@@ -6,19 +6,22 @@
 #include <memory>
 
 #include "simulationBox.hpp"
+#include "settings.hpp"
 
 class RstFileReader
 {
 private:
-    std::string _filename;
+    const std::string _filename;
+    Settings &_settings;
 
 public:
-    RstFileReader(std::string);
+    RstFileReader(std::string, Settings &);
     ~RstFileReader();
 
-    // void read(string filename);
+    std::unique_ptr<SimulationBox> read();
 };
 
-std::unique_ptr<SimulationBox> read_rst(std::string filename);
+std::unique_ptr<SimulationBox> read_rst(std::string, Settings &);
+Settings _settings;
 
 #endif
