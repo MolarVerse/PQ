@@ -11,10 +11,16 @@ using namespace std;
 using namespace StringUtilities;
 using namespace Setup::RstFileReader;
 
-RstFileReader::RstFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings) {}
+RstFileReader::RstFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings) {
+    _sections.push_back(new BoxSection);
+    _sections.push_back(new NoseHooverSection);
+    _sections.push_back(new StepCountSection);
+}
 RstFileReader::~RstFileReader() {
     for (RstFileSection *section : _sections)
         delete section;
+
+    delete _atomSection;
 }
 
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
@@ -25,7 +31,7 @@ RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
             return section;
     }
 
-    return new AtomSection;
+    return _atomSection;
 }
 
 unique_ptr<SimulationBox> RstFileReader::read()

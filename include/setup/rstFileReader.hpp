@@ -17,7 +17,8 @@ namespace Setup::RstFileReader
     private:
         const std::string _filename;
         Settings &_settings;
-        std::vector<RstFileSection *> _sections = {new BoxSection, new NoseHooverSection, new StepCountSection};
+        std::vector<RstFileSection *> _sections;
+        RstFileSection *_atomSection = new AtomSection;
 
     public:
         RstFileReader(const std::string &, Settings &);
