@@ -7,10 +7,7 @@
 
 using namespace std;
 
-Box::Box() : _boxDimensions({0.0, 0.0, 0.0}), _boxAngles({0.0, 0.0, 0.0}) {}
-Box::~Box() {}
-
-vector<double> Box::getBoxDimensions()
+vector<double> Box::getBoxDimensions() const
 {
     return _boxDimensions;
 }
@@ -31,7 +28,7 @@ void Box::setBoxDimensions(const vector<double> &boxDimensions)
     _boxDimensions = boxDimensions;
 }
 
-vector<double> Box::getBoxAngles()
+vector<double> Box::getBoxAngles() const
 {
     return _boxAngles;
 }

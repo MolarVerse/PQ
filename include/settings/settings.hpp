@@ -8,9 +8,10 @@ private:
     int _stepcount = 0;
 
 public:
-    Settings();
-    ~Settings();
-    int getStepCount();
+    Settings() = default;
+    ~Settings() = default;
+
+    int getStepCount() const;
     void setStepCount(int);
 };
 

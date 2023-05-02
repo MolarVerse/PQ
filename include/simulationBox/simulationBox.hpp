@@ -23,7 +23,6 @@
  */
 class SimulationBox
 {
-private:
 public:
     std::vector<std::string> _atomtype;
     std::vector<int> _moltype;
@@ -34,15 +33,16 @@ public:
     std::vector<double> _positionsOld;
     std::vector<double> _velocitiesOld;
     std::vector<double> _forcesOld;
+
     Box _box;
 
-    SimulationBox();
-    ~SimulationBox();
+    SimulationBox() = default;
+    ~SimulationBox() = default;
 
-    void setAtomicProperties(std::vector<double> &, std::vector<double>);
+    void setAtomicProperties(std::vector<double> &, std::vector<double>) const;
 
     template <typename T>
-    void setAtomicProperties(std::vector<T> &, T);
+    void setAtomicProperties(std::vector<T> &, T) const;
 };
 
 /**
@@ -54,7 +54,7 @@ public:
  */
 // FIXME: move this function into a separate header file
 template <typename T>
-void SimulationBox::setAtomicProperties(std::vector<T> &target, T toAdd)
+void SimulationBox::setAtomicProperties(std::vector<T> &target, T toAdd) const
 {
     target.push_back(toAdd);
 }

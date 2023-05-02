@@ -11,14 +11,14 @@ bool BoxSection::isHeader() { return true; }
 
 /**
  * @brief processes the box section of the rst file
- * 
+ *
  * @param lineElements all elements of the line
  * @param settings not used in this function
  * @param simulationBox object containing the simulation box
- * 
+ *
  * @throws invalid_argument if the number of elements in the line is not 4 or 7
  */
-void BoxSection::process(vector<string> lineElements, [[maybe_unused]] Settings &settings, SimulationBox &simulationBox)
+void BoxSection::process(vector<string> &lineElements, [[maybe_unused]] Settings &settings, SimulationBox &simulationBox)
 {
     if (lineElements.size() != 4 && lineElements.size() != 7)
         throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
@@ -34,8 +34,8 @@ void BoxSection::process(vector<string> lineElements, [[maybe_unused]] Settings 
 string NoseHooverSection::keyword() { return "chi"; }
 bool NoseHooverSection::isHeader() { return true; }
 
-//TODO: implement this function
-void NoseHooverSection::process(vector<string>, Settings &, [[maybe_unused]] SimulationBox &)
+// TODO: implement this function
+void NoseHooverSection::process(vector<string> &, Settings &, [[maybe_unused]] SimulationBox &)
 {
     throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
 }
@@ -45,14 +45,14 @@ bool StepCountSection::isHeader() { return true; }
 
 /**
  * @brief processes the step count section of the rst file
- * 
+ *
  * @param lineElements all elements of the line
  * @param settings object containing the settings of the simulation
  * @param simulationBox not used in this function
- * 
+ *
  * @throws invalid_argument if the number of elements in the line is not 2
  */
-void StepCountSection::process(vector<string> lineElements, Settings &settings, [[maybe_unused]] SimulationBox &simulationBox)
+void StepCountSection::process(vector<string> &lineElements, Settings &settings, [[maybe_unused]] SimulationBox &simulationBox)
 {
     if (lineElements.size() != 2)
         throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
@@ -60,18 +60,18 @@ void StepCountSection::process(vector<string> lineElements, Settings &settings, 
     settings.setStepCount(stoi(lineElements[1]));
 }
 
-string AtomSection::keyword() { return 0; }
+string AtomSection::keyword() { return nullptr; }
 bool AtomSection::isHeader() { return false; }
 /**
  * @brief processes the atom section of the rst file
- * 
+ *
  * @param lineElements all elements of the line
  * @param settings not used in this function
  * @param simulationBox object containing the simulation box
- * 
+ *
  * @throws invalid_argument if the number of elements in the line is not 21
  */
-void AtomSection::process(vector<string> lineElements, [[maybe_unused]] Settings &settings, SimulationBox &simulationBox)
+void AtomSection::process(vector<string> &lineElements, [[maybe_unused]] Settings &settings, SimulationBox &simulationBox)
 {
     if (lineElements.size() != 21)
         throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");

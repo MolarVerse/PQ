@@ -11,10 +11,13 @@ using namespace std;
 using namespace StringUtilities;
 using namespace Setup::RstFileReader;
 
-RstFileReader::RstFileReader(string filename, Settings &settings) : _filename(filename), _settings(settings), _sections({new BoxSection, new NoseHooverSection, new StepCountSection}) {}
-RstFileReader::~RstFileReader() {}
+RstFileReader::RstFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings) {}
+RstFileReader::~RstFileReader() {
+    for (RstFileSection *section : _sections)
+        delete section;
+}
 
-RstFileSection *RstFileReader::determineSection(vector<string> lineElements)
+RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
     for (RstFileSection *section : _sections)
     {
@@ -27,7 +30,7 @@ RstFileSection *RstFileReader::determineSection(vector<string> lineElements)
 
 unique_ptr<SimulationBox> RstFileReader::read()
 {
-    auto simulationBox = unique_ptr<SimulationBox>(new SimulationBox);
+    auto simulationBox = make_unique<SimulationBox>(SimulationBox());
     string line;
     vector<string> lineElements;
     ifstream rstFile(_filename);

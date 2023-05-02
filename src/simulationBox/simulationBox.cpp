@@ -2,9 +2,6 @@
 
 using namespace std;
 
-SimulationBox::SimulationBox() : _box() {}
-SimulationBox::~SimulationBox() {}
-
 /**
  * @brief sets the atomic 3d properties
  *
@@ -19,7 +16,7 @@ SimulationBox::~SimulationBox() {}
  *  the next three elements are the x, y and z coordinates
  *  of the second atom, and so on.
  */
-void SimulationBox::setAtomicProperties(vector<double> &target, vector<double> toAdd)
+void SimulationBox::setAtomicProperties(vector<double> &target, vector<double> toAdd) const
 {
     for (auto toAddElement : toAdd)
         target.push_back(toAddElement);

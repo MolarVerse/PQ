@@ -12,21 +12,19 @@
 
 namespace Setup::RstFileReader
 {
-    using namespace std;
-
     class RstFileReader
     {
     private:
-        const string _filename;
+        const std::string _filename;
         Settings &_settings;
-        vector<RstFileSection *> _sections;
+        std::vector<RstFileSection *> _sections = {new BoxSection, new NoseHooverSection, new StepCountSection};
 
     public:
-        RstFileReader(string, Settings &);
+        RstFileReader(const std::string &, Settings &);
         ~RstFileReader();
 
-        unique_ptr<SimulationBox> read();
-        RstFileSection *determineSection(vector<string>);
+        std::unique_ptr<SimulationBox> read();
+        RstFileSection *determineSection(std::vector<std::string> &);
     };
 }
 

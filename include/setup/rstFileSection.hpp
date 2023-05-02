@@ -10,55 +10,55 @@
 
 namespace Setup::RstFileReader
 {
-    using namespace std;
-
     class RstFileSection
     {
     public:
+        virtual ~RstFileSection() = default;
+
         int _lineNumber;
-        virtual string keyword() = 0;
+        virtual std::string keyword() = 0;
         virtual bool isHeader() = 0;
-        virtual void process(vector<string>, Settings &, SimulationBox &) = 0;
+        virtual void process(std::vector<std::string> &, Settings &, SimulationBox &) = 0;
     };
 
     class BoxSection : public RstFileSection
     {
     public:
-        string keyword() override;
+        std::string keyword() override;
         bool isHeader() override;
-        void process(vector<string>, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
     };
 
     // class CellSection : public RstFileSection
     // {
     // public:
-    //     string keyword() override;
+    //     std::string keyword() override;
     //     bool isHeader() override;
-    //     void process(vector<string>, SimulationBox &) override;
+    //     void process(std::vector<std::string>, SimulationBox &) override;
     // };
 
     class NoseHooverSection : public RstFileSection
     {
     public:
-        string keyword() override;
+        std::string keyword() override;
         bool isHeader() override;
-        void process(vector<string>, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
     };
 
     class StepCountSection : public RstFileSection
     {
     public:
-        string keyword() override;
+        std::string keyword() override;
         bool isHeader() override;
-        void process(vector<string>, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
     };
 
     class AtomSection : public RstFileSection
     {
     public:
-        string keyword() override;
+        std::string keyword() override;
         bool isHeader() override;
-        void process(vector<string>, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
     };
 }
 
