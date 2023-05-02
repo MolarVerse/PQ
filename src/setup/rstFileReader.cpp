@@ -23,6 +23,12 @@ RstFileReader::~RstFileReader() {
     delete _atomSection;
 }
 
+/**
+ * @brief Determines which section of the .rst file the line belongs to
+ * 
+ * @param lineElements 
+ * @return RstFileSection* 
+ */
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
     for (RstFileSection *section : _sections)
@@ -34,6 +40,11 @@ RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
     return _atomSection;
 }
 
+/**
+ * @brief Reads a .rst file and returns a SimulationBox object
+ * 
+ * @return unique_ptr<SimulationBox> 
+ */
 unique_ptr<SimulationBox> RstFileReader::read()
 {
     auto simulationBox = make_unique<SimulationBox>(SimulationBox());
@@ -58,7 +69,14 @@ unique_ptr<SimulationBox> RstFileReader::read()
     return simulationBox;
 }
 
-unique_ptr<SimulationBox> read_rst(string filename, Settings &settings)
+/**
+ * @brief Reads a .rst file and returns a SimulationBox object
+ * 
+ * @param filename 
+ * @param settings 
+ * @return unique_ptr<SimulationBox> 
+ */
+unique_ptr<SimulationBox> read_rst(const string &filename, Settings &settings)
 {
     RstFileReader rstFileReader(filename, settings);
     return rstFileReader.read();

@@ -76,12 +76,12 @@ void AtomSection::process(vector<string> &lineElements, [[maybe_unused]] Setting
     if (lineElements.size() != 21)
         throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
 
-    simulationBox.setAtomicProperties(simulationBox._atomtype, lineElements[0]);
-    simulationBox.setAtomicProperties(simulationBox._moltype, stoi(lineElements[2]));
-    simulationBox.setAtomicProperties(simulationBox._positions, {stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    simulationBox.setAtomicProperties(simulationBox._velocities, {stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    simulationBox.setAtomicProperties(simulationBox._forces, {stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
-    simulationBox.setAtomicProperties(simulationBox._positionsOld, {stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
-    simulationBox.setAtomicProperties(simulationBox._velocitiesOld, {stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
-    simulationBox.setAtomicProperties(simulationBox._forcesOld, {stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+    simulationBox.addAtomicProperties(simulationBox._atomtype, lineElements[0]);
+    simulationBox.addAtomicProperties(simulationBox._moltype, stoi(lineElements[2]));
+    simulationBox.addAtomicProperties(simulationBox._positions, {stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    simulationBox.addAtomicProperties(simulationBox._velocities, {stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    simulationBox.addAtomicProperties(simulationBox._forces, {stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    simulationBox.addAtomicProperties(simulationBox._positionsOld, {stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
+    simulationBox.addAtomicProperties(simulationBox._velocitiesOld, {stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
+    simulationBox.addAtomicProperties(simulationBox._forcesOld, {stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
 }

@@ -39,10 +39,10 @@ public:
     SimulationBox() = default;
     ~SimulationBox() = default;
 
-    void setAtomicProperties(std::vector<double> &, std::vector<double>) const;
+    void addAtomicProperties(std::vector<double> &, std::vector<double>) const;
 
     template <typename T>
-    void setAtomicProperties(std::vector<T> &, T) const;
+    void addAtomicProperties(std::vector<T> &, T) const;
 };
 
 /**
@@ -54,7 +54,7 @@ public:
  */
 // FIXME: move this function into a separate header file
 template <typename T>
-void SimulationBox::setAtomicProperties(std::vector<T> &target, T toAdd) const
+void SimulationBox::addAtomicProperties(std::vector<T> &target, T toAdd) const
 {
     target.push_back(toAdd);
 }

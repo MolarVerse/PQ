@@ -2,6 +2,12 @@
 
 #define _SETTINGS_H_
 
+/**
+ * @class Settings
+ * 
+ * @brief Stores the settings of the simulation
+ * 
+ */
 class Settings
 {
 private:

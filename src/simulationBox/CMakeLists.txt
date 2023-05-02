@@ -1,0 +1,10 @@
+add_library(simulationBox
+    box.cpp
+    simulationBox.cpp
+)
+
+target_include_directories(simulationBox
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${PROJECT_SOURCE_DIR}/include/simulationBox
+)

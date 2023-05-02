@@ -10,8 +10,15 @@
 #include "settings.hpp"
 #include "rstFileSection.hpp"
 
+
 namespace Setup::RstFileReader
 {
+    /**
+     * @class RstFileReader
+     * 
+     * @brief Reads a .rst file and returns a SimulationBox object
+     * 
+     */
     class RstFileReader
     {
     private:
@@ -29,6 +36,11 @@ namespace Setup::RstFileReader
     };
 }
 
-std::unique_ptr<SimulationBox> read_rst(std::string, Settings &);
+/**
+ * @brief Reads a .rst file and returns a SimulationBox object
+ * 
+ * @return std::unique_ptr<SimulationBox> 
+ */
+std::unique_ptr<SimulationBox> read_rst(const std::string &, Settings &);
 
 #endif

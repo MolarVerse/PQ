@@ -6,15 +6,27 @@
 
 using namespace std;
 
-string StringUtilities::removeComments(string line, string commentChar)
+/**
+ * @brief Removes comments from a line
+ *
+ * @param line
+ * @param commentChar
+ * @return string
+ */
+string StringUtilities::removeComments(string &line, string_view commentChar)
 {
-    auto commentPos = line.find(commentChar);
-    if (commentPos != string::npos)
+    if (auto commentPos = line.find(commentChar); commentPos != string::npos)
         line = line.substr(0, commentPos);
     return line;
 }
 
-vector<string> StringUtilities::splitString(string line)
+/**
+ * @brief Splits a string into a vector of strings
+ *
+ * @param line
+ * @return vector<string>
+ */
+vector<string> StringUtilities::splitString(const string &line)
 {
     string word;
     vector<string> lineElements = {};

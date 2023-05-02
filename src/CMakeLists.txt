@@ -1,0 +1,4 @@
+add_subdirectory(settings)
+add_subdirectory(utilities)
+add_subdirectory(setup)
+add_subdirectory(simulationBox)

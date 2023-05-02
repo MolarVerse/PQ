@@ -16,7 +16,7 @@ using namespace std;
  *  the next three elements are the x, y and z coordinates
  *  of the second atom, and so on.
  */
-void SimulationBox::setAtomicProperties(vector<double> &target, vector<double> toAdd) const
+void SimulationBox::addAtomicProperties(vector<double> &target, vector<double> toAdd) const
 {
     for (auto toAddElement : toAdd)
         target.push_back(toAddElement);
