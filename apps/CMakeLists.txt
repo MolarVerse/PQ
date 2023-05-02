@@ -12,6 +12,7 @@ target_link_libraries(pimd_qmcf
         simulationBox
         settings
         utilities
+        config
 )
 
 install(TARGETS pimd_qmcf
