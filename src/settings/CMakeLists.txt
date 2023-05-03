@@ -1,5 +1,7 @@
 add_library(settings
     settings.cpp
+    timings.cpp
+    jobtype.cpp
 )
 
 target_include_directories(settings

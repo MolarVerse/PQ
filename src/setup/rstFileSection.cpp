@@ -57,7 +57,7 @@ void StepCountSection::process(vector<string> &lineElements, Settings &settings,
     if (lineElements.size() != 2)
         throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
 
-    settings.setStepCount(stoi(lineElements[1]));
+    settings._timings.setStepCount(stoi(lineElements[1]));
 }
 
 string AtomSection::keyword() { return nullptr; }

@@ -1,6 +1,8 @@
 add_library(setup
     rstFileReader.cpp
     rstFileSection.cpp
+    inputFileReader.cpp
+    inputFileReaderParse.cpp
 )
 
 target_include_directories(setup
