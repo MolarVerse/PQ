@@ -29,8 +29,6 @@ namespace Setup::InputFileReader
 
         void process(const std::vector<std::string> &);
 
-        std::vector<std::string> getLineCommands(const std::string &) const;
-
     public:
         InputFileReader(const std::string &, Settings &);
         ~InputFileReader() = default;

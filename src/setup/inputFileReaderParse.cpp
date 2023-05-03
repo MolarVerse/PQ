@@ -62,8 +62,6 @@ void checkCommand(const vector<string> &lineElements, int _lineNumber)
  */
 void InputFileReader::parseJobType(const vector<string> &lineElements)
 {
-    cout << "Parsing jobtype" << endl;
-
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "mm-md")
         _settings._jobType = MMMD();
@@ -78,7 +76,6 @@ void InputFileReader::parseJobType(const vector<string> &lineElements)
  */
 void InputFileReader::parseTimestep(const vector<string> &lineElements)
 {
-    cout << "Parsing timestep" << endl;
     checkCommand(lineElements, _lineNumber);
     _settings._timings.setTimestep(stoi(lineElements[2]));
 }

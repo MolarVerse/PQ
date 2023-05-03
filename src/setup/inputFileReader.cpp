@@ -35,7 +35,7 @@ InputFileReader::InputFileReader(const string &filename, Settings &settings) : _
  *
  * @throw invalid_argument if line does not end with a semicolon
  */
-vector<string> InputFileReader::getLineCommands(const string &line) const
+vector<string> getLineCommands(const string &line, int _lineNumber)
 {
 
     for (int i = int(line.size()) - 1; i >= 0; i--)
@@ -86,7 +86,7 @@ void InputFileReader::read()
     while (getline(inputFile, line))
     {
         line = removeComments(line, "#");
-        auto lineCommands = getLineCommands(line);
+        auto lineCommands = getLineCommands(line, _lineNumber);
 
         for (const string &command : lineCommands)
         {
