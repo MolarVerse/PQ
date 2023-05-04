@@ -22,9 +22,31 @@ using namespace Setup::InputFileReader;
  */
 InputFileReader::InputFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings)
 {
-    _keywordMap.try_emplace(string("jobtype"), &InputFileReader::parseJobType);
+    addKeyword(string("jobtype"), &InputFileReader::parseJobType, true);
 
-    _keywordMap.try_emplace(string("timestep"), &InputFileReader::parseTimestep);
+    addKeyword(string("timestep"), &InputFileReader::parseTimestep, true);
+}
+
+/**
+ * @brief add keyword to different keyword maps
+ *
+ * @param keyword
+ * @param parserFunc
+ * @param count
+ * @param required
+ *
+ * @details
+ *
+ *  parserFunc is a function pointer to a parsing function
+ *  count is the number of keywords found in the inputfile
+ *  required is a boolean that indicates if the keyword is required
+ *
+ */
+void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*parserFunc)(const vector<string> &), bool required)
+{
+    _keywordFuncMap.try_emplace(keyword, parserFunc);
+    _keywordCountMap.try_emplace(keyword, 0);
+    _keywordRequiredMap.try_emplace(keyword, required);
 }
 
 /**
@@ -63,11 +85,13 @@ void InputFileReader::process(const vector<string> &lineElements)
 {
     auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
 
-    if (_keywordMap.find(keyword) == _keywordMap.end())
+    if (_keywordFuncMap.find(keyword) == _keywordFuncMap.end())
         throw runtime_error("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
 
-    void (InputFileReader::*parserFunc)(const vector<string> &) = _keywordMap[keyword];
+    void (InputFileReader::*parserFunc)(const vector<string> &) = _keywordFuncMap[keyword];
     (this->*parserFunc)(lineElements);
+
+    _keywordCountMap[keyword]++;
 }
 
 /**
@@ -111,4 +135,21 @@ void readInputFile(const string &filename, Settings &settings)
 {
     InputFileReader inputFileReader(filename, settings);
     inputFileReader.read();
+    inputFileReader.postProcess();
+}
+
+/**
+ * @brief checking keywords set in input file
+ *
+ */
+void InputFileReader::postProcess()
+{
+    for (auto const &[keyword, count] : _keywordCountMap)
+    {
+        if (_keywordRequiredMap[keyword] && count == 0)
+            throw runtime_error("Missing keyword \"" + keyword + "\" in input file");
+
+        if (count > 1)
+            throw runtime_error("Multiple keywords \"" + keyword + "\" in input file");
+    }
 }
