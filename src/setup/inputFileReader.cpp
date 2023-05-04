@@ -31,6 +31,12 @@ InputFileReader::InputFileReader(const string &filename, Settings &settings) : _
 
     addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
     addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
+    addKeyword(string("info_file"), &InputFileReader::parseInfoFilename, false);
+    addKeyword(string("energy_file"), &InputFileReader::parseEnergyFilename, false);
+    addKeyword(string("traj_file"), &InputFileReader::parseTrajectoryFilename, false);
+    addKeyword(string("vel_file"), &InputFileReader::parseVelocityFilename, false);
+    addKeyword(string("restart_file"), &InputFileReader::parseRestartFilename, false);
+    addKeyword(string("charge_file"), &InputFileReader::parseChargeFilename, false);
 }
 
 /**

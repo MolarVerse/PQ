@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 
     cout << "Output frequency: " << Output::getOutputFreq() << endl;
 
-    cout << "Output file name: " << settings._output[0].getFilename() << endl;
-    cout << "Output file name: " << settings._output[1].getFilename() << endl;
+    for (auto &output : settings._output)
+        cout << "Output file name: " << output.getFilename() << endl;
 
     return 0;
 }
