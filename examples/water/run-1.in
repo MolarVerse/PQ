@@ -42,8 +42,8 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.1;
-   #nstep       = 1000000;
-   #output_freq = 1;
+   nstep       = 1000000;
+   output_freq = 2;
    #write_traj  = on;
 
 # SYSTEM RESTRAINTS
@@ -82,9 +82,9 @@
 
 # FILES
 #-----------------------------------------
-   #start_file   = testset_02___mm_md_h2o.rst; 
+   start_file   = h2o-qmcf.rst; 
 
-   #output_file  = testset_02___mm_md_h2o-1.out; 
+   output_file  = testset_02___mm_md_h2o-1.out; 
    #info_file    = testset_02___mm_md_h2o-1.info;
    #energy_file  = testset_02___mm_md_h2o-1.en; 
    #traj_file    = testset_02___mm_md_h2o-1.xyz;

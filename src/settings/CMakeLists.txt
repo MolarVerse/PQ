@@ -9,3 +9,8 @@ target_include_directories(settings
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/include/settings
 )
+
+target_link_libraries(settings
+    PUBLIC
+        output
+)

@@ -1,5 +1,6 @@
 add_subdirectory(settings)
 add_subdirectory(utilities)
+add_subdirectory(output)
 add_subdirectory(setup)
 add_subdirectory(simulationBox)
 add_subdirectory(config)

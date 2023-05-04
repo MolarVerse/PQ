@@ -16,4 +16,5 @@ target_link_libraries(setup
         settings
         simulationBox
         utilities
+        output
 )

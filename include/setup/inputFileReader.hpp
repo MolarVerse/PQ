@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "settings.hpp"
+#include "output.hpp"
 
 namespace Setup::InputFileReader
 {
@@ -29,7 +30,14 @@ namespace Setup::InputFileReader
         int _lineNumber = 1;
 
         void parseJobType(const std::vector<std::string> &);
+
         void parseTimestep(const std::vector<std::string> &);
+        void parseNumberOfSteps(const std::vector<std::string> &);
+
+        void parseStartFilename(const std::vector<std::string> &);
+
+        void parseOutputFreq(const std::vector<std::string> &);
+        void parseLogFilename(const std::vector<std::string> &);
 
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 

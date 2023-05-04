@@ -25,6 +25,12 @@ InputFileReader::InputFileReader(const string &filename, Settings &settings) : _
     addKeyword(string("jobtype"), &InputFileReader::parseJobType, true);
 
     addKeyword(string("timestep"), &InputFileReader::parseTimestep, true);
+    addKeyword(string("nstep"), &InputFileReader::parseNumberOfSteps, true);
+
+    addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
+
+    addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
+    addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
 }
 
 /**

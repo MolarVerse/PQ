@@ -5,6 +5,9 @@
 #include "commandLineArgs.hpp"
 #include "inputFileReader.hpp"
 #include "settings.hpp"
+#include "output.hpp"
+
+#include "initStatic.hpp"
 
 using namespace std;
 
@@ -18,13 +21,17 @@ int main(int argc, char *argv[])
     auto settings = Settings();
     readInputFile(commandLineArgs.getInputFileName(), settings);
 
-    auto simulationBox = read_rst("h2o-qmcf.rst", settings);
+    auto simulationBox = read_rst(settings.getStartFilename(), settings);
 
     cout << "Step count: " << settings._timings.getStepCount() << endl;
     cout << "Timestep: " << settings._timings.getTimestep() << endl;
     cout << "Job type: " << settings._jobType.getJobType() << endl;
+    cout << "Number of steps: " << settings._timings.getNumberOfSteps() << endl;
 
-    cout << commandLineArgs.getInputFileName() << endl;
+    cout << "Output frequency: " << Output::getOutputFreq() << endl;
+
+    cout << "Output file name: " << settings._output[0].getFilename() << endl;
+    cout << "Output file name: " << settings._output[1].getFilename() << endl;
 
     return 0;
 }

@@ -13,6 +13,7 @@ target_link_libraries(pimd_qmcf
         settings
         utilities
         config
+        output
 )
 
 install(TARGETS pimd_qmcf
