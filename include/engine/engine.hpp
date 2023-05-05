@@ -9,6 +9,12 @@
 #include "output.hpp"
 #include "simulationBox.hpp"
 
+/**
+ * @class Engine
+ *
+ * @brief Contains all the information needed to run the simulation
+ *
+ */
 class Engine
 {
 public:

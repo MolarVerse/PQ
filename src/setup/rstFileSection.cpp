@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "rstFileSection.hpp"
+#include "exceptions.hpp"
 
 using namespace Setup::RstFileReader;
 using namespace std;
@@ -15,12 +16,12 @@ bool BoxSection::isHeader() { return true; }
  * @param lineElements all elements of the line
  * @param engine object containing the engine
  *
- * @throws invalid_argument if the number of elements in the line is not 4 or 7
+ * @throws RstFileException if the number of elements in the line is not 4 or 7
  */
 void BoxSection::process(vector<string> &lineElements, Engine &engine)
 {
     if (lineElements.size() != 4 && lineElements.size() != 7)
-        throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
+        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
 
     engine._simulationBox._box.setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
 
@@ -36,7 +37,7 @@ bool NoseHooverSection::isHeader() { return true; }
 // TODO: implement this function
 void NoseHooverSection::process(vector<string> &, Engine &)
 {
-    throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
+    throw RstFileException("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
 }
 
 string StepCountSection::keyword() { return "step"; }
@@ -48,12 +49,12 @@ bool StepCountSection::isHeader() { return true; }
  * @param lineElements all elements of the line
  * @param engine object containing the engine
  *
- * @throws invalid_argument if the number of elements in the line is not 2
+ * @throws RstFileException if the number of elements in the line is not 2
  */
 void StepCountSection::process(vector<string> &lineElements, Engine &engine)
 {
     if (lineElements.size() != 2)
-        throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
+        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
 
     engine._settings._timings.setStepCount(stoi(lineElements[1]));
 }
@@ -67,12 +68,12 @@ bool AtomSection::isHeader() { return false; }
  * @param settings not used in this function
  * @param simulationBox object containing the simulation box
  *
- * @throws invalid_argument if the number of elements in the line is not 21
+ * @throws RstFileException if the number of elements in the line is not 21
  */
 void AtomSection::process(vector<string> &lineElements, Engine &engine)
 {
     if (lineElements.size() != 21)
-        throw invalid_argument("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
+        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
 
     engine._simulationBox.addAtomicProperties(engine._simulationBox._atomtype, lineElements[0]);
     engine._simulationBox.addAtomicProperties(engine._simulationBox._moltype, stoi(lineElements[2]));

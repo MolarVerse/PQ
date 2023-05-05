@@ -7,3 +7,8 @@ target_include_directories(output
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/include/output
 )
+
+target_link_libraries(output
+    PUBLIC
+        config
+)

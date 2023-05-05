@@ -10,7 +10,7 @@ using namespace std;
  * @param lineElement
  * @param _lineNumber
  *
- * @throw invalid_argument if second argument is not "="
+ * @throw InputFileException if second argument is not "="
  */
 void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNumber)
 {
@@ -24,7 +24,7 @@ void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNu
  * @param lineElements
  * @param _lineNumber
  *
- * @throw invalid_argument if command array has less than 3 elements
+ * @throw InputFileException if command array has less than 3 elements
  *
  * @note this function is used for commands that have an array as their third argument
  */
@@ -42,7 +42,7 @@ void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElement
  * @param lineElements
  * @param _lineNumber
  *
- * @throw invalid_argument if command array has less or more than 3 elements
+ * @throw InputFileException if command array has less or more than 3 elements
  */
 void Setup::InputFileReader::checkCommand(const vector<string> &lineElements, int _lineNumber)
 {

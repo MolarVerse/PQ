@@ -66,7 +66,7 @@ namespace Setup::InputFileReader
  * @brief reads input file and sets settings
  *
  * @param filename
- * @param settings
+ * @param engine
  *
  */
 void readInputFile(const std::string &, Engine &);

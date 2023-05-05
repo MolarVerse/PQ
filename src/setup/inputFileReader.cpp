@@ -67,7 +67,7 @@ void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*
  * @param line
  * @return vector<string>
  *
- * @throw invalid_argument if line does not end with a semicolon
+ * @throw InputFileException if line does not end with a semicolon
  */
 vector<string> getLineCommands(const string &line, int _lineNumber)
 {
@@ -91,7 +91,7 @@ vector<string> getLineCommands(const string &line, int _lineNumber)
  *
  * @param lineElements
  *
- * @throw runtime_error if keyword is not recognised
+ * @throw InputFileException if keyword is not recognised
  */
 void InputFileReader::process(const vector<string> &lineElements)
 {
@@ -109,7 +109,7 @@ void InputFileReader::process(const vector<string> &lineElements)
 /**
  * @brief read input file
  *
- * @throw runtime_error if file not found
+ * @throw InputFileException if file not found
  */
 void InputFileReader::read()
 {
@@ -153,6 +153,7 @@ void readInputFile(const string &filename, Engine &engine)
 /**
  * @brief checking keywords set in input file
  *
+ * @throw InputFileException if keyword is required but not found
  */
 void InputFileReader::postProcess()
 {

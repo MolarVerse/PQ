@@ -11,7 +11,7 @@ using namespace Setup::InputFileReader;
  *
  * @param lineElements
  *
- * @throw invalid_argument if jobtype is not recognised
+ * @throw InputFileException if jobtype is not recognised
  */
 void InputFileReader::parseJobType(const vector<string> &lineElements)
 {

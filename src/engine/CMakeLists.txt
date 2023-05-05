@@ -1,8 +1,8 @@
 add_library(engine
+    engine.cpp
     settings.cpp
     timings.cpp
     jobtype.cpp
-    engine.cpp
 )
 
 target_include_directories(engine
@@ -15,4 +15,5 @@ target_link_libraries(engine
     PUBLIC
         output
         simulationBox
+        config
 )

@@ -5,6 +5,12 @@
 #include <ostream>
 namespace Color
 {
+    /**
+     * @enum Code
+     *
+     * @brief ANSI escape codes for colors
+     *
+     */
     enum Code
     {
         FG_RED = 31,
@@ -16,6 +22,13 @@ namespace Color
         BG_BLUE = 44,
         BG_DEFAULT = 49
     };
+
+    /**
+     * @class Modifier
+     *
+     * @brief Modifier class for ANSI escape codes
+     *
+     */
     class Modifier
     {
         Code code;

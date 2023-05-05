@@ -5,6 +5,7 @@
 
 #include "rstFileReader.hpp"
 #include "stringUtilities.hpp"
+#include "exceptions.hpp"
 
 using namespace std;
 using namespace StringUtilities;
@@ -52,7 +53,7 @@ void RstFileReader::read()
     int lineNumber = 1;
 
     if (rstFile.fail())
-        throw runtime_error("\"" + _filename + "\"" + " File not found");
+        throw InputFileException("\"" + _filename + "\"" + " File not found");
 
     while (getline(rstFile, line))
     {

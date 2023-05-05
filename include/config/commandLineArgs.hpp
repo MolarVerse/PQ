@@ -7,22 +7,23 @@
 
 /**
  * @class CommandLineArgs
- * 
+ *
  * @brief Handles the command line arguments.
- * 
+ *
  */
 class CommandLineArgs
 {
-    private:
-        int _argc;
-        std::vector<std::string> _argv;
-        std::string _inputFileName;
-    public:
-        CommandLineArgs(int , const std::vector<std::string> &);
+private:
+    int _argc;
+    std::vector<std::string> _argv;
+    std::string _inputFileName;
 
-        void detectFlags();
+public:
+    CommandLineArgs(int, const std::vector<std::string> &);
 
-        std::string getInputFileName() const { return _inputFileName; }
+    void detectFlags();
+
+    std::string getInputFileName() const { return _inputFileName; }
 };
 
 #endif

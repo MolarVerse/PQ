@@ -3,17 +3,24 @@
 #include <fstream>
 
 #include "output.hpp"
+#include "exceptions.hpp"
 
 using namespace std;
 
+/**
+ * @brief Sets the filename of the output file
+ *
+ * @param filename
+ *
+ * @throw InputFileException if filename is empty
+ */
 void Output::setFilename(string_view filename)
 {
     if (filename.empty())
-        throw invalid_argument("Filename cannot be empty");
+        throw InputFileException("Filename cannot be empty");
 
-    ifstream fp(string(filename).c_str());
-    if (fp.good())
-        throw invalid_argument("File already exists - filename = " + string(filename));
+    if (ifstream fp(string(filename).c_str()); fp.good())
+        throw InputFileException("File already exists - filename = " + string(filename));
 
     _filename = filename;
 }
@@ -23,7 +30,7 @@ void Output::setFilename(string_view filename)
  *
  * @param outputFreq
  *
- * @throw range_error if output frequency is negative
+ * @throw InputFileException if output frequency is negative
  *
  * @note
  *
@@ -34,7 +41,7 @@ void Output::setFilename(string_view filename)
 void Output::setOutputFreq(int outputFreq)
 {
     if (outputFreq < 0)
-        throw range_error("Output frequency must be positive - output frequency = " + to_string(outputFreq));
+        throw InputFileException("Output frequency must be positive - output frequency = " + to_string(outputFreq));
 
     if (outputFreq == 0)
         _outputFreq = INT32_MAX;
