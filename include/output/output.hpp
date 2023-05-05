@@ -12,7 +12,7 @@ protected:
 
 public:
     std::string getFilename() const { return _filename; };
-    void setFilename(std::string_view filename) { _filename = filename; }; // TODO: check if this file exists
+    void setFilename(std::string_view filename);
 
     static int getOutputFreq() { return _outputFreq; };
     static void setOutputFreq(int outputFreq);
@@ -38,9 +38,8 @@ public:
 
 class StdoutOutput : public Output
 {
-    // TODO: think of a clever way to add stdout stream
 public:
-    explicit StdoutOutput() = default;
+    StdoutOutput() = default;
 };
 
 class RstFileOutput : public Output

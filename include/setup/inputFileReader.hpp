@@ -38,6 +38,12 @@ namespace Setup::InputFileReader
 
         void parseOutputFreq(const std::vector<std::string> &);
         void parseLogFilename(const std::vector<std::string> &);
+        void parseInfoFilename(const std::vector<std::string> &);
+        void parseEnergyFilename(const std::vector<std::string> &);
+        void parseTrajectoryFilename(const std::vector<std::string> &);
+        void parseVelocityFilename(const std::vector<std::string> &);
+        void parseRestartFilename(const std::vector<std::string> &);
+        void parseChargeFilename(const std::vector<std::string> &);
 
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
@@ -50,6 +56,10 @@ namespace Setup::InputFileReader
         void read();
         void postProcess();
     };
+
+    void checkEqualSign(std::string_view, int);
+    void checkCommand(const std::vector<std::string> &, int);
+    void checkCommandArray(const std::vector<std::string> &, int);
 }
 
 /**

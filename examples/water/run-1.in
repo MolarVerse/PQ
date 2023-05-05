@@ -85,11 +85,11 @@
    start_file   = h2o-qmcf.rst; 
 
    output_file  = testset_02___mm_md_h2o-1.out; 
-   #info_file    = testset_02___mm_md_h2o-1.info;
-   #energy_file  = testset_02___mm_md_h2o-1.en; 
-   #traj_file    = testset_02___mm_md_h2o-1.xyz;
-   #vel_file     = testset_02___mm_md_h2o-1.vel;
-   #restart_file = testset_02___mm_md_h2o-1.rst;
+   info_file    = testset_02___mm_md_h2o-1.info;
+   energy_file  = testset_02___mm_md_h2o-1.en; 
+   traj_file    = testset_02___mm_md_h2o-1.xyz;
+   vel_file     = testset_02___mm_md_h2o-1.vel;
+   restart_file = testset_02___mm_md_h2o-1.rst;
 
 
 

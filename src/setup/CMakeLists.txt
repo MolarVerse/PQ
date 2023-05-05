@@ -2,7 +2,11 @@ add_library(setup
     rstFileReader.cpp
     rstFileSection.cpp
     inputFileReader.cpp
-    inputFileReaderParse.cpp
+    inputFileParser.cpp    
+    inputFileParserOutput.cpp 
+    inputFileParserJobtype.cpp
+    inputFileParserTimings.cpp
+    inputFileParserGeneral.cpp
 )
 
 target_include_directories(setup
