@@ -13,5 +13,5 @@ using namespace Setup::InputFileReader;
 void InputFileReader::parseStartFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _settings.setStartFilename(lineElements[2]);
+    _engine._settings.setStartFilename(lineElements[2]);
 }

@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "settings.hpp"
-#include "timings.hpp"
 #include "jobtype.hpp"
 #include "output.hpp"
+#include "simulationBox.hpp"
 
 class Engine
 {
@@ -16,9 +16,9 @@ public:
     ~Engine() = default;
 
     Settings _settings;
-    Timings _timings;
     JobType _jobType;
     std::vector<Output> _output = {StdoutOutput()};
+    SimulationBox _simulationBox;
 };
 
 #endif

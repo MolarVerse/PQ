@@ -1,5 +1,4 @@
 #include <string>
-#include <memory>
 #include <iostream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
@@ -11,12 +10,14 @@ using namespace std;
 using namespace StringUtilities;
 using namespace Setup::RstFileReader;
 
-RstFileReader::RstFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings) {
+RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _engine(engine)
+{
     _sections.push_back(new BoxSection);
     _sections.push_back(new NoseHooverSection);
     _sections.push_back(new StepCountSection);
 }
-RstFileReader::~RstFileReader() {
+RstFileReader::~RstFileReader()
+{
     for (RstFileSection *section : _sections)
         delete section;
 
@@ -25,9 +26,9 @@ RstFileReader::~RstFileReader() {
 
 /**
  * @brief Determines which section of the .rst file the line belongs to
- * 
- * @param lineElements 
- * @return RstFileSection* 
+ *
+ * @param lineElements
+ * @return RstFileSection*
  */
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
@@ -42,12 +43,9 @@ RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 
 /**
  * @brief Reads a .rst file and returns a SimulationBox object
- * 
- * @return unique_ptr<SimulationBox> 
  */
-unique_ptr<SimulationBox> RstFileReader::read()
+void RstFileReader::read()
 {
-    auto simulationBox = make_unique<SimulationBox>(SimulationBox());
     string line;
     vector<string> lineElements;
     ifstream rstFile(_filename);
@@ -63,21 +61,16 @@ unique_ptr<SimulationBox> RstFileReader::read()
 
         auto section = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
-        section->process(lineElements, _settings, *simulationBox);
+        section->process(lineElements, _engine);
     }
-
-    return simulationBox;
 }
 
 /**
  * @brief Reads a .rst file and returns a SimulationBox object
- * 
- * @param filename 
- * @param settings 
- * @return unique_ptr<SimulationBox> 
+ *
+ * @param engine
  */
-unique_ptr<SimulationBox> read_rst(const string &filename, Settings &settings)
+void read_rst(Engine &engine)
 {
-    RstFileReader rstFileReader(filename, settings);
-    return rstFileReader.read();
+    RstFileReader rstFileReader(engine._settings.getStartFilename(), engine);
 }

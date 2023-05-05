@@ -26,7 +26,7 @@ void InputFileReader::parseLogFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = LogOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -39,7 +39,7 @@ void InputFileReader::parseInfoFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = InfoOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -52,7 +52,7 @@ void InputFileReader::parseEnergyFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = EnergyOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -65,7 +65,7 @@ void InputFileReader::parseTrajectoryFilename(const vector<string> &lineElements
     checkCommand(lineElements, _lineNumber);
     auto output = TrajectoryOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -78,7 +78,7 @@ void InputFileReader::parseVelocityFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = TrajectoryOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -91,7 +91,7 @@ void InputFileReader::parseRestartFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = RstFileOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }
 
 /**
@@ -104,5 +104,5 @@ void InputFileReader::parseChargeFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = ChargeOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }

@@ -3,6 +3,9 @@
 #define _SETTINGS_H_
 
 #include <vector>
+#include <string>
+
+#include "timings.hpp"
 
 /**
  * @class Settings
@@ -18,6 +21,8 @@ private:
 public:
     Settings() = default;
     ~Settings() = default;
+
+    Timings _timings;
 
     std::string getStartFilename() const { return _startFilename; };
     std::string setStartFilename(std::string_view startFilename) { return _startFilename = startFilename; };

@@ -1,6 +1,5 @@
 #include "rstFileSection.hpp"
-#include "settings.hpp"
-#include "simulationBox.hpp"
+#include "engine.hpp"
 
 using namespace Setup::RstFileReader;
 
@@ -10,8 +9,7 @@ protected:
     virtual void SetUp() override
     {
         _section = new BoxSection;
-        _settings = Settings();
-        _simulationBox = SimulationBox();
+        _engine = Engine();
     }
 
     virtual void TearDown() override
@@ -20,7 +18,5 @@ protected:
     }
 
     RstFileSection *_section;
-    Settings _settings;
-    SimulationBox _simulationBox;
-
+    Engine _engine;
 };

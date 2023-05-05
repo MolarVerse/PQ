@@ -7,14 +7,15 @@
 
 #include "simulationBox.hpp"
 #include "settings.hpp"
+#include "engine.hpp"
 
 namespace Setup::RstFileReader
 {
     /**
      * @class RstFileSection
-     * 
+     *
      * @brief Base class for all sections of a .rst file
-     * 
+     *
      */
     class RstFileSection
     {
@@ -24,71 +25,63 @@ namespace Setup::RstFileReader
         int _lineNumber;
         virtual std::string keyword() = 0;
         virtual bool isHeader() = 0;
-        virtual void process(std::vector<std::string> &, Settings &, SimulationBox &) = 0;
+        virtual void process(std::vector<std::string> &, Engine &) = 0;
     };
 
     /**
      * @class BoxSection
-     * 
+     *
      * @brief Reads the box section of a .rst file
-     * 
+     *
      */
     class BoxSection : public RstFileSection
     {
     public:
         std::string keyword() override;
         bool isHeader() override;
-        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Engine &) override;
     };
-
-    // class CellSection : public RstFileSection
-    // {
-    // public:
-    //     std::string keyword() override;
-    //     bool isHeader() override;
-    //     void process(std::vector<std::string>, SimulationBox &) override;
-    // };
 
     /**
      * @class NoseHooverSection
-     * 
+     *
      * @brief Reads the Nose-Hoover section of a .rst file
-     * 
+     *
      */
     class NoseHooverSection : public RstFileSection
     {
     public:
         std::string keyword() override;
         bool isHeader() override;
-        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Engine &) override;
     };
 
     /**
      * @class StepCountSection
-     * 
+     *
      * @brief Reads the step count section of a .rst file
-     * 
+     *
      */
     class StepCountSection : public RstFileSection
     {
     public:
         std::string keyword() override;
         bool isHeader() override;
-        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Engine &) override;
     };
 
     /**
      * @class AtomSection
-     * 
+     *
      * @brief Reads the atom section of a .rst file
-     * 
+     *
      */
     class AtomSection : public RstFileSection
     {
     public:
         std::string keyword() override;
         bool isHeader() override;
-        void process(std::vector<std::string> &, Settings &, SimulationBox &) override;
+        void process(std::vector<std::string> &, Engine &) override;
     };
 }
 
