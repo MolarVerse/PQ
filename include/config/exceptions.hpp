@@ -66,4 +66,18 @@ public:
     const char *what() const throw() override;
 };
 
+/**
+ * @class MolDescriptorException inherits from CustomException
+ *
+ * @brief Exception for MolDescriptor errors
+ *
+ */
+class MolDescriptorException : public CustomException
+{
+public:
+    explicit MolDescriptorException(const std::string &message) : CustomException(message){};
+
+    const char *what() const throw() override;
+};
+
 #endif

@@ -28,6 +28,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("nstep"), &InputFileReader::parseNumberOfSteps, true);
 
     addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
+    addKeyword(string("moldescriptor_file"), &InputFileReader::parseMoldescriptorFilename, false);
+    addKeyword(string("guff_path"), &InputFileReader::parseGuffPath, false); // default is current directory (not backword compatible)
 
     addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
     addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
@@ -37,6 +39,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("vel_file"), &InputFileReader::parseVelocityFilename, false);
     addKeyword(string("restart_file"), &InputFileReader::parseRestartFilename, false);
     addKeyword(string("charge_file"), &InputFileReader::parseChargeFilename, false);
+
+    addKeyword(string("integrator"), &InputFileReader::parseIntegrator, true);
 }
 
 /**
@@ -165,4 +169,6 @@ void InputFileReader::postProcess()
         if (count > 1)
             throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     }
+
+    _engine._settings.setMoldescriptorFilename(_engine._settings.getGuffPath() + "/" + _engine._settings.getMoldescriptorFilename());
 }

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "inputFileReader.hpp"
 #include "exceptions.hpp"
 

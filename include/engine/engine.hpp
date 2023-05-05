@@ -8,6 +8,7 @@
 #include "jobtype.hpp"
 #include "output.hpp"
 #include "simulationBox.hpp"
+#include "integrator.hpp"
 
 /**
  * @class Engine
@@ -25,6 +26,7 @@ public:
     JobType _jobType;
     std::vector<Output> _output = {StdoutOutput()};
     SimulationBox _simulationBox;
+    Integrator _integrator;
 };
 
 #endif

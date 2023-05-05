@@ -7,7 +7,6 @@
 using namespace Setup::RstFileReader;
 using namespace std;
 
-string BoxSection::keyword() { return "box"; }
 bool BoxSection::isHeader() { return true; }
 
 /**
@@ -31,7 +30,6 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
         engine._simulationBox._box.setBoxAngles({90.0, 90.0, 90.0});
 }
 
-string NoseHooverSection::keyword() { return "chi"; }
 bool NoseHooverSection::isHeader() { return true; }
 
 // TODO: implement this function
@@ -40,7 +38,6 @@ void NoseHooverSection::process(vector<string> &, Engine &)
     throw RstFileException("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
 }
 
-string StepCountSection::keyword() { return "step"; }
 bool StepCountSection::isHeader() { return true; }
 
 /**
@@ -59,7 +56,6 @@ void StepCountSection::process(vector<string> &lineElements, Engine &engine)
     engine._settings._timings.setStepCount(stoi(lineElements[1]));
 }
 
-string AtomSection::keyword() { return nullptr; }
 bool AtomSection::isHeader() { return false; }
 /**
  * @brief processes the atom section of the rst file
@@ -75,7 +71,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     if (lineElements.size() != 21)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
 
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._atomtype, lineElements[0]);
+    engine._simulationBox.addAtomicProperties(engine._simulationBox._atomtypeNames, lineElements[0]);
     engine._simulationBox.addAtomicProperties(engine._simulationBox._moltype, stoi(lineElements[2]));
     engine._simulationBox.addAtomicProperties(engine._simulationBox._positions, {stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     engine._simulationBox.addAtomicProperties(engine._simulationBox._velocities, {stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});

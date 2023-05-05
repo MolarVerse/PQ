@@ -23,8 +23,17 @@
  */
 class SimulationBox
 {
+private:
+    int _waterType;
+    int _ammoniaType;
+
 public:
-    std::vector<std::string> _atomtype;
+    std::vector<std::string> _moltypeNames;
+    std::vector<int> _molNumberOfAtoms;
+    std::vector<double> _molCharge;
+    // do mol stuff here - think of a clever way to store it
+
+    std::vector<std::string> _atomtypeNames;
     std::vector<int> _moltype;
     std::vector<double> _positions;
     std::vector<double> _velocities;
@@ -38,6 +47,12 @@ public:
 
     SimulationBox() = default;
     ~SimulationBox() = default;
+
+    void setWaterType(int waterType) { _waterType = waterType; };
+    int getWaterType() const { return _waterType; };
+
+    void setAmmoniaType(int ammoniaType) { _ammoniaType = ammoniaType; };
+    int getAmmoniaType() const { return _ammoniaType; };
 
     void addAtomicProperties(std::vector<double> &, std::vector<double>) const;
 

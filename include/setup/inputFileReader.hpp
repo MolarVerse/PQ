@@ -35,6 +35,8 @@ namespace Setup::InputFileReader
         void parseNumberOfSteps(const std::vector<std::string> &);
 
         void parseStartFilename(const std::vector<std::string> &);
+        void parseMoldescriptorFilename(const std::vector<std::string> &);
+        void parseGuffPath(const std::vector<std::string> &);
 
         void parseOutputFreq(const std::vector<std::string> &);
         void parseLogFilename(const std::vector<std::string> &);
@@ -44,6 +46,8 @@ namespace Setup::InputFileReader
         void parseVelocityFilename(const std::vector<std::string> &);
         void parseRestartFilename(const std::vector<std::string> &);
         void parseChargeFilename(const std::vector<std::string> &);
+
+        void parseIntegrator(const std::vector<std::string> &);
 
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 

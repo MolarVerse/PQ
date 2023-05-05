@@ -67,7 +67,12 @@
 
 # INTEGRATOR
 #-----------------------------------------
-   #integrator = v-verlet;
+   integrator = v-verlet;
+
+# MOLDESCRIPTOR
+#-----------------------------------------
+  #moldescriptor_file = test.dat;
+  #guff_path = test;
 
 # THERMOSTAT
 #-----------------------------------------

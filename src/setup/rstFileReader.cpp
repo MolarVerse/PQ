@@ -44,6 +44,8 @@ RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 
 /**
  * @brief Reads a .rst file and returns a SimulationBox object
+ *
+ * @throw InputFileException if file not found
  */
 void RstFileReader::read()
 {

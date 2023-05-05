@@ -37,7 +37,7 @@ namespace Setup::RstFileReader
     class BoxSection : public RstFileSection
     {
     public:
-        std::string keyword() override;
+        std::string keyword() override { return "box"; };
         bool isHeader() override;
         void process(std::vector<std::string> &, Engine &) override;
     };
@@ -51,7 +51,7 @@ namespace Setup::RstFileReader
     class NoseHooverSection : public RstFileSection
     {
     public:
-        std::string keyword() override;
+        std::string keyword() override { return "chi"; };
         bool isHeader() override;
         void process(std::vector<std::string> &, Engine &) override;
     };
@@ -65,7 +65,7 @@ namespace Setup::RstFileReader
     class StepCountSection : public RstFileSection
     {
     public:
-        std::string keyword() override;
+        std::string keyword() override { return "step"; };
         bool isHeader() override;
         void process(std::vector<std::string> &, Engine &) override;
     };
@@ -79,7 +79,7 @@ namespace Setup::RstFileReader
     class AtomSection : public RstFileSection
     {
     public:
-        std::string keyword() override;
+        std::string keyword() override { return nullptr; }
         bool isHeader() override;
         void process(std::vector<std::string> &, Engine &) override;
     };

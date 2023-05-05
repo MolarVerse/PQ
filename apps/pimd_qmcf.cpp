@@ -6,6 +6,7 @@
 #include "inputFileReader.hpp"
 #include "output.hpp"
 #include "engine.hpp"
+#include "moldescriptorReader.hpp"
 
 #include "initStatic.hpp"
 
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
 
     auto engine = Engine();
     readInputFile(commandLineArgs.getInputFileName(), engine);
+
+    readMolDescriptor(engine);
 
     read_rst(engine);
 
@@ -36,6 +39,11 @@ int main(int argc, char *argv[])
     {
         cout << output.getFilename() << endl;
     }
+
+    cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
+
+    cout << "Water type: " << engine._simulationBox.getWaterType() << endl;
+    cout << "Ammonia type: " << engine._simulationBox.getAmmoniaType() << endl;
 
     return 0;
 }

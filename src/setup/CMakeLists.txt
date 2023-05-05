@@ -7,6 +7,8 @@ add_library(setup
     inputFileParserJobtype.cpp
     inputFileParserTimings.cpp
     inputFileParserGeneral.cpp
+    inputFileParserIntegrator.cpp
+    moldescriptorReader.cpp
 )
 
 target_include_directories(setup
