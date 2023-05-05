@@ -1,4 +1,4 @@
-add_subdirectory(settings)
+add_subdirectory(engine)
 add_subdirectory(utilities)
 add_subdirectory(output)
 add_subdirectory(setup)

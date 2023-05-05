@@ -13,7 +13,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-        settings
+        engine
         simulationBox
         utilities
         output

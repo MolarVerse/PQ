@@ -64,7 +64,7 @@ void InputFileReader::parseJobType(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "mm-md")
-        _settings._jobType = MMMD();
+        _engine._jobType = MMMD();
     else
         throw invalid_argument("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
 }
@@ -77,7 +77,7 @@ void InputFileReader::parseJobType(const vector<string> &lineElements)
 void InputFileReader::parseTimestep(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _settings._timings.setTimestep(stoi(lineElements[2]));
+    _engine._timings.setTimestep(stoi(lineElements[2]));
 }
 
 /**
@@ -88,7 +88,7 @@ void InputFileReader::parseTimestep(const vector<string> &lineElements)
 void InputFileReader::parseNumberOfSteps(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _settings._timings.setNumberOfSteps(stoi(lineElements[2]));
+    _engine._timings.setNumberOfSteps(stoi(lineElements[2]));
 }
 
 /**
@@ -110,7 +110,7 @@ void InputFileReader::parseOutputFreq(const vector<string> &lineElements)
 void InputFileReader::parseStartFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _settings.setStartFilename(lineElements[2]);
+    _engine._settings.setStartFilename(lineElements[2]);
 }
 
 void InputFileReader::parseLogFilename(const vector<string> &lineElements)
@@ -118,5 +118,5 @@ void InputFileReader::parseLogFilename(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     auto output = LogOutput();
     output.setFilename(lineElements[2]);
-    _settings._output.push_back(output);
+    _engine._output.push_back(output);
 }

@@ -20,7 +20,7 @@ using namespace Setup::InputFileReader;
  *
  * @details parsing functions stored in a keyword map as function pointers
  */
-InputFileReader::InputFileReader(const string &filename, Settings &settings) : _filename(filename), _settings(settings)
+InputFileReader::InputFileReader(const string &filename, Engine &engine) : _filename(filename), _engine(engine)
 {
     addKeyword(string("jobtype"), &InputFileReader::parseJobType, true);
 
@@ -137,9 +137,9 @@ void InputFileReader::read()
  * @param filename
  * @param settings
  */
-void readInputFile(const string &filename, Settings &settings)
+void readInputFile(const string &filename, Engine &engine)
 {
-    InputFileReader inputFileReader(filename, settings);
+    InputFileReader inputFileReader(filename, engine);
     inputFileReader.read();
     inputFileReader.postProcess();
 }

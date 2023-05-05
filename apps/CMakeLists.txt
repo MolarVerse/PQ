@@ -10,7 +10,7 @@ target_link_libraries(pimd_qmcf
     PUBLIC
         setup
         simulationBox
-        settings
+        engine
         utilities
         config
         output

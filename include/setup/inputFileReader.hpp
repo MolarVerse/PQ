@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-#include "settings.hpp"
+#include "engine.hpp"
 #include "output.hpp"
 
 namespace Setup::InputFileReader
@@ -21,7 +21,7 @@ namespace Setup::InputFileReader
     {
     private:
         const std::string _filename;
-        Settings &_settings;
+        Engine &_engine;
 
         std::map<std::string, void (InputFileReader::*)(const std::vector<std::string> &)> _keywordFuncMap;
         std::map<std::string, int> _keywordCountMap;
@@ -44,7 +44,7 @@ namespace Setup::InputFileReader
         void process(const std::vector<std::string> &);
 
     public:
-        InputFileReader(const std::string &, Settings &);
+        InputFileReader(const std::string &, Engine &);
         ~InputFileReader() = default;
 
         void read();
@@ -59,6 +59,6 @@ namespace Setup::InputFileReader
  * @param settings
  *
  */
-void readInputFile(const std::string &, Settings &);
+void readInputFile(const std::string &, Engine &);
 
 #endif
