@@ -82,7 +82,7 @@
 
 # FILES
 #-----------------------------------------
-   start_file   = h2o-qmcf.rst; 
+   #start_file   = h2o-qmcf.rst; 
 
    output_file  = testset_02___mm_md_h2o-1.out; 
    info_file    = testset_02___mm_md_h2o-1.info;

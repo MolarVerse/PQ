@@ -8,7 +8,7 @@
 
 #include "engine.hpp"
 #include "output.hpp"
-
+#include "exceptions.hpp"
 namespace Setup::InputFileReader
 {
     /**

@@ -77,7 +77,7 @@ vector<string> getLineCommands(const string &line, int _lineNumber)
         if (line[i] == ';')
             break;
         else if (!isspace(line[i]))
-            throw invalid_argument("Missing semicolon in input file at line " + to_string(_lineNumber));
+            throw InputFileException("Missing semicolon in input file at line " + to_string(_lineNumber));
     }
 
     vector<string> lineCommands;
@@ -98,7 +98,7 @@ void InputFileReader::process(const vector<string> &lineElements)
     auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
 
     if (_keywordFuncMap.find(keyword) == _keywordFuncMap.end())
-        throw runtime_error("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
+        throw InputFileException("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
 
     void (InputFileReader::*parserFunc)(const vector<string> &) = _keywordFuncMap[keyword];
     (this->*parserFunc)(lineElements);
@@ -117,7 +117,7 @@ void InputFileReader::read()
     string line;
 
     if (inputFile.fail())
-        throw runtime_error("\"" + _filename + "\"" + " File not found");
+        throw InputFileException("\"" + _filename + "\"" + " File not found");
 
     while (getline(inputFile, line))
     {
@@ -159,9 +159,9 @@ void InputFileReader::postProcess()
     for (auto const &[keyword, count] : _keywordCountMap)
     {
         if (_keywordRequiredMap[keyword] && count == 0)
-            throw runtime_error("Missing keyword \"" + keyword + "\" in input file");
+            throw InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
         if (count > 1)
-            throw runtime_error("Multiple keywords \"" + keyword + "\" in input file");
+            throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     }
 }

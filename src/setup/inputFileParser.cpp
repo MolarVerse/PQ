@@ -15,7 +15,7 @@ using namespace std;
 void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNumber)
 {
     if (lineElement != "=")
-        throw invalid_argument("Invalid command at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid command at line " + to_string(_lineNumber) + "in input file");
 }
 
 /**
@@ -31,7 +31,7 @@ void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNu
 void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElements, int _lineNumber)
 {
     if (lineElements.size() < 3)
-        throw invalid_argument("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
 
     checkEqualSign(lineElements[1], _lineNumber);
 }
@@ -47,7 +47,7 @@ void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElement
 void Setup::InputFileReader::checkCommand(const vector<string> &lineElements, int _lineNumber)
 {
     if (lineElements.size() != 3)
-        throw invalid_argument("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
 
     checkEqualSign(lineElements[1], _lineNumber);
 }

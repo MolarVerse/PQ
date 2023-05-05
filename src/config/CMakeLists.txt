@@ -1,5 +1,6 @@
 add_library(config
     commandLineArgs.cpp
+    exceptions.cpp
 )
 
 target_include_directories(config

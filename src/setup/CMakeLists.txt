@@ -20,4 +20,5 @@ target_link_libraries(setup
         engine
         utilities
         output
+        config
 )
