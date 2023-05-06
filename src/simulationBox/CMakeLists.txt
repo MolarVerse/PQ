@@ -1,6 +1,7 @@
 add_library(simulationBox
     box.cpp
     simulationBox.cpp
+    molecule.cpp
 )
 
 target_include_directories(simulationBox

@@ -4,6 +4,7 @@
 #include "moldescriptorReader.hpp"
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
+#include "molecule.hpp"
 
 using namespace std;
 using namespace StringUtilities;
@@ -75,17 +76,8 @@ void MolDescriptorReader::processMolecule(vector<string> &lineElements)
     if (lineElements.size() < 3)
         throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
 
-    _engine._simulationBox._moltypeNames.push_back(lineElements[0]);
-    _engine._simulationBox._molNumberOfAtoms.push_back(stoi(lineElements[1]));
-    _engine._simulationBox._molCharge.push_back(stod(lineElements[2]));
+    Molecule molecule(lineElements[0]);
 
-    for (int i = 0; i < _engine._simulationBox._molNumberOfAtoms.back(); i++)
-    {
-        getline(_fp, line);
-        line = removeComments(line, "#");
-        lineElements = splitString(line);
-
-        if (lineElements.size() != 3 and lineElements.size() != 4)
-            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
-    }
+    molecule.setNumberOfAtoms(stoi(lineElements[1]));
+    molecule.setCharge(stod(lineElements[2]));
 }

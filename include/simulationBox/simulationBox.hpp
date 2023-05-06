@@ -6,6 +6,7 @@
 #include <string>
 
 #include "box.hpp"
+#include "molecule.hpp"
 
 /**
  * @class SimulationBox
@@ -28,10 +29,7 @@ private:
     int _ammoniaType;
 
 public:
-    std::vector<std::string> _moltypeNames;
-    std::vector<int> _molNumberOfAtoms;
-    std::vector<double> _molCharge;
-    // do mol stuff here - think of a clever way to store it
+    std::vector<Molecule> _moleculeTypes;
 
     std::vector<std::string> _atomtypeNames;
     std::vector<int> _moltype;
