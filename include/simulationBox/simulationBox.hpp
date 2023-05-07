@@ -30,16 +30,7 @@ private:
 
 public:
     std::vector<Molecule> _moleculeTypes;
-
-    std::vector<std::string> _atomtypeNames;
-    std::vector<int> _moltype;
-    std::vector<double> _positions;
-    std::vector<double> _velocities;
-    std::vector<double> _forces;
-
-    std::vector<double> _positionsOld;
-    std::vector<double> _velocitiesOld;
-    std::vector<double> _forcesOld;
+    std::vector<Molecule> _molecules;
 
     Box _box;
 
@@ -52,24 +43,7 @@ public:
     void setAmmoniaType(int ammoniaType) { _ammoniaType = ammoniaType; };
     int getAmmoniaType() const { return _ammoniaType; };
 
-    void addAtomicProperties(std::vector<double> &, std::vector<double>) const;
-
-    template <typename T>
-    void addAtomicProperties(std::vector<T> &, T) const;
+    Molecule findMoleculeType(int moltype) const;
 };
-
-/**
- * @brief sets the atomic 1d properties
- *
- * @tparam T
- * @param target
- * @param toAdd
- */
-// FIXME: move this function into a separate header file
-template <typename T>
-void SimulationBox::addAtomicProperties(std::vector<T> &target, T toAdd) const
-{
-    target.push_back(toAdd);
-}
 
 #endif

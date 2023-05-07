@@ -8,6 +8,12 @@
 
 #include "engine.hpp"
 
+/**
+ * @class MolDescriptorReader
+ *
+ * @brief Reads a moldescriptor file
+ *
+ */
 class MolDescriptorReader
 {
 private:
@@ -23,6 +29,11 @@ public:
     void processMolecule(std::vector<std::string> &lineElements);
 };
 
+/**
+ * @brief Reads a moldescriptor file
+ *
+ * @param engine
+ */
 void readMolDescriptor(Engine &);
 
 #endif

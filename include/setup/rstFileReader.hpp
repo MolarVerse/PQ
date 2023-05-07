@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "simulationBox.hpp"
 #include "engine.hpp"
@@ -21,6 +22,7 @@ namespace Setup::RstFileReader
     {
     private:
         const std::string _filename;
+        std::ifstream _fp;
         Engine &_engine;
         std::vector<RstFileSection *> _sections;
         RstFileSection *_atomSection = new AtomSection;

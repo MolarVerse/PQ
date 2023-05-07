@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "simulationBox.hpp"
 #include "settings.hpp"
@@ -23,6 +24,7 @@ namespace Setup::RstFileReader
         virtual ~RstFileSection() = default;
 
         int _lineNumber;
+        std::ifstream *_fp;
         virtual std::string keyword() = 0;
         virtual bool isHeader() = 0;
         virtual void process(std::vector<std::string> &, Engine &) = 0;

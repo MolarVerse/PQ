@@ -45,5 +45,16 @@ int main(int argc, char *argv[])
     cout << "Water type: " << engine._simulationBox.getWaterType() << endl;
     cout << "Ammonia type: " << engine._simulationBox.getAmmoniaType() << endl;
 
+    for (auto molecule : engine._simulationBox._molecules)
+    {
+        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        {
+            cout << "x:   " << molecule.getAtomPosition(i)[0] << endl;
+            cout << "y:   " << molecule.getAtomPosition(i)[1] << endl;
+            cout << "z:   " << molecule.getAtomPosition(i)[2] << endl;
+        }
+        cout << endl;
+    }
+
     return 0;
 }

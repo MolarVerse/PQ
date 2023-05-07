@@ -1,11 +1,14 @@
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include "rstFileSection.hpp"
 #include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
 using namespace Setup::RstFileReader;
 using namespace std;
+using namespace StringUtilities;
 
 bool BoxSection::isHeader() { return true; }
 
@@ -61,22 +64,67 @@ bool AtomSection::isHeader() { return false; }
  * @brief processes the atom section of the rst file
  *
  * @param lineElements all elements of the line
- * @param settings not used in this function
- * @param simulationBox object containing the simulation box
+ * @param engine
  *
  * @throws RstFileException if the number of elements in the line is not 21
+ * @throws RstFileException if the molecule type is not found
+ * @throws RstFileException if the number of atoms in the molecule is not correct
  */
 void AtomSection::process(vector<string> &lineElements, Engine &engine)
 {
+    string line;
+    Molecule molecule;
+
     if (lineElements.size() != 21)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
 
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._atomtypeNames, lineElements[0]);
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._moltype, stoi(lineElements[2]));
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._positions, {stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._velocities, {stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._forces, {stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._positionsOld, {stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._velocitiesOld, {stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
-    engine._simulationBox.addAtomicProperties(engine._simulationBox._forcesOld, {stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+    int moltype = stoi(lineElements[2]);
+
+    try
+    {
+        molecule = engine._simulationBox.findMoleculeType(moltype);
+    }
+    catch (const RstFileException &e)
+    {
+        cout << e.what() << endl;
+        cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << endl;
+        exit(-1);
+    }
+
+    int atomCounter = 0;
+
+    while (true)
+    {
+        if (molecule.getMoltype() != moltype)
+            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
+
+        molecule.addAtomTypeName(lineElements[0]);
+
+        molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+        molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+        molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+        molecule.addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
+        molecule.addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
+        molecule.addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+
+        atomCounter++;
+
+        if (atomCounter == molecule.getNumberOfAtoms())
+            break;
+
+        _lineNumber++;
+
+        if (!getline(*_fp, line))
+            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
+
+        line = removeComments(line, "#");
+        lineElements = splitString(line);
+
+        if (lineElements.size() != 21)
+            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
+
+        moltype = stoi(lineElements[2]);
+    }
+
+    engine._simulationBox._molecules.push_back(molecule);
 }

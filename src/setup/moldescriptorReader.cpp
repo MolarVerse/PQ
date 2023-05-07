@@ -69,6 +69,11 @@ void MolDescriptorReader::read()
     }
 }
 
+/**
+ * @brief process molecule
+ *
+ * @param lineElements
+ */
 void MolDescriptorReader::processMolecule(vector<string> &lineElements)
 {
     string line;
@@ -80,4 +85,35 @@ void MolDescriptorReader::processMolecule(vector<string> &lineElements)
 
     molecule.setNumberOfAtoms(stoi(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
+
+    molecule.setMoltype(int(_engine._simulationBox._moleculeTypes.size()) + 1);
+
+    int AtomCount = 0;
+
+    while (AtomCount < molecule.getNumberOfAtoms())
+    {
+        getline(_fp, line);
+        line = removeComments(line, "#");
+        lineElements = splitString(line);
+
+        _lineNumber++;
+
+        if (lineElements.empty())
+            continue;
+        else if (lineElements.size() == 3 || lineElements.size() == 4)
+        {
+            molecule.addAtomName(lineElements[0]);
+            molecule.addAtomType(stoi(lineElements[1]));
+            molecule.addPartialCharge(stod(lineElements[2]));
+
+            if (lineElements.size() == 4)
+                molecule.addGlobalVDWType(stoi(lineElements[3]));
+
+            AtomCount++;
+        }
+        else
+            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+    }
+
+    _engine._simulationBox._moleculeTypes.push_back(molecule);
 }

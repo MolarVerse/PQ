@@ -9,6 +9,7 @@ add_library(setup
     inputFileParserGeneral.cpp
     inputFileParserIntegrator.cpp
     moldescriptorReader.cpp
+    postProcessSetup.cpp
 )
 
 target_include_directories(setup

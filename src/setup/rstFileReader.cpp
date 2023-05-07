@@ -11,7 +11,7 @@ using namespace std;
 using namespace StringUtilities;
 using namespace Setup::RstFileReader;
 
-RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _engine(engine)
+RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _fp(filename), _engine(engine)
 {
     _sections.push_back(new BoxSection);
     _sections.push_back(new NoseHooverSection);
@@ -51,19 +51,19 @@ void RstFileReader::read()
 {
     string line;
     vector<string> lineElements;
-    ifstream rstFile(_filename);
     int lineNumber = 1;
 
-    if (rstFile.fail())
+    if (_fp.fail())
         throw InputFileException("\"" + _filename + "\"" + " File not found");
 
-    while (getline(rstFile, line))
+    while (getline(_fp, line))
     {
         line = removeComments(line, "#");
         lineElements = splitString(line);
 
         auto section = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
+        section->_fp = &_fp;
         section->process(lineElements, _engine);
     }
 }
@@ -76,4 +76,5 @@ void RstFileReader::read()
 void read_rst(Engine &engine)
 {
     RstFileReader rstFileReader(engine._settings.getStartFilename(), engine);
+    rstFileReader.read();
 }
