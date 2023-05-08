@@ -41,6 +41,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("charge_file"), &InputFileReader::parseChargeFilename, false);
 
     addKeyword(string("integrator"), &InputFileReader::parseIntegrator, true);
+
+    addKeyword(string("density"), &InputFileReader::parseDensity, false);
 }
 
 /**

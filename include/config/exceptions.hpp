@@ -80,4 +80,18 @@ public:
     const char *what() const throw() override;
 };
 
+/**
+ * @class UserInputExceptionWarning inherits from CustomException
+ *
+ * @brief Exception for user input warnings
+ *
+ */
+class UserInputExceptionWarning : public CustomException
+{
+public:
+    explicit UserInputExceptionWarning(const std::string &message) : CustomException(message){};
+
+    const char *what() const throw() override;
+};
+
 #endif

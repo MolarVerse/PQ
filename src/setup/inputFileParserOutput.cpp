@@ -24,9 +24,7 @@ void InputFileReader::parseOutputFreq(const vector<string> &lineElements)
 void InputFileReader::parseLogFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = LogOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._logOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -37,9 +35,7 @@ void InputFileReader::parseLogFilename(const vector<string> &lineElements)
 void InputFileReader::parseInfoFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = InfoOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._infoOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -50,9 +46,7 @@ void InputFileReader::parseInfoFilename(const vector<string> &lineElements)
 void InputFileReader::parseEnergyFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = EnergyOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._energyOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -63,9 +57,7 @@ void InputFileReader::parseEnergyFilename(const vector<string> &lineElements)
 void InputFileReader::parseTrajectoryFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = TrajectoryOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._xyzOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -76,9 +68,18 @@ void InputFileReader::parseTrajectoryFilename(const vector<string> &lineElements
 void InputFileReader::parseVelocityFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = TrajectoryOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._velOutput.setFilename(lineElements[2]);
+}
+
+/**
+ * @brief parse velocity filename of simulation and add it to output
+ *
+ * @param lineElements
+ */
+void InputFileReader::parseForceFilename(const vector<string> &lineElements)
+{
+    checkCommand(lineElements, _lineNumber);
+    _engine._forceOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -89,9 +90,7 @@ void InputFileReader::parseVelocityFilename(const vector<string> &lineElements)
 void InputFileReader::parseRestartFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = RstFileOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._rstFileOutput.setFilename(lineElements[2]);
 }
 
 /**
@@ -102,7 +101,5 @@ void InputFileReader::parseRestartFilename(const vector<string> &lineElements)
 void InputFileReader::parseChargeFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    auto output = ChargeOutput();
-    output.setFilename(lineElements[2]);
-    _engine._output.push_back(output);
+    _engine._chargeOutput.setFilename(lineElements[2]);
 }

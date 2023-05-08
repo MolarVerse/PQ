@@ -8,6 +8,7 @@ add_library(setup
     inputFileParserTimings.cpp
     inputFileParserGeneral.cpp
     inputFileParserIntegrator.cpp
+    inputFileParserBox.cpp
     moldescriptorReader.cpp
     postProcessSetup.cpp
 )

@@ -10,10 +10,15 @@ private:
     Engine _engine;
 
 public:
-    explicit PostProcessSetup(const Engine &engine) : _engine(engine){};
+    explicit PostProcessSetup(Engine &engine) : _engine(engine){};
 
     void setup();
     void setAtomMasses();
+    void setAtomicNumbers();
+    void calculateTotalMass();
+    void calculateTotalCharge();
+
+    void checkBoxSettings();
 };
 
 /**

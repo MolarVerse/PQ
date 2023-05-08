@@ -22,6 +22,8 @@ void Output::setFilename(string_view filename)
     if (ifstream fp(string(filename).c_str()); fp.good())
         throw InputFileException("File already exists - filename = " + string(filename));
 
+    openFile();
+
     _filename = filename;
 }
 
@@ -47,4 +49,36 @@ void Output::setOutputFreq(int outputFreq)
         _outputFreq = INT32_MAX;
     else
         _outputFreq = outputFreq;
+}
+
+/**
+ * @brief Opens the output file
+ *
+ * @throw InputFileException if file cannot be opened
+ *
+ */
+void Output::openFile()
+{
+    _fp.open(_filename);
+
+    if (!_fp.is_open())
+        throw InputFileException("Could not open file - filename = " + _filename);
+}
+
+void LogOutput::writeDensityWarning()
+{
+    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl;
+}
+
+void StdoutOutput::writeDensityWarning() const
+{
+    try
+    {
+        throw UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
+    }
+    catch (const UserInputExceptionWarning &e)
+    {
+        cout << e.what() << endl
+             << endl;
+    }
 }

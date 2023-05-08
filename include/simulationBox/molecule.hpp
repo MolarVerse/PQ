@@ -25,6 +25,7 @@ private:
     std::vector<double> _partialCharges;
     std::vector<int> _globalVDWTypes;
     std::vector<double> _masses;
+    std::vector<int> _atomicNumbers;
 
     std::vector<double> _positions;
     std::vector<double> _velocities;
@@ -72,6 +73,9 @@ public:
 
     void addMass(double mass) { _masses.push_back(mass); };
     double getMass(int index) const { return _masses[index]; };
+
+    void addAtomicNumber(int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
+    int getAtomicNumber(int index) const { return _atomicNumbers[index]; };
 
     void addAtomPosition(const std::vector<double> &positions) { addVector(_positions, positions); }
     std::vector<double> getAtomPosition(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }

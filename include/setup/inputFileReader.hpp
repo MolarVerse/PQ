@@ -44,10 +44,13 @@ namespace Setup::InputFileReader
         void parseEnergyFilename(const std::vector<std::string> &);
         void parseTrajectoryFilename(const std::vector<std::string> &);
         void parseVelocityFilename(const std::vector<std::string> &);
+        void parseForceFilename(const std::vector<std::string> &);
         void parseRestartFilename(const std::vector<std::string> &);
         void parseChargeFilename(const std::vector<std::string> &);
 
         void parseIntegrator(const std::vector<std::string> &);
+
+        void parseDensity(const std::vector<std::string> &);
 
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 

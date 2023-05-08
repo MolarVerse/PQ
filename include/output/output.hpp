@@ -3,6 +3,7 @@
 #define _OUTPUT_H_
 
 #include <string>
+#include <fstream>
 
 /**
  * @class Output
@@ -14,7 +15,10 @@ class Output
 {
 protected:
     std::string _filename;
+    std::ofstream _fp;
     static int _outputFreq;
+
+    void openFile();
 
 public:
     std::string getFilename() const { return _filename; };
@@ -34,6 +38,7 @@ class EnergyOutput : public Output
 {
 public:
     EnergyOutput() = default;
+    EnergyOutput &operator=(const EnergyOutput &output) { return *this; }
 };
 
 /**
@@ -46,6 +51,7 @@ class TrajectoryOutput : public Output
 {
 public:
     TrajectoryOutput() = default;
+    TrajectoryOutput &operator=(const TrajectoryOutput &) { return *this; }
 };
 
 /**
@@ -58,6 +64,9 @@ class LogOutput : public Output
 {
 public:
     LogOutput() = default;
+    LogOutput &operator=(const LogOutput &) { return *this; }
+
+    void writeDensityWarning();
 };
 
 /**
@@ -70,6 +79,9 @@ class StdoutOutput : public Output
 {
 public:
     StdoutOutput() = default;
+    StdoutOutput &operator=(const StdoutOutput &) { return *this; }
+
+    void writeDensityWarning() const;
 };
 
 /**
@@ -82,6 +94,7 @@ class RstFileOutput : public Output
 {
 public:
     RstFileOutput() = default;
+    RstFileOutput &operator=(const RstFileOutput &) { return *this; }
 };
 
 /**
@@ -94,6 +107,7 @@ class ChargeOutput : public Output
 {
 public:
     ChargeOutput() = default;
+    ChargeOutput &operator=(const ChargeOutput &) { return *this; }
 };
 
 /**
@@ -106,6 +120,7 @@ class InfoOutput : public Output
 {
 public:
     InfoOutput() = default;
+    InfoOutput &operator=(const InfoOutput &) { return *this; }
 };
 
 #endif

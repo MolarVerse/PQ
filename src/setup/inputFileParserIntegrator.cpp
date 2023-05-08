@@ -3,6 +3,11 @@
 using namespace std;
 using namespace Setup::InputFileReader;
 
+/**
+ * @brief Parse the integrator used in the simulation
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseIntegrator(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

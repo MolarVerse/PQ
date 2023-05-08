@@ -57,3 +57,14 @@ const char *MolDescriptorException::what() const throw()
     colorfulOutput(Color::FG_RED, "MolDescriptorError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @return const char*
+ */
+const char *UserInputExceptionWarning::what() const throw()
+{
+    colorfulOutput(Color::FG_ORANGE, "UserInputWarning");
+    return _message.c_str();
+}

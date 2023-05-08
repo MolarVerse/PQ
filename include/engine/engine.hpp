@@ -19,12 +19,22 @@
 class Engine
 {
 public:
-    Engine() = default;
-    ~Engine() = default;
+    Engine();
+    Engine(const Engine &);
 
     Settings _settings;
     JobType _jobType;
-    std::vector<Output> _output = {StdoutOutput()};
+
+    EnergyOutput _energyOutput = EnergyOutput();
+    TrajectoryOutput _xyzOutput = TrajectoryOutput();
+    TrajectoryOutput _velOutput = TrajectoryOutput();
+    TrajectoryOutput _forceOutput = TrajectoryOutput();
+    LogOutput _logOutput = LogOutput();
+    StdoutOutput _stdoutOutput = StdoutOutput();
+    RstFileOutput _rstFileOutput = RstFileOutput();
+    ChargeOutput _chargeOutput = ChargeOutput();
+    InfoOutput _infoOutput = InfoOutput();
+
     SimulationBox _simulationBox;
     Integrator _integrator;
 };

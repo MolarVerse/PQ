@@ -7,6 +7,7 @@
 #include "output.hpp"
 #include "engine.hpp"
 #include "moldescriptorReader.hpp"
+#include "postProcessSetup.hpp"
 
 #include "initStatic.hpp"
 
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
 
     read_rst(engine);
 
+    postProcessSetup(engine);
+
     cout << "Box size: " << engine._simulationBox._box.getBoxDimensions()[0] << endl;
     cout << "Box size: " << engine._simulationBox._box.getBoxAngles()[1] << endl;
 
@@ -35,26 +38,24 @@ int main(int argc, char *argv[])
 
     cout << engine._settings._timings.getNumberOfSteps() << endl;
 
-    for (auto output : engine._output)
-    {
-        cout << output.getFilename() << endl;
-    }
+    cout << engine._logOutput.getFilename() << endl;
+    cout << engine._logOutput.getOutputFreq() << endl;
 
     cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
 
     cout << "Water type: " << engine._simulationBox.getWaterType() << endl;
     cout << "Ammonia type: " << engine._simulationBox.getAmmoniaType() << endl;
 
-    for (auto molecule : engine._simulationBox._molecules)
-    {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
-        {
-            cout << "x:   " << molecule.getAtomPosition(i)[0] << endl;
-            cout << "y:   " << molecule.getAtomPosition(i)[1] << endl;
-            cout << "z:   " << molecule.getAtomPosition(i)[2] << endl;
-        }
-        cout << endl;
-    }
+    // for (auto molecule : engine._simulationBox._molecules)
+    // {
+    //     for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+    //     {
+    //         cout << "x:   " << molecule.getAtomPosition(i)[0] << endl;
+    //         cout << "y:   " << molecule.getAtomPosition(i)[1] << endl;
+    //         cout << "z:   " << molecule.getAtomPosition(i)[2] << endl;
+    //     }
+    //     cout << endl;
+    // }
 
     return 0;
 }
