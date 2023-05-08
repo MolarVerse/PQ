@@ -9,8 +9,6 @@
 #include "moldescriptorReader.hpp"
 #include "postProcessSetup.hpp"
 
-#include "initStatic.hpp"
-
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -56,6 +54,8 @@ int main(int argc, char *argv[])
     //     }
     //     cout << endl;
     // }
+
+    cout << "density " << engine._simulationBox._box.getDensity() << endl;
 
     return 0;
 }

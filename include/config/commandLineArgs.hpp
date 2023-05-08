@@ -23,6 +23,7 @@ public:
 
     void detectFlags();
 
+    // standard getter and setters
     std::string getInputFileName() const { return _inputFileName; }
 };
 

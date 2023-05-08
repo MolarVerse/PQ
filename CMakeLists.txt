@@ -13,6 +13,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
+
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("Release build.")
     set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -Werror -pedantic -O3")
@@ -26,7 +28,9 @@ set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src)
 add_subdirectory(apps)
 
-BUILD_DOCUMENTATION()
+message(${CMAKE_MODULE_PATH})
+
+include(documentation)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     enable_testing()
@@ -43,5 +47,7 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
         FetchContent_MakeAvailable(gtest)
     endif()
+
+    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
     add_subdirectory(tests)
 endif()

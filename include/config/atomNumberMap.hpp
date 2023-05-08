@@ -5,6 +5,9 @@
 #include <map>
 #include <string>
 
+/**
+ * @brief Map of atom names to atomic numbers
+ */
 const std::map<std::string, int> atomNumberMap = {
     {"h", 1},
     {"d", 1},

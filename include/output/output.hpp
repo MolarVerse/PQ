@@ -16,7 +16,7 @@ class Output
 protected:
     std::string _filename;
     std::ofstream _fp;
-    static int _outputFreq;
+    inline static int _outputFreq = 1;
 
     void openFile();
 

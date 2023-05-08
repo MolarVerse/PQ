@@ -5,6 +5,9 @@
 #include <map>
 #include <string>
 
+/**
+ * @brief Map of atom names to their masses
+ */
 const std::map<std::string, double> atomMassMap = {
     {"h", 1.00794},
     {"d", 2.014101778},
