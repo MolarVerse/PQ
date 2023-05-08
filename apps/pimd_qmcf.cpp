@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
 
     cout << engine._settings._timings.getNumberOfSteps() << endl;
 
-    cout << engine._logOutput.getFilename() << endl;
-    cout << engine._logOutput.getOutputFreq() << endl;
+    cout << engine._logOutput->getFilename() << endl;
+    cout << engine._logOutput->getOutputFreq() << endl;
 
     cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
 

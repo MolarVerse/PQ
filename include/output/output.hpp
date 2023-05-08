@@ -21,6 +21,8 @@ protected:
     void openFile();
 
 public:
+    explicit Output(const std::string &filename) : _filename(filename){};
+
     std::string getFilename() const { return _filename; };
     void setFilename(std::string_view filename);
 
@@ -37,8 +39,7 @@ public:
 class EnergyOutput : public Output
 {
 public:
-    EnergyOutput() = default;
-    EnergyOutput &operator=(const EnergyOutput &output) { return *this; }
+    explicit EnergyOutput(const std::string &filename) : Output(filename){};
 };
 
 /**
@@ -50,8 +51,7 @@ public:
 class TrajectoryOutput : public Output
 {
 public:
-    TrajectoryOutput() = default;
-    TrajectoryOutput &operator=(const TrajectoryOutput &) { return *this; }
+    explicit TrajectoryOutput(const std::string &filename) : Output(filename){};
 };
 
 /**
@@ -63,8 +63,7 @@ public:
 class LogOutput : public Output
 {
 public:
-    LogOutput() = default;
-    LogOutput &operator=(const LogOutput &) { return *this; }
+    explicit LogOutput(const std::string &filename) : Output(filename){};
 
     void writeDensityWarning();
 };
@@ -78,8 +77,7 @@ public:
 class StdoutOutput : public Output
 {
 public:
-    StdoutOutput() = default;
-    StdoutOutput &operator=(const StdoutOutput &) { return *this; }
+    explicit StdoutOutput(const std::string &filename) : Output(filename){};
 
     void writeDensityWarning() const;
 };
@@ -93,8 +91,7 @@ public:
 class RstFileOutput : public Output
 {
 public:
-    RstFileOutput() = default;
-    RstFileOutput &operator=(const RstFileOutput &) { return *this; }
+    explicit RstFileOutput(const std::string &filename) : Output(filename){};
 };
 
 /**
@@ -106,8 +103,7 @@ public:
 class ChargeOutput : public Output
 {
 public:
-    ChargeOutput() = default;
-    ChargeOutput &operator=(const ChargeOutput &) { return *this; }
+    explicit ChargeOutput(const std::string &filename) : Output(filename){};
 };
 
 /**
@@ -119,8 +115,7 @@ public:
 class InfoOutput : public Output
 {
 public:
-    InfoOutput() = default;
-    InfoOutput &operator=(const InfoOutput &) { return *this; }
+    explicit InfoOutput(const std::string &filename) : Output(filename){};
 };
 
 #endif

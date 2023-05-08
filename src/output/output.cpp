@@ -22,9 +22,9 @@ void Output::setFilename(string_view filename)
     if (ifstream fp(string(filename).c_str()); fp.good())
         throw InputFileException("File already exists - filename = " + string(filename));
 
-    openFile();
-
     _filename = filename;
+
+    openFile();
 }
 
 /**

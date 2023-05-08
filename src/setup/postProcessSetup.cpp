@@ -141,7 +141,7 @@ void PostProcessSetup::checkBoxSettings()
         _engine._simulationBox._box.setVolume(volume);
         _engine._simulationBox._box.setDensity(density);
 
-        _engine._logOutput.writeDensityWarning();
-        _engine._stdoutOutput.writeDensityWarning();
+        _engine._logOutput->writeDensityWarning();
+        _engine._stdoutOutput->writeDensityWarning();
     }
 }
