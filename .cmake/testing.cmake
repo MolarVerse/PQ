@@ -16,12 +16,15 @@ if(NOT ${GTest_FOUND})
 endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    include(gcov)
+    include(gcovr)
 
     list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
         NAME coverage EXECUTABLE ctest EXCLUDE tests.*)
+
+    setup_target_for_coverage_lcov(
+        NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS "--no-external" EXCLUDE ${CMAKE_SOURCE_DIR}/tests*)
 endif()
 
 add_subdirectory(tests)
