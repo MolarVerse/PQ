@@ -154,16 +154,18 @@ endif() # NOT GCOV_PATH
 # Check supported compiler (Clang, GNU and Flang)
 get_property(LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
 
-foreach(LANG ${LANGUAGES})
-    if("${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
-        if("${CMAKE_${LANG}_COMPILER_VERSION}" VERSION_LESS 3)
-            message(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
-        endif()
-    elseif(NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "GNU"
-        AND NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(LLVM)?[Ff]lang")
-        message(FATAL_ERROR "Compiler is not GNU or Flang! Aborting...")
-    endif()
-endforeach()
+#FIXME: it does not work on rw2 debian build gcc
+# foreach(LANG ${LANGUAGES})
+#     message(STATUS ${LANG})
+#     if("${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+#         if("${CMAKE_${LANG}_COMPILER_VERSION}" VERSION_LESS 3)
+#             message(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
+#         endif()
+#     elseif(NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "GNU"
+#         AND NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(LLVM)?[Ff]lang")
+#         message(FATAL_ERROR "Compiler is not GNU or Flang! Aborting...")
+#     endif()
+# endforeach()
 
 set(COVERAGE_COMPILER_FLAGS "-g --coverage"
     CACHE INTERNAL "")
