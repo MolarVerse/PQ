@@ -40,3 +40,22 @@ vector<string> StringUtilities::splitString(const string &line)
 
     return lineElements;
 }
+
+/**
+ * @brief Splits a string into a vector of strings
+ *
+ * @param line
+ * @return vector<string>
+ */
+void StringUtilities::splitString2(const string &line, vector<string> &lineElements)
+{
+    string word;
+    lineElements.clear();
+
+    stringstream ss(line);
+
+    while (ss >> word)
+    {
+        lineElements.push_back(word);
+    }
+}

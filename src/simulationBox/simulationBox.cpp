@@ -13,7 +13,7 @@ using namespace std;
  */
 Molecule SimulationBox::findMoleculeType(int moltype) const
 {
-    for (auto moleculeType : _moleculeTypes)
+    for (auto &moleculeType : _moleculeTypes)
     {
         if (moleculeType.getMoltype() == moltype)
             return moleculeType;

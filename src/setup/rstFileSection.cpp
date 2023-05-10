@@ -118,7 +118,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
 
         line = removeComments(line, "#");
-        lineElements = splitString(line);
+        // lineElements = splitString(line);
+        splitString2(line, lineElements);
 
         if (lineElements.size() != 21)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
