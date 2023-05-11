@@ -62,11 +62,17 @@ namespace Setup::InputFileReader
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
         void process(const std::vector<std::string> &);
+
+        int getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; };
+        bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; };
     };
 
     void checkEqualSign(std::string_view, int);
     void checkCommand(const std::vector<std::string> &, int);
     void checkCommandArray(const std::vector<std::string> &, int);
+
+    std::vector<std::string> getLineCommands(const std::string &, int);
+
 }
 
 /**

@@ -11,6 +11,7 @@ set(source_files
     testParserOutput.cpp
     testParserGeneral.cpp
     testInputFileParser.cpp
+    testInputFileReader.cpp
 )
 
 foreach(source_file ${source_files})

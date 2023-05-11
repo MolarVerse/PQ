@@ -1,0 +1,16 @@
+jobtype true            
+timestep true
+nstep true
+start_file true
+moldescriptor_file false
+guff_path false
+output_freq false
+output_file false
+info_file false
+energy_file false
+traj_file false
+vel_file false
+restart_file false
+charge_file false
+integrator true
+density false

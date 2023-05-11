@@ -75,7 +75,7 @@ void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*
  *
  * @throw InputFileException if line does not end with a semicolon
  */
-vector<string> getLineCommands(const string &line, int _lineNumber)
+vector<string> Setup::InputFileReader::getLineCommands(const string &line, int _lineNumber)
 {
 
     for (int i = int(line.size()) - 1; i >= 0; i--)
