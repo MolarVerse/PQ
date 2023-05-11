@@ -1,4 +1,6 @@
 .vscode/
+.cache/
+tests/gmon.out
 build/
 _build/
 bin/

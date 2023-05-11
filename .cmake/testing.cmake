@@ -15,7 +15,7 @@ if(NOT ${GTest_FOUND})
     FetchContent_MakeAvailable(gtest)
 endif()
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
     include(gcovr)
 
     list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
