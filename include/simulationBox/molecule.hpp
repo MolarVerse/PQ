@@ -81,19 +81,19 @@ public:
     std::vector<double> getAtomPosition(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
 
     void addAtomVelocity(const std::vector<double> &velocities) { addVector(_velocities, velocities); }
-    // std::vector<double> getAtomVelocity(int index) const;
+    std::vector<double> getAtomVelocity(int index) { return {_velocities[3 * index], _velocities[3 * index + 1], _velocities[3 * index + 2]}; }
 
     void addAtomForce(const std::vector<double> &forces) { addVector(_forces, forces); }
-    // std::vector<double> getAtomForce(int index) const;
+    std::vector<double> getAtomForce(int index) { return {_forces[3 * index], _forces[3 * index + 1], _forces[3 * index + 2]}; }
 
     void addAtomPositionOld(const std::vector<double> &positionsOld) { addVector(_positionsOld, positionsOld); }
-    // std::vector<double> getAtomPositionOld(int index) const;
+    std::vector<double> getAtomPositionOld(int index) { return {_positionsOld[3 * index], _positionsOld[3 * index + 1], _positionsOld[3 * index + 2]}; }
 
     void addAtomVelocityOld(const std::vector<double> &velocitiesOld) { addVector(_velocitiesOld, velocitiesOld); }
-    // std::vector<double> getAtomVelocityOld(int index) const;
+    std::vector<double> getAtomVelocityOld(int index) { return {_velocitiesOld[3 * index], _velocitiesOld[3 * index + 1], _velocitiesOld[3 * index + 2]}; }
 
     void addAtomForceOld(const std::vector<double> &forcesOld) { addVector(_forcesOld, forcesOld); }
-    // std::vector<double> getAtomForceOld(int index) const;
+    std::vector<double> getAtomForceOld(int index) { return {_forcesOld[3 * index], _forcesOld[3 * index + 1], _forcesOld[3 * index + 2]}; }
 };
 
 #endif

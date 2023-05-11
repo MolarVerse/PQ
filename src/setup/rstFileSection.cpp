@@ -105,14 +105,14 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         if (atomCounter == molecule.getNumberOfAtoms())
             break;
 
-        _lineNumber++;
+        // TODO: put the next for statements into a function
 
-        if (!getline(*_fp, line))
-            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
+        checkAtomLine(lineElements, line, molecule);
 
-        line = removeComments(line, "#");
-        // lineElements = splitString(line);
-        splitString2(line, lineElements);
+        while (lineElements.empty())
+        {
+            checkAtomLine(lineElements, line, molecule);
+        }
 
         if (lineElements.size() != 21)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
@@ -129,7 +129,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
  * @param lineElements
  * @param molecule
  */
-void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule)
+void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule) const
 {
     molecule.addAtomTypeName(lineElements[0]);
 
@@ -139,4 +139,25 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
     molecule.addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
     molecule.addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
     molecule.addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+}
+
+/**
+ * @brief checks if the line of the atom section of the rst file is correct
+ *
+ * @param lineElements
+ * @param line
+ * @param molecule
+ *
+ * @throws RstFileException if the number of elements in the line is not 21
+ */
+void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, Molecule &molecule)
+{
+    _lineNumber++;
+
+    if (!getline(*_fp, line))
+        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
+
+    line = removeComments(line, "#");
+    // lineElements = splitString(line); TODO: implement all splitString functions via splitString2
+    splitString2(line, lineElements);
 }

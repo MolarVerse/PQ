@@ -10,25 +10,28 @@
 using namespace std;
 using namespace testing;
 
-TEST_F(TestNoseHooverSection, testKeyword)
+namespace Setup::RstFileReader
 {
-    EXPECT_EQ(_section->keyword(), "chi");
-}
+    TEST_F(TestNoseHooverSection, testKeyword)
+    {
+        EXPECT_EQ(_section->keyword(), "chi");
+    }
 
-TEST_F(TestNoseHooverSection, testIsHeader)
-{
-    EXPECT_TRUE(_section->isHeader());
-}
+    TEST_F(TestNoseHooverSection, testIsHeader)
+    {
+        EXPECT_TRUE(_section->isHeader());
+    }
 
-TEST_F(TestNoseHooverSection, testNumberOfArguments)
-{
-    GTEST_SKIP();
-}
+    TEST_F(TestNoseHooverSection, testNumberOfArguments)
+    {
+        GTEST_SKIP();
+    }
 
-TEST_F(TestNoseHooverSection, testProcess)
-{
-    auto line = vector<string>(0);
-    ASSERT_THROW(_section->process(line, _engine), RstFileException);
+    TEST_F(TestNoseHooverSection, testProcess)
+    {
+        auto line = vector<string>(0);
+        ASSERT_THROW(_section->process(line, _engine), RstFileException);
+    }
 }
 
 int main(int argc, char **argv)

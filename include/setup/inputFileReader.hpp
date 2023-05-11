@@ -29,6 +29,13 @@ namespace Setup::InputFileReader
 
         int _lineNumber = 1;
 
+    public:
+        InputFileReader(const std::string &, Engine &);
+        ~InputFileReader() = default;
+
+        void read();
+        void postProcess();
+
         void parseJobType(const std::vector<std::string> &);
 
         void parseTimestep(const std::vector<std::string> &);
@@ -55,13 +62,6 @@ namespace Setup::InputFileReader
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
         void process(const std::vector<std::string> &);
-
-    public:
-        InputFileReader(const std::string &, Engine &);
-        ~InputFileReader() = default;
-
-        void read();
-        void postProcess();
     };
 
     void checkEqualSign(std::string_view, int);
