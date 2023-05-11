@@ -32,7 +32,6 @@ namespace Setup::RstFileReader
     protected:
         void SetUp() override
         {
-            // GTEST_SKIP();
             _section = new NoseHooverSection;
             _engine = Engine();
         }

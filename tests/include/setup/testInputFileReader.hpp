@@ -26,10 +26,25 @@ namespace Setup::InputFileReader
         void TearDown() override
         {
             delete _inputFileReader;
+            remove_file();
         };
+
+        std::string _filename = "";
 
         Engine _engine;
         InputFileReader *_inputFileReader;
+
+        void remove_file()
+        {
+            try
+            {
+                std::remove(_filename.c_str());
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+        }
     };
 }
 

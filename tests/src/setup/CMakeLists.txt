@@ -6,6 +6,11 @@ set(source_files
 
     testParserBox.cpp
     testParserIntegrator.cpp
+    testParserJobtype.cpp
+    testParserTimings.cpp
+    testParserOutput.cpp
+    testParserGeneral.cpp
+    testInputFileParser.cpp
 )
 
 foreach(source_file ${source_files})
