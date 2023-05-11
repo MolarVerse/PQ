@@ -45,3 +45,39 @@ protected:
     RstFileSection *_section;
     Engine _engine;
 };
+
+class TestStepCountSection : public ::testing::Test
+{
+protected:
+    virtual void SetUp() override
+    {
+        _section = new StepCountSection;
+        _engine = Engine();
+    }
+
+    virtual void TearDown() override
+    {
+        delete _section;
+    }
+
+    RstFileSection *_section;
+    Engine _engine;
+};
+
+class TestAtomSection : public ::testing::Test
+{
+protected:
+    virtual void SetUp() override
+    {
+        _section = new AtomSection;
+        _engine = Engine();
+    }
+
+    virtual void TearDown() override
+    {
+        delete _section;
+    }
+
+    RstFileSection *_section;
+    Engine _engine;
+};

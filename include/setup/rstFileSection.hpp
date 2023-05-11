@@ -80,8 +80,11 @@ namespace Setup::RstFileReader
      */
     class AtomSection : public RstFileSection
     {
+    private:
+        void processAtomLine(std::vector<std::string> &, Molecule &);
+
     public:
-        std::string keyword() override { return nullptr; }
+        std::string keyword() override { return ""; }
         bool isHeader() override;
         void process(std::vector<std::string> &, Engine &) override;
     };

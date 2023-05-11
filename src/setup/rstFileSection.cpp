@@ -88,7 +88,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     {
         cout << e.what() << endl;
         cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << endl;
-        exit(-1);
+        throw;
     }
 
     int atomCounter = 0;
@@ -98,14 +98,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         if (molecule.getMoltype() != moltype)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
 
-        molecule.addAtomTypeName(lineElements[0]);
-
-        molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-        molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-        molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
-        molecule.addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
-        molecule.addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
-        molecule.addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+        processAtomLine(lineElements, molecule);
 
         atomCounter++;
 
@@ -128,4 +121,22 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     }
 
     engine._simulationBox._molecules.push_back(molecule);
+}
+
+/**
+ * @brief processes a line of the atom section of the rst file
+ *
+ * @param lineElements
+ * @param molecule
+ */
+void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule)
+{
+    molecule.addAtomTypeName(lineElements[0]);
+
+    molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    molecule.addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
+    molecule.addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
+    molecule.addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
 }
