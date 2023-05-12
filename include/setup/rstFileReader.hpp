@@ -41,6 +41,6 @@ namespace Setup::RstFileReader
  *
  * @param engine
  */
-void read_rst(Engine &);
+void readRstFile(Engine &);
 
 #endif

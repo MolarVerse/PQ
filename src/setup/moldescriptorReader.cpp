@@ -16,7 +16,7 @@ using namespace StringUtilities;
  *
  * @throw InputFileException if file not found
  */
-MolDescriptorReader::MolDescriptorReader(Engine &engine) : _filename(engine._settings.getMoldescriptorFilename()),
+MoldescriptorReader::MoldescriptorReader(Engine &engine) : _filename(engine._settings.getMoldescriptorFilename()),
                                                            _engine(engine)
 {
     _fp.open(_filename);
@@ -32,14 +32,14 @@ MolDescriptorReader::MolDescriptorReader(Engine &engine) : _filename(engine._set
  */
 void readMolDescriptor(Engine &engine)
 {
-    MolDescriptorReader reader(engine);
+    MoldescriptorReader reader(engine);
     reader.read();
 }
 
 /**
  * @brief read moldescriptor file
  */
-void MolDescriptorReader::read()
+void MoldescriptorReader::read()
 {
     string line;
     vector<string> lineElements;
@@ -58,9 +58,9 @@ void MolDescriptorReader::read()
         else if (lineElements.size() > 1) // TODO: probably works only for now
         {
             if (boost::algorithm::to_lower_copy(lineElements[0]) == "water_type")
-                _engine._simulationBox.setWaterType(stoi(lineElements[1]));
+                _engine.getSimulationBox().setWaterType(stoi(lineElements[1]));
             else if (boost::algorithm::to_lower_copy(lineElements[0]) == "ammonia_type")
-                _engine._simulationBox.setAmmoniaType(stoi(lineElements[1]));
+                _engine.getSimulationBox().setAmmoniaType(stoi(lineElements[1]));
             else
                 processMolecule(lineElements);
         }
@@ -74,7 +74,7 @@ void MolDescriptorReader::read()
  *
  * @param lineElements
  */
-void MolDescriptorReader::processMolecule(vector<string> &lineElements)
+void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 {
     string line;
 
@@ -86,9 +86,10 @@ void MolDescriptorReader::processMolecule(vector<string> &lineElements)
     molecule.setNumberOfAtoms(stoi(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
 
-    molecule.setMoltype(int(_engine._simulationBox._moleculeTypes.size()) + 1);
+    molecule.setMoltype(int(_engine.getSimulationBox()._moleculeTypes.size()) + 1);
 
     int AtomCount = 0;
+    size_t numberOfAtomEntries = 0;
 
     while (AtomCount < molecule.getNumberOfAtoms())
     {
@@ -98,8 +99,12 @@ void MolDescriptorReader::processMolecule(vector<string> &lineElements)
 
         _lineNumber++;
 
+        numberOfAtomEntries = lineElements.size();
+
         if (lineElements.empty())
             continue;
+        else if (lineElements.size() != numberOfAtomEntries)
+            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
         else if (lineElements.size() == 3 || lineElements.size() == 4)
         {
             molecule.addAtomName(lineElements[0]);
@@ -115,5 +120,5 @@ void MolDescriptorReader::processMolecule(vector<string> &lineElements)
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
     }
 
-    _engine._simulationBox._moleculeTypes.push_back(molecule);
+    _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
 }

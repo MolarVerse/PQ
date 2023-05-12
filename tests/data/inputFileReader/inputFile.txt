@@ -1,0 +1,5 @@
+nstep = 1;
+integrator = v-verlet;
+jobtype = mm-md;
+timestep = 0.2;
+start_file = start.rst;

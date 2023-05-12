@@ -23,12 +23,12 @@ int main(int argc, char *argv[])
 
     readMolDescriptor(engine);
 
-    read_rst(engine);
+    readRstFile(engine);
 
     postProcessSetup(engine);
 
-    cout << "Box size: " << engine._simulationBox._box.getBoxDimensions()[0] << endl;
-    cout << "Box size: " << engine._simulationBox._box.getBoxAngles()[1] << endl;
+    cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
+    cout << "Box size: " << engine.getSimulationBox()._box.getBoxAngles()[1] << endl;
 
     cout << engine._settings.getStartFilename() << endl;
 
@@ -41,10 +41,12 @@ int main(int argc, char *argv[])
 
     cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
 
-    cout << "Water type: " << engine._simulationBox.getWaterType() << endl;
-    cout << "Ammonia type: " << engine._simulationBox.getAmmoniaType() << endl;
+    cout << "Water type: " << engine.getSimulationBox().getWaterType() << endl;
+    cout << "Ammonia type: " << engine.getSimulationBox().getAmmoniaType() << endl;
 
-    // for (auto molecule : engine._simulationBox._molecules)
+    cout << "atom mass test: " << engine.getSimulationBox()._molecules[0].getMass(0) << endl;
+
+    // for (auto molecule : engine.getSimulationBox()._molecules)
     // {
     //     for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
     //     {
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
     //     cout << endl;
     // }
 
-    cout << "density " << engine._simulationBox._box.getDensity() << endl;
+    cout << "density " << engine.getSimulationBox()._box.getDensity() << endl;
 
     return 0;
 }

@@ -7,7 +7,7 @@
 class PostProcessSetup
 {
 private:
-    Engine _engine;
+    Engine &_engine;
 
 public:
     explicit PostProcessSetup(Engine &engine) : _engine(engine){};

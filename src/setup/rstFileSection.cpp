@@ -25,12 +25,12 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
     if (lineElements.size() != 4 && lineElements.size() != 7)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
 
-    engine._simulationBox._box.setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
+    engine.getSimulationBox()._box.setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
 
     if (lineElements.size() == 7)
-        engine._simulationBox._box.setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
+        engine.getSimulationBox()._box.setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
     else
-        engine._simulationBox._box.setBoxAngles({90.0, 90.0, 90.0});
+        engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
 }
 
 bool NoseHooverSection::isHeader() { return true; }
@@ -82,7 +82,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
 
     try
     {
-        molecule = engine._simulationBox.findMoleculeType(moltype);
+        molecule = engine.getSimulationBox().findMoleculeType(moltype);
     }
     catch (const RstFileException &e)
     {
@@ -120,7 +120,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         moltype = stoi(lineElements[2]);
     }
 
-    engine._simulationBox._molecules.push_back(molecule);
+    engine.getSimulationBox()._molecules.push_back(molecule);
 }
 
 /**

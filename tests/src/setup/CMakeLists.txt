@@ -3,6 +3,7 @@ set(source_files
     testNoseHooverSection.cpp
     testStepCountSection.cpp
     testAtomSection.cpp
+    testRstFileReader.cpp
 
     testParserBox.cpp
     testParserIntegrator.cpp
@@ -12,6 +13,10 @@ set(source_files
     testParserGeneral.cpp
     testInputFileParser.cpp
     testInputFileReader.cpp
+
+    testMoldescriptorReader.cpp
+
+    testPostProcessSetup.cpp
 )
 
 foreach(source_file ${source_files})

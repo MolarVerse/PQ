@@ -19,9 +19,12 @@
  */
 class Engine
 {
+private:
+    SimulationBox _simulationBox;
+
 public:
-    // Engine();
-    // Engine(const Engine &);
+    // Engine() {};
+    //  Engine(const Engine &);
 
     Settings _settings;
     JobType _jobType;
@@ -36,7 +39,8 @@ public:
     std::shared_ptr<ChargeOutput> _chargeOutput = std::make_shared<ChargeOutput>(ChargeOutput("default.chg"));
     std::shared_ptr<InfoOutput> _infoOutput = std::make_shared<InfoOutput>(InfoOutput("default.info"));
 
-    SimulationBox _simulationBox;
+    SimulationBox &getSimulationBox() { return _simulationBox; };
+
     Integrator _integrator;
 };
 

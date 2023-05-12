@@ -2,8 +2,8 @@ add_library(setup
     rstFileReader.cpp
     rstFileSection.cpp
     inputFileReader.cpp
-    inputFileParser.cpp    
-    inputFileParserOutput.cpp 
+    inputFileParser.cpp
+    inputFileParserOutput.cpp
     inputFileParserJobtype.cpp
     inputFileParserTimings.cpp
     inputFileParserGeneral.cpp
@@ -15,14 +15,14 @@ add_library(setup
 
 target_include_directories(setup
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${PROJECT_SOURCE_DIR}/include/setup
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/include/setup
 )
 
 target_link_libraries(setup
     PUBLIC
-        engine
-        utilities
-        output
-        config
+    engine
+    utilities
+    output
+    config
 )

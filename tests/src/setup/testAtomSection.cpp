@@ -52,7 +52,7 @@ namespace Setup::RstFileReader
 
         auto molecule = Molecule(1);
         molecule.setNumberOfAtoms(3);
-        _engine._simulationBox._moleculeTypes.push_back(molecule);
+        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
 
         ifstream fp(filename);
         _section->_fp = &fp;
@@ -79,7 +79,7 @@ namespace Setup::RstFileReader
 
         auto molecule = Molecule(1);
         molecule.setNumberOfAtoms(3);
-        _engine._simulationBox._moleculeTypes.push_back(molecule);
+        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
 
         ifstream fp(filename);
         _section->_fp = &fp;
@@ -98,11 +98,11 @@ namespace Setup::RstFileReader
 
         auto molecule = Molecule(1);
         molecule.setNumberOfAtoms(3);
-        _engine._simulationBox._moleculeTypes.push_back(molecule);
+        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
 
         auto molecule2 = Molecule(2);
         molecule2.setNumberOfAtoms(4);
-        _engine._simulationBox._moleculeTypes.push_back(molecule2);
+        _engine.getSimulationBox()._moleculeTypes.push_back(molecule2);
 
         ifstream fp(filename);
         _section->_fp = &fp;
@@ -123,16 +123,16 @@ namespace Setup::RstFileReader
 
         _section->process(line, _engine);
 
-        EXPECT_EQ(_engine._simulationBox._molecules.size(), 3);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules.size(), 3);
 
-        EXPECT_EQ(_engine._simulationBox._molecules[0].getMoltype(), 1);
-        EXPECT_EQ(_engine._simulationBox._molecules[0].getNumberOfAtoms(), 3);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[0].getMoltype(), 1);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[0].getNumberOfAtoms(), 3);
 
-        EXPECT_EQ(_engine._simulationBox._molecules[1].getMoltype(), 2);
-        EXPECT_EQ(_engine._simulationBox._molecules[1].getNumberOfAtoms(), 4);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[1].getMoltype(), 2);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[1].getNumberOfAtoms(), 4);
 
-        EXPECT_EQ(_engine._simulationBox._molecules[2].getMoltype(), 1);
-        EXPECT_EQ(_engine._simulationBox._molecules[2].getNumberOfAtoms(), 3);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[2].getMoltype(), 1);
+        EXPECT_EQ(_engine.getSimulationBox()._molecules[2].getNumberOfAtoms(), 3);
     }
 
     TEST_F(TestAtomSection, testProcessAtomLine)

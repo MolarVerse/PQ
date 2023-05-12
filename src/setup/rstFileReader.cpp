@@ -73,7 +73,7 @@ void RstFileReader::read()
  *
  * @param engine
  */
-void read_rst(Engine &engine)
+void readRstFile(Engine &engine)
 {
     RstFileReader rstFileReader(engine._settings.getStartFilename(), engine);
     rstFileReader.read();

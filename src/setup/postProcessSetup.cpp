@@ -38,18 +38,22 @@ void PostProcessSetup::setup()
  */
 void PostProcessSetup::setAtomMasses()
 {
-    for (Molecule &molecule : _engine._simulationBox._molecules)
+    // TODO: check me!!!!!!!!!!!!
+    for (int moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
     {
+
+        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
         {
             auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
-
             if (atomMassMap.find(keyword) == atomMassMap.end())
                 throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
                 molecule.addMass(atomMassMap.at(keyword));
         }
     }
+
+    cout << _engine.getSimulationBox()._molecules[0].getMass(0) << endl;
 }
 
 /**
@@ -59,7 +63,7 @@ void PostProcessSetup::setAtomMasses()
  */
 void PostProcessSetup::setAtomicNumbers()
 {
-    for (Molecule &molecule : _engine._simulationBox._molecules)
+    for (Molecule &molecule : _engine.getSimulationBox()._molecules)
     {
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
         {
@@ -80,13 +84,13 @@ void PostProcessSetup::calculateTotalMass()
 {
     double totalMass = 0.0;
 
-    for (const Molecule &molecule : _engine._simulationBox._molecules)
+    for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
     {
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
             totalMass += molecule.getMass(i);
     }
 
-    _engine._simulationBox._box.setTotalMass(totalMass);
+    _engine.getSimulationBox()._box.setTotalMass(totalMass);
 }
 
 /**
@@ -96,13 +100,13 @@ void PostProcessSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    for (const Molecule &molecule : _engine._simulationBox._molecules)
+    for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
     {
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
             totalCharge += molecule.getPartialCharge(i);
     }
 
-    _engine._simulationBox._box.setTotalCharge(totalCharge);
+    _engine.getSimulationBox()._box.setTotalCharge(totalCharge);
 }
 
 /**
@@ -116,30 +120,30 @@ void PostProcessSetup::calculateTotalCharge()
  */
 void PostProcessSetup::checkBoxSettings()
 {
-    auto box = _engine._simulationBox._box.getBoxDimensions();
-    auto density = _engine._simulationBox._box.getDensity();
+    auto box = _engine.getSimulationBox()._box.getBoxDimensions();
+    auto density = _engine.getSimulationBox()._box.getDensity();
 
     if (density == 0.0 && box[0] == 0.0 && box[1] == 0.0 && box[2] == 0.0)
         throw UserInputException("Box dimensions and density not set");
     else if (box[0] == 0.0 && box[1] == 0.0 && box[2] == 0.0)
     {
-        auto boxDimensions = _engine._simulationBox._box.calculateBoxDimensionsFromDensity();
-        _engine._simulationBox._box.setBoxDimensions(boxDimensions);
-        _engine._simulationBox._box.setBoxAngles({90.0, 90.0, 90.0});
+        auto boxDimensions = _engine.getSimulationBox()._box.calculateBoxDimensionsFromDensity();
+        _engine.getSimulationBox()._box.setBoxDimensions(boxDimensions);
+        _engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
     }
     else if (density == 0.0)
     {
-        auto volume = _engine._simulationBox._box.calculateVolume();
-        density = _engine._simulationBox._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
-        _engine._simulationBox._box.setVolume(volume);
-        _engine._simulationBox._box.setDensity(density);
+        auto volume = _engine.getSimulationBox()._box.calculateVolume();
+        density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        _engine.getSimulationBox()._box.setVolume(volume);
+        _engine.getSimulationBox()._box.setDensity(density);
     }
     else
     {
-        auto volume = _engine._simulationBox._box.calculateVolume();
-        density = _engine._simulationBox._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
-        _engine._simulationBox._box.setVolume(volume);
-        _engine._simulationBox._box.setDensity(density);
+        auto volume = _engine.getSimulationBox()._box.calculateVolume();
+        density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        _engine.getSimulationBox()._box.setVolume(volume);
+        _engine.getSimulationBox()._box.setDensity(density);
 
         _engine._logOutput->writeDensityWarning();
         _engine._stdoutOutput->writeDensityWarning();

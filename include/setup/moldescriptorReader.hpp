@@ -9,12 +9,12 @@
 #include "engine.hpp"
 
 /**
- * @class MolDescriptorReader
+ * @class MoldescriptorReader
  *
  * @brief Reads a moldescriptor file
  *
  */
-class MolDescriptorReader
+class MoldescriptorReader
 {
 private:
     const std::string _filename;
@@ -22,7 +22,7 @@ private:
     int _lineNumber;
 
 public:
-    explicit MolDescriptorReader(Engine &engine);
+    explicit MoldescriptorReader(Engine &engine);
     Engine &_engine;
 
     void read();

@@ -20,7 +20,7 @@ namespace Setup::InputFileReader
     class InputFileReader
     {
     private:
-        const std::string _filename;
+        std::string _filename;
         Engine &_engine;
 
         std::map<std::string, void (InputFileReader::*)(const std::vector<std::string> &)> _keywordFuncMap;
@@ -63,7 +63,12 @@ namespace Setup::InputFileReader
 
         void process(const std::vector<std::string> &);
 
+        // Getters and setters
+        void setFilename(const std::string &filename) { _filename = filename; };
+
         int getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; };
+        void setKeywordCount(const std::string &keyword, int count) { _keywordCountMap[keyword] = count; };
+
         bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; };
     };
 

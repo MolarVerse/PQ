@@ -36,13 +36,13 @@ namespace Setup::RstFileReader
     {
         vector<string> line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
         _section->process(line, _engine);
-        ASSERT_THAT(_engine._simulationBox._box.getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
-        ASSERT_THAT(_engine._simulationBox._box.getBoxAngles(), ElementsAre(90.0, 90.0, 70.0));
+        ASSERT_THAT(_engine.getSimulationBox()._box.getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
+        ASSERT_THAT(_engine.getSimulationBox()._box.getBoxAngles(), ElementsAre(90.0, 90.0, 70.0));
 
         line = {"box", "1.0", "2.0", "3.0"};
         _section->process(line, _engine);
-        ASSERT_THAT(_engine._simulationBox._box.getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
-        ASSERT_THAT(_engine._simulationBox._box.getBoxAngles(), ElementsAre(90.0, 90.0, 90.0));
+        ASSERT_THAT(_engine.getSimulationBox()._box.getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
+        ASSERT_THAT(_engine.getSimulationBox()._box.getBoxAngles(), ElementsAre(90.0, 90.0, 90.0));
 
         line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
         ASSERT_THROW(_section->process(line, _engine), RstFileException);

@@ -9,7 +9,7 @@ TEST_F(TestInputFileReader, testParseDensity)
 {
     vector<string> lineElements = {"density", "=", "1.0"};
     _inputFileReader->parseDensity(lineElements);
-    EXPECT_EQ(_engine._simulationBox._box.getDensity(), 1.0);
+    EXPECT_EQ(_engine.getSimulationBox()._box.getDensity(), 1.0);
 }
 
 int main(int argc, char **argv)
