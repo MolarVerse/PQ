@@ -94,4 +94,18 @@ public:
     const char *what() const throw() override;
 };
 
+/**
+ * @class GuffDatException inherits from CustomException
+ *
+ * @brief Exception for guff.dat errors
+ *
+ */
+class GuffDatException : public CustomException
+{
+public:
+    explicit GuffDatException(const std::string &message) : CustomException(message){};
+
+    const char *what() const throw() override;
+};
+
 #endif

@@ -7,9 +7,11 @@
 
 namespace StringUtilities
 {
-    std::string removeComments(std::string &line, std::string_view commentChar);
-    std::vector<std::string> splitString(const std::string &line);
-    void splitString2(const std::string &line, std::vector<std::string> &lineElements);
+    std::string removeComments(std::string &, std::string_view);
+    std::vector<std::string> getLineCommands(const std::string &, int);
+
+    std::vector<std::string> splitString(const std::string &);
+    void splitString2(const std::string &, std::vector<std::string> &);
 }
 
 #endif

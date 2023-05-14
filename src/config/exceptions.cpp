@@ -68,3 +68,14 @@ const char *UserInputExceptionWarning::what() const throw()
     colorfulOutput(Color::FG_ORANGE, "UserInputWarning");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @return const char*
+ */
+const char *GuffDatException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "GuffDatError");
+    return _message.c_str();
+}

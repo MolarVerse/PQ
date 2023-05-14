@@ -18,6 +18,7 @@ private:
     int _moltype;
     int _numberOfAtoms;
     double _charge;
+    double _molMass;
 
     std::vector<std::string> _atomNames;
     std::vector<std::string> _atomTypeNames;
@@ -55,6 +56,9 @@ public:
 
     void setCharge(double charge) { _charge = charge; };
     double getCharge() const { return _charge; };
+
+    void setMolMass(double molMass) { _molMass = molMass; };
+    double getMolMass() const { return _molMass; };
 
     void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); };
     std::string getAtomName(int index) const { return _atomNames[index]; };

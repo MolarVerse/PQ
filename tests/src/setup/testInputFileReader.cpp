@@ -1,10 +1,12 @@
 #include "testInputFileReader.hpp"
 #include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
 #include <gmock/gmock.h>
 
 using namespace std;
 using namespace Setup::InputFileReader;
+using namespace StringUtilities;
 using namespace ::testing;
 
 void readKeywordList(const string &filename, vector<string> &keywords, vector<bool> &required)

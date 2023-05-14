@@ -15,6 +15,7 @@ public:
     void setup();
     void setAtomMasses();
     void setAtomicNumbers();
+    void calculateMolMass();
     void calculateTotalMass();
     void calculateTotalCharge();
 

@@ -1,6 +1,7 @@
 add_library(setup
     rstFileReader.cpp
     rstFileSection.cpp
+
     inputFileReader.cpp
     inputFileParser.cpp
     inputFileParserOutput.cpp
@@ -9,8 +10,11 @@ add_library(setup
     inputFileParserGeneral.cpp
     inputFileParserIntegrator.cpp
     inputFileParserBox.cpp
+
     moldescriptorReader.cpp
     postProcessSetup.cpp
+
+    guffDatReader.cpp
 )
 
 target_include_directories(setup
@@ -25,4 +29,5 @@ target_link_libraries(setup
     utilities
     output
     config
+    gtest
 )

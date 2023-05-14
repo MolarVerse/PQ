@@ -25,6 +25,7 @@ void PostProcessSetup::setup()
 {
     setAtomMasses();
     setAtomicNumbers();
+    calculateMolMass();
     calculateTotalMass();
     calculateTotalCharge();
 
@@ -39,7 +40,7 @@ void PostProcessSetup::setup()
 void PostProcessSetup::setAtomMasses()
 {
     // TODO: check me!!!!!!!!!!!!
-    for (int moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
+    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
     {
 
         Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
@@ -52,8 +53,6 @@ void PostProcessSetup::setAtomMasses()
                 molecule.addMass(atomMassMap.at(keyword));
         }
     }
-
-    cout << _engine.getSimulationBox()._molecules[0].getMass(0) << endl;
 }
 
 /**
@@ -63,8 +62,10 @@ void PostProcessSetup::setAtomMasses()
  */
 void PostProcessSetup::setAtomicNumbers()
 {
-    for (Molecule &molecule : _engine.getSimulationBox()._molecules)
+    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
     {
+
+        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
         {
             auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
@@ -74,6 +75,25 @@ void PostProcessSetup::setAtomicNumbers()
             else
                 molecule.addAtomicNumber(atomNumberMap.at(keyword));
         }
+    }
+}
+
+/**
+ * @brief calculates the molecular mass of each molecule in the simulation box
+ *
+ */
+void PostProcessSetup::calculateMolMass()
+{
+    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
+    {
+
+        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
+
+        double molMass = 0.0;
+        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+            molMass += molecule.getMass(i);
+
+        molecule.setMolMass(molMass);
     }
 }
 
@@ -130,6 +150,7 @@ void PostProcessSetup::checkBoxSettings()
         auto boxDimensions = _engine.getSimulationBox()._box.calculateBoxDimensionsFromDensity();
         _engine.getSimulationBox()._box.setBoxDimensions(boxDimensions);
         _engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
+        _engine.getSimulationBox()._box.setVolume(_engine.getSimulationBox()._box.calculateVolume());
     }
     else if (density == 0.0)
     {

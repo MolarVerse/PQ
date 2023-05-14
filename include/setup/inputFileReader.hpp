@@ -75,9 +75,6 @@ namespace Setup::InputFileReader
     void checkEqualSign(std::string_view, int);
     void checkCommand(const std::vector<std::string> &, int);
     void checkCommandArray(const std::vector<std::string> &, int);
-
-    std::vector<std::string> getLineCommands(const std::string &, int);
-
 }
 
 /**

@@ -20,7 +20,7 @@ class Box
 {
 private:
     std::vector<double> _boxDimensions = {0.0, 0.0, 0.0};
-    std::vector<double> _boxAngles = {0.0, 0.0, 0.0};
+    std::vector<double> _boxAngles = {90.0, 90.0, 90.0};
 
     double _totalMass = 0.0;
     double _totalCharge = 0.0;
@@ -31,11 +31,11 @@ public:
     Box() = default;
     ~Box() = default;
 
-    std::vector<double> getBoxDimensions() const;
+    std::vector<double> getBoxDimensions() const { return _boxDimensions; };
     void setBoxDimensions(const std::vector<double> &);
     std::vector<double> calculateBoxDimensionsFromDensity() const;
 
-    std::vector<double> getBoxAngles() const;
+    std::vector<double> getBoxAngles() const { return _boxAngles; };
     void setBoxAngles(const std::vector<double> &);
 
     void setTotalMass(double totalMass) { _totalMass = totalMass; };

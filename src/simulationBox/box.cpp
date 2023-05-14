@@ -10,11 +10,6 @@
 
 using namespace std;
 
-vector<double> Box::getBoxDimensions() const
-{
-    return _boxDimensions;
-}
-
 /**
  * @brief Set the Box Dimensions in Box object
  *
@@ -29,11 +24,6 @@ void Box::setBoxDimensions(const vector<double> &boxDimensions)
             throw RstFileException("Box dimensions must be positive - dimension = " + to_string(dimension));
 
     _boxDimensions = boxDimensions;
-}
-
-vector<double> Box::getBoxAngles() const
-{
-    return _boxAngles;
 }
 
 /**

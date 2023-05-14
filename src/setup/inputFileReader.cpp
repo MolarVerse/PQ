@@ -68,31 +68,6 @@ void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*
 }
 
 /**
- * @brief get commands from a line
- *
- * @param line
- * @return vector<string>
- *
- * @throw InputFileException if line does not end with a semicolon
- */
-vector<string> Setup::InputFileReader::getLineCommands(const string &line, int _lineNumber)
-{
-
-    for (int i = int(line.size()) - 1; i >= 0; i--)
-    {
-        if (line[i] == ';')
-            break;
-        else if (!isspace(line[i]))
-            throw InputFileException("Missing semicolon in input file at line " + to_string(_lineNumber));
-    }
-
-    vector<string> lineCommands;
-    boost::split(lineCommands, line, boost::is_any_of(";"));
-
-    return lineCommands;
-}
-
-/**
  * @brief process command
  *
  * @param lineElements
@@ -128,6 +103,13 @@ void InputFileReader::read()
     while (getline(inputFile, line))
     {
         line = removeComments(line, "#");
+
+        if (line.empty())
+        {
+            _lineNumber++;
+            continue;
+        }
+
         auto lineCommands = getLineCommands(line, _lineNumber);
 
         for (const string &command : lineCommands)
