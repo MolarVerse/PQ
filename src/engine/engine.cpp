@@ -5,6 +5,12 @@
 
 using namespace std;
 
+/**
+ * @brief calculates the boxmomentum and sets it in the outputData
+ *
+ * @param simulationBox
+ * @param outputData
+ */
 void Engine::calculateMomentum(SimulationBox &simulationBox, OutputData &outputData)
 {
     vector<double> momentum(3, 0.0);

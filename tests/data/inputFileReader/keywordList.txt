@@ -1,4 +1,4 @@
-jobtype true            
+jobtype true       
 timestep true
 nstep true
 start_file true
@@ -14,3 +14,4 @@ restart_file false
 charge_file false
 integrator true
 density false
+virial false

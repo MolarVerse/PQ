@@ -4,6 +4,10 @@
 
 #include <vector>
 
+/**
+ * @brief MathUtilities is a namespace for math utilities
+ *
+ */
 namespace MathUtilities
 {
     double norm(const std::vector<double> &);

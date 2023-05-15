@@ -4,6 +4,12 @@
 
 #include <vector>
 
+/**
+ * @class OutputData
+ *
+ * @brief OutputData is a class for output data storage
+ *
+ */
 class OutputData
 {
 private:

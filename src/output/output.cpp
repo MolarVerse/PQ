@@ -65,11 +65,19 @@ void Output::openFile()
         throw InputFileException("Could not open file - filename = " + _filename);
 }
 
+/**
+ * @brief write a warning message to the log file if density and box dimensions are set
+ *
+ */
 void LogOutput::writeDensityWarning()
 {
     _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl;
 }
 
+/**
+ * @brief write a warning message to the stdout if density and box dimensions are set
+ *
+ */
 void StdoutOutput::writeDensityWarning() const
 {
     try
@@ -83,17 +91,33 @@ void StdoutOutput::writeDensityWarning() const
     }
 }
 
+/**
+ * @brief construct general initial momentum message
+ *
+ * @param momentum
+ * @return string
+ */
 string Output::initialMomentumMessage(double momentum) const
 {
     return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
 }
 
+/**
+ * @brief write initial momentum to log file
+ *
+ * @param momentum
+ */
 void LogOutput::writeInitialMomentum(double momentum)
 {
     _fp << endl;
     _fp << initialMomentumMessage(momentum) << endl;
 }
 
+/**
+ * @brief write initial momentum to stdout
+ *
+ * @param momentum
+ */
 void StdoutOutput::writeInitialMomentum(double momentum) const
 {
     cout << endl;

@@ -5,6 +5,11 @@
 using namespace std;
 using namespace Setup::InputFileReader;
 
+/**
+ * @brief parses virial command
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseVirial(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

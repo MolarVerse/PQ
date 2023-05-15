@@ -5,6 +5,12 @@
 
 using namespace std;
 
+/**
+ * @brief calculates the norm of a vector
+ *
+ * @param vector
+ * @return double
+ */
 double MathUtilities::norm(const std::vector<double> &vector)
 {
     double norm = 0.0;

@@ -8,6 +8,11 @@
 using namespace std;
 using namespace StringUtilities;
 
+/**
+ * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
+ *
+ * @param engine
+ */
 void readGuffDat(Engine &engine)
 {
     GuffDatReader guffDat(engine);
@@ -15,6 +20,10 @@ void readGuffDat(Engine &engine)
     guffDat.read();
 }
 
+/**
+ * @brief constructs the guff dat 4d vectors
+ *
+ */
 void GuffDatReader::setupGuffMaps()
 {
     size_t numberOfMoleculeTypes = _engine.getSimulationBox()._moleculeTypes.size();
@@ -59,6 +68,11 @@ void GuffDatReader::setupGuffMaps()
     }
 }
 
+/**
+ * @brief reads the guff.dat file
+ *
+ * @throws GuffDatException if the file is invalid
+ */
 void GuffDatReader::read()
 {
     ifstream fp(_filename);
@@ -85,6 +99,13 @@ void GuffDatReader::read()
     }
 }
 
+/**
+ * @brief parses a line from the guff.dat file
+ *
+ * @param lineCommands
+ *
+ * @throws GuffDatException if the line is invalid
+ */
 void GuffDatReader::parseLine(vector<string> &lineCommands)
 {
     Molecule molecule1;
