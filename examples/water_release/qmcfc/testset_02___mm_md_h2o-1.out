@@ -1,0 +1,224 @@
+
+
+	--->>> QMCFC Engine 1.7 <<<--- 
+
+ (+) Simulation run started on: Mon May 15 23:26:47 2023
+
+
+
+	 Your infile for this simulation was
+   ---------------------------------------------------
+
+	#==================================================================================
+	#
+	#          _/_/_/      _/_/      _/_/    _/_/_/  _/_/_/_/          _/_/_/_/_/
+	#       _/      _/    _/_/_/  _/_/_/  _/        _/                  _/  _/
+	#      _/      _/    _/  _/_/_/  _/  _/        _/_/_/              _/  _/
+	#     _/   _/ _/    _/    _/    _/  _/        _/        _/_/_/    _/  _/
+	#    _/      _/    _/          _/  _/        _/                  _/  _/
+	#     _/_/_/  _/  _/          _/    _/_/_/  _/                _/_/_/_/_/
+	#
+	#
+	#    Quantum - Mechanical - Charge - Field - Molecular - Dynamics
+	#
+	#    QMCFc
+	#    Copyright (C)   2007-now    Thomas S. Hofer
+	#
+	#    QMCF2 (this)
+	#    Copyright (C)   2016-now    Alexander K. H. Weiss
+	#
+	#    This program is free software: you can redistribute it and/or modify
+	#    it under the terms of the GNU General Public License as published by
+	#    the Free Software Foundation, either version 3 of the License, or
+	#    (at your option) any later version.
+	#
+	#    This program is distributed in the hope that it will be useful,
+	#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+	#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	#    GNU General Public License for more details.
+	#
+	#    You should have received a copy of the GNU General Public License
+	#    along with this program.  If not, see <http://www.gnu.org/licenses/ >
+	#
+	#==================================================================================
+	#
+	# QMCF2 testset:       testset_02___mm_md_h2o
+	#
+	#==================================================================================
+	
+	# THIS IS A QMCFc TESTSET
+	#-----------------------------------------
+	#  keyword_set = qmcfc;
+	
+	# JOB
+	#-----------------------------------------
+	   jobtype     = mm-md; timestep    = 0.0000000000000000001;
+	   nstep       = 1;
+	   output_freq = 1;
+	   #write_traj  = on;
+	
+	# SYSTEM RESTRAINTS
+	#-----------------------------------------
+	   density = 0.9523;
+	
+	# WATER POTENTIAL
+	#-----------------------------------------
+	  #water_intra = qspcfw;
+	  #water_inter = qspcfw;
+	
+	# COULOMBICS
+	#-----------------------------------------
+	   rcoulomb   = 9.0;
+	   long_range = none;
+	   #longrange_nc = on;
+	
+	# NON-COULOMBICS
+	#-----------------------------------------
+	   noncoulomb = lj;
+	
+	# INTEGRATOR
+	#-----------------------------------------
+	   integrator = v-verlet;
+	
+	# MOLDESCRIPTOR
+	#-----------------------------------------
+	  #moldescriptor_file = test.dat;
+	  #guff_path = test;
+	
+	# THERMOSTAT
+	#-----------------------------------------
+	   #temp       = 298.15;
+	   thermostat = none;
+	   #manostat   = berendsen;
+	   #pressure   = 1.013;
+	#  nscale = 500;
+	   #cell-list = on;
+	   #cell-number = 10;
+	#  friction   = 0.035;
+	
+	# VIRIAL
+	# ----------------------------------------
+	    virial = molecular;
+	
+	# FILES
+	#-----------------------------------------
+	   start_file   = h2o-qmcf.rst; 
+	
+	   output_file  = testset_02___mm_md_h2o-1.out; 
+	   info_file    = testset_02___mm_md_h2o-1.info;
+	   energy_file  = testset_02___mm_md_h2o-1.en; 
+	   traj_file    = testset_02___mm_md_h2o-1.xyz;
+	   vel_file     = testset_02___mm_md_h2o-1.vel;
+	   restart_file = testset_02___mm_md_h2o-1.rst;
+	
+	
+	
+
+
+   ---------------------------------------------------
+
+
+ (+) Input file run-1.in read successfully
+       18 keywords have been read
+
+ (+) Reading moldescriptor at
+     /home/jag/software/qmcfc/data/moldescriptor.dat
+
+     SUCCESS: Data of 10 unit types have been read
+
+ (+) Reading sytem information from
+     restart file 'h2o-qmcf.rst'
+
+     SUCCESS: Molecular units:   2000
+              Atoms:             6000
+
+	     >> MOLECULE UNITS <<
+
+        2000 Molecule(s) of type  1 (H2O)
+
+ (!) Warning: Box data taken from restart file h2o-qmcf.rst.
+     Density recalculated - input density  0.95230 is ignored.
+
+	      >> SYSTEM DATA <<
+
+           XBOX    =    20.00000 A
+           YBOX    =    20.30000 A
+           ZBOX    =    26.00000 A
+           VOLUME  = 10556.00000 A�
+           Density =  5.66788 kg/dm³
+           Charge  =        0 e
+
+	    >> INITIAL MOMENTUM <<
+                p = 7.68198e-01 amu * A / fs
+
+ (+) Reading GUFF coefficients for pair potentials at
+     /home/jag/software/qmcfc/data/guff.dat
+
+     Lennard-Jones 6-12 formulation was requested
+
+     Requesting data for:
+
+	   * H2O -- H2O Potential (o o)
+		   non-coulomb cutoff distance  9.00
+	   * H2O -- H2O Potential (o h)
+		   non-coulomb cutoff distance  5.00
+	   * H2O -- H2O Potential (h h)
+		   non-coulomb cutoff distance  3.00
+
+     SUCCESS: Data of 3 Pair functions have been read.
+
+ (+) Initializing cutoffs
+
+     SUCCESS: 3 cutoff(s) initialized
+
+ (+) No intramolecular potential for water applied.
+
+ (+) Initialising Constants
+
+	* Velocity Verlet
+		Time step: 0.00 fs
+
+	* Coulombic Interactions
+		Cutoff:   9.00 A
+
+ (!) Warning: No longe Range correction requested.
+
+	* Thermostat -- none
+
+	* Manostat -- none
+
+	* Data output
+		Output Frequency:    1 (0.0 fs)
+
+ (+) Creating data files....SUCCESS
+
+ (+) General initalization complete
+
+ (+) Entering MM -- simulation loop
+
+       Requested Number of Steps:           1
+       Step Counter:                     1232
+
+ (+) Starting Simulation...
+
+   STEP NUMBER	           1		TOTAL STEPS	        1233
+   SIMULATION TIME     0.000		TEMPERATURE	     201.840
+   PRESSURE	149852029787.663		E(MM)		11884123349.627
+   E(KIN)	    3609.869		E(INTRA)	       0.000
+   E(COULOMB)	  -11738.231		E(NONCOULOMB)	11884131477.988
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   MOMENTUM	   7.682e-01		LOOPTIME 	       0.000
+
+
+
+
+*********************************************************
+*                                                       *
+*                 QMCFC ENDED NORMALLY                  *
+*                                                       *
+*********************************************************
+
+
+
+ (+) Simulation time: 0.000000
+

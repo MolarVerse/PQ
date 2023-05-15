@@ -50,6 +50,11 @@ public:
     double getVolume() const { return _volume; };
     void setVolume(double volume) { _volume = volume; };
     double calculateVolume() const;
+
+    double calculateDistance(const std::vector<double> &, const std::vector<double> &);
+    void applyPBC(std::vector<double> &);
+
+    double getMinimalBoxDimension() const;
 };
 
 #endif

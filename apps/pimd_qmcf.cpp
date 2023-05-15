@@ -35,12 +35,17 @@ int main(int argc, char *argv[])
     engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
     engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
 
+    engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
+
+    cout << engine._outputData.getAverageCoulombEnergy() << endl;
+    cout << engine._outputData.getAverageNonCoulombEnergy() << endl;
+
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxAngles()[1] << endl;
 
     cout << engine._settings.getStartFilename() << endl;
 
-    cout << engine._jobType.getJobType() << endl;
+    cout << engine._jobType->getJobType() << endl;
 
     cout << engine._settings._timings.getNumberOfSteps() << endl;
 

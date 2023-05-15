@@ -28,7 +28,7 @@ public:
     //  Engine(const Engine &);
 
     Settings _settings;
-    JobType _jobType;
+    std::unique_ptr<JobType> _jobType;
     OutputData _outputData;
 
     std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>(EnergyOutput("default.en"));

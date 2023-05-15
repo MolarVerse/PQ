@@ -1,7 +1,7 @@
 .vscode/
 .cache/
 **/gmon.out
-build/
-_build/
+build*
+_build*
 bin/
 examples/*/testset*

@@ -9,7 +9,7 @@ TEST_F(TestInputFileReader, testParseJobType)
 {
     vector<string> lineElements = {"jobtype", "=", "mm-md"};
     _inputFileReader->parseJobType(lineElements);
-    EXPECT_EQ(_engine._jobType.getJobType(), "MMMD");
+    EXPECT_EQ(_engine._jobType->getJobType(), "MMMD");
 }
 
 TEST_F(TestInputFileReader, testJobTypeUnknown)

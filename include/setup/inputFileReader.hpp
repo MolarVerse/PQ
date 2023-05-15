@@ -61,6 +61,8 @@ namespace Setup::InputFileReader
 
         void parseVirial(const std::vector<std::string> &);
 
+        void parseRcoulomb(const std::vector<std::string> &);
+
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
         void process(const std::vector<std::string> &);

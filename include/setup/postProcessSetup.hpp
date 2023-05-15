@@ -20,6 +20,8 @@ public:
     void calculateTotalCharge();
 
     void checkBoxSettings();
+
+    void checkRcCutoff();
 };
 
 /**

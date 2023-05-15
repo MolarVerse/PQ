@@ -99,3 +99,31 @@ vector<double> Box::calculateBoxDimensionsFromDensity() const
 
     return boxDimensions;
 }
+
+double Box::calculateDistance(const vector<double> &point1, const vector<double> &point2)
+{
+    vector<double> dxyz = {point1[0] - point2[0], point1[1] - point2[1], point1[2] - point2[2]};
+
+    applyPBC(dxyz);
+
+    double distance = sqrt(dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2]);
+
+    return distance;
+}
+
+void Box::applyPBC(vector<double> &dxyz)
+{
+    dxyz[0] -= _boxDimensions[0] * round(dxyz[0] / _boxDimensions[0]);
+    dxyz[1] -= _boxDimensions[1] * round(dxyz[1] / _boxDimensions[1]);
+    dxyz[2] -= _boxDimensions[2] * round(dxyz[2] / _boxDimensions[2]);
+}
+
+double Box::getMinimalBoxDimension() const
+{
+    double minDimension = _boxDimensions[0];
+    if (_boxDimensions[1] < minDimension)
+        minDimension = _boxDimensions[1];
+    if (_boxDimensions[2] < minDimension)
+        minDimension = _boxDimensions[2];
+    return minDimension;
+}

@@ -58,6 +58,8 @@ public:
     double getCoulombCoefficient(int moltype1, int moltype2, int atomType1, int atomType2) { return _coulombCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
 
     Molecule findMoleculeType(int moltype) const;
+
+    int getNumberOfMolecules() const { return _molecules.size(); };
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include <string>
 
 #include "simulationBox.hpp"
+#include "outputData.hpp"
 
 /**
  * @class JobType
@@ -20,6 +21,8 @@ protected:
 public:
     std::string getJobType() const { return _jobType; }
     void setJobType(std::string_view jobType) { _jobType = jobType; };
+
+    virtual void calculateForces(SimulationBox &, OutputData &) = 0;
 };
 
 /**
@@ -35,7 +38,7 @@ class MMMD : public JobType
 public:
     MMMD() { _jobType = "MMMD"; };
 
-    void calculateForces(SimulationBox &);
+    void calculateForces(SimulationBox &, OutputData &) override;
 };
 
 #endif
