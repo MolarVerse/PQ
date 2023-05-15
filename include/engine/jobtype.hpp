@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "simulationBox.hpp"
+
 /**
  * @class JobType
  *
@@ -32,6 +34,8 @@ class MMMD : public JobType
 {
 public:
     MMMD() { _jobType = "MMMD"; };
+
+    void calculateForces(SimulationBox &);
 };
 
 #endif
