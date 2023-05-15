@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 /**
  * @class Molecule
@@ -22,7 +23,11 @@ private:
 
     std::vector<std::string> _atomNames;
     std::vector<std::string> _atomTypeNames;
+
+    std::vector<int> _externalAtomTypes;
     std::vector<int> _atomTypes;
+    std::map<int, int> _externalToInternalAtomTypes;
+
     std::vector<double> _partialCharges;
     std::vector<int> _globalVDWTypes;
     std::vector<double> _masses;
@@ -66,7 +71,13 @@ public:
     void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); };
     std::string getAtomTypeName(int index) const { return _atomTypeNames[index]; };
 
+    void addExternalAtomType(int atomType) { _externalAtomTypes.push_back(atomType); };
+    int getExternalAtomType(int index) const { return _externalAtomTypes[index]; };
+    std::vector<int> getExternalAtomTypes() const { return _externalAtomTypes; };
+    void addExternalToInternalAtomTypeElement(int externalAtomType, int internalAtomType) { _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType); };
+
     void addAtomType(int atomType) { _atomTypes.push_back(atomType); };
+    int getInternalAtomType(int externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
     int getAtomType(int index) const { return _atomTypes[index]; };
 
     void addPartialCharge(double partialCharge) { _partialCharges.push_back(partialCharge); };
@@ -98,6 +109,8 @@ public:
 
     void addAtomForceOld(const std::vector<double> &forcesOld) { addVector(_forcesOld, forcesOld); }
     std::vector<double> getAtomForceOld(int index) { return {_forcesOld[3 * index], _forcesOld[3 * index + 1], _forcesOld[3 * index + 2]}; }
+
+    int getNumberOfAtomTypes();
 };
 
 #endif

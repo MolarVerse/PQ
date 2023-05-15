@@ -57,7 +57,7 @@
 
 # COULOMBICS
 #-----------------------------------------
-   #rcoulomb   = 9.0;
+   rcoulomb   = 9.0;
    #long_range = ewald;
    #longrange_nc = on;
 

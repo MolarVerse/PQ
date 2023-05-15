@@ -26,7 +26,8 @@ public:
     Engine &_engine;
 
     void read();
-    void processMolecule(std::vector<std::string> &lineElements);
+    void processMolecule(std::vector<std::string> &);
+    void convertExternalToInternalAtomtypes(Molecule &);
 };
 
 /**

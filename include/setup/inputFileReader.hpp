@@ -59,6 +59,8 @@ namespace Setup::InputFileReader
 
         void parseDensity(const std::vector<std::string> &);
 
+        void parseVirial(const std::vector<std::string> &);
+
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
         void process(const std::vector<std::string> &);

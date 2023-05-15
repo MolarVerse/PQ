@@ -28,6 +28,8 @@ public:
 
     static int getOutputFreq() { return _outputFreq; };
     static void setOutputFreq(int outputFreq);
+
+    std::string initialMomentumMessage(double momentum) const;
 };
 
 /**
@@ -66,6 +68,7 @@ public:
     explicit LogOutput(const std::string &filename) : Output(filename){};
 
     void writeDensityWarning();
+    void writeInitialMomentum(double momentum);
 };
 
 /**
@@ -80,6 +83,7 @@ public:
     explicit StdoutOutput(const std::string &filename) : Output(filename){};
 
     void writeDensityWarning() const;
+    void writeInitialMomentum(double momentum) const;
 };
 
 /**

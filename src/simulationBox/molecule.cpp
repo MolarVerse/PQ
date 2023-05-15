@@ -1,6 +1,8 @@
 #include "molecule.hpp"
 #include "exceptions.hpp"
 
+#include <algorithm>
+
 using namespace std;
 
 /**
@@ -31,4 +33,14 @@ void Molecule::addVector(vector<double> &v, const vector<double> &vToAdd) const
     {
         v.push_back(element);
     }
+}
+
+/**
+ * @brief finds number of different atom types in molecule
+ *
+ * @return int
+ */
+int Molecule::getNumberOfAtomTypes()
+{
+    return int(distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
 }

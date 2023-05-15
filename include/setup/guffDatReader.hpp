@@ -23,10 +23,11 @@ private:
 public:
     explicit GuffDatReader(Engine &engine) : _engine(engine) {}
 
+    void setupGuffMaps();
     void parseLine(std::vector<std::string> &);
     void read();
 };
 
-void readGuffDat();
+void readGuffDat(Engine &);
 
 #endif // _GUFF_DAT_READER_H_

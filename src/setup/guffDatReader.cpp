@@ -1,6 +1,7 @@
 #include "guffDatReader.hpp"
 #include "stringUtilities.hpp"
 #include "exceptions.hpp"
+#include "defaults.hpp"
 
 #include <fstream>
 
@@ -10,7 +11,52 @@ using namespace StringUtilities;
 void readGuffDat(Engine &engine)
 {
     GuffDatReader guffDat(engine);
+    guffDat.setupGuffMaps();
     guffDat.read();
+}
+
+void GuffDatReader::setupGuffMaps()
+{
+    size_t numberOfMoleculeTypes = _engine.getSimulationBox()._moleculeTypes.size();
+
+    _engine.getSimulationBox()._guffCoefficients.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._rncCutOffs.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._coulombCoefficients.resize(numberOfMoleculeTypes);
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; i++)
+    {
+        _engine.getSimulationBox()._guffCoefficients[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._rncCutOffs[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._coulombCoefficients[i].resize(numberOfMoleculeTypes);
+    }
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; i++)
+    {
+        size_t numberOfAtomTypes = _engine.getSimulationBox()._moleculeTypes[i].getNumberOfAtomTypes();
+        for (size_t j = 0; j < numberOfMoleculeTypes; j++)
+        {
+            _engine.getSimulationBox()._guffCoefficients[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._rncCutOffs[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._coulombCoefficients[i][j].resize(numberOfAtomTypes);
+        }
+    }
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; i++)
+    {
+        size_t numberOfAtomTypes_i = _engine.getSimulationBox()._moleculeTypes[i].getNumberOfAtomTypes();
+
+        for (size_t j = 0; j < numberOfMoleculeTypes; j++)
+        {
+            size_t numberOfAtomTypes_j = _engine.getSimulationBox()._moleculeTypes[j].getNumberOfAtomTypes();
+
+            for (size_t k = 0; k < numberOfAtomTypes_i; k++)
+            {
+                _engine.getSimulationBox()._guffCoefficients[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._rncCutOffs[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._coulombCoefficients[i][j][k].resize(numberOfAtomTypes_j);
+            }
+        }
+    }
 }
 
 void GuffDatReader::read()
@@ -30,8 +76,8 @@ void GuffDatReader::read()
 
         auto lineCommands = getLineCommands(line, _lineNumber);
 
-        if (lineCommands.size() != 23)
-            throw GuffDatException("Invalid number of commands in line " + to_string(_lineNumber));
+        if (lineCommands.size() - 1 != 28)
+            throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " + to_string(_lineNumber));
 
         parseLine(lineCommands);
 
@@ -41,13 +87,54 @@ void GuffDatReader::read()
 
 void GuffDatReader::parseLine(vector<string> &lineCommands)
 {
+    Molecule molecule1;
+    Molecule molecule2;
+
+    int atomType1;
+    int atomType2;
+
     try
     {
-        auto molecule1 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[0]));
+        molecule1 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[0]));
+        molecule2 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[2]));
     }
-    catch (const UserInputException &e)
+    catch (const RstFileException &e)
     {
-        cout << e.what() << endl
-             << endl;
+        throw GuffDatException("Invalid molecule type in line " + to_string(_lineNumber));
     }
+
+    try
+    {
+        atomType1 = molecule1.getInternalAtomType(stoi(lineCommands[1]));
+        atomType2 = molecule2.getInternalAtomType(stoi(lineCommands[3]));
+    }
+    catch (const std::exception &e)
+    {
+        throw GuffDatException("Invalid atom type in line " + to_string(_lineNumber));
+    }
+
+    double rncCutOff = stod(lineCommands[4]);
+
+    if (rncCutOff < 0.0)
+        rncCutOff = _RC_CUT_OFF_DEF_;
+
+    double coulombCoefficient = stod(lineCommands[5]);
+    vector<double> guffCoefficients(22);
+
+    for (size_t i = 0; i < 22; i++)
+    {
+        guffCoefficients[i] = stod(lineCommands[i + 6]);
+    }
+
+    int moltype1 = stoi(lineCommands[0]) - 1;
+    int moltype2 = stoi(lineCommands[2]) - 1;
+
+    _engine.getSimulationBox()._guffCoefficients[moltype1][moltype2][atomType1][atomType2] = guffCoefficients;
+    _engine.getSimulationBox()._guffCoefficients[moltype2][moltype1][atomType2][atomType1] = guffCoefficients;
+
+    _engine.getSimulationBox()._rncCutOffs[moltype1][moltype2][atomType1][atomType2] = rncCutOff;
+    _engine.getSimulationBox()._rncCutOffs[moltype2][moltype1][atomType2][atomType1] = rncCutOff;
+
+    _engine.getSimulationBox()._coulombCoefficients[moltype1][moltype2][atomType1][atomType2] = coulombCoefficient;
+    _engine.getSimulationBox()._coulombCoefficients[moltype2][moltype1][atomType2][atomType1] = coulombCoefficient;
 }

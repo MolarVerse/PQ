@@ -1,5 +1,6 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 #include "moldescriptorReader.hpp"
 #include "exceptions.hpp"
@@ -108,7 +109,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
         else if (lineElements.size() == 3 || lineElements.size() == 4)
         {
             molecule.addAtomName(lineElements[0]);
-            molecule.addAtomType(stoi(lineElements[1]));
+            molecule.addExternalAtomType(stoi(lineElements[1]));
             molecule.addPartialCharge(stod(lineElements[2]));
 
             if (lineElements.size() == 4)
@@ -120,5 +121,30 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
     }
 
+    convertExternalToInternalAtomtypes(molecule);
+
     _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
+}
+
+/**
+ * @brief convert external to internal atomtypes
+ *
+ * @details in order to manage if user declares for example only atomtype 1 and 3
+ *
+ * @param molecule
+ */
+void MoldescriptorReader::convertExternalToInternalAtomtypes(Molecule &molecule)
+{
+
+    for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+    {
+        int externalAtomType = molecule.getExternalAtomType(i);
+        molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
+    }
+
+    for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+    {
+        int externalAtomType = molecule.getExternalAtomType(i);
+        molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
+    }
 }

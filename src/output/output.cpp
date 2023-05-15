@@ -82,3 +82,20 @@ void StdoutOutput::writeDensityWarning() const
              << endl;
     }
 }
+
+string Output::initialMomentumMessage(double momentum) const
+{
+    return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
+}
+
+void LogOutput::writeInitialMomentum(double momentum)
+{
+    _fp << endl;
+    _fp << initialMomentumMessage(momentum) << endl;
+}
+
+void StdoutOutput::writeInitialMomentum(double momentum) const
+{
+    cout << endl;
+    cout << initialMomentumMessage(momentum) << endl;
+}

@@ -8,6 +8,7 @@
 #include "settings.hpp"
 #include "jobtype.hpp"
 #include "output.hpp"
+#include "outputData.hpp"
 #include "simulationBox.hpp"
 #include "integrator.hpp"
 
@@ -28,20 +29,23 @@ public:
 
     Settings _settings;
     JobType _jobType;
+    OutputData _outputData;
 
-    std::shared_ptr<EnergyOutput> _energyOutput = std::make_shared<EnergyOutput>(EnergyOutput("default.en"));
-    std::shared_ptr<TrajectoryOutput> _xyzOutput = std::make_shared<TrajectoryOutput>(TrajectoryOutput("default.xyz"));
-    std::shared_ptr<TrajectoryOutput> _velOutput = std::make_shared<TrajectoryOutput>(TrajectoryOutput("default.vel"));
-    std::shared_ptr<TrajectoryOutput> _forceOutput = std::make_shared<TrajectoryOutput>(TrajectoryOutput("default.force"));
-    std::shared_ptr<LogOutput> _logOutput = std::make_shared<LogOutput>(LogOutput("default.log"));
-    std::shared_ptr<StdoutOutput> _stdoutOutput = std::make_shared<StdoutOutput>(StdoutOutput("stdout"));
-    std::shared_ptr<RstFileOutput> _rstFileOutput = std::make_shared<RstFileOutput>(RstFileOutput("default.rst"));
-    std::shared_ptr<ChargeOutput> _chargeOutput = std::make_shared<ChargeOutput>(ChargeOutput("default.chg"));
-    std::shared_ptr<InfoOutput> _infoOutput = std::make_shared<InfoOutput>(InfoOutput("default.info"));
+    std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>(EnergyOutput("default.en"));
+    std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.xyz"));
+    std::unique_ptr<TrajectoryOutput> _velOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.vel"));
+    std::unique_ptr<TrajectoryOutput> _forceOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.force"));
+    std::unique_ptr<LogOutput> _logOutput = std::make_unique<LogOutput>(LogOutput("default.log"));
+    std::unique_ptr<StdoutOutput> _stdoutOutput = std::make_unique<StdoutOutput>(StdoutOutput("stdout"));
+    std::unique_ptr<RstFileOutput> _rstFileOutput = std::make_unique<RstFileOutput>(RstFileOutput("default.rst"));
+    std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>(ChargeOutput("default.chg"));
+    std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>(InfoOutput("default.info"));
 
     SimulationBox &getSimulationBox() { return _simulationBox; };
 
     Integrator _integrator;
+
+    void calculateMomentum(SimulationBox &, OutputData &);
 };
 
 #endif

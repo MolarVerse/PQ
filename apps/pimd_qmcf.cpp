@@ -8,6 +8,7 @@
 #include "engine.hpp"
 #include "moldescriptorReader.hpp"
 #include "postProcessSetup.hpp"
+#include "guffDatReader.hpp"
 
 using namespace std;
 
@@ -26,6 +27,13 @@ int main(int argc, char *argv[])
     readRstFile(engine);
 
     postProcessSetup(engine);
+
+    readGuffDat(engine);
+
+    engine.calculateMomentum(engine.getSimulationBox(), engine._outputData);
+
+    engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
+    engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
 
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxAngles()[1] << endl;
@@ -46,18 +54,17 @@ int main(int argc, char *argv[])
 
     cout << "atom mass test: " << engine.getSimulationBox()._molecules[0].getMass(0) << endl;
 
-    // for (auto molecule : engine.getSimulationBox()._molecules)
-    // {
-    //     for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
-    //     {
-    //         cout << "x:   " << molecule.getAtomPosition(i)[0] << endl;
-    //         cout << "y:   " << molecule.getAtomPosition(i)[1] << endl;
-    //         cout << "z:   " << molecule.getAtomPosition(i)[2] << endl;
-    //     }
-    //     cout << endl;
-    // }
-
     cout << "density " << engine.getSimulationBox()._box.getDensity() << endl;
+
+    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 0, 0)[0] << endl;
+    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 0, 1)[0] << endl;
+    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 1, 0)[0] << endl;
+    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 1, 1)[0] << endl;
+
+    cout << engine.getSimulationBox().getRncCutOff(1, 1, 0, 0) << endl;
+    cout << engine.getSimulationBox().getRncCutOff(1, 1, 0, 1) << endl;
+    cout << engine.getSimulationBox().getRncCutOff(1, 1, 1, 0) << endl;
+    cout << engine.getSimulationBox().getRncCutOff(1, 1, 1, 1) << endl;
 
     return 0;
 }

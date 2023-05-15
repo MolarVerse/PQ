@@ -47,4 +47,10 @@ constexpr double _ELECTRON_CHARGE_ = 1.6021766208e-19; // in Coulomb
 constexpr double _ELECTRON_CHARGE_SQUARED_ = _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
 constexpr double _ELECTRON_MASS_ = 9.10938356e-31; // in kg
 
+/**
+ * @brief Conversion factors for time units
+ */
+constexpr double _S_TO_FS_ = 1.0e15;
+constexpr double _FS_TO_S_ = 1.0 / _S_TO_FS_;
+
 #endif
