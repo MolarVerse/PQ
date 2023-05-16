@@ -41,7 +41,7 @@
 
 # JOB
 #-----------------------------------------
-   jobtype     = mm-md; timestep    = 0.0000000000000000001;
+   jobtype     = mm-md; timestep    = 0.1;
    nstep       = 1;
    output_freq = 1;
    #write_traj  = on;
@@ -58,12 +58,12 @@
 # COULOMBICS
 #-----------------------------------------
    rcoulomb   = 9.0;
-   long_range = none;
+   #long_range = ewald;
    #longrange_nc = on;
 
 # NON-COULOMBICS
 #-----------------------------------------
-   noncoulomb = lj;
+   #noncoulomb = lj;
 
 # INTEGRATOR
 #-----------------------------------------
@@ -77,7 +77,7 @@
 # THERMOSTAT
 #-----------------------------------------
    #temp       = 298.15;
-   thermostat = none;
+   #thermostat = rescale;
    #manostat   = berendsen;
    #pressure   = 1.013;
 #  nscale = 500;

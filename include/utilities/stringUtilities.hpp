@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief StringUtilities is a namespace for string utilities
+ *
+ */
 namespace StringUtilities
 {
     std::string removeComments(std::string &, std::string_view);

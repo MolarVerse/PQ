@@ -23,6 +23,8 @@ public:
     void setJobType(std::string_view jobType) { _jobType = jobType; };
 
     virtual void calculateForces(SimulationBox &, OutputData &) = 0;
+    void calcCoulomb(double, double, double, double &, double &, double, double force_cutof);
+    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double);
 };
 
 /**

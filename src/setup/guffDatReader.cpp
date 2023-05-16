@@ -4,6 +4,7 @@
 #include "defaults.hpp"
 
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 using namespace StringUtilities;
@@ -31,12 +32,20 @@ void GuffDatReader::setupGuffMaps()
     _engine.getSimulationBox()._guffCoefficients.resize(numberOfMoleculeTypes);
     _engine.getSimulationBox()._rncCutOffs.resize(numberOfMoleculeTypes);
     _engine.getSimulationBox()._coulombCoefficients.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._cEnergyCutOffs.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._cForceCutOffs.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._ncEnergyCutOffs.resize(numberOfMoleculeTypes);
+    _engine.getSimulationBox()._ncForceCutOffs.resize(numberOfMoleculeTypes);
 
     for (size_t i = 0; i < numberOfMoleculeTypes; i++)
     {
         _engine.getSimulationBox()._guffCoefficients[i].resize(numberOfMoleculeTypes);
         _engine.getSimulationBox()._rncCutOffs[i].resize(numberOfMoleculeTypes);
         _engine.getSimulationBox()._coulombCoefficients[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._cEnergyCutOffs[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._cForceCutOffs[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._ncEnergyCutOffs[i].resize(numberOfMoleculeTypes);
+        _engine.getSimulationBox()._ncForceCutOffs[i].resize(numberOfMoleculeTypes);
     }
 
     for (size_t i = 0; i < numberOfMoleculeTypes; i++)
@@ -47,6 +56,10 @@ void GuffDatReader::setupGuffMaps()
             _engine.getSimulationBox()._guffCoefficients[i][j].resize(numberOfAtomTypes);
             _engine.getSimulationBox()._rncCutOffs[i][j].resize(numberOfAtomTypes);
             _engine.getSimulationBox()._coulombCoefficients[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._cEnergyCutOffs[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._cForceCutOffs[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._ncEnergyCutOffs[i][j].resize(numberOfAtomTypes);
+            _engine.getSimulationBox()._ncForceCutOffs[i][j].resize(numberOfAtomTypes);
         }
     }
 
@@ -63,6 +76,10 @@ void GuffDatReader::setupGuffMaps()
                 _engine.getSimulationBox()._guffCoefficients[i][j][k].resize(numberOfAtomTypes_j);
                 _engine.getSimulationBox()._rncCutOffs[i][j][k].resize(numberOfAtomTypes_j);
                 _engine.getSimulationBox()._coulombCoefficients[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._cEnergyCutOffs[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._cForceCutOffs[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._ncEnergyCutOffs[i][j][k].resize(numberOfAtomTypes_j);
+                _engine.getSimulationBox()._ncForceCutOffs[i][j][k].resize(numberOfAtomTypes_j);
             }
         }
     }
@@ -137,7 +154,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     double rncCutOff = stod(lineCommands[4]);
 
     if (rncCutOff < 0.0)
-        rncCutOff = _RC_CUT_OFF_DEF_;
+        rncCutOff = _engine.getSimulationBox().getRcCutOff();
 
     double coulombCoefficient = stod(lineCommands[5]);
     vector<double> guffCoefficients(22);
@@ -158,4 +175,21 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     _engine.getSimulationBox()._coulombCoefficients[moltype1][moltype2][atomType1][atomType2] = coulombCoefficient;
     _engine.getSimulationBox()._coulombCoefficients[moltype2][moltype1][atomType2][atomType1] = coulombCoefficient;
+
+    double energy, force;
+    double dummyCutoff = 1.0;
+
+    _engine._jobType->calcCoulomb(coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);
+
+    _engine.getSimulationBox()._cEnergyCutOffs[moltype1][moltype2][atomType1][atomType2] = energy;
+    _engine.getSimulationBox()._cEnergyCutOffs[moltype2][moltype1][atomType2][atomType1] = energy;
+    _engine.getSimulationBox()._cForceCutOffs[moltype1][moltype2][atomType1][atomType2] = force;
+    _engine.getSimulationBox()._cForceCutOffs[moltype2][moltype1][atomType2][atomType1] = force;
+
+    _engine._jobType->calcNonCoulomb(guffCoefficients, dummyCutoff, rncCutOff, energy, force, 0.0, 0.0);
+
+    _engine.getSimulationBox()._ncEnergyCutOffs[moltype1][moltype2][atomType1][atomType2] = energy;
+    _engine.getSimulationBox()._ncEnergyCutOffs[moltype2][moltype1][atomType2][atomType1] = energy;
+    _engine.getSimulationBox()._ncForceCutOffs[moltype1][moltype2][atomType1][atomType2] = force;
+    _engine.getSimulationBox()._ncForceCutOffs[moltype2][moltype1][atomType2][atomType1] = force;
 }

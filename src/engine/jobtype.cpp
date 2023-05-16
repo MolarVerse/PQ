@@ -5,11 +5,14 @@
 
 using namespace std;
 
-void calcCoulomb(double rcCutoff, double coulombCoefficient, double distance, double &energy, double &force);
-void calcNonCoulomb(double rncCutoff, vector<double> &guffCoefficients, double distance, double &energy, double &force);
-
 void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
 {
+    vector<double> xyz_i(3);
+    vector<double> xyz_j(3);
+    vector<double> dxyz(3);
+
+    vector<double> box = simBox._box.getBoxDimensions();
+
     // inter molecular forces
     for (int mol_i = 0; mol_i < simBox.getNumberOfMolecules(); mol_i++)
     {
@@ -25,13 +28,25 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
             {
                 for (int atom_j = 0; atom_j < molecule_j.getNumberOfAtoms(); atom_j++)
                 {
-                    const auto &xyz_i = molecule_i.getAtomPosition(atom_i);
-                    const auto &xyz_j = molecule_j.getAtomPosition(atom_j);
+                    molecule_i.getAtomPosition(atom_i, xyz_i);
+                    molecule_j.getAtomPosition(atom_j, xyz_j);
 
-                    const double distance = simBox._box.calculateDistance(xyz_i, xyz_j);
+                    // const double distanceSquared = simBox._box.calculateDistanceSquared(xyz_i, xyz_j, dxyz);
+                    dxyz[0] = xyz_i[0] - xyz_j[0];
+                    dxyz[1] = xyz_i[1] - xyz_j[1];
+                    dxyz[2] = xyz_i[2] - xyz_j[2];
 
-                    if (distance < simBox.getRcCutOff())
+                    dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
+                    dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
+                    dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+
+                    double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+
+                    double RcCutOff = simBox.getRcCutOff();
+
+                    if (distanceSquared < RcCutOff * RcCutOff)
                     {
+                        const double distance = sqrt(distanceSquared);
                         const int atomType_i = molecule_i.getAtomType(atom_i);
                         const int atomType_j = molecule_j.getAtomType(atom_j);
 
@@ -39,7 +54,7 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
 
                         double energy, force;
 
-                        calcCoulomb(simBox.getRcCutOff(), coulombCoefficient, distance, energy, force);
+                        calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                         outputData.addAverageCoulombEnergy(energy);
 
@@ -49,7 +64,7 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
                         {
                             auto &guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                            calcNonCoulomb(rncCutOff, guffCoefficients, distance, energy, force);
+                            calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                             outputData.addAverageNonCoulombEnergy(energy);
                         }
@@ -60,18 +75,19 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
     }
 }
 
-void calcCoulomb(double rcCutoff, double coulombCoefficient, double distance, double &energy, double &force)
+void JobType::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
 {
-    energy = coulombCoefficient * (1 / distance - 1 / rcCutoff - 1 / (rcCutoff * rcCutoff) * (rcCutoff - distance));
-    force = coulombCoefficient * (1 / (rcCutoff * rcCutoff) - 1 / (distance * distance));
+    energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (distance - rcCutoff);
+    force = -coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
 }
 
-void calcNonCoulomb(double rncCutoff, vector<double> &guffCoefficients, double distance, double &energy, double &force)
+void JobType::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
 {
     auto c6 = guffCoefficients[0];
+    auto n6 = guffCoefficients[1];
     auto c12 = guffCoefficients[2];
+    auto n12 = guffCoefficients[3];
 
-    double force_cutoff = -c6 / pow(rncCutoff, 7) + 6 * c12 / pow(rncCutoff, 13);
-    double energy_cutoff = c6 / pow(rncCutoff, 6) - c12 / pow(rncCutoff, 12);
-    energy = c6 / pow(distance, 6) - c12 / pow(distance, 12) - energy_cutoff - force_cutoff * (rncCutoff - distance);
+    energy = c6 / pow(distance, n6) + c12 / pow(distance, n12) - energy_cutoff - force_cutoff * (rncCutoff - distance);
+    force = -n6 * c6 / pow(distance, n6 + 1) - n12 * c12 / pow(distance, n12 + 1) - force_cutoff;
 }

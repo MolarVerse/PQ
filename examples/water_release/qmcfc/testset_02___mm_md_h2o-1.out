@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Mon May 15 23:26:47 2023
+ (+) Simulation run started on: Tue May 16 10:51:15 2023
 
 
 
@@ -52,7 +52,7 @@
 	
 	# JOB
 	#-----------------------------------------
-	   jobtype     = mm-md; timestep    = 0.0000000000000000001;
+	   jobtype     = mm-md; timestep    = 0.1;
 	   nstep       = 1;
 	   output_freq = 1;
 	   #write_traj  = on;
@@ -69,12 +69,12 @@
 	# COULOMBICS
 	#-----------------------------------------
 	   rcoulomb   = 9.0;
-	   long_range = none;
+	   #long_range = ewald;
 	   #longrange_nc = on;
 	
 	# NON-COULOMBICS
 	#-----------------------------------------
-	   noncoulomb = lj;
+	   #noncoulomb = lj;
 	
 	# INTEGRATOR
 	#-----------------------------------------
@@ -88,7 +88,7 @@
 	# THERMOSTAT
 	#-----------------------------------------
 	   #temp       = 298.15;
-	   thermostat = none;
+	   #thermostat = rescale;
 	   #manostat   = berendsen;
 	   #pressure   = 1.013;
 	#  nscale = 500;
@@ -119,7 +119,7 @@
 
 
  (+) Input file run-1.in read successfully
-       18 keywords have been read
+       15 keywords have been read
 
  (+) Reading moldescriptor at
      /home/jag/software/qmcfc/data/moldescriptor.dat
@@ -154,7 +154,7 @@
  (+) Reading GUFF coefficients for pair potentials at
      /home/jag/software/qmcfc/data/guff.dat
 
-     Lennard-Jones 6-12 formulation was requested
+     23 Parameter GUFF formulation was requested
 
      Requesting data for:
 
@@ -176,19 +176,23 @@
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 0.00 fs
+		Time step: 0.10 fs
 
 	* Coulombic Interactions
 		Cutoff:   9.00 A
 
- (!) Warning: No longe Range correction requested.
+	* Reaction field
+		Dielectric Constant:   0.00
 
-	* Thermostat -- none
+	* Thermostat -- Berendsen
+		Relaxation time   :   0.10 ps
+		Target Temperature: 298.15 K
+		kT                : 5.92e-01 kcal/mol
 
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (0.0 fs)
+		Output Frequency:    1 (0.1 fs)
 
  (+) Creating data files....SUCCESS
 
@@ -202,12 +206,12 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	        1233
-   SIMULATION TIME     0.000		TEMPERATURE	     201.840
-   PRESSURE	149852029787.663		E(MM)		11884123349.627
-   E(KIN)	    3609.869		E(INTRA)	       0.000
-   E(COULOMB)	  -11738.231		E(NONCOULOMB)	11884131477.988
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.682e-01		LOOPTIME 	       0.000
+   SIMULATION TIME     0.123		TEMPERATURE	231381894018195324928.000
+   PRESSURE	2761970074760982822912.000		E(MM)		4138227769507500785664.000
+   E(KIN)	4138227766488053841920.000		E(INTRA)	       0.000
+   E(COULOMB)	  -11762.123		E(NONCOULOMB)	3019446739857.167
+   E(RF)	     814.112		E(THREEBODY)	       0.000
+   MOMENTUM	   7.678e-01		LOOPTIME 	       1.000
 
 
 
@@ -220,5 +224,5 @@
 
 
 
- (+) Simulation time: 0.000000
+ (+) Simulation time: 1.000000
 

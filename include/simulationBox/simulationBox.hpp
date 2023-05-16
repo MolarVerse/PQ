@@ -38,6 +38,10 @@ public:
     std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> _guffCoefficients;
     std::vector<std::vector<std::vector<std::vector<double>>>> _rncCutOffs;
     std::vector<std::vector<std::vector<std::vector<double>>>> _coulombCoefficients;
+    std::vector<std::vector<std::vector<std::vector<double>>>> _cEnergyCutOffs;
+    std::vector<std::vector<std::vector<std::vector<double>>>> _cForceCutOffs;
+    std::vector<std::vector<std::vector<std::vector<double>>>> _ncEnergyCutOffs;
+    std::vector<std::vector<std::vector<std::vector<double>>>> _ncForceCutOffs;
 
     Box _box;
 
@@ -56,6 +60,10 @@ public:
     std::vector<double> &getGuffCoefficients(int moltype1, int moltype2, int atomType1, int atomType2) { return _guffCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
     double getRncCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _rncCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
     double getCoulombCoefficient(int moltype1, int moltype2, int atomType1, int atomType2) { return _coulombCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    double getcEnergyCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _cEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    double getcForceCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _cForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    double getncEnergyCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _ncEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    double getncForceCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _ncForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
 
     Molecule findMoleculeType(int moltype) const;
 

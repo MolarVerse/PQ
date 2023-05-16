@@ -93,7 +93,14 @@ public:
     int getAtomicNumber(int index) const { return _atomicNumbers[index]; };
 
     void addAtomPosition(const std::vector<double> &positions) { addVector(_positions, positions); }
-    const std::vector<double> &getAtomPosition(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
+    std::vector<double> getAtomPosition(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
+    void getAtomPosition(int index, std::vector<double> &position) const
+    {
+        position[0] = _positions[3 * index];
+        position[1] = _positions[3 * index + 1];
+        position[2] = _positions[3 * index + 2];
+    }
+    double getAtomPosition(int index, int dimension) const { return _positions[3 * index + dimension]; }
 
     void addAtomVelocity(const std::vector<double> &velocities) { addVector(_velocities, velocities); }
     std::vector<double> getAtomVelocity(int index) { return {_velocities[3 * index], _velocities[3 * index + 1], _velocities[3 * index + 2]}; }
