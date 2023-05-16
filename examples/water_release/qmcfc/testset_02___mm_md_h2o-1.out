@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Tue May 16 10:51:15 2023
+ (+) Simulation run started on: Tue May 16 23:05:02 2023
 
 
 
@@ -52,7 +52,7 @@
 	
 	# JOB
 	#-----------------------------------------
-	   jobtype     = mm-md; timestep    = 0.1;
+	   jobtype     = mm-md; timestep    = 0.0000000000000000000001;
 	   nstep       = 1;
 	   output_freq = 1;
 	   #write_traj  = on;
@@ -69,7 +69,7 @@
 	# COULOMBICS
 	#-----------------------------------------
 	   rcoulomb   = 9.0;
-	   #long_range = ewald;
+	   long_range = none;
 	   #longrange_nc = on;
 	
 	# NON-COULOMBICS
@@ -83,7 +83,7 @@
 	# MOLDESCRIPTOR
 	#-----------------------------------------
 	  #moldescriptor_file = test.dat;
-	  #guff_path = test;
+	  guff_path = .;
 	
 	# THERMOSTAT
 	#-----------------------------------------
@@ -119,40 +119,40 @@
 
 
  (+) Input file run-1.in read successfully
-       15 keywords have been read
+       17 keywords have been read
 
  (+) Reading moldescriptor at
-     /home/jag/software/qmcfc/data/moldescriptor.dat
+     /home/jag/projects/pimd_qmcf/examples/water_release/qmcfc/moldescriptor.dat
 
      SUCCESS: Data of 10 unit types have been read
 
  (+) Reading sytem information from
      restart file 'h2o-qmcf.rst'
 
-     SUCCESS: Molecular units:   2000
-              Atoms:             6000
+     SUCCESS: Molecular units:   1000
+              Atoms:             3000
 
 	     >> MOLECULE UNITS <<
 
-        2000 Molecule(s) of type  1 (H2O)
+        1000 Molecule(s) of type  1 (H2O)
 
  (!) Warning: Box data taken from restart file h2o-qmcf.rst.
      Density recalculated - input density  0.95230 is ignored.
 
 	      >> SYSTEM DATA <<
 
-           XBOX    =    20.00000 A
-           YBOX    =    20.30000 A
-           ZBOX    =    26.00000 A
-           VOLUME  = 10556.00000 A�
-           Density =  5.66788 kg/dm³
+           XBOX    =    31.05722 A
+           YBOX    =    31.05722 A
+           ZBOX    =    31.05722 A
+           VOLUME  = 29956.26513 A�
+           Density =  0.99863 kg/dm³
            Charge  =        0 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 7.68198e-01 amu * A / fs
+                p = 4.70667e-12 amu * A / fs
 
  (+) Reading GUFF coefficients for pair potentials at
-     /home/jag/software/qmcfc/data/guff.dat
+     /home/jag/projects/pimd_qmcf/examples/water_release/qmcfc/guff.dat
 
      23 Parameter GUFF formulation was requested
 
@@ -176,13 +176,12 @@
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 0.10 fs
+		Time step: 0.00 fs
 
 	* Coulombic Interactions
 		Cutoff:   9.00 A
 
-	* Reaction field
-		Dielectric Constant:   0.00
+ (!) Warning: No longe Range correction requested.
 
 	* Thermostat -- Berendsen
 		Relaxation time   :   0.10 ps
@@ -192,7 +191,7 @@
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (0.1 fs)
+		Output Frequency:    1 (0.0 fs)
 
  (+) Creating data files....SUCCESS
 
@@ -201,17 +200,17 @@
  (+) Entering MM -- simulation loop
 
        Requested Number of Steps:           1
-       Step Counter:                     1232
+       Step Counter:                        0
 
  (+) Starting Simulation...
 
-   STEP NUMBER	           1		TOTAL STEPS	        1233
-   SIMULATION TIME     0.123		TEMPERATURE	231381894018195324928.000
-   PRESSURE	2761970074760982822912.000		E(MM)		4138227769507500785664.000
-   E(KIN)	4138227766488053841920.000		E(INTRA)	       0.000
-   E(COULOMB)	  -11762.123		E(NONCOULOMB)	3019446739857.167
-   E(RF)	     814.112		E(THREEBODY)	       0.000
-   MOMENTUM	   7.678e-01		LOOPTIME 	       1.000
+   STEP NUMBER	           1		TOTAL STEPS	           1
+   SIMULATION TIME     0.000		TEMPERATURE	     196.421
+   PRESSURE	   66232.434		E(MM)		   -2504.023
+   E(KIN)	    1756.482		E(INTRA)	       0.000
+   E(COULOMB)	   -7102.053		E(NONCOULOMB)	    2841.548
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   MOMENTUM	   4.707e-12		LOOPTIME 	       0.000
 
 
 
@@ -224,5 +223,5 @@
 
 
 
- (+) Simulation time: 1.000000
+ (+) Simulation time: 0.000000
 

@@ -41,7 +41,7 @@
 
 # JOB
 #-----------------------------------------
-   jobtype     = mm-md; timestep    = 0.1;
+   jobtype     = mm-md; timestep    = 0.0000000000000000000001;
    nstep       = 1;
    output_freq = 1;
    #write_traj  = on;
@@ -58,7 +58,7 @@
 # COULOMBICS
 #-----------------------------------------
    rcoulomb   = 9.0;
-   #long_range = ewald;
+   long_range = none;
    #longrange_nc = on;
 
 # NON-COULOMBICS
@@ -72,7 +72,7 @@
 # MOLDESCRIPTOR
 #-----------------------------------------
   #moldescriptor_file = test.dat;
-  #guff_path = test;
+  guff_path = .;
 
 # THERMOSTAT
 #-----------------------------------------

@@ -31,7 +31,6 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
                     molecule_i.getAtomPosition(atom_i, xyz_i);
                     molecule_j.getAtomPosition(atom_j, xyz_j);
 
-                    // const double distanceSquared = simBox._box.calculateDistanceSquared(xyz_i, xyz_j, dxyz);
                     dxyz[0] = xyz_i[0] - xyz_j[0];
                     dxyz[1] = xyz_i[1] - xyz_j[1];
                     dxyz[2] = xyz_i[2] - xyz_j[2];
@@ -52,7 +51,8 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
 
                         double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                        double energy, force;
+                        double energy = 0.0;
+                        double force = 0.0;
 
                         calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
@@ -77,17 +77,66 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
 
 void JobType::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
 {
-    energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (distance - rcCutoff);
-    force = -coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
+    energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (rcCutoff - distance);
+    force = coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
 }
 
 void JobType::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
 {
-    auto c6 = guffCoefficients[0];
-    auto n6 = guffCoefficients[1];
-    auto c12 = guffCoefficients[2];
-    auto n12 = guffCoefficients[3];
+    auto c1 = guffCoefficients[0];
+    auto n2 = guffCoefficients[1];
+    auto c3 = guffCoefficients[2];
+    auto n4 = guffCoefficients[3];
 
-    energy = c6 / pow(distance, n6) + c12 / pow(distance, n12) - energy_cutoff - force_cutoff * (rncCutoff - distance);
-    force = -n6 * c6 / pow(distance, n6 + 1) - n12 * c12 / pow(distance, n12 + 1) - force_cutoff;
+    energy = c1 / pow(distance, n2) + c3 / pow(distance, n4);
+    force = n2 * c1 / pow(distance, n2 + 1) + n4 * c3 / pow(distance, n4 + 1);
+
+    auto c5 = guffCoefficients[4];
+    auto n6 = guffCoefficients[5];
+    auto c7 = guffCoefficients[6];
+    auto n8 = guffCoefficients[7];
+
+    energy += c5 / pow(distance, n6) + c7 / pow(distance, n8);
+    force += n6 * c5 / pow(distance, n6 + 1) + n8 * c7 / pow(distance, n8 + 1);
+
+    auto c9 = guffCoefficients[8];
+    auto cexp10 = guffCoefficients[9];
+    auto rexp11 = guffCoefficients[10];
+
+    auto helper = exp(cexp10 * (distance - rexp11));
+
+    energy += c9 / (1 + helper);
+    force += c9 * cexp10 * helper / ((1 + helper) * (1 + helper));
+
+    auto c12 = guffCoefficients[11];
+    auto cexp13 = guffCoefficients[12];
+    auto rexp14 = guffCoefficients[13];
+
+    helper = exp(cexp13 * (distance - rexp14));
+
+    energy += c12 / (1 + helper);
+    force += c12 * cexp13 * helper / ((1 + helper) * (1 + helper));
+
+    auto c15 = guffCoefficients[14];
+    auto cexp16 = guffCoefficients[15];
+    auto rexp17 = guffCoefficients[16];
+    auto n18 = guffCoefficients[17];
+
+    helper = c15 * exp(cexp16 * pow((distance - rexp17), n18));
+
+    energy += helper;
+    force += -cexp16 * n18 * pow((distance - rexp17), n18 - 1) * helper;
+
+    auto c19 = guffCoefficients[18];
+    auto cexp20 = guffCoefficients[19];
+    auto rexp21 = guffCoefficients[20];
+    auto n22 = guffCoefficients[21];
+
+    helper = c19 * exp(cexp20 * pow((distance - rexp21), n22));
+
+    energy += helper;
+    force += -cexp20 * n22 * pow((distance - rexp21), n22 - 1) * helper;
+
+    energy += -energy_cutoff - force_cutoff * (rncCutoff - distance);
+    force += -force_cutoff;
 }
