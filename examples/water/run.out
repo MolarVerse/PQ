@@ -1,0 +1,29 @@
+[33mUserInputWarning[39m
+Density and box dimensions set. Density will be ignored.
+
+9
+20
+
+Initial momentum = 0.768198 Angstrom * amu / fs
+-11738.2
+1.18842e+10
+Box size: 20
+Box size: 90
+h2o-qmcf.rst
+MMMD
+1000000
+testset_02___mm_md_h2o-1.out
+2
+Moldescriptor filename: ./moldescriptor.dat
+Water type: 1
+Ammonia type: 2
+atom mass test: 15.9994
+density 5.66788e-60
+26758.2
+6.23403
+6.23403
+0
+12.5
+5
+5
+3

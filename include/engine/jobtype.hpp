@@ -6,6 +6,7 @@
 
 #include "simulationBox.hpp"
 #include "outputData.hpp"
+#include "celllist.hpp"
 
 /**
  * @class JobType
@@ -23,6 +24,7 @@ public:
     void setJobType(std::string_view jobType) { _jobType = jobType; };
 
     virtual void calculateForces(SimulationBox &, OutputData &) = 0;
+    virtual void calculateForcesCellList(SimulationBox &, OutputData &, CellList &) = 0;
     void calcCoulomb(double, double, double, double &, double &, double, double force_cutof);
     void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double);
 };
@@ -41,6 +43,7 @@ public:
     MMMD() { _jobType = "MMMD"; };
 
     void calculateForces(SimulationBox &, OutputData &) override;
+    void calculateForcesCellList(SimulationBox &, OutputData &, CellList &) override;
 };
 
 #endif

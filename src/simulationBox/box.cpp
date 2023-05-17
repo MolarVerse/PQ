@@ -90,7 +90,7 @@ double Box::calculateVolume() const
  */
 vector<double> Box::calculateBoxDimensionsFromDensity() const
 {
-    double volume = _totalMass / (_density * _KG_PER_LITER_CUBIC_TO_AMU_PER_ANGSTROM_CUBIC_);
+    double volume = _totalMass / (_density / _KG_PER_LITER_CUBIC_TO_AMU_PER_ANGSTROM_CUBIC_);
     double a = cbrt(volume);
     double b = cbrt(volume);
     double c = cbrt(volume);

@@ -31,6 +31,7 @@ public:
     void addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
     int getNeighbourCellSize() const { return int(_neighbourCells.size()); }
     Cell *getNeighbourCell(int index) const { return _neighbourCells[index]; }
+    std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
 
     void setLowerBoundary(const std::vector<double> &lowerBoundary) { _lowerBoundary = lowerBoundary; }
     std::vector<double> getLowerBoundary() const { return _lowerBoundary; }
@@ -43,6 +44,7 @@ public:
 
     void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
     void clearMolecules() { _molecules.clear(); }
+    Molecule *getMolecule(int index) const { return _molecules[index]; }
 };
 
 #endif // _CELL_H_

@@ -81,8 +81,8 @@
    #manostat   = berendsen;
    #pressure   = 1.013;
 #  nscale = 500;
-   #cell-list = on;
-   #cell-number = 10;
+   cell-list = on;
+   cell-number = 3;
 #  friction   = 0.035;
 
 # VIRIAL
@@ -91,7 +91,7 @@
 
 # FILES
 #-----------------------------------------
-   start_file   = h2o-qmcf.rst; 
+   start_file   = h2o-qmcf_2000.rst; 
 
    output_file  = testset_02___mm_md_h2o-1.out; 
    info_file    = testset_02___mm_md_h2o-1.info;

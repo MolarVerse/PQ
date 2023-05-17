@@ -75,6 +75,147 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
     }
 }
 
+void MMMD::calculateForcesCellList(SimulationBox &simBox, OutputData &outputData, CellList &cellList)
+{
+    vector<double> xyz_i(3);
+    vector<double> xyz_j(3);
+    vector<double> dxyz(3);
+
+    vector<double> box = simBox._box.getBoxDimensions();
+
+    Molecule *molecule_i;
+    Molecule *molecule_j;
+
+    for (auto &cell_i : cellList.getCells())
+    {
+        for (int mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); mol_i++)
+        {
+            molecule_i = cell_i.getMolecule(mol_i);
+            int moltype_i = molecule_i->getMoltype();
+
+            for (int mol_j = 0; mol_j < mol_i; mol_j++)
+            {
+                molecule_j = cell_i.getMolecule(mol_j);
+                int moltype_j = molecule_j->getMoltype();
+
+                for (int atom_i = 0; atom_i < molecule_i->getNumberOfAtoms(); atom_i++)
+                {
+                    for (int atom_j = 0; atom_j < molecule_j->getNumberOfAtoms(); atom_j++)
+                    {
+                        molecule_i->getAtomPosition(atom_i, xyz_i);
+                        molecule_j->getAtomPosition(atom_j, xyz_j);
+
+                        dxyz[0] = xyz_i[0] - xyz_j[0];
+                        dxyz[1] = xyz_i[1] - xyz_j[1];
+                        dxyz[2] = xyz_i[2] - xyz_j[2];
+
+                        dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
+                        dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
+                        dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+
+                        double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+
+                        double RcCutOff = simBox.getRcCutOff();
+
+                        if (distanceSquared < RcCutOff * RcCutOff)
+                        {
+                            const double distance = sqrt(distanceSquared);
+                            const int atomType_i = molecule_i->getAtomType(atom_i);
+                            const int atomType_j = molecule_j->getAtomType(atom_j);
+
+                            double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                            double energy = 0.0;
+                            double force = 0.0;
+
+                            calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                            outputData.addAverageCoulombEnergy(energy);
+
+                            double rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                            if (distance < rncCutOff)
+                            {
+                                auto &guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                                calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                                outputData.addAverageNonCoulombEnergy(energy);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (auto &cell_i : cellList.getCells())
+    {
+        for (auto cell_j : cell_i.getNeighbourCells())
+        {
+            for (int mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); mol_i++)
+            {
+                molecule_i = cell_i.getMolecule(mol_i);
+                int moltype_i = molecule_i->getMoltype();
+
+                for (int mol_j = 0; mol_j < cell_j->getNumberOfMolecules(); mol_j++)
+                {
+                    molecule_j = cell_j->getMolecule(mol_j);
+                    int moltype_j = molecule_j->getMoltype();
+
+                    for (int atom_i = 0; atom_i < molecule_i->getNumberOfAtoms(); atom_i++)
+                    {
+                        for (int atom_j = 0; atom_j < molecule_j->getNumberOfAtoms(); atom_j++)
+                        {
+                            molecule_i->getAtomPosition(atom_i, xyz_i);
+                            molecule_j->getAtomPosition(atom_j, xyz_j);
+
+                            dxyz[0] = xyz_i[0] - xyz_j[0];
+                            dxyz[1] = xyz_i[1] - xyz_j[1];
+                            dxyz[2] = xyz_i[2] - xyz_j[2];
+
+                            dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
+                            dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
+                            dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+
+                            double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+
+                            double RcCutOff = simBox.getRcCutOff();
+
+                            if (distanceSquared < RcCutOff * RcCutOff)
+                            {
+                                const double distance = sqrt(distanceSquared);
+                                const int atomType_i = molecule_i->getAtomType(atom_i);
+                                const int atomType_j = molecule_j->getAtomType(atom_j);
+
+                                double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                                double energy = 0.0;
+                                double force = 0.0;
+
+                                calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                                outputData.addAverageCoulombEnergy(energy);
+
+                                double rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                                if (distance < rncCutOff)
+                                {
+                                    auto &guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                                    calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                                    outputData.addAverageNonCoulombEnergy(energy);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 void JobType::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
 {
     energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (rcCutoff - distance);
