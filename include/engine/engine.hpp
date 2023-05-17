@@ -25,9 +25,6 @@ private:
     SimulationBox _simulationBox;
 
 public:
-    // Engine() {};
-    //  Engine(const Engine &);
-
     Settings _settings;
     std::unique_ptr<JobType> _jobType;
     OutputData _outputData;

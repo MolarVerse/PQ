@@ -67,7 +67,7 @@ public:
 
     Molecule findMoleculeType(int moltype) const;
 
-    int getNumberOfMolecules() const { return _molecules.size(); };
+    int getNumberOfMolecules() const { return int(_molecules.size()); };
 };
 
 #endif

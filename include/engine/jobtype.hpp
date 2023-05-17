@@ -25,8 +25,10 @@ public:
 
     virtual void calculateForces(SimulationBox &, OutputData &) = 0;
     virtual void calculateForcesCellList(SimulationBox &, OutputData &, CellList &) = 0;
-    void calcCoulomb(double, double, double, double &, double &, double, double force_cutof);
-    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double);
+    void calcCoulomb(double, double, double, double &, double &, double, double force_cutof) const;
+    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const;
+    void calcLJ(std::vector<double> &, double, double, double &, double &, double, double) const;
+    void calcBuckingham(std::vector<double> &, double, double, double &, double &, double, double) const;
 };
 
 /**

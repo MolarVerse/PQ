@@ -16,12 +16,12 @@ void MMMD::calculateForces(SimulationBox &simBox, OutputData &outputData)
     // inter molecular forces
     for (int mol_i = 0; mol_i < simBox.getNumberOfMolecules(); mol_i++)
     {
-        auto &molecule_i = simBox._molecules[mol_i];
+        const auto &molecule_i = simBox._molecules[mol_i];
         int moltype_i = molecule_i.getMoltype();
 
         for (int mol_j = 0; mol_j < mol_i; mol_j++)
         {
-            auto &molecule_j = simBox._molecules[mol_j];
+            const auto &molecule_j = simBox._molecules[mol_j];
             int moltype_j = molecule_j.getMoltype();
 
             for (int atom_i = 0; atom_i < molecule_i.getNumberOfAtoms(); atom_i++)
@@ -83,10 +83,10 @@ void MMMD::calculateForcesCellList(SimulationBox &simBox, OutputData &outputData
 
     vector<double> box = simBox._box.getBoxDimensions();
 
-    Molecule *molecule_i;
-    Molecule *molecule_j;
+    const Molecule *molecule_i;
+    const Molecule *molecule_j;
 
-    for (auto &cell_i : cellList.getCells())
+    for (const auto &cell_i : cellList.getCells())
     {
         for (int mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); mol_i++)
         {
@@ -149,9 +149,9 @@ void MMMD::calculateForcesCellList(SimulationBox &simBox, OutputData &outputData
         }
     }
 
-    for (auto &cell_i : cellList.getCells())
+    for (const auto &cell_i : cellList.getCells())
     {
-        for (auto cell_j : cell_i.getNeighbourCells())
+        for (const auto cell_j : cell_i.getNeighbourCells())
         {
             for (int mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); mol_i++)
             {
@@ -216,13 +216,46 @@ void MMMD::calculateForcesCellList(SimulationBox &simBox, OutputData &outputData
     }
 }
 
-void JobType::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
+void JobType::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
 {
     energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (rcCutoff - distance);
     force = coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
 }
 
-void JobType::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff)
+void JobType::calcLJ(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
+{
+    auto c6 = guffCoefficients[0];
+    auto c12 = guffCoefficients[2];
+
+    auto distance_6 = distance * distance * distance * distance * distance * distance;
+    auto distance_12 = distance_6 * distance_6;
+
+    energy = c12 / distance_12 + c6 / distance_6;
+    force = 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
+
+    energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
+    force += force_cutoff;
+}
+
+void JobType::calcBuckingham(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
+{
+    auto c1 = guffCoefficients[0];
+    auto c2 = guffCoefficients[1];
+    auto c3 = guffCoefficients[2];
+
+    auto helper = c1 * exp(distance * c2);
+
+    auto distance_6 = distance * distance * distance * distance * distance * distance;
+    auto helper_c3 = c3 / distance_6;
+
+    energy = helper + helper_c3;
+    force = -c2 * helper + 6 * helper_c3 / distance;
+
+    energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
+    force += force_cutoff;
+}
+
+void JobType::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
 {
     auto c1 = guffCoefficients[0];
     auto n2 = guffCoefficients[1];

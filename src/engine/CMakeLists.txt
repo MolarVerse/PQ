@@ -3,7 +3,6 @@ add_library(engine
     settings.cpp
     timings.cpp
     jobtype.cpp
-    integrator.cpp
 )
 
 target_include_directories(engine
@@ -17,4 +16,5 @@ target_link_libraries(engine
         output
         simulationBox
         config
+        integrator
 )
