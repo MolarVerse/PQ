@@ -9,6 +9,7 @@
 #include "moldescriptorReader.hpp"
 #include "postProcessSetup.hpp"
 #include "guffDatReader.hpp"
+#include "celllist.hpp"
 
 using namespace std;
 
@@ -34,6 +35,19 @@ int main(int argc, char *argv[])
 
     engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
     engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
+
+    engine._cellList.setup(engine.getSimulationBox());
+
+    engine._cellList.updateCellList(engine.getSimulationBox());
+
+    int numberOfMolecules = 0;
+    for (auto &cell : engine._cellList.getCells())
+    {
+        numberOfMolecules += cell.getNumberOfMolecules();
+        cout << cell.getNumberOfMolecules() << endl;
+    }
+
+    cout << "Number of molecules: " << numberOfMolecules << endl;
 
     engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
 

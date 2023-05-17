@@ -27,6 +27,8 @@ private:
     double _density = 0.0;
     double _volume = 0.0;
 
+    bool _boxSizeHasChanged = false;
+
 public:
     Box() = default;
     ~Box() = default;
@@ -50,6 +52,9 @@ public:
     double getVolume() const { return _volume; };
     void setVolume(double volume) { _volume = volume; };
     double calculateVolume() const;
+
+    bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
+    void setBoxSizeHasChanged(bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; };
 
     double calculateDistance(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
     double calculateDistanceSquared(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);

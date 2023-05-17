@@ -36,15 +36,19 @@ namespace Setup::InputFileReader
         void read();
         void postProcess();
 
+        // parsing jobtype related keywords
         void parseJobType(const std::vector<std::string> &);
 
+        // parsing timings related keywords
         void parseTimestep(const std::vector<std::string> &);
         void parseNumberOfSteps(const std::vector<std::string> &);
 
+        // parsing general keywords
         void parseStartFilename(const std::vector<std::string> &);
         void parseMoldescriptorFilename(const std::vector<std::string> &);
         void parseGuffPath(const std::vector<std::string> &);
 
+        // parsing output related keywords
         void parseOutputFreq(const std::vector<std::string> &);
         void parseLogFilename(const std::vector<std::string> &);
         void parseInfoFilename(const std::vector<std::string> &);
@@ -55,13 +59,21 @@ namespace Setup::InputFileReader
         void parseRestartFilename(const std::vector<std::string> &);
         void parseChargeFilename(const std::vector<std::string> &);
 
+        // parsing integrator related keywords
         void parseIntegrator(const std::vector<std::string> &);
 
+        // parsing Box related keywords
         void parseDensity(const std::vector<std::string> &);
 
+        // parsing Virial related keywords TODO: implement
         void parseVirial(const std::vector<std::string> &);
 
+        // parsing simualationBox related keywords
         void parseRcoulomb(const std::vector<std::string> &);
+
+        // parsing celllist related keywords
+        void parseCellListActivated(const std::vector<std::string> &);
+        void parseNumberOfCells(const std::vector<std::string> &);
 
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 

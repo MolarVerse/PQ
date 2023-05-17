@@ -12,6 +12,7 @@ add_library(setup
     inputFileParserBox.cpp
     inputFileParserVirial.cpp
     inputFileParserSimulationBox.cpp
+    inputFileParserCelllist.cpp
 
     moldescriptorReader.cpp
     postProcessSetup.cpp

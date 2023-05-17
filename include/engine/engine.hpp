@@ -11,6 +11,7 @@
 #include "outputData.hpp"
 #include "simulationBox.hpp"
 #include "integrator.hpp"
+#include "celllist.hpp"
 
 /**
  * @class Engine
@@ -30,6 +31,8 @@ public:
     Settings _settings;
     std::unique_ptr<JobType> _jobType;
     OutputData _outputData;
+    Integrator _integrator;
+    CellList _cellList;
 
     std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>(EnergyOutput("default.en"));
     std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.xyz"));
@@ -42,9 +45,6 @@ public:
     std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>(InfoOutput("default.info"));
 
     SimulationBox &getSimulationBox() { return _simulationBox; };
-
-    Integrator _integrator;
-
     void calculateMomentum(SimulationBox &, OutputData &);
 };
 

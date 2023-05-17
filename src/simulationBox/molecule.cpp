@@ -44,3 +44,24 @@ int Molecule::getNumberOfAtomTypes()
 {
     return int(distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
 }
+
+vector<double> Molecule::getCenterOfMass()
+{
+    auto centerOfMass = vector<double>(3, 0.0);
+
+    for (int i = 0; i < _numberOfAtoms; i++)
+    {
+        auto mass = getMass(i);
+        auto position = getAtomPosition(i);
+
+        centerOfMass[0] += mass * position[0];
+        centerOfMass[1] += mass * position[1];
+        centerOfMass[2] += mass * position[2];
+    }
+
+    centerOfMass[0] /= getMolMass();
+    centerOfMass[1] /= getMolMass();
+    centerOfMass[2] /= getMolMass();
+
+    return centerOfMass;
+}

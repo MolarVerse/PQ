@@ -118,6 +118,8 @@ public:
     std::vector<double> getAtomForceOld(int index) { return {_forcesOld[3 * index], _forcesOld[3 * index + 1], _forcesOld[3 * index + 2]}; }
 
     int getNumberOfAtomTypes();
+
+    std::vector<double> getCenterOfMass();
 };
 
 #endif

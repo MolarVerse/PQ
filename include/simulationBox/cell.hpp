@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "molecule.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class Cell
@@ -16,11 +17,32 @@ class Cell
 {
 private:
     std::vector<Molecule *> _molecules;
-    std::vector<Cell> _neighbourCells;
+    std::vector<Cell *> _neighbourCells;
+    std::vector<double> _lowerBoundary = {0, 0, 0};
+    std::vector<double> _upperBoundary = {0, 0, 0};
+
+    std::vector<int> _cellIndex = {0, 0, 0};
 
 public:
     void addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
     std::vector<Molecule *> getMolecules() const { return _molecules; }
+    int getNumberOfMolecules() const { return int(_molecules.size()); }
+
+    void addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
+    int getNeighbourCellSize() const { return int(_neighbourCells.size()); }
+    Cell *getNeighbourCell(int index) const { return _neighbourCells[index]; }
+
+    void setLowerBoundary(const std::vector<double> &lowerBoundary) { _lowerBoundary = lowerBoundary; }
+    std::vector<double> getLowerBoundary() const { return _lowerBoundary; }
+
+    void setUpperBoundary(const std::vector<double> &upperBoundary) { _upperBoundary = upperBoundary; }
+    std::vector<double> getUpperBoundary() const { return _upperBoundary; }
+
+    void setCellIndex(const std::vector<int> &cellIndex) { _cellIndex = cellIndex; }
+    std::vector<int> getCellIndex() const { return _cellIndex; }
+
+    void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
+    void clearMolecules() { _molecules.clear(); }
 };
 
 #endif // _CELL_H_
