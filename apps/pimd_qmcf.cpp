@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     engine._cellList.updateCellList(engine.getSimulationBox());
 
     // engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
-    engine._jobType->calculateForcesCellList(engine.getSimulationBox(), engine._outputData, engine._cellList);
+    engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
 
     cout << engine._outputData.getAverageCoulombEnergy() << endl;
     cout << engine._outputData.getAverageNonCoulombEnergy() << endl;

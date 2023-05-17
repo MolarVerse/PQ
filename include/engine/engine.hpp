@@ -12,6 +12,7 @@
 #include "simulationBox.hpp"
 #include "integrator.hpp"
 #include "celllist.hpp"
+#include "potential.hpp"
 
 /**
  * @class Engine
@@ -27,6 +28,7 @@ private:
 public:
     Settings _settings;
     std::unique_ptr<JobType> _jobType;
+    std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     OutputData _outputData;
     Integrator _integrator;
     CellList _cellList;
