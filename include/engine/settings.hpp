@@ -19,6 +19,7 @@ private:
     std::string _startFilename;
     std::string _moldescriptorFilename = "moldescriptor.dat"; // for backward compatibility
     std::string _guffPath = ".";                              // not backward compatible
+    std::string _jobtype;
 
 public:
     Settings() = default;
@@ -27,13 +28,16 @@ public:
     Timings _timings;
 
     std::string getStartFilename() const { return _startFilename; };
-    std::string setStartFilename(std::string_view startFilename) { return _startFilename = startFilename; };
+    void setStartFilename(std::string_view startFilename) { _startFilename = startFilename; };
 
     std::string getMoldescriptorFilename() const { return _moldescriptorFilename; };
-    std::string setMoldescriptorFilename(std::string_view moldescriptorFilename) { return _moldescriptorFilename = moldescriptorFilename; };
+    void setMoldescriptorFilename(std::string_view moldescriptorFilename) { _moldescriptorFilename = moldescriptorFilename; };
 
     std::string getGuffPath() const { return _guffPath; };
-    std::string setGuffPath(std::string_view guffPath) { return _guffPath = guffPath; };
+    void setGuffPath(std::string_view guffPath) { _guffPath = guffPath; };
+
+    std::string getJobtype() const { return _jobtype; };
+    void setJobtype(std::string_view jobtype) { _jobtype = jobtype; };
 };
 
 #endif

@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "settings.hpp"
-#include "jobtype.hpp"
 #include "output.hpp"
 #include "outputData.hpp"
 #include "simulationBox.hpp"
@@ -27,7 +26,6 @@ private:
 
 public:
     Settings _settings;
-    std::unique_ptr<JobType> _jobType;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     OutputData _outputData;
     Integrator _integrator;

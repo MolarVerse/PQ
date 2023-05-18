@@ -36,6 +36,7 @@ public:
     std::vector<Cell> getCells() const { return _cells; }
 
     void activate() { _activated = true; }
+    bool isActivated() const { return _activated; }
 
     void setNumberOfCells(int nCells)
     {
@@ -43,6 +44,8 @@ public:
         _nCellsY = nCells;
         _nCellsZ = nCells;
     }
+
+    std::vector<double> getCellSize() const { return _cellSize; }
 
     void setup(SimulationBox &);
     void determineCellSize(SimulationBox &);

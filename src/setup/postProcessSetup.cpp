@@ -32,6 +32,9 @@ void PostProcessSetup::setup()
     checkBoxSettings();
 
     checkRcCutoff();
+
+    setupCellList();
+    setPotential();
 }
 
 /**
@@ -177,4 +180,30 @@ void PostProcessSetup::checkRcCutoff()
 {
     if (_engine.getSimulationBox().getRcCutOff() > _engine.getSimulationBox()._box.getMinimalBoxDimension() / 2.0)
         throw InputFileException("Rc cutoff is larger than half of the minimal box dimension of " + std::to_string(_engine.getSimulationBox()._box.getMinimalBoxDimension()) + " Angstrom.");
+}
+
+void PostProcessSetup::setupCellList()
+{
+    if (_engine._cellList.isActivated())
+    {
+        _engine._cellList.setup(_engine.getSimulationBox());
+        _engine._potential = make_unique<PotentialCellList>();
+    }
+    else
+    {
+        _engine._potential = make_unique<PotentialBruteForce>();
+    }
+}
+
+void PostProcessSetup::setPotential()
+{
+    if (_engine._potential->getCoulombType() == "guff")
+    {
+        _engine._potential->_coulombPotential = make_unique<GuffCoulomb>();
+    }
+
+    if (_engine._potential->getNonCoulombType() == "guff")
+    {
+        _engine._potential->_nonCoulombPotential = make_unique<GuffNonCoulomb>();
+    }
 }

@@ -7,7 +7,6 @@ set(source_files
 
     testParserBox.cpp
     testParserIntegrator.cpp
-    testParserJobtype.cpp
     testParserTimings.cpp
     testParserOutput.cpp
     testParserGeneral.cpp

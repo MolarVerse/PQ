@@ -22,6 +22,9 @@ public:
     void checkBoxSettings();
 
     void checkRcCutoff();
+
+    void setupCellList();
+    void setPotential();
 };
 
 /**

@@ -5,7 +5,6 @@ add_library(setup
     inputFileReader.cpp
     inputFileParser.cpp
     inputFileParserOutput.cpp
-    inputFileParserJobtype.cpp
     inputFileParserTimings.cpp
     inputFileParserGeneral.cpp
     inputFileParserIntegrator.cpp

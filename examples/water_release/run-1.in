@@ -57,7 +57,7 @@
 
 # COULOMBICS
 #-----------------------------------------
-   rcoulomb   = 9.0;
+   rcoulomb   = 15.0;
    #long_range = ewald;
    #longrange_nc = on;
 
@@ -82,7 +82,7 @@
    #pressure   = 1.013;
 #  nscale = 500;
    cell-list = on;
-   cell-number = 10;
+   cell-number = 7;
 #  friction   = 0.035;
 
 # VIRIAL

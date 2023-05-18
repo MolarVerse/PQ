@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Thu May 18 22:17:49 2023
+ (+) Simulation run started on: Thu May 18 23:40:43 2023
 
 
 
@@ -68,7 +68,7 @@
 	
 	# COULOMBICS
 	#-----------------------------------------
-	   rcoulomb   = 9.0;
+	   rcoulomb   = 15.0;
 	   long_range = none;
 	   #longrange_nc = on;
 	
@@ -156,7 +156,7 @@
      Requesting data for:
 
 	   * H2O -- H2O Potential (o o)
-		   non-coulomb cutoff distance  9.00
+		   non-coulomb cutoff distance 15.00
 	   * H2O -- H2O Potential (o h)
 		   non-coulomb cutoff distance  5.00
 	   * H2O -- H2O Potential (h h)
@@ -176,7 +176,7 @@
 		Time step: 0.00 fs
 
 	* Coulombic Interactions
-		Cutoff:   9.00 A
+		Cutoff:  15.00 A
 
  (!) Warning: No longe Range correction requested.
 
@@ -203,9 +203,9 @@
 
    STEP NUMBER	           1		TOTAL STEPS	        1233
    SIMULATION TIME     0.000		TEMPERATURE	     201.840
-   PRESSURE	   62463.712		E(MM)		   -5716.762
+   PRESSURE	   62339.558		E(MM)		   -5994.559
    E(KIN)	    3609.869		E(INTRA)	       0.000
-   E(COULOMB)	  -15308.436		E(NONCOULOMB)	    5981.806
+   E(COULOMB)	  -15617.918		E(NONCOULOMB)	    6013.490
    E(RF)	       0.000		E(THREEBODY)	       0.000
    MOMENTUM	   7.682e-01		LOOPTIME 	       1.000
 

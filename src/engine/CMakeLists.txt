@@ -2,7 +2,6 @@ add_library(engine
     engine.cpp
     settings.cpp
     timings.cpp
-    jobtype.cpp
 )
 
 target_include_directories(engine

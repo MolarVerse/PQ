@@ -21,14 +21,20 @@ int main(int argc, char *argv[])
     commandLineArgs.detectFlags();
 
     auto engine = Engine();
+
+    cout << "Reading input file..." << endl;
     readInputFile(commandLineArgs.getInputFileName(), engine);
 
+    cout << "Reading moldescriptor..." << endl;
     readMolDescriptor(engine);
 
+    cout << "Reading rst file..." << endl;
     readRstFile(engine);
 
+    cout << "Post processing setup..." << endl;
     postProcessSetup(engine);
 
+    cout << "Reading guff.dat..." << endl;
     readGuffDat(engine);
 
     engine.calculateMomentum(engine.getSimulationBox(), engine._outputData);
@@ -36,12 +42,21 @@ int main(int argc, char *argv[])
     engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
     engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
 
-    engine._cellList.setup(engine.getSimulationBox());
+    /*
+        HERE STARTS THE MAIN LOOP
+    */
 
-    engine._cellList.updateCellList(engine.getSimulationBox());
+    if (engine._cellList.isActivated())
+    {
+        engine._cellList.updateCellList(engine.getSimulationBox());
+    }
 
     // engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
     engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
+
+    /*
+        HERE ENDS THE MAIN LOOP
+    */
 
     cout << "Couloumb energy: " << engine._outputData.getAverageCoulombEnergy() << endl;
     cout << "Non Couloumb energy: " << engine._outputData.getAverageNonCoulombEnergy() << endl;

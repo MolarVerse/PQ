@@ -13,11 +13,21 @@
 
 class Potential
 {
+private:
+    std::string _coulombType = "guff";
+    std::string _nonCoulombType = "guff";
+
 public:
-    std::unique_ptr<CoulombPotential> _coulombPotential = std::make_unique<GuffCoulomb>();
-    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential = std::make_unique<GuffNonCoulomb>();
+    std::unique_ptr<CoulombPotential> _coulombPotential;
+    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
 
     virtual void calculateForces(SimulationBox &, OutputData &, CellList &) = 0;
+
+    std::string getCoulombType() const { return _coulombType; };
+    void setCoulombType(std::string_view coulombType) { _coulombType = coulombType; };
+
+    std::string getNonCoulombType() const { return _nonCoulombType; };
+    void setNonCoulombType(std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; };
 };
 
 class PotentialBruteForce : public Potential
