@@ -42,7 +42,7 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.1;
-   nstep       = 1000000;
+   nstep       = 1;
    output_freq = 2;
    #write_traj  = on;
 

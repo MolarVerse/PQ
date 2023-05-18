@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Tue May 16 23:05:02 2023
+ (+) Simulation run started on: Thu May 18 22:17:49 2023
 
 
 
@@ -129,27 +129,24 @@
  (+) Reading sytem information from
      restart file 'h2o-qmcf.rst'
 
-     SUCCESS: Molecular units:   1000
-              Atoms:             3000
+     SUCCESS: Molecular units:   2000
+              Atoms:             6000
 
 	     >> MOLECULE UNITS <<
 
-        1000 Molecule(s) of type  1 (H2O)
-
- (!) Warning: Box data taken from restart file h2o-qmcf.rst.
-     Density recalculated - input density  0.95230 is ignored.
+        2000 Molecule(s) of type  1 (H2O)
 
 	      >> SYSTEM DATA <<
 
-           XBOX    =    31.05722 A
-           YBOX    =    31.05722 A
-           ZBOX    =    31.05722 A
-           VOLUME  = 29956.26513 A�
-           Density =  0.99863 kg/dm³
+           XBOX    =    39.75412 A
+           YBOX    =    39.75412 A
+           ZBOX    =    39.75412 A
+           VOLUME  = 62827.00041 A�
+           Density =  0.95230 kg/dm³
            Charge  =        0 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.70667e-12 amu * A / fs
+                p = 7.68198e-01 amu * A / fs
 
  (+) Reading GUFF coefficients for pair potentials at
      /home/jag/projects/pimd_qmcf/examples/water_release/qmcfc/guff.dat
@@ -200,17 +197,17 @@
  (+) Entering MM -- simulation loop
 
        Requested Number of Steps:           1
-       Step Counter:                        0
+       Step Counter:                     1232
 
  (+) Starting Simulation...
 
-   STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.000		TEMPERATURE	     196.421
-   PRESSURE	   66232.434		E(MM)		   -2504.023
-   E(KIN)	    1756.482		E(INTRA)	       0.000
-   E(COULOMB)	   -7102.053		E(NONCOULOMB)	    2841.548
+   STEP NUMBER	           1		TOTAL STEPS	        1233
+   SIMULATION TIME     0.000		TEMPERATURE	     201.840
+   PRESSURE	   62463.712		E(MM)		   -5716.762
+   E(KIN)	    3609.869		E(INTRA)	       0.000
+   E(COULOMB)	  -15308.436		E(NONCOULOMB)	    5981.806
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   4.707e-12		LOOPTIME 	       0.000
+   MOMENTUM	   7.682e-01		LOOPTIME 	       1.000
 
 
 
@@ -223,5 +220,5 @@
 
 
 
- (+) Simulation time: 0.000000
+ (+) Simulation time: 1.000000
 

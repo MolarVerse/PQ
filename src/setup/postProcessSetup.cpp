@@ -175,8 +175,6 @@ void PostProcessSetup::checkBoxSettings()
 
 void PostProcessSetup::checkRcCutoff()
 {
-    cout << _engine.getSimulationBox().getRcCutOff() << endl;
-    cout << _engine.getSimulationBox()._box.getMinimalBoxDimension() << endl;
     if (_engine.getSimulationBox().getRcCutOff() > _engine.getSimulationBox()._box.getMinimalBoxDimension() / 2.0)
         throw InputFileException("Rc cutoff is larger than half of the minimal box dimension of " + std::to_string(_engine.getSimulationBox()._box.getMinimalBoxDimension()) + " Angstrom.");
 }

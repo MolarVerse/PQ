@@ -61,6 +61,9 @@ void RstFileReader::read()
         line = removeComments(line, "#");
         lineElements = splitString(line);
 
+        if (lineElements.empty())
+            continue;
+
         auto section = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
         section->_fp = &_fp;

@@ -43,20 +43,15 @@ int main(int argc, char *argv[])
     // engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
     engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
 
-    cout << engine._outputData.getAverageCoulombEnergy() << endl;
-    cout << engine._outputData.getAverageNonCoulombEnergy() << endl;
+    cout << "Couloumb energy: " << engine._outputData.getAverageCoulombEnergy() << endl;
+    cout << "Non Couloumb energy: " << engine._outputData.getAverageNonCoulombEnergy() << endl;
 
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
-    cout << "Box size: " << engine.getSimulationBox()._box.getBoxAngles()[1] << endl;
+    cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;
 
-    cout << engine._settings.getStartFilename() << endl;
+    cout << "start file name: " << engine._settings.getStartFilename() << endl;
 
-    cout << engine._jobType->getJobType() << endl;
-
-    cout << engine._settings._timings.getNumberOfSteps() << endl;
-
-    cout << engine._logOutput->getFilename() << endl;
-    cout << engine._logOutput->getOutputFreq() << endl;
+    cout << "number of steps: " << engine._settings._timings.getNumberOfSteps() << endl;
 
     cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
 
@@ -65,17 +60,9 @@ int main(int argc, char *argv[])
 
     cout << "atom mass test: " << engine.getSimulationBox()._molecules[0].getMass(0) << endl;
 
-    cout << "density " << engine.getSimulationBox()._box.getDensity() << endl;
+    cout << "density: " << engine.getSimulationBox()._box.getDensity() << endl;
 
-    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 0, 0)[0] << endl;
-    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 0, 1)[0] << endl;
-    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 1, 0)[0] << endl;
-    cout << engine.getSimulationBox().getGuffCoefficients(1, 1, 1, 1)[0] << endl;
-
-    cout << engine.getSimulationBox().getRncCutOff(1, 1, 0, 0) << endl;
-    cout << engine.getSimulationBox().getRncCutOff(1, 1, 0, 1) << endl;
-    cout << engine.getSimulationBox().getRncCutOff(1, 1, 1, 0) << endl;
-    cout << engine.getSimulationBox().getRncCutOff(1, 1, 1, 1) << endl;
+    cout << "volume: " << engine.getSimulationBox()._box.getVolume() << endl;
 
     return 0;
 }

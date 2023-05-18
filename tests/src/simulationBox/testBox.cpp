@@ -53,7 +53,7 @@ TEST_F(TestBox, setDensityNegative)
 TEST_F(TestBox, calculateBoxDimensionsFromDensity)
 {
     double density = 1.0;
-    _box->setDensity(density / _KG_PER_LITER_CUBIC_TO_AMU_PER_ANGSTROM_CUBIC_);
+    _box->setDensity(density / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
     _box->setTotalMass(1.0);
     vector<double> boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(_box->calculateBoxDimensionsFromDensity(), boxDimensions);

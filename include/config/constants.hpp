@@ -31,8 +31,8 @@ constexpr double _LITER_TO_ANGSTROM_CUBIC_ = 1.0 / _ANGSTROM_CUBIC_TO_LITER_;
 /**
  * @brief Conversion factors for density units
  */
-constexpr double _KG_PER_LITER_CUBIC_TO_AMU_PER_ANGSTROM_CUBIC_ = _KG_TO_AMU_ / _LITER_TO_ANGSTROM_CUBIC_;
-constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ = 1.0 / _KG_PER_LITER_CUBIC_TO_AMU_PER_ANGSTROM_CUBIC_;
+constexpr double _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_ = _KG_TO_AMU_ / _LITER_TO_ANGSTROM_CUBIC_;
+constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ = 1.0 / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
 
 /**
  * @brief Conversion factors for energy units
