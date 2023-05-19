@@ -1,5 +1,6 @@
 #include "mathUtilities.hpp"
 
+#include <algorithm>
 #include <vector>
 #include <cmath>
 
@@ -14,9 +15,7 @@ using namespace std;
 double MathUtilities::norm(const std::vector<double> &vector)
 {
     double norm = 0.0;
-    for (size_t i = 0; i < vector.size(); i++)
-    {
-        norm += vector[i] * vector[i];
-    }
+    for_each(vector.begin(), vector.end(), [&norm](double value)
+             { norm += value * value; });
     return sqrt(norm);
 }

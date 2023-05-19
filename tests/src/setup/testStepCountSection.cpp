@@ -37,7 +37,7 @@ namespace Setup::RstFileReader
         auto line = vector<string>(2);
         line[1] = "1000";
         _section->process(line, _engine);
-        EXPECT_EQ(_engine._settings._timings.getStepCount(), 1000);
+        EXPECT_EQ(_engine._timings.getStepCount(), 1000);
     }
 }
 

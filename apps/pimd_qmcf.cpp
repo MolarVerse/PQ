@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     cout << "start file name: " << engine._settings.getStartFilename() << endl;
 
-    cout << "number of steps: " << engine._settings._timings.getNumberOfSteps() << endl;
+    cout << "number of steps: " << engine._timings.getNumberOfSteps() << endl;
 
     cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
 

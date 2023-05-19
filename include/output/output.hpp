@@ -23,13 +23,15 @@ protected:
 public:
     explicit Output(const std::string &filename) : _filename(filename){};
 
-    std::string getFilename() const { return _filename; };
     void setFilename(std::string_view filename);
 
-    static int getOutputFreq() { return _outputFreq; };
     static void setOutputFreq(int outputFreq);
 
     std::string initialMomentumMessage(double momentum) const;
+
+    // standard getter and setters
+    std::string getFilename() const { return _filename; };
+    static int getOutputFreq() { return _outputFreq; };
 };
 
 /**

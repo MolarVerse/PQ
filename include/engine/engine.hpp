@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "settings.hpp"
+#include "timings.hpp"
 #include "output.hpp"
 #include "outputData.hpp"
 #include "simulationBox.hpp"
@@ -26,6 +27,7 @@ private:
 
 public:
     Settings _settings;
+    Timings _timings;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     OutputData _outputData;
     Integrator _integrator;
@@ -41,8 +43,10 @@ public:
     std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>("default.chg");
     std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>("default.info");
 
-    SimulationBox &getSimulationBox() { return _simulationBox; };
     void calculateMomentum(SimulationBox &, OutputData &) const;
+
+    // standard getter and setters
+    SimulationBox &getSimulationBox() { return _simulationBox; };
 };
 
 #endif

@@ -22,6 +22,9 @@ private:
     int _numberOfSteps = 0;
 
 public:
+    void setNumberOfSteps(int numberOfSteps);
+
+    // standard getter and setters
     int getStepCount() const { return _stepCount; };
     void setStepCount(int stepCount);
 
@@ -29,7 +32,6 @@ public:
     void setTimestep(int timestep) { _timestep = timestep; };
 
     int getNumberOfSteps() const { return _numberOfSteps; };
-    void setNumberOfSteps(int numberOfSteps);
 };
 
 #endif

@@ -18,6 +18,8 @@ protected:
 public:
     Integrator() = default;
     explicit Integrator(std::string_view integratorType) : _integratorType(integratorType){};
+
+    // standard getter and setters
     std::string_view getIntegratorType() const { return _integratorType; };
 };
 

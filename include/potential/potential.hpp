@@ -11,6 +11,15 @@
 #include "outputData.hpp"
 #include "celllist.hpp"
 
+/**
+ * @class Potential
+ *
+ * @brief
+ * This class is the base class for all potentials.
+ * It contains a pointer to a CoulombPotential and a NonCoulombPotential.
+ * Default values for the potential types are "guff".
+ *
+ */
 class Potential
 {
 private:
@@ -25,6 +34,7 @@ public:
 
     virtual void calculateForces(SimulationBox &, OutputData &, CellList &) = 0;
 
+    // standard getter and setters
     std::string getCoulombType() const { return _coulombType; };
     void setCoulombType(std::string_view coulombType) { _coulombType = coulombType; };
 
@@ -32,12 +42,30 @@ public:
     void setNonCoulombType(std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; };
 };
 
+/**
+ * @class PotentialBruteForce inherits Potential
+ *
+ * @brief
+ * This class is the brute force implementation of the potential.
+ * It contains a pointer to a CoulombPotential and a NonCoulombPotential.
+ * Default values for the potential types are "guff".
+ *
+ */
 class PotentialBruteForce : public Potential
 {
 public:
     void calculateForces(SimulationBox &, OutputData &, CellList &) override;
 };
 
+/**
+ * @class PotentialCellList inherits Potential
+ *
+ * @brief
+ * This class is the cell list implementation of the potential.
+ * It contains a pointer to a CoulombPotential and a NonCoulombPotential.
+ * Default values for the potential types are "guff".
+ *
+ */
 class PotentialCellList : public Potential
 {
 public:

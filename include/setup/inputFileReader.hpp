@@ -31,7 +31,6 @@ namespace Setup::InputFileReader
 
     public:
         InputFileReader(const std::string &, Engine &);
-        ~InputFileReader() = default;
 
         void read();
         void postProcess();

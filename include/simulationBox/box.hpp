@@ -30,15 +30,23 @@ private:
     bool _boxSizeHasChanged = false;
 
 public:
-    Box() = default;
-    ~Box() = default;
-
-    std::vector<double> getBoxDimensions() const { return _boxDimensions; };
     void setBoxDimensions(const std::vector<double> &);
     std::vector<double> calculateBoxDimensionsFromDensity() const;
 
-    std::vector<double> getBoxAngles() const { return _boxAngles; };
     void setBoxAngles(const std::vector<double> &);
+
+    double calculateVolume() const;
+
+    double calculateDistance(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
+    double calculateDistanceSquared(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
+
+    void applyPBC(std::vector<double> &);
+
+    double getMinimalBoxDimension() const;
+
+    // standard getter and setters
+    std::vector<double> getBoxDimensions() const { return _boxDimensions; };
+    std::vector<double> getBoxAngles() const { return _boxAngles; };
 
     void setTotalMass(double totalMass) { _totalMass = totalMass; };
     double getTotalMass() const { return _totalMass; };
@@ -51,16 +59,9 @@ public:
 
     double getVolume() const { return _volume; };
     void setVolume(double volume) { _volume = volume; };
-    double calculateVolume() const;
 
     bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
     void setBoxSizeHasChanged(bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; };
-
-    double calculateDistance(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
-    double calculateDistanceSquared(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
-    void applyPBC(std::vector<double> &);
-
-    double getMinimalBoxDimension() const;
 };
 
 #endif

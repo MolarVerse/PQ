@@ -26,6 +26,7 @@ private:
 public:
     void setMomentumVector(const std::vector<double> &momentumVector);
 
+    // standard getter and setters
     double getMomentum() const { return _momentum; }
     double getAverageMomentum() const { return _averageMomentum; }
 

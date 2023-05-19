@@ -4,6 +4,12 @@
 
 #include "engine.hpp"
 
+/**
+ * @class PostProcessSetup
+ *
+ * @brief Setup post processing before reading guffdat file
+ *
+ */
 class PostProcessSetup
 {
 private:

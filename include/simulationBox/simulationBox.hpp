@@ -29,7 +29,7 @@ private:
     int _waterType;
     int _ammoniaType;
 
-    double _rcCutOff = _RC_CUT_OFF_DEF_;
+    double _rcCutOff = _COULOMB_CUT_OFF_DEFAULT_;
 
 public:
     std::vector<Molecule> _moleculeTypes;

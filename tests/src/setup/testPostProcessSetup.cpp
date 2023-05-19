@@ -194,7 +194,7 @@ TEST_F(TestPostProcessSetup, testSetup)
     _engine.getSimulationBox()._molecules.push_back(molecule2);
     _engine.getSimulationBox()._box.setTotalMass(6000);
     _engine.getSimulationBox()._box.setDensity(12341243.1234); // this should be ignored
-    _engine.getSimulationBox()._box.setBoxDimensions({10.0, 20.0, 30.0});
+    _engine.getSimulationBox()._box.setBoxDimensions({30.0, 35.0, 32.0});
     ASSERT_NO_THROW(postProcessSetup(_engine));
 }
 

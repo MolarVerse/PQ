@@ -46,10 +46,10 @@ public:
 
     std::vector<double> getCellSize() const { return _cellSize; }
 
-    void setup(SimulationBox &);
-    void determineCellSize(SimulationBox &);
-    void determineCellBoundaries(SimulationBox &);
-    void addNeighbouringCells(SimulationBox &);
+    void setup(const SimulationBox &);
+    void determineCellSize(const SimulationBox &);
+    void determineCellBoundaries(const SimulationBox &);
+    void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
     std::vector<int> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);

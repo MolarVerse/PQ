@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void CellList::setup(SimulationBox &simulationBox)
+void CellList::setup(const SimulationBox &simulationBox)
 {
     determineCellSize(simulationBox);
 
@@ -18,13 +18,13 @@ void CellList::setup(SimulationBox &simulationBox)
     addNeighbouringCells(simulationBox);
 }
 
-void CellList::determineCellSize(SimulationBox &simulationBox)
+void CellList::determineCellSize(const SimulationBox &simulationBox)
 {
     auto boxDimensions = simulationBox._box.getBoxDimensions();
     _cellSize = {boxDimensions[0] / _nCellsX, boxDimensions[1] / _nCellsY, boxDimensions[2] / _nCellsZ};
 }
 
-void CellList::determineCellBoundaries(SimulationBox &simulationBox)
+void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
 {
     for (int i = 0; i < _nCellsX; i++)
     {
@@ -49,7 +49,7 @@ void CellList::determineCellBoundaries(SimulationBox &simulationBox)
     }
 }
 
-void CellList::addNeighbouringCells(SimulationBox &simulationBox)
+void CellList::addNeighbouringCells(const SimulationBox &simulationBox)
 {
     _nNeighbourCellsX = int(ceil(simulationBox.getRcCutOff() / _cellSize[0]));
     _nNeighbourCellsY = int(ceil(simulationBox.getRcCutOff() / _cellSize[1]));
@@ -122,23 +122,20 @@ void CellList::updateCellList(SimulationBox &simulationBox)
         Molecule *molecule = &simulationBox._molecules[i];
         auto mapCellIndexToAtomIndex = map<int, std::vector<int>>();
 
-        for (int i = 0; i < molecule->getNumberOfAtoms(); i++)
+        for (int j = 0; j < molecule->getNumberOfAtoms(); j++)
         {
-            molecule->getAtomPosition(i, position);
+            molecule->getAtomPosition(j, position);
 
             auto atomCellIndices = getCellIndexOfMolecule(simulationBox, position);
             auto cellIndex = getCellIndex(atomCellIndices);
 
-            auto pair = mapCellIndexToAtomIndex.try_emplace(cellIndex, vector<int>({i}));
-            if (!pair.second)
-                mapCellIndexToAtomIndex[cellIndex].push_back(i);
+            const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(cellIndex, vector<int>({j}));
+            if (!successful)
+                mapCellIndexToAtomIndex[cellIndex].push_back(j);
         }
 
-        for (auto &pair : mapCellIndexToAtomIndex)
+        for (const auto &[cellIndex, atomIndices] : mapCellIndexToAtomIndex)
         {
-            auto cellIndex = pair.first;
-            auto atomIndices = pair.second;
-
             _cells[cellIndex].addMolecule(molecule);
             _cells[cellIndex].addAtomIndices(atomIndices);
         }

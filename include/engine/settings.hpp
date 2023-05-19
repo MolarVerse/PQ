@@ -22,11 +22,7 @@ private:
     std::string _jobtype;
 
 public:
-    Settings() = default;
-    ~Settings() = default;
-
-    Timings _timings;
-
+    // standard getter and setters
     std::string getStartFilename() const { return _startFilename; };
     void setStartFilename(std::string_view startFilename) { _startFilename = startFilename; };
 

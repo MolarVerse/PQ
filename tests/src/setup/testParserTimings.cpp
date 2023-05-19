@@ -9,14 +9,14 @@ TEST_F(TestInputFileReader, testParseTimestep)
 {
     vector<string> lineElements = {"timestep", "=", "1"};
     _inputFileReader->parseTimestep(lineElements);
-    EXPECT_EQ(_engine._settings._timings.getTimestep(), 1.0);
+    EXPECT_EQ(_engine._timings.getTimestep(), 1.0);
 }
 
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
     vector<string> lineElements = {"nsteps", "=", "1000"};
     _inputFileReader->parseNumberOfSteps(lineElements);
-    EXPECT_EQ(_engine._settings._timings.getNumberOfSteps(), 1000);
+    EXPECT_EQ(_engine._timings.getNumberOfSteps(), 1000);
 }
 
 int main(int argc, char **argv)
