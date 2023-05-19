@@ -53,7 +53,11 @@ public:
     void addNeighbouringCells(SimulationBox &);
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
-    int getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
+    std::vector<int> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
+    int getCellIndex(const std::vector<int> &cellIndices)
+    {
+        return cellIndices[0] * _nCellsY * _nCellsZ + cellIndices[1] * _nCellsZ + cellIndices[2];
+    }
 };
 
 #endif // _CELL_LIST_H_

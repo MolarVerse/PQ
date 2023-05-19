@@ -106,9 +106,9 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
                 molecule_j = cell_i.getMolecule(mol_j);
                 int moltype_j = molecule_j->getMoltype();
 
-                for (int atom_i = 0; atom_i < molecule_i->getNumberOfAtoms(); atom_i++)
+                for (int atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    for (int atom_j = 0; atom_j < molecule_j->getNumberOfAtoms(); atom_j++)
+                    for (int atom_j : cell_i.getAtomIndices(mol_j))
                     {
                         molecule_i->getAtomPosition(atom_i, xyz_i);
                         molecule_j->getAtomPosition(atom_j, xyz_j);
@@ -173,9 +173,12 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
                     molecule_j = cell_j->getMolecule(mol_j);
                     int moltype_j = molecule_j->getMoltype();
 
-                    for (int atom_i = 0; atom_i < molecule_i->getNumberOfAtoms(); atom_i++)
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (int atom_i : cell_i.getAtomIndices(mol_i))
                     {
-                        for (int atom_j = 0; atom_j < molecule_j->getNumberOfAtoms(); atom_j++)
+                        for (int atom_j : cell_j->getAtomIndices(mol_j))
                         {
                             molecule_i->getAtomPosition(atom_i, xyz_i);
                             molecule_j->getAtomPosition(atom_j, xyz_j);

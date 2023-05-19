@@ -17,6 +17,7 @@ class Cell
 {
 private:
     std::vector<Molecule *> _molecules;
+    std::vector<std::vector<int>> _atomInidices;
     std::vector<Cell *> _neighbourCells;
     std::vector<double> _lowerBoundary = {0, 0, 0};
     std::vector<double> _upperBoundary = {0, 0, 0};
@@ -43,8 +44,12 @@ public:
     std::vector<int> getCellIndex() const { return _cellIndex; }
 
     void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
-    void clearMolecules() { _molecules.clear(); }
     Molecule *getMolecule(int index) const { return _molecules[index]; }
+    void clearMolecules() { _molecules.clear(); }
+
+    void addAtomIndices(std::vector<int> atomIndices) { _atomInidices.push_back(atomIndices); }
+    std::vector<int> getAtomIndices(int index) const { return _atomInidices[index]; }
+    void clearAtomIndices() { _atomInidices.clear(); }
 };
 
 #endif // _CELL_H_

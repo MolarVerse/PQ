@@ -112,19 +112,40 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     for (auto &cell : _cells)
     {
         cell.clearMolecules();
+        cell.clearAtomIndices();
     }
+
+    vector<double> position(3);
 
     for (int i = 0; i < simulationBox.getNumberOfMolecules(); i++)
     {
         Molecule *molecule = &simulationBox._molecules[i];
+        auto mapCellIndexToAtomIndex = map<int, std::vector<int>>();
 
-        auto cellIndex = getCellIndexOfMolecule(simulationBox, molecule->getCenterOfMass());
+        for (int i = 0; i < molecule->getNumberOfAtoms(); i++)
+        {
+            molecule->getAtomPosition(i, position);
 
-        _cells[cellIndex].addMolecule(molecule);
+            auto atomCellIndices = getCellIndexOfMolecule(simulationBox, position);
+            auto cellIndex = getCellIndex(atomCellIndices);
+
+            auto pair = mapCellIndexToAtomIndex.try_emplace(cellIndex, vector<int>({i}));
+            if (!pair.second)
+                mapCellIndexToAtomIndex[cellIndex].push_back(i);
+        }
+
+        for (auto &pair : mapCellIndexToAtomIndex)
+        {
+            auto cellIndex = pair.first;
+            auto atomIndices = pair.second;
+
+            _cells[cellIndex].addMolecule(molecule);
+            _cells[cellIndex].addAtomIndices(atomIndices);
+        }
     }
 }
 
-int CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const vector<double> &position)
+vector<int> CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const vector<double> &position)
 {
     auto boxDimensions = simulationBox._box.getBoxDimensions();
 
@@ -136,7 +157,5 @@ int CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const v
     cellIndexY -= _nCellsY * int(floor((double)cellIndexY / (double)_nCellsY));
     cellIndexZ -= _nCellsZ * int(floor((double)cellIndexZ / (double)_nCellsZ));
 
-    int cellIndex = cellIndexX * _nCellsY * _nCellsZ + cellIndexY * _nCellsZ + cellIndexZ;
-
-    return cellIndex;
+    return {cellIndexX, cellIndexY, cellIndexZ};
 }
