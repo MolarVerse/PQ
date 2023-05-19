@@ -12,7 +12,7 @@ void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
     else if (lineElements[2] != "off")
     {
         auto message = "Invalid cell-list keyword \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file\n";
-        message += "Possible keywords are \"on\" and \"off\"";
+        message += R"(Possible keywords are "on" and "off")";
         throw InputFileException(message);
     }
 }

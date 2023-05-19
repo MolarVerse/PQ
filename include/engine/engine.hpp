@@ -31,18 +31,18 @@ public:
     Integrator _integrator;
     CellList _cellList;
 
-    std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>(EnergyOutput("default.en"));
-    std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.xyz"));
-    std::unique_ptr<TrajectoryOutput> _velOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.vel"));
-    std::unique_ptr<TrajectoryOutput> _forceOutput = std::make_unique<TrajectoryOutput>(TrajectoryOutput("default.force"));
-    std::unique_ptr<LogOutput> _logOutput = std::make_unique<LogOutput>(LogOutput("default.log"));
-    std::unique_ptr<StdoutOutput> _stdoutOutput = std::make_unique<StdoutOutput>(StdoutOutput("stdout"));
-    std::unique_ptr<RstFileOutput> _rstFileOutput = std::make_unique<RstFileOutput>(RstFileOutput("default.rst"));
-    std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>(ChargeOutput("default.chg"));
-    std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>(InfoOutput("default.info"));
+    std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>("default.en");
+    std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>("default.xyz");
+    std::unique_ptr<TrajectoryOutput> _velOutput = std::make_unique<TrajectoryOutput>("default.vel");
+    std::unique_ptr<TrajectoryOutput> _forceOutput = std::make_unique<TrajectoryOutput>("default.force");
+    std::unique_ptr<LogOutput> _logOutput = std::make_unique<LogOutput>("default.log");
+    std::unique_ptr<StdoutOutput> _stdoutOutput = std::make_unique<StdoutOutput>("stdout");
+    std::unique_ptr<RstFileOutput> _rstFileOutput = std::make_unique<RstFileOutput>("default.rst");
+    std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>("default.chg");
+    std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>("default.info");
 
     SimulationBox &getSimulationBox() { return _simulationBox; };
-    void calculateMomentum(SimulationBox &, OutputData &);
+    void calculateMomentum(SimulationBox &, OutputData &) const;
 };
 
 #endif

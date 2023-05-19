@@ -80,7 +80,7 @@ namespace Setup::InputFileReader
         void process(const std::vector<std::string> &);
 
         // Getters and setters
-        void setFilename(const std::string &filename) { _filename = filename; };
+        void setFilename(std::string_view filename) { _filename = filename; };
 
         int getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; };
         void setKeywordCount(const std::string &keyword, int count) { _keywordCountMap[keyword] = count; };

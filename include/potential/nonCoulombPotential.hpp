@@ -7,6 +7,7 @@
 class NonCoulombPotential
 {
 public:
+    virtual ~NonCoulombPotential() = default;
     virtual void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const = 0;
 };
 

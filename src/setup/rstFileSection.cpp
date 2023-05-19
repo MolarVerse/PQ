@@ -150,7 +150,7 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
  *
  * @throws RstFileException if the number of elements in the line is not 21
  */
-void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, Molecule &molecule)
+void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const Molecule &molecule)
 {
     _lineNumber++;
 

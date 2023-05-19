@@ -133,7 +133,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
  *
  * @param molecule
  */
-void MoldescriptorReader::convertExternalToInternalAtomtypes(Molecule &molecule)
+void MoldescriptorReader::convertExternalToInternalAtomtypes(Molecule &molecule) const
 {
 
     for (int i = 0; i < molecule.getNumberOfAtoms(); i++)

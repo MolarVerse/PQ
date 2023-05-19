@@ -136,7 +136,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
         molecule1 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[0]));
         molecule2 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[2]));
     }
-    catch (const RstFileException &e)
+    catch (const RstFileException &)
     {
         throw GuffDatException("Invalid molecule type in line " + to_string(_lineNumber));
     }
@@ -146,7 +146,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
         atomType1 = molecule1.getInternalAtomType(stoi(lineCommands[1]));
         atomType2 = molecule2.getInternalAtomType(stoi(lineCommands[3]));
     }
-    catch (const std::exception &e)
+    catch (const std::exception &)
     {
         throw GuffDatException("Invalid atom type in line " + to_string(_lineNumber));
     }
@@ -176,7 +176,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     _engine.getSimulationBox()._coulombCoefficients[moltype1][moltype2][atomType1][atomType2] = coulombCoefficient;
     _engine.getSimulationBox()._coulombCoefficients[moltype2][moltype1][atomType2][atomType1] = coulombCoefficient;
 
-    double energy, force;
+    double energy = 0.0;
+    double force = 0.0;
     double dummyCutoff = 1.0;
 
     _engine._potential->_coulombPotential->calcCoulomb(coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);

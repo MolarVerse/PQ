@@ -11,7 +11,7 @@ using namespace std;
  * @param simulationBox
  * @param outputData
  */
-void Engine::calculateMomentum(SimulationBox &simulationBox, OutputData &outputData)
+void Engine::calculateMomentum(SimulationBox &simulationBox, OutputData &outputData) const
 {
     vector<double> momentum(3, 0.0);
 

@@ -13,8 +13,6 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
 
     vector<double> box = simBox._box.getBoxDimensions();
 
-    int interactionCount = 0;
-
     // inter molecular forces
     for (int mol_i = 0; mol_i < simBox.getNumberOfMolecules(); mol_i++)
     {
@@ -47,8 +45,6 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
 
                     if (distanceSquared < RcCutOff * RcCutOff)
                     {
-                        interactionCount++;
-
                         const double distance = sqrt(distanceSquared);
                         const int atomType_i = molecule_i.getAtomType(atom_i);
                         const int atomType_j = molecule_j.getAtomType(atom_j);
@@ -77,8 +73,6 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
             }
         }
     }
-
-    cout << interactionCount << endl;
 }
 
 void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outputData, CellList &cellList)
@@ -91,8 +85,6 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
     const Molecule *molecule_i;
     const Molecule *molecule_j;
-
-    int interactionCount = 0;
 
     for (const auto &cell_i : cellList.getCells())
     {
@@ -127,8 +119,6 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
                         if (distanceSquared < RcCutOff * RcCutOff)
                         {
-                            interactionCount++;
-
                             const double distance = sqrt(distanceSquared);
                             const int atomType_i = molecule_i->getAtomType(atom_i);
                             const int atomType_j = molecule_j->getAtomType(atom_j);
@@ -197,8 +187,6 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
                             if (distanceSquared < RcCutOff * RcCutOff)
                             {
-                                interactionCount++;
-
                                 const double distance = sqrt(distanceSquared);
                                 const int atomType_i = molecule_i->getAtomType(atom_i);
                                 const int atomType_j = molecule_j->getAtomType(atom_j);
@@ -229,19 +217,6 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
             }
         }
     }
-
-    cout << "Interaction count: " << interactionCount << endl;
-
-    int molcounter = 0;
-
-    for (auto &cell : cellList.getCells())
-    {
-        molcounter += cell.getNumberOfMolecules();
-    }
-
-    cout << "Molecule count: " << molcounter << endl;
-
-    cout << cellList.getCellSize()[0] << " " << cellList.getCellSize()[1] << " " << cellList.getCellSize()[2] << endl;
 }
 
 void GuffCoulomb::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const

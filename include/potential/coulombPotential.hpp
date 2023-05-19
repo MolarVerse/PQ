@@ -5,6 +5,7 @@
 class CoulombPotential
 {
 public:
+    virtual ~CoulombPotential() = default;
     virtual void calcCoulomb(double, double, double, double &, double &, double, double force_cutof) const = 0;
 };
 

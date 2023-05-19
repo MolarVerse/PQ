@@ -18,6 +18,8 @@ private:
     std::string _nonCoulombType = "guff";
 
 public:
+    virtual ~Potential() = default;
+
     std::unique_ptr<CoulombPotential> _coulombPotential;
     std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
 

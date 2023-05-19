@@ -31,7 +31,6 @@ private:
     std::vector<double> _cellSize;
 
 public:
-    // void setCells(Cell &cell, int index_x, int index_y, int index_z);
     Cell &getCell(int index) { return _cells[index]; }
     std::vector<Cell> getCells() const { return _cells; }
 
@@ -54,7 +53,7 @@ public:
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
     std::vector<int> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
-    int getCellIndex(const std::vector<int> &cellIndices)
+    int getCellIndex(const std::vector<int> &cellIndices) const
     {
         return cellIndices[0] * _nCellsY * _nCellsZ + cellIndices[1] * _nCellsZ + cellIndices[2];
     }

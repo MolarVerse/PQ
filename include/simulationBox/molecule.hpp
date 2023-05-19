@@ -41,8 +41,6 @@ private:
     std::vector<double> _velocitiesOld;
     std::vector<double> _forcesOld;
 
-    // std::vector<double> centerOfMass;
-
     void addVector(std::vector<double> &vector, const std::vector<double> &vectorToAdd) const;
 
 public:

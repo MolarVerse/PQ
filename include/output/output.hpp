@@ -41,7 +41,7 @@ public:
 class EnergyOutput : public Output
 {
 public:
-    explicit EnergyOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 };
 
 /**
@@ -53,7 +53,7 @@ public:
 class TrajectoryOutput : public Output
 {
 public:
-    explicit TrajectoryOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 };
 
 /**
@@ -65,7 +65,7 @@ public:
 class LogOutput : public Output
 {
 public:
-    explicit LogOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 
     void writeDensityWarning();
     void writeInitialMomentum(double momentum);
@@ -80,7 +80,7 @@ public:
 class StdoutOutput : public Output
 {
 public:
-    explicit StdoutOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 
     void writeDensityWarning() const;
     void writeInitialMomentum(double momentum) const;
@@ -95,7 +95,7 @@ public:
 class RstFileOutput : public Output
 {
 public:
-    explicit RstFileOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 };
 
 /**
@@ -107,7 +107,7 @@ public:
 class ChargeOutput : public Output
 {
 public:
-    explicit ChargeOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 };
 
 /**
@@ -119,7 +119,7 @@ public:
 class InfoOutput : public Output
 {
 public:
-    explicit InfoOutput(const std::string &filename) : Output(filename){};
+    using Output::Output;
 };
 
 #endif
