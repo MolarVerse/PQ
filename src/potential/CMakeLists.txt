@@ -12,4 +12,5 @@ target_link_libraries(potential
     PUBLIC
     output
     simulationBox
+    MPI_C
 )

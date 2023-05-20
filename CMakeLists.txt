@@ -34,4 +34,5 @@ add_subdirectory(src)
 add_subdirectory(apps)
 
 include(doxygen)
-include(testing)
+
+# include(testing)

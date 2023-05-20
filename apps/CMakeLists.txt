@@ -1,21 +1,28 @@
-add_executable(pimd_qmcf
-  pimd_qmcf.cpp
-)
+set(executables pimd_qmcf_mpi)
 
-target_include_directories(pimd_qmcf
-  PUBLIC ${CODE_INCLUDE_DIR}
-)
+foreach(executable ${executables})
+  find_package(MPI REQUIRED)
 
-target_link_libraries(pimd_qmcf
+  add_executable(${executable}
+    ${executable}.cpp
+  )
+
+  target_include_directories(${executable}
+    PUBLIC ${CODE_INCLUDE_DIR}
+  )
+
+  target_link_libraries(${executable}
     PUBLIC
-        setup
-        simulationBox
-        engine
-        utilities
-        config
-        output
-)
+    setup
+    simulationBox
+    engine
+    utilities
+    config
+    output
+    MPI::MPI_CXX
+  )
 
-install(TARGETS pimd_qmcf
+  install(TARGETS ${executable}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/bin
-)
+  )
+endforeach()

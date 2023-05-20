@@ -1,4 +1,5 @@
 #include <iostream>
+#include <mpi.h>
 
 #include "rstFileReader.hpp"
 #include "simulationBox.hpp"
@@ -15,6 +16,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+
+    MPI_Status status;
+
+    // Creation of parallel processes
+    MPI_Init(&argc, &argv);
 
     // FIXME: cleanup this piece of code when knowing how to do it properly
     vector<string> arguments(argv, argv + argc);
