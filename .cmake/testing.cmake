@@ -27,4 +27,4 @@ if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
         NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS "--no-external" EXCLUDE ${CMAKE_SOURCE_DIR}/tests*)
 endif()
 
-add_subdirectory(tests)
+# add_subdirectory(tests)

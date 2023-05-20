@@ -1,3 +1,5 @@
+find_package(MPI REQUIRED)
+
 add_library(potential
     potential.cpp
 )
@@ -12,5 +14,5 @@ target_link_libraries(potential
     PUBLIC
     output
     simulationBox
-    MPI_C
+    MPI::MPI_C
 )
