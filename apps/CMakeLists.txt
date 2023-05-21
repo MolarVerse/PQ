@@ -1,34 +1,29 @@
-find_package(MPI REQUIRED)
+add_executable(pimd_qmcf
+  pimd_qmcf.cpp
+)
 
-set(executables pimd_qmcf pimd_qmcf_mpi)
+target_include_directories(pimd_qmcf
+PUBLIC ${CODE_INCLUDE_DIR}
+)
 
-foreach(executable ${executables})
-  add_executable(${executable}
-    ${executable}.cpp
-  )
-
-  target_include_directories(${executable}
-  PUBLIC ${CODE_INCLUDE_DIR}
-  )
-
-  # target_link_libraries(${executable}
-  # PUBLIC
-  # MPI::MPI_C
-  # )
-
-  target_link_libraries(${executable}
-    PRIVATE
-    MPI::MPI_C
+if(BUILD_WITH_MPI)
+  target_link_libraries(pimd_qmcf
     PUBLIC
-    setup
-    simulationBox
-    engine
-    utilities
-    config
-    output
+    MPI::MPI_C
   )
+endif()
 
-  install(TARGETS ${executable}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/bin
-  )
-endforeach()
+target_link_libraries(pimd_qmcf
+  PRIVATE
+  PUBLIC
+  setup
+  simulationBox
+  engine
+  utilities
+  config
+  output
+)
+
+install(TARGETS pimd_qmcf
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/bin
+)

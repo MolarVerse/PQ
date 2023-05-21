@@ -17,6 +17,7 @@ protected:
     std::string _filename;
     std::ofstream _fp;
     inline static int _outputFreq = 1;
+    int _rank;
 
     void openFile();
 

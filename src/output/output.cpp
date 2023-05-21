@@ -1,9 +1,14 @@
 #include <stdexcept>
+#include <filesystem>
 
 #include <fstream>
 
 #include "output.hpp"
 #include "exceptions.hpp"
+
+#ifdef WITH_MPI
+#include <mpi.h>
+#endif
 
 using namespace std;
 
@@ -16,13 +21,35 @@ using namespace std;
  */
 void Output::setFilename(string_view filename)
 {
-    if (filename.empty())
-        throw InputFileException("Filename cannot be empty");
-
-    if (ifstream fp(string(filename).c_str()); fp.good())
-        throw InputFileException("File already exists - filename = " + string(filename));
+#ifdef WITH_MPI
+    int rank;
+    int procId;
+    MPI_Comm_rank(MPI_COMM_WORLD, &procId);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank == 0)
+    {
+        _filename = filename;
+    }
+    else
+    {
+        filesystem::create_directory("procid_pimd-qmcf_" + to_string(procId));
+        _filename = filename;
+        _filename = "procid_pimd-qmcf_" + to_string(procId) + "/" + _filename;
+    }
+#else
 
     _filename = filename;
+#endif
+
+    if (_filename.empty())
+    {
+        throw InputFileException("Filename cannot be empty");
+    }
+
+    if (ifstream fp(string(_filename).c_str()); fp.good())
+    {
+        throw InputFileException("File already exists - filename = " + string(_filename));
+    }
 
     openFile();
 }

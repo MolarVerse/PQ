@@ -6,6 +6,10 @@
 #include <string>
 #include <iostream>
 
+#ifdef WITH_MPI
+#include <mpi.h>
+#endif
+
 #include "color.hpp"
 
 /**
@@ -33,7 +37,7 @@ public:
 class InputFileException : public CustomException
 {
 public:
-    explicit InputFileException(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -47,7 +51,7 @@ public:
 class RstFileException : public CustomException
 {
 public:
-    explicit RstFileException(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -61,7 +65,7 @@ public:
 class UserInputException : public CustomException
 {
 public:
-    explicit UserInputException(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -75,7 +79,7 @@ public:
 class MolDescriptorException : public CustomException
 {
 public:
-    explicit MolDescriptorException(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -89,7 +93,7 @@ public:
 class UserInputExceptionWarning : public CustomException
 {
 public:
-    explicit UserInputExceptionWarning(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -103,7 +107,7 @@ public:
 class GuffDatException : public CustomException
 {
 public:
-    explicit GuffDatException(const std::string &message) : CustomException(message){};
+    using CustomException::CustomException;
 
     const char *what() const throw() override;
 };

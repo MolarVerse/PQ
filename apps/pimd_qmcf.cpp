@@ -1,4 +1,9 @@
 #include <iostream>
+#include <filesystem>
+
+#ifdef WITH_MPI
+#include <mpi.h>
+#endif
 
 #include "rstFileReader.hpp"
 #include "simulationBox.hpp"
@@ -13,7 +18,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int pimd_qmcf(int argc, char *argv[])
 {
 
     // FIXME: cleanup this piece of code when knowing how to do it properly
@@ -80,5 +85,43 @@ int main(int argc, char *argv[])
 
     cout << "volume: " << engine.getSimulationBox()._box.getVolume() << endl;
 
-    return 0;
+    return EXIT_SUCCESS;
+}
+
+// main wrapper
+int main(int argc, char *argv[])
+{
+#ifdef WITH_MPI
+    MPI_Init(&argc, &argv);
+    int rank;
+    int size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+#endif
+    try
+    {
+        int return_value = pimd_qmcf(argc, argv);
+
+#ifdef WITH_MPI
+        for (int i = 1; i < size; i++)
+        {
+            filesystem::remove_all("procid_pimd-qmcf_" + to_string(i));
+        }
+        MPI_Finalize();
+#endif
+        return return_value;
+    }
+    catch (const exception &e)
+    {
+        cout << "Exception: " << e.what() << endl;
+#ifdef WITH_MPI
+        for (int i = 1; i < size; i++)
+        {
+            filesystem::remove_all("procid_pimd-qmcf_" + to_string(i));
+        }
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+#endif
+    }
+
+    return EXIT_FAILURE;
 }
