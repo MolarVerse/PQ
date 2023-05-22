@@ -133,12 +133,17 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
 {
     molecule.addAtomTypeName(lineElements[0]);
 
-    molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    molecule.addAtomPositions({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    molecule.addAtomVelocities({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
     molecule.addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
     molecule.addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
     molecule.addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+
+    auto force = molecule.getAtomForce(molecule.getNumberOfAtoms() - 1);
+
+    cout << "forces: " << force[0] << " " << force[1] << " " << force[2] << endl;
+    cout << "forces2: " << stod(lineElements[9]) << " " << stod(lineElements[10]) << " " << stod(lineElements[11]) << endl;
 }
 
 /**

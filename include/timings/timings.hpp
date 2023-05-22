@@ -18,7 +18,7 @@ class Timings
 {
 private:
     int _stepCount = 0;
-    int _timestep = 0;
+    double _timestep = 0;
     int _numberOfSteps = 0;
 
 public:
@@ -28,8 +28,8 @@ public:
     int getStepCount() const { return _stepCount; };
     void setStepCount(int stepCount);
 
-    int getTimestep() const { return _timestep; };
-    void setTimestep(int timestep) { _timestep = timestep; };
+    double getTimestep() const { return _timestep; };
+    void setTimestep(double timestep) { _timestep = timestep; };
 
     int getNumberOfSteps() const { return _numberOfSteps; };
 };

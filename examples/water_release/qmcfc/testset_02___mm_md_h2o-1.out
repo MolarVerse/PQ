@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Fri May 19 14:09:28 2023
+ (+) Simulation run started on: Mon May 22 11:05:33 2023
 
 
 
@@ -52,7 +52,7 @@
 	
 	# JOB
 	#-----------------------------------------
-	   jobtype     = mm-md; timestep    = 0.0000000000000000000001;
+	   jobtype     = mm-md; timestep    = 0.5;
 	   nstep       = 1;
 	   output_freq = 1;
 	   #write_traj  = on;
@@ -173,7 +173,7 @@
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 0.00 fs
+		Time step: 0.50 fs
 
 	* Coulombic Interactions
 		Cutoff:   9.00 A
@@ -188,7 +188,7 @@
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (0.0 fs)
+		Output Frequency:    1 (0.5 fs)
 
  (+) Creating data files....SUCCESS
 
@@ -202,12 +202,12 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	        1233
-   SIMULATION TIME     0.000		TEMPERATURE	     201.840
-   PRESSURE	   62463.712		E(MM)		   -5716.762
-   E(KIN)	    3609.869		E(INTRA)	       0.000
-   E(COULOMB)	  -15308.436		E(NONCOULOMB)	    5981.806
+   SIMULATION TIME     0.617		TEMPERATURE	     217.819
+   PRESSURE	   62792.210		E(MM)		   -5462.321
+   E(KIN)	    3895.656		E(INTRA)	       0.000
+   E(COULOMB)	  -15365.587		E(NONCOULOMB)	    6007.610
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.682e-01		LOOPTIME 	       0.000
+   MOMENTUM	   7.689e-01		LOOPTIME 	       0.000
 
 
 

@@ -53,4 +53,28 @@ constexpr double _ELECTRON_MASS_ = 9.10938356e-31; // in kg
 constexpr double _S_TO_FS_ = 1.0e15;
 constexpr double _FS_TO_S_ = 1.0 / _S_TO_FS_;
 
+/**
+ * @brief Conversion factors for velocity verler integrator
+ *
+ * @details
+ * [F] = kcal/mol/Angstrom
+ * [m] = amu
+ * [v] = Angstrom/s
+ * [t] = fs
+ *
+ * [v] = [t] * [F] / [m]
+ *
+ * [F'] = J/m = [F] * 4.184 * 1000 / 6.022140857e23 / 1e-10 = [F] * _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER / _ANGSTROM_TO_METER_
+ * [m'] = kg = [m] * 1.660539040e-27 = [m] * _AMU_TO_KG_
+ *
+ */
+constexpr double _FORCE_UNIT_TO_SI_ = _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_METER_;
+constexpr double _MASS_UNIT_TO_SI_ = _AMU_TO_KG_;
+constexpr double _TIME_UNIT_TO_SI_ = _FS_TO_S_;
+
+constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_METER_;
+constexpr double _SI_TO_VELOCITY_UNIT_ = 1.0 / _VELOCITY_UNIT_TO_SI_;
+
+constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * _FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_ * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;
+
 #endif

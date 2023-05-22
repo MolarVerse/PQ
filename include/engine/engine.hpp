@@ -30,7 +30,7 @@ public:
     Timings _timings;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     OutputData _outputData;
-    Integrator _integrator;
+    std::unique_ptr<Integrator> _integrator;
     CellList _cellList;
 
     std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>("default.en");

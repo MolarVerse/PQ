@@ -16,20 +16,20 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
     // inter molecular forces
     for (int mol_i = 0; mol_i < simBox.getNumberOfMolecules(); mol_i++)
     {
-        const auto &molecule_i = simBox._molecules[mol_i];
+        auto &molecule_i = simBox._molecules[mol_i];
         int moltype_i = molecule_i.getMoltype();
 
         for (int mol_j = 0; mol_j < mol_i; mol_j++)
         {
-            const auto &molecule_j = simBox._molecules[mol_j];
+            auto &molecule_j = simBox._molecules[mol_j];
             int moltype_j = molecule_j.getMoltype();
 
             for (int atom_i = 0; atom_i < molecule_i.getNumberOfAtoms(); atom_i++)
             {
                 for (int atom_j = 0; atom_j < molecule_j.getNumberOfAtoms(); atom_j++)
                 {
-                    molecule_i.getAtomPosition(atom_i, xyz_i);
-                    molecule_j.getAtomPosition(atom_j, xyz_j);
+                    molecule_i.getAtomPositions(atom_i, xyz_i);
+                    molecule_j.getAtomPositions(atom_j, xyz_j);
 
                     dxyz[0] = xyz_i[0] - xyz_j[0];
                     dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -68,6 +68,15 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
 
                             outputData.addAverageNonCoulombEnergy(energy);
                         }
+
+                        force /= distance;
+
+                        auto fx = force * dxyz[0];
+                        auto fy = force * dxyz[1];
+                        auto fz = force * dxyz[2];
+
+                        molecule_i.addAtomForces(atom_i, {fx, fy, fz});
+                        molecule_j.addAtomForces(atom_j, {-fx, -fy, -fz});
                     }
                 }
             }
@@ -98,8 +107,8 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
 //             {
 //                 for (int atom_j = 0; atom_j < molecule_j.getNumberOfAtoms(); atom_j++)
 //                 {
-//                     molecule_i.getAtomPosition(atom_i, xyz_i);
-//                     molecule_j.getAtomPosition(atom_j, xyz_j);
+//                     molecule_i.getAtomPositions(atom_i, xyz_i);
+//                     molecule_j.getAtomPositions(atom_j, xyz_j);
 
 //                     dxyz[0] = xyz_i[0] - xyz_j[0];
 //                     dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -153,8 +162,8 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
     vector<double> box = simBox._box.getBoxDimensions();
 
-    const Molecule *molecule_i;
-    const Molecule *molecule_j;
+    Molecule *molecule_i;
+    Molecule *molecule_j;
 
     for (const auto &cell_i : cellList.getCells())
     {
@@ -172,8 +181,8 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
                 {
                     for (int atom_j : cell_i.getAtomIndices(mol_j))
                     {
-                        molecule_i->getAtomPosition(atom_i, xyz_i);
-                        molecule_j->getAtomPosition(atom_j, xyz_j);
+                        molecule_i->getAtomPositions(atom_i, xyz_i);
+                        molecule_j->getAtomPositions(atom_j, xyz_j);
 
                         dxyz[0] = xyz_i[0] - xyz_j[0];
                         dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -212,6 +221,15 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
                                 outputData.addAverageNonCoulombEnergy(energy);
                             }
+
+                            force /= distance;
+
+                            auto fx = force * dxyz[0];
+                            auto fy = force * dxyz[1];
+                            auto fz = force * dxyz[2];
+
+                            molecule_i->addAtomForces(atom_i, {fx, fy, fz});
+                            molecule_j->addAtomForces(atom_j, {-fx, -fy, -fz});
                         }
                     }
                 }
@@ -240,8 +258,8 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
                     {
                         for (int atom_j : cell_j->getAtomIndices(mol_j))
                         {
-                            molecule_i->getAtomPosition(atom_i, xyz_i);
-                            molecule_j->getAtomPosition(atom_j, xyz_j);
+                            molecule_i->getAtomPositions(atom_i, xyz_i);
+                            molecule_j->getAtomPositions(atom_j, xyz_j);
 
                             dxyz[0] = xyz_i[0] - xyz_j[0];
                             dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -280,6 +298,15 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 
                                     outputData.addAverageNonCoulombEnergy(energy);
                                 }
+
+                                force /= distance;
+
+                                auto fx = force * dxyz[0];
+                                auto fy = force * dxyz[1];
+                                auto fz = force * dxyz[2];
+
+                                molecule_i->addAtomForces(atom_i, {fx, fy, fz});
+                                molecule_j->addAtomForces(atom_j, {-fx, -fy, -fz});
                             }
                         }
                     }
@@ -292,7 +319,7 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
 void GuffCoulomb::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
 {
     energy = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (rcCutoff - distance);
-    force = coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
+    force += coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
 }
 
 void GuffLJ::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const
@@ -304,7 +331,7 @@ void GuffLJ::calcNonCoulomb(vector<double> &guffCoefficients, double rncCutoff, 
     auto distance_12 = distance_6 * distance_6;
 
     energy = c12 / distance_12 + c6 / distance_6;
-    force = 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
+    force += 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
 
     energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
     force += force_cutoff;
@@ -322,7 +349,7 @@ void GuffBuckingham::calcNonCoulomb(vector<double> &guffCoefficients, double rnc
     auto helper_c3 = c3 / distance_6;
 
     energy = helper + helper_c3;
-    force = -c2 * helper + 6 * helper_c3 / distance;
+    force += -c2 * helper + 6 * helper_c3 / distance;
 
     energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
     force += force_cutoff;
@@ -336,7 +363,7 @@ void GuffNonCoulomb::calcNonCoulomb(vector<double> &guffCoefficients, double rnc
     auto n4 = guffCoefficients[3];
 
     energy = c1 / pow(distance, n2) + c3 / pow(distance, n4);
-    force = n2 * c1 / pow(distance, n2 + 1) + n4 * c3 / pow(distance, n4 + 1);
+    force += n2 * c1 / pow(distance, n2 + 1) + n4 * c3 / pow(distance, n4 + 1);
 
     auto c5 = guffCoefficients[4];
     auto n6 = guffCoefficients[5];

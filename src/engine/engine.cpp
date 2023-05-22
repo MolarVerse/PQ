@@ -20,7 +20,7 @@ void Engine::calculateMomentum(SimulationBox &simulationBox, OutputData &outputD
 
         for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
         {
-            auto velocities = molecule.getAtomVelocity(i);
+            auto velocities = molecule.getAtomVelocities(i);
             auto mass = molecule.getMass(i);
 
             momentum[0] += velocities[0] * mass / _S_TO_FS_;

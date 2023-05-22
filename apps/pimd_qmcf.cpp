@@ -15,11 +15,14 @@
 #include "postProcessSetup.hpp"
 #include "guffDatReader.hpp"
 #include "celllist.hpp"
+#include "constants.hpp"
 
 using namespace std;
 
 int pimd_qmcf(int argc, char *argv[])
 {
+
+    cout << _V_VERLET_VELOCITY_FACTOR_ << endl;
 
     // FIXME: cleanup this piece of code when knowing how to do it properly
     vector<string> arguments(argv, argv + argc);
@@ -52,13 +55,22 @@ int pimd_qmcf(int argc, char *argv[])
         HERE STARTS THE MAIN LOOP
     */
 
-    if (engine._cellList.isActivated())
+    for (int i = 0; i < engine._timings.getNumberOfSteps(); i++)
     {
-        engine._cellList.updateCellList(engine.getSimulationBox());
-    }
+        engine._outputData.setAverageCoulombEnergy(0.0);
+        engine._outputData.setAverageNonCoulombEnergy(0.0);
 
-    // engine._jobType->calculateForces(engine.getSimulationBox(), engine._outputData);
-    engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
+        engine._integrator->firstStep(engine.getSimulationBox(), engine._timings);
+
+        if (engine._cellList.isActivated())
+        {
+            engine._cellList.updateCellList(engine.getSimulationBox());
+        }
+
+        engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
+
+        engine._integrator->secondStep(engine.getSimulationBox(), engine._timings);
+    }
 
     /*
         HERE ENDS THE MAIN LOOP
@@ -93,35 +105,29 @@ int main(int argc, char *argv[])
 {
 #ifdef WITH_MPI
     MPI_Init(&argc, &argv);
-    int rank;
     int size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 #endif
     try
     {
-        int return_value = pimd_qmcf(argc, argv);
-
-#ifdef WITH_MPI
-        for (int i = 1; i < size; i++)
-        {
-            filesystem::remove_all("procid_pimd-qmcf_" + to_string(i));
-        }
-        MPI_Finalize();
-#endif
-        return return_value;
+        pimd_qmcf(argc, argv);
     }
     catch (const exception &e)
     {
         cout << "Exception: " << e.what() << endl;
 #ifdef WITH_MPI
-        for (int i = 1; i < size; i++)
-        {
-            filesystem::remove_all("procid_pimd-qmcf_" + to_string(i));
-        }
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
 
-    return EXIT_FAILURE;
+#ifdef WITH_MPI
+    for (int i = 1; i < size; i++)
+    {
+        auto path = "procid_pimd-qmcf_" + to_string(i);
+        filesystem::remove_all(path);
+    }
+    MPI_Finalize();
+#endif
+
+    return EXIT_SUCCESS;
 }

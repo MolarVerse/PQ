@@ -1,7 +1,6 @@
 add_library(engine
     engine.cpp
     settings.cpp
-    timings.cpp
 )
 
 target_include_directories(engine
@@ -17,4 +16,5 @@ target_link_libraries(engine
     config
     integrator
     potential
+    timings
 )

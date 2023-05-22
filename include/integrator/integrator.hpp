@@ -4,6 +4,9 @@
 
 #include <string>
 
+#include "simulationBox.hpp"
+#include "timings.hpp"
+
 /**
  * @class Integrator
  *
@@ -17,10 +20,14 @@ protected:
 
 public:
     Integrator() = default;
+    virtual ~Integrator() = default;
     explicit Integrator(std::string_view integratorType) : _integratorType(integratorType){};
 
     // standard getter and setters
     std::string_view getIntegratorType() const { return _integratorType; };
+
+    virtual void firstStep(SimulationBox &, const Timings &) = 0;
+    virtual void secondStep(SimulationBox &, const Timings &) = 0;
 };
 
 /**
@@ -33,6 +40,9 @@ class VelocityVerlet : public Integrator
 {
 public:
     explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
+
+    void firstStep(SimulationBox &, const Timings &) override;
+    void secondStep(SimulationBox &, const Timings &) override;
 };
 
 #endif

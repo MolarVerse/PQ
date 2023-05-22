@@ -90,21 +90,52 @@ public:
     void addAtomicNumber(int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
     int getAtomicNumber(int index) const { return _atomicNumbers[index]; };
 
-    void addAtomPosition(const std::vector<double> &positions) { addVector(_positions, positions); }
-    std::vector<double> getAtomPosition(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
-    void getAtomPosition(int index, std::vector<double> &position) const
+    void addAtomPositions(const std::vector<double> &positions) { addVector(_positions, positions); }
+    std::vector<double> getAtomPositions(int index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
+    void getAtomPositions(int index, std::vector<double> &position) const
     {
         position[0] = _positions[3 * index];
         position[1] = _positions[3 * index + 1];
         position[2] = _positions[3 * index + 2];
     }
-    double getAtomPosition(int index, int dimension) const { return _positions[3 * index + dimension]; }
+    double getAtomPositions(int index, int dimension) const { return _positions[3 * index + dimension]; }
+    void setAtomPositions(int index, const std::vector<double> &position)
+    {
+        _positions[3 * index] = position[0];
+        _positions[3 * index + 1] = position[1];
+        _positions[3 * index + 2] = position[2];
+    }
 
-    void addAtomVelocity(const std::vector<double> &velocities) { addVector(_velocities, velocities); }
-    std::vector<double> getAtomVelocity(int index) { return {_velocities[3 * index], _velocities[3 * index + 1], _velocities[3 * index + 2]}; }
+    void addAtomVelocities(const std::vector<double> &velocities) { addVector(_velocities, velocities); }
+    std::vector<double> getAtomVelocities(int index) { return {_velocities[3 * index], _velocities[3 * index + 1], _velocities[3 * index + 2]}; }
+    void getAtomVelocities(int index, std::vector<double> &velocity) const
+    {
+        velocity[0] = _velocities[3 * index];
+        velocity[1] = _velocities[3 * index + 1];
+        velocity[2] = _velocities[3 * index + 2];
+    }
+    void setAtomVelocities(int index, const std::vector<double> &velocity)
+    {
+        _velocities[3 * index] = velocity[0];
+        _velocities[3 * index + 1] = velocity[1];
+        _velocities[3 * index + 2] = velocity[2];
+    }
 
     void addAtomForce(const std::vector<double> &forces) { addVector(_forces, forces); }
     std::vector<double> getAtomForce(int index) { return {_forces[3 * index], _forces[3 * index + 1], _forces[3 * index + 2]}; }
+    void getAtomForces(int index, std::vector<double> &force) const
+    {
+        force[0] = _forces[3 * index];
+        force[1] = _forces[3 * index + 1];
+        force[2] = _forces[3 * index + 2];
+    }
+    void addAtomForces(int index, const std::vector<double> &force)
+    {
+        _forces[3 * index] += force[0];
+        _forces[3 * index + 1] += force[1];
+        _forces[3 * index + 2] += force[2];
+    }
+    void resetAtomForces() { std::fill(_forces.begin(), _forces.end(), 0.0); }
 
     void addAtomPositionOld(const std::vector<double> &positionsOld) { addVector(_positionsOld, positionsOld); }
     std::vector<double> getAtomPositionOld(int index) { return {_positionsOld[3 * index], _positionsOld[3 * index + 1], _positionsOld[3 * index + 2]}; }

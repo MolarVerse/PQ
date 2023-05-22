@@ -4,13 +4,13 @@ add_library(integrator
 
 target_include_directories(integrator
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${PROJECT_SOURCE_DIR}/include/integrator
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/include/integrator
 )
 
-target_link_libraries(engine
+target_link_libraries(integrator
     PUBLIC
-        output
-        simulationBox
-        config
+    simulationBox
+    timings
+    config
 )

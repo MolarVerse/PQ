@@ -124,7 +124,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
         for (int j = 0; j < molecule->getNumberOfAtoms(); j++)
         {
-            molecule->getAtomPosition(j, position);
+            molecule->getAtomPositions(j, position);
 
             auto atomCellIndices = getCellIndexOfMolecule(simulationBox, position);
             auto cellIndex = getCellIndex(atomCellIndices);

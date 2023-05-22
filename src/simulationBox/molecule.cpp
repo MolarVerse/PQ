@@ -52,7 +52,7 @@ vector<double> Molecule::getCenterOfMass()
     for (int i = 0; i < _numberOfAtoms; i++)
     {
         auto mass = getMass(i);
-        auto position = getAtomPosition(i);
+        auto position = getAtomPositions(i);
 
         centerOfMass[0] += mass * position[0];
         centerOfMass[1] += mass * position[1];
