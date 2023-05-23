@@ -30,8 +30,6 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
             velocities[1] += timeStep * forces[1] / mass * _V_VERLET_VELOCITY_FACTOR_;
             velocities[2] += timeStep * forces[2] / mass * _V_VERLET_VELOCITY_FACTOR_;
 
-            // cout << "forces: " << forces[0] << " " << forces[1] << " " << forces[2] << endl;
-
             molecule.setAtomVelocities(i, velocities);
 
             positions[0] += timeStep * velocities[0] * _FS_TO_S_;
@@ -43,9 +41,9 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
             positions[2] -= box[2] * round(positions[2] / box[2]);
 
             molecule.setAtomPositions(i, positions);
-
-            molecule.resetAtomForces();
         }
+
+        molecule.resetAtomForces();
     }
 }
 
@@ -69,8 +67,6 @@ void VelocityVerlet::secondStep(SimulationBox &simulationBox, const Timings &tim
             velocities[2] += timeStep * forces[2] / mass * _V_VERLET_VELOCITY_FACTOR_;
 
             molecule.setAtomVelocities(i, velocities);
-
-            molecule.resetAtomForces();
         }
     }
 }

@@ -29,10 +29,7 @@ void Molecule::setNumberOfAtoms(int numberOfAtoms)
  */
 void Molecule::addVector(vector<double> &v, const vector<double> &vToAdd) const
 {
-    for (auto element : vToAdd)
-    {
-        v.push_back(element);
-    }
+    v.insert(v.end(), vToAdd.begin(), vToAdd.end());
 }
 
 /**

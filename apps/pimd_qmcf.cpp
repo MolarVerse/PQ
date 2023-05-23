@@ -22,8 +22,6 @@ using namespace std;
 int pimd_qmcf(int argc, char *argv[])
 {
 
-    cout << _V_VERLET_VELOCITY_FACTOR_ << endl;
-
     // FIXME: cleanup this piece of code when knowing how to do it properly
     vector<string> arguments(argv, argv + argc);
     auto commandLineArgs = CommandLineArgs(argc, arguments);
@@ -46,6 +44,8 @@ int pimd_qmcf(int argc, char *argv[])
     cout << "Reading guff.dat..." << endl;
     readGuffDat(engine);
 
+    engine.getSimulationBox().calculateDegreesOfFreedom();
+
     engine.calculateMomentum(engine.getSimulationBox(), engine._outputData);
 
     engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
@@ -59,6 +59,7 @@ int pimd_qmcf(int argc, char *argv[])
     {
         engine._outputData.setAverageCoulombEnergy(0.0);
         engine._outputData.setAverageNonCoulombEnergy(0.0);
+        engine._outputData.setAverageTemperature(0.0);
 
         engine._integrator->firstStep(engine.getSimulationBox(), engine._timings);
 
@@ -70,6 +71,8 @@ int pimd_qmcf(int argc, char *argv[])
         engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
 
         engine._integrator->secondStep(engine.getSimulationBox(), engine._timings);
+
+        engine._thermostat->calculateTemperature(engine.getSimulationBox(), engine._outputData);
     }
 
     /*
@@ -78,6 +81,8 @@ int pimd_qmcf(int argc, char *argv[])
 
     cout << "Couloumb energy: " << engine._outputData.getAverageCoulombEnergy() << endl;
     cout << "Non Couloumb energy: " << engine._outputData.getAverageNonCoulombEnergy() << endl;
+
+    cout << "Temperature: " << engine._outputData.getAverageTemperature() << endl;
 
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;

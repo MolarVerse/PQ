@@ -48,7 +48,7 @@ public:
     void clearMolecules() { _molecules.clear(); }
 
     void addAtomIndices(const std::vector<int> &atomIndices) { _atomInidices.push_back(atomIndices); }
-    std::vector<int> getAtomIndices(int index) const { return _atomInidices[index]; }
+    const std::vector<int> &getAtomIndices(int index) const { return _atomInidices[index]; }
     void clearAtomIndices() { _atomInidices.clear(); }
 };
 

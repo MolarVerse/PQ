@@ -129,7 +129,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
  * @param lineElements
  * @param molecule
  */
-void AtomSection::processAtomLine(vector<string> &lineElements, unique_ptr<Molecule> &molecule) const
+void AtomSection::processAtomLine(vector<string> &lineElements, const unique_ptr<Molecule> &molecule) const
 {
     molecule->addAtomTypeName(lineElements[0]);
 
@@ -139,14 +139,6 @@ void AtomSection::processAtomLine(vector<string> &lineElements, unique_ptr<Molec
     molecule->addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
     molecule->addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
     molecule->addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
-
-    auto velocity = molecule->getAtomVelocities(molecule->getNumberOfAtoms() - 1);
-    auto force = molecule->getAtomForce(molecule->getNumberOfAtoms() - 1);
-
-    cout << "velocities: " << velocity[0] << " " << velocity[1] << " " << velocity[2] << endl;
-    cout << "velocities2: " << stod(lineElements[6]) << " " << stod(lineElements[7]) << " " << stod(lineElements[8]) << endl;
-    cout << "forces: " << force[0] << " " << force[1] << " " << force[2] << endl;
-    cout << "forces2: " << stod(lineElements[9]) << " " << stod(lineElements[10]) << " " << stod(lineElements[11]) << endl;
 }
 
 /**
@@ -158,7 +150,7 @@ void AtomSection::processAtomLine(vector<string> &lineElements, unique_ptr<Molec
  *
  * @throws RstFileException if the number of elements in the line is not 21
  */
-void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, unique_ptr<Molecule> &molecule)
+void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const unique_ptr<Molecule> &molecule)
 {
     _lineNumber++;
 

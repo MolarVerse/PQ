@@ -17,4 +17,5 @@ target_link_libraries(engine
     integrator
     potential
     timings
+    thermostat
 )

@@ -77,4 +77,10 @@ constexpr double _SI_TO_VELOCITY_UNIT_ = 1.0 / _VELOCITY_UNIT_TO_SI_;
 
 constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * _FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_ * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;
 
+/**
+ * @brief Conversion factors for temperature calculation
+ */
+constexpr double _BOLTZMANN_CONSTANT_ = 1.38064852e-23; // in J/K
+constexpr double _TEMPERATURE_FACTOR_ = _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _MASS_UNIT_TO_SI_ / _BOLTZMANN_CONSTANT_;
+
 #endif

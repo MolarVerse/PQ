@@ -135,6 +135,12 @@ public:
         _forces[3 * index + 1] += force[1];
         _forces[3 * index + 2] += force[2];
     }
+    void subtractAtomForces(int index, const std::vector<double> &force)
+    {
+        _forces[3 * index] -= force[0];
+        _forces[3 * index + 1] -= force[1];
+        _forces[3 * index + 2] -= force[2];
+    }
     void resetAtomForces() { std::fill(_forces.begin(), _forces.end(), 0.0); }
 
     void addAtomPositionOld(const std::vector<double> &positionsOld) { addVector(_positionsOld, positionsOld); }

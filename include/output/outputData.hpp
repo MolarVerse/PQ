@@ -17,6 +17,8 @@ private:
     double _momentum = 0.0;
     double _averageMomentum = 0.0;
 
+    double _averageTemperature = 0.0;
+
     double _coulombEnergy = 0.0;
     double _averageCoulombEnergy = 0.0;
 
@@ -29,6 +31,10 @@ public:
     // standard getter and setters
     double getMomentum() const { return _momentum; }
     double getAverageMomentum() const { return _averageMomentum; }
+
+    void setAverageTemperature(double averageTemperature) { _averageTemperature = averageTemperature; }
+    void addAverageTemperature(double temperature) { _averageTemperature += temperature; }
+    double getAverageTemperature() const { return _averageTemperature; }
 
     void setCoulombEnergy(double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     double getCoulombEnergy() const { return _coulombEnergy; }

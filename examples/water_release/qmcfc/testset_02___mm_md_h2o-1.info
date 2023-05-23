@@ -1,11 +1,11 @@
 ---------------------------------------------------------------------------------
 |     Some information about the running simulation:                		|
 ---------------------------------------------------------------------------------
-|     SIMULATION TIME	       0.617		TEMPERATURE	     217.819	|
-|     PRESSURE		   62792.210		E(MM)		   -5462.321	|
-|     E(KIN)		    3895.656		E(INTRA)	       0.000	|
-|     E(COULOMB)	  -15365.587		E(NONCOULOMB)	    6007.610	|
+|     SIMULATION TIME	       0.621		TEMPERATURE	     895.698	|
+|     PRESSURE		    9314.574		E(MM)		   -5565.107	|
+|     E(KIN)		   16019.414		E(INTRA)	       0.000	|
+|     E(COULOMB)	  -18937.514		E(NONCOULOMB)	   -2647.007	|
 |     E(RF)		       0.000		E(THREEBODY)	       0.000	|
-|     MOMENTUM		   7.689e-01		LOOPTIME 	       0.000	|
+|     MOMENTUM		   7.682e-01		LOOPTIME 	       0.000	|
 ---------------------------------------------------------------------------------
 

@@ -21,3 +21,11 @@ Molecule SimulationBox::findMoleculeType(int moltype) const
 
     throw RstFileException("Molecule type " + to_string(moltype) + " not found");
 }
+
+void SimulationBox::calculateDegreesOfFreedom()
+{
+    for (const auto &molecule : _molecules)
+    {
+        _degreesOfFreedom += molecule.getNumberOfAtoms() * 3;
+    }
+}
