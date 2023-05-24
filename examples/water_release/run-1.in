@@ -76,8 +76,8 @@
 
 # THERMOSTAT
 #-----------------------------------------
-   #temp       = 298.15;
-   #thermostat = none;
+   temp       = 298.15;
+   thermostat = berendsen;
    #manostat   = berendsen;
    #pressure   = 1.013;
 #  nscale = 500;

@@ -52,6 +52,7 @@ constexpr double _ELECTRON_MASS_ = 9.10938356e-31; // in kg
  */
 constexpr double _S_TO_FS_ = 1.0e15;
 constexpr double _FS_TO_S_ = 1.0 / _S_TO_FS_;
+constexpr double _PS_TO_FS_ = 1.0e3;
 
 /**
  * @brief Conversion factors for velocity verler integrator

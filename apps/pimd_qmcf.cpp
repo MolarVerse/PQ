@@ -72,7 +72,9 @@ int pimd_qmcf(int argc, char *argv[])
 
         engine._integrator->secondStep(engine.getSimulationBox(), engine._timings);
 
-        engine._thermostat->calculateTemperature(engine.getSimulationBox(), engine._outputData);
+        engine._thermostat->applyThermostat(engine.getSimulationBox());
+
+        engine._outputData.addAverageTemperature(engine._thermostat->getTemperature());
     }
 
     /*

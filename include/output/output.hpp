@@ -71,6 +71,7 @@ public:
     using Output::Output;
 
     void writeDensityWarning();
+    void writeRelaxationTimeThermostatWarning();
     void writeInitialMomentum(double momentum);
 };
 
@@ -86,6 +87,7 @@ public:
     using Output::Output;
 
     void writeDensityWarning() const;
+    void writeRelaxationTimeThermostatWarning() const;
     void writeInitialMomentum(double momentum) const;
 };
 

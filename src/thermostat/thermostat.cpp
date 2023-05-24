@@ -1,9 +1,11 @@
 #include "thermostat.hpp"
 #include "constants.hpp"
 
+#include <cmath>
+
 using namespace std;
 
-void Thermostat::calculateTemperature(const SimulationBox &simulationBox, OutputData &outputData)
+void Thermostat::calculateTemperature(const SimulationBox &simulationBox)
 {
     auto temperature = 0.0;
     auto velocities = vector<double>(3);
@@ -23,5 +25,33 @@ void Thermostat::calculateTemperature(const SimulationBox &simulationBox, Output
     temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
 
     setTemperature(temperature);
-    outputData.addAverageTemperature(temperature);
+}
+
+void Thermostat::applyThermostat(SimulationBox &simulationBox)
+{
+    calculateTemperature(simulationBox);
+}
+
+void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox)
+{
+    calculateTemperature(simulationBox);
+
+    auto velocities = vector<double>(3);
+    const auto berendsenFactor = sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
+
+    for (auto &molecule : simulationBox._molecules)
+    {
+        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        {
+            molecule.getAtomVelocities(i, velocities);
+
+            velocities[0] *= berendsenFactor;
+            velocities[1] *= berendsenFactor;
+            velocities[2] *= berendsenFactor;
+
+            molecule.setAtomVelocities(i, velocities);
+        }
+    }
+
+    calculateTemperature(simulationBox);
 }

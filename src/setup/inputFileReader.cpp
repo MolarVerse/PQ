@@ -7,6 +7,7 @@
 
 #include "inputFileReader.hpp"
 #include "stringUtilities.hpp"
+#include "constants.hpp"
 
 using namespace std;
 using namespace StringUtilities;
@@ -50,6 +51,10 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
 
     addKeyword(string("cell-list"), &InputFileReader::parseCellListActivated, false);
     addKeyword(string("cell-number"), &InputFileReader::parseNumberOfCells, false);
+
+    addKeyword(string("thermostat"), &InputFileReader::parseThermostat, false);
+    addKeyword(string("temp"), &InputFileReader::parseTemperature, false);
+    addKeyword(string("t_relaxation"), &InputFileReader::parseRelaxationTime, false);
 }
 
 /**
@@ -162,4 +167,29 @@ void InputFileReader::postProcess()
     }
 
     _engine._settings.setMoldescriptorFilename(_engine._settings.getGuffPath() + "/" + _engine._settings.getMoldescriptorFilename());
+
+    setupThermostat();
+}
+
+void InputFileReader::setupThermostat() // TODO: include warnings if value set but not used
+{
+    if (_engine._settings.getThermostat() == "berendsen")
+    {
+        if (_engine._settings.getTemperatureSet() == false)
+            throw InputFileException("Temperature not set for Berendsen thermostat");
+
+        if (_engine._settings.getRelaxationTimeSet() == false)
+        {
+            _engine._stdoutOutput->writeRelaxationTimeThermostatWarning();
+            _engine._logOutput->writeRelaxationTimeThermostatWarning();
+        }
+
+        _engine._thermostat = make_unique<BerendsenThermostat>(_engine._settings.getTemperature(), _engine._settings.getRelaxationTime() * _PS_TO_FS_);
+    }
+    else
+    {
+        // warnings if values set but not used
+    }
+
+    _engine._thermostat->setTimestep(_engine._timings.getTimestep());
 }

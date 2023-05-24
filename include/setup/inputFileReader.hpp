@@ -74,6 +74,10 @@ namespace Setup::InputFileReader
         void parseCellListActivated(const std::vector<std::string> &);
         void parseNumberOfCells(const std::vector<std::string> &);
 
+        void parseThermostat(const std::vector<std::string> &);
+        void parseTemperature(const std::vector<std::string> &);
+        void parseRelaxationTime(const std::vector<std::string> &);
+
         void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
 
         void process(const std::vector<std::string> &);
@@ -85,6 +89,8 @@ namespace Setup::InputFileReader
         void setKeywordCount(const std::string &keyword, int count) { _keywordCountMap[keyword] = count; };
 
         bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; };
+
+        void setupThermostat();
     };
 
     void checkEqualSign(std::string_view, int);
