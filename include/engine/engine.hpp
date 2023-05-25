@@ -46,8 +46,6 @@ public:
     std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>("default.chg");
     std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>("default.info");
 
-    void calculateMomentum(SimulationBox &, OutputData &) const;
-
     // standard getter and setters
     SimulationBox &getSimulationBox() { return _simulationBox; };
 };

@@ -39,6 +39,8 @@ constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ = 1.0 / _KG_PER_
  */
 constexpr double _KCAL_TO_JOULE_ = 4184.0;
 constexpr double _JOULE_TO_KCAL_ = 1.0 / _KCAL_TO_JOULE_;
+constexpr double _JOULE_TO_KCAL_PER_MOL_ = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
+constexpr double _KCAL_PER_MOL_TO_JOULE_ = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
 
 /**
  * @brief Conversion factors for electron related data
@@ -83,5 +85,10 @@ constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * _FORCE_UNIT_TO_SI_ / _MASS_U
  */
 constexpr double _BOLTZMANN_CONSTANT_ = 1.38064852e-23; // in J/K
 constexpr double _TEMPERATURE_FACTOR_ = _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _MASS_UNIT_TO_SI_ / _BOLTZMANN_CONSTANT_;
+
+/**
+ * @brief Conversion factors kinetic energy
+ */
+constexpr double _KINETIC_ENERGY_FACTOR_ = 0.5 * _MASS_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _JOULE_TO_KCAL_PER_MOL_;
 
 #endif

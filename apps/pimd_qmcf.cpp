@@ -46,7 +46,7 @@ int pimd_qmcf(int argc, char *argv[])
 
     engine.getSimulationBox().calculateDegreesOfFreedom();
 
-    engine.calculateMomentum(engine.getSimulationBox(), engine._outputData);
+    engine._outputData.calculateKineticEnergyAndMomentum(engine.getSimulationBox());
 
     engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
     engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
@@ -60,6 +60,7 @@ int pimd_qmcf(int argc, char *argv[])
         engine._outputData.setAverageCoulombEnergy(0.0);
         engine._outputData.setAverageNonCoulombEnergy(0.0);
         engine._outputData.setAverageTemperature(0.0);
+        engine._outputData.setAverageKineticEnergy(0.0);
 
         engine._integrator->firstStep(engine.getSimulationBox(), engine._timings);
 
@@ -74,6 +75,8 @@ int pimd_qmcf(int argc, char *argv[])
 
         engine._thermostat->applyThermostat(engine.getSimulationBox());
 
+        engine._outputData.calculateKineticEnergyAndMomentum(engine.getSimulationBox());
+
         engine._outputData.addAverageTemperature(engine._thermostat->getTemperature());
     }
 
@@ -83,8 +86,10 @@ int pimd_qmcf(int argc, char *argv[])
 
     cout << "Couloumb energy: " << engine._outputData.getAverageCoulombEnergy() << endl;
     cout << "Non Couloumb energy: " << engine._outputData.getAverageNonCoulombEnergy() << endl;
+    cout << "Kinetic energy: " << engine._outputData.getAverageKineticEnergy() << endl;
 
     cout << "Temperature: " << engine._outputData.getAverageTemperature() << endl;
+    cout << "Momentum: " << engine._outputData.getAverageMomentum() << endl;
 
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;
