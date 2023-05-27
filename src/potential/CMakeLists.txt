@@ -10,6 +10,6 @@ target_include_directories(potential
 
 target_link_libraries(potential
     PUBLIC
-    output
+    physicalData
     simulationBox
 )

@@ -44,52 +44,22 @@ int pimd_qmcf(int argc, char *argv[])
     cout << "Reading guff.dat..." << endl;
     readGuffDat(engine);
 
-    engine.getSimulationBox().calculateDegreesOfFreedom();
-
-    engine._outputData.calculateKineticEnergyAndMomentum(engine.getSimulationBox());
-
-    engine._logOutput->writeInitialMomentum(engine._outputData.getMomentum());
-    engine._stdoutOutput->writeInitialMomentum(engine._outputData.getMomentum());
-
     /*
         HERE STARTS THE MAIN LOOP
     */
 
-    for (int i = 0; i < engine._timings.getNumberOfSteps(); i++)
-    {
-        engine._outputData.setAverageCoulombEnergy(0.0);
-        engine._outputData.setAverageNonCoulombEnergy(0.0);
-        engine._outputData.setAverageTemperature(0.0);
-        engine._outputData.setAverageKineticEnergy(0.0);
-
-        engine._integrator->firstStep(engine.getSimulationBox(), engine._timings);
-
-        if (engine._cellList.isActivated())
-        {
-            engine._cellList.updateCellList(engine.getSimulationBox());
-        }
-
-        engine._potential->calculateForces(engine.getSimulationBox(), engine._outputData, engine._cellList);
-
-        engine._integrator->secondStep(engine.getSimulationBox(), engine._timings);
-
-        engine._thermostat->applyThermostat(engine.getSimulationBox());
-
-        engine._outputData.calculateKineticEnergyAndMomentum(engine.getSimulationBox());
-
-        engine._outputData.addAverageTemperature(engine._thermostat->getTemperature());
-    }
+    engine.run();
 
     /*
         HERE ENDS THE MAIN LOOP
     */
 
-    cout << "Couloumb energy: " << engine._outputData.getAverageCoulombEnergy() << endl;
-    cout << "Non Couloumb energy: " << engine._outputData.getAverageNonCoulombEnergy() << endl;
-    cout << "Kinetic energy: " << engine._outputData.getAverageKineticEnergy() << endl;
+    cout << "Couloumb energy: " << engine._physicalData.getAverageCoulombEnergy() << endl;
+    cout << "Non Couloumb energy: " << engine._physicalData.getAverageNonCoulombEnergy() << endl;
+    cout << "Kinetic energy: " << engine._physicalData.getAverageKineticEnergy() << endl;
 
-    cout << "Temperature: " << engine._outputData.getAverageTemperature() << endl;
-    cout << "Momentum: " << engine._outputData.getAverageMomentum() << endl;
+    cout << "Temperature: " << engine._physicalData.getAverageTemperature() << endl;
+    cout << "Momentum: " << engine._physicalData.getAverageMomentum() << endl;
 
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;

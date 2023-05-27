@@ -1,4 +1,4 @@
-#include "outputData.hpp"
+#include "physicalData.hpp"
 #include "mathUtilities.hpp"
 #include "constants.hpp"
 
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void OutputData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
+void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
 {
     vector<double> momentum(3, 0.0);
     vector<double> momentumSquared(3, 0.0);
@@ -60,4 +60,13 @@ void OutputData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
 
     _kineticEnergy = _kineticEnergyAtomicVector[0] + _kineticEnergyAtomicVector[1] + _kineticEnergyAtomicVector[2];
     _averageKineticEnergy += _kineticEnergy;
+}
+
+void PhysicalData::resetAverageData()
+{
+    _averageCoulombEnergy = 0.0;
+    _averageNonCoulombEnergy = 0.0;
+    _averageTemperature = 0.0;
+    _averageKineticEnergy = 0.0;
+    _averageMomentum = 0.0;
 }

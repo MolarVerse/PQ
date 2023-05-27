@@ -8,7 +8,7 @@
 #include "settings.hpp"
 #include "timings.hpp"
 #include "output.hpp"
-#include "outputData.hpp"
+#include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "integrator.hpp"
 #include "celllist.hpp"
@@ -29,7 +29,7 @@ private:
 public:
     Settings _settings;
     Timings _timings;
-    OutputData _outputData;
+    PhysicalData _physicalData;
     CellList _cellList;
 
     std::unique_ptr<Integrator> _integrator;
@@ -45,6 +45,9 @@ public:
     std::unique_ptr<RstFileOutput> _rstFileOutput = std::make_unique<RstFileOutput>("default.rst");
     std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>("default.chg");
     std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>("default.info");
+
+    void run();
+    void takeStep();
 
     // standard getter and setters
     SimulationBox &getSimulationBox() { return _simulationBox; };

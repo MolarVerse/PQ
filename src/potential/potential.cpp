@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &outputData, CellList &)
+void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     vector<double> xyz_i(3);
     vector<double> xyz_j(3);
@@ -89,14 +89,14 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, OutputData &out
         }
     }
 
-    outputData.setCoulombEnergy(totalCoulombicEnergy);
-    outputData.addAverageCoulombEnergy(totalCoulombicEnergy);
+    physicalData.setCoulombEnergy(totalCoulombicEnergy);
+    physicalData.addAverageCoulombEnergy(totalCoulombicEnergy);
 
-    outputData.setNonCoulombEnergy(totalNonCoulombicEnergy);
-    outputData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
 }
 
-void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outputData, CellList &cellList)
+void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
     vector<double> xyz_i(3);
     vector<double> xyz_j(3);
@@ -264,11 +264,11 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, OutputData &outpu
         }
     }
 
-    outputData.setCoulombEnergy(totalCoulombicEnergy);
-    outputData.addAverageCoulombEnergy(totalCoulombicEnergy);
+    physicalData.setCoulombEnergy(totalCoulombicEnergy);
+    physicalData.addAverageCoulombEnergy(totalCoulombicEnergy);
 
-    outputData.setNonCoulombEnergy(totalNonCoulombicEnergy);
-    outputData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
 }
 
 void GuffCoulomb::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const

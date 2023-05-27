@@ -1,6 +1,5 @@
 add_library(output
     output.cpp
-    outputData.cpp
 )
 
 target_include_directories(output
@@ -13,5 +12,4 @@ target_link_libraries(output
     PUBLIC
     config
     utilities
-    simulationBox
 )
