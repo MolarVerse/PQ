@@ -96,6 +96,9 @@ void CellList::addCellPointers(Cell &cell)
 
 void CellList::updateCellList(SimulationBox &simulationBox)
 {
+    if (!_activated)
+        return;
+
     if (simulationBox._box.getBoxSizeHasChanged())
     {
         _cells.clear();

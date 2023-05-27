@@ -24,10 +24,7 @@ void Engine::takeStep()
 {
     _integrator->firstStep(getSimulationBox(), _timings);
 
-    if (_cellList.isActivated())
-    {
-        _cellList.updateCellList(getSimulationBox());
-    }
+    _cellList.updateCellList(getSimulationBox());
 
     _potential->calculateForces(getSimulationBox(), _physicalData, _cellList);
 
