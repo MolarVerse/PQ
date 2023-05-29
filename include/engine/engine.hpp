@@ -14,6 +14,7 @@
 #include "celllist.hpp"
 #include "potential.hpp"
 #include "thermostat.hpp"
+#include "virial.hpp"
 
 /**
  * @class Engine
@@ -35,6 +36,7 @@ public:
     std::unique_ptr<Integrator> _integrator;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     std::unique_ptr<Thermostat> _thermostat = std::make_unique<Thermostat>();
+    std::unique_ptr<Virial> _virial = std::make_unique<VirialMolecular>();
 
     std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>("default.en");
     std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>("default.xyz");

@@ -17,22 +17,22 @@ void Engine::run()
         _physicalData.resetAverageData();
 
         takeStep();
+
+        _physicalData.addAverageTemperature(_thermostat->getTemperature());
     }
 }
 
 void Engine::takeStep()
 {
-    _integrator->firstStep(getSimulationBox(), _timings);
+    _integrator->firstStep(_simulationBox, _timings);
 
-    _cellList.updateCellList(getSimulationBox());
+    _cellList.updateCellList(_simulationBox);
 
-    _potential->calculateForces(getSimulationBox(), _physicalData, _cellList);
+    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
-    _integrator->secondStep(getSimulationBox(), _timings);
+    _integrator->secondStep(_simulationBox, _timings);
 
-    _thermostat->applyThermostat(getSimulationBox());
+    _thermostat->applyThermostat(_simulationBox);
 
-    _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
-
-    _physicalData.addAverageTemperature(_thermostat->getTemperature());
+    _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
 }
