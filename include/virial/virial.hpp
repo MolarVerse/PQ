@@ -15,7 +15,7 @@ protected:
 public:
     virtual ~Virial() = default;
 
-    virtual void computeVirial(SimulationBox &simulationBox, PhysicalData &physicalData) = 0;
+    virtual void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData);
 
     // standard getter and setters
     std::vector<double> getVirial() const { return _virial; };
@@ -24,12 +24,12 @@ public:
 
 class VirialMolecular : public Virial
 {
-    void computeVirial(SimulationBox &simulationBox, PhysicalData &physicalData);
+    void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData) override;
+    void intraMolecularVirialCorrection(SimulationBox &simulationBox);
 };
 
 class VirialAtomic : public Virial
 {
-    void computeVirial(SimulationBox &simulationBox, PhysicalData &physicalData){};
 };
 
 #endif

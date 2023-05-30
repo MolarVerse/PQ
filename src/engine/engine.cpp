@@ -7,7 +7,8 @@ using namespace std;
 
 void Engine::run()
 {
-    getSimulationBox().calculateDegreesOfFreedom();
+    _simulationBox.calculateDegreesOfFreedom();
+    _simulationBox.calculateCenterOfMassMolecules();
 
     _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
 
@@ -32,6 +33,7 @@ void Engine::run()
 
     cout << "Volume: " << _averagePhysicalData.getVolume() << endl;
     cout << "Density: " << _averagePhysicalData.getDensity() << endl;
+    cout << "Pressure: " << _averagePhysicalData.getPressure() << endl;
 
     cout << endl
          << endl;
@@ -40,6 +42,8 @@ void Engine::run()
 void Engine::takeStep()
 {
     _integrator->firstStep(_simulationBox, _timings);
+
+    _simulationBox.calculateCenterOfMassMolecules();
 
     _cellList.updateCellList(_simulationBox);
 
@@ -50,4 +54,10 @@ void Engine::takeStep()
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 
     _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
+
+    _virial->calculateVirial(_simulationBox, _physicalData);
+
+    cout << "Virial: " << _virial->getVirial()[0] << " " << _virial->getVirial()[1] << " " << _virial->getVirial()[2] << endl;
+
+    _manostat->calculatePressure(*_virial, _physicalData);
 }

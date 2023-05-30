@@ -2,6 +2,7 @@
 #include "exceptions.hpp"
 
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -42,6 +43,7 @@ int Molecule::getNumberOfAtomTypes()
     return int(distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
 }
 
+// FIXME: remove this function
 vector<double> Molecule::getCenterOfMass()
 {
     auto centerOfMass = vector<double>(3, 0.0);
@@ -61,4 +63,24 @@ vector<double> Molecule::getCenterOfMass()
     centerOfMass[2] /= getMolMass();
 
     return centerOfMass;
+}
+
+// FIXME: here PBC have to be applied
+void Molecule::calculateCenterOfMass(vector<double> &box)
+{
+    _centerOfMass = vector<double>(3, 0.0);
+
+    for (int i = 0; i < _numberOfAtoms; i++)
+    {
+        auto mass = getMass(i);
+        auto position = getAtomPositions(i);
+
+        _centerOfMass[0] += mass * (position[0] - box[0] * round(position[0] / box[0]));
+        _centerOfMass[1] += mass * (position[1] - box[1] * round(position[1] / box[1]));
+        _centerOfMass[2] += mass * (position[2] - box[2] * round(position[2] / box[2]));
+    }
+
+    _centerOfMass[0] /= getMolMass();
+    _centerOfMass[1] /= getMolMass();
+    _centerOfMass[2] /= getMolMass();
 }

@@ -57,6 +57,17 @@ constexpr double _FS_TO_S_ = 1.0 / _S_TO_FS_;
 constexpr double _PS_TO_FS_ = 1.0e3;
 
 /**
+ * @brief Conversion factors to SI units
+ */
+constexpr double _FORCE_UNIT_TO_SI_ = _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_METER_;
+constexpr double _MASS_UNIT_TO_SI_ = _AMU_TO_KG_;
+constexpr double _TIME_UNIT_TO_SI_ = _FS_TO_S_;
+constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_METER_;
+constexpr double _SI_TO_VELOCITY_UNIT_ = 1.0 / _VELOCITY_UNIT_TO_SI_;
+constexpr double _ENERGY_UNIT_TO_SI_ = _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_;
+constexpr double _VOLUME_UNIT_TO_SI_ = _ANGSTROM_CUBIC_TO_METER_CUBIC_;
+
+/**
  * @brief Conversion factors for velocity verler integrator
  *
  * @details
@@ -71,13 +82,6 @@ constexpr double _PS_TO_FS_ = 1.0e3;
  * [m'] = kg = [m] * 1.660539040e-27 = [m] * _AMU_TO_KG_
  *
  */
-constexpr double _FORCE_UNIT_TO_SI_ = _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_METER_;
-constexpr double _MASS_UNIT_TO_SI_ = _AMU_TO_KG_;
-constexpr double _TIME_UNIT_TO_SI_ = _FS_TO_S_;
-
-constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_METER_;
-constexpr double _SI_TO_VELOCITY_UNIT_ = 1.0 / _VELOCITY_UNIT_TO_SI_;
-
 constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * _FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_ * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;
 
 /**
@@ -90,5 +94,11 @@ constexpr double _TEMPERATURE_FACTOR_ = _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_T
  * @brief Conversion factors kinetic energy
  */
 constexpr double _KINETIC_ENERGY_FACTOR_ = 0.5 * _MASS_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _JOULE_TO_KCAL_PER_MOL_;
+
+/**
+ * @brief Conversion factors for pressure calculation
+ */
+constexpr double _PASCAL_TO_BAR_ = 1.0e-5;
+constexpr double _PRESSURE_FACTOR_ = _ENERGY_UNIT_TO_SI_ / _VOLUME_UNIT_TO_SI_ * _PASCAL_TO_BAR_;
 
 #endif

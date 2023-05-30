@@ -42,6 +42,8 @@ private:
     std::vector<double> _velocitiesOld;
     std::vector<double> _forcesOld;
 
+    std::vector<double> _centerOfMass = {0.0, 0.0, 0.0};
+
     void addVector(std::vector<double> &vector, const std::vector<double> &vectorToAdd) const;
 
 public:
@@ -176,6 +178,13 @@ public:
     int getNumberOfAtomTypes();
 
     std::vector<double> getCenterOfMass();
+    void getCenterOfMass(std::vector<double> &centerOfMass) const
+    {
+        centerOfMass[0] = _centerOfMass[0];
+        centerOfMass[1] = _centerOfMass[1];
+        centerOfMass[2] = _centerOfMass[2];
+    }
+    void calculateCenterOfMass(std::vector<double> &);
 };
 
 #endif

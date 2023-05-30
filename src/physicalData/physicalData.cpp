@@ -73,6 +73,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _virial[0] += physicalData.getVirial()[0];
     _virial[1] += physicalData.getVirial()[1];
     _virial[2] += physicalData.getVirial()[2];
+
+    _pressure += physicalData.getPressure();
 }
 
 void PhysicalData::resetData()

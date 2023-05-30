@@ -29,3 +29,11 @@ void SimulationBox::calculateDegreesOfFreedom()
         _degreesOfFreedom += molecule.getNumberOfAtoms() * 3;
     }
 }
+
+void SimulationBox::calculateCenterOfMassMolecules()
+{
+    for (auto &molecule : _molecules)
+    {
+        molecule.calculateCenterOfMass(_box.getBoxDimensions()); // FIXME: change this one here... maybe solution with unique ptr
+    }
+}

@@ -80,6 +80,8 @@ public:
 
     void calculateDegreesOfFreedom();
     int getDegreesOfFreedom() const { return _degreesOfFreedom; };
+
+    void calculateCenterOfMassMolecules();
 };
 
 #endif
