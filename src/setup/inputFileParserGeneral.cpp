@@ -13,7 +13,7 @@ using namespace Setup::InputFileReader;
 void InputFileReader::parseStartFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._settings.setStartFilename(lineElements[2]);
+    _engine.getSettings().setStartFilename(lineElements[2]);
 }
 
 /**
@@ -24,7 +24,7 @@ void InputFileReader::parseStartFilename(const vector<string> &lineElements)
 void InputFileReader::parseMoldescriptorFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._settings.setMoldescriptorFilename(lineElements[2]);
+    _engine.getSettings().setMoldescriptorFilename(lineElements[2]);
 }
 
 /**
@@ -35,7 +35,7 @@ void InputFileReader::parseMoldescriptorFilename(const vector<string> &lineEleme
 void InputFileReader::parseGuffPath(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._settings.setGuffPath(lineElements[2]);
+    _engine.getSettings().setGuffPath(lineElements[2]);
 }
 
 /**
@@ -49,7 +49,7 @@ void InputFileReader::parseJobType(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "mm-md")
-        _engine._settings.setJobtype("MMMD");
+        _engine.getSettings().setJobtype("MMMD");
     else
         throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
 }

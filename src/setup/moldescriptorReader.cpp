@@ -17,7 +17,7 @@ using namespace StringUtilities;
  *
  * @throw InputFileException if file not found
  */
-MoldescriptorReader::MoldescriptorReader(Engine &engine) : _filename(engine._settings.getMoldescriptorFilename()),
+MoldescriptorReader::MoldescriptorReader(Engine &engine) : _filename(engine.getSettings().getMoldescriptorFilename()),
                                                            _engine(engine)
 {
     _fp.open(_filename);

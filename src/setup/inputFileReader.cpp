@@ -166,30 +166,30 @@ void InputFileReader::postProcess()
             throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     }
 
-    _engine._settings.setMoldescriptorFilename(_engine._settings.getGuffPath() + "/" + _engine._settings.getMoldescriptorFilename());
+    _engine.getSettings().setMoldescriptorFilename(_engine.getSettings().getGuffPath() + "/" + _engine.getSettings().getMoldescriptorFilename());
 
     setupThermostat();
 }
 
 void InputFileReader::setupThermostat() // TODO: include warnings if value set but not used
 {
-    if (_engine._settings.getThermostat() == "berendsen")
+    if (_engine.getSettings().getThermostat() == "berendsen")
     {
-        if (_engine._settings.getTemperatureSet() == false)
+        if (_engine.getSettings().getTemperatureSet() == false)
             throw InputFileException("Temperature not set for Berendsen thermostat");
 
-        if (_engine._settings.getRelaxationTimeSet() == false)
+        if (_engine.getSettings().getRelaxationTimeSet() == false)
         {
             _engine._stdoutOutput->writeRelaxationTimeThermostatWarning();
             _engine._logOutput->writeRelaxationTimeThermostatWarning();
         }
 
-        _engine._thermostat = make_unique<BerendsenThermostat>(_engine._settings.getTemperature(), _engine._settings.getRelaxationTime() * _PS_TO_FS_);
+        _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(), _engine.getSettings().getRelaxationTime() * _PS_TO_FS_);
     }
     else
     {
         // warnings if values set but not used
     }
 
-    _engine._thermostat->setTimestep(_engine._timings.getTimestep());
+    _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
 }

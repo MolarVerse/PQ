@@ -26,16 +26,16 @@
 class Engine
 {
 private:
+    Settings _settings;
+    Timings _timings;
+    CellList _cellList;
+
     SimulationBox _simulationBox;
 
     PhysicalData _physicalData;
     PhysicalData _averagePhysicalData;
 
 public:
-    Settings _settings;
-    Timings _timings;
-    CellList _cellList;
-
     std::unique_ptr<Integrator> _integrator;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     std::unique_ptr<Thermostat> _thermostat = std::make_unique<Thermostat>();
@@ -56,6 +56,9 @@ public:
     void takeStep();
 
     // standard getter and setters
+    Settings &getSettings() { return _settings; };
+    Timings &getTimings() { return _timings; };
+    CellList &getCellList() { return _cellList; };
     SimulationBox &getSimulationBox() { return _simulationBox; };
     PhysicalData &getPhysicalData() { return _physicalData; };
 };

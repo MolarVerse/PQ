@@ -196,9 +196,9 @@ void PostProcessSetup::checkRcCutoff()
 
 void PostProcessSetup::setupCellList()
 {
-    if (_engine._cellList.isActivated())
+    if (_engine.getCellList().isActivated())
     {
-        _engine._cellList.setup(_engine.getSimulationBox());
+        _engine.getCellList().setup(_engine.getSimulationBox());
         _engine._potential = make_unique<PotentialCellList>();
     }
     else

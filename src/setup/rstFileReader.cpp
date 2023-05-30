@@ -78,6 +78,6 @@ void RstFileReader::read()
  */
 void readRstFile(Engine &engine)
 {
-    RstFileReader rstFileReader(engine._settings.getStartFilename(), engine);
+    RstFileReader rstFileReader(engine.getSettings().getStartFilename(), engine);
     rstFileReader.read();
 }

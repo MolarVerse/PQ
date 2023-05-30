@@ -16,12 +16,12 @@ void InputFileReader::parseThermostat(const vector<string> &lineElements)
     if (lineElements[2] == "none")
     {
         _engine._thermostat = make_unique<Thermostat>();
-        _engine._settings.setThermostat("none");
+        _engine.getSettings().setThermostat("none");
     }
     else if (lineElements[2] == "berendsen")
     {
         _engine._thermostat = make_unique<BerendsenThermostat>();
-        _engine._settings.setThermostat("berendsen");
+        _engine.getSettings().setThermostat("berendsen");
     }
     else
         throw InputFileException("Invalid thermostat \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
@@ -30,11 +30,11 @@ void InputFileReader::parseThermostat(const vector<string> &lineElements)
 void InputFileReader::parseTemperature(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._settings.setTemperature(stod(lineElements[2]));
+    _engine.getSettings().setTemperature(stod(lineElements[2]));
 }
 
 void InputFileReader::parseRelaxationTime(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._settings.setRelaxationTime(stod(lineElements[2]));
+    _engine.getSettings().setRelaxationTime(stod(lineElements[2]));
 }

@@ -57,12 +57,6 @@ int pimd_qmcf(int argc, char *argv[])
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;
 
-    cout << "start file name: " << engine._settings.getStartFilename() << endl;
-
-    cout << "number of steps: " << engine._timings.getNumberOfSteps() << endl;
-
-    cout << "Moldescriptor filename: " << engine._settings.getMoldescriptorFilename() << endl;
-
     cout << "Water type: " << engine.getSimulationBox().getWaterType() << endl;
     cout << "Ammonia type: " << engine.getSimulationBox().getAmmoniaType() << endl;
 

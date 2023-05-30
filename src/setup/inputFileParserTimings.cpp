@@ -13,7 +13,7 @@ using namespace Setup::InputFileReader;
 void InputFileReader::parseTimestep(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._timings.setTimestep(stod(lineElements[2]));
+    _engine.getTimings().setTimestep(stod(lineElements[2]));
 }
 
 /**
@@ -24,5 +24,5 @@ void InputFileReader::parseTimestep(const vector<string> &lineElements)
 void InputFileReader::parseNumberOfSteps(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._timings.setNumberOfSteps(stoi(lineElements[2]));
+    _engine.getTimings().setNumberOfSteps(stoi(lineElements[2]));
 }

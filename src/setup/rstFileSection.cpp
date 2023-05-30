@@ -56,7 +56,7 @@ void StepCountSection::process(vector<string> &lineElements, Engine &engine)
     if (lineElements.size() != 2)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
 
-    engine._timings.setStepCount(stoi(lineElements[1]));
+    engine.getTimings().setStepCount(stoi(lineElements[1]));
 }
 
 bool AtomSection::isHeader() { return false; }
