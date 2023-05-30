@@ -18,8 +18,8 @@ public:
     virtual void computeVirial(SimulationBox &simulationBox, PhysicalData &physicalData) = 0;
 
     // standard getter and setters
-    std::vector<double> getVirial() { return _virial; };
-    void setVirial(std::vector<double> &virial) { _virial = virial; };
+    std::vector<double> getVirial() const { return _virial; };
+    void setVirial(const std::vector<double> &virial) { _virial = virial; };
 };
 
 class VirialMolecular : public Virial

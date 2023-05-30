@@ -28,6 +28,7 @@ void PostProcessSetup::setup()
     calculateMolMass();
     calculateTotalMass();
     calculateTotalCharge();
+    resizeAtomShiftForces();
 
     checkBoxSettings();
 
@@ -173,6 +174,17 @@ void PostProcessSetup::checkBoxSettings()
 
         _engine._logOutput->writeDensityWarning();
         _engine._stdoutOutput->writeDensityWarning();
+    }
+
+    _engine.getPhysicalData().setVolume(_engine.getSimulationBox()._box.getVolume());
+    _engine.getPhysicalData().setDensity(_engine.getSimulationBox()._box.getDensity());
+}
+
+void PostProcessSetup::resizeAtomShiftForces()
+{
+    for (auto &molecule : _engine.getSimulationBox()._molecules)
+    {
+        molecule.resizeAtomShiftForces();
     }
 }
 

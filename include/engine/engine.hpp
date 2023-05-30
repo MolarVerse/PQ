@@ -14,6 +14,7 @@
 #include "celllist.hpp"
 #include "potential.hpp"
 #include "thermostat.hpp"
+#include "manostat.hpp"
 #include "virial.hpp"
 
 /**
@@ -27,15 +28,18 @@ class Engine
 private:
     SimulationBox _simulationBox;
 
+    PhysicalData _physicalData;
+    PhysicalData _averagePhysicalData;
+
 public:
     Settings _settings;
     Timings _timings;
-    PhysicalData _physicalData;
     CellList _cellList;
 
     std::unique_ptr<Integrator> _integrator;
     std::unique_ptr<Potential> _potential = std::make_unique<PotentialBruteForce>();
     std::unique_ptr<Thermostat> _thermostat = std::make_unique<Thermostat>();
+    std::unique_ptr<Manostat> _manostat = std::make_unique<Manostat>();
     std::unique_ptr<Virial> _virial = std::make_unique<VirialMolecular>();
 
     std::unique_ptr<EnergyOutput> _energyOutput = std::make_unique<EnergyOutput>("default.en");
@@ -53,6 +57,7 @@ public:
 
     // standard getter and setters
     SimulationBox &getSimulationBox() { return _simulationBox; };
+    PhysicalData &getPhysicalData() { return _physicalData; };
 };
 
 #endif

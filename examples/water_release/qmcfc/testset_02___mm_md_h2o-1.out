@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Wed May 24 07:59:25 2023
+ (+) Simulation run started on: Tue May 30 10:12:47 2023
 
 
 
@@ -243,7 +243,7 @@
    E(KIN)	   10192.155		E(INTRA)	       0.000
    E(COULOMB)	  -16222.670		E(NONCOULOMB)	     423.896
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.666e-01		LOOPTIME 	       0.000
+   MOMENTUM	   7.666e-01		LOOPTIME 	       1.000
 
 
    STEP NUMBER	           6		TOTAL STEPS	        1238
@@ -270,7 +270,7 @@
    E(KIN)	   13445.977		E(INTRA)	       0.000
    E(COULOMB)	  -17604.275		E(NONCOULOMB)	   -1547.437
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.633e-01		LOOPTIME 	       1.000
+   MOMENTUM	   7.633e-01		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           9		TOTAL STEPS	        1241

@@ -18,6 +18,7 @@ target_link_libraries(engine
     potential
     timings
     thermostat
+    manostat
     physicalData
     virial
 )

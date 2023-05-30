@@ -10,7 +10,9 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
     vector<double> xyz_i(3);
     vector<double> xyz_j(3);
     vector<double> dxyz(3);
+    vector<double> txyz(3);
     vector<double> forcexyz(3);
+    vector<double> shiftForcexyz(3);
 
     vector<double> box = simBox._box.getBoxDimensions();
 
@@ -42,9 +44,13 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
                     dxyz[1] = xyz_i[1] - xyz_j[1];
                     dxyz[2] = xyz_i[2] - xyz_j[2];
 
-                    dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
-                    dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
-                    dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+                    txyz[0] = -box[0] * round(dxyz[0] / box[0]);
+                    txyz[1] = -box[1] * round(dxyz[1] / box[1]);
+                    txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+
+                    dxyz[0] += txyz[0];
+                    dxyz[1] += txyz[1];
+                    dxyz[2] += txyz[2];
 
                     double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
@@ -81,8 +87,14 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
                         forcexyz[1] = force * dxyz[1];
                         forcexyz[2] = force * dxyz[2];
 
+                        shiftForcexyz[0] = forcexyz[0] * txyz[0];
+                        shiftForcexyz[1] = forcexyz[1] * txyz[1];
+                        shiftForcexyz[2] = forcexyz[2] * txyz[2];
+
                         molecule_i.addAtomForces(atom_i, forcexyz);
                         molecule_j.subtractAtomForces(atom_j, forcexyz);
+
+                        molecule_i.addAtomShifForces(atom_i, shiftForcexyz);
                     }
                 }
             }
@@ -90,18 +102,18 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
     }
 
     physicalData.setCoulombEnergy(totalCoulombicEnergy);
-    physicalData.addAverageCoulombEnergy(totalCoulombicEnergy);
-
     physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
-    physicalData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
 }
 
+// TODO: check if cutoff is smaller than smallest cell size
 void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
     vector<double> xyz_i(3);
     vector<double> xyz_j(3);
     vector<double> dxyz(3);
+    vector<double> txyz(3);
     vector<double> forcexyz(3);
+    vector<double> shiftForcexyz(3);
 
     vector<double> box = simBox._box.getBoxDimensions();
 
@@ -139,9 +151,13 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                         dxyz[1] = xyz_i[1] - xyz_j[1];
                         dxyz[2] = xyz_i[2] - xyz_j[2];
 
-                        dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
-                        dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
-                        dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+                        txyz[0] = -box[0] * round(dxyz[0] / box[0]);
+                        txyz[1] = -box[1] * round(dxyz[1] / box[1]);
+                        txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+
+                        dxyz[0] += txyz[0];
+                        dxyz[1] += txyz[1];
+                        dxyz[2] += txyz[2];
 
                         double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
@@ -178,8 +194,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                             forcexyz[1] = force * dxyz[1];
                             forcexyz[2] = force * dxyz[2];
 
+                            shiftForcexyz[0] = forcexyz[0] * txyz[0];
+                            shiftForcexyz[1] = forcexyz[1] * txyz[1];
+                            shiftForcexyz[2] = forcexyz[2] * txyz[2];
+
                             molecule_i->addAtomForces(atom_i, forcexyz);
                             molecule_j->subtractAtomForces(atom_j, forcexyz);
+
+                            molecule_i->addAtomShifForces(atom_i, shiftForcexyz);
                         }
                     }
                 }
@@ -215,9 +237,13 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                             dxyz[1] = xyz_i[1] - xyz_j[1];
                             dxyz[2] = xyz_i[2] - xyz_j[2];
 
-                            dxyz[0] -= box[0] * round(dxyz[0] / box[0]);
-                            dxyz[1] -= box[1] * round(dxyz[1] / box[1]);
-                            dxyz[2] -= box[2] * round(dxyz[2] / box[2]);
+                            txyz[0] = -box[0] * round(dxyz[0] / box[0]);
+                            txyz[1] = -box[1] * round(dxyz[1] / box[1]);
+                            txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+
+                            dxyz[0] += txyz[0];
+                            dxyz[1] += txyz[1];
+                            dxyz[2] += txyz[2];
 
                             double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
@@ -254,8 +280,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                                 forcexyz[1] = force * dxyz[1];
                                 forcexyz[2] = force * dxyz[2];
 
+                                shiftForcexyz[0] = forcexyz[0] * txyz[0];
+                                shiftForcexyz[1] = forcexyz[1] * txyz[1];
+                                shiftForcexyz[2] = forcexyz[2] * txyz[2];
+
                                 molecule_i->addAtomForces(atom_i, forcexyz);
                                 molecule_j->subtractAtomForces(atom_j, forcexyz);
+
+                                molecule_i->addAtomShifForces(atom_i, shiftForcexyz);
                             }
                         }
                     }
@@ -265,10 +297,7 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
     }
 
     physicalData.setCoulombEnergy(totalCoulombicEnergy);
-    physicalData.addAverageCoulombEnergy(totalCoulombicEnergy);
-
     physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
-    physicalData.addAverageNonCoulombEnergy(totalNonCoulombicEnergy);
 }
 
 void GuffCoulomb::calcCoulomb(double coulombCoefficient, double rcCutoff, double distance, double &energy, double &force, double energy_cutoff, double force_cutoff) const

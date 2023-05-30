@@ -54,13 +54,6 @@ int pimd_qmcf(int argc, char *argv[])
         HERE ENDS THE MAIN LOOP
     */
 
-    cout << "Couloumb energy: " << engine._physicalData.getAverageCoulombEnergy() << endl;
-    cout << "Non Couloumb energy: " << engine._physicalData.getAverageNonCoulombEnergy() << endl;
-    cout << "Kinetic energy: " << engine._physicalData.getAverageKineticEnergy() << endl;
-
-    cout << "Temperature: " << engine._physicalData.getAverageTemperature() << endl;
-    cout << "Momentum: " << engine._physicalData.getAverageMomentum() << endl;
-
     cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
     cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;
 
@@ -72,12 +65,6 @@ int pimd_qmcf(int argc, char *argv[])
 
     cout << "Water type: " << engine.getSimulationBox().getWaterType() << endl;
     cout << "Ammonia type: " << engine.getSimulationBox().getAmmoniaType() << endl;
-
-    cout << "atom mass test: " << engine.getSimulationBox()._molecules[0].getMass(0) << endl;
-
-    cout << "density: " << engine.getSimulationBox()._box.getDensity() << endl;
-
-    cout << "volume: " << engine.getSimulationBox()._box.getVolume() << endl;
 
     return EXIT_SUCCESS;
 }

@@ -49,7 +49,6 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
     _momentumVector[1] *= _FS_TO_S_;
     _momentumVector[2] *= _FS_TO_S_;
     _momentum = sqrt(_momentumVector[0] * _momentumVector[0] + _momentumVector[1] * _momentumVector[1] + _momentumVector[2] * _momentumVector[2]);
-    _averageMomentum += _momentum;
 
     _kineticEnergyAtomicVector[0] *= _KINETIC_ENERGY_FACTOR_;
     _kineticEnergyAtomicVector[1] *= _KINETIC_ENERGY_FACTOR_;
@@ -59,14 +58,28 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
     _kineticEnergyMolecularVector[2] *= _KINETIC_ENERGY_FACTOR_;
 
     _kineticEnergy = _kineticEnergyAtomicVector[0] + _kineticEnergyAtomicVector[1] + _kineticEnergyAtomicVector[2];
-    _averageKineticEnergy += _kineticEnergy;
 }
 
-void PhysicalData::resetAverageData()
+void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
-    _averageCoulombEnergy = 0.0;
-    _averageNonCoulombEnergy = 0.0;
-    _averageTemperature = 0.0;
-    _averageKineticEnergy = 0.0;
-    _averageMomentum = 0.0;
+    _coulombEnergy += physicalData.getCoulombEnergy();
+    _nonCoulombEnergy += physicalData.getNonCoulombEnergy();
+    _temperature += physicalData.getTemperature();
+    _momentum += physicalData.getMomentum();
+    _kineticEnergy += physicalData.getKineticEnergy();
+    _volume += physicalData.getVolume();
+    _density += physicalData.getDensity();
+
+    _virial[0] += physicalData.getVirial()[0];
+    _virial[1] += physicalData.getVirial()[1];
+    _virial[2] += physicalData.getVirial()[2];
+}
+
+void PhysicalData::resetData()
+{
+    _coulombEnergy = 0.0;
+    _nonCoulombEnergy = 0.0;
+    _temperature = 0.0;
+    _momentum = 0.0;
+    _kineticEnergy = 0.0;
 }

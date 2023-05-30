@@ -3,6 +3,7 @@
 #define _THEMOSTAT_H_
 
 #include "simulationBox.hpp"
+#include "physicalData.hpp"
 
 /**
  * @class Thermostat
@@ -22,9 +23,9 @@ public:
     explicit Thermostat(double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
-    void calculateTemperature(const SimulationBox &);
+    void calculateTemperature(const SimulationBox &, PhysicalData &);
 
-    virtual void applyThermostat(SimulationBox &);
+    virtual void applyThermostat(SimulationBox &, PhysicalData &);
 
     // standard getters and setters
     double getTemperature() const { return _temperature; }
@@ -55,7 +56,7 @@ public:
     double getTau() const { return _tau; }
     void setTau(double tau) { _tau = tau; }
 
-    void applyThermostat(SimulationBox &) override;
+    void applyThermostat(SimulationBox &, PhysicalData &) override;
 };
 
 #endif // _THEMOSTAT_H_

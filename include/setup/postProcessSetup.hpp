@@ -24,6 +24,7 @@ public:
     void calculateMolMass();
     void calculateTotalMass();
     void calculateTotalCharge();
+    void resizeAtomShiftForces();
 
     void checkBoxSettings();
 

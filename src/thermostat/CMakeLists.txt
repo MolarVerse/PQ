@@ -12,5 +12,5 @@ target_link_libraries(thermostat
     PUBLIC
     config
     simulationBox
-    output
+    physicalData
 )

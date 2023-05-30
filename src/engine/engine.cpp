@@ -1,6 +1,8 @@
 #include "engine.hpp"
 #include "constants.hpp"
 
+#include <iostream>
+
 using namespace std;
 
 void Engine::run()
@@ -14,12 +16,25 @@ void Engine::run()
 
     for (int i = 0; i < _timings.getNumberOfSteps(); i++)
     {
-        _physicalData.resetAverageData();
+        _averagePhysicalData = PhysicalData();
 
         takeStep();
 
-        _physicalData.addAverageTemperature(_thermostat->getTemperature());
+        _averagePhysicalData.updateAverages(_physicalData);
     }
+
+    cout << "Couloumb energy: " << _averagePhysicalData.getCoulombEnergy() << endl;
+    cout << "Non Couloumb energy: " << _averagePhysicalData.getNonCoulombEnergy() << endl;
+    cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << endl;
+
+    cout << "Temperature: " << _averagePhysicalData.getTemperature() << endl;
+    cout << "Momentum: " << _averagePhysicalData.getMomentum() << endl;
+
+    cout << "Volume: " << _averagePhysicalData.getVolume() << endl;
+    cout << "Density: " << _averagePhysicalData.getDensity() << endl;
+
+    cout << endl
+         << endl;
 }
 
 void Engine::takeStep()
@@ -32,7 +47,7 @@ void Engine::takeStep()
 
     _integrator->secondStep(_simulationBox, _timings);
 
-    _thermostat->applyThermostat(_simulationBox);
+    _thermostat->applyThermostat(_simulationBox, _physicalData);
 
     _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
 }

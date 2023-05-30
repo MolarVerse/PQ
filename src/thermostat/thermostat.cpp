@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void Thermostat::calculateTemperature(const SimulationBox &simulationBox)
+void Thermostat::calculateTemperature(const SimulationBox &simulationBox, PhysicalData &physicalData)
 {
     auto temperature = 0.0;
     auto velocities = vector<double>(3);
@@ -24,17 +24,18 @@ void Thermostat::calculateTemperature(const SimulationBox &simulationBox)
 
     temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
 
-    setTemperature(temperature);
+    _temperature = temperature;
+    physicalData.setTemperature(_temperature);
 }
 
-void Thermostat::applyThermostat(SimulationBox &simulationBox)
+void Thermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
-    calculateTemperature(simulationBox);
+    calculateTemperature(simulationBox, physicalData);
 }
 
-void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox)
+void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
-    calculateTemperature(simulationBox);
+    calculateTemperature(simulationBox, physicalData);
 
     auto velocities = vector<double>(3);
     const auto berendsenFactor = sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
@@ -53,5 +54,5 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox)
         }
     }
 
-    calculateTemperature(simulationBox);
+    calculateTemperature(simulationBox, physicalData);
 }

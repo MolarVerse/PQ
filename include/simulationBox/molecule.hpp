@@ -36,6 +36,7 @@ private:
     std::vector<double> _positions;
     std::vector<double> _velocities;
     std::vector<double> _forces;
+    std::vector<double> _shiftForces;
 
     std::vector<double> _positionsOld;
     std::vector<double> _velocitiesOld;
@@ -122,7 +123,7 @@ public:
     }
 
     void addAtomForce(const std::vector<double> &forces) { addVector(_forces, forces); }
-    std::vector<double> getAtomForce(int index) { return {_forces[3 * index], _forces[3 * index + 1], _forces[3 * index + 2]}; }
+    std::vector<double> getAtomForces(int index) { return {_forces[3 * index], _forces[3 * index + 1], _forces[3 * index + 2]}; }
     void getAtomForces(int index, std::vector<double> &force) const
     {
         force[0] = _forces[3 * index];
@@ -142,6 +143,26 @@ public:
         _forces[3 * index + 2] -= force[2];
     }
     void resetAtomForces() { std::fill(_forces.begin(), _forces.end(), 0.0); }
+
+    void resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
+    void setAtomShiftForces(int index, const std::vector<double> &shiftForces)
+    {
+        _shiftForces[3 * index] = shiftForces[0];
+        _shiftForces[3 * index + 1] = shiftForces[1];
+        _shiftForces[3 * index + 2] = shiftForces[2];
+    }
+    void getAtomShiftForces(int index, std::vector<double> &shiftForce) const
+    {
+        shiftForce[0] = _shiftForces[3 * index];
+        shiftForce[1] = _shiftForces[3 * index + 1];
+        shiftForce[2] = _shiftForces[3 * index + 2];
+    }
+    void addAtomShifForces(int index, const std::vector<double> &shiftForces)
+    {
+        _shiftForces[3 * index] += shiftForces[0];
+        _shiftForces[3 * index + 1] += shiftForces[1];
+        _shiftForces[3 * index + 2] += shiftForces[2];
+    }
 
     void addAtomPositionOld(const std::vector<double> &positionsOld) { addVector(_positionsOld, positionsOld); }
     std::vector<double> getAtomPositionOld(int index) { return {_positionsOld[3 * index], _positionsOld[3 * index + 1], _positionsOld[3 * index + 2]}; }
