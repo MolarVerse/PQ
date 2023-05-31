@@ -43,6 +43,7 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
             molecule.setAtomPositions(i, positions);
         }
 
+        molecule.calculateCenterOfMass(box);
         molecule.resetAtomForces();
     }
 }

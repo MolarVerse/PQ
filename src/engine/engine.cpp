@@ -43,8 +43,6 @@ void Engine::takeStep()
 {
     _integrator->firstStep(_simulationBox, _timings);
 
-    _simulationBox.calculateCenterOfMassMolecules();
-
     _cellList.updateCellList(_simulationBox);
 
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
@@ -56,8 +54,6 @@ void Engine::takeStep()
     _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
 
     _virial->calculateVirial(_simulationBox, _physicalData);
-
-    cout << "Virial: " << _virial->getVirial()[0] << " " << _virial->getVirial()[1] << " " << _virial->getVirial()[2] << endl;
 
     _manostat->calculatePressure(*_virial, _physicalData);
 }

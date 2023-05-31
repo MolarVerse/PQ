@@ -184,7 +184,7 @@ public:
         centerOfMass[1] = _centerOfMass[1];
         centerOfMass[2] = _centerOfMass[2];
     }
-    void calculateCenterOfMass(std::vector<double> &);
+    void calculateCenterOfMass(const std::vector<double> &);
 };
 
 #endif

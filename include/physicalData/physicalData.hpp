@@ -41,6 +41,12 @@ public:
 
     void resetData(); // not used at the moment
 
+    std::function<std::vector<double>()> getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
+    void changeKineticVirialToAtomic()
+    {
+        getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyAtomicVector, this);
+    }
+
     // standard getter and setters
     void setVolume(double volume) { _volume = volume; }
     double getVolume() const { return _volume; }

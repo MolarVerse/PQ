@@ -12,6 +12,10 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
     vector<double> momentum(3, 0.0);
     vector<double> momentumSquared(3, 0.0);
 
+    _momentumVector = {0.0, 0.0, 0.0};
+    _kineticEnergyAtomicVector = {0.0, 0.0, 0.0};
+    _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
+
     for (auto &molecule : simulationBox._molecules)
     {
         momentumSquared[0] = 0.0;

@@ -19,7 +19,8 @@ void InputFileReader::parseVirial(const vector<string> &lineElements)
     }
     else if (lineElements[2] == "atomic")
     {
-        // TODO: implement
+        _engine._virial = make_unique<VirialAtomic>();
+        _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else
         throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");

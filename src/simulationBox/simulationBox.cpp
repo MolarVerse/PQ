@@ -34,6 +34,6 @@ void SimulationBox::calculateCenterOfMassMolecules()
 {
     for (auto &molecule : _molecules)
     {
-        molecule.calculateCenterOfMass(_box.getBoxDimensions()); // FIXME: change this one here... maybe solution with unique ptr
+        molecule.calculateCenterOfMass(_box.getBoxDimensions());
     }
 }
