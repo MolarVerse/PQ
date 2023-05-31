@@ -24,11 +24,11 @@ protected:
 public:
     explicit Output(const std::string &filename) : _filename(filename){};
 
-    void setFilename(std::string_view filename);
+    void setFilename(const std::string_view &filename);
 
-    static void setOutputFreq(int outputFreq);
+    static void setOutputFreq(const int outputFreq);
 
-    std::string initialMomentumMessage(double momentum) const;
+    std::string initialMomentumMessage(const double momentum) const;
 
     // standard getter and setters
     std::string getFilename() const { return _filename; };
@@ -72,7 +72,7 @@ public:
 
     void writeDensityWarning();
     void writeRelaxationTimeThermostatWarning();
-    void writeInitialMomentum(double momentum);
+    void writeInitialMomentum(const double momentum);
 };
 
 /**
@@ -88,7 +88,7 @@ public:
 
     void writeDensityWarning() const;
     void writeRelaxationTimeThermostatWarning() const;
-    void writeInitialMomentum(double momentum) const;
+    void writeInitialMomentum(const double momentum) const;
 };
 
 /**

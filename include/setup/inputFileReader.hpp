@@ -27,7 +27,7 @@ namespace Setup::InputFileReader
         std::map<std::string, int> _keywordCountMap;
         std::map<std::string, bool> _keywordRequiredMap;
 
-        int _lineNumber = 1;
+        size_t _lineNumber = 1;
 
     public:
         InputFileReader(const std::string &, Engine &);
@@ -93,9 +93,9 @@ namespace Setup::InputFileReader
         void setupThermostat();
     };
 
-    void checkEqualSign(const std::string_view, int);
-    void checkCommand(const std::vector<std::string> &, int);
-    void checkCommandArray(const std::vector<std::string> &, int);
+    void checkEqualSign(const std::string_view &view, const size_t);
+    void checkCommand(const std::vector<std::string> &, const size_t);
+    void checkCommandArray(const std::vector<std::string> &, const size_t);
 }
 
 /**

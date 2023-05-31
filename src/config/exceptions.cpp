@@ -8,10 +8,10 @@ using namespace std;
  * @param color
  * @param exception
  */
-void CustomException::colorfulOutput(Color::Code color, string_view exception) const
+void CustomException::colorfulOutput(const Color::Code color, const string_view exception) const
 {
-    Color::Modifier modifier(color);
-    Color::Modifier def(Color::FG_DEFAULT);
+    const Color::Modifier modifier(color);
+    const Color::Modifier def(Color::FG_DEFAULT);
 
     cout << modifier << exception << def << endl;
 }

@@ -74,9 +74,9 @@ public:
     [[nodiscard]] double getncEnergyCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
     [[nodiscard]] double getncForceCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
 
-    Molecule findMoleculeType(int moltype) const;
+    [[nodiscard]] Molecule findMoleculeType(const size_t moltype) const;
 
-    [[nodiscard]] int getNumberOfMolecules() const { return static_cast<int>(_molecules.size()); };
+    [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); };
 
     void calculateDegreesOfFreedom();
     [[nodiscard]] int getDegreesOfFreedom() const { return _degreesOfFreedom; };

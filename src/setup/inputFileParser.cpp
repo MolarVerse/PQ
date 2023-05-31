@@ -12,10 +12,10 @@ using namespace std;
  *
  * @throw InputFileException if second argument is not "="
  */
-void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNumber)
+void Setup::InputFileReader::checkEqualSign(const string_view &lineElement, const size_t lineNumber)
 {
     if (lineElement != "=")
-        throw InputFileException("Invalid command at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid command at line " + to_string(lineNumber) + "in input file");
 }
 
 /**
@@ -28,12 +28,12 @@ void Setup::InputFileReader::checkEqualSign(string_view lineElement, int _lineNu
  *
  * @note this function is used for commands that have an array as their third argument
  */
-void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElements, int _lineNumber)
+void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() < 3)
-        throw InputFileException("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
 
-    checkEqualSign(lineElements[1], _lineNumber);
+    checkEqualSign(lineElements[1], lineNumber);
 }
 
 /**
@@ -44,10 +44,10 @@ void Setup::InputFileReader::checkCommandArray(const vector<string> &lineElement
  *
  * @throw InputFileException if command array has less or more than 3 elements
  */
-void Setup::InputFileReader::checkCommand(const vector<string> &lineElements, int _lineNumber)
+void Setup::InputFileReader::checkCommand(const vector<string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() != 3)
-        throw InputFileException("Invalid number of arguments at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
 
-    checkEqualSign(lineElements[1], _lineNumber);
+    checkEqualSign(lineElements[1], lineNumber);
 }

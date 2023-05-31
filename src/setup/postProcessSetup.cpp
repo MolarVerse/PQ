@@ -45,14 +45,16 @@ void PostProcessSetup::setup()
  */
 void PostProcessSetup::setAtomMasses()
 {
-    // TODO: check me!!!!!!!!!!!!
-    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
-    {
+    const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
 
+    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
+    {
         Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
+            const auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
             if (atomMassMap.find(keyword) == atomMassMap.end())
                 throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
@@ -68,13 +70,17 @@ void PostProcessSetup::setAtomMasses()
  */
 void PostProcessSetup::setAtomicNumbers()
 {
-    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
+    const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
+
+    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
     {
 
         Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
+            const auto keyword = boost::algorithm::to_lower_copy(molecule.getAtomName(i));
 
             if (atomNumberMap.find(keyword) == atomNumberMap.end())
                 throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
@@ -90,13 +96,16 @@ void PostProcessSetup::setAtomicNumbers()
  */
 void PostProcessSetup::calculateMolMass()
 {
-    for (size_t moli = 0; moli < _engine.getSimulationBox()._molecules.size(); moli++)
-    {
 
+    const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
+
+    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
+    {
         Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         double molMass = 0.0;
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        for (size_t i = 0; i < numberOfAtoms; ++i)
             molMass += molecule.getMass(i);
 
         molecule.setMolMass(molMass);
@@ -112,7 +121,9 @@ void PostProcessSetup::calculateTotalMass()
 
     for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
     {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
             totalMass += molecule.getMass(i);
     }
 
@@ -128,7 +139,9 @@ void PostProcessSetup::calculateTotalCharge()
 
     for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
     {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
             totalCharge += molecule.getPartialCharge(i);
     }
 
@@ -149,25 +162,25 @@ void PostProcessSetup::checkBoxSettings()
     auto box = _engine.getSimulationBox()._box.getBoxDimensions();
     auto density = _engine.getSimulationBox()._box.getDensity();
 
-    if (density == 0.0 && box[0] == 0.0 && box[1] == 0.0 && box[2] == 0.0)
+    if ((density == 0.0) && (box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
         throw UserInputException("Box dimensions and density not set");
-    else if (box[0] == 0.0 && box[1] == 0.0 && box[2] == 0.0)
+    else if ((box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
     {
-        auto boxDimensions = _engine.getSimulationBox()._box.calculateBoxDimensionsFromDensity();
+        const auto boxDimensions = _engine.getSimulationBox()._box.calculateBoxDimensionsFromDensity();
         _engine.getSimulationBox()._box.setBoxDimensions(boxDimensions);
         _engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
         _engine.getSimulationBox()._box.setVolume(_engine.getSimulationBox()._box.calculateVolume());
     }
     else if (density == 0.0)
     {
-        auto volume = _engine.getSimulationBox()._box.calculateVolume();
+        const auto volume = _engine.getSimulationBox()._box.calculateVolume();
         density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox()._box.setVolume(volume);
         _engine.getSimulationBox()._box.setDensity(density);
     }
     else
     {
-        auto volume = _engine.getSimulationBox()._box.calculateVolume();
+        const auto volume = _engine.getSimulationBox()._box.calculateVolume();
         density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox()._box.setVolume(volume);
         _engine.getSimulationBox()._box.setDensity(density);

@@ -12,11 +12,13 @@ void Thermostat::calculateTemperature(const SimulationBox &simulationBox, Physic
 
     for (const auto &molecule : simulationBox._molecules)
     {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             molecule.getAtomVelocities(i, velocities);
 
-            auto mass = molecule.getMass(i);
+            const auto mass = molecule.getMass(i);
 
             temperature += mass * (velocities[0] * velocities[0] + velocities[1] * velocities[1] + velocities[2] * velocities[2]);
         }
@@ -42,7 +44,9 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
 
     for (auto &molecule : simulationBox._molecules)
     {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             molecule.getAtomVelocities(i, velocities);
 

@@ -42,7 +42,7 @@ public:
 
     void applyPBC(std::vector<double> &);
 
-    double getMinimalBoxDimension() const;
+    [[nodiscard]] double getMinimalBoxDimension() const;
 
     // standard getter and setters
     std::vector<double> getBoxDimensions() const { return _boxDimensions; };
@@ -54,7 +54,7 @@ public:
     void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; };
     [[nodiscard]] double getTotalCharge() const { return _totalCharge; };
 
-    void setDensity(double density);
+    void setDensity(const double density);
     [[nodiscard]] double getDensity() const { return _density; };
 
     void setVolume(const double volume) { _volume = volume; };

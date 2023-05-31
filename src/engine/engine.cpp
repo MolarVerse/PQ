@@ -15,7 +15,9 @@ void Engine::run()
     _logOutput->writeInitialMomentum(_physicalData.getMomentum());
     _stdoutOutput->writeInitialMomentum(_physicalData.getMomentum());
 
-    for (int i = 0; i < _timings.getNumberOfSteps(); i++)
+    const auto numberOfSteps = _timings.getNumberOfSteps();
+
+    for (size_t i = 0; i < numberOfSteps; ++i)
     {
         _averagePhysicalData = PhysicalData();
 

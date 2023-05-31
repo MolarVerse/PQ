@@ -88,7 +88,7 @@ void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*
  */
 void InputFileReader::process(const vector<string> &lineElements)
 {
-    auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
+    const auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
 
     if (_keywordFuncMap.find(keyword) == _keywordFuncMap.end())
         throw InputFileException("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
@@ -96,7 +96,7 @@ void InputFileReader::process(const vector<string> &lineElements)
     void (InputFileReader::*parserFunc)(const vector<string> &) = _keywordFuncMap[keyword];
     (this->*parserFunc)(lineElements);
 
-    _keywordCountMap[keyword]++;
+    ++_keywordCountMap[keyword];
 }
 
 /**
@@ -118,22 +118,22 @@ void InputFileReader::read()
 
         if (line.empty())
         {
-            _lineNumber++;
+            ++_lineNumber;
             continue;
         }
 
-        auto lineCommands = getLineCommands(line, _lineNumber);
+        const auto lineCommands = getLineCommands(line, _lineNumber);
 
         for (const string &command : lineCommands)
         {
-            auto lineElements = splitString(command);
+            const auto lineElements = splitString(command);
             if (lineElements.empty())
                 continue;
 
             process(lineElements);
         }
 
-        _lineNumber++;
+        ++_lineNumber;
     }
 }
 
@@ -159,7 +159,7 @@ void InputFileReader::postProcess()
 {
     for (auto const &[keyword, count] : _keywordCountMap)
     {
-        if (_keywordRequiredMap[keyword] && count == 0)
+        if (_keywordRequiredMap[keyword] && (count == 0))
             throw InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
         if (count > 1)
@@ -175,10 +175,10 @@ void InputFileReader::setupThermostat() // TODO: include warnings if value set b
 {
     if (_engine.getSettings().getThermostat() == "berendsen")
     {
-        if (_engine.getSettings().getTemperatureSet() == false)
+        if (!_engine.getSettings().getTemperatureSet())
             throw InputFileException("Temperature not set for Berendsen thermostat");
 
-        if (_engine.getSettings().getRelaxationTimeSet() == false)
+        if (!_engine.getSettings().getRelaxationTimeSet())
         {
             _engine._stdoutOutput->writeRelaxationTimeThermostatWarning();
             _engine._logOutput->writeRelaxationTimeThermostatWarning();

@@ -11,14 +11,10 @@ using namespace std;
  *
  * @param numberOfAtoms
  *
- * @throw MolDescriptorException if number of atoms is negative
+ * TODO: add check for number of atoms when reading moldescriptor if not negative
  */
-void Molecule::setNumberOfAtoms(int numberOfAtoms)
+void Molecule::setNumberOfAtoms(const size_t numberOfAtoms)
 {
-    if (numberOfAtoms < 0)
-    {
-        throw MolDescriptorException("Number of atoms in molecule " + _name + " is negative");
-    }
     _numberOfAtoms = numberOfAtoms;
 }
 
@@ -38,9 +34,9 @@ void Molecule::addVector(vector<double> &v, const vector<double> &vToAdd) const
  *
  * @return int
  */
-int Molecule::getNumberOfAtomTypes()
+size_t Molecule::getNumberOfAtomTypes()
 {
-    return int(distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
+    return static_cast<size_t>(distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
 }
 
 void Molecule::calculateCenterOfMass(const vector<double> &box)
@@ -49,9 +45,9 @@ void Molecule::calculateCenterOfMass(const vector<double> &box)
 
     auto positionAtom1 = getAtomPositions(0);
 
-    for (int i = 0; i < _numberOfAtoms; i++)
+    for (size_t i = 0; i < _numberOfAtoms; ++i)
     {
-        auto mass = getMass(i);
+        const auto mass = getMass(i);
         auto position = getAtomPositions(i);
 
         _centerOfMass[0] += mass * (position[0] - box[0] * round((position[0] - positionAtom1[0]) / box[0]));

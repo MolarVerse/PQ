@@ -25,7 +25,7 @@ public:
 class VirialMolecular : public Virial
 {
     void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData) override;
-    void intraMolecularVirialCorrection(SimulationBox &simulationBox);
+    void intraMolecularVirialCorrection(const SimulationBox &simulationBox);
 };
 
 class VirialAtomic : public Virial

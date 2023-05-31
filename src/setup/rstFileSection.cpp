@@ -22,7 +22,7 @@ bool BoxSection::isHeader() { return true; }
  */
 void BoxSection::process(vector<string> &lineElements, Engine &engine)
 {
-    if (lineElements.size() != 4 && lineElements.size() != 7)
+    if ((lineElements.size() != 4) && (lineElements.size() != 7))
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
 
     engine.getSimulationBox()._box.setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
@@ -78,7 +78,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     if (lineElements.size() != 21)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
 
-    int moltype = stoi(lineElements[2]);
+    size_t moltype = stoul(lineElements[2]);
 
     try
     {
@@ -91,7 +91,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         throw;
     }
 
-    int atomCounter = 0;
+    size_t atomCounter = 0;
 
     while (true)
     {
@@ -100,7 +100,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
 
         processAtomLine(lineElements, *molecule);
 
-        atomCounter++;
+        ++atomCounter;
 
         if (atomCounter == molecule->getNumberOfAtoms())
             break;
@@ -114,10 +114,10 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
             checkAtomLine(lineElements, line, *molecule);
         }
 
-        if (lineElements.size() != 21 && lineElements.size() != 12)
+        if ((lineElements.size() != 21) && (lineElements.size() != 12))
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 12 or 21 elements");
 
-        moltype = stoi(lineElements[2]);
+        moltype = stoul(lineElements[2]);
     }
 
     engine.getSimulationBox()._molecules.push_back(*molecule);
@@ -149,7 +149,7 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
  */
 void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const Molecule &molecule)
 {
-    _lineNumber++;
+    ++_lineNumber;
 
     if (!getline(*_fp, line))
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");

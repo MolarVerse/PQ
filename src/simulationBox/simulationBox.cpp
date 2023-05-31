@@ -11,7 +11,7 @@ using namespace std;
  *
  * @throw RstFileException if molecule type not found
  */
-Molecule SimulationBox::findMoleculeType(int moltype) const
+[[nodiscard]] Molecule SimulationBox::findMoleculeType(const size_t moltype) const
 {
     for (auto &moleculeType : _moleculeTypes)
     {

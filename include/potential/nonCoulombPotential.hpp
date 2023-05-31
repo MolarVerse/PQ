@@ -14,7 +14,7 @@ class NonCoulombPotential
 {
 public:
     virtual ~NonCoulombPotential() = default;
-    virtual void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const = 0;
+    virtual void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const = 0;
 };
 
 /**
@@ -28,7 +28,7 @@ public:
 class GuffNonCoulomb : public NonCoulombPotential
 {
 public:
-    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const override;
+    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
 /**
@@ -42,7 +42,7 @@ public:
 class GuffLJ : public NonCoulombPotential
 {
 public:
-    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const override;
+    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
 /**
@@ -56,7 +56,7 @@ public:
 class GuffBuckingham : public NonCoulombPotential
 {
 public:
-    void calcNonCoulomb(std::vector<double> &, double, double, double &, double &, double, double) const override;
+    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
 #endif // _NON_COULOMB_POTENTIAL_H_

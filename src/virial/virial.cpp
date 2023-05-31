@@ -16,7 +16,9 @@ void Virial::calculateVirial(SimulationBox &simulationBox, PhysicalData &physica
 
     for (auto &molecule : simulationBox._molecules)
     {
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             molecule.getAtomForces(i, forcexyz);
             molecule.getAtomShiftForces(i, shiftForcexyz);
@@ -42,7 +44,7 @@ void VirialMolecular::calculateVirial(SimulationBox &simulationBox, PhysicalData
     physicalData.setVirial(_virial);
 }
 
-void VirialMolecular::intraMolecularVirialCorrection(SimulationBox &simulationBox)
+void VirialMolecular::intraMolecularVirialCorrection(const SimulationBox &simulationBox)
 {
     vector<double> xyz(3);
     vector<double> dxyz(3);
@@ -54,8 +56,9 @@ void VirialMolecular::intraMolecularVirialCorrection(SimulationBox &simulationBo
     for (const auto &molecule : simulationBox._molecules)
     {
         molecule.getCenterOfMass(centerOfMass);
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             molecule.getAtomForces(i, forcexyz);
             molecule.getAtomPositions(i, xyz);

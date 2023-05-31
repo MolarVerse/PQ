@@ -2,6 +2,8 @@
 
 #define _TIMINGS_H_
 
+#include <cstddef>
+
 /**
  * @class Timings
  *
@@ -17,21 +19,20 @@
 class Timings
 {
 private:
-    int _stepCount = 0;
+    size_t _stepCount = 0;
     double _timestep = 0;
-    int _numberOfSteps = 0;
+    size_t _numberOfSteps = 0;
 
 public:
-    void setNumberOfSteps(int numberOfSteps);
-
     // standard getter and setters
-    [[nodiscard]] int getStepCount() const { return _stepCount; };
-    void setStepCount(int stepCount);
+    [[nodiscard]] size_t getStepCount() const { return _stepCount; };
+    void setStepCount(const size_t stepCount) { _stepCount = stepCount; };
 
     [[nodiscard]] double getTimestep() const { return _timestep; };
     void setTimestep(const double timestep) { _timestep = timestep; };
 
-    [[nodiscard]] int getNumberOfSteps() const { return _numberOfSteps; };
+    [[nodiscard]] size_t getNumberOfSteps() const { return _numberOfSteps; };
+    void setNumberOfSteps(const size_t numberOfSteps) { _numberOfSteps = numberOfSteps; }
 };
 
 #endif

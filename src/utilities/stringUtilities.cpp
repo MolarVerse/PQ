@@ -15,9 +15,9 @@ using namespace std;
  * @param commentChar
  * @return string
  */
-string StringUtilities::removeComments(string &line, string_view commentChar)
+string StringUtilities::removeComments(string &line, const string_view &commentChar)
 {
-    if (auto commentPos = line.find(commentChar); commentPos != string::npos)
+    if (const auto commentPos = line.find(commentChar); commentPos != string::npos)
         line = line.substr(0, commentPos);
     return line;
 }
@@ -27,6 +27,8 @@ string StringUtilities::removeComments(string &line, string_view commentChar)
  *
  * @param line
  * @return vector<string>
+ *
+ * TODO: merge splitstring functions
  */
 vector<string> StringUtilities::splitString(const string &line)
 {
@@ -70,15 +72,19 @@ void StringUtilities::splitString2(const string &line, vector<string> &lineEleme
  *
  * @throw InputFileException if line does not end with a semicolon
  */
-vector<string> StringUtilities::getLineCommands(const string &line, int _lineNumber)
+vector<string> StringUtilities::getLineCommands(const string &line, const size_t lineNumber)
 {
 
-    for (int i = int(line.size()) - 1; i >= 0; i--)
+    for (auto i = static_cast<int>(line.size() - 1); i >= 0; --i)
     {
-        if (line[i] == ';')
+        if (line[static_cast<size_t>(i)] == ';')
             break;
-        else if (!isspace(line[i]))
-            throw InputFileException("Missing semicolon in input file at line " + to_string(_lineNumber));
+        else if (!isspace(line[static_cast<size_t>(i)]))
+            throw InputFileException("Missing semicolon in input file at line " + to_string(lineNumber));
+        else
+        {
+            // dummy
+        }
     }
 
     vector<string> lineCommands;

@@ -52,7 +52,7 @@ void MoldescriptorReader::read()
         line = removeComments(line, "#");
         lineElements = splitString(line);
 
-        _lineNumber++;
+        ++_lineNumber;
 
         if (lineElements.empty())
             continue;
@@ -87,18 +87,18 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
     molecule.setNumberOfAtoms(stoi(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
 
-    molecule.setMoltype(int(_engine.getSimulationBox()._moleculeTypes.size()) + 1);
+    molecule.setMoltype(_engine.getSimulationBox()._moleculeTypes.size() + 1);
 
-    int AtomCount = 0;
+    size_t atomCount = 0;
     size_t numberOfAtomEntries = 0;
 
-    while (AtomCount < molecule.getNumberOfAtoms())
+    while (atomCount < molecule.getNumberOfAtoms())
     {
         getline(_fp, line);
         line = removeComments(line, "#");
         lineElements = splitString(line);
 
-        _lineNumber++;
+        ++_lineNumber;
 
         numberOfAtomEntries = lineElements.size();
 
@@ -106,16 +106,16 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             continue;
         else if (lineElements.size() != numberOfAtomEntries)
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
-        else if (lineElements.size() == 3 || lineElements.size() == 4)
+        else if ((lineElements.size() == 3) || (lineElements.size() == 4))
         {
             molecule.addAtomName(lineElements[0]);
-            molecule.addExternalAtomType(stoi(lineElements[1]));
+            molecule.addExternalAtomType(stoul(lineElements[1]));
             molecule.addPartialCharge(stod(lineElements[2]));
 
             if (lineElements.size() == 4)
                 molecule.addGlobalVDWType(stoi(lineElements[3]));
 
-            AtomCount++;
+            ++atomCount;
         }
         else
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
@@ -135,16 +135,17 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
  */
 void MoldescriptorReader::convertExternalToInternalAtomtypes(Molecule &molecule) const
 {
+    const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
-    for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+    for (size_t i = 0; i < numberOfAtoms; ++i)
     {
-        int externalAtomType = molecule.getExternalAtomType(i);
+        const size_t externalAtomType = molecule.getExternalAtomType(i);
         molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
     }
 
-    for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+    for (size_t i = 0; i < numberOfAtoms; ++i)
     {
-        int externalAtomType = molecule.getExternalAtomType(i);
+        const size_t externalAtomType = molecule.getExternalAtomType(i);
         molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
     }
 }

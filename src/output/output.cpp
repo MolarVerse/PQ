@@ -19,7 +19,7 @@ using namespace std;
  *
  * @throw InputFileException if filename is empty
  */
-void Output::setFilename(string_view filename)
+void Output::setFilename(const string_view &filename)
 {
 #ifdef WITH_MPI
     int rank;
@@ -46,7 +46,7 @@ void Output::setFilename(string_view filename)
         throw InputFileException("Filename cannot be empty");
     }
 
-    if (ifstream fp(string(_filename).c_str()); fp.good())
+    if (const ifstream fp(_filename.c_str()); fp.good())
     {
         throw InputFileException("File already exists - filename = " + string(_filename));
     }
@@ -67,7 +67,7 @@ void Output::setFilename(string_view filename)
  *  in order to avoid division by 0 in the output
  *
  */
-void Output::setOutputFreq(int outputFreq)
+void Output::setOutputFreq(const int outputFreq)
 {
     if (outputFreq < 0)
         throw InputFileException("Output frequency must be positive - output frequency = " + to_string(outputFreq));
@@ -124,7 +124,7 @@ void StdoutOutput::writeDensityWarning() const
  * @param momentum
  * @return string
  */
-string Output::initialMomentumMessage(double momentum) const
+string Output::initialMomentumMessage(const double momentum) const
 {
     return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
 }
@@ -134,7 +134,7 @@ string Output::initialMomentumMessage(double momentum) const
  *
  * @param momentum
  */
-void LogOutput::writeInitialMomentum(double momentum)
+void LogOutput::writeInitialMomentum(const double momentum)
 {
     _fp << endl;
     _fp << initialMomentumMessage(momentum) << endl;
@@ -145,7 +145,7 @@ void LogOutput::writeInitialMomentum(double momentum)
  *
  * @param momentum
  */
-void StdoutOutput::writeInitialMomentum(double momentum) const
+void StdoutOutput::writeInitialMomentum(const double momentum) const
 {
     cout << endl;
     cout << initialMomentumMessage(momentum) << endl;

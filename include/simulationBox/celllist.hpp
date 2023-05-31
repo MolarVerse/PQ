@@ -20,13 +20,13 @@ private:
 
     bool _activated = false;
 
-    int _nCellsX = 7;
-    int _nCellsY = 7;
-    int _nCellsZ = 7;
+    size_t _nCellsX = 7;
+    size_t _nCellsY = 7;
+    size_t _nCellsZ = 7;
 
-    int _nNeighbourCellsX;
-    int _nNeighbourCellsY;
-    int _nNeighbourCellsZ;
+    size_t _nNeighbourCellsX;
+    size_t _nNeighbourCellsY;
+    size_t _nNeighbourCellsZ;
 
     std::vector<double> _cellSize;
 
@@ -37,7 +37,7 @@ public:
     void activate() { _activated = true; }
     [[nodiscard]] bool isActivated() const { return _activated; }
 
-    void setNumberOfCells(const int nCells)
+    void setNumberOfCells(const size_t nCells)
     {
         _nCellsX = nCells;
         _nCellsY = nCells;
@@ -52,8 +52,8 @@ public:
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
-    std::vector<int> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
-    [[nodiscard]] int getCellIndex(const std::vector<int> &cellIndices) const
+    std::vector<size_t> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
+    [[nodiscard]] size_t getCellIndex(const std::vector<size_t> &cellIndices) const
     {
         return cellIndices[0] * _nCellsY * _nCellsZ + cellIndices[1] * _nCellsZ + cellIndices[2];
     }

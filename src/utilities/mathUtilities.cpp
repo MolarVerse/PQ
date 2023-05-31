@@ -15,7 +15,7 @@ using namespace std;
 double MathUtilities::norm(const std::vector<double> &vector)
 {
     double norm = 0.0;
-    for_each(vector.begin(), vector.end(), [&norm](double value)
+    for_each(vector.begin(), vector.end(), [&norm](const double value)
              { norm += value * value; });
     return sqrt(norm);
 }

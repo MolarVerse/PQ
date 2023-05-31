@@ -22,10 +22,12 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
         momentumSquared[1] = 0.0;
         momentumSquared[2] = 0.0;
 
-        for (int i = 0; i < molecule.getNumberOfAtoms(); i++)
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             auto velocities = molecule.getAtomVelocities(i);
-            auto mass = molecule.getMass(i);
+            const auto mass = molecule.getMass(i);
 
             momentum[0] = velocities[0] * mass;
             momentum[1] = velocities[1] * mass;

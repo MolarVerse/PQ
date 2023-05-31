@@ -36,7 +36,7 @@ void Box::setBoxDimensions(const vector<double> &boxDimensions)
 void Box::setBoxAngles(const vector<double> &boxAngles)
 {
     for (auto &angle : boxAngles)
-        if (angle < 0.0 || angle > 90.0)
+        if ((angle < 0.0) || (angle > 90.0))
             throw RstFileException("Box angles must be positive and smaller than 90° - angle = " + to_string(angle));
 
     _boxAngles = boxAngles;
@@ -49,7 +49,7 @@ void Box::setBoxAngles(const vector<double> &boxAngles)
  *
  * @throw InputFileException if density is negative
  */
-void Box::setDensity(double density)
+void Box::setDensity(const double density)
 {
     if (density < 0.0)
         throw InputFileException("Density must be positive - density = " + to_string(density));
@@ -74,9 +74,9 @@ double Box::calculateVolume() const
 {
     double volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
-    double cos_alpha = cos(_boxAngles[0] * M_PI / 180.0);
-    double cos_beta = cos(_boxAngles[1] * M_PI / 180.0);
-    double cos_gamma = cos(_boxAngles[2] * M_PI / 180.0);
+    const double cos_alpha = cos(_boxAngles[0] * M_PI / 180.0);
+    const double cos_beta = cos(_boxAngles[1] * M_PI / 180.0);
+    const double cos_gamma = cos(_boxAngles[2] * M_PI / 180.0);
 
     volume *= sqrt(1.0 - cos_alpha * cos_alpha - cos_beta * cos_beta - cos_gamma * cos_gamma + 2.0 * cos_alpha * cos_beta * cos_gamma);
 
@@ -90,10 +90,10 @@ double Box::calculateVolume() const
  */
 vector<double> Box::calculateBoxDimensionsFromDensity() const
 {
-    double volume = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
-    double a = cbrt(volume);
-    double b = a;
-    double c = a;
+    const double volume = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+    const double a = cbrt(volume);
+    const double b = a;
+    const double c = a;
 
     vector<double> boxDimensions = {a, b, c};
 
@@ -108,7 +108,7 @@ double Box::calculateDistance(const vector<double> &point1, const vector<double>
 
     applyPBC(dxyz);
 
-    double distance = sqrt(dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2]);
+    const double distance = sqrt(dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2]);
 
     return distance;
 }
@@ -121,7 +121,7 @@ double Box::calculateDistanceSquared(const vector<double> &point1, const vector<
 
     applyPBC(dxyz);
 
-    double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+    const double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
     return distanceSquared;
 }
@@ -133,7 +133,7 @@ void Box::applyPBC(vector<double> &dxyz)
     dxyz[2] -= _boxDimensions[2] * round(dxyz[2] / _boxDimensions[2]);
 }
 
-double Box::getMinimalBoxDimension() const
+[[nodiscard]] double Box::getMinimalBoxDimension() const
 {
     double minDimension = _boxDimensions[0];
     if (_boxDimensions[1] < minDimension)

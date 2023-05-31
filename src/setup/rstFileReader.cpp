@@ -19,7 +19,7 @@ RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename
 }
 RstFileReader::~RstFileReader()
 {
-    for (RstFileSection *section : _sections)
+    for (const RstFileSection *section : _sections)
         delete section;
 
     delete _atomSection;
@@ -64,7 +64,7 @@ void RstFileReader::read()
         if (lineElements.empty())
             continue;
 
-        auto section = determineSection(lineElements);
+        auto *section = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
         section->_fp = &_fp;
         section->process(lineElements, _engine);

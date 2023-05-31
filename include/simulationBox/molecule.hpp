@@ -16,17 +16,18 @@ class Molecule
 private:
     std::string _name;
 
-    int _moltype;
-    int _numberOfAtoms;
+    size_t _moltype;
+    size_t _numberOfAtoms;
+
     double _charge;
     double _molMass;
 
     std::vector<std::string> _atomNames;
     std::vector<std::string> _atomTypeNames;
 
-    std::vector<int> _externalAtomTypes;
-    std::vector<int> _atomTypes;
-    std::map<int, int> _externalToInternalAtomTypes;
+    std::vector<size_t> _externalAtomTypes;
+    std::vector<size_t> _atomTypes;
+    std::map<size_t, size_t> _externalToInternalAtomTypes;
 
     std::vector<double> _partialCharges;
     std::vector<int> _globalVDWTypes;
@@ -45,20 +46,21 @@ private:
 public:
     Molecule() = default;
     explicit Molecule(const std::string_view name) : _name(name){};
-    explicit Molecule(const int moltype) : _moltype(moltype){};
+    explicit Molecule(const size_t moltype) : _moltype(moltype){};
 
-    void setNumberOfAtoms(int numberOfAtoms);
-    int getNumberOfAtomTypes();
     void calculateCenterOfMass(const std::vector<double> &);
+
+    void setNumberOfAtoms(const size_t numberOfAtoms);
+    size_t getNumberOfAtomTypes(); // cannot be const due to iterator in it
 
     // standard getter and setters
     void setName(const std::string_view name) { _name = name; };
     std::string getName() const { return _name; };
 
-    void setMoltype(const int moltype) { _moltype = moltype; };
-    [[nodiscard]] int getMoltype() const { return _moltype; };
+    void setMoltype(const size_t moltype) { _moltype = moltype; };
+    [[nodiscard]] size_t getMoltype() const { return _moltype; };
 
-    [[nodiscard]] int getNumberOfAtoms() const { return _numberOfAtoms; };
+    [[nodiscard]] size_t getNumberOfAtoms() const { return _numberOfAtoms; };
 
     void setCharge(const double charge) { _charge = charge; };
     [[nodiscard]] double getCharge() const { return _charge; };
@@ -72,14 +74,14 @@ public:
     void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); };
     std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; };
 
-    void addExternalAtomType(const int atomType) { _externalAtomTypes.push_back(atomType); };
-    [[nodiscard]] int getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; };
-    std::vector<int> getExternalAtomTypes() const { return _externalAtomTypes; };
-    void addExternalToInternalAtomTypeElement(const int externalAtomType, int internalAtomType) { _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType); };
+    void addExternalAtomType(const size_t atomType) { _externalAtomTypes.push_back(atomType); };
+    [[nodiscard]] size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; };
+    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; };
+    void addExternalToInternalAtomTypeElement(const size_t externalAtomType, size_t internalAtomType) { _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType); };
 
-    void addAtomType(const int atomType) { _atomTypes.push_back(atomType); };
-    int getInternalAtomType(const int externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
-    [[nodiscard]] int getAtomType(const size_t index) const { return _atomTypes[index]; };
+    void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); };
+    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
+    [[nodiscard]] size_t getAtomType(const size_t index) const { return _atomTypes[index]; };
 
     void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); };
     [[nodiscard]] double getPartialCharge(const size_t index) const { return _partialCharges[index]; };

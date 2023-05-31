@@ -12,7 +12,7 @@ class CoulombPotential
 {
 public:
     virtual ~CoulombPotential() = default;
-    virtual void calcCoulomb(double, double, double, double &, double &, double, double force_cutof) const = 0;
+    virtual void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const = 0;
 };
 
 /**
@@ -26,7 +26,7 @@ public:
 class GuffCoulomb : public CoulombPotential
 {
 public:
-    void calcCoulomb(double, double, double, double &, double &, double, double force_cutof) const override;
+    void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
 };
 
 #endif // _COULOMB_POTENTIAL_H_
