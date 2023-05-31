@@ -25,13 +25,17 @@ private:
     std::vector<int> _cellIndex = {0, 0, 0};
 
 public:
+    void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
     void addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
+    [[nodiscard]] Molecule *getMolecule(const size_t index) const { return _molecules[index]; }
     std::vector<Molecule *> getMolecules() const { return _molecules; }
-    int getNumberOfMolecules() const { return int(_molecules.size()); }
+
+    void clearMolecules() { _molecules.clear(); }
+    [[nodiscard]] int getNumberOfMolecules() const { return static_cast<int>(_molecules.size()); }
 
     void addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
-    int getNeighbourCellSize() const { return int(_neighbourCells.size()); }
-    Cell *getNeighbourCell(int index) const { return _neighbourCells[index]; }
+    [[nodiscard]] int getNeighbourCellSize() const { return static_cast<int>(_neighbourCells.size()); }
+    [[nodiscard]] Cell *getNeighbourCell(const size_t index) const { return _neighbourCells[index]; }
     std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
 
     void setLowerBoundary(const std::vector<double> &lowerBoundary) { _lowerBoundary = lowerBoundary; }
@@ -43,12 +47,8 @@ public:
     void setCellIndex(const std::vector<int> &cellIndex) { _cellIndex = cellIndex; }
     std::vector<int> getCellIndex() const { return _cellIndex; }
 
-    void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
-    Molecule *getMolecule(int index) const { return _molecules[index]; }
-    void clearMolecules() { _molecules.clear(); }
-
     void addAtomIndices(const std::vector<int> &atomIndices) { _atomInidices.push_back(atomIndices); }
-    const std::vector<int> &getAtomIndices(int index) const { return _atomInidices[index]; }
+    [[nodiscard]] const std::vector<int> &getAtomIndices(const size_t index) const { return _atomInidices[index]; }
     void clearAtomIndices() { _atomInidices.clear(); }
 };
 

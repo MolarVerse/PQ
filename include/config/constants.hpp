@@ -82,7 +82,7 @@ constexpr double _VOLUME_UNIT_TO_SI_ = _ANGSTROM_CUBIC_TO_METER_CUBIC_;
  * [m'] = kg = [m] * 1.660539040e-27 = [m] * _AMU_TO_KG_
  *
  */
-constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * _FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_ * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;
+constexpr double _V_VERLET_VELOCITY_FACTOR_ = 0.5 * (_FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_) * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;
 
 /**
  * @brief Conversion factors for temperature calculation

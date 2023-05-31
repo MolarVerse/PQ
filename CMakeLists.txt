@@ -23,7 +23,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("Release build.")
 
     # set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -Werror -pedantic -O3 -march=native -mtune=native")
-    set(CMAKE_CXX_FLAGS "-std=c++17 -O3 -march=native -mtune=native -g")
+    set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -O3 -march=native -mtune=native -g")
 else()
     message("Debug build.")
 

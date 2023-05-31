@@ -36,10 +36,10 @@ public:
 
     // standard getter and setters
     std::string getCoulombType() const { return _coulombType; };
-    void setCoulombType(std::string_view coulombType) { _coulombType = coulombType; };
+    void setCoulombType(const std::string_view coulombType) { _coulombType = coulombType; };
 
     std::string getNonCoulombType() const { return _nonCoulombType; };
-    void setNonCoulombType(std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; };
+    void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; };
 };
 
 /**

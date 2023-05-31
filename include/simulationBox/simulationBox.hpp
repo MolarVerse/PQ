@@ -50,36 +50,36 @@ public:
     SimulationBox() = default;
     ~SimulationBox() = default;
 
-    void setWaterType(int waterType) { _waterType = waterType; };
-    int getWaterType() const { return _waterType; };
+    void setWaterType(const int waterType) { _waterType = waterType; };
+    [[nodiscard]] int getWaterType() const { return _waterType; };
 
-    void setAmmoniaType(int ammoniaType) { _ammoniaType = ammoniaType; };
-    int getAmmoniaType() const { return _ammoniaType; };
+    void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; };
+    [[nodiscard]] int getAmmoniaType() const { return _ammoniaType; };
 
-    void setRcCutOff(double rcCutOff) { _rcCutOff = rcCutOff; };
-    double getRcCutOff() const { return _rcCutOff; };
+    void setRcCutOff(const double rcCutOff) { _rcCutOff = rcCutOff; };
+    [[nodiscard]] double getRcCutOff() const { return _rcCutOff; };
 
-    std::vector<double> &getGuffCoefficients(int moltype1, int moltype2, int atomType1, int atomType2) { return _guffCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    void getGuffCoefficients(int moltype1, int moltype2, int atomType1, int atomType2, std::vector<double> &guffCoefficients)
+    [[nodiscard]] std::vector<double> &getGuffCoefficients(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _guffCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    void getGuffCoefficients(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2, std::vector<double> &guffCoefficients)
     {
-        for (int i = 0; i < 22; i++)
+        for (size_t i = 0; i < 22; ++i)
         {
             guffCoefficients[i] = _guffCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2][i];
-        };
+        }
     }
-    double getRncCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _rncCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    double getCoulombCoefficient(int moltype1, int moltype2, int atomType1, int atomType2) { return _coulombCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    double getcEnergyCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _cEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    double getcForceCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _cForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    double getncEnergyCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _ncEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-    double getncForceCutOff(int moltype1, int moltype2, int atomType1, int atomType2) { return _ncForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getRncCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _rncCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getCoulombCoefficient(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _coulombCoefficients[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getcEnergyCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _cEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getcForceCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _cForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getncEnergyCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
+    [[nodiscard]] double getncForceCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
 
     Molecule findMoleculeType(int moltype) const;
 
-    int getNumberOfMolecules() const { return int(_molecules.size()); };
+    [[nodiscard]] int getNumberOfMolecules() const { return static_cast<int>(_molecules.size()); };
 
     void calculateDegreesOfFreedom();
-    int getDegreesOfFreedom() const { return _degreesOfFreedom; };
+    [[nodiscard]] int getDegreesOfFreedom() const { return _degreesOfFreedom; };
 
     void calculateCenterOfMassMolecules();
 };

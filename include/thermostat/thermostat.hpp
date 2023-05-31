@@ -20,7 +20,7 @@ protected:
 
 public:
     Thermostat() = default;
-    explicit Thermostat(double targetTemperature) : _targetTemperature(targetTemperature) {}
+    explicit Thermostat(const double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
     void calculateTemperature(const SimulationBox &, PhysicalData &);
@@ -28,14 +28,14 @@ public:
     virtual void applyThermostat(SimulationBox &, PhysicalData &);
 
     // standard getters and setters
-    double getTemperature() const { return _temperature; }
-    void setTemperature(double temperature) { _temperature = temperature; }
+    [[nodiscard]] double getTemperature() const { return _temperature; }
+    void setTemperature(const double temperature) { _temperature = temperature; }
 
-    double getTargetTemperature() const { return _targetTemperature; }
-    void setTargetTemperature(double targetTemperature) { _targetTemperature = targetTemperature; }
+    [[nodiscard]] double getTargetTemperature() const { return _targetTemperature; }
+    void setTargetTemperature(const double targetTemperature) { _targetTemperature = targetTemperature; }
 
-    double getTimestep() const { return _timestep; }
-    void setTimestep(double timestep) { _timestep = timestep; }
+    [[nodiscard]] double getTimestep() const { return _timestep; }
+    void setTimestep(const double timestep) { _timestep = timestep; }
 };
 
 /**
@@ -51,10 +51,10 @@ private:
 
 public:
     BerendsenThermostat() = default;
-    explicit BerendsenThermostat(double targetTemperature, double tau) : Thermostat(targetTemperature), _tau(tau) {}
+    explicit BerendsenThermostat(const double targetTemperature, const double tau) : Thermostat(targetTemperature), _tau(tau) {}
     // standard getters and setters
-    double getTau() const { return _tau; }
-    void setTau(double tau) { _tau = tau; }
+    [[nodiscard]] double getTau() const { return _tau; }
+    void setTau(const double tau) { _tau = tau; }
 
     void applyThermostat(SimulationBox &, PhysicalData &) override;
 };

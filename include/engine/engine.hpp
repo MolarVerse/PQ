@@ -1,6 +1,6 @@
-#ifndef _ENGINE_H_
+#ifndef _ENGINE_HPP_
 
-#define _ENGINE_H_
+#define _ENGINE_HPP_
 
 #include <vector>
 #include <memory>
@@ -56,11 +56,11 @@ public:
     void takeStep();
 
     // standard getter and setters
-    Settings &getSettings() { return _settings; };
-    Timings &getTimings() { return _timings; };
-    CellList &getCellList() { return _cellList; };
-    SimulationBox &getSimulationBox() { return _simulationBox; };
-    PhysicalData &getPhysicalData() { return _physicalData; };
+    [[nodiscard]] Settings &getSettings() { return _settings; };
+    [[nodiscard]] Timings &getTimings() { return _timings; };
+    [[nodiscard]] CellList &getCellList() { return _cellList; };
+    [[nodiscard]] SimulationBox &getSimulationBox() { return _simulationBox; };
+    [[nodiscard]] PhysicalData &getPhysicalData() { return _physicalData; };
 };
 
-#endif
+#endif // _ENGINE_HPP_

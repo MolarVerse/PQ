@@ -20,11 +20,11 @@ protected:
 
 public:
     Integrator() = default;
+    explicit Integrator(const std::string_view integratorType) : _integratorType(integratorType){};
     virtual ~Integrator() = default;
-    explicit Integrator(std::string_view integratorType) : _integratorType(integratorType){};
 
     // standard getter and setters
-    std::string_view getIntegratorType() const { return _integratorType; };
+    [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; };
 
     virtual void firstStep(SimulationBox &, const Timings &) = 0;
     virtual void secondStep(SimulationBox &, const Timings &) = 0;

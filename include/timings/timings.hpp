@@ -25,13 +25,13 @@ public:
     void setNumberOfSteps(int numberOfSteps);
 
     // standard getter and setters
-    int getStepCount() const { return _stepCount; };
+    [[nodiscard]] int getStepCount() const { return _stepCount; };
     void setStepCount(int stepCount);
 
-    double getTimestep() const { return _timestep; };
-    void setTimestep(double timestep) { _timestep = timestep; };
+    [[nodiscard]] double getTimestep() const { return _timestep; };
+    void setTimestep(const double timestep) { _timestep = timestep; };
 
-    int getNumberOfSteps() const { return _numberOfSteps; };
+    [[nodiscard]] int getNumberOfSteps() const { return _numberOfSteps; };
 };
 
 #endif

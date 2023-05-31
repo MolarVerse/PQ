@@ -48,20 +48,20 @@ public:
     std::vector<double> getBoxDimensions() const { return _boxDimensions; };
     std::vector<double> getBoxAngles() const { return _boxAngles; };
 
-    void setTotalMass(double totalMass) { _totalMass = totalMass; };
-    double getTotalMass() const { return _totalMass; };
+    void setTotalMass(const double totalMass) { _totalMass = totalMass; };
+    [[nodiscard]] double getTotalMass() const { return _totalMass; };
 
-    void setTotalCharge(double totalCharge) { _totalCharge = totalCharge; };
-    double getTotalCharge() const { return _totalCharge; };
+    void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; };
+    [[nodiscard]] double getTotalCharge() const { return _totalCharge; };
 
-    double getDensity() const { return _density; };
     void setDensity(double density);
+    [[nodiscard]] double getDensity() const { return _density; };
 
-    double getVolume() const { return _volume; };
-    void setVolume(double volume) { _volume = volume; };
+    void setVolume(const double volume) { _volume = volume; };
+    [[nodiscard]] double getVolume() const { return _volume; };
 
-    bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
-    void setBoxSizeHasChanged(bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; };
+    void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; };
+    [[nodiscard]] bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
 };
 
 #endif

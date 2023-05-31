@@ -19,7 +19,7 @@ private:
     std::string _inputFileName;
 
 public:
-    CommandLineArgs(int, const std::vector<std::string> &);
+    CommandLineArgs(const int, const std::vector<std::string> &);
 
     void detectFlags();
 

@@ -83,17 +83,17 @@ namespace Setup::InputFileReader
         void process(const std::vector<std::string> &);
 
         // Getters and setters
-        void setFilename(std::string_view filename) { _filename = filename; };
+        void setFilename(const std::string_view filename) { _filename = filename; };
 
         int getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; };
-        void setKeywordCount(const std::string &keyword, int count) { _keywordCountMap[keyword] = count; };
+        void setKeywordCount(const std::string &keyword, const int count) { _keywordCountMap[keyword] = count; };
 
         bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; };
 
         void setupThermostat();
     };
 
-    void checkEqualSign(std::string_view, int);
+    void checkEqualSign(const std::string_view, int);
     void checkCommand(const std::vector<std::string> &, int);
     void checkCommandArray(const std::vector<std::string> &, int);
 }

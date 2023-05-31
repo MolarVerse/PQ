@@ -35,7 +35,7 @@ namespace Color
         Code code;
 
     public:
-        explicit Modifier(Code pCode) : code(pCode) {}
+        explicit Modifier(const Code pCode) : code(pCode) {}
         friend std::ostream &
         operator<<(std::ostream &os, const Modifier &mod)
         {

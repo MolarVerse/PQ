@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CommandLineArgs::CommandLineArgs(int argc, const vector<string> &argv) : _argc(argc), _argv(argv) {}
+CommandLineArgs::CommandLineArgs(const int argc, const vector<string> &argv) : _argc(argc), _argv(argv) {}
 
 /**
  * @brief Detects flags in the command line arguments.

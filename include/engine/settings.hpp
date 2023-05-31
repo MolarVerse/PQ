@@ -31,27 +31,27 @@ private:
 public:
     // standard getter and setters
     std::string getStartFilename() const { return _startFilename; };
-    void setStartFilename(std::string_view startFilename) { _startFilename = startFilename; };
+    void setStartFilename(const std::string_view startFilename) { _startFilename = startFilename; };
 
     std::string getMoldescriptorFilename() const { return _moldescriptorFilename; };
-    void setMoldescriptorFilename(std::string_view moldescriptorFilename) { _moldescriptorFilename = moldescriptorFilename; };
+    void setMoldescriptorFilename(const std::string_view moldescriptorFilename) { _moldescriptorFilename = moldescriptorFilename; };
 
     std::string getGuffPath() const { return _guffPath; };
-    void setGuffPath(std::string_view guffPath) { _guffPath = guffPath; };
+    void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; };
 
     std::string getJobtype() const { return _jobtype; };
-    void setJobtype(std::string_view jobtype) { _jobtype = jobtype; };
+    void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; };
 
-    bool getThermostatSet() const { return _thermostat.first; };
+    [[nodiscard]] bool getThermostatSet() const { return _thermostat.first; };
     std::string getThermostat() const { return _thermostat.second; };
     void setThermostat(std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); };
 
-    bool getTemperatureSet() const { return _temperature.first; };
-    double getTemperature() const { return _temperature.second; };
+    [[nodiscard]] bool getTemperatureSet() const { return _temperature.first; };
+    [[nodiscard]] double getTemperature() const { return _temperature.second; };
     void setTemperature(double temperature);
 
-    bool getRelaxationTimeSet() const { return _relaxationTime.first; };
-    double getRelaxationTime() const { return _relaxationTime.second; };
+    [[nodiscard]] bool getRelaxationTimeSet() const { return _relaxationTime.first; };
+    [[nodiscard]] double getRelaxationTime() const { return _relaxationTime.second; };
     void setRelaxationTime(double relaxationTime);
 };
 

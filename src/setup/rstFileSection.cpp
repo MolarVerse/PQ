@@ -98,7 +98,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         if (molecule->getMoltype() != moltype)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule->getNumberOfAtoms()) + " atoms");
 
-        processAtomLine(lineElements, molecule);
+        processAtomLine(lineElements, *molecule);
 
         atomCounter++;
 
@@ -107,15 +107,15 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
 
         // TODO: put the next for statements into a function
 
-        checkAtomLine(lineElements, line, molecule);
+        checkAtomLine(lineElements, line, *molecule);
 
         while (lineElements.empty())
         {
-            checkAtomLine(lineElements, line, molecule);
+            checkAtomLine(lineElements, line, *molecule);
         }
 
-        if (lineElements.size() != 21)
-            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
+        if (lineElements.size() != 21 && lineElements.size() != 12)
+            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 12 or 21 elements");
 
         moltype = stoi(lineElements[2]);
     }
@@ -129,16 +129,13 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
  * @param lineElements
  * @param molecule
  */
-void AtomSection::processAtomLine(vector<string> &lineElements, const unique_ptr<Molecule> &molecule) const
+void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule) const
 {
-    molecule->addAtomTypeName(lineElements[0]);
+    molecule.addAtomTypeName(lineElements[0]);
 
-    molecule->addAtomPositions({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    molecule->addAtomVelocities({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    molecule->addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
-    molecule->addAtomPositionOld({stod(lineElements[12]), stod(lineElements[13]), stod(lineElements[14])});
-    molecule->addAtomVelocityOld({stod(lineElements[15]), stod(lineElements[16]), stod(lineElements[17])});
-    molecule->addAtomForceOld({stod(lineElements[18]), stod(lineElements[19]), stod(lineElements[20])});
+    molecule.addAtomPositions({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    molecule.addAtomVelocities({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    molecule.addAtomForces({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 }
 
 /**
@@ -150,12 +147,12 @@ void AtomSection::processAtomLine(vector<string> &lineElements, const unique_ptr
  *
  * @throws RstFileException if the number of elements in the line is not 21
  */
-void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const unique_ptr<Molecule> &molecule)
+void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const Molecule &molecule)
 {
     _lineNumber++;
 
     if (!getline(*_fp, line))
-        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule->getNumberOfAtoms()) + " atoms");
+        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " + to_string(molecule.getNumberOfAtoms()) + " atoms");
 
     line = removeComments(line, "#");
     // lineElements = splitString(line); TODO: implement all splitString functions via splitString2

@@ -82,8 +82,8 @@ namespace Setup::RstFileReader
     class AtomSection : public RstFileSection
     {
     private:
-        void checkAtomLine(std::vector<std::string> &, std::string &, const std::unique_ptr<Molecule> &);
-        void processAtomLine(std::vector<std::string> &, const std::unique_ptr<Molecule> &) const;
+        void processAtomLine(std::vector<std::string> &, Molecule &) const;
+        void checkAtomLine(std::vector<std::string> &, std::string &, const Molecule &);
 
         FRIEND_TEST(TestAtomSection, testProcessAtomLine);
 

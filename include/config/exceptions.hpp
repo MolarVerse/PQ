@@ -24,7 +24,7 @@ protected:
     std::string _message;
 
 public:
-    explicit CustomException(std::string_view message) : _message(message){};
+    explicit CustomException(const std::string_view message) : _message(message){};
     void colorfulOutput(Color::Code color, std::string_view) const;
 };
 
