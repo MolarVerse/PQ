@@ -7,11 +7,11 @@ using namespace std;
 
 void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
-    vector<double> xyz_i(3);
-    vector<double> xyz_j(3);
+    auto xyz_i = Vec3D();
+    auto xyz_j = Vec3D();
+    auto forcexyz = Vec3D();
     vector<double> dxyz(3);
     vector<double> txyz(3);
-    vector<double> forcexyz(3);
     vector<double> shiftForcexyz(3);
 
     vector<double> box = simBox._box.getBoxDimensions();
@@ -44,8 +44,8 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
             {
                 for (size_t atom_j = 0; atom_j < numberOfAtomsinMolecule_j; ++atom_j)
                 {
-                    molecule_i.getAtomPositions(atom_i, xyz_i);
-                    molecule_j.getAtomPositions(atom_j, xyz_j);
+                    xyz_i = molecule_i.getAtomPositions(atom_i);
+                    xyz_j = molecule_j.getAtomPositions(atom_j);
 
                     dxyz[0] = xyz_i[0] - xyz_j[0];
                     dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -113,8 +113,8 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 // TODO: check if cutoff is smaller than smallest cell size
 void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
-    vector<double> xyz_i(3);
-    vector<double> xyz_j(3);
+    auto xyz_i = Vec3D();
+    auto xyz_j = Vec3D();
     vector<double> dxyz(3);
     vector<double> txyz(3);
     vector<double> forcexyz(3);
@@ -151,10 +151,10 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    molecule_i->getAtomPositions(atom_i, xyz_i);
+                    xyz_i = molecule_i->getAtomPositions(atom_i);
                     for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
-                        molecule_j->getAtomPositions(atom_j, xyz_j);
+                        xyz_j = molecule_j->getAtomPositions(atom_j);
 
                         dxyz[0] = xyz_i[0] - xyz_j[0];
                         dxyz[1] = xyz_i[1] - xyz_j[1];
@@ -239,11 +239,11 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                     for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                     {
-                        molecule_i->getAtomPositions(atom_i, xyz_i);
+                        xyz_i = molecule_i->getAtomPositions(atom_i);
 
                         for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
-                            molecule_j->getAtomPositions(atom_j, xyz_j);
+                            xyz_j = molecule_j->getAtomPositions(atom_j);
 
                             dxyz[0] = xyz_i[0] - xyz_j[0];
                             dxyz[1] = xyz_i[1] - xyz_j[1];

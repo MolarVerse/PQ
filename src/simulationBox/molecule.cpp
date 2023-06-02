@@ -13,10 +13,6 @@ using namespace std;
  *
  * TODO: add check for number of atoms when reading moldescriptor if not negative
  */
-void Molecule::setNumberOfAtoms(const size_t numberOfAtoms)
-{
-    _numberOfAtoms = numberOfAtoms;
-}
 
 /**
  * @brief adds atomic vector in xyz format to molecule

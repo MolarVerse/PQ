@@ -22,18 +22,24 @@ using namespace std;
     throw RstFileException("Molecule type " + to_string(moltype) + " not found");
 }
 
+/**
+ * @brief calculate degrees of freedom
+ *
+ * TODO: maybe -3 Ncom
+ *
+ */
 void SimulationBox::calculateDegreesOfFreedom()
 {
     for (const auto &molecule : _molecules)
-    {
         _degreesOfFreedom += molecule.getNumberOfAtoms() * 3;
-    }
 }
 
+/**
+ * @brief calculate center of mass of all molecules
+ *
+ */
 void SimulationBox::calculateCenterOfMassMolecules()
 {
     for (auto &molecule : _molecules)
-    {
         molecule.calculateCenterOfMass(_box.getBoxDimensions());
-    }
 }

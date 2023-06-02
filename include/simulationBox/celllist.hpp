@@ -52,7 +52,7 @@ public:
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
-    std::vector<size_t> getCellIndexOfMolecule(const SimulationBox &, const std::vector<double> &);
+    std::vector<size_t> getCellIndexOfMolecule(const SimulationBox &, const Vec3D &);
     [[nodiscard]] size_t getCellIndex(const std::vector<size_t> &cellIndices) const
     {
         return cellIndices[0] * _nCellsY * _nCellsZ + cellIndices[1] * _nCellsZ + cellIndices[2];

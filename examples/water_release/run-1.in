@@ -81,8 +81,8 @@
    #manostat   = berendsen;
    #pressure   = 1.013;
 #  nscale = 500;
-   #cell-list = on;
-   #cell-number = 10;
+   cell-list = on;
+   cell-number = 10;
 #  friction   = 0.035;
 
 # VIRIAL

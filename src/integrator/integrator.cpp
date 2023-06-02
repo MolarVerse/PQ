@@ -9,9 +9,9 @@ using namespace std;
 
 void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timings)
 {
-    auto positions = vector<double>(3);
-    auto velocities = vector<double>(3);
-    auto forces = vector<double>(3);
+    auto positions = Vec3D();
+    auto velocities = Vec3D();
+    auto forces = Vec3D();
 
     const auto box = simulationBox._box.getBoxDimensions();
 
@@ -23,9 +23,9 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            molecule.getAtomPositions(i, positions);
-            molecule.getAtomVelocities(i, velocities);
-            molecule.getAtomForces(i, forces);
+            positions = molecule.getAtomPositions(i);
+            velocities = molecule.getAtomVelocities(i);
+            forces = molecule.getAtomForces(i);
             const auto mass = molecule.getMass(i);
 
             velocities[0] += timeStep * forces[0] / mass * _V_VERLET_VELOCITY_FACTOR_;
@@ -46,14 +46,14 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
         }
 
         molecule.calculateCenterOfMass(box);
-        molecule.resetAtomForces();
+        molecule.setAtomForcesToZero();
     }
 }
 
 void VelocityVerlet::secondStep(SimulationBox &simulationBox, const Timings &timings)
 {
-    auto velocities = vector<double>(3);
-    auto forces = vector<double>(3);
+    auto velocities = Vec3D();
+    auto forces = Vec3D();
 
     const auto timeStep = timings.getTimestep();
 
@@ -63,8 +63,8 @@ void VelocityVerlet::secondStep(SimulationBox &simulationBox, const Timings &tim
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            molecule.getAtomVelocities(i, velocities);
-            molecule.getAtomForces(i, forces);
+            velocities = molecule.getAtomVelocities(i);
+            forces = molecule.getAtomForces(i);
             const auto mass = molecule.getMass(i);
 
             velocities[0] += timeStep * forces[0] / mass * _V_VERLET_VELOCITY_FACTOR_;

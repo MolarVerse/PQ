@@ -3,7 +3,7 @@ add_executable(pimd_qmcf
 )
 
 target_include_directories(pimd_qmcf
-PUBLIC ${CODE_INCLUDE_DIR}
+  PUBLIC ${CODE_INCLUDE_DIR}
 )
 
 if(BUILD_WITH_MPI)
@@ -22,6 +22,7 @@ target_link_libraries(pimd_qmcf
   utilities
   config
   output
+  math
 )
 
 install(TARGETS pimd_qmcf

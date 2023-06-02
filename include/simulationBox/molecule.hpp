@@ -2,6 +2,8 @@
 
 #define _MOLECULE_H_
 
+#include "vector3d.hpp"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -34,9 +36,9 @@ private:
     std::vector<double> _masses;
     std::vector<int> _atomicNumbers;
 
-    std::vector<double> _positions;
-    std::vector<double> _velocities;
-    std::vector<double> _forces;
+    std::vector<Vec3D> _positions;
+    std::vector<Vec3D> _velocities;
+    std::vector<Vec3D> _forces;
     std::vector<double> _shiftForces;
 
     std::vector<double> _centerOfMass = {0.0, 0.0, 0.0};
@@ -50,7 +52,7 @@ public:
 
     void calculateCenterOfMass(const std::vector<double> &);
 
-    void setNumberOfAtoms(const size_t numberOfAtoms);
+    void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; };
     size_t getNumberOfAtomTypes(); // cannot be const due to iterator in it
 
     // standard getter and setters
@@ -95,57 +97,18 @@ public:
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
     [[nodiscard]] int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
 
-    void addAtomPositions(const std::vector<double> &positions) { addVector(_positions, positions); }
-    std::vector<double> getAtomPositions(const size_t index) { return {_positions[3 * index], _positions[3 * index + 1], _positions[3 * index + 2]}; }
-    void getAtomPositions(const size_t index, std::vector<double> &position) const
-    {
-        position[0] = _positions[3 * index];
-        position[1] = _positions[3 * index + 1];
-        position[2] = _positions[3 * index + 2];
-    }
-    void setAtomPositions(const size_t index, const std::vector<double> &position)
-    {
-        _positions[3 * index] = position[0];
-        _positions[3 * index + 1] = position[1];
-        _positions[3 * index + 2] = position[2];
-    }
+    void addAtomPositions(const Vec3D &position) { _positions.push_back(position); }
+    [[nodiscard]] Vec3D getAtomPositions(const size_t index) const { return _positions[index]; }
+    void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
 
-    void addAtomVelocities(const std::vector<double> &velocities) { addVector(_velocities, velocities); }
-    std::vector<double> getAtomVelocities(const size_t index) { return {_velocities[3 * index], _velocities[3 * index + 1], _velocities[3 * index + 2]}; }
-    void getAtomVelocities(const size_t index, std::vector<double> &velocity) const
-    {
-        velocity[0] = _velocities[3 * index];
-        velocity[1] = _velocities[3 * index + 1];
-        velocity[2] = _velocities[3 * index + 2];
-    }
-    void setAtomVelocities(const size_t index, const std::vector<double> &velocity)
-    {
-        _velocities[3 * index] = velocity[0];
-        _velocities[3 * index + 1] = velocity[1];
-        _velocities[3 * index + 2] = velocity[2];
-    }
+    void addAtomVelocities(const Vec3D &velocity) { _velocities.push_back(velocity); }
+    [[nodiscard]] Vec3D getAtomVelocities(const size_t index) const { return _velocities[index]; }
+    void setAtomVelocities(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }
 
-    std::vector<double> getAtomForces(const size_t index) { return {_forces[3 * index], _forces[3 * index + 1], _forces[3 * index + 2]}; }
-    void getAtomForces(const size_t index, std::vector<double> &force) const
-    {
-        force[0] = _forces[3 * index];
-        force[1] = _forces[3 * index + 1];
-        force[2] = _forces[3 * index + 2];
-    }
-    void addAtomForces(const std::vector<double> &forces) { addVector(_forces, forces); }
-    void addAtomForces(const size_t index, const std::vector<double> &force)
-    {
-        _forces[3 * index] += force[0];
-        _forces[3 * index + 1] += force[1];
-        _forces[3 * index + 2] += force[2];
-    }
-    void subtractAtomForces(const size_t index, const std::vector<double> &force)
-    {
-        _forces[3 * index] -= force[0];
-        _forces[3 * index + 1] -= force[1];
-        _forces[3 * index + 2] -= force[2];
-    }
-    void resetAtomForces() { std::fill(_forces.begin(), _forces.end(), 0.0); }
+    void addAtomFores(const Vec3D &force) { _forces.push_back(force); }
+    [[nodiscard]] Vec3D getAtomForces(const size_t index) const { return _forces[index]; }
+    void setAtomForces(const size_t index, const Vec3D &force) { _forces[index] = force; }
+    void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), Vec3D(0.0, 0.0, 0.0)); }
 
     void resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
     void setAtomShiftForces(const size_t index, const std::vector<double> &shiftForces)

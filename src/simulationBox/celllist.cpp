@@ -65,11 +65,18 @@ void CellList::addCellPointers(Cell &cell)
 {
     const size_t totalCellNeighbours = (_nNeighbourCellsX * 2 + 1) * (_nNeighbourCellsY * 2 + 1) * (_nNeighbourCellsZ * 2 + 1);
 
-    for (int i = -_nNeighbourCellsX; i <= _nNeighbourCellsX; ++i)
+    int i0 = -_nNeighbourCellsX;
+    int i1 = _nNeighbourCellsX;
+    int j0 = -_nNeighbourCellsY;
+    int j1 = _nNeighbourCellsY;
+    int k0 = -_nNeighbourCellsZ;
+    int k1 = _nNeighbourCellsZ;
+
+    for (int i = i0; i <= i1; ++i)
     {
-        for (int j = -_nNeighbourCellsY; j <= _nNeighbourCellsY; ++j)
+        for (int j = j0; j <= j1; ++j)
         {
-            for (int k = -_nNeighbourCellsZ; k <= _nNeighbourCellsZ; ++k)
+            for (int k = k0; k <= k1; ++k)
             {
                 if ((i == 0) && (j == 0) && (k == 0))
                     continue;
@@ -78,9 +85,9 @@ void CellList::addCellPointers(Cell &cell)
                 int neighbourCellIndexY = j + cell.getCellIndex()[1];
                 int neighbourCellIndexZ = k + cell.getCellIndex()[2];
 
-                neighbourCellIndexX -= _nCellsX * static_cast<size_t>(floor(neighbourCellIndexX / static_cast<double>(_nCellsX)));
-                neighbourCellIndexY -= _nCellsY * static_cast<size_t>(floor(neighbourCellIndexY / static_cast<double>(_nCellsY)));
-                neighbourCellIndexZ -= _nCellsZ * static_cast<size_t>(floor(neighbourCellIndexZ / static_cast<double>(_nCellsZ)));
+                neighbourCellIndexX -= _nCellsX * static_cast<int>(floor(neighbourCellIndexX / static_cast<double>(_nCellsX)));
+                neighbourCellIndexY -= _nCellsY * static_cast<int>(floor(neighbourCellIndexY / static_cast<double>(_nCellsY)));
+                neighbourCellIndexZ -= _nCellsZ * static_cast<int>(floor(neighbourCellIndexZ / static_cast<double>(_nCellsZ)));
 
                 const auto neighbourCellIndex = neighbourCellIndexX * _nCellsY * _nCellsZ + neighbourCellIndexY * _nCellsZ + neighbourCellIndexZ;
 
@@ -119,7 +126,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
         cell.clearAtomIndices();
     }
 
-    vector<double> position(3);
+    Vec3D position(0.0, 0.0, 0.0);
 
     const size_t numberOfMolecules = simulationBox.getNumberOfMolecules();
 
@@ -131,7 +138,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
         for (size_t j = 0; j < numberOfAtoms; ++j)
         {
-            molecule->getAtomPositions(j, position);
+            position = molecule->getAtomPositions(j);
 
             const auto atomCellIndices = getCellIndexOfMolecule(simulationBox, position);
             const auto cellIndex = getCellIndex(atomCellIndices);
@@ -149,17 +156,17 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     }
 }
 
-vector<size_t> CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const vector<double> &position)
+vector<size_t> CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position)
 {
     const auto boxDimensions = simulationBox._box.getBoxDimensions();
 
-    auto cellIndexX = static_cast<size_t>(floor((position[0] + boxDimensions[0] / 2.0) / _cellSize[0]));
-    auto cellIndexY = static_cast<size_t>(floor((position[1] + boxDimensions[1] / 2.0) / _cellSize[1]));
-    auto cellIndexZ = static_cast<size_t>(floor((position[2] + boxDimensions[2] / 2.0) / _cellSize[2]));
+    auto cellIndexX = static_cast<int>(floor((position[0] + boxDimensions[0] / 2.0) / _cellSize[0]));
+    auto cellIndexY = static_cast<int>(floor((position[1] + boxDimensions[1] / 2.0) / _cellSize[1]));
+    auto cellIndexZ = static_cast<int>(floor((position[2] + boxDimensions[2] / 2.0) / _cellSize[2]));
 
-    cellIndexX -= _nCellsX * static_cast<size_t>(floor(static_cast<double>(cellIndexX) / static_cast<double>(_nCellsX)));
-    cellIndexY -= _nCellsY * static_cast<size_t>(floor(static_cast<double>(cellIndexY) / static_cast<double>(_nCellsY)));
-    cellIndexZ -= _nCellsZ * static_cast<size_t>(floor(static_cast<double>(cellIndexZ) / static_cast<double>(_nCellsZ)));
+    cellIndexX -= _nCellsX * static_cast<int>(floor(static_cast<double>(cellIndexX) / static_cast<double>(_nCellsX)));
+    cellIndexY -= _nCellsY * static_cast<int>(floor(static_cast<double>(cellIndexY) / static_cast<double>(_nCellsY)));
+    cellIndexZ -= _nCellsZ * static_cast<int>(floor(static_cast<double>(cellIndexZ) / static_cast<double>(_nCellsZ)));
 
     return {cellIndexX, cellIndexY, cellIndexZ};
 }

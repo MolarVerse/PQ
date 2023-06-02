@@ -21,7 +21,6 @@ using namespace std;
 
 int pimd_qmcf(int argc, char *argv[])
 {
-
     // FIXME: cleanup this piece of code when knowing how to do it properly
     vector<string> arguments(argv, argv + argc);
     auto commandLineArgs = CommandLineArgs(argc, arguments);
