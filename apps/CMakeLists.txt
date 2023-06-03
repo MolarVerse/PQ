@@ -22,7 +22,6 @@ target_link_libraries(pimd_qmcf
   utilities
   config
   output
-  math
 )
 
 install(TARGETS pimd_qmcf

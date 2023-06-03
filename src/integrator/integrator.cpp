@@ -7,42 +7,40 @@
 
 using namespace std;
 
-void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timings)
+void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
 {
-    auto positions = Vec3D();
-    auto velocities = Vec3D();
-    auto forces = Vec3D();
+    auto velocities = molecule.getAtomVelocities(i);
+    const auto forces = molecule.getAtomForces(i);
+    const auto mass = molecule.getMass(i);
 
-    const auto box = simulationBox._box.getBoxDimensions();
+    velocities += timestep * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
 
-    const auto timeStep = timings.getTimestep();
+    molecule.setAtomVelocities(i, velocities);
+}
 
-    for (auto &molecule : simulationBox._molecules)
+void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
+{
+    auto positions = molecule.getAtomPositions(i);
+    const auto velocities = molecule.getAtomVelocities(i);
+
+    positions += timestep * velocities * _FS_TO_S_;
+    applyPBC(simBox, positions);
+
+    molecule.setAtomPositions(i, positions);
+}
+
+void VelocityVerlet::firstStep(SimulationBox &simBox)
+{
+    const auto box = simBox._box.getBoxDimensions();
+
+    for (auto &molecule : simBox._molecules)
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            positions = molecule.getAtomPositions(i);
-            velocities = molecule.getAtomVelocities(i);
-            forces = molecule.getAtomForces(i);
-            const auto mass = molecule.getMass(i);
-
-            velocities[0] += timeStep * forces[0] / mass * _V_VERLET_VELOCITY_FACTOR_;
-            velocities[1] += timeStep * forces[1] / mass * _V_VERLET_VELOCITY_FACTOR_;
-            velocities[2] += timeStep * forces[2] / mass * _V_VERLET_VELOCITY_FACTOR_;
-
-            molecule.setAtomVelocities(i, velocities);
-
-            positions[0] += timeStep * velocities[0] * _FS_TO_S_;
-            positions[1] += timeStep * velocities[1] * _FS_TO_S_;
-            positions[2] += timeStep * velocities[2] * _FS_TO_S_;
-
-            positions[0] -= box[0] * round(positions[0] / box[0]);
-            positions[1] -= box[1] * round(positions[1] / box[1]);
-            positions[2] -= box[2] * round(positions[2] / box[2]);
-
-            molecule.setAtomPositions(i, positions);
+            integrateVelocities(_dt, molecule, i);
+            integratePositions(_dt, molecule, i, simBox);
         }
 
         molecule.calculateCenterOfMass(box);
@@ -50,28 +48,15 @@ void VelocityVerlet::firstStep(SimulationBox &simulationBox, const Timings &timi
     }
 }
 
-void VelocityVerlet::secondStep(SimulationBox &simulationBox, const Timings &timings)
+void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
-    auto velocities = Vec3D();
-    auto forces = Vec3D();
-
-    const auto timeStep = timings.getTimestep();
-
-    for (auto &molecule : simulationBox._molecules)
+    for (auto &molecule : simBox._molecules)
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            velocities = molecule.getAtomVelocities(i);
-            forces = molecule.getAtomForces(i);
-            const auto mass = molecule.getMass(i);
-
-            velocities[0] += timeStep * forces[0] / mass * _V_VERLET_VELOCITY_FACTOR_;
-            velocities[1] += timeStep * forces[1] / mass * _V_VERLET_VELOCITY_FACTOR_;
-            velocities[2] += timeStep * forces[2] / mass * _V_VERLET_VELOCITY_FACTOR_;
-
-            molecule.setAtomVelocities(i, velocities);
+            integrateVelocities(_dt, molecule, i);
         }
     }
 }

@@ -19,6 +19,7 @@ public:
     explicit PostProcessSetup(Engine &engine) : _engine(engine){};
 
     void setup();
+
     void setAtomMasses();
     void setAtomicNumbers();
     void calculateMolMass();
@@ -32,6 +33,10 @@ public:
 
     void setupCellList();
     void setPotential();
+
+    void setTimestep();
+
+    void setStep();
 };
 
 /**

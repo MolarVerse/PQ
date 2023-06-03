@@ -16,7 +16,7 @@ class Output
 protected:
     std::string _filename;
     std::ofstream _fp;
-    inline static int _outputFreq = 1;
+    inline static size_t _outputFrequency = 1;
     int _rank;
 
     void openFile();
@@ -26,25 +26,14 @@ public:
 
     void setFilename(const std::string_view &filename);
 
-    static void setOutputFreq(const int outputFreq);
+    static void setOutputFrequency(const size_t outputFreq);
 
     std::string initialMomentumMessage(const double momentum) const;
 
     // standard getter and setters
     std::string getFilename() const { return _filename; };
-    static int getOutputFreq() { return _outputFreq; };
-};
 
-/**
- * @class EnergyOutput inherits from Output
- *
- * @brief Output file for energy
- *
- */
-class EnergyOutput : public Output
-{
-public:
-    using Output::Output;
+    static size_t getOutputFrequency() { return _outputFrequency; };
 };
 
 /**

@@ -133,7 +133,7 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
 {
     molecule.addAtomTypeName(lineElements[0]);
 
-    molecule.addAtomPositions(Vec3D(stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])));
+    molecule.addAtomPositions({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     molecule.addAtomVelocities({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     molecule.addAtomForces({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 }

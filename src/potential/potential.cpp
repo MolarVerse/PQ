@@ -7,25 +7,14 @@ using namespace std;
 
 void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
-    auto xyz_i = Vec3D();
-    auto xyz_j = Vec3D();
-    auto forcexyz = Vec3D();
-    vector<double> dxyz(3);
-    vector<double> txyz(3);
-    vector<double> shiftForcexyz(3);
-
-    vector<double> box = simBox._box.getBoxDimensions();
+    const auto box = simBox._box.getBoxDimensions();
+    const double RcCutOff = simBox.getRcCutOff();
 
     double totalCoulombicEnergy = 0.0;
     double totalNonCoulombicEnergy = 0.0;
     double energy = 0.0;
-    double force = 0.0;
-    double rncCutOff = 0.0;
-
-    const double RcCutOff = simBox.getRcCutOff();
 
     // inter molecular forces
-
     const size_t numberOfMolecules = simBox.getNumberOfMolecules();
 
     for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
@@ -44,22 +33,16 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
             {
                 for (size_t atom_j = 0; atom_j < numberOfAtomsinMolecule_j; ++atom_j)
                 {
-                    xyz_i = molecule_i.getAtomPositions(atom_i);
-                    xyz_j = molecule_j.getAtomPositions(atom_j);
+                    const auto xyz_i = molecule_i.getAtomPositions(atom_i);
+                    const auto xyz_j = molecule_j.getAtomPositions(atom_j);
 
-                    dxyz[0] = xyz_i[0] - xyz_j[0];
-                    dxyz[1] = xyz_i[1] - xyz_j[1];
-                    dxyz[2] = xyz_i[2] - xyz_j[2];
+                    auto dxyz = xyz_i - xyz_j;
 
-                    txyz[0] = -box[0] * round(dxyz[0] / box[0]);
-                    txyz[1] = -box[1] * round(dxyz[1] / box[1]);
-                    txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+                    const auto txyz = -box * round(dxyz / box);
 
-                    dxyz[0] += txyz[0];
-                    dxyz[1] += txyz[1];
-                    dxyz[2] += txyz[2];
+                    dxyz += txyz;
 
-                    const double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+                    const double distanceSquared = normSquared(dxyz);
 
                     if (distanceSquared < RcCutOff * RcCutOff)
                     {
@@ -69,13 +52,13 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                         const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                        force = 0.0;
+                        auto force = 0.0;
 
                         _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                         totalCoulombicEnergy += energy;
 
-                        rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                        const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                         if (distance < rncCutOff)
                         {
@@ -88,18 +71,14 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                         force /= distance;
 
-                        forcexyz[0] = force * dxyz[0];
-                        forcexyz[1] = force * dxyz[1];
-                        forcexyz[2] = force * dxyz[2];
+                        const auto forcexyz = force * dxyz;
 
-                        shiftForcexyz[0] = forcexyz[0] * txyz[0];
-                        shiftForcexyz[1] = forcexyz[1] * txyz[1];
-                        shiftForcexyz[2] = forcexyz[2] * txyz[2];
+                        const auto shiftForcexyz = forcexyz * txyz;
 
                         molecule_i.addAtomForces(atom_i, forcexyz);
-                        molecule_j.subtractAtomForces(atom_j, forcexyz);
+                        molecule_j.addAtomForces(atom_j, -forcexyz);
 
-                        molecule_i.addAtomShifForces(atom_i, shiftForcexyz);
+                        molecule_i.addAtomShiftForces(atom_i, shiftForcexyz);
                     }
                 }
             }
@@ -113,14 +92,7 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 // TODO: check if cutoff is smaller than smallest cell size
 void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
-    auto xyz_i = Vec3D();
-    auto xyz_j = Vec3D();
-    vector<double> dxyz(3);
-    vector<double> txyz(3);
-    vector<double> forcexyz(3);
-    vector<double> shiftForcexyz(3);
-
-    vector<double> box = simBox._box.getBoxDimensions();
+    const auto box = simBox._box.getBoxDimensions();
 
     Molecule *molecule_i = nullptr;
     Molecule *molecule_j = nullptr;
@@ -128,8 +100,6 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
     double totalCoulombicEnergy = 0.0;
     double totalNonCoulombicEnergy = 0.0;
     double energy = 0.0;
-    double force = 0.0;
-    double rncCutOff = 0.0;
 
     const double RcCutOff = simBox.getRcCutOff();
 
@@ -151,24 +121,18 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    xyz_i = molecule_i->getAtomPositions(atom_i);
+                    const auto xyz_i = molecule_i->getAtomPositions(atom_i);
                     for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
-                        xyz_j = molecule_j->getAtomPositions(atom_j);
+                        const auto xyz_j = molecule_j->getAtomPositions(atom_j);
 
-                        dxyz[0] = xyz_i[0] - xyz_j[0];
-                        dxyz[1] = xyz_i[1] - xyz_j[1];
-                        dxyz[2] = xyz_i[2] - xyz_j[2];
+                        auto dxyz = xyz_i - xyz_j;
 
-                        txyz[0] = -box[0] * round(dxyz[0] / box[0]);
-                        txyz[1] = -box[1] * round(dxyz[1] / box[1]);
-                        txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+                        const auto txyz = -box * round(dxyz / box);
 
-                        dxyz[0] += txyz[0];
-                        dxyz[1] += txyz[1];
-                        dxyz[2] += txyz[2];
+                        dxyz += txyz;
 
-                        const double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+                        const double distanceSquared = normSquared(dxyz);
 
                         if (distanceSquared < RcCutOff * RcCutOff)
                         {
@@ -178,13 +142,13 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                             const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                            force = 0.0;
+                            auto force = 0.0;
 
                             _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                             totalCoulombicEnergy += energy;
 
-                            rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                            const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                             if (distance < rncCutOff)
                             {
@@ -197,18 +161,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                             force /= distance;
 
-                            forcexyz[0] = force * dxyz[0];
-                            forcexyz[1] = force * dxyz[1];
-                            forcexyz[2] = force * dxyz[2];
+                            const auto forcexyz = force * dxyz;
 
-                            shiftForcexyz[0] = forcexyz[0] * txyz[0];
-                            shiftForcexyz[1] = forcexyz[1] * txyz[1];
-                            shiftForcexyz[2] = forcexyz[2] * txyz[2];
+                            const auto shiftForcexyz = forcexyz * txyz;
 
                             molecule_i->addAtomForces(atom_i, forcexyz);
-                            molecule_j->subtractAtomForces(atom_j, forcexyz);
+                            molecule_j->addAtomForces(atom_j, -forcexyz);
 
-                            molecule_i->addAtomShifForces(atom_i, shiftForcexyz);
+                            molecule_i->addAtomShiftForces(atom_i, shiftForcexyz);
                         }
                     }
                 }
@@ -239,25 +199,19 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                     for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                     {
-                        xyz_i = molecule_i->getAtomPositions(atom_i);
+                        const auto xyz_i = molecule_i->getAtomPositions(atom_i);
 
                         for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
-                            xyz_j = molecule_j->getAtomPositions(atom_j);
+                            const auto xyz_j = molecule_j->getAtomPositions(atom_j);
 
-                            dxyz[0] = xyz_i[0] - xyz_j[0];
-                            dxyz[1] = xyz_i[1] - xyz_j[1];
-                            dxyz[2] = xyz_i[2] - xyz_j[2];
+                            auto dxyz = xyz_i - xyz_j;
 
-                            txyz[0] = -box[0] * round(dxyz[0] / box[0]);
-                            txyz[1] = -box[1] * round(dxyz[1] / box[1]);
-                            txyz[2] = -box[2] * round(dxyz[2] / box[2]);
+                            const auto txyz = -box * round(dxyz / box);
 
-                            dxyz[0] += txyz[0];
-                            dxyz[1] += txyz[1];
-                            dxyz[2] += txyz[2];
+                            dxyz += txyz;
 
-                            const double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+                            const double distanceSquared = normSquared(dxyz);
 
                             if (distanceSquared < RcCutOff * RcCutOff)
                             {
@@ -267,13 +221,13 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                                 const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                                force = 0.0;
+                                auto force = 0.0;
 
                                 _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                                 totalCoulombicEnergy += energy;
 
-                                rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                                const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                                 if (distance < rncCutOff)
                                 {
@@ -286,18 +240,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                                 force /= distance;
 
-                                forcexyz[0] = force * dxyz[0];
-                                forcexyz[1] = force * dxyz[1];
-                                forcexyz[2] = force * dxyz[2];
+                                const auto forcexyz = force * dxyz;
 
-                                shiftForcexyz[0] = forcexyz[0] * txyz[0];
-                                shiftForcexyz[1] = forcexyz[1] * txyz[1];
-                                shiftForcexyz[2] = forcexyz[2] * txyz[2];
+                                const auto shiftForcexyz = forcexyz * txyz;
 
                                 molecule_i->addAtomForces(atom_i, forcexyz);
-                                molecule_j->subtractAtomForces(atom_j, forcexyz);
+                                molecule_j->addAtomForces(atom_j, -forcexyz);
 
-                                molecule_i->addAtomShifForces(atom_i, shiftForcexyz);
+                                molecule_i->addAtomShiftForces(atom_i, shiftForcexyz);
                             }
                         }
                     }

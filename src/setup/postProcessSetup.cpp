@@ -36,6 +36,10 @@ void PostProcessSetup::setup()
 
     setupCellList();
     setPotential();
+
+    setTimestep();
+
+    setStep();
 }
 
 /**
@@ -232,3 +236,7 @@ void PostProcessSetup::setPotential()
         _engine._potential->_nonCoulombPotential = make_unique<GuffNonCoulomb>();
     }
 }
+
+void PostProcessSetup::setTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }
+
+void PostProcessSetup::setStep() { _engine.setStep0(_engine.getTimings().getStepCount()); }

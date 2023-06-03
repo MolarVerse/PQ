@@ -2,7 +2,7 @@
 
 #define _BOX_H_
 
-#include <vector>
+#include "vector3d.hpp"
 
 /**
  * @class Box
@@ -19,8 +19,8 @@
 class Box
 {
 private:
-    std::vector<double> _boxDimensions = {0.0, 0.0, 0.0};
-    std::vector<double> _boxAngles = {90.0, 90.0, 90.0};
+    Vec3D _boxDimensions = {0.0, 0.0, 0.0};
+    Vec3D _boxAngles = {90.0, 90.0, 90.0};
 
     double _totalMass = 0.0;
     double _totalCharge = 0.0;
@@ -30,23 +30,23 @@ private:
     bool _boxSizeHasChanged = false;
 
 public:
-    void setBoxDimensions(const std::vector<double> &);
-    std::vector<double> calculateBoxDimensionsFromDensity() const;
+    void setBoxDimensions(const Vec3D &);
+    Vec3D calculateBoxDimensionsFromDensity() const;
 
-    void setBoxAngles(const std::vector<double> &);
+    void setBoxAngles(const Vec3D &);
 
     double calculateVolume() const;
 
-    double calculateDistance(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
-    double calculateDistanceSquared(const std::vector<double> &, const std::vector<double> &, std::vector<double> &);
+    double calculateDistance(const Vec3D &, const Vec3D &, Vec3D &);
+    double calculateDistanceSquared(const Vec3D &, const Vec3D &, Vec3D &);
 
-    void applyPBC(std::vector<double> &);
+    void applyPBC(Vec3D &) const;
 
-    [[nodiscard]] double getMinimalBoxDimension() const;
+    [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); };
 
     // standard getter and setters
-    std::vector<double> getBoxDimensions() const { return _boxDimensions; };
-    std::vector<double> getBoxAngles() const { return _boxAngles; };
+    [[nodiscard]] Vec3D getBoxDimensions() const { return _boxDimensions; };
+    [[nodiscard]] Vec3D getBoxAngles() const { return _boxAngles; };
 
     void setTotalMass(const double totalMass) { _totalMass = totalMass; };
     [[nodiscard]] double getTotalMass() const { return _totalMass; };

@@ -1,5 +1,6 @@
 add_library(output
     output.cpp
+    energyOutput.cpp
 )
 
 target_include_directories(output
@@ -12,4 +13,5 @@ target_link_libraries(output
     PUBLIC
     config
     utilities
+    physicalData
 )

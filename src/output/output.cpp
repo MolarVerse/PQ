@@ -66,16 +66,18 @@ void Output::setFilename(const string_view &filename)
  *  if output frequency is 0, it is set to INT32_MAX
  *  in order to avoid division by 0 in the output
  *
+ * TODO: check if output frequency is positive in parser file
+ *
  */
-void Output::setOutputFreq(const int outputFreq)
+void Output::setOutputFrequency(const size_t outputFreq)
 {
-    if (outputFreq < 0)
-        throw InputFileException("Output frequency must be positive - output frequency = " + to_string(outputFreq));
+    // if (outputFreq < 0)
+    //     throw InputFileException("Output frequency must be positive - output frequency = " + to_string(outputFreq));
 
     if (outputFreq == 0)
-        _outputFreq = INT32_MAX;
+        _outputFrequency = INT64_MAX;
     else
-        _outputFreq = outputFreq;
+        _outputFrequency = outputFreq;
 }
 
 /**

@@ -13,7 +13,7 @@ using namespace Setup::InputFileReader;
 void InputFileReader::parseOutputFreq(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    Output::setOutputFreq(stoi(lineElements[2]));
+    Output::setOutputFrequency(stoi(lineElements[2]));
 }
 
 /**

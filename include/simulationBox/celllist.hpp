@@ -20,15 +20,10 @@ private:
 
     bool _activated = false;
 
-    size_t _nCellsX = 7;
-    size_t _nCellsY = 7;
-    size_t _nCellsZ = 7;
+    Vec3Dul _nCells = {7, 7, 7};
+    Vec3Dul _nNeighbourCells = {0, 0, 0};
 
-    size_t _nNeighbourCellsX;
-    size_t _nNeighbourCellsY;
-    size_t _nNeighbourCellsZ;
-
-    std::vector<double> _cellSize;
+    Vec3D _cellSize;
 
 public:
     Cell &getCell(const size_t index) { return _cells[index]; }
@@ -37,14 +32,9 @@ public:
     void activate() { _activated = true; }
     [[nodiscard]] bool isActivated() const { return _activated; }
 
-    void setNumberOfCells(const size_t nCells)
-    {
-        _nCellsX = nCells;
-        _nCellsY = nCells;
-        _nCellsZ = nCells;
-    }
+    void setNumberOfCells(const size_t nCells) { _nCells = {nCells, nCells, nCells}; }
 
-    std::vector<double> getCellSize() const { return _cellSize; }
+    [[nodiscard]] Vec3D getCellSize() const { return _cellSize; }
 
     void setup(const SimulationBox &);
     void determineCellSize(const SimulationBox &);
@@ -52,10 +42,11 @@ public:
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
     void updateCellList(SimulationBox &);
-    std::vector<size_t> getCellIndexOfMolecule(const SimulationBox &, const Vec3D &);
-    [[nodiscard]] size_t getCellIndex(const std::vector<size_t> &cellIndices) const
+
+    Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const Vec3D &);
+    [[nodiscard]] size_t getCellIndex(const Vec3Dul &cellIndices) const
     {
-        return cellIndices[0] * _nCellsY * _nCellsZ + cellIndices[1] * _nCellsZ + cellIndices[2];
+        return cellIndices[0] * _nCells[1] * _nCells[2] + cellIndices[1] * _nCells[2] + cellIndices[2];
     }
 };
 

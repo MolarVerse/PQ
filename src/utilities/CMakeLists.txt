@@ -1,6 +1,5 @@
 add_library(utilities
     stringUtilities.cpp
-    mathUtilities.cpp
 )
 
 target_include_directories(utilities

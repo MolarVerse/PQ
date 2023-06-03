@@ -33,4 +33,5 @@ target_link_libraries(setup
     output
     config
     gtest
+    math
 )

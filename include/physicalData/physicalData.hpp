@@ -16,36 +16,32 @@
 class PhysicalData
 {
 private:
-    double _volume = 0.0;
-    double _density = 0.0;
+    double _volume;
+    double _density;
 
-    double _temperature = 0.0;
-    double _pressure = 0.0;
+    double _temperature;
+    double _pressure;
 
-    std::vector<double> _momentumVector = {0.0, 0.0, 0.0};
-    double _momentum = 0.0;
+    Vec3D _momentumVector;
+    double _momentum;
 
-    std::vector<double> _virial = {0.0, 0.0, 0.0};
+    Vec3D _virial;
 
-    std::vector<double> _kineticEnergyAtomicVector = {0.0, 0.0, 0.0};
-    std::vector<double> _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
-    double _kineticEnergy = 0.0;
+    Vec3D _kineticEnergyAtomicVector;
+    Vec3D _kineticEnergyMolecularVector;
+    double _kineticEnergy;
 
-    double _coulombEnergy = 0.0;
-    double _nonCoulombEnergy = 0.0;
+    double _coulombEnergy;
+    double _nonCoulombEnergy;
 
 public:
-    void calculateKineticEnergyAndMomentum(SimulationBox &);
+    void calculateKineticEnergyAndMomentum(const SimulationBox &);
 
     void updateAverages(const PhysicalData &);
+    void makeAverages(const double);
 
-    void resetData(); // not used at the moment
-
-    std::function<std::vector<double>()> getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
-    void changeKineticVirialToAtomic()
-    {
-        getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyAtomicVector, this);
-    }
+    std::function<Vec3D()> getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
+    void changeKineticVirialToAtomic() { getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyAtomicVector, this); }
 
     // standard getter and setters
     void setVolume(const double volume) { _volume = volume; }
@@ -62,13 +58,13 @@ public:
 
     [[nodiscard]] double getMomentum() const { return _momentum; }
 
-    void setVirial(const std::vector<double> &virial) { _virial = virial; }
-    std::vector<double> getVirial() const { return _virial; }
+    void setVirial(const Vec3D &virial) { _virial = virial; }
+    [[nodiscard]] Vec3D getVirial() const { return _virial; }
 
     [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
 
-    std::vector<double> getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
-    std::vector<double> getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
+    [[nodiscard]] Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
+    [[nodiscard]] Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
 
     void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }

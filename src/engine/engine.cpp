@@ -17,25 +17,23 @@ void Engine::run()
 
     const auto numberOfSteps = _timings.getNumberOfSteps();
 
-    for (size_t i = 0; i < numberOfSteps; ++i)
+    for (; _step <= numberOfSteps; ++_step)
     {
-        _averagePhysicalData = PhysicalData();
-
         takeStep();
 
-        _averagePhysicalData.updateAverages(_physicalData);
+        writeOutput();
     }
 
-    cout << "Couloumb energy: " << _averagePhysicalData.getCoulombEnergy() << endl;
-    cout << "Non Couloumb energy: " << _averagePhysicalData.getNonCoulombEnergy() << endl;
-    cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << endl;
+    cout << "Couloumb energy: " << _physicalData.getCoulombEnergy() << endl;
+    cout << "Non Couloumb energy: " << _physicalData.getNonCoulombEnergy() << endl;
+    cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << endl;
 
-    cout << "Temperature: " << _averagePhysicalData.getTemperature() << endl;
-    cout << "Momentum: " << _averagePhysicalData.getMomentum() << endl;
+    cout << "Temperature: " << _physicalData.getTemperature() << endl;
+    cout << "Momentum: " << _physicalData.getMomentum() << endl;
 
-    cout << "Volume: " << _averagePhysicalData.getVolume() << endl;
-    cout << "Density: " << _averagePhysicalData.getDensity() << endl;
-    cout << "Pressure: " << _averagePhysicalData.getPressure() << endl;
+    cout << "Volume: " << _physicalData.getVolume() << endl;
+    cout << "Density: " << _physicalData.getDensity() << endl;
+    cout << "Pressure: " << _physicalData.getPressure() << endl;
 
     cout << endl
          << endl;
@@ -43,13 +41,13 @@ void Engine::run()
 
 void Engine::takeStep()
 {
-    _integrator->firstStep(_simulationBox, _timings);
+    _integrator->firstStep(_simulationBox);
 
     _cellList.updateCellList(_simulationBox);
 
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
-    _integrator->secondStep(_simulationBox, _timings);
+    _integrator->secondStep(_simulationBox);
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 
@@ -57,5 +55,20 @@ void Engine::takeStep()
 
     _virial->calculateVirial(_simulationBox, _physicalData);
 
-    _manostat->calculatePressure(*_virial, _physicalData);
+    _manostat->calculatePressure(_physicalData);
+}
+
+void Engine::writeOutput()
+{
+    _averagePhysicalData.updateAverages(_physicalData);
+    const auto outputFrequency = Output::getOutputFrequency();
+
+    if (_step % outputFrequency == 0)
+    {
+        _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
+
+        _energyOutput->write(_step, _step0, _averagePhysicalData);
+
+        _averagePhysicalData = PhysicalData();
+    }
 }

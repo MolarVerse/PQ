@@ -4,13 +4,14 @@
 
 #include "simulationBox.hpp"
 #include "physicalData.hpp"
+#include "vector3d.hpp"
 
 #include <vector>
 
 class Virial
 {
 protected:
-    std::vector<double> _virial = {0.0, 0.0, 0.0};
+    Vec3D _virial = Vec3D(0.0, 0.0, 0.0);
 
 public:
     virtual ~Virial() = default;
@@ -18,8 +19,8 @@ public:
     virtual void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData);
 
     // standard getter and setters
-    std::vector<double> getVirial() const { return _virial; };
-    void setVirial(const std::vector<double> &virial) { _virial = virial; };
+    [[nodiscard]] Vec3D getVirial() const { return _virial; };
+    void setVirial(const Vec3D &virial) { _virial = virial; };
 };
 
 class VirialMolecular : public Virial

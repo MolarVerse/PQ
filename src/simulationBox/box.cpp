@@ -17,7 +17,7 @@ using namespace std;
  *
  * @throw RstFileException if any of the dimensions is negative
  */
-void Box::setBoxDimensions(const vector<double> &boxDimensions)
+void Box::setBoxDimensions(const Vec3D &boxDimensions)
 {
     for (auto &dimension : boxDimensions)
         if (dimension < 0.0)
@@ -33,7 +33,7 @@ void Box::setBoxDimensions(const vector<double> &boxDimensions)
  *
  * @throw RstFileException if any of the angles is negative or greater than 90°
  */
-void Box::setBoxAngles(const vector<double> &boxAngles)
+void Box::setBoxAngles(const Vec3D &boxAngles)
 {
     for (auto &angle : boxAngles)
         if ((angle < 0.0) || (angle > 90.0))
@@ -88,57 +88,33 @@ double Box::calculateVolume() const
  *
  * @return vector<double>
  */
-vector<double> Box::calculateBoxDimensionsFromDensity() const
+Vec3D Box::calculateBoxDimensionsFromDensity() const
 {
     const double volume = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
-    const double a = cbrt(volume);
-    const double b = a;
-    const double c = a;
+    const double cellLenght = cbrt(volume);
 
-    vector<double> boxDimensions = {a, b, c};
-
-    return boxDimensions;
+    return Vec3D(cellLenght, cellLenght, cellLenght);
 }
 
-double Box::calculateDistance(const vector<double> &point1, const vector<double> &point2, vector<double> &dxyz)
+double Box::calculateDistance(const Vec3D &point1, const Vec3D &point2, Vec3D &dxyz)
 {
-    dxyz[0] = point1[0] - point2[0];
-    dxyz[1] = point1[1] - point2[1];
-    dxyz[2] = point1[2] - point2[2];
+    dxyz = point1 - point2;
 
     applyPBC(dxyz);
 
-    const double distance = sqrt(dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2]);
-
-    return distance;
+    return norm(dxyz);
 }
 
-double Box::calculateDistanceSquared(const vector<double> &point1, const vector<double> &point2, vector<double> &dxyz)
+double Box::calculateDistanceSquared(const Vec3D &point1, const Vec3D &point2, Vec3D &dxyz)
 {
-    dxyz[0] = point1[0] - point2[0];
-    dxyz[1] = point1[1] - point2[1];
-    dxyz[2] = point1[2] - point2[2];
+    dxyz = point1 - point2;
 
     applyPBC(dxyz);
 
-    const double distanceSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
-
-    return distanceSquared;
+    return normSquared(dxyz);
 }
 
-void Box::applyPBC(vector<double> &dxyz)
+void Box::applyPBC(Vec3D &dxyz) const
 {
-    dxyz[0] -= _boxDimensions[0] * round(dxyz[0] / _boxDimensions[0]);
-    dxyz[1] -= _boxDimensions[1] * round(dxyz[1] / _boxDimensions[1]);
-    dxyz[2] -= _boxDimensions[2] * round(dxyz[2] / _boxDimensions[2]);
-}
-
-[[nodiscard]] double Box::getMinimalBoxDimension() const
-{
-    double minDimension = _boxDimensions[0];
-    if (_boxDimensions[1] < minDimension)
-        minDimension = _boxDimensions[1];
-    if (_boxDimensions[2] < minDimension)
-        minDimension = _boxDimensions[2];
-    return minDimension;
+    dxyz -= _boxDimensions * round(dxyz / _boxDimensions);
 }

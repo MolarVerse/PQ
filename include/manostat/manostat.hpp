@@ -10,11 +10,11 @@
 class Manostat
 {
 protected:
-    std::vector<double> _pressureVector = {0.0, 0.0, 0.0};
+    Vec3D _pressureVector = {0.0, 0.0, 0.0};
     double _pressure;
 
 public:
-    void calculatePressure(const Virial &Virial, PhysicalData &physicalData);
+    void calculatePressure(PhysicalData &physicalData);
 };
 
 #endif

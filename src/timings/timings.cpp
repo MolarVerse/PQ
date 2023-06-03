@@ -16,5 +16,5 @@ using namespace std;
  *
  * @param numberOfSteps
  *
- * check when reading input file if number of steps is negative
+ * TODO: check when reading input file if number of steps is negative
  */

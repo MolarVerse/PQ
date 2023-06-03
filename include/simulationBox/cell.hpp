@@ -19,10 +19,10 @@ private:
     std::vector<Molecule *> _molecules;
     std::vector<std::vector<size_t>> _atomInidices;
     std::vector<Cell *> _neighbourCells;
-    std::vector<double> _lowerBoundary = {0, 0, 0};
-    std::vector<double> _upperBoundary = {0, 0, 0};
+    Vec3D _lowerBoundary = {0, 0, 0};
+    Vec3D _upperBoundary = {0, 0, 0};
 
-    std::vector<int> _cellIndex = {0, 0, 0};
+    Vec3Dul _cellIndex = {0, 0, 0};
 
 public:
     void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
@@ -38,14 +38,14 @@ public:
     [[nodiscard]] Cell *getNeighbourCell(const size_t index) const { return _neighbourCells[index]; }
     std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
 
-    void setLowerBoundary(const std::vector<double> &lowerBoundary) { _lowerBoundary = lowerBoundary; }
-    std::vector<double> getLowerBoundary() const { return _lowerBoundary; }
+    void setLowerBoundary(const Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
+    [[nodiscard]] Vec3D getLowerBoundary() const { return _lowerBoundary; }
 
-    void setUpperBoundary(const std::vector<double> &upperBoundary) { _upperBoundary = upperBoundary; }
-    std::vector<double> getUpperBoundary() const { return _upperBoundary; }
+    void setUpperBoundary(const Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
+    [[nodiscard]] Vec3D getUpperBoundary() const { return _upperBoundary; }
 
-    void setCellIndex(const std::vector<int> &cellIndex) { _cellIndex = cellIndex; }
-    std::vector<int> getCellIndex() const { return _cellIndex; }
+    void setCellIndex(const Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
+    [[nodiscard]] Vec3Dul getCellIndex() const { return _cellIndex; }
 
     void addAtomIndices(const std::vector<size_t> &atomIndices) { _atomInidices.push_back(atomIndices); }
     [[nodiscard]] const std::vector<size_t> &getAtomIndices(const size_t index) const { return _atomInidices[index]; }

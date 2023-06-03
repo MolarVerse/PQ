@@ -5,7 +5,6 @@
 #include <string>
 
 #include "simulationBox.hpp"
-#include "timings.hpp"
 
 /**
  * @class Integrator
@@ -17,17 +16,24 @@ class Integrator
 {
 protected:
     std::string _integratorType;
+    double _dt;
 
 public:
     Integrator() = default;
     explicit Integrator(const std::string_view integratorType) : _integratorType(integratorType){};
     virtual ~Integrator() = default;
 
+    virtual void firstStep(SimulationBox &) = 0;
+    virtual void secondStep(SimulationBox &) = 0;
+
+    void applyPBC(const SimulationBox &simBox, Vec3D &positions) const { simBox._box.applyPBC(positions); };
+    void integrateVelocities(const double, Molecule &, const size_t) const;
+    void integratePositions(const double, Molecule &, const size_t, const SimulationBox &) const;
+
     // standard getter and setters
     [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; };
 
-    virtual void firstStep(SimulationBox &, const Timings &) = 0;
-    virtual void secondStep(SimulationBox &, const Timings &) = 0;
+    void setDt(const double dt) { _dt = dt; };
 };
 
 /**
@@ -41,8 +47,8 @@ class VelocityVerlet : public Integrator
 public:
     explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
 
-    void firstStep(SimulationBox &, const Timings &) override;
-    void secondStep(SimulationBox &, const Timings &) override;
+    void firstStep(SimulationBox &) override;
+    void secondStep(SimulationBox &) override;
 };
 
 #endif

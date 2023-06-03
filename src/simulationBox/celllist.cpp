@@ -11,7 +11,7 @@ void CellList::setup(const SimulationBox &simulationBox)
 {
     determineCellSize(simulationBox);
 
-    _cells.resize(_nCellsX * _nCellsY * _nCellsZ);
+    _cells.resize(prod(_nCells));
 
     determineCellBoundaries(simulationBox);
 
@@ -20,30 +20,33 @@ void CellList::setup(const SimulationBox &simulationBox)
 
 void CellList::determineCellSize(const SimulationBox &simulationBox)
 {
-    auto boxDimensions = simulationBox._box.getBoxDimensions();
-    _cellSize = {boxDimensions[0] / static_cast<double>(_nCellsX), boxDimensions[1] / static_cast<double>(_nCellsY), boxDimensions[2] / static_cast<double>(_nCellsZ)};
+    const auto boxDimensions = simulationBox._box.getBoxDimensions();
+    _cellSize = boxDimensions / static_cast<Vec3D>(_nCells);
 }
 
 void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
 {
-    for (int i = 0; i < _nCellsX; ++i)
+    for (size_t i = 0; i < _nCells[0]; ++i)
     {
-        for (int j = 0; j < _nCellsY; ++j)
+        for (size_t j = 0; j < _nCells[1]; ++j)
         {
-            for (int k = 0; k < _nCellsZ; ++k)
+            for (size_t k = 0; k < _nCells[2]; ++k)
             {
-                const auto cellIndex = i * _nCellsY * _nCellsZ + j * _nCellsZ + k;
+
+                const auto cellIndex = i * _nCells[1] * _nCells[2] + j * _nCells[2] + k;
                 auto *cell = &_cells[cellIndex];
 
-                auto boxDimensions = simulationBox._box.getBoxDimensions();
+                const auto boxDimensions = simulationBox._box.getBoxDimensions();
 
-                auto lowerBoundary = {-boxDimensions[0] / 2.0 + i * _cellSize[0], -boxDimensions[1] / 2.0 + j * _cellSize[1], -boxDimensions[2] / 2.0 + k * _cellSize[2]};
-                auto upperBoundary = {-boxDimensions[0] / 2.0 + (i + 1) * _cellSize[0], -boxDimensions[1] / 2.0 + (j + 1) * _cellSize[1], -boxDimensions[2] / 2.0 + (k + 1) * _cellSize[2]};
+                const auto ijk = Vec3Dul(i, j, k);
+
+                const auto lowerBoundary = -boxDimensions / 2.0 + static_cast<Vec3D>(ijk) * _cellSize;
+                const auto upperBoundary = -boxDimensions / 2.0 + static_cast<Vec3D>((ijk + 1)) * _cellSize;
 
                 cell->setLowerBoundary(lowerBoundary);
                 cell->setUpperBoundary(upperBoundary);
 
-                cell->setCellIndex({i, j, k});
+                cell->setCellIndex(ijk);
             }
         }
     }
@@ -51,26 +54,23 @@ void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
 
 void CellList::addNeighbouringCells(const SimulationBox &simulationBox)
 {
-    _nNeighbourCellsX = static_cast<size_t>(ceil(simulationBox.getRcCutOff() / _cellSize[0]));
-    _nNeighbourCellsY = static_cast<size_t>(ceil(simulationBox.getRcCutOff() / _cellSize[1]));
-    _nNeighbourCellsZ = static_cast<size_t>(ceil(simulationBox.getRcCutOff() / _cellSize[2]));
+
+    _nNeighbourCells = static_cast<Vec3Dul>(ceil(simulationBox.getRcCutOff() / _cellSize));
 
     for (auto &cell : _cells)
-    {
         addCellPointers(cell);
-    }
 }
 
 void CellList::addCellPointers(Cell &cell)
 {
-    const size_t totalCellNeighbours = (_nNeighbourCellsX * 2 + 1) * (_nNeighbourCellsY * 2 + 1) * (_nNeighbourCellsZ * 2 + 1);
+    const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
-    int i0 = -_nNeighbourCellsX;
-    int i1 = _nNeighbourCellsX;
-    int j0 = -_nNeighbourCellsY;
-    int j1 = _nNeighbourCellsY;
-    int k0 = -_nNeighbourCellsZ;
-    int k1 = _nNeighbourCellsZ;
+    int i0 = -_nNeighbourCells[0];
+    int i1 = _nNeighbourCells[0];
+    int j0 = -_nNeighbourCells[1];
+    int j1 = _nNeighbourCells[1];
+    int k0 = -_nNeighbourCells[2];
+    int k1 = _nNeighbourCells[2];
 
     for (int i = i0; i <= i1; ++i)
     {
@@ -78,20 +78,17 @@ void CellList::addCellPointers(Cell &cell)
         {
             for (int k = k0; k <= k1; ++k)
             {
-                if ((i == 0) && (j == 0) && (k == 0))
+                const auto ijk = Vec3Di(i, j, k);
+
+                if (ijk == Vec3Di(0, 0, 0))
                     continue;
 
-                int neighbourCellIndexX = i + cell.getCellIndex()[0];
-                int neighbourCellIndexY = j + cell.getCellIndex()[1];
-                int neighbourCellIndexZ = k + cell.getCellIndex()[2];
+                auto neighbourCellIndex = ijk + static_cast<Vec3Di>(cell.getCellIndex());
+                neighbourCellIndex -= static_cast<Vec3Di>(_nCells) * static_cast<Vec3Di>(floor(static_cast<Vec3D>(neighbourCellIndex) / static_cast<Vec3D>(_nCells)));
 
-                neighbourCellIndexX -= _nCellsX * static_cast<int>(floor(neighbourCellIndexX / static_cast<double>(_nCellsX)));
-                neighbourCellIndexY -= _nCellsY * static_cast<int>(floor(neighbourCellIndexY / static_cast<double>(_nCellsY)));
-                neighbourCellIndexZ -= _nCellsZ * static_cast<int>(floor(neighbourCellIndexZ / static_cast<double>(_nCellsZ)));
+                const auto neighbourCellIndexScalar = neighbourCellIndex[0] * _nCells[1] * _nCells[2] + neighbourCellIndex[1] * _nCells[2] + neighbourCellIndex[2];
 
-                const auto neighbourCellIndex = neighbourCellIndexX * _nCellsY * _nCellsZ + neighbourCellIndexY * _nCellsZ + neighbourCellIndexZ;
-
-                Cell *neighbourCell = &_cells[neighbourCellIndex];
+                Cell *neighbourCell = &_cells[neighbourCellIndexScalar];
 
                 cell.addNeighbourCell(neighbourCell);
 
@@ -113,7 +110,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
         determineCellSize(simulationBox);
 
-        _cells.resize(_nCellsX * _nCellsY * _nCellsZ);
+        _cells.resize(prod(_nCells));
 
         determineCellBoundaries(simulationBox);
 
@@ -156,17 +153,13 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     }
 }
 
-vector<size_t> CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position)
+Vec3Dul CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position)
 {
     const auto boxDimensions = simulationBox._box.getBoxDimensions();
 
-    auto cellIndexX = static_cast<int>(floor((position[0] + boxDimensions[0] / 2.0) / _cellSize[0]));
-    auto cellIndexY = static_cast<int>(floor((position[1] + boxDimensions[1] / 2.0) / _cellSize[1]));
-    auto cellIndexZ = static_cast<int>(floor((position[2] + boxDimensions[2] / 2.0) / _cellSize[2]));
+    auto cellIndex = static_cast<Vec3Dul>(floor((position + boxDimensions / 2.0) / _cellSize));
 
-    cellIndexX -= _nCellsX * static_cast<int>(floor(static_cast<double>(cellIndexX) / static_cast<double>(_nCellsX)));
-    cellIndexY -= _nCellsY * static_cast<int>(floor(static_cast<double>(cellIndexY) / static_cast<double>(_nCellsY)));
-    cellIndexZ -= _nCellsZ * static_cast<int>(floor(static_cast<double>(cellIndexZ) / static_cast<double>(_nCellsZ)));
+    cellIndex -= _nCells * static_cast<Vec3Dul>(floor(static_cast<Vec3D>(cellIndex) / static_cast<Vec3D>(_nCells)));
 
-    return {cellIndexX, cellIndexY, cellIndexZ};
+    return cellIndex;
 }
