@@ -10,6 +10,7 @@
 
 #include "output.hpp"
 #include "energyOutput.hpp"
+#include "infoOutput.hpp"
 
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -30,7 +31,6 @@ class Engine
 {
 private:
     size_t _step = 1;
-    size_t _step0;
 
     Settings _settings;
     Timings _timings;
@@ -63,13 +63,12 @@ public:
     void writeOutput();
 
     // standard getter and setters
-    void setStep0(const size_t step0) { _step0 = step0; };
-
     [[nodiscard]] Settings &getSettings() { return _settings; };
     [[nodiscard]] Timings &getTimings() { return _timings; };
     [[nodiscard]] CellList &getCellList() { return _cellList; };
     [[nodiscard]] SimulationBox &getSimulationBox() { return _simulationBox; };
     [[nodiscard]] PhysicalData &getPhysicalData() { return _physicalData; };
+    [[nodiscard]] PhysicalData &getAveragePhysicalData() { return _averagePhysicalData; }
 };
 
 #endif // _ENGINE_HPP_

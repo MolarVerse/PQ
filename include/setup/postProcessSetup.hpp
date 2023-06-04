@@ -35,8 +35,6 @@ public:
     void setPotential();
 
     void setTimestep();
-
-    void setStep();
 };
 
 /**

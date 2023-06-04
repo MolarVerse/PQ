@@ -1,6 +1,8 @@
 add_library(output
     output.cpp
+
     energyOutput.cpp
+    infoOutput.cpp
 )
 
 target_include_directories(output

@@ -4,11 +4,9 @@
 
 using namespace std;
 
-void EnergyOutput::write(const size_t step, const size_t step0, const PhysicalData &data)
+void EnergyOutput::write(const size_t step, const PhysicalData &data)
 {
-    _effectiveStep = step + step0;
-
-    _fp << _effectiveStep << "\t";
+    _fp << step << "\t";
     _fp << fixed;
     _fp << setprecision(12);
     _fp << data.getTemperature() << "\t";

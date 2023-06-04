@@ -13,13 +13,10 @@
  */
 class EnergyOutput : public Output
 {
-private:
-    size_t _effectiveStep;
-
 public:
     using Output::Output;
 
-    void write(const size_t, const size_t, const PhysicalData &);
+    void write(const size_t, const PhysicalData &);
 };
 
 #endif // _ENERGYOUTPUT_HPP_

@@ -104,16 +104,4 @@ public:
     using Output::Output;
 };
 
-/**
- * @class InfoOutput inherits from Output
- *
- * @brief Output file for info file
- *
- */
-class InfoOutput : public Output
-{
-public:
-    using Output::Output;
-};
-
 #endif

@@ -38,8 +38,6 @@ void PostProcessSetup::setup()
     setPotential();
 
     setTimestep();
-
-    setStep();
 }
 
 /**
@@ -238,5 +236,3 @@ void PostProcessSetup::setPotential()
 }
 
 void PostProcessSetup::setTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }
-
-void PostProcessSetup::setStep() { _engine.setStep0(_engine.getTimings().getStepCount()); }

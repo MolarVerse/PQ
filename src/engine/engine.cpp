@@ -61,13 +61,20 @@ void Engine::takeStep()
 void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
+
     const auto outputFrequency = Output::getOutputFrequency();
 
     if (_step % outputFrequency == 0)
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
 
-        _energyOutput->write(_step, _step0, _averagePhysicalData);
+        const auto dt = _timings.getTimestep();
+        const auto step0 = _timings.getStepCount();
+        const auto effectiveStep = _step + step0;
+        const auto simulationTime = static_cast<double>(effectiveStep) * dt * _FS_TO_PS_;
+
+        _energyOutput->write(effectiveStep, _averagePhysicalData);
+        _infoOutput->write(simulationTime, _averagePhysicalData);
 
         _averagePhysicalData = PhysicalData();
     }
