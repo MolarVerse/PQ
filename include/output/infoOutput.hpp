@@ -5,6 +5,8 @@
 #include "output.hpp"
 #include "physicalData.hpp"
 
+#include <functional>
+
 /**
  * @class InfoOutput inherits from Output
  *
@@ -13,6 +15,11 @@
  */
 class InfoOutput : public Output
 {
+private:
+    void writeHeader();
+    void writeLeft(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+    void writeRight(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+
 public:
     using Output::Output;
 

@@ -1,5 +1,6 @@
 #include "engine.hpp"
 #include "constants.hpp"
+#include "progressbar.hpp"
 
 #include <iostream>
 
@@ -7,6 +8,8 @@ using namespace std;
 
 void Engine::run()
 {
+    _timings.beginTimer();
+
     _simulationBox.calculateDegreesOfFreedom();
     _simulationBox.calculateCenterOfMassMolecules();
 
@@ -16,13 +19,25 @@ void Engine::run()
     _stdoutOutput->writeInitialMomentum(_physicalData.getMomentum());
 
     const auto numberOfSteps = _timings.getNumberOfSteps();
+    progressbar bar(numberOfSteps);
 
     for (; _step <= numberOfSteps; ++_step)
     {
+        bar.update();
         takeStep();
 
         writeOutput();
     }
+
+    _timings.endTimer();
+
+    cout << endl
+         << endl;
+
+    cout << "Total time: " << _timings.calculateElapsedTime() * 1e-6 << endl;
+
+    cout << endl
+         << endl;
 
     cout << "Couloumb energy: " << _physicalData.getCoulombEnergy() << endl;
     cout << "Non Couloumb energy: " << _physicalData.getNonCoulombEnergy() << endl;
@@ -73,9 +88,15 @@ void Engine::writeOutput()
         const auto effectiveStep = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * _FS_TO_PS_;
 
+        // calclooptime after writting trajectory files
+
         _energyOutput->write(effectiveStep, _averagePhysicalData);
         _infoOutput->write(simulationTime, _averagePhysicalData);
 
         _averagePhysicalData = PhysicalData();
+    }
+    else
+    {
+        // calclooptime
     }
 }

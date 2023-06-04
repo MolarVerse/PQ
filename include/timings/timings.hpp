@@ -3,6 +3,9 @@
 #define _TIMINGS_H_
 
 #include <cstddef>
+#include <chrono>
+
+using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 /**
  * @class Timings
@@ -23,7 +26,15 @@ private:
     double _timestep = 0;
     size_t _numberOfSteps = 0;
 
+    Time _start;
+    Time _end;
+
 public:
+    void beginTimer() { _start = std::chrono::high_resolution_clock::now(); };
+    void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
+
+    [[nodiscard]] long calculateElapsedTime() const { return std::chrono::duration_cast<std::chrono::nanoseconds>(_end - _start).count(); }
+
     // standard getter and setters
     [[nodiscard]] size_t getStepCount() const { return _stepCount; };
     void setStepCount(const size_t stepCount) { _stepCount = stepCount; };
