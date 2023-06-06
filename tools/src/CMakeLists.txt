@@ -1,1 +1,4 @@
 add_subdirectory(engine)
+add_subdirectory(frame)
+add_subdirectory(analysis)
+add_subdirectory(configurationReader)

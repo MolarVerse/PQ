@@ -1,7 +1,12 @@
 .vscode/
 .cache/
+
 **/gmon.out
+
 build*
 _build*
+.build*
+
 bin/
+
 examples/*/testset*
