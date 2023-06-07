@@ -2,12 +2,12 @@
 
 using namespace std;
 
-void TrajectoryToCom::setup()
+void TrajToCom::setup()
 {
     _configReader = ConfigurationReader(_xyzFilenames);
 }
 
-void TrajectoryToCom::run()
+void TrajToCom::run()
 {
     while (_configReader.nextFrame())
     {

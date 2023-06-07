@@ -27,6 +27,7 @@ private:
     ExtxyzReader _extxyzReader;
 
 public:
+    ConfigurationReader() = default;
     explicit ConfigurationReader(const std::vector<std::string> &filenames);
 
     ConfigurationReader &operator=(const ConfigurationReader &) { return *this; };

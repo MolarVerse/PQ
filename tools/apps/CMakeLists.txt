@@ -1,4 +1,4 @@
-set(EXECUTABLES analysis trajectoryToCom)
+set(EXECUTABLES analysis trajectoryToCenterOfMass)
 
 foreach(executable ${EXECUTABLES})
     add_executable(${executable}
@@ -18,6 +18,8 @@ foreach(executable ${EXECUTABLES})
 
     target_link_libraries(${executable}
         PUBLIC
+        engineTools
+        config
     )
 
     install(TARGETS ${executable}
