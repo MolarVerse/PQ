@@ -31,22 +31,11 @@ void Engine::run()
 void Engine::parseAnalysisRunners()
 {
 
-    try
-    {
-        auto pos = _executableName.find_last_of("/");
-        _executableName = _executableName.substr(pos + 1);
-    }
-    catch (const std::exception &e)
-    {
-    }
-
     addAnalysisRunnerKeys();
 
-    try
-    {
+    if (_executableName != "analysis")
         _analysisRunnerKeys.at(_executableName)(_inputFilename);
-    }
-    catch (const std::out_of_range &e)
+    else
     {
         toml::table tbl;
         try
@@ -65,15 +54,20 @@ void Engine::parseAnalysisRunners()
 
         try
         {
-            const toml::array *runners = tbl["analysis"]["runners"].as_array();
+            auto runners = tbl.get_as<toml::array>("analysis.runners");
             runners->for_each(
-                [this](auto &&runner)
+                [&](const toml::value<string> &runner)
                 {
-                string tmpRunner = runner.as_string()->value_or("");
-                _analysisRunnerKeys.at(tmpRunner)(_inputFilename); });
+                    const auto runnerName = runner.value_or("none");
+
+                    _analysisRunnerKeys.at(runnerName)(_inputFilename);
+                }
+
+            );
         }
-        catch (const std::out_of_range &e)
+        catch (const std::out_of_range &err)
         {
+            exit(-1);
         }
     }
 }

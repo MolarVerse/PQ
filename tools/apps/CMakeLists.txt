@@ -22,6 +22,14 @@ foreach(executable ${EXECUTABLES})
         config
     )
 
+    target_compile_options(${executable}
+        PRIVATE
+        "-D${executable}"
+    )
+
+    get_target_property(cflags ${executable} COMPILE_OPTIONS)
+    message(STATUS "Compile options for ${executable}: ${cflags}")
+
     install(TARGETS ${executable}
         RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/tools/
     )

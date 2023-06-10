@@ -5,6 +5,15 @@
 
 using namespace std;
 
+string getExecutableName()
+{
+#ifdef trajectoryToCenterOfMass
+    return "trajectoryToCenterOfMass";
+#else
+    return "analysis";
+#endif
+}
+
 int main(int argc, char **argv)
 {
     // like in main.cpp of pimd_qmcf not best way TODO:
@@ -14,7 +23,9 @@ int main(int argc, char **argv)
 
     std::cout << "Hello, world!" << std::endl;
 
-    auto engine = Engine(argv[0], argv[1]);
+    auto executableName = getExecutableName();
+
+    auto engine = Engine(executableName, argv[1]);
 
     engine.run();
 
