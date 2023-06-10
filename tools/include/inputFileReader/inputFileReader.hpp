@@ -3,8 +3,10 @@
 #define _INPUTFILEREADER_HPP_
 
 #include <string>
+#include <memory>
 
 #include "toml.hpp"
+#include "analysisRunner.hpp"
 
 class InputFileReader
 {
@@ -15,10 +17,10 @@ private:
     void parseXYZFILES();
 
 public:
-    InputFileReader(const std::string_view &filename) : _filename(filename) {}
+    explicit InputFileReader(const std::string_view &filename) : _filename(filename) {}
     virtual ~InputFileReader() = default;
 
-    virtual void read();
+    virtual AnalysisRunner &read() = 0;
 };
 
 #endif

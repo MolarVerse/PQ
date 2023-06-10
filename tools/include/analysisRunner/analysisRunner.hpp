@@ -6,7 +6,6 @@
 #include <string>
 
 #include "frame.hpp"
-#include "inputFileReader.hpp"
 
 class AnalysisRunner
 {
@@ -17,11 +16,8 @@ protected:
 
     std::vector<Frame> _frames;
 
-    InputFileReader _inputFileReader;
-
 public:
     AnalysisRunner() = default;
-    virtual ~AnalysisRunner() = default;
 
     virtual void setup() = 0;
     virtual void run() = 0;

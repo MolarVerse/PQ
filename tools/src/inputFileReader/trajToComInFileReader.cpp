@@ -1,5 +1,5 @@
 #include "trajToComInFileReader.hpp"
 
-void TrajToComInFileReader::read()
+AnalysisRunner &TrajToComInFileReader::read()
 {
 }

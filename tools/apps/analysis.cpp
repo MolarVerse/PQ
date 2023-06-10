@@ -16,5 +16,7 @@ int main(int argc, char **argv)
 
     auto engine = Engine(argv[0], argv[1]);
 
+    engine.run();
+
     return 0;
 }

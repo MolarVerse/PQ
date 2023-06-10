@@ -7,7 +7,9 @@
 class TrajToComInFileReader : public InputFileReader
 {
 public:
-    void read();
+    explicit TrajToComInFileReader(const std::string_view &filename) : InputFileReader(filename) {}
+
+    AnalysisRunner &read() override;
 };
 
 #endif // _TRAJECTORYTOCOM_INPUTINPUTFILEREADER_HPP_

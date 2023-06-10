@@ -12,4 +12,5 @@ target_include_directories(engineTools
 target_link_libraries(engineTools
     PUBLIC
     analysisRunnerTools
+    inputFileReaderTools
 )
