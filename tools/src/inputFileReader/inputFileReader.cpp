@@ -2,6 +2,7 @@
 #include "tomlExtensions.hpp"
 
 #include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -27,6 +28,11 @@ vector<string> InputFileReader::parseXYZFiles()
     const auto input = _tomlTable["files"]["xyz"].as_array();
 
     return tomlExtensions::tomlArrayToVector<string>(input);
+}
+
+string InputFileReader::parseXYZOutputFile()
+{
+    return _tomlTable["outputfiles"]["xyz"].value_or("");
 }
 
 vector<size_t> InputFileReader::parseAtomIndices()

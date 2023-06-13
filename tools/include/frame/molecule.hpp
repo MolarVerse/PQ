@@ -10,13 +10,21 @@ class Molecule
 {
 private:
     size_t _nAtoms;
-    std::vector<Atom> _atoms;
+
+    double _molMass = 0.0;
+    Vec3D _centerOfMass = {0.0, 0.0, 0.0};
+
+    std::vector<Atom *> _atoms;
 
 public:
     Molecule() = default;
-    explicit Molecule(const size_t nAtoms);
+    explicit Molecule(const size_t nAtoms) : _nAtoms(nAtoms) {}
 
-    void addAtom(const Atom &atom) { _atoms.push_back(atom); }
+    void calculateCenterOfMass(const Vec3D &);
+
+    [[nodiscard]] Vec3D getCenterOfMass() const { return _centerOfMass; }
+
+    void addAtom(Atom *atom) { _atoms.push_back(atom); }
 };
 
 #endif // _MOLECULE_HPP_

@@ -14,4 +14,5 @@ target_link_libraries(analysisRunnerTools
     PUBLIC
     frameTools
     configurationReaderTools
+    outputTools
 )

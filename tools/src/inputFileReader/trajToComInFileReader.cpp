@@ -17,5 +17,8 @@ AnalysisRunner &TrajToComInFileReader::read()
     auto numberOfAtomsPerMolecule = parseNumberOfAtomsPerMolecule();
     _runner.setNumberOfAtomsPerMolecule(numberOfAtomsPerMolecule);
 
+    auto outputXYZ = parseXYZOutputFile();
+    _runner.setXyzOutFile(outputXYZ);
+
     return _runner;
 }

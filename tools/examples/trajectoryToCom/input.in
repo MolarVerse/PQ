@@ -6,6 +6,9 @@ runners = [
 [files]
 xyz = ["umcm-9-md-19.xyz"]
 
+[outputfiles]
+xyz = "output.xyz"
+
 [system]
 atomIndices = [
     617,

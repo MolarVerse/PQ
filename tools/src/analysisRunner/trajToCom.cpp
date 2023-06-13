@@ -18,36 +18,12 @@ void TrajToCom::run()
 
         setupMolecules();
 
-        vector<Vec3D> coms;
-        for (size_t i = 0; i < _atomIndices.size(); ++i)
+        for (auto &molecule : _frame.getMolecules())
         {
-            double molMass = 0.0;
-            Vec3D com = {0.0, 0.0, 0.0};
-
-            for (size_t j = 0; j < _numberOfAtomsPerMolecule; ++j)
-            {
-                const size_t atomIndex = _atomIndices[i];
-                const auto atomName = _frame.getElementType(atomIndex);
-                const double mass = atomMassMap.at(atomName);
-
-                com += _frame.getPosition(atomIndex) * mass;
-
-                molMass += mass;
-                i += 1;
-            }
-            i -= 1;
-            com /= molMass;
-
-            coms.push_back(com);
+            molecule.calculateCenterOfMass(_frame.getBox());
         }
 
-        cout << coms.size() << endl;
-        cout << endl;
-
-        for (const auto &com : coms)
-        {
-            cout << "COM " << com[0] << " " << com[1] << " " << com[2] << endl;
-        }
+        _trajOutput->write(_frame);
     }
 }
 
@@ -59,9 +35,11 @@ void TrajToCom::setupMolecules()
         for (size_t j = 0; j < _numberOfAtomsPerMolecule; ++j)
         {
             const size_t atomIndex = _atomIndices[i];
-            molecule.addAtom(_frame.getAtom(atomIndex);
+            molecule.addAtom(&(_frame.getAtom(atomIndex)));
             i += 1;
         }
         i -= 1;
+
+        _frame.addMolecule(molecule);
     }
 }

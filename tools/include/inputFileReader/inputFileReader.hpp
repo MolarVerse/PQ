@@ -19,6 +19,7 @@ protected:
 
     size_t parseNumberOfAtomsPerMolecule();
 
+    std::string parseXYZOutputFile();
     std::vector<std::string> parseXYZFiles();
     std::vector<size_t> parseAtomIndices();
 

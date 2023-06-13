@@ -13,4 +13,5 @@ target_include_directories(frameTools
 target_link_libraries(frameTools
     PUBLIC
     math
+    config
 )
