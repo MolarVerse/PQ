@@ -12,10 +12,6 @@ class AnalysisRunner
 protected:
     std::string _inputFilename;
 
-    std::vector<std::string> _xyzFilenames;
-
-    std::vector<Frame> _frames;
-
 public:
     AnalysisRunner() = default;
 

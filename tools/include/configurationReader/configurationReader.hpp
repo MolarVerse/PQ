@@ -30,8 +30,6 @@ public:
     ConfigurationReader() = default;
     explicit ConfigurationReader(const std::vector<std::string> &filenames);
 
-    ConfigurationReader &operator=(const ConfigurationReader &) { return *this; };
-
     bool nextFrame();
     Frame &getFrame();
     void parseHeader();

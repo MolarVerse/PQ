@@ -1,9 +1,0 @@
-[analysis]
-runners = [
-    "trajectoryToCenterOfMass"
-]
-
-dt = 0.1
-
-[meta]
-dt = 0.2

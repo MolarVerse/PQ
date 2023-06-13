@@ -4,20 +4,26 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "toml.hpp"
 #include "analysisRunner.hpp"
 
 class InputFileReader
 {
-private:
-    std::string _filename;
+protected:
+    std::string _inputFilename;
     toml::table _tomlTable;
 
-    void parseXYZFILES();
+    void parseTomlFile();
+
+    size_t parseNumberOfAtomsPerMolecule();
+
+    std::vector<std::string> parseXYZFiles();
+    std::vector<size_t> parseAtomIndices();
 
 public:
-    explicit InputFileReader(const std::string_view &filename) : _filename(filename) {}
+    explicit InputFileReader(const std::string_view &filename) : _inputFilename(filename) {}
     virtual ~InputFileReader() = default;
 
     virtual AnalysisRunner &read() = 0;

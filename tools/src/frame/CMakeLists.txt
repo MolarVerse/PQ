@@ -1,4 +1,6 @@
 add_library(frameTools
+    atom.cpp
+    molecule.cpp
     frame.cpp
 )
 

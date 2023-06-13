@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "trajectoryToCom.hpp"
 #include "trajToComInFileReader.hpp"
 
 #include <iostream>
@@ -14,9 +13,7 @@ void Engine::addAnalysisRunnerKeys()
 }
 
 Engine::Engine(const string_view &executableName, const string_view &inputFileName)
-    : _executableName(executableName), _inputFilename(inputFileName)
-{
-}
+    : _executableName(executableName), _inputFilename(inputFileName) {}
 
 void Engine::run()
 {
@@ -25,6 +22,12 @@ void Engine::run()
     for (const auto inputFileReader : _inputFileReaders)
     {
         _analysisRunners.push_back(&inputFileReader->read());
+    }
+
+    for (const auto analysisRunner : _analysisRunners)
+    {
+        analysisRunner->setup();
+        analysisRunner->run();
     }
 }
 
@@ -54,7 +57,7 @@ void Engine::parseAnalysisRunners()
 
         try
         {
-            auto runners = tbl.get_as<toml::array>("analysis.runners");
+            const auto runners = tbl["analysis"]["runners"].as_array();
             runners->for_each(
                 [&](const toml::value<string> &runner)
                 {
@@ -67,6 +70,8 @@ void Engine::parseAnalysisRunners()
         }
         catch (const std::out_of_range &err)
         {
+            cerr << "Error parsing file '" << _inputFilename << "':\n"
+                 << "  " << err.what() << "\n";
             exit(-1);
         }
     }

@@ -13,4 +13,5 @@ target_include_directories(inputFileReaderTools
 target_link_libraries(inputFileReaderTools
     PUBLIC
     analysisRunnerTools
+    tomlExtensions
 )

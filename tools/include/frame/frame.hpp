@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 
-#include "vector3d.hpp"
+#include "atom.hpp"
+#include "molecule.hpp"
 
 class Frame
 {
@@ -13,22 +14,31 @@ private:
     size_t _nAtoms;
     Vec3D _box;
 
-    std::vector<std::string> _atomNames;
-    std::vector<double> _masses;
-
-    std::vector<Vec3D> _positions;
-    std::vector<Vec3D> _velocities;
-    std::vector<Vec3D> _forces;
+    std::vector<Atom> _atoms;
+    std::vector<Molecule> _molecules;
 
 public:
+    std::string getElementType(const size_t atomIndex) const { return _atoms[atomIndex].getElementType(); }
+
+    [[nodiscard]] Vec3D getPosition(const size_t atomIndex) const { return _atoms[atomIndex].getPosition(); }
+
     // standard getter and setter
     void setNAtoms(const size_t nAtoms) { _nAtoms = nAtoms; }
 
     void setBox(const Vec3D &box) { _box = box; }
 
-    void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); }
+    void addAtom(const Atom &atom) { _atoms.push_back(atom); }
+    [[nodiscard]] Atom getAtom(const size_t atomIndex) const { return _atoms[atomIndex]; }
 
-    void addPosition(const Vec3D &position) { _positions.push_back(position); }
+    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
+
+    [[nodiscard]] size_t getNAtoms() const { return _nAtoms; }
+
+    [[nodiscard]] Vec3D getBox() const { return _box; }
+
+    [[nodiscard]] std::vector<Atom> getAtoms() const { return _atoms; }
+
+    [[nodiscard]] std::vector<Molecule> getMolecules() const { return _molecules; }
 };
 
 #endif // _FRAME_HPP_

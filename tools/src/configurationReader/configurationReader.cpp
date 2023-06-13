@@ -1,6 +1,8 @@
 #include "configurationReader.hpp"
+#include "atom.hpp"
 
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -14,11 +16,11 @@ bool ConfigurationReader::nextFrame()
     if (_fp.peek() == EOF)
     {
         _fp.close();
+        _filenames.erase(_filenames.begin());
         if (_filenames.empty())
             return false;
         else
         {
-            _filenames.erase(_filenames.begin());
             _fp.open(_filenames[0]);
             return true;
         }
@@ -46,7 +48,7 @@ void ConfigurationReader::parseHeader()
 
     istringstream iss(line.data());
 
-    size_t nAtoms = 0;
+    size_t nAtoms;
     Vec3D box;
 
     iss >> nAtoms;
@@ -71,6 +73,8 @@ void ConfigurationReader::parseHeader()
             throw runtime_error("Box is not set in first frame");
         else
             _box = box;
+
+        _nAtoms = nAtoms;
     }
 
     _frame.setBox(_box);
@@ -92,7 +96,9 @@ void ConfigurationReader::parseAtoms()
         iss >> atomName;
         iss >> position[0] >> position[1] >> position[2];
 
-        _frame.addAtomName(atomName);
-        _frame.addPosition(position);
+        Atom atom(atomName);
+        atom.setPosition(position);
+
+        _frame.addAtom(atom);
     }
 }
