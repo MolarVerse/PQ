@@ -22,7 +22,7 @@ private:
     size_t _nFrames = 0;
     Vec3D _box;
 
-    Frame _frame;
+    frameTools::Frame _frame;
 
     ExtxyzReader _extxyzReader;
 
@@ -31,7 +31,7 @@ public:
     explicit ConfigurationReader(const std::vector<std::string> &filenames);
 
     bool nextFrame();
-    Frame &getFrame();
+    frameTools::Frame &getFrame();
     void parseHeader();
     void parseAtoms();
     [[nodiscard]] bool isBoxSet(const Vec3D &box) const { return box != Vec3D(0.0, 0.0, 0.0); }

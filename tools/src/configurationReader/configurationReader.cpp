@@ -5,6 +5,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace frameTools;
 
 ConfigurationReader::ConfigurationReader(const vector<string> &filenames) : _filenames(filenames)
 {

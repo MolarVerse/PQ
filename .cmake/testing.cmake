@@ -1,4 +1,6 @@
 enable_testing()
+option(INSTALL_GMOCK "install Googletest's GMock?" OFF)
+option(INSTALL_GTEST "install Googletest's GTest?" OFF)
 find_package(GTest CONFIG) # use googletest
 
 if(NOT ${GTest_FOUND})

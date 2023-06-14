@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <iterator>
 #include <cmath>
+#include <iostream>
 
 template <typename T>
 using iterator = typename std::array<T, 3>::iterator;
@@ -104,6 +105,7 @@ public:
     friend T sum(Vector3D<T> v) { return v._x + v._y + v._z; };
     friend T prod(Vector3D<T> v) { return v._x * v._y * v._z; };
     friend T mean(Vector3D<T> v) { return sum(v) / 3; };
+    friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v) { return os << v._x << " " << v._y << " " << v._z; };
 };
 
 using Vec3D = Vector3D<double>;

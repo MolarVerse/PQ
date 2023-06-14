@@ -16,7 +16,7 @@ private:
     std::vector<std::string> _xyzFiles;
     std::vector<size_t> _atomIndices;
 
-    Frame _frame;
+    frameTools::Frame _frame;
 
     ConfigurationReader _configReader;
 
@@ -29,7 +29,7 @@ public:
     void setup() override;
     void run() override;
 
-    void setNumberOfAtomsPerMolecule(size_t numberOfAtomsPerMolecule) { _numberOfAtomsPerMolecule = numberOfAtomsPerMolecule; }
+    void setNumberOfAtomsPerMolecule(const size_t numberOfAtomsPerMolecule) { _numberOfAtomsPerMolecule = numberOfAtomsPerMolecule; }
 
     void setXyzFiles(const std::vector<std::string> &filenames) { _xyzFiles = filenames; }
 

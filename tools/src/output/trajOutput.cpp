@@ -1,12 +1,14 @@
 #include "trajOutput.hpp"
 
 using namespace std;
+using namespace frameTools;
 
 void TrajOutput::write(Frame &frame)
 {
     const auto &molecules = frame.getMolecules();
+    const auto &box = frame.getBox();
 
-    _fp << molecules.size() << endl;
+    _fp << molecules.size() << " " << box << endl;
     _fp << endl;
 
     for (const auto &molecule : molecules)

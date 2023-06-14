@@ -14,3 +14,7 @@ target_link_libraries(engineTools
     analysisRunnerTools
     inputFileReaderTools
 )
+
+install(TARGETS engineTools
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

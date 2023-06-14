@@ -31,6 +31,6 @@ foreach(executable ${EXECUTABLES})
     message(STATUS "Compile options for ${executable}: ${cflags}")
 
     install(TARGETS ${executable}
-        RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/tools/
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/tools/
     )
 endforeach()

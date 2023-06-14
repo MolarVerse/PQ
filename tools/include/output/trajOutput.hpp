@@ -10,7 +10,7 @@ class TrajOutput : public Output
 public:
     using Output::Output;
 
-    void write(Frame &);
+    void write(frameTools::Frame &);
 };
 
 #endif

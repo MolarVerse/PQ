@@ -21,8 +21,6 @@ int main(int argc, char **argv)
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    std::cout << "Hello, world!" << std::endl;
-
     auto executableName = getExecutableName();
 
     auto engine = Engine(executableName, argv[1]);

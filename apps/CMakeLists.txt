@@ -25,5 +25,5 @@ target_link_libraries(pimd_qmcf
 )
 
 install(TARGETS pimd_qmcf
-  RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )
