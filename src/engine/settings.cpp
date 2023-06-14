@@ -18,3 +18,11 @@ void Settings::setRelaxationTime(double relaxationTime)
     else
         _relaxationTime = make_pair(true, relaxationTime);
 }
+
+void Settings::setTauManostat(double tau)
+{
+    if (tau < 0)
+        throw InputFileException("Relaxation time of manostat must be positive");
+    else
+        _tauManostat = make_pair(true, tau);
+}

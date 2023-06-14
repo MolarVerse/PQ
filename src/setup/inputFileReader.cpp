@@ -55,7 +55,11 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
 
     addKeyword(string("thermostat"), &InputFileReader::parseThermostat, false);
     addKeyword(string("temp"), &InputFileReader::parseTemperature, false);
-    addKeyword(string("t_relaxation"), &InputFileReader::parseRelaxationTime, false);
+    addKeyword(string("t_relaxation"), &InputFileReader::parseThermostatRelaxationTime, false);
+
+    addKeyword(string("manostat"), &InputFileReader::parseManostat, false);
+    addKeyword(string("pressure"), &InputFileReader::parsePressure, false);
+    addKeyword(string("p_relaxation"), &InputFileReader::parseManostatRelaxationTime, false);
 }
 
 /**
@@ -170,6 +174,7 @@ void InputFileReader::postProcess()
     _engine.getSettings().setMoldescriptorFilename(_engine.getSettings().getGuffPath() + "/" + _engine.getSettings().getMoldescriptorFilename());
 
     setupThermostat();
+    setupManostat();
 }
 
 void InputFileReader::setupThermostat() // TODO: include warnings if value set but not used
@@ -193,4 +198,27 @@ void InputFileReader::setupThermostat() // TODO: include warnings if value set b
     }
 
     _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
+}
+
+void InputFileReader::setupManostat() // TODO: include warnings if value set but not used
+{
+    if (_engine.getSettings().getManostat() == "berendsen")
+    {
+        if (!_engine.getSettings().getManostatSet())
+            throw InputFileException("Pressure not set for Berendsen manostat");
+
+        if (!_engine.getSettings().getTauManostatSet())
+        {
+            _engine._stdoutOutput->writeRelaxationTimeManostatWarning();
+            _engine._logOutput->writeRelaxationTimeManostatWarning();
+        }
+
+        _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(), _engine.getSettings().getTauManostat() * _PS_TO_FS_);
+    }
+    else
+    {
+        // warnings if values set but not used
+    }
+
+    _engine._manostat->setTimestep(_engine.getTimings().getTimestep());
 }

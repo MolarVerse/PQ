@@ -118,3 +118,9 @@ void Box::applyPBC(Vec3D &dxyz) const
 {
     dxyz -= _boxDimensions * round(dxyz / _boxDimensions);
 }
+
+void Box::scaleBox(const Vec3D &scaleFactors)
+{
+    _boxDimensions *= scaleFactors;
+    calculateVolume();
+}

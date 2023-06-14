@@ -5,18 +5,18 @@
 
 using namespace std;
 
-void Thermostat::calculateTemperature(const SimulationBox &simulationBox, PhysicalData &physicalData)
+void Thermostat::calculateTemperature(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
     auto temperature = 0.0;
 
-    for (const auto &molecule : simulationBox._molecules)
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass = molecule.getMass(i);
+            const auto mass = molecule.getAtomMass(i);
 
             temperature += mass * normSquared(velocities);
         }
@@ -39,7 +39,7 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
 
     const auto berendsenFactor = sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
 
-    for (auto &molecule : simulationBox._molecules)
+    for (auto &molecule : simulationBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
@@ -49,7 +49,7 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
 
             velocities *= berendsenFactor;
 
-            molecule.setAtomVelocities(i, velocities);
+            molecule.setAtomVelocity(i, velocities);
         }
     }
 

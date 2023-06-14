@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void PhysicalData::calculateKineticEnergyAndMomentum(const SimulationBox &simulationBox)
+void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
 {
     auto momentum = Vec3D();
 
@@ -14,7 +14,7 @@ void PhysicalData::calculateKineticEnergyAndMomentum(const SimulationBox &simula
     _kineticEnergyAtomicVector = Vec3D();
     _kineticEnergyMolecularVector = Vec3D();
 
-    for (const auto &molecule : simulationBox._molecules)
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
         auto momentumSquared = Vec3D();
@@ -22,7 +22,7 @@ void PhysicalData::calculateKineticEnergyAndMomentum(const SimulationBox &simula
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass = molecule.getMass(i);
+            const auto mass = molecule.getAtomMass(i);
 
             momentum = velocities * mass;
 

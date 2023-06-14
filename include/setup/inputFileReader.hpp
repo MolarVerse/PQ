@@ -11,6 +11,9 @@
 #include "exceptions.hpp"
 namespace Setup::InputFileReader
 {
+    class InputFileReader;
+    using parseFunc = void (InputFileReader::*)(const std::vector<std::string> &);
+
     /**
      * @class InputFileReader
      *
@@ -23,7 +26,7 @@ namespace Setup::InputFileReader
         std::string _filename;
         Engine &_engine;
 
-        std::map<std::string, void (InputFileReader::*)(const std::vector<std::string> &)> _keywordFuncMap;
+        std::map<std::string, parseFunc> _keywordFuncMap;
         std::map<std::string, int> _keywordCountMap;
         std::map<std::string, bool> _keywordRequiredMap;
 
@@ -76,9 +79,13 @@ namespace Setup::InputFileReader
 
         void parseThermostat(const std::vector<std::string> &);
         void parseTemperature(const std::vector<std::string> &);
-        void parseRelaxationTime(const std::vector<std::string> &);
+        void parseThermostatRelaxationTime(const std::vector<std::string> &);
 
-        void addKeyword(const std::string &, void (InputFileReader::*)(const std::vector<std::string> &), bool);
+        void parseManostat(const std::vector<std::string> &);
+        void parsePressure(const std::vector<std::string> &);
+        void parseManostatRelaxationTime(const std::vector<std::string> &);
+
+        void addKeyword(const std::string &, parseFunc, bool);
 
         void process(const std::vector<std::string> &);
 
@@ -91,6 +98,7 @@ namespace Setup::InputFileReader
         bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; };
 
         void setupThermostat();
+        void setupManostat();
     };
 
     void checkEqualSign(const std::string_view &view, const size_t);

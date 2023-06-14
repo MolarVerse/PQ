@@ -20,8 +20,8 @@ void CellList::setup(const SimulationBox &simulationBox)
 
 void CellList::determineCellSize(const SimulationBox &simulationBox)
 {
-    const auto boxDimensions = simulationBox._box.getBoxDimensions();
-    _cellSize = boxDimensions / static_cast<Vec3D>(_nCells);
+    const auto box = simulationBox.getBoxDimensions();
+    _cellSize = box / static_cast<Vec3D>(_nCells);
 }
 
 void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
@@ -36,12 +36,12 @@ void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
                 const auto cellIndex = i * _nCells[1] * _nCells[2] + j * _nCells[2] + k;
                 auto *cell = &_cells[cellIndex];
 
-                const auto boxDimensions = simulationBox._box.getBoxDimensions();
+                const auto box = simulationBox.getBoxDimensions();
 
                 const auto ijk = Vec3Dul(i, j, k);
 
-                const auto lowerBoundary = -boxDimensions / 2.0 + static_cast<Vec3D>(ijk) * _cellSize;
-                const auto upperBoundary = -boxDimensions / 2.0 + static_cast<Vec3D>((ijk + 1)) * _cellSize;
+                const auto lowerBoundary = -box / 2.0 + static_cast<Vec3D>(ijk) * _cellSize;
+                const auto upperBoundary = -box / 2.0 + static_cast<Vec3D>((ijk + 1)) * _cellSize;
 
                 cell->setLowerBoundary(lowerBoundary);
                 cell->setUpperBoundary(upperBoundary);
@@ -129,7 +129,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
     for (size_t i = 0; i < numberOfMolecules; ++i)
     {
-        Molecule *molecule = &simulationBox._molecules[i];
+        auto *molecule = &simulationBox.getMolecule(i);
         auto mapCellIndexToAtomIndex = map<size_t, std::vector<size_t>>();
         const size_t numberOfAtoms = molecule->getNumberOfAtoms();
 

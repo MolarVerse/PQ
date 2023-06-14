@@ -42,6 +42,8 @@ public:
 
     void applyPBC(Vec3D &) const;
 
+    void scaleBox(const Vec3D &);
+
     [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); };
 
     // standard getter and setters

@@ -23,18 +23,11 @@ public:
     explicit Thermostat(const double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
-    void calculateTemperature(const SimulationBox &, PhysicalData &);
+    void calculateTemperature(SimulationBox &, PhysicalData &);
 
     virtual void applyThermostat(SimulationBox &, PhysicalData &);
 
     // standard getters and setters
-    [[nodiscard]] double getTemperature() const { return _temperature; }
-    void setTemperature(const double temperature) { _temperature = temperature; }
-
-    [[nodiscard]] double getTargetTemperature() const { return _targetTemperature; }
-    void setTargetTemperature(const double targetTemperature) { _targetTemperature = targetTemperature; }
-
-    [[nodiscard]] double getTimestep() const { return _timestep; }
     void setTimestep(const double timestep) { _timestep = timestep; }
 };
 

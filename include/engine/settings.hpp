@@ -28,6 +28,10 @@ private:
     std::pair<bool, double> _temperature;
     std::pair<bool, double> _relaxationTime = std::make_pair(false, 0.1); // pay attention here default value in ps
 
+    std::pair<bool, std::string> _manostat; // pair.first = check if thermostat was set
+    std::pair<bool, double> _pressure;
+    std::pair<bool, double> _tauManostat = std::make_pair(false, 1.0); // pay attention here default value in ps
+
 public:
     // standard getter and setters
     std::string getStartFilename() const { return _startFilename; };
@@ -53,6 +57,18 @@ public:
     [[nodiscard]] bool getRelaxationTimeSet() const { return _relaxationTime.first; };
     [[nodiscard]] double getRelaxationTime() const { return _relaxationTime.second; };
     void setRelaxationTime(double relaxationTime);
+
+    [[nodiscard]] bool getManostatSet() const { return _manostat.first; };
+    std::string getManostat() const { return _manostat.second; };
+    void setManostat(std::string_view manostat) { _manostat = std::make_pair(true, manostat); };
+
+    [[nodiscard]] bool getPressureSet() const { return _pressure.first; };
+    [[nodiscard]] double getPressure() const { return _pressure.second; };
+    void setPressure(double pressure) { _pressure = std::make_pair(true, pressure); }
+
+    [[nodiscard]] bool getTauManostatSet() const { return _tauManostat.first; };
+    [[nodiscard]] double getTauManostat() const { return _tauManostat.second; };
+    void setTauManostat(double tauManostat);
 };
 
 #endif

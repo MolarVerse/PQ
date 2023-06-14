@@ -19,13 +19,13 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
     for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
     {
-        auto &molecule_i = simBox._molecules[mol_i];
+        auto &molecule_i = simBox.getMolecule(mol_i);
         const size_t moltype_i = molecule_i.getMoltype();
         const size_t numberOfAtomsinMolecule_i = molecule_i.getNumberOfAtoms();
 
         for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
         {
-            auto &molecule_j = simBox._molecules[mol_j];
+            auto &molecule_j = simBox.getMolecule(mol_j);
             const size_t moltype_j = molecule_j.getMoltype();
             const size_t numberOfAtomsinMolecule_j = molecule_j.getNumberOfAtoms();
 

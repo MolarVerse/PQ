@@ -33,9 +33,10 @@ private:
 
     double _rcCutOff = _COULOMB_CUT_OFF_DEFAULT_;
 
+    std::vector<Molecule> _molecules;
+
 public:
     std::vector<Molecule> _moleculeTypes;
-    std::vector<Molecule> _molecules;
 
     std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> _guffCoefficients;
     std::vector<std::vector<std::vector<std::vector<double>>>> _rncCutOffs;
@@ -61,11 +62,17 @@ public:
 
     void calculateCenterOfMassMolecules();
 
-    // standard getters and setters
+    void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); };
 
+    // standard getters and setters
+    [[nodiscard]] double getVolume() const { return _box.getVolume(); }
+    [[nodiscard]] double getDensity() const { return _box.getDensity(); }
+    [[nodiscard]] Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
     [[nodiscard]] Box getBox() const { return _box; };
 
-    [[nodiscard]] std::vector<Molecule> getMolecules() const { return _molecules; };
+    [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; };
+    [[nodiscard]] Molecule &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; };
+    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); };
 
     void setWaterType(const int waterType) { _waterType = waterType; };
     [[nodiscard]] int getWaterType() const { return _waterType; };

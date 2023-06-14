@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void TrajectoryOutput::writexyz(const SimulationBox &simBox)
+void TrajectoryOutput::writexyz(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
@@ -41,7 +41,7 @@ void TrajectoryOutput::writexyz(const SimulationBox &simBox)
     }
 }
 
-void TrajectoryOutput::writeVelocities(const SimulationBox &simBox)
+void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
@@ -78,7 +78,7 @@ void TrajectoryOutput::writeVelocities(const SimulationBox &simBox)
     }
 }
 
-void TrajectoryOutput::writeForces(const SimulationBox &simBox)
+void TrajectoryOutput::writeForces(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
@@ -115,7 +115,7 @@ void TrajectoryOutput::writeForces(const SimulationBox &simBox)
     }
 }
 
-void TrajectoryOutput::writeCharges(const SimulationBox &simBox)
+void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";

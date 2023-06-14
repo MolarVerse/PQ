@@ -11,11 +11,11 @@ void Integrator::integrateVelocities(const double timestep, Molecule &molecule, 
 {
     auto velocities = molecule.getAtomVelocity(i);
     const auto forces = molecule.getAtomForce(i);
-    const auto mass = molecule.getMass(i);
+    const auto mass = molecule.getAtomMass(i);
 
     velocities += timestep * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
 
-    molecule.setAtomVelocities(i, velocities);
+    molecule.setAtomVelocity(i, velocities);
 }
 
 void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
@@ -31,9 +31,9 @@ void Integrator::integratePositions(const double timestep, Molecule &molecule, c
 
 void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
-    const auto box = simBox._box.getBoxDimensions();
+    const auto box = simBox.getBoxDimensions();
 
-    for (auto &molecule : simBox._molecules)
+    for (auto &molecule : simBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
@@ -50,7 +50,7 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 
 void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
-    for (auto &molecule : simBox._molecules)
+    for (auto &molecule : simBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

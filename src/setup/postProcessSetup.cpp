@@ -51,7 +51,7 @@ void PostProcessSetup::setAtomMasses()
 
     for (size_t moli = 0; moli < numberOfMolecules; ++moli)
     {
-        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
+        Molecule &molecule = _engine.getSimulationBox().getMolecule(moli);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
@@ -60,7 +60,7 @@ void PostProcessSetup::setAtomMasses()
             if (atomMassMap.find(keyword) == atomMassMap.end())
                 throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.addMass(atomMassMap.at(keyword));
+                molecule.addAtomMass(atomMassMap.at(keyword));
         }
     }
 }
@@ -77,7 +77,7 @@ void PostProcessSetup::setAtomicNumbers()
     for (size_t moli = 0; moli < numberOfMolecules; ++moli)
     {
 
-        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
+        Molecule &molecule = _engine.getSimulationBox().getMolecule(moli);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
@@ -103,12 +103,12 @@ void PostProcessSetup::calculateMolMass()
 
     for (size_t moli = 0; moli < numberOfMolecules; ++moli)
     {
-        Molecule &molecule = _engine.getSimulationBox()._molecules[moli];
+        Molecule &molecule = _engine.getSimulationBox().getMolecule(moli);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         double molMass = 0.0;
         for (size_t i = 0; i < numberOfAtoms; ++i)
-            molMass += molecule.getMass(i);
+            molMass += molecule.getAtomMass(i);
 
         molecule.setMolMass(molMass);
     }
@@ -121,12 +121,12 @@ void PostProcessSetup::calculateTotalMass()
 {
     double totalMass = 0.0;
 
-    for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
+    for (const Molecule &molecule : _engine.getSimulationBox().getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
-            totalMass += molecule.getMass(i);
+            totalMass += molecule.getAtomMass(i);
     }
 
     _engine.getSimulationBox()._box.setTotalMass(totalMass);
@@ -139,7 +139,7 @@ void PostProcessSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    for (const Molecule &molecule : _engine.getSimulationBox()._molecules)
+    for (const Molecule &molecule : _engine.getSimulationBox().getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
@@ -197,7 +197,7 @@ void PostProcessSetup::checkBoxSettings()
 
 void PostProcessSetup::resizeAtomShiftForces()
 {
-    for (auto &molecule : _engine.getSimulationBox()._molecules)
+    for (auto &molecule : _engine.getSimulationBox().getMolecules())
     {
         molecule.resizeAtomShiftForces();
     }

@@ -120,7 +120,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         moltype = stoul(lineElements[2]);
     }
 
-    engine.getSimulationBox()._molecules.push_back(*molecule);
+    engine.getSimulationBox().addMolecule(*molecule);
 }
 
 /**
@@ -134,7 +134,7 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
     molecule.addAtomTypeName(lineElements[0]);
 
     molecule.addAtomPositions({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    molecule.addAtomVelocities({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     molecule.addAtomForces({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 }
 

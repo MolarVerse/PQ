@@ -89,8 +89,8 @@ public:
     void addGlobalVDWType(const int globalVDWType) { _globalVDWTypes.push_back(globalVDWType); };
     [[nodiscard]] int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; };
 
-    void addMass(const double mass) { _masses.push_back(mass); };
-    [[nodiscard]] double getMass(const size_t index) const { return _masses[index]; };
+    void addAtomMass(const double mass) { _masses.push_back(mass); };
+    [[nodiscard]] double getAtomMass(const size_t index) const { return _masses[index]; };
 
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
     [[nodiscard]] int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
@@ -99,9 +99,9 @@ public:
     [[nodiscard]] Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
     void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
 
-    void addAtomVelocities(const Vec3D &velocity) { _velocities.push_back(velocity); }
+    void addAtomVelocity(const Vec3D &velocity) { _velocities.push_back(velocity); }
     [[nodiscard]] Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
-    void setAtomVelocities(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }
+    void setAtomVelocity(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }
 
     void addAtomForces(const Vec3D &force) { _forces.push_back(force); }
     void addAtomForces(const size_t index, const Vec3D &force) { _forces[index] += force; }

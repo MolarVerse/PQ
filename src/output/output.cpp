@@ -162,6 +162,11 @@ void LogOutput::writeRelaxationTimeThermostatWarning()
     _fp << "WARNING: Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps." << endl;
 }
 
+void LogOutput::writeRelaxationTimeManostatWarning()
+{
+    _fp << "WARNING: Berendsen manostat set but no relaxation time given. Using default value of 1.0ps." << endl;
+}
+
 /**
  * @brief write warning message to stdout if Berendsen thermostat is set but no relaxation time is given
  *
@@ -171,6 +176,19 @@ void StdoutOutput::writeRelaxationTimeThermostatWarning() const
     try
     {
         throw UserInputExceptionWarning("Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps.");
+    }
+    catch (const UserInputExceptionWarning &e)
+    {
+        cout << e.what() << endl
+             << endl;
+    }
+}
+
+void StdoutOutput::writeRelaxationTimeManostatWarning() const
+{
+    try
+    {
+        throw UserInputExceptionWarning("Berendsen manostat set but no relaxation time given. Using default value of 1.0ps.");
     }
     catch (const UserInputExceptionWarning &e)
     {
