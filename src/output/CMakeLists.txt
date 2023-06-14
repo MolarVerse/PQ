@@ -17,3 +17,7 @@ target_link_libraries(output
     utilities
     physicalData
 )
+
+install(TARGETS output
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

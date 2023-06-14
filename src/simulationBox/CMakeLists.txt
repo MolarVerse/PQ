@@ -17,3 +17,7 @@ target_link_libraries(simulationBox
     config
     math
 )
+
+install(TARGETS simulationBox
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

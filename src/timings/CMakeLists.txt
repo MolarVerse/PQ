@@ -12,3 +12,7 @@ target_link_libraries(timings
     PUBLIC
     config
 )
+
+install(TARGETS timings
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

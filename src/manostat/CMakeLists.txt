@@ -14,3 +14,7 @@ target_link_libraries(manostat
     virial
     physicalData
 )
+
+install(TARGETS manostat
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

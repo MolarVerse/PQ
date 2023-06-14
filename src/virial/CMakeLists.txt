@@ -14,3 +14,7 @@ target_link_libraries(virial
     simulationBox
     physicalData
 )
+
+install(TARGETS virial
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

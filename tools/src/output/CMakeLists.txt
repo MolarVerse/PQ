@@ -13,3 +13,7 @@ target_link_libraries(outputTools
     frameTools
     output
 )
+
+install(TARGETS outputTools
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

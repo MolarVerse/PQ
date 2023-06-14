@@ -12,3 +12,7 @@ target_include_directories(tomlExtensions
 target_link_libraries(tomlExtensions
     PUBLIC
 )
+
+install(TARGETS tomlExtensions
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

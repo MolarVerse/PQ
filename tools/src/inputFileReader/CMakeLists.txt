@@ -15,3 +15,7 @@ target_link_libraries(inputFileReaderTools
     analysisRunnerTools
     tomlExtensions
 )
+
+install(TARGETS inputFileReaderTools
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

@@ -11,3 +11,7 @@ target_include_directories(math
 target_link_libraries(math
     PUBLIC
 )
+
+install(TARGETS math
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

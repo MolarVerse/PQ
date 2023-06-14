@@ -14,3 +14,7 @@ target_link_libraries(thermostat
     simulationBox
     physicalData
 )
+
+install(TARGETS thermostat
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

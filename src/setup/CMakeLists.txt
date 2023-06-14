@@ -35,3 +35,7 @@ target_link_libraries(setup
     gtest
     math
 )
+
+install(TARGETS setup
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

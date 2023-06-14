@@ -23,3 +23,7 @@ target_link_libraries(engine
     physicalData
     virial
 )
+
+install(TARGETS engine
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

@@ -13,3 +13,7 @@ target_link_libraries(potential
     physicalData
     simulationBox
 )
+
+install(TARGETS potential
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

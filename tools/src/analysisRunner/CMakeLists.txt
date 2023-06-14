@@ -16,3 +16,7 @@ target_link_libraries(analysisRunnerTools
     configurationReaderTools
     outputTools
 )
+
+install(TARGETS analysisRunnerTools
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

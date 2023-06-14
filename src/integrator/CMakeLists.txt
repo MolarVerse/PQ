@@ -14,3 +14,7 @@ target_link_libraries(integrator
     timings
     config
 )
+
+install(TARGETS integrator
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

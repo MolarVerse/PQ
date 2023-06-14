@@ -14,3 +14,7 @@ target_link_libraries(configurationReaderTools
     frameTools
     math
 )
+
+install(TARGETS configurationReaderTools
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tools/
+)

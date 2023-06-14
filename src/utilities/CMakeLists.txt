@@ -12,3 +12,7 @@ target_link_libraries(utilities
     PUBLIC
     config
 )
+
+install(TARGETS utilities
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)
