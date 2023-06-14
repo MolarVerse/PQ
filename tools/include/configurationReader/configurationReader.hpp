@@ -34,7 +34,7 @@ public:
     frameTools::Frame &getFrame();
     void parseHeader();
     void parseAtoms();
-    [[nodiscard]] bool isBoxSet(const Vec3D &box) const { return box != Vec3D(0.0, 0.0, 0.0); }
+    [[nodiscard]] bool isBoxSet(const Vec3D &box) const { return fabs(box) > 1e-15; }
 };
 
 #endif // _CONFIGURATIONREADER_HPP_

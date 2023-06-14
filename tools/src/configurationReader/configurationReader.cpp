@@ -78,6 +78,8 @@ void ConfigurationReader::parseHeader()
         _nAtoms = nAtoms;
     }
 
+    _nFrames++;
+
     _frame.setBox(_box);
     _frame.setNAtoms(nAtoms);
 }

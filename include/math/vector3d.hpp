@@ -84,6 +84,10 @@ public:
     Vector3D<T> operator/(const T rhs) const { return Vector3D<T>(_x / rhs, _y / rhs, _z / rhs); }
     Vector3D<T> operator/(const Vector3D<T> &rhs) const { return Vector3D<T>(_x / rhs._x, _y / rhs._y, _z / rhs._z); }
 
+    bool operator<(const double t) const { return _x < t && _y < t && _z < t; }
+    bool operator>(const double t) const { return _x > t && _y > t && _z > t; }
+    friend Vector3D fabs(const Vector3D &v) { return Vector3D<T>(fabs(v._x), fabs(v._y), fabs(v._z)); }
+
     constexpr iterator<T> begin() noexcept { return _xyz.begin(); };
     constexpr const_iterator<T> begin() const noexcept { return _xyz.begin(); };
     constexpr iterator<T> end() noexcept { return _xyz.end(); };
