@@ -21,7 +21,7 @@ void PhysicalData::calculateKineticEnergyAndMomentum(const SimulationBox &simula
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            const auto velocities = molecule.getAtomVelocities(i);
+            const auto velocities = molecule.getAtomVelocity(i);
             const auto mass = molecule.getMass(i);
 
             momentum = velocities * mass;

@@ -3,6 +3,16 @@
 
 using namespace std;
 
+size_t SimulationBox::getNumberOfParticles() const
+{
+    size_t numberOfParticles = 0;
+
+    for (const auto &molecule : _molecules)
+        numberOfParticles += molecule.getNumberOfAtoms();
+
+    return numberOfParticles;
+}
+
 /**
  * @brief find molecule type my moltype
  *

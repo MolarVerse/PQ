@@ -15,7 +15,7 @@ void Thermostat::calculateTemperature(const SimulationBox &simulationBox, Physic
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            const auto velocities = molecule.getAtomVelocities(i);
+            const auto velocities = molecule.getAtomVelocity(i);
             const auto mass = molecule.getMass(i);
 
             temperature += mass * normSquared(velocities);
@@ -45,7 +45,7 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            auto velocities = molecule.getAtomVelocities(i);
+            auto velocities = molecule.getAtomVelocity(i);
 
             velocities *= berendsenFactor;
 

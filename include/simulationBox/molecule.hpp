@@ -96,16 +96,16 @@ public:
     [[nodiscard]] int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
 
     void addAtomPositions(const Vec3D &position) { _positions.push_back(position); }
-    [[nodiscard]] Vec3D getAtomPositions(const size_t index) const { return _positions[index]; }
+    [[nodiscard]] Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
     void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
 
     void addAtomVelocities(const Vec3D &velocity) { _velocities.push_back(velocity); }
-    [[nodiscard]] Vec3D getAtomVelocities(const size_t index) const { return _velocities[index]; }
+    [[nodiscard]] Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
     void setAtomVelocities(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }
 
     void addAtomForces(const Vec3D &force) { _forces.push_back(force); }
     void addAtomForces(const size_t index, const Vec3D &force) { _forces[index] += force; }
-    [[nodiscard]] Vec3D getAtomForces(const size_t index) const { return _forces[index]; }
+    [[nodiscard]] Vec3D getAtomForce(const size_t index) const { return _forces[index]; }
     void setAtomForces(const size_t index, const Vec3D &force) { _forces[index] = force; }
     void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), Vec3D(0.0, 0.0, 0.0)); }
 

@@ -30,12 +30,12 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
 {
     _centerOfMass = Vec3D();
 
-    const auto positionAtom1 = getAtomPositions(0);
+    const auto positionAtom1 = getAtomPosition(0);
 
     for (size_t i = 0; i < _numberOfAtoms; ++i)
     {
         const auto mass = getMass(i);
-        const auto position = getAtomPositions(i);
+        const auto position = getAtomPosition(i);
 
         _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));
     }

@@ -37,18 +37,6 @@ public:
 };
 
 /**
- * @class TrajectoryOutput inherits from Output
- *
- * @brief Output file for xyz, vel, force files
- *
- */
-class TrajectoryOutput : public Output
-{
-public:
-    using Output::Output;
-};
-
-/**
  * @class LogOutput inherits from Output
  *
  * @brief Output file for log file

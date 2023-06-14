@@ -92,6 +92,10 @@ void Engine::writeOutput()
 
         _energyOutput->write(effectiveStep, _averagePhysicalData);
         _infoOutput->write(simulationTime, _averagePhysicalData);
+        _xyzOutput->writexyz(_simulationBox);
+        _velOutput->writeVelocities(_simulationBox);
+        _forceOutput->writeForces(_simulationBox);
+        _chargeOutput->writeCharges(_simulationBox);
 
         _averagePhysicalData = PhysicalData();
     }

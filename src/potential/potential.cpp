@@ -33,8 +33,8 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
             {
                 for (size_t atom_j = 0; atom_j < numberOfAtomsinMolecule_j; ++atom_j)
                 {
-                    const auto xyz_i = molecule_i.getAtomPositions(atom_i);
-                    const auto xyz_j = molecule_j.getAtomPositions(atom_j);
+                    const auto xyz_i = molecule_i.getAtomPosition(atom_i);
+                    const auto xyz_j = molecule_j.getAtomPosition(atom_j);
 
                     auto dxyz = xyz_i - xyz_j;
 
@@ -121,10 +121,10 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    const auto xyz_i = molecule_i->getAtomPositions(atom_i);
+                    const auto xyz_i = molecule_i->getAtomPosition(atom_i);
                     for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
-                        const auto xyz_j = molecule_j->getAtomPositions(atom_j);
+                        const auto xyz_j = molecule_j->getAtomPosition(atom_j);
 
                         auto dxyz = xyz_i - xyz_j;
 
@@ -199,11 +199,11 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                     for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                     {
-                        const auto xyz_i = molecule_i->getAtomPositions(atom_i);
+                        const auto xyz_i = molecule_i->getAtomPosition(atom_i);
 
                         for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
-                            const auto xyz_j = molecule_j->getAtomPositions(atom_j);
+                            const auto xyz_j = molecule_j->getAtomPosition(atom_j);
 
                             auto dxyz = xyz_i - xyz_j;
 

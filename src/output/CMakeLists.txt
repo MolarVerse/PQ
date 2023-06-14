@@ -3,6 +3,7 @@ add_library(output
 
     energyOutput.cpp
     infoOutput.cpp
+    trajectoryOutput.cpp
 )
 
 target_include_directories(output
@@ -16,6 +17,7 @@ target_link_libraries(output
     config
     utilities
     physicalData
+    simulationBox
 )
 
 install(TARGETS output

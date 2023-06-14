@@ -135,7 +135,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
         for (size_t j = 0; j < numberOfAtoms; ++j)
         {
-            position = molecule->getAtomPositions(j);
+            position = molecule->getAtomPosition(j);
 
             const auto atomCellIndices = getCellIndexOfMolecule(simulationBox, position);
             const auto cellIndex = getCellIndex(atomCellIndices);

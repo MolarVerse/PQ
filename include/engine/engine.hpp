@@ -11,6 +11,7 @@
 #include "output.hpp"
 #include "energyOutput.hpp"
 #include "infoOutput.hpp"
+#include "trajectoryOutput.hpp"
 
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -52,10 +53,10 @@ public:
     std::unique_ptr<TrajectoryOutput> _xyzOutput = std::make_unique<TrajectoryOutput>("default.xyz");
     std::unique_ptr<TrajectoryOutput> _velOutput = std::make_unique<TrajectoryOutput>("default.vel");
     std::unique_ptr<TrajectoryOutput> _forceOutput = std::make_unique<TrajectoryOutput>("default.force");
+    std::unique_ptr<TrajectoryOutput> _chargeOutput = std::make_unique<TrajectoryOutput>("default.chg");
     std::unique_ptr<LogOutput> _logOutput = std::make_unique<LogOutput>("default.log");
     std::unique_ptr<StdoutOutput> _stdoutOutput = std::make_unique<StdoutOutput>("stdout");
     std::unique_ptr<RstFileOutput> _rstFileOutput = std::make_unique<RstFileOutput>("default.rst");
-    std::unique_ptr<ChargeOutput> _chargeOutput = std::make_unique<ChargeOutput>("default.chg");
     std::unique_ptr<InfoOutput> _infoOutput = std::make_unique<InfoOutput>("default.info");
 
     void run();

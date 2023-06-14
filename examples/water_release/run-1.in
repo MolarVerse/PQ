@@ -98,6 +98,8 @@
    energy_file  = testset_02___mm_md_h2o-1.en; 
    traj_file    = testset_02___mm_md_h2o-1.xyz;
    vel_file     = testset_02___mm_md_h2o-1.vel;
+   force_file   = testset_02___mm_md_h2o-1.frc;
+   charge_file  = testset_02___mm_md_h2o-1.chrg;
    restart_file = testset_02___mm_md_h2o-1.rst;
 
 

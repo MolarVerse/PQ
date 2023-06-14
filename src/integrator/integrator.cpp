@@ -9,8 +9,8 @@ using namespace std;
 
 void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
 {
-    auto velocities = molecule.getAtomVelocities(i);
-    const auto forces = molecule.getAtomForces(i);
+    auto velocities = molecule.getAtomVelocity(i);
+    const auto forces = molecule.getAtomForce(i);
     const auto mass = molecule.getMass(i);
 
     velocities += timestep * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
@@ -20,8 +20,8 @@ void Integrator::integrateVelocities(const double timestep, Molecule &molecule, 
 
 void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
 {
-    auto positions = molecule.getAtomPositions(i);
-    const auto velocities = molecule.getAtomVelocities(i);
+    auto positions = molecule.getAtomPosition(i);
+    const auto velocities = molecule.getAtomVelocity(i);
 
     positions += timestep * velocities * _FS_TO_S_;
     applyPBC(simBox, positions);

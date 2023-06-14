@@ -50,6 +50,23 @@ public:
     SimulationBox() = default;
     ~SimulationBox() = default;
 
+    [[nodiscard]] size_t getNumberOfParticles() const;
+
+    [[nodiscard]] Molecule findMoleculeType(const size_t moltype) const;
+
+    [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); };
+
+    void calculateDegreesOfFreedom();
+    [[nodiscard]] int getDegreesOfFreedom() const { return _degreesOfFreedom; };
+
+    void calculateCenterOfMassMolecules();
+
+    // standard getters and setters
+
+    [[nodiscard]] Box getBox() const { return _box; };
+
+    [[nodiscard]] std::vector<Molecule> getMolecules() const { return _molecules; };
+
     void setWaterType(const int waterType) { _waterType = waterType; };
     [[nodiscard]] int getWaterType() const { return _waterType; };
 
@@ -73,15 +90,6 @@ public:
     [[nodiscard]] double getcForceCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _cForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
     [[nodiscard]] double getncEnergyCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncEnergyCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
     [[nodiscard]] double getncForceCutOff(const size_t moltype1, const size_t moltype2, const size_t atomType1, const size_t atomType2) { return _ncForceCutOffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2]; };
-
-    [[nodiscard]] Molecule findMoleculeType(const size_t moltype) const;
-
-    [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); };
-
-    void calculateDegreesOfFreedom();
-    [[nodiscard]] int getDegreesOfFreedom() const { return _degreesOfFreedom; };
-
-    void calculateCenterOfMassMolecules();
 };
 
 #endif

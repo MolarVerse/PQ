@@ -38,6 +38,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("energy_file"), &InputFileReader::parseEnergyFilename, false);
     addKeyword(string("traj_file"), &InputFileReader::parseTrajectoryFilename, false);
     addKeyword(string("vel_file"), &InputFileReader::parseVelocityFilename, false);
+    addKeyword(string("force_file"), &InputFileReader::parseForceFilename, false);
     addKeyword(string("restart_file"), &InputFileReader::parseRestartFilename, false);
     addKeyword(string("charge_file"), &InputFileReader::parseChargeFilename, false);
 
