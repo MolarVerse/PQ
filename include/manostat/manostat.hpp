@@ -38,6 +38,7 @@ class BerendsenManostat : public Manostat
 {
 private:
     double _tau;
+    double _compressability = 4.591e-5; // TODO: make as input parameter
 
 public:
     using Manostat::Manostat;

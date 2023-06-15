@@ -43,3 +43,11 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
 
     _centerOfMass /= getMolMass();
 }
+
+void Molecule::scale(const Vec3D &shiftfactors)
+{
+    const auto shift = _centerOfMass * (shiftfactors - 1.0);
+
+    for (size_t i = 0; i < _numberOfAtoms; ++i)
+        _positions[i] += shift;
+}

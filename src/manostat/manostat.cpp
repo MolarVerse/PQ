@@ -26,12 +26,15 @@ void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physi
 {
     calculatePressure(physicalData);
 
-    const auto scaleFactors = Vec3D(pow(1.0 + _timestep / _tau * (_targetPressure / _pressure - 1.0), 1.0 / 3.0));
+    const auto scaleFactors = Vec3D(pow(1.0 - _compressability * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
 
     simBox.scaleBox(scaleFactors);
 
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    calculatePressure(physicalData);
+    for (auto &molecule : simBox.getMolecules())
+        molecule.scale(scaleFactors);
+
+    // calculatePressure(physicalData); TODO: talk to thh about this
 }

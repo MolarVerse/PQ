@@ -71,17 +71,17 @@ void Box::setDensity(const double density)
  *
  * @return volume
  */
-double Box::calculateVolume() const
+double Box::calculateVolume()
 {
-    double volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
+    _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
     const double cos_alpha = cos(_boxAngles[0] * M_PI / 180.0);
     const double cos_beta = cos(_boxAngles[1] * M_PI / 180.0);
     const double cos_gamma = cos(_boxAngles[2] * M_PI / 180.0);
 
-    volume *= sqrt(1.0 - cos_alpha * cos_alpha - cos_beta * cos_beta - cos_gamma * cos_gamma + 2.0 * cos_alpha * cos_beta * cos_gamma);
+    _volume *= sqrt(1.0 - cos_alpha * cos_alpha - cos_beta * cos_beta - cos_gamma * cos_gamma + 2.0 * cos_alpha * cos_beta * cos_gamma);
 
-    return volume;
+    return _volume;
 }
 
 /**

@@ -100,6 +100,7 @@ constexpr double _KINETIC_ENERGY_FACTOR_ = 0.5 * _MASS_UNIT_TO_SI_ * _VELOCITY_U
  * @brief Conversion factors for pressure calculation
  */
 constexpr double _PASCAL_TO_BAR_ = 1.0e-5;
+constexpr double _BAR_TO_PASCAL_ = 1.0 / _PASCAL_TO_BAR_;
 constexpr double _PRESSURE_FACTOR_ = _ENERGY_UNIT_TO_SI_ / _VOLUME_UNIT_TO_SI_ * _PASCAL_TO_BAR_;
 
 #endif

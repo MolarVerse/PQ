@@ -54,6 +54,7 @@ public:
     explicit Molecule(const size_t moltype) : _moltype(moltype){};
 
     void calculateCenterOfMass(const Vec3D &);
+    void scale(const Vec3D &);
 
     void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; };
     size_t getNumberOfAtomTypes(); // cannot be const due to iterator in it

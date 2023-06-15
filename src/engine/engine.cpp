@@ -71,7 +71,7 @@ void Engine::takeStep()
 
     _virial->calculateVirial(_simulationBox, _physicalData);
 
-    _manostat->calculatePressure(_physicalData);
+    _manostat->applyManostat(_simulationBox, _physicalData);
 }
 
 void Engine::writeOutput()

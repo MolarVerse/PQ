@@ -35,7 +35,7 @@ private:
     bool _boxSizeHasChanged = false;
 
 public:
-    double calculateVolume() const;
+    double calculateVolume();
     double calculateDistance(const Vec3D &, const Vec3D &, Vec3D &);
     double calculateDistanceSquared(const Vec3D &, const Vec3D &, Vec3D &);
 

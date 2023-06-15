@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Sun Jun  4 23:41:25 2023
+ (+) Simulation run started on: Thu Jun 15 23:18:29 2023
 
 
 
@@ -53,8 +53,8 @@
 	# JOB
 	#-----------------------------------------
 	   jobtype     = mm-md; timestep    = 0.5;
-	   nstep       = 100;
-	   output_freq = 2;
+	   nstep       = 10;
+	   output_freq = 1;
 	   #write_traj  = on;
 	
 	# SYSTEM RESTRAINTS
@@ -89,8 +89,9 @@
 	#-----------------------------------------
 	   temp       = 298.15;
 	   thermostat = berendsen;
-	   #manostat   = berendsen;
-	   #pressure   = 1.013;
+	   manostat   = berendsen;
+	   pressure   = 1.013;
+	   p_relaxation = 0.1;
 	#  nscale = 500;
 	   #cell-list = on;
 	   #cell-number = 10;
@@ -119,7 +120,7 @@
 
 
  (+) Input file run-1.in read successfully
-       19 keywords have been read
+       22 keywords have been read
 
  (+) Reading moldescriptor at
      /home/jag/projects/pimd_qmcf/examples/water_release/qmcfc/moldescriptor.dat
@@ -135,6 +136,9 @@
 	     >> MOLECULE UNITS <<
 
         2000 Molecule(s) of type  1 (H2O)
+
+ (!) Warning: Box data taken from restart file h2o-qmcf.rst.
+     Density recalculated - input density  0.95230 is ignored.
 
 	      >> SYSTEM DATA <<
 
@@ -185,10 +189,15 @@
 		Target Temperature: 298.15 K
 		kT                : 5.92e-01 kcal/mol
 
-	* Manostat -- none
+	* Manostat -- Berendsen
+		Relaxation time:  0.10 ps
+		Target Pressure:  1.01 bar
+		Compressibility:  0.00 1/bar
+
+		isotropic coupling
 
 	* Data output
-		Output Frequency:    2 (1.0 fs)
+		Output Frequency:    1 (0.5 fs)
 
  (+) Creating data files....SUCCESS
 
@@ -196,459 +205,109 @@
 
  (+) Entering MM -- simulation loop
 
-       Requested Number of Steps:         100
+       Requested Number of Steps:          10
        Step Counter:                     1232
 
  (+) Starting Simulation...
 
-   STEP NUMBER	           2		TOTAL STEPS	        1234
-   SIMULATION TIME     0.617		TEMPERATURE	     263.644
-   PRESSURE	   56119.652		E(MM)		   -5519.223
-   E(KIN)	    4715.228		E(INTRA)	       0.000
-   E(COULOMB)	  -15424.710		E(NONCOULOMB)	    5190.259
+   STEP NUMBER	           1		TOTAL STEPS	        1233
+   SIMULATION TIME     0.617		TEMPERATURE	     217.819
+   PRESSURE	   62792.210		E(MM)		   -5462.321
+   E(KIN)	    3895.656		E(INTRA)	       0.000
+   E(COULOMB)	  -15365.587		E(NONCOULOMB)	    6007.610
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.689e-01		LOOPTIME 	       0.500
+   VOLUME	   63732.571		DENSITY		    0.938769
+   MOMENTUM	   7.689e-01		LOOPTIME 	       0.000
+
+
+   STEP NUMBER	           2		TOTAL STEPS	        1234
+   SIMULATION TIME     0.617		TEMPERATURE	     302.465
+   PRESSURE	   43596.993		E(MM)		   -6043.110
+   E(KIN)	    5409.545		E(INTRA)	       0.000
+   E(COULOMB)	  -15381.285		E(NONCOULOMB)	    3928.630
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	   64370.372		DENSITY		    0.929467
+   MOMENTUM	   7.689e-01		LOOPTIME 	       0.000
+
+
+   STEP NUMBER	           3		TOTAL STEPS	        1235
+   SIMULATION TIME     0.618		TEMPERATURE	     403.012
+   PRESSURE	   20348.557		E(MM)		   -6128.765
+   E(KIN)	    7207.810		E(INTRA)	       0.000
+   E(COULOMB)	  -15493.426		E(NONCOULOMB)	    2156.851
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	   64671.032		DENSITY		    0.925146
+   MOMENTUM	   7.684e-01		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           4		TOTAL STEPS	        1236
-   SIMULATION TIME     0.618		TEMPERATURE	     464.006
-   PRESSURE	   16501.116		E(MM)		   -5622.043
-   E(KIN)	    8298.676		E(INTRA)	       0.000
-   E(COULOMB)	  -15785.975		E(NONCOULOMB)	    1865.257
+   SIMULATION TIME     0.618		TEMPERATURE	     487.851
+   PRESSURE	    8442.689		E(MM)		   -6043.171
+   E(KIN)	    8725.128		E(INTRA)	       0.000
+   E(COULOMB)	  -15707.710		E(NONCOULOMB)	     939.411
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.679e-01		LOOPTIME 	       0.000
+   VOLUME	   64796.351		DENSITY		    0.923357
+   MOMENTUM	   7.676e-01		LOOPTIME 	       0.000
+
+
+   STEP NUMBER	           5		TOTAL STEPS	        1237
+   SIMULATION TIME     0.619		TEMPERATURE	     562.257
+   PRESSURE	     811.945		E(MM)		   -6021.892
+   E(KIN)	   10055.870		E(INTRA)	       0.000
+   E(COULOMB)	  -16007.718		E(NONCOULOMB)	     -70.044
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	   64808.412		DENSITY		    0.923185
+   MOMENTUM	   7.667e-01		LOOPTIME 	       1.000
 
 
    STEP NUMBER	           6		TOTAL STEPS	        1238
-   SIMULATION TIME     0.619		TEMPERATURE	     599.500
-   PRESSURE	    1986.052		E(MM)		   -5622.925
-   E(KIN)	   10721.956		E(INTRA)	       0.000
-   E(COULOMB)	  -16415.222		E(NONCOULOMB)	      70.341
+   SIMULATION TIME     0.619		TEMPERATURE	     626.544
+   PRESSURE	   -3596.214		E(MM)		   -6022.273
+   E(KIN)	   11205.637		E(INTRA)	       0.000
+   E(COULOMB)	  -16389.970		E(NONCOULOMB)	    -837.940
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.661e-01		LOOPTIME 	       0.500
+   VOLUME	   64754.897		DENSITY		    0.923948
+   MOMENTUM	   7.657e-01		LOOPTIME 	       0.000
+
+
+   STEP NUMBER	           7		TOTAL STEPS	        1239
+   SIMULATION TIME     0.620		TEMPERATURE	     686.096
+   PRESSURE	   -4023.664		E(MM)		   -6054.518
+   E(KIN)	   12270.720		E(INTRA)	       0.000
+   E(COULOMB)	  -16853.222		E(NONCOULOMB)	   -1472.017
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	   64695.072		DENSITY		    0.924802
+   MOMENTUM	   7.646e-01		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           8		TOTAL STEPS	        1240
-   SIMULATION TIME     0.620		TEMPERATURE	     720.057
-   PRESSURE	    2159.434		E(MM)		   -5681.908
-   E(KIN)	   12878.103		E(INTRA)	       0.000
-   E(COULOMB)	  -17335.731		E(NONCOULOMB)	   -1224.281
+   SIMULATION TIME     0.620		TEMPERATURE	     747.197
+   PRESSURE	   -2543.449		E(MM)		   -6078.158
+   E(KIN)	   13363.493		E(INTRA)	       0.000
+   E(COULOMB)	  -17393.498		E(NONCOULOMB)	   -2048.153
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.639e-01		LOOPTIME 	       0.000
+   VOLUME	   64657.285		DENSITY		    0.925343
+   MOMENTUM	   7.635e-01		LOOPTIME 	       0.000
+
+
+   STEP NUMBER	           9		TOTAL STEPS	        1241
+   SIMULATION TIME     0.621		TEMPERATURE	     811.350
+   PRESSURE	    -144.336		E(MM)		   -6119.394
+   E(KIN)	   14510.858		E(INTRA)	       0.000
+   E(COULOMB)	  -18011.385		E(NONCOULOMB)	   -2618.866
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	   64655.128		DENSITY		    0.925374
+   MOMENTUM	   7.623e-01		LOOPTIME 	       0.000
 
 
    STEP NUMBER	          10		TOTAL STEPS	        1242
-   SIMULATION TIME     0.621		TEMPERATURE	     849.437
-   PRESSURE	    7439.636		E(MM)		   -5790.620
-   E(KIN)	   15192.046		E(INTRA)	       0.000
-   E(COULOMB)	  -18574.624		E(NONCOULOMB)	   -2408.041
+   SIMULATION TIME     0.621		TEMPERATURE	     875.154
+   PRESSURE	    3637.296		E(MM)		   -6178.632
+   E(KIN)	   15651.990		E(INTRA)	       0.000
+   E(COULOMB)	  -18710.619		E(NONCOULOMB)	   -3120.003
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.615e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          12		TOTAL STEPS	        1244
-   SIMULATION TIME     0.622		TEMPERATURE	     967.748
-   PRESSURE	   16312.844		E(MM)		   -5907.288
-   E(KIN)	   17308.017		E(INTRA)	       0.000
-   E(COULOMB)	  -20174.998		E(NONCOULOMB)	   -3040.307
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.589e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          14		TOTAL STEPS	        1246
-   SIMULATION TIME     0.623		TEMPERATURE	    1080.618
-   PRESSURE	   24979.056		E(MM)		   -6032.726
-   E(KIN)	   19326.687		E(INTRA)	       0.000
-   E(COULOMB)	  -22232.544		E(NONCOULOMB)	   -3126.869
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.561e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          16		TOTAL STEPS	        1248
-   SIMULATION TIME     0.624		TEMPERATURE	    1213.290
-   PRESSURE	   30404.858		E(MM)		   -6193.750
-   E(KIN)	   21699.499		E(INTRA)	       0.000
-   E(COULOMB)	  -24906.938		E(NONCOULOMB)	   -2986.310
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.533e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          18		TOTAL STEPS	        1250
-   SIMULATION TIME     0.625		TEMPERATURE	    1377.351
-   PRESSURE	   37447.273		E(MM)		   -6370.545
-   E(KIN)	   24633.696		E(INTRA)	       0.000
-   E(COULOMB)	  -28354.798		E(NONCOULOMB)	   -2649.444
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.504e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          20		TOTAL STEPS	        1252
-   SIMULATION TIME     0.626		TEMPERATURE	    1598.753
-   PRESSURE	   41902.952		E(MM)		   -6605.544
-   E(KIN)	   28593.430		E(INTRA)	       0.000
-   E(COULOMB)	  -32677.922		E(NONCOULOMB)	   -2521.052
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.474e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          22		TOTAL STEPS	        1254
-   SIMULATION TIME     0.627		TEMPERATURE	    1869.685
-   PRESSURE	   48074.089		E(MM)		   -6895.762
-   E(KIN)	   33439.022		E(INTRA)	       0.000
-   E(COULOMB)	  -37992.771		E(NONCOULOMB)	   -2342.013
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.442e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          24		TOTAL STEPS	        1256
-   SIMULATION TIME     0.628		TEMPERATURE	    2168.273
-   PRESSURE	   59451.598		E(MM)		   -7244.044
-   E(KIN)	   38779.211		E(INTRA)	       0.000
-   E(COULOMB)	  -44369.082		E(NONCOULOMB)	   -1654.173
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.411e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          26		TOTAL STEPS	        1258
-   SIMULATION TIME     0.629		TEMPERATURE	    2478.626
-   PRESSURE	   71848.053		E(MM)		   -7658.522
-   E(KIN)	   44329.829		E(INTRA)	       0.000
-   E(COULOMB)	  -51656.004		E(NONCOULOMB)	    -332.347
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.378e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          28		TOTAL STEPS	        1260
-   SIMULATION TIME     0.630		TEMPERATURE	    2781.848
-   PRESSURE	   85248.980		E(MM)		   -8095.602
-   E(KIN)	   49752.908		E(INTRA)	       0.000
-   E(COULOMB)	  -59436.177		E(NONCOULOMB)	    1587.668
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.345e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          30		TOTAL STEPS	        1262
-   SIMULATION TIME     0.631		TEMPERATURE	    3097.634
-   PRESSURE	   95875.217		E(MM)		   -8614.259
-   E(KIN)	   55400.687		E(INTRA)	       0.000
-   E(COULOMB)	  -67207.042		E(NONCOULOMB)	    3192.096
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.312e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          32		TOTAL STEPS	        1264
-   SIMULATION TIME     0.632		TEMPERATURE	    3386.589
-   PRESSURE	  110035.295		E(MM)		   -9191.554
-   E(KIN)	   60568.601		E(INTRA)	       0.000
-   E(COULOMB)	  -74532.274		E(NONCOULOMB)	    4772.118
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.279e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          34		TOTAL STEPS	        1266
-   SIMULATION TIME     0.633		TEMPERATURE	    3621.008
-   PRESSURE	  117282.479		E(MM)		   -9736.435
-   E(KIN)	   64761.146		E(INTRA)	       0.000
-   E(COULOMB)	  -80853.323		E(NONCOULOMB)	    6355.742
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.245e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          36		TOTAL STEPS	        1268
-   SIMULATION TIME     0.634		TEMPERATURE	    3882.962
-   PRESSURE	  106991.013		E(MM)		  -10397.050
-   E(KIN)	   69446.144		E(INTRA)	       0.000
-   E(COULOMB)	  -85745.560		E(NONCOULOMB)	    5902.366
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.212e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          38		TOTAL STEPS	        1270
-   SIMULATION TIME     0.635		TEMPERATURE	    4126.410
-   PRESSURE	   94326.152		E(MM)		  -11099.838
-   E(KIN)	   73800.176		E(INTRA)	       0.000
-   E(COULOMB)	  -89553.464		E(NONCOULOMB)	    4653.451
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.179e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          40		TOTAL STEPS	        1272
-   SIMULATION TIME     0.636		TEMPERATURE	    4260.919
-   PRESSURE	   98940.406		E(MM)		  -11767.551
-   E(KIN)	   76205.850		E(INTRA)	       0.000
-   E(COULOMB)	  -92701.141		E(NONCOULOMB)	    4727.741
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.145e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          42		TOTAL STEPS	        1274
-   SIMULATION TIME     0.637		TEMPERATURE	    4401.360
-   PRESSURE	   91911.823		E(MM)		  -12474.213
-   E(KIN)	   78717.620		E(INTRA)	       0.000
-   E(COULOMB)	  -95184.768		E(NONCOULOMB)	    3992.936
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.112e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          44		TOTAL STEPS	        1276
-   SIMULATION TIME     0.638		TEMPERATURE	    4560.893
-   PRESSURE	   80913.953		E(MM)		  -13233.627
-   E(KIN)	   81570.826		E(INTRA)	       0.000
-   E(COULOMB)	  -97279.609		E(NONCOULOMB)	    2475.155
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.079e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          46		TOTAL STEPS	        1278
-   SIMULATION TIME     0.639		TEMPERATURE	    4668.857
-   PRESSURE	   76527.544		E(MM)		  -13985.293
-   E(KIN)	   83501.760		E(INTRA)	       0.000
-   E(COULOMB)	  -99335.197		E(NONCOULOMB)	    1848.143
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.046e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          48		TOTAL STEPS	        1280
-   SIMULATION TIME     0.640		TEMPERATURE	    4746.951
-   PRESSURE	   82011.485		E(MM)		  -14783.835
-   E(KIN)	   84898.443		E(INTRA)	       0.000
-   E(COULOMB)	 -101267.211		E(NONCOULOMB)	    1584.933
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.013e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          50		TOTAL STEPS	        1282
-   SIMULATION TIME     0.641		TEMPERATURE	    4850.594
-   PRESSURE	   80574.533		E(MM)		  -15589.846
-   E(KIN)	   86752.088		E(INTRA)	       0.000
-   E(COULOMB)	 -103007.215		E(NONCOULOMB)	     665.281
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.980e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          52		TOTAL STEPS	        1284
-   SIMULATION TIME     0.642		TEMPERATURE	    4945.641
-   PRESSURE	   77001.317		E(MM)		  -16411.070
-   E(KIN)	   88451.996		E(INTRA)	       0.000
-   E(COULOMB)	 -104759.127		E(NONCOULOMB)	    -103.939
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.947e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          54		TOTAL STEPS	        1286
-   SIMULATION TIME     0.643		TEMPERATURE	    5009.478
-   PRESSURE	   78409.303		E(MM)		  -17172.836
-   E(KIN)	   89593.701		E(INTRA)	       0.000
-   E(COULOMB)	 -106741.171		E(NONCOULOMB)	     -25.365
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.914e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          56		TOTAL STEPS	        1288
-   SIMULATION TIME     0.644		TEMPERATURE	    5119.530
-   PRESSURE	   80751.958		E(MM)		  -18023.533
-   E(KIN)	   91561.974		E(INTRA)	       0.000
-   E(COULOMB)	 -108854.147		E(NONCOULOMB)	    -731.360
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.882e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          58		TOTAL STEPS	        1290
-   SIMULATION TIME     0.645		TEMPERATURE	    5213.236
-   PRESSURE	   83606.690		E(MM)		  -18860.220
-   E(KIN)	   93237.877		E(INTRA)	       0.000
-   E(COULOMB)	 -111214.337		E(NONCOULOMB)	    -883.760
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.849e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          60		TOTAL STEPS	        1292
-   SIMULATION TIME     0.646		TEMPERATURE	    5281.401
-   PRESSURE	   86090.158		E(MM)		  -19754.408
-   E(KIN)	   94457.011		E(INTRA)	       0.000
-   E(COULOMB)	 -113669.207		E(NONCOULOMB)	    -542.212
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.817e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          62		TOTAL STEPS	        1294
-   SIMULATION TIME     0.647		TEMPERATURE	    5348.076
-   PRESSURE	   86769.986		E(MM)		  -20638.342
-   E(KIN)	   95649.470		E(INTRA)	       0.000
-   E(COULOMB)	 -115882.639		E(NONCOULOMB)	    -405.174
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.785e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          64		TOTAL STEPS	        1296
-   SIMULATION TIME     0.648		TEMPERATURE	    5399.120
-   PRESSURE	   92405.636		E(MM)		  -21506.314
-   E(KIN)	   96562.388		E(INTRA)	       0.000
-   E(COULOMB)	 -117752.855		E(NONCOULOMB)	    -315.847
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.753e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          66		TOTAL STEPS	        1298
-   SIMULATION TIME     0.649		TEMPERATURE	    5452.637
-   PRESSURE	   92668.833		E(MM)		  -22440.038
-   E(KIN)	   97519.524		E(INTRA)	       0.000
-   E(COULOMB)	 -119488.773		E(NONCOULOMB)	    -470.788
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.721e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          68		TOTAL STEPS	        1300
-   SIMULATION TIME     0.650		TEMPERATURE	    5509.639
-   PRESSURE	   97527.881		E(MM)		  -23320.812
-   E(KIN)	   98538.997		E(INTRA)	       0.000
-   E(COULOMB)	 -121344.767		E(NONCOULOMB)	    -515.041
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.689e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          70		TOTAL STEPS	        1302
-   SIMULATION TIME     0.651		TEMPERATURE	    5554.483
-   PRESSURE	  105827.432		E(MM)		  -24210.472
-   E(KIN)	   99341.028		E(INTRA)	       0.000
-   E(COULOMB)	 -123344.827		E(NONCOULOMB)	    -206.673
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.657e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          72		TOTAL STEPS	        1304
-   SIMULATION TIME     0.652		TEMPERATURE	    5576.550
-   PRESSURE	  109451.951		E(MM)		  -25159.767
-   E(KIN)	   99735.698		E(INTRA)	       0.000
-   E(COULOMB)	 -125298.179		E(NONCOULOMB)	     402.713
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.626e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          74		TOTAL STEPS	        1306
-   SIMULATION TIME     0.653		TEMPERATURE	    5598.737
-   PRESSURE	  107128.014		E(MM)		  -26082.856
-   E(KIN)	  100132.508		E(INTRA)	       0.000
-   E(COULOMB)	 -126960.578		E(NONCOULOMB)	     745.215
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.594e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          76		TOTAL STEPS	        1308
-   SIMULATION TIME     0.654		TEMPERATURE	    5612.362
-   PRESSURE	  106248.347		E(MM)		  -27018.505
-   E(KIN)	  100376.184		E(INTRA)	       0.000
-   E(COULOMB)	 -128401.622		E(NONCOULOMB)	    1006.933
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.563e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          78		TOTAL STEPS	        1310
-   SIMULATION TIME     0.655		TEMPERATURE	    5631.962
-   PRESSURE	  107679.106		E(MM)		  -27847.179
-   E(KIN)	  100726.724		E(INTRA)	       0.000
-   E(COULOMB)	 -129668.275		E(NONCOULOMB)	    1094.372
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.532e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          80		TOTAL STEPS	        1312
-   SIMULATION TIME     0.656		TEMPERATURE	    5657.863
-   PRESSURE	  101158.577		E(MM)		  -28829.005
-   E(KIN)	  101189.968		E(INTRA)	       0.000
-   E(COULOMB)	 -130714.530		E(NONCOULOMB)	     695.557
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.501e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          82		TOTAL STEPS	        1314
-   SIMULATION TIME     0.657		TEMPERATURE	    5635.664
-   PRESSURE	  108053.820		E(MM)		  -29717.398
-   E(KIN)	  100792.935		E(INTRA)	       0.000
-   E(COULOMB)	 -131650.734		E(NONCOULOMB)	    1140.400
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.470e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          84		TOTAL STEPS	        1316
-   SIMULATION TIME     0.658		TEMPERATURE	    5614.094
-   PRESSURE	  115608.041		E(MM)		  -30620.486
-   E(KIN)	  100407.155		E(INTRA)	       0.000
-   E(COULOMB)	 -132285.512		E(NONCOULOMB)	    1257.870
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.440e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          86		TOTAL STEPS	        1318
-   SIMULATION TIME     0.659		TEMPERATURE	    5601.415
-   PRESSURE	  115892.716		E(MM)		  -31474.029
-   E(KIN)	  100180.400		E(INTRA)	       0.000
-   E(COULOMB)	 -132702.702		E(NONCOULOMB)	    1048.274
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.409e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          88		TOTAL STEPS	        1320
-   SIMULATION TIME     0.660		TEMPERATURE	    5599.701
-   PRESSURE	  105827.585		E(MM)		  -32377.977
-   E(KIN)	  100149.744		E(INTRA)	       0.000
-   E(COULOMB)	 -133171.703		E(NONCOULOMB)	     643.982
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.379e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          90		TOTAL STEPS	        1322
-   SIMULATION TIME     0.661		TEMPERATURE	    5550.856
-   PRESSURE	  113250.776		E(MM)		  -33372.360
-   E(KIN)	   99276.163		E(INTRA)	       0.000
-   E(COULOMB)	 -133995.262		E(NONCOULOMB)	    1346.739
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.349e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          92		TOTAL STEPS	        1324
-   SIMULATION TIME     0.662		TEMPERATURE	    5494.391
-   PRESSURE	  120610.376		E(MM)		  -34211.890
-   E(KIN)	   98266.297		E(INTRA)	       0.000
-   E(COULOMB)	 -134993.731		E(NONCOULOMB)	    2515.545
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.319e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          94		TOTAL STEPS	        1326
-   SIMULATION TIME     0.663		TEMPERATURE	    5491.712
-   PRESSURE	  108108.633		E(MM)		  -35102.587
-   E(KIN)	   98218.375		E(INTRA)	       0.000
-   E(COULOMB)	 -135623.688		E(NONCOULOMB)	    2302.725
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.289e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	          96		TOTAL STEPS	        1328
-   SIMULATION TIME     0.664		TEMPERATURE	    5464.714
-   PRESSURE	  100863.388		E(MM)		  -35951.485
-   E(KIN)	   97735.535		E(INTRA)	       0.000
-   E(COULOMB)	 -136095.833		E(NONCOULOMB)	    2408.813
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.259e-01		LOOPTIME 	       0.500
-
-
-   STEP NUMBER	          98		TOTAL STEPS	        1330
-   SIMULATION TIME     0.665		TEMPERATURE	    5453.316
-   PRESSURE	  100273.694		E(MM)		  -36869.803
-   E(KIN)	   97531.683		E(INTRA)	       0.000
-   E(COULOMB)	 -136606.061		E(NONCOULOMB)	    2204.575
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.229e-01		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	         100		TOTAL STEPS	        1332
-   SIMULATION TIME     0.666		TEMPERATURE	    5410.656
-   PRESSURE	  111925.496		E(MM)		  -37679.475
-   E(KIN)	   96768.717		E(INTRA)	       0.000
-   E(COULOMB)	 -137087.189		E(NONCOULOMB)	    2638.997
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   6.200e-01		LOOPTIME 	       0.500
+   VOLUME	   64709.096		DENSITY		    0.924602
+   MOMENTUM	   7.610e-01		LOOPTIME 	       0.000
 
 
 
@@ -661,5 +320,5 @@
 
 
 
- (+) Simulation time: 27.000000
+ (+) Simulation time: 1.000000
 

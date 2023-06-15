@@ -43,7 +43,7 @@
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
    nstep       = 10;
-   output_freq = 2;
+   output_freq = 1;
    #write_traj  = on;
 
 # SYSTEM RESTRAINTS
@@ -78,9 +78,10 @@
 #-----------------------------------------
    temp       = 298.15;
    thermostat = berendsen;
-   #manostat   = berendsen;
-   #pressure   = 1.013;
-#  nscale = 500;
+   manostat   = berendsen;
+   pressure   = 1.013;
+   p_relaxation = 0.1;
+#  scale = 500;
    cell-list = on;
    cell-number = 10;
 #  friction   = 0.035;
