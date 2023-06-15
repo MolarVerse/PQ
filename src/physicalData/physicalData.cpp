@@ -5,6 +5,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace simulationBox;
 
 void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
 {

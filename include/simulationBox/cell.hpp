@@ -7,16 +7,21 @@
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 
+namespace simulationBox
+{
+    class Cell;
+}
+
 /**
  * @class Cell
  *
  * @brief Cell is a class for cell
  *
  */
-class Cell
+class simulationBox::Cell
 {
 private:
-    std::vector<Molecule *> _molecules;
+    std::vector<simulationBox::Molecule *> _molecules;
     std::vector<std::vector<size_t>> _atomInidices;
     std::vector<Cell *> _neighbourCells;
     Vec3D _lowerBoundary = {0, 0, 0};
@@ -25,10 +30,10 @@ private:
     Vec3Dul _cellIndex = {0, 0, 0};
 
 public:
-    void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
-    void addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
-    [[nodiscard]] Molecule *getMolecule(const size_t index) const { return _molecules[index]; }
-    std::vector<Molecule *> getMolecules() const { return _molecules; }
+    void addMolecule(simulationBox::Molecule &molecule) { _molecules.push_back(&molecule); }
+    void addMolecule(simulationBox::Molecule *molecule) { _molecules.push_back(molecule); }
+    [[nodiscard]] simulationBox::Molecule *getMolecule(const size_t index) const { return _molecules[index]; }
+    std::vector<simulationBox::Molecule *> getMolecules() const { return _molecules; }
 
     void clearMolecules() { _molecules.clear(); }
     [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }

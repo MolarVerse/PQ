@@ -5,6 +5,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace simulationBox;
 
 void Virial::calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
@@ -40,7 +41,7 @@ void VirialMolecular::calculateVirial(SimulationBox &simulationBox, PhysicalData
 
 void VirialMolecular::intraMolecularVirialCorrection(SimulationBox &simulationBox)
 {
-    const auto box = simulationBox._box.getBoxDimensions();
+    const auto box = simulationBox.getBoxDimensions();
 
     for (const auto &molecule : simulationBox.getMolecules())
     {

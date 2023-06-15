@@ -27,7 +27,7 @@ public:
 
     void read();
     void processMolecule(std::vector<std::string> &);
-    void convertExternalToInternalAtomtypes(Molecule &) const;
+    void convertExternalToInternalAtomtypes(simulationBox::Molecule &) const;
 };
 
 /**

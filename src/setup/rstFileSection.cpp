@@ -6,9 +6,10 @@
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
-using namespace Setup::RstFileReader;
 using namespace std;
+using namespace Setup::RstFileReader;
 using namespace StringUtilities;
+using namespace simulationBox;
 
 bool BoxSection::isHeader() { return true; }
 
@@ -25,12 +26,12 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
 
-    engine.getSimulationBox()._box.setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
+    engine.getSimulationBox().setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
 
     if (lineElements.size() == 7)
-        engine.getSimulationBox()._box.setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
+        engine.getSimulationBox().setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
     else
-        engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
+        engine.getSimulationBox().setBoxAngles({90.0, 90.0, 90.0});
 }
 
 bool NoseHooverSection::isHeader() { return true; }

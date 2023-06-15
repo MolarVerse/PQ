@@ -9,6 +9,11 @@
 #include "molecule.hpp"
 #include "defaults.hpp"
 
+namespace simulationBox
+{
+    class SimulationBox;
+}
+
 /**
  * @class SimulationBox
  *
@@ -23,7 +28,7 @@
  *  Additional molecular information is also stored in the SimulationBox class.
  *
  */
-class SimulationBox
+class simulationBox::SimulationBox
 {
 private:
     int _waterType;
@@ -32,6 +37,8 @@ private:
     int _degreesOfFreedom = 0;
 
     double _rcCutOff = _COULOMB_CUT_OFF_DEFAULT_;
+
+    Box _box;
 
     std::vector<Molecule> _molecules;
 
@@ -45,8 +52,6 @@ public:
     std::vector<std::vector<std::vector<std::vector<double>>>> _cForceCutOffs;
     std::vector<std::vector<std::vector<std::vector<double>>>> _ncEnergyCutOffs;
     std::vector<std::vector<std::vector<std::vector<double>>>> _ncForceCutOffs;
-
-    Box _box;
 
     SimulationBox() = default;
     ~SimulationBox() = default;
@@ -65,10 +70,34 @@ public:
     void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); };
 
     // standard getters and setters
-    [[nodiscard]] double getVolume() const { return _box.getVolume(); }
     [[nodiscard]] double getDensity() const { return _box.getDensity(); }
+    void setDensity(const double density) { _box.setDensity(density); }
+
+    [[nodiscard]] double getTotalMass() const { return _box.getTotalMass(); }
+    void setTotalMass(const double mass) { _box.setTotalMass(mass); }
+
+    [[nodiscard]] double getTotalCharge() const { return _box.getTotalCharge(); }
+    void setTotalCharge(const double charge) { _box.setTotalCharge(charge); }
+
+    [[nodiscard]] double getVolume() const { return _box.getVolume(); }
+    void setVolume(const double volume) { _box.setVolume(volume); }
+
+    [[nodiscard]] double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
+
     [[nodiscard]] Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
-    [[nodiscard]] Box getBox() const { return _box; };
+    void setBoxDimensions(const Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
+
+    [[nodiscard]] Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
+    void setBoxAngles(const Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
+
+    [[nodiscard]] bool getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
+    void applyPBC(Vec3D &position) const { _box.applyPBC(position); };
+
+    [[nodiscard]] double calculateVolume() { return _box.calculateVolume(); }
+
+    [[nodiscard]] Vec3D calculateBoxDimensionsFromDensity() { return _box.calculateBoxDimensionsFromDensity(); }
+
+    /******************/
 
     [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; };
     [[nodiscard]] Molecule &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; };

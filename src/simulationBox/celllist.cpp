@@ -6,6 +6,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace simulationBox;
 
 void CellList::setup(const SimulationBox &simulationBox)
 {
@@ -104,7 +105,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     if (!_activated)
         return;
 
-    if (simulationBox._box.getBoxSizeHasChanged())
+    if (simulationBox.getBoxSizeHasChanged())
     {
         _cells.clear();
 
@@ -155,9 +156,9 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 
 Vec3Dul CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position)
 {
-    const auto boxDimensions = simulationBox._box.getBoxDimensions();
+    const auto box = simulationBox.getBoxDimensions();
 
-    auto cellIndex = static_cast<Vec3Dul>(floor((position + boxDimensions / 2.0) / _cellSize));
+    auto cellIndex = static_cast<Vec3Dul>(floor((position + box / 2.0) / _cellSize));
 
     cellIndex -= _nCells * static_cast<Vec3Dul>(floor(static_cast<Vec3D>(cellIndex) / static_cast<Vec3D>(_nCells)));
 

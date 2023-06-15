@@ -35,7 +35,7 @@ private:
     double _nonCoulombEnergy;
 
 public:
-    void calculateKineticEnergyAndMomentum(SimulationBox &);
+    void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
 
     void updateAverages(const PhysicalData &);
     void makeAverages(const double);

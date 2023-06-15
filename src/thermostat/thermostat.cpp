@@ -4,6 +4,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace simulationBox;
 
 void Thermostat::calculateTemperature(SimulationBox &simulationBox, PhysicalData &physicalData)
 {

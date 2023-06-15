@@ -35,9 +35,9 @@ private:
 
     Settings _settings;
     Timings _timings;
-    CellList _cellList;
+    simulationBox::CellList _cellList;
 
-    SimulationBox _simulationBox;
+    simulationBox::SimulationBox _simulationBox;
 
     PhysicalData _physicalData;
     PhysicalData _averagePhysicalData;
@@ -66,8 +66,8 @@ public:
     // standard getter and setters
     [[nodiscard]] Settings &getSettings() { return _settings; };
     [[nodiscard]] Timings &getTimings() { return _timings; };
-    [[nodiscard]] CellList &getCellList() { return _cellList; };
-    [[nodiscard]] SimulationBox &getSimulationBox() { return _simulationBox; };
+    [[nodiscard]] simulationBox::CellList &getCellList() { return _cellList; };
+    [[nodiscard]] simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; };
     [[nodiscard]] PhysicalData &getPhysicalData() { return _physicalData; };
     [[nodiscard]] PhysicalData &getAveragePhysicalData() { return _averagePhysicalData; }
 };

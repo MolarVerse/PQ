@@ -9,6 +9,7 @@
 #include <boost/algorithm/string.hpp>
 
 using namespace std;
+using namespace simulationBox;
 
 /**
  * @brief Setup post processing
@@ -129,7 +130,7 @@ void PostProcessSetup::calculateTotalMass()
             totalMass += molecule.getAtomMass(i);
     }
 
-    _engine.getSimulationBox()._box.setTotalMass(totalMass);
+    _engine.getSimulationBox().setTotalMass(totalMass);
 }
 
 /**
@@ -147,7 +148,7 @@ void PostProcessSetup::calculateTotalCharge()
             totalCharge += molecule.getPartialCharge(i);
     }
 
-    _engine.getSimulationBox()._box.setTotalCharge(totalCharge);
+    _engine.getSimulationBox().setTotalCharge(totalCharge);
 }
 
 /**
@@ -159,40 +160,40 @@ void PostProcessSetup::calculateTotalCharge()
  * @note If density is set, box dimensions will be calculated from density.
  * @note If box dimensions are set, density will be calculated from box dimensions.
  */
-void PostProcessSetup::checkBoxSettings()
+void PostProcessSetup::checkBoxSettings() // FIXME:
 {
-    auto box = _engine.getSimulationBox()._box.getBoxDimensions();
-    auto density = _engine.getSimulationBox()._box.getDensity();
+    auto box = _engine.getSimulationBox().getBoxDimensions();
+    auto density = _engine.getSimulationBox().getDensity();
 
     if ((density == 0.0) && (box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
         throw UserInputException("Box dimensions and density not set");
     else if ((box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
     {
-        const auto boxDimensions = _engine.getSimulationBox()._box.calculateBoxDimensionsFromDensity();
-        _engine.getSimulationBox()._box.setBoxDimensions(boxDimensions);
-        _engine.getSimulationBox()._box.setBoxAngles({90.0, 90.0, 90.0});
-        _engine.getSimulationBox()._box.setVolume(_engine.getSimulationBox()._box.calculateVolume());
+        const auto boxDimensions = _engine.getSimulationBox().calculateBoxDimensionsFromDensity();
+        _engine.getSimulationBox().setBoxDimensions(boxDimensions);
+        _engine.getSimulationBox().setBoxAngles({90.0, 90.0, 90.0});
+        _engine.getSimulationBox().setVolume(_engine.getSimulationBox().calculateVolume());
     }
     else if (density == 0.0)
     {
-        const auto volume = _engine.getSimulationBox()._box.calculateVolume();
-        density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
-        _engine.getSimulationBox()._box.setVolume(volume);
-        _engine.getSimulationBox()._box.setDensity(density);
+        const auto volume = _engine.getSimulationBox().calculateVolume();
+        density = _engine.getSimulationBox().getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        _engine.getSimulationBox().setVolume(volume);
+        _engine.getSimulationBox().setDensity(density);
     }
     else
     {
-        const auto volume = _engine.getSimulationBox()._box.calculateVolume();
-        density = _engine.getSimulationBox()._box.getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
-        _engine.getSimulationBox()._box.setVolume(volume);
-        _engine.getSimulationBox()._box.setDensity(density);
+        const auto volume = _engine.getSimulationBox().calculateVolume();
+        density = _engine.getSimulationBox().getTotalMass() / volume * _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        _engine.getSimulationBox().setVolume(volume);
+        _engine.getSimulationBox().setDensity(density);
 
         _engine._logOutput->writeDensityWarning();
         _engine._stdoutOutput->writeDensityWarning();
     }
 
-    _engine.getPhysicalData().setVolume(_engine.getSimulationBox()._box.getVolume());
-    _engine.getPhysicalData().setDensity(_engine.getSimulationBox()._box.getDensity());
+    _engine.getPhysicalData().setVolume(_engine.getSimulationBox().getVolume());
+    _engine.getPhysicalData().setDensity(_engine.getSimulationBox().getDensity());
 }
 
 void PostProcessSetup::resizeAtomShiftForces()
@@ -205,8 +206,8 @@ void PostProcessSetup::resizeAtomShiftForces()
 
 void PostProcessSetup::checkRcCutoff()
 {
-    if (_engine.getSimulationBox().getRcCutOff() > _engine.getSimulationBox()._box.getMinimalBoxDimension() / 2.0)
-        throw InputFileException("Rc cutoff is larger than half of the minimal box dimension of " + std::to_string(_engine.getSimulationBox()._box.getMinimalBoxDimension()) + " Angstrom.");
+    if (_engine.getSimulationBox().getRcCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
+        throw InputFileException("Rc cutoff is larger than half of the minimal box dimension of " + std::to_string(_engine.getSimulationBox().getMinimalBoxDimension()) + " Angstrom.");
 }
 
 void PostProcessSetup::setupCellList()

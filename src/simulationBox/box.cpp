@@ -9,6 +9,7 @@
 #include "constants.hpp"
 
 using namespace std;
+using namespace simulationBox;
 
 /**
  * @brief Set the Box Dimensions in Box object
@@ -114,10 +115,7 @@ double Box::calculateDistanceSquared(const Vec3D &point1, const Vec3D &point2, V
     return normSquared(dxyz);
 }
 
-void Box::applyPBC(Vec3D &dxyz) const
-{
-    dxyz -= _boxDimensions * round(dxyz / _boxDimensions);
-}
+void Box::applyPBC(Vec3D &dxyz) const { dxyz -= _boxDimensions * round(dxyz / _boxDimensions); }
 
 void Box::scaleBox(const Vec3D &scaleFactors)
 {

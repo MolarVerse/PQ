@@ -16,7 +16,7 @@ protected:
 public:
     virtual ~Virial() = default;
 
-    virtual void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData);
+    virtual void calculateVirial(simulationBox::SimulationBox &, PhysicalData &);
 
     // standard getter and setters
     [[nodiscard]] Vec3D getVirial() const { return _virial; };
@@ -25,8 +25,8 @@ public:
 
 class VirialMolecular : public Virial
 {
-    void calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData) override;
-    void intraMolecularVirialCorrection(SimulationBox &simulationBox);
+    void calculateVirial(simulationBox::SimulationBox &, PhysicalData &) override;
+    void intraMolecularVirialCorrection(simulationBox::SimulationBox &);
 };
 
 class VirialAtomic : public Virial

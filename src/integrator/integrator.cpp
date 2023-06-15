@@ -6,6 +6,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace simulationBox;
 
 void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
 {

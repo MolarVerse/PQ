@@ -8,5 +8,5 @@ using namespace Setup::InputFileReader;
 void InputFileReader::parseDensity(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine.getSimulationBox()._box.setDensity(stod(lineElements[2]));
+    _engine.getSimulationBox().setDensity(stod(lineElements[2]));
 }

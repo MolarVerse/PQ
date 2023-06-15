@@ -2,6 +2,7 @@
 #include "constants.hpp"
 
 using namespace std;
+using namespace simulationBox;
 
 void Manostat::calculatePressure(PhysicalData &physicalData)
 {

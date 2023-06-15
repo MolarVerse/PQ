@@ -2,6 +2,7 @@
 #include "exceptions.hpp"
 
 using namespace std;
+using namespace simulationBox;
 
 size_t SimulationBox::getNumberOfParticles() const
 {

@@ -4,10 +4,11 @@
 #include <cmath>
 
 using namespace std;
+using namespace simulationBox;
 
 void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
-    const auto box = simBox._box.getBoxDimensions();
+    const auto box = simBox.getBoxDimensions();
     const double RcCutOff = simBox.getRcCutOff();
 
     double totalCoulombicEnergy = 0.0;
@@ -92,7 +93,7 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 // TODO: check if cutoff is smaller than smallest cell size
 void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
-    const auto box = simBox._box.getBoxDimensions();
+    const auto box = simBox.getBoxDimensions();
 
     Molecule *molecule_i = nullptr;
     Molecule *molecule_j = nullptr;

@@ -6,6 +6,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace simulationBox;
 
 /**
  * @brief sets number of atoms in molecule

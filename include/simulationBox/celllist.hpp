@@ -7,13 +7,18 @@
 #include "cell.hpp"
 #include "simulationBox.hpp"
 
+namespace simulationBox
+{
+    class CellList;
+}
+
 /**
  * @class CellList
  *
  * @brief CellList is a class for cell list
  *
  */
-class CellList
+class simulationBox::CellList
 {
 private:
     std::vector<Cell> _cells;
@@ -36,14 +41,14 @@ public:
 
     [[nodiscard]] Vec3D getCellSize() const { return _cellSize; }
 
-    void setup(const SimulationBox &);
-    void determineCellSize(const SimulationBox &);
-    void determineCellBoundaries(const SimulationBox &);
-    void addNeighbouringCells(const SimulationBox &);
+    void setup(const simulationBox::SimulationBox &);
+    void determineCellSize(const simulationBox::SimulationBox &);
+    void determineCellBoundaries(const simulationBox::SimulationBox &);
+    void addNeighbouringCells(const simulationBox::SimulationBox &);
     void addCellPointers(Cell &);
-    void updateCellList(SimulationBox &);
+    void updateCellList(simulationBox::SimulationBox &);
 
-    Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const Vec3D &);
+    Vec3Dul getCellIndexOfMolecule(const simulationBox::SimulationBox &, const Vec3D &);
     [[nodiscard]] size_t getCellIndex(const Vec3Dul &cellIndices) const
     {
         return cellIndices[0] * _nCells[1] * _nCells[2] + cellIndices[1] * _nCells[2] + cellIndices[2];

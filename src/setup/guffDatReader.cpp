@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace StringUtilities;
+using namespace simulationBox;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object

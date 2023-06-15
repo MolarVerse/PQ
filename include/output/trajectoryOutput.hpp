@@ -16,10 +16,10 @@ class TrajectoryOutput : public Output
 public:
     using Output::Output;
 
-    void writexyz(SimulationBox &);
-    void writeVelocities(SimulationBox &);
-    void writeForces(SimulationBox &);
-    void writeCharges(SimulationBox &);
+    void writexyz(simulationBox::SimulationBox &);
+    void writeVelocities(simulationBox::SimulationBox &);
+    void writeForces(simulationBox::SimulationBox &);
+    void writeCharges(simulationBox::SimulationBox &);
 };
 
 #endif // _TRAJECTORY_OUTPUT_HPP_

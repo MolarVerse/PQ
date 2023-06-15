@@ -5,6 +5,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace simulationBox;
 
 void Engine::run()
 {

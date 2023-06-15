@@ -23,9 +23,9 @@ public:
     explicit Thermostat(const double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
-    void calculateTemperature(SimulationBox &, PhysicalData &);
+    void calculateTemperature(simulationBox::SimulationBox &, PhysicalData &);
 
-    virtual void applyThermostat(SimulationBox &, PhysicalData &);
+    virtual void applyThermostat(simulationBox::SimulationBox &, PhysicalData &);
 
     // standard getters and setters
     void setTimestep(const double timestep) { _timestep = timestep; }
@@ -49,7 +49,7 @@ public:
     [[nodiscard]] double getTau() const { return _tau; }
     void setTau(const double tau) { _tau = tau; }
 
-    void applyThermostat(SimulationBox &, PhysicalData &) override;
+    void applyThermostat(simulationBox::SimulationBox &, PhysicalData &) override;
 };
 
 #endif // _THEMOSTAT_H_

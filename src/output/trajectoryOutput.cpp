@@ -3,14 +3,15 @@
 #include <iomanip>
 
 using namespace std;
+using namespace simulationBox;
 
 void TrajectoryOutput::writexyz(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxDimensions();
+    _fp << simBox.getBoxDimensions();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxAngles();
+    _fp << simBox.getBoxAngles();
     _fp << endl;
 
     _fp << endl;
@@ -45,9 +46,9 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxDimensions();
+    _fp << simBox.getBoxDimensions();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxAngles();
+    _fp << simBox.getBoxAngles();
     _fp << endl;
 
     _fp << endl;
@@ -82,9 +83,9 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxDimensions();
+    _fp << simBox.getBoxDimensions();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxAngles();
+    _fp << simBox.getBoxAngles();
     _fp << endl;
 
     _fp << endl;
@@ -119,9 +120,9 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfParticles();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxDimensions();
+    _fp << simBox.getBoxDimensions();
     _fp << "  ";
-    _fp << simBox.getBox().getBoxAngles();
+    _fp << simBox.getBoxAngles();
     _fp << endl;
 
     _fp << endl;

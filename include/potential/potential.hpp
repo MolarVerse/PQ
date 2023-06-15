@@ -32,7 +32,7 @@ public:
     std::unique_ptr<CoulombPotential> _coulombPotential;
     std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
 
-    virtual void calculateForces(SimulationBox &, PhysicalData &, CellList &) = 0;
+    virtual void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) = 0;
 
     // standard getter and setters
     std::string getCoulombType() const { return _coulombType; };
@@ -54,7 +54,7 @@ public:
 class PotentialBruteForce : public Potential
 {
 public:
-    void calculateForces(SimulationBox &, PhysicalData &, CellList &) override;
+    void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
 };
 
 /**
@@ -69,7 +69,7 @@ public:
 class PotentialCellList : public Potential
 {
 public:
-    void calculateForces(SimulationBox &, PhysicalData &, CellList &) override;
+    void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
 };
 
 #endif // _POTENTIAL_H_

@@ -53,12 +53,6 @@ int pimd_qmcf(int argc, char *argv[])
         HERE ENDS THE MAIN LOOP
     */
 
-    cout << "Box size: " << engine.getSimulationBox()._box.getBoxDimensions()[0] << endl;
-    cout << "Box angles: " << engine.getSimulationBox()._box.getBoxAngles()[0] << endl;
-
-    cout << "Water type: " << engine.getSimulationBox().getWaterType() << endl;
-    cout << "Ammonia type: " << engine.getSimulationBox().getAmmoniaType() << endl;
-
     return EXIT_SUCCESS;
 }
 

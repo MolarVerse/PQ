@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace StringUtilities;
+using namespace simulationBox;
 
 /**
  * @brief constructor

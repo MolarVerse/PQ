@@ -28,7 +28,7 @@ public:
     virtual ~Manostat() = default;
 
     void calculatePressure(PhysicalData &physicalData);
-    virtual void applyManostat(SimulationBox &, PhysicalData &);
+    virtual void applyManostat(simulationBox::SimulationBox &, PhysicalData &);
 
     // standard getters and setters
     void setTimestep(const double timestep) { _timestep = timestep; }
@@ -43,7 +43,7 @@ public:
     using Manostat::Manostat;
     explicit BerendsenManostat(const double targetPressure, const double tau) : Manostat(targetPressure), _tau(tau) {}
 
-    void applyManostat(SimulationBox &, PhysicalData &) override;
+    void applyManostat(simulationBox::SimulationBox &, PhysicalData &) override;
 };
 
 #endif

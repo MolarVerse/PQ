@@ -8,12 +8,17 @@
 #include <vector>
 #include <map>
 
+namespace simulationBox
+{
+    class Molecule;
+}
+
 /**
  * @class Molecule
  *
  * @brief containing all information about a molecule
  */
-class Molecule
+class simulationBox::Molecule
 {
 private:
     std::string _name;
