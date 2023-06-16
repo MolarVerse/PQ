@@ -4,9 +4,8 @@
 
 #include "vector3d.hpp"
 
-namespace simulationBox
-{
-    class Box;
+namespace simulationBox {
+class Box;
 }
 
 /**
@@ -21,9 +20,8 @@ namespace simulationBox
  *  This class is used to store the box dimensions and angles.
  *
  */
-class simulationBox::Box
-{
-private:
+class simulationBox::Box {
+  private:
     Vec3D _boxDimensions;
     Vec3D _boxAngles = {90.0, 90.0, 90.0};
 
@@ -34,7 +32,7 @@ private:
 
     bool _boxSizeHasChanged = false;
 
-public:
+  public:
     double calculateVolume();
     double calculateDistance(const Vec3D &, const Vec3D &, Vec3D &);
     double calculateDistanceSquared(const Vec3D &, const Vec3D &, Vec3D &);
@@ -58,13 +56,13 @@ public:
      * standard getter and setters *
      *******************************/
 
-    [[nodiscard]] Vec3D getBoxDimensions() const { return _boxDimensions; };
-    [[nodiscard]] Vec3D getBoxAngles() const { return _boxAngles; };
+    [[nodiscard]] Vec3D  getBoxDimensions() const { return _boxDimensions; };
+    [[nodiscard]] Vec3D  getBoxAngles() const { return _boxAngles; };
     [[nodiscard]] double getTotalMass() const { return _totalMass; };
     [[nodiscard]] double getTotalCharge() const { return _totalCharge; };
     [[nodiscard]] double getDensity() const { return _density; };
     [[nodiscard]] double getVolume() const { return _volume; };
-    [[nodiscard]] bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
+    [[nodiscard]] bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
 
     void setTotalMass(const double totalMass) { _totalMass = totalMass; };
     void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; };

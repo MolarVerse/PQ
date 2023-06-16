@@ -1,0 +1,23 @@
+# options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+ColumnLimit: 300
+SpaceAfterCStyleCast: true
+UseTab: Never
+SpacesBeforeTrailingComments: 3
+NamespaceIndentation: All
+
+AllowShortIfStatementsOnASingleLine: true
+# AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+
+AlignTrailingComments: true
+AlignConsecutiveMacros: Consecutive
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+
+IncludeBlocks: Regroup
+
+# use \n instead of \r\n
+UseCRLF: false

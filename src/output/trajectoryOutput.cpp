@@ -7,7 +7,7 @@ using namespace simulationBox;
 
 void TrajectoryOutput::writexyz(SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfParticles();
+    _fp << simBox.getNumberOfAtoms();
     _fp << "  ";
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
@@ -44,7 +44,7 @@ void TrajectoryOutput::writexyz(SimulationBox &simBox)
 
 void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfParticles();
+    _fp << simBox.getNumberOfAtoms();
     _fp << "  ";
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
@@ -81,7 +81,7 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 
 void TrajectoryOutput::writeForces(SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfParticles();
+    _fp << simBox.getNumberOfAtoms();
     _fp << "  ";
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
@@ -118,7 +118,7 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
 
 void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfParticles();
+    _fp << simBox.getNumberOfAtoms();
     _fp << "  ";
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
