@@ -2,7 +2,7 @@
 BasedOnStyle: LLVM
 
 IndentWidth: 4
-ColumnLimit: 300
+ColumnLimit: 130
 SpaceAfterCStyleCast: true
 UseTab: Never
 SpacesBeforeTrailingComments: 3

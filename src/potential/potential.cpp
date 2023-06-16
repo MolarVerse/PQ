@@ -76,10 +76,10 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                         const auto shiftForcexyz = forcexyz * txyz;
 
-                        molecule_i.addAtomForces(atom_i, forcexyz);
-                        molecule_j.addAtomForces(atom_j, -forcexyz);
+                        molecule_i.addAtomForce(atom_i, forcexyz);
+                        molecule_j.addAtomForce(atom_j, -forcexyz);
 
-                        molecule_i.addAtomShiftForces(atom_i, shiftForcexyz);
+                        molecule_i.addAtomShiftForce(atom_i, shiftForcexyz);
                     }
                 }
             }
@@ -166,10 +166,10 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                             const auto shiftForcexyz = forcexyz * txyz;
 
-                            molecule_i->addAtomForces(atom_i, forcexyz);
-                            molecule_j->addAtomForces(atom_j, -forcexyz);
+                            molecule_i->addAtomForce(atom_i, forcexyz);
+                            molecule_j->addAtomForce(atom_j, -forcexyz);
 
-                            molecule_i->addAtomShiftForces(atom_i, shiftForcexyz);
+                            molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
                         }
                     }
                 }
@@ -245,10 +245,10 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                                 const auto shiftForcexyz = forcexyz * txyz;
 
-                                molecule_i->addAtomForces(atom_i, forcexyz);
-                                molecule_j->addAtomForces(atom_j, -forcexyz);
+                                molecule_i->addAtomForce(atom_i, forcexyz);
+                                molecule_j->addAtomForce(atom_j, -forcexyz);
 
-                                molecule_i->addAtomShiftForces(atom_i, shiftForcexyz);
+                                molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
                             }
                         }
                     }

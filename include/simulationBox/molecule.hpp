@@ -4,12 +4,11 @@
 
 #include "vector3d.hpp"
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
-namespace simulationBox
-{
+namespace simulationBox {
     class Molecule;
 }
 
@@ -18,13 +17,11 @@ namespace simulationBox
  *
  * @brief containing all information about a molecule
  */
-class simulationBox::Molecule
-{
-private:
+class simulationBox::Molecule {
+  private:
     std::string _name;
-
-    size_t _moltype;
-    size_t _numberOfAtoms;
+    size_t      _moltype;
+    size_t      _numberOfAtoms;
 
     double _charge;
     double _molMass;
@@ -32,14 +29,14 @@ private:
     std::vector<std::string> _atomNames;
     std::vector<std::string> _atomTypeNames;
 
-    std::vector<size_t> _externalAtomTypes;
-    std::vector<size_t> _atomTypes;
+    std::vector<int>         _globalVDWTypes;
+    std::vector<int>         _atomicNumbers;
+    std::vector<size_t>      _externalAtomTypes;
+    std::vector<size_t>      _atomTypes;
     std::map<size_t, size_t> _externalToInternalAtomTypes;
 
     std::vector<double> _partialCharges;
-    std::vector<int> _globalVDWTypes;
     std::vector<double> _masses;
-    std::vector<int> _atomicNumbers;
 
     std::vector<Vec3D> _positions;
     std::vector<Vec3D> _velocities;
@@ -48,7 +45,7 @@ private:
 
     Vec3D _centerOfMass = Vec3D(0.0, 0.0, 0.0);
 
-public:
+  public:
     Molecule() = default;
     explicit Molecule(const std::string_view name) : _name(name){};
     explicit Molecule(const size_t moltype) : _moltype(moltype){};
@@ -56,71 +53,77 @@ public:
     void calculateCenterOfMass(const Vec3D &);
     void scale(const Vec3D &);
 
-    void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; };
-    size_t getNumberOfAtomTypes(); // cannot be const due to iterator in it
-
-    // standard getter and setters
-    void setName(const std::string_view name) { _name = name; };
-    std::string getName() const { return _name; };
-
-    void setMoltype(const size_t moltype) { _moltype = moltype; };
-    [[nodiscard]] size_t getMoltype() const { return _moltype; };
-
-    [[nodiscard]] size_t getNumberOfAtoms() const { return _numberOfAtoms; };
-
-    void setCharge(const double charge) { _charge = charge; };
-    [[nodiscard]] double getCharge() const { return _charge; };
-
-    void setMolMass(const double molMass) { _molMass = molMass; };
-    [[nodiscard]] double getMolMass() const { return _molMass; };
+    size_t getNumberOfAtomTypes();
+    void   resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
 
     void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); };
-    std::string getAtomName(const size_t index) const { return _atomNames[index]; };
-
     void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); };
-    std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; };
-
-    void addExternalAtomType(const size_t atomType) { _externalAtomTypes.push_back(atomType); };
-    [[nodiscard]] size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; };
-    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; };
-    void addExternalToInternalAtomTypeElement(const size_t externalAtomType, size_t internalAtomType) { _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType); };
-
     void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); };
-    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
-    [[nodiscard]] size_t getAtomType(const size_t index) const { return _atomTypes[index]; };
+    void addExternalAtomType(const size_t atomType) { _externalAtomTypes.push_back(atomType); };
+    void addExternalToInternalAtomTypeElement(const size_t externalAtomType, size_t internalAtomType) {
+        _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType);
+    };
+
+    /************************
+     * standatd add methods *
+     ************************/
 
     void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); };
-    [[nodiscard]] double getPartialCharge(const size_t index) const { return _partialCharges[index]; };
-
     void addGlobalVDWType(const int globalVDWType) { _globalVDWTypes.push_back(globalVDWType); };
-    [[nodiscard]] int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; };
-
     void addAtomMass(const double mass) { _masses.push_back(mass); };
-    [[nodiscard]] double getAtomMass(const size_t index) const { return _masses[index]; };
-
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
-    [[nodiscard]] int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
 
-    void addAtomPositions(const Vec3D &position) { _positions.push_back(position); }
-    [[nodiscard]] Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
-    void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
-
+    void addAtomPosition(const Vec3D &position) { _positions.push_back(position); }
     void addAtomVelocity(const Vec3D &velocity) { _velocities.push_back(velocity); }
-    [[nodiscard]] Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
+    void addAtomForce(const Vec3D &force) { _forces.push_back(force); }
+    void addAtomForce(const size_t index, const Vec3D &force) { _forces[index] += force; }
+    void addAtomShiftForce(const size_t index, const Vec3D &shiftForce) { _shiftForces[index] += shiftForce; }
+
+    /***************************
+     * standatd getter methods *
+     ***************************/
+
+    size_t getMoltype() const { return _moltype; };
+    size_t getNumberOfAtoms() const { return _numberOfAtoms; };
+    size_t getAtomType(const size_t index) const { return _atomTypes[index]; };
+    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
+    size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; };
+
+    int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; };
+    int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
+
+    double getCharge() const { return _charge; };
+    double getMolMass() const { return _molMass; };
+    double getPartialCharge(const size_t index) const { return _partialCharges[index]; };
+    double getAtomMass(const size_t index) const { return _masses[index]; };
+
+    std::string getName() const { return _name; };
+    std::string getAtomName(const size_t index) const { return _atomNames[index]; };
+    std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; };
+
+    Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
+    Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
+    Vec3D getAtomForce(const size_t index) const { return _forces[index]; }
+    Vec3D getAtomShiftForce(const size_t index) const { return _shiftForces[index]; }
+    Vec3D getCenterOfMass() const { return _centerOfMass; }
+
+    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; };
+
+    /***************************
+     * standatd setter methods *
+     ***************************/
+
+    void setName(const std::string_view name) { _name = name; };
+    void setMoltype(const size_t moltype) { _moltype = moltype; };
+    void setCharge(const double charge) { _charge = charge; };
+    void setMolMass(const double molMass) { _molMass = molMass; };
+    void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; };
+
+    void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
     void setAtomVelocity(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }
-
-    void addAtomForces(const Vec3D &force) { _forces.push_back(force); }
-    void addAtomForces(const size_t index, const Vec3D &force) { _forces[index] += force; }
-    [[nodiscard]] Vec3D getAtomForce(const size_t index) const { return _forces[index]; }
-    void setAtomForces(const size_t index, const Vec3D &force) { _forces[index] = force; }
-    void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), Vec3D(0.0, 0.0, 0.0)); }
-
-    void addAtomShiftForces(const size_t index, const Vec3D &shiftForce) { _shiftForces[index] += shiftForce; }
-    [[nodiscard]] Vec3D getAtomShiftForces(const size_t index) const { return _shiftForces[index]; }
+    void setAtomForce(const size_t index, const Vec3D &force) { _forces[index] = force; }
     void setAtomShiftForces(const size_t index, const Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }
-    void resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
-
-    [[nodiscard]] Vec3D getCenterOfMass() const { return _centerOfMass; }
+    void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), Vec3D(0.0, 0.0, 0.0)); }
 };
 
 #endif

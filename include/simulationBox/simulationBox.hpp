@@ -52,9 +52,9 @@ class simulationBox::SimulationBox {
   public:
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); };
 
-    [[nodiscard]] size_t   getNumberOfAtoms() const;
-    [[nodiscard]] int      getDegreesOfFreedom() const { return _degreesOfFreedom; };
-    [[nodiscard]] Molecule findMoleculeType(const size_t moltype) const;
+    size_t   getNumberOfAtoms() const;
+    int      getDegreesOfFreedom() const { return _degreesOfFreedom; };
+    Molecule findMoleculeType(const size_t moltype) const;
 
     void calculateDegreesOfFreedom();
     void calculateCenterOfMassMolecules();
@@ -68,25 +68,26 @@ class simulationBox::SimulationBox {
      * standatd getter methods *
      ***************************/
 
-    [[nodiscard]] int    getWaterType() const { return _waterType; };
-    [[nodiscard]] int    getAmmoniaType() const { return _ammoniaType; };
-    [[nodiscard]] double getRcCutOff() const { return _rcCutOff; };
+    int    getWaterType() const { return _waterType; };
+    int    getAmmoniaType() const { return _ammoniaType; };
+    double getRcCutOff() const { return _rcCutOff; };
+    size_t getNumberOfMolecules() const { return _molecules.size(); };
 
-    [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); };
+    std::vector<Molecule> &getMolecules() { return _molecules; };
+    std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; };
+    Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; };
+    Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; };
 
-    [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; };
-    [[nodiscard]] Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; };
-    [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; };
-    [[nodiscard]] Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; };
+    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2) {
+        return _guffCoefficients[m1 - 1][m2 - 1][a1][a2];
+    };
 
-    [[nodiscard]] std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _guffCoefficients[m1 - 1][m2 - 1][a1][a2]; };
-
-    [[nodiscard]] double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    [[nodiscard]] double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; };
-    [[nodiscard]] double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    [[nodiscard]] double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    [[nodiscard]] double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    [[nodiscard]] double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; };
+    double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
 
     /***************************
      * standatd setter methods *
@@ -96,13 +97,27 @@ class simulationBox::SimulationBox {
     void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; };
     void setRcCutOff(const double rcCutOff) { _rcCutOff = rcCutOff; };
 
-    void setGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const std::vector<double> &guffCoefficients) { _guffCoefficients[m1 - 1][m2 - 1][a1][a2] = guffCoefficients; }
-    void setRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff) { _rncCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff; }
-    void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient) { _coulombCoefficients[m1 - 1][m2 - 1][a1][a2] = coulombCoefficient; }
-    void setcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff) { _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = cEnergyCutOff; }
-    void setcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff) { _cForceCutOffs[m1 - 1][m2 - 1][a1][a2] = cForceCutOff; }
-    void setncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff) { _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = ncEnergyCutOff; }
-    void setncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff) { _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2] = ncForceCutOff; }
+    void setGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const std::vector<double> &guffCoefficients) {
+        _guffCoefficients[m1 - 1][m2 - 1][a1][a2] = guffCoefficients;
+    }
+    void setRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff) {
+        _rncCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
+    }
+    void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient) {
+        _coulombCoefficients[m1 - 1][m2 - 1][a1][a2] = coulombCoefficient;
+    }
+    void setcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff) {
+        _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = cEnergyCutOff;
+    }
+    void setcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff) {
+        _cForceCutOffs[m1 - 1][m2 - 1][a1][a2] = cForceCutOff;
+    }
+    void setncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff) {
+        _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = ncEnergyCutOff;
+    }
+    void setncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff) {
+        _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2] = ncForceCutOff;
+    }
 
     /**********************************************
      * Forwards the box methods to the box object *
@@ -111,18 +126,18 @@ class simulationBox::SimulationBox {
     void applyPBC(Vec3D &position) const { _box.applyPBC(position); };
     void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); };
 
-    [[nodiscard]] double calculateVolume() { return _box.calculateVolume(); }
-    [[nodiscard]] Vec3D  calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }
+    double calculateVolume() { return _box.calculateVolume(); }
+    Vec3D  calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }
 
-    [[nodiscard]] double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
-    [[nodiscard]] bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
+    double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
+    bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
 
-    [[nodiscard]] double getDensity() const { return _box.getDensity(); }
-    [[nodiscard]] double getTotalMass() const { return _box.getTotalMass(); }
-    [[nodiscard]] double getTotalCharge() const { return _box.getTotalCharge(); }
-    [[nodiscard]] double getVolume() const { return _box.getVolume(); }
-    [[nodiscard]] Vec3D  getBoxDimensions() const { return _box.getBoxDimensions(); }
-    [[nodiscard]] Vec3D  getBoxAngles() const { return _box.getBoxAngles(); }
+    double getDensity() const { return _box.getDensity(); }
+    double getTotalMass() const { return _box.getTotalMass(); }
+    double getTotalCharge() const { return _box.getTotalCharge(); }
+    double getVolume() const { return _box.getVolume(); }
+    Vec3D  getBoxDimensions() const { return _box.getBoxDimensions(); }
+    Vec3D  getBoxAngles() const { return _box.getBoxAngles(); }
 
     void setDensity(const double density) { _box.setDensity(density); }
     void setTotalMass(const double mass) { _box.setTotalMass(mass); }

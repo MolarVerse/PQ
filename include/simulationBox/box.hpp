@@ -5,7 +5,7 @@
 #include "vector3d.hpp"
 
 namespace simulationBox {
-class Box;
+    class Box;
 }
 
 /**
@@ -50,19 +50,19 @@ class simulationBox::Box {
     void setBoxAngles(const Vec3D &);
     void setDensity(const double density);
 
-    [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); };
+    double getMinimalBoxDimension() const { return minimum(_boxDimensions); };
 
     /*******************************
      * standard getter and setters *
      *******************************/
 
-    [[nodiscard]] Vec3D  getBoxDimensions() const { return _boxDimensions; };
-    [[nodiscard]] Vec3D  getBoxAngles() const { return _boxAngles; };
-    [[nodiscard]] double getTotalMass() const { return _totalMass; };
-    [[nodiscard]] double getTotalCharge() const { return _totalCharge; };
-    [[nodiscard]] double getDensity() const { return _density; };
-    [[nodiscard]] double getVolume() const { return _volume; };
-    [[nodiscard]] bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
+    Vec3D  getBoxDimensions() const { return _boxDimensions; };
+    Vec3D  getBoxAngles() const { return _boxAngles; };
+    double getTotalMass() const { return _totalMass; };
+    double getTotalCharge() const { return _totalCharge; };
+    double getDensity() const { return _density; };
+    double getVolume() const { return _volume; };
+    bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
 
     void setTotalMass(const double totalMass) { _totalMass = totalMass; };
     void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; };
