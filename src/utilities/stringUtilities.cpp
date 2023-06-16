@@ -1,10 +1,11 @@
-#include <string>
-#include <sstream>
-#include <vector>
-#include <boost/algorithm/string.hpp>
-
 #include "stringUtilities.hpp"
+
 #include "exceptions.hpp"
+
+#include <boost/algorithm/string.hpp>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -17,55 +18,14 @@ using namespace std;
  */
 string StringUtilities::removeComments(string &line, const string_view &commentChar)
 {
-    if (const auto commentPos = line.find(commentChar); commentPos != string::npos)
-        line = line.substr(0, commentPos);
+    if (const auto commentPos = line.find(commentChar); commentPos != string::npos) line = line.substr(0, commentPos);
     return line;
 }
 
 /**
- * @brief Splits a string into a vector of strings
- *
- * @param line
- * @return vector<string>
- *
- * TODO: merge splitstring functions
- */
-vector<string> StringUtilities::splitString(const string &line)
-{
-    string word;
-    vector<string> lineElements = {};
-
-    stringstream ss(line);
-
-    while (ss >> word)
-    {
-        lineElements.push_back(word);
-    }
-
-    return lineElements;
-}
-
-/**
- * @brief Splits a string into a vector of strings
- *
- * @param line
- * @return vector<string>
- */
-void StringUtilities::splitString2(const string &line, vector<string> &lineElements)
-{
-    string word;
-    lineElements.clear();
-
-    stringstream ss(line);
-
-    while (ss >> word)
-    {
-        lineElements.push_back(word);
-    }
-}
-
-/**
  * @brief get commands from a line
+ *
+ * @note split commands at every semicolon
  *
  * @param line
  * @return vector<string>
@@ -81,14 +41,31 @@ vector<string> StringUtilities::getLineCommands(const string &line, const size_t
             break;
         else if (!isspace(line[static_cast<size_t>(i)]))
             throw InputFileException("Missing semicolon in input file at line " + to_string(lineNumber));
-        else
-        {
-            // dummy
-        }
     }
 
     vector<string> lineCommands;
     boost::split(lineCommands, line, boost::is_any_of(";"));
 
     return lineCommands;
+}
+
+/**
+ * @brief Splits a string into a vector of strings at every whitespace
+ *
+ * @param line
+ * @return vector<string>
+ *
+ * TODO: merge splitstring functions
+ */
+vector<string> StringUtilities::splitString(const string &line)
+{
+    string         word;
+    vector<string> lineElements = {};
+
+    stringstream ss(line);
+
+    while (ss >> word)
+        lineElements.push_back(word);
+
+    return lineElements;
 }

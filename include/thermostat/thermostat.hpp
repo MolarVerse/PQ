@@ -2,8 +2,18 @@
 
 #define _THEMOSTAT_H_
 
-#include "simulationBox.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
+
+/**
+ * @namespace thermostat
+ *
+ */
+namespace thermostat
+{
+    class Thermostat;
+    class BerendsenThermostat;
+}   // namespace thermostat
 
 /**
  * @class Thermostat
@@ -11,23 +21,22 @@
  * @brief Thermostat is a base class for all thermostats
  *
  */
-class Thermostat
+class thermostat::Thermostat
 {
-protected:
+  protected:
     double _temperature;
     double _targetTemperature;
     double _timestep;
 
-public:
+  public:
     Thermostat() = default;
     explicit Thermostat(const double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
-    void calculateTemperature(simulationBox::SimulationBox &, PhysicalData &);
-
     virtual void applyThermostat(simulationBox::SimulationBox &, PhysicalData &);
 
-    // standard getters and setters
+    void calculateTemperature(simulationBox::SimulationBox &, PhysicalData &);
+
     void setTimestep(const double timestep) { _timestep = timestep; }
 };
 
@@ -37,19 +46,19 @@ public:
  * @brief BerendsenThermostat is a class for Berendsen thermostat
  *
  */
-class BerendsenThermostat : public Thermostat
+class thermostat::BerendsenThermostat : public thermostat::Thermostat
 {
-private:
+  private:
     double _tau;
 
-public:
+  public:
     BerendsenThermostat() = default;
     explicit BerendsenThermostat(const double targetTemperature, const double tau) : Thermostat(targetTemperature), _tau(tau) {}
-    // standard getters and setters
-    [[nodiscard]] double getTau() const { return _tau; }
-    void setTau(const double tau) { _tau = tau; }
 
     void applyThermostat(simulationBox::SimulationBox &, PhysicalData &) override;
+
+    double getTau() const { return _tau; }
+    void   setTau(const double tau) { _tau = tau; }
 };
 
-#endif // _THEMOSTAT_H_
+#endif   // _THEMOSTAT_H_

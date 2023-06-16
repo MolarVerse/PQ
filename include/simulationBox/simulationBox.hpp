@@ -9,9 +9,23 @@
 #include <string>
 #include <vector>
 
-using c_ul = const size_t;
+using c_ul     = const size_t;
+using vector4d = std::vector<std::vector<std::vector<std::vector<double>>>>;
+using vector5d = std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>>;
 
-namespace simulationBox {
+/**
+ * @namespace simulationBox
+ *
+ * @brief contains class:
+ *  SimulationBox
+ *  Box
+ *  CellList
+ *  Cell
+ *  Molecule
+ *
+ */
+namespace simulationBox
+{
     class SimulationBox;
 }
 
@@ -29,7 +43,8 @@ namespace simulationBox {
  *  Additional molecular information is also stored in the SimulationBox class.
  *
  */
-class simulationBox::SimulationBox {
+class simulationBox::SimulationBox
+{
   private:
     int    _waterType;
     int    _ammoniaType;
@@ -41,19 +56,19 @@ class simulationBox::SimulationBox {
     std::vector<Molecule> _molecules;
     std::vector<Molecule> _moleculeTypes;
 
-    std::vector<std::vector<std::vector<std::vector<std::vector<double>>>>> _guffCoefficients;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _rncCutOffs;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _coulombCoefficients;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _cEnergyCutOffs;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _cForceCutOffs;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _ncEnergyCutOffs;
-    std::vector<std::vector<std::vector<std::vector<double>>>>              _ncForceCutOffs;
+    vector5d _guffCoefficients;
+    vector4d _rncCutOffs;
+    vector4d _coulombCoefficients;
+    vector4d _cEnergyCutOffs;
+    vector4d _cForceCutOffs;
+    vector4d _ncEnergyCutOffs;
+    vector4d _ncForceCutOffs;
 
   public:
-    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); };
+    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
 
     size_t   getNumberOfAtoms() const;
-    int      getDegreesOfFreedom() const { return _degreesOfFreedom; };
+    int      getDegreesOfFreedom() const { return _degreesOfFreedom; }
     Molecule findMoleculeType(const size_t moltype) const;
 
     void calculateDegreesOfFreedom();
@@ -68,54 +83,62 @@ class simulationBox::SimulationBox {
      * standatd getter methods *
      ***************************/
 
-    int    getWaterType() const { return _waterType; };
-    int    getAmmoniaType() const { return _ammoniaType; };
-    double getRcCutOff() const { return _rcCutOff; };
-    size_t getNumberOfMolecules() const { return _molecules.size(); };
+    int    getWaterType() const { return _waterType; }
+    int    getAmmoniaType() const { return _ammoniaType; }
+    double getRcCutOff() const { return _rcCutOff; }
+    size_t getNumberOfMolecules() const { return _molecules.size(); }
 
-    std::vector<Molecule> &getMolecules() { return _molecules; };
-    std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; };
-    Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; };
-    Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; };
+    std::vector<Molecule> &getMolecules() { return _molecules; }
+    std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
+    Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
+    Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2) {
+    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
         return _guffCoefficients[m1 - 1][m2 - 1][a1][a2];
-    };
+    }
 
-    double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; };
-    double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; };
-    double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; };
+    double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; }
+    double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
 
     /***************************
      * standatd setter methods *
      ***************************/
 
-    void setWaterType(const int waterType) { _waterType = waterType; };
-    void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; };
-    void setRcCutOff(const double rcCutOff) { _rcCutOff = rcCutOff; };
+    void setWaterType(const int waterType) { _waterType = waterType; }
+    void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; }
+    void setRcCutOff(const double rcCutOff) { _rcCutOff = rcCutOff; }
 
-    void setGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const std::vector<double> &guffCoefficients) {
+    void setGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const std::vector<double> &guffCoefficients)
+    {
         _guffCoefficients[m1 - 1][m2 - 1][a1][a2] = guffCoefficients;
     }
-    void setRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff) {
+    void setRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff)
+    {
         _rncCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
     }
-    void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient) {
+    void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient)
+    {
         _coulombCoefficients[m1 - 1][m2 - 1][a1][a2] = coulombCoefficient;
     }
-    void setcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff) {
+    void setcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff)
+    {
         _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = cEnergyCutOff;
     }
-    void setcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff) {
+    void setcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff)
+    {
         _cForceCutOffs[m1 - 1][m2 - 1][a1][a2] = cForceCutOff;
     }
-    void setncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff) {
+    void setncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff)
+    {
         _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = ncEnergyCutOff;
     }
-    void setncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff) {
+    void setncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff)
+    {
         _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2] = ncForceCutOff;
     }
 
@@ -123,8 +146,8 @@ class simulationBox::SimulationBox {
      * Forwards the box methods to the box object *
      **********************************************/
 
-    void applyPBC(Vec3D &position) const { _box.applyPBC(position); };
-    void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); };
+    void applyPBC(Vec3D &position) const { _box.applyPBC(position); }
+    void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); }
 
     double calculateVolume() { return _box.calculateVolume(); }
     Vec3D  calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }

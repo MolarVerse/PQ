@@ -4,7 +4,8 @@
 
 #include "vector3d.hpp"
 
-namespace simulationBox {
+namespace simulationBox
+{
     class Box;
 }
 
@@ -20,7 +21,8 @@ namespace simulationBox {
  *  This class is used to store the box dimensions and angles.
  *
  */
-class simulationBox::Box {
+class simulationBox::Box
+{
   private:
     Vec3D _boxDimensions;
     Vec3D _boxAngles = {90.0, 90.0, 90.0};
@@ -50,24 +52,24 @@ class simulationBox::Box {
     void setBoxAngles(const Vec3D &);
     void setDensity(const double density);
 
-    double getMinimalBoxDimension() const { return minimum(_boxDimensions); };
+    double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
 
     /*******************************
      * standard getter and setters *
      *******************************/
 
-    Vec3D  getBoxDimensions() const { return _boxDimensions; };
-    Vec3D  getBoxAngles() const { return _boxAngles; };
-    double getTotalMass() const { return _totalMass; };
-    double getTotalCharge() const { return _totalCharge; };
-    double getDensity() const { return _density; };
-    double getVolume() const { return _volume; };
-    bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; };
+    Vec3D  getBoxDimensions() const { return _boxDimensions; }
+    Vec3D  getBoxAngles() const { return _boxAngles; }
+    double getTotalMass() const { return _totalMass; }
+    double getTotalCharge() const { return _totalCharge; }
+    double getDensity() const { return _density; }
+    double getVolume() const { return _volume; }
+    bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
-    void setTotalMass(const double totalMass) { _totalMass = totalMass; };
-    void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; };
-    void setVolume(const double volume) { _volume = volume; };
-    void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; };
+    void setTotalMass(const double totalMass) { _totalMass = totalMass; }
+    void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
+    void setVolume(const double volume) { _volume = volume; }
+    void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; }
 };
 
 #endif

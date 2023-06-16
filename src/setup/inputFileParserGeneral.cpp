@@ -1,9 +1,9 @@
-#include <iostream>
-
 #include "inputFileReader.hpp"
 
+#include <iostream>
+
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 /**
  * @brief parse start file of simulation and set it in settings
@@ -51,5 +51,6 @@ void InputFileReader::parseJobType(const vector<string> &lineElements)
     if (lineElements[2] == "mm-md")
         _engine.getSettings().setJobtype("MMMD");
     else
-        throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+                                 "in input file");
 }

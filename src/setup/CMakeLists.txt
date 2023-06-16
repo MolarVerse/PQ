@@ -1,4 +1,6 @@
 add_library(setup
+    setup.cpp
+
     rstFileReader.cpp
     rstFileSection.cpp
 

@@ -3,7 +3,8 @@
 #include <memory>
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
+using namespace thermostat;
 
 /**
  * @brief Parse the thermostat used in the simulation
@@ -24,7 +25,8 @@ void InputFileReader::parseThermostat(const vector<string> &lineElements)
         _engine.getSettings().setThermostat("berendsen");
     }
     else
-        throw InputFileException("Invalid thermostat \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid thermostat \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+                                 "in input file");
 }
 
 void InputFileReader::parseTemperature(const vector<string> &lineElements)

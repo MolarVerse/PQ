@@ -3,7 +3,7 @@
 #include <memory>
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 /**
  * @brief Parse the integrator used in the simulation
@@ -16,5 +16,6 @@ void InputFileReader::parseIntegrator(const vector<string> &lineElements)
     if (lineElements[2] == "v-verlet")
         _engine._integrator = make_unique<VelocityVerlet>();
     else
-        throw InputFileException("Invalid integrator \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid integrator \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+                                 "in input file");
 }

@@ -11,47 +11,18 @@
 using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
+using namespace setup;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
  *
  * @param engine
  */
-void readGuffDat(Engine &engine) {
+void setup::readGuffDat(Engine &engine)
+{
     GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();
     guffDat.read();
-}
-
-/**
- * @brief constructs the guff dat 4d vectors
- *
- */
-void GuffDatReader::setupGuffMaps() {
-    const size_t numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size();
-
-    _engine.getSimulationBox().resizeGuff(numberOfMoleculeTypes);
-
-    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
-        _engine.getSimulationBox().resizeGuff(i, numberOfMoleculeTypes);
-
-    for (size_t i = 0; i < numberOfMoleculeTypes; ++i) {
-        const size_t numberOfAtomTypes = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
-
-        for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
-            _engine.getSimulationBox().resizeGuff(i, j, numberOfAtomTypes);
-    }
-
-    for (size_t i = 0; i < numberOfMoleculeTypes; ++i) {
-        const size_t numberOfAtomTypes_i = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
-
-        for (size_t j = 0; j < numberOfMoleculeTypes; ++j) {
-            const size_t numberOfAtomTypes_j = _engine.getSimulationBox().getMoleculeType(j).getNumberOfAtomTypes();
-
-            for (size_t k = 0; k < numberOfAtomTypes_i; ++k)
-                _engine.getSimulationBox().resizeGuff(i, j, k, numberOfAtomTypes_j);
-        }
-    }
 }
 
 /**
@@ -59,25 +30,65 @@ void GuffDatReader::setupGuffMaps() {
  *
  * @throws GuffDatException if the file is invalid
  */
-void GuffDatReader::read() {
+void GuffDatReader::read()
+{
     ifstream fp(_filename);
     string   line;
 
-    while (getline(fp, line)) {
+    while (getline(fp, line))
+    {
         line = removeComments(line, "#");
 
-        if (line.empty()) {
+        if (line.empty())
+        {
             ++_lineNumber;
             continue;
         }
 
         auto lineCommands = getLineCommands(line, _lineNumber);
 
-        if (lineCommands.size() - 1 != 28) throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " + to_string(_lineNumber));
+        if (lineCommands.size() - 1 != 28)
+            throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " +
+                                   to_string(_lineNumber));
 
         parseLine(lineCommands);
 
         ++_lineNumber;
+    }
+}
+
+/**
+ * @brief constructs the guff dat 4d vectors
+ *
+ */
+void GuffDatReader::setupGuffMaps()
+{
+    const size_t numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size();
+
+    _engine.getSimulationBox().resizeGuff(numberOfMoleculeTypes);
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+        _engine.getSimulationBox().resizeGuff(i, numberOfMoleculeTypes);
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+    {
+        const size_t numberOfAtomTypes = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
+
+        for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
+            _engine.getSimulationBox().resizeGuff(i, j, numberOfAtomTypes);
+    }
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+    {
+        const size_t numberOfAtomTypes_i = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
+
+        for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
+        {
+            const size_t numberOfAtomTypes_j = _engine.getSimulationBox().getMoleculeType(j).getNumberOfAtomTypes();
+
+            for (size_t k = 0; k < numberOfAtomTypes_i; ++k)
+                _engine.getSimulationBox().resizeGuff(i, j, k, numberOfAtomTypes_j);
+        }
     }
 }
 
@@ -88,24 +99,31 @@ void GuffDatReader::read() {
  *
  * @throws GuffDatException if the line is invalid
  */
-void GuffDatReader::parseLine(vector<string> &lineCommands) {
+void GuffDatReader::parseLine(vector<string> &lineCommands)
+{
     Molecule molecule1;
     Molecule molecule2;
 
     size_t atomType1 = 0;
     size_t atomType2 = 0;
 
-    try {
+    try
+    {
         molecule1 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[0]));
         molecule2 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[2]));
-    } catch (const RstFileException &) {
+    }
+    catch (const RstFileException &)
+    {
         throw GuffDatException("Invalid molecule type in line " + to_string(_lineNumber));
     }
 
-    try {
+    try
+    {
         atomType1 = molecule1.getInternalAtomType(stoul(lineCommands[1]));
         atomType2 = molecule2.getInternalAtomType(stoul(lineCommands[3]));
-    } catch (const std::exception &) {
+    }
+    catch (const std::exception &)
+    {
         throw GuffDatException("Invalid atom type in line " + to_string(_lineNumber));
     }
 
@@ -116,7 +134,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands) {
     const double   coulombCoefficient = stod(lineCommands[5]);
     vector<double> guffCoefficients(22);
 
-    for (size_t i = 0; i < 22; ++i) {
+    for (size_t i = 0; i < 22; ++i)
+    {
         guffCoefficients[i] = stod(lineCommands[i + 6]);
     }
 
@@ -136,7 +155,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands) {
     double       force       = 0.0;
     const double dummyCutoff = 1.0;
 
-    _engine._potential->_coulombPotential->calcCoulomb(coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);
+    _engine._potential->_coulombPotential->calcCoulomb(
+        coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);
 
     _engine.getSimulationBox().setcEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
     _engine.getSimulationBox().setcEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);

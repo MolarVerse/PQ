@@ -11,11 +11,23 @@ NamespaceIndentation: All
 AllowShortIfStatementsOnASingleLine: true
 # AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
 
 AlignTrailingComments: true
 AlignConsecutiveMacros: Consecutive
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
+
+BreakBeforeBraces: Allman
+
+BreakBeforeConceptDeclarations: Always
+
+BinPackArguments: false
+BinPackParameters: false
+
+RemoveSemicolon: true
 
 IncludeBlocks: Regroup
 

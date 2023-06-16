@@ -22,7 +22,8 @@ bool BoxSection::isHeader() { return true; }
  *
  * @throws RstFileException if the number of elements in the line is not 4 or 7
  */
-void BoxSection::process(vector<string> &lineElements, Engine &engine) {
+void BoxSection::process(vector<string> &lineElements, Engine &engine)
+{
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
 
@@ -37,7 +38,8 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine) {
 bool NoseHooverSection::isHeader() { return true; }
 
 // TODO: implement this function
-void NoseHooverSection::process(vector<string> &, Engine &) {
+void NoseHooverSection::process(vector<string> &, Engine &)
+{
     throw RstFileException("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
 }
 
@@ -51,7 +53,8 @@ bool StepCountSection::isHeader() { return true; }
  *
  * @throws RstFileException if the number of elements in the line is not 2
  */
-void StepCountSection::process(vector<string> &lineElements, Engine &engine) {
+void StepCountSection::process(vector<string> &lineElements, Engine &engine)
+{
     if (lineElements.size() != 2)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
 
@@ -69,7 +72,8 @@ bool AtomSection::isHeader() { return false; }
  * @throws RstFileException if the molecule type is not found
  * @throws RstFileException if the number of atoms in the molecule is not correct
  */
-void AtomSection::process(vector<string> &lineElements, Engine &engine) {
+void AtomSection::process(vector<string> &lineElements, Engine &engine)
+{
     string               line;
     unique_ptr<Molecule> molecule;
 
@@ -78,9 +82,12 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine) {
 
     size_t moltype = stoul(lineElements[2]);
 
-    try {
+    try
+    {
         molecule = make_unique<Molecule>(engine.getSimulationBox().findMoleculeType(moltype));
-    } catch (const RstFileException &e) {
+    }
+    catch (const RstFileException &e)
+    {
         cout << e.what() << endl;
         cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << endl;
         throw;
@@ -88,7 +95,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine) {
 
     size_t atomCounter = 0;
 
-    while (true) {
+    while (true)
+    {
         if (molecule->getMoltype() != moltype)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " +
                                    to_string(molecule->getNumberOfAtoms()) + " atoms");
@@ -103,7 +111,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine) {
 
         checkAtomLine(lineElements, line, *molecule);
 
-        while (lineElements.empty()) {
+        while (lineElements.empty())
+        {
             checkAtomLine(lineElements, line, *molecule);
         }
 
@@ -122,7 +131,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine) {
  * @param lineElements
  * @param molecule
  */
-void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule) const {
+void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecule) const
+{
     molecule.addAtomTypeName(lineElements[0]);
 
     molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
@@ -139,14 +149,14 @@ void AtomSection::processAtomLine(vector<string> &lineElements, Molecule &molecu
  *
  * @throws RstFileException if the number of elements in the line is not 21
  */
-void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const Molecule &molecule) {
+void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, const Molecule &molecule)
+{
     ++_lineNumber;
 
     if (!getline(*_fp, line))
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " +
                                to_string(molecule.getNumberOfAtoms()) + " atoms");
 
-    line = removeComments(line, "#");
-    // lineElements = splitString(line); TODO: implement all splitString functions via splitString2
-    splitString2(line, lineElements);
+    line         = removeComments(line, "#");
+    lineElements = splitString(line);
 }

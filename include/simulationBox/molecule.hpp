@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-namespace simulationBox {
+namespace simulationBox
+{
     class Molecule;
 }
 
@@ -17,7 +18,8 @@ namespace simulationBox {
  *
  * @brief containing all information about a molecule
  */
-class simulationBox::Molecule {
+class simulationBox::Molecule
+{
   private:
     std::string _name;
     size_t      _moltype;
@@ -52,26 +54,28 @@ class simulationBox::Molecule {
 
     void calculateCenterOfMass(const Vec3D &);
     void scale(const Vec3D &);
+    void scaleVelocities(double scaleFactor);
 
     size_t getNumberOfAtomTypes();
     void   resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
 
-    void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); };
-    void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); };
-    void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); };
-    void addExternalAtomType(const size_t atomType) { _externalAtomTypes.push_back(atomType); };
-    void addExternalToInternalAtomTypeElement(const size_t externalAtomType, size_t internalAtomType) {
+    void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); }
+    void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); }
+    void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); }
+    void addExternalAtomType(const size_t atomType) { _externalAtomTypes.push_back(atomType); }
+    void addExternalToInternalAtomTypeElement(const size_t externalAtomType, size_t internalAtomType)
+    {
         _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType);
-    };
+    }
 
     /************************
      * standatd add methods *
      ************************/
 
-    void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); };
-    void addGlobalVDWType(const int globalVDWType) { _globalVDWTypes.push_back(globalVDWType); };
-    void addAtomMass(const double mass) { _masses.push_back(mass); };
-    void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); };
+    void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); }
+    void addGlobalVDWType(const int globalVDWType) { _globalVDWTypes.push_back(globalVDWType); }
+    void addAtomMass(const double mass) { _masses.push_back(mass); }
+    void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); }
 
     void addAtomPosition(const Vec3D &position) { _positions.push_back(position); }
     void addAtomVelocity(const Vec3D &velocity) { _velocities.push_back(velocity); }
@@ -83,23 +87,23 @@ class simulationBox::Molecule {
      * standatd getter methods *
      ***************************/
 
-    size_t getMoltype() const { return _moltype; };
-    size_t getNumberOfAtoms() const { return _numberOfAtoms; };
-    size_t getAtomType(const size_t index) const { return _atomTypes[index]; };
-    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; };
-    size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; };
+    size_t getMoltype() const { return _moltype; }
+    size_t getNumberOfAtoms() const { return _numberOfAtoms; }
+    size_t getAtomType(const size_t index) const { return _atomTypes[index]; }
+    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; }
+    size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
 
-    int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; };
-    int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; };
+    int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; }
+    int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
 
-    double getCharge() const { return _charge; };
-    double getMolMass() const { return _molMass; };
-    double getPartialCharge(const size_t index) const { return _partialCharges[index]; };
-    double getAtomMass(const size_t index) const { return _masses[index]; };
+    double getCharge() const { return _charge; }
+    double getMolMass() const { return _molMass; }
+    double getPartialCharge(const size_t index) const { return _partialCharges[index]; }
+    double getAtomMass(const size_t index) const { return _masses[index]; }
 
-    std::string getName() const { return _name; };
-    std::string getAtomName(const size_t index) const { return _atomNames[index]; };
-    std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; };
+    std::string getName() const { return _name; }
+    std::string getAtomName(const size_t index) const { return _atomNames[index]; }
+    std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; }
 
     Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
     Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
@@ -107,17 +111,17 @@ class simulationBox::Molecule {
     Vec3D getAtomShiftForce(const size_t index) const { return _shiftForces[index]; }
     Vec3D getCenterOfMass() const { return _centerOfMass; }
 
-    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; };
+    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; }
 
     /***************************
      * standatd setter methods *
      ***************************/
 
-    void setName(const std::string_view name) { _name = name; };
-    void setMoltype(const size_t moltype) { _moltype = moltype; };
-    void setCharge(const double charge) { _charge = charge; };
-    void setMolMass(const double molMass) { _molMass = molMass; };
-    void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; };
+    void setName(const std::string_view name) { _name = name; }
+    void setMoltype(const size_t moltype) { _moltype = moltype; }
+    void setCharge(const double charge) { _charge = charge; }
+    void setMolMass(const double molMass) { _molMass = molMass; }
+    void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
 
     void setAtomPositions(const size_t index, const Vec3D &position) { _positions[index] = position; }
     void setAtomVelocity(const size_t index, const Vec3D &velocity) { _velocities[index] = velocity; }

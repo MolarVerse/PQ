@@ -1,9 +1,9 @@
-#include <iostream>
-
 #include "inputFileReader.hpp"
 
+#include <iostream>
+
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 void InputFileReader::parseRcoulomb(const vector<string> &lineElements)
 {

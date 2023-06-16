@@ -2,34 +2,62 @@
 
 #define _VIRIAL_H_
 
-#include "simulationBox.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 #include "vector3d.hpp"
 
 #include <vector>
 
-class Virial
+/**
+ * @namespace virial
+ *
+ * @brief Namespace for virial calculation
+ */
+namespace virial
 {
-protected:
-    Vec3D _virial = Vec3D(0.0, 0.0, 0.0);
+    class Virial;
+    class VirialMolecular;
+    class VirialAtomic;
+}   // namespace virial
 
-public:
+/**
+ * @class Virial
+ *
+ * @brief Base class for virial calculation
+ */
+class virial::Virial
+{
+  protected:
+    Vec3D _virial;
+
+  public:
     virtual ~Virial() = default;
 
     virtual void calculateVirial(simulationBox::SimulationBox &, PhysicalData &);
 
-    // standard getter and setters
-    [[nodiscard]] Vec3D getVirial() const { return _virial; };
-    void setVirial(const Vec3D &virial) { _virial = virial; };
+    Vec3D getVirial() const { return _virial; }
+    void  setVirial(const Vec3D &virial) { _virial = virial; }
 };
 
-class VirialMolecular : public Virial
+/**
+ * @class VirialMolecular
+ *
+ * @brief Class for virial calculation of molecular systems
+ */
+class virial::VirialMolecular : public virial::Virial
 {
+  public:
     void calculateVirial(simulationBox::SimulationBox &, PhysicalData &) override;
     void intraMolecularVirialCorrection(simulationBox::SimulationBox &);
 };
 
-class VirialAtomic : public Virial
+/**
+ * @class VirialAtomic
+ *
+ * @brief Class for virial calculation of atomic systems
+ *
+ */
+class virial::VirialAtomic : public virial::Virial
 {
 };
 

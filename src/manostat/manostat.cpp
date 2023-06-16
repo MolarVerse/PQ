@@ -1,4 +1,5 @@
 #include "manostat.hpp"
+
 #include "constants.hpp"
 
 using namespace std;
@@ -6,9 +7,9 @@ using namespace simulationBox;
 
 void Manostat::calculatePressure(PhysicalData &physicalData)
 {
-    const auto ekinVirial = physicalData.getKineticEnergyVirialVector();
+    const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
     const auto forceVirial = physicalData.getVirial();
-    const auto volume = physicalData.getVolume();
+    const auto volume      = physicalData.getVolume();
 
     _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * _PRESSURE_FACTOR_;
 
@@ -17,10 +18,7 @@ void Manostat::calculatePressure(PhysicalData &physicalData)
     physicalData.setPressure(_pressure);
 }
 
-void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData)
-{
-    calculatePressure(physicalData);
-}
+void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calculatePressure(physicalData); }
 
 void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physicalData)
 {

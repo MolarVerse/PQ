@@ -101,7 +101,7 @@
     },
     "C_Cpp.errorSquiggles": "enabled",
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
-    "editor.tokenColorCustomizations": {
-        "comments": "#b743ce",
-    },
+    // "editor.tokenColorCustomizations": {
+    //     "comments": "#b743ce",
+    // },
 }

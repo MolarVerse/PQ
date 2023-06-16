@@ -17,11 +17,8 @@ target_link_libraries(pimd_qmcf
   PRIVATE
   PUBLIC
   setup
-  simulationBox
   engine
-  utilities
   config
-  output
 )
 
 install(TARGETS pimd_qmcf

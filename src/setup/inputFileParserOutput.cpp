@@ -1,9 +1,9 @@
-#include <iostream>
-
 #include "inputFileReader.hpp"
 
+#include <iostream>
+
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 /**
  * @brief parse output frequency of simulation and set it in output statically

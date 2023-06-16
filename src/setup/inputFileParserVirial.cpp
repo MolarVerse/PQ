@@ -1,9 +1,10 @@
-#include <iostream>
-
 #include "inputFileReader.hpp"
 
+#include <iostream>
+
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
+using namespace virial;
 
 /**
  * @brief parses virial command
@@ -23,5 +24,6 @@ void InputFileReader::parseVirial(const vector<string> &lineElements)
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else
-        throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+                                 "in input file");
 }

@@ -1,47 +1,28 @@
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 #ifdef WITH_MPI
 #include <mpi.h>
 #endif
 
-#include "rstFileReader.hpp"
-#include "simulationBox.hpp"
-#include "commandLineArgs.hpp"
-#include "inputFileReader.hpp"
-#include "output.hpp"
-#include "engine.hpp"
-#include "moldescriptorReader.hpp"
-#include "postProcessSetup.hpp"
-#include "guffDatReader.hpp"
 #include "celllist.hpp"
-#include "constants.hpp"
+#include "commandLineArgs.hpp"
+#include "engine.hpp"
+#include "setup.hpp"
 
 using namespace std;
+using namespace setup;
 
 int pimd_qmcf(int argc, char *argv[])
 {
     // TODO: cleanup this piece of code when knowing how to do it properly
     vector<string> arguments(argv, argv + argc);
-    auto commandLineArgs = CommandLineArgs(argc, arguments);
+    auto           commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
     auto engine = Engine();
 
-    cout << "Reading input file..." << endl;
-    readInputFile(commandLineArgs.getInputFileName(), engine);
-
-    cout << "Reading moldescriptor..." << endl;
-    readMolDescriptor(engine);
-
-    cout << "Reading rst file..." << endl;
-    readRstFile(engine);
-
-    cout << "Post processing setup..." << endl;
-    postProcessSetup(engine);
-
-    cout << "Reading guff.dat..." << endl;
-    readGuffDat(engine);
+    setupEngine(commandLineArgs.getInputFileName(), engine);
 
     /*
         HERE STARTS THE MAIN LOOP

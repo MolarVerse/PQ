@@ -1,17 +1,19 @@
-#include <string>
-#include <fstream>
-#include <map>
-#include <vector>
-#include <boost/algorithm/string.hpp>
-#include <iostream>
-
 #include "inputFileReader.hpp"
-#include "stringUtilities.hpp"
+
 #include "constants.hpp"
+#include "stringUtilities.hpp"
+
+#include <boost/algorithm/string.hpp>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace StringUtilities;
-using namespace Setup::InputFileReader;
+using namespace setup;
+using namespace thermostat;
 
 /**
  * @brief Construct a new Input File Reader:: Input File Reader object
@@ -30,7 +32,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
 
     addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
     addKeyword(string("moldescriptor_file"), &InputFileReader::parseMoldescriptorFilename, false);
-    addKeyword(string("guff_path"), &InputFileReader::parseGuffPath, false); // default is current directory (not backword compatible)
+    addKeyword(
+        string("guff_path"), &InputFileReader::parseGuffPath, false);   // default is current directory (not backword compatible)
 
     addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
     addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
@@ -77,7 +80,9 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
  *  required is a boolean that indicates if the keyword is required
  *
  */
-void InputFileReader::addKeyword(const string &keyword, void (InputFileReader::*parserFunc)(const vector<string> &), bool required)
+void InputFileReader::addKeyword(const string &keyword,
+                                 void (InputFileReader::*parserFunc)(const vector<string> &),
+                                 bool required)
 {
     _keywordFuncMap.try_emplace(keyword, parserFunc);
     _keywordCountMap.try_emplace(keyword, 0);
@@ -112,10 +117,9 @@ void InputFileReader::process(const vector<string> &lineElements)
 void InputFileReader::read()
 {
     ifstream inputFile(_filename);
-    string line;
+    string   line;
 
-    if (inputFile.fail())
-        throw InputFileException("\"" + _filename + "\"" + " File not found");
+    if (inputFile.fail()) throw InputFileException("\"" + _filename + "\"" + " File not found");
 
     while (getline(inputFile, line))
     {
@@ -132,8 +136,7 @@ void InputFileReader::read()
         for (const string &command : lineCommands)
         {
             const auto lineElements = splitString(command);
-            if (lineElements.empty())
-                continue;
+            if (lineElements.empty()) continue;
 
             process(lineElements);
         }
@@ -143,12 +146,13 @@ void InputFileReader::read()
 }
 
 /**
- * @brief read input file and instantiate InputFileReader
+ * @brief reads input file and sets settings
  *
  * @param filename
- * @param settings
+ * @param engine
+ *
  */
-void readInputFile(const string &filename, Engine &engine)
+void setup::readInputFile(const string &filename, Engine &engine)
 {
     InputFileReader inputFileReader(filename, engine);
     inputFileReader.read();
@@ -167,22 +171,21 @@ void InputFileReader::postProcess()
         if (_keywordRequiredMap[keyword] && (count == 0))
             throw InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
-        if (count > 1)
-            throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
+        if (count > 1) throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     }
 
-    _engine.getSettings().setMoldescriptorFilename(_engine.getSettings().getGuffPath() + "/" + _engine.getSettings().getMoldescriptorFilename());
+    _engine.getSettings().setMoldescriptorFilename(_engine.getSettings().getGuffPath() + "/" +
+                                                   _engine.getSettings().getMoldescriptorFilename());
 
     setupThermostat();
     setupManostat();
 }
 
-void InputFileReader::setupThermostat() // TODO: include warnings if value set but not used
+void InputFileReader::setupThermostat()   // TODO: include warnings if value set but not used
 {
     if (_engine.getSettings().getThermostat() == "berendsen")
     {
-        if (!_engine.getSettings().getTemperatureSet())
-            throw InputFileException("Temperature not set for Berendsen thermostat");
+        if (!_engine.getSettings().getTemperatureSet()) throw InputFileException("Temperature not set for Berendsen thermostat");
 
         if (!_engine.getSettings().getRelaxationTimeSet())
         {
@@ -190,7 +193,8 @@ void InputFileReader::setupThermostat() // TODO: include warnings if value set b
             _engine._logOutput->writeRelaxationTimeThermostatWarning();
         }
 
-        _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(), _engine.getSettings().getRelaxationTime() * _PS_TO_FS_);
+        _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(),
+                                                               _engine.getSettings().getRelaxationTime() * _PS_TO_FS_);
     }
     else
     {
@@ -200,12 +204,11 @@ void InputFileReader::setupThermostat() // TODO: include warnings if value set b
     _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
 }
 
-void InputFileReader::setupManostat() // TODO: include warnings if value set but not used
+void InputFileReader::setupManostat()   // TODO: include warnings if value set but not used
 {
     if (_engine.getSettings().getManostat() == "berendsen")
     {
-        if (!_engine.getSettings().getManostatSet())
-            throw InputFileException("Pressure not set for Berendsen manostat");
+        if (!_engine.getSettings().getManostatSet()) throw InputFileException("Pressure not set for Berendsen manostat");
 
         if (!_engine.getSettings().getTauManostatSet())
         {
@@ -213,7 +216,8 @@ void InputFileReader::setupManostat() // TODO: include warnings if value set but
             _engine._logOutput->writeRelaxationTimeManostatWarning();
         }
 
-        _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(), _engine.getSettings().getTauManostat() * _PS_TO_FS_);
+        _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(),
+                                                           _engine.getSettings().getTauManostat() * _PS_TO_FS_);
     }
     else
     {

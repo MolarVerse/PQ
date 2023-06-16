@@ -1,10 +1,10 @@
-#include "inputFileReader.hpp"
 #include "constants.hpp"
+#include "inputFileReader.hpp"
 
 #include <memory>
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 /**
  * @brief Parse the thermostat used in the simulation
@@ -21,11 +21,12 @@ void InputFileReader::parseManostat(const vector<string> &lineElements)
     }
     else if (lineElements[2] == "berendsen")
     {
-        _engine._thermostat = make_unique<BerendsenThermostat>();
+        _engine._manostat = make_unique<BerendsenManostat>();
         _engine.getSettings().setManostat("berendsen");
     }
     else
-        throw InputFileException("Invalid thermostat \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file");
+        throw InputFileException("Invalid manostat \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+                                 "in input file");
 }
 
 void InputFileReader::parsePressure(const vector<string> &lineElements)

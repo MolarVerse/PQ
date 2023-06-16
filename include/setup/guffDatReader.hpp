@@ -2,9 +2,15 @@
 
 #define _GUFF_DAT_READER_H_
 
+#include "engine.hpp"
+
 #include <string>
 
-#include "engine.hpp"
+namespace setup
+{
+    class GuffDatReader;
+    void readGuffDat(Engine &);
+}   // namespace setup
 
 /**
  * @class GuffDatReader
@@ -12,15 +18,15 @@
  * @brief reads the guff.dat file
  *
  */
-class GuffDatReader
+class setup::GuffDatReader
 {
-private:
-    std::string _filename = "guff.dat";
-    int _lineNumber = 1;
+  private:
+    int         _lineNumber = 1;
+    std::string _filename   = "guff.dat";
 
     Engine &_engine;
 
-public:
+  public:
     explicit GuffDatReader(Engine &engine) : _engine(engine) {}
 
     void setupGuffMaps();
@@ -28,6 +34,4 @@ public:
     void read();
 };
 
-void readGuffDat(Engine &);
-
-#endif // _GUFF_DAT_READER_H_
+#endif   // _GUFF_DAT_READER_H_

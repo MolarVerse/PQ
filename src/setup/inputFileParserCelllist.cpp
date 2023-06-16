@@ -1,8 +1,8 @@
-#include "inputFileReader.hpp"
 #include "exceptions.hpp"
+#include "inputFileReader.hpp"
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 
 void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
 {
@@ -15,7 +15,8 @@ void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
     }
     else
     {
-        auto message = "Invalid cell-list keyword \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file\n";
+        auto message =
+            "Invalid cell-list keyword \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file\n";
         message += R"(Possible keywords are "on" and "off")";
         throw InputFileException(message);
     }
