@@ -2,45 +2,41 @@
 
 #define _RST_FILE_READER_H_
 
-#include <string>
-#include <vector>
-#include <fstream>
-
-#include "simulationBox.hpp"
 #include "engine.hpp"
 #include "rstFileSection.hpp"
+#include "simulationBox.hpp"
 
-namespace Setup::RstFileReader
+#include <fstream>
+#include <string>
+#include <vector>
+
+namespace setup
 {
-    /**
-     * @class RstFileReader
-     *
-     * @brief Reads a .rst file and returns a SimulationBox object
-     *
-     */
-    class RstFileReader
-    {
-    private:
-        const std::string _filename;
-        std::ifstream _fp;
-        Engine &_engine;
-        std::vector<RstFileSection *> _sections;
-        RstFileSection *_atomSection = new AtomSection;
-
-    public:
-        RstFileReader(const std::string &, Engine &);
-        ~RstFileReader();
-
-        void read();
-        RstFileSection *determineSection(std::vector<std::string> &);
-    };
-}
+    class RstFileReader;
+    void readRstFile(Engine &);
+}   // namespace setup
 
 /**
+ * @class RstFileReader
+ *
  * @brief Reads a .rst file and returns a SimulationBox object
  *
- * @param engine
  */
-void readRstFile(Engine &);
+class setup::RstFileReader
+{
+  private:
+    const std::string             _filename;
+    std::ifstream                 _fp;
+    Engine                       &_engine;
+    std::vector<RstFileSection *> _sections;
+    RstFileSection               *_atomSection = new AtomSection;
+
+  public:
+    RstFileReader(const std::string &, Engine &);
+    ~RstFileReader();
+
+    void            read();
+    RstFileSection *determineSection(std::vector<std::string> &);
+};
 
 #endif

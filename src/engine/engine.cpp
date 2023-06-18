@@ -1,4 +1,5 @@
 #include "engine.hpp"
+
 #include "constants.hpp"
 #include "progressbar.hpp"
 
@@ -19,7 +20,7 @@ void Engine::run()
     _logOutput->writeInitialMomentum(_physicalData.getMomentum());
     _stdoutOutput->writeInitialMomentum(_physicalData.getMomentum());
 
-    const auto numberOfSteps = _timings.getNumberOfSteps();
+    const auto  numberOfSteps = _timings.getNumberOfSteps();
     progressbar bar(numberOfSteps);
 
     for (; _step <= numberOfSteps; ++_step)
@@ -32,13 +33,11 @@ void Engine::run()
 
     _timings.endTimer();
 
-    cout << endl
-         << endl;
+    cout << endl << endl;
 
     cout << "Total time: " << _timings.calculateElapsedTime() * 1e-6 << endl;
 
-    cout << endl
-         << endl;
+    cout << endl << endl;
 
     cout << "Couloumb energy: " << _physicalData.getCoulombEnergy() << endl;
     cout << "Non Couloumb energy: " << _physicalData.getNonCoulombEnergy() << endl;
@@ -51,8 +50,7 @@ void Engine::run()
     cout << "Density: " << _physicalData.getDensity() << endl;
     cout << "Pressure: " << _physicalData.getPressure() << endl;
 
-    cout << endl
-         << endl;
+    cout << endl << endl;
 }
 
 void Engine::takeStep()
@@ -84,9 +82,9 @@ void Engine::writeOutput()
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
 
-        const auto dt = _timings.getTimestep();
-        const auto step0 = _timings.getStepCount();
-        const auto effectiveStep = _step + step0;
+        const auto dt             = _timings.getTimestep();
+        const auto step0          = _timings.getStepCount();
+        const auto effectiveStep  = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * _FS_TO_PS_;
 
         // calclooptime after writting trajectory files

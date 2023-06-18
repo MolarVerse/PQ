@@ -5,18 +5,18 @@ add_library(setup
     rstFileSection.cpp
 
     inputFileReader.cpp
-    inputFileParser.cpp
-    inputFileParserOutput.cpp
-    inputFileParserTimings.cpp
-    inputFileParserGeneral.cpp
-    inputFileParserIntegrator.cpp
-    inputFileParserBox.cpp
-    inputFileParserVirial.cpp
-    inputFileParserSimulationBox.cpp
-    inputFileParserCelllist.cpp
 
-    inputFileParserThermostat.cpp
-    inputFileParserManostat.cpp
+    inputFileParsing/inputFileParser.cpp
+    inputFileParsing/inputFileParserOutput.cpp
+    inputFileParsing/inputFileParserTimings.cpp
+    inputFileParsing/inputFileParserGeneral.cpp
+    inputFileParsing/inputFileParserIntegrator.cpp
+    inputFileParsing/inputFileParserBox.cpp
+    inputFileParsing/inputFileParserVirial.cpp
+    inputFileParsing/inputFileParserSimulationBox.cpp
+    inputFileParsing/inputFileParserCelllist.cpp
+    inputFileParsing/inputFileParserThermostat.cpp
+    inputFileParsing/inputFileParserManostat.cpp
 
     moldescriptorReader.cpp
     postProcessSetup.cpp

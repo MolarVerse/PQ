@@ -8,9 +8,9 @@
 #include <string>
 
 using namespace std;
-using namespace Setup::RstFileReader;
 using namespace StringUtilities;
 using namespace simulationBox;
+using namespace setup;
 
 bool BoxSection::isHeader() { return true; }
 
@@ -62,6 +62,7 @@ void StepCountSection::process(vector<string> &lineElements, Engine &engine)
 }
 
 bool AtomSection::isHeader() { return false; }
+
 /**
  * @brief processes the atom section of the rst file
  *

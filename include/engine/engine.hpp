@@ -42,7 +42,7 @@ class Engine
 
   public:
     std::unique_ptr<Integrator>             _integrator;
-    std::unique_ptr<Potential>              _potential  = std::make_unique<PotentialBruteForce>();
+    std::unique_ptr<potential::Potential>   _potential  = std::make_unique<potential::PotentialBruteForce>();
     std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
     std::unique_ptr<Manostat>               _manostat   = std::make_unique<Manostat>();
     std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();

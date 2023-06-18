@@ -4,6 +4,11 @@
 using namespace std;
 using namespace setup;
 
+/**
+ * @brief Parses if cell-list should be used in simulation
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
@@ -22,6 +27,11 @@ void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
     }
 }
 
+/**
+ * @brief Parses the number of cells used for each dimension
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseNumberOfCells(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

@@ -155,7 +155,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     double       force       = 0.0;
     const double dummyCutoff = 1.0;
 
-    _engine._potential->_coulombPotential->calcCoulomb(
+    _engine._potential->calcCoulomb(
         coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);
 
     _engine.getSimulationBox().setcEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
@@ -166,7 +166,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     energy = 0.0;
     force  = 0.0;
 
-    _engine._potential->_nonCoulombPotential->calcNonCoulomb(guffCoefficients, dummyCutoff, rncCutOff, energy, force, 0.0, 0.0);
+    _engine._potential->calcNonCoulomb(guffCoefficients, dummyCutoff, rncCutOff, energy, force, 0.0, 0.0);
 
     _engine.getSimulationBox().setncEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
     _engine.getSimulationBox().setncEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);

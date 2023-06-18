@@ -1,33 +1,34 @@
 #include "potential.hpp"
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 using namespace simulationBox;
+using namespace potential;
 
 void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
-    const auto box = simBox.getBoxDimensions();
+    const auto   box      = simBox.getBoxDimensions();
     const double RcCutOff = simBox.getRcCutOff();
 
-    double totalCoulombicEnergy = 0.0;
+    double totalCoulombicEnergy    = 0.0;
     double totalNonCoulombicEnergy = 0.0;
-    double energy = 0.0;
+    double energy                  = 0.0;
 
     // inter molecular forces
     const size_t numberOfMolecules = simBox.getNumberOfMolecules();
 
     for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
     {
-        auto &molecule_i = simBox.getMolecule(mol_i);
-        const size_t moltype_i = molecule_i.getMoltype();
+        auto        &molecule_i                = simBox.getMolecule(mol_i);
+        const size_t moltype_i                 = molecule_i.getMoltype();
         const size_t numberOfAtomsinMolecule_i = molecule_i.getNumberOfAtoms();
 
         for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
         {
-            auto &molecule_j = simBox.getMolecule(mol_j);
-            const size_t moltype_j = molecule_j.getMoltype();
+            auto        &molecule_j                = simBox.getMolecule(mol_j);
+            const size_t moltype_j                 = molecule_j.getMoltype();
             const size_t numberOfAtomsinMolecule_j = molecule_j.getNumberOfAtoms();
 
             for (size_t atom_i = 0; atom_i < numberOfAtomsinMolecule_i; ++atom_i)
@@ -47,15 +48,22 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                     if (distanceSquared < RcCutOff * RcCutOff)
                     {
-                        const double distance = sqrt(distanceSquared);
+                        const double distance   = sqrt(distanceSquared);
                         const size_t atomType_i = molecule_i.getAtomType(atom_i);
                         const size_t atomType_j = molecule_j.getAtomType(atom_j);
 
-                        const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+                        const double coulombCoefficient =
+                            simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
                         auto force = 0.0;
 
-                        _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                        _coulombPotential->calcCoulomb(coulombCoefficient,
+                                                       simBox.getRcCutOff(),
+                                                       distance,
+                                                       energy,
+                                                       force,
+                                                       simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                                       simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                         totalCoulombicEnergy += energy;
 
@@ -63,9 +71,17 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                         if (distance < rncCutOff)
                         {
-                            const auto &guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
+                            const auto &guffCoefficients =
+                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                            _nonCoulombPotential->calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                            _nonCoulombPotential->calcNonCoulomb(
+                                guffCoefficients,
+                                rncCutOff,
+                                distance,
+                                energy,
+                                force,
+                                simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                             totalNonCoulombicEnergy += energy;
                         }
@@ -98,9 +114,9 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
     Molecule *molecule_i = nullptr;
     Molecule *molecule_j = nullptr;
 
-    double totalCoulombicEnergy = 0.0;
+    double totalCoulombicEnergy    = 0.0;
     double totalNonCoulombicEnergy = 0.0;
-    double energy = 0.0;
+    double energy                  = 0.0;
 
     const double RcCutOff = simBox.getRcCutOff();
 
@@ -112,12 +128,12 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
         for (size_t mol_i = 0; mol_i < numberOfMoleculesInCell_i; ++mol_i)
         {
-            molecule_i = cell_i.getMolecule(mol_i);
+            molecule_i             = cell_i.getMolecule(mol_i);
             const size_t moltype_i = molecule_i->getMoltype();
 
             for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                molecule_j = cell_i.getMolecule(mol_j);
+                molecule_j             = cell_i.getMolecule(mol_j);
                 const size_t moltype_j = molecule_j->getMoltype();
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
@@ -137,15 +153,22 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                         if (distanceSquared < RcCutOff * RcCutOff)
                         {
-                            const double distance = sqrt(distanceSquared);
+                            const double distance   = sqrt(distanceSquared);
                             const size_t atomType_i = molecule_i->getAtomType(atom_i);
                             const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
-                            const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+                            const double coulombCoefficient =
+                                simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
                             auto force = 0.0;
 
-                            _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                            _coulombPotential->calcCoulomb(coulombCoefficient,
+                                                           simBox.getRcCutOff(),
+                                                           distance,
+                                                           energy,
+                                                           force,
+                                                           simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                                           simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                             totalCoulombicEnergy += energy;
 
@@ -155,7 +178,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                             {
                                 guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                                _nonCoulombPotential->calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                _nonCoulombPotential->calcNonCoulomb(
+                                    guffCoefficients,
+                                    rncCutOff,
+                                    distance,
+                                    energy,
+                                    force,
+                                    simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                    simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                                 totalNonCoulombicEnergy += energy;
                             }
@@ -187,16 +217,15 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
             for (size_t mol_i = 0; mol_i < numberOfMoleculesInCell_i; ++mol_i)
             {
-                molecule_i = cell_i.getMolecule(mol_i);
+                molecule_i             = cell_i.getMolecule(mol_i);
                 const size_t moltype_i = molecule_i->getMoltype();
 
                 for (size_t mol_j = 0; mol_j < numberOfMoleculesInCell_j; ++mol_j)
                 {
-                    molecule_j = cell_j->getMolecule(mol_j);
+                    molecule_j             = cell_j->getMolecule(mol_j);
                     const size_t moltype_j = molecule_j->getMoltype();
 
-                    if (molecule_i == molecule_j)
-                        continue;
+                    if (molecule_i == molecule_j) continue;
 
                     for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                     {
@@ -216,15 +245,23 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
                             if (distanceSquared < RcCutOff * RcCutOff)
                             {
-                                const double distance = sqrt(distanceSquared);
+                                const double distance   = sqrt(distanceSquared);
                                 const size_t atomType_i = molecule_i->getAtomType(atom_i);
                                 const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
-                                const double coulombCoefficient = simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+                                const double coulombCoefficient =
+                                    simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
 
                                 auto force = 0.0;
 
-                                _coulombPotential->calcCoulomb(coulombCoefficient, simBox.getRcCutOff(), distance, energy, force, simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                _coulombPotential->calcCoulomb(
+                                    coulombCoefficient,
+                                    simBox.getRcCutOff(),
+                                    distance,
+                                    energy,
+                                    force,
+                                    simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                    simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                                 totalCoulombicEnergy += energy;
 
@@ -234,7 +271,14 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                                 {
                                     guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
 
-                                    _nonCoulombPotential->calcNonCoulomb(guffCoefficients, rncCutOff, distance, energy, force, simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j), simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                    _nonCoulombPotential->calcNonCoulomb(
+                                        guffCoefficients,
+                                        rncCutOff,
+                                        distance,
+                                        energy,
+                                        force,
+                                        simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                        simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
                                     totalNonCoulombicEnergy += energy;
                                 }
@@ -264,8 +308,8 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
                               const double rcCutoff,
                               const double distance,
-                              double &energy,
-                              double &force,
+                              double      &energy,
+                              double      &force,
                               const double energy_cutoff,
                               const double force_cutoff) const
 {
@@ -274,17 +318,17 @@ void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
 }
 
 void GuffLJ::calcNonCoulomb(const vector<double> &guffCoefficients,
-                            const double rncCutoff,
-                            const double distance,
-                            double &energy,
-                            double &force,
-                            const double energy_cutoff,
-                            const double force_cutoff) const
+                            const double          rncCutoff,
+                            const double          distance,
+                            double               &energy,
+                            double               &force,
+                            const double          energy_cutoff,
+                            const double          force_cutoff) const
 {
-    const double c6 = guffCoefficients[0];
+    const double c6  = guffCoefficients[0];
     const double c12 = guffCoefficients[2];
 
-    const double distance_6 = distance * distance * distance * distance * distance * distance;
+    const double distance_6  = distance * distance * distance * distance * distance * distance;
     const double distance_12 = distance_6 * distance_6;
 
     energy = c12 / distance_12 + c6 / distance_6;
@@ -295,12 +339,12 @@ void GuffLJ::calcNonCoulomb(const vector<double> &guffCoefficients,
 }
 
 void GuffBuckingham::calcNonCoulomb(const vector<double> &guffCoefficients,
-                                    const double rncCutoff,
-                                    const double distance,
-                                    double &energy,
-                                    double &force,
-                                    const double energy_cutoff,
-                                    const double force_cutoff) const
+                                    const double          rncCutoff,
+                                    const double          distance,
+                                    double               &energy,
+                                    double               &force,
+                                    const double          energy_cutoff,
+                                    const double          force_cutoff) const
 {
     const double c1 = guffCoefficients[0];
     const double c2 = guffCoefficients[1];
@@ -309,7 +353,7 @@ void GuffBuckingham::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double helper = c1 * exp(distance * c2);
 
     const double distance_6 = distance * distance * distance * distance * distance * distance;
-    const double helper_c3 = c3 / distance_6;
+    const double helper_c3  = c3 / distance_6;
 
     energy = helper + helper_c3;
     force += -c2 * helper + 6 * helper_c3 / distance;
@@ -319,12 +363,12 @@ void GuffBuckingham::calcNonCoulomb(const vector<double> &guffCoefficients,
 }
 
 void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
-                                    const double rncCutoff,
-                                    const double distance,
-                                    double &energy,
-                                    double &force,
-                                    const double energy_cutoff,
-                                    const double force_cutoff) const
+                                    const double          rncCutoff,
+                                    const double          distance,
+                                    double               &energy,
+                                    double               &force,
+                                    const double          energy_cutoff,
+                                    const double          force_cutoff) const
 {
     const double c1 = guffCoefficients[0];
     const double n2 = guffCoefficients[1];
@@ -342,7 +386,7 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     energy += c5 / pow(distance, n6) + c7 / pow(distance, n8);
     force += n6 * c5 / pow(distance, n6 + 1) + n8 * c7 / pow(distance, n8 + 1);
 
-    const double c9 = guffCoefficients[8];
+    const double c9     = guffCoefficients[8];
     const double cexp10 = guffCoefficients[9];
     const double rexp11 = guffCoefficients[10];
 
@@ -351,7 +395,7 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     energy += c9 / (1 + helper);
     force += c9 * cexp10 * helper / ((1 + helper) * (1 + helper));
 
-    const double c12 = guffCoefficients[11];
+    const double c12    = guffCoefficients[11];
     const double cexp13 = guffCoefficients[12];
     const double rexp14 = guffCoefficients[13];
 
@@ -360,20 +404,20 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     energy += c12 / (1 + helper);
     force += c12 * cexp13 * helper / ((1 + helper) * (1 + helper));
 
-    const double c15 = guffCoefficients[14];
+    const double c15    = guffCoefficients[14];
     const double cexp16 = guffCoefficients[15];
     const double rexp17 = guffCoefficients[16];
-    const double n18 = guffCoefficients[17];
+    const double n18    = guffCoefficients[17];
 
     helper = c15 * exp(cexp16 * pow((distance - rexp17), n18));
 
     energy += helper;
     force += -cexp16 * n18 * pow((distance - rexp17), n18 - 1) * helper;
 
-    const double c19 = guffCoefficients[18];
+    const double c19    = guffCoefficients[18];
     const double cexp20 = guffCoefficients[19];
     const double rexp21 = guffCoefficients[20];
-    const double n22 = guffCoefficients[21];
+    const double n22    = guffCoefficients[21];
 
     helper = c19 * exp(cexp20 * pow((distance - rexp21), n22));
 

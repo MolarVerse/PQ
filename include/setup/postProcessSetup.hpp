@@ -4,44 +4,43 @@
 
 #include "engine.hpp"
 
+namespace setup
+{
+    class PostProcessSetup;
+    void postProcessSetup(Engine &);
+}   // namespace setup
+
 /**
  * @class PostProcessSetup
  *
  * @brief Setup post processing before reading guffdat file
  *
  */
-class PostProcessSetup
+class setup::PostProcessSetup
 {
-private:
+  private:
     Engine &_engine;
 
-public:
+  public:
     explicit PostProcessSetup(Engine &engine) : _engine(engine){};
 
     void setup();
 
     void setAtomMasses();
     void setAtomicNumbers();
+
     void calculateMolMass();
     void calculateTotalMass();
     void calculateTotalCharge();
+
     void resizeAtomShiftForces();
 
     void checkBoxSettings();
-
     void checkRcCutoff();
 
     void setupCellList();
     void setPotential();
-
     void setTimestep();
 };
-
-/**
- * @brief Setup post processing
- *
- * @param engine
- */
-void postProcessSetup(Engine &);
 
 #endif

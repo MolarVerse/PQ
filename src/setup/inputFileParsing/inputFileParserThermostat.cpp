@@ -29,12 +29,22 @@ void InputFileReader::parseThermostat(const vector<string> &lineElements)
                                  "in input file");
 }
 
+/**
+ * @brief Parse the temperature used in the simulation
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseTemperature(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
     _engine.getSettings().setTemperature(stod(lineElements[2]));
 }
 
+/**
+ * @brief parses the relaxation time of the thermostat
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseThermostatRelaxationTime(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

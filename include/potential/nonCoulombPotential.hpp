@@ -4,17 +4,26 @@
 
 #include <vector>
 
+namespace potential
+{
+    class NonCoulombPotential;
+    class GuffNonCoulomb;
+    class GuffLJ;
+    class GuffBuckingham;
+}   // namespace potential
+
 /**
  * @class NonCoulombPotential
  *
  * @brief NonCoulombPotential is a base class for all non coulomb potentials
  *
  */
-class NonCoulombPotential
+class potential::NonCoulombPotential
 {
-public:
+  public:
     virtual ~NonCoulombPotential() = default;
-    virtual void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const = 0;
+    virtual void calcNonCoulomb(
+        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const = 0;
 };
 
 /**
@@ -25,10 +34,11 @@ public:
  * GuffNonCoulomb is a class for the full Guff potential
  *
  */
-class GuffNonCoulomb : public NonCoulombPotential
+class potential::GuffNonCoulomb : public potential::NonCoulombPotential
 {
-public:
-    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
+  public:
+    void calcNonCoulomb(
+        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
 /**
@@ -39,10 +49,11 @@ public:
  * GuffLJ is a class for the Lennard-Jones part of the Guff potential
  * it uses only parameters 1(C6) and 3(C12) of the guffdat file
  */
-class GuffLJ : public NonCoulombPotential
+class potential::GuffLJ : public potential::NonCoulombPotential
 {
-public:
-    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
+  public:
+    void calcNonCoulomb(
+        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
 /**
@@ -53,10 +64,11 @@ public:
  * GuffBuckingham is a class for the Buckingham part of the Guff potential
  * it uses only parameters 1(A), 2(B) and 3(C) of the guffdat file
  */
-class GuffBuckingham : public NonCoulombPotential
+class potential::GuffBuckingham : public potential::NonCoulombPotential
 {
-public:
-    void calcNonCoulomb(const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
+  public:
+    void calcNonCoulomb(
+        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
-#endif // _NON_COULOMB_POTENTIAL_H_
+#endif   // _NON_COULOMB_POTENTIAL_H_

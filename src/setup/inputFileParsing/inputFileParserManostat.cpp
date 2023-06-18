@@ -7,7 +7,7 @@ using namespace std;
 using namespace setup;
 
 /**
- * @brief Parse the thermostat used in the simulation
+ * @brief Parse the manostat used in the simulation
  *
  * @param lineElements
  */
@@ -29,12 +29,22 @@ void InputFileReader::parseManostat(const vector<string> &lineElements)
                                  "in input file");
 }
 
+/**
+ * @brief Parse the pressure used in the simulation
+ *
+ * @param lineElements
+ */
 void InputFileReader::parsePressure(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
     _engine.getSettings().setPressure(stod(lineElements[2]));
 }
 
+/**
+ * @brief parses the relaxation time of the manostat
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseManostatRelaxationTime(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

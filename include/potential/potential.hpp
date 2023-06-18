@@ -2,14 +2,21 @@
 
 #define _POTENTIAL_H_
 
-#include <vector>
-#include <memory>
-
+#include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
-#include "simulationBox.hpp"
 #include "physicalData.hpp"
-#include "celllist.hpp"
+#include "simulationBox.hpp"
+
+#include <memory>
+#include <vector>
+
+namespace potential
+{
+    class Potential;
+    class PotentialBruteForce;
+    class PotentialCellList;
+}   // namespace potential
 
 /**
  * @class Potential
@@ -20,26 +27,58 @@
  * Default values for the potential types are "guff".
  *
  */
-class Potential
+class potential::Potential
 {
-private:
-    std::string _coulombType = "guff";
+  protected:
+    std::string _coulombType    = "guff";
     std::string _nonCoulombType = "guff";
 
-public:
-    virtual ~Potential() = default;
-
-    std::unique_ptr<CoulombPotential> _coulombPotential;
+    std::unique_ptr<CoulombPotential>    _coulombPotential;
     std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
+
+  public:
+    virtual ~Potential() = default;
 
     virtual void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) = 0;
 
-    // standard getter and setters
-    std::string getCoulombType() const { return _coulombType; };
-    void setCoulombType(const std::string_view coulombType) { _coulombType = coulombType; };
+    void calcCoulomb(const double coulombCoefficient,
+                     const double rcCutoff,
+                     const double distance,
+                     double      &energy,
+                     double      &force,
+                     const double energy_cutoff,
+                     const double force_cutoff) const
+    {
+        _coulombPotential->calcCoulomb(coulombCoefficient, rcCutoff, distance, energy, force, energy_cutoff, force_cutoff);
+    }
 
-    std::string getNonCoulombType() const { return _nonCoulombType; };
-    void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; };
+    void calcNonCoulomb(const std::vector<double> &guffCoefficients,
+                        const double               rncCutoff,
+                        const double               distance,
+                        double                    &energy,
+                        double                    &force,
+                        const double               energy_cutoff,
+                        const double               force_cutoff) const
+    {
+        _nonCoulombPotential->calcNonCoulomb(guffCoefficients, rncCutoff, distance, energy, force, energy_cutoff, force_cutoff);
+    }
+
+    /********************************
+     * standard getters and setters *
+     ********************************/
+    std::string getCoulombType() const { return _coulombType; }
+    std::string getNonCoulombType() const { return _nonCoulombType; }
+
+    void setCoulombType(const std::string_view coulombType) { _coulombType = coulombType; }
+    void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; }
+    void setCoulombPotential(const CoulombPotential &potential)
+    {
+        _coulombPotential = std::make_unique<CoulombPotential>(potential);
+    }
+    void setNonCoulombPotential(const NonCoulombPotential &potential)
+    {
+        _nonCoulombPotential = std::make_unique<NonCoulombPotential>(potential);
+    }
 };
 
 /**
@@ -51,9 +90,9 @@ public:
  * Default values for the potential types are "guff".
  *
  */
-class PotentialBruteForce : public Potential
+class potential::PotentialBruteForce : public potential::Potential
 {
-public:
+  public:
     void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
 };
 
@@ -66,10 +105,10 @@ public:
  * Default values for the potential types are "guff".
  *
  */
-class PotentialCellList : public Potential
+class potential::PotentialCellList : public potential::Potential
 {
-public:
+  public:
     void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
 };
 
-#endif // _POTENTIAL_H_
+#endif   // _POTENTIAL_H_

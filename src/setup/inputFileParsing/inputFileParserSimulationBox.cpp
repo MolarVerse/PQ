@@ -5,6 +5,11 @@
 using namespace std;
 using namespace setup;
 
+/**
+ * @brief parses the coulomb cutoff radius
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseRcoulomb(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

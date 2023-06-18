@@ -2,11 +2,17 @@
 
 #define _MOLDESCRIPTOR_READER_H_
 
+#include "engine.hpp"
+
+#include <fstream>
 #include <string>
 #include <vector>
-#include <fstream>
 
-#include "engine.hpp"
+namespace setup
+{
+    class MoldescriptorReader;
+    void readMolDescriptor(Engine &);
+}   // namespace setup
 
 /**
  * @class MoldescriptorReader
@@ -14,27 +20,21 @@
  * @brief Reads a moldescriptor file
  *
  */
-class MoldescriptorReader
+class setup::MoldescriptorReader
 {
-private:
+  private:
+    int               _lineNumber;
     const std::string _filename;
-    std::ifstream _fp;
-    int _lineNumber;
+    std::ifstream     _fp;
 
-public:
-    explicit MoldescriptorReader(Engine &engine);
     Engine &_engine;
+
+  public:
+    explicit MoldescriptorReader(Engine &engine);
 
     void read();
     void processMolecule(std::vector<std::string> &);
     void convertExternalToInternalAtomtypes(simulationBox::Molecule &) const;
 };
-
-/**
- * @brief Reads a moldescriptor file
- *
- * @param engine
- */
-void readMolDescriptor(Engine &);
 
 #endif

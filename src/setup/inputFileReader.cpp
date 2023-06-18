@@ -181,7 +181,13 @@ void InputFileReader::postProcess()
     setupManostat();
 }
 
-void InputFileReader::setupThermostat()   // TODO: include warnings if value set but not used
+/**
+ * @brief setup thermostat
+ *
+ * TODO: include warnings if value set but not used
+ *
+ */
+void InputFileReader::setupThermostat()
 {
     if (_engine.getSettings().getThermostat() == "berendsen")
     {
@@ -204,7 +210,13 @@ void InputFileReader::setupThermostat()   // TODO: include warnings if value set
     _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
 }
 
-void InputFileReader::setupManostat()   // TODO: include warnings if value set but not used
+/**
+ * @brief setup manostat
+ *
+ * TODO: include warnings if value set but not used
+ *
+ */
+void InputFileReader::setupManostat()
 {
     if (_engine.getSettings().getManostat() == "berendsen")
     {
