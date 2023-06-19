@@ -5,6 +5,11 @@
 using namespace std;
 using namespace setup;
 
+/**
+ * @brief parse density of simulation and set it in simulation box
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseDensity(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

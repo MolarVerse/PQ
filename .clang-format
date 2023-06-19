@@ -23,6 +23,7 @@ AlignConsecutiveDeclarations: true
 BreakBeforeBraces: Allman
 
 BreakBeforeConceptDeclarations: Always
+AlwaysBreakTemplateDeclarations: MultiLine
 
 BinPackArguments: false
 BinPackParameters: false
