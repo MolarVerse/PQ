@@ -7,6 +7,7 @@
 using namespace std;
 using namespace simulationBox;
 using namespace thermostat;
+using namespace physicalData;
 
 /**
  * @brief calculate temperature

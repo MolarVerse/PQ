@@ -3,6 +3,7 @@
 #include <iomanip>
 
 using namespace std;
+using namespace physicalData;
 
 void InfoOutput::write(const double simulationTime, const PhysicalData &data)
 {
@@ -55,7 +56,11 @@ void InfoOutput::writeHeader()
     _fp << setfill(' ');
 }
 
-void InfoOutput::writeLeft(const double value, const string_view &name, const string_view &unit, ios_base &(*formatter)(ios_base &), const size_t precision)
+void InfoOutput::writeLeft(const double       value,
+                           const string_view &name,
+                           const string_view &unit,
+                           ios_base &(*formatter)(ios_base &),
+                           const size_t precision)
 {
     _fp << "|   ";
     _fp << left << setw(16) << name;
@@ -63,7 +68,11 @@ void InfoOutput::writeLeft(const double value, const string_view &name, const st
     _fp << " " << left << setw(9) << unit;
 }
 
-void InfoOutput::writeRight(const double value, const string_view &name, const string_view &unit, ios_base &(*formatter)(ios_base &), const size_t precision)
+void InfoOutput::writeRight(const double       value,
+                            const string_view &name,
+                            const string_view &unit,
+                            ios_base &(*formatter)(ios_base &),
+                            const size_t precision)
 {
     _fp << left << setw(12) << name;
     _fp << right << setw(15) << setfill(' ') << formatter << setprecision(precision) << value;

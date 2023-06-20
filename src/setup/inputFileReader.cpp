@@ -14,6 +14,7 @@ using namespace std;
 using namespace StringUtilities;
 using namespace setup;
 using namespace thermostat;
+using namespace manostat;
 
 /**
  * @brief Construct a new Input File Reader:: Input File Reader object

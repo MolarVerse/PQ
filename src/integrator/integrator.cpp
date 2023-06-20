@@ -1,18 +1,20 @@
 #include "integrator.hpp"
+
 #include "constants.hpp"
 
-#include <vector>
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 using namespace simulationBox;
+using namespace integrator;
 
 void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
 {
-    auto velocities = molecule.getAtomVelocity(i);
-    const auto forces = molecule.getAtomForce(i);
-    const auto mass = molecule.getAtomMass(i);
+    auto       velocities = molecule.getAtomVelocity(i);
+    const auto forces     = molecule.getAtomForce(i);
+    const auto mass       = molecule.getAtomMass(i);
 
     velocities += timestep * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
 
@@ -21,7 +23,7 @@ void Integrator::integrateVelocities(const double timestep, Molecule &molecule, 
 
 void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
 {
-    auto positions = molecule.getAtomPosition(i);
+    auto       positions  = molecule.getAtomPosition(i);
     const auto velocities = molecule.getAtomVelocity(i);
 
     positions += timestep * velocities * _FS_TO_S_;

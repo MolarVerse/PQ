@@ -13,10 +13,10 @@
  */
 class EnergyOutput : public Output
 {
-public:
+  public:
     using Output::Output;
 
-    void write(const size_t, const PhysicalData &);
+    void write(const size_t, const physicalData::PhysicalData &);
 };
 
-#endif // _ENERGYOUTPUT_HPP_
+#endif   // _ENERGYOUTPUT_HPP_

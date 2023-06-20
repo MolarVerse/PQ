@@ -39,7 +39,7 @@ class potential::Potential
   public:
     virtual ~Potential() = default;
 
-    virtual void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) = 0;
+    virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
     void calcCoulomb(const double coulombCoefficient,
                      const double rcCutoff,
@@ -87,7 +87,7 @@ class potential::Potential
 class potential::PotentialBruteForce : public potential::Potential
 {
   public:
-    void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
+    void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
 /**
@@ -102,7 +102,7 @@ class potential::PotentialBruteForce : public potential::Potential
 class potential::PotentialCellList : public potential::Potential
 {
   public:
-    void calculateForces(simulationBox::SimulationBox &, PhysicalData &, simulationBox::CellList &) override;
+    void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
 #endif   // _POTENTIAL_H_

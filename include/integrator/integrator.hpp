@@ -2,9 +2,15 @@
 
 #define _INTEGRATOR_H_
 
+#include "simulationBox.hpp"
+
 #include <string>
 
-#include "simulationBox.hpp"
+namespace integrator
+{
+    class Integrator;
+    class VelocityVerlet;
+}   // namespace integrator
 
 /**
  * @class Integrator
@@ -12,28 +18,28 @@
  * @brief Integrator is a base class for all integrators
  *
  */
-class Integrator
+class integrator::Integrator
 {
-protected:
+  protected:
     std::string _integratorType;
-    double _dt;
+    double      _dt;
 
-public:
+  public:
     Integrator() = default;
     explicit Integrator(const std::string_view integratorType) : _integratorType(integratorType){};
     virtual ~Integrator() = default;
 
-    virtual void firstStep(simulationBox::SimulationBox &) = 0;
+    virtual void firstStep(simulationBox::SimulationBox &)  = 0;
     virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-    void applyPBC(const simulationBox::SimulationBox &simBox, Vec3D &positions) const { simBox.applyPBC(positions); };
+    void applyPBC(const simulationBox::SimulationBox &simBox, Vec3D &positions) const { simBox.applyPBC(positions); }
     void integrateVelocities(const double, simulationBox::Molecule &, const size_t) const;
     void integratePositions(const double, simulationBox::Molecule &, const size_t, const simulationBox::SimulationBox &) const;
 
     // standard getter and setters
-    [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; };
+    [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
 
-    void setDt(const double dt) { _dt = dt; };
+    void setDt(const double dt) { _dt = dt; }
 };
 
 /**
@@ -42,9 +48,9 @@ public:
  * @brief VelocityVerlet is a class for velocity verlet integrator
  *
  */
-class VelocityVerlet : public Integrator
+class integrator::VelocityVerlet : public integrator::Integrator
 {
-public:
+  public:
     explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
 
     void firstStep(simulationBox::SimulationBox &) override;

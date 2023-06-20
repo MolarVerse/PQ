@@ -4,6 +4,8 @@
 
 using namespace std;
 using namespace simulationBox;
+using namespace physicalData;
+using namespace manostat;
 
 void Manostat::calculatePressure(PhysicalData &physicalData)
 {

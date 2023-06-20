@@ -9,4 +9,5 @@ _build*
 bin/
 install/
 
-examples/*/testset*
+examples/**/testset*
+

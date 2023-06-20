@@ -17,7 +17,9 @@ AllowShortIfStatementsOnASingleLine: WithoutElse
 
 AlignTrailingComments: true
 AlignConsecutiveMacros: Consecutive
-AlignConsecutiveAssignments: true
+AlignConsecutiveAssignments:
+  Enabled: true
+  AlignCompound: true
 AlignConsecutiveDeclarations: true
 
 BreakBeforeBraces: Allman

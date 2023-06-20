@@ -15,15 +15,17 @@
  */
 class InfoOutput : public Output
 {
-private:
+  private:
     void writeHeader();
-    void writeLeft(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
-    void writeRight(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+    void
+    writeLeft(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+    void
+    writeRight(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
 
-public:
+  public:
     using Output::Output;
 
-    void write(const double, const PhysicalData &data);
+    void write(const double, const physicalData::PhysicalData &data);
 };
 
 #endif /* __INFOOUTPUT_HPP__ */

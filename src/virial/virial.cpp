@@ -7,6 +7,7 @@
 using namespace std;
 using namespace simulationBox;
 using namespace virial;
+using namespace physicalData;
 
 /**
  * @brief calculate virial for general systems

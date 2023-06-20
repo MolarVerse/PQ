@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace setup;
+using namespace manostat;
 
 /**
  * @brief Parse the manostat used in the simulation

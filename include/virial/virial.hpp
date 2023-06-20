@@ -33,7 +33,7 @@ class virial::Virial
   public:
     virtual ~Virial() = default;
 
-    virtual void calculateVirial(simulationBox::SimulationBox &, PhysicalData &);
+    virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
     Vec3D getVirial() const { return _virial; }
     void  setVirial(const Vec3D &virial) { _virial = virial; }
@@ -47,7 +47,7 @@ class virial::Virial
 class virial::VirialMolecular : public virial::Virial
 {
   public:
-    void calculateVirial(simulationBox::SimulationBox &, PhysicalData &) override;
+    void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     void intraMolecularVirialCorrection(simulationBox::SimulationBox &);
 };
 

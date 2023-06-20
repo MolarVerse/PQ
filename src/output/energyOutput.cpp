@@ -3,6 +3,7 @@
 #include <iomanip>
 
 using namespace std;
+using namespace physicalData;
 
 void EnergyOutput::write(const size_t step, const PhysicalData &data)
 {

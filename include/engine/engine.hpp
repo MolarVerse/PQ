@@ -37,14 +37,14 @@ class Engine
 
     simulationBox::SimulationBox _simulationBox;
 
-    PhysicalData _physicalData;
-    PhysicalData _averagePhysicalData;
+    physicalData::PhysicalData _physicalData;
+    physicalData::PhysicalData _averagePhysicalData;
 
   public:
-    std::unique_ptr<Integrator>             _integrator;
+    std::unique_ptr<integrator::Integrator> _integrator;
     std::unique_ptr<potential::Potential>   _potential  = std::make_unique<potential::PotentialBruteForce>();
     std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
-    std::unique_ptr<Manostat>               _manostat   = std::make_unique<Manostat>();
+    std::unique_ptr<manostat::Manostat>     _manostat   = std::make_unique<manostat::Manostat>();
     std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();
 
     std::unique_ptr<EnergyOutput>     _energyOutput  = std::make_unique<EnergyOutput>("default.en");
@@ -62,12 +62,12 @@ class Engine
     void writeOutput();
 
     // standard getter and setters
-    [[nodiscard]] Settings                     &getSettings() { return _settings; }
-    [[nodiscard]] Timings                      &getTimings() { return _timings; }
-    [[nodiscard]] simulationBox::CellList      &getCellList() { return _cellList; }
-    [[nodiscard]] simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
-    [[nodiscard]] PhysicalData                 &getPhysicalData() { return _physicalData; }
-    [[nodiscard]] PhysicalData                 &getAveragePhysicalData() { return _averagePhysicalData; }
+    Settings                     &getSettings() { return _settings; }
+    Timings                      &getTimings() { return _timings; }
+    simulationBox::CellList      &getCellList() { return _cellList; }
+    simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
+    physicalData::PhysicalData   &getPhysicalData() { return _physicalData; }
+    physicalData::PhysicalData   &getAveragePhysicalData() { return _averagePhysicalData; }
 };
 
 #endif   // _ENGINE_HPP_

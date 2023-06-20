@@ -33,9 +33,9 @@ class thermostat::Thermostat
     explicit Thermostat(const double targetTemperature) : _targetTemperature(targetTemperature) {}
     virtual ~Thermostat() = default;
 
-    virtual void applyThermostat(simulationBox::SimulationBox &, PhysicalData &);
+    virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    void calculateTemperature(simulationBox::SimulationBox &, PhysicalData &);
+    void calculateTemperature(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
     void setTimestep(const double timestep) { _timestep = timestep; }
 };
@@ -55,7 +55,7 @@ class thermostat::BerendsenThermostat : public thermostat::Thermostat
     BerendsenThermostat() = default;
     explicit BerendsenThermostat(const double targetTemperature, const double tau) : Thermostat(targetTemperature), _tau(tau) {}
 
-    void applyThermostat(simulationBox::SimulationBox &, PhysicalData &) override;
+    void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
     double getTau() const { return _tau; }
     void   setTau(const double tau) { _tau = tau; }
