@@ -118,7 +118,8 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
     double totalNonCoulombicEnergy = 0.0;
     double energy                  = 0.0;
 
-    const double RcCutOff = simBox.getRcCutOff();
+    const double RcCutOff        = simBox.getRcCutOff();
+    const double RcCutOffSquared = RcCutOff * RcCutOff;
 
     auto guffCoefficients = vector<double>(22);
 
@@ -142,65 +143,59 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                     for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
                         const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-
-                        auto dxyz = xyz_i - xyz_j;
-
-                        const auto txyz = -box * round(dxyz / box);
+                        auto       dxyz  = xyz_i - xyz_j;
+                        const auto txyz  = -box * round(dxyz / box);
 
                         dxyz += txyz;
 
                         const double distanceSquared = normSquared(dxyz);
 
-                        if (distanceSquared < RcCutOff * RcCutOff)
+                        if (distanceSquared > RcCutOffSquared) continue;
+
+                        const double distance   = sqrt(distanceSquared);
+                        const size_t atomType_i = molecule_i->getAtomType(atom_i);
+                        const size_t atomType_j = molecule_j->getAtomType(atom_j);
+
+                        const double coulombCoefficient =
+                            simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                        auto force = 0.0;
+
+                        _coulombPotential->calcCoulomb(coulombCoefficient,
+                                                       simBox.getRcCutOff(),
+                                                       distance,
+                                                       energy,
+                                                       force,
+                                                       simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                                       simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                        totalCoulombicEnergy += energy;
+
+                        const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                        if (distance < rncCutOff)
                         {
-                            const double distance   = sqrt(distanceSquared);
-                            const size_t atomType_i = molecule_i->getAtomType(atom_i);
-                            const size_t atomType_j = molecule_j->getAtomType(atom_j);
+                            _nonCoulombPotential->calcNonCoulomb(
+                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
+                                rncCutOff,
+                                distance,
+                                energy,
+                                force,
+                                simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                            const double coulombCoefficient =
-                                simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                            auto force = 0.0;
-
-                            _coulombPotential->calcCoulomb(coulombCoefficient,
-                                                           simBox.getRcCutOff(),
-                                                           distance,
-                                                           energy,
-                                                           force,
-                                                           simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                                           simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                            totalCoulombicEnergy += energy;
-
-                            const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                            if (distance < rncCutOff)
-                            {
-                                guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                                _nonCoulombPotential->calcNonCoulomb(
-                                    guffCoefficients,
-                                    rncCutOff,
-                                    distance,
-                                    energy,
-                                    force,
-                                    simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                    simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                                totalNonCoulombicEnergy += energy;
-                            }
-
-                            force /= distance;
-
-                            const auto forcexyz = force * dxyz;
-
-                            const auto shiftForcexyz = forcexyz * txyz;
-
-                            molecule_i->addAtomForce(atom_i, forcexyz);
-                            molecule_j->addAtomForce(atom_j, -forcexyz);
-
-                            molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
+                            totalNonCoulombicEnergy += energy;
                         }
+
+                        force /= distance;
+
+                        const auto forcexyz      = force * dxyz;
+                        const auto shiftForcexyz = forcexyz * txyz;
+
+                        molecule_i->addAtomForce(atom_i, forcexyz);
+                        molecule_j->addAtomForce(atom_j, -forcexyz);
+
+                        molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
                     }
                 }
             }
@@ -234,66 +229,67 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
                         for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
                             const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-
-                            auto dxyz = xyz_i - xyz_j;
-
-                            const auto txyz = -box * round(dxyz / box);
+                            auto       dxyz  = xyz_i - xyz_j;
+                            const auto txyz  = -box * round(dxyz / box);
 
                             dxyz += txyz;
 
+                            // dxyz[0] += txyz[0];
+                            // dxyz[1] += txyz[1];
+                            // dxyz[2] += txyz[2];
+
+                            // dxyz[0] += txyz[0];
+                            // dxyz[1] += txyz[1];
+                            // dxyz[2] += txyz[2];
+
                             const double distanceSquared = normSquared(dxyz);
 
-                            if (distanceSquared < RcCutOff * RcCutOff)
+                            if (distanceSquared > RcCutOffSquared) continue;
+
+                            const double distance   = sqrt(distanceSquared);
+                            const size_t atomType_i = molecule_i->getAtomType(atom_i);
+                            const size_t atomType_j = molecule_j->getAtomType(atom_j);
+
+                            const double coulombCoefficient =
+                                simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                            auto force = 0.0;
+
+                            _coulombPotential->calcCoulomb(coulombCoefficient,
+                                                           simBox.getRcCutOff(),
+                                                           distance,
+                                                           energy,
+                                                           force,
+                                                           simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                                           simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+
+                            totalCoulombicEnergy += energy;
+
+                            const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+
+                            if (distance < rncCutOff)
                             {
-                                const double distance   = sqrt(distanceSquared);
-                                const size_t atomType_i = molecule_i->getAtomType(atom_i);
-                                const size_t atomType_j = molecule_j->getAtomType(atom_j);
-
-                                const double coulombCoefficient =
-                                    simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                                auto force = 0.0;
-
-                                _coulombPotential->calcCoulomb(
-                                    coulombCoefficient,
-                                    simBox.getRcCutOff(),
+                                _nonCoulombPotential->calcNonCoulomb(
+                                    simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
+                                    rncCutOff,
                                     distance,
                                     energy,
                                     force,
-                                    simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                    simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                    simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                    simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                                totalCoulombicEnergy += energy;
-
-                                const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                                if (distance < rncCutOff)
-                                {
-                                    guffCoefficients = simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                                    _nonCoulombPotential->calcNonCoulomb(
-                                        guffCoefficients,
-                                        rncCutOff,
-                                        distance,
-                                        energy,
-                                        force,
-                                        simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                        simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                                    totalNonCoulombicEnergy += energy;
-                                }
-
-                                force /= distance;
-
-                                const auto forcexyz = force * dxyz;
-
-                                const auto shiftForcexyz = forcexyz * txyz;
-
-                                molecule_i->addAtomForce(atom_i, forcexyz);
-                                molecule_j->addAtomForce(atom_j, -forcexyz);
-
-                                molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
+                                totalNonCoulombicEnergy += energy;
                             }
+
+                            force /= distance;
+
+                            const auto forcexyz      = force * dxyz;
+                            const auto shiftForcexyz = forcexyz * txyz;
+
+                            molecule_i->addAtomForce(atom_i, forcexyz);
+                            molecule_j->addAtomForce(atom_j, -forcexyz);
+
+                            molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
                         }
                     }
                 }

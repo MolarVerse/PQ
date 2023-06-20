@@ -19,16 +19,22 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double c3 = guffCoefficients[2];
     const double n4 = guffCoefficients[3];
 
+    const double distance_n2 = pow(distance, n2);
+    const double distance_n4 = pow(distance, n4);
+
     energy = c1 / pow(distance, n2) + c3 / pow(distance, n4);
-    force += n2 * c1 / pow(distance, n2 + 1) + n4 * c3 / pow(distance, n4 + 1);
+    force += n2 * c1 / (distance_n2 * distance) + n4 * c3 / (distance_n4 * distance);
 
     const double c5 = guffCoefficients[4];
     const double n6 = guffCoefficients[5];
     const double c7 = guffCoefficients[6];
     const double n8 = guffCoefficients[7];
 
+    const double distance_n6 = pow(distance, n2);
+    const double distance_n8 = pow(distance, n4);
+
     energy += c5 / pow(distance, n6) + c7 / pow(distance, n8);
-    force += n6 * c5 / pow(distance, n6 + 1) + n8 * c7 / pow(distance, n8 + 1);
+    force += n6 * c5 / (distance_n6 * distance) + n8 * c7 / (distance_n8 * distance);
 
     const double c9     = guffCoefficients[8];
     const double cexp10 = guffCoefficients[9];
@@ -53,10 +59,12 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double rexp17 = guffCoefficients[16];
     const double n18    = guffCoefficients[17];
 
+    const double distance_n18 = pow(distance - rexp17, n18);
+
     helper = c15 * exp(cexp16 * pow((distance - rexp17), n18));
 
     energy += helper;
-    force += -cexp16 * n18 * pow((distance - rexp17), n18 - 1) * helper;
+    force += -cexp16 * n18 * distance_n18 / (distance - rexp17) * helper;
 
     const double c19    = guffCoefficients[18];
     const double cexp20 = guffCoefficients[19];
