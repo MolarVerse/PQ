@@ -8,7 +8,7 @@ using namespace simulationBox;
 using namespace potential;
 using namespace physicalData;
 
-void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     const auto   box      = simBox.getBoxDimensions();
     const double RcCutOff = simBox.getRcCutOff();
@@ -72,11 +72,8 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 
                         if (distance < rncCutOff)
                         {
-                            const auto &guffCoefficients =
-                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j);
-
                             _nonCoulombPotential->calcNonCoulomb(
-                                guffCoefficients,
+                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
                                 rncCutOff,
                                 distance,
                                 energy,
@@ -108,12 +105,9 @@ void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &p
 }
 
 // TODO: check if cutoff is smaller than smallest cell size
-void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
+inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
     const auto box = simBox.getBoxDimensions();
-
-    Molecule *molecule_i = nullptr;
-    Molecule *molecule_j = nullptr;
 
     double totalCoulombicEnergy    = 0.0;
     double totalNonCoulombicEnergy = 0.0;
@@ -122,39 +116,46 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
     const double RcCutOff        = simBox.getRcCutOff();
     const double RcCutOffSquared = RcCutOff * RcCutOff;
 
-    auto guffCoefficients = vector<double>(22);
+    auto dxyz = Vec3D(0.0, 0.0, 0.0);
 
     for (const auto &cell_i : cellList.getCells())
     {
-        const size_t numberOfMoleculesInCell_i = cell_i.getNumberOfMolecules();
-
-        for (size_t mol_i = 0; mol_i < numberOfMoleculesInCell_i; ++mol_i)
+        for (size_t mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); ++mol_i)
         {
-            molecule_i             = cell_i.getMolecule(mol_i);
-            const size_t moltype_i = molecule_i->getMoltype();
+            auto         molecule_i = cell_i.getMolecule(mol_i);
+            const size_t moltype_i  = molecule_i->getMoltype();
 
             for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                molecule_j             = cell_i.getMolecule(mol_j);
-                const size_t moltype_j = molecule_j->getMoltype();
+                auto         molecule_j = cell_i.getMolecule(mol_j);
+                const size_t moltype_j  = molecule_j->getMoltype();
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    const auto xyz_i = molecule_i->getAtomPosition(atom_i);
+                    const size_t atomType_i = molecule_i->getAtomType(atom_i);
+                    const auto   xyz_i      = molecule_i->getAtomPosition(atom_i);
+
                     for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
                         const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-                        auto       dxyz  = xyz_i - xyz_j;
-                        const auto txyz  = -box * round(dxyz / box);
+                        // auto       dxyz  = xyz_i - xyz_j;
 
-                        dxyz += txyz;
+                        dxyz[0]         = xyz_i[0] - xyz_j[0];
+                        dxyz[1]         = xyz_i[1] - xyz_j[1];
+                        dxyz[2]         = xyz_i[2] - xyz_j[2];
+                        const auto txyz = -box * round(dxyz / box);
+
+                        // dxyz += txyz;
+
+                        dxyz[0] += txyz[0];
+                        dxyz[1] += txyz[1];
+                        dxyz[2] += txyz[2];
 
                         const double distanceSquared = normSquared(dxyz);
 
                         if (distanceSquared > RcCutOffSquared) continue;
 
                         const double distance   = sqrt(distanceSquared);
-                        const size_t atomType_i = molecule_i->getAtomType(atom_i);
                         const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
                         const double coulombCoefficient =
@@ -213,42 +214,44 @@ void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &phy
 
             for (size_t mol_i = 0; mol_i < numberOfMoleculesInCell_i; ++mol_i)
             {
-                molecule_i             = cell_i.getMolecule(mol_i);
-                const size_t moltype_i = molecule_i->getMoltype();
+                auto        *molecule_i = cell_i.getMolecule(mol_i);
+                const size_t moltype_i  = molecule_i->getMoltype();
 
-                for (size_t mol_j = 0; mol_j < numberOfMoleculesInCell_j; ++mol_j)
+                for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    molecule_j             = cell_j->getMolecule(mol_j);
-                    const size_t moltype_j = molecule_j->getMoltype();
+                    const size_t atomType_i = molecule_i->getAtomType(atom_i);
+                    const auto   xyz_i      = molecule_i->getAtomPosition(atom_i);
 
-                    if (molecule_i == molecule_j) continue;
-
-                    for (const auto atom_i : cell_i.getAtomIndices(mol_i))
+                    for (size_t mol_j = 0; mol_j < numberOfMoleculesInCell_j; ++mol_j)
                     {
-                        const auto xyz_i = molecule_i->getAtomPosition(atom_i);
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                        if (molecule_i == molecule_j) continue;
+
+                        const size_t moltype_j = molecule_j->getMoltype();
 
                         for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
                             const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-                            auto       dxyz  = xyz_i - xyz_j;
-                            const auto txyz  = -box * round(dxyz / box);
+                            // auto       dxyz  = xyz_i - xyz_j;
 
-                            dxyz += txyz;
+                            dxyz[0] = xyz_i[0] - xyz_j[0];
+                            dxyz[1] = xyz_i[1] - xyz_j[1];
+                            dxyz[2] = xyz_i[2] - xyz_j[2];
 
-                            // dxyz[0] += txyz[0];
-                            // dxyz[1] += txyz[1];
-                            // dxyz[2] += txyz[2];
+                            const auto txyz = -box * round(dxyz / box);
 
-                            // dxyz[0] += txyz[0];
-                            // dxyz[1] += txyz[1];
-                            // dxyz[2] += txyz[2];
+                            // dxyz += txyz;
+
+                            dxyz[0] += txyz[0];
+                            dxyz[1] += txyz[1];
+                            dxyz[2] += txyz[2];
 
                             const double distanceSquared = normSquared(dxyz);
 
                             if (distanceSquared > RcCutOffSquared) continue;
 
                             const double distance   = sqrt(distanceSquared);
-                            const size_t atomType_i = molecule_i->getAtomType(atom_i);
                             const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
                             const double coulombCoefficient =

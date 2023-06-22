@@ -4,6 +4,7 @@
 
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
+#include "molecule.hpp"
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
