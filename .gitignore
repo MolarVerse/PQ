@@ -10,4 +10,5 @@ bin/
 install/
 
 examples/**/testset*
+examples/**/perf*
 
