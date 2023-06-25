@@ -146,28 +146,28 @@ class simulationBox::SimulationBox
      * Forwards the box methods to the box object *
      **********************************************/
 
-    void applyPBC(Vec3D &position) const { _box.applyPBC(position); }
-    void scaleBox(const Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); }
+    void applyPBC(vector3d::Vec3D &position) const { _box.applyPBC(position); }
+    void scaleBox(const vector3d::Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); }
 
-    double calculateVolume() { return _box.calculateVolume(); }
-    Vec3D  calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }
+    double          calculateVolume() { return _box.calculateVolume(); }
+    vector3d::Vec3D calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }
 
     double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
     bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
 
-    double getDensity() const { return _box.getDensity(); }
-    double getTotalMass() const { return _box.getTotalMass(); }
-    double getTotalCharge() const { return _box.getTotalCharge(); }
-    double getVolume() const { return _box.getVolume(); }
-    Vec3D  getBoxDimensions() const { return _box.getBoxDimensions(); }
-    Vec3D  getBoxAngles() const { return _box.getBoxAngles(); }
+    double          getDensity() const { return _box.getDensity(); }
+    double          getTotalMass() const { return _box.getTotalMass(); }
+    double          getTotalCharge() const { return _box.getTotalCharge(); }
+    double          getVolume() const { return _box.getVolume(); }
+    vector3d::Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
+    vector3d::Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
 
     void setDensity(const double density) { _box.setDensity(density); }
     void setTotalMass(const double mass) { _box.setTotalMass(mass); }
     void setTotalCharge(const double charge) { _box.setTotalCharge(charge); }
     void setVolume(const double volume) { _box.setVolume(volume); }
-    void setBoxDimensions(const Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
-    void setBoxAngles(const Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
+    void setBoxDimensions(const vector3d::Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
+    void setBoxAngles(const vector3d::Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
 };
 
 #endif

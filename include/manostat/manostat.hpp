@@ -22,9 +22,9 @@ namespace manostat
 class manostat::Manostat
 {
   protected:
-    Vec3D  _pressureVector = {0.0, 0.0, 0.0};
-    double _pressure;
-    double _targetPressure;
+    vector3d::Vec3D _pressureVector = {0.0, 0.0, 0.0};
+    double          _pressure;
+    double          _targetPressure;
 
     double _timestep;
 

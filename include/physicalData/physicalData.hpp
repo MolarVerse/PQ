@@ -30,10 +30,10 @@ class physicalData::PhysicalData
     double _coulombEnergy;
     double _nonCoulombEnergy;
 
-    Vec3D _virial;
-    Vec3D _momentumVector;
-    Vec3D _kineticEnergyAtomicVector;
-    Vec3D _kineticEnergyMolecularVector;
+    vector3d::Vec3D _virial;
+    vector3d::Vec3D _momentumVector;
+    vector3d::Vec3D _kineticEnergyAtomicVector;
+    vector3d::Vec3D _kineticEnergyMolecularVector;
 
   public:
     void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
@@ -41,7 +41,8 @@ class physicalData::PhysicalData
     void updateAverages(const PhysicalData &);
     void makeAverages(const double);
 
-    std::function<Vec3D()> getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
+    std::function<vector3d::Vec3D()> getKineticEnergyVirialVector =
+        std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
 
     void changeKineticVirialToAtomic()
     {
@@ -56,7 +57,7 @@ class physicalData::PhysicalData
     void setDensity(const double density) { _density = density; }
     void setTemperature(const double temperature) { _temperature = temperature; }
     void setPressure(const double pressure) { _pressure = pressure; }
-    void setVirial(const Vec3D &virial) { _virial = virial; }
+    void setVirial(const vector3d::Vec3D &virial) { _virial = virial; }
     void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
 
@@ -64,17 +65,17 @@ class physicalData::PhysicalData
      * standard getters *
      ********************/
 
-    double getVolume() const { return _volume; }
-    double getDensity() const { return _density; }
-    double getTemperature() const { return _temperature; }
-    double getPressure() const { return _pressure; }
-    double getMomentum() const { return _momentum; }
-    double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
-    double getCoulombEnergy() const { return _coulombEnergy; }
-    double getKineticEnergy() const { return _kineticEnergy; }
-    Vec3D  getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
-    Vec3D  getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
-    Vec3D  getVirial() const { return _virial; }
+    double          getVolume() const { return _volume; }
+    double          getDensity() const { return _density; }
+    double          getTemperature() const { return _temperature; }
+    double          getPressure() const { return _pressure; }
+    double          getMomentum() const { return _momentum; }
+    double          getNonCoulombEnergy() const { return _nonCoulombEnergy; }
+    double          getCoulombEnergy() const { return _coulombEnergy; }
+    double          getKineticEnergy() const { return _kineticEnergy; }
+    vector3d::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
+    vector3d::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
+    vector3d::Vec3D getVirial() const { return _virial; }
 };
 
 #endif   // _PHYSICAL_DATA_H_

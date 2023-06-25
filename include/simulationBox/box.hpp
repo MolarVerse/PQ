@@ -24,8 +24,8 @@ namespace simulationBox
 class simulationBox::Box
 {
   private:
-    Vec3D _boxDimensions;
-    Vec3D _boxAngles = {90.0, 90.0, 90.0};
+    vector3d::Vec3D _boxDimensions;
+    vector3d::Vec3D _boxAngles = {90.0, 90.0, 90.0};
 
     double _totalMass;
     double _totalCharge;
@@ -36,20 +36,20 @@ class simulationBox::Box
 
   public:
     double calculateVolume();
-    double calculateDistance(const Vec3D &, const Vec3D &, Vec3D &);
-    double calculateDistanceSquared(const Vec3D &, const Vec3D &, Vec3D &);
+    double calculateDistance(const vector3d::Vec3D &, const vector3d::Vec3D &, vector3d::Vec3D &);
+    double calculateDistanceSquared(const vector3d::Vec3D &, const vector3d::Vec3D &, vector3d::Vec3D &);
 
-    Vec3D calculateBoxDimensionsFromDensity() const;
+    vector3d::Vec3D calculateBoxDimensionsFromDensity() const;
 
-    void applyPBC(Vec3D &) const;
-    void scaleBox(const Vec3D &);
+    void applyPBC(vector3d::Vec3D &) const;
+    void scaleBox(const vector3d::Vec3D &);
 
     /***********************************
      * non-standard getter and setters *
      ***********************************/
 
-    void setBoxDimensions(const Vec3D &);
-    void setBoxAngles(const Vec3D &);
+    void setBoxDimensions(const vector3d::Vec3D &);
+    void setBoxAngles(const vector3d::Vec3D &);
     void setDensity(const double density);
 
     double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
@@ -58,8 +58,8 @@ class simulationBox::Box
      * standard getter and setters *
      *******************************/
 
-    Vec3D  getBoxDimensions() const { return _boxDimensions; }
-    Vec3D  getBoxAngles() const { return _boxAngles; }
+    vector3d::Vec3D  getBoxDimensions() const { return _boxDimensions; }
+    vector3d::Vec3D  getBoxAngles() const { return _boxAngles; }
     double getTotalMass() const { return _totalMass; }
     double getTotalCharge() const { return _totalCharge; }
     double getDensity() const { return _density; }

@@ -28,15 +28,15 @@ namespace virial
 class virial::Virial
 {
   protected:
-    Vec3D _virial;
+    vector3d::Vec3D _virial;
 
   public:
     virtual ~Virial() = default;
 
     virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    Vec3D getVirial() const { return _virial; }
-    void  setVirial(const Vec3D &virial) { _virial = virial; }
+    vector3d::Vec3D getVirial() const { return _virial; }
+    void            setVirial(const vector3d::Vec3D &virial) { _virial = virial; }
 };
 
 /**

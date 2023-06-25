@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace simulationBox;
+using namespace vector3d;
 
 /**
  * @brief setup cell list

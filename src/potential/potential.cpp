@@ -7,6 +7,7 @@ using namespace std;
 using namespace simulationBox;
 using namespace potential;
 using namespace physicalData;
+using namespace vector3d;
 
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {

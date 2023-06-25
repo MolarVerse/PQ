@@ -7,7 +7,8 @@
 
 #include <vector>
 
-namespace simulationBox {
+namespace simulationBox
+{
     class Cell;
 }
 
@@ -17,15 +18,16 @@ namespace simulationBox {
  * @brief Cell is a class for cell
  *
  */
-class simulationBox::Cell {
+class simulationBox::Cell
+{
   private:
     std::vector<Molecule *>          _molecules;
     std::vector<std::vector<size_t>> _atomInidices;
     std::vector<Cell *>              _neighbourCells;
 
-    Vec3D   _lowerBoundary = {0, 0, 0};
-    Vec3D   _upperBoundary = {0, 0, 0};
-    Vec3Dul _cellIndex     = {0, 0, 0};
+    vector3d::Vec3D   _lowerBoundary = {0, 0, 0};
+    vector3d::Vec3D   _upperBoundary = {0, 0, 0};
+    vector3d::Vec3Dul _cellIndex     = {0, 0, 0};
 
   public:
     void clearMolecules() { _molecules.clear(); }
@@ -40,11 +42,11 @@ class simulationBox::Cell {
      * standatd getter methods *
      ***************************/
 
-    size_t  getNumberOfMolecules() const { return _molecules.size(); }
-    size_t  getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
-    Vec3D   getLowerBoundary() const { return _lowerBoundary; }
-    Vec3D   getUpperBoundary() const { return _upperBoundary; }
-    Vec3Dul getCellIndex() const { return _cellIndex; }
+    size_t            getNumberOfMolecules() const { return _molecules.size(); }
+    size_t            getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
+    vector3d::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
+    vector3d::Vec3D   getUpperBoundary() const { return _upperBoundary; }
+    vector3d::Vec3Dul getCellIndex() const { return _cellIndex; }
 
     Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
     std::vector<Molecule *> getMolecules() const { return _molecules; }
@@ -58,9 +60,9 @@ class simulationBox::Cell {
      * standatd setter methods *
      ***************************/
 
-    void setLowerBoundary(const Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
-    void setUpperBoundary(const Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
-    void setCellIndex(const Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
+    void setLowerBoundary(const vector3d::Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
+    void setUpperBoundary(const vector3d::Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
+    void setCellIndex(const vector3d::Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
 };
 
 #endif   // _CELL_H_

@@ -1,11 +1,13 @@
 #include "configurationReader.hpp"
+
 #include "atom.hpp"
 
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace frameTools;
+using namespace vector3d;
 
 ConfigurationReader::ConfigurationReader(const vector<string> &filenames) : _filenames(filenames)
 {
@@ -50,7 +52,7 @@ void ConfigurationReader::parseHeader()
     istringstream iss(line.data());
 
     size_t nAtoms;
-    Vec3D box;
+    Vec3D  box;
 
     iss >> nAtoms;
     iss >> box[0] >> box[1] >> box[2];
@@ -62,11 +64,9 @@ void ConfigurationReader::parseHeader()
 
     if (_nFrames != 0)
     {
-        if (_nAtoms != nAtoms)
-            throw runtime_error("Number of atoms in the trajectory is not consistent");
+        if (_nAtoms != nAtoms) throw runtime_error("Number of atoms in the trajectory is not consistent");
 
-        if (isBoxSet(box))
-            _box = box;
+        if (isBoxSet(box)) _box = box;
     }
     else
     {
@@ -90,7 +90,7 @@ void ConfigurationReader::parseAtoms()
     {
         string line;
         string atomName;
-        Vec3D position;
+        Vec3D  position;
 
         getline(_fp, line);
 

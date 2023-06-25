@@ -2,43 +2,43 @@
 
 #define _FRAME_HPP_
 
-#include <vector>
-#include <string>
-
 #include "atom.hpp"
 #include "molecule.hpp"
+
+#include <string>
+#include <vector>
 
 namespace frameTools
 {
     class Frame
     {
-    private:
-        size_t _nAtoms;
-        Vec3D _box;
+      private:
+        size_t          _nAtoms;
+        vector3d::Vec3D _box;
 
-        std::vector<Atom> _atoms;
+        std::vector<Atom>     _atoms;
         std::vector<Molecule> _molecules;
 
-    public:
+      public:
         std::string getElementType(const size_t atomIndex) const { return _atoms[atomIndex].getElementType(); }
 
-        [[nodiscard]] Vec3D getPosition(const size_t atomIndex) const { return _atoms[atomIndex].getPosition(); }
+        vector3d::Vec3D getPosition(const size_t atomIndex) const { return _atoms[atomIndex].getPosition(); }
 
         // standard getter and setter
-        void setNAtoms(const size_t nAtoms) { _nAtoms = nAtoms; }
-        [[nodiscard]] size_t getNAtoms() const { return _nAtoms; }
+        void   setNAtoms(const size_t nAtoms) { _nAtoms = nAtoms; }
+        size_t getNAtoms() const { return _nAtoms; }
 
-        void setBox(const Vec3D &box) { _box = box; }
+        void setBox(const vector3d::Vec3D &box) { _box = box; }
 
-        void addAtom(const Atom &atom) { _atoms.push_back(atom); }
-        [[nodiscard]] Atom &getAtom(const size_t atomIndex) { return _atoms[atomIndex]; }
-        [[nodiscard]] std::vector<Atom> getAtoms() const { return _atoms; }
+        void              addAtom(const Atom &atom) { _atoms.push_back(atom); }
+        Atom             &getAtom(const size_t atomIndex) { return _atoms[atomIndex]; }
+        std::vector<Atom> getAtoms() const { return _atoms; }
 
-        [[nodiscard]] Vec3D getBox() const { return _box; }
+        vector3d::Vec3D getBox() const { return _box; }
 
-        void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
-        [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
+        void                   addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
+        std::vector<Molecule> &getMolecules() { return _molecules; }
     };
-}
+}   // namespace frameTools
 
-#endif // _FRAME_HPP_
+#endif   // _FRAME_HPP_

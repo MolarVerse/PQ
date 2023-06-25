@@ -23,9 +23,9 @@ class simulationBox::CellList {
 
     std::vector<Cell> _cells;
 
-    Vec3D   _cellSize;
-    Vec3Dul _nCells          = {7, 7, 7};
-    Vec3Dul _nNeighbourCells = {0, 0, 0};
+    vector3d::Vec3D   _cellSize;
+    vector3d::Vec3Dul _nCells          = {7, 7, 7};
+    vector3d::Vec3Dul _nNeighbourCells = {0, 0, 0};
 
   public:
     void setup(const SimulationBox &);
@@ -37,8 +37,8 @@ class simulationBox::CellList {
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
 
-    size_t  getCellIndex(const Vec3Dul &cellIndices) const;
-    Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const Vec3D &);
+    size_t  getCellIndex(const vector3d::Vec3Dul &cellIndices) const;
+    vector3d::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const vector3d::Vec3D &);
 
     void activate() { _activated = true; }
     bool isActivated() const { return _activated; }
@@ -47,7 +47,7 @@ class simulationBox::CellList {
      * standatd getter methods *
      ***************************/
 
-    Vec3D             getCellSize() const { return _cellSize; }
+    vector3d::Vec3D             getCellSize() const { return _cellSize; }
     Cell             &getCell(const size_t index) { return _cells[index]; }
     std::vector<Cell> getCells() const { return _cells; }
 

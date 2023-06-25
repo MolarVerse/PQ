@@ -11,6 +11,7 @@
 
 using namespace std;
 using namespace simulationBox;
+using namespace vector3d;
 
 /**
  * @brief Set the Box Dimensions in Box object

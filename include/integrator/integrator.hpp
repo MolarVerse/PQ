@@ -32,12 +32,11 @@ class integrator::Integrator
     virtual void firstStep(simulationBox::SimulationBox &)  = 0;
     virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-    void applyPBC(const simulationBox::SimulationBox &simBox, Vec3D &positions) const { simBox.applyPBC(positions); }
+    void applyPBC(const simulationBox::SimulationBox &simBox, vector3d::Vec3D &positions) const { simBox.applyPBC(positions); }
     void integrateVelocities(const double, simulationBox::Molecule &, const size_t) const;
     void integratePositions(const double, simulationBox::Molecule &, const size_t, const simulationBox::SimulationBox &) const;
 
-    // standard getter and setters
-    [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
+    std::string_view getIntegratorType() const { return _integratorType; }
 
     void setDt(const double dt) { _dt = dt; }
 };
