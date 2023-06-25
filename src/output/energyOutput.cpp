@@ -4,7 +4,14 @@
 
 using namespace std;
 using namespace physicalData;
+using namespace output;
 
+/**
+ * @brief Write the energy output
+ *
+ * @param step
+ * @param data
+ */
 void EnergyOutput::write(const size_t step, const PhysicalData &data)
 {
     _fp << right;

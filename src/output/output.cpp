@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace customException;
+using namespace output;
 
 /**
  * @brief Sets the filename of the output file
@@ -95,28 +96,6 @@ void Output::openFile()
 }
 
 /**
- * @brief write a warning message to the log file if density and box dimensions are set
- *
- */
-void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl; }
-
-/**
- * @brief write a warning message to the stdout if density and box dimensions are set
- *
- */
-void StdoutOutput::writeDensityWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
-}
-
-/**
  * @brief construct general initial momentum message
  *
  * @param momentum
@@ -125,68 +104,4 @@ void StdoutOutput::writeDensityWarning() const
 string Output::initialMomentumMessage(const double momentum) const
 {
     return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
-}
-
-/**
- * @brief write initial momentum to log file
- *
- * @param momentum
- */
-void LogOutput::writeInitialMomentum(const double momentum)
-{
-    _fp << endl;
-    _fp << initialMomentumMessage(momentum) << endl;
-}
-
-/**
- * @brief write initial momentum to stdout
- *
- * @param momentum
- */
-void StdoutOutput::writeInitialMomentum(const double momentum) const
-{
-    cout << endl;
-    cout << initialMomentumMessage(momentum) << endl;
-}
-
-/**
- * @brief write warning message to log file if Berendsen thermostat is set but no relaxation time is given
- *
- */
-void LogOutput::writeRelaxationTimeThermostatWarning()
-{
-    _fp << "WARNING: Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps." << endl;
-}
-
-void LogOutput::writeRelaxationTimeManostatWarning()
-{
-    _fp << "WARNING: Berendsen manostat set but no relaxation time given. Using default value of 1.0ps." << endl;
-}
-
-/**
- * @brief write warning message to stdout if Berendsen thermostat is set but no relaxation time is given
- *
- */
-void StdoutOutput::writeRelaxationTimeThermostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
-}
-
-void StdoutOutput::writeRelaxationTimeManostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen manostat set but no relaxation time given. Using default value of 1.0ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
 }

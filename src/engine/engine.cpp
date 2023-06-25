@@ -12,6 +12,7 @@ using namespace settings;
 using namespace timings;
 using namespace engine;
 using namespace config;
+using namespace output;
 
 void Engine::run()
 {

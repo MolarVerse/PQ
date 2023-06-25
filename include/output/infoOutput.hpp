@@ -7,13 +7,18 @@
 
 #include <functional>
 
+namespace output
+{
+    class InfoOutput;
+}
+
 /**
  * @class InfoOutput inherits from Output
  *
  * @brief Output file for info file
  *
  */
-class InfoOutput : public Output
+class output::InfoOutput : public output::Output
 {
   private:
     void writeHeader();
@@ -23,7 +28,7 @@ class InfoOutput : public Output
     writeRight(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
 
   public:
-    using Output::Output;
+    using output::Output::Output;
 
     void write(const double, const physicalData::PhysicalData &data);
 };

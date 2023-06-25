@@ -4,7 +4,13 @@
 
 using namespace std;
 using namespace simulationBox;
+using namespace output;
 
+/**
+ * @brief Write xyz file
+ *
+ * @param simBox
+ */
 void TrajectoryOutput::writexyz(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms();
@@ -42,6 +48,11 @@ void TrajectoryOutput::writexyz(SimulationBox &simBox)
     }
 }
 
+/**
+ * @brief Write velocities file
+ *
+ * @param simBox
+ */
 void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms();
@@ -79,6 +90,11 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
     }
 }
 
+/**
+ * @brief Write forces file
+ *
+ * @param simBox
+ */
 void TrajectoryOutput::writeForces(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms();
@@ -116,6 +132,11 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
     }
 }
 
+/**
+ * @brief Write charges file
+ *
+ * @param simBox
+ */
 void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms();

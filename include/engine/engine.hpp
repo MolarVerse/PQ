@@ -6,12 +6,15 @@
 #include "energyOutput.hpp"
 #include "infoOutput.hpp"
 #include "integrator.hpp"
+#include "logOutput.hpp"
 #include "manostat.hpp"
 #include "output.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "rstFileOutput.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "stdoutOutput.hpp"
 #include "thermostat.hpp"
 #include "timings.hpp"
 #include "trajectoryOutput.hpp"
@@ -50,15 +53,15 @@ class engine::Engine
     std::unique_ptr<manostat::Manostat>     _manostat   = std::make_unique<manostat::Manostat>();
     std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();
 
-    std::unique_ptr<EnergyOutput>     _energyOutput  = std::make_unique<EnergyOutput>("default.en");
-    std::unique_ptr<TrajectoryOutput> _xyzOutput     = std::make_unique<TrajectoryOutput>("default.xyz");
-    std::unique_ptr<TrajectoryOutput> _velOutput     = std::make_unique<TrajectoryOutput>("default.vel");
-    std::unique_ptr<TrajectoryOutput> _forceOutput   = std::make_unique<TrajectoryOutput>("default.force");
-    std::unique_ptr<TrajectoryOutput> _chargeOutput  = std::make_unique<TrajectoryOutput>("default.chg");
-    std::unique_ptr<LogOutput>        _logOutput     = std::make_unique<LogOutput>("default.log");
-    std::unique_ptr<StdoutOutput>     _stdoutOutput  = std::make_unique<StdoutOutput>("stdout");
-    std::unique_ptr<RstFileOutput>    _rstFileOutput = std::make_unique<RstFileOutput>("default.rst");
-    std::unique_ptr<InfoOutput>       _infoOutput    = std::make_unique<InfoOutput>("default.info");
+    std::unique_ptr<output::EnergyOutput>     _energyOutput  = std::make_unique<output::EnergyOutput>("default.en");
+    std::unique_ptr<output::TrajectoryOutput> _xyzOutput     = std::make_unique<output::TrajectoryOutput>("default.xyz");
+    std::unique_ptr<output::TrajectoryOutput> _velOutput     = std::make_unique<output::TrajectoryOutput>("default.vel");
+    std::unique_ptr<output::TrajectoryOutput> _forceOutput   = std::make_unique<output::TrajectoryOutput>("default.force");
+    std::unique_ptr<output::TrajectoryOutput> _chargeOutput  = std::make_unique<output::TrajectoryOutput>("default.chg");
+    std::unique_ptr<output::LogOutput>        _logOutput     = std::make_unique<output::LogOutput>("default.log");
+    std::unique_ptr<output::StdoutOutput>     _stdoutOutput  = std::make_unique<output::StdoutOutput>("stdout");
+    std::unique_ptr<output::RstFileOutput>    _rstFileOutput = std::make_unique<output::RstFileOutput>("default.rst");
+    std::unique_ptr<output::InfoOutput>       _infoOutput    = std::make_unique<output::InfoOutput>("default.info");
 
     void run();
     void takeStep();

@@ -4,6 +4,9 @@ add_library(output
     energyOutput.cpp
     infoOutput.cpp
     trajectoryOutput.cpp
+    logOutput.cpp
+    stdoutOutput.cpp
+    rstFileOutput.cpp
 )
 
 target_include_directories(output

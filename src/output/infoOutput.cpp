@@ -4,7 +4,14 @@
 
 using namespace std;
 using namespace physicalData;
+using namespace output;
 
+/**
+ * @brief write info file
+ *
+ * @param simulationTime
+ * @param data
+ */
 void InfoOutput::write(const double simulationTime, const PhysicalData &data)
 {
     _fp.close();
@@ -35,6 +42,10 @@ void InfoOutput::write(const double simulationTime, const PhysicalData &data)
         << "\n";
 }
 
+/**
+ * @brief write header of info file
+ *
+ */
 void InfoOutput::writeHeader()
 {
     _fp << setw(86);
@@ -56,6 +67,15 @@ void InfoOutput::writeHeader()
     _fp << setfill(' ');
 }
 
+/**
+ * @brief write left column of info file
+ *
+ * @param value
+ * @param name
+ * @param unit
+ * @param formatter
+ * @param precision
+ */
 void InfoOutput::writeLeft(const double       value,
                            const string_view &name,
                            const string_view &unit,
@@ -68,6 +88,15 @@ void InfoOutput::writeLeft(const double       value,
     _fp << " " << left << setw(9) << unit;
 }
 
+/**
+ * @brief write right column of info file
+ *
+ * @param value
+ * @param name
+ * @param unit
+ * @param formatter
+ * @param precision
+ */
 void InfoOutput::writeRight(const double       value,
                             const string_view &name,
                             const string_view &unit,

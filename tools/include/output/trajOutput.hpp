@@ -2,13 +2,13 @@
 
 #define _TRAJ_OUTPUT_HPP_
 
-#include "output.hpp"
 #include "frame.hpp"
+#include "output.hpp"
 
-class TrajOutput : public Output
+class TrajOutput : public output::Output
 {
-public:
-    using Output::Output;
+  public:
+    using output::Output::Output;
 
     void write(frameTools::Frame &);
 };

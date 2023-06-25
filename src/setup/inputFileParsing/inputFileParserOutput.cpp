@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace setup;
+using namespace output;
 
 /**
  * @brief parse output frequency of simulation and set it in output statically

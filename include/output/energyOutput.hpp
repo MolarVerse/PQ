@@ -5,16 +5,21 @@
 #include "output.hpp"
 #include "physicalData.hpp"
 
+namespace output
+{
+    class EnergyOutput;
+}
+
 /**
  * @class EnergyOutput inherits from Output
  *
  * @brief Output file for energy
  *
  */
-class EnergyOutput : public Output
+class output::EnergyOutput : public output::Output
 {
   public:
-    using Output::Output;
+    using output::Output::Output;
 
     void write(const size_t, const physicalData::PhysicalData &);
 };

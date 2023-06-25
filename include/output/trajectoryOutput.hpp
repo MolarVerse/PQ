@@ -5,16 +5,21 @@
 #include "output.hpp"
 #include "simulationBox.hpp"
 
+namespace output
+{
+    class TrajectoryOutput;
+}
+
 /**
  * @class TrajectoryOutput inherits from Output
  *
  * @brief Output file for xyz, vel, force files
  *
  */
-class TrajectoryOutput : public Output
+class output::TrajectoryOutput : public output::Output
 {
-public:
-    using Output::Output;
+  public:
+    using output::Output::Output;
 
     void writexyz(simulationBox::SimulationBox &);
     void writeVelocities(simulationBox::SimulationBox &);
@@ -22,4 +27,4 @@ public:
     void writeCharges(simulationBox::SimulationBox &);
 };
 
-#endif // _TRAJECTORY_OUTPUT_HPP_
+#endif   // _TRAJECTORY_OUTPUT_HPP_
