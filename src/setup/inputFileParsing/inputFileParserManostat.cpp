@@ -6,6 +6,7 @@
 using namespace std;
 using namespace setup;
 using namespace manostat;
+using namespace customException;
 
 /**
  * @brief Parse the manostat used in the simulation

@@ -9,6 +9,7 @@ using namespace std;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace vector3d;
+using namespace config;
 
 /**
  * @brief Calculates kinetic energy and momentum of the system

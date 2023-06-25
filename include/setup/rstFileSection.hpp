@@ -33,9 +33,9 @@ class setup::RstFileSection
 
     int                 _lineNumber;
     std::ifstream      *_fp;
-    virtual std::string keyword()                                     = 0;
-    virtual bool        isHeader()                                    = 0;
-    virtual void        process(std::vector<std::string> &, Engine &) = 0;
+    virtual std::string keyword()                                             = 0;
+    virtual bool        isHeader()                                            = 0;
+    virtual void        process(std::vector<std::string> &, engine::Engine &) = 0;
 };
 
 /**
@@ -49,7 +49,7 @@ class setup::BoxSection : public setup::RstFileSection
   public:
     std::string keyword() override { return "box"; }
     bool        isHeader() override;
-    void        process(std::vector<std::string> &, Engine &) override;
+    void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
 /**
@@ -63,7 +63,7 @@ class setup::NoseHooverSection : public setup::RstFileSection
   public:
     std::string keyword() override { return "chi"; }
     bool        isHeader() override;
-    void        process(std::vector<std::string> &, Engine &) override;
+    void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
 /**
@@ -77,7 +77,7 @@ class setup::StepCountSection : public setup::RstFileSection
   public:
     std::string keyword() override { return "step"; }
     bool        isHeader() override;
-    void        process(std::vector<std::string> &, Engine &) override;
+    void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
 /**
@@ -97,7 +97,7 @@ class setup::AtomSection : public setup::RstFileSection
   public:
     std::string keyword() override { return ""; }
     bool        isHeader() override;
-    void        process(std::vector<std::string> &, Engine &) override;
+    void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
 #endif

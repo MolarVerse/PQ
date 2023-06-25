@@ -17,7 +17,7 @@
  */
 namespace setup
 {
-    void setupEngine(const std::string &, Engine &);
+    void setupEngine(const std::string &, engine::Engine &);
 }
 
 #endif   // _SETUP_HPP_

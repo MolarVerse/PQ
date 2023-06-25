@@ -13,6 +13,9 @@ using namespace std;
 using namespace simulationBox;
 using namespace setup;
 using namespace potential;
+using namespace engine;
+using namespace config;
+using namespace customException;
 
 /**
  * @brief Setup post processing

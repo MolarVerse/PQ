@@ -1,6 +1,7 @@
 #include "exceptions.hpp"
 
 using namespace std;
+using namespace customException;
 
 /**
  * @brief Prints the exception type in color.

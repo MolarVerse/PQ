@@ -5,6 +5,7 @@
 using namespace std;
 using namespace setup;
 using namespace virial;
+using namespace customException;
 
 /**
  * @brief parses virial command

@@ -3,6 +3,7 @@
 
 using namespace std;
 using namespace setup;
+using namespace customException;
 
 /**
  * @brief Parses if cell-list should be used in simulation

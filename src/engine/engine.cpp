@@ -8,6 +8,10 @@
 using namespace std;
 using namespace simulationBox;
 using namespace physicalData;
+using namespace settings;
+using namespace timings;
+using namespace engine;
+using namespace config;
 
 void Engine::run()
 {

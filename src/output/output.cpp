@@ -1,16 +1,17 @@
-#include <stdexcept>
-#include <filesystem>
-
-#include <fstream>
-
 #include "output.hpp"
+
 #include "exceptions.hpp"
+
+#include <filesystem>
+#include <fstream>
+#include <stdexcept>
 
 #ifdef WITH_MPI
 #include <mpi.h>
 #endif
 
 using namespace std;
+using namespace customException;
 
 /**
  * @brief Sets the filename of the output file
@@ -90,18 +91,14 @@ void Output::openFile()
 {
     _fp.open(_filename);
 
-    if (!_fp.is_open())
-        throw InputFileException("Could not open file - filename = " + _filename);
+    if (!_fp.is_open()) throw InputFileException("Could not open file - filename = " + _filename);
 }
 
 /**
  * @brief write a warning message to the log file if density and box dimensions are set
  *
  */
-void LogOutput::writeDensityWarning()
-{
-    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl;
-}
+void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl; }
 
 /**
  * @brief write a warning message to the stdout if density and box dimensions are set
@@ -115,8 +112,7 @@ void StdoutOutput::writeDensityWarning() const
     }
     catch (const UserInputExceptionWarning &e)
     {
-        cout << e.what() << endl
-             << endl;
+        cout << e.what() << endl << endl;
     }
 }
 
@@ -179,8 +175,7 @@ void StdoutOutput::writeRelaxationTimeThermostatWarning() const
     }
     catch (const UserInputExceptionWarning &e)
     {
-        cout << e.what() << endl
-             << endl;
+        cout << e.what() << endl << endl;
     }
 }
 
@@ -192,7 +187,6 @@ void StdoutOutput::writeRelaxationTimeManostatWarning() const
     }
     catch (const UserInputExceptionWarning &e)
     {
-        cout << e.what() << endl
-             << endl;
+        cout << e.what() << endl << endl;
     }
 }

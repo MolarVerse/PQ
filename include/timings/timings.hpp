@@ -5,7 +5,11 @@
 #include <chrono>
 #include <cstddef>
 
-using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+namespace timings
+{
+    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    class Timings;
+}   // namespace timings
 
 /**
  * @class Timings
@@ -18,7 +22,7 @@ using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
  *  execution time
  *
  */
-class Timings
+class timings::Timings
 {
   private:
     size_t _stepCount     = 0;

@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace setup;
+using namespace customException;
 
 /**
  * @brief parse start file of simulation and set it in settings

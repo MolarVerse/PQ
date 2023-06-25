@@ -9,7 +9,7 @@
 namespace setup
 {
     class GuffDatReader;
-    void readGuffDat(Engine &);
+    void readGuffDat(engine::Engine &);
 }   // namespace setup
 
 /**
@@ -24,10 +24,10 @@ class setup::GuffDatReader
     int         _lineNumber = 1;
     std::string _filename   = "guff.dat";
 
-    Engine &_engine;
+    engine::Engine &_engine;
 
   public:
-    explicit GuffDatReader(Engine &engine) : _engine(engine) {}
+    explicit GuffDatReader(engine::Engine &engine) : _engine(engine) {}
 
     void setupGuffMaps();
     void parseLine(std::vector<std::string> &);

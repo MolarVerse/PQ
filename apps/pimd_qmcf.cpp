@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace setup;
+using namespace engine;
 
 int pimd_qmcf(int argc, char *argv[])
 {

@@ -11,6 +11,8 @@
 using namespace std;
 using namespace StringUtilities;
 using namespace setup;
+using namespace engine;
+using namespace customException;
 
 RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _fp(filename), _engine(engine)
 {

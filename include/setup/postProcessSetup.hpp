@@ -7,7 +7,7 @@
 namespace setup
 {
     class PostProcessSetup;
-    void postProcessSetup(Engine &);
+    void postProcessSetup(engine::Engine &);
 }   // namespace setup
 
 /**
@@ -19,10 +19,10 @@ namespace setup
 class setup::PostProcessSetup
 {
   private:
-    Engine &_engine;
+    engine::Engine &_engine;
 
   public:
-    explicit PostProcessSetup(Engine &engine) : _engine(engine){};
+    explicit PostProcessSetup(engine::Engine &engine) : _engine(engine){};
 
     void setup();
 

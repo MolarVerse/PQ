@@ -7,7 +7,13 @@
 using namespace std;
 using namespace frameTools;
 using namespace vector3d;
+using namespace config;
 
+/**
+ * @brief calculates the center of mass of the molecule
+ *
+ * @param box
+ */
 void Molecule::calculateCenterOfMass(const Vec3D &box)
 {
     _molMass = 0.0;

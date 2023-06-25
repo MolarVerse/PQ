@@ -13,7 +13,7 @@
 namespace setup
 {
     class InputFileReader;
-    void readInputFile(const std::string &, Engine &);
+    void readInputFile(const std::string &, engine::Engine &);
 
     void checkEqualSign(const std::string_view &view, const size_t);
     void checkCommand(const std::vector<std::string> &, const size_t);
@@ -32,8 +32,8 @@ using parseFunc = void (setup::InputFileReader::*)(const std::vector<std::string
 class setup::InputFileReader
 {
   private:
-    std::string _filename;
-    Engine     &_engine;
+    std::string     _filename;
+    engine::Engine &_engine;
 
     std::map<std::string, parseFunc> _keywordFuncMap;
     std::map<std::string, int>       _keywordCountMap;
@@ -42,7 +42,7 @@ class setup::InputFileReader
     size_t _lineNumber = 1;
 
   public:
-    InputFileReader(const std::string &, Engine &);
+    InputFileReader(const std::string &, engine::Engine &);
 
     void read();
     void postProcess();

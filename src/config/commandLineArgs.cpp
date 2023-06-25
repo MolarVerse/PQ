@@ -1,11 +1,13 @@
+#include "commandLineArgs.hpp"
+
+#include "exceptions.hpp"
+
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 
-#include "commandLineArgs.hpp"
-#include "exceptions.hpp"
-
 using namespace std;
+using namespace customException;
 
 CommandLineArgs::CommandLineArgs(const int argc, const vector<string> &argv) : _argc(argc), _argv(argv) {}
 
@@ -18,11 +20,9 @@ CommandLineArgs::CommandLineArgs(const int argc, const vector<string> &argv) : _
 void CommandLineArgs::detectFlags()
 {
     for (const auto &arg : _argv)
-        if (boost::starts_with(arg, "-"))
-            throw UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
+        if (boost::starts_with(arg, "-")) throw UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
 
-    if (_argc < 2)
-        throw UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
+    if (_argc < 2) throw UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
 
     _inputFileName = _argv[1];
 }

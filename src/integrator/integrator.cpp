@@ -9,7 +9,15 @@
 using namespace std;
 using namespace simulationBox;
 using namespace integrator;
+using namespace config;
 
+/**
+ * @brief integrates the velocities of a single atom
+ *
+ * @param timestep
+ * @param molecule
+ * @param i
+ */
 void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
 {
     auto       velocities = molecule.getAtomVelocity(i);
@@ -21,6 +29,14 @@ void Integrator::integrateVelocities(const double timestep, Molecule &molecule, 
     molecule.setAtomVelocity(i, velocities);
 }
 
+/**
+ * @brief integrates the positions of a single atom
+ *
+ * @param timestep
+ * @param molecule
+ * @param i
+ * @param simBox
+ */
 void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
 {
     auto       positions  = molecule.getAtomPosition(i);
@@ -32,6 +48,11 @@ void Integrator::integratePositions(const double timestep, Molecule &molecule, c
     molecule.setAtomPositions(i, positions);
 }
 
+/**
+ * @brief applies first half step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
 void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
     const auto box = simBox.getBoxDimensions();
@@ -51,6 +72,11 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
     }
 }
 
+/**
+ * @brief applies second half step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
 void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
     for (auto &molecule : simBox.getMolecules())

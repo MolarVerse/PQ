@@ -5,6 +5,7 @@
 using namespace std;
 using namespace setup;
 using namespace thermostat;
+using namespace customException;
 
 /**
  * @brief Parse the thermostat used in the simulation

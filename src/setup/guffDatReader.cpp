@@ -12,6 +12,8 @@ using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
 using namespace setup;
+using namespace engine;
+using namespace customException;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object

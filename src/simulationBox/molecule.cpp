@@ -1,5 +1,7 @@
 #include "molecule.hpp"
 
+#include "atomMassMap.hpp"
+#include "atomNumberMap.hpp"
 #include "exceptions.hpp"
 #include "vector3d.hpp"
 
@@ -9,6 +11,7 @@
 using namespace std;
 using namespace simulationBox;
 using namespace vector3d;
+using namespace config;
 
 /**
  * @brief sets number of atoms in molecule

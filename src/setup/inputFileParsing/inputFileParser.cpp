@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace customException;
 
 /**
  * @brief check if second argument is "="

@@ -49,7 +49,7 @@ class simulationBox::SimulationBox
     int    _waterType;
     int    _ammoniaType;
     int    _degreesOfFreedom = 0;
-    double _rcCutOff         = _COULOMB_CUT_OFF_DEFAULT_;
+    double _rcCutOff         = config::_COULOMB_CUT_OFF_DEFAULT_;
 
     Box _box;
 

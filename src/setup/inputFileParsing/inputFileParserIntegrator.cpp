@@ -5,6 +5,7 @@
 using namespace std;
 using namespace setup;
 using namespace integrator;
+using namespace customException;
 
 /**
  * @brief Parse the integrator used in the simulation

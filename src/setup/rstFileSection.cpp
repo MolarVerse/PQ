@@ -11,6 +11,8 @@ using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
 using namespace setup;
+using namespace engine;
+using namespace customException;
 
 bool BoxSection::isHeader() { return true; }
 

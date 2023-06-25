@@ -11,7 +11,7 @@
 namespace setup
 {
     class MoldescriptorReader;
-    void readMolDescriptor(Engine &);
+    void readMolDescriptor(engine::Engine &);
 }   // namespace setup
 
 /**
@@ -27,10 +27,10 @@ class setup::MoldescriptorReader
     const std::string _filename;
     std::ifstream     _fp;
 
-    Engine &_engine;
+    engine::Engine &_engine;
 
   public:
-    explicit MoldescriptorReader(Engine &engine);
+    explicit MoldescriptorReader(engine::Engine &engine);
 
     void read();
     void processMolecule(std::vector<std::string> &);

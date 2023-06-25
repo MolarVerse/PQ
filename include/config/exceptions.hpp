@@ -3,8 +3,8 @@
 #define _EXCEPTIONS_H_
 
 #include <exception>
-#include <string>
 #include <iostream>
+#include <string>
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -12,18 +12,29 @@
 
 #include "color.hpp"
 
+namespace customException
+{
+    class CustomException;
+    class InputFileException;
+    class RstFileException;
+    class UserInputException;
+    class MolDescriptorException;
+    class UserInputExceptionWarning;
+    class GuffDatException;
+}   // namespace customException
+
 /**
  * @class CustomException
  *
  * @brief Custom exception base class
  *
  */
-class CustomException : public std::exception
+class customException::CustomException : public std::exception
 {
-protected:
+  protected:
     std::string _message;
 
-public:
+  public:
     explicit CustomException(const std::string_view message) : _message(message){};
     void colorfulOutput(const Color::Code color, const std::string_view) const;
 };
@@ -34,10 +45,10 @@ public:
  * @brief Exception for input file errors
  *
  */
-class InputFileException : public CustomException
+class customException::InputFileException : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -48,10 +59,10 @@ public:
  * @brief Exception for restart file errors
  *
  */
-class RstFileException : public CustomException
+class customException::RstFileException : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -62,10 +73,10 @@ public:
  * @brief Exception for user input errors (CLI)
  *
  */
-class UserInputException : public CustomException
+class customException::UserInputException : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -76,10 +87,10 @@ public:
  * @brief Exception for MolDescriptor errors
  *
  */
-class MolDescriptorException : public CustomException
+class customException::MolDescriptorException : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -90,10 +101,10 @@ public:
  * @brief Exception for user input warnings
  *
  */
-class UserInputExceptionWarning : public CustomException
+class customException::UserInputExceptionWarning : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };
@@ -104,10 +115,10 @@ public:
  * @brief Exception for guff.dat errors
  *
  */
-class GuffDatException : public CustomException
+class customException::GuffDatException : public customException::CustomException
 {
-public:
-    using CustomException::CustomException;
+  public:
+    using customException::CustomException::CustomException;
 
     const char *what() const throw() override;
 };

@@ -13,7 +13,7 @@
 namespace setup
 {
     class RstFileReader;
-    void readRstFile(Engine &);
+    void readRstFile(engine::Engine &);
 }   // namespace setup
 
 /**
@@ -27,12 +27,12 @@ class setup::RstFileReader
   private:
     const std::string             _filename;
     std::ifstream                 _fp;
-    Engine                       &_engine;
+    engine::Engine               &_engine;
     std::vector<RstFileSection *> _sections;
     RstFileSection               *_atomSection = new AtomSection;
 
   public:
-    RstFileReader(const std::string &, Engine &);
+    RstFileReader(const std::string &, engine::Engine &);
     ~RstFileReader();
 
     void            read();

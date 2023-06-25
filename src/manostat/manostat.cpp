@@ -7,7 +7,13 @@ using namespace simulationBox;
 using namespace physicalData;
 using namespace manostat;
 using namespace vector3d;
+using namespace config;
 
+/**
+ * @brief calculate the pressure of the system
+ *
+ * @param physicalData
+ */
 void Manostat::calculatePressure(PhysicalData &physicalData)
 {
     const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
@@ -21,8 +27,19 @@ void Manostat::calculatePressure(PhysicalData &physicalData)
     physicalData.setPressure(_pressure);
 }
 
+/**
+ * @brief apply dummy manostat for NVT ensemble
+ *
+ * @param physicalData
+ */
 void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calculatePressure(physicalData); }
 
+/**
+ * @brief apply Berendsen manostat for NPT ensemble
+ *
+ * @param simBox
+ * @param physicalData
+ */
 void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physicalData)
 {
     calculatePressure(physicalData);

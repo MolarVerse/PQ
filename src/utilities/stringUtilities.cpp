@@ -8,6 +8,7 @@
 #include <vector>
 
 using namespace std;
+using namespace customException;
 
 /**
  * @brief Removes comments from a line

@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace simulationBox;
+using namespace customException;
 
 /**
  * @brief resizes all guff related vectors

@@ -20,25 +20,28 @@
 #include <memory>
 #include <vector>
 
+namespace engine
+{
+    class Engine;
+}
+
 /**
  * @class Engine
  *
  * @brief Contains all the information needed to run the simulation
  *
  */
-class Engine
+class engine::Engine
 {
   private:
     size_t _step = 1;
 
-    Settings                _settings;
-    Timings                 _timings;
-    simulationBox::CellList _cellList;
-
+    settings::Settings           _settings;
+    timings::Timings             _timings;
+    simulationBox::CellList      _cellList;
     simulationBox::SimulationBox _simulationBox;
-
-    physicalData::PhysicalData _physicalData;
-    physicalData::PhysicalData _averagePhysicalData;
+    physicalData::PhysicalData   _physicalData;
+    physicalData::PhysicalData   _averagePhysicalData;
 
   public:
     std::unique_ptr<integrator::Integrator> _integrator;
@@ -62,8 +65,8 @@ class Engine
     void writeOutput();
 
     // standard getter and setters
-    Settings                     &getSettings() { return _settings; }
-    Timings                      &getTimings() { return _timings; }
+    settings::Settings           &getSettings() { return _settings; }
+    timings::Timings             &getTimings() { return _timings; }
     simulationBox::CellList      &getCellList() { return _cellList; }
     simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
     physicalData::PhysicalData   &getPhysicalData() { return _physicalData; }
