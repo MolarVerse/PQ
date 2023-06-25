@@ -3,6 +3,7 @@
 #define _RST_FILE_OUTPUT_HPP_
 
 #include "output.hpp"
+#include "simulationBox.hpp"
 
 namespace output
 {
@@ -19,6 +20,8 @@ class output::RstFileOutput : public output::Output
 {
   public:
     using output::Output::Output;
+
+    void write(simulationBox::SimulationBox &, const size_t);
 };
 
 #endif   // _RST_FILE_OUTPUT_HPP_

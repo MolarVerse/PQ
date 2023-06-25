@@ -101,6 +101,7 @@ void Engine::writeOutput()
         _velOutput->writeVelocities(_simulationBox);
         _forceOutput->writeForces(_simulationBox);
         _chargeOutput->writeCharges(_simulationBox);
+        _rstFileOutput->write(_simulationBox, _step + step0);
 
         _averagePhysicalData = PhysicalData();
     }
