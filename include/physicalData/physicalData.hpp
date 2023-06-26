@@ -36,6 +36,8 @@ class physicalData::PhysicalData
     vector3d::Vec3D _kineticEnergyMolecularVector;
 
   public:
+    void calculateTemperature(simulationBox::SimulationBox &);
+
     void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
 
     void updateAverages(const PhysicalData &);
@@ -76,6 +78,7 @@ class physicalData::PhysicalData
     vector3d::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
     vector3d::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
     vector3d::Vec3D getVirial() const { return _virial; }
+    vector3d::Vec3D getMomentumVector() const { return _momentumVector; }
 };
 
 #endif   // _PHYSICAL_DATA_H_

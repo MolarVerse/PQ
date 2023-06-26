@@ -18,6 +18,7 @@ using namespace manostat;
 using namespace engine;
 using namespace customException;
 using namespace config;
+using namespace resetKinetics;
 
 /**
  * @brief Construct a new Input File Reader:: Input File Reader object
@@ -67,6 +68,11 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("manostat"), &InputFileReader::parseManostat, false);
     addKeyword(string("pressure"), &InputFileReader::parsePressure, false);
     addKeyword(string("p_relaxation"), &InputFileReader::parseManostatRelaxationTime, false);
+
+    addKeyword(string("nscale"), &InputFileReader::parseNScale, false);
+    addKeyword(string("fscale"), &InputFileReader::parseFScale, false);
+    addKeyword(string("nreset"), &InputFileReader::parseNReset, false);
+    addKeyword(string("freset"), &InputFileReader::parseFReset, false);
 }
 
 /**
@@ -183,6 +189,7 @@ void InputFileReader::postProcess()
 
     setupThermostat();
     setupManostat();
+    setupResetKinetics();
 }
 
 /**
@@ -241,4 +248,33 @@ void InputFileReader::setupManostat()
     }
 
     _engine._manostat->setTimestep(_engine.getTimings().getTimestep());
+}
+
+void InputFileReader::setupResetKinetics()
+{
+    auto nScale = _engine.getSettings().getNScale();
+    auto fScale = _engine.getSettings().getFScale();
+    auto nReset = _engine.getSettings().getNReset();
+    auto fReset = _engine.getSettings().getFReset();
+
+    const auto targetTemperature = _engine.getSettings().getTemperature();
+
+    const auto numberOfSteps = _engine.getTimings().getNumberOfSteps();
+
+    if (nScale != 0 || fScale != 0)
+    {
+        if (nScale == 0) nScale = numberOfSteps + 1;
+        if (fScale == 0) fScale = numberOfSteps + 1;
+        if (nReset == 0) nReset = numberOfSteps + 1;
+        if (fReset == 0) fReset = numberOfSteps + 1;
+        _engine._resetKinetics = make_unique<ResetTemperature>(nScale, fScale, nReset, fReset, targetTemperature);
+    }
+    else if (nReset != 0 || fReset != 0)
+    {
+        nScale = numberOfSteps + 1;
+        fScale = numberOfSteps + 1;
+        if (nReset == 0) nReset = numberOfSteps + 1;
+        if (fReset == 0) fReset = numberOfSteps + 1;
+        _engine._resetKinetics = make_unique<ResetMomentum>(nReset, fScale, nReset, fReset, targetTemperature);
+    }
 }

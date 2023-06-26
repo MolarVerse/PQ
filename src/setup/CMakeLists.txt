@@ -17,6 +17,7 @@ add_library(setup
     inputFileParsing/inputFileParserCelllist.cpp
     inputFileParsing/inputFileParserThermostat.cpp
     inputFileParsing/inputFileParserManostat.cpp
+    inputFileParsing/inputFileParserReset.cpp
 
     moldescriptorReader.cpp
     postProcessSetup.cpp

@@ -54,7 +54,8 @@ class simulationBox::Molecule
 
     void calculateCenterOfMass(const vector3d::Vec3D &);
     void scale(const vector3d::Vec3D &);
-    void scaleVelocities(double scaleFactor);
+    void scaleVelocities(const double scaleFactor);
+    void correctVelocities(const vector3d::Vec3D &correction);
 
     size_t getNumberOfAtomTypes();
     void   resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }

@@ -11,34 +11,6 @@ using namespace physicalData;
 using namespace config;
 
 /**
- * @brief calculate temperature
- *
- * @param simulationBox
- * @param physicalData
- */
-void Thermostat::calculateTemperature(SimulationBox &simulationBox, PhysicalData &physicalData)
-{
-    _temperature = 0.0;
-
-    for (const auto &molecule : simulationBox.getMolecules())
-    {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-        {
-            const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass       = molecule.getAtomMass(i);
-
-            _temperature += mass * normSquared(velocities);
-        }
-    }
-
-    _temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
-
-    physicalData.setTemperature(_temperature);
-}
-
-/**
  * @brief apply thermostat - base class
  *
  * @note here base class represents none thermostat
@@ -48,7 +20,7 @@ void Thermostat::calculateTemperature(SimulationBox &simulationBox, PhysicalData
  */
 void Thermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
-    calculateTemperature(simulationBox, physicalData);
+    physicalData.calculateTemperature(simulationBox);
 }
 
 /**
@@ -59,12 +31,14 @@ void Thermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &phy
  */
 void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
 {
-    calculateTemperature(simulationBox, physicalData);
+    physicalData.calculateTemperature(simulationBox);
+
+    _temperature = physicalData.getTemperature();
 
     const auto berendsenFactor = sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
 
     for (auto &molecule : simulationBox.getMolecules())
         molecule.scaleVelocities(berendsenFactor);
 
-    calculateTemperature(simulationBox, physicalData);
+    physicalData.calculateTemperature(simulationBox);
 }

@@ -71,8 +71,19 @@ void Molecule::scale(const Vec3D &shiftFactors)
  *
  * @param scaleFactor
  */
-void Molecule::scaleVelocities(double scaleFactor)
+void Molecule::scaleVelocities(const double scaleFactor)
 {
     for (size_t i = 0; i < _numberOfAtoms; ++i)
         _velocities[i] *= scaleFactor;
+}
+
+/**
+ * @brief corrects the velocities of the molecule
+ *
+ * @param correction
+ */
+void Molecule::correctVelocities(const Vec3D &correction)
+{
+    for (size_t i = 0; i < _numberOfAtoms; ++i)
+        _velocities[i] -= correction;
 }

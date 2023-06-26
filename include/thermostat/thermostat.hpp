@@ -35,8 +35,6 @@ class thermostat::Thermostat
 
     virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    void calculateTemperature(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-
     void setTimestep(const double timestep) { _timestep = timestep; }
 };
 

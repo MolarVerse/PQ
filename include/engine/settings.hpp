@@ -23,6 +23,11 @@ namespace settings
 class settings::Settings
 {
   private:
+    size_t _nScale = 0;
+    size_t _fScale = 0;
+    size_t _nReset = 0;
+    size_t _fReset = 0;
+
     std::string _startFilename;
     std::string _moldescriptorFilename = "moldescriptor.dat";   // for backward compatibility
     std::string _guffPath              = ".";                   // not backward compatible
@@ -54,6 +59,10 @@ class settings::Settings
     bool        getManostatSet() const { return _manostat.first; }
     bool        getPressureSet() const { return _pressure.first; }
     bool        getTauManostatSet() const { return _tauManostat.first; }
+    size_t      getNScale() const { return _nScale; }
+    size_t      getFScale() const { return _fScale; }
+    size_t      getNReset() const { return _nReset; }
+    size_t      getFReset() const { return _fReset; }
     double      getTemperature() const { return _temperature.second; }
     double      getRelaxationTime() const { return _relaxationTime.second; }
     double      getPressure() const { return _pressure.second; }
@@ -67,12 +76,16 @@ class settings::Settings
     void setMoldescriptorFilename(const std::string_view filename) { _moldescriptorFilename = filename; }
     void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; }
     void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
-    void setThermostat(std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); }
-    void setTemperature(double temperature);
-    void setRelaxationTime(double relaxationTime);
-    void setManostat(std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
-    void setPressure(double pressure) { _pressure = std::make_pair(true, pressure); }
-    void setTauManostat(double tauManostat);
+    void setThermostat(const std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); }
+    void setTemperature(const double temperature);
+    void setRelaxationTime(const double relaxationTime);
+    void setManostat(const std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
+    void setPressure(const double pressure) { _pressure = std::make_pair(true, pressure); }
+    void setTauManostat(const double tauManostat);
+    void setNScale(const size_t nScale) { _nScale = nScale; }
+    void setFScale(const size_t fScale) { _fScale = fScale; }
+    void setNReset(const size_t nReset) { _nReset = nReset; }
+    void setFReset(const size_t fReset) { _fReset = fReset; }
 };
 
 #endif

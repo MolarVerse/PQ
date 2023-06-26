@@ -22,6 +22,7 @@ target_link_libraries(engine
     manostat
     physicalData
     virial
+    resetKinetics
 )
 
 install(TARGETS engine

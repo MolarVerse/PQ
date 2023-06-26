@@ -94,6 +94,11 @@ class setup::InputFileReader
     void parsePressure(const std::vector<std::string> &);
     void parseManostatRelaxationTime(const std::vector<std::string> &);
 
+    void parseNScale(const std::vector<std::string> &);
+    void parseFScale(const std::vector<std::string> &);
+    void parseNReset(const std::vector<std::string> &);
+    void parseFReset(const std::vector<std::string> &);
+
     void addKeyword(const std::string &, parseFunc, bool);
 
     void process(const std::vector<std::string> &);
@@ -108,6 +113,7 @@ class setup::InputFileReader
 
     void setupThermostat();
     void setupManostat();
+    void setupResetKinetics();
 };
 
 #endif

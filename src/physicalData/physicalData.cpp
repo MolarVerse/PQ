@@ -86,3 +86,28 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _virial           /= outputFrequency;
     _pressure         /= outputFrequency;
 }
+
+/**
+ * @brief calculate temperature
+ *
+ * @param simulationBox
+ */
+void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+{
+    _temperature = 0.0;
+
+    for (const auto &molecule : simulationBox.getMolecules())
+    {
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
+        {
+            const auto velocities = molecule.getAtomVelocity(i);
+            const auto mass       = molecule.getAtomMass(i);
+
+            _temperature += mass * normSquared(velocities);
+        }
+    }
+
+    _temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
+}

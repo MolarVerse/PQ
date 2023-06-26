@@ -76,6 +76,8 @@ void Engine::takeStep()
     _virial->calculateVirial(_simulationBox, _physicalData);
 
     _manostat->applyManostat(_simulationBox, _physicalData);
+
+    _resetKinetics->reset(_step, _physicalData, _simulationBox);
 }
 
 void Engine::writeOutput()
