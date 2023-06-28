@@ -23,7 +23,7 @@ if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
     list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
-        NAME coverage EXECUTABLE ctest EXCLUDE tests* _deps* apps* external* apps* benchmarks*)
+        NAME coverage EXECUTABLE ctest EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build* tools*)
 
     setup_target_for_coverage_lcov(
         NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS "--no-external" EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)

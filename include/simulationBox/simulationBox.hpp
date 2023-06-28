@@ -105,6 +105,12 @@ class simulationBox::SimulationBox
     double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
     double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
 
+    vector5d &getGuffCoefficients() { return _guffCoefficients; }
+    vector4d &getRncCutOffs() { return _rncCutOffs; }
+    vector4d &getCoulombCoefficients() { return _coulombCoefficients; }
+    vector4d &getcEnergyCutOffs() { return _cEnergyCutOffs; }
+    vector4d &getcForceCutOffs() { return _cForceCutOffs; }
+
     /***************************
      * standatd setter methods *
      ***************************/

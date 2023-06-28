@@ -78,12 +78,12 @@ double Box::calculateVolume()
 {
     _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
-    const double cos_alpha = cos(_boxAngles[0] * M_PI / 180.0);
-    const double cos_beta  = cos(_boxAngles[1] * M_PI / 180.0);
-    const double cos_gamma = cos(_boxAngles[2] * M_PI / 180.0);
+    const double cos_alpha = ::cos(_boxAngles[0] * M_PI / 180.0);
+    const double cos_beta  = ::cos(_boxAngles[1] * M_PI / 180.0);
+    const double cos_gamma = ::cos(_boxAngles[2] * M_PI / 180.0);
 
-    _volume *=
-        sqrt(1.0 - cos_alpha * cos_alpha - cos_beta * cos_beta - cos_gamma * cos_gamma + 2.0 * cos_alpha * cos_beta * cos_gamma);
+    _volume *= ::sqrt(1.0 - cos_alpha * cos_alpha - cos_beta * cos_beta - cos_gamma * cos_gamma +
+                      2.0 * cos_alpha * cos_beta * cos_gamma);
 
     return _volume;
 }
@@ -96,43 +96,9 @@ double Box::calculateVolume()
 Vec3D Box::calculateBoxDimensionsFromDensity() const
 {
     const double volume     = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
-    const double cellLenght = cbrt(volume);
+    const double cellLenght = ::cbrt(volume);
 
     return Vec3D(cellLenght, cellLenght, cellLenght);
-}
-
-/**
- * @brief calculates the distance between two atoms
- *
- * @param point1
- * @param point2
- * @param dxyz
- * @return double distance
- */
-double Box::calculateDistance(const Vec3D &point1, const Vec3D &point2, Vec3D &dxyz)
-{
-    dxyz = point1 - point2;
-
-    applyPBC(dxyz);
-
-    return norm(dxyz);
-}
-
-/**
- * @brief calculates the distance squared between two atoms
- *
- * @param point1
- * @param point2
- * @param dxyz
- * @return double
- */
-double Box::calculateDistanceSquared(const Vec3D &point1, const Vec3D &point2, Vec3D &dxyz)
-{
-    dxyz = point1 - point2;
-
-    applyPBC(dxyz);
-
-    return normSquared(dxyz);
 }
 
 /**

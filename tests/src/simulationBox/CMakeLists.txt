@@ -1,5 +1,7 @@
 set(source_files
     testBox.cpp
+    testMolecule.cpp
+    testSimulationBox.cpp
 )
 
 foreach(source_file ${source_files})

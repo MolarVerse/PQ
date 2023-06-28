@@ -62,6 +62,8 @@ class physicalData::PhysicalData
     void setVirial(const vector3d::Vec3D &virial) { _virial = virial; }
     void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
+    void setKineticEnergyAtomicVector(const vector3d::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
+    void setKineticEnergyMolecularVector(const vector3d::Vec3D &vec) { _kineticEnergyMolecularVector = vec; }
 
     /********************
      * standard getters *

@@ -36,8 +36,6 @@ class simulationBox::Box
 
   public:
     double calculateVolume();
-    double calculateDistance(const vector3d::Vec3D &, const vector3d::Vec3D &, vector3d::Vec3D &);
-    double calculateDistanceSquared(const vector3d::Vec3D &, const vector3d::Vec3D &, vector3d::Vec3D &);
 
     vector3d::Vec3D calculateBoxDimensionsFromDensity() const;
 
@@ -58,13 +56,13 @@ class simulationBox::Box
      * standard getter and setters *
      *******************************/
 
-    vector3d::Vec3D  getBoxDimensions() const { return _boxDimensions; }
-    vector3d::Vec3D  getBoxAngles() const { return _boxAngles; }
-    double getTotalMass() const { return _totalMass; }
-    double getTotalCharge() const { return _totalCharge; }
-    double getDensity() const { return _density; }
-    double getVolume() const { return _volume; }
-    bool   getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+    vector3d::Vec3D getBoxDimensions() const { return _boxDimensions; }
+    vector3d::Vec3D getBoxAngles() const { return _boxAngles; }
+    double          getTotalMass() const { return _totalMass; }
+    double          getTotalCharge() const { return _totalCharge; }
+    double          getDensity() const { return _density; }
+    double          getVolume() const { return _volume; }
+    bool            getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
     void setTotalMass(const double totalMass) { _totalMass = totalMass; }
     void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
