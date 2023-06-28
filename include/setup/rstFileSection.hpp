@@ -11,6 +11,9 @@
 #include <string>
 #include <vector>
 
+// Forward declarations for friend test
+class TestAtomSection_testProcessAtomLine_Test;
+
 namespace setup
 {
     class RstFileSection;
@@ -92,7 +95,7 @@ class setup::AtomSection : public setup::RstFileSection
     void processAtomLine(std::vector<std::string> &, simulationBox::Molecule &) const;
     void checkAtomLine(std::vector<std::string> &, std::string &, const simulationBox::Molecule &);
 
-    FRIEND_TEST(TestAtomSection, testProcessAtomLine);
+    FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
 
   public:
     std::string keyword() override { return ""; }

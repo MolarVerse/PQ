@@ -1,83 +1,70 @@
-#include "rstFileSection.hpp"
 #include "engine.hpp"
+#include "rstFileSection.hpp"
 
-namespace Setup::RstFileReader
+#include <gtest/gtest.h>
+
+/**
+ * @class TestBoxSection
+ *
+ * @brief Test fixture for testing the BoxSection class.
+ *
+ */
+class TestBoxSection : public ::testing::Test
 {
-    /**
-     * @class TestBoxSection
-     *
-     * @brief Test fixture for testing the BoxSection class.
-     *
-     */
-    class TestBoxSection : public ::testing::Test
+  protected:
+    void SetUp() override
     {
-    protected:
-        void SetUp() override
-        {
-            _section = new BoxSection;
-            _engine = Engine();
-        }
+        _section = new setup::BoxSection;
+        _engine  = engine::Engine();
+    }
 
-        void TearDown() override
-        {
-            delete _section;
-        }
+    void TearDown() override { delete _section; }
 
-        RstFileSection *_section;
-        Engine _engine;
-    };
+    setup::RstFileSection *_section;
+    engine::Engine         _engine;
+};
 
-    class TestNoseHooverSection : public ::testing::Test
+class TestNoseHooverSection : public ::testing::Test
+{
+  protected:
+    void SetUp() override
     {
-    protected:
-        void SetUp() override
-        {
-            _section = new NoseHooverSection;
-            _engine = Engine();
-        }
+        _section = new setup::NoseHooverSection;
+        _engine  = engine::Engine();
+    }
 
-        void TearDown() override
-        {
-            delete _section;
-        }
+    void TearDown() override { delete _section; }
 
-        RstFileSection *_section;
-        Engine _engine;
-    };
+    setup::RstFileSection *_section;
+    engine::Engine         _engine;
+};
 
-    class TestStepCountSection : public ::testing::Test
+class TestStepCountSection : public ::testing::Test
+{
+  protected:
+    void SetUp() override
     {
-    protected:
-        void SetUp() override
-        {
-            _section = new StepCountSection;
-            _engine = Engine();
-        }
+        _section = new setup::StepCountSection;
+        _engine  = engine::Engine();
+    }
 
-        void TearDown() override
-        {
-            delete _section;
-        }
+    void TearDown() override { delete _section; }
 
-        RstFileSection *_section;
-        Engine _engine;
-    };
+    setup::RstFileSection *_section;
+    engine::Engine         _engine;
+};
 
-    class TestAtomSection : public ::testing::Test
+class TestAtomSection : public ::testing::Test
+{
+  protected:
+    void SetUp() override
     {
-    protected:
-        void SetUp() override
-        {
-            _section = new AtomSection;
-            _engine = Engine();
-        }
+        _section = new setup::AtomSection;
+        _engine  = engine::Engine();
+    }
 
-        void TearDown() override
-        {
-            delete _section;
-        }
+    void TearDown() override { delete _section; }
 
-        RstFileSection *_section;
-        Engine _engine;
-    };
-}
+    setup::RstFileSection *_section;
+    engine::Engine         _engine;
+};

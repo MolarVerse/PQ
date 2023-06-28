@@ -1,160 +1,152 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <vector>
-#include <string>
-#include <cassert>
-#include <fstream>
-#include <filesystem>
-
-#include "testRstFileSection.hpp"
 #include "exceptions.hpp"
+#include "testRstFileSection.hpp"
+
+#include <cassert>
+#include <filesystem>
+#include <fstream>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace testing;
+using namespace setup;
+using namespace simulationBox;
+using namespace customException;
+using namespace vector3d;
 
-namespace Setup::RstFileReader
+TEST_F(TestAtomSection, testKeyword) { EXPECT_EQ(_section->keyword(), ""); }
+
+TEST_F(TestAtomSection, testIsHeader) { EXPECT_FALSE(_section->isHeader()); }
+
+TEST_F(TestAtomSection, testNumberOfArguments)
 {
-    TEST_F(TestAtomSection, testKeyword)
-    {
-        EXPECT_EQ(_section->keyword(), "");
-    }
+    for (int i = 0; i < 25; ++i)
+        if (i != 21)
+        {
+            auto line = vector<string>(i);
+            ASSERT_THROW(_section->process(line, _engine), RstFileException);
+        }
+}
 
-    TEST_F(TestAtomSection, testIsHeader)
-    {
-        EXPECT_FALSE(_section->isHeader());
-    }
+TEST_F(TestAtomSection, testMoltypeNotFound)
+{
+    auto line = vector<string>(21);
+    line[2]   = "1";
+    ASSERT_THROW(_section->process(line, _engine), RstFileException);
+}
 
-    TEST_F(TestAtomSection, testNumberOfArguments)
-    {
-        for (int i = 0; i < 25; ++i)
-            if (i != 21)
-            {
-                auto line = vector<string>(i);
-                ASSERT_THROW(_section->process(line, _engine), RstFileException);
-            }
-    }
+TEST_F(TestAtomSection, testNotEnoughAtomsInMolecule)
+{
+    auto line = vector<string>(21);
+    line[2]   = "1";
+    for (int i = 3; i < 21; ++i)
+        line[i] = "1.0";
 
-    TEST_F(TestAtomSection, testMoltypeNotFound)
-    {
-        auto line = vector<string>(21);
-        line[2] = "1";
-        ASSERT_THROW(_section->process(line, _engine), RstFileException);
-    }
+    string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    TEST_F(TestAtomSection, testNotEnoughAtomsInMolecule)
-    {
-        auto line = vector<string>(21);
-        line[2] = "1";
-        for (int i = 3; i < 21; ++i)
-            line[i] = "1.0";
+    auto molecule = Molecule(1);
+    molecule.setNumberOfAtoms(3);
+    _engine.getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-        string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
+    ifstream fp(filename);
+    _section->_fp = &fp;
 
-        auto molecule = Molecule(1);
-        molecule.setNumberOfAtoms(3);
-        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
+    ASSERT_THROW(_section->process(line, _engine), RstFileException);
 
-        ifstream fp(filename);
-        _section->_fp = &fp;
+    line[2] = "1";
 
-        ASSERT_THROW(_section->process(line, _engine), RstFileException);
+    string   filename2 = "data/atomSection/testNotEnoughAtomsInMolecule2.rst";
+    ifstream fp2(filename2);
+    _section->_fp = &fp2;
 
-        line[2] = "1";
+    ASSERT_THROW(_section->process(line, _engine), RstFileException);
+}
 
-        string filename2 = "data/atomSection/testNotEnoughAtomsInMolecule2.rst";
-        ifstream fp2(filename2);
-        _section->_fp = &fp2;
+TEST_F(TestAtomSection, testNumberOfArgumentsWithinMolecule)
+{
+    auto line = vector<string>(21);
+    line[2]   = "1";
+    for (int i = 3; i < 21; ++i)
+        line[i] = "1.0";
 
-        ASSERT_THROW(_section->process(line, _engine), RstFileException);
-    }
+    string filename = "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    TEST_F(TestAtomSection, testNumberOfArgumentsWithinMolecule)
-    {
-        auto line = vector<string>(21);
-        line[2] = "1";
-        for (int i = 3; i < 21; ++i)
-            line[i] = "1.0";
+    auto molecule = Molecule(1);
+    molecule.setNumberOfAtoms(3);
+    _engine.getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-        string filename = "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
+    ifstream fp(filename);
+    _section->_fp = &fp;
 
-        auto molecule = Molecule(1);
-        molecule.setNumberOfAtoms(3);
-        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
+    ASSERT_THROW(_section->process(line, _engine), RstFileException);
+}
 
-        ifstream fp(filename);
-        _section->_fp = &fp;
+TEST_F(TestAtomSection, testProcess)
+{
+    auto line = vector<string>(21);
+    line[2]   = "1";
+    for (int i = 3; i < 21; ++i)
+        line[i] = "1.0";
 
-        ASSERT_THROW(_section->process(line, _engine), RstFileException);
-    }
+    string filename = "data/atomSection/testProcess.rst";
 
-    TEST_F(TestAtomSection, testProcess)
-    {
-        auto line = vector<string>(21);
-        line[2] = "1";
-        for (int i = 3; i < 21; ++i)
-            line[i] = "1.0";
+    auto molecule = Molecule(1);
+    molecule.setNumberOfAtoms(3);
+    _engine.getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-        string filename = "data/atomSection/testProcess.rst";
+    auto molecule2 = Molecule(2);
+    molecule2.setNumberOfAtoms(4);
+    _engine.getSimulationBox().getMoleculeTypes().push_back(molecule2);
 
-        auto molecule = Molecule(1);
-        molecule.setNumberOfAtoms(3);
-        _engine.getSimulationBox()._moleculeTypes.push_back(molecule);
+    ifstream fp(filename);
+    _section->_fp = &fp;
 
-        auto molecule2 = Molecule(2);
-        molecule2.setNumberOfAtoms(4);
-        _engine.getSimulationBox()._moleculeTypes.push_back(molecule2);
+    _section->process(line, _engine);
 
-        ifstream fp(filename);
-        _section->_fp = &fp;
+    line    = vector<string>(21);
+    line[2] = "2";
+    for (int i = 3; i < 21; ++i)
+        line[i] = "1.0";
 
-        _section->process(line, _engine);
+    _section->process(line, _engine);
 
-        line = vector<string>(21);
-        line[2] = "2";
-        for (int i = 3; i < 21; ++i)
-            line[i] = "1.0";
+    line    = vector<string>(21);
+    line[2] = "1";
+    for (int i = 3; i < 21; ++i)
+        line[i] = "1.0";
 
-        _section->process(line, _engine);
+    _section->process(line, _engine);
 
-        line = vector<string>(21);
-        line[2] = "1";
-        for (int i = 3; i < 21; ++i)
-            line[i] = "1.0";
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules().size(), 3);
 
-        _section->process(line, _engine);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[0].getMoltype(), 1);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[0].getNumberOfAtoms(), 3);
 
-        EXPECT_EQ(_engine.getSimulationBox()._molecules.size(), 3);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[1].getMoltype(), 2);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[1].getNumberOfAtoms(), 4);
 
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[0].getMoltype(), 1);
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[0].getNumberOfAtoms(), 3);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[2].getMoltype(), 1);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[2].getNumberOfAtoms(), 3);
+}
 
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[1].getMoltype(), 2);
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[1].getNumberOfAtoms(), 4);
+TEST_F(TestAtomSection, testProcessAtomLine)
+{
+    Molecule molecule(1);
 
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[2].getMoltype(), 1);
-        EXPECT_EQ(_engine.getSimulationBox()._molecules[2].getNumberOfAtoms(), 3);
-    }
+    auto line = vector<string>(21);
+    line[0]   = "Ar";
+    for (int i = 3; i < 21; ++i)
+        line[i] = to_string(i + i / 10.0);
 
-    TEST_F(TestAtomSection, testProcessAtomLine)
-    {
-        Molecule molecule(1);
+    static_cast<AtomSection *>(_section)->processAtomLine(line, molecule);
 
-        auto line = vector<string>(21);
-        line[0] = "Ar";
-        for (int i = 3; i < 21; ++i)
-            line[i] = to_string(i + i / 10.0);
+    ASSERT_THAT(molecule.getAtomPosition(0), ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
+    ASSERT_THAT(molecule.getAtomVelocity(0), ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
+    ASSERT_THAT(molecule.getAtomForce(0), ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
 
-        static_cast<AtomSection *>(_section)->processAtomLine(line, molecule);
-
-        ASSERT_THAT(molecule.getAtomPosition(0), ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
-        ASSERT_THAT(molecule.getAtomVelocity(0), ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
-        ASSERT_THAT(molecule.getAtomForce(0), ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
-        ASSERT_THAT(molecule.getAtomPositionOld(0), ElementsAre(stod(line[12]), stod(line[13]), stod(line[14])));
-        ASSERT_THAT(molecule.getAtomVelocityOld(0), ElementsAre(stod(line[15]), stod(line[16]), stod(line[17])));
-        ASSERT_THAT(molecule.getAtomForceOld(0), ElementsAre(stod(line[18]), stod(line[19]), stod(line[20])));
-
-        ASSERT_EQ(molecule.getAtomTypeName(0), line[0]);
-    }
+    ASSERT_EQ(molecule.getAtomTypeName(0), line[0]);
 }
 
 int main(int argc, char **argv)

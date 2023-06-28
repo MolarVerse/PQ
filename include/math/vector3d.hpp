@@ -49,6 +49,8 @@ template <class T> class vector3d::Vector3D
     explicit Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
     explicit Vector3D(const std::array<T, 3> &xyz) : _xyz(xyz){};
 
+    using value_type = T;
+
     /**
      * @brief index operator
      *
@@ -84,10 +86,10 @@ template <class T> class vector3d::Vector3D
     /**
      * @brief operator ==
      *
-     * @param rhs
+     * @param const Vector3D<T> rhs
      * @return bool
      */
-    bool operator==(const Vector3D<T> &rhs) { return _x == rhs[0] && _y == rhs[1] && _z == rhs[2]; }
+    bool operator==(const Vector3D<T> &rhs) const { return _x == rhs[0] && _y == rhs[1] && _z == rhs[2]; }
 
     /**
      * @brief += operator for two Vector3d objects
@@ -274,23 +276,9 @@ template <class T> class vector3d::Vector3D
     /**
      * @brief begin iterator for vector3d
      *
-     * @return constexpr iterator<T>
-     */
-    constexpr iterator<T> begin() noexcept { return _xyz.begin(); }
-
-    /**
-     * @brief begin iterator for vector3d
-     *
      * @return constexpr const_iterator<T>
      */
     constexpr const_iterator<T> begin() const noexcept { return _xyz.begin(); }
-
-    /**
-     * @brief end iterator for vector3d
-     *
-     * @return constexpr iterator<T>
-     */
-    constexpr iterator<T> end() noexcept { return _xyz.end(); }
 
     /**
      * @brief end iterator for vector3d
@@ -389,7 +377,10 @@ template <class T> class vector3d::Vector3D
      * @param v
      * @return std::ostream&
      */
-    friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v) { return os << v._x << " " << v._y << " " << v._z; }
+    friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v)
+    {
+        return os << "[" << v._x << ", " << v._y << ", " << v._z << "]";
+    }
 };
 
 #endif   // _VEC3D_HPP_

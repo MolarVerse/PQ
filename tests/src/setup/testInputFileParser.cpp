@@ -1,8 +1,8 @@
 #include "testInputFileReader.hpp"
 
 using namespace std;
-using namespace Setup::InputFileReader;
-using namespace ::testing;
+using namespace setup;
+using namespace customException;
 
 TEST(TestInputFileReader, testCheckCommand)
 {
@@ -49,6 +49,6 @@ TEST(TestInputFileReader, testEqualSign)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

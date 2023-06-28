@@ -1,17 +1,19 @@
 #include "testInputFileReader.hpp"
+
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
 #include <gmock/gmock.h>
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 using namespace StringUtilities;
 using namespace ::testing;
+using namespace customException;
 
 void readKeywordList(const string &filename, vector<string> &keywords, vector<bool> &required)
 {
-    string line;
+    string   line;
     ifstream inputFile(filename);
 
     while (getline(inputFile, line))
@@ -19,7 +21,7 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
 
         string keyword;
         string required_string;
-        bool required_bool;
+        bool   required_bool;
 
         istringstream(line) >> keyword >> required_string;
         istringstream(required_string) >> std::boolalpha >> required_bool;
@@ -32,14 +34,14 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
 TEST_F(TestInputFileReader, testAddKeyword)
 {
     vector<string> keywordsRef(0);
-    vector<bool> requiredRef(0);
+    vector<bool>   requiredRef(0);
 
     readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
     for (size_t i = 0; i < keywordsRef.size(); i++)
     {
-        string keyword = keywordsRef[i];
-        bool required = requiredRef[i];
+        string keyword  = keywordsRef[i];
+        bool   required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
         EXPECT_EQ(_inputFileReader->getKeywordRequired(keyword), required);
@@ -97,7 +99,7 @@ TEST_F(TestInputFileReader, testReadInputFileFunction)
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 {
     vector<string> keywordsRef(0);
-    vector<bool> requiredRef(0);
+    vector<bool>   requiredRef(0);
 
     readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
@@ -105,8 +107,8 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
     for (size_t i = 0; i < keywordsRef.size(); i++)
     {
-        string keyword = keywordsRef[i];
-        bool required = requiredRef[i];
+        string keyword  = keywordsRef[i];
+        bool   required = requiredRef[i];
 
         if (required)
         {
@@ -127,7 +129,7 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 {
     vector<string> keywordsRef(0);
-    vector<bool> requiredRef(0);
+    vector<bool>   requiredRef(0);
 
     readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
@@ -135,8 +137,8 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 
     for (size_t i = 0; i < keywordsRef.size(); i++)
     {
-        string keyword = keywordsRef[i];
-        bool required = requiredRef[i];
+        string keyword  = keywordsRef[i];
+        bool   required = requiredRef[i];
 
         if (required)
         {
@@ -160,7 +162,7 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 TEST_F(TestInputFileReader, testMoldescriptorfileProcess)
 {
     vector<string> keywordsRef(0);
-    vector<bool> requiredRef(0);
+    vector<bool>   requiredRef(0);
 
     readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
@@ -168,8 +170,8 @@ TEST_F(TestInputFileReader, testMoldescriptorfileProcess)
 
     for (size_t i = 0; i < keywordsRef.size(); i++)
     {
-        string keyword = keywordsRef[i];
-        bool required = requiredRef[i];
+        string keyword  = keywordsRef[i];
+        bool   required = requiredRef[i];
 
         if (required)
         {
@@ -178,12 +180,12 @@ TEST_F(TestInputFileReader, testMoldescriptorfileProcess)
         }
     }
 
-    _engine._settings.setGuffPath("guffpath");
-    _engine._settings.setMoldescriptorFilename("moldescriptorfile");
+    _engine.getSettings().setGuffPath("guffpath");
+    _engine.getSettings().setMoldescriptorFilename("moldescriptorfile");
 
     _inputFileReader->postProcess();
 
-    EXPECT_EQ(_engine._settings.getMoldescriptorFilename(), "guffpath/moldescriptorfile");
+    EXPECT_EQ(_engine.getSettings().getMoldescriptorFilename(), "guffpath/moldescriptorfile");
 }
 
 int main(int argc, char **argv)

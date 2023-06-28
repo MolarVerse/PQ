@@ -2,19 +2,16 @@
 
 #define _TEST_POST_PROCESS_SETUP_H_
 
-#include <gtest/gtest.h>
-
 #include "postProcessSetup.hpp"
+
+#include <gtest/gtest.h>
 
 class TestPostProcessSetup : public ::testing::Test
 {
-protected:
-    void SetUp() override
-    {
-        _engine = Engine();
-    }
+  protected:
+    void SetUp() override { _engine = engine::Engine(); }
 
-    Engine _engine;
+    engine::Engine _engine;
 };
 
 #endif

@@ -97,7 +97,9 @@
         "scoped_allocator": "cpp",
         "spanstream": "cpp",
         "stacktrace": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "format": "cpp",
+        "stdfloat": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",

@@ -49,7 +49,7 @@ include(mpi)
 include(doxygen)
 include(testing)
 
-# add_subdirectory(tests)
+add_subdirectory(tests)
 include(benchmarking)
 add_subdirectory(benchmarks)
 

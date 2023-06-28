@@ -1,15 +1,16 @@
-#include "testInputFileReader.hpp"
 #include "exceptions.hpp"
+#include "testInputFileReader.hpp"
 
 using namespace std;
-using namespace Setup::InputFileReader;
+using namespace setup;
 using namespace ::testing;
+using namespace customException;
 
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
     vector<string> lineElements = {"integrator", "=", "v-verlet"};
     _inputFileReader->parseIntegrator(lineElements);
-    EXPECT_EQ(_engine._integrator.getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(_engine._integrator->getIntegratorType(), "VelocityVerlet");
 }
 
 TEST_F(TestInputFileReader, testIntegratorUnknown)
