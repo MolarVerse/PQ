@@ -45,7 +45,6 @@ jobs:
       run: |
         cd build
         make test
-        make coverage       
 
     - name: Generate a code coverage report
       uses: threeal/gcovr-action@latest
