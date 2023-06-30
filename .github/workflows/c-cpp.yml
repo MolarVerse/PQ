@@ -25,7 +25,7 @@ jobs:
       env:
         CACHE_HIT: ${{steps.cache-boost.outputs.cache-hit}}
       run: |
-        if [[ "$CACHE_HIT" == 'true' ]]; then
+        if [[ "$CACHE_HIT" == 'nevertrue' ]]; then
           sudo cp --force --recursive ~/boost/* /
         else
           sudo apt-get update && sudo apt-get install -yq libboost-all-dev
@@ -39,7 +39,7 @@ jobs:
       run: cmake -S . -B build -G "Unix Makefiles"
 
     - name: "Build Project" 
-      run: cmake --build build --target all -- -j4
+      run: cmake --build build --target all -- -j20
 
     - name: "Test Project"
       run: |
@@ -64,3 +64,8 @@ jobs:
       uses: threeal/gcovr-action@latest
       with:
         gcov-executable: gcov
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env: 
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
