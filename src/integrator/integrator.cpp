@@ -14,17 +14,16 @@ using namespace config;
 /**
  * @brief integrates the velocities of a single atom
  *
- * @param timestep
  * @param molecule
  * @param i
  */
-void Integrator::integrateVelocities(const double timestep, Molecule &molecule, const size_t i) const
+void Integrator::integrateVelocities(Molecule &molecule, const size_t i) const
 {
     auto       velocities = molecule.getAtomVelocity(i);
     const auto forces     = molecule.getAtomForce(i);
     const auto mass       = molecule.getAtomMass(i);
 
-    velocities += timestep * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
+    velocities += _dt * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
 
     molecule.setAtomVelocity(i, velocities);
 }
@@ -32,17 +31,16 @@ void Integrator::integrateVelocities(const double timestep, Molecule &molecule, 
 /**
  * @brief integrates the positions of a single atom
  *
- * @param timestep
  * @param molecule
  * @param i
  * @param simBox
  */
-void Integrator::integratePositions(const double timestep, Molecule &molecule, const size_t i, const SimulationBox &simBox) const
+void Integrator::integratePositions(Molecule &molecule, const size_t i, const SimulationBox &simBox) const
 {
     auto       positions  = molecule.getAtomPosition(i);
     const auto velocities = molecule.getAtomVelocity(i);
 
-    positions += timestep * velocities * _FS_TO_S_;
+    positions += _dt * velocities * _FS_TO_S_;
     applyPBC(simBox, positions);
 
     molecule.setAtomPositions(i, positions);
@@ -63,8 +61,8 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            integrateVelocities(_dt, molecule, i);
-            integratePositions(_dt, molecule, i, simBox);
+            integrateVelocities(molecule, i);
+            integratePositions(molecule, i, simBox);
         }
 
         molecule.calculateCenterOfMass(box);
@@ -85,7 +83,7 @@ void VelocityVerlet::secondStep(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            integrateVelocities(_dt, molecule, i);
+            integrateVelocities(molecule, i);
         }
     }
 }

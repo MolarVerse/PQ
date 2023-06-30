@@ -7,7 +7,8 @@
 
 #include <vector>
 
-namespace simulationBox {
+namespace simulationBox
+{
     class CellList;
 }
 
@@ -17,7 +18,8 @@ namespace simulationBox {
  * @brief CellList is a class for cell list
  *
  */
-class simulationBox::CellList {
+class simulationBox::CellList
+{
   private:
     bool _activated = false;
 
@@ -37,7 +39,7 @@ class simulationBox::CellList {
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
 
-    size_t  getCellIndex(const vector3d::Vec3Dul &cellIndices) const;
+    size_t            getCellIndex(const vector3d::Vec3Dul &cellIndices) const;
     vector3d::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const vector3d::Vec3D &);
 
     void activate() { _activated = true; }
@@ -47,7 +49,7 @@ class simulationBox::CellList {
      * standatd getter methods *
      ***************************/
 
-    vector3d::Vec3D             getCellSize() const { return _cellSize; }
+    vector3d::Vec3D   getCellSize() const { return _cellSize; }
     Cell             &getCell(const size_t index) { return _cells[index]; }
     std::vector<Cell> getCells() const { return _cells; }
 
