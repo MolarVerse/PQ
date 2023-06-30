@@ -14,10 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: "Install libraries"
+      run: |
+        conda install -c conda-forge boost
+      
     - name: "Create build directory and run CMake"
       run: cmake -S . -B build -G "Unix Makefiles"
+
     - name: "Build Project" 
       run: cmake --build build --target all -- -j4
+      
     - name: "Test Project"
       run: |
         cd build
