@@ -50,13 +50,6 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         gcov: true
-        gcov_exclude: |
-          tests/*
-          apps/*
-          benchmarks/*
-          tools/*
-          _deps/*
-          external/*
       env: 
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       
