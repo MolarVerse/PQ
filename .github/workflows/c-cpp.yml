@@ -46,3 +46,28 @@ jobs:
         cd build
         make test
         make coverage       
+
+    - name: Generate a code coverage report
+      uses: threeal/gcovr-action@latest
+
+    - name: Generate a code coverage report
+      uses: threeal/gcovr-action@latest
+      with:
+        excludes: |
+          tests/*
+          apps/*
+          benchmarks/*
+          tools/*
+          _deps/*
+          external/*
+
+    - name: Build and test this project
+      run: |
+        cmake . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+        cmake --build build
+        ctest --test-dir build
+
+    - name: Generate a code coverage report
+      uses: threeal/gcovr-action@latest
+      with:
+        gcov-executable: llvm-cov gcov
