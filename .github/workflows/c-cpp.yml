@@ -46,26 +46,17 @@ jobs:
         cd build
         make test
 
-    - name: Generate a code coverage report
-      uses: threeal/gcovr-action@latest
-
-    - name: Generate a code coverage report
-      uses: threeal/gcovr-action@latest
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
       with:
-        excludes: |
+        gcov: true
+        gcov_exclude: |
           tests/*
           apps/*
           benchmarks/*
           tools/*
           _deps/*
           external/*
-
-    - name: Generate a code coverage report
-      uses: threeal/gcovr-action@latest
-      with:
-        gcov-executable: gcov
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
       env: 
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      
