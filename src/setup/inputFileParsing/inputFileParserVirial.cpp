@@ -17,7 +17,7 @@ void InputFileReader::parseVirial(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "molecular")
     {
-        // default
+        _engine._virial = make_unique<VirialMolecular>();
     }
     else if (lineElements[2] == "atomic")
     {

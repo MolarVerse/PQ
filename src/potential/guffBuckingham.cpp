@@ -23,9 +23,9 @@ void GuffBuckingham::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double distance_6 = distance * distance * distance * distance * distance * distance;
     const double helper_c3  = c3 / distance_6;
 
-    energy = helper + helper_c3;
-    force += -c2 * helper + 6 * helper_c3 / distance;
+    energy  = helper + helper_c3;
+    force  += -c2 * helper + 6 * helper_c3 / distance;
 
-    energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
-    force += force_cutoff;
+    energy -= energy_cutoff + force_cutoff * (rncCutoff - distance);
+    force  -= force_cutoff;
 }

@@ -10,6 +10,11 @@ set(source_files
     testParserTimings.cpp
     testParserOutput.cpp
     testParserGeneral.cpp
+    testParserVirial.cpp
+    testParserThermostat.cpp
+    testParserManostat.cpp
+    testParserReset.cpp
+    testParserCelllist.cpp
     testInputFileParser.cpp
     testInputFileReader.cpp
 

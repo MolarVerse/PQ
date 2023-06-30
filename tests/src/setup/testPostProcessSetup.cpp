@@ -175,6 +175,46 @@ TEST_F(TestPostProcessSetup, testBoxAndDensitySet)
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
 }
 
+TEST_F(TestPostProcessSetup, testResizeAtomShiftForces)
+{
+
+    Molecule molecule1(1);
+    molecule1.addAtomForce({1.0, 2.0, 3.0});
+    molecule1.addAtomForce({4.0, 5.0, 6.0});
+
+    Molecule molecule2(2);
+    molecule2.addAtomForce({7.0, 8.0, 9.0});
+
+    _engine.getSimulationBox().addMolecule(molecule1);
+    _engine.getSimulationBox().addMolecule(molecule2);
+
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.resizeAtomShiftForces();
+
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[0].getAtomShiftForces().size(), 2);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[1].getAtomShiftForces().size(), 1);
+}
+
+TEST_F(TestPostProcessSetup, testChechRcCutoff)
+{
+    _engine.getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    _engine.getSimulationBox().setRcCutOff(14.0);
+    PostProcessSetup postProcessSetup(_engine);
+    EXPECT_THROW(postProcessSetup.checkRcCutoff(), customException::InputFileException);
+
+    PostProcessSetup postProcessSetup2(_engine);
+    _engine.getSimulationBox().setRcCutOff(4.0);
+    EXPECT_NO_THROW(postProcessSetup2.checkRcCutoff());
+}
+
+TEST_F(TestPostProcessSetup, testSetTimeStep)
+{
+    _engine.getTimings().setTimestep(0.001);
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.setTimestep();
+    EXPECT_DOUBLE_EQ(_engine.getIntegrator().getDt(), 0.001);
+}
+
 // TEST_F(TestPostProcessSetup, testSetup)
 // {
 //     Molecule molecule1(1);

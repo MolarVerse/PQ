@@ -26,6 +26,15 @@ TEST_F(TestInputFileReader, testGuffPath)
     EXPECT_EQ(_engine.getSettings().getGuffPath(), "guff");
 }
 
+TEST_F(TestInputFileReader, testJobType)
+{
+    vector<string> lineElements = {"jobtype", "=", "mm-md"};
+    _inputFileReader->parseJobType(lineElements);
+    EXPECT_EQ(_engine.getSettings().getJobtype(), "MMMD");
+    lineElements = {"jobtype", "=", "notvalid"};
+    EXPECT_THROW(_inputFileReader->parseJobType(lineElements), customException::InputFileException);
+}
+
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);

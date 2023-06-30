@@ -49,9 +49,10 @@ class simulationBox::CellList
      * standatd getter methods *
      ***************************/
 
+    vector3d::Vec3Dul getNumberOfCells() const { return _nCells; }
     vector3d::Vec3D   getCellSize() const { return _cellSize; }
-    Cell             &getCell(const size_t index) { return _cells[index]; }
     std::vector<Cell> getCells() const { return _cells; }
+    Cell             &getCell(const size_t index) { return _cells[index]; }
 
     /***************************
      * standatd setter methods *
