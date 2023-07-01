@@ -131,6 +131,7 @@ class simulationBox::Molecule
     void setAtomForce(const size_t index, const vector3d::Vec3D &force) { _forces[index] = force; }
     void setAtomShiftForces(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }
     void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), vector3d::Vec3D(0.0, 0.0, 0.0)); }
+    void setCenterOfMass(const vector3d::Vec3D &centerOfMass) { _centerOfMass = centerOfMass; }
 
     void setExternalAtomTypes(const std::vector<size_t> &externalAtomTypes) { _externalAtomTypes = externalAtomTypes; }
 };

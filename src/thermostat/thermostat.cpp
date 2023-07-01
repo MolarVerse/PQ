@@ -40,5 +40,5 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
     for (auto &molecule : simulationBox.getMolecules())
         molecule.scaleVelocities(berendsenFactor);
 
-    physicalData.calculateTemperature(simulationBox);
+    physicalData.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 }

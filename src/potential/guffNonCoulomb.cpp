@@ -30,8 +30,8 @@ void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double c7 = guffCoefficients[6];
     const double n8 = guffCoefficients[7];
 
-    const double distance_n6 = pow(distance, n2);
-    const double distance_n8 = pow(distance, n4);
+    const double distance_n6 = pow(distance, n6);
+    const double distance_n8 = pow(distance, n8);
 
     energy_local += c5 / distance_n6 + c7 / distance_n8;
     force_local  += n6 * c5 / (distance_n6 * distance) + n8 * c7 / (distance_n8 * distance);

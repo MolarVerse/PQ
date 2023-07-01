@@ -2,6 +2,7 @@ set(source_files
     testGuffLJ.cpp
     testCoulomb.cpp
     testGuffBuckingham.cpp
+    testGuffNonCoulomb.cpp
 )
 
 foreach(source_file ${source_files})
