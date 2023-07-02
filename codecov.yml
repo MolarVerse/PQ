@@ -5,7 +5,4 @@ ignore:
   - tests/
   - apps/
   - benchmarks/
-<<<<<<< HEAD
-=======
   - tools/
->>>>>>> testing
