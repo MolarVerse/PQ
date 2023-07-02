@@ -377,10 +377,7 @@ template <class T> class vector3d::Vector3D
      * @param v
      * @return std::ostream&
      */
-    friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v)
-    {
-        return os << "[" << v._x << ", " << v._y << ", " << v._z << "]";
-    }
+    friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v) { return os << v._x << " " << v._y << " " << v._z; }
 };
 
 #endif   // _VEC3D_HPP_
