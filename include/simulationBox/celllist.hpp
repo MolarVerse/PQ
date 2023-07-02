@@ -52,6 +52,7 @@ class simulationBox::CellList
     vector3d::Vec3Dul getNumberOfCells() const { return _nCells; }
     vector3d::Vec3D   getCellSize() const { return _cellSize; }
     std::vector<Cell> getCells() const { return _cells; }
+    void              resizeCells(const size_t nCells) { _cells.resize(nCells); }
     Cell             &getCell(const size_t index) { return _cells[index]; }
 
     /***************************

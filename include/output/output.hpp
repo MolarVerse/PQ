@@ -39,6 +39,8 @@ class output::Output
     std::string getFilename() const { return _filename; }
 
     static size_t getOutputFrequency() { return _outputFrequency; }
+
+    void close() { _fp.close(); }
 };
 
 #endif
