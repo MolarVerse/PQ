@@ -6,3 +6,4 @@ ignore:
   - apps/
   - benchmarks/
   - tools/
+  - src/setup/setup.cpp # just one combining all setup methods - working as interface

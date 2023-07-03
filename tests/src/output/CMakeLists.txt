@@ -3,6 +3,9 @@ set(source_files
     testLogOutput.cpp
     testRstFileOutput.cpp
     testTrajectoryOutput.cpp
+    testInfoOutput.cpp
+    testEnergyOutput.cpp
+    testOutput.cpp
 )
 
 foreach(source_file ${source_files})

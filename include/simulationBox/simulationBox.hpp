@@ -174,6 +174,7 @@ class simulationBox::SimulationBox
     void setVolume(const double volume) { _box.setVolume(volume); }
     void setBoxDimensions(const vector3d::Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
     void setBoxAngles(const vector3d::Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
+    void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _box.setBoxSizeHasChanged(boxSizeHasChanged); }
 };
 
 #endif
