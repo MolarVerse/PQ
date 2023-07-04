@@ -46,9 +46,9 @@ void PostProcessSetup::setup()
     checkRcCutoff();
 
     setupCellList();
-    setPotential();
+    setupPotential();
 
-    setTimestep();
+    setupTimestep();
 }
 
 /**
@@ -251,7 +251,7 @@ void PostProcessSetup::setupCellList()
  * @details
  *
  */
-void PostProcessSetup::setPotential()
+void PostProcessSetup::setupPotential()
 {
     if (_engine._potential->getCoulombType() == "guff") _engine._potential->setCoulombPotential(GuffCoulomb());
 
@@ -262,4 +262,4 @@ void PostProcessSetup::setPotential()
  * @brief sets timestep in integrator
  *
  */
-void PostProcessSetup::setTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }
+void PostProcessSetup::setupTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }

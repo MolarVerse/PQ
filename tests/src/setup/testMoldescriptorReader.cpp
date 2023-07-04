@@ -40,6 +40,12 @@ TEST_F(TestMoldescriptorReader, testArgumentsinMoleculeSection)
     ASSERT_THROW(reader3.read(), MolDescriptorException);
 }
 
+/**
+ * @brief test reading of moldescriptor.dat
+ *
+ * TODO: add more tests to check if the data is read correctly
+ *
+ */
 TEST_F(TestMoldescriptorReader, testMoldescriptorReader)
 {
     _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
@@ -53,6 +59,13 @@ TEST_F(TestMoldescriptorReader, testSpecialTypes)
     readMolDescriptor(_engine);
     ASSERT_EQ(_engine.getSimulationBox().getWaterType(), 1);
     ASSERT_EQ(_engine.getSimulationBox().getAmmoniaType(), 2);
+}
+
+TEST_F(TestMoldescriptorReader, testToManyAtomsPerMoltype)
+{
+    _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat");
+    MoldescriptorReader reader2(_engine);
+    ASSERT_THROW(reader2.read(), MolDescriptorException);
 }
 
 // TODO: build more large test cases with real simulation input to test everything!!!

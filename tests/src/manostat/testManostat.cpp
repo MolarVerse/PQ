@@ -25,8 +25,6 @@ TEST_F(TestManostat, testApplyManostat)
     _manostat = manostat::BerendsenManostat(1.0, 0.1);
     _manostat.applyManostat(*_box, *_data);
 
-    const auto old_pressure = 2.0 * config::_PRESSURE_FACTOR_;
-
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
 }
 
