@@ -20,6 +20,8 @@ set(source_files
 
     testMoldescriptorReader.cpp
 
+    testGuffDatReader.cpp
+
     testPostProcessSetup.cpp
 )
 

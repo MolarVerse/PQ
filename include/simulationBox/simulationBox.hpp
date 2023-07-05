@@ -66,6 +66,7 @@ class simulationBox::SimulationBox
 
   public:
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
+    void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
     size_t   getNumberOfAtoms() const;
     int      getDegreesOfFreedom() const { return _degreesOfFreedom; }
