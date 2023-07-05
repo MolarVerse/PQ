@@ -6,3 +6,5 @@ ignore:
   - apps/
   - benchmarks/
   - tools/
+  - src/setup/setup.cpp # just one combining all setup methods - working as interface
+  - src/engine/engine.cpp # just one combining all engine methods - tested by integration tests

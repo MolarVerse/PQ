@@ -37,7 +37,8 @@ class manostat::Manostat
     virtual void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
     // standard getters and setters
-    void setTimestep(const double timestep) { _timestep = timestep; }
+    void   setTimestep(const double timestep) { _timestep = timestep; }
+    double getTimestep() const { return _timestep; }
 };
 
 class manostat::BerendsenManostat : public manostat::Manostat
@@ -51,6 +52,8 @@ class manostat::BerendsenManostat : public manostat::Manostat
     explicit BerendsenManostat(const double targetPressure, const double tau) : Manostat(targetPressure), _tau(tau) {}
 
     void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+
+    double getTau() const { return _tau; }
 };
 
 #endif

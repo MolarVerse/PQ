@@ -13,9 +13,11 @@ class TestCellList : public ::testing::Test
     {
         _cellList = new simulationBox::CellList();
         _cellList->setNumberOfCells(2);
+        _cellList->setNumberOfNeighbourCells(1);
 
         _simulationBox = new simulationBox::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox->setRcCutOff(1.5);
     }
 
     virtual void TearDown()

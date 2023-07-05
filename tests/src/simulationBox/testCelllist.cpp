@@ -46,6 +46,81 @@ TEST_F(TestCellList, getCellIndexOfMolecule)
     EXPECT_EQ(_cellList->getCellIndexOfMolecule(*_simulationBox, position2), vector3d::Vec3Dul(0, 0, 0));
 }
 
+TEST_F(TestCellList, addCellPointers)
+{
+    auto cell = simulationBox::Cell();
+    cell.setCellIndex(vector3d::Vec3Dul(0, 0, 0));
+
+    _cellList->setNumberOfCells(7);
+    _cellList->determineCellSize(*_simulationBox);
+    _cellList->resizeCells(prod(_cellList->getNumberOfCells()));
+    _cellList->determineCellBoundaries(*_simulationBox);
+    _cellList->addCellPointers(cell);
+
+    const auto neighbourCells = cell.getNeighbourCells();
+
+    EXPECT_EQ(neighbourCells.size(), 13);
+    EXPECT_EQ(neighbourCells[0]->getCellIndex(), vector3d::Vec3Dul(6, 6, 6));
+    EXPECT_EQ(neighbourCells[1]->getCellIndex(), vector3d::Vec3Dul(6, 6, 0));
+    EXPECT_EQ(neighbourCells[2]->getCellIndex(), vector3d::Vec3Dul(6, 6, 1));
+    EXPECT_EQ(neighbourCells[3]->getCellIndex(), vector3d::Vec3Dul(6, 0, 6));
+    EXPECT_EQ(neighbourCells[4]->getCellIndex(), vector3d::Vec3Dul(6, 0, 0));
+    EXPECT_EQ(neighbourCells[5]->getCellIndex(), vector3d::Vec3Dul(6, 0, 1));
+    EXPECT_EQ(neighbourCells[6]->getCellIndex(), vector3d::Vec3Dul(6, 1, 6));
+    EXPECT_EQ(neighbourCells[7]->getCellIndex(), vector3d::Vec3Dul(6, 1, 0));
+    EXPECT_EQ(neighbourCells[8]->getCellIndex(), vector3d::Vec3Dul(6, 1, 1));
+    EXPECT_EQ(neighbourCells[9]->getCellIndex(), vector3d::Vec3Dul(0, 6, 6));
+    EXPECT_EQ(neighbourCells[10]->getCellIndex(), vector3d::Vec3Dul(0, 6, 0));
+    EXPECT_EQ(neighbourCells[11]->getCellIndex(), vector3d::Vec3Dul(0, 6, 1));
+    EXPECT_EQ(neighbourCells[12]->getCellIndex(), vector3d::Vec3Dul(0, 0, 6));
+}
+
+TEST_F(TestCellList, addNeighbouringCells)
+{
+    _cellList->setNumberOfCells(7);
+    _cellList->determineCellSize(*_simulationBox);
+    _cellList->resizeCells(prod(_cellList->getNumberOfCells()));
+    _cellList->determineCellBoundaries(*_simulationBox);
+    _cellList->addNeighbouringCells(*_simulationBox);
+
+    for (const auto &cell : _cellList->getCells())
+    {
+        const auto neighbourCells = cell.getNeighbourCells();
+        EXPECT_EQ(neighbourCells.size(), 62);
+    }
+
+    EXPECT_EQ(_cellList->getNumberOfNeighbourCells(), vector3d::Vec3Dul(2, 2, 2));
+}
+
+/**
+ * @brief testing updateCellList and setup method
+ *
+ * TODO: think of a clever way to break this test into smaller tests
+ *
+ */
+TEST_F(TestCellList, updateCellList)
+{
+    EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
+    _cellList->activate();
+
+    auto molecule = simulationBox::Molecule();
+    molecule.setNumberOfAtoms(2);
+    molecule.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
+    molecule.addAtomPosition(vector3d::Vec3D(6.0, 7.0, 8.0));
+
+    _simulationBox->addMolecule(molecule);
+
+    _cellList->setup(*_simulationBox);
+    const auto cellSizeOld = _cellList->getCellSize();
+
+    _simulationBox->setBoxDimensions(vector3d::Vec3D(50.0, 50.0, 50.0));
+    _simulationBox->setBoxSizeHasChanged(true);
+
+    _cellList->updateCellList(*_simulationBox);
+
+    EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

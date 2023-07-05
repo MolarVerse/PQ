@@ -92,24 +92,18 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 
     molecule.setMoltype(_engine.getSimulationBox().getMoleculeTypes().size() + 1);
 
-    size_t atomCount           = 0;
-    size_t numberOfAtomEntries = 0;
+    size_t atomCount = 0;
 
     while (atomCount < molecule.getNumberOfAtoms())
     {
+        if (_fp.eof()) throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
         getline(_fp, line);
         line         = removeComments(line, "#");
         lineElements = splitString(line);
 
         ++_lineNumber;
 
-        numberOfAtomEntries = lineElements.size();
-
-        if (lineElements.empty())
-            continue;
-        else if (lineElements.size() != numberOfAtomEntries)
-            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
-        else if ((lineElements.size() == 3) || (lineElements.size() == 4))
+        if ((lineElements.size() == 3) || (lineElements.size() == 4))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));

@@ -50,6 +50,7 @@ class simulationBox::CellList
      ***************************/
 
     vector3d::Vec3Dul getNumberOfCells() const { return _nCells; }
+    vector3d::Vec3Dul getNumberOfNeighbourCells() const { return _nNeighbourCells; }
     vector3d::Vec3D   getCellSize() const { return _cellSize; }
     std::vector<Cell> getCells() const { return _cells; }
     void              resizeCells(const size_t nCells) { _cells.resize(nCells); }
@@ -60,6 +61,10 @@ class simulationBox::CellList
      ***************************/
 
     void setNumberOfCells(const size_t nCells) { _nCells = {nCells, nCells, nCells}; }
+    void setNumberOfNeighbourCells(const size_t nNeighbourCells)
+    {
+        _nNeighbourCells = {nNeighbourCells, nNeighbourCells, nNeighbourCells};
+    }
 };
 
 #endif   // _CELL_LIST_H_
