@@ -3,8 +3,10 @@
 #define _TEST_GUFFDATREADER_HPP_
 
 #include "guffDatReader.hpp"
+#include "potential.hpp"
 
 #include <gtest/gtest.h>
+#include <memory>
 
 class TestGuffDatReader : public ::testing::Test
 {
@@ -28,6 +30,12 @@ class TestGuffDatReader : public ::testing::Test
         _engine = new engine::Engine();
         _engine->getSimulationBox().addMoleculeType(molecule1);
         _engine->getSimulationBox().addMoleculeType(molecule2);
+
+        _engine->getSimulationBox().setRcCutOff(12.5);
+
+        _engine->_potential = std::make_unique<potential::PotentialBruteForce>();
+        _engine->_potential->setNonCoulombPotential(potential::GuffNonCoulomb());
+        _engine->_potential->setCoulombPotential(potential::GuffCoulomb());
 
         _guffDatReader = new setup::GuffDatReader(*_engine);
     }
