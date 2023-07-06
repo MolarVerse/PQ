@@ -32,6 +32,7 @@ class setup::GuffDatReader
     void setupGuffMaps();
     void parseLine(std::vector<std::string> &);
     void read();
+    void setFilename(const std::string &filename) { _filename = filename; }
 };
 
 #endif   // _GUFF_DAT_READER_H_
