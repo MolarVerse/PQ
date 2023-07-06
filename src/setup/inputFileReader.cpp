@@ -231,7 +231,7 @@ void InputFileReader::setupManostat()
 {
     if (_engine.getSettings().getManostat() == "berendsen")
     {
-        if (!_engine.getSettings().getManostatSet()) throw InputFileException("Pressure not set for Berendsen manostat");
+        if (!_engine.getSettings().getPressureSet()) throw InputFileException("Pressure not set for Berendsen manostat");
 
         if (!_engine.getSettings().getTauManostatSet())
         {
@@ -263,18 +263,14 @@ void InputFileReader::setupResetKinetics()
 
     if (nScale != 0 || fScale != 0)
     {
-        if (nScale == 0) nScale = numberOfSteps + 1;
         if (fScale == 0) fScale = numberOfSteps + 1;
-        if (nReset == 0) nReset = numberOfSteps + 1;
         if (fReset == 0) fReset = numberOfSteps + 1;
         _engine._resetKinetics = make_unique<ResetTemperature>(nScale, fScale, nReset, fReset, targetTemperature);
     }
     else if (nReset != 0 || fReset != 0)
     {
-        nScale = numberOfSteps + 1;
         fScale = numberOfSteps + 1;
-        if (nReset == 0) nReset = numberOfSteps + 1;
         if (fReset == 0) fReset = numberOfSteps + 1;
-        _engine._resetKinetics = make_unique<ResetMomentum>(nReset, fScale, nReset, fReset, targetTemperature);
+        _engine._resetKinetics = make_unique<ResetMomentum>(nScale, fScale, nReset, fReset, targetTemperature);
     }
 }

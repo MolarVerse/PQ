@@ -13,6 +13,8 @@ using namespace vector3d;
 /**
  * @brief setup cell list
  *
+ * TODO: add check for cutoff radius
+ *
  * @param simulationBox
  */
 void CellList::setup(const SimulationBox &simulationBox)
@@ -130,6 +132,8 @@ void CellList::addCellPointers(Cell &cell)
 
 /**
  * @brief update cell list after md step
+ *
+ * TODO: add check for cutoff if box size changes
  *
  * @param simulationBox
  */

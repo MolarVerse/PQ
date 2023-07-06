@@ -302,19 +302,19 @@ TEST(TestVector3d, testOsStream)
     testing::internal::CaptureStdout();
     std::cout << vec1;
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "[1, 2, 3]");
+    EXPECT_EQ(output, "1 2 3");
 
     const auto vec2 = Vec3Di(1, 2, 3);
     testing::internal::CaptureStdout();
     std::cout << vec2;
     output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "[1, 2, 3]");
+    EXPECT_EQ(output, "1 2 3");
 
     const auto vec3 = Vec3Dul(1, 2, 3);
     testing::internal::CaptureStdout();
     std::cout << vec3;
     output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "[1, 2, 3]");
+    EXPECT_EQ(output, "1 2 3");
 }
 
 TEST(TestVector3d, testBegin)

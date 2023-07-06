@@ -12,7 +12,7 @@ class TestManostat : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _manostat = manostat::Manostat();
+        _manostat = new manostat::Manostat();
         _data     = new physicalData::PhysicalData();
 
         _data->setVolume(2.0);
@@ -27,11 +27,12 @@ class TestManostat : public ::testing::Test
     {
         delete _data;
         delete _box;
+        delete _manostat;
     }
 
     physicalData::PhysicalData   *_data;
     simulationBox::SimulationBox *_box;
-    manostat::Manostat            _manostat;
+    manostat::Manostat           *_manostat;
 };
 
 #endif

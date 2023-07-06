@@ -36,7 +36,7 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
 
             _fp << left;
             _fp << setw(5);
-            _fp << i;
+            _fp << i + 1;
 
             _fp << left;
             _fp << setw(5);

@@ -36,5 +36,7 @@ void InputFileReader::parseCellListActivated(const vector<string> &lineElements)
 void InputFileReader::parseNumberOfCells(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine.getCellList().setNumberOfCells(stoi(lineElements[2]));
+    if (stoi(lineElements[2]) <= 0)
+        throw InputFileException("Number of cells must be positive - number of cells = " + lineElements[2]);
+    _engine.getCellList().setNumberOfCells(stoul(lineElements[2]));
 }

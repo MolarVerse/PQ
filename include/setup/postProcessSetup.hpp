@@ -39,8 +39,8 @@ class setup::PostProcessSetup
     void checkRcCutoff();
 
     void setupCellList();
-    void setPotential();
-    void setTimestep();
+    void setupPotential();
+    void setupTimestep();
 };
 
 #endif

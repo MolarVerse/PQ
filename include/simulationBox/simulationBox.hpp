@@ -66,6 +66,7 @@ class simulationBox::SimulationBox
 
   public:
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
+    void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
     size_t   getNumberOfAtoms() const;
     int      getDegreesOfFreedom() const { return _degreesOfFreedom; }
@@ -174,6 +175,7 @@ class simulationBox::SimulationBox
     void setVolume(const double volume) { _box.setVolume(volume); }
     void setBoxDimensions(const vector3d::Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
     void setBoxAngles(const vector3d::Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
+    void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _box.setBoxSizeHasChanged(boxSizeHasChanged); }
 };
 
 #endif

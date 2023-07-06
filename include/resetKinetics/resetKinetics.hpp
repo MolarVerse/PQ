@@ -46,6 +46,11 @@ class resetKinetics::ResetKinetics
     virtual void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
     void         resetTemperature(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
     void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
+
+    size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
+    size_t getFrequencyTemperatureReset() const { return _frequencyTemperatureReset; }
+    size_t getNStepsMomentumReset() const { return _nStepsMomentumReset; }
+    size_t getFrequencyMomentumReset() const { return _frequencyMomentumReset; }
 };
 
 /**

@@ -19,9 +19,9 @@ void GuffLJ::calcNonCoulomb(const vector<double> &guffCoefficients,
     const double distance_6  = distance * distance * distance * distance * distance * distance;
     const double distance_12 = distance_6 * distance_6;
 
-    energy = c12 / distance_12 + c6 / distance_6;
-    force += 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
+    energy  = c12 / distance_12 + c6 / distance_6;
+    force  += 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
 
-    energy += energy_cutoff + force_cutoff * (rncCutoff - distance);
-    force += force_cutoff;
+    energy -= energy_cutoff + force_cutoff * (rncCutoff - distance);
+    force  -= force_cutoff;
 }

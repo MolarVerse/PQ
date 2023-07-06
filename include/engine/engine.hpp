@@ -48,7 +48,7 @@ class engine::Engine
     physicalData::PhysicalData   _averagePhysicalData;
 
   public:
-    std::unique_ptr<integrator::Integrator>       _integrator;
+    std::unique_ptr<integrator::Integrator>       _integrator    = std::make_unique<integrator::VelocityVerlet>();
     std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
     std::unique_ptr<thermostat::Thermostat>       _thermostat    = std::make_unique<thermostat::Thermostat>();
     std::unique_ptr<manostat::Manostat>           _manostat      = std::make_unique<manostat::Manostat>();
@@ -76,6 +76,8 @@ class engine::Engine
     simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
     physicalData::PhysicalData   &getPhysicalData() { return _physicalData; }
     physicalData::PhysicalData   &getAveragePhysicalData() { return _averagePhysicalData; }
+    virial::Virial               &getVirial() { return *_virial; }
+    integrator::Integrator       &getIntegrator() { return *_integrator; }
 };
 
 #endif   // _ENGINE_HPP_

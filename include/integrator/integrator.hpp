@@ -36,7 +36,12 @@ class integrator::Integrator
     void integrateVelocities(simulationBox::Molecule &, const size_t) const;
     void integratePositions(simulationBox::Molecule &, const size_t, const simulationBox::SimulationBox &) const;
 
+    /********************************
+     * standard getters and setters *
+     ********************************/
+
     std::string_view getIntegratorType() const { return _integratorType; }
+    double           getDt() const { return _dt; }
 
     void setDt(const double dt) { _dt = dt; }
 };

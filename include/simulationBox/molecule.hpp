@@ -91,7 +91,7 @@ class simulationBox::Molecule
     size_t getMoltype() const { return _moltype; }
     size_t getNumberOfAtoms() const { return _numberOfAtoms; }
     size_t getAtomType(const size_t index) const { return _atomTypes[index]; }
-    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes[externalAtomType]; }
+    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes.at(externalAtomType); }
     size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
 
     int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; }
@@ -131,6 +131,7 @@ class simulationBox::Molecule
     void setAtomForce(const size_t index, const vector3d::Vec3D &force) { _forces[index] = force; }
     void setAtomShiftForces(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }
     void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), vector3d::Vec3D(0.0, 0.0, 0.0)); }
+    void setCenterOfMass(const vector3d::Vec3D &centerOfMass) { _centerOfMass = centerOfMass; }
 
     void setExternalAtomTypes(const std::vector<size_t> &externalAtomTypes) { _externalAtomTypes = externalAtomTypes; }
 };

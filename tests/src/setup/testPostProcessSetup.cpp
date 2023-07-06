@@ -175,33 +175,97 @@ TEST_F(TestPostProcessSetup, testBoxAndDensitySet)
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
 }
 
-// TEST_F(TestPostProcessSetup, testSetup)
-// {
-//     Molecule molecule1(1);
-//     molecule1.setNumberOfAtoms(3);
-//     molecule1.addAtomName("C");
-//     molecule1.addAtomName("H");
-//     molecule1.addAtomName("O");
+TEST_F(TestPostProcessSetup, testResizeAtomShiftForces)
+{
 
-//     Molecule molecule2(2);
-//     molecule2.setNumberOfAtoms(2);
-//     molecule2.addAtomName("H");
-//     molecule2.addAtomName("H");
+    Molecule molecule1(1);
+    molecule1.addAtomForce({1.0, 2.0, 3.0});
+    molecule1.addAtomForce({4.0, 5.0, 6.0});
 
-//     molecule1.addPartialCharge(0.1);
-//     molecule1.addPartialCharge(0.2);
-//     molecule1.addPartialCharge(-0.4);
+    Molecule molecule2(2);
+    molecule2.addAtomForce({7.0, 8.0, 9.0});
 
-//     molecule2.addPartialCharge(0.1);
-//     molecule2.addPartialCharge(0.2);
+    _engine.getSimulationBox().addMolecule(molecule1);
+    _engine.getSimulationBox().addMolecule(molecule2);
 
-//     _engine.getSimulationBox().getMolecules().push_back(molecule1);
-//     _engine.getSimulationBox().getMolecules().push_back(molecule2);
-//     _engine.getSimulationBox().setTotalMass(6000);
-//     _engine.getSimulationBox().setDensity(12341243.1234);   // this should be ignored
-//     _engine.getSimulationBox().setBoxDimensions({30.0, 35.0, 32.0});
-//     ASSERT_NO_THROW(postProcessSetup(_engine));
-// }
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.resizeAtomShiftForces();
+
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[0].getAtomShiftForces().size(), 2);
+    EXPECT_EQ(_engine.getSimulationBox().getMolecules()[1].getAtomShiftForces().size(), 1);
+}
+
+TEST_F(TestPostProcessSetup, testChechRcCutoff)
+{
+    _engine.getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    _engine.getSimulationBox().setRcCutOff(14.0);
+    PostProcessSetup postProcessSetup(_engine);
+    EXPECT_THROW(postProcessSetup.checkRcCutoff(), customException::InputFileException);
+
+    PostProcessSetup postProcessSetup2(_engine);
+    _engine.getSimulationBox().setRcCutOff(4.0);
+    EXPECT_NO_THROW(postProcessSetup2.checkRcCutoff());
+}
+
+TEST_F(TestPostProcessSetup, SetTimeStep)
+{
+    _engine.getTimings().setTimestep(0.001);
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.setupTimestep();
+    EXPECT_DOUBLE_EQ(_engine.getIntegrator().getDt(), 0.001);
+}
+
+TEST_F(TestPostProcessSetup, setupCellList)
+{
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.setupCellList();
+
+    EXPECT_EQ(typeid(*(_engine._potential)), typeid(potential::PotentialBruteForce));
+
+    _engine.getCellList().activate();
+    postProcessSetup.setupCellList();
+
+    EXPECT_EQ(typeid(*(_engine._potential)), typeid(potential::PotentialCellList));
+}
+
+TEST_F(TestPostProcessSetup, setupPotential)
+{
+    _engine._potential->setCoulombType("guff");
+    _engine._potential->setNonCoulombType("guff");
+    PostProcessSetup postProcessSetup(_engine);
+    postProcessSetup.setupPotential();
+
+    EXPECT_EQ(typeid(*(_engine._potential->getCoulombPotential())), typeid(potential::GuffCoulomb));
+    EXPECT_EQ(typeid(*(_engine._potential->getNonCoulombPotential())), typeid(potential::GuffNonCoulomb));
+}
+
+TEST_F(TestPostProcessSetup, testSetup)
+{
+    Molecule molecule1(1);
+    molecule1.setNumberOfAtoms(3);
+    molecule1.addAtomName("C");
+    molecule1.addAtomName("H");
+    molecule1.addAtomName("O");
+
+    Molecule molecule2(2);
+    molecule2.setNumberOfAtoms(2);
+    molecule2.addAtomName("H");
+    molecule2.addAtomName("H");
+
+    molecule1.addPartialCharge(0.1);
+    molecule1.addPartialCharge(0.2);
+    molecule1.addPartialCharge(-0.4);
+
+    molecule2.addPartialCharge(0.1);
+    molecule2.addPartialCharge(0.2);
+
+    _engine.getSimulationBox().getMolecules().push_back(molecule1);
+    _engine.getSimulationBox().getMolecules().push_back(molecule2);
+    _engine.getSimulationBox().setTotalMass(6000);
+    _engine.getSimulationBox().setDensity(12341243.1234);   // this should be ignored
+    _engine.getSimulationBox().setBoxDimensions({30.0, 35.0, 32.0});
+    ASSERT_NO_THROW(postProcessSetup(_engine));
+}
 
 int main(int argc, char **argv)
 {
