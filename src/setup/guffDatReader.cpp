@@ -137,9 +137,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     vector<double> guffCoefficients(22);
 
     for (size_t i = 0; i < 22; ++i)
-    {
         guffCoefficients[i] = stod(lineCommands[i + 6]);
-    }
 
     const size_t moltype1 = stoul(lineCommands[0]);
     const size_t moltype2 = stoul(lineCommands[2]);

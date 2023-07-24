@@ -28,8 +28,7 @@ using namespace config;
  */
 size_t Molecule::getNumberOfAtomTypes()
 {
-    return static_cast<size_t>(
-        distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
+    return ranges::distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end()));
 }
 
 /**
@@ -42,13 +41,13 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
     _centerOfMass            = Vec3D();
     const auto positionAtom1 = getAtomPosition(0);
 
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
+    auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
     {
-        const auto mass     = getAtomMass(i);
-        const auto position = getAtomPosition(i);
+        auto const &[mass, position]  = pair;
+        _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
+    };
 
-        _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));   // PBC to first atom of molecule
-    }
+    ranges::for_each(ranges::views::zip(_masses, _positions), f);
 
     _centerOfMass /= getMolMass();
 }
@@ -62,8 +61,7 @@ void Molecule::scale(const Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
-        _positions[i] += shift;
+    ranges::for_each(_positions, [shift](auto &position) { position += shift; });
 }
 
 /**
@@ -73,8 +71,7 @@ void Molecule::scale(const Vec3D &shiftFactors)
  */
 void Molecule::scaleVelocities(const double scaleFactor)
 {
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
-        _velocities[i] *= scaleFactor;
+    ranges::for_each(_velocities, [scaleFactor](auto &velocity) { velocity *= scaleFactor; });
 }
 
 /**
@@ -84,6 +81,5 @@ void Molecule::scaleVelocities(const double scaleFactor)
  */
 void Molecule::correctVelocities(const Vec3D &correction)
 {
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
-        _velocities[i] -= correction;
+    ranges::for_each(_velocities, [correction](auto &velocity) { velocity -= correction; });
 }

@@ -33,11 +33,7 @@ void CellList::setup(const SimulationBox &simulationBox)
  *
  * @param simulationBox
  */
-void CellList::determineCellSize(const SimulationBox &simulationBox)
-{
-    const auto box = simulationBox.getBoxDimensions();
-    _cellSize      = box / static_cast<Vec3D>(_nCells);
-}
+void CellList::determineCellSize(const SimulationBox &simBox) { _cellSize = simBox.getBoxDimensions() / Vec3D(_nCells); }
 
 /**
  * @brief determine cell boundaries
@@ -60,8 +56,8 @@ void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
 
                 const auto ijk = Vec3Dul(i, j, k);
 
-                const auto lowerBoundary = -box / 2.0 + static_cast<Vec3D>(ijk) * _cellSize;
-                const auto upperBoundary = -box / 2.0 + static_cast<Vec3D>((ijk + 1)) * _cellSize;
+                const auto lowerBoundary = -box / 2.0 + Vec3D(ijk) * _cellSize;
+                const auto upperBoundary = -box / 2.0 + Vec3D(ijk + 1) * _cellSize;
 
                 cell->setLowerBoundary(lowerBoundary);
                 cell->setUpperBoundary(upperBoundary);
@@ -79,11 +75,9 @@ void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
  */
 void CellList::addNeighbouringCells(const SimulationBox &simulationBox)
 {
+    _nNeighbourCells = Vec3Dul(ceil(simulationBox.getRcCutOff() / _cellSize));
 
-    _nNeighbourCells = static_cast<Vec3Dul>(ceil(simulationBox.getRcCutOff() / _cellSize));
-
-    for (auto &cell : _cells)
-        addCellPointers(cell);
+    ranges::for_each(_cells, [this](auto &cell) { addCellPointers(cell); });
 }
 
 /**
@@ -112,10 +106,8 @@ void CellList::addCellPointers(Cell &cell)
 
                 if (ijk == Vec3Di(0, 0, 0)) continue;
 
-                auto neighbourCellIndex = ijk + static_cast<Vec3Di>(cell.getCellIndex());
-                neighbourCellIndex -=
-                    static_cast<Vec3Di>(_nCells) *
-                    static_cast<Vec3Di>(floor(static_cast<Vec3D>(neighbourCellIndex) / static_cast<Vec3D>(_nCells)));
+                auto neighbourCellIndex  = ijk + Vec3Di(cell.getCellIndex());
+                neighbourCellIndex      -= Vec3Di(_nCells) * Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
 
                 const auto neighbourCellIndexScalar =
                     neighbourCellIndex[0] * _nCells[1] * _nCells[2] + neighbourCellIndex[1] * _nCells[2] + neighbourCellIndex[2];
@@ -211,9 +203,9 @@ Vec3Dul CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, con
 {
     const auto box = simulationBox.getBoxDimensions();
 
-    auto cellIndex = static_cast<Vec3Dul>(floor((position + box / 2.0) / _cellSize));
+    auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 
-    cellIndex -= _nCells * static_cast<Vec3Dul>(floor(static_cast<Vec3D>(cellIndex) / static_cast<Vec3D>(_nCells)));
+    cellIndex -= _nCells * Vec3Dul(floor(Vec3D(cellIndex) / Vec3D(_nCells)));
 
     return cellIndex;
 }

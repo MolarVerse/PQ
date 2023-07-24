@@ -90,6 +90,7 @@ class simulationBox::Molecule
 
     size_t getMoltype() const { return _moltype; }
     size_t getNumberOfAtoms() const { return _numberOfAtoms; }
+    size_t getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
     size_t getAtomType(const size_t index) const { return _atomTypes[index]; }
     size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes.at(externalAtomType); }
     size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }

@@ -94,17 +94,17 @@ class simulationBox::SimulationBox
     Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
     Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
-    {
-        return _guffCoefficients[m1 - 1][m2 - 1][a1][a2];
-    }
-
     double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; }
     double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; }
     double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
     double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
     double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
     double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+
+    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _guffCoefficients[m1 - 1][m2 - 1][a1][a2];
+    }
 
     vector5d &getGuffCoefficients() { return _guffCoefficients; }
     vector4d &getRncCutOffs() { return _rncCutOffs; }
@@ -157,7 +157,7 @@ class simulationBox::SimulationBox
     void scaleBox(const vector3d::Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); }
 
     double          calculateVolume() { return _box.calculateVolume(); }
-    vector3d::Vec3D calculateBoxDimensionsFromDensity() const { return _box.calculateBoxDimensionsFromDensity(); }
+    vector3d::Vec3D calculateBoxDimensionsFromDensity() { return _box.calculateBoxDimensionsFromDensity(); }
 
     double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
     bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
