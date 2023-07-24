@@ -7,7 +7,7 @@ using namespace ::testing;
 
 TEST_F(TestInputFileReader, testParseDensity)
 {
-    vector<string> lineElements = {"density", "=", "1.0"};
+    const vector<string> lineElements = {"density", "=", "1.0"};
     _inputFileReader->parseDensity(lineElements);
     EXPECT_EQ(_engine.getSimulationBox().getDensity(), 1.0);
 }
@@ -15,5 +15,5 @@ TEST_F(TestInputFileReader, testParseDensity)
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

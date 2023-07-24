@@ -12,7 +12,7 @@ class TestMolecule : public ::testing::Test
     virtual void SetUp()
     {
         _molecule = new simulationBox::Molecule();
-        _molecule->setExternalAtomTypes({1, 2, 3});
+        _molecule->setExternalAtomTypes({1, 2, 2});
 
         _molecule->addAtomPosition(vector3d::Vec3D(0.0, 0.0, 0.0));
         _molecule->addAtomPosition(vector3d::Vec3D(1.0, 0.0, 0.0));

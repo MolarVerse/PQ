@@ -37,7 +37,7 @@ class simulationBox::Box
   public:
     double calculateVolume();
 
-    vector3d::Vec3D calculateBoxDimensionsFromDensity() const;
+    vector3d::Vec3D calculateBoxDimensionsFromDensity();
 
     void applyPBC(vector3d::Vec3D &) const;
     void scaleBox(const vector3d::Vec3D &);

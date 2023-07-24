@@ -68,6 +68,7 @@ void ResetKinetics::resetTemperature(PhysicalData &physicalData, simulationBox::
     const auto temperature = physicalData.getTemperature();
     const auto lambda      = sqrt(_targetTemperature / temperature);
 
+    // simBox.scaleVelocities(lambda);
     for (auto &molecule : simBox.getMolecules())
         molecule.scaleVelocities(lambda);
 }

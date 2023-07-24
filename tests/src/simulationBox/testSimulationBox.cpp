@@ -1,5 +1,7 @@
 #include "testSimulationBox.hpp"
 
+#include "exceptions.hpp"
+
 TEST_F(TestSimulationBox, resizeGuff)
 {
     _simulationBox->resizeGuff(2);
@@ -36,7 +38,7 @@ TEST_F(TestSimulationBox, numberOfAtoms) { EXPECT_EQ(_simulationBox->getNumberOf
 TEST_F(TestSimulationBox, calculateDegreesOfFreedom)
 {
     _simulationBox->calculateDegreesOfFreedom();
-    EXPECT_EQ(_simulationBox->getDegreesOfFreedom(), 15);
+    EXPECT_EQ(_simulationBox->getDegreesOfFreedom(), 12);
 }
 
 TEST_F(TestSimulationBox, centerOfMassOfMolecules)
@@ -49,8 +51,16 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
     EXPECT_EQ(molecules[1].getCenterOfMass(), vector3d::Vec3D(2 / 3.0, 0.0, 0.0));
 }
 
+TEST_F(TestSimulationBox, findMoleculeType)
+{
+    const auto molecule = _simulationBox->findMoleculeType(1);
+    EXPECT_EQ(molecule.getMoltype(), 1);
+
+    EXPECT_THROW(_simulationBox->findMoleculeType(3), customException::RstFileException);
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

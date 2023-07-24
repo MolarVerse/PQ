@@ -2,8 +2,6 @@
 
 using namespace std;
 
-TEST_F(TestMolecule, numberOfAtomTypes) { EXPECT_EQ(_molecule->getNumberOfAtomTypes(), 3); }
-
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
     const vector3d::Vec3D box          = {10.0, 10.0, 10.0};
@@ -74,6 +72,8 @@ TEST_F(TestMolecule, setAtomForceToZero)
     EXPECT_EQ(_molecule->getAtomForce(1), vector3d::Vec3D());
     EXPECT_EQ(_molecule->getAtomForce(2), vector3d::Vec3D());
 }
+
+TEST_F(TestMolecule, getNumberOfAtomTypes) { EXPECT_EQ(_molecule->getNumberOfAtomTypes(), 2); }
 
 int main(int argc, char **argv)
 {

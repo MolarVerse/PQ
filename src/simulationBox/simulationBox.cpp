@@ -2,6 +2,8 @@
 
 #include "exceptions.hpp"
 
+#include <ranges>
+
 using namespace std;
 using namespace simulationBox;
 using namespace customException;
@@ -81,12 +83,9 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms)
  */
 size_t SimulationBox::getNumberOfAtoms() const
 {
-    size_t numberOfParticles = 0;
+    auto accumulateFunc = [](size_t sum, const Molecule &molecule) { return sum + molecule.getNumberOfAtoms(); };
 
-    for (const auto &molecule : _molecules)
-        numberOfParticles += molecule.getNumberOfAtoms();
-
-    return numberOfParticles;
+    return accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc);
 }
 
 /**
@@ -99,10 +98,12 @@ size_t SimulationBox::getNumberOfAtoms() const
  */
 Molecule SimulationBox::findMoleculeType(const size_t moltype) const
 {
-    for (auto &moleculeType : _moleculeTypes)
-        if (moleculeType.getMoltype() == moltype) return moleculeType;
+    auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
 
-    throw RstFileException("Molecule type " + to_string(moltype) + " not found");
+    if (auto molecule = ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
+        return *molecule;
+    else
+        throw RstFileException("Molecule type " + to_string(moltype) + " not found");
 }
 
 /**
@@ -113,8 +114,9 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
  */
 void SimulationBox::calculateDegreesOfFreedom()
 {
-    for (const auto &molecule : _molecules)
-        _degreesOfFreedom += molecule.getNumberOfAtoms() * 3;
+    auto accumulateFunc = [](size_t sum, const Molecule &molecule) { return sum + molecule.getDegreesOfFreedom(); };
+
+    _degreesOfFreedom = accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc) - 3;
 }
 
 /**
@@ -123,6 +125,5 @@ void SimulationBox::calculateDegreesOfFreedom()
  */
 void SimulationBox::calculateCenterOfMassMolecules()
 {
-    for (auto &molecule : _molecules)
-        molecule.calculateCenterOfMass(_box.getBoxDimensions());
+    ranges::for_each(_molecules, [&_box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(_box.getBoxDimensions()); });
 }

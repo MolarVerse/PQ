@@ -18,27 +18,26 @@ class TestSimulationBox : public ::testing::Test
 
         _molecule1.setNumberOfAtoms(3);
         _molecule2.setNumberOfAtoms(2);
-
         _molecule1.addAtomPosition(vector3d::Vec3D(0.0, 0.0, 0.0));
         _molecule1.addAtomPosition(vector3d::Vec3D(1.0, 0.0, 0.0));
         _molecule1.addAtomPosition(vector3d::Vec3D(0.0, 1.0, 0.0));
-
         _molecule1.addAtomMass(1.0);
         _molecule1.addAtomMass(2.0);
         _molecule1.addAtomMass(3.0);
-
         _molecule1.setMolMass(6.0);
+        _molecule1.setMoltype(1);
 
         _molecule2.addAtomPosition(vector3d::Vec3D(0.0, 0.0, 0.0));
         _molecule2.addAtomPosition(vector3d::Vec3D(1.0, 0.0, 0.0));
-
         _molecule2.addAtomMass(1.0);
         _molecule2.addAtomMass(2.0);
-
         _molecule2.setMolMass(3.0);
+        _molecule2.setMoltype(2);
 
         _simulationBox->addMolecule(_molecule1);
         _simulationBox->addMolecule(_molecule2);
+        _simulationBox->addMoleculeType(_molecule1);
+        _simulationBox->addMoleculeType(_molecule2);
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
     }

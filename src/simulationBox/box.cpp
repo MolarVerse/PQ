@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -24,8 +25,8 @@ using namespace customException;
  */
 void Box::setBoxDimensions(const Vec3D &boxDimensions)
 {
-    for (auto &dimension : boxDimensions)
-        if (dimension < 0.0) throw RstFileException("Box dimensions must be positive - dimension = " + to_string(dimension));
+    if (ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
+        throw RstFileException("All box dimensions must be positive");
 
     _boxDimensions = boxDimensions;
 }
@@ -39,9 +40,8 @@ void Box::setBoxDimensions(const Vec3D &boxDimensions)
  */
 void Box::setBoxAngles(const Vec3D &boxAngles)
 {
-    for (auto &angle : boxAngles)
-        if ((angle < 0.0) || (angle > 90.0))
-            throw RstFileException("Box angles must be positive and smaller than 90° - angle = " + to_string(angle));
+    if (ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
+        throw RstFileException("Box angles must be positive and smaller than 90°");
 
     _boxAngles = boxAngles;
 }
@@ -93,12 +93,11 @@ double Box::calculateVolume()
  *
  * @return vector<double>
  */
-Vec3D Box::calculateBoxDimensionsFromDensity() const
+Vec3D Box::calculateBoxDimensionsFromDensity()
 {
-    const double volume     = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
-    const double cellLenght = ::cbrt(volume);
+    _volume = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
 
-    return Vec3D(cellLenght, cellLenght, cellLenght);
+    return Vec3D(::cbrt(_volume));
 }
 
 /**

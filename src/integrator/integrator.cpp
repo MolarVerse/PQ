@@ -32,18 +32,18 @@ void Integrator::integrateVelocities(Molecule &molecule, const size_t i) const
  * @brief integrates the positions of a single atom
  *
  * @param molecule
- * @param i
+ * @param index
  * @param simBox
  */
-void Integrator::integratePositions(Molecule &molecule, const size_t i, const SimulationBox &simBox) const
+void Integrator::integratePositions(Molecule &molecule, const size_t index, const SimulationBox &simBox) const
 {
-    auto       positions  = molecule.getAtomPosition(i);
-    const auto velocities = molecule.getAtomVelocity(i);
+    auto       positions  = molecule.getAtomPosition(index);
+    const auto velocities = molecule.getAtomVelocity(index);
 
     positions += _dt * velocities * _FS_TO_S_;
     applyPBC(simBox, positions);
 
-    molecule.setAtomPositions(i, positions);
+    molecule.setAtomPositions(index, positions);
 }
 
 /**
