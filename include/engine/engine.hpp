@@ -3,6 +3,7 @@
 #define _ENGINE_HPP_
 
 #include "celllist.hpp"
+#include "constraints.hpp"
 #include "energyOutput.hpp"
 #include "infoOutput.hpp"
 #include "integrator.hpp"
@@ -46,6 +47,7 @@ class engine::Engine
     simulationBox::SimulationBox _simulationBox;
     physicalData::PhysicalData   _physicalData;
     physicalData::PhysicalData   _averagePhysicalData;
+    constraints::Constraints     _constraints;
 
   public:
     std::unique_ptr<integrator::Integrator>       _integrator    = std::make_unique<integrator::VelocityVerlet>();
@@ -78,6 +80,7 @@ class engine::Engine
     physicalData::PhysicalData   &getAveragePhysicalData() { return _averagePhysicalData; }
     virial::Virial               &getVirial() { return *_virial; }
     integrator::Integrator       &getIntegrator() { return *_integrator; }
+    constraints::Constraints     &getConstraints() { return _constraints; }
 };
 
 #endif   // _ENGINE_HPP_

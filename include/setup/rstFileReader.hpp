@@ -7,6 +7,7 @@
 #include "simulationBox.hpp"
 
 #include <fstream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -25,18 +26,18 @@ namespace setup
 class setup::RstFileReader
 {
   private:
-    const std::string             _filename;
-    std::ifstream                 _fp;
-    engine::Engine               &_engine;
-    std::vector<RstFileSection *> _sections;
-    RstFileSection               *_atomSection = new AtomSection;
+    const std::string _filename;
+    std::ifstream     _fp;
+    engine::Engine   &_engine;
+
+    std::unique_ptr<setup::RstFileSection>              _atomSection = std::make_unique<AtomSection>();
+    std::vector<std::unique_ptr<setup::RstFileSection>> _sections;
 
   public:
     RstFileReader(const std::string &, engine::Engine &);
-    ~RstFileReader();
 
-    void            read();
-    RstFileSection *determineSection(std::vector<std::string> &);
+    void                   read();
+    setup::RstFileSection *determineSection(std::vector<std::string> &);
 };
 
 #endif

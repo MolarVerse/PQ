@@ -37,8 +37,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
 
     addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
     addKeyword(string("moldescriptor_file"), &InputFileReader::parseMoldescriptorFilename, false);
-    addKeyword(
-        string("guff_path"), &InputFileReader::parseGuffPath, false);   // default is current directory (not backword compatible)
+    addKeyword(string("guff_path"), &InputFileReader::parseGuffPath, false);   // default is current dir (not backword compatible)
 
     addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
     addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
@@ -73,6 +72,10 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("fscale"), &InputFileReader::parseFScale, false);
     addKeyword(string("nreset"), &InputFileReader::parseNReset, false);
     addKeyword(string("freset"), &InputFileReader::parseFReset, false);
+
+    addKeyword(string("shake"), &InputFileReader::parseShakeActivated, false);
+
+    addKeyword(string("topology_file"), &InputFileReader::parseTopologyFilename, false);
 }
 
 /**

@@ -20,7 +20,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * config::_PRESSURE_FACTOR_);
 }
 
-TEST_F(TestManostat, testApplyManostat)
+TEST_F(TestManostat, testApplyBerendsenManostat)
 {
     _box->setBoxDimensions({2.0, 2.0, 2.0});
     auto box_old = _box->getBoxDimensions();
@@ -40,6 +40,13 @@ TEST_F(TestManostat, testApplyManostat)
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
     EXPECT_NE(box_old, box_new);
     EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), vector3d::Vec3D(1.0, 0.0, 0.0));
+}
+
+TEST_F(TestManostat, applyNoneManostat)
+{
+    _manostat->applyManostat(*_box, *_data);
+
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
 }
 
 int main(int argc, char **argv)

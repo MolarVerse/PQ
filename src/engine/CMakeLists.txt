@@ -23,6 +23,7 @@ target_link_libraries(engine
     physicalData
     virial
     resetKinetics
+    constraints
 )
 
 install(TARGETS engine

@@ -99,6 +99,10 @@ class setup::InputFileReader
     void parseNReset(const std::vector<std::string> &);
     void parseFReset(const std::vector<std::string> &);
 
+    void parseShakeActivated(const std::vector<std::string> &);
+
+    void parseTopologyFilename(const std::vector<std::string> &);
+
     void addKeyword(const std::string &, parseFunc, bool);
 
     void process(const std::vector<std::string> &);

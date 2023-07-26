@@ -70,3 +70,15 @@ vector<string> StringUtilities::splitString(const string &line)
 
     return lineElements;
 }
+
+/**
+ * @brief returns a copy of a string all lower case
+ *
+ * @param mystring
+ * @return string
+ */
+string StringUtilities::to_lower_copy(string mystring)
+{
+    ranges::for_each(mystring, [](char &c) { c = tolower(c); });
+    return mystring;
+}

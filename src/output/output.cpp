@@ -43,15 +43,10 @@ void Output::setFilename(const string_view &filename)
     _filename = filename;
 #endif
 
-    if (_filename.empty())
-    {
-        throw InputFileException("Filename cannot be empty");
-    }
+    if (_filename.empty()) throw InputFileException("Filename cannot be empty");
 
     if (const ifstream fp(_filename.c_str()); fp.good())
-    {
         throw InputFileException("File already exists - filename = " + string(_filename));
-    }
 
     openFile();
 }

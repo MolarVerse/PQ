@@ -31,6 +31,7 @@ class settings::Settings
     std::string _startFilename;
     std::string _moldescriptorFilename = "moldescriptor.dat";   // for backward compatibility
     std::string _guffPath              = ".";                   // not backward compatible
+    std::string _topologyFilename      = "";
 
     std::string _jobtype;
 
@@ -50,6 +51,8 @@ class settings::Settings
     std::string getStartFilename() const { return _startFilename; }
     std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
     std::string getGuffPath() const { return _guffPath; }
+    std::string getTopologyFilename() const { return _topologyFilename; }
+
     std::string getJobtype() const { return _jobtype; }
     std::string getThermostat() const { return _thermostat.second; }
     std::string getManostat() const { return _manostat.second; }
@@ -75,6 +78,8 @@ class settings::Settings
     void setStartFilename(const std::string_view startFilename) { _startFilename = startFilename; }
     void setMoldescriptorFilename(const std::string_view filename) { _moldescriptorFilename = filename; }
     void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; }
+    void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
+
     void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
     void setThermostat(const std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); }
     void setTemperature(const double temperature);

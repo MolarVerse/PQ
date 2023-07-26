@@ -107,6 +107,28 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
 }
 
 /**
+ * @brief find molecule by atom index
+ *
+ * @details return a pair of a pointer to the molecule and the index of the atom in the molecule
+ *
+ * @param atomIndex
+ * @return pair<Molecule *, size_t>
+ */
+pair<const Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t atomIndex) const
+{
+    size_t sum = 0;
+
+    for (auto &molecule : _molecules)
+    {
+        sum += molecule.getNumberOfAtoms();
+
+        if (sum >= atomIndex) return make_pair(&molecule, sum - molecule.getNumberOfAtoms() - 1);
+    }
+
+    throw UserInputException("Atom index " + to_string(atomIndex) + " out of range - total number of atoms: " + to_string(sum));
+}
+
+/**
  * @brief calculate degrees of freedom
  *
  * TODO: maybe -3 Ncom

@@ -16,16 +16,9 @@ using namespace customException;
 
 RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _fp(filename), _engine(engine)
 {
-    _sections.push_back(new BoxSection);
-    _sections.push_back(new NoseHooverSection);
-    _sections.push_back(new StepCountSection);
-}
-RstFileReader::~RstFileReader()
-{
-    for (const RstFileSection *section : _sections)
-        delete section;
-
-    delete _atomSection;
+    _sections.push_back(make_unique<BoxSection>());
+    _sections.push_back(make_unique<NoseHooverSection>());
+    _sections.push_back(make_unique<StepCountSection>());
 }
 
 /**
@@ -36,12 +29,10 @@ RstFileReader::~RstFileReader()
  */
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
-    for (RstFileSection *section : _sections)
-    {
-        if (section->keyword() == boost::algorithm::to_lower_copy(lineElements[0])) return section;
-    }
+    for (auto &section : _sections)
+        if (section->keyword() == boost::algorithm::to_lower_copy(lineElements[0])) return section.get();
 
-    return _atomSection;
+    return _atomSection.get();
 }
 
 /**
@@ -62,12 +53,17 @@ void RstFileReader::read()
         line         = removeComments(line, "#");
         lineElements = splitString(line);
 
-        if (lineElements.empty()) continue;
+        if (lineElements.empty())
+        {
+            lineNumber++;
+            continue;
+        }
 
-        auto *section        = determineSection(lineElements);
+        auto section         = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
         section->_fp         = &_fp;
         section->process(lineElements, _engine);
+        lineNumber = section->_lineNumber;
     }
 }
 

@@ -110,8 +110,6 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
 
         if (atomCounter == molecule->getNumberOfAtoms()) break;
 
-        // TODO: put the next for statements into a function
-
         checkAtomLine(lineElements, line, *molecule);
 
         while (lineElements.empty())
@@ -123,6 +121,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
             throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 12 or 21 elements");
 
         moltype = stoul(lineElements[2]);
+
+        _lineNumber++;
     }
 
     engine.getSimulationBox().addMolecule(*molecule);
