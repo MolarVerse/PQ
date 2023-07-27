@@ -45,7 +45,8 @@ void TopologyReader::read()
 
     if (_filename.empty()) throw customException::InputFileException("Topology file needed for requested simulation setup");
 
-    if (_fp.fail()) throw customException::InputFileException("Topolgoy file \"" + _filename + "\"" + " File not found");
+    if (!filesystem::exists(_filename))
+        throw customException::InputFileException("Topolgoy file \"" + _filename + "\"" + " File not found");
 
     while (getline(_fp, line))
     {
@@ -59,6 +60,8 @@ void TopologyReader::read()
         }
 
         auto section = determineSection(lineElements);
+        cout << "HERE" << endl;
+        cout << lineElements[0] << endl;
         section->setLineNumber(lineNumber++);
         section->setFp(&_fp);
         section->process(lineElements, _engine);
