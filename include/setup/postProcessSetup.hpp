@@ -41,6 +41,10 @@ class setup::PostProcessSetup
     void setupCellList();
     void setupPotential();
     void setupTimestep();
+    void setupThermostat();
+    void setupManostat();
+    void setupResetKinetics();
+    void setupShake();
 };
 
 #endif

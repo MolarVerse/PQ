@@ -16,6 +16,9 @@ using namespace potential;
 using namespace engine;
 using namespace config;
 using namespace customException;
+using namespace thermostat;
+using namespace manostat;
+using namespace resetKinetics;
 
 /**
  * @brief Setup post processing
@@ -42,14 +45,14 @@ void PostProcessSetup::setup()
     resizeAtomShiftForces();
 
     checkBoxSettings();
-
     checkRcCutoff();
 
+    setupThermostat();
+    setupManostat();
+    setupResetKinetics();
     setupCellList();
     setupPotential();
-
     setupTimestep();
-
     setupShake();
 }
 
@@ -267,7 +270,100 @@ void PostProcessSetup::setupPotential()
 void PostProcessSetup::setupTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }
 
 /**
+ * @brief setup thermostat
+ *
+ * TODO: include warnings if value set but not used
+ *
+ */
+void PostProcessSetup::setupThermostat()
+{
+    if (_engine.getSettings().getThermostat() == "berendsen")
+    {
+        if (!_engine.getSettings().getTemperatureSet()) throw InputFileException("Temperature not set for Berendsen thermostat");
+
+        if (!_engine.getSettings().getRelaxationTimeSet())
+        {
+            _engine._stdoutOutput->writeRelaxationTimeThermostatWarning();
+            _engine._logOutput->writeRelaxationTimeThermostatWarning();
+        }
+
+        _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(),
+                                                               _engine.getSettings().getRelaxationTime() * _PS_TO_FS_);
+    }
+    else
+    {
+        // warnings if values set but not used
+    }
+
+    _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
+}
+
+/**
+ * @brief setup manostat
+ *
+ * TODO: include warnings if value set but not used
+ *
+ */
+void PostProcessSetup::setupManostat()
+{
+    if (_engine.getSettings().getManostat() == "berendsen")
+    {
+        if (!_engine.getSettings().getPressureSet()) throw InputFileException("Pressure not set for Berendsen manostat");
+
+        if (!_engine.getSettings().getTauManostatSet())
+        {
+            _engine._stdoutOutput->writeRelaxationTimeManostatWarning();
+            _engine._logOutput->writeRelaxationTimeManostatWarning();
+        }
+
+        _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(),
+                                                           _engine.getSettings().getTauManostat() * _PS_TO_FS_);
+    }
+    else
+    {
+        // warnings if values set but not used
+    }
+
+    _engine._manostat->setTimestep(_engine.getTimings().getTimestep());
+}
+
+/**
+ * @brief setup nscale, fscale, nreset, freset
+ *
+ */
+void PostProcessSetup::setupResetKinetics()
+{
+    auto nScale = _engine.getSettings().getNScale();
+    auto fScale = _engine.getSettings().getFScale();
+    auto nReset = _engine.getSettings().getNReset();
+    auto fReset = _engine.getSettings().getFReset();
+
+    const auto targetTemperature = _engine.getSettings().getTemperature();
+
+    const auto numberOfSteps = _engine.getTimings().getNumberOfSteps();
+
+    if (nScale != 0 || fScale != 0)
+    {
+        if (fScale == 0) fScale = numberOfSteps + 1;
+        if (fReset == 0) fReset = numberOfSteps + 1;
+        _engine._resetKinetics = make_unique<ResetTemperature>(nScale, fScale, nReset, fReset, targetTemperature);
+    }
+    else if (nReset != 0 || fReset != 0)
+    {
+        fScale = numberOfSteps + 1;
+        if (fReset == 0) fReset = numberOfSteps + 1;
+        _engine._resetKinetics = make_unique<ResetMomentum>(nScale, fScale, nReset, fReset, targetTemperature);
+    }
+}
+
+/**
  * @brief sets shake data in constraints object
  *
  */
-void PostProcessSetup::setupShake() {}
+void PostProcessSetup::setupShake()
+{
+    _engine.getConstraints().setShakeMaxIter(_engine.getSettings().getShakeMaxIter());
+    _engine.getConstraints().setShakeTolerance(_engine.getSettings().getShakeTolerance());
+    _engine.getConstraints().setRattleMaxIter(_engine.getSettings().getRattleMaxIter());
+    _engine.getConstraints().setRattleTolerance(_engine.getSettings().getRattleTolerance());
+}

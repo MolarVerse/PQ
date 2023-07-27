@@ -10,7 +10,7 @@
 namespace setup
 {
     class TopologyReader;
-    void readTopologyFile(const std::string &, engine::Engine &);
+    void readTopologyFile(engine::Engine &);
 
 }   // namespace setup
 
@@ -38,17 +38,5 @@ class setup::TopologyReader
 
     void setFilename(const std::string &filename) { _filename = filename; }
 };
-
-/**
- * @brief constructs a TopologyReader and reads topology file
- *
- * @param filename
- * @param engine
- */
-void setup::readTopologyFile(const std::string &filename, engine::Engine &engine)
-{
-    TopologyReader topologyReader(filename, engine);
-    topologyReader.read();
-}
 
 #endif   // _TOPOLOGY_READER_HPP_

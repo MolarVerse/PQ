@@ -86,3 +86,15 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }
+
+/**
+ * @brief constructs a TopologyReader and reads topology file
+ *
+ * @param filename
+ * @param engine
+ */
+void setup::readTopologyFile(engine::Engine &engine)
+{
+    TopologyReader topologyReader(engine.getSettings().getTopologyFilename(), engine);
+    topologyReader.read();
+}

@@ -50,7 +50,11 @@ TEST_F(TestTopologyReader, read)
  *
  * @note this test does not check any logic, but it is here for completeness
  */
-TEST_F(TestTopologyReader, readTopologyFile) { EXPECT_NO_THROW(setup::readTopologyFile("topology.top", *_engine)); }
+TEST_F(TestTopologyReader, readTopologyFile)
+{
+    _engine->getSettings().setTopologyFilename("topology.top");
+    setup::readTopologyFile(*_engine);
+}
 
 int main(int argc, char **argv)
 {

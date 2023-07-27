@@ -118,10 +118,6 @@ class setup::InputFileReader
     void setKeywordCount(const std::string &keyword, const int count) { _keywordCountMap[keyword] = count; }
 
     bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; }
-
-    void setupThermostat();
-    void setupManostat();
-    void setupResetKinetics();
 };
 
 #endif

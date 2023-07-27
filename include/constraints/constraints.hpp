@@ -36,6 +36,11 @@ class constraints::Constraints
 
     const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
 
+    size_t getShakeMaxIter() const { return _shakeMaxIter; }
+    size_t getRattleMaxIter() const { return _rattleMaxIter; }
+    double getShakeTolerance() const { return _shakeTolerance; }
+    double getRattleTolerance() const { return _rattleTolerance; }
+
     void setShakeMaxIter(size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
     void setRattleMaxIter(size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
     void setShakeTolerance(double shakeTolerance) { _shakeTolerance = shakeTolerance; }

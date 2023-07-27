@@ -5,6 +5,7 @@
 #include "moldescriptorReader.hpp"
 #include "postProcessSetup.hpp"
 #include "rstFileReader.hpp"
+#include "topologyReader.hpp"
 
 #include <iostream>
 
@@ -28,9 +29,14 @@ void setup::setupEngine(const string &filename, Engine &engine)
     cout << "Reading rst file..." << endl;
     readRstFile(engine);
 
+    cout << "Reading topology file..." << endl;
+    setup::readTopologyFile(engine);
+
     cout << "Post processing setup..." << endl;
     postProcessSetup(engine);
 
     cout << "Reading guff.dat..." << endl;
     setup::readGuffDat(engine);
+
+    cout << "Setup complete!" << endl;
 }
