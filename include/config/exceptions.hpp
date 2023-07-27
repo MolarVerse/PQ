@@ -21,6 +21,7 @@ namespace customException
     class MolDescriptorException;
     class UserInputExceptionWarning;
     class GuffDatException;
+    class TopologyException;
 }   // namespace customException
 
 /**
@@ -116,6 +117,19 @@ class customException::UserInputExceptionWarning : public customException::Custo
  *
  */
 class customException::GuffDatException : public customException::CustomException
+{
+  public:
+    using customException::CustomException::CustomException;
+
+    const char *what() const throw() override;
+};
+
+/**
+ * @class TopologyException inherits from CustomException
+ *
+ * @brief Exception for topology file errors
+ */
+class customException::TopologyException : public customException::CustomException
 {
   public:
     using customException::CustomException::CustomException;

@@ -9,6 +9,7 @@ set(source_files
     testPostProcessSetup.cpp
     testInputFileReader.cpp
     testTopologyReader.cpp
+    testShakeSection.cpp
 )
 
 foreach(source_file ${source_files})

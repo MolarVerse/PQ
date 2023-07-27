@@ -16,6 +16,8 @@ using namespace setup;
 void ShakeSection::process(vector<string> &, engine::Engine &engine)
 {
     string line;
+    auto   endedNormal = false;
+
     while (getline(*_fp, line))
     {
         line                    = StringUtilities::removeComments(line, "#");
@@ -27,14 +29,25 @@ void ShakeSection::process(vector<string> &, engine::Engine &engine)
             continue;
         }
 
+        if (StringUtilities::to_lower_copy(lineElements[0]) == "end")
+        {
+            _lineNumber++;
+            endedNormal = true;
+            break;
+        }
+
         if (lineElements.size() != 4)
-            throw customException::InputFileException("Wrong number of arguments in topology file shake section at line " +
-                                                      to_string(_lineNumber) + " - number of elements has to be 4!");
+            throw customException::TopologyException("Wrong number of arguments in topology file shake section at line " +
+                                                     to_string(_lineNumber) + " - number of elements has to be 4!");
 
         auto atom1      = stoul(lineElements[0]);
         auto atom2      = stoul(lineElements[1]);
         auto bondLength = stod(lineElements[2]);
         // auto linker = lineElements[3];
+
+        if (atom1 == atom2)
+            throw customException::TopologyException("Topology file shake section at line " + to_string(_lineNumber) +
+                                                     " - atoms cannot be the same!");
 
         auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
         auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -45,4 +58,6 @@ void ShakeSection::process(vector<string> &, engine::Engine &engine)
 
         _lineNumber++;
     }
+
+    if (!endedNormal) throw customException::TopologyException("Topology file shake section does not end with 'end' keyword!");
 }

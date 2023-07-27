@@ -59,6 +59,19 @@ TEST_F(TestSimulationBox, findMoleculeType)
     EXPECT_THROW(_simulationBox->findMoleculeType(3), customException::RstFileException);
 }
 
+TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
+{
+    const auto &[molecule1, atomIndex1] = _simulationBox->findMoleculeByAtomIndex(3);
+    EXPECT_EQ(molecule1, &(_simulationBox->getMolecules()[0]));
+    EXPECT_EQ(atomIndex1, 2);
+
+    const auto &[molecule2, atomIndex2] = _simulationBox->findMoleculeByAtomIndex(4);
+    EXPECT_EQ(molecule2, &(_simulationBox->getMolecules()[1]));
+    EXPECT_EQ(atomIndex2, 0);
+
+    EXPECT_THROW(_simulationBox->findMoleculeByAtomIndex(6), customException::UserInputException);
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

@@ -122,7 +122,7 @@ pair<const Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size
     {
         sum += molecule.getNumberOfAtoms();
 
-        if (sum >= atomIndex) return make_pair(&molecule, sum - molecule.getNumberOfAtoms() - 1);
+        if (sum >= atomIndex) return make_pair(&molecule, atomIndex - (sum - molecule.getNumberOfAtoms()) - 1);
     }
 
     throw UserInputException("Atom index " + to_string(atomIndex) + " out of range - total number of atoms: " + to_string(sum));

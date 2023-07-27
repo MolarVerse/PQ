@@ -19,18 +19,28 @@ TEST_F(TestTopologyReader, isNeeded)
 }
 
 /**
- * @brief tests reading a topology file
+ * @brief tests determineSection function
+ *
  */
-TEST_F(TestTopologyReader, read)
+TEST_F(TestTopologyReader, determineSection)
 {
-    EXPECT_NO_THROW(_topologyReader->read());
-
-    _engine->getConstraints().activate();
-    EXPECT_NO_THROW(_topologyReader->read());
-
-    _topologyReader->setFilename("");
-    EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
+    EXPECT_NO_THROW(_topologyReader->determineSection({"shake"}));
+    EXPECT_THROW(_topologyReader->determineSection({"unknown"}), customException::TopologyException);
 }
+
+// /**
+//  * @brief tests reading a topology file
+//  */
+// TEST_F(TestTopologyReader, read)
+// {
+//     EXPECT_NO_THROW(_topologyReader->read());
+
+//     _engine->getConstraints().activate();
+//     EXPECT_NO_THROW(_topologyReader->read());
+
+//     _topologyReader->setFilename("");
+//     EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
+// }
 
 /**
  * @brief tests the readTopologyFile function

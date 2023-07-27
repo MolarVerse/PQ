@@ -27,6 +27,8 @@ class constraints::Constraints
     bool isActivated() const { return _activated; }
 
     void addBondConstraint(BondConstraint bondConstraint) { _bondConstraints.push_back(bondConstraint); }
+
+    const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
 };
 
 #endif   // _CONSTRAINTS_HPP_

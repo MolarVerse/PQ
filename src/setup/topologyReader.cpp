@@ -81,5 +81,5 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
             return (*section).get();
         };
 
-    throw customException::InputFileException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
+    throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }
