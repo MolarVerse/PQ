@@ -16,7 +16,7 @@ using namespace StringUtilities;
 TopologyReader::TopologyReader(const string &filename, engine::Engine &engine)
     : _filename(filename), _fp(filename), _engine(engine)
 {
-    _topologySections.push_back(make_unique<ShakeSection>());
+    _topologySections.push_back(new ShakeSection());
 }
 
 /**
@@ -60,10 +60,10 @@ void TopologyReader::read()
         }
 
         auto section = determineSection(lineElements);
-        cout << "HERE" << endl;
-        cout << lineElements[0] << endl;
         section->setLineNumber(lineNumber++);
+        cout << "Hello" << endl;
         section->setFp(&_fp);
+        // cout << "Processing topology section \"" << section->keyword() << "\"\n";
         section->process(lineElements, _engine);
         lineNumber = section->getLineNumber();
     }
@@ -81,7 +81,7 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
         if ((*section)->keyword() == to_lower_copy(lineElements[0]))
         {
             _topologySections.erase(section);
-            return (*section).get();
+            return *section;
         };
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");

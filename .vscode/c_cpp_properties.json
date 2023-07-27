@@ -13,7 +13,7 @@
                 ]
             },
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/home/jag/software/gcc-13.1.0/install/bin/g++",
             "cStandard": "c17",
             "cppStandard": "c++23",
             "intelliSenseMode": "linux-gcc-x64",

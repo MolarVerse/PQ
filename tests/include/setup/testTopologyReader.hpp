@@ -16,7 +16,17 @@ class TestTopologyReader : public ::testing::Test
 
     void SetUp() override
     {
-        _engine         = new engine::Engine();
+        auto molecule1 = simulationBox::Molecule();
+        molecule1.setNumberOfAtoms(1);
+
+        auto molecule2 = simulationBox::Molecule();
+        molecule2.setNumberOfAtoms(2);
+
+        _engine = new engine::Engine();
+
+        _engine->getSimulationBox().addMolecule(molecule1);
+        _engine->getSimulationBox().addMolecule(molecule2);
+
         _topologyReader = new setup::TopologyReader("data/topologyReader/topology.top", *_engine);
     }
 

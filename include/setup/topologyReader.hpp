@@ -27,14 +27,14 @@ class setup::TopologyReader
     std::ifstream   _fp;
     engine::Engine &_engine;
 
-    std::vector<std::unique_ptr<setup::TopologySection>> _topologySections;
+    std::vector<setup::TopologySection *> _topologySections;
 
   public:
     TopologyReader(const std::string &filename, engine::Engine &engine);
 
-    bool             isNeeded() const;
-    void             read();
-    TopologySection *determineSection(const std::vector<std::string> &);
+    bool                    isNeeded() const;
+    void                    read();
+    setup::TopologySection *determineSection(const std::vector<std::string> &);
 
     void setFilename(const std::string &filename) { _filename = filename; }
 };
