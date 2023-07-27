@@ -49,6 +49,8 @@ void PostProcessSetup::setup()
     setupPotential();
 
     setupTimestep();
+
+    setupShake();
 }
 
 /**
@@ -263,3 +265,9 @@ void PostProcessSetup::setupPotential()
  *
  */
 void PostProcessSetup::setupTimestep() { _engine._integrator->setDt(_engine.getTimings().getTimestep()); }
+
+/**
+ * @brief sets shake data in constraints object
+ *
+ */
+void PostProcessSetup::setupShake() {}

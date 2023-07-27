@@ -23,11 +23,13 @@ namespace settings
 class settings::Settings
 {
   private:
+    // resetKineticsSettings for later setup
     size_t _nScale = 0;
     size_t _fScale = 0;
     size_t _nReset = 0;
     size_t _fReset = 0;
 
+    // filenames and paths for later setup
     std::string _startFilename;
     std::string _moldescriptorFilename = "moldescriptor.dat";   // for backward compatibility
     std::string _guffPath              = ".";                   // not backward compatible
@@ -35,13 +37,21 @@ class settings::Settings
 
     std::string _jobtype;
 
+    // thermostat settings for later setup
     std::pair<bool, std::string> _thermostat;                                    // pair.first = check if thermostat was set
     std::pair<bool, double>      _temperature;
     std::pair<bool, double>      _relaxationTime = std::make_pair(false, 0.1);   // pay attention here default value in ps
 
-    std::pair<bool, std::string> _manostat;                                      // pair.first = check if thermostat was set
+    // manostat settings for later setup
+    std::pair<bool, std::string> _manostat;                                   // pair.first = check if thermostat was set
     std::pair<bool, double>      _pressure;
-    std::pair<bool, double>      _tauManostat = std::make_pair(false, 1.0);      // pay attention here default value in ps
+    std::pair<bool, double>      _tauManostat = std::make_pair(false, 1.0);   // pay attention here default value in ps
+
+    // shake settings for later setup
+    double _shakeTolerance  = 1e-8;
+    size_t _shakeMaxIter    = 20;
+    double _rattleTolerance = 1e-8;
+    size_t _rattleMaxIter   = 20;
 
   public:
     /********************
@@ -54,22 +64,30 @@ class settings::Settings
     std::string getTopologyFilename() const { return _topologyFilename; }
 
     std::string getJobtype() const { return _jobtype; }
+
     std::string getThermostat() const { return _thermostat.second; }
-    std::string getManostat() const { return _manostat.second; }
     bool        getThermostatSet() const { return _thermostat.first; }
-    bool        getTemperatureSet() const { return _temperature.first; }
-    bool        getRelaxationTimeSet() const { return _relaxationTime.first; }
-    bool        getManostatSet() const { return _manostat.first; }
-    bool        getPressureSet() const { return _pressure.first; }
-    bool        getTauManostatSet() const { return _tauManostat.first; }
-    size_t      getNScale() const { return _nScale; }
-    size_t      getFScale() const { return _fScale; }
-    size_t      getNReset() const { return _nReset; }
-    size_t      getFReset() const { return _fReset; }
     double      getTemperature() const { return _temperature.second; }
+    bool        getTemperatureSet() const { return _temperature.first; }
     double      getRelaxationTime() const { return _relaxationTime.second; }
+    bool        getRelaxationTimeSet() const { return _relaxationTime.first; }
+
+    std::string getManostat() const { return _manostat.second; }
+    bool        getManostatSet() const { return _manostat.first; }
     double      getPressure() const { return _pressure.second; }
+    bool        getPressureSet() const { return _pressure.first; }
     double      getTauManostat() const { return _tauManostat.second; }
+    bool        getTauManostatSet() const { return _tauManostat.first; }
+
+    size_t getNScale() const { return _nScale; }
+    size_t getFScale() const { return _fScale; }
+    size_t getNReset() const { return _nReset; }
+    size_t getFReset() const { return _fReset; }
+
+    double getShakeTolerance() const { return _shakeTolerance; }
+    size_t getShakeMaxIter() const { return _shakeMaxIter; }
+    double getRattleTolerance() const { return _rattleTolerance; }
+    size_t getRattleMaxIter() const { return _rattleMaxIter; }
 
     /********************
      * standard setters *
@@ -81,16 +99,24 @@ class settings::Settings
     void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
 
     void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
+
     void setThermostat(const std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); }
     void setTemperature(const double temperature);
     void setRelaxationTime(const double relaxationTime);
+
     void setManostat(const std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
     void setPressure(const double pressure) { _pressure = std::make_pair(true, pressure); }
     void setTauManostat(const double tauManostat);
+
     void setNScale(const size_t nScale) { _nScale = nScale; }
     void setFScale(const size_t fScale) { _fScale = fScale; }
     void setNReset(const size_t nReset) { _nReset = nReset; }
     void setFReset(const size_t fReset) { _fReset = fReset; }
+
+    void setShakeTolerance(const double shakeTolerance) { _shakeTolerance = shakeTolerance; }
+    void setShakeMaxIter(const size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
+    void setRattleTolerance(const double rattleTolerance) { _rattleTolerance = rattleTolerance; }
+    void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
 };
 
 #endif

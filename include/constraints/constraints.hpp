@@ -20,6 +20,12 @@ class constraints::Constraints
   private:
     bool _activated = false;
 
+    size_t _shakeMaxIter;
+    size_t _rattleMaxIter;
+
+    double _shakeTolerance;
+    double _rattleTolerance;
+
     std::vector<BondConstraint> _bondConstraints;
 
   public:
@@ -29,6 +35,11 @@ class constraints::Constraints
     void addBondConstraint(BondConstraint bondConstraint) { _bondConstraints.push_back(bondConstraint); }
 
     const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
+
+    void setShakeMaxIter(size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
+    void setRattleMaxIter(size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
+    void setShakeTolerance(double shakeTolerance) { _shakeTolerance = shakeTolerance; }
+    void setRattleTolerance(double rattleTolerance) { _rattleTolerance = rattleTolerance; }
 };
 
 #endif   // _CONSTRAINTS_HPP_

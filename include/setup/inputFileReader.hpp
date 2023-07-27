@@ -100,6 +100,10 @@ class setup::InputFileReader
     void parseFReset(const std::vector<std::string> &);
 
     void parseShakeActivated(const std::vector<std::string> &);
+    void parseShakeTolerance(const std::vector<std::string> &);
+    void parseShakeIteration(const std::vector<std::string> &);
+    void parseRattleTolerance(const std::vector<std::string> &);
+    void parseRattleIteration(const std::vector<std::string> &);
 
     void parseTopologyFilename(const std::vector<std::string> &);
 

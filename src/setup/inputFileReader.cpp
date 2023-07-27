@@ -74,6 +74,10 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("freset"), &InputFileReader::parseFReset, false);
 
     addKeyword(string("shake"), &InputFileReader::parseShakeActivated, false);
+    addKeyword(string("shake-tolerance"), &InputFileReader::parseShakeTolerance, false);
+    addKeyword(string("shake-iter"), &InputFileReader::parseShakeIteration, false);
+    addKeyword(string("rattle-iter"), &InputFileReader::parseRattleIteration, false);
+    addKeyword(string("rattle-tolerance"), &InputFileReader::parseRattleTolerance, false);
 
     addKeyword(string("topology_file"), &InputFileReader::parseTopologyFilename, false);
 }

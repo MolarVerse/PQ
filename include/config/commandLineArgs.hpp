@@ -13,17 +13,16 @@
  */
 class CommandLineArgs
 {
-private:
-    int _argc;
+  private:
+    int                      _argc;
     std::vector<std::string> _argv;
-    std::string _inputFileName;
+    std::string              _inputFileName;
 
-public:
-    CommandLineArgs(const int, const std::vector<std::string> &);
+  public:
+    CommandLineArgs(const int argc, const std::vector<std::string> &argv) : _argc(argc), _argv(argv){};
 
     void detectFlags();
 
-    // standard getter and setters
     std::string getInputFileName() const { return _inputFileName; }
 };
 
