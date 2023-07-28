@@ -1,17 +1,13 @@
-file(GLOB InputFileParserFiles ${CMAKE_CURRENT_SOURCE_DIR}/inputFileParsing/inputFileParser*.cpp)
-
 add_library(setup
     setup.cpp
-    rstFileReader.cpp
-    rstFileSection.cpp
-    moldescriptorReader.cpp
-    postProcessSetup.cpp
-    guffDatReader.cpp
-    topologyReader.cpp
-    topologySection.cpp
-
-    inputFileReader.cpp
-    ${InputFileParserFiles}
+    simulationBoxSetup.cpp
+    celllistSetup.cpp
+    thermostatSetup.cpp
+    manostatSetup.cpp
+    resetKineticsSetup.cpp
+    potentialSetup.cpp
+    integratorSetup.cpp
+    constraintsSetup.cpp
 )
 
 target_include_directories(setup
@@ -22,6 +18,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
+    readInput
     engine
     utilities
     output

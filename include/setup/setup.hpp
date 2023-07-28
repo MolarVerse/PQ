@@ -17,7 +17,9 @@
  */
 namespace setup
 {
-    void setupEngine(const std::string &, engine::Engine &);
-}
+    void readFiles(const std::string &, engine::Engine &);
+    void setupEngine(engine::Engine &);
+    void setupSimulation(const std::string &, engine::Engine &);
+}   // namespace setup
 
 #endif   // _SETUP_HPP_

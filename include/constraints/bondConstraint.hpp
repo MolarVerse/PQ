@@ -24,7 +24,8 @@ class constraints::BondConstraint
     size_t _atomIndex1;
     size_t _atomIndex2;
 
-    double _bondLength;
+    double          _targetBondLength;
+    vector3d::Vec3D _shakeDistanceRef;
 
   public:
     BondConstraint(const simulationBox::Molecule *molecule1,
@@ -33,13 +34,16 @@ class constraints::BondConstraint
                    size_t                         atomIndex2,
                    double                         bondLength)
         : _molecule1(molecule1), _molecule2(molecule2), _atomIndex1(atomIndex1), _atomIndex2(atomIndex2),
-          _bondLength(bondLength){};
+          _targetBondLength(bondLength){};
+
+    void setShakeDistanceRef(vector3d::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
     const simulationBox::Molecule *getMolecule1() const { return _molecule1; }
     const simulationBox::Molecule *getMolecule2() const { return _molecule2; }
     size_t                         getAtomIndex1() const { return _atomIndex1; }
     size_t                         getAtomIndex2() const { return _atomIndex2; }
-    double                         getBondLength() const { return _bondLength; }
+    double                         getTargetBondLength() const { return _targetBondLength; }
+    vector3d::Vec3D                getShakeDistanceRef() const { return _shakeDistanceRef; }
 };
 
 #endif   // _BOND_CONSTRAINT_HPP_

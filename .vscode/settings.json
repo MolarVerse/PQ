@@ -102,12 +102,12 @@
         "stdfloat": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "clang-diagnostic-error",
         "clang-diagnostic-error",
         "clang-diagnostic-error"
     ],
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
     // "editor.tokenColorCustomizations": {
     //     "comments": "#b743ce",
     // },

@@ -23,7 +23,7 @@ int pimd_qmcf(int argc, char *argv[])
 
     auto engine = Engine();
 
-    setupEngine(commandLineArgs.getInputFileName(), engine);
+    setupSimulation(commandLineArgs.getInputFileName(), engine);
 
     /*
         HERE STARTS THE MAIN LOOP
