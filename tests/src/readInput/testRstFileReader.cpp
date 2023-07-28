@@ -5,7 +5,7 @@
 
 using namespace std;
 using namespace ::testing;
-using namespace setup;
+using namespace readInput;
 using namespace customException;
 
 TEST_F(TestRstFileReader, testDetermineSection)

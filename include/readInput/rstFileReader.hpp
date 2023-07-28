@@ -11,11 +11,11 @@
 #include <string>
 #include <vector>
 
-namespace setup
+namespace readInput
 {
     class RstFileReader;
     void readRstFile(engine::Engine &);
-}   // namespace setup
+}   // namespace readInput
 
 /**
  * @class RstFileReader
@@ -23,21 +23,21 @@ namespace setup
  * @brief Reads a .rst file and returns a SimulationBox object
  *
  */
-class setup::RstFileReader
+class readInput::RstFileReader
 {
   private:
     const std::string _filename;
     std::ifstream     _fp;
     engine::Engine   &_engine;
 
-    std::unique_ptr<setup::RstFileSection>              _atomSection = std::make_unique<AtomSection>();
-    std::vector<std::unique_ptr<setup::RstFileSection>> _sections;
+    std::unique_ptr<readInput::RstFileSection>              _atomSection = std::make_unique<AtomSection>();
+    std::vector<std::unique_ptr<readInput::RstFileSection>> _sections;
 
   public:
     RstFileReader(const std::string &, engine::Engine &);
 
-    void                   read();
-    setup::RstFileSection *determineSection(std::vector<std::string> &);
+    void                       read();
+    readInput::RstFileSection *determineSection(std::vector<std::string> &);
 };
 
 #endif

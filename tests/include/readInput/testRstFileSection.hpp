@@ -14,14 +14,14 @@ class TestBoxSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new setup::BoxSection;
+        _section = new readInput::BoxSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    setup::RstFileSection *_section;
-    engine::Engine         _engine;
+    readInput::RstFileSection *_section;
+    engine::Engine             _engine;
 };
 
 class TestNoseHooverSection : public ::testing::Test
@@ -29,14 +29,14 @@ class TestNoseHooverSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new setup::NoseHooverSection;
+        _section = new readInput::NoseHooverSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    setup::RstFileSection *_section;
-    engine::Engine         _engine;
+    readInput::RstFileSection *_section;
+    engine::Engine             _engine;
 };
 
 class TestStepCountSection : public ::testing::Test
@@ -44,14 +44,14 @@ class TestStepCountSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new setup::StepCountSection;
+        _section = new readInput::StepCountSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    setup::RstFileSection *_section;
-    engine::Engine         _engine;
+    readInput::RstFileSection *_section;
+    engine::Engine             _engine;
 };
 
 class TestAtomSection : public ::testing::Test
@@ -59,12 +59,12 @@ class TestAtomSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new setup::AtomSection;
+        _section = new readInput::AtomSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    setup::RstFileSection *_section;
-    engine::Engine         _engine;
+    readInput::RstFileSection *_section;
+    engine::Engine             _engine;
 };

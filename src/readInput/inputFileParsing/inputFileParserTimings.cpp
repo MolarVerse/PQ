@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 
 /**
  * @brief parse timestep of simulation and set it in timings

@@ -11,7 +11,7 @@
 using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
-using namespace setup;
+using namespace readInput;
 using namespace engine;
 using namespace customException;
 
@@ -20,7 +20,7 @@ using namespace customException;
  *
  * @param engine
  */
-void setup::readGuffDat(Engine &engine)
+void readInput::readGuffDat(Engine &engine)
 {
     GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();

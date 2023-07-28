@@ -4,7 +4,7 @@
 #include "stringUtilities.hpp"
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace StringUtilities;
 
 /**
@@ -93,7 +93,7 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
  * @param filename
  * @param engine
  */
-void setup::readTopologyFile(engine::Engine &engine)
+void readInput::readTopologyFile(engine::Engine &engine)
 {
     TopologyReader topologyReader(engine.getSettings().getTopologyFilename(), engine);
     topologyReader.read();

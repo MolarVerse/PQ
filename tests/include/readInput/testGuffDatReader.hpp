@@ -37,7 +37,7 @@ class TestGuffDatReader : public ::testing::Test
         _engine->_potential->setNonCoulombPotential(potential::GuffNonCoulomb());
         _engine->_potential->setCoulombPotential(potential::GuffCoulomb());
 
-        _guffDatReader = new setup::GuffDatReader(*_engine);
+        _guffDatReader = new readInput::GuffDatReader(*_engine);
     }
 
     void TearDown() override
@@ -46,8 +46,8 @@ class TestGuffDatReader : public ::testing::Test
         delete _engine;
     }
 
-    setup::GuffDatReader *_guffDatReader;
-    engine::Engine       *_engine;
+    readInput::GuffDatReader *_guffDatReader;
+    engine::Engine           *_engine;
 };
 
 #endif   // _TEST_GUFFDATREADER_HPP_

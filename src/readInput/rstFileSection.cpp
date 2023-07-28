@@ -10,7 +10,7 @@
 using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
-using namespace setup;
+using namespace readInput;
 using namespace engine;
 using namespace customException;
 

@@ -12,7 +12,7 @@
 
 using namespace std;
 using namespace StringUtilities;
-using namespace setup;
+using namespace readInput;
 using namespace thermostat;
 using namespace manostat;
 using namespace engine;
@@ -169,7 +169,7 @@ void InputFileReader::read()
  * @param engine
  *
  */
-void setup::readInputFile(const string &filename, Engine &engine)
+void readInput::readInputFile(const string &filename, Engine &engine)
 {
     InputFileReader inputFileReader(filename, engine);
     inputFileReader.read();

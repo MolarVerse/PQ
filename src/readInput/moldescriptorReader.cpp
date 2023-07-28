@@ -11,7 +11,7 @@
 using namespace std;
 using namespace StringUtilities;
 using namespace simulationBox;
-using namespace setup;
+using namespace readInput;
 using namespace engine;
 using namespace customException;
 
@@ -35,7 +35,7 @@ MoldescriptorReader::MoldescriptorReader(Engine &engine)
  *
  * @param engine
  */
-void setup::readMolDescriptor(Engine &engine)
+void readInput::readMolDescriptor(Engine &engine)
 {
     MoldescriptorReader reader(engine);
     reader.read();

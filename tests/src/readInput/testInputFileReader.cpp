@@ -6,7 +6,7 @@
 #include <gmock/gmock.h>
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace StringUtilities;
 using namespace ::testing;
 using namespace customException;

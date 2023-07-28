@@ -5,7 +5,7 @@
 #include "stringUtilities.hpp"
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 
 /**
  * @brief processes the shake section of the topology file

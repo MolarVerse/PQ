@@ -18,7 +18,7 @@ class TestInputFileReader : public ::testing::Test
     void SetUp() override
     {
         _engine          = engine::Engine();
-        _inputFileReader = new setup::InputFileReader("input.in", _engine);
+        _inputFileReader = new readInput::InputFileReader("input.in", _engine);
     }
 
     void TearDown() override
@@ -29,8 +29,8 @@ class TestInputFileReader : public ::testing::Test
 
     std::string _filename = "";
 
-    engine::Engine          _engine;
-    setup::InputFileReader *_inputFileReader;
+    engine::Engine              _engine;
+    readInput::InputFileReader *_inputFileReader;
 
     void remove_file()
     {

@@ -2,7 +2,7 @@
 #include "inputFileReader.hpp"
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace customException;
 
 /**

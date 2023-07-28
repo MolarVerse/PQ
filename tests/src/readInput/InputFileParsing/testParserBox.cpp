@@ -2,7 +2,7 @@
 #include "testInputFileReader.hpp"
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace ::testing;
 
 TEST_F(TestInputFileReader, testParseDensity)

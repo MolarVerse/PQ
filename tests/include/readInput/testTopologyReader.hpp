@@ -11,8 +11,8 @@
 class TestTopologyReader : public ::testing::Test
 {
   protected:
-    engine::Engine        *_engine;
-    setup::TopologyReader *_topologyReader;
+    engine::Engine            *_engine;
+    readInput::TopologyReader *_topologyReader;
 
     void SetUp() override
     {
@@ -27,7 +27,7 @@ class TestTopologyReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _topologyReader = new setup::TopologyReader("data/topologyReader/topology.top", *_engine);
+        _topologyReader = new readInput::TopologyReader("data/topologyReader/topology.top", *_engine);
     }
 
     void TearDown() override

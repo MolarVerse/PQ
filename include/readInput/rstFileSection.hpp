@@ -14,14 +14,14 @@
 // Forward declarations for friend test
 class TestAtomSection_testProcessAtomLine_Test;
 
-namespace setup
+namespace readInput
 {
     class RstFileSection;
     class BoxSection;
     class NoseHooverSection;
     class StepCountSection;
     class AtomSection;
-}   // namespace setup
+}   // namespace readInput
 
 /**
  * @class RstFileSection
@@ -29,7 +29,7 @@ namespace setup
  * @brief Base class for all sections of a .rst file
  *
  */
-class setup::RstFileSection
+class readInput::RstFileSection
 {
   public:
     virtual ~RstFileSection() = default;
@@ -47,7 +47,7 @@ class setup::RstFileSection
  * @brief Reads the box section of a .rst file
  *
  */
-class setup::BoxSection : public setup::RstFileSection
+class readInput::BoxSection : public readInput::RstFileSection
 {
   public:
     std::string keyword() override { return "box"; }
@@ -61,7 +61,7 @@ class setup::BoxSection : public setup::RstFileSection
  * @brief Reads the Nose-Hoover section of a .rst file
  *
  */
-class setup::NoseHooverSection : public setup::RstFileSection
+class readInput::NoseHooverSection : public readInput::RstFileSection
 {
   public:
     std::string keyword() override { return "chi"; }
@@ -75,7 +75,7 @@ class setup::NoseHooverSection : public setup::RstFileSection
  * @brief Reads the step count section of a .rst file
  *
  */
-class setup::StepCountSection : public setup::RstFileSection
+class readInput::StepCountSection : public readInput::RstFileSection
 {
   public:
     std::string keyword() override { return "step"; }
@@ -89,7 +89,7 @@ class setup::StepCountSection : public setup::RstFileSection
  * @brief Reads the atom section of a .rst file
  *
  */
-class setup::AtomSection : public setup::RstFileSection
+class readInput::AtomSection : public readInput::RstFileSection
 {
   private:
     void processAtomLine(std::vector<std::string> &, simulationBox::Molecule &) const;

@@ -6,11 +6,11 @@
 
 #include <string>
 
-namespace setup
+namespace readInput
 {
     class GuffDatReader;
     void readGuffDat(engine::Engine &);
-}   // namespace setup
+}   // namespace readInput
 
 /**
  * @class GuffDatReader
@@ -18,7 +18,7 @@ namespace setup
  * @brief reads the guff.dat file
  *
  */
-class setup::GuffDatReader
+class readInput::GuffDatReader
 {
   private:
     int         _lineNumber = 1;

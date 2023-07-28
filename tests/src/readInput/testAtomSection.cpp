@@ -11,7 +11,7 @@
 
 using namespace std;
 using namespace testing;
-using namespace setup;
+using namespace readInput;
 using namespace simulationBox;
 using namespace customException;
 using namespace vector3d;

@@ -90,7 +90,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     chdir("data/guffDatReader");
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    EXPECT_NO_THROW(setup::readGuffDat(*_engine));
+    EXPECT_NO_THROW(readInput::readGuffDat(*_engine));
     chdir("../../");
 }
 

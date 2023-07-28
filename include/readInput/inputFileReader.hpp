@@ -10,7 +10,11 @@
 #include <string>
 #include <vector>
 
-namespace setup
+/**
+ * @brief namespace for reading input files
+ *
+ */
+namespace readInput
 {
     class InputFileReader;
     void readInputFile(const std::string &, engine::Engine &);
@@ -19,9 +23,9 @@ namespace setup
     void checkCommand(const std::vector<std::string> &, const size_t);
     void checkCommandArray(const std::vector<std::string> &, const size_t);
 
-}   // namespace setup
+}   // namespace readInput
 
-using parseFunc = void (setup::InputFileReader::*)(const std::vector<std::string> &);
+using parseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
 
 /**
  * @class InputFileReader
@@ -29,7 +33,7 @@ using parseFunc = void (setup::InputFileReader::*)(const std::vector<std::string
  * @brief reads input file and sets settings
  *
  */
-class setup::InputFileReader
+class readInput::InputFileReader
 {
   private:
     std::string     _filename;

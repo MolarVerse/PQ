@@ -3,7 +3,7 @@
 #include <memory>
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace integrator;
 using namespace customException;
 

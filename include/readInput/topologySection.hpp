@@ -4,11 +4,11 @@
 
 #include "engine.hpp"
 
-namespace setup
+namespace readInput
 {
     class TopologySection;
     class ShakeSection;
-}   // namespace setup
+}   // namespace readInput
 
 /**
  * @class TopologySection
@@ -16,7 +16,7 @@ namespace setup
  * @brief base class for reading topology file sections
  *
  */
-class setup::TopologySection
+class readInput::TopologySection
 {
   protected:
     int            _lineNumber;
@@ -40,7 +40,7 @@ class setup::TopologySection
  * @brief reads shake section of topology file
  *
  */
-class setup::ShakeSection : public setup::TopologySection
+class readInput::ShakeSection : public readInput::TopologySection
 {
   public:
     std::string keyword() override { return "shake"; }

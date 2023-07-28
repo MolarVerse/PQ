@@ -18,6 +18,7 @@
 
 using namespace std;
 using namespace engine;
+using namespace readInput;
 
 /**
  * @brief setup the engine
@@ -57,7 +58,7 @@ void setup::readFiles(const string &inputFilename, Engine &engine)
     readRstFile(engine);
 
     cout << "Reading topology file..." << endl;
-    setup::readTopologyFile(engine);
+    readTopologyFile(engine);
 }
 
 /**

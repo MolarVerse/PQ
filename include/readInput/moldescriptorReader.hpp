@@ -8,11 +8,11 @@
 #include <string>
 #include <vector>
 
-namespace setup
+namespace readInput
 {
     class MoldescriptorReader;
     void readMolDescriptor(engine::Engine &);
-}   // namespace setup
+}   // namespace readInput
 
 /**
  * @class MoldescriptorReader
@@ -20,7 +20,7 @@ namespace setup
  * @brief Reads a moldescriptor file
  *
  */
-class setup::MoldescriptorReader
+class readInput::MoldescriptorReader
 {
   private:
     int               _lineNumber;

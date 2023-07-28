@@ -3,7 +3,7 @@
 #include "topologySection.hpp"
 
 using namespace ::testing;
-using namespace setup;
+using namespace readInput;
 
 /**
  * @brief tests full process function

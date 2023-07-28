@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 
 /**
  * @brief parses the coulomb cutoff radius

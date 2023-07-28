@@ -4,7 +4,7 @@
 #include <memory>
 
 using namespace std;
-using namespace setup;
+using namespace readInput;
 using namespace manostat;
 using namespace customException;
 

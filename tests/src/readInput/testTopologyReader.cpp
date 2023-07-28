@@ -53,7 +53,7 @@ TEST_F(TestTopologyReader, read)
 TEST_F(TestTopologyReader, readTopologyFile)
 {
     _engine->getSettings().setTopologyFilename("topology.top");
-    setup::readTopologyFile(*_engine);
+    readInput::readTopologyFile(*_engine);
 }
 
 int main(int argc, char **argv)

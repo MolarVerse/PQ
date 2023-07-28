@@ -10,7 +10,7 @@
 using namespace customException;
 using namespace std;
 using namespace testing;
-using namespace setup;
+using namespace readInput;
 using namespace vector3d;
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }

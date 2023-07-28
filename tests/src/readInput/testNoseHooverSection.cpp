@@ -9,7 +9,7 @@
 
 using namespace std;
 using namespace testing;
-using namespace setup;
+using namespace readInput;
 using namespace customException;
 
 TEST_F(TestNoseHooverSection, testKeyword) { EXPECT_EQ(_section->keyword(), "chi"); }

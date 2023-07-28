@@ -10,7 +10,7 @@
 
 using namespace std;
 using namespace StringUtilities;
-using namespace setup;
+using namespace readInput;
 using namespace engine;
 using namespace customException;
 
@@ -72,7 +72,7 @@ void RstFileReader::read()
  *
  * @param engine
  */
-void setup::readRstFile(Engine &engine)
+void readInput::readRstFile(Engine &engine)
 {
     RstFileReader rstFileReader(engine.getSettings().getStartFilename(), engine);
     rstFileReader.read();
