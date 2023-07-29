@@ -35,13 +35,15 @@ TEST_F(TestBondConstraint, applyShake)
     const auto dpos       = shakeForce * vector3d::Vec3D(0.0, -1.0, -2.0);
     const auto timestep   = 2.0;
 
-    _bondConstraint->applyShake(*_box, 0.0, timestep);
+    EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0, timestep));
 
     EXPECT_EQ(_box->getMolecules()[0].getAtomPosition(0), vector3d::Vec3D(1.0, 1.0, 1.0) + dpos);
     EXPECT_EQ(_box->getMolecules()[0].getAtomPosition(1), vector3d::Vec3D(1.0, 2.0, 3.0) - 0.5 * dpos);
 
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(0), vector3d::Vec3D(0.0, 0.0, 0.0) + dpos / timestep);
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(1), vector3d::Vec3D(1.0, 1.0, 1.0) - 0.5 * dpos / timestep);
+
+    EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0, timestep));
 }
 
 /**
@@ -65,9 +67,11 @@ TEST_F(TestBondConstraint, applyRattle)
     const auto delta = _bondConstraint->calculateVelocityDelta();
     const auto dv    = delta * _bondConstraint->getShakeDistanceRef();
 
-    _bondConstraint->applyRattle(0.0);
+    EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(0), vector3d::Vec3D(0.0, 0.0, 0.0) + dv);
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(1), vector3d::Vec3D(1.0, 1.0, 1.0) - 0.5 * dv);
+
+    EXPECT_TRUE(_bondConstraint->applyRattle(1000.0));
 }
 
 int main(int argc, char **argv)
