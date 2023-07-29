@@ -114,7 +114,7 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
  * @param atomIndex
  * @return pair<Molecule *, size_t>
  */
-pair<const Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t atomIndex) const
+pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t atomIndex)
 {
     size_t sum = 0;
 

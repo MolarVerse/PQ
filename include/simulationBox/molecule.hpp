@@ -127,7 +127,7 @@ class simulationBox::Molecule
     void setMolMass(const double molMass) { _molMass = molMass; }
     void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
 
-    void setAtomPositions(const size_t index, const vector3d::Vec3D &position) { _positions[index] = position; }
+    void setAtomPosition(const size_t index, const vector3d::Vec3D &position) { _positions[index] = position; }
     void setAtomVelocity(const size_t index, const vector3d::Vec3D &velocity) { _velocities[index] = velocity; }
     void setAtomForce(const size_t index, const vector3d::Vec3D &force) { _forces[index] = force; }
     void setAtomShiftForces(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }

@@ -15,13 +15,45 @@ void setup::setupConstraints(engine::Engine &engine)
 }
 
 /**
- * @brief sets shake data in constraints object
+ * @brief sets constraints data in constraints object
  *
  */
 void ConstraintsSetup::setup()
 {
-    _engine.getConstraints().setShakeMaxIter(_engine.getSettings().getShakeMaxIter());
+    setupTolerances();
+    setupMaxIterations();
+    setupRefBondLengths();
+    setupTimestep();
+}
+
+/**
+ * @brief sets constraints tolerances
+ *
+ */
+void ConstraintsSetup::setupTolerances()
+{
     _engine.getConstraints().setShakeTolerance(_engine.getSettings().getShakeTolerance());
-    _engine.getConstraints().setRattleMaxIter(_engine.getSettings().getRattleMaxIter());
     _engine.getConstraints().setRattleTolerance(_engine.getSettings().getRattleTolerance());
 }
+
+/**
+ * @brief sets constraints max iterations
+ *
+ */
+void ConstraintsSetup::setupMaxIterations()
+{
+    _engine.getConstraints().setShakeMaxIter(_engine.getSettings().getShakeMaxIter());
+    _engine.getConstraints().setRattleMaxIter(_engine.getSettings().getRattleMaxIter());
+}
+
+/**
+ * @brief sets constraints reference bond lengths
+ *
+ */
+void ConstraintsSetup::setupRefBondLengths() { _engine.getConstraints().calculateConstraintBondRefs(_engine.getSimulationBox()); }
+
+/**
+ * @brief sets timestep in constraints
+ *
+ */
+void ConstraintsSetup::setupTimestep() { _engine.getConstraints().setDt(_engine.getTimings().getTimestep()); }

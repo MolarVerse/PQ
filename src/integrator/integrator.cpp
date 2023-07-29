@@ -43,7 +43,7 @@ void Integrator::integratePositions(Molecule &molecule, const size_t index, cons
     positions += _dt * velocities * _FS_TO_S_;
     applyPBC(simBox, positions);
 
-    molecule.setAtomPositions(index, positions);
+    molecule.setAtomPosition(index, positions);
 }
 
 /**

@@ -67,6 +67,8 @@ void Engine::takeStep()
 
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
+    _constraints.calculateConstraintBondRefs(_simulationBox);
+
     _integrator->secondStep(_simulationBox);
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);

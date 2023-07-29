@@ -28,7 +28,8 @@ using namespace config;
  */
 size_t Molecule::getNumberOfAtomTypes()
 {
-    return ranges::distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end()));
+    return static_cast<size_t>(
+        distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
 }
 
 /**
@@ -61,6 +62,7 @@ void Molecule::scale(const Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
+    // for_each(_positions.begin(), _positions.end(), [shift](auto &position) { position += shift; });
     ranges::for_each(_positions, [shift](auto &position) { position += shift; });
 }
 

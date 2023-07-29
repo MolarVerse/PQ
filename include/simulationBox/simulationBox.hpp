@@ -71,8 +71,8 @@ class simulationBox::SimulationBox
     size_t getNumberOfAtoms() const;
     int    getDegreesOfFreedom() const { return _degreesOfFreedom; }
 
-    Molecule                            findMoleculeType(const size_t moltype) const;
-    std::pair<const Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex) const;
+    Molecule                      findMoleculeType(const size_t moltype) const;
+    std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
 
     void calculateDegreesOfFreedom();
     void calculateCenterOfMassMolecules();

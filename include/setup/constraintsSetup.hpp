@@ -25,6 +25,11 @@ class setup::ConstraintsSetup
     explicit ConstraintsSetup(engine::Engine &engine) : _engine(engine){};
 
     void setup();
+
+    void setupTolerances();
+    void setupMaxIterations();
+    void setupRefBondLengths();
+    void setupTimestep();
 };
 
 #endif   // _CONSTRAINTS_SETUP_HPP_

@@ -6,21 +6,34 @@
 using namespace setup;
 using namespace customException;
 
-TEST_F(TestSetup, setupShake)
+TEST_F(TestSetup, setupConstraintTolerances)
 {
-
     _engine.getSettings().setShakeTolerance(1e-6);
-    _engine.getSettings().setShakeMaxIter(100);
     _engine.getSettings().setRattleTolerance(1e-6);
-    _engine.getSettings().setRattleMaxIter(100);
 
     ConstraintsSetup constraintsSetup(_engine);
     constraintsSetup.setup();
 
     EXPECT_EQ(_engine.getConstraints().getShakeTolerance(), 1e-6);
-    EXPECT_EQ(_engine.getConstraints().getShakeMaxIter(), 100);
     EXPECT_EQ(_engine.getConstraints().getRattleTolerance(), 1e-6);
+}
+
+TEST_F(TestSetup, setupConstraintMaxIter)
+{
+
+    _engine.getSettings().setShakeMaxIter(100);
+    _engine.getSettings().setRattleMaxIter(100);
+
+    ConstraintsSetup constraintsSetup(_engine);
+    constraintsSetup.setup();
+
+    EXPECT_EQ(_engine.getConstraints().getShakeMaxIter(), 100);
     EXPECT_EQ(_engine.getConstraints().getRattleMaxIter(), 100);
+}
+
+TEST_F(TestSetup, setupConstraints)
+{
+    ConstraintsSetup constraintsSetup(_engine);
 
     EXPECT_NO_THROW(setupConstraints(_engine));
 }
