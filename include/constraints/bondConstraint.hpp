@@ -39,9 +39,12 @@ class constraints::BondConstraint
 
     void setShakeDistanceRef(vector3d::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
-    void calculateConstraintBondRef(simulationBox::SimulationBox &);
+    void calculateConstraintBondRef(const simulationBox::SimulationBox &);
 
-    bool applyShake(simulationBox::SimulationBox &, double, double);
+    double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
+    double calculateVelocityDelta() const;
+    bool   applyShake(const simulationBox::SimulationBox &, double, double);
+    bool   applyRattle(double);
 
     /***************************
      *                         *

@@ -27,7 +27,7 @@ void Engine::run()
     _stdoutOutput->writeInitialMomentum(_physicalData.getMomentum());
 
     const auto  numberOfSteps = _timings.getNumberOfSteps();
-    progressbar bar(numberOfSteps);
+    progressbar bar(static_cast<int>(numberOfSteps));
 
     for (; _step <= numberOfSteps; ++_step)
     {
@@ -41,7 +41,7 @@ void Engine::run()
 
     cout << endl << endl;
 
-    cout << "Total time: " << _timings.calculateElapsedTime() * 1e-6 << endl;
+    cout << "Total time: " << static_cast<int>(_timings.calculateElapsedTime()) * 1e-6 << endl;
 
     cout << endl << endl;
 
@@ -63,6 +63,8 @@ void Engine::takeStep()
 {
     _integrator->firstStep(_simulationBox);
 
+    _constraints.applyShake(_simulationBox);
+
     _cellList.updateCellList(_simulationBox);
 
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
@@ -70,6 +72,8 @@ void Engine::takeStep()
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _integrator->secondStep(_simulationBox);
+
+    _constraints.applyRattle();
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 

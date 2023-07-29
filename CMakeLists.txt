@@ -31,18 +31,18 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("Release build.")
 
-    # set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -Werror -pedantic -O3 -march=native -mtune=native")
-    set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -Ofast -ffast-math -flto -march=native -mtune=native -g")
+    # set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -Werror -pedantic -O3 -march=native -mtune=native")
+    set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -Ofast -ffast-math -flto -march=native -mtune=native -g")
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("Debug build.")
 
-    # set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -g -ftest-coverage -O0 -coverage")
-    set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -g -pg -fprofile-arcs -ftest-coverage -O0 -coverage") # for gprof
+    # set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -g -ftest-coverage -O0 -coverage")
+    set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -g -pg -fprofile-arcs -ftest-coverage -O0 -coverage") # for gprof
 else()
     message("Release build.")
 
-    # set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -Werror -pedantic -O3 -march=native -mtune=native")
-    set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage") # for gprof
+    # set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -Werror -pedantic -O3 -march=native -mtune=native")
+    set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage") # for gprof
 endif()
 
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")

@@ -371,6 +371,14 @@ template <class T> class vector3d::Vector3D
     friend T mean(Vector3D<T> v) { return sum(v) / 3; }
 
     /**
+     * @brief scalar_product of two vectors
+     *
+     * @param v1
+     * @param v2
+     */
+    friend T dot(Vector3D<T> v1, Vector3D<T> v2) { return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z; }
+
+    /**
      * @brief ostream operator for vector3d
      *
      * @param os

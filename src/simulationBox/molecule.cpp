@@ -26,11 +26,7 @@ using namespace config;
  *
  * @return int
  */
-size_t Molecule::getNumberOfAtomTypes()
-{
-    return static_cast<size_t>(
-        distance(_externalAtomTypes.begin(), unique(_externalAtomTypes.begin(), _externalAtomTypes.end())));
-}
+size_t Molecule::getNumberOfAtomTypes() { return _externalAtomTypes.size() - ranges::size(ranges::unique(_externalAtomTypes)); }
 
 /**
  * @brief calculates the center of mass of the molecule
@@ -42,13 +38,21 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
     _centerOfMass            = Vec3D();
     const auto positionAtom1 = getAtomPosition(0);
 
-    auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
-    {
-        auto const &[mass, position]  = pair;
-        _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
-    };
+    // TODO: sonarlint until now not compatible with c++23
+    //  auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
+    //  {
+    //      auto const &[mass, position]  = pair;
+    //      _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
+    //  };
+    //  ranges::for_each(ranges::views::zip(_masses, _positions), f);
 
-    ranges::for_each(ranges::views::zip(_masses, _positions), f);
+    for (size_t i = 0; i < _numberOfAtoms; ++i)
+    {
+        const auto mass     = _masses[i];
+        const auto position = _positions[i];
+
+        _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));
+    }
 
     _centerOfMass /= getMolMass();
 }
@@ -62,7 +66,6 @@ void Molecule::scale(const Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    // for_each(_positions.begin(), _positions.end(), [shift](auto &position) { position += shift; });
     ranges::for_each(_positions, [shift](auto &position) { position += shift; });
 }
 

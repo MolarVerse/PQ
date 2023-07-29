@@ -15,9 +15,15 @@ class TestBondConstraint : public ::testing::Test
     {
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(3);
+
         molecule1.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
         molecule1.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomPosition(vector3d::Vec3D(2.0, 0.0, 0.0));
+
+        molecule1.addAtomMass(1.0);
+        molecule1.addAtomMass(2.0);
+
+        molecule1.addAtomVelocity(vector3d::Vec3D(0.0, 0.0, 0.0));
+        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
 
         _box = new simulationBox::SimulationBox();
         _box->addMolecule(molecule1);

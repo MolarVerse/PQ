@@ -8,7 +8,7 @@ using namespace constraints;
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(simulationBox::SimulationBox &simBox)
+void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox &simBox)
 {
     std::ranges::for_each(_bondConstraints,
                           [&simBox](auto &bondConstraint) { bondConstraint.calculateConstraintBondRef(simBox); });
@@ -18,9 +18,8 @@ void Constraints::calculateConstraintBondRefs(simulationBox::SimulationBox &simB
  * @brief applies the shake algorithm to all bond constraints
  *
  */
-void Constraints::applyShake(simulationBox::SimulationBox &simBox)
+void Constraints::applyShake(const simulationBox::SimulationBox &simBox)
 {
-
     auto   converged = false;
     size_t iter      = 0;
 
@@ -32,6 +31,27 @@ void Constraints::applyShake(simulationBox::SimulationBox &simBox)
                               [&simBox, &converged, this](auto &bondConstraint)
                               { converged = converged && bondConstraint.applyShake(simBox, _shakeTolerance, _dt); });
 
-        iter++;
+        ++iter;
+    }
+}
+
+/**
+ * @brief applies the rattle algorithm to all bond constraints
+ *
+ */
+void Constraints::applyRattle()
+{
+    auto   converged = false;
+    size_t iter      = 0;
+
+    while (!converged && iter <= _rattleMaxIter)
+    {
+        converged = true;
+
+        std::ranges::for_each(_bondConstraints,
+                              [&converged, this](auto &bondConstraint)
+                              { converged = converged && bondConstraint.applyRattle(_rattleTolerance); });
+
+        ++iter;
     }
 }

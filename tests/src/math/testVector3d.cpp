@@ -296,6 +296,14 @@ TEST(TestVector3d, testProduct)
     EXPECT_EQ(prod(vec3), 6);
 }
 
+TEST(TestVector3d, scalarProduct)
+{
+    const auto vec1 = Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = Vec3D(1.0, 2.0, 3.0);
+
+    EXPECT_EQ(dot(vec1, vec2), 14.0);
+}
+
 TEST(TestVector3d, testOsStream)
 {
     const auto vec1 = Vec3D(1.0, 2.0, 3.0);

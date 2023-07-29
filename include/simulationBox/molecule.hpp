@@ -79,7 +79,9 @@ class simulationBox::Molecule
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); }
 
     void addAtomPosition(const vector3d::Vec3D &position) { _positions.push_back(position); }
+    void addAtomPosition(const size_t index, const vector3d::Vec3D &position) { _positions[index] += position; }
     void addAtomVelocity(const vector3d::Vec3D &velocity) { _velocities.push_back(velocity); }
+    void addAtomVelocity(const size_t index, const vector3d::Vec3D &velocity) { _velocities[index] += velocity; }
     void addAtomForce(const vector3d::Vec3D &force) { _forces.push_back(force); }
     void addAtomForce(const size_t index, const vector3d::Vec3D &force) { _forces[index] += force; }
     void addAtomShiftForce(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] += shiftForce; }
@@ -131,7 +133,7 @@ class simulationBox::Molecule
     void setAtomVelocity(const size_t index, const vector3d::Vec3D &velocity) { _velocities[index] = velocity; }
     void setAtomForce(const size_t index, const vector3d::Vec3D &force) { _forces[index] = force; }
     void setAtomShiftForces(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }
-    void setAtomForcesToZero() { std::fill(_forces.begin(), _forces.end(), vector3d::Vec3D(0.0, 0.0, 0.0)); }
+    void setAtomForcesToZero() { std::ranges::fill(_forces, vector3d::Vec3D(0.0, 0.0, 0.0)); }
     void setCenterOfMass(const vector3d::Vec3D &centerOfMass) { _centerOfMass = centerOfMass; }
 
     void setExternalAtomTypes(const std::vector<size_t> &externalAtomTypes) { _externalAtomTypes = externalAtomTypes; }

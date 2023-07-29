@@ -34,11 +34,12 @@ class constraints::Constraints
     void activate() { _activated = true; }
     bool isActivated() const { return _activated; }
 
-    void calculateConstraintBondRefs(simulationBox::SimulationBox &simulationBox);
+    void calculateConstraintBondRefs(const simulationBox::SimulationBox &simulationBox);
 
-    void addBondConstraint(BondConstraint bondConstraint) { _bondConstraints.push_back(bondConstraint); }
+    void addBondConstraint(const BondConstraint &bondConstraint) { _bondConstraints.push_back(bondConstraint); }
 
-    void applyShake(simulationBox::SimulationBox &simulationBox);
+    void applyShake(const simulationBox::SimulationBox &simulationBox);
+    void applyRattle();
 
     /***************************
      *                         *

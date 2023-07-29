@@ -48,7 +48,7 @@ class simulationBox::SimulationBox
   private:
     int    _waterType;
     int    _ammoniaType;
-    int    _degreesOfFreedom = 0;
+    size_t _degreesOfFreedom = 0;
     double _rcCutOff         = config::_COULOMB_CUT_OFF_DEFAULT_;
 
     Box _box;
@@ -69,7 +69,7 @@ class simulationBox::SimulationBox
     void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
     size_t getNumberOfAtoms() const;
-    int    getDegreesOfFreedom() const { return _degreesOfFreedom; }
+    size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
 
     Molecule                      findMoleculeType(const size_t moltype) const;
     std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
