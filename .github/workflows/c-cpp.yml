@@ -36,7 +36,7 @@ jobs:
         fi
       
     - name: "Create build directory and run CMake"
-      run: cmake -S . -B build -G "Unix Makefiles"
+      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 
     - name: "Build Project" 
       run: cmake --build build --target all -- -j20
