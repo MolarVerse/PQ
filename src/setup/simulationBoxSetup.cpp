@@ -57,10 +57,10 @@ void SimulationBoxSetup::setAtomMasses()
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             const auto keyword = to_lower_copy(molecule.getAtomName(i));
-            if (config::atomMassMap.find(keyword) == config::atomMassMap.end())
+            if (!constants::atomMassMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.addAtomMass(config::atomMassMap.at(keyword));
+                molecule.addAtomMass(constants::atomMassMap.at(keyword));
         }
     }
 }
@@ -84,10 +84,10 @@ void SimulationBoxSetup::setAtomicNumbers()
         {
             const auto keyword = to_lower_copy(molecule.getAtomName(i));
 
-            if (config::atomNumberMap.find(keyword) == config::atomNumberMap.end())
+            if (!constants::atomNumberMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.addAtomicNumber(config::atomNumberMap.at(keyword));
+                molecule.addAtomicNumber(constants::atomNumberMap.at(keyword));
         }
     }
 }

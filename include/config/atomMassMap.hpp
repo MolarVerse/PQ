@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-namespace config
+namespace constants
 {
     /**
      * @brief Map of atom names to their masses
@@ -31,6 +31,6 @@ namespace config
         {"fm", 257.0951},   {"md", 258.0986},   {"no", 259.1009},    {"q", 999.00000},  {"x", 999.00000},  {"cav", 1000.00000},
         {"sup", 1000000.0}, {"dum", 1.0}};
 
-}   // namespace config
+}   // namespace constants
 
 #endif

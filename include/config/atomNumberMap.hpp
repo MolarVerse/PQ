@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-namespace config
+namespace constants
 {
     /**
      * @brief Map of atom names to atomic numbers
@@ -25,6 +25,6 @@ namespace config
         {"cf", 98},       {"es", 99}, {"fm", 100}, {"md", 101}, {"no", 102}, {"lr", 103}, {"q", 999}, {"x", 999}, {"cav", 1000},
         {"sup", 1000000}, {"dum", 1}};
 
-}   // namespace config
+}   // namespace constants
 
 #endif

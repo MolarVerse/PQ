@@ -11,7 +11,6 @@
 using namespace std;
 using namespace simulationBox;
 using namespace vector3d;
-using namespace config;
 
 /**
  * @brief sets number of atoms in molecule
