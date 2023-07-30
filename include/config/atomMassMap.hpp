@@ -1,6 +1,6 @@
-#ifndef _ATOM_MASS_MAP_H_
+#ifndef _ATOM_MASS_MAP_HPP_
 
-#define _ATOM_MASS_MAP_H_
+#define _ATOM_MASS_MAP_HPP_
 
 #include <map>
 #include <string>
@@ -33,4 +33,4 @@ namespace constants
 
 }   // namespace constants
 
-#endif
+#endif   // _ATOM_MASS_MAP_HPP_
