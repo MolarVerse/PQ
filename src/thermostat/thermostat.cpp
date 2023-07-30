@@ -8,7 +8,6 @@ using namespace std;
 using namespace simulationBox;
 using namespace thermostat;
 using namespace physicalData;
-using namespace config;
 
 /**
  * @brief apply thermostat - base class
@@ -35,7 +34,7 @@ void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, Physical
 
     _temperature = physicalData.getTemperature();
 
-    const auto berendsenFactor = sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
+    const auto berendsenFactor = ::sqrt(1.0 + _timestep / _tau * (_targetTemperature / _temperature - 1.0));
 
     for (auto &molecule : simulationBox.getMolecules())
         molecule.scaleVelocities(berendsenFactor);

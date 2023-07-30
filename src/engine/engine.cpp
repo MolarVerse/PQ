@@ -11,7 +11,6 @@ using namespace physicalData;
 using namespace settings;
 using namespace timings;
 using namespace engine;
-using namespace config;
 using namespace output;
 
 void Engine::run()
@@ -99,7 +98,7 @@ void Engine::writeOutput()
         const auto dt             = _timings.getTimestep();
         const auto step0          = _timings.getStepCount();
         const auto effectiveStep  = _step + step0;
-        const auto simulationTime = static_cast<double>(effectiveStep) * dt * _FS_TO_PS_;
+        const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
 
         // calclooptime after writting trajectory files
 

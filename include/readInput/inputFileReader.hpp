@@ -25,7 +25,7 @@ namespace readInput
 
 }   // namespace readInput
 
-using parseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
+using ParseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
 
 /**
  * @class InputFileReader
@@ -39,7 +39,7 @@ class readInput::InputFileReader
     std::string     _filename;
     engine::Engine &_engine;
 
-    std::map<std::string, parseFunc> _keywordFuncMap;
+    std::map<std::string, ParseFunc> _keywordFuncMap;
     std::map<std::string, int>       _keywordCountMap;
     std::map<std::string, bool>      _keywordRequiredMap;
 
@@ -111,7 +111,7 @@ class readInput::InputFileReader
 
     void parseTopologyFilename(const std::vector<std::string> &);
 
-    void addKeyword(const std::string &, parseFunc, bool);
+    void addKeyword(const std::string &, ParseFunc, bool);
 
     void process(const std::vector<std::string> &);
 

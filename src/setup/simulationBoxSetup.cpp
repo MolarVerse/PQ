@@ -176,14 +176,14 @@ void SimulationBoxSetup::checkBoxSettings()   // TODO:
     else if (density == 0.0)
     {
         const auto volume = _engine.getSimulationBox().calculateVolume();
-        density = _engine.getSimulationBox().getTotalMass() / volume * config::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        density = _engine.getSimulationBox().getTotalMass() / volume * constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
     }
     else
     {
         const auto volume = _engine.getSimulationBox().calculateVolume();
-        density = _engine.getSimulationBox().getTotalMass() / volume * config::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        density = _engine.getSimulationBox().getTotalMass() / volume * constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
 

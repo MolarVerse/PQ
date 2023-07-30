@@ -351,17 +351,17 @@ TEST(TestVector3d, testEnd)
 
 TEST(TestVector3d, testEqualOperator)
 {
-    Vec3D vec1 = Vec3D(1.0, 2.0, 3.0);
+    auto  vec1 = Vec3D(1.0, 2.0, 3.0);
     Vec3D vec2 = vec1;
 
     EXPECT_EQ(vec1, vec2);
 
-    Vec3Di vec3 = Vec3Di(1, 2, 3);
+    auto   vec3 = Vec3Di(1, 2, 3);
     Vec3Di vec4 = vec3;
 
     EXPECT_EQ(vec3, vec4);
 
-    Vec3Dul vec5 = Vec3Dul(1, 2, 3);
+    auto    vec5 = Vec3Dul(1, 2, 3);
     Vec3Dul vec6 = vec5;
 
     EXPECT_EQ(vec5, vec6);
@@ -454,5 +454,5 @@ TEST(TestVector3d, testDivisionAssignmentOperator)
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

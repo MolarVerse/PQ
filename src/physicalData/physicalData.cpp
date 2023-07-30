@@ -9,7 +9,6 @@ using namespace std;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace vector3d;
-using namespace config;
 
 /**
  * @brief Calculates kinetic energy and momentum of the system
@@ -43,11 +42,11 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
         _kineticEnergyMolecularVector += momentumSquared / molecule.getMolMass();
     }
 
-    _momentumVector *= _FS_TO_S_;
+    _momentumVector *= constants::_FS_TO_S_;
     _momentum        = norm(_momentumVector);
 
-    _kineticEnergyAtomicVector    *= _KINETIC_ENERGY_FACTOR_;
-    _kineticEnergyMolecularVector *= _KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
 }
 
@@ -109,5 +108,5 @@ void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
         }
     }
 
-    _temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
+    _temperature *= constants::_TEMPERATURE_FACTOR_ / static_cast<double>(simulationBox.getDegreesOfFreedom());
 }

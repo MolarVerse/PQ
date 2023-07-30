@@ -9,7 +9,6 @@ using namespace std;
 using namespace ::testing;
 using namespace setup;
 using namespace simulationBox;
-using namespace config;
 using namespace customException;
 
 TEST_F(TestSetup, testSetAtomMasses)
@@ -149,13 +148,13 @@ TEST_F(TestSetup, testNoDensity)
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getVolume(), 6000.0);
-    EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
 }
 
 TEST_F(TestSetup, testNoBox)
 {
     _engine.getSimulationBox().setTotalMass(6000);
-    _engine.getSimulationBox().setDensity(_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    _engine.getSimulationBox().setDensity(constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -172,7 +171,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getVolume(), 6000.0);
-    EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getDensity(), constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
 }
 
 TEST_F(TestSetup, testResizeAtomShiftForces)
@@ -245,5 +244,5 @@ TEST_F(TestSetup, testFullSetup)
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

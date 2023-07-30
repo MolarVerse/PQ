@@ -17,7 +17,6 @@ using namespace thermostat;
 using namespace manostat;
 using namespace engine;
 using namespace customException;
-using namespace config;
 using namespace resetKinetics;
 
 /**
@@ -97,9 +96,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
  *  required is a boolean that indicates if the keyword is required
  *
  */
-void InputFileReader::addKeyword(const string &keyword,
-                                 void (InputFileReader::*parserFunc)(const vector<string> &),
-                                 bool required)
+void InputFileReader::addKeyword(const string &keyword, ParseFunc parserFunc, bool required)
 {
     _keywordFuncMap.try_emplace(keyword, parserFunc);
     _keywordCountMap.try_emplace(keyword, 0);
@@ -117,10 +114,10 @@ void InputFileReader::process(const vector<string> &lineElements)
 {
     const auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
 
-    if (_keywordFuncMap.find(keyword) == _keywordFuncMap.end())
+    if (!_keywordFuncMap.contains(keyword))
         throw InputFileException("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
 
-    void (InputFileReader::*parserFunc)(const vector<string> &) = _keywordFuncMap[keyword];
+    ParseFunc parserFunc = _keywordFuncMap[keyword];
     (this->*parserFunc)(lineElements);
 
     ++_keywordCountMap[keyword];

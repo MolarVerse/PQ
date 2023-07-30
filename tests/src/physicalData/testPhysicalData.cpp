@@ -53,13 +53,14 @@ TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
         (mass_mol1_atom1 * mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
          mass_mol1_atom2 * mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2) /
             (mass_mol1_atom1 + mass_mol1_atom2) +
-        (mass_mol2_atom1 * mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1) / (mass_mol2_atom1);
+        (mass_mol2_atom1 * mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1) / mass_mol2_atom1;
 
-    EXPECT_EQ(_physicalData->getMomentumVector(), momentumVector * config::_FS_TO_S_);
-    EXPECT_EQ(_physicalData->getMomentum(), norm(momentumVector) * config::_FS_TO_S_);
-    EXPECT_EQ(_physicalData->getKineticEnergyAtomicVector(), kineticEnergyAtomicVector * config::_KINETIC_ENERGY_FACTOR_);
-    EXPECT_EQ(_physicalData->getKineticEnergyMolecularVector(), kineticEnergyMolecularVector * config::_KINETIC_ENERGY_FACTOR_);
-    EXPECT_EQ(_physicalData->getKineticEnergy(), sum(kineticEnergyAtomicVector) * config::_KINETIC_ENERGY_FACTOR_);
+    EXPECT_EQ(_physicalData->getMomentumVector(), momentumVector * constants::_FS_TO_S_);
+    EXPECT_EQ(_physicalData->getMomentum(), norm(momentumVector) * constants::_FS_TO_S_);
+    EXPECT_EQ(_physicalData->getKineticEnergyAtomicVector(), kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_);
+    EXPECT_EQ(_physicalData->getKineticEnergyMolecularVector(),
+              kineticEnergyMolecularVector * constants::_KINETIC_ENERGY_FACTOR_);
+    EXPECT_EQ(_physicalData->getKineticEnergy(), sum(kineticEnergyAtomicVector) * constants::_KINETIC_ENERGY_FACTOR_);
 }
 
 TEST_F(TestPhysicalData, calculateTemperature)
@@ -80,7 +81,7 @@ TEST_F(TestPhysicalData, calculateTemperature)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    EXPECT_EQ(_physicalData->getTemperature(), sum(kineticEnergyAtomicVector) * config::_TEMPERATURE_FACTOR_ / (nDOF));
+    EXPECT_EQ(_physicalData->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF));
 }
 
 int main(int argc, char **argv)
