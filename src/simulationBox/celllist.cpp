@@ -75,7 +75,7 @@ void CellList::determineCellBoundaries(const SimulationBox &simulationBox)
  */
 void CellList::addNeighbouringCells(const SimulationBox &simulationBox)
 {
-    _nNeighbourCells = Vec3Dul(ceil(simulationBox.getRcCutOff() / _cellSize));
+    _nNeighbourCells = Vec3Dul(ceil(simulationBox.getCoulombRadiusCutOff() / _cellSize));
 
     ranges::for_each(_cells, [this](auto &cell) { addCellPointers(cell); });
 }

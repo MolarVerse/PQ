@@ -71,7 +71,12 @@ class engine::Engine
     void takeStep();
     void writeOutput();
 
-    // standard getter and setters
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
     settings::Settings           &getSettings() { return _settings; }
     timings::Timings             &getTimings() { return _timings; }
     simulationBox::CellList      &getCellList() { return _cellList; }

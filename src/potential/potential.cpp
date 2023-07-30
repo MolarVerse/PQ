@@ -12,11 +12,11 @@ using namespace vector3d;
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     const auto   box      = simBox.getBoxDimensions();
-    const double RcCutOff = simBox.getRcCutOff();
+    const double RcCutOff = simBox.getCoulombRadiusCutOff();
 
-    double totalCoulombicEnergy    = 0.0;
-    double totalNonCoulombicEnergy = 0.0;
-    double energy                  = 0.0;
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+    double energy                = 0.0;
 
     // inter molecular forces
     const size_t numberOfMolecules = simBox.getNumberOfMolecules();
@@ -25,17 +25,17 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
     {
         auto        &molecule_i                = simBox.getMolecule(mol_i);
         const size_t moltype_i                 = molecule_i.getMoltype();
-        const size_t numberOfAtomsinMolecule_i = molecule_i.getNumberOfAtoms();
+        const size_t numberOfAtomsInMolecule_i = molecule_i.getNumberOfAtoms();
 
         for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
         {
             auto        &molecule_j                = simBox.getMolecule(mol_j);
             const size_t moltype_j                 = molecule_j.getMoltype();
-            const size_t numberOfAtomsinMolecule_j = molecule_j.getNumberOfAtoms();
+            const size_t numberOfAtomsInMolecule_j = molecule_j.getNumberOfAtoms();
 
-            for (size_t atom_i = 0; atom_i < numberOfAtomsinMolecule_i; ++atom_i)
+            for (size_t atom_i = 0; atom_i < numberOfAtomsInMolecule_i; ++atom_i)
             {
-                for (size_t atom_j = 0; atom_j < numberOfAtomsinMolecule_j; ++atom_j)
+                for (size_t atom_j = 0; atom_j < numberOfAtomsInMolecule_j; ++atom_j)
                 {
                     const auto xyz_i = molecule_i.getAtomPosition(atom_i);
                     const auto xyz_j = molecule_j.getAtomPosition(atom_j);
@@ -50,7 +50,7 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 
                     if (distanceSquared < RcCutOff * RcCutOff)
                     {
-                        const double distance   = sqrt(distanceSquared);
+                        const double distance   = ::sqrt(distanceSquared);
                         const size_t atomType_i = molecule_i.getAtomType(atom_i);
                         const size_t atomType_j = molecule_j.getAtomType(atom_j);
 
@@ -59,17 +59,18 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 
                         auto force = 0.0;
 
-                        _coulombPotential->calcCoulomb(coulombCoefficient,
-                                                       simBox.getRcCutOff(),
-                                                       distance,
-                                                       energy,
-                                                       force,
-                                                       simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                                       simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                        _coulombPotential->calcCoulomb(
+                            coulombCoefficient,
+                            simBox.getCoulombRadiusCutOff(),
+                            distance,
+                            energy,
+                            force,
+                            simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                            simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                        totalCoulombicEnergy += energy;
+                        totalCoulombEnergy += energy;
 
-                        const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                        const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                         if (distance < rncCutOff)
                         {
@@ -79,10 +80,10 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
                                 distance,
                                 energy,
                                 force,
-                                simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                            totalNonCoulombicEnergy += energy;
+                            totalNonCoulombEnergy += energy;
                         }
 
                         force /= distance;
@@ -101,8 +102,8 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
         }
     }
 
-    physicalData.setCoulombEnergy(totalCoulombicEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.setCoulombEnergy(totalCoulombEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 // TODO: check if cutoff is smaller than smallest cell size
@@ -110,25 +111,27 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 {
     const auto box = simBox.getBoxDimensions();
 
-    double totalCoulombicEnergy    = 0.0;
-    double totalNonCoulombicEnergy = 0.0;
-    double energy                  = 0.0;
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+    double energy                = 0.0;
 
-    const double RcCutOff        = simBox.getRcCutOff();
+    const double RcCutOff        = simBox.getCoulombRadiusCutOff();
     const double RcCutOffSquared = RcCutOff * RcCutOff;
 
     auto dxyz = Vec3D(0.0, 0.0, 0.0);
 
     for (const auto &cell_i : cellList.getCells())
     {
-        for (size_t mol_i = 0; mol_i < cell_i.getNumberOfMolecules(); ++mol_i)
+        const auto numberOfMolecules = cell_i.getNumberOfMolecules();
+
+        for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
         {
-            auto         molecule_i = cell_i.getMolecule(mol_i);
+            auto        *molecule_i = cell_i.getMolecule(mol_i);
             const size_t moltype_i  = molecule_i->getMoltype();
 
             for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                auto         molecule_j = cell_i.getMolecule(mol_j);
+                auto        *molecule_j = cell_i.getMolecule(mol_j);
                 const size_t moltype_j  = molecule_j->getMoltype();
 
                 for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
@@ -156,7 +159,7 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                         if (distanceSquared > RcCutOffSquared) continue;
 
-                        const double distance   = sqrt(distanceSquared);
+                        const double distance   = ::sqrt(distanceSquared);
                         const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
                         const double coulombCoefficient =
@@ -164,17 +167,18 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                         auto force = 0.0;
 
-                        _coulombPotential->calcCoulomb(coulombCoefficient,
-                                                       simBox.getRcCutOff(),
-                                                       distance,
-                                                       energy,
-                                                       force,
-                                                       simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                                       simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                        _coulombPotential->calcCoulomb(
+                            coulombCoefficient,
+                            simBox.getCoulombRadiusCutOff(),
+                            distance,
+                            energy,
+                            force,
+                            simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                            simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                        totalCoulombicEnergy += energy;
+                        totalCoulombEnergy += energy;
 
-                        const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                        const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                         if (distance < rncCutOff)
                         {
@@ -184,10 +188,10 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
                                 distance,
                                 energy,
                                 force,
-                                simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                            totalNonCoulombicEnergy += energy;
+                            totalNonCoulombEnergy += energy;
                         }
 
                         force /= distance;
@@ -252,7 +256,7 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                             if (distanceSquared > RcCutOffSquared) continue;
 
-                            const double distance   = sqrt(distanceSquared);
+                            const double distance   = ::sqrt(distanceSquared);
                             const size_t atomType_j = molecule_j->getAtomType(atom_j);
 
                             const double coulombCoefficient =
@@ -260,17 +264,18 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                             auto force = 0.0;
 
-                            _coulombPotential->calcCoulomb(coulombCoefficient,
-                                                           simBox.getRcCutOff(),
-                                                           distance,
-                                                           energy,
-                                                           force,
-                                                           simBox.getcEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                                           simBox.getcForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                            _coulombPotential->calcCoulomb(
+                                coulombCoefficient,
+                                simBox.getCoulombRadiusCutOff(),
+                                distance,
+                                energy,
+                                force,
+                                simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                            totalCoulombicEnergy += energy;
+                            totalCoulombEnergy += energy;
 
-                            const auto rncCutOff = simBox.getRncCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                            const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
 
                             if (distance < rncCutOff)
                             {
@@ -280,10 +285,10 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
                                     distance,
                                     energy,
                                     force,
-                                    simBox.getncEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                    simBox.getncForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
+                                    simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
+                                    simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
 
-                                totalNonCoulombicEnergy += energy;
+                                totalNonCoulombEnergy += energy;
                             }
 
                             force /= distance;
@@ -302,6 +307,6 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
         }
     }
 
-    physicalData.setCoulombEnergy(totalCoulombicEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombicEnergy);
+    physicalData.setCoulombEnergy(totalCoulombEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }

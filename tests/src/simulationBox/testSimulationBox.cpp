@@ -6,31 +6,31 @@ TEST_F(TestSimulationBox, resizeGuff)
 {
     _simulationBox->resizeGuff(2);
     EXPECT_EQ(_simulationBox->getGuffCoefficients().size(), 2);
-    EXPECT_EQ(_simulationBox->getRncCutOffs().size(), 2);
+    EXPECT_EQ(_simulationBox->getNonCoulombRadiusCutOffs().size(), 2);
     EXPECT_EQ(_simulationBox->getCoulombCoefficients().size(), 2);
-    EXPECT_EQ(_simulationBox->getcEnergyCutOffs().size(), 2);
-    EXPECT_EQ(_simulationBox->getcForceCutOffs().size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombEnergyCutOffs().size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombForceCutOffs().size(), 2);
 
     _simulationBox->resizeGuff(0, 2);
     EXPECT_EQ(_simulationBox->getGuffCoefficients()[0].size(), 2);
-    EXPECT_EQ(_simulationBox->getRncCutOffs()[0].size(), 2);
+    EXPECT_EQ(_simulationBox->getNonCoulombRadiusCutOffs()[0].size(), 2);
     EXPECT_EQ(_simulationBox->getCoulombCoefficients()[0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcEnergyCutOffs()[0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcForceCutOffs()[0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombEnergyCutOffs()[0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombForceCutOffs()[0].size(), 2);
 
     _simulationBox->resizeGuff(0, 0, 2);
     EXPECT_EQ(_simulationBox->getGuffCoefficients()[0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getRncCutOffs()[0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getNonCoulombRadiusCutOffs()[0][0].size(), 2);
     EXPECT_EQ(_simulationBox->getCoulombCoefficients()[0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcEnergyCutOffs()[0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcForceCutOffs()[0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombEnergyCutOffs()[0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombForceCutOffs()[0][0].size(), 2);
 
     _simulationBox->resizeGuff(0, 0, 0, 2);
     EXPECT_EQ(_simulationBox->getGuffCoefficients()[0][0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getRncCutOffs()[0][0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getNonCoulombRadiusCutOffs()[0][0][0].size(), 2);
     EXPECT_EQ(_simulationBox->getCoulombCoefficients()[0][0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcEnergyCutOffs()[0][0][0].size(), 2);
-    EXPECT_EQ(_simulationBox->getcForceCutOffs()[0][0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombEnergyCutOffs()[0][0][0].size(), 2);
+    EXPECT_EQ(_simulationBox->getCoulombForceCutOffs()[0][0][0].size(), 2);
 }
 
 TEST_F(TestSimulationBox, numberOfAtoms) { EXPECT_EQ(_simulationBox->getNumberOfAtoms(), 5); }

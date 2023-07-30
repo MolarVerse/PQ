@@ -1,6 +1,6 @@
-#ifndef _NON_COULOMB_POTENTIAL_H_
+#ifndef _NON_COULOMB_POTENTIAL_HPP_
 
-#define _NON_COULOMB_POTENTIAL_H_
+#define _NON_COULOMB_POTENTIAL_HPP_
 
 #include <vector>
 
@@ -71,4 +71,4 @@ class potential::GuffBuckingham : public potential::NonCoulombPotential
         const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
 };
 
-#endif   // _NON_COULOMB_POTENTIAL_H_
+#endif   // _NON_COULOMB_POTENTIAL_HPP_

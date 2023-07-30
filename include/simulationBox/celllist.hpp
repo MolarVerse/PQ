@@ -1,8 +1,9 @@
-#ifndef _CELL_LIST_H_
+#ifndef _CELL_LIST_HPP_
 
-#define _CELL_LIST_H_
+#define _CELL_LIST_HPP_
 
 #include "cell.hpp"
+#include "defaults.hpp"
 #include "simulationBox.hpp"
 
 #include <vector>
@@ -26,8 +27,9 @@ class simulationBox::CellList
     std::vector<Cell> _cells;
 
     vector3d::Vec3D   _cellSize;
-    vector3d::Vec3Dul _nCells          = {7, 7, 7};
     vector3d::Vec3Dul _nNeighbourCells = {0, 0, 0};
+    vector3d::Vec3Dul _nCells          = {
+        defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_};
 
   public:
     void setup(const SimulationBox &);
@@ -46,7 +48,7 @@ class simulationBox::CellList
     bool isActivated() const { return _activated; }
 
     /***************************
-     * standatd getter methods *
+     * standard getter methods *
      ***************************/
 
     vector3d::Vec3Dul getNumberOfCells() const { return _nCells; }
@@ -57,7 +59,7 @@ class simulationBox::CellList
     Cell             &getCell(const size_t index) { return _cells[index]; }
 
     /***************************
-     * standatd setter methods *
+     * standard setter methods *
      ***************************/
 
     void setNumberOfCells(const size_t nCells) { _nCells = {nCells, nCells, nCells}; }
@@ -67,4 +69,4 @@ class simulationBox::CellList
     }
 };
 
-#endif   // _CELL_LIST_H_
+#endif   // _CELL_LIST_HPP_

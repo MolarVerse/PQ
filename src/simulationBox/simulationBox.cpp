@@ -16,12 +16,12 @@ using namespace customException;
 void SimulationBox::resizeGuff(c_ul numberOfMoleculeTypes)
 {
     _guffCoefficients.resize(numberOfMoleculeTypes);
-    _rncCutOffs.resize(numberOfMoleculeTypes);
+    _NonCoulombRadiusCutOffs.resize(numberOfMoleculeTypes);
     _coulombCoefficients.resize(numberOfMoleculeTypes);
-    _cEnergyCutOffs.resize(numberOfMoleculeTypes);
-    _cForceCutOffs.resize(numberOfMoleculeTypes);
-    _ncEnergyCutOffs.resize(numberOfMoleculeTypes);
-    _ncForceCutOffs.resize(numberOfMoleculeTypes);
+    _coulombEnergyCutOffs.resize(numberOfMoleculeTypes);
+    _coulombForceCutOffs.resize(numberOfMoleculeTypes);
+    _nonCoulombEnergyCutOffs.resize(numberOfMoleculeTypes);
+    _nonCoulombForceCutOffs.resize(numberOfMoleculeTypes);
 }
 
 /**
@@ -30,15 +30,15 @@ void SimulationBox::resizeGuff(c_ul numberOfMoleculeTypes)
  * @param m1
  * @param numberOfMoleculeTypes
  */
-void SimulationBox::resizeGuff(c_ul m1, c_ul numberOfMoleulceTypes)
+void SimulationBox::resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes)
 {
-    _guffCoefficients[m1].resize(numberOfMoleulceTypes);
-    _rncCutOffs[m1].resize(numberOfMoleulceTypes);
-    _coulombCoefficients[m1].resize(numberOfMoleulceTypes);
-    _cEnergyCutOffs[m1].resize(numberOfMoleulceTypes);
-    _cForceCutOffs[m1].resize(numberOfMoleulceTypes);
-    _ncEnergyCutOffs[m1].resize(numberOfMoleulceTypes);
-    _ncForceCutOffs[m1].resize(numberOfMoleulceTypes);
+    _guffCoefficients[m1].resize(numberOfMoleculeTypes);
+    _NonCoulombRadiusCutOffs[m1].resize(numberOfMoleculeTypes);
+    _coulombCoefficients[m1].resize(numberOfMoleculeTypes);
+    _coulombEnergyCutOffs[m1].resize(numberOfMoleculeTypes);
+    _coulombForceCutOffs[m1].resize(numberOfMoleculeTypes);
+    _nonCoulombEnergyCutOffs[m1].resize(numberOfMoleculeTypes);
+    _nonCoulombForceCutOffs[m1].resize(numberOfMoleculeTypes);
 }
 
 /**
@@ -51,12 +51,12 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul numberOfMoleulceTypes)
 void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms)
 {
     _guffCoefficients[m1][m2].resize(numberOfAtoms);
-    _rncCutOffs[m1][m2].resize(numberOfAtoms);
+    _NonCoulombRadiusCutOffs[m1][m2].resize(numberOfAtoms);
     _coulombCoefficients[m1][m2].resize(numberOfAtoms);
-    _cEnergyCutOffs[m1][m2].resize(numberOfAtoms);
-    _cForceCutOffs[m1][m2].resize(numberOfAtoms);
-    _ncEnergyCutOffs[m1][m2].resize(numberOfAtoms);
-    _ncForceCutOffs[m1][m2].resize(numberOfAtoms);
+    _coulombEnergyCutOffs[m1][m2].resize(numberOfAtoms);
+    _coulombForceCutOffs[m1][m2].resize(numberOfAtoms);
+    _nonCoulombEnergyCutOffs[m1][m2].resize(numberOfAtoms);
+    _nonCoulombForceCutOffs[m1][m2].resize(numberOfAtoms);
 }
 
 /**
@@ -70,12 +70,12 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms)
 void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms)
 {
     _guffCoefficients[m1][m2][a1].resize(numberOfAtoms);
-    _rncCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _NonCoulombRadiusCutOffs[m1][m2][a1].resize(numberOfAtoms);
     _coulombCoefficients[m1][m2][a1].resize(numberOfAtoms);
-    _cEnergyCutOffs[m1][m2][a1].resize(numberOfAtoms);
-    _cForceCutOffs[m1][m2][a1].resize(numberOfAtoms);
-    _ncEnergyCutOffs[m1][m2][a1].resize(numberOfAtoms);
-    _ncForceCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _coulombEnergyCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _coulombForceCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _nonCoulombEnergyCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _nonCoulombForceCutOffs[m1][m2][a1].resize(numberOfAtoms);
 }
 
 /**
@@ -130,8 +130,6 @@ pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t ato
 
 /**
  * @brief calculate degrees of freedom
- *
- * TODO: maybe -3 Ncom
  *
  */
 void SimulationBox::calculateDegreesOfFreedom()

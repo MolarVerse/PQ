@@ -1,6 +1,6 @@
-#ifndef _STRING_UTILITIES_H_
+#ifndef _STRING_UTILITIES_HPP_
 
-#define _STRING_UTILITIES_H_
+#define _STRING_UTILITIES_HPP_
 
 #include <string>
 #include <vector>
@@ -19,4 +19,4 @@ namespace StringUtilities
 
 }   // namespace StringUtilities
 
-#endif
+#endif   // _STRING_UTILITIES_HPP_

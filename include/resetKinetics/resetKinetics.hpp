@@ -81,4 +81,4 @@ class resetKinetics::ResetTemperature : public resetKinetics::ResetKinetics
     void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const override;
 };
 
-#endif
+#endif   // _RESET_KINETICS_HPP_

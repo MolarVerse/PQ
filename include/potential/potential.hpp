@@ -1,6 +1,6 @@
-#ifndef _POTENTIAL_H_
+#ifndef _POTENTIAL_HPP_
 
-#define _POTENTIAL_H_
+#define _POTENTIAL_HPP_
 
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
@@ -109,4 +109,4 @@ class potential::PotentialCellList : public potential::Potential
     void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
-#endif   // _POTENTIAL_H_
+#endif   // _POTENTIAL_HPP_

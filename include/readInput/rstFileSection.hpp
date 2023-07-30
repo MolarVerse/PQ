@@ -1,6 +1,6 @@
-#ifndef _RST_FILE_SECTION_H_
+#ifndef _RST_FILE_SECTION_HPP_
 
-#define _RST_FILE_SECTION_H_
+#define _RST_FILE_SECTION_HPP_
 
 #include "engine.hpp"
 #include "settings.hpp"
@@ -59,6 +59,7 @@ class readInput::BoxSection : public readInput::RstFileSection
  * @class NoseHooverSection
  *
  * @brief Reads the Nose-Hoover section of a .rst file
+ *        TODO: This section is not yet implemented
  *
  */
 class readInput::NoseHooverSection : public readInput::RstFileSection
@@ -103,4 +104,4 @@ class readInput::AtomSection : public readInput::RstFileSection
     void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
-#endif
+#endif   // _RST_FILE_SECTION_HPP_

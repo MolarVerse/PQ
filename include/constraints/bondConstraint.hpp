@@ -13,7 +13,7 @@ namespace constraints
 /**
  * @class BondConstraint
  *
- * @brief constraint for bond lengths
+ * @brief constraint object for single bond length
  *
  */
 class constraints::BondConstraint

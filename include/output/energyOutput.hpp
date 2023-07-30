@@ -1,6 +1,6 @@
-#ifndef _ENERGYOUTPUT_HPP_
+#ifndef _ENERGY_OUTPUT_HPP_
 
-#define _ENERGYOUTPUT_HPP_
+#define _ENERGY_OUTPUT_HPP_
 
 #include "output.hpp"
 #include "physicalData.hpp"
@@ -13,7 +13,7 @@ namespace output
 /**
  * @class EnergyOutput inherits from Output
  *
- * @brief Output file for energy
+ * @brief Output file for energy, temperature and pressure
  *
  */
 class output::EnergyOutput : public output::Output
@@ -24,4 +24,4 @@ class output::EnergyOutput : public output::Output
     void write(const size_t, const physicalData::PhysicalData &);
 };
 
-#endif   // _ENERGYOUTPUT_HPP_
+#endif   // _ENERGY_OUTPUT_HPP_

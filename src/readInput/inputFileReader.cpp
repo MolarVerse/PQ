@@ -54,7 +54,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
 
     addKeyword(string("virial"), &InputFileReader::parseVirial, false);
 
-    addKeyword(string("rcoulomb"), &InputFileReader::parseRcoulomb, false);
+    addKeyword(string("rcoulomb"), &InputFileReader::parseCoulombRadius, false);
 
     addKeyword(string("cell-list"), &InputFileReader::parseCellListActivated, false);
     addKeyword(string("cell-number"), &InputFileReader::parseNumberOfCells, false);

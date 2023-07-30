@@ -36,7 +36,7 @@ class readInput::TopologyReader
     void                        read();
     readInput::TopologySection *determineSection(const std::vector<std::string> &);
 
-    void setFilename(const std::string &filename) { _filename = filename; }
+    void setFilename(const std::string_view &filename) { _filename = filename; }
 };
 
 #endif   // _TOPOLOGY_READER_HPP_

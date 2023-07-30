@@ -1,6 +1,6 @@
-#ifndef _TIMINGS_H_
+#ifndef _TIMINGS_HPP_
 
-#define _TIMINGS_H_
+#define _TIMINGS_HPP_
 
 #include <chrono>
 #include <cstddef>
@@ -51,4 +51,4 @@ class timings::Timings
     void setNumberOfSteps(const size_t numberOfSteps) { _numberOfSteps = numberOfSteps; }
 };
 
-#endif
+#endif   // _TIMINGS_HPP_

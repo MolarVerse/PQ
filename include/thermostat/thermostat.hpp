@@ -1,6 +1,6 @@
-#ifndef _THEMOSTAT_H_
+#ifndef _THERMOSTAT_HPP_
 
-#define _THEMOSTAT_H_
+#define _THERMOSTAT_HPP_
 
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -60,4 +60,4 @@ class thermostat::BerendsenThermostat : public thermostat::Thermostat
     void   setTau(const double tau) { _tau = tau; }
 };
 
-#endif   // _THEMOSTAT_H_
+#endif   // _THERMOSTAT_HPP_

@@ -1,6 +1,6 @@
-#ifndef _INTEGRATOR_H_
+#ifndef _INTEGRATOR_HPP_
 
-#define _INTEGRATOR_H_
+#define _INTEGRATOR_HPP_
 
 #include "simulationBox.hpp"
 
@@ -61,4 +61,4 @@ class integrator::VelocityVerlet : public integrator::Integrator
     void secondStep(simulationBox::SimulationBox &) override;
 };
 
-#endif
+#endif   // _INTEGRATOR_HPP_

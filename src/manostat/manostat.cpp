@@ -43,7 +43,7 @@ void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physi
 {
     calculatePressure(physicalData);
 
-    const auto scaleFactors = Vec3D(::pow(1.0 - _compressability * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
+    const auto scaleFactors = Vec3D(::pow(1.0 - _compressibility * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
 
     simBox.scaleBox(scaleFactors);
 

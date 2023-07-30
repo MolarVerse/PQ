@@ -1,7 +1,8 @@
-#ifndef _SETTINGS_H_
+#ifndef _SETTINGS_HPP_
 
-#define _SETTINGS_H_
+#define _SETTINGS_HPP_
 
+#include "defaults.hpp"
 #include "timings.hpp"
 
 #include <string>
@@ -31,27 +32,27 @@ class settings::Settings
 
     // filenames and paths for later setup
     std::string _startFilename;
-    std::string _moldescriptorFilename = "moldescriptor.dat";   // for backward compatibility
-    std::string _guffPath              = ".";                   // not backward compatible
+    std::string _moldescriptorFilename = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
+    std::string _guffPath              = ".";                                          // not backward compatible
     std::string _topologyFilename      = "";
 
     std::string _jobtype;
 
     // thermostat settings for later setup
-    std::pair<bool, std::string> _thermostat;                                    // pair.first = check if thermostat was set
+    std::pair<bool, std::string> _thermostat;   // pair.first = check if thermostat was set
     std::pair<bool, double>      _temperature;
     std::pair<bool, double>      _relaxationTime = std::make_pair(false, 0.1);   // pay attention here default value in ps
 
     // manostat settings for later setup
-    std::pair<bool, std::string> _manostat;                                   // pair.first = check if thermostat was set
+    std::pair<bool, std::string> _manostat;   // pair.first = check if thermostat was set
     std::pair<bool, double>      _pressure;
     std::pair<bool, double>      _tauManostat = std::make_pair(false, 1.0);   // pay attention here default value in ps
 
     // shake settings for later setup
-    double _shakeTolerance  = 1e-8;
-    size_t _shakeMaxIter    = 20;
-    double _rattleTolerance = 1e-8;
-    size_t _rattleMaxIter   = 20;
+    double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
+    size_t _shakeMaxIter    = defaults::_SHAKE_MAX_ITER_DEFAULT_;
+    double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
+    size_t _rattleMaxIter   = defaults::_RATTLE_MAX_ITER_DEFAULT_;
 
   public:
     /********************
@@ -119,4 +120,4 @@ class settings::Settings
     void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
 };
 
-#endif
+#endif   // _SETTINGS_HPP_

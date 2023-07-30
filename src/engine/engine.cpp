@@ -44,8 +44,8 @@ void Engine::run()
 
     cout << endl << endl;
 
-    cout << "Couloumb energy: " << _physicalData.getCoulombEnergy() << endl;
-    cout << "Non Couloumb energy: " << _physicalData.getNonCoulombEnergy() << endl;
+    cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << endl;
+    cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << endl;
     cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << endl;
 
     cout << "Temperature: " << _physicalData.getTemperature() << endl;
@@ -100,11 +100,9 @@ void Engine::writeOutput()
         const auto effectiveStep  = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
 
-        // calclooptime after writting trajectory files
-
         _energyOutput->write(effectiveStep, _averagePhysicalData);
         _infoOutput->write(simulationTime, _averagePhysicalData);
-        _xyzOutput->writexyz(_simulationBox);
+        _xyzOutput->writeXyz(_simulationBox);
         _velOutput->writeVelocities(_simulationBox);
         _forceOutput->writeForces(_simulationBox);
         _chargeOutput->writeCharges(_simulationBox);

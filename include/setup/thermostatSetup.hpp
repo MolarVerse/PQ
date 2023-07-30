@@ -27,4 +27,4 @@ class setup::ThermostatSetup
     void setup();
 };
 
-#endif
+#endif   // _THERMOSTAT_SETUP_HPP_

@@ -111,8 +111,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     try
     {
-        molecule1 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[0]));
-        molecule2 = _engine.getSimulationBox().findMoleculeType(stoi(lineCommands[2]));
+        molecule1 = _engine.getSimulationBox().findMoleculeType(stoul(lineCommands[0]));
+        molecule2 = _engine.getSimulationBox().findMoleculeType(stoul(lineCommands[2]));
     }
     catch (const RstFileException &)
     {
@@ -131,7 +131,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     double rncCutOff = stod(lineCommands[4]);
 
-    if (rncCutOff < 0.0) rncCutOff = _engine.getSimulationBox().getRcCutOff();
+    if (rncCutOff < 0.0) rncCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
 
     const double   coulombCoefficient = stod(lineCommands[5]);
     vector<double> guffCoefficients(22);
@@ -145,8 +145,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     _engine.getSimulationBox().setGuffCoefficients(moltype1, moltype2, atomType1, atomType2, guffCoefficients);
     _engine.getSimulationBox().setGuffCoefficients(moltype2, moltype1, atomType2, atomType1, guffCoefficients);
 
-    _engine.getSimulationBox().setRncCutOff(moltype1, moltype2, atomType1, atomType2, rncCutOff);
-    _engine.getSimulationBox().setRncCutOff(moltype2, moltype1, atomType2, atomType1, rncCutOff);
+    _engine.getSimulationBox().setNonCoulombRadiusCutOff(moltype1, moltype2, atomType1, atomType2, rncCutOff);
+    _engine.getSimulationBox().setNonCoulombRadiusCutOff(moltype2, moltype1, atomType2, atomType1, rncCutOff);
 
     _engine.getSimulationBox().setCoulombCoefficient(moltype1, moltype2, atomType1, atomType2, coulombCoefficient);
     _engine.getSimulationBox().setCoulombCoefficient(moltype2, moltype1, atomType2, atomType1, coulombCoefficient);
@@ -156,20 +156,20 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     const double dummyCutoff = 1.0;
 
     _engine._potential->calcCoulomb(
-        coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getRcCutOff(), energy, force, 0.0, 0.0);
+        coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getCoulombRadiusCutOff(), energy, force, 0.0, 0.0);
 
-    _engine.getSimulationBox().setcEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
-    _engine.getSimulationBox().setcEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);
-    _engine.getSimulationBox().setcForceCutOff(moltype1, moltype2, atomType1, atomType2, force);
-    _engine.getSimulationBox().setcForceCutOff(moltype2, moltype1, atomType2, atomType1, force);
+    _engine.getSimulationBox().setCoulombEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
+    _engine.getSimulationBox().setCoulombEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);
+    _engine.getSimulationBox().setCoulombForceCutOff(moltype1, moltype2, atomType1, atomType2, force);
+    _engine.getSimulationBox().setCoulombForceCutOff(moltype2, moltype1, atomType2, atomType1, force);
 
     energy = 0.0;
     force  = 0.0;
 
     _engine._potential->calcNonCoulomb(guffCoefficients, dummyCutoff, rncCutOff, energy, force, 0.0, 0.0);
 
-    _engine.getSimulationBox().setncEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
-    _engine.getSimulationBox().setncEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);
-    _engine.getSimulationBox().setncForceCutOff(moltype1, moltype2, atomType1, atomType2, force);
-    _engine.getSimulationBox().setncForceCutOff(moltype2, moltype1, atomType2, atomType1, force);
+    _engine.getSimulationBox().setNonCoulombEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
+    _engine.getSimulationBox().setNonCoulombEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);
+    _engine.getSimulationBox().setNonCoulombForceCutOff(moltype1, moltype2, atomType1, atomType2, force);
+    _engine.getSimulationBox().setNonCoulombForceCutOff(moltype2, moltype1, atomType2, atomType1, force);
 }
