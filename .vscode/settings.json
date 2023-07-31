@@ -106,5 +106,26 @@
     "C_Cpp.codeAnalysis.clangTidy.args": [
         "-p",
         "${workspaceFolder}/.build"
+    ],
+    "cSpell.words": [
+        "Berendsen",
+        "dxyz",
+        "ekin",
+        "forcexyz",
+        "guffdat",
+        "jobtype",
+        "Lennard",
+        "manostat",
+        "manostats",
+        "moldescriptor",
+        "moltype",
+        "Neighbouring",
+        "Neighbours",
+        "progressbar",
+        "timestep",
+        "tparam",
+        "txyz",
+        "Verlet",
+        "Virial"
     ]
 }

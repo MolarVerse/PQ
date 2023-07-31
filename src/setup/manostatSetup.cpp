@@ -7,7 +7,6 @@ using namespace std;
 using namespace setup;
 using namespace customException;
 using namespace manostat;
-using namespace config;
 
 /**
  * @brief wrapper for setupManostat
@@ -38,7 +37,7 @@ void ManostatSetup::setup()
         }
 
         _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(),
-                                                           _engine.getSettings().getTauManostat() * _PS_TO_FS_);
+                                                           _engine.getSettings().getTauManostat() * constants::_PS_TO_FS_);
     }
     else
     {

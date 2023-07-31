@@ -1,8 +1,8 @@
-#ifndef _CONSTANTS_H_
+#ifndef _CONSTANTS_HPP_
 
-#define _CONSTANTS_H_
+#define _CONSTANTS_HPP_
 
-namespace config
+namespace constants
 {
 
     /**
@@ -18,8 +18,9 @@ namespace config
     constexpr double _ANGSTROM_TO_METER_ = 1.0e-10;
     constexpr double _METER_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_METER_;
 
-    constexpr double _BOHR_RADIUS_TO_METER_    = 5.2917721067e-11;
-    constexpr double _METER_TO_BOHR_RADIUS_    = 1.0 / _BOHR_RADIUS_TO_METER_;
+    constexpr double _BOHR_RADIUS_TO_METER_ = 5.2917721067e-11;
+    constexpr double _METER_TO_BOHR_RADIUS_ = 1.0 / _BOHR_RADIUS_TO_METER_;
+
     constexpr double _ANGSTROM_TO_BOHR_RADIUS_ = _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
     constexpr double _BOHR_RADIUS_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_BOHR_RADIUS_;
 
@@ -50,7 +51,7 @@ namespace config
      */
     constexpr double _ELECTRON_CHARGE_         = 1.6021766208e-19;   // in Coulomb
     constexpr double _ELECTRON_CHARGE_SQUARED_ = _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
-    constexpr double _ELECTRON_MASS_           = 9.10938356e-31;     // in kg
+    constexpr double _ELECTRON_MASS_           = 9.10938356e-31;   // in kg
 
     /**
      * @brief Conversion factors for time units
@@ -109,6 +110,6 @@ namespace config
     constexpr double _BAR_TO_PASCAL_   = 1.0 / _PASCAL_TO_BAR_;
     constexpr double _PRESSURE_FACTOR_ = _ENERGY_UNIT_TO_SI_ / _VOLUME_UNIT_TO_SI_ * _PASCAL_TO_BAR_;
 
-}   // namespace config
+}   // namespace constants
 
-#endif
+#endif   // _CONSTANTS_HPP_

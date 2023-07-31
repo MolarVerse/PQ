@@ -1,6 +1,6 @@
-#ifndef _BOX_H_
+#ifndef _BOX_HPP_
 
-#define _BOX_H_
+#define _BOX_HPP_
 
 #include "vector3d.hpp"
 
@@ -70,4 +70,4 @@ class simulationBox::Box
     void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; }
 };
 
-#endif
+#endif   // _BOX_HPP_

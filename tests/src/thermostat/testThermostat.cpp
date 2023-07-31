@@ -20,7 +20,7 @@ TEST_F(TestThermostat, calculateTemperature)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    EXPECT_EQ(_data->getTemperature(), sum(kineticEnergyAtomicVector) * config::_TEMPERATURE_FACTOR_ / (nDOF));
+    EXPECT_EQ(_data->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF));
 }
 
 TEST_F(TestThermostat, applyThermostatBerendsen)
@@ -42,9 +42,9 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    const auto oldTemperature = sum(kineticEnergyAtomicVector) * config::_TEMPERATURE_FACTOR_ / (nDOF);
+    const auto oldTemperature = sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / static_cast<double>(nDOF);
 
-    const auto berendsenFactor = sqrt(1.0 + (0.1 / 100.0) * (300.0 / oldTemperature - 1.0));
+    const auto berendsenFactor = ::sqrt(1.0 + 0.1 / 100.0 * (300.0 / oldTemperature - 1.0));
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 

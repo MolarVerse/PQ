@@ -1,6 +1,6 @@
-#ifndef _TOPOLGY_SECTION_HPP_
+#ifndef _TOPOLOGY_SECTION_HPP_
 
-#define _TOPOLGY_SECTION_HPP_
+#define _TOPOLOGY_SECTION_HPP_
 
 #include "engine.hpp"
 
@@ -47,4 +47,4 @@ class readInput::ShakeSection : public readInput::TopologySection
     void        process(std::vector<std::string> &, engine::Engine &) override;
 };
 
-#endif   // _TOPOLGY_SECTION_HPP_
+#endif   // _TOPOLOGY_SECTION_HPP_

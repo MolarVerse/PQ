@@ -1,6 +1,6 @@
-#ifndef _COMMAND_LINE_ARGS_H_
+#ifndef _COMMAND_LINE_ARGS_HPP_
 
-#define _COMMAND_LINE_ARGS_H_
+#define _COMMAND_LINE_ARGS_HPP_
 
 #include <string>
 #include <vector>
@@ -26,4 +26,4 @@ class CommandLineArgs
     std::string getInputFileName() const { return _inputFileName; }
 };
 
-#endif
+#endif   // _COMMAND_LINE_ARGS_HPP_

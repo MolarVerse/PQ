@@ -1,6 +1,6 @@
-#ifndef _VIRIAL_H_
+#ifndef _VIRIAL_HPP_
 
-#define _VIRIAL_H_
+#define _VIRIAL_HPP_
 
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -69,4 +69,4 @@ class virial::VirialAtomic : public virial::Virial
     VirialAtomic() : Virial() { _virialType = "atomic"; }
 };
 
-#endif
+#endif   // _VIRIAL_HPP_

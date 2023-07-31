@@ -1,6 +1,6 @@
-#ifndef _RST_FILE_READER_H_
+#ifndef _RST_FILE_READER_HPP_
 
-#define _RST_FILE_READER_H_
+#define _RST_FILE_READER_HPP_
 
 #include "engine.hpp"
 #include "rstFileSection.hpp"
@@ -40,4 +40,4 @@ class readInput::RstFileReader
     readInput::RstFileSection *determineSection(std::vector<std::string> &);
 };
 
-#endif
+#endif   // _RST_FILE_READER_HPP_

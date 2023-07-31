@@ -39,4 +39,4 @@ class setup::SimulationBoxSetup
     void checkRcCutoff();
 };
 
-#endif
+#endif   // _SIMULATION_BOX_SETUP_HPP_

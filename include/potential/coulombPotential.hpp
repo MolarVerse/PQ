@@ -1,6 +1,6 @@
-#ifndef _COULOMB_POTENTIAL_H_
+#ifndef _COULOMB_POTENTIAL_HPP_
 
-#define _COULOMB_POTENTIAL_H_
+#define _COULOMB_POTENTIAL_HPP_
 
 namespace potential
 {
@@ -35,4 +35,4 @@ class potential::GuffCoulomb : public potential::CoulombPotential
     void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
 };
 
-#endif   // _COULOMB_POTENTIAL_H_
+#endif   // _COULOMB_POTENTIAL_HPP_

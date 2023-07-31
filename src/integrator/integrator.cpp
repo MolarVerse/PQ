@@ -9,7 +9,6 @@
 using namespace std;
 using namespace simulationBox;
 using namespace integrator;
-using namespace config;
 
 /**
  * @brief integrates the velocities of a single atom
@@ -23,7 +22,7 @@ void Integrator::integrateVelocities(Molecule &molecule, const size_t i) const
     const auto forces     = molecule.getAtomForce(i);
     const auto mass       = molecule.getAtomMass(i);
 
-    velocities += _dt * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
+    velocities += _dt * forces / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
 
     molecule.setAtomVelocity(i, velocities);
 }
@@ -40,7 +39,7 @@ void Integrator::integratePositions(Molecule &molecule, const size_t index, cons
     auto       positions  = molecule.getAtomPosition(index);
     const auto velocities = molecule.getAtomVelocity(index);
 
-    positions += _dt * velocities * _FS_TO_S_;
+    positions += _dt * velocities * constants::_FS_TO_S_;
     applyPBC(simBox, positions);
 
     molecule.setAtomPosition(index, positions);

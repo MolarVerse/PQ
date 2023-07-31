@@ -39,7 +39,7 @@ void ThermostatSetup::setup()
         }
 
         _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(),
-                                                               _engine.getSettings().getRelaxationTime() * config::_PS_TO_FS_);
+                                                               _engine.getSettings().getRelaxationTime() * constants::_PS_TO_FS_);
     }
     else
     {

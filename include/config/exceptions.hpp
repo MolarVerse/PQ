@@ -1,6 +1,6 @@
-#ifndef _EXCEPTIONS_H_
+#ifndef _EXCEPTIONS_HPP_
 
-#define _EXCEPTIONS_H_
+#define _EXCEPTIONS_HPP_
 
 #include <exception>
 #include <iostream>
@@ -137,4 +137,4 @@ class customException::TopologyException : public customException::CustomExcepti
     const char *what() const throw() override;
 };
 
-#endif
+#endif   // _EXCEPTIONS_HPP_

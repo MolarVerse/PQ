@@ -5,7 +5,6 @@
 using namespace std;
 using namespace resetKinetics;
 using namespace physicalData;
-using namespace config;
 
 /**
  * @brief dummy reset function in case no reset is needed
@@ -63,12 +62,11 @@ void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simu
  * @param physicalData
  * @param simBox
  */
-void ResetKinetics::resetTemperature(PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetKinetics::resetTemperature(const PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
     const auto temperature = physicalData.getTemperature();
-    const auto lambda      = sqrt(_targetTemperature / temperature);
+    const auto lambda      = ::sqrt(_targetTemperature / temperature);
 
-    // simBox.scaleVelocities(lambda);
     for (auto &molecule : simBox.getMolecules())
         molecule.scaleVelocities(lambda);
 }
@@ -81,7 +79,7 @@ void ResetKinetics::resetTemperature(PhysicalData &physicalData, simulationBox::
  */
 void ResetKinetics::resetMomentum(PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    const auto momentumVector     = physicalData.getMomentumVector() * _S_TO_FS_;
+    const auto momentumVector     = physicalData.getMomentumVector() * constants::_S_TO_FS_;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
 
     for (auto &molecule : simBox.getMolecules())

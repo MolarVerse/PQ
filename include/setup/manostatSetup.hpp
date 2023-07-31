@@ -27,4 +27,4 @@ class setup::ManostatSetup
     void setup();
 };
 
-#endif
+#endif   // _MANOSTAT_SETUP_HPP_

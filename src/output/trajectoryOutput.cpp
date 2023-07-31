@@ -11,7 +11,7 @@ using namespace output;
  *
  * @param simBox
  */
-void TrajectoryOutput::writexyz(SimulationBox &simBox)
+void TrajectoryOutput::writeXyz(SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms();
     _fp << "  ";
@@ -24,7 +24,9 @@ void TrajectoryOutput::writexyz(SimulationBox &simBox)
 
     for (const auto &molecule : simBox.getMolecules())
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             _fp << left;
             _fp << setw(5);
@@ -66,7 +68,9 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 
     for (const auto &molecule : simBox.getMolecules())
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             _fp << left;
             _fp << setw(5);
@@ -108,7 +112,9 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
 
     for (const auto &molecule : simBox.getMolecules())
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             _fp << left;
             _fp << setw(5);
@@ -150,7 +156,9 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 
     for (const auto &molecule : simBox.getMolecules())
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             _fp << left;
             _fp << setw(5);

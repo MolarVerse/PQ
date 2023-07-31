@@ -8,7 +8,6 @@ using namespace std;
 using namespace vector3d;
 using namespace customException;
 using namespace simulationBox;
-using namespace config;
 using namespace ::testing;
 
 TEST_F(TestBox, setBoxDimensions)
@@ -47,7 +46,7 @@ TEST_F(TestBox, setDensity)
 TEST_F(TestBox, calculateBoxDimensionsFromDensity)
 {
     const double density = 1.0;
-    _box->setDensity(density / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+    _box->setDensity(density / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
     _box->setTotalMass(1.0);
     const Vec3D boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(_box->calculateBoxDimensionsFromDensity(), boxDimensions);

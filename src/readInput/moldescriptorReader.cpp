@@ -117,7 +117,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
     }
 
-    convertExternalToInternalAtomtypes(molecule);
+    convertExternalToInternalAtomTypes(molecule);
 
     _engine.getSimulationBox().getMoleculeTypes().push_back(molecule);
 }
@@ -129,7 +129,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
  *
  * @param molecule
  */
-void MoldescriptorReader::convertExternalToInternalAtomtypes(Molecule &molecule) const
+void MoldescriptorReader::convertExternalToInternalAtomTypes(Molecule &molecule) const
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

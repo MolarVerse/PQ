@@ -1,6 +1,6 @@
-#ifndef _INPUT_FILE_READER_H_
+#ifndef _INPUT_FILE_READER_HPP_
 
-#define _INPUT_FILE_READER_H_
+#define _INPUT_FILE_READER_HPP_
 
 #include "engine.hpp"
 #include "exceptions.hpp"
@@ -25,7 +25,7 @@ namespace readInput
 
 }   // namespace readInput
 
-using parseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
+using ParseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
 
 /**
  * @class InputFileReader
@@ -39,7 +39,7 @@ class readInput::InputFileReader
     std::string     _filename;
     engine::Engine &_engine;
 
-    std::map<std::string, parseFunc> _keywordFuncMap;
+    std::map<std::string, ParseFunc> _keywordFuncMap;
     std::map<std::string, int>       _keywordCountMap;
     std::map<std::string, bool>      _keywordRequiredMap;
 
@@ -49,7 +49,15 @@ class readInput::InputFileReader
     InputFileReader(const std::string &, engine::Engine &);
 
     void read();
+    void addKeyword(const std::string &, ParseFunc, bool);
+    void process(const std::vector<std::string> &);
     void postProcess();
+
+    /*************************
+     *                       *
+     * all parsing functions *
+     *                       *
+     *************************/
 
     // parsing jobtype related keywords
     void parseJobType(const std::vector<std::string> &);
@@ -62,6 +70,7 @@ class readInput::InputFileReader
     void parseStartFilename(const std::vector<std::string> &);
     void parseMoldescriptorFilename(const std::vector<std::string> &);
     void parseGuffPath(const std::vector<std::string> &);
+    void parseTopologyFilename(const std::vector<std::string> &);
 
     // parsing output related keywords
     void parseOutputFreq(const std::vector<std::string> &);
@@ -83,39 +92,42 @@ class readInput::InputFileReader
     // parsing Virial related keywords TODO: implement
     void parseVirial(const std::vector<std::string> &);
 
-    // parsing simualationBox related keywords
-    void parseRcoulomb(const std::vector<std::string> &);
+    // parsing simulationBox related keywords
+    void parseCoulombRadius(const std::vector<std::string> &);
 
-    // parsing celllist related keywords
+    // parsing cellList related keywords
     void parseCellListActivated(const std::vector<std::string> &);
     void parseNumberOfCells(const std::vector<std::string> &);
 
+    // parsing temperature related keywords
     void parseThermostat(const std::vector<std::string> &);
     void parseTemperature(const std::vector<std::string> &);
     void parseThermostatRelaxationTime(const std::vector<std::string> &);
 
+    // parsing pressure related keywords
     void parseManostat(const std::vector<std::string> &);
     void parsePressure(const std::vector<std::string> &);
     void parseManostatRelaxationTime(const std::vector<std::string> &);
 
+    // parsing reset related keywords
     void parseNScale(const std::vector<std::string> &);
     void parseFScale(const std::vector<std::string> &);
     void parseNReset(const std::vector<std::string> &);
     void parseFReset(const std::vector<std::string> &);
 
+    // parsing constraints related keywords
     void parseShakeActivated(const std::vector<std::string> &);
     void parseShakeTolerance(const std::vector<std::string> &);
     void parseShakeIteration(const std::vector<std::string> &);
     void parseRattleTolerance(const std::vector<std::string> &);
     void parseRattleIteration(const std::vector<std::string> &);
 
-    void parseTopologyFilename(const std::vector<std::string> &);
+    /********************************
+     *                              *
+     * standard getters and setters *
+     *                              *
+     ********************************/
 
-    void addKeyword(const std::string &, parseFunc, bool);
-
-    void process(const std::vector<std::string> &);
-
-    // Getters and setters
     void setFilename(const std::string_view filename) { _filename = filename; }
 
     int  getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; }
@@ -124,4 +136,4 @@ class readInput::InputFileReader
     bool getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; }
 };
 
-#endif
+#endif   // _INPUT_FILE_READER_HPP_

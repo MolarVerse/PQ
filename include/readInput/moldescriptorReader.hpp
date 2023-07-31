@@ -1,6 +1,6 @@
-#ifndef _MOLDESCRIPTOR_READER_H_
+#ifndef _MOLDESCRIPTOR_READER_HPP_
 
-#define _MOLDESCRIPTOR_READER_H_
+#define _MOLDESCRIPTOR_READER_HPP_
 
 #include "engine.hpp"
 
@@ -34,7 +34,7 @@ class readInput::MoldescriptorReader
 
     void read();
     void processMolecule(std::vector<std::string> &);
-    void convertExternalToInternalAtomtypes(simulationBox::Molecule &) const;
+    void convertExternalToInternalAtomTypes(simulationBox::Molecule &) const;
 };
 
-#endif
+#endif   // _MOLDESCRIPTOR_READER_HPP_

@@ -1,6 +1,6 @@
-#ifndef _SIMULATION_BOX_H_
+#ifndef _SIMULATION_BOX_HPP_
 
-#define _SIMULATION_BOX_H_
+#define _SIMULATION_BOX_HPP_
 
 #include "box.hpp"
 #include "defaults.hpp"
@@ -49,7 +49,7 @@ class simulationBox::SimulationBox
     int    _waterType;
     int    _ammoniaType;
     size_t _degreesOfFreedom = 0;
-    double _rcCutOff         = config::_COULOMB_CUT_OFF_DEFAULT_;
+    double _rcCutOff         = defaults::_COULOMB_CUT_OFF_DEFAULT_;
 
     Box _box;
 
@@ -57,12 +57,12 @@ class simulationBox::SimulationBox
     std::vector<Molecule> _moleculeTypes;
 
     vector5d _guffCoefficients;
-    vector4d _rncCutOffs;
+    vector4d _NonCoulombRadiusCutOffs;
     vector4d _coulombCoefficients;
-    vector4d _cEnergyCutOffs;
-    vector4d _cForceCutOffs;
-    vector4d _ncEnergyCutOffs;
-    vector4d _ncForceCutOffs;
+    vector4d _coulombEnergyCutOffs;
+    vector4d _coulombForceCutOffs;
+    vector4d _nonCoulombEnergyCutOffs;
+    vector4d _nonCoulombForceCutOffs;
 
   public:
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
@@ -78,17 +78,17 @@ class simulationBox::SimulationBox
     void calculateCenterOfMassMolecules();
 
     void resizeGuff(c_ul numberOfMoleculeTypes);
-    void resizeGuff(c_ul m1, c_ul numberOfMoleulceTypes);
+    void resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes);
     void resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms);
     void resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms);
 
     /***************************
-     * standatd getter methods *
+     * standard getter methods *
      ***************************/
 
     int    getWaterType() const { return _waterType; }
     int    getAmmoniaType() const { return _ammoniaType; }
-    double getRcCutOff() const { return _rcCutOff; }
+    double getCoulombRadiusCutOff() const { return _rcCutOff; }
     size_t getNumberOfMolecules() const { return _molecules.size(); }
 
     std::vector<Molecule> &getMolecules() { return _molecules; }
@@ -96,12 +96,21 @@ class simulationBox::SimulationBox
     Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
     Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-    double getRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _rncCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getNonCoulombRadiusCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _NonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2];
+    }
     double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; }
-    double getcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
-    double getcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _cForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
-    double getncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
-    double getncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
+    double getNonCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _nonCoulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2];
+    }
+    double getNonCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _nonCoulombForceCutOffs[m1 - 1][m2 - 1][a1][a2];
+    }
 
     std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
     {
@@ -109,13 +118,13 @@ class simulationBox::SimulationBox
     }
 
     vector5d &getGuffCoefficients() { return _guffCoefficients; }
-    vector4d &getRncCutOffs() { return _rncCutOffs; }
+    vector4d &getNonCoulombRadiusCutOffs() { return _NonCoulombRadiusCutOffs; }
     vector4d &getCoulombCoefficients() { return _coulombCoefficients; }
-    vector4d &getcEnergyCutOffs() { return _cEnergyCutOffs; }
-    vector4d &getcForceCutOffs() { return _cForceCutOffs; }
+    vector4d &getCoulombEnergyCutOffs() { return _coulombEnergyCutOffs; }
+    vector4d &getCoulombForceCutOffs() { return _coulombForceCutOffs; }
 
     /***************************
-     * standatd setter methods *
+     * standard setter methods *
      ***************************/
 
     void setWaterType(const int waterType) { _waterType = waterType; }
@@ -126,29 +135,29 @@ class simulationBox::SimulationBox
     {
         _guffCoefficients[m1 - 1][m2 - 1][a1][a2] = guffCoefficients;
     }
-    void setRncCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff)
+    void setNonCoulombRadiusCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff)
     {
-        _rncCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
+        _NonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
     }
     void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient)
     {
         _coulombCoefficients[m1 - 1][m2 - 1][a1][a2] = coulombCoefficient;
     }
-    void setcEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff)
+    void setCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cEnergyCutOff)
     {
-        _cEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = cEnergyCutOff;
+        _coulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = cEnergyCutOff;
     }
-    void setcForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff)
+    void setCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double cForceCutOff)
     {
-        _cForceCutOffs[m1 - 1][m2 - 1][a1][a2] = cForceCutOff;
+        _coulombForceCutOffs[m1 - 1][m2 - 1][a1][a2] = cForceCutOff;
     }
-    void setncEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff)
+    void setNonCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncEnergyCutOff)
     {
-        _ncEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = ncEnergyCutOff;
+        _nonCoulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2] = ncEnergyCutOff;
     }
-    void setncForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff)
+    void setNonCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double ncForceCutOff)
     {
-        _ncForceCutOffs[m1 - 1][m2 - 1][a1][a2] = ncForceCutOff;
+        _nonCoulombForceCutOffs[m1 - 1][m2 - 1][a1][a2] = ncForceCutOff;
     }
 
     /**********************************************
@@ -180,4 +189,4 @@ class simulationBox::SimulationBox
     void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _box.setBoxSizeHasChanged(boxSizeHasChanged); }
 };
 
-#endif
+#endif   // _SIMULATION_BOX_HPP_

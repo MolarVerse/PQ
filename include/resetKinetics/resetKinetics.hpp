@@ -44,7 +44,7 @@ class resetKinetics::ResetKinetics
     virtual ~ResetKinetics() = default;
 
     virtual void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
-    void         resetTemperature(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
+    void         resetTemperature(const physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
     void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
 
     size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
@@ -81,4 +81,4 @@ class resetKinetics::ResetTemperature : public resetKinetics::ResetKinetics
     void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const override;
 };
 
-#endif
+#endif   // _RESET_KINETICS_HPP_

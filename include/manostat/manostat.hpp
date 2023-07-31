@@ -1,6 +1,6 @@
-#ifndef _MANOSTAT_H_
+#ifndef _MANOSTAT_HPP_
 
-#define _MANOSTAT_H_
+#define _MANOSTAT_HPP_
 
 #include "physicalData.hpp"
 #include "virial.hpp"
@@ -36,7 +36,10 @@ class manostat::Manostat
     void         calculatePressure(physicalData::PhysicalData &physicalData);
     virtual void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    // standard getters and setters
+    /********************************
+     * standard getters and setters *
+     ********************************/
+
     void   setTimestep(const double timestep) { _timestep = timestep; }
     double getTimestep() const { return _timestep; }
 };
@@ -45,7 +48,7 @@ class manostat::BerendsenManostat : public manostat::Manostat
 {
   private:
     double _tau;
-    double _compressability = 4.591e-5;   // TODO: make as input parameter
+    double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;   // TODO: make as input parameter
 
   public:
     using Manostat::Manostat;
@@ -56,4 +59,4 @@ class manostat::BerendsenManostat : public manostat::Manostat
     double getTau() const { return _tau; }
 };
 
-#endif
+#endif   // _MANOSTAT_HPP_

@@ -1,9 +1,9 @@
 #include "testTrajectoryOutput.hpp"
 
-TEST_F(TestTrajectoryOutput, writexyz)
+TEST_F(TestTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writexyz(*_simulationBox);
+    _trajectoryOutput->writeXyz(*_simulationBox);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;

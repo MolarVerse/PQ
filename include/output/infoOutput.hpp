@@ -1,6 +1,6 @@
-#ifndef __INFOOUTPUT_HPP__
+#ifndef __INFO_OUTPUT_HPP__
 
-#define __INFOOUTPUT_HPP__
+#define __INFO_OUTPUT_HPP__
 
 #include "output.hpp"
 #include "physicalData.hpp"
@@ -33,4 +33,4 @@ class output::InfoOutput : public output::Output
     void write(const double, const physicalData::PhysicalData &data);
 };
 
-#endif /* __INFOOUTPUT_HPP__ */
+#endif /* __INFO_OUTPUT_HPP__ */

@@ -25,4 +25,4 @@ class setup::CellListSetup
     void setup();
 };
 
-#endif
+#endif   // _CELL_LIST_SETUP_HPP_

@@ -11,7 +11,6 @@ using namespace physicalData;
 using namespace settings;
 using namespace timings;
 using namespace engine;
-using namespace config;
 using namespace output;
 
 void Engine::run()
@@ -45,8 +44,8 @@ void Engine::run()
 
     cout << endl << endl;
 
-    cout << "Couloumb energy: " << _physicalData.getCoulombEnergy() << endl;
-    cout << "Non Couloumb energy: " << _physicalData.getNonCoulombEnergy() << endl;
+    cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << endl;
+    cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << endl;
     cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << endl;
 
     cout << "Temperature: " << _physicalData.getTemperature() << endl;
@@ -59,6 +58,24 @@ void Engine::run()
     cout << endl << endl;
 }
 
+/**
+ * @brief Takes one step in the simulation.
+ *
+ * @details The step is taken in the following order:
+ *  1. First step of the integrator
+ *  2. Apply SHAKE
+ *  3. Update cell list
+ *  4. Calculate forces
+ *  5. Calculate constraint bond references
+ *  6. Second step of the integrator
+ *  7. Apply RATTLE
+ *  8. Apply thermostat
+ *  9. Calculate kinetic energy and momentum
+ * 10. Calculate virial
+ * 11. Apply manostat
+ * 12. Reset temperature and momentum
+ *
+ */
 void Engine::takeStep()
 {
     _integrator->firstStep(_simulationBox);
@@ -99,13 +116,11 @@ void Engine::writeOutput()
         const auto dt             = _timings.getTimestep();
         const auto step0          = _timings.getStepCount();
         const auto effectiveStep  = _step + step0;
-        const auto simulationTime = static_cast<double>(effectiveStep) * dt * _FS_TO_PS_;
-
-        // calclooptime after writting trajectory files
+        const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
 
         _energyOutput->write(effectiveStep, _averagePhysicalData);
         _infoOutput->write(simulationTime, _averagePhysicalData);
-        _xyzOutput->writexyz(_simulationBox);
+        _xyzOutput->writeXyz(_simulationBox);
         _velOutput->writeVelocities(_simulationBox);
         _forceOutput->writeForces(_simulationBox);
         _chargeOutput->writeCharges(_simulationBox);

@@ -13,7 +13,6 @@
 using namespace std;
 using namespace simulationBox;
 using namespace vector3d;
-using namespace config;
 using namespace customException;
 
 /**
@@ -95,7 +94,7 @@ double Box::calculateVolume()
  */
 Vec3D Box::calculateBoxDimensionsFromDensity()
 {
-    _volume = _totalMass / (_density * _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+    _volume = _totalMass / (_density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
 
     return Vec3D(::cbrt(_volume));
 }

@@ -8,7 +8,7 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
 }
 
 TEST_F(TestManostat, ChangeVirialToAtomic)
@@ -17,7 +17,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
 
     _manostat->calculatePressure(*_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * config::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::_PRESSURE_FACTOR_);
 }
 
 TEST_F(TestManostat, testApplyBerendsenManostat)
@@ -37,7 +37,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     auto box_new = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
     EXPECT_NE(box_old, box_new);
     EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), vector3d::Vec3D(1.0, 0.0, 0.0));
 }
@@ -46,7 +46,7 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * config::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
 }
 
 int main(int argc, char **argv)

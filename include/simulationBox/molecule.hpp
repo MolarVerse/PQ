@@ -1,6 +1,6 @@
-#ifndef _MOLECULE_H_
+#ifndef _MOLECULE_HPP_
 
-#define _MOLECULE_H_
+#define _MOLECULE_HPP_
 
 #include "vector3d.hpp"
 
@@ -70,7 +70,7 @@ class simulationBox::Molecule
     }
 
     /************************
-     * standatd add methods *
+     * standard add methods *
      ************************/
 
     void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); }
@@ -87,7 +87,7 @@ class simulationBox::Molecule
     void addAtomShiftForce(const size_t index, const vector3d::Vec3D &shiftForce) { _shiftForces[index] += shiftForce; }
 
     /***************************
-     * standatd getter methods *
+     * standard getter methods *
      ***************************/
 
     size_t getMoltype() const { return _moltype; }
@@ -120,7 +120,7 @@ class simulationBox::Molecule
     std::vector<vector3d::Vec3D> getAtomShiftForces() const { return _shiftForces; }
 
     /***************************
-     * standatd setter methods *
+     * standard setter methods *
      ***************************/
 
     void setName(const std::string_view name) { _name = name; }
@@ -139,4 +139,4 @@ class simulationBox::Molecule
     void setExternalAtomTypes(const std::vector<size_t> &externalAtomTypes) { _externalAtomTypes = externalAtomTypes; }
 };
 
-#endif
+#endif   // _MOLECULE_HPP_

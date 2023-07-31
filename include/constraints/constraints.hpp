@@ -14,6 +14,8 @@ namespace constraints
 
 /**
  * @class Constraints
+ *
+ * @brief class for all constraints
  */
 class constraints::Constraints
 {

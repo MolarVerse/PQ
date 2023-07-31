@@ -10,7 +10,7 @@ using namespace readInput;
  *
  * @param lineElements
  */
-void InputFileReader::parseRcoulomb(const vector<string> &lineElements)
+void InputFileReader::parseCoulombRadius(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
     _engine.getSimulationBox().setRcCutOff(stod(lineElements[2]));

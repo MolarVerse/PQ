@@ -7,7 +7,6 @@ using namespace simulationBox;
 using namespace physicalData;
 using namespace manostat;
 using namespace vector3d;
-using namespace config;
 
 /**
  * @brief calculate the pressure of the system
@@ -20,7 +19,7 @@ void Manostat::calculatePressure(PhysicalData &physicalData)
     const auto forceVirial = physicalData.getVirial();
     const auto volume      = physicalData.getVolume();
 
-    _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * _PRESSURE_FACTOR_;
+    _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
 
     _pressure = mean(_pressureVector);
 
@@ -44,7 +43,7 @@ void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physi
 {
     calculatePressure(physicalData);
 
-    const auto scaleFactors = Vec3D(pow(1.0 - _compressability * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
+    const auto scaleFactors = Vec3D(::pow(1.0 - _compressibility * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
 
     simBox.scaleBox(scaleFactors);
 

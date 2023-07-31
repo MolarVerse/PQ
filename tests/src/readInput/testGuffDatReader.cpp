@@ -11,7 +11,7 @@ TEST_F(TestGuffDatReader, parseLineErrorMoltypeNotFound)
     EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
 }
 
-TEST_F(TestGuffDatReader, parseLineErrorAtomtypeNotFound)
+TEST_F(TestGuffDatReader, parseLineErrorAtomTypeNotFound)
 {
     auto line = std::vector<std::string>{"1", "0", "2", "3"};
     EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
@@ -48,7 +48,7 @@ TEST_F(TestGuffDatReader, parseLine)
 
     EXPECT_EQ(_engine->getSimulationBox().getCoulombCoefficient(1, 2, 0, 0), 10.0);
 
-    EXPECT_EQ(_engine->getSimulationBox().getRncCutOff(1, 2, 0, 0), 12.5);
+    EXPECT_EQ(_engine->getSimulationBox().getNonCoulombRadiusCutOff(1, 2, 0, 0), 12.5);
 
     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[0], 2.0);
     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[1], 2.0);
@@ -88,10 +88,10 @@ TEST_F(TestGuffDatReader, readErrorNumberOfLineArguments)
  */
 TEST_F(TestGuffDatReader, readGuffDat)
 {
-    chdir("data/guffDatReader");
+    ::chdir("data/guffDatReader");
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(readInput::readGuffDat(*_engine));
-    chdir("../../");
+    ::chdir("../../");
 }
 
 int main(int argc, char **argv)

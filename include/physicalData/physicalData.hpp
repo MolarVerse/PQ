@@ -1,6 +1,6 @@
-#ifndef _PHYSICAL_DATA_H_
+#ifndef _PHYSICAL_DATA_HPP_
 
-#define _PHYSICAL_DATA_H_
+#define _PHYSICAL_DATA_HPP_
 
 #include "simulationBox.hpp"
 
@@ -44,11 +44,11 @@ class physicalData::PhysicalData
     void makeAverages(const double);
 
     std::function<vector3d::Vec3D()> getKineticEnergyVirialVector =
-        std::bind(&PhysicalData::getKineticEnergyMolecularVector, this);
+        std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
 
     void changeKineticVirialToAtomic()
     {
-        getKineticEnergyVirialVector = std::bind(&PhysicalData::getKineticEnergyAtomicVector, this);
+        getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
     }
 
     /********************
@@ -86,4 +86,4 @@ class physicalData::PhysicalData
     vector3d::Vec3D getMomentumVector() const { return _momentumVector; }
 };
 
-#endif   // _PHYSICAL_DATA_H_
+#endif   // _PHYSICAL_DATA_HPP_

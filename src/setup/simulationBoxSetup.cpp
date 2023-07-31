@@ -49,9 +49,9 @@ void SimulationBoxSetup::setAtomMasses()
 {
     const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
 
-    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
+    for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
     {
-        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(moli);
+        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(mol_i);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
@@ -74,10 +74,10 @@ void SimulationBoxSetup::setAtomicNumbers()
 {
     const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
 
-    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
+    for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
     {
 
-        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(moli);
+        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(mol_i);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
@@ -101,9 +101,9 @@ void SimulationBoxSetup::calculateMolMass()
 
     const size_t numberOfMolecules = _engine.getSimulationBox().getNumberOfMolecules();
 
-    for (size_t moli = 0; moli < numberOfMolecules; ++moli)
+    for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
     {
-        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(moli);
+        Molecule    &molecule      = _engine.getSimulationBox().getMolecule(mol_i);
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
         double molMass = 0.0;
@@ -176,14 +176,14 @@ void SimulationBoxSetup::checkBoxSettings()   // TODO:
     else if (density == 0.0)
     {
         const auto volume = _engine.getSimulationBox().calculateVolume();
-        density = _engine.getSimulationBox().getTotalMass() / volume * config::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        density = _engine.getSimulationBox().getTotalMass() / volume * constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
     }
     else
     {
         const auto volume = _engine.getSimulationBox().calculateVolume();
-        density = _engine.getSimulationBox().getTotalMass() / volume * config::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        density = _engine.getSimulationBox().getTotalMass() / volume * constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
 
@@ -196,7 +196,7 @@ void SimulationBoxSetup::checkBoxSettings()   // TODO:
 }
 
 /**
- * @brief resizes atomshifvectors to num_atoms
+ * @brief resizes atomShiftVectors to num_atoms
  *
  */
 void SimulationBoxSetup::resizeAtomShiftForces()
@@ -212,7 +212,7 @@ void SimulationBoxSetup::resizeAtomShiftForces()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    if (_engine.getSimulationBox().getRcCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
+    if (_engine.getSimulationBox().getCoulombRadiusCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
         throw customException::InputFileException("Rc cutoff is larger than half of the minimal box dimension of " +
                                                   std::to_string(_engine.getSimulationBox().getMinimalBoxDimension()) +
                                                   " Angstrom.");

@@ -1,6 +1,6 @@
-#ifndef _OUTPUT_H_
+#ifndef _OUTPUT_HPP_
 
-#define _OUTPUT_H_
+#define _OUTPUT_HPP_
 
 #include <fstream>
 #include <string>
@@ -29,18 +29,19 @@ class output::Output
   public:
     explicit Output(const std::string &filename) : _filename(filename){};
 
-    void setFilename(const std::string_view &filename);
-
-    static void setOutputFrequency(const size_t outputFreq);
-
-    std::string initialMomentumMessage(const double momentum) const;
-
-    // standard getter and setters
-    std::string getFilename() const { return _filename; }
-
-    static size_t getOutputFrequency() { return _outputFrequency; }
-
+    void setFilename(const std::string_view &);
     void close() { _fp.close(); }
+
+    static void setOutputFrequency(const size_t);
+
+    std::string initialMomentumMessage(const double) const;
+
+    /********************************
+     * standard getters and setters *
+     ********************************/
+
+    std::string   getFilename() const { return _filename; }
+    static size_t getOutputFrequency() { return _outputFrequency; }
 };
 
-#endif
+#endif   // _OUTPUT_HPP_

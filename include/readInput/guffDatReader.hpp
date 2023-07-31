@@ -1,6 +1,6 @@
-#ifndef _GUFF_DAT_READER_H_
+#ifndef _GUFF_DAT_READER_HPP_
 
-#define _GUFF_DAT_READER_H_
+#define _GUFF_DAT_READER_HPP_
 
 #include "engine.hpp"
 
@@ -21,8 +21,8 @@ namespace readInput
 class readInput::GuffDatReader
 {
   private:
-    int         _lineNumber = 1;
-    std::string _filename   = "guff.dat";
+    size_t      _lineNumber = 1;
+    std::string _filename   = defaults::_GUFF_FILENAME_DEFAULT_;   // TODO: until now only default filename implemented
 
     engine::Engine &_engine;
 
@@ -32,7 +32,7 @@ class readInput::GuffDatReader
     void setupGuffMaps();
     void parseLine(std::vector<std::string> &);
     void read();
-    void setFilename(const std::string &filename) { _filename = filename; }
+    void setFilename(const std::string_view &filename) { _filename = filename; }
 };
 
-#endif   // _GUFF_DAT_READER_H_
+#endif   // _GUFF_DAT_READER_HPP_
