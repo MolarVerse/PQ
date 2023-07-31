@@ -58,6 +58,24 @@ void Engine::run()
     cout << endl << endl;
 }
 
+/**
+ * @brief Takes one step in the simulation.
+ *
+ * @details The step is taken in the following order:
+ *  1. First step of the integrator
+ *  2. Apply SHAKE
+ *  3. Update cell list
+ *  4. Calculate forces
+ *  5. Calculate constraint bond references
+ *  6. Second step of the integrator
+ *  7. Apply RATTLE
+ *  8. Apply thermostat
+ *  9. Calculate kinetic energy and momentum
+ * 10. Calculate virial
+ * 11. Apply manostat
+ * 12. Reset temperature and momentum
+ *
+ */
 void Engine::takeStep()
 {
     _integrator->firstStep(_simulationBox);
