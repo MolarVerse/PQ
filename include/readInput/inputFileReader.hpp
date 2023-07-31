@@ -94,6 +94,8 @@ class readInput::InputFileReader
 
     // parsing simulationBox related keywords
     void parseCoulombRadius(const std::vector<std::string> &);
+    void parseCoulombLongRange(const std::vector<std::string> &);
+    void parseWolfParameter(const std::vector<std::string> &);
 
     // parsing cellList related keywords
     void parseCellListActivated(const std::vector<std::string> &);

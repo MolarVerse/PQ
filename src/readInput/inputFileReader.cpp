@@ -55,6 +55,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("virial"), &InputFileReader::parseVirial, false);
 
     addKeyword(string("rcoulomb"), &InputFileReader::parseCoulombRadius, false);
+    addKeyword(string("long_range"), &InputFileReader::parseCoulombLongRange, false);
+    addKeyword(string("wolf_param"), &InputFileReader::parseWolfParameter, false);
 
     addKeyword(string("cell-list"), &InputFileReader::parseCellListActivated, false);
     addKeyword(string("cell-number"), &InputFileReader::parseNumberOfCells, false);

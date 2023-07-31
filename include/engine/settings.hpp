@@ -49,10 +49,14 @@ class settings::Settings
     std::pair<bool, double>      _tauManostat = std::make_pair(false, 1.0);   // pay attention here default value in ps
 
     // shake settings for later setup
-    double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
-    size_t _shakeMaxIter    = defaults::_SHAKE_MAX_ITER_DEFAULT_;
-    double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
-    size_t _rattleMaxIter   = defaults::_RATTLE_MAX_ITER_DEFAULT_;
+    double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;    // 1e-8
+    size_t _shakeMaxIter    = defaults::_SHAKE_MAX_ITER_DEFAULT_;     // 20
+    double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;   // 1e-8
+    size_t _rattleMaxIter   = defaults::_RATTLE_MAX_ITER_DEFAULT_;    // 20
+
+    // coulomb long range settings for later setup
+    std::string _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // none
+    double      _wolfParameter        = defaults::_WOLF_PARAMETER_DEFAULT_;            // 0.25
 
   public:
     /********************
@@ -90,6 +94,9 @@ class settings::Settings
     double getRattleTolerance() const { return _rattleTolerance; }
     size_t getRattleMaxIter() const { return _rattleMaxIter; }
 
+    std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
+    double      getWolfParameter() const { return _wolfParameter; }
+
     /********************
      * standard setters *
      ********************/
@@ -118,6 +125,9 @@ class settings::Settings
     void setShakeMaxIter(const size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
     void setRattleTolerance(const double rattleTolerance) { _rattleTolerance = rattleTolerance; }
     void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
+
+    void setCoulombLongRangeType(const std::string_view coulombLongRangeType) { _coulombLongRangeType = coulombLongRangeType; }
+    void setWolfParameter(const double wolfParameter) { _wolfParameter = wolfParameter; }
 };
 
 #endif   // _SETTINGS_HPP_

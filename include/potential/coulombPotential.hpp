@@ -6,6 +6,7 @@ namespace potential
 {
     class CoulombPotential;
     class GuffCoulomb;
+    class GuffWolfCoulomb;
 }   // namespace potential
 
 /**
@@ -32,6 +33,25 @@ class potential::CoulombPotential
 class potential::GuffCoulomb : public potential::CoulombPotential
 {
   public:
+    void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
+};
+
+/**
+ * @class GuffWolfCoulomb
+ *
+ * @brief
+ * GuffWolfCoulomb inherits CoulombPotential
+ * GuffWolfCoulomb is a class for Guff potential with Wolf long range correction
+ *
+ */
+class potential::GuffWolfCoulomb : public potential::CoulombPotential
+{
+  private:
+    double _kappa;
+
+  public:
+    explicit GuffWolfCoulomb(const double wolfParameter) : _kappa(wolfParameter){};
+
     void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
 };
 

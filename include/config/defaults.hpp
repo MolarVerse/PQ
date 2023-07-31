@@ -13,7 +13,9 @@ namespace defaults
     constexpr char _MOLDESCRIPTOR_FILENAME_DEFAULT_[] = "moldescriptor.dat";
     constexpr char _GUFF_FILENAME_DEFAULT_[]          = "guff.dat";
 
-    constexpr double _COULOMB_CUT_OFF_DEFAULT_ = 12.5;
+    constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;
+    constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;
+    constexpr char   _COULOMB_LONG_RANGE_TYPE_DEFAULT_[] = "none";
 
     constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;
 

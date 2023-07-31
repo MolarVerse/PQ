@@ -101,7 +101,6 @@
         "format": "cpp",
         "stdfloat": "cpp"
     },
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
         "-p",
@@ -109,6 +108,7 @@
     ],
     "cSpell.words": [
         "Berendsen",
+        "coulombic",
         "dxyz",
         "ekin",
         "forcexyz",
@@ -127,5 +127,6 @@
         "txyz",
         "Verlet",
         "Virial"
-    ]
+    ],
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
 }
