@@ -33,7 +33,7 @@ class connectivity::ConnectivityElement
      *                         *
      ***************************/
 
-    std::vector<simulationBox::Molecule *> getMolecule() const { return _molecules; }
+    std::vector<simulationBox::Molecule *> getMolecules() const { return _molecules; }
     std::vector<size_t>                    getAtomIndices() const { return _atomIndices; }
 };
 

@@ -93,7 +93,7 @@ void ShakeSection::endedNormally(bool endedNormal) const
  */
 void BondSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 3 || lineElements.size() != 4)
+    if (lineElements.size() != 3 && lineElements.size() != 4)
         throw customException::TopologyException("Wrong number of arguments in topology file bond section at line " +
                                                  to_string(_lineNumber) + " - number of elements has to be 3 or 4!");
 
@@ -134,7 +134,7 @@ void BondSection::endedNormally(bool endedNormal) const
  */
 void AngleSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 4 || lineElements.size() != 5)
+    if (lineElements.size() != 4 && lineElements.size() != 5)
         throw customException::TopologyException("Wrong number of arguments in topology file angle section at line " +
                                                  to_string(_lineNumber) + " - number of elements has to be 4 or 5!");
 
@@ -177,7 +177,7 @@ void AngleSection::endedNormally(bool endedNormal) const
  */
 void DihedralSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 5 || lineElements.size() != 6)
+    if (lineElements.size() != 5 && lineElements.size() != 6)
         throw customException::TopologyException("Wrong number of arguments in topology file dihedral section at line " +
                                                  to_string(_lineNumber) + " - number of elements has to be 5 or 6!");
 
@@ -222,7 +222,7 @@ void DihedralSection::endedNormally(bool endedNormal) const
  */
 void ImproperDihedralSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 5 || lineElements.size() != 6)
+    if (lineElements.size() != 5 && lineElements.size() != 6)
         throw customException::TopologyException("Wrong number of arguments in topology file improper dihedral section at line " +
                                                  to_string(_lineNumber) + " - number of elements has to be 5 or 6!");
 

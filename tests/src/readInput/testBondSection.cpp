@@ -1,0 +1,44 @@
+#include "exceptions.hpp"
+#include "forceField.hpp"
+#include "testTopologySection.hpp"
+#include "topologySection.hpp"
+
+/**
+ * @brief test bond section processing one line
+ *
+ */
+TEST_F(TestTopologySection, processSectionBond)
+{
+    std::vector<std::string> lineElements = {"1", "2", "7"};
+    readInput::BondSection   bondSection;
+    bondSection.processSection(lineElements, *_engine);
+    EXPECT_EQ(_engine->getForceField().getBonds().size(), 1);
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].getMolecule1(), &(_engine->getSimulationBox().getMolecules()[0]));
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].getMolecule2(), &(_engine->getSimulationBox().getMolecules()[1]));
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].getAtomIndex1(), 0);
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].getType(), 7);
+
+    lineElements = {"1", "1", "7"};
+    EXPECT_THROW(bondSection.processSection(lineElements, *_engine), customException::TopologyException);
+
+    lineElements = {"1", "2", "7", "1", "2"};
+    EXPECT_THROW(bondSection.processSection(lineElements, *_engine), customException::TopologyException);
+}
+
+/**
+ * @brief test if endedNormally throws exception
+ *
+ */
+TEST_F(TestTopologySection, endedNormallyBond)
+{
+    readInput::BondSection bondSection;
+    EXPECT_THROW(bondSection.endedNormally(false), customException::TopologyException);
+    EXPECT_NO_THROW(bondSection.endedNormally(true));
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

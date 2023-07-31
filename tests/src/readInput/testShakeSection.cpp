@@ -2,129 +2,42 @@
 #include "testTopologySection.hpp"
 #include "topologySection.hpp"
 
-using namespace ::testing;
-using namespace readInput;
-
 /**
- * @brief tests full process function
+ * @brief test shake section processing one line
  *
  */
-TEST_F(TestTopologySection, processShakeSection)
+TEST_F(TestTopologySection, processSectionShake)
 {
-    ShakeSection shakeSection;
-
-    std::ofstream _outputStream(_topologyFilename.c_str());
-
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0 0\n";
-    _outputStream << "         \n";
-    _outputStream << "2 3 1.2 0\n";
-    _outputStream << "end" << std::endl;
-
-    _outputStream.close();
-
-    auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
-    getline(fp, lineElements[0]);
-
-    shakeSection.setFp(&fp);
-    shakeSection.setLineNumber(1);
-
-    EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine));
-
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints().size(), 2);
-
+    std::vector<std::string> lineElements = {"1", "2", "1.0", "0"};
+    readInput::ShakeSection  shakeSection;
+    shakeSection.processSection(lineElements, *_engine);
+    EXPECT_EQ(_engine->getConstraints().getBondConstraints().size(), 1);
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getMolecule1(), &(_engine->getSimulationBox().getMolecules()[0]));
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getMolecule2(), &(_engine->getSimulationBox().getMolecules()[1]));
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getAtomIndex1(), 0);
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getAtomIndex2(), 0);
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getTargetBondLength(), 1.0);
 
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints()[1].getMolecule1(), &(_engine->getSimulationBox().getMolecules()[1]));
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints()[1].getMolecule2(), &(_engine->getSimulationBox().getMolecules()[1]));
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints()[1].getAtomIndex1(), 0);
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints()[1].getAtomIndex2(), 1);
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints()[1].getTargetBondLength(), 1.2);
+    lineElements = {"1", "1", "1.0", "0"};
+    EXPECT_THROW(shakeSection.processSection(lineElements, *_engine), customException::TopologyException);
 
-    EXPECT_EQ(shakeSection.getLineNumber(), 5);
+    lineElements = {"1", "1", "1.0", "0", "1"};
+    EXPECT_THROW(shakeSection.processSection(lineElements, *_engine), customException::TopologyException);
 }
 
 /**
- * @brief tests if incorrect number of elements is correctly handled
+ * @brief test if endedNormally throws exception
  *
  */
-TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
+TEST_F(TestTopologySection, endedNormallyShake)
 {
-    ShakeSection shakeSection;
-
-    std::ofstream _outputStream(_topologyFilename.c_str());
-
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0\n";
-    _outputStream << "end" << std::endl;
-
-    _outputStream.close();
-
-    auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
-
-    EXPECT_THROW(shakeSection.process(lineElements, *_engine), customException::TopologyException);
-}
-
-/**
- * @brief tests if same atom given twice is correctly handled
- *
- */
-TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
-{
-    ShakeSection shakeSection;
-
-    std::ofstream _outputStream(_topologyFilename.c_str());
-
-    _outputStream << "shake\n";
-    _outputStream << "1 1 1.0 0\n";
-    _outputStream << "end" << std::endl;
-
-    _outputStream.close();
-
-    auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
-
-    EXPECT_THROW(shakeSection.process(lineElements, *_engine), customException::TopologyException);
-}
-
-/**
- * @brief tests if missing end statement is correctly handled
- *
- */
-TEST_F(TestTopologySection, processShakeSection_missingEnd)
-{
-    ShakeSection shakeSection;
-
-    std::ofstream _outputStream(_topologyFilename.c_str());
-
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0 0\n";
-    _outputStream << "         \n";
-    _outputStream << "2 3 1.2 0\n";
-    _outputStream << "" << std::endl;
-
-    _outputStream.close();
-
-    auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
-
-    EXPECT_THROW(shakeSection.process(lineElements, *_engine), customException::TopologyException);
+    readInput::ShakeSection shakeSection;
+    EXPECT_THROW(shakeSection.endedNormally(false), customException::TopologyException);
+    EXPECT_NO_THROW(shakeSection.endedNormally(true));
 }
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

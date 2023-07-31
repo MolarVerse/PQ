@@ -32,6 +32,11 @@ class forceField::ForceField
     void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
     void addDihedral(const DihedralForceField &dihedral) { _dihedrals.push_back(dihedral); }
     void addImproperDihedral(const DihedralForceField &improperDihedral) { _improperDihedrals.push_back(improperDihedral); }
+
+    const std::vector<BondForceField>     &getBonds() const { return _bonds; }
+    const std::vector<AngleForceField>    &getAngles() const { return _angles; }
+    const std::vector<DihedralForceField> &getDihedrals() const { return _dihedrals; }
+    const std::vector<DihedralForceField> &getImproperDihedrals() const { return _improperDihedrals; }
 };
 
 #endif   // _Force_FIELD_HPP_

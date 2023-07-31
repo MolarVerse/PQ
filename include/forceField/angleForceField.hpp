@@ -23,6 +23,8 @@ class forceField::AngleForceField : public connectivity::Angle
   public:
     AngleForceField(const std::vector<simulationBox::Molecule *> &molecules, const std::vector<size_t> &atomIndices, size_t type)
         : connectivity::Angle(molecules, atomIndices), _type(type){};
+
+    size_t getType() const { return _type; }
 };
 
 #endif   // _ANGLE_FORCE_FIELD_HPP_

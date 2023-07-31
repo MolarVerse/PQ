@@ -8,7 +8,12 @@ set(source_files
     testGuffDatReader.cpp
     testInputFileReader.cpp
     testTopologyReader.cpp
+    testTopologySection.cpp
     testShakeSection.cpp
+    testBondSection.cpp
+    testAngleSection.cpp
+    testDihedralSection.cpp
+    testImproperDihedralSection.cpp
 )
 
 foreach(source_file ${source_files})

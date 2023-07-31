@@ -25,6 +25,8 @@ class forceField::DihedralForceField : public connectivity::Dihedral
                        const std::vector<size_t>                    &atomIndices,
                        size_t                                        type)
         : connectivity::Dihedral(molecules, atomIndices), _type(type){};
+
+    size_t getType() const { return _type; }
 };
 
 #endif   // _DIHEDRAL_FORCE_FIELD_HPP_

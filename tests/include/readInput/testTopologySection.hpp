@@ -20,7 +20,7 @@ class TestTopologySection : public ::testing::Test
         molecule1.setNumberOfAtoms(1);
 
         auto molecule2 = simulationBox::Molecule();
-        molecule2.setNumberOfAtoms(2);
+        molecule2.setNumberOfAtoms(3);
 
         _engine = new engine::Engine();
 
@@ -31,7 +31,7 @@ class TestTopologySection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        remove(_topologyFilename.c_str());
+        ::remove(_topologyFilename.c_str());
     }
 };
 
