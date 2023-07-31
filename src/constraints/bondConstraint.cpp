@@ -9,7 +9,7 @@ using namespace constraints;
  */
 void BondConstraint::calculateConstraintBondRef(const simulationBox::SimulationBox &simBox)
 {
-    _shakeDistanceRef = _molecule1->getAtomPosition(_atomIndex1) - _molecule2->getAtomPosition(_atomIndex2);
+    _shakeDistanceRef = _molecules[0]->getAtomPosition(_atomIndices[0]) - _molecules[1]->getAtomPosition(_atomIndices[1]);
 
     simBox.applyPBC(_shakeDistanceRef);
 }
@@ -20,8 +20,8 @@ void BondConstraint::calculateConstraintBondRef(const simulationBox::SimulationB
  */
 double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox &simBox) const
 {
-    auto pos1 = _molecule1->getAtomPosition(_atomIndex1);
-    auto pos2 = _molecule2->getAtomPosition(_atomIndex2);
+    auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+    auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
 
     auto dpos = pos1 - pos2;
     simBox.applyPBC(dpos);
@@ -42,20 +42,20 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
 
     if (std::fabs(delta) > tolerance)
     {
-        auto invMass1 = 1 / _molecule1->getAtomMass(_atomIndex1);
-        auto invMass2 = 1 / _molecule2->getAtomMass(_atomIndex2);
+        auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+        auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
         const auto shakeForce = delta / (invMass1 + invMass2) / normSquared(_shakeDistanceRef);
 
         auto dpos = shakeForce * _shakeDistanceRef;
 
-        _molecule1->addAtomPosition(_atomIndex1, +invMass1 * dpos);
-        _molecule2->addAtomPosition(_atomIndex2, -invMass2 * dpos);
+        _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dpos);
+        _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dpos);
 
         dpos = dpos / timestep;
 
-        _molecule1->addAtomVelocity(_atomIndex1, +invMass1 * dpos);
-        _molecule2->addAtomVelocity(_atomIndex2, -invMass2 * dpos);
+        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dpos);
+        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dpos);
 
         return false;
     }
@@ -69,12 +69,12 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
  */
 double BondConstraint::calculateVelocityDelta() const
 {
-    auto dv = _molecule1->getAtomVelocity(_atomIndex1) - _molecule2->getAtomVelocity(_atomIndex2);
+    auto dv = _molecules[0]->getAtomVelocity(_atomIndices[0]) - _molecules[1]->getAtomVelocity(_atomIndices[1]);
 
     auto scalarProduct = dot(dv, _shakeDistanceRef);
 
-    const auto invMass1 = 1 / _molecule1->getAtomMass(_atomIndex1);
-    const auto invMass2 = 1 / _molecule2->getAtomMass(_atomIndex2);
+    const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+    const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
     const auto delta = -scalarProduct / (invMass1 + invMass2) / normSquared(_shakeDistanceRef);
 
@@ -93,11 +93,11 @@ bool BondConstraint::applyRattle(double tolerance)
     {
         const auto dv = delta * _shakeDistanceRef;
 
-        const auto invMass1 = 1 / _molecule1->getAtomMass(_atomIndex1);
-        const auto invMass2 = 1 / _molecule2->getAtomMass(_atomIndex2);
+        const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+        const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
-        _molecule1->addAtomVelocity(_atomIndex1, +invMass1 * dv);
-        _molecule2->addAtomVelocity(_atomIndex2, -invMass2 * dv);
+        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dv);
+        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dv);
 
         return false;
     }

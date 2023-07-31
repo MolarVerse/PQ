@@ -5,6 +5,7 @@
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "energyOutput.hpp"
+#include "forceField.hpp"
 #include "infoOutput.hpp"
 #include "integrator.hpp"
 #include "logOutput.hpp"
@@ -48,6 +49,7 @@ class engine::Engine
     physicalData::PhysicalData   _physicalData;
     physicalData::PhysicalData   _averagePhysicalData;
     constraints::Constraints     _constraints;
+    forceField::ForceField       _forceField;
 
   public:
     std::unique_ptr<integrator::Integrator>       _integrator    = std::make_unique<integrator::VelocityVerlet>();
@@ -86,6 +88,7 @@ class engine::Engine
     virial::Virial               &getVirial() { return *_virial; }
     integrator::Integrator       &getIntegrator() { return *_integrator; }
     constraints::Constraints     &getConstraints() { return _constraints; }
+    forceField::ForceField       &getForceField() { return _forceField; }
 };
 
 #endif   // _ENGINE_HPP_

@@ -12,6 +12,7 @@ target_include_directories(constraints
 target_link_libraries(constraints
     PUBLIC
     simulationBox
+    connectivity
 )
 
 install(TARGETS constraints

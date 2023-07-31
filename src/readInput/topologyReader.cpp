@@ -17,6 +17,10 @@ TopologyReader::TopologyReader(const string &filename, engine::Engine &engine)
     : _filename(filename), _fp(filename), _engine(engine)
 {
     _topologySections.push_back(new ShakeSection());
+    _topologySections.push_back(new BondSection());
+    _topologySections.push_back(new AngleSection());
+    _topologySections.push_back(new DihedralSection());
+    _topologySections.push_back(new ImproperDihedralSection());
 }
 
 /**
@@ -46,7 +50,7 @@ void TopologyReader::read()
     if (_filename.empty()) throw customException::InputFileException("Topology file needed for requested simulation setup");
 
     if (!filesystem::exists(_filename))
-        throw customException::InputFileException("Topolgoy file \"" + _filename + "\"" + " File not found");
+        throw customException::InputFileException("Topology file \"" + _filename + "\"" + " File not found");
 
     while (getline(_fp, line))
     {
@@ -55,15 +59,14 @@ void TopologyReader::read()
 
         if (lineElements.empty())
         {
-            lineNumber++;
+            ++lineNumber;
             continue;
         }
 
-        auto section = determineSection(lineElements);
-        section->setLineNumber(lineNumber++);
-        cout << "Hello" << endl;
+        auto *section = determineSection(lineElements);
+        ++lineNumber;
+        section->setLineNumber(lineNumber);
         section->setFp(&_fp);
-        // cout << "Processing topology section \"" << section->keyword() << "\"\n";
         section->process(lineElements, _engine);
         lineNumber = section->getLineNumber();
     }
@@ -77,12 +80,10 @@ void TopologyReader::read()
  */
 TopologySection *TopologyReader::determineSection(const vector<string> &lineElements)
 {
-    for (auto section = _topologySections.begin(); section != _topologySections.end(); section++)
-        if ((*section)->keyword() == to_lower_copy(lineElements[0]))
-        {
-            _topologySections.erase(section);
-            return *section;
-        };
+    const auto iterEnd = _topologySections.end();
+
+    for (auto section = _topologySections.begin(); section != iterEnd; ++section)
+        if ((*section)->keyword() == to_lower_copy(lineElements[0])) return *section;
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }

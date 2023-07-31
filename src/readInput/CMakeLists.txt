@@ -25,6 +25,7 @@ target_link_libraries(readInput
     output
     config
     gtest
+    forceField
     math
 )
 

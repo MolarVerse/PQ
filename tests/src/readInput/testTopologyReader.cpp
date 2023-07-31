@@ -41,7 +41,7 @@ TEST_F(TestTopologyReader, read)
     _topologyReader->setFilename("");
     EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
 
-    _topologyReader->setFilename("nonexistingfile.top");
+    _topologyReader->setFilename("nonExistingFile.top");
     EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
 }
 

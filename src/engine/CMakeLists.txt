@@ -24,6 +24,7 @@ target_link_libraries(engine
     virial
     resetKinetics
     constraints
+    forceField
 )
 
 install(TARGETS engine

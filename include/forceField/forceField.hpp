@@ -1,0 +1,37 @@
+#ifndef _Force_FIELD_HPP_
+
+#define _Force_FIELD_HPP_
+
+#include "angleForceField.hpp"
+#include "bondForceField.hpp"
+#include "dihedralForceField.hpp"
+
+#include <vector>
+
+namespace forceField
+{
+    class ForceField;
+}
+
+/**
+ * @class ForceField
+ *
+ * @brief force field object containing all force field information
+ *
+ */
+class forceField::ForceField
+{
+  private:
+    std::vector<BondForceField>     _bonds;
+    std::vector<AngleForceField>    _angles;
+    std::vector<DihedralForceField> _dihedrals;
+    std::vector<DihedralForceField> _improperDihedrals;
+
+  public:
+    void addBond(const BondForceField &bond) { _bonds.push_back(bond); }
+    void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
+    void addDihedral(const DihedralForceField &dihedral) { _dihedrals.push_back(dihedral); }
+    void addImproperDihedral(const DihedralForceField &improperDihedral) { _improperDihedrals.push_back(improperDihedral); }
+};
+
+#endif   // _Force_FIELD_HPP_
