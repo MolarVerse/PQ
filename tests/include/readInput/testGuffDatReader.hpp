@@ -1,6 +1,6 @@
-#ifndef _TEST_GUFFDATREADER_HPP_
+#ifndef _TEST_GUFFDAT_READER_HPP_
 
-#define _TEST_GUFFDATREADER_HPP_
+#define _TEST_GUFFDAT_READER_HPP_
 
 #include "guffDatReader.hpp"
 #include "potential.hpp"
@@ -31,11 +31,11 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(molecule1);
         _engine->getSimulationBox().addMoleculeType(molecule2);
 
-        _engine->getSimulationBox().setRcCutOff(12.5);
+        _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);
 
         _engine->_potential = std::make_unique<potential::PotentialBruteForce>();
         _engine->_potential->setNonCoulombPotential(potential::GuffNonCoulomb());
-        _engine->_potential->setCoulombPotential(potential::GuffCoulomb());
+        _engine->_potential->setCoulombPotential(potential::GuffCoulomb(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
         _guffDatReader = new readInput::GuffDatReader(*_engine);
     }
@@ -50,4 +50,4 @@ class TestGuffDatReader : public ::testing::Test
     engine::Engine           *_engine;
 };
 
-#endif   // _TEST_GUFFDATREADER_HPP_
+#endif   // _TEST_GUFFDAT_READER_HPP_

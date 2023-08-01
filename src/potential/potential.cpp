@@ -44,7 +44,10 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 
                     const auto txyz = -box * round(dxyz / box);
 
-                    dxyz += txyz;
+                    // dxyz += txyz;
+                    dxyz[0] += txyz[0];
+                    dxyz[1] += txyz[1];
+                    dxyz[2] += txyz[2];
 
                     const double distanceSquared = normSquared(dxyz);
 
@@ -61,7 +64,6 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 
                         _coulombPotential->calcCoulomb(
                             coulombCoefficient,
-                            simBox.getCoulombRadiusCutOff(),
                             distance,
                             energy,
                             force,
@@ -169,7 +171,6 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                         _coulombPotential->calcCoulomb(
                             coulombCoefficient,
-                            simBox.getCoulombRadiusCutOff(),
                             distance,
                             energy,
                             force,
@@ -266,7 +267,6 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                             _coulombPotential->calcCoulomb(
                                 coulombCoefficient,
-                                simBox.getCoulombRadiusCutOff(),
                                 distance,
                                 energy,
                                 force,

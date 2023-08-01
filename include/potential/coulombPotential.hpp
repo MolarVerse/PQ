@@ -17,9 +17,14 @@ namespace potential
  */
 class potential::CoulombPotential
 {
+  protected:
+    double _coulombRadiusCutOff;
+
   public:
-    virtual ~CoulombPotential() = default;
-    virtual void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const = 0;
+    explicit CoulombPotential(const double coulombCutoff) : _coulombRadiusCutOff(coulombCutoff) {}
+
+    virtual ~CoulombPotential()                                                                                = default;
+    virtual void calcCoulomb(const double, const double, double &, double &, const double, const double) const = 0;
 };
 
 /**
@@ -33,7 +38,8 @@ class potential::CoulombPotential
 class potential::GuffCoulomb : public potential::CoulombPotential
 {
   public:
-    void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
+    using CoulombPotential::CoulombPotential;
+    void calcCoulomb(const double, const double, double &, double &, const double, const double) const override;
 };
 
 /**
@@ -48,11 +54,14 @@ class potential::GuffWolfCoulomb : public potential::CoulombPotential
 {
   private:
     double _kappa;
+    double _wolfParameter1;
+    double _wolfParameter2;
+    double _wolfParameter3;
 
   public:
-    explicit GuffWolfCoulomb(const double wolfParameter) : _kappa(wolfParameter){};
+    explicit GuffWolfCoulomb(const double coulombRadiusCutOff, const double wolfParameter);
 
-    void calcCoulomb(const double, const double, const double, double &, double &, const double, const double) const override;
+    void calcCoulomb(const double, const double, double &, double &, const double, const double) const override;
 
     double getKappa() const { return _kappa; }
 };

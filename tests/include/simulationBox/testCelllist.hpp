@@ -17,7 +17,7 @@ class TestCellList : public ::testing::Test
 
         _simulationBox = new simulationBox::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox->setRcCutOff(1.5);
+        _simulationBox->setCoulombRadiusCutOff(1.5);
     }
 
     virtual void TearDown()

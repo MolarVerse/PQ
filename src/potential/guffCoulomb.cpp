@@ -5,15 +5,31 @@
 using namespace potential;
 
 void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
-                              const double rcCutoff,
                               const double distance,
                               double      &energy,
                               double      &force,
                               const double energy_cutoff,
                               const double force_cutoff) const
 {
-    energy  = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (rcCutoff - distance);
+    energy  = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (_coulombRadiusCutOff - distance);
     force  += coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
+}
+
+/**
+ * @brief Constructor for GuffWolfCoulomb
+ *
+ * @details calculates Wolf parameters
+ *
+ * @param coulombRadiusCutoff
+ * @param kappa
+ */
+GuffWolfCoulomb::GuffWolfCoulomb(const double coulombRadiusCutoff, const double kappa)
+    : CoulombPotential::CoulombPotential(coulombRadiusCutoff), _kappa(kappa)
+{
+    _wolfParameter1 = ::erfc(_kappa * coulombRadiusCutoff) / coulombRadiusCutoff;
+    _wolfParameter2 = 2.0 * _kappa / ::sqrt(M_PI);
+    _wolfParameter3 = _wolfParameter1 / coulombRadiusCutoff +
+                      _wolfParameter2 * ::exp(-_kappa * _kappa * coulombRadiusCutoff * coulombRadiusCutoff) / coulombRadiusCutoff;
 }
 
 /**
@@ -30,22 +46,13 @@ void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
  * @param dummy_energy_cutoff
  * @param dummy_force_cutoff
  */
-void GuffWolfCoulomb::calcCoulomb(const double coulombCoefficient,
-                                  const double rcCutoff,
-                                  const double distance,
-                                  double      &energy,
-                                  double      &force,
-                                  const double,
-                                  const double) const
+void GuffWolfCoulomb::calcCoulomb(
+    const double coulombCoefficient, const double distance, double &energy, double &force, const double, const double) const
 {
-    const auto kappaDistance  = _kappa * distance;
-    const auto erfcFactor     = ::erfc(kappaDistance);
-    const auto wolfParameter1 = ::erfc(_kappa * rcCutoff) / rcCutoff;
-    const auto wolfParameter2 = 2.0 * _kappa / ::sqrt(M_PI);
-    const auto wolfParameter3 =
-        wolfParameter1 / rcCutoff + wolfParameter2 * ::exp(-_kappa * _kappa * rcCutoff * rcCutoff) / rcCutoff;
+    const auto kappaDistance = _kappa * distance;
+    const auto erfcFactor    = ::erfc(kappaDistance);
 
-    energy  = coulombCoefficient * (erfcFactor / distance - wolfParameter1 + wolfParameter3 * (distance - rcCutoff));
-    force  += coulombCoefficient * (erfcFactor / (distance * distance) +
-                                   wolfParameter2 * ::exp(-kappaDistance * kappaDistance) / distance - wolfParameter3);
+    energy = coulombCoefficient * (erfcFactor / distance - _wolfParameter1 + _wolfParameter3 * (distance - _coulombRadiusCutOff));
+    force += coulombCoefficient * (erfcFactor / (distance * distance) +
+                                   _wolfParameter2 * ::exp(-kappaDistance * kappaDistance) / distance - _wolfParameter3);
 }

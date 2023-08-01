@@ -13,6 +13,7 @@ set(source_files
     testParserTopology.cpp
     testParserVirial.cpp
     testParserCoulombLongRange.cpp
+    testParserNonCoulomb.cpp
 )
 
 foreach(source_file ${source_files})

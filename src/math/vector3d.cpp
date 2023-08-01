@@ -20,9 +20,9 @@ template <class T> Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &rhs)
 
 template <class T> void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
 {
-    _x += rhs[0];
-    _y += rhs[1];
-    _z += rhs[2];
+    _x += rhs._x;
+    _y += rhs._y;
+    _z += rhs._z;
 }
 
 template <class T> Vector3D<T> &Vector3D<T>::operator+=(const T rhs)

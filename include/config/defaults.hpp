@@ -17,6 +17,8 @@ namespace defaults
     constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;
     constexpr char   _COULOMB_LONG_RANGE_TYPE_DEFAULT_[] = "none";
 
+    constexpr char _NONCOULOMB_TYPE_DEFAULT_[] = "none";
+
     constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;
 
     constexpr size_t _SHAKE_MAX_ITER_DEFAULT_  = 20;

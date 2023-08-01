@@ -13,5 +13,5 @@ using namespace readInput;
 void InputFileReader::parseCoulombRadius(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine.getSimulationBox().setRcCutOff(stod(lineElements[2]));
+    _engine.getSimulationBox().setCoulombRadiusCutOff(stod(lineElements[2]));
 }

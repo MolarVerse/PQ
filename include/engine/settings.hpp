@@ -58,6 +58,9 @@ class settings::Settings
     std::string _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // none
     double      _wolfParameter        = defaults::_WOLF_PARAMETER_DEFAULT_;            // 0.25
 
+    // noncoulomb settings for later setup
+    std::string _nonCoulombType = defaults::_NONCOULOMB_TYPE_DEFAULT_;   // none
+
   public:
     /********************
      * standard getters *
@@ -97,6 +100,8 @@ class settings::Settings
     std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
     double      getWolfParameter() const { return _wolfParameter; }
 
+    std::string getNonCoulombType() const { return _nonCoulombType; }
+
     /********************
      * standard setters *
      ********************/
@@ -128,6 +133,8 @@ class settings::Settings
 
     void setCoulombLongRangeType(const std::string_view coulombLongRangeType) { _coulombLongRangeType = coulombLongRangeType; }
     void setWolfParameter(const double wolfParameter) { _wolfParameter = wolfParameter; }
+
+    void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; }
 };
 
 #endif   // _SETTINGS_HPP_

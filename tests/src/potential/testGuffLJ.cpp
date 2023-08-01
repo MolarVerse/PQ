@@ -12,7 +12,7 @@ TEST(TestGuffLJ, guffLJ)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto guffLJ = potential::GuffLJ();
+    const auto guffLJ = potential::GuffLennardJones();
 
     auto distance = 2.0;
     guffLJ.calcNonCoulomb(coefficients, rncCutoff, distance, energy, force, energyCutoff, forceCutoff);

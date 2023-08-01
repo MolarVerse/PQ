@@ -43,14 +43,13 @@ class potential::Potential
     virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
     void calcCoulomb(const double coulombCoefficient,
-                     const double rcCutoff,
                      const double distance,
                      double      &energy,
                      double      &force,
                      const double energy_cutoff,
                      const double force_cutoff) const
     {
-        _coulombPotential->calcCoulomb(coulombCoefficient, rcCutoff, distance, energy, force, energy_cutoff, force_cutoff);
+        _coulombPotential->calcCoulomb(coulombCoefficient, distance, energy, force, energy_cutoff, force_cutoff);
     }
 
     void calcNonCoulomb(const std::vector<double> &guffCoefficients,

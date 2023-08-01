@@ -36,7 +36,7 @@ class timings::Timings
     void beginTimer() { _start = std::chrono::high_resolution_clock::now(); }
     void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
 
-    long calculateElapsedTime() const { return std::chrono::duration_cast<std::chrono::nanoseconds>(_end - _start).count(); }
+    long calculateElapsedTime() const { return std::chrono::duration_cast<std::chrono::milliseconds>(_end - _start).count(); }
 
     /********************************
      * standard getters and setters *

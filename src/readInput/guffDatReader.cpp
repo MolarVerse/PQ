@@ -51,7 +51,7 @@ void GuffDatReader::read()
 
         if (lineCommands.size() - 1 != 28)
             throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " +
-                                   to_string(_lineNumber));
+                                   to_string(_lineNumber) + "28 are allowed.");
 
         parseLine(lineCommands);
 
@@ -156,7 +156,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     const double dummyCutoff = 1.0;
 
     _engine._potential->calcCoulomb(
-        coulombCoefficient, dummyCutoff, _engine.getSimulationBox().getCoulombRadiusCutOff(), energy, force, 0.0, 0.0);
+        coulombCoefficient, _engine.getSimulationBox().getCoulombRadiusCutOff(), energy, force, 0.0, 0.0);
 
     _engine.getSimulationBox().setCoulombEnergyCutOff(moltype1, moltype2, atomType1, atomType2, energy);
     _engine.getSimulationBox().setCoulombEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);

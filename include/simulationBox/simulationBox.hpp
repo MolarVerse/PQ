@@ -48,8 +48,8 @@ class simulationBox::SimulationBox
   private:
     int    _waterType;
     int    _ammoniaType;
-    size_t _degreesOfFreedom = 0;
-    double _rcCutOff         = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+    size_t _degreesOfFreedom    = 0;
+    double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
 
     Box _box;
 
@@ -88,7 +88,7 @@ class simulationBox::SimulationBox
 
     int    getWaterType() const { return _waterType; }
     int    getAmmoniaType() const { return _ammoniaType; }
-    double getCoulombRadiusCutOff() const { return _rcCutOff; }
+    double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
     size_t getNumberOfMolecules() const { return _molecules.size(); }
 
     std::vector<Molecule> &getMolecules() { return _molecules; }
@@ -129,7 +129,7 @@ class simulationBox::SimulationBox
 
     void setWaterType(const int waterType) { _waterType = waterType; }
     void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; }
-    void setRcCutOff(const double rcCutOff) { _rcCutOff = rcCutOff; }
+    void setCoulombRadiusCutOff(const double rcCutOff) { _coulombRadiusCutOff = rcCutOff; }
 
     void setGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const std::vector<double> &guffCoefficients)
     {

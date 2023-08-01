@@ -123,6 +123,7 @@
         "moltype",
         "Neighbouring",
         "Neighbours",
+        "noncoulomb",
         "nreset",
         "nscale",
         "progressbar",

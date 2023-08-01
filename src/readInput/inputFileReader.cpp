@@ -58,6 +58,8 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("long_range"), &InputFileReader::parseCoulombLongRange, false);
     addKeyword(string("wolf_param"), &InputFileReader::parseWolfParameter, false);
 
+    addKeyword(string("noncoulomb"), &InputFileReader::parseNonCoulombType, false);
+
     addKeyword(string("cell-list"), &InputFileReader::parseCellListActivated, false);
     addKeyword(string("cell-number"), &InputFileReader::parseNumberOfCells, false);
 

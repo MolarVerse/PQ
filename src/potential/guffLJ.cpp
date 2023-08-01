@@ -5,7 +5,7 @@
 using namespace std;
 using namespace potential;
 
-void GuffLJ::calcNonCoulomb(const vector<double> &guffCoefficients,
+void GuffLennardJones::calcNonCoulomb(const vector<double> &guffCoefficients,
                             const double          rncCutoff,
                             const double          distance,
                             double               &energy,

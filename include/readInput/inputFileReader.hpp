@@ -97,6 +97,8 @@ class readInput::InputFileReader
     void parseCoulombLongRange(const std::vector<std::string> &);
     void parseWolfParameter(const std::vector<std::string> &);
 
+    void parseNonCoulombType(const std::vector<std::string> &);
+
     // parsing cellList related keywords
     void parseCellListActivated(const std::vector<std::string> &);
     void parseNumberOfCells(const std::vector<std::string> &);

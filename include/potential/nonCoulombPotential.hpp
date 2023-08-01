@@ -8,7 +8,7 @@ namespace potential
 {
     class NonCoulombPotential;
     class GuffNonCoulomb;
-    class GuffLJ;
+    class GuffLennardJones;
     class GuffBuckingham;
 }   // namespace potential
 
@@ -42,14 +42,14 @@ class potential::GuffNonCoulomb : public potential::NonCoulombPotential
 };
 
 /**
- * @class GuffLJ
+ * @class GuffLennardJones
  *
  * @brief
- * GuffLJ inherits NonCoulombPotential
- * GuffLJ is a class for the Lennard-Jones part of the Guff potential
+ * GuffLennardJones inherits NonCoulombPotential
+ * GuffLennardJones is a class for the Lennard-Jones part of the Guff potential
  * it uses only parameters 1(C6) and 3(C12) of the guffdat file
  */
-class potential::GuffLJ : public potential::NonCoulombPotential
+class potential::GuffLennardJones : public potential::NonCoulombPotential
 {
   public:
     void calcNonCoulomb(

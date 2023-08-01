@@ -25,6 +25,8 @@ class setup::PotentialSetup
     explicit PotentialSetup(engine::Engine &engine) : _engine(engine){};
 
     void setup();
+    void setupCoulomb();
+    void setupNonCoulomb();
 };
 
 #endif   // _POTENTIAL_SETUP_HPP_

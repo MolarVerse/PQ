@@ -40,7 +40,7 @@ void Engine::run()
 
     cout << endl << endl;
 
-    cout << "Total time: " << static_cast<int>(_timings.calculateElapsedTime()) * 1e-6 << endl;
+    cout << "Total time: " << static_cast<long long>(_timings.calculateElapsedTime()) * 1e-3 << "s" << endl;
 
     cout << endl << endl;
 

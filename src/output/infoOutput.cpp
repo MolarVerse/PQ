@@ -40,6 +40,8 @@ void InfoOutput::write(const double simulationTime, const PhysicalData &data)
     _fp << right;
     _fp << "\n"
         << "\n";
+
+    _fp.flush();
 }
 
 /**
