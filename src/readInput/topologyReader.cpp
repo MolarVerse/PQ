@@ -33,6 +33,8 @@ bool TopologyReader::isNeeded() const
 {
     if (_engine.getConstraints().isActivated()) return true;
 
+    if (_engine.getForceField().isActivated()) return true;
+
     return false;
 }
 

@@ -16,6 +16,10 @@ TEST_F(TestTopologyReader, isNeeded)
 
     _engine->getConstraints().activate();
     EXPECT_TRUE(_topologyReader->isNeeded());
+
+    _engine->getConstraints().deactivate();
+    _engine->getForceField().activate();
+    EXPECT_TRUE(_topologyReader->isNeeded());
 }
 
 /**

@@ -71,6 +71,7 @@ class readInput::InputFileReader
     void parseMoldescriptorFilename(const std::vector<std::string> &);
     void parseGuffPath(const std::vector<std::string> &);
     void parseTopologyFilename(const std::vector<std::string> &);
+    void parseParameterFilename(const std::vector<std::string> &);
 
     // parsing output related keywords
     void parseOutputFreq(const std::vector<std::string> &);

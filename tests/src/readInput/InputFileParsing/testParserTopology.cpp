@@ -7,13 +7,13 @@ using namespace ::testing;
 
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    vector<string> lineElements = {"topologyfilename", "=", ""};
+    vector<string> lineElements = {"topology_file", "=", ""};
     EXPECT_THROW(_inputFileReader->parseTopologyFilename(lineElements), customException::InputFileException);
 
-    lineElements = {"topologyfilename", "=", "topology.txt"};
+    lineElements = {"topology_file", "=", "topology.txt"};
     EXPECT_THROW(_inputFileReader->parseTopologyFilename(lineElements), customException::InputFileException);
 
-    lineElements = {"topologyfilename", "=", "data/topologyReader/topology.top"};
+    lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
     _inputFileReader->parseTopologyFilename(lineElements);
     EXPECT_EQ(_engine.getSettings().getTopologyFilename(), "data/topologyReader/topology.top");
 }

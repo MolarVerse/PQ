@@ -83,6 +83,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("rattle-tolerance"), &InputFileReader::parseRattleTolerance, false);
 
     addKeyword(string("topology_file"), &InputFileReader::parseTopologyFilename, false);
+    addKeyword(string("parameter_file"), &InputFileReader::parseParameterFilename, false);
 }
 
 /**

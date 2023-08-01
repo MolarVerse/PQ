@@ -9,9 +9,9 @@ void InputFileReader::parseTopologyFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
 
-    const auto filename = lineElements[2];
+    const auto &filename = lineElements[2];
 
-    if (filename.empty()) throw InputFileException("Topologyfilename cannot be empty");
+    if (filename.empty()) throw InputFileException("Topology filename cannot be empty");
 
     if (!fopen(filename.c_str(), "r")) throw InputFileException("Cannot open topology file - filename = " + string(filename));
 

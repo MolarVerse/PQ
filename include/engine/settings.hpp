@@ -35,6 +35,7 @@ class settings::Settings
     std::string _moldescriptorFilename = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
     std::string _guffPath              = ".";                                          // not backward compatible
     std::string _topologyFilename      = "";
+    std::string _parameterFilename     = "";
 
     std::string _jobtype;
 
@@ -70,6 +71,7 @@ class settings::Settings
     std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
     std::string getGuffPath() const { return _guffPath; }
     std::string getTopologyFilename() const { return _topologyFilename; }
+    std::string getParameterFilename() const { return _parameterFilename; }
 
     std::string getJobtype() const { return _jobtype; }
 
@@ -110,6 +112,7 @@ class settings::Settings
     void setMoldescriptorFilename(const std::string_view filename) { _moldescriptorFilename = filename; }
     void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; }
     void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
+    void setParameterFilename(const std::string_view parameterFilename) { _parameterFilename = parameterFilename; }
 
     void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
 

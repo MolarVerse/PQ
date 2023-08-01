@@ -34,6 +34,7 @@ class constraints::Constraints
 
   public:
     void activate() { _activated = true; }
+    void deactivate() { _activated = false; }
     bool isActivated() const { return _activated; }
 
     void calculateConstraintBondRefs(const simulationBox::SimulationBox &simulationBox);

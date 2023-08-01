@@ -7,6 +7,7 @@ add_library(readInput
     guffDatReader.cpp
     topologyReader.cpp
     topologySection.cpp
+    parameterFileReader.cpp
 
     inputFileReader.cpp
     ${InputFileParserFiles}
