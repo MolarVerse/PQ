@@ -16,10 +16,18 @@ TEST_F(TestSetup, setupPotential)
     EXPECT_EQ(typeid(*(_engine._potential->getNonCoulombPotential())), typeid(potential::GuffNonCoulomb));
 
     EXPECT_NO_THROW(setupPotential(_engine));
+
+    _engine.getSettings().setCoulombLongRangeType("wolf");
+    PotentialSetup potentialSetup2(_engine);
+    potentialSetup2.setup();
+
+    EXPECT_EQ(typeid(*(_engine._potential->getCoulombPotential())), typeid(potential::GuffWolfCoulomb));
+    const auto *wolfCoulomb = dynamic_cast<potential::GuffWolfCoulomb *>(_engine._potential->getCoulombPotential());
+    EXPECT_EQ(wolfCoulomb->getKappa(), 0.25);
 }
 
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

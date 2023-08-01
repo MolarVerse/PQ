@@ -27,8 +27,41 @@ TEST(TestGuffCoulomb, guffCoulomb)
     EXPECT_DOUBLE_EQ(force, coefficient / (distance * distance) - forceCutoff + intermediateForce);
 }
 
+TEST(TestGuffCoulomb, guffWolfCoulomb)
+{
+    const auto   coefficient = 2.0;
+    const auto   rncCutoff   = 3.0;
+    double       energy      = 0.0;
+    double       force       = 0.0;
+    const double kappa       = 0.25;
+
+    const auto guffWolfCoulomb = potential::GuffWolfCoulomb(kappa);
+    const auto constParam1     = ::erfc(kappa * rncCutoff) / rncCutoff;
+    const auto constParam2     = 2.0 * kappa / ::sqrt(M_PI);
+    const auto constParam3 = constParam1 / rncCutoff + constParam2 * ::exp(-kappa * kappa * rncCutoff * rncCutoff) / rncCutoff;
+
+    auto distance = 2.0;
+
+    auto param1 = ::erfc(kappa * distance);
+    guffWolfCoulomb.calcCoulomb(coefficient, rncCutoff, distance, energy, force, 0.0, 0.0);
+    EXPECT_DOUBLE_EQ(energy, coefficient * (param1 / distance - constParam1 + constParam3 * (distance - rncCutoff)));
+    EXPECT_DOUBLE_EQ(force,
+                     coefficient * (param1 / (distance * distance) +
+                                    constParam2 * ::exp(-kappa * kappa * distance * distance) / distance - constParam3));
+
+    distance            = 5.0;
+    param1              = ::erfc(kappa * distance);
+    const auto oldForce = force;
+    guffWolfCoulomb.calcCoulomb(coefficient, rncCutoff, distance, energy, force, 0.0, 0.0);
+    EXPECT_DOUBLE_EQ(energy, coefficient * (param1 / distance - constParam1 + constParam3 * (distance - rncCutoff)));
+    EXPECT_DOUBLE_EQ(force,
+                     oldForce +
+                         coefficient * (param1 / (distance * distance) +
+                                        constParam2 * ::exp(-kappa * kappa * distance * distance) / distance - constParam3));
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }
