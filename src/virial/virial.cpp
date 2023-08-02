@@ -12,6 +12,9 @@ using namespace physicalData;
 /**
  * @brief calculate virial for general systems
  *
+ * @details It calculates the virial for all atoms in the simulation box without any corrections.
+ *          It already sets the virial in the physicalData object
+ *
  * @param simulationBox
  * @param physicalData
  */
@@ -41,9 +44,9 @@ void Virial::calculateVirial(SimulationBox &simulationBox, PhysicalData &physica
 /**
  * @brief calculate virial for molecular systems
  *
- * @note
- *  This function is called by VirialMolecular::calculateVirial
- *  it includes also intramolecular virial correction
+ * @details it calls the general virial calculation and then corrects it for
+ *          intramolecular interactions. Afterwards it sets the virial in the
+ *          physicalData object
  *
  * @param simulationBox
  * @param physicalData
@@ -59,6 +62,8 @@ void VirialMolecular::calculateVirial(SimulationBox &simulationBox, PhysicalData
 
 /**
  * @brief calculate intramolecular virial correction
+ *
+ * @note it directly corrects the virial member variable
  *
  * @param simulationBox
  */

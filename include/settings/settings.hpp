@@ -33,8 +33,8 @@ class settings::Settings
     // filenames and paths for later setup
     std::string _startFilename;
     std::string _moldescriptorFilename = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
-    std::string _guffPath              = ".";   // not backward compatibile
-    std::string _guffDatFilename       = defaults::_GUFF_FILENAME_DEFAULT_;   
+    std::string _guffPath              = ".";                                          // not backward compatible
+    std::string _guffDatFilename       = defaults::_GUFF_FILENAME_DEFAULT_;
     std::string _topologyFilename      = "";
     std::string _parameterFilename     = "";
 
