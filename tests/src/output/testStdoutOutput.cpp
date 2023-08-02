@@ -29,17 +29,6 @@ TEST_F(TestStdoutOutput, writeRelaxationTimeThermostatWarning)
               "0.1ps.\n\n");
 }
 
-TEST_F(TestStdoutOutput, writeRelaxationTimeManostatWarning)
-{
-    testing::internal::CaptureStdout();
-    _stdoutOutput->writeRelaxationTimeManostatWarning();
-    std::string output = testing::internal::GetCapturedStdout();
-
-    EXPECT_EQ(output,
-              "\x1B[33mUserInputWarning\x1B[39m\nBerendsen manostat set but no relaxation time given. Using default value of "
-              "1.0ps.\n\n");
-}
-
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

@@ -39,6 +39,12 @@ void InputFileReader::parseGuffPath(const vector<string> &lineElements)
     _engine.getSettings().setGuffPath(lineElements[2]);
 }
 
+void InputFileReader::parseGuffDatFilename(const vector<string> &lineElements)
+{
+    checkCommand(lineElements, _lineNumber);
+    _engine.getSettings().setGuffDatFilename(lineElements[2]);
+}
+
 /**
  * @brief parse jobtype of simulation and set it in settings
  *

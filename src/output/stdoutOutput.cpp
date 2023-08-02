@@ -48,19 +48,3 @@ void StdoutOutput::writeRelaxationTimeThermostatWarning() const
         cout << e.what() << endl << endl;
     }
 }
-
-/**
- * @brief write warning message to stdout if Berendsen manostat is set but no relaxation time is given
- *
- */
-void StdoutOutput::writeRelaxationTimeManostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen manostat set but no relaxation time given. Using default value of 1.0ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
-}

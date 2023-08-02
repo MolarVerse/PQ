@@ -28,12 +28,3 @@ void LogOutput::writeRelaxationTimeThermostatWarning()
 {
     _fp << "WARNING: Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps." << endl;
 }
-
-/**
- * @brief write warning message to log file if Berendsen manostat is set but no relaxation time is given
- *
- */
-void LogOutput::writeRelaxationTimeManostatWarning()
-{
-    _fp << "WARNING: Berendsen manostat set but no relaxation time given. Using default value of 1.0ps." << endl;
-}

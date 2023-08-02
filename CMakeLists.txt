@@ -50,8 +50,8 @@ include(testing)
 
 add_subdirectory(tests)
 include(benchmarking)
-add_subdirectory(benchmarks)
 
+# add_subdirectory(benchmarks)
 add_subdirectory(src)
 add_subdirectory(apps)
 add_subdirectory(tools)

@@ -32,7 +32,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     _box->addMolecule(molecule);
 
-    _manostat = new manostat::BerendsenManostat(1.0, 0.1);
+    _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
     _manostat->applyManostat(*_box, *_data);
 
     auto box_new = _box->getBoxDimensions();

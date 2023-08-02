@@ -70,6 +70,7 @@ class readInput::InputFileReader
     void parseStartFilename(const std::vector<std::string> &);
     void parseMoldescriptorFilename(const std::vector<std::string> &);
     void parseGuffPath(const std::vector<std::string> &);
+    void parseGuffDatFilename(const std::vector<std::string> &);
     void parseTopologyFilename(const std::vector<std::string> &);
     void parseParameterFilename(const std::vector<std::string> &);
 

@@ -37,6 +37,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
     addKeyword(string("moldescriptor_file"), &InputFileReader::parseMoldescriptorFilename, false);
     addKeyword(string("guff_path"), &InputFileReader::parseGuffPath, false);   // default is current dir (not backward compatible)
+    addKeyword(string("guff_file"), &InputFileReader::parseGuffDatFilename, false);
 
     addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
     addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
@@ -70,6 +71,7 @@ InputFileReader::InputFileReader(const string &filename, Engine &engine) : _file
     addKeyword(string("manostat"), &InputFileReader::parseManostat, false);
     addKeyword(string("pressure"), &InputFileReader::parsePressure, false);
     addKeyword(string("p_relaxation"), &InputFileReader::parseManostatRelaxationTime, false);
+    addKeyword(string("compressibility"), &InputFileReader::parseCompressibility, false);
 
     addKeyword(string("nscale"), &InputFileReader::parseNScale, false);
     addKeyword(string("fscale"), &InputFileReader::parseFScale, false);

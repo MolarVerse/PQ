@@ -6,6 +6,10 @@
 using namespace setup;
 using namespace customException;
 
+/**
+ * @TODO: refactor this test to use the new setupManostat function
+ *
+ */
 TEST_F(TestSetup, setup)
 {
     ManostatSetup manostatSetup(_engine);

@@ -24,7 +24,7 @@ class manostat::Manostat
   protected:
     vector3d::Vec3D _pressureVector = {0.0, 0.0, 0.0};
     double          _pressure;
-    double          _targetPressure;
+    double          _targetPressure;   // no default value, must be set
 
     double _timestep;
 
@@ -47,12 +47,15 @@ class manostat::Manostat
 class manostat::BerendsenManostat : public manostat::Manostat
 {
   private:
-    double _tau;
-    double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;   // TODO: make as input parameter
+    double _tau             = defaults::_TAU_MANOSTAT_DEFAULT_;
+    double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;
 
   public:
     using Manostat::Manostat;
-    explicit BerendsenManostat(const double targetPressure, const double tau) : Manostat(targetPressure), _tau(tau) {}
+    explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
+        : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+    {
+    }
 
     void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 

@@ -33,7 +33,8 @@ class settings::Settings
     // filenames and paths for later setup
     std::string _startFilename;
     std::string _moldescriptorFilename = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
-    std::string _guffPath              = ".";                                          // not backward compatible
+    std::string _guffPath              = ".";   // not backward compatibile
+    std::string _guffDatFilename       = defaults::_GUFF_FILENAME_DEFAULT_;   
     std::string _topologyFilename      = "";
     std::string _parameterFilename     = "";
 
@@ -47,7 +48,8 @@ class settings::Settings
     // manostat settings for later setup
     std::pair<bool, std::string> _manostat;   // pair.first = check if thermostat was set
     std::pair<bool, double>      _pressure;
-    std::pair<bool, double>      _tauManostat = std::make_pair(false, 1.0);   // pay attention here default value in ps
+    std::pair<bool, double>      _tauManostat     = std::make_pair(false, 1.0);   // pay attention here default value in ps
+    double                       _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;   // 4.5e-5
 
     // shake settings for later setup
     double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;    // 1e-8
@@ -70,6 +72,7 @@ class settings::Settings
     std::string getStartFilename() const { return _startFilename; }
     std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
     std::string getGuffPath() const { return _guffPath; }
+    std::string getGuffDatFilename() const { return _guffDatFilename; }
     std::string getTopologyFilename() const { return _topologyFilename; }
     std::string getParameterFilename() const { return _parameterFilename; }
 
@@ -88,6 +91,7 @@ class settings::Settings
     bool        getPressureSet() const { return _pressure.first; }
     double      getTauManostat() const { return _tauManostat.second; }
     bool        getTauManostatSet() const { return _tauManostat.first; }
+    double      getCompressibility() const { return _compressibility; }
 
     size_t getNScale() const { return _nScale; }
     size_t getFScale() const { return _fScale; }
@@ -111,6 +115,7 @@ class settings::Settings
     void setStartFilename(const std::string_view startFilename) { _startFilename = startFilename; }
     void setMoldescriptorFilename(const std::string_view filename) { _moldescriptorFilename = filename; }
     void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; }
+    void setGuffDatFilename(const std::string_view guffDatFilename) { _guffDatFilename = guffDatFilename; }
     void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
     void setParameterFilename(const std::string_view parameterFilename) { _parameterFilename = parameterFilename; }
 
@@ -123,6 +128,7 @@ class settings::Settings
     void setManostat(const std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
     void setPressure(const double pressure) { _pressure = std::make_pair(true, pressure); }
     void setTauManostat(const double tauManostat);
+    void setCompressibility(const double compressibility) { _compressibility = compressibility; }
 
     void setNScale(const size_t nScale) { _nScale = nScale; }
     void setFScale(const size_t fScale) { _fScale = fScale; }

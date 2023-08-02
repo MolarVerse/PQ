@@ -20,6 +20,7 @@ namespace defaults
     constexpr char _NONCOULOMB_TYPE_DEFAULT_[] = "none";
 
     constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;
+    constexpr double _TAU_MANOSTAT_DEFAULT_          = 1.0;
 
     constexpr size_t _SHAKE_MAX_ITER_DEFAULT_  = 20;
     constexpr size_t _RATTLE_MAX_ITER_DEFAULT_ = 20;

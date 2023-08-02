@@ -58,7 +58,7 @@
 # COULOMBICS
 #-----------------------------------------
    rcoulomb   = 9.0;
-   #long_range = ewald;
+   long_range = none;
    #longrange_nc = on;
 
 # NON-COULOMBICS
@@ -72,7 +72,7 @@
 # MOLDESCRIPTOR
 #-----------------------------------------
   #moldescriptor_file = test.dat;
-  #guff_path = test;
+  guff_path = .;
 
 # THERMOSTAT
 #-----------------------------------------
@@ -82,8 +82,8 @@
    pressure   = 1.013;
    p_relaxation = 0.1;
    nscale = 5;
-   cell-list = on;
-   cell-number = 10;
+   #cell-list = on;
+   #cell-number = 10;
 #  friction   = 0.035;
 
 # VIRIAL
@@ -92,15 +92,13 @@
 
 # FILES
 #-----------------------------------------
-   start_file   = h2o-qmcf_2000.rst; 
+   start_file   = h2o-qmcf.rst; 
 
    output_file  = testset_02___mm_md_h2o-1.out; 
    info_file    = testset_02___mm_md_h2o-1.info;
    energy_file  = testset_02___mm_md_h2o-1.en; 
    traj_file    = testset_02___mm_md_h2o-1.xyz;
    vel_file     = testset_02___mm_md_h2o-1.vel;
-   force_file   = testset_02___mm_md_h2o-1.frc;
-   charge_file  = testset_02___mm_md_h2o-1.chrg;
    restart_file = testset_02___mm_md_h2o-1.rst;
 
 

@@ -34,17 +34,6 @@ TEST_F(TestLogOutput, writeRelaxationTimeThermostatWarning)
     EXPECT_EQ(line, "WARNING: Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps.");
 }
 
-TEST_F(TestLogOutput, writeRelaxationTimeManostatWarning)
-{
-    _logOutput->setFilename("default.out");
-    _logOutput->writeRelaxationTimeManostatWarning();
-    _logOutput->close();
-    std::ifstream file("default.out");
-    std::string   line;
-    getline(file, line);
-    EXPECT_EQ(line, "WARNING: Berendsen manostat set but no relaxation time given. Using default value of 1.0ps.");
-}
-
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
