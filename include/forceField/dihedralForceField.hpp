@@ -3,6 +3,10 @@
 #define _DIHEDRAL_FORCE_FIELD_HPP_
 
 #include "dihedral.hpp"
+#include "molecule.hpp"
+
+#include <cstddef>
+#include <vector>
 
 namespace forceField
 {

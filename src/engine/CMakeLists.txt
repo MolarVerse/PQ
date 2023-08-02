@@ -1,29 +1,30 @@
 add_library(engine
     engine.cpp
-    settings.cpp
+    engineOutput.cpp
 )
 
 target_include_directories(engine
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/engine
+    PRIVATE
     ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )
 
 target_link_libraries(engine
     PUBLIC
+    constraints
+    integrator
+    manostat
+    potential
+    resetKinetics
+    settings
+    thermostat
     output
     simulationBox
     config
-    integrator
-    potential
     timings
-    thermostat
-    manostat
     physicalData
     virial
-    resetKinetics
-    constraints
     forceField
 )
 

@@ -2,6 +2,8 @@
 
 #define _COULOMB_POTENTIAL_HPP_
 
+#include "defaults.hpp"
+
 namespace potential
 {
     class CoulombPotential;
@@ -21,7 +23,8 @@ class potential::CoulombPotential
     double _coulombRadiusCutOff;
 
   public:
-    CoulombPotential(const double coulombCutoff) : _coulombRadiusCutOff(coulombCutoff) {}
+    CoulombPotential() : _coulombRadiusCutOff(defaults::_COULOMB_CUT_OFF_DEFAULT_) {}
+    explicit CoulombPotential(const double coulombCutoff) : _coulombRadiusCutOff(coulombCutoff) {}
 
     virtual ~CoulombPotential()                                                                                = default;
     virtual void calcCoulomb(const double, const double, double &, double &, const double, const double) const = 0;

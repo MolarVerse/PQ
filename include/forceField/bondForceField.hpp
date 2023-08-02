@@ -3,6 +3,9 @@
 #define _BOND_FORCE_FIELD_HPP_
 
 #include "bond.hpp"
+#include "molecule.hpp"
+
+#include <cstddef>
 
 namespace forceField
 {

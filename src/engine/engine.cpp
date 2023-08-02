@@ -22,8 +22,8 @@ void Engine::run()
 
     _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
 
-    _logOutput->writeInitialMomentum(_physicalData.getMomentum());
-    _stdoutOutput->writeInitialMomentum(_physicalData.getMomentum());
+    _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
+    _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());
 
     const auto  numberOfSteps = _timings.getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));
@@ -118,18 +118,14 @@ void Engine::writeOutput()
         const auto effectiveStep  = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
 
-        _energyOutput->write(effectiveStep, _averagePhysicalData);
-        _infoOutput->write(simulationTime, _averagePhysicalData);
-        _xyzOutput->writeXyz(_simulationBox);
-        _velOutput->writeVelocities(_simulationBox);
-        _forceOutput->writeForces(_simulationBox);
-        _chargeOutput->writeCharges(_simulationBox);
-        _rstFileOutput->write(_simulationBox, _step + step0);
+        _engineOutput.writeEnergyFile(effectiveStep, _averagePhysicalData);
+        _engineOutput.writeInfoFile(simulationTime, _averagePhysicalData);
+        _engineOutput.writeXyzFile(_simulationBox);
+        _engineOutput.writeVelFile(_simulationBox);
+        _engineOutput.writeForceFile(_simulationBox);
+        _engineOutput.writeChargeFile(_simulationBox);
+        _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
         _averagePhysicalData = PhysicalData();
-    }
-    else
-    {
-        // calclooptime
     }
 }

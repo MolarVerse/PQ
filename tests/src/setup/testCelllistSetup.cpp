@@ -11,15 +11,15 @@ using namespace setup;
  */
 TEST_F(TestSetup, setupCellList)
 {
-    CellListSetup celllistSetup(_engine);
-    celllistSetup.setup();
+    CellListSetup cellListSetup(_engine);
+    cellListSetup.setup();
 
-    EXPECT_EQ(typeid(*(_engine._potential)), typeid(potential::PotentialBruteForce));
+    EXPECT_EQ(typeid((_engine.getPotential())), typeid(potential::PotentialBruteForce));
 
     _engine.getCellList().activate();
-    celllistSetup.setup();
+    cellListSetup.setup();
 
-    EXPECT_EQ(typeid(*(_engine._potential)), typeid(potential::PotentialCellList));
+    EXPECT_EQ(typeid((_engine.getPotential())), typeid(potential::PotentialCellList));
 
     EXPECT_NO_THROW(setupCellList(_engine));
 }

@@ -9,6 +9,23 @@ using namespace potential;
 using namespace physicalData;
 using namespace vector3d;
 
+Potential::Potential(const Potential &potential)
+{
+    _coulombType    = potential._coulombType;
+    _nonCoulombType = potential._nonCoulombType;
+}
+
+Potential &Potential::operator=(const Potential &potential)
+{
+    if (this != &potential)
+    {
+        _coulombType    = potential._coulombType;
+        _nonCoulombType = potential._nonCoulombType;
+    }
+
+    return *this;
+}
+
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     const auto   box      = simBox.getBoxDimensions();

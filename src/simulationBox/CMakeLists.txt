@@ -8,14 +8,13 @@ add_library(simulationBox
 
 target_include_directories(simulationBox
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/simulationBox
 )
 
 target_link_libraries(simulationBox
     PUBLIC
+    vector3d
     config
-    math
 )
 
 install(TARGETS simulationBox

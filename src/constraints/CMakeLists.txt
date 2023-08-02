@@ -10,8 +10,9 @@ target_include_directories(constraints
 
 target_link_libraries(constraints
     PUBLIC
-    simulationBox
     connectivity
+    simulationBox
+    vector3d
 )
 
 install(TARGETS constraints

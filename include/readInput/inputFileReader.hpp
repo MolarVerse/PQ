@@ -113,6 +113,7 @@ class readInput::InputFileReader
     void parseManostat(const std::vector<std::string> &);
     void parsePressure(const std::vector<std::string> &);
     void parseManostatRelaxationTime(const std::vector<std::string> &);
+    void parseCompressibility(const std::vector<std::string> &);
 
     // parsing reset related keywords
     void parseNScale(const std::vector<std::string> &);

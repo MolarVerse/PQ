@@ -27,7 +27,6 @@ target_link_libraries(readInput
     config
     gtest
     forceField
-    math
 )
 
 install(TARGETS readInput

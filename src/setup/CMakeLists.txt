@@ -24,7 +24,6 @@ target_link_libraries(setup
     output
     config
     gtest
-    math
 )
 
 install(TARGETS setup

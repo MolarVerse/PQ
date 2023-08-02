@@ -3,6 +3,10 @@
 #define _ANGLE_FORCE_FIELD_HPP_
 
 #include "angle.hpp"
+#include "molecule.hpp"
+
+#include <cstddef>
+#include <vector>
 
 namespace forceField
 {

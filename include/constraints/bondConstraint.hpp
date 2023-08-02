@@ -3,7 +3,6 @@
 #define _BOND_CONSTRAINT_HPP_
 
 #include "bond.hpp"
-#include "molecule.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 

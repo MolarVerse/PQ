@@ -1,5 +1,8 @@
 #include "bondConstraint.hpp"
 
+#include "simulationBox.hpp"
+#include "vector3d.hpp"
+
 using namespace constraints;
 
 /**

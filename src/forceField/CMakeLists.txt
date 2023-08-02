@@ -14,6 +14,7 @@ target_link_libraries(forceField
     PUBLIC
     simulationBox
     connectivity
+    vector3d
 )
 
 install(TARGETS forceField

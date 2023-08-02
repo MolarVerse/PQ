@@ -34,11 +34,15 @@ class potential::Potential
     std::string _coulombType    = "guff";
     std::string _nonCoulombType = "guff";
 
-    std::unique_ptr<CoulombPotential>    _coulombPotential    = nullptr;
-    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential = nullptr;
+    std::unique_ptr<CoulombPotential>    _coulombPotential;
+    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
 
   public:
+    Potential() = default;
+    Potential(const Potential &);
     virtual ~Potential() = default;
+
+    Potential &operator=(const Potential &);
 
     virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
@@ -90,6 +94,7 @@ class potential::Potential
 class potential::PotentialBruteForce : public potential::Potential
 {
   public:
+    using Potential::Potential;
     void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
@@ -105,6 +110,7 @@ class potential::PotentialBruteForce : public potential::Potential
 class potential::PotentialCellList : public potential::Potential
 {
   public:
+    using Potential::Potential;
     void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
