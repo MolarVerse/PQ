@@ -5,7 +5,6 @@ add_library(constraints
 
 target_include_directories(constraints
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/constraints
 )
 

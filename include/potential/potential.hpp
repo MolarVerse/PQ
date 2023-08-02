@@ -34,8 +34,8 @@ class potential::Potential
     std::string _coulombType    = "guff";
     std::string _nonCoulombType = "guff";
 
-    std::unique_ptr<CoulombPotential>    _coulombPotential;
-    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
+    std::unique_ptr<CoulombPotential>    _coulombPotential    = nullptr;
+    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential = nullptr;
 
   public:
     virtual ~Potential() = default;

@@ -10,7 +10,6 @@
 #include "integrator.hpp"
 #include "logOutput.hpp"
 #include "manostat.hpp"
-#include "output.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "resetKinetics.hpp"
@@ -24,7 +23,6 @@
 #include "virial.hpp"
 
 #include <memory>
-#include <vector>
 
 namespace engine
 {
@@ -51,7 +49,6 @@ class engine::Engine
     constraints::Constraints     _constraints;
     forceField::ForceField       _forceField;
 
-  public:
     std::unique_ptr<integrator::Integrator>       _integrator    = std::make_unique<integrator::VelocityVerlet>();
     std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
     std::unique_ptr<thermostat::Thermostat>       _thermostat    = std::make_unique<thermostat::Thermostat>();
@@ -69,9 +66,17 @@ class engine::Engine
     std::unique_ptr<output::RstFileOutput>    _rstFileOutput = std::make_unique<output::RstFileOutput>("default.rst");
     std::unique_ptr<output::InfoOutput>       _infoOutput    = std::make_unique<output::InfoOutput>("default.info");
 
+  public:
     void run();
     void takeStep();
     void writeOutput();
+
+    template <typename T> void makeIntegrator(T integrator) { _integrator = std::make_unique<T>(integrator); }
+    template <typename T> void makePotential(T potential) { _potential = std::make_unique<T>(potential); }
+    template <typename T> void makeThermostat(T thermostat) { _thermostat = std::make_unique<T>(thermostat); }
+    template <typename T> void makeManostat(T manostat) { _manostat = std::make_unique<T>(manostat); }
+    template <typename T> void makeVirial(T virial) { _virial = std::make_unique<T>(virial); }
+    template <typename T> void makeResetKinetics(T resetKinetics) { _resetKinetics = std::make_unique<T>(resetKinetics); }
 
     /***************************
      *                         *
@@ -89,6 +94,19 @@ class engine::Engine
     integrator::Integrator       &getIntegrator() { return *_integrator; }
     constraints::Constraints     &getConstraints() { return _constraints; }
     forceField::ForceField       &getForceField() { return _forceField; }
+    potential::Potential         &getPotential() { return *_potential; }
+    thermostat::Thermostat       &getThermostat() { return *_thermostat; }
+    manostat::Manostat           &getManostat() { return *_manostat; }
+
+    output::EnergyOutput     &getEnergyOutput() { return *_energyOutput; }
+    output::TrajectoryOutput &getXyzOutput() { return *_xyzOutput; }
+    output::TrajectoryOutput &getVelOutput() { return *_velOutput; }
+    output::TrajectoryOutput &getForceOutput() { return *_forceOutput; }
+    output::TrajectoryOutput &getChargeOutput() { return *_chargeOutput; }
+    output::LogOutput        &getLogOutput() { return *_logOutput; }
+    output::StdoutOutput     &getStdoutOutput() { return *_stdoutOutput; }
+    output::RstFileOutput    &getRstFileOutput() { return *_rstFileOutput; }
+    output::InfoOutput       &getInfoOutput() { return *_infoOutput; }
 };
 
 #endif   // _ENGINE_HPP_

@@ -7,7 +7,6 @@ add_library(forceField
 
 target_include_directories(forceField
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/forceField
 )
 

@@ -33,9 +33,9 @@ class TestGuffDatReader : public ::testing::Test
 
         _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);
 
-        _engine->_potential = std::make_unique<potential::PotentialBruteForce>();
-        _engine->_potential->setNonCoulombPotential(potential::GuffNonCoulomb());
-        _engine->_potential->setCoulombPotential(potential::GuffCoulomb(_engine->getSimulationBox().getCoulombRadiusCutOff()));
+        _engine->makePotential(potential::PotentialBruteForce());
+        _engine->getPotential().setNonCoulombPotential(potential::GuffNonCoulomb());
+        _engine->getPotential().setCoulombPotential(potential::GuffCoulomb(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
         _guffDatReader = new readInput::GuffDatReader(*_engine);
     }

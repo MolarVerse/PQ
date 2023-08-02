@@ -34,17 +34,18 @@ void ThermostatSetup::setup()
 
         if (!_engine.getSettings().getRelaxationTimeSet())
         {
-            _engine._stdoutOutput->writeRelaxationTimeThermostatWarning();
-            _engine._logOutput->writeRelaxationTimeThermostatWarning();
+            _engine.getStdoutOutput().writeRelaxationTimeThermostatWarning();
+            _engine.getLogOutput().writeRelaxationTimeThermostatWarning();
         }
 
-        _engine._thermostat = make_unique<BerendsenThermostat>(_engine.getSettings().getTemperature(),
-                                                               _engine.getSettings().getRelaxationTime() * constants::_PS_TO_FS_);
+        // TODO: check if this works
+        _engine.makeThermostat(BerendsenThermostat(_engine.getSettings().getTemperature(),
+                                                   _engine.getSettings().getRelaxationTime() * constants::_PS_TO_FS_));
     }
     else
     {
         // warnings if values set but not used
     }
 
-    _engine._thermostat->setTimestep(_engine.getTimings().getTimestep());
+    _engine.getThermostat().setTimestep(_engine.getTimings().getTimestep());
 }

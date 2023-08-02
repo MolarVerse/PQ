@@ -27,6 +27,7 @@ TopologyReader::TopologyReader(const string &filename, engine::Engine &engine)
  * @brief checks if reading topology file is needed
  *
  * @return true if shake is activated
+ * @return true if force field is activated
  * @return false
  */
 bool TopologyReader::isNeeded() const

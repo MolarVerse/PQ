@@ -7,14 +7,12 @@ add_library(connectivity
 
 target_include_directories(connectivity
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/connectivity
 )
 
 target_link_libraries(connectivity
     PUBLIC
     simulationBox
-    config
 )
 
 install(TARGETS connectivity

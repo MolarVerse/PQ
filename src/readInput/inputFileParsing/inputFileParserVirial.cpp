@@ -17,11 +17,11 @@ void InputFileReader::parseVirial(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "molecular")
     {
-        _engine._virial = make_unique<VirialMolecular>();
+        _engine.makeVirial(VirialMolecular());
     }
     else if (lineElements[2] == "atomic")
     {
-        _engine._virial = make_unique<VirialAtomic>();
+        _engine.makeVirial(VirialAtomic());
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else

@@ -24,10 +24,10 @@ void CellListSetup::setup()
     if (_engine.getCellList().isActivated())
     {
         _engine.getCellList().setup(_engine.getSimulationBox());
-        _engine._potential = make_unique<PotentialCellList>();
+        _engine.makePotential(PotentialCellList());
     }
     else
     {
-        _engine._potential = make_unique<PotentialBruteForce>();
+        _engine.makePotential(PotentialBruteForce());
     }
 }

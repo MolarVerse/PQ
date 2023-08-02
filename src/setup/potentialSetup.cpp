@@ -33,14 +33,14 @@ void PotentialSetup::setupCoulomb()
 {
     const auto coulombRadiusCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
 
-    if (_engine._potential->getCoulombType() == "guff")
+    if (_engine.getPotential().getCoulombType() == "guff")
     {
         if (_engine.getSettings().getCoulombLongRangeType() == "none")
-            _engine._potential->setCoulombPotential(GuffCoulomb(coulombRadiusCutOff));
+            _engine.getPotential().setCoulombPotential(GuffCoulomb(coulombRadiusCutOff));
         else if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
         {
             auto wolfParameter = _engine.getSettings().getWolfParameter();
-            _engine._potential->setCoulombPotential(GuffWolfCoulomb(coulombRadiusCutOff, wolfParameter));
+            _engine.getPotential().setCoulombPotential(GuffWolfCoulomb(coulombRadiusCutOff, wolfParameter));
         }
     }
 }
@@ -51,13 +51,13 @@ void PotentialSetup::setupCoulomb()
  */
 void PotentialSetup::setupNonCoulomb()
 {
-    if (_engine._potential->getNonCoulombType() == "guff")
+    if (_engine.getPotential().getNonCoulombType() == "guff")
     {
         if (_engine.getSettings().getNonCoulombType() == "none")
-            _engine._potential->setNonCoulombPotential(GuffNonCoulomb());
+            _engine.getPotential().setNonCoulombPotential(GuffNonCoulomb());
         else if (_engine.getSettings().getNonCoulombType() == "lj")
-            _engine._potential->setNonCoulombPotential(GuffLennardJones());
+            _engine.getPotential().setNonCoulombPotential(GuffLennardJones());
         else if (_engine.getSettings().getNonCoulombType() == "buck")
-            _engine._potential->setNonCoulombPotential(GuffBuckingham());
+            _engine.getPotential().setNonCoulombPotential(GuffBuckingham());
     }
 }

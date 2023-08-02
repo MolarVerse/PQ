@@ -4,6 +4,7 @@
 
 #include "molecule.hpp"
 
+#include <cstddef>
 #include <vector>
 
 namespace connectivity

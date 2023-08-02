@@ -32,17 +32,18 @@ void ManostatSetup::setup()
 
         if (!_engine.getSettings().getTauManostatSet())
         {
-            _engine._stdoutOutput->writeRelaxationTimeManostatWarning();
-            _engine._logOutput->writeRelaxationTimeManostatWarning();
+            _engine.getStdoutOutput().writeRelaxationTimeManostatWarning();
+            _engine.getLogOutput().writeRelaxationTimeManostatWarning();
         }
 
-        _engine._manostat = make_unique<BerendsenManostat>(_engine.getSettings().getPressure(),
-                                                           _engine.getSettings().getTauManostat() * constants::_PS_TO_FS_);
+        // TODO: check if this works
+        _engine.makeManostat(BerendsenManostat(_engine.getSettings().getPressure(),
+                                               _engine.getSettings().getTauManostat() * constants::_PS_TO_FS_));
     }
     else
     {
         // warnings if values set but not used
     }
 
-    _engine._manostat->setTimestep(_engine.getTimings().getTimestep());
+    _engine.getManostat().setTimestep(_engine.getTimings().getTimestep());
 }

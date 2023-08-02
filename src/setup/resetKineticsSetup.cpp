@@ -33,12 +33,14 @@ void ResetKineticsSetup::setup()
     {
         if (fScale == 0) fScale = numberOfSteps + 1;
         if (fReset == 0) fReset = numberOfSteps + 1;
-        _engine._resetKinetics = make_unique<ResetTemperature>(nScale, fScale, nReset, fReset, targetTemperature);
+        // TODO: check if this works
+        _engine.makeResetKinetics(ResetTemperature(nScale, fScale, nReset, fReset, targetTemperature));
     }
     else if (nReset != 0 || fReset != 0)
     {
         fScale = numberOfSteps + 1;
         if (fReset == 0) fReset = numberOfSteps + 1;
-        _engine._resetKinetics = make_unique<ResetMomentum>(nScale, fScale, nReset, fReset, targetTemperature);
+        // TODO: check if this works
+        _engine.makeResetKinetics(ResetMomentum(nScale, fScale, nReset, fReset, targetTemperature));
     }
 }

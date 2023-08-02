@@ -3,6 +3,10 @@
 #define _CONSTRAINTS_HPP_
 
 #include "bondConstraint.hpp"
+#include "simulationBox.hpp"
+
+#include <cstddef>
+#include <vector>
 
 /**
  * @brief namespace for all constraints

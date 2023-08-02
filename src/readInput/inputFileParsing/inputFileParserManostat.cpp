@@ -18,12 +18,12 @@ void InputFileReader::parseManostat(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "none")
     {
-        _engine._manostat = make_unique<Manostat>();
+        _engine.makeManostat(Manostat());
         _engine.getSettings().setManostat("none");
     }
     else if (lineElements[2] == "berendsen")
     {
-        _engine._manostat = make_unique<BerendsenManostat>();
+        _engine.makeManostat(BerendsenManostat());
         _engine.getSettings().setManostat("berendsen");
     }
     else

@@ -17,12 +17,12 @@ void InputFileReader::parseThermostat(const vector<string> &lineElements)
     checkCommand(lineElements, _lineNumber);
     if (lineElements[2] == "none")
     {
-        _engine._thermostat = make_unique<Thermostat>();
+        _engine.makeThermostat(Thermostat());
         _engine.getSettings().setThermostat("none");
     }
     else if (lineElements[2] == "berendsen")
     {
-        _engine._thermostat = make_unique<BerendsenThermostat>();
+        _engine.makeThermostat(BerendsenThermostat());
         _engine.getSettings().setThermostat("berendsen");
     }
     else

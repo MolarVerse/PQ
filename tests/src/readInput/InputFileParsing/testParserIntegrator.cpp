@@ -10,7 +10,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
 {
     vector<string> lineElements = {"integrator", "=", "v-verlet"};
     _inputFileReader->parseIntegrator(lineElements);
-    EXPECT_EQ(_engine._integrator->getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(_engine.getIntegrator().getIntegratorType(), "VelocityVerlet");
 }
 
 TEST_F(TestInputFileReader, testIntegratorUnknown)

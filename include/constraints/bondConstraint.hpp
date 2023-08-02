@@ -5,6 +5,9 @@
 #include "bond.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "vector3d.hpp"
+
+#include <cstddef>
 
 namespace constraints
 {

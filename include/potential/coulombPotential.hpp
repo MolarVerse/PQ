@@ -21,7 +21,7 @@ class potential::CoulombPotential
     double _coulombRadiusCutOff;
 
   public:
-    explicit CoulombPotential(const double coulombCutoff) : _coulombRadiusCutOff(coulombCutoff) {}
+    CoulombPotential(const double coulombCutoff) : _coulombRadiusCutOff(coulombCutoff) {}
 
     virtual ~CoulombPotential()                                                                                = default;
     virtual void calcCoulomb(const double, const double, double &, double &, const double, const double) const = 0;
@@ -59,7 +59,7 @@ class potential::GuffWolfCoulomb : public potential::CoulombPotential
     double _wolfParameter3;
 
   public:
-    explicit GuffWolfCoulomb(const double coulombRadiusCutOff, const double wolfParameter);
+    GuffWolfCoulomb(const double coulombRadiusCutOff, const double wolfParameter);
 
     void calcCoulomb(const double, const double, double &, double &, const double, const double) const override;
 

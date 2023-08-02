@@ -1,5 +1,6 @@
 #include "inputFileReader.hpp"
 
+#include <cstddef>
 #include <iostream>
 
 using namespace std;
@@ -14,7 +15,13 @@ using namespace output;
 void InputFileReader::parseOutputFreq(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    Output::setOutputFrequency(stoi(lineElements[2]));
+
+    const auto outputFrequency = stoi(lineElements[2]);
+    if (outputFrequency < 0)
+        throw customException::InputFileException("Output frequency cannot be negative - \"" + lineElements[2] + "\" at line " +
+                                                  to_string(_lineNumber) + "in input file");
+
+    Output::setOutputFrequency(static_cast<size_t>(outputFrequency));
 }
 
 /**
@@ -25,7 +32,7 @@ void InputFileReader::parseOutputFreq(const vector<string> &lineElements)
 void InputFileReader::parseLogFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._logOutput->setFilename(lineElements[2]);
+    _engine.getLogOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -36,7 +43,7 @@ void InputFileReader::parseLogFilename(const vector<string> &lineElements)
 void InputFileReader::parseInfoFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._infoOutput->setFilename(lineElements[2]);
+    _engine.getInfoOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -47,7 +54,7 @@ void InputFileReader::parseInfoFilename(const vector<string> &lineElements)
 void InputFileReader::parseEnergyFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._energyOutput->setFilename(lineElements[2]);
+    _engine.getEnergyOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -58,7 +65,7 @@ void InputFileReader::parseEnergyFilename(const vector<string> &lineElements)
 void InputFileReader::parseTrajectoryFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._xyzOutput->setFilename(lineElements[2]);
+    _engine.getXyzOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -69,7 +76,7 @@ void InputFileReader::parseTrajectoryFilename(const vector<string> &lineElements
 void InputFileReader::parseVelocityFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._velOutput->setFilename(lineElements[2]);
+    _engine.getVelOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -80,7 +87,7 @@ void InputFileReader::parseVelocityFilename(const vector<string> &lineElements)
 void InputFileReader::parseForceFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._forceOutput->setFilename(lineElements[2]);
+    _engine.getForceOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -91,7 +98,7 @@ void InputFileReader::parseForceFilename(const vector<string> &lineElements)
 void InputFileReader::parseRestartFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._rstFileOutput->setFilename(lineElements[2]);
+    _engine.getRstFileOutput().setFilename(lineElements[2]);
 }
 
 /**
@@ -102,5 +109,5 @@ void InputFileReader::parseRestartFilename(const vector<string> &lineElements)
 void InputFileReader::parseChargeFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);
-    _engine._chargeOutput->setFilename(lineElements[2]);
+    _engine.getChargeOutput().setFilename(lineElements[2]);
 }

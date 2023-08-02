@@ -187,8 +187,8 @@ void SimulationBoxSetup::checkBoxSettings()   // TODO:
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
 
-        _engine._logOutput->writeDensityWarning();
-        _engine._stdoutOutput->writeDensityWarning();
+        _engine.getLogOutput().writeDensityWarning();
+        _engine.getStdoutOutput().writeDensityWarning();
     }
 
     _engine.getPhysicalData().setVolume(_engine.getSimulationBox().getVolume());

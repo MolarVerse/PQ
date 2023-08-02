@@ -3,6 +3,9 @@
 #define _BOND_HPP_
 
 #include "connectivityElement.hpp"
+#include "molecule.hpp"
+
+#include <cstddef>
 
 namespace connectivity
 {
