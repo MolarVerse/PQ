@@ -28,6 +28,17 @@ void readInput::readGuffDat(Engine &engine)
 }
 
 /**
+ * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
+ *
+ * @param engine
+ */
+GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine)
+{
+    _filename = _engine.getSettings().getGuffDatFilename();
+    if (!fileExists(_filename)) throw InputFileException("Could not open guffdat file " + _filename + ".");
+}
+
+/**
  * @brief reads the guff.dat file
  *
  * @throws GuffDatException if the file is invalid

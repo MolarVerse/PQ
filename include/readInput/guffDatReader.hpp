@@ -22,12 +22,12 @@ class readInput::GuffDatReader
 {
   private:
     size_t      _lineNumber = 1;
-    std::string _filename   = defaults::_GUFF_FILENAME_DEFAULT_;   // TODO: until now only default filename implemented
+    std::string _filename   = defaults::_GUFF_FILENAME_DEFAULT_;   // gets overridden by the engine in the constructor
 
     engine::Engine &_engine;
 
   public:
-    explicit GuffDatReader(engine::Engine &engine) : _engine(engine) {}
+    explicit GuffDatReader(engine::Engine &engine);
 
     void setupGuffMaps();
     void parseLine(std::vector<std::string> &);

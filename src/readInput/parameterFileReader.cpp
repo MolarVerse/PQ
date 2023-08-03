@@ -1,7 +1,7 @@
 #include "parameterFileReader.hpp"
 
 using namespace std;
-using namespace readInput;
+using namespace readInput::parameterFile;
 
 /**
  * @brief constructor

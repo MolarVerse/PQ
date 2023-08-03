@@ -1,18 +1,18 @@
-#ifndef _TEST_TOPOLOGY_READER_HPP_
+#ifndef _TEST_PARAMETER_FILE_SECTION_HPP_
 
-#define _TEST_TOPOLOGY_READER_HPP_
+#define _TEST_PARAMETER_FILE_SECTION_HPP_
 
 #include "engine.hpp"
-#include "topologyReader.hpp"
 
+#include <fstream>
 #include <gtest/gtest.h>
 #include <string>
 
-class TestTopologyReader : public ::testing::Test
+class TestParameterFileSection : public ::testing::Test
 {
   protected:
-    engine::Engine                      *_engine;
-    readInput::topology::TopologyReader *_topologyReader;
+    engine::Engine *_engine;
+    std::string     _parameterFilename = "param.param";
 
     void SetUp() override
     {
@@ -20,21 +20,19 @@ class TestTopologyReader : public ::testing::Test
         molecule1.setNumberOfAtoms(1);
 
         auto molecule2 = simulationBox::Molecule();
-        molecule2.setNumberOfAtoms(2);
+        molecule2.setNumberOfAtoms(3);
 
         _engine = new engine::Engine();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
-
-        _topologyReader = new readInput::topology::TopologyReader("data/topologyReader/topology.top", *_engine);
     }
 
     void TearDown() override
     {
-        delete _topologyReader;
         delete _engine;
+        ::remove(_parameterFilename.c_str());
     }
 };
 
-#endif   // _TEST_TOPOLOGY_READER_HPP_
+#endif   // _TEST_PARAMETER_FILE_SECTION_HPP_

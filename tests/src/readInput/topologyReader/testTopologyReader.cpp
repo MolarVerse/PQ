@@ -8,6 +8,7 @@ using namespace ::testing;
  * @brief tests isNeeded function
  *
  * @return true if shake is enabled
+ * @return true if forceField is enabled
  * @return false
  */
 TEST_F(TestTopologyReader, isNeeded)
@@ -57,7 +58,7 @@ TEST_F(TestTopologyReader, read)
 TEST_F(TestTopologyReader, readTopologyFile)
 {
     _engine->getSettings().setTopologyFilename("topology.top");
-    readInput::readTopologyFile(*_engine);
+    readInput::topology::readTopologyFile(*_engine);
 }
 
 int main(int argc, char **argv)

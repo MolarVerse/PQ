@@ -6,9 +6,9 @@ using namespace customException;
 
 TEST(TestInputFileReader, testCheckCommand)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; ++i)
     {
-        auto lineElements = vector<string>(i);
+        auto lineElements = vector<string>(size_t(i));
 
         if (i != 3)
         {
@@ -24,9 +24,9 @@ TEST(TestInputFileReader, testCheckCommand)
 
 TEST(TestInputFileReader, testCheckCommandArray)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; ++i)
     {
-        auto lineElements = vector<string>(i);
+        auto lineElements = vector<string>(size_t(i));
 
         if (i < 3)
         {

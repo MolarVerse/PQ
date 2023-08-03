@@ -15,7 +15,9 @@ namespace StringUtilities
     std::vector<std::string> getLineCommands(const std::string &, const size_t);
     std::vector<std::string> splitString(const std::string &);
 
-    std::string to_lower_copy(std::string);
+    std::string toLowerCopy(std::string);
+
+    bool fileExists(const std::string &);
 
 }   // namespace StringUtilities
 

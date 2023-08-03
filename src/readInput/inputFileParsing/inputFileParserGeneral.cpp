@@ -39,6 +39,11 @@ void InputFileReader::parseGuffPath(const vector<string> &lineElements)
     _engine.getSettings().setGuffPath(lineElements[2]);
 }
 
+/**
+ * @brief parse guff dat file of simulation and set it in settings
+ *
+ * @param lineElements
+ */
 void InputFileReader::parseGuffDatFilename(const vector<string> &lineElements)
 {
     checkCommand(lineElements, _lineNumber);

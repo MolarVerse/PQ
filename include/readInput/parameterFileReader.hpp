@@ -7,12 +7,12 @@
 
 #include <string>
 
-namespace readInput
+namespace readInput::parameterFile
 {
     class ParameterFileReader;
     // void readParameterFile(engine::Engine &);
 
-}   // namespace readInput
+}   // namespace readInput::parameterFile
 
 /**
  * @class ParameterReader
@@ -20,7 +20,7 @@ namespace readInput
  * @brief reads parameter file and sets settings
  *
  */
-class readInput::ParameterFileReader
+class readInput::parameterFile::ParameterFileReader
 {
   private:
     std::string     _filename;

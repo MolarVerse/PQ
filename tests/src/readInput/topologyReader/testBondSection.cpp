@@ -9,8 +9,8 @@
  */
 TEST_F(TestTopologySection, processSectionBond)
 {
-    std::vector<std::string> lineElements = {"1", "2", "7"};
-    readInput::BondSection   bondSection;
+    std::vector<std::string>         lineElements = {"1", "2", "7"};
+    readInput::topology::BondSection bondSection;
     bondSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getBonds().size(), 1);
     EXPECT_EQ(_engine->getForceField().getBonds()[0].getMolecule1(), &(_engine->getSimulationBox().getMolecules()[0]));
@@ -32,7 +32,7 @@ TEST_F(TestTopologySection, processSectionBond)
  */
 TEST_F(TestTopologySection, endedNormallyBond)
 {
-    readInput::BondSection bondSection;
+    readInput::topology::BondSection bondSection;
     EXPECT_THROW(bondSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(bondSection.endedNormally(true));
 }

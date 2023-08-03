@@ -11,6 +11,9 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     vector<string> lineElements = {"outputfreq", "=", "1000"};
     _inputFileReader->parseOutputFreq(lineElements);
     EXPECT_EQ(Output::getOutputFrequency(), 1000);
+
+    lineElements = {"outputfreq", "=", "-1000"};
+    EXPECT_THROW(_inputFileReader->parseOutputFreq(lineElements), customException::InputFileException);
 }
 
 TEST_F(TestInputFileReader, testParseLogFilename)
@@ -24,7 +27,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
 TEST_F(TestInputFileReader, testParseInfoFilename)
 {
     _filename                   = "info.txt";
-    vector<string> lineElements = {"infofilename", "=", "info.txt"};
+    vector<string> lineElements = {"infoFilename", "=", "info.txt"};
     _inputFileReader->parseInfoFilename(lineElements);
     EXPECT_EQ(_engine.getInfoOutput().getFilename(), "info.txt");
 }
@@ -32,7 +35,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
 TEST_F(TestInputFileReader, testParseEnergyFilename)
 {
     _filename                   = "energy.txt";
-    vector<string> lineElements = {"energyfilename", "=", _filename};
+    vector<string> lineElements = {"energyFilename", "=", _filename};
     _inputFileReader->parseEnergyFilename(lineElements);
     EXPECT_EQ(_engine.getEnergyOutput().getFilename(), _filename);
 }
@@ -40,7 +43,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
 TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
     _filename                   = "trajectory.xyz";
-    vector<string> lineElements = {"trajectoryfilename", "=", _filename};
+    vector<string> lineElements = {"trajectoryFilename", "=", _filename};
     _inputFileReader->parseTrajectoryFilename(lineElements);
     EXPECT_EQ(_engine.getXyzOutput().getFilename(), _filename);
 }
@@ -48,7 +51,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 TEST_F(TestInputFileReader, testVelocityFilename)
 {
     _filename                   = "velocity.xyz";
-    vector<string> lineElements = {"velocityfilename", "=", _filename};
+    vector<string> lineElements = {"velocityFilename", "=", _filename};
     _inputFileReader->parseVelocityFilename(lineElements);
     EXPECT_EQ(_engine.getVelOutput().getFilename(), _filename);
 }
@@ -56,7 +59,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
 TEST_F(TestInputFileReader, testForceFilename)
 {
     _filename                   = "force.xyz";
-    vector<string> lineElements = {"forcefilename", "=", _filename};
+    vector<string> lineElements = {"forceFilename", "=", _filename};
     _inputFileReader->parseForceFilename(lineElements);
     EXPECT_EQ(_engine.getForceOutput().getFilename(), _filename);
 }
@@ -64,7 +67,7 @@ TEST_F(TestInputFileReader, testForceFilename)
 TEST_F(TestInputFileReader, testParseRestartFilename)
 {
     _filename                   = "restart.xyz";
-    vector<string> lineElements = {"restartfilename", "=", _filename};
+    vector<string> lineElements = {"restartFilename", "=", _filename};
     _inputFileReader->parseRestartFilename(lineElements);
     EXPECT_EQ(_engine.getRstFileOutput().getFilename(), _filename);
 }
@@ -72,7 +75,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
 TEST_F(TestInputFileReader, testChargeFilename)
 {
     _filename                   = "charge.xyz";
-    vector<string> lineElements = {"chargefilename", "=", _filename};
+    vector<string> lineElements = {"chargeFilename", "=", _filename};
     _inputFileReader->parseChargeFilename(lineElements);
     EXPECT_EQ(_engine.getChargeOutput().getFilename(), _filename);
 }

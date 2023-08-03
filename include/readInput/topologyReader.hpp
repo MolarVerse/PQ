@@ -7,12 +7,12 @@
 
 #include <string>
 
-namespace readInput
+namespace readInput::topology
 {
     class TopologyReader;
     void readTopologyFile(engine::Engine &);
 
-}   // namespace readInput
+}   // namespace readInput::topology
 
 /**
  * @class TopologyReader
@@ -20,21 +20,21 @@ namespace readInput
  * @brief reads topology file and sets settings
  *
  */
-class readInput::TopologyReader
+class readInput::topology::TopologyReader
 {
   private:
     std::string     _filename;
     std::ifstream   _fp;
     engine::Engine &_engine;
 
-    std::vector<readInput::TopologySection *> _topologySections;
+    std::vector<readInput::topology::TopologySection *> _topologySections;
 
   public:
     TopologyReader(const std::string &filename, engine::Engine &engine);
 
     bool                        isNeeded() const;
     void                        read();
-    readInput::TopologySection *determineSection(const std::vector<std::string> &);
+    readInput::topology::TopologySection *determineSection(const std::vector<std::string> &);
 
     void setFilename(const std::string_view &filename) { _filename = filename; }
 };

@@ -56,7 +56,7 @@ void SimulationBoxSetup::setAtomMasses()
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            const auto keyword = to_lower_copy(molecule.getAtomName(i));
+            const auto keyword = toLowerCopy(molecule.getAtomName(i));
             if (!constants::atomMassMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
@@ -82,7 +82,7 @@ void SimulationBoxSetup::setAtomicNumbers()
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            const auto keyword = to_lower_copy(molecule.getAtomName(i));
+            const auto keyword = toLowerCopy(molecule.getAtomName(i));
 
             if (!constants::atomNumberMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
@@ -159,7 +159,7 @@ void SimulationBoxSetup::calculateTotalCharge()
  * @note If density is set, box dimensions will be calculated from density.
  * @note If box dimensions are set, density will be calculated from box dimensions.
  */
-void SimulationBoxSetup::checkBoxSettings()   // TODO:
+void SimulationBoxSetup::checkBoxSettings()
 {
     auto box     = _engine.getSimulationBox().getBoxDimensions();
     auto density = _engine.getSimulationBox().getDensity();

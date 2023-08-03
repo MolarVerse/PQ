@@ -5,7 +5,7 @@
 #include "stringUtilities.hpp"
 
 using namespace std;
-using namespace readInput;
+using namespace readInput::topology;
 
 /**
  * @brief general process function for topology sections
@@ -29,7 +29,7 @@ void TopologySection::process(vector<string> &lineElements, engine::Engine &engi
             continue;
         }
 
-        if (StringUtilities::to_lower_copy(lineElements[0]) == "end")
+        if (StringUtilities::toLowerCopy(lineElements[0]) == "end")
         {
             ++_lineNumber;
             endedNormal = true;

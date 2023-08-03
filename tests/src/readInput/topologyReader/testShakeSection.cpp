@@ -8,8 +8,8 @@
  */
 TEST_F(TestTopologySection, processSectionShake)
 {
-    std::vector<std::string> lineElements = {"1", "2", "1.0", "0"};
-    readInput::ShakeSection  shakeSection;
+    std::vector<std::string>          lineElements = {"1", "2", "1.0", "0"};
+    readInput::topology::ShakeSection shakeSection;
     shakeSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getConstraints().getBondConstraints().size(), 1);
     EXPECT_EQ(_engine->getConstraints().getBondConstraints()[0].getMolecule1(), &(_engine->getSimulationBox().getMolecules()[0]));
@@ -31,7 +31,7 @@ TEST_F(TestTopologySection, processSectionShake)
  */
 TEST_F(TestTopologySection, endedNormallyShake)
 {
-    readInput::ShakeSection shakeSection;
+    readInput::topology::ShakeSection shakeSection;
     EXPECT_THROW(shakeSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(shakeSection.endedNormally(true));
 }

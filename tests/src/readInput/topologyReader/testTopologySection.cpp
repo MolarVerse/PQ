@@ -4,7 +4,7 @@
 #include "topologySection.hpp"
 
 using namespace ::testing;
-using namespace readInput;
+using namespace readInput::topology;
 
 /**
  * @brief tests full process function

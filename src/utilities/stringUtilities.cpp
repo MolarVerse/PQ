@@ -2,7 +2,9 @@
 
 #include "exceptions.hpp"
 
+#include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -40,7 +42,7 @@ vector<string> StringUtilities::getLineCommands(const string &line, const size_t
     {
         if (line[static_cast<size_t>(i)] == ';')
             break;
-        else if (!isspace(line[static_cast<size_t>(i)]))
+        else if (!::isspace(line[static_cast<size_t>(i)]))
             throw InputFileException("Missing semicolon in input file at line " + to_string(lineNumber));
     }
 
@@ -55,8 +57,6 @@ vector<string> StringUtilities::getLineCommands(const string &line, const size_t
  *
  * @param line
  * @return vector<string>
- *
- * TODO: merge splitstring functions
  */
 vector<string> StringUtilities::splitString(const string &line)
 {
@@ -74,11 +74,24 @@ vector<string> StringUtilities::splitString(const string &line)
 /**
  * @brief returns a copy of a string all lower case
  *
- * @param mystring
+ * @param myString
  * @return string
  */
-string StringUtilities::to_lower_copy(string mystring)
+string StringUtilities::toLowerCopy(string myString)
 {
-    ranges::for_each(mystring, [](char &c) { c = tolower(c); });
-    return mystring;
+    ranges::for_each(myString, [](auto &c) { c = ::tolower(c); });
+    return myString;
+}
+
+/**
+ * @brief checks if a file exists and can be opened
+ *
+ * @param filename
+ * @return true if file exists and can be opened
+ * @return false if file does not exist or cannot be opened
+ */
+bool StringUtilities::fileExists(const string &filename)
+{
+    ifstream file(filename);
+    return file.good();
 }

@@ -1,7 +1,9 @@
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
+#include <fstream>
 #include <gtest/gtest.h>
+#include <string>
 
 using namespace ::testing;
 
@@ -48,13 +50,27 @@ TEST(TestStringUtilities, splitString)
 }
 
 /**
- * @brief test to_lower_copy function
+ * @brief test toLowerCopy function
  *
  */
-TEST(TestStringUtilities, to_lower_copy)
+TEST(TestStringUtilities, toLowerCopy)
 {
     std::string line = "TEST";
-    EXPECT_EQ("test", StringUtilities::to_lower_copy(line));
+    EXPECT_EQ("test", StringUtilities::toLowerCopy(line));
+}
+
+/**
+ * @brief test check if file exists
+ *
+ */
+TEST(TestStringUtilities, fileExists)
+{
+    std::string   file = "testFile.txt";
+    std::ofstream out(file);
+    out.close();
+    EXPECT_TRUE(StringUtilities::fileExists(file));
+    EXPECT_FALSE(StringUtilities::fileExists("testFile2.txt"));
+    std::remove(file.c_str());
 }
 
 int main(int argc, char **argv)

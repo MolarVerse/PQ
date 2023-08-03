@@ -29,6 +29,9 @@ namespace defaults
     constexpr double _RATTLE_TOLERANCE_DEFAULT_ = 1e-8;
 
     constexpr size_t _NUMBER_OF_CELLS_DEFAULT_ = 7;
+
+    constexpr double _SCALE_14_COULOMB_DEFAULT_       = 1.0;
+    constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_ = 1.0;
 }   // namespace defaults
 
 #endif   // _DEFAULTS_HPP_

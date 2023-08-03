@@ -9,8 +9,8 @@
  */
 TEST_F(TestTopologySection, processSectionAngle)
 {
-    std::vector<std::string> lineElements = {"1", "2", "3", "7"};
-    readInput::AngleSection  angleSection;
+    std::vector<std::string>          lineElements = {"1", "2", "3", "7"};
+    readInput::topology::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getAngles().size(), 1);
     EXPECT_EQ(_engine->getForceField().getAngles()[0].getMolecules()[0], &(_engine->getSimulationBox().getMolecules()[0]));
@@ -34,7 +34,7 @@ TEST_F(TestTopologySection, processSectionAngle)
  */
 TEST_F(TestTopologySection, endedNormallyAngle)
 {
-    readInput::AngleSection angleSection;
+    readInput::topology::AngleSection angleSection;
     EXPECT_THROW(angleSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(angleSection.endedNormally(true));
 }

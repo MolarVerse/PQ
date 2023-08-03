@@ -25,43 +25,53 @@ TEST(TestVector3d, testConstructors)
     ASSERT_EQ(vec[1], 1.0);
     ASSERT_EQ(vec[2], 2.0);
 
-    auto veci = Vec3Di(0, 1, 2);
-    ASSERT_EQ(veci[0], 0);
-    ASSERT_EQ(veci[1], 1);
-    ASSERT_EQ(veci[2], 2);
+    auto vecInt = Vec3Di(0, 1, 2);
+    ASSERT_EQ(vecInt[0], 0);
+    ASSERT_EQ(vecInt[1], 1);
+    ASSERT_EQ(vecInt[2], 2);
 
-    const auto vec2i = Vec3Di(veci);
-    ASSERT_EQ(vec2i, veci);
+    const auto vec2i = Vec3Di(vecInt);
+    ASSERT_EQ(vec2i, vecInt);
 
-    veci = Vec3Di(1);
-    ASSERT_EQ(veci[0], 1);
-    ASSERT_EQ(veci[1], 1);
-    ASSERT_EQ(veci[2], 1);
+    vecInt = Vec3Di(1);
+    ASSERT_EQ(vecInt[0], 1);
+    ASSERT_EQ(vecInt[1], 1);
+    ASSERT_EQ(vecInt[2], 1);
 
-    const std::array<int, 3> arri = {0, 1, 2};
-    veci                          = Vec3Di(arri);
-    ASSERT_EQ(veci[0], 0);
-    ASSERT_EQ(veci[1], 1);
-    ASSERT_EQ(veci[2], 2);
+    const std::array<int, 3> arrInt = {0, 1, 2};
+    vecInt                          = Vec3Di(arrInt);
+    ASSERT_EQ(vecInt[0], 0);
+    ASSERT_EQ(vecInt[1], 1);
+    ASSERT_EQ(vecInt[2], 2);
 
-    auto vecul = Vec3Dul(0, 1, 2);
-    ASSERT_EQ(vecul[0], 0);
-    ASSERT_EQ(vecul[1], 1);
-    ASSERT_EQ(vecul[2], 2);
+    auto vecUnsignedLong = Vec3Dul(0, 1, 2);
+    ASSERT_EQ(vecUnsignedLong[0], 0);
+    ASSERT_EQ(vecUnsignedLong[1], 1);
+    ASSERT_EQ(vecUnsignedLong[2], 2);
 
-    const auto vec2ul = Vec3Dul(vecul);
-    ASSERT_EQ(vec2ul, vecul);
+    const auto vec2ul = Vec3Dul(vecUnsignedLong);
+    ASSERT_EQ(vec2ul, vecUnsignedLong);
 
-    vecul = Vec3Dul(1);
-    ASSERT_EQ(vecul[0], 1);
-    ASSERT_EQ(vecul[1], 1);
-    ASSERT_EQ(vecul[2], 1);
+    vecUnsignedLong = Vec3Dul(1);
+    ASSERT_EQ(vecUnsignedLong[0], 1);
+    ASSERT_EQ(vecUnsignedLong[1], 1);
+    ASSERT_EQ(vecUnsignedLong[2], 1);
 
-    const std::array<unsigned long, 3> arrul = {0, 1, 2};
-    vecul                                    = Vec3Dul(arrul);
-    ASSERT_EQ(vecul[0], 0);
-    ASSERT_EQ(vecul[1], 1);
-    ASSERT_EQ(vecul[2], 2);
+    const std::array<unsigned long, 3> arrUnsignedLong = {0, 1, 2};
+    vecUnsignedLong                                    = Vec3Dul(arrUnsignedLong);
+    ASSERT_EQ(vecUnsignedLong[0], 0);
+    ASSERT_EQ(vecUnsignedLong[1], 1);
+    ASSERT_EQ(vecUnsignedLong[2], 2);
+}
+
+TEST(TestVector3d, testAssignmentOperator)
+{
+    Vec3D vec1(0.0, 1.0, 2.0);
+    Vec3D vec2(1.0, 2.0, 3.0);
+
+    vec1 = vec2;
+
+    ASSERT_EQ(vec1, vec2);
 }
 
 TEST(TestVector3d, testAdditionOperator)

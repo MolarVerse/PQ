@@ -8,6 +8,7 @@ add_library(readInput
     topologyReader.cpp
     topologySection.cpp
     parameterFileReader.cpp
+    parameterFileSection.cpp
 
     inputFileReader.cpp
     ${InputFileParserFiles}
@@ -15,7 +16,6 @@ add_library(readInput
 
 target_include_directories(readInput
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/readInput
 )
 

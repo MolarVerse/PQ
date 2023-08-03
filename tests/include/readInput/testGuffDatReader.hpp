@@ -37,6 +37,8 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getPotential().setNonCoulombPotential(potential::GuffNonCoulomb());
         _engine->getPotential().setCoulombPotential(potential::GuffCoulomb(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
+        _engine->getSettings().setGuffDatFilename("data/guffDatReader/guff.dat");
+
         _guffDatReader = new readInput::GuffDatReader(*_engine);
     }
 

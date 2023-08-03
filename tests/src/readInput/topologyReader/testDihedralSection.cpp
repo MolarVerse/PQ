@@ -9,8 +9,8 @@
  */
 TEST_F(TestTopologySection, processSectionDihedral)
 {
-    std::vector<std::string>   lineElements = {"1", "2", "3", "4", "7"};
-    readInput::DihedralSection dihedralSection;
+    std::vector<std::string>             lineElements = {"1", "2", "3", "4", "7"};
+    readInput::topology::DihedralSection dihedralSection;
     dihedralSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getDihedrals().size(), 1);
     EXPECT_EQ(_engine->getForceField().getDihedrals()[0].getMolecules()[0], &(_engine->getSimulationBox().getMolecules()[0]));
@@ -36,7 +36,7 @@ TEST_F(TestTopologySection, processSectionDihedral)
  */
 TEST_F(TestTopologySection, endedNormallyDihedral)
 {
-    readInput::DihedralSection dihedralSection;
+    readInput::topology::DihedralSection dihedralSection;
     EXPECT_THROW(dihedralSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(dihedralSection.endedNormally(true));
 }

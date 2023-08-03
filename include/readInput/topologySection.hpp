@@ -4,7 +4,7 @@
 
 #include "engine.hpp"
 
-namespace readInput
+namespace readInput::topology
 {
     class TopologySection;
     class ShakeSection;
@@ -12,7 +12,7 @@ namespace readInput
     class AngleSection;
     class DihedralSection;
     class ImproperDihedralSection;
-}   // namespace readInput
+}   // namespace readInput::topology
 
 /**
  * @class TopologySection
@@ -20,7 +20,7 @@ namespace readInput
  * @brief base class for reading topology file sections
  *
  */
-class readInput::TopologySection
+class readInput::topology::TopologySection
 {
   protected:
     int            _lineNumber;
@@ -47,7 +47,7 @@ class readInput::TopologySection
  * @brief reads bond section of topology file
  *
  */
-class readInput::BondSection : public readInput::TopologySection
+class readInput::topology::BondSection : public readInput::topology::TopologySection
 {
   public:
     std::string keyword() override { return "bonds"; }
@@ -61,7 +61,7 @@ class readInput::BondSection : public readInput::TopologySection
  * @brief reads angle section of topology file
  *
  */
-class readInput::AngleSection : public readInput::TopologySection
+class readInput::topology::AngleSection : public readInput::topology::TopologySection
 {
   public:
     std::string keyword() override { return "angles"; }
@@ -75,7 +75,7 @@ class readInput::AngleSection : public readInput::TopologySection
  * @brief reads dihedral section of topology file
  *
  */
-class readInput::DihedralSection : public readInput::TopologySection
+class readInput::topology::DihedralSection : public readInput::topology::TopologySection
 {
   public:
     std::string keyword() override { return "dihedrals"; }
@@ -89,7 +89,7 @@ class readInput::DihedralSection : public readInput::TopologySection
  * @brief reads improper dihedral section of topology file
  *
  */
-class readInput::ImproperDihedralSection : public readInput::TopologySection
+class readInput::topology::ImproperDihedralSection : public readInput::topology::TopologySection
 {
   public:
     std::string keyword() override { return "impropers"; }
@@ -103,7 +103,7 @@ class readInput::ImproperDihedralSection : public readInput::TopologySection
  * @brief reads shake section of topology file
  *
  */
-class readInput::ShakeSection : public readInput::TopologySection
+class readInput::topology::ShakeSection : public readInput::topology::TopologySection
 {
   public:
     std::string keyword() override { return "shake"; }

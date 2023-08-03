@@ -114,11 +114,14 @@
         "forcexyz",
         "freset",
         "guffdat",
+        "guffpath",
+        "impropers",
         "inputfile",
         "jobtype",
         "Lennard",
         "manostat",
         "manostats",
+        "MMMD",
         "moldescriptor",
         "moltype",
         "Neighbouring",
@@ -126,6 +129,7 @@
         "noncoulomb",
         "nreset",
         "nscale",
+        "outputfreq",
         "progressbar",
         "rcoulomb",
         "timestep",
@@ -133,7 +137,8 @@
         "traj",
         "txyz",
         "Verlet",
-        "Virial"
+        "Virial",
+        "Waals"
     ],
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
 }

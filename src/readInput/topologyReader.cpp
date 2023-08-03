@@ -4,7 +4,7 @@
 #include "stringUtilities.hpp"
 
 using namespace std;
-using namespace readInput;
+using namespace readInput::topology;
 using namespace StringUtilities;
 
 /**
@@ -86,7 +86,7 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
     const auto iterEnd = _topologySections.end();
 
     for (auto section = _topologySections.begin(); section != iterEnd; ++section)
-        if ((*section)->keyword() == to_lower_copy(lineElements[0])) return *section;
+        if ((*section)->keyword() == toLowerCopy(lineElements[0])) return *section;
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }
@@ -97,7 +97,7 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
  * @param filename
  * @param engine
  */
-void readInput::readTopologyFile(engine::Engine &engine)
+void readInput::topology::readTopologyFile(engine::Engine &engine)
 {
     TopologyReader topologyReader(engine.getSettings().getTopologyFilename(), engine);
     topologyReader.read();

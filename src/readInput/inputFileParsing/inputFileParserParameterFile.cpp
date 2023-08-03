@@ -1,5 +1,6 @@
 #include "exceptions.hpp"
 #include "inputFileReader.hpp"
+#include "stringUtilities.hpp"
 
 using namespace std;
 using namespace readInput;
@@ -13,7 +14,8 @@ void InputFileReader::parseParameterFilename(const vector<string> &lineElements)
 
     if (filename.empty()) throw InputFileException("Parameter filename cannot be empty");
 
-    if (!::fopen(filename.c_str(), "r")) throw InputFileException("Cannot open parameter file - filename = " + string(filename));
+    if (!StringUtilities::fileExists(filename))
+        throw InputFileException("Cannot open parameter file - filename = " + string(filename));
 
     _engine.getSettings().setParameterFilename(filename);
 }

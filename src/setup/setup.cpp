@@ -58,7 +58,7 @@ void setup::readFiles(const string &inputFilename, Engine &engine)
     readRstFile(engine);
 
     cout << "Reading topology file..." << endl;
-    readTopologyFile(engine);
+    topology::readTopologyFile(engine);
 }
 
 /**

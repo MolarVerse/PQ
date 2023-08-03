@@ -22,6 +22,7 @@ namespace customException
     class UserInputExceptionWarning;
     class GuffDatException;
     class TopologyException;
+    class ParameterFileException;
 }   // namespace customException
 
 /**
@@ -130,6 +131,19 @@ class customException::GuffDatException : public customException::CustomExceptio
  * @brief Exception for topology file errors
  */
 class customException::TopologyException : public customException::CustomException
+{
+  public:
+    using customException::CustomException::CustomException;
+
+    const char *what() const throw() override;
+};
+
+/**
+ * @class ParameterFileException inherits from CustomException
+ *
+ * @brief Exception for parameter file errors
+ */
+class customException::ParameterFileException : public customException::CustomException
 {
   public:
     using customException::CustomException::CustomException;
