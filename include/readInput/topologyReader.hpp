@@ -31,9 +31,10 @@ class readInput::topology::TopologyReader
 
   public:
     TopologyReader(const std::string &filename, engine::Engine &engine);
+    ~TopologyReader();
 
-    bool                        isNeeded() const;
-    void                        read();
+    bool                                  isNeeded() const;
+    void                                  read();
     readInput::topology::TopologySection *determineSection(const std::vector<std::string> &);
 
     void setFilename(const std::string_view &filename) { _filename = filename; }

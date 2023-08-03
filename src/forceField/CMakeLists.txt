@@ -1,7 +1,10 @@
 add_library(forceField
     bondForceField.cpp
+    bondType.cpp
     angleForceField.cpp
+    angleType.cpp
     dihedralForceField.cpp
+    dihedralType.cpp
     forceField.cpp
 )
 

@@ -32,6 +32,7 @@ namespace defaults
 
     constexpr double _SCALE_14_COULOMB_DEFAULT_       = 1.0;
     constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_ = 1.0;
+    constexpr char   _NON_COULOMBICS_TYPE_DEFAULT_[]  = "LennardJones";
 }   // namespace defaults
 
 #endif   // _DEFAULTS_HPP_

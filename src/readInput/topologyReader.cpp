@@ -24,6 +24,15 @@ TopologyReader::TopologyReader(const string &filename, engine::Engine &engine)
 }
 
 /**
+ * @brief Destructor
+ */
+TopologyReader::~TopologyReader()
+{
+    for (auto *section : _topologySections)
+        delete section;
+}
+
+/**
  * @brief checks if reading topology file is needed
  *
  * @return true if shake is activated

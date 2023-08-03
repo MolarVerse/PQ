@@ -12,6 +12,20 @@ using namespace readInput::parameterFile;
 ParameterFileReader::ParameterFileReader(const string &filename, engine::Engine &engine)
     : _filename(filename), _fp(filename), _engine(engine)
 {
+    _parameterFileSections.push_back(new TypesSection());
+    _parameterFileSections.push_back(new BondSection());
+    _parameterFileSections.push_back(new AngleSection());
+    _parameterFileSections.push_back(new DihedralSection());
+    _parameterFileSections.push_back(new ImproperDihedralSection());
+}
+
+/**
+ * @brief Destructor
+ */
+ParameterFileReader::~ParameterFileReader()
+{
+    for (auto *section : _parameterFileSections)
+        delete section;
 }
 
 /**

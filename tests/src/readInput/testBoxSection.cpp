@@ -19,7 +19,7 @@ TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
 
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
-    for (int i = 0; i < 10; ++i)
+    for (size_t i = 0; i < 10; ++i)
         if (i != 4 && i != 7)
         {
             auto line = vector<string>(i);

@@ -3,21 +3,23 @@
 #define _PARAMETER_FILE_SECTION_HPP_
 
 #include "engine.hpp"
+#include "forceField.hpp"
 
 namespace readInput::parameterFile
 {
     class ParameterFileSection;
     class TypesSection;
-    // class BondSection;
-    // class AngleSection;
-    // class DihedralSection;
-    // class ImproperDihedralSection;
+    class BondSection;
+    class AngleSection;
+    class DihedralSection;
+    class ImproperDihedralSection;
+    class NonCoulombicsSection;
 }   // namespace readInput::parameterFile
 
 /**
- * @class TopologySection
+ * @class ParameterFileSection
  *
- * @brief base class for reading topology file sections
+ * @brief base class for reading parameter file sections
  *
  */
 class readInput::parameterFile::ParameterFileSection
@@ -30,10 +32,11 @@ class readInput::parameterFile::ParameterFileSection
     virtual ~ParameterFileSection() = default;
 
     virtual void process(std::vector<std::string> &, engine::Engine &);
+    void         endedNormally(bool);
 
     virtual std::string keyword()                                                    = 0;
     virtual void        processSection(std::vector<std::string> &, engine::Engine &) = 0;
-    void                endedNormally(bool);
+    virtual void        processHeader(std::vector<std::string> &, engine::Engine &)  = 0;
 
     void setLineNumber(int lineNumber) { _lineNumber = lineNumber; }
     void setFp(std::ifstream *fp) { _fp = fp; }
@@ -53,58 +56,83 @@ class readInput::parameterFile::TypesSection : public readInput::parameterFile::
     std::string keyword() override { return "types"; }
     void        process(std::vector<std::string> &, engine::Engine &) override;
     void        processSection(std::vector<std::string> &, engine::Engine &) override;
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
 };
 
-// /**
-//  * @class BondSection
-//  *
-//  * @brief reads bond section of topology file
-//  *
-//  */
-// class readInput::BondSection : public readInput::TopologySection
-// {
-//   public:
-//     std::string keyword() override { return "bonds"; }
-//     void        processSection(std::vector<std::string> &, engine::Engine &) override;
-// };
+/**
+ * @class BondSection
+ *
+ * @brief reads bond section of parameter file
+ *
+ */
+class readInput::parameterFile::BondSection : public readInput::parameterFile::ParameterFileSection
+{
+  public:
+    std::string keyword() override { return "bonds"; }
+    void        processSection(std::vector<std::string> &, engine::Engine &) override;
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
+};
 
-// /**
-//  * @class AngleSection
-//  *
-//  * @brief reads angle section of topology file
-//  *
-//  */
-// class readInput::AngleSection : public readInput::TopologySection
-// {
-//   public:
-//     std::string keyword() override { return "angles"; }
-//     void        processSection(std::vector<std::string> &, engine::Engine &) override;
-// };
+/**
+ * @class AngleSection
+ *
+ * @brief reads angle section of parameter file
+ *
+ */
+class readInput::parameterFile::AngleSection : public readInput::parameterFile::ParameterFileSection
+{
+  public:
+    std::string keyword() override { return "angles"; }
+    void        processSection(std::vector<std::string> &, engine::Engine &) override;
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
+};
 
-// /**
-//  * @class DihedralSection
-//  *
-//  * @brief reads dihedral section of topology file
-//  *
-//  */
-// class readInput::DihedralSection : public readInput::TopologySection
-// {
-//   public:
-//     std::string keyword() override { return "dihedrals"; }
-//     void        processSection(std::vector<std::string> &, engine::Engine &) override;
-// };
+/**
+ * @class DihedralSection
+ *
+ * @brief reads dihedral section of parameter file
+ *
+ */
+class readInput::parameterFile::DihedralSection : public readInput::parameterFile::ParameterFileSection
+{
+  public:
+    std::string keyword() override { return "dihedrals"; }
+    void        processSection(std::vector<std::string> &, engine::Engine &) override;
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
+};
 
-// /**
-//  * @class ImproperDihedralSection
-//  *
-//  * @brief reads improper dihedral section of topology file
-//  *
-//  */
-// class readInput::ImproperDihedralSection : public readInput::TopologySection
-// {
-//   public:
-//     std::string keyword() override { return "impropers"; }
-//     void        processSection(std::vector<std::string> &, engine::Engine &) override;
-// };
+/**
+ * @class ImproperDihedralSection
+ *
+ * @brief reads improper dihedral section of parameter file
+ *
+ */
+class readInput::parameterFile::ImproperDihedralSection : public readInput::parameterFile::ParameterFileSection
+{
+  public:
+    std::string keyword() override { return "impropers"; }
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
+    void        processSection(std::vector<std::string> &, engine::Engine &) override;
+};
+
+/**
+ * @class NonCoulombicsSection
+ *
+ * @brief reads non-coulombics section of parameter file
+ *
+ */
+class readInput::parameterFile::NonCoulombicsSection : public readInput::parameterFile::ParameterFileSection
+{
+  private:
+    forceField::NonCoulombicType _nonCoulombicType;
+
+  public:
+    std::string keyword() override { return "noncoulombics"; }
+    void        processSection(std::vector<std::string> &, engine::Engine &) override;
+    void        processHeader(std::vector<std::string> &, engine::Engine &) override;
+    void        processLJ(std::vector<std::string> &, engine::Engine &);
+    void        processBuckingham(std::vector<std::string> &, engine::Engine &){};   // TODO: implement
+    void        processMorse(std::vector<std::string> &, engine::Engine &){};        // TODO: implement
+};
 
 #endif   // _PARAMETER_FILE_SECTION_HPP_

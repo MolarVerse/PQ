@@ -3,7 +3,7 @@
 #define _PARAMETER_FILE_READER_HPP_
 
 #include "engine.hpp"
-// #include "parameterFileSection.hpp"
+#include "parameterFileSection.hpp"
 
 #include <string>
 
@@ -27,10 +27,11 @@ class readInput::parameterFile::ParameterFileReader
     std::ifstream   _fp;
     engine::Engine &_engine;
 
-    // std::vector<readInput::TopologySection *> _topologySections;
+    std::vector<readInput::parameterFile::ParameterFileSection *> _parameterFileSections;
 
   public:
     ParameterFileReader(const std::string &filename, engine::Engine &engine);
+    ~ParameterFileReader();
 
     bool isNeeded() const;
     // void read();
