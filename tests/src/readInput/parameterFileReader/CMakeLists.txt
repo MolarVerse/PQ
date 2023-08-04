@@ -2,6 +2,11 @@ set(source_files
     testParameterFileReader.cpp
     testParameterFileSection.cpp
     testTypesSection.cpp
+    testBondTypesSection.cpp
+    testAngleTypesSection.cpp
+    testDihedralTypesSection.cpp
+    testImproperDihedralTypesSection.cpp
+    testNonCoulombicTypesSection.cpp
 )
 
 foreach(source_file ${source_files})

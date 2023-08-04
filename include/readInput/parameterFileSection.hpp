@@ -131,8 +131,11 @@ class readInput::parameterFile::NonCoulombicsSection : public readInput::paramet
     void        processSection(std::vector<std::string> &, engine::Engine &) override;
     void        processHeader(std::vector<std::string> &, engine::Engine &) override;
     void        processLJ(std::vector<std::string> &, engine::Engine &);
-    void        processBuckingham(std::vector<std::string> &, engine::Engine &){};   // TODO: implement
-    void        processMorse(std::vector<std::string> &, engine::Engine &){};        // TODO: implement
+    void        processBuckingham(std::vector<std::string> &, engine::Engine &);
+    void        processMorse(std::vector<std::string> &, engine::Engine &);
+
+    void setNonCoulombicType(forceField::NonCoulombicType nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
+    forceField::NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
 };
 
 #endif   // _PARAMETER_FILE_SECTION_HPP_

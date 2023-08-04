@@ -17,6 +17,7 @@ ParameterFileReader::ParameterFileReader(const string &filename, engine::Engine 
     _parameterFileSections.push_back(new AngleSection());
     _parameterFileSections.push_back(new DihedralSection());
     _parameterFileSections.push_back(new ImproperDihedralSection());
+    _parameterFileSections.push_back(new NonCoulombicsSection());
 }
 
 /**

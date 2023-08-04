@@ -8,6 +8,7 @@ add_library(setup
     potentialSetup.cpp
     integratorSetup.cpp
     constraintsSetup.cpp
+    forceFieldSetup.cpp
 )
 
 target_include_directories(setup

@@ -152,7 +152,7 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
 
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
-    auto periodicity   = stoul(lineElements[2]);
+    auto periodicity   = stod(lineElements[2]);
     auto phaseShift    = stod(lineElements[3]);
 
     if (periodicity < 0.0)
@@ -178,7 +178,7 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
 
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
-    auto periodicity   = stoul(lineElements[2]);
+    auto periodicity   = stod(lineElements[2]);
     auto phaseShift    = stod(lineElements[3]);
 
     if (periodicity < 0.0)
@@ -201,7 +201,7 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
  */
 void NonCoulombicsSection::processHeader(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 1 || lineElements.size() != 2)
+    if (lineElements.size() != 1 && lineElements.size() != 2)
         throw customException::ParameterFileException(
             "Wrong number of arguments in parameter file in nonCoulombics header at line " + to_string(_lineNumber) +
             " - number of elements has to be 1 or 2!");
@@ -214,15 +214,9 @@ void NonCoulombicsSection::processHeader(vector<string> &lineElements, engine::E
         if (type == "lj")
             engine.getForceField().setNonCoulombicType(forceField::NonCoulombicType::LJ);
         else if (type == "buckingham")
-        {
             engine.getForceField().setNonCoulombicType(forceField::NonCoulombicType::BUCKINGHAM);
-            throw customException::ParameterFileException("Buckingham potential is not implemented yet for force field!");
-        }
         else if (type == "morse")
-        {
             engine.getForceField().setNonCoulombicType(forceField::NonCoulombicType::MORSE);
-            throw customException::ParameterFileException("Morse potential is not implemented yet for force field!");
-        }
         else
             throw customException::ParameterFileException(
                 "Wrong type of nonCoulombic in parameter file nonCoulombic section at line " + to_string(_lineNumber) +
@@ -260,7 +254,7 @@ void NonCoulombicsSection::processSection(vector<string> &lineElements, engine::
  */
 void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 4 || lineElements.size() != 5)
+    if (lineElements.size() != 4 && lineElements.size() != 5)
         throw customException::ParameterFileException(
             "Wrong number of arguments in parameter file in Lennard Jones nonCoulombics section at line " +
             to_string(_lineNumber) + " - number of elements has to be 4 or 5!");
@@ -274,5 +268,58 @@ void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engin
 
     auto nonCoulombicPair = forceField::LennardJonesPair(atomType1, atomType2, cutOff, c6, c12);
 
-    engine.getForceField().addNonCoulombicPair(nonCoulombicPair);
+    engine.getForceField().addNonCoulombicPair(make_unique<forceField::LennardJonesPair>(nonCoulombicPair));
+}
+
+/**
+ * @brief processes the Buckingham nonCoulombics section of the parameter file
+ *
+ * @param line
+ * @param engine
+ */
+void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engine::Engine &engine)
+{
+    if (lineElements.size() != 5 && lineElements.size() != 6)
+        throw customException::ParameterFileException(
+            "Wrong number of arguments in parameter file in Buckingham nonCoulombics section at line " + to_string(_lineNumber) +
+            " - number of elements has to be 5 or 6!");
+
+    const auto atomType1 = stoul(lineElements[0]);
+    const auto atomType2 = stoul(lineElements[1]);
+    const auto a         = stod(lineElements[2]);
+    const auto dRho      = stod(lineElements[3]);
+    const auto c6        = stod(lineElements[4]);
+
+    const auto cutOff = lineElements.size() == 6 ? stod(lineElements[5]) : -1.0;
+
+    auto nonCoulombicPair = forceField::BuckinghamPair(atomType1, atomType2, cutOff, a, dRho, c6);
+
+    engine.getForceField().addNonCoulombicPair(make_unique<forceField::BuckinghamPair>(nonCoulombicPair));
+}
+
+/**
+ * @brief processes the Morse nonCoulombics section of the parameter file
+ *
+ * @param line
+ * @param engine
+ */
+void NonCoulombicsSection::processMorse(vector<string> &lineElements, engine::Engine &engine)
+{
+    if (lineElements.size() != 5 && lineElements.size() != 6)
+        throw customException::ParameterFileException(
+            "Wrong number of arguments in parameter file in Morse nonCoulombics section at line " + to_string(_lineNumber) +
+            " - number of elements has to be 5 or 6!");
+
+    const auto atomType1           = stoul(lineElements[0]);
+    const auto atomType2           = stoul(lineElements[1]);
+    const auto dissociationEnergy  = stod(lineElements[2]);
+    const auto wellWidth           = stod(lineElements[3]);
+    const auto equilibriumDistance = stod(lineElements[4]);
+
+    const auto cutOff = lineElements.size() == 6 ? stod(lineElements[5]) : -1.0;
+
+    auto nonCoulombicPair =
+        forceField::MorsePair(atomType1, atomType2, cutOff, dissociationEnergy, wellWidth, equilibriumDistance);
+
+    engine.getForceField().addNonCoulombicPair(make_unique<forceField::MorsePair>(nonCoulombicPair));
 }
