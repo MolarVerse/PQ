@@ -95,6 +95,8 @@ class engine::Engine
     output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
     output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
     output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+
+    forceField::ForceField *getForceFieldPtr() { return &_forceField; }
 };
 
 #endif   // _ENGINE_HPP_

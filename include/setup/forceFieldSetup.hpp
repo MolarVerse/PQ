@@ -11,7 +11,7 @@ namespace setup
 }   // namespace setup
 
 /**
- * @class SetupCellList
+ * @class ForceFieldSetup
  *
  */
 class setup::ForceFieldSetup
@@ -23,6 +23,10 @@ class setup::ForceFieldSetup
     explicit ForceFieldSetup(engine::Engine &engine) : _engine(engine){};
 
     void setup(){};
+    void setupBonds();
+    void setupAngles();
+    void setupDihedrals();
+    void setupImproperDihedrals();
 };
 
 #endif   // _FORCE_FIELD_SETUP_HPP_

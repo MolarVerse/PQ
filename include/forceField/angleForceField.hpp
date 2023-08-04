@@ -24,11 +24,19 @@ class forceField::AngleForceField : public connectivity::Angle
   private:
     size_t _type;
 
+    double _equilibriumAngle;
+    double _forceConstant;
+
   public:
     AngleForceField(const std::vector<simulationBox::Molecule *> &molecules, const std::vector<size_t> &atomIndices, size_t type)
         : connectivity::Angle(molecules, atomIndices), _type(type){};
 
+    void setEquilibriumAngle(double equilibriumAngle) { _equilibriumAngle = equilibriumAngle; }
+    void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
+
     size_t getType() const { return _type; }
+    double getEquilibriumAngle() const { return _equilibriumAngle; }
+    double getForceConstant() const { return _forceConstant; }
 };
 
 #endif   // _ANGLE_FORCE_FIELD_HPP_

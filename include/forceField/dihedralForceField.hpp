@@ -24,13 +24,24 @@ class forceField::DihedralForceField : public connectivity::Dihedral
   private:
     size_t _type;
 
+    double _forceConstant;
+    double _periodicity;
+    double _phaseShift;
+
   public:
     DihedralForceField(const std::vector<simulationBox::Molecule *> &molecules,
                        const std::vector<size_t>                    &atomIndices,
                        size_t                                        type)
         : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
+    void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
+    void setPeriodicity(double periodicity) { _periodicity = periodicity; }
+    void setPhaseShift(double phaseShift) { _phaseShift = phaseShift; }
+
     size_t getType() const { return _type; }
+    double getForceConstant() const { return _forceConstant; }
+    double getPeriodicity() const { return _periodicity; }
+    double getPhaseShift() const { return _phaseShift; }
 };
 
 #endif   // _DIHEDRAL_FORCE_FIELD_HPP_

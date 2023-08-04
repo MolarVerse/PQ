@@ -111,10 +111,10 @@ class forceField::ForceField
 
     NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
 
-    const std::vector<BondForceField>     &getBonds() const { return _bonds; }
-    const std::vector<AngleForceField>    &getAngles() const { return _angles; }
-    const std::vector<DihedralForceField> &getDihedrals() const { return _dihedrals; }
-    const std::vector<DihedralForceField> &getImproperDihedrals() const { return _improperDihedrals; }
+    std::vector<BondForceField>     &getBonds() { return _bonds; }
+    std::vector<AngleForceField>    &getAngles() { return _angles; }
+    std::vector<DihedralForceField> &getDihedrals() { return _dihedrals; }
+    std::vector<DihedralForceField> &getImproperDihedrals() { return _improperDihedrals; }
 
     const std::vector<BondType>     &getBondTypes() const { return _bondTypes; }
     const std::vector<AngleType>    &getAngleTypes() const { return _angleTypes; }
