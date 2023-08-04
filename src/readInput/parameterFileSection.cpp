@@ -252,7 +252,7 @@ void NonCoulombicsSection::processSection(vector<string> &lineElements, engine::
  * @param line
  * @param engine
  */
-void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engine &engine)
+void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engine &engine) const
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
         throw customException::ParameterFileException(
@@ -266,9 +266,7 @@ void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engin
 
     const auto cutOff = lineElements.size() == 5 ? stod(lineElements[4]) : -1.0;
 
-    auto nonCoulombicPair = forceField::LennardJonesPair(atomType1, atomType2, cutOff, c6, c12);
-
-    engine.getForceField().addNonCoulombicPair(make_unique<forceField::LennardJonesPair>(nonCoulombicPair));
+    engine.getForceField().addNonCoulombicPair(make_unique<forceField::LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12));
 }
 
 /**
@@ -277,7 +275,7 @@ void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engin
  * @param line
  * @param engine
  */
-void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engine::Engine &engine)
+void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engine::Engine &engine) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw customException::ParameterFileException(
@@ -292,9 +290,8 @@ void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engin
 
     const auto cutOff = lineElements.size() == 6 ? stod(lineElements[5]) : -1.0;
 
-    auto nonCoulombicPair = forceField::BuckinghamPair(atomType1, atomType2, cutOff, a, dRho, c6);
-
-    engine.getForceField().addNonCoulombicPair(make_unique<forceField::BuckinghamPair>(nonCoulombicPair));
+    engine.getForceField().addNonCoulombicPair(
+        make_unique<forceField::BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6));
 }
 
 /**
@@ -303,7 +300,7 @@ void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engin
  * @param line
  * @param engine
  */
-void NonCoulombicsSection::processMorse(vector<string> &lineElements, engine::Engine &engine)
+void NonCoulombicsSection::processMorse(vector<string> &lineElements, engine::Engine &engine) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw customException::ParameterFileException(
@@ -318,8 +315,6 @@ void NonCoulombicsSection::processMorse(vector<string> &lineElements, engine::En
 
     const auto cutOff = lineElements.size() == 6 ? stod(lineElements[5]) : -1.0;
 
-    auto nonCoulombicPair =
-        forceField::MorsePair(atomType1, atomType2, cutOff, dissociationEnergy, wellWidth, equilibriumDistance);
-
-    engine.getForceField().addNonCoulombicPair(make_unique<forceField::MorsePair>(nonCoulombicPair));
+    engine.getForceField().addNonCoulombicPair(
+        make_unique<forceField::MorsePair>(atomType1, atomType2, cutOff, dissociationEnergy, wellWidth, equilibriumDistance));
 }

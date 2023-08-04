@@ -130,9 +130,9 @@ class readInput::parameterFile::NonCoulombicsSection : public readInput::paramet
     std::string keyword() override { return "noncoulombics"; }
     void        processSection(std::vector<std::string> &, engine::Engine &) override;
     void        processHeader(std::vector<std::string> &, engine::Engine &) override;
-    void        processLJ(std::vector<std::string> &, engine::Engine &);
-    void        processBuckingham(std::vector<std::string> &, engine::Engine &);
-    void        processMorse(std::vector<std::string> &, engine::Engine &);
+    void        processLJ(std::vector<std::string> &, engine::Engine &) const;
+    void        processBuckingham(std::vector<std::string> &, engine::Engine &) const;
+    void        processMorse(std::vector<std::string> &, engine::Engine &) const;
 
     void setNonCoulombicType(forceField::NonCoulombicType nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
     forceField::NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }

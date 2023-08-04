@@ -110,7 +110,7 @@ TEST_F(TestParameterFileSection, processHeader)
     nonCoulombicsSection.processHeader(lineElements, *_engine);
     EXPECT_EQ(nonCoulombicsSection.getNonCoulombicType(), forceField::NonCoulombicType::MORSE);
 
-    lineElements = {"noncoulombics", "lj", "hökl"};
+    lineElements = {"noncoulombics", "lj", "dummy"};
     EXPECT_THROW(nonCoulombicsSection.processHeader(lineElements, *_engine), customException::ParameterFileException);
 
     lineElements = {"noncoulombics", "noValidType"};
