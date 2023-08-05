@@ -56,6 +56,9 @@ class simulationBox::SimulationBox
     std::vector<Molecule> _molecules;
     std::vector<Molecule> _moleculeTypes;
 
+    std::vector<size_t>      _externalGlobalVdwTypes;
+    std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
+
     vector5d _guffCoefficients;
     vector4d _NonCoulombRadiusCutOffs;
     vector4d _coulombCoefficients;
@@ -73,6 +76,7 @@ class simulationBox::SimulationBox
 
     Molecule                      findMoleculeType(const size_t moltype) const;
     std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
+    void                          setupExternalToInternalGlobalVdwTypesMap();
 
     void calculateDegreesOfFreedom();
     void calculateCenterOfMassMolecules();

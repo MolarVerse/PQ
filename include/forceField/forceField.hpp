@@ -18,11 +18,11 @@
 namespace forceField
 {
     class ForceField;
-    enum NonCoulombicType : size_t;
+    enum class NonCoulombicType : size_t;
 
 }   // namespace forceField
 
-enum forceField::NonCoulombicType : size_t
+enum class forceField::NonCoulombicType : size_t
 {
     LJ,
     LJ_9_12,   // at the momentum just dummy for testing not implemented yet
@@ -39,8 +39,9 @@ enum forceField::NonCoulombicType : size_t
 class forceField::ForceField
 {
   private:
-    bool             _isActivated      = false;
-    NonCoulombicType _nonCoulombicType = NonCoulombicType::LJ;   // LJ
+    bool             _isActivated              = false;
+    bool             _isNonCoulombicActivatded = false;
+    NonCoulombicType _nonCoulombicType         = NonCoulombicType::LJ;   // LJ
 
     double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
     double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
@@ -57,6 +58,8 @@ class forceField::ForceField
     std::vector<std::unique_ptr<NonCoulombicPair>> _nonCoulombicPairs;
 
   public:
+    void deleteNotNeededNonCoulombicPairs(const std::vector<size_t> &);
+
     const BondType     &findBondTypeById(size_t id) const;
     const AngleType    &findAngleTypeById(size_t id) const;
     const DihedralType &findDihedralTypeById(size_t id) const;
@@ -65,6 +68,10 @@ class forceField::ForceField
     void activate() { _isActivated = true; }
     void deactivate() { _isActivated = false; }
     bool isActivated() const { return _isActivated; }
+
+    void activateNonCoulombic() { _isNonCoulombicActivatded = true; }
+    void deactivateNonCoulombic() { _isNonCoulombicActivatded = false; }
+    bool isNonCoulombicActivated() const { return _isNonCoulombicActivatded; }
 
     void addBond(const BondForceField &bond) { _bonds.push_back(bond); }
     void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
@@ -95,8 +102,8 @@ class forceField::ForceField
      *                  *
      ********************/
 
-    void setScale14Coulomb(double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
-    void setScale14VanDerWaals(double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
+    void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
+    void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
 
     void setNonCoulombicType(const NonCoulombicType &nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
 

@@ -109,12 +109,20 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             molecule.addExternalAtomType(stoul(lineElements[1]));
             molecule.addPartialCharge(stod(lineElements[2]));
 
-            if (lineElements.size() == 4) molecule.addGlobalVDWType(stoi(lineElements[3]));
-
             ++atomCount;
         }
         else
             throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+
+        if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+        {
+            if (lineElements.size() != 4)
+                throw MolDescriptorException(
+                    "Error in moldescriptor file at line " + to_string(_lineNumber) +
+                    " force field noncoulombics is activated but no global can der Waals parameter given!");
+
+            molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
+        }
     }
 
     convertExternalToInternalAtomTypes(molecule);

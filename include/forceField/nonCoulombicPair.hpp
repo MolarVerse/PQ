@@ -28,7 +28,7 @@ class forceField::NonCoulombicPair
     double _cutOff;
 
   public:
-    NonCoulombicPair(size_t vanDerWaalsType1, size_t vanDerWaalsType2, double cutOff)
+    NonCoulombicPair(const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff)
         : _vanDerWaalsType1(vanDerWaalsType1), _vanDerWaalsType2(vanDerWaalsType2), _cutOff(cutOff){};
     virtual ~NonCoulombicPair() = default;
 
@@ -50,7 +50,8 @@ class forceField::LennardJonesPair : public forceField::NonCoulombicPair
     double _c12;
 
   public:
-    LennardJonesPair(size_t vanDerWaalsType1, size_t vanDerWaalsType2, double cutOff, double c6, double c12)
+    LennardJonesPair(
+        const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff, const double c6, const double c12)
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
 
     double getC6() const { return _c6; }
@@ -71,7 +72,12 @@ class forceField::BuckinghamPair : public forceField::NonCoulombicPair
     double _c6;
 
   public:
-    BuckinghamPair(size_t vanDerWaalsType1, size_t vanDerWaalsType2, double cutOff, double a, double dRho, double c6)
+    BuckinghamPair(const size_t vanDerWaalsType1,
+                   const size_t vanDerWaalsType2,
+                   const double cutOff,
+                   const double a,
+                   const double dRho,
+                   const double c6)
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
 
     double getA() const { return _a; }
@@ -93,12 +99,12 @@ class forceField::MorsePair : public forceField::NonCoulombicPair
     double _equilibriumDistance;
 
   public:
-    MorsePair(size_t vanDerWaalsType1,
-              size_t vanDerWaalsType2,
-              double cutOff,
-              double dissociationEnergy,
-              double wellWidth,
-              double equilibriumDistance)
+    MorsePair(const size_t vanDerWaalsType1,
+              const size_t vanDerWaalsType2,
+              const double cutOff,
+              const double dissociationEnergy,
+              const double wellWidth,
+              const double equilibriumDistance)
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
           _wellWidth(wellWidth), _equilibriumDistance(equilibriumDistance){};
 

@@ -129,6 +129,9 @@ class readInput::InputFileReader
     void parseRattleTolerance(const std::vector<std::string> &);
     void parseRattleIteration(const std::vector<std::string> &);
 
+    // parsing information of forcefield
+    void parseForceFieldType(const std::vector<std::string> &);
+
     /********************************
      *                              *
      * standard getters and setters *

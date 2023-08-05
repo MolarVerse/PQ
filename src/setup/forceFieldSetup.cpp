@@ -99,3 +99,5 @@ void ForceFieldSetup::setupImproperDihedrals()
 
     forceField->clearImproperDihedralTypes();
 }
+
+void ForceFieldSetup::setupNonCoulombics() { _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap(); }

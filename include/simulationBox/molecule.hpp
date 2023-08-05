@@ -31,7 +31,9 @@ class simulationBox::Molecule
     std::vector<std::string> _atomNames;
     std::vector<std::string> _atomTypeNames;
 
-    std::vector<int>         _globalVDWTypes;
+    std::vector<size_t> _externalGlobalVDWTypes;
+    std::vector<size_t> _internalGlobalVDWTypes;
+
     std::vector<int>         _atomicNumbers;
     std::vector<size_t>      _externalAtomTypes;
     std::vector<size_t>      _atomTypes;
@@ -60,6 +62,10 @@ class simulationBox::Molecule
     size_t getNumberOfAtomTypes();
     void   resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
 
+    /************************
+     * standard add methods *
+     ************************/
+
     void addAtomName(const std::string &atomName) { _atomNames.push_back(atomName); }
     void addAtomTypeName(const std::string &atomTypeName) { _atomTypeNames.push_back(atomTypeName); }
     void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); }
@@ -69,12 +75,8 @@ class simulationBox::Molecule
         _externalToInternalAtomTypes.try_emplace(externalAtomType, internalAtomType);
     }
 
-    /************************
-     * standard add methods *
-     ************************/
-
     void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); }
-    void addGlobalVDWType(const int globalVDWType) { _globalVDWTypes.push_back(globalVDWType); }
+    void addExternalGlobalVDWType(const size_t globalVDWType) { _externalGlobalVDWTypes.push_back(globalVDWType); }
     void addAtomMass(const double mass) { _masses.push_back(mass); }
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); }
 
@@ -97,8 +99,8 @@ class simulationBox::Molecule
     size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes.at(externalAtomType); }
     size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
 
-    int getGlobalVDWType(const size_t index) const { return _globalVDWTypes[index]; }
-    int getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
+    size_t getExternalGlobalVDWType(const size_t index) const { return _externalGlobalVDWTypes[index]; }
+    int    getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
 
     double getCharge() const { return _charge; }
     double getMolMass() const { return _molMass; }
@@ -116,6 +118,7 @@ class simulationBox::Molecule
     vector3d::Vec3D getCenterOfMass() const { return _centerOfMass; }
 
     std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; }
+    std::vector<size_t> getExternalGlobalVDWTypes() const { return _externalGlobalVDWTypes; }
 
     std::vector<vector3d::Vec3D> getAtomShiftForces() const { return _shiftForces; }
 

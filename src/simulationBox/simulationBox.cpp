@@ -83,7 +83,7 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms)
  */
 size_t SimulationBox::getNumberOfAtoms() const
 {
-    auto accumulateFunc = [](size_t sum, const Molecule &molecule) { return sum + molecule.getNumberOfAtoms(); };
+    auto accumulateFunc = [](const size_t sum, const Molecule &molecule) { return sum + molecule.getNumberOfAtoms(); };
 
     return accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc);
 }
@@ -100,7 +100,7 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
 {
     auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
 
-    if (auto molecule = ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
+    if (const auto molecule = ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
     else
         throw RstFileException("Molecule type " + to_string(moltype) + " not found");
@@ -129,12 +129,37 @@ pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t ato
 }
 
 /**
+ * @brief make external to internal global vdw types map
+ *
+ */
+void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
+{
+    auto fillExternalGlobalVdwTypes = [&_externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
+    {
+        _externalGlobalVdwTypes.insert(_externalGlobalVdwTypes.end(),
+                                       molecule.getExternalGlobalVDWTypes().begin(),
+                                       molecule.getExternalGlobalVDWTypes().end());
+    };
+
+    ranges::for_each(_molecules, fillExternalGlobalVdwTypes);
+
+    ranges::sort(_externalGlobalVdwTypes);
+    const auto duplicates = ranges::unique(_externalGlobalVdwTypes);
+    _externalGlobalVdwTypes.erase(duplicates.begin(), duplicates.end());
+
+    // c++23 with ranges::views::enumerate
+    const size_t size = _externalGlobalVdwTypes.size();
+    for (size_t i = 0; i < size; ++i)
+        _externalToInternalGlobalVDWTypes.try_emplace(_externalGlobalVdwTypes[i], i);
+}
+
+/**
  * @brief calculate degrees of freedom
  *
  */
 void SimulationBox::calculateDegreesOfFreedom()
 {
-    auto accumulateFunc = [](size_t sum, const Molecule &molecule) { return sum + molecule.getDegreesOfFreedom(); };
+    auto accumulateFunc = [](const size_t sum, const Molecule &molecule) { return sum + molecule.getDegreesOfFreedom(); };
 
     _degreesOfFreedom = accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc) - 3;
 }
