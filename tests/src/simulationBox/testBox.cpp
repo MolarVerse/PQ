@@ -5,7 +5,7 @@
 #include "vector3d.hpp"
 
 using namespace std;
-using namespace vector3d;
+using namespace linearAlgebra;
 using namespace customException;
 using namespace simulationBox;
 using namespace ::testing;

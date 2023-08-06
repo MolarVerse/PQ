@@ -7,7 +7,7 @@
 
 using namespace std;
 using namespace frameTools;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 ConfigurationReader::ConfigurationReader(const vector<string> &filenames) : _filenames(filenames)
 {

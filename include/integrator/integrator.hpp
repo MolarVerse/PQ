@@ -35,7 +35,7 @@ class integrator::Integrator
     virtual void firstStep(simulationBox::SimulationBox &)  = 0;
     virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-    void applyPBC(const simulationBox::SimulationBox &simBox, vector3d::Vec3D &positions) const { simBox.applyPBC(positions); }
+    void applyPBC(const simulationBox::SimulationBox &simBox, linearAlgebra::Vec3D &positions) const { simBox.applyPBC(positions); }
 
     void integrateVelocities(simulationBox::Molecule &, const size_t) const;
     void integratePositions(simulationBox::Molecule &, const size_t, const simulationBox::SimulationBox &) const;

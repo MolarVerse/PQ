@@ -11,8 +11,9 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processLJ(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 1);
-    auto *pair = dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairs()[0].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 1);
+    auto *pair =
+        dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getC6(), 1.22);
@@ -21,8 +22,9 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
 
     lineElements = {"0", "1", "1.22", "234.3"};
     nonCoulombicsSection.processLJ(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 2);
-    auto *pair2 = dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairs()[1].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 2);
+    auto *pair2 =
+        dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getC6(), 1.22);
@@ -38,8 +40,8 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 1);
-    auto *pair = dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairs()[0].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 1);
+    auto *pair = dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getA(), 1.22);
@@ -49,8 +51,9 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 2);
-    auto *pair2 = dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairs()[1].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 2);
+    auto *pair2 =
+        dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getA(), 1.22);
@@ -67,8 +70,8 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processMorse(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 1);
-    auto *pair = dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairs()[0].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 1);
+    auto *pair = dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
@@ -78,8 +81,8 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processMorse(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 2);
-    auto *pair2 = dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairs()[1].get());
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 2);
+    auto *pair2 = dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
@@ -123,20 +126,22 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 1);
-    EXPECT_NO_THROW(dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairs()[0].get()));
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 1);
+    EXPECT_NO_THROW(
+        dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::BUCKINGHAM);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 2);
-    EXPECT_NO_THROW(dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairs()[0].get()));
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 2);
+    EXPECT_NO_THROW(
+        dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::MORSE);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
-    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairs().size(), 3);
-    EXPECT_NO_THROW(dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairs()[0].get()));
+    EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 3);
+    EXPECT_NO_THROW(dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::LJ_9_12);

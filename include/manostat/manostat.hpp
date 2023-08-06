@@ -22,7 +22,7 @@ namespace manostat
 class manostat::Manostat
 {
   protected:
-    vector3d::Vec3D _pressureVector = {0.0, 0.0, 0.0};
+    linearAlgebra::Vec3D _pressureVector = {0.0, 0.0, 0.0};
     double          _pressure;
     double          _targetPressure;   // no default value, must be set
 

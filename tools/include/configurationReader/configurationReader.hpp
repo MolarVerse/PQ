@@ -20,7 +20,7 @@ class ConfigurationReader
 
     size_t          _nAtoms  = 0;
     size_t          _nFrames = 0;
-    vector3d::Vec3D _box;
+    linearAlgebra::Vec3D _box;
 
     frameTools::Frame _frame;
 
@@ -34,7 +34,7 @@ class ConfigurationReader
     frameTools::Frame &getFrame();
     void               parseHeader();
     void               parseAtoms();
-    [[nodiscard]] bool isBoxSet(const vector3d::Vec3D &box) const { return fabs(box) > 1e-15; }
+    [[nodiscard]] bool isBoxSet(const linearAlgebra::Vec3D &box) const { return fabs(box) > 1e-15; }
 };
 
 #endif   // _CONFIGURATIONREADER_HPP_

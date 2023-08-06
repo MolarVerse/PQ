@@ -11,7 +11,7 @@ target_include_directories(frameTools
 
 target_link_libraries(frameTools
     PUBLIC
-    vector3d
+    linearAlgebra
     config
 )
 

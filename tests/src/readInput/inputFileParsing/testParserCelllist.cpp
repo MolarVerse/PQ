@@ -21,7 +21,7 @@ TEST_F(TestInputFileReader, testNumberOfCells)
 {
     vector<string> lineElements = {"ncelss", "=", "3"};
     _inputFileReader->parseNumberOfCells(lineElements);
-    EXPECT_EQ(_engine.getCellList().getNumberOfCells(), vector3d::Vec3Dul(3, 3, 3));
+    EXPECT_EQ(_engine.getCellList().getNumberOfCells(), linearAlgebra::Vec3Dul(3, 3, 3));
     lineElements = {"ncelss", "=", "0"};
     EXPECT_THROW(_inputFileReader->parseNumberOfCells(lineElements), customException::InputFileException);
 }

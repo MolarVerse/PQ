@@ -39,7 +39,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
     EXPECT_NE(box_old, box_new);
-    EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), vector3d::Vec3D(1.0, 0.0, 0.0));
+    EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0));
 }
 
 TEST_F(TestManostat, applyNoneManostat)

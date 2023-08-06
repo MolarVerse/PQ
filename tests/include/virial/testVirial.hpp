@@ -18,27 +18,27 @@ class TestVirial : public ::testing::Test
 
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomForce(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomForce(vector3d::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule1.resizeAtomShiftForces();
-        molecule1.setAtomShiftForces(0, vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.setAtomShiftForces(1, vector3d::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setCenterOfMass(vector3d::Vec3D(1.0, 1.0, 1.0));
+        molecule1.setAtomShiftForces(0, linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.setAtomShiftForces(1, linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        molecule1.setCenterOfMass(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomForce(vector3d::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.resizeAtomShiftForces();
-        molecule2.setAtomShiftForces(0, vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setCenterOfMass(vector3d::Vec3D(0.0, 0.0, 0.0));
+        molecule2.setAtomShiftForces(0, linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.setCenterOfMass(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
 
-        _simulationBox->setBoxDimensions(vector3d::Vec3D(10.0, 10.0, 10.0));
+        _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     }
 
     void TearDown() override

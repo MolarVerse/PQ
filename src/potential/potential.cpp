@@ -7,7 +7,7 @@ using namespace std;
 using namespace simulationBox;
 using namespace potential;
 using namespace physicalData;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 Potential::Potential(const Potential &potential)
 {

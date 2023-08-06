@@ -98,7 +98,7 @@ void ForceField::deleteNotNeededNonCoulombicPairs(const std::vector<size_t> &ext
                    externalGlobalVanDerWaalTypes.end();
     };
 
-    const auto ret = ranges::remove_if(_nonCoulombicPairs, isNotNeededNonCoulombicPair);
+    const auto ret = ranges::remove_if(_nonCoulombicPairsVector, isNotNeededNonCoulombicPair);
 
-    _nonCoulombicPairs.erase(ret.begin(), ret.end());
+    _nonCoulombicPairsVector.erase(ret.begin(), ret.end());
 }

@@ -5,7 +5,7 @@
 TEST_F(TestIntegrator, integrateVelocities)
 {
     _integrator->integrateVelocities(*_molecule1, 0);
-    EXPECT_EQ(_molecule1->getAtomVelocity(0), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_molecule1->getAtomVelocity(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     _integrator->integrateVelocities(*_molecule1, 1);
     EXPECT_DOUBLE_EQ(_molecule1->getAtomVelocity(1)[0], 1.0 + 0.1 * 0.5 * constants::_V_VERLET_VELOCITY_FACTOR_);
     EXPECT_DOUBLE_EQ(_molecule1->getAtomVelocity(1)[1], 2.0 + 0.1 * 1.5 * constants::_V_VERLET_VELOCITY_FACTOR_);
@@ -15,7 +15,7 @@ TEST_F(TestIntegrator, integrateVelocities)
 TEST_F(TestIntegrator, integratePositions)
 {
     _integrator->integratePositions(*_molecule1, 0, *_box);
-    EXPECT_EQ(_molecule1->getAtomPosition(0), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_molecule1->getAtomPosition(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     _integrator->integratePositions(*_molecule1, 1, *_box);
     EXPECT_DOUBLE_EQ(_molecule1->getAtomPosition(1)[0], 1.0 + 0.1 * 1.0 * constants::_FS_TO_S_);
     EXPECT_DOUBLE_EQ(_molecule1->getAtomPosition(1)[1], 1.0 + 0.1 * 2.0 * constants::_FS_TO_S_);
@@ -27,10 +27,10 @@ TEST_F(TestIntegrator, firstStep)
     _integrator->firstStep(*_box);
 
     const auto molecule = _box->getMolecules()[0];
-    EXPECT_EQ(molecule.getAtomVelocity(0), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.getAtomVelocity(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 
-    auto velocities  = vector3d::Vec3D(1.0, 2.0, 3.0);
-    velocities      += 0.1 * vector3d::Vec3D(0.5, 1.5, 2.5) * constants::_V_VERLET_VELOCITY_FACTOR_;
+    auto velocities  = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    velocities      += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) * constants::_V_VERLET_VELOCITY_FACTOR_;
 
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[0], velocities[0]);
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[1], velocities[1]);
@@ -42,10 +42,10 @@ TEST_F(TestIntegrator, firstStep)
     EXPECT_DOUBLE_EQ(molecule.getAtomPosition(1)[1], 1.0 + 0.1 * velocities[1] * constants::_FS_TO_S_);
     EXPECT_DOUBLE_EQ(molecule.getAtomPosition(1)[2], 1.0 + 0.1 * velocities[2] * constants::_FS_TO_S_);
 
-    EXPECT_EQ(molecule.getAtomForce(0), vector3d::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_EQ(molecule.getAtomForce(1), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.getAtomForce(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.getAtomForce(1), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 
-    EXPECT_TRUE(molecule.getCenterOfMass() != vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_TRUE(molecule.getCenterOfMass() != linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 }
 
 TEST_F(TestIntegrator, secondStep)
@@ -53,7 +53,7 @@ TEST_F(TestIntegrator, secondStep)
     _integrator->secondStep(*_box);
 
     const auto molecule = _box->getMolecules()[0];
-    EXPECT_EQ(molecule.getAtomVelocity(0), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.getAtomVelocity(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[0], 1.0 + 0.1 * 0.5 * constants::_V_VERLET_VELOCITY_FACTOR_);
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[1], 2.0 + 0.1 * 1.5 * constants::_V_VERLET_VELOCITY_FACTOR_);
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[2], 3.0 + 0.1 * 2.5 * constants::_V_VERLET_VELOCITY_FACTOR_);

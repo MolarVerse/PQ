@@ -21,15 +21,15 @@ TEST_F(TestVirial, calculateVirial)
     _virial->calculateVirial(*_simulationBox, *_data);
 
     EXPECT_EQ(_data->getVirial(), virial);
-    EXPECT_EQ(_simulationBox->getMolecule(0).getAtomShiftForce(0), vector3d::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_EQ(_simulationBox->getMolecule(0).getAtomShiftForce(1), vector3d::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_EQ(_simulationBox->getMolecule(1).getAtomShiftForce(0), vector3d::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_simulationBox->getMolecule(0).getAtomShiftForce(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_simulationBox->getMolecule(0).getAtomShiftForce(1), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_simulationBox->getMolecule(1).getAtomShiftForce(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 }
 
 TEST_F(TestVirial, intramolecularCorrection)
 {
     auto virialClass = new virial::VirialMolecular();
-    virialClass->setVirial(vector3d::Vec3D(0.0, 0.0, 0.0));
+    virialClass->setVirial(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     const auto force_mol1_atom1 = _simulationBox->getMolecule(0).getAtomForce(0);
     const auto force_mol1_atom2 = _simulationBox->getMolecule(0).getAtomForce(1);
     const auto force_mol2_atom1 = _simulationBox->getMolecule(1).getAtomForce(0);
@@ -60,7 +60,7 @@ TEST_F(TestVirial, intramolecularCorrection)
 TEST_F(TestVirial, calculateVirialMolecular)
 {
     auto virialClass = new virial::VirialMolecular();
-    virialClass->setVirial(vector3d::Vec3D(0.0, 0.0, 0.0));
+    virialClass->setVirial(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     const auto force_mol1_atom1 = _simulationBox->getMolecule(0).getAtomForce(0);
     const auto force_mol1_atom2 = _simulationBox->getMolecule(0).getAtomForce(1);
     const auto force_mol2_atom1 = _simulationBox->getMolecule(1).getAtomForce(0);

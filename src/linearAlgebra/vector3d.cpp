@@ -1,6 +1,6 @@
 #include "vector3d.hpp"
 
-using namespace vector3d;
+using namespace linearAlgebra;
 
 template <class T> Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &rhs)
 {
@@ -81,6 +81,6 @@ template <class T> Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
     return *this;
 }
 
-template class vector3d::Vector3D<double>;
-template class vector3d::Vector3D<int>;
-template class vector3d::Vector3D<size_t>;
+template class linearAlgebra::Vector3D<double>;
+template class linearAlgebra::Vector3D<int>;
+template class linearAlgebra::Vector3D<size_t>;

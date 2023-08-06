@@ -27,6 +27,7 @@ class setup::ForceFieldSetup
     void setupAngles();
     void setupDihedrals();
     void setupImproperDihedrals();
+
     void setupNonCoulombics();
 };
 

@@ -24,8 +24,8 @@ namespace simulationBox
 class simulationBox::Box
 {
   private:
-    vector3d::Vec3D _boxDimensions;
-    vector3d::Vec3D _boxAngles = {90.0, 90.0, 90.0};
+    linearAlgebra::Vec3D _boxDimensions;
+    linearAlgebra::Vec3D _boxAngles = {90.0, 90.0, 90.0};
 
     double _totalMass;
     double _totalCharge;
@@ -37,17 +37,17 @@ class simulationBox::Box
   public:
     double calculateVolume();
 
-    vector3d::Vec3D calculateBoxDimensionsFromDensity();
+    linearAlgebra::Vec3D calculateBoxDimensionsFromDensity();
 
-    void applyPBC(vector3d::Vec3D &) const;
-    void scaleBox(const vector3d::Vec3D &);
+    void applyPBC(linearAlgebra::Vec3D &) const;
+    void scaleBox(const linearAlgebra::Vec3D &);
 
     /***********************************
      * non-standard getter and setters *
      ***********************************/
 
-    void setBoxDimensions(const vector3d::Vec3D &);
-    void setBoxAngles(const vector3d::Vec3D &);
+    void setBoxDimensions(const linearAlgebra::Vec3D &);
+    void setBoxAngles(const linearAlgebra::Vec3D &);
     void setDensity(const double density);
 
     double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
@@ -56,8 +56,8 @@ class simulationBox::Box
      * standard getter and setters *
      *******************************/
 
-    vector3d::Vec3D getBoxDimensions() const { return _boxDimensions; }
-    vector3d::Vec3D getBoxAngles() const { return _boxAngles; }
+    linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
+    linearAlgebra::Vec3D getBoxAngles() const { return _boxAngles; }
     double          getTotalMass() const { return _totalMass; }
     double          getTotalCharge() const { return _totalCharge; }
     double          getDensity() const { return _density; }

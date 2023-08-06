@@ -13,7 +13,7 @@ target_include_directories(simulationBox
 
 target_link_libraries(simulationBox
     PUBLIC
-    vector3d
+    linearAlgebra
     config
 )
 

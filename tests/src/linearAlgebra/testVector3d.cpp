@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace vector3d;
+using namespace linearAlgebra;
 
 TEST(TestVector3d, testConstructors)
 {

@@ -47,8 +47,8 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
 
     auto molecules = _simulationBox->getMolecules();
 
-    EXPECT_EQ(molecules[0].getCenterOfMass(), vector3d::Vec3D(1 / 3.0, 0.5, 0.0));
-    EXPECT_EQ(molecules[1].getCenterOfMass(), vector3d::Vec3D(2 / 3.0, 0.0, 0.0));
+    EXPECT_EQ(molecules[0].getCenterOfMass(), linearAlgebra::Vec3D(1 / 3.0, 0.5, 0.0));
+    EXPECT_EQ(molecules[1].getCenterOfMass(), linearAlgebra::Vec3D(2 / 3.0, 0.0, 0.0));
 }
 
 TEST_F(TestSimulationBox, findMoleculeType)

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <iterator>
 
-namespace vector3d
+namespace linearAlgebra
 {
     template <typename T> using iterator       = typename std::array<T, 3>::iterator;
     template <typename T> using const_iterator = typename std::array<T, 3>::const_iterator;
@@ -19,7 +19,7 @@ namespace vector3d
     using Vec3D   = Vector3D<double>;
     using Vec3Di  = Vector3D<int>;
     using Vec3Dul = Vector3D<size_t>;
-}   // namespace vector3d
+}   // namespace linearAlgebra
 
 /**
  * @brief Vector3D class
@@ -28,7 +28,7 @@ namespace vector3d
  *
  * @tparam T
  */
-template <class T> class vector3d::Vector3D
+template <class T> class linearAlgebra::Vector3D
 {
   private:
     union

@@ -14,17 +14,17 @@ class TestMolecule : public ::testing::Test
         _molecule = new simulationBox::Molecule();
         _molecule->setExternalAtomTypes({1, 2, 2});
 
-        _molecule->addAtomPosition(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomPosition(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomPosition(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
-        _molecule->addAtomVelocity(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomVelocity(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomVelocity(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
-        _molecule->addAtomForce(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomForce(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomForce(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
         _molecule->addAtomMass(1.0);
         _molecule->addAtomMass(2.0);

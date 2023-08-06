@@ -10,7 +10,7 @@
 
 using namespace std;
 using namespace simulationBox;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 /**
  * @brief finds number of different atom types in molecule

@@ -8,7 +8,7 @@
 
 using namespace std;
 using namespace simulationBox;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 /**
  * @brief setup cell list

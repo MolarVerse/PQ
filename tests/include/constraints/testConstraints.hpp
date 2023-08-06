@@ -15,19 +15,19 @@ class TestConstraints : public ::testing::Test
     {
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(3);
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomPosition(vector3d::Vec3D(2.0, 0.0, 0.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(2.0, 0.0, 0.0));
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(2);
-        molecule2.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
+        molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
         _box = new simulationBox::SimulationBox();
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
-        _box->setBoxDimensions(vector3d::Vec3D(10.0, 10.0, 10.0));
+        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
         _constraints = new constraints::Constraints();
 

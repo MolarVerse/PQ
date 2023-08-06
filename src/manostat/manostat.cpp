@@ -6,7 +6,7 @@ using namespace std;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace manostat;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 /**
  * @brief calculate the pressure of the system

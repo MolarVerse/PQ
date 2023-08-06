@@ -26,9 +26,9 @@ class simulationBox::CellList
 
     std::vector<Cell> _cells;
 
-    vector3d::Vec3D   _cellSize;
-    vector3d::Vec3Dul _nNeighbourCells = {0, 0, 0};
-    vector3d::Vec3Dul _nCells          = {
+    linearAlgebra::Vec3D   _cellSize;
+    linearAlgebra::Vec3Dul _nNeighbourCells = {0, 0, 0};
+    linearAlgebra::Vec3Dul _nCells          = {
         defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_};
 
   public:
@@ -41,8 +41,8 @@ class simulationBox::CellList
     void addNeighbouringCells(const SimulationBox &);
     void addCellPointers(Cell &);
 
-    size_t            getCellIndex(const vector3d::Vec3Dul &cellIndices) const;
-    vector3d::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const vector3d::Vec3D &);
+    size_t                 getCellIndex(const linearAlgebra::Vec3Dul &cellIndices) const;
+    linearAlgebra::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const linearAlgebra::Vec3D &);
 
     void activate() { _activated = true; }
     bool isActivated() const { return _activated; }
@@ -51,12 +51,12 @@ class simulationBox::CellList
      * standard getter methods *
      ***************************/
 
-    vector3d::Vec3Dul getNumberOfCells() const { return _nCells; }
-    vector3d::Vec3Dul getNumberOfNeighbourCells() const { return _nNeighbourCells; }
-    vector3d::Vec3D   getCellSize() const { return _cellSize; }
-    std::vector<Cell> getCells() const { return _cells; }
-    void              resizeCells(const size_t nCells) { _cells.resize(nCells); }
-    Cell             &getCell(const size_t index) { return _cells[index]; }
+    linearAlgebra::Vec3Dul getNumberOfCells() const { return _nCells; }
+    linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const { return _nNeighbourCells; }
+    linearAlgebra::Vec3D   getCellSize() const { return _cellSize; }
+    std::vector<Cell>      getCells() const { return _cells; }
+    void                   resizeCells(const size_t nCells) { _cells.resize(nCells); }
+    Cell                  &getCell(const size_t index) { return _cells[index]; }
 
     /***************************
      * standard setter methods *

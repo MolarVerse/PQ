@@ -17,7 +17,7 @@ target_link_libraries(forceField
     PUBLIC
     simulationBox
     connectivity
-    vector3d
+    linearAlgebra
 )
 
 install(TARGETS forceField

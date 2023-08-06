@@ -1,6 +1,6 @@
 add_subdirectory(setup)
 add_subdirectory(simulationBox)
-add_subdirectory(vector3d)
+add_subdirectory(linearAlgebra)
 add_subdirectory(manostat)
 add_subdirectory(integrator)
 add_subdirectory(thermostat)

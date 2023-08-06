@@ -23,7 +23,7 @@ class constraints::BondConstraint : public connectivity::Bond
 {
   private:
     double          _targetBondLength;
-    vector3d::Vec3D _shakeDistanceRef;
+    linearAlgebra::Vec3D _shakeDistanceRef;
 
   public:
     BondConstraint(simulationBox::Molecule *molecule1,
@@ -46,10 +46,10 @@ class constraints::BondConstraint : public connectivity::Bond
      *                                    *
      **************************************/
 
-    void setShakeDistanceRef(vector3d::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
+    void setShakeDistanceRef(linearAlgebra::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
     double          getTargetBondLength() const { return _targetBondLength; }
-    vector3d::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }
+    linearAlgebra::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }
 };
 
 #endif   // _BOND_CONSTRAINT_HPP_

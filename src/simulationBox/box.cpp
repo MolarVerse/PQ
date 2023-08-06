@@ -12,7 +12,7 @@
 
 using namespace std;
 using namespace simulationBox;
-using namespace vector3d;
+using namespace linearAlgebra;
 using namespace customException;
 
 /**

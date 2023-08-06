@@ -19,12 +19,12 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomPosition(vector3d::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomForce(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomForce(vector3d::Vec3D(2.0, 3.0, 4.0));
-        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomVelocity(vector3d::Vec3D(3.0, 4.0, 5.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomForce(linearAlgebra::Vec3D(2.0, 3.0, 4.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(3.0, 4.0, 5.0));
         molecule1.addAtomName("H");
         molecule1.addAtomName("O");
         molecule1.addPartialCharge(1.0);
@@ -33,9 +33,9 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomPosition(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomForce(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.addAtomName("Ar");
         molecule2.addPartialCharge(0.0);
         molecule2.setMoltype(2);

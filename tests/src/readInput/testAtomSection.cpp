@@ -14,7 +14,7 @@ using namespace testing;
 using namespace readInput;
 using namespace simulationBox;
 using namespace customException;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 TEST_F(TestAtomSection, testKeyword) { EXPECT_EQ(_section->keyword(), ""); }
 

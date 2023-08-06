@@ -26,12 +26,12 @@ TEST_F(TestResetKinetics, resetTemperature)
 
 TEST_F(TestResetKinetics, resetMomentum)
 {
-    _data->setMomentumVector(vector3d::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
     _resetKinetics->resetMomentum(*_data, *_simulationBox);
 
-    const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0) - vector3d::Vec3D(1.0, 2.0, 3.0) / 3.0;
-    const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1) - vector3d::Vec3D(1.0, 2.0, 3.0) / 3.0;
-    const auto velocity_mol2_atom1 = _simulationBox->getMolecule(1).getAtomVelocity(0) - vector3d::Vec3D(1.0, 2.0, 3.0) / 3.0;
+    const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0) - linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
+    const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1) - linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
+    const auto velocity_mol2_atom1 = _simulationBox->getMolecule(1).getAtomVelocity(0) - linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
 
     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(0)[0], velocity_mol1_atom1[0], 10.0);
     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(0)[1], velocity_mol1_atom1[1], 10.0);
@@ -140,7 +140,7 @@ TEST_F(TestResetKinetics, resetMomentumNreset)
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(vector3d::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -183,7 +183,7 @@ TEST_F(TestResetKinetics, resetTemperatureNreset)
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(vector3d::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -226,7 +226,7 @@ TEST_F(TestResetKinetics, resetMomentumFreset)
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(vector3d::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -269,7 +269,7 @@ TEST_F(TestResetKinetics, resetTemperatureFreset)
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(vector3d::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 

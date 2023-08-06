@@ -11,7 +11,7 @@ using namespace customException;
 using namespace std;
 using namespace testing;
 using namespace readInput;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 

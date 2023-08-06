@@ -14,7 +14,7 @@ namespace frameTools
         size_t _nAtoms;
 
         double          _molMass      = 0.0;
-        vector3d::Vec3D _centerOfMass = {0.0, 0.0, 0.0};
+        linearAlgebra::Vec3D _centerOfMass = {0.0, 0.0, 0.0};
 
         std::vector<Atom *> _atoms;
 
@@ -22,9 +22,9 @@ namespace frameTools
         Molecule() = default;
         explicit Molecule(const size_t nAtoms) : _nAtoms(nAtoms) {}
 
-        void calculateCenterOfMass(const vector3d::Vec3D &);
+        void calculateCenterOfMass(const linearAlgebra::Vec3D &);
 
-        vector3d::Vec3D getCenterOfMass() const { return _centerOfMass; }
+        linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
 
         void addAtom(Atom *atom) { _atoms.push_back(atom); }
     };

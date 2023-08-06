@@ -6,7 +6,7 @@
 
 using namespace std;
 using namespace frameTools;
-using namespace vector3d;
+using namespace linearAlgebra;
 
 /**
  * @brief calculates the center of mass of the molecule

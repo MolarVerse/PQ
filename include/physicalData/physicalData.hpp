@@ -30,10 +30,10 @@ class physicalData::PhysicalData
     double _coulombEnergy;
     double _nonCoulombEnergy;
 
-    vector3d::Vec3D _virial;
-    vector3d::Vec3D _momentumVector;
-    vector3d::Vec3D _kineticEnergyAtomicVector;
-    vector3d::Vec3D _kineticEnergyMolecularVector;
+    linearAlgebra::Vec3D _virial;
+    linearAlgebra::Vec3D _momentumVector;
+    linearAlgebra::Vec3D _kineticEnergyAtomicVector;
+    linearAlgebra::Vec3D _kineticEnergyMolecularVector;
 
   public:
     void calculateTemperature(simulationBox::SimulationBox &);
@@ -43,7 +43,7 @@ class physicalData::PhysicalData
     void updateAverages(const PhysicalData &);
     void makeAverages(const double);
 
-    std::function<vector3d::Vec3D()> getKineticEnergyVirialVector =
+    std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =
         std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
 
     void changeKineticVirialToAtomic()
@@ -59,14 +59,14 @@ class physicalData::PhysicalData
     void setDensity(const double density) { _density = density; }
     void setTemperature(const double temperature) { _temperature = temperature; }
     void setPressure(const double pressure) { _pressure = pressure; }
-    void setVirial(const vector3d::Vec3D &virial) { _virial = virial; }
+    void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
     void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
     void setMomentum(const double momentum) { _momentum = momentum; }
-    void setMomentumVector(const vector3d::Vec3D &vec) { _momentumVector = vec; }
+    void setMomentumVector(const linearAlgebra::Vec3D &vec) { _momentumVector = vec; }
     void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
-    void setKineticEnergyAtomicVector(const vector3d::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
-    void setKineticEnergyMolecularVector(const vector3d::Vec3D &vec) { _kineticEnergyMolecularVector = vec; }
+    void setKineticEnergyAtomicVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
+    void setKineticEnergyMolecularVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyMolecularVector = vec; }
 
     /********************
      * standard getters *
@@ -80,10 +80,10 @@ class physicalData::PhysicalData
     double          getNonCoulombEnergy() const { return _nonCoulombEnergy; }
     double          getCoulombEnergy() const { return _coulombEnergy; }
     double          getKineticEnergy() const { return _kineticEnergy; }
-    vector3d::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
-    vector3d::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
-    vector3d::Vec3D getVirial() const { return _virial; }
-    vector3d::Vec3D getMomentumVector() const { return _momentumVector; }
+    linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
+    linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
+    linearAlgebra::Vec3D getVirial() const { return _virial; }
+    linearAlgebra::Vec3D getMomentumVector() const { return _momentumVector; }
 };
 
 #endif   // _PHYSICAL_DATA_HPP_

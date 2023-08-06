@@ -12,7 +12,7 @@ target_link_libraries(constraints
     PUBLIC
     connectivity
     simulationBox
-    vector3d
+    linearAlgebra
 )
 
 install(TARGETS constraints

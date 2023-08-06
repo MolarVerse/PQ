@@ -25,9 +25,9 @@ class simulationBox::Cell
     std::vector<std::vector<size_t>> _atomIndices;
     std::vector<Cell *>              _neighbourCells;
 
-    vector3d::Vec3D   _lowerBoundary = {0, 0, 0};
-    vector3d::Vec3D   _upperBoundary = {0, 0, 0};
-    vector3d::Vec3Dul _cellIndex     = {0, 0, 0};
+    linearAlgebra::Vec3D   _lowerBoundary = {0, 0, 0};
+    linearAlgebra::Vec3D   _upperBoundary = {0, 0, 0};
+    linearAlgebra::Vec3Dul _cellIndex     = {0, 0, 0};
 
   public:
     void clearMolecules() { _molecules.clear(); }
@@ -44,9 +44,9 @@ class simulationBox::Cell
 
     size_t            getNumberOfMolecules() const { return _molecules.size(); }
     size_t            getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
-    vector3d::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
-    vector3d::Vec3D   getUpperBoundary() const { return _upperBoundary; }
-    vector3d::Vec3Dul getCellIndex() const { return _cellIndex; }
+    linearAlgebra::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
+    linearAlgebra::Vec3D   getUpperBoundary() const { return _upperBoundary; }
+    linearAlgebra::Vec3Dul getCellIndex() const { return _cellIndex; }
 
     Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
     std::vector<Molecule *> getMolecules() const { return _molecules; }
@@ -60,9 +60,9 @@ class simulationBox::Cell
      * standard setter methods *
      ***************************/
 
-    void setLowerBoundary(const vector3d::Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
-    void setUpperBoundary(const vector3d::Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
-    void setCellIndex(const vector3d::Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
+    void setLowerBoundary(const linearAlgebra::Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
+    void setUpperBoundary(const linearAlgebra::Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
+    void setCellIndex(const linearAlgebra::Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
 };
 
 #endif   // _CELL_HPP_

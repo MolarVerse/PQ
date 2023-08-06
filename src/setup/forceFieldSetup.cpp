@@ -100,4 +100,9 @@ void ForceFieldSetup::setupImproperDihedrals()
     forceField->clearImproperDihedralTypes();
 }
 
-void ForceFieldSetup::setupNonCoulombics() { _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap(); }
+void ForceFieldSetup::setupNonCoulombics()
+{
+    _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
+
+    auto externalGlobalVanDerWaalsTypes = _engine.getSimulationBox().getExternalGlobalVdwTypes();
+}
