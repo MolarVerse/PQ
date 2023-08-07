@@ -153,6 +153,10 @@ class forceField::ForceField
     {
         return _nonCoulombicPairsVector;
     }
+    [[nodiscard]] linearAlgebra::Matrix<std::unique_ptr<NonCoulombicPair>> &getNonCoulombicPairsMatrix()
+    {
+        return _nonCoulombicPairsMatrix;
+    }
 };
 
 #endif   // _Force_FIELD_HPP_

@@ -22,6 +22,8 @@ class forceField::DihedralType
     DihedralType(size_t id, double forceConstant, double frequency, double phaseShift)
         : _id(id), _forceConstant(forceConstant), _periodicity(frequency), _phaseShift(phaseShift){};
 
+    bool operator==(const DihedralType &other) const;
+
     size_t getId() const { return _id; }
     double getForceConstant() const { return _forceConstant; }
     double getPeriodicity() const { return _periodicity; }
