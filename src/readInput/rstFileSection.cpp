@@ -8,7 +8,7 @@
 #include <string>
 
 using namespace std;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace simulationBox;
 using namespace readInput;
 using namespace engine;
@@ -31,7 +31,7 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
 
     engine.getSimulationBox().setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
 
-    if (lineElements.size() == 7)
+    if (7 == lineElements.size())
         engine.getSimulationBox().setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
     else
         engine.getSimulationBox().setBoxAngles({90.0, 90.0, 90.0});
@@ -54,13 +54,18 @@ bool StepCountSection::isHeader() { return true; }
  * @param engine object containing the engine
  *
  * @throws RstFileException if the number of elements in the line is not 2
+ * @throws RstFileException if the step count is negative
  */
 void StepCountSection::process(vector<string> &lineElements, Engine &engine)
 {
     if (lineElements.size() != 2)
         throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
 
-    engine.getTimings().setStepCount(stoi(lineElements[1]));
+    auto stepCount = stoi(lineElements[1]);
+
+    if (stepCount < 0) throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count must be positive");
+
+    engine.getTimings().setStepCount(size_t(stepCount));
 }
 
 bool AtomSection::isHeader() { return false; }
@@ -91,8 +96,8 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     }
     catch (const RstFileException &e)
     {
-        cout << e.what() << endl;
-        cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << endl;
+        cout << e.what() << '\n';
+        cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << '\n';
         throw;
     }
 
@@ -122,7 +127,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
 
         moltype = stoul(lineElements[2]);
 
-        _lineNumber++;
+        ++_lineNumber;
     }
 
     engine.getSimulationBox().addMolecule(*molecule);

@@ -10,7 +10,7 @@
 using namespace std;
 using namespace setup;
 using namespace simulationBox;
-using namespace StringUtilities;
+using namespace utilities;
 
 /**
  * @brief wrapper to create SetupSimulationBox object and call setup

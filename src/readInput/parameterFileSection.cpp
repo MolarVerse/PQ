@@ -22,8 +22,8 @@ void ParameterFileSection::process(vector<string> &lineElements, engine::Engine 
 
     while (getline(*_fp, line))
     {
-        line         = StringUtilities::removeComments(line, "#");
-        lineElements = StringUtilities::splitString(line);
+        line         = utilities::removeComments(line, "#");
+        lineElements = utilities::splitString(line);
 
         if (lineElements.empty())
         {
@@ -31,7 +31,7 @@ void ParameterFileSection::process(vector<string> &lineElements, engine::Engine 
             continue;
         }
 
-        if (StringUtilities::toLowerCopy(lineElements[0]) == "end")
+        if (utilities::toLowerCopy(lineElements[0]) == "end")
         {
             ++_lineNumber;
             endedNormal = true;
@@ -209,7 +209,7 @@ void NonCoulombicsSection::processHeader(vector<string> &lineElements, engine::E
     if (lineElements.size() == 2)
     {
 
-        const auto type = StringUtilities::toLowerCopy(lineElements[1]);
+        const auto type = utilities::toLowerCopy(lineElements[1]);
 
         if (type == "lj")
             engine.getForceField().setNonCoulombicType(forceField::NonCoulombicType::LJ);

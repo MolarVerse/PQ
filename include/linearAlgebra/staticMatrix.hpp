@@ -29,21 +29,53 @@ class linearAlgebra::Matrix
   public:
     Matrix() = default;
     explicit Matrix(const std::vector<T> &vec) : _data(vec){};
-    explicit Matrix(size_t rows, size_t cols) : _rows(rows), _cols(cols), _data(rows * cols){};
-    explicit Matrix(size_t rowsAndCols) : _rows(rowsAndCols), _cols(rowsAndCols), _data(rowsAndCols * rowsAndCols){};
+    explicit Matrix(const size_t rows, const size_t cols) : _rows(rows), _cols(cols), _data(rows * cols){};
+    explicit Matrix(const size_t rowsAndCols) : _rows(rowsAndCols), _cols(rowsAndCols), _data(rowsAndCols * rowsAndCols){};
 
     /**
      * @brief index operator
      *
      * @param const size_t index
-     * @return T&
+     * @return std::vector<T> &
      */
-    T &operator[](const size_t index)
+    std::vector<T> &operator[](const size_t index)
     {
         const auto start = _data.begin() + _cols * index;
         const auto end   = _data.begin() + _cols * 2 * index;
         return std::vector<T>(start, end);
     }
+
+    /**
+     * @brief index operator
+     *
+     * @param const size_t index
+     * @return std::vector<T>
+     */
+    std::vector<T> operator[](const size_t index) const
+    {
+        const auto start = _data.begin() + _cols * index;
+        const auto end   = _data.begin() + _cols * 2 * index;
+        return std::vector<T>(start, end);
+    }
+
+    /**
+     * @brief index operator
+     *
+     * @return T&
+     */
+    T &operator()(const size_t index1, const size_t index2) { return _data[index1 * _cols + index2]; }
+
+    /**
+     * @brief index operator
+     *
+     * @return T
+     */
+    T operator()(const size_t index1, const size_t index2) const { return _data[index1 * _cols + index2]; }
+
+    [[nodiscard]] size_t                    rows() const { return _rows; }
+    [[nodiscard]] size_t                    cols() const { return _cols; }
+    [[nodiscard]] size_t                    size() const { return _rows * _cols; }
+    [[nodiscard]] std::pair<size_t, size_t> shape() const { return std::make_pair(_rows, _cols); }
 
     Matrix<T> transpose() const
     {

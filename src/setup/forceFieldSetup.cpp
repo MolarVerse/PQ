@@ -1,5 +1,7 @@
 #include "forceFieldSetup.hpp"
 
+#include "exceptions.hpp"
+
 #include <ranges>
 
 using namespace std;
@@ -104,5 +106,24 @@ void ForceFieldSetup::setupNonCoulombics()
 {
     _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
 
-    auto externalGlobalVanDerWaalsTypes = _engine.getSimulationBox().getExternalGlobalVdwTypes();
+    _engine.getForceFieldPtr()->determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
+
+    const auto numberOfGlobalVdwTypes           = _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
+    auto       selfInteractionNonCoulombicPairs = _engine.getForceFieldPtr()->getSelfInteractionNonCoulombicPairs();
+
+    if (selfInteractionNonCoulombicPairs.size() != numberOfGlobalVdwTypes)
+        throw customException::ParameterFileException(
+            "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
+
+    ranges::sort(selfInteractionNonCoulombicPairs,
+                 [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
+                 { return nonCoulombicPair1->getInternalType1() < nonCoulombicPair2->getInternalType1(); });
+
+    for (size_t i = 0; i < numberOfGlobalVdwTypes; ++i)
+        if (selfInteractionNonCoulombicPairs[i]->getInternalType1() != i)
+            throw customException::ParameterFileException(
+                "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
+
+    _engine.getForceFieldPtr()->fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
+    _engine.getForceFieldPtr()->fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
 }

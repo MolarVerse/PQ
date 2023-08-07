@@ -19,7 +19,7 @@ using namespace customException;
  * @param commentChar
  * @return string
  */
-string StringUtilities::removeComments(string &line, const string_view &commentChar)
+string utilities::removeComments(string &line, const string_view &commentChar)
 {
     if (const auto commentPos = line.find(commentChar); commentPos != string::npos) line = line.substr(0, commentPos);
     return line;
@@ -35,7 +35,7 @@ string StringUtilities::removeComments(string &line, const string_view &commentC
  *
  * @throw InputFileException if line does not end with a semicolon
  */
-vector<string> StringUtilities::getLineCommands(const string &line, const size_t lineNumber)
+vector<string> utilities::getLineCommands(const string &line, const size_t lineNumber)
 {
 
     for (auto i = static_cast<int>(line.size() - 1); i >= 0; --i)
@@ -58,7 +58,7 @@ vector<string> StringUtilities::getLineCommands(const string &line, const size_t
  * @param line
  * @return vector<string>
  */
-vector<string> StringUtilities::splitString(const string &line)
+vector<string> utilities::splitString(const string &line)
 {
     string         word;
     vector<string> lineElements = {};
@@ -77,7 +77,7 @@ vector<string> StringUtilities::splitString(const string &line)
  * @param myString
  * @return string
  */
-string StringUtilities::toLowerCopy(string myString)
+string utilities::toLowerCopy(string myString)
 {
     ranges::for_each(myString, [](auto &c) { c = ::tolower(c); });
     return myString;
@@ -90,7 +90,7 @@ string StringUtilities::toLowerCopy(string myString)
  * @return true if file exists and can be opened
  * @return false if file does not exist or cannot be opened
  */
-bool StringUtilities::fileExists(const string &filename)
+bool utilities::fileExists(const string &filename)
 {
     ifstream file(filename);
     return file.good();

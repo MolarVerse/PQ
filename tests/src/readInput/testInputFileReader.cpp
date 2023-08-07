@@ -7,7 +7,7 @@
 
 using namespace std;
 using namespace readInput;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace ::testing;
 using namespace customException;
 

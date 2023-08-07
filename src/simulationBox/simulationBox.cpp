@@ -16,7 +16,7 @@ using namespace customException;
 void SimulationBox::resizeGuff(c_ul numberOfMoleculeTypes)
 {
     _guffCoefficients.resize(numberOfMoleculeTypes);
-    _NonCoulombRadiusCutOffs.resize(numberOfMoleculeTypes);
+    _nonCoulombRadiusCutOffs.resize(numberOfMoleculeTypes);
     _coulombCoefficients.resize(numberOfMoleculeTypes);
     _coulombEnergyCutOffs.resize(numberOfMoleculeTypes);
     _coulombForceCutOffs.resize(numberOfMoleculeTypes);
@@ -33,7 +33,7 @@ void SimulationBox::resizeGuff(c_ul numberOfMoleculeTypes)
 void SimulationBox::resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes)
 {
     _guffCoefficients[m1].resize(numberOfMoleculeTypes);
-    _NonCoulombRadiusCutOffs[m1].resize(numberOfMoleculeTypes);
+    _nonCoulombRadiusCutOffs[m1].resize(numberOfMoleculeTypes);
     _coulombCoefficients[m1].resize(numberOfMoleculeTypes);
     _coulombEnergyCutOffs[m1].resize(numberOfMoleculeTypes);
     _coulombForceCutOffs[m1].resize(numberOfMoleculeTypes);
@@ -51,7 +51,7 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes)
 void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms)
 {
     _guffCoefficients[m1][m2].resize(numberOfAtoms);
-    _NonCoulombRadiusCutOffs[m1][m2].resize(numberOfAtoms);
+    _nonCoulombRadiusCutOffs[m1][m2].resize(numberOfAtoms);
     _coulombCoefficients[m1][m2].resize(numberOfAtoms);
     _coulombEnergyCutOffs[m1][m2].resize(numberOfAtoms);
     _coulombForceCutOffs[m1][m2].resize(numberOfAtoms);
@@ -70,7 +70,7 @@ void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms)
 void SimulationBox::resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms)
 {
     _guffCoefficients[m1][m2][a1].resize(numberOfAtoms);
-    _NonCoulombRadiusCutOffs[m1][m2][a1].resize(numberOfAtoms);
+    _nonCoulombRadiusCutOffs[m1][m2][a1].resize(numberOfAtoms);
     _coulombCoefficients[m1][m2][a1].resize(numberOfAtoms);
     _coulombEnergyCutOffs[m1][m2][a1].resize(numberOfAtoms);
     _coulombForceCutOffs[m1][m2][a1].resize(numberOfAtoms);
@@ -134,11 +134,11 @@ pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t ato
  */
 void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 {
-    auto fillExternalGlobalVdwTypes = [&_externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
+    auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
     {
-        _externalGlobalVdwTypes.insert(_externalGlobalVdwTypes.end(),
-                                       molecule.getExternalGlobalVDWTypes().begin(),
-                                       molecule.getExternalGlobalVDWTypes().end());
+        externalGlobalVdwTypes.insert(externalGlobalVdwTypes.end(),
+                                      molecule.getExternalGlobalVDWTypes().begin(),
+                                      molecule.getExternalGlobalVDWTypes().end());
     };
 
     ranges::for_each(_molecules, fillExternalGlobalVdwTypes);
@@ -170,5 +170,5 @@ void SimulationBox::calculateDegreesOfFreedom()
  */
 void SimulationBox::calculateCenterOfMassMolecules()
 {
-    ranges::for_each(_molecules, [&_box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(_box.getBoxDimensions()); });
+    ranges::for_each(_molecules, [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box.getBoxDimensions()); });
 }

@@ -9,7 +9,7 @@
 #include <string>
 
 using namespace std;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace readInput;
 using namespace engine;
 using namespace customException;
@@ -29,7 +29,7 @@ RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename
  */
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
-    for (auto &section : _sections)
+    for (const auto &section : _sections)
         if (section->keyword() == boost::algorithm::to_lower_copy(lineElements[0])) return section.get();
 
     return _atomSection.get();
@@ -55,11 +55,11 @@ void RstFileReader::read()
 
         if (lineElements.empty())
         {
-            lineNumber++;
+            ++lineNumber;
             continue;
         }
 
-        auto section         = determineSection(lineElements);
+        auto *section        = determineSection(lineElements);
         section->_lineNumber = lineNumber++;
         section->_fp         = &_fp;
         section->process(lineElements, _engine);

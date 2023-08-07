@@ -20,6 +20,7 @@ namespace forceField
 {
     class ForceField;
     enum class NonCoulombicType : size_t;
+    enum class MixingRule : size_t;
 
 }   // namespace forceField
 
@@ -29,6 +30,11 @@ enum class forceField::NonCoulombicType : size_t
     LJ_9_12,   // at the momentum just dummy for testing not implemented yet
     BUCKINGHAM,
     MORSE
+};
+
+enum class forceField::MixingRule : size_t
+{
+    NONE
 };
 
 /**
@@ -43,6 +49,7 @@ class forceField::ForceField
     bool             _isActivated             = false;
     bool             _isNonCoulombicActivated = false;
     NonCoulombicType _nonCoulombicType        = NonCoulombicType::LJ;   // LJ
+    MixingRule       _mixingRule              = MixingRule::NONE;       // no mixing rule
 
     double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
     double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
@@ -61,19 +68,26 @@ class forceField::ForceField
 
   public:
     void deleteNotNeededNonCoulombicPairs(const std::vector<size_t> &);
+    void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
+    void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::unique_ptr<NonCoulombicPair>> &);
+    void fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+
+    std::vector<std::unique_ptr<NonCoulombicPair>>   getSelfInteractionNonCoulombicPairs() const;
+    std::optional<std::unique_ptr<NonCoulombicPair>> findNonCoulombicPairByInternalTypes(size_t internalType1,
+                                                                                         size_t internalType2) const;
 
     const BondType     &findBondTypeById(size_t id) const;
     const AngleType    &findAngleTypeById(size_t id) const;
     const DihedralType &findDihedralTypeById(size_t id) const;
     const DihedralType &findImproperDihedralTypeById(size_t id) const;
 
-    void activate() { _isActivated = true; }
-    void deactivate() { _isActivated = false; }
-    bool isActivated() const { return _isActivated; }
+    void               activate() { _isActivated = true; }
+    void               deactivate() { _isActivated = false; }
+    [[nodiscard]] bool isActivated() const { return _isActivated; }
 
-    void activateNonCoulombic() { _isNonCoulombicActivated = true; }
-    void deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
-    bool isNonCoulombicActivated() const { return _isNonCoulombicActivated; }
+    void               activateNonCoulombic() { _isNonCoulombicActivated = true; }
+    void               deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
+    [[nodiscard]] bool isNonCoulombicActivated() const { return _isNonCoulombicActivated; }
 
     void addBond(const BondForceField &bond) { _bonds.push_back(bond); }
     void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
@@ -109,7 +123,7 @@ class forceField::ForceField
 
     void setNonCoulombicType(const NonCoulombicType &nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
 
-    void initNonCoulombicPairsMatrix(size_t n)
+    void initNonCoulombicPairsMatrix(const size_t n)
     {
         _nonCoulombicPairsMatrix = linearAlgebra::Matrix<std::unique_ptr<NonCoulombicPair>>(n);
     }
@@ -120,22 +134,25 @@ class forceField::ForceField
      *                  *
      ********************/
 
-    double getScale14Coulomb() const { return _scale14Coulomb; }
-    double getScale14VanDerWaals() const { return _scale14VanDerWaals; }
+    [[nodiscard]] double getScale14Coulomb() const { return _scale14Coulomb; }
+    [[nodiscard]] double getScale14VanDerWaals() const { return _scale14VanDerWaals; }
 
-    NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
+    [[nodiscard]] NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
 
-    std::vector<BondForceField>     &getBonds() { return _bonds; }
-    std::vector<AngleForceField>    &getAngles() { return _angles; }
-    std::vector<DihedralForceField> &getDihedrals() { return _dihedrals; }
-    std::vector<DihedralForceField> &getImproperDihedrals() { return _improperDihedrals; }
+    [[nodiscard]] std::vector<BondForceField>     &getBonds() { return _bonds; }
+    [[nodiscard]] std::vector<AngleForceField>    &getAngles() { return _angles; }
+    [[nodiscard]] std::vector<DihedralForceField> &getDihedrals() { return _dihedrals; }
+    [[nodiscard]] std::vector<DihedralForceField> &getImproperDihedrals() { return _improperDihedrals; }
 
-    const std::vector<BondType>     &getBondTypes() const { return _bondTypes; }
-    const std::vector<AngleType>    &getAngleTypes() const { return _angleTypes; }
-    const std::vector<DihedralType> &getDihedralTypes() const { return _dihedralTypes; }
-    const std::vector<DihedralType> &getImproperDihedralTypes() const { return _improperDihedralTypes; }
+    [[nodiscard]] const std::vector<BondType>     &getBondTypes() const { return _bondTypes; }
+    [[nodiscard]] const std::vector<AngleType>    &getAngleTypes() const { return _angleTypes; }
+    [[nodiscard]] const std::vector<DihedralType> &getDihedralTypes() const { return _dihedralTypes; }
+    [[nodiscard]] const std::vector<DihedralType> &getImproperDihedralTypes() const { return _improperDihedralTypes; }
 
-    std::vector<std::unique_ptr<NonCoulombicPair>> &getNonCoulombicPairsVector() { return _nonCoulombicPairsVector; }
+    [[nodiscard]] std::vector<std::unique_ptr<NonCoulombicPair>> &getNonCoulombicPairsVector()
+    {
+        return _nonCoulombicPairsVector;
+    }
 };
 
 #endif   // _Force_FIELD_HPP_

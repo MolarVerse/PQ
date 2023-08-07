@@ -10,8 +10,9 @@
  */
 namespace defaults
 {
-    static constexpr char _MOLDESCRIPTOR_FILENAME_DEFAULT_[] = "moldescriptor.dat";
-    static constexpr char _GUFF_FILENAME_DEFAULT_[]          = "guff.dat";
+    static constexpr char   _MOLDESCRIPTOR_FILENAME_DEFAULT_[] = "moldescriptor.dat";
+    static constexpr char   _GUFF_FILENAME_DEFAULT_[]          = "guff.dat";
+    static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_           = 28;
 
     static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;
     static constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;

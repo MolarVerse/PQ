@@ -60,7 +60,7 @@ class simulationBox::SimulationBox
     std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
     vector5d _guffCoefficients;
-    vector4d _NonCoulombRadiusCutOffs;
+    vector4d _nonCoulombRadiusCutOffs;
     vector4d _coulombCoefficients;
     vector4d _coulombEnergyCutOffs;
     vector4d _coulombForceCutOffs;
@@ -71,8 +71,8 @@ class simulationBox::SimulationBox
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
     void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
-    size_t getNumberOfAtoms() const;
-    size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
+    size_t               getNumberOfAtoms() const;
+    [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
 
     Molecule                      findMoleculeType(const size_t moltype) const;
     std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
@@ -90,44 +90,54 @@ class simulationBox::SimulationBox
      * standard getter methods *
      ***************************/
 
-    int    getWaterType() const { return _waterType; }
-    int    getAmmoniaType() const { return _ammoniaType; }
-    double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
-    size_t getNumberOfMolecules() const { return _molecules.size(); }
+    [[nodiscard]] int    getWaterType() const { return _waterType; }
+    [[nodiscard]] int    getAmmoniaType() const { return _ammoniaType; }
+    [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
+    [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
 
-    std::vector<Molecule> &getMolecules() { return _molecules; }
-    std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
-    Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
-    Molecule              &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
+    [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
+    [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
+    [[nodiscard]] Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
+    [[nodiscard]] Molecule &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-    std::vector<size_t> &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
+    [[nodiscard]] std::vector<size_t>      &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
+    [[nodiscard]] std::map<size_t, size_t> &getExternalToInternalGlobalVDWTypes() { return _externalToInternalGlobalVDWTypes; }
 
-    double getNonCoulombRadiusCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    [[nodiscard]] double getNonCoulombRadiusCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
     {
-        return _NonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2];
+        return _nonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2];
     }
-    double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2]; }
-    double getCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2]; }
-    double getCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2) { return _coulombForceCutOffs[m1 - 1][m2 - 1][a1][a2]; }
-    double getNonCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    [[nodiscard]] double getCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _coulombCoefficients[m1 - 1][m2 - 1][a1][a2];
+    }
+    [[nodiscard]] double getCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _coulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2];
+    }
+    [[nodiscard]] double getCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    {
+        return _coulombForceCutOffs[m1 - 1][m2 - 1][a1][a2];
+    }
+    [[nodiscard]] double getNonCoulombEnergyCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
     {
         return _nonCoulombEnergyCutOffs[m1 - 1][m2 - 1][a1][a2];
     }
-    double getNonCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    [[nodiscard]] double getNonCoulombForceCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
     {
         return _nonCoulombForceCutOffs[m1 - 1][m2 - 1][a1][a2];
     }
 
-    std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
+    [[nodiscard]] std::vector<double> &getGuffCoefficients(c_ul m1, c_ul m2, c_ul a1, c_ul a2)
     {
         return _guffCoefficients[m1 - 1][m2 - 1][a1][a2];
     }
 
-    vector5d &getGuffCoefficients() { return _guffCoefficients; }
-    vector4d &getNonCoulombRadiusCutOffs() { return _NonCoulombRadiusCutOffs; }
-    vector4d &getCoulombCoefficients() { return _coulombCoefficients; }
-    vector4d &getCoulombEnergyCutOffs() { return _coulombEnergyCutOffs; }
-    vector4d &getCoulombForceCutOffs() { return _coulombForceCutOffs; }
+    [[nodiscard]] vector5d &getGuffCoefficients() { return _guffCoefficients; }
+    [[nodiscard]] vector4d &getNonCoulombRadiusCutOffs() { return _nonCoulombRadiusCutOffs; }
+    [[nodiscard]] vector4d &getCoulombCoefficients() { return _coulombCoefficients; }
+    [[nodiscard]] vector4d &getCoulombEnergyCutOffs() { return _coulombEnergyCutOffs; }
+    [[nodiscard]] vector4d &getCoulombForceCutOffs() { return _coulombForceCutOffs; }
 
     /***************************
      * standard setter methods *
@@ -143,7 +153,7 @@ class simulationBox::SimulationBox
     }
     void setNonCoulombRadiusCutOff(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double rncCutOff)
     {
-        _NonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
+        _nonCoulombRadiusCutOffs[m1 - 1][m2 - 1][a1][a2] = rncCutOff;
     }
     void setCoulombCoefficient(c_ul m1, c_ul m2, c_ul a1, c_ul a2, const double coulombCoefficient)
     {
@@ -176,15 +186,15 @@ class simulationBox::SimulationBox
     double               calculateVolume() { return _box.calculateVolume(); }
     linearAlgebra::Vec3D calculateBoxDimensionsFromDensity() { return _box.calculateBoxDimensionsFromDensity(); }
 
-    double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
-    bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
+    [[nodiscard]] double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
+    [[nodiscard]] bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
 
-    double               getDensity() const { return _box.getDensity(); }
-    double               getTotalMass() const { return _box.getTotalMass(); }
-    double               getTotalCharge() const { return _box.getTotalCharge(); }
-    double               getVolume() const { return _box.getVolume(); }
-    linearAlgebra::Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
-    linearAlgebra::Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
+    [[nodiscard]] double               getDensity() const { return _box.getDensity(); }
+    [[nodiscard]] double               getTotalMass() const { return _box.getTotalMass(); }
+    [[nodiscard]] double               getTotalCharge() const { return _box.getTotalCharge(); }
+    [[nodiscard]] double               getVolume() const { return _box.getVolume(); }
+    [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
+    [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
 
     void setDensity(const double density) { _box.setDensity(density); }
     void setTotalMass(const double mass) { _box.setTotalMass(mass); }

@@ -9,7 +9,7 @@
 #include <string>
 
 using namespace std;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace simulationBox;
 using namespace readInput;
 using namespace engine;
@@ -103,7 +103,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 
         ++_lineNumber;
 
-        if ((lineElements.size() == 3) || (lineElements.size() == 4))
+        if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));
@@ -131,9 +131,9 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 }
 
 /**
- * @brief convert external to internal atomtypes
+ * @brief convert external to internal atom types
  *
- * @details in order to manage if user declares for example only atomtype 1 and 3
+ * @details in order to manage if user declares for example only atom type 1 and 3
  *
  * @param molecule
  */

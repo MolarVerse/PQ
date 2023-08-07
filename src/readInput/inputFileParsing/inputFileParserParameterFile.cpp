@@ -14,8 +14,7 @@ void InputFileReader::parseParameterFilename(const vector<string> &lineElements)
 
     if (filename.empty()) throw InputFileException("Parameter filename cannot be empty");
 
-    if (!StringUtilities::fileExists(filename))
-        throw InputFileException("Cannot open parameter file - filename = " + string(filename));
+    if (!utilities::fileExists(filename)) throw InputFileException("Cannot open parameter file - filename = " + string(filename));
 
     _engine.getSettings().setParameterFilename(filename);
 }

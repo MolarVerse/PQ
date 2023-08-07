@@ -9,7 +9,7 @@
 #include <sstream>
 
 using namespace std;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace simulationBox;
 using namespace readInput;
 using namespace engine;
@@ -60,9 +60,10 @@ void GuffDatReader::read()
 
         auto lineCommands = getLineCommands(line, _lineNumber);
 
-        if (lineCommands.size() - 1 != 28)
+        if (lineCommands.size() - 1 != defaults::_NUMBER_OF_GUFF_ENTRIES_)
             throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " +
-                                   to_string(_lineNumber) + "28 are allowed.");
+                                   to_string(_lineNumber) + " " + to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
+                                   " are allowed.");
 
         parseLine(lineCommands);
 

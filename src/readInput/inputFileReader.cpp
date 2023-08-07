@@ -11,7 +11,7 @@
 #include <vector>
 
 using namespace std;
-using namespace StringUtilities;
+using namespace utilities;
 using namespace readInput;
 using namespace thermostat;
 using namespace manostat;
@@ -154,9 +154,7 @@ void InputFileReader::read()
             continue;
         }
 
-        const auto lineCommands = getLineCommands(line, _lineNumber);
-
-        for (const string &command : lineCommands)
+        for (const auto lineCommands = getLineCommands(line, _lineNumber); const string &command : lineCommands)
         {
             const auto lineElements = splitString(command);
             if (lineElements.empty()) continue;
@@ -191,7 +189,7 @@ void InputFileReader::postProcess()
 {
     for (auto const &[keyword, count] : _keywordCountMap)
     {
-        if (_keywordRequiredMap[keyword] && (count == 0))
+        if (_keywordRequiredMap[keyword] && (0 == count))
             throw InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
         if (count > 1) throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");

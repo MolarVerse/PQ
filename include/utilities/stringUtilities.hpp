@@ -6,9 +6,9 @@
 #include <vector>
 
 /**
- * @brief StringUtilities is a namespace for string utilities
+ * @brief utilities is a namespace for all utility functions
  */
-namespace StringUtilities
+namespace utilities
 {
     std::string removeComments(std::string &, const std::string_view &);
 
@@ -19,6 +19,6 @@ namespace StringUtilities
 
     bool fileExists(const std::string &);
 
-}   // namespace StringUtilities
+}   // namespace utilities
 
 #endif   // _STRING_UTILITIES_HPP_
