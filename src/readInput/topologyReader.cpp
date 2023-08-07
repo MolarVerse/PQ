@@ -66,7 +66,7 @@ void TopologyReader::read()
             continue;
         }
 
-        auto section = determineSection(lineElements);
+        auto *section = determineSection(lineElements);
         ++lineNumber;
         section->setLineNumber(lineNumber);
         section->setFp(&_fp);
@@ -81,12 +81,12 @@ void TopologyReader::read()
  * @param lineElements
  * @return TopologySection*
  */
-std::unique_ptr<readInput::topology::TopologySection> TopologyReader::determineSection(const vector<string> &lineElements)
+TopologySection *TopologyReader::determineSection(const vector<string> &lineElements)
 {
     const auto iterEnd = _topologySections.end();
 
     for (auto section = _topologySections.begin(); section != iterEnd; ++section)
-        if ((*section)->keyword() == toLowerCopy(lineElements[0])) return move(*section);
+        if ((*section)->keyword() == toLowerCopy(lineElements[0])) return (*section).get();
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }

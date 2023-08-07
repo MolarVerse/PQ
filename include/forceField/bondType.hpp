@@ -2,7 +2,7 @@
 
 #define _BOND_TYPE_HPP_
 
-#include "cstddef"
+#include <cstddef>
 
 namespace forceField
 {
@@ -20,6 +20,8 @@ class forceField::BondType
   public:
     BondType(size_t id, double equilibriumBondLength, double springConstant)
         : _id(id), _equilibriumBondLength(equilibriumBondLength), _forceConstant(springConstant){};
+
+    bool operator==(const BondType &other) const;
 
     size_t getId() const { return _id; }
     double getEquilibriumBondLength() const { return _equilibriumBondLength; }

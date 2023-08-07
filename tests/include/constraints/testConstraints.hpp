@@ -8,6 +8,10 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @brief Fixture for constraint tests.
+ *
+ */
 class TestConstraints : public ::testing::Test
 {
   protected:

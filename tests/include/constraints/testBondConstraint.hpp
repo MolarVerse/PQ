@@ -8,6 +8,10 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @brief Fixture for bond constraint tests.
+ *
+ */
 class TestBondConstraint : public ::testing::Test
 {
   protected:
@@ -29,7 +33,8 @@ class TestBondConstraint : public ::testing::Test
         _box->addMolecule(molecule1);
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
-        _bondConstraint = new constraints::BondConstraint(&(_box->getMolecules()[0]), &(_box->getMolecules()[0]), 0, 1, 1.2);
+        _bondConstraint =
+            new constraints::BondConstraint(&(_box->getMolecules()[0]), &(_box->getMolecules()[0]), 0, 1, _targetBondLength);
     }
 
     virtual void TearDown()
@@ -40,6 +45,7 @@ class TestBondConstraint : public ::testing::Test
 
     simulationBox::SimulationBox *_box;
     constraints::BondConstraint  *_bondConstraint;
+    double                        _targetBondLength = 1.2;
 };
 
 #endif   // _TEST_BOND_CONSTRAINT_HPP_

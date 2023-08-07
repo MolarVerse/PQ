@@ -17,6 +17,7 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
 /**
  * @brief applies the shake algorithm to all bond constraints
  *
+ * @TODO: implement check if not converged with own exception type
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simBox)
 {
@@ -38,6 +39,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simBox)
 /**
  * @brief applies the rattle algorithm to all bond constraints
  *
+ * @TODO: implement check if not converged with own exception type
  */
 void Constraints::applyRattle()
 {

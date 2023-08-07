@@ -34,8 +34,8 @@ class connectivity::ConnectivityElement
      *                         *
      ***************************/
 
-    std::vector<simulationBox::Molecule *> getMolecules() const { return _molecules; }
-    std::vector<size_t>                    getAtomIndices() const { return _atomIndices; }
+    [[nodiscard]] std::vector<simulationBox::Molecule *> getMolecules() const { return _molecules; }
+    [[nodiscard]] std::vector<size_t>                    getAtomIndices() const { return _atomIndices; }
 };
 
 #endif   // _CONNECTIVITY_ELEMENT_HPP_

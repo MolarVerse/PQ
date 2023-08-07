@@ -103,6 +103,12 @@ void Engine::takeStep()
     _resetKinetics->reset(_step, _physicalData, _simulationBox);
 }
 
+/**
+ * @brief Writes output files.
+ *
+ * @details output files are written if the step is a multiple of the output frequency.
+ *
+ */
 void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
