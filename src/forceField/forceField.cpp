@@ -124,16 +124,16 @@ void ForceField::determineInternalGlobalVdwTypes(const map<size_t, size_t> &exte
  *
  * @details self interacting means that both internal or external types are the same
  *
- * @return vector<unique_ptr<NonCoulombicPair>>
+ * @return vector<shared_ptr<NonCoulombicPair>>
  */
-vector<unique_ptr<NonCoulombicPair>> ForceField::getSelfInteractionNonCoulombicPairs() const
+vector<shared_ptr<NonCoulombicPair>> ForceField::getSelfInteractionNonCoulombicPairs() const
 {
-    vector<unique_ptr<NonCoulombicPair>> selfInteractionNonCoulombicPairs;
+    vector<shared_ptr<NonCoulombicPair>> selfInteractionNonCoulombicPairs;
 
     auto addSelfInteractionPairs = [&selfInteractionNonCoulombicPairs](const auto &nonCoulombicPair)
     {
         if (nonCoulombicPair->getInternalType1() == nonCoulombicPair->getInternalType2())
-            selfInteractionNonCoulombicPairs.push_back(make_unique<NonCoulombicPair>(*nonCoulombicPair));
+            selfInteractionNonCoulombicPairs.push_back(nonCoulombicPair);
     };
 
     ranges::for_each(_nonCoulombicPairsVector, addSelfInteractionPairs);
@@ -146,7 +146,7 @@ vector<unique_ptr<NonCoulombicPair>> ForceField::getSelfInteractionNonCoulombicP
  *
  * @param diagonalElements
  */
-void ForceField::fillDiagonalElementsOfNonCoulombicPairsMatrix(vector<unique_ptr<NonCoulombicPair>> &diagonalElements)
+void ForceField::fillDiagonalElementsOfNonCoulombicPairsMatrix(vector<shared_ptr<NonCoulombicPair>> &diagonalElements)
 {
     ranges::sort(diagonalElements,
                  [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
@@ -156,10 +156,23 @@ void ForceField::fillDiagonalElementsOfNonCoulombicPairsMatrix(vector<unique_ptr
     initNonCoulombicPairsMatrix(numberOfDiagonalElements);
 
     for (size_t i = 0; i < numberOfDiagonalElements; ++i)
-        _nonCoulombicPairsMatrix(i, i) = move(diagonalElements[i]);
+        _nonCoulombicPairsMatrix[i][i] = diagonalElements[i];
 }
 
-// TODO:
+/**
+ * @brief fills the off-diagonal elements of the non-coulombic pairs matrix
+ *
+ * @details if no type is found check if mixing rules are used
+ * if mixing rules are used, then add a new non-coulombic pair with the mixing rule (TODO: not yet implemented)
+ * if no mixing rules are used, then throw an exception
+ * if a type is found, then add the non-coulombic pair to the matrix
+ * if a type is found with both index combinations and it has the same parameters, then add the non-coulombic pair
+ * if a type is found with both index combinations and it has different parameters, then throw an exception
+ *
+ * @throws customException::ParameterFileException if mixing rules are not used and not all combinations of global van der Waals
+ * types are defined in the parameter file
+ * @throws customException::ParameterFileException if type is found with both index combinations and it has different parameters
+ */
 void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
 {
     const auto &[rows, cols] = _nonCoulombicPairsMatrix.shape();
@@ -187,19 +200,22 @@ void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
                     const auto vdwType2 = (*nonCoulombicPair1)->getVanDerWaalsType2();
                     throw customException::ParameterFileException("Non-coulombic pairs with global van der Waals types " +
                                                                   to_string(vdwType1) + ", " + to_string(vdwType2) + " and " +
-                                                                  to_string(vdwType1) + ", " + to_string(vdwType2) +
+                                                                  to_string(vdwType2) + ", " + to_string(vdwType1) +
                                                                   " in the parameter file have different parameters");
                 }
+
+                _nonCoulombicPairsMatrix[i][j] = *nonCoulombicPair1;
+                _nonCoulombicPairsMatrix[j][i] = *nonCoulombicPair1;
             }
             else if (nonCoulombicPair1 != nullopt)
             {
-                _nonCoulombicPairsMatrix(i, j) = move(*nonCoulombicPair1);
-                _nonCoulombicPairsMatrix(j, i) = move(*nonCoulombicPair1);
+                _nonCoulombicPairsMatrix[i][j] = *nonCoulombicPair1;
+                _nonCoulombicPairsMatrix[j][i] = *nonCoulombicPair1;
             }
             else
             {
-                _nonCoulombicPairsMatrix(i, j) = move(*nonCoulombicPair2);
-                _nonCoulombicPairsMatrix(j, i) = move(*nonCoulombicPair2);
+                _nonCoulombicPairsMatrix[i][j] = *nonCoulombicPair2;
+                _nonCoulombicPairsMatrix[j][i] = *nonCoulombicPair2;
             }
         }
 }
@@ -212,11 +228,11 @@ void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
  *
  * @param internalType1
  * @param internalType2
- * @return optional<unique_ptr<NonCoulombicPair>>
+ * @return optional<shared_ptr<NonCoulombicPair>>
  *
  * @throws if the non coulombic pair is found twice
  */
-optional<unique_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInternalTypes(size_t internalType1,
+optional<shared_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInternalTypes(size_t internalType1,
                                                                                        size_t internalType2) const
 {
     auto findByInternalAtomTypes = [internalType1, internalType2](const auto &nonCoulombicPair)
@@ -237,7 +253,7 @@ optional<unique_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInterna
         }
         else
         {
-            return make_unique<NonCoulombicPair>(**firstNonCoulombicPair);
+            return *firstNonCoulombicPair;
         }
     }
     else

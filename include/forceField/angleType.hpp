@@ -9,6 +9,12 @@ namespace forceField
     class AngleType;
 }
 
+/**
+ * @class AngleType
+ *
+ * @brief represents an angle type
+ *
+ */
 class forceField::AngleType
 {
   private:

@@ -9,6 +9,12 @@ namespace forceField
     class BondType;
 }
 
+/**
+ * @class BondType
+ *
+ * @brief represents a bond type
+ *
+ */
 class forceField::BondType
 {
   private:

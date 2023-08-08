@@ -9,6 +9,12 @@ namespace forceField
     class DihedralType;
 }
 
+/**
+ * @class DihedralType
+ *
+ * @brief represents a dihedral type
+ *
+ */
 class forceField::DihedralType
 {
   private:

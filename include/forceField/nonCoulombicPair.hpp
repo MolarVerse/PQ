@@ -36,12 +36,7 @@ class forceField::NonCoulombicPair
         : _vanDerWaalsType1(vanDerWaalsType1), _vanDerWaalsType2(vanDerWaalsType2), _cutOff(cutOff){};
     virtual ~NonCoulombicPair() = default;
 
-    [[nodiscard]] bool operator==(const NonCoulombicPair &other) const
-    {
-        return _vanDerWaalsType1 == other._vanDerWaalsType1 && _vanDerWaalsType2 == other._vanDerWaalsType2 &&
-               _internalType1 == other._internalType1 && _internalType2 == other._internalType2 &&
-               utilities::compare(_cutOff, other._cutOff);
-    }
+    [[nodiscard]] bool operator==(const NonCoulombicPair &other) const;
 
     size_t setInternalType1(const size_t internalType1) { return _internalType1 = internalType1; }
     size_t setInternalType2(const size_t internalType2) { return _internalType2 = internalType2; }
@@ -70,10 +65,7 @@ class forceField::LennardJonesPair : public forceField::NonCoulombicPair
         const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff, const double c6, const double c12)
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
 
-    [[nodiscard]] bool operator==(const LennardJonesPair &other) const
-    {
-        return NonCoulombicPair::operator==(other) && utilities::compare(_c6, other._c6) && utilities::compare(_c12, other._c12);
-    }
+    [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
     [[nodiscard]] double getC6() const { return _c6; }
     [[nodiscard]] double getC12() const { return _c12; }
@@ -101,11 +93,7 @@ class forceField::BuckinghamPair : public forceField::NonCoulombicPair
                    const double c6)
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
 
-    [[nodiscard]] bool operator==(const BuckinghamPair &other) const
-    {
-        return NonCoulombicPair::operator==(other) && utilities::compare(_a, other._a) &&
-               utilities::compare(_dRho, other._dRho) && utilities::compare(_c6, other._c6);
-    }
+    [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
     [[nodiscard]] double getA() const { return _a; }
     [[nodiscard]] double getDRho() const { return _dRho; }
@@ -135,12 +123,7 @@ class forceField::MorsePair : public forceField::NonCoulombicPair
         : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
           _wellWidth(wellWidth), _equilibriumDistance(equilibriumDistance){};
 
-    [[nodiscard]] bool operator==(const MorsePair &other) const
-    {
-        return NonCoulombicPair::operator==(other) && utilities::compare(_dissociationEnergy, other._dissociationEnergy) &&
-               utilities::compare(_wellWidth, other._wellWidth) &&
-               utilities::compare(_equilibriumDistance, other._equilibriumDistance);
-    }
+    [[nodiscard]] bool operator==(const MorsePair &other) const;
 
     [[nodiscard]] double getDissociationEnergy() const { return _dissociationEnergy; }
     [[nodiscard]] double getWellWidth() const { return _wellWidth; }

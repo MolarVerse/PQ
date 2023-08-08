@@ -126,4 +126,6 @@ void ForceFieldSetup::setupNonCoulombics()
 
     _engine.getForceFieldPtr()->fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
     _engine.getForceFieldPtr()->fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+
+    _engine.getForceFieldPtr()->clearNonCoulombicPairs();
 }

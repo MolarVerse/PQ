@@ -124,7 +124,7 @@ TEST(TestForceField, deleteNotNeededNonCoulombicPairs_deleteNothing)
     auto forceField       = forceField::ForceField();
     auto nonCoulombicPair = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair));
     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 1);
@@ -142,7 +142,7 @@ TEST(TestForceField, deleteNotNeededNonCoulombicPairs_deleteOnePair)
     auto forceField       = forceField::ForceField();
     auto nonCoulombicPair = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair));
     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 0);
@@ -158,8 +158,8 @@ TEST(TestForceField, determineInternalGlobalVdwTypes)
     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
     auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair1));
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair2));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
 
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
 
@@ -183,10 +183,10 @@ TEST(TestForceField, getSelfInteractionNonCoulombicPairs)
     auto nonCoulombicPair3 = forceField::LennardJonesPair(2, 2, 2.0, 1.0, 1.0);
     auto nonCoulombicPair4 = forceField::LennardJonesPair(5, 5, 2.0, 1.0, 1.0);
 
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair1));
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair2));
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair3));
-    forceField.addNonCoulombicPair(std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair4));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair3));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair4));
 
     // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -197,6 +197,10 @@ TEST(TestForceField, getSelfInteractionNonCoulombicPairs)
     EXPECT_EQ(selfInteractionNonCoulombicPairs.size(), 2);
 }
 
+/**
+ * @brief tests fillDiagonalElementsOfNonCoulombicPairsMatrix function
+ *
+ */
 TEST(TestForceField, fillDiagonalElementsOfNonCoulombicPairsMatrix)
 {
     auto forceField        = forceField::ForceField();
@@ -207,9 +211,9 @@ TEST(TestForceField, fillDiagonalElementsOfNonCoulombicPairsMatrix)
     nonCoulombicPair2.setInternalType1(9);
     nonCoulombicPair2.setInternalType2(9);
 
-    std::vector<std::unique_ptr<forceField::NonCoulombicPair>> diagonalElements = {
-        std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair1),
-        std::make_unique<forceField::NonCoulombicPair>(nonCoulombicPair2)};
+    std::vector<std::shared_ptr<forceField::NonCoulombicPair>> diagonalElements = {
+        std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1),
+        std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2)};
 
     forceField.fillDiagonalElementsOfNonCoulombicPairsMatrix(diagonalElements);
 
@@ -219,6 +223,197 @@ TEST(TestForceField, fillDiagonalElementsOfNonCoulombicPairsMatrix)
     EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][0]->getInternalType2(), 0);
     EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][1]->getInternalType1(), 9);
     EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][1]->getInternalType2(), 9);
+}
+
+/**
+ * @brief tests fillOffDiagonalElementsOfNonCoulombicPairsMatrix function if only one type is found
+ *
+ */
+TEST(TestForceField, findNonCoulombicPairByInternalTypes_findOneType)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+
+    auto nonCoulombicPair = forceField.findNonCoulombicPairByInternalTypes(0, 2);
+    EXPECT_EQ((*nonCoulombicPair)->getInternalType1(), 0);
+    EXPECT_EQ((*nonCoulombicPair)->getInternalType2(), 2);
+}
+
+/**
+ * @brief tests fillOffDiagonalElementsOfNonCoulombicPairsMatrix function if no type is found
+ *
+ */
+TEST(TestForceField, findNonCoulombicPairByInternalTypes_findNothing)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+
+    auto nonCoulombicPair = forceField.findNonCoulombicPairByInternalTypes(0, 3);
+    EXPECT_EQ(nonCoulombicPair, std::nullopt);
+}
+
+/**
+ * @brief tests fillOffDiagonalElementsOfNonCoulombicPairsMatrix function if multiple types are found
+ *
+ */
+TEST(TestForceField, findNonCoulombicPairByInternalTypes_findMultipleTypes)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 5, 2.0, 5.0, 1.0);
+    auto nonCoulombicPair3 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair3));
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+
+    EXPECT_THROW_MSG(forceField.findNonCoulombicPairByInternalTypes(0, 2),
+                     customException::ParameterFileException,
+                     "Non coulombic pair with global van der waals types 1 and 5 is defined twice in the parameter file.");
+}
+
+/**
+ * @brief tests fillNonDiagonalElementsOfNonCoulombicPairsMatrix function if element is not found
+ *
+ */
+TEST(TestForceField, fillNonDiagonalElementsOfNonCoulombicPairsMatrix_ElementNotFound)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+
+    forceField.initNonCoulombicPairsMatrix(2);
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+
+    EXPECT_THROW_MSG(
+        forceField.fillNonDiagonalElementsOfNonCoulombicPairsMatrix(),
+        customException::ParameterFileException,
+        "Not all combinations of global van der Waals types are defined in the parameter file - and no mixing rules were chosen");
+}
+
+/**
+ * @brief tests fillNonDiagonalElementsOfNonCoulombicPairsMatrix function if element is found with lower index first
+ *
+ */
+TEST(TestForceField, fillNonDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithLowerIndexFirst)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+
+    forceField.initNonCoulombicPairsMatrix(2);
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    forceField.fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType1(), 0);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType2(), 1);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType1(), 0);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType2(), 1);
+}
+
+/**
+ * @brief tests fillNonDiagonalElementsOfNonCoulombicPairsMatrix function if element is found with higher index first
+ *
+ */
+TEST(TestForceField, fillNonDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithHigherIndexFirst)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(2, 1, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+
+    forceField.initNonCoulombicPairsMatrix(2);
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    forceField.fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType1(), 1);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType2(), 0);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType1(), 1);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType2(), 0);
+}
+
+/**
+ * @brief tests fillNonDiagonalElementsOfNonCoulombicPairsMatrix function if element is found for both index combinations with
+ * same parameters
+ *
+ */
+TEST(TestForceField, fillNonDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withSameParams)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = forceField::LennardJonesPair(2, 1, 2.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+
+    forceField.initNonCoulombicPairsMatrix(2);
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    forceField.fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType1(), 0);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[0][1]->getInternalType2(), 1);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType1(), 0);
+    EXPECT_EQ(forceField.getNonCoulombicPairsMatrix()[1][0]->getInternalType2(), 1);
+}
+
+/**
+ * @brief tests fillNonDiagonalElementsOfNonCoulombicPairsMatrix function if element is found for both index combinations with
+ * different parameters
+ *
+ */
+TEST(TestForceField, fillNonDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withDifferentParams)
+{
+    auto forceField        = forceField::ForceField();
+    auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = forceField::LennardJonesPair(2, 1, 5.0, 1.0, 1.0);
+
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+    forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+
+    forceField.initNonCoulombicPairsMatrix(2);
+
+    // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
+    std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
+    forceField.determineInternalGlobalVdwTypes(externalToInternalTypes);
+
+    EXPECT_THROW_MSG(
+        forceField.fillNonDiagonalElementsOfNonCoulombicPairsMatrix(),
+        customException::ParameterFileException,
+        "Non-coulombic pairs with global van der Waals types 1, 2 and 2, 1 in the parameter file have different parameters");
 }
 
 int main(int argc, char **argv)
