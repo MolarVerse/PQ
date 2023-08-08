@@ -1,6 +1,7 @@
 #include "testSimulationBox.hpp"
 
 #include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestSimulationBox, resizeGuff)
 {
@@ -70,6 +71,35 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
     EXPECT_EQ(atomIndex2, 0);
 
     EXPECT_THROW(_simulationBox->findMoleculeByAtomIndex(6), customException::UserInputException);
+}
+
+/**
+ * @brief tests checkCoulombRadiusCutoff function if the radius cut off is larger than half of the minimal box
+ */
+TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
+{
+    _simulationBox->setCoulombRadiusCutOff(1.0);
+    _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
+
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
+
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION),
+                     customException::ManostatException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
+
+    _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
+
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
+
+    _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
+
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
 }
 
 int main(int argc, char **argv)

@@ -4,6 +4,7 @@
 
 #include "box.hpp"
 #include "defaults.hpp"
+#include "exceptions.hpp"
 #include "molecule.hpp"
 
 #include <string>
@@ -68,11 +69,9 @@ class simulationBox::SimulationBox
     vector4d _nonCoulombForceCutOffs;
 
   public:
-    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
-    void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
+    void checkCoulombRadiusCutOff(customException::ExceptionType) const;
 
-    size_t               getNumberOfAtoms() const;
-    [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
+    size_t getNumberOfAtoms() const;
 
     Molecule                      findMoleculeType(const size_t moltype) const;
     std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
@@ -86,6 +85,9 @@ class simulationBox::SimulationBox
     void resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms);
     void resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms);
 
+    void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
+    void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
+
     /***************************
      * standard getter methods *
      ***************************/
@@ -94,6 +96,7 @@ class simulationBox::SimulationBox
     [[nodiscard]] int    getAmmoniaType() const { return _ammoniaType; }
     [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
     [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
+    [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
 
     [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
     [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }

@@ -8,7 +8,7 @@ target_include_directories(settings
 )
 
 target_link_libraries(settings
-    PRIVATE
+    PUBLIC
     config
     timings
 )

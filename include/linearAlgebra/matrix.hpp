@@ -17,8 +17,6 @@ namespace linearAlgebra
 /**
  * @class Matrix
  *
- * @brief Matrix is a class for static matrix
- *
  */
 template <typename T>
 class linearAlgebra::Matrix
@@ -30,16 +28,8 @@ class linearAlgebra::Matrix
 
   public:
     Matrix() = default;
-    explicit Matrix(const size_t rows, const size_t cols) : _rows(rows), _cols(cols)
-    {
-        _data.resize(rows);
-        std::ranges::for_each(_data, [cols](auto &row) { row.resize(cols); });
-    }
-    explicit Matrix(const size_t rowsAndCols) : _rows(rowsAndCols), _cols(rowsAndCols)
-    {
-        _data.resize(rowsAndCols);
-        std::ranges::for_each(_data, [rowsAndCols](auto &row) { row.resize(rowsAndCols); });
-    }
+    explicit Matrix(const size_t rows, const size_t cols);
+    explicit Matrix(const size_t rowsAndCols);
 
     /**
      * @brief index operator
@@ -54,5 +44,32 @@ class linearAlgebra::Matrix
     [[nodiscard]] size_t                    size() const { return _rows * _cols; }
     [[nodiscard]] std::pair<size_t, size_t> shape() const { return std::make_pair(_rows, _cols); }
 };
+
+/**
+ * @brief Construct a new Matrix< T>:: Matrix object
+ *
+ * @tparam T
+ * @param rows
+ * @param cols
+ */
+template <typename T>
+linearAlgebra::Matrix<T>::Matrix(const size_t rows, const size_t cols) : _rows(rows), _cols(cols)
+{
+    _data.resize(rows);
+    std::ranges::for_each(_data, [cols](auto &row) { row.resize(cols); });
+}
+
+/**
+ * @brief Construct a new Matrix< T>:: Matrix object
+ *
+ * @tparam T
+ * @param rowsAndCols
+ */
+template <typename T>
+linearAlgebra::Matrix<T>::Matrix(const size_t rowsAndCols) : _rows(rowsAndCols), _cols(rowsAndCols)
+{
+    _data.resize(rowsAndCols);
+    std::ranges::for_each(_data, [rowsAndCols](auto &row) { row.resize(rowsAndCols); });
+}
 
 #endif   // _STATIC_MATRIX_HPP_

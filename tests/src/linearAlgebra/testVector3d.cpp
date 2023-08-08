@@ -4,7 +4,17 @@
 
 using namespace linearAlgebra;
 
-TEST(TestVector3d, testConstructors)
+/**
+ * @file testVector3d.cpp
+ *
+ * @brief Contains tests for double, int and size_t Vector3D
+ */
+
+/**
+ * @brief tests constructors for Vector3D
+ *
+ */
+TEST(TestVector3d, constructors)
 {
     auto vec = Vec3D(0.0, 1.0, 2.0);
     ASSERT_EQ(vec[0], 0.0);
@@ -64,7 +74,11 @@ TEST(TestVector3d, testConstructors)
     ASSERT_EQ(vecUnsignedLong[2], 2);
 }
 
-TEST(TestVector3d, testAssignmentOperator)
+/**
+ * @brief tests assignment operators for Vector3D
+ *
+ */
+TEST(TestVector3d, assignmentOperator)
 {
     Vec3D vec1(0.0, 1.0, 2.0);
     Vec3D vec2(1.0, 2.0, 3.0);
@@ -72,9 +86,27 @@ TEST(TestVector3d, testAssignmentOperator)
     vec1 = vec2;
 
     ASSERT_EQ(vec1, vec2);
+
+    Vec3Di vec3(0, 1, 2);
+    Vec3Di vec4(1, 2, 3);
+
+    vec3 = vec4;
+
+    ASSERT_EQ(vec3, vec4);
+
+    Vec3Dul vec5(0, 1, 2);
+    Vec3Dul vec6(1, 2, 3);
+
+    vec5 = vec6;
+
+    ASSERT_EQ(vec5, vec6);
 }
 
-TEST(TestVector3d, testAdditionOperator)
+/**
+ * @brief tests operator+ for Vector3D
+ *
+ */
+TEST(TestVector3d, additionOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
     const auto vec2 = Vec3D(1.0, 2.0, 3.0);
@@ -95,7 +127,11 @@ TEST(TestVector3d, testAdditionOperator)
     EXPECT_EQ(vec5 + 1, Vec3Dul(2, 3, 4));
 }
 
-TEST(TestVector3d, testSubtractionOperator)
+/**
+ * @brief tests operator- for Vector3D
+ *
+ */
+TEST(TestVector3d, subtractionOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
     const auto vec2 = Vec3D(1.0, 2.0, 3.0);
@@ -119,7 +155,11 @@ TEST(TestVector3d, testSubtractionOperator)
     EXPECT_EQ(-vec5, Vec3Dul(-1, -2, -3));
 }
 
-TEST(TestVector3d, testMultiplicationOperator)
+/**
+ * @brief tests operator* for Vector3D
+ *
+ */
+TEST(TestVector3d, multiplicationOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
     const auto vec2 = Vec3D(1.0, 2.0, 3.0);
@@ -141,7 +181,11 @@ TEST(TestVector3d, testMultiplicationOperator)
     EXPECT_EQ(vec5 * 2, Vec3Dul(2, 4, 6));
 }
 
-TEST(TestVector3d, testDivisionOperator)
+/**
+ * @brief tests operator/ for Vector3D
+ *
+ */
+TEST(TestVector3d, divisionOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
     const auto vec2 = Vec3D(1.0, 2.0, 3.0);
@@ -163,7 +207,11 @@ TEST(TestVector3d, testDivisionOperator)
     EXPECT_EQ(vec5 / 2, Vec3Dul(0, 1, 1));
 }
 
-TEST(TestVector3d, testIsLessOperator)
+/**
+ * @brief tests operator< for Vector3D
+ *
+ */
+TEST(TestVector3d, isLessOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
 
@@ -181,7 +229,11 @@ TEST(TestVector3d, testIsLessOperator)
     EXPECT_FALSE(vec3 < 2);
 }
 
-TEST(TestVector3d, testIsGreaterOperator)
+/**
+ * @brief tests operator> for Vector3D
+ *
+ */
+TEST(TestVector3d, isGreaterOperator)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
 
@@ -199,13 +251,21 @@ TEST(TestVector3d, testIsGreaterOperator)
     EXPECT_FALSE(vec3 > 1);
 }
 
-TEST(TestVector3d, testFABS)
+/**
+ * @brief tests fabs for Vector3D
+ *
+ */
+TEST(TestVector3d, fABS)
 {
     const auto vec1 = Vec3D(0.0, -1.0, 2.0);
     EXPECT_EQ(fabs(vec1), Vec3D(0.0, 1.0, 2.0));
 }
 
-TEST(TestVector3d, testStaticCast)
+/**
+ * @brief tests static casts for Vector3D
+ *
+ */
+TEST(TestVector3d, staticCast)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
     const auto vec2 = Vec3Di(0, 1, 2);
@@ -219,42 +279,66 @@ TEST(TestVector3d, testStaticCast)
     EXPECT_EQ(static_cast<Vec3Di>(vec3), vec2);
 }
 
-TEST(TestVector3d, testRound)
+/**
+ * @brief tests round for Vector3D
+ *
+ */
+TEST(TestVector3d, round)
 {
     const auto vec = Vec3D(0.0, 1.4, 2.8);
 
     EXPECT_EQ(round(vec), Vec3D(0.0, 1.0, 3.0));
 }
 
-TEST(TestVector3d, testCeil)
+/**
+ * @brief tests ceil for Vector3D
+ *
+ */
+TEST(TestVector3d, ceil)
 {
     const auto vec = Vec3D(0.0, 1.4, 2.8);
 
     EXPECT_EQ(ceil(vec), Vec3D(0.0, 2.0, 3.0));
 }
 
-TEST(TestVector3d, testFloor)
+/**
+ * @brief tests floor for Vector3D
+ *
+ */
+TEST(TestVector3d, floor)
 {
     const auto vec = Vec3D(0.0, 1.4, 2.8);
 
     EXPECT_EQ(floor(vec), Vec3D(0.0, 1.0, 2.0));
 }
 
-TEST(TestVector3d, testNorm)
+/**
+ * @brief tests abs for Vector3D
+ *
+ */
+TEST(TestVector3d, norm)
 {
     const auto vec = Vec3D(0.0, 1.0, 2.0);
 
     EXPECT_EQ(norm(vec), sqrt(5.0));
 }
 
-TEST(TestVector3d, testNormSquared)
+/**
+ * @brief tests norm squared for Vector3D
+ *
+ */
+TEST(TestVector3d, normSquared)
 {
     const auto vec = Vec3D(0.0, 1.0, 2.0);
 
     EXPECT_EQ(normSquared(vec), 5.0);
 }
 
-TEST(TestVector3d, testMinimum)
+/**
+ * @brief tests minimum for Vector3D
+ *
+ */
+TEST(TestVector3d, minimum)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
 
@@ -269,7 +353,11 @@ TEST(TestVector3d, testMinimum)
     EXPECT_EQ(minimum(vec3), 0);
 }
 
-TEST(TestVector3d, testSum)
+/**
+ * @brief tests sum for Vector3D
+ *
+ */
+TEST(TestVector3d, sum)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
 
@@ -284,6 +372,10 @@ TEST(TestVector3d, testSum)
     EXPECT_EQ(sum(vec3), 3);
 }
 
+/**
+ * @brief tests mean for Vector3D
+ *
+ */
 TEST(TestVector3d, mean)
 {
     const auto vec1 = Vec3D(0.0, 1.0, 2.0);
@@ -291,7 +383,11 @@ TEST(TestVector3d, mean)
     EXPECT_EQ(mean(vec1), 1.0);
 }
 
-TEST(TestVector3d, testProduct)
+/**
+ * @brief tests product of entries for Vector3D
+ *
+ */
+TEST(TestVector3d, product)
 {
     const auto vec1 = Vec3D(1.0, 2.0, 3.0);
 
@@ -306,6 +402,10 @@ TEST(TestVector3d, testProduct)
     EXPECT_EQ(prod(vec3), 6);
 }
 
+/**
+ * @brief tests dot product for Vector3D
+ *
+ */
 TEST(TestVector3d, scalarProduct)
 {
     const auto vec1 = Vec3D(1.0, 2.0, 3.0);
@@ -314,7 +414,11 @@ TEST(TestVector3d, scalarProduct)
     EXPECT_EQ(dot(vec1, vec2), 14.0);
 }
 
-TEST(TestVector3d, testOsStream)
+/**
+ * @brief tests os stream for Vector3D
+ *
+ */
+TEST(TestVector3d, osStream)
 {
     const auto vec1 = Vec3D(1.0, 2.0, 3.0);
     testing::internal::CaptureStdout();
@@ -335,7 +439,11 @@ TEST(TestVector3d, testOsStream)
     EXPECT_EQ(output, "1 2 3");
 }
 
-TEST(TestVector3d, testBegin)
+/**
+ * @brief tests begin() for Vector3D
+ *
+ */
+TEST(TestVector3d, begin)
 {
     const auto vec = Vec3D(1.0, 2.0, 3.0);
     EXPECT_EQ(*vec.begin(), 1.0);
@@ -347,7 +455,11 @@ TEST(TestVector3d, testBegin)
     EXPECT_EQ(*vec3.begin(), 1);
 }
 
-TEST(TestVector3d, testEnd)
+/**
+ * @brief tests end() for Vector3D
+ *
+ */
+TEST(TestVector3d, end)
 {
     const auto vec = Vec3D(1.0, 2.0, 3.0);
     EXPECT_EQ(*(vec.end() - 1), 3.0);
@@ -359,7 +471,11 @@ TEST(TestVector3d, testEnd)
     EXPECT_EQ(*(vec3.end() - 1), 3);
 }
 
-TEST(TestVector3d, testEqualOperator)
+/**
+ * @brief tests operator== for Vector3D
+ *
+ */
+TEST(TestVector3d, equalOperator)
 {
     auto  vec1 = Vec3D(1.0, 2.0, 3.0);
     Vec3D vec2 = vec1;
@@ -377,7 +493,11 @@ TEST(TestVector3d, testEqualOperator)
     EXPECT_EQ(vec5, vec6);
 }
 
-TEST(TestVector3d, testAdditionAssignmentOperator)
+/**
+ * @brief tests addition assignment operator for Vector3D
+ *
+ */
+TEST(TestVector3d, additionAssignmentOperator)
 {
     auto vec  = Vec3D(1.0, 2.0, 3.0);
     vec      += Vec3D(1.0, 2.0, 3.0);
@@ -398,7 +518,11 @@ TEST(TestVector3d, testAdditionAssignmentOperator)
     EXPECT_EQ(vec3, Vec3Dul(3, 5, 7));
 }
 
-TEST(TestVector3d, testSubtractionAssignmentOperator)
+/**
+ * @brief tests subtraction assignment operator for Vector3D
+ *
+ */
+TEST(TestVector3d, subtractionAssignmentOperator)
 {
     auto vec  = Vec3D(1.0, 2.0, 3.0);
     vec      -= Vec3D(1.0, 2.0, 3.0);
@@ -419,7 +543,11 @@ TEST(TestVector3d, testSubtractionAssignmentOperator)
     EXPECT_EQ(vec3, Vec3Dul(-1, -1, -1));
 }
 
-TEST(TestVector3d, testMultiplicationAssignmentOperator)
+/**
+ * @brief tests multiplication assignment operator for Vector3D
+ *
+ */
+TEST(TestVector3d, multiplicationAssignmentOperator)
 {
     auto vec  = Vec3D(1.0, 2.0, 3.0);
     vec      *= Vec3D(1.0, 2.0, 3.0);
@@ -440,7 +568,11 @@ TEST(TestVector3d, testMultiplicationAssignmentOperator)
     EXPECT_EQ(vec3, Vec3Dul(2, 8, 18));
 }
 
-TEST(TestVector3d, testDivisionAssignmentOperator)
+/**
+ * @brief tests division assignment operator for Vector3D
+ *
+ */
+TEST(TestVector3d, divisionAssignmentOperator)
 {
     auto vec  = Vec3D(1.0, 2.0, 3.0);
     vec      /= Vec3D(1.0, 2.0, 3.0);

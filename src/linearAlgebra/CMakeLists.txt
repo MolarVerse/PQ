@@ -6,6 +6,7 @@ add_library(linearAlgebra
 target_include_directories(linearAlgebra
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/src/linearAlgebra
 )
 
 install(TARGETS linearAlgebra

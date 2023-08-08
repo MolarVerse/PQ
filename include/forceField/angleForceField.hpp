@@ -34,9 +34,9 @@ class forceField::AngleForceField : public connectivity::Angle
     void setEquilibriumAngle(double equilibriumAngle) { _equilibriumAngle = equilibriumAngle; }
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
 
-    size_t getType() const { return _type; }
-    double getEquilibriumAngle() const { return _equilibriumAngle; }
-    double getForceConstant() const { return _forceConstant; }
+    [[nodiscard]] size_t getType() const { return _type; }
+    [[nodiscard]] double getEquilibriumAngle() const { return _equilibriumAngle; }
+    [[nodiscard]] double getForceConstant() const { return _forceConstant; }
 };
 
 #endif   // _ANGLE_FORCE_FIELD_HPP_

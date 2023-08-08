@@ -2,6 +2,10 @@
 
 #include "constants.hpp"
 
+/**
+ * @brief tests function integrate velocities of velocity verlet integrator
+ *
+ */
 TEST_F(TestIntegrator, integrateVelocities)
 {
     _integrator->integrateVelocities(*_molecule1, 0);
@@ -12,6 +16,10 @@ TEST_F(TestIntegrator, integrateVelocities)
     EXPECT_DOUBLE_EQ(_molecule1->getAtomVelocity(1)[2], 3.0 + 0.1 * 2.5 * constants::_V_VERLET_VELOCITY_FACTOR_);
 }
 
+/**
+ * @brief tests function integrate positions of velocity verlet integrator
+ *
+ */
 TEST_F(TestIntegrator, integratePositions)
 {
     _integrator->integratePositions(*_molecule1, 0, *_box);
@@ -22,6 +30,10 @@ TEST_F(TestIntegrator, integratePositions)
     EXPECT_DOUBLE_EQ(_molecule1->getAtomPosition(1)[2], 1.0 + 0.1 * 3.0 * constants::_FS_TO_S_);
 }
 
+/**
+ * @brief tests function firstStep of velocity verlet integrator
+ *
+ */
 TEST_F(TestIntegrator, firstStep)
 {
     _integrator->firstStep(*_box);
@@ -48,6 +60,10 @@ TEST_F(TestIntegrator, firstStep)
     EXPECT_TRUE(molecule.getCenterOfMass() != linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 }
 
+/**
+ * @brief tests function secondStep of velocity verlet integrator
+ *
+ */
 TEST_F(TestIntegrator, secondStep)
 {
     _integrator->secondStep(*_box);

@@ -76,6 +76,15 @@ TEST(TestExceptions, parameterFileException)
     EXPECT_THROW_MSG(throw customException::ParameterFileException("test"), customException::ParameterFileException, "test");
 }
 
+/**
+ * @brief tests throwing manostat exception
+ *
+ */
+TEST(TestExceptions, manostatException)
+{
+    EXPECT_THROW_MSG(throw customException::ManostatException("test"), customException::ManostatException, "test");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

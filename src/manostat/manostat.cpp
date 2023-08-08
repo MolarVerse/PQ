@@ -50,8 +50,8 @@ void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physi
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
+    simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
+
     for (auto &molecule : simBox.getMolecules())
         molecule.scale(scaleFactors);
-
-    // calculatePressure(physicalData); TODO: talk to thh about this
 }

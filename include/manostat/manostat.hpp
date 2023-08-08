@@ -23,8 +23,8 @@ class manostat::Manostat
 {
   protected:
     linearAlgebra::Vec3D _pressureVector = {0.0, 0.0, 0.0};
-    double          _pressure;
-    double          _targetPressure;   // no default value, must be set
+    double               _pressure;
+    double               _targetPressure;   // no default value, must be set
 
     double _timestep;
 
@@ -40,10 +40,14 @@ class manostat::Manostat
      * standard getters and setters *
      ********************************/
 
-    void   setTimestep(const double timestep) { _timestep = timestep; }
-    double getTimestep() const { return _timestep; }
+    void                 setTimestep(const double timestep) { _timestep = timestep; }
+    [[nodiscard]] double getTimestep() const { return _timestep; }
 };
 
+/**
+ * @class BerendsenManostat inherits from Manostat
+ *
+ */
 class manostat::BerendsenManostat : public manostat::Manostat
 {
   private:
@@ -59,7 +63,7 @@ class manostat::BerendsenManostat : public manostat::Manostat
 
     void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
-    double getTau() const { return _tau; }
+    [[nodiscard]] double getTau() const { return _tau; }
 };
 
 #endif   // _MANOSTAT_HPP_

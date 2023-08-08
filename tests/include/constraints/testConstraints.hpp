@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 
 /**
+ * @class TestConstraints
+ *
  * @brief Fixture for constraint tests.
  *
  */

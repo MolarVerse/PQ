@@ -7,6 +7,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestManostat
+ *
+ * @brief Fixture for manostat tests.
+ *
+ */
 class TestManostat : public ::testing::Test
 {
   protected:

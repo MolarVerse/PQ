@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * class TestIntegrator
+ *
+ * @brief Fixture for integrator tests.
+ *
+ */
 class TestIntegrator : public ::testing::Test
 {
   protected:

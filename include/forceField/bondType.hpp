@@ -27,11 +27,11 @@ class forceField::BondType
     BondType(size_t id, double equilibriumBondLength, double springConstant)
         : _id(id), _equilibriumBondLength(equilibriumBondLength), _forceConstant(springConstant){};
 
-    bool operator==(const BondType &other) const;
+    [[nodiscard]] bool operator==(const BondType &other) const;
 
-    size_t getId() const { return _id; }
-    double getEquilibriumBondLength() const { return _equilibriumBondLength; }
-    double getForceConstant() const { return _forceConstant; }
+    [[nodiscard]] size_t getId() const { return _id; }
+    [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
+    [[nodiscard]] double getForceConstant() const { return _forceConstant; }
 };
 
 #endif   // _BOND_TYPE_HPP_

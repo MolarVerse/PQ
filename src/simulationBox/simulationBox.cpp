@@ -172,3 +172,20 @@ void SimulationBox::calculateCenterOfMassMolecules()
 {
     ranges::for_each(_molecules, [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box.getBoxDimensions()); });
 }
+
+/**
+ * @brief checks if the coulomb radius cut off is smaller than half of the minimal box dimension
+ *
+ * @throw UserInputException if coulomb radius cut off is larger than half of the minimal box dimension
+ */
+void SimulationBox::checkCoulombRadiusCutOff(ExceptionType exceptionType) const
+{
+    if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
+    {
+        const auto *message = "Coulomb radius cut off is larger than half of the minimal box dimension";
+        if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
+            throw ManostatException(message);
+        else
+            throw UserInputException(message);
+    }
+}

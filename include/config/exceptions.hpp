@@ -23,7 +23,26 @@ namespace customException
     class GuffDatException;
     class TopologyException;
     class ParameterFileException;
+    class ManostatException;
+    enum class ExceptionType : size_t;
 }   // namespace customException
+
+/**
+ * @enum ExceptionType
+ *
+ */
+enum class customException::ExceptionType : size_t
+{
+    INPUTFILEEXCEPTION,
+    RSTFILEEXCEPTION,
+    USERINPUTEXCEPTION,
+    MOLDESCRIPTOREXCEPTION,
+    USERINPUTEXCEPTIONWARNING,
+    GUFFDATEXCEPTION,
+    TOPOLOGYEXCEPTION,
+    PARAMETERFILEEXCEPTION,
+    MANOSTATEXCEPTION
+};
 
 /**
  * @class CustomException
@@ -144,6 +163,19 @@ class customException::TopologyException : public customException::CustomExcepti
  * @brief Exception for parameter file errors
  */
 class customException::ParameterFileException : public customException::CustomException
+{
+  public:
+    using customException::CustomException::CustomException;
+
+    const char *what() const throw() override;
+};
+
+/**
+ * @class ManostatException inherits from CustomException
+ *
+ * @brief Exception for manostat errors
+ */
+class customException::ManostatException : public customException::CustomException
 {
   public:
     using customException::CustomException::CustomException;

@@ -34,9 +34,9 @@ class forceField::BondForceField : public connectivity::Bond
     void setEquilibriumBondLength(double equilibriumBondLength) { _equilibriumBondLength = equilibriumBondLength; }
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
 
-    size_t getType() const { return _type; }
-    double getEquilibriumBondLength() const { return _equilibriumBondLength; }
-    double getForceConstant() const { return _forceConstant; }
+    [[nodiscard]] size_t getType() const { return _type; }
+    [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
+    [[nodiscard]] double getForceConstant() const { return _forceConstant; }
 };
 
 #endif   // _BOND_FORCE_FIELD_HPP_

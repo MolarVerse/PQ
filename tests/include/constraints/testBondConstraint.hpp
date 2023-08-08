@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 
 /**
+ * @class TestBondConstraint
+ *
  * @brief Fixture for bond constraint tests.
  *
  */

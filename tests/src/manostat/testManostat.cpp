@@ -1,9 +1,14 @@
 #include "testManostat.hpp"
 
 #include "constants.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 
+/**
+ * @brief tests function calculate pressure
+ *
+ */
 TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_data);
@@ -11,6 +16,10 @@ TEST_F(TestManostat, CalculatePressure)
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
 }
 
+/**
+ * @brief tests function to change virial to atomic
+ *
+ */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
     _data->changeKineticVirialToAtomic();
@@ -20,10 +29,15 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::_PRESSURE_FACTOR_);
 }
 
+/**
+ * @brief tests application of berendsen manostat
+ *
+ */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
+    _box->setCoulombRadiusCutOff(0.99);
     _box->setBoxDimensions({2.0, 2.0, 2.0});
-    auto box_old = _box->getBoxDimensions();
+    auto boxOld = _box->getBoxDimensions();
 
     auto molecule = simulationBox::Molecule();
     molecule.addAtomPosition({1.0, 0.0, 0.0});
@@ -33,15 +47,37 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->addMolecule(molecule);
 
     _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
-    _manostat->applyManostat(*_box, *_data);
+    _manostat->setTimestep(0.5);
 
-    auto box_new = _box->getBoxDimensions();
+    _manostat->applyManostat(*_box, *_data);
+    auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
-    EXPECT_NE(box_old, box_new);
+    EXPECT_NE(boxOld, boxNew);
     EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0));
 }
 
+/**
+ * @brief tests application of berendsen manostat if coulomb radius is larger than half of the minimum box dimension
+ *
+ */
+TEST_F(TestManostat, testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBoxDimension)
+{
+    _box->setCoulombRadiusCutOff(10.0);
+    _box->setBoxDimensions({2.0, 2.0, 2.0});
+
+    _manostat = new manostat::BerendsenManostat(3.0 * constants::_PRESSURE_FACTOR_, 0.1, 4.5);
+    _manostat->setTimestep(0.5);
+
+    EXPECT_THROW_MSG(_manostat->applyManostat(*_box, *_data),
+                     customException::ManostatException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
+}
+
+/**
+ * @brief tests application of manotstat none
+ *
+ */
 TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);

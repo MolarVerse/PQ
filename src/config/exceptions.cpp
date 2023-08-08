@@ -14,7 +14,7 @@ void CustomException::colorfulOutput(const Color::Code color, const string_view 
     const Color::Modifier modifier(color);
     const Color::Modifier def(Color::FG_DEFAULT);
 
-    cout << modifier << exception << def << endl;
+    cout << modifier << exception << def << '\n' << std::flush;
 }
 
 /**
@@ -102,5 +102,16 @@ const char *TopologyException::what() const throw()
 const char *ParameterFileException::what() const throw()
 {
     colorfulOutput(Color::FG_RED, "ParameterFileError");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @return const char*
+ */
+const char *ManostatException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "ManostatError");
     return _message.c_str();
 }
