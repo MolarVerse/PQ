@@ -49,12 +49,17 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
     _manostat->setTimestep(0.5);
 
+    const auto scaleFactors =
+        linearAlgebra::Vec3D(::pow(1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_), 1.0 / 3.0));
+
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
-    EXPECT_NE(boxOld, boxNew);
-    EXPECT_NE(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+    EXPECT_DOUBLE_EQ(boxNew[0], (boxOld * scaleFactors)[0]);
+    EXPECT_DOUBLE_EQ(boxNew[1], (boxOld * scaleFactors)[1]);
+    EXPECT_DOUBLE_EQ(boxNew[2], (boxOld * scaleFactors)[2]);
+    EXPECT_EQ(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors);
 }
 
 /**
