@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestStdoutOutput
+ *
+ * @brief test suite for stdout output
+ *
+ */
 class TestStdoutOutput : public ::testing::Test
 {
   protected:

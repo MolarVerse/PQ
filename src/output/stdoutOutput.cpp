@@ -32,19 +32,3 @@ void StdoutOutput::writeInitialMomentum(const double momentum) const
     cout << endl;
     cout << initialMomentumMessage(momentum) << endl;
 }
-
-/**
- * @brief write warning message to stdout if Berendsen thermostat is set but no relaxation time is given
- *
- */
-void StdoutOutput::writeRelaxationTimeThermostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
-}

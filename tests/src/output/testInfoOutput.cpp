@@ -1,5 +1,9 @@
 #include "testEnergyOutput.hpp"
 
+/**
+ * @brief tests writing info file
+ *
+ */
 TEST_F(TestEnergyOutput, writeInfo)
 {
     _infoOutput->setFilename("default.info");

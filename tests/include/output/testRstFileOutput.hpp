@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestRstFileOutput
+ *
+ * @brief test suite for restart file output
+ *
+ */
 class TestRstFileOutput : public ::testing::Test
 {
   protected:

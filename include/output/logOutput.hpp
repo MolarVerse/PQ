@@ -21,7 +21,6 @@ class output::LogOutput : public output::Output
     using output::Output::Output;
 
     void writeDensityWarning();
-    void writeRelaxationTimeThermostatWarning();
     void writeInitialMomentum(const double momentum);
 };
 

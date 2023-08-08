@@ -21,7 +21,6 @@ class output::StdoutOutput : public output::Output
     using output::Output::Output;
 
     void writeDensityWarning() const;
-    void writeRelaxationTimeThermostatWarning() const;
     void writeInitialMomentum(const double momentum) const;
 };
 

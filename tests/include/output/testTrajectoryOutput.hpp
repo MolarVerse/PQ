@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestTrajectoryOutput
+ *
+ * @brief test suite for trajectory output
+ *
+ */
 class TestTrajectoryOutput : public ::testing::Test
 {
   protected:

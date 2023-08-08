@@ -1,5 +1,9 @@
 #include "testEnergyOutput.hpp"
 
+/**
+ * @brief tests writing energy output file
+ *
+ */
 TEST_F(TestEnergyOutput, writeEnergyFile)
 {
     _energyOutput->setFilename("default.en");

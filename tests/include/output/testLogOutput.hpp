@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestLogOutput
+ *
+ * @brief test suite for log output
+ *
+ */
 class TestLogOutput : public ::testing::Test
 {
   protected:

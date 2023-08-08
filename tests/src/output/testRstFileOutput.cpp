@@ -1,5 +1,9 @@
 #include "testRstFileOutput.hpp"
 
+/**
+ * @brief tests writing the restart file
+ *
+ */
 TEST_F(TestRstFileOutput, write)
 {
     _rstFileOutput->setFilename("default.rst");

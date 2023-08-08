@@ -1,16 +1,25 @@
 #include "exceptions.hpp"
 #include "output.hpp"
+#include "throwWithMessage.hpp"
 
 #include "gtest/gtest.h"
 #include <filesystem>
 
-TEST(TestOutput, TestSpecialSetFilename)
+/**
+ * @brief tests setting output filename
+ *
+ */
+TEST(TestOutput, testSpecialSetFilename)
 {
     auto output = output::Output("default.out");
-    EXPECT_THROW(output.setFilename(""), customException::InputFileException);
-    EXPECT_THROW(output.setFilename("src"), customException::InputFileException);
+    EXPECT_THROW_MSG(output.setFilename(""), customException::InputFileException, "Filename cannot be empty");
+    EXPECT_THROW_MSG(output.setFilename("src"), customException::InputFileException, "File already exists - filename = src");
 }
 
+/**
+ * @brief tests setting output frequency
+ *
+ */
 TEST(TestOutput, setSpecialOutputFrequency)
 {
     auto output = output::Output("default.out");

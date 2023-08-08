@@ -1,5 +1,9 @@
 #include "testTrajectoryOutput.hpp"
 
+/**
+ * @brief Test the writeXyz method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -19,6 +23,10 @@ TEST_F(TestTrajectoryOutput, writeXyz)
     EXPECT_EQ(line, "Ar        1.00000000     1.00000000     1.00000000");
 }
 
+/**
+ * @brief Test the writeVelocities method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeVelocities)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -38,6 +46,10 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
     EXPECT_EQ(line, "Ar         1.00000000e+00      1.00000000e+00      1.00000000e+00");
 }
 
+/**
+ * @brief Test the writeForces method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeForces)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -57,6 +69,10 @@ TEST_F(TestTrajectoryOutput, writeForces)
     EXPECT_EQ(line, "Ar        1.00000000     1.00000000     1.00000000");
 }
 
+/**
+ * @brief Test the writeXyz method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeCharges)
 {
     _trajectoryOutput->setFilename("default.xyz");

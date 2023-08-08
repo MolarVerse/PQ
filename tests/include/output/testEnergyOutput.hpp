@@ -7,6 +7,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestEnergyOutput
+ *
+ * @brief test suite for energy output
+ *
+ */
 class TestEnergyOutput : public ::testing::Test
 {
   protected:

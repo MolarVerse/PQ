@@ -22,8 +22,6 @@ void setup::setupThermostat(Engine &engine)
 /**
  * @brief setup thermostat
  *
- * TODO: include warnings if value set but not used
- *
  */
 void ThermostatSetup::setup()
 {
@@ -32,19 +30,8 @@ void ThermostatSetup::setup()
         if (!_engine.getSettings().getTemperatureSet())
             throw customException::InputFileException("Temperature not set for Berendsen thermostat");
 
-        if (!_engine.getSettings().getRelaxationTimeSet())
-        {
-            _engine.getStdoutOutput().writeRelaxationTimeThermostatWarning();
-            _engine.getLogOutput().writeRelaxationTimeThermostatWarning();
-        }
-
-        // TODO: check if this works
         _engine.makeThermostat(BerendsenThermostat(_engine.getSettings().getTemperature(),
                                                    _engine.getSettings().getRelaxationTime() * constants::_PS_TO_FS_));
-    }
-    else
-    {
-        // warnings if values set but not used
     }
 
     _engine.getThermostat().setTimestep(_engine.getTimings().getTimestep());
