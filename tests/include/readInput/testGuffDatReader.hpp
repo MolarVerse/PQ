@@ -8,6 +8,12 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+/**
+ * @class TestGuffDatReader
+ *
+ * @brief Fixture for guffDatReader tests.
+ *
+ */
 class TestGuffDatReader : public ::testing::Test
 {
   protected:

@@ -1,25 +1,43 @@
 #include "testGuffDatReader.hpp"
 
+#include "defaults.hpp"
 #include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
-TEST_F(TestGuffDatReader, parseLineErrorMoltypeNotFound)
+/**
+ * @brief tests parseLine function of GuffDatReader
+ *
+ * @details expects throw if mol types are not found
+ *
+ */
+TEST_F(TestGuffDatReader, parseLine_ErrorMoltypeNotFound)
 {
     auto line = std::vector<std::string>{"3", "1", "1"};
-    EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
+    EXPECT_THROW_MSG(_guffDatReader->parseLine(line), customException::GuffDatException, "Invalid molecule type in line 1");
 
     line = std::vector<std::string>{"1", "1", "3"};
-    EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
+    EXPECT_THROW_MSG(_guffDatReader->parseLine(line), customException::GuffDatException, "Invalid molecule type in line 1");
 }
 
-TEST_F(TestGuffDatReader, parseLineErrorAtomTypeNotFound)
+/**
+ * @brief tests parseLine function of GuffDatReader
+ *
+ * @details expects throw if atom types are not found
+ *
+ */
+TEST_F(TestGuffDatReader, parseLine_ErrorAtomTypeNotFound)
 {
     auto line = std::vector<std::string>{"1", "0", "2", "3"};
-    EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
+    EXPECT_THROW_MSG(_guffDatReader->parseLine(line), customException::GuffDatException, "Invalid atom type in line 1");
 
     line = std::vector<std::string>{"1", "1", "2", "1"};
-    EXPECT_THROW(_guffDatReader->parseLine(line), customException::GuffDatException);
+    EXPECT_THROW_MSG(_guffDatReader->parseLine(line), customException::GuffDatException, "Invalid atom type in line 1");
 }
 
+/**
+ * @brief tests setupGuffMaps function of GuffDatReader
+ *
+ */
 TEST_F(TestGuffDatReader, setupGuffMaps)
 {
     EXPECT_NO_THROW(_guffDatReader->setupGuffMaps());
@@ -38,6 +56,10 @@ TEST_F(TestGuffDatReader, setupGuffMaps)
     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients()[1][1][0].size(), 1);
 }
 
+/**
+ * @brief tests parseLine function
+ *
+ */
 TEST_F(TestGuffDatReader, parseLine)
 {
     auto line = std::vector<std::string>{"1",   "1",   "2",   "3",   "-1.0", "10.0", "2.0", "2.0", "2.0", "2.0",
@@ -74,24 +96,29 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[21], 2.0);
 }
 
-TEST_F(TestGuffDatReader, readErrorNumberOfLineArguments)
+/**
+ * @brief tests read function
+ *
+ * @details error number of line arguments
+ *
+ */
+TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
 {
     _guffDatReader->setFilename("data/guffDatReader/guffNumberLineElementsError.dat");
-    EXPECT_THROW(_guffDatReader->read(), customException::GuffDatException);
+    EXPECT_THROW_MSG(_guffDatReader->read(),
+                     customException::GuffDatException,
+                     "Invalid number of commands (5) in line 3 " + std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
+                         " are allowed.");
 }
 
 /**
  * @brief readGuffdat function testing
  *
- * TODO: chdir has to be used because "guff.dat" is hardcoded in the class GuffDatReader
- *
  */
 TEST_F(TestGuffDatReader, readGuffDat)
 {
-    // ::chdir("data/guffDatReader");
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(readInput::readGuffDat(*_engine));
-    // ::chdir("../../");
 }
 
 int main(int argc, char **argv)
