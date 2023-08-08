@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestPhysicalData
+ *
+ * @brief test suite for physical data
+ *
+ */
 class TestPhysicalData : public ::testing::Test
 {
   protected:

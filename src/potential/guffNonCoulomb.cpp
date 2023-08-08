@@ -6,6 +6,17 @@
 using namespace std;
 using namespace potential;
 
+/**
+ * @brief calculates the non-coulomb potential and its force for the general guff potential
+ *
+ * @param guffCoefficients
+ * @param rncCutoff
+ * @param distance
+ * @param energy
+ * @param force
+ * @param energy_cutoff
+ * @param force_cutoff
+ */
 void GuffNonCoulomb::calcNonCoulomb(const vector<double> &guffCoefficients,
                                     const double          rncCutoff,
                                     const double          distance,

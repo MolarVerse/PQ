@@ -2,6 +2,10 @@
 
 #include "constants.hpp"
 
+/**
+ * @brief tests makeAverages function
+ *
+ */
 TEST_F(TestPhysicalData, makeAverages)
 {
     _physicalData->makeAverages(2);
@@ -15,6 +19,10 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getPressure(), 4.0);
 }
 
+/**
+ * @brief tests updateAverages function
+ *
+ */
 TEST_F(TestPhysicalData, updateAverages)
 {
     const physicalData::PhysicalData physicalData2 = *_physicalData;
@@ -30,6 +38,10 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
 }
 
+/**
+ * @brief tests calculateKineticEnergyAndMomentum function
+ *
+ */
 TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
 {
     _physicalData->calculateKineticEnergyAndMomentum(*_simulationBox);
@@ -63,6 +75,10 @@ TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
     EXPECT_EQ(_physicalData->getKineticEnergy(), sum(kineticEnergyAtomicVector) * constants::_KINETIC_ENERGY_FACTOR_);
 }
 
+/**
+ * @brief tests calculateTemperature function
+ *
+ */
 TEST_F(TestPhysicalData, calculateTemperature)
 {
     _physicalData->calculateTemperature(*_simulationBox);

@@ -34,9 +34,10 @@ void Output::setFilename(const string_view &filename)
     }
     else
     {
-        filesystem::create_directory("procid_pimd-qmcf_" + to_string(procId));
+        const auto baseFilename = "procId_pimd-qmcf_";
+        filesystem::create_directory(baseFilename + to_string(procId));
         _filename = filename;
-        _filename = "procid_pimd-qmcf_" + to_string(procId) + "/" + _filename;
+        _filename = baseFilename + to_string(procId) + "/" + _filename;
     }
 #else
 

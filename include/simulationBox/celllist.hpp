@@ -47,6 +47,8 @@ class simulationBox::CellList
     void activate() { _activated = true; }
     bool isActivated() const { return _activated; }
 
+    void addCell(const Cell &cell) { _cells.push_back(cell); }
+
     /***************************
      * standard getter methods *
      ***************************/

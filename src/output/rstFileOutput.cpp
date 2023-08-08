@@ -28,7 +28,8 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
     _fp << endl;
     for (const auto &molecule : simBox.getMolecules())
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             _fp << left;
             _fp << setw(5);

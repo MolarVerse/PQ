@@ -9,12 +9,23 @@ using namespace potential;
 using namespace physicalData;
 using namespace linearAlgebra;
 
+/**
+ * @brief copy constructor for potential
+ *
+ * @param potential
+ */
 Potential::Potential(const Potential &potential)
+    : _coulombType(potential._coulombType), _nonCoulombType(potential._nonCoulombType)
 {
-    _coulombType    = potential._coulombType;
-    _nonCoulombType = potential._nonCoulombType;
 }
 
+/**
+ * @brief copy assignment for potential
+ *
+ * @param potential
+ *
+ * @return
+ */
 Potential &Potential::operator=(const Potential &potential)
 {
     if (this != &potential)
@@ -26,6 +37,12 @@ Potential &Potential::operator=(const Potential &potential)
     return *this;
 }
 
+/**
+ * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
+ *
+ * @param simBox
+ * @param physicalData
+ */
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     const auto   box      = simBox.getBoxDimensions();
@@ -126,6 +143,13 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 }
 
 // TODO: check if cutoff is smaller than smallest cell size
+/**
+ * @brief calculates forces, coulombic and non-coulombic energy for cell list routine
+ *
+ * @param simBox
+ * @param physicalData
+ * @param cellList
+ */
 inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
 {
     const auto box = simBox.getBoxDimensions();
@@ -226,7 +250,6 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
             }
         }
     }
-
     for (const auto &cell_i : cellList.getCells())
     {
         const auto numberOfMoleculesInCell_i = cell_i.getNumberOfMolecules();

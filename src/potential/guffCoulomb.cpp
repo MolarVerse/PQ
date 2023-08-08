@@ -1,9 +1,21 @@
 #include "coulombPotential.hpp"
 
 #include <cmath>
+#include <iostream>
 
 using namespace potential;
 
+/**
+ * @brief calculates the coulomb potential and its force for the guff-coulomb potential
+ *
+ * @param coulombCoefficient
+ * @param rcCutoff
+ * @param distance
+ * @param energy
+ * @param force
+ * @param energy_cutoff
+ * @param force_cutoff
+ */
 void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
                               const double distance,
                               double      &energy,
