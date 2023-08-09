@@ -20,6 +20,53 @@ using namespace customException;
 using namespace resetKinetics;
 
 /**
+ * @brief check if second argument is "="
+ *
+ * @param lineElement
+ * @param _lineNumber
+ *
+ * @throw InputFileException if second argument is not "="
+ */
+void readInput::checkEqualSign(const string_view &lineElement, const size_t lineNumber)
+{
+    if (lineElement != "=") throw InputFileException("Invalid command at line " + to_string(lineNumber) + "in input file");
+}
+
+/**
+ * @brief check if command array has at least 3 elements
+ *
+ * @param lineElements
+ * @param _lineNumber
+ *
+ * @throw InputFileException if command array has less than 3 elements
+ *
+ * @note this function is used for commands that have an array as their third argument
+ */
+void readInput::checkCommandArray(const vector<string> &lineElements, const size_t lineNumber)
+{
+    if (lineElements.size() < 3)
+        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
+
+    checkEqualSign(lineElements[1], lineNumber);
+}
+
+/**
+ * @brief check if command array has exactly 3 elements
+ *
+ * @param lineElements
+ * @param _lineNumber
+ *
+ * @throw InputFileException if command array has less or more than 3 elements
+ */
+void readInput::checkCommand(const vector<string> &lineElements, const size_t lineNumber)
+{
+    if (lineElements.size() != 3)
+        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
+
+    checkEqualSign(lineElements[1], lineNumber);
+}
+
+/**
  * @brief Construct a new Input File Reader:: Input File Reader object
  *
  * @param filename
@@ -29,65 +76,65 @@ using namespace resetKinetics;
  */
 InputFileReader::InputFileReader(const string &filename, Engine &engine) : _filename(filename), _engine(engine)
 {
-    addKeyword(string("jobtype"), &InputFileReader::parseJobType, true);
+    addKeyword(string("jobtype"), bind_front(&InputFileReader::parseJobType, this), true);
 
-    addKeyword(string("timestep"), &InputFileReader::parseTimestep, true);
-    addKeyword(string("nstep"), &InputFileReader::parseNumberOfSteps, true);
+    addKeyword(string("timestep"), bind_front(&InputFileReader::parseTimestep, this), true);
+    addKeyword(string("nstep"), bind_front(&InputFileReader::parseNumberOfSteps, this), true);
 
-    addKeyword(string("start_file"), &InputFileReader::parseStartFilename, true);
-    addKeyword(string("moldescriptor_file"), &InputFileReader::parseMoldescriptorFilename, false);
-    addKeyword(string("guff_path"), &InputFileReader::parseGuffPath, false);   // default is current dir (not backward compatible)
-    addKeyword(string("guff_file"), &InputFileReader::parseGuffDatFilename, false);
+    addKeyword(string("start_file"), bind_front(&InputFileReader::parseStartFilename, this), true);
+    addKeyword(string("moldescriptor_file"), bind_front(&InputFileReader::parseMoldescriptorFilename, this), false);
+    addKeyword(string("guff_path"), bind_front(&InputFileReader::parseGuffPath, this), false);
+    addKeyword(string("guff_file"), bind_front(&InputFileReader::parseGuffDatFilename, this), false);
 
-    addKeyword(string("output_freq"), &InputFileReader::parseOutputFreq, false);
-    addKeyword(string("output_file"), &InputFileReader::parseLogFilename, false);
-    addKeyword(string("info_file"), &InputFileReader::parseInfoFilename, false);
-    addKeyword(string("energy_file"), &InputFileReader::parseEnergyFilename, false);
-    addKeyword(string("traj_file"), &InputFileReader::parseTrajectoryFilename, false);
-    addKeyword(string("vel_file"), &InputFileReader::parseVelocityFilename, false);
-    addKeyword(string("force_file"), &InputFileReader::parseForceFilename, false);
-    addKeyword(string("restart_file"), &InputFileReader::parseRestartFilename, false);
-    addKeyword(string("charge_file"), &InputFileReader::parseChargeFilename, false);
+    addKeyword(string("output_freq"), bind_front(&InputFileReader::parseOutputFreq, this), false);
+    addKeyword(string("output_file"), bind_front(&InputFileReader::parseLogFilename, this), false);
+    addKeyword(string("info_file"), bind_front(&InputFileReader::parseInfoFilename, this), false);
+    addKeyword(string("energy_file"), bind_front(&InputFileReader::parseEnergyFilename, this), false);
+    addKeyword(string("traj_file"), bind_front(&InputFileReader::parseTrajectoryFilename, this), false);
+    addKeyword(string("vel_file"), bind_front(&InputFileReader::parseVelocityFilename, this), false);
+    addKeyword(string("force_file"), bind_front(&InputFileReader::parseForceFilename, this), false);
+    addKeyword(string("restart_file"), bind_front(&InputFileReader::parseRestartFilename, this), false);
+    addKeyword(string("charge_file"), bind_front(&InputFileReader::parseChargeFilename, this), false);
 
-    addKeyword(string("integrator"), &InputFileReader::parseIntegrator, true);
+    addKeyword(string("integrator"), bind_front(&InputFileReader::parseIntegrator, this), true);
 
-    addKeyword(string("density"), &InputFileReader::parseDensity, false);
+    addKeyword(string("density"), bind_front(&InputFileReader::parseDensity, this), false);
 
-    addKeyword(string("virial"), &InputFileReader::parseVirial, false);
+    addKeyword(string("virial"), bind_front(&InputFileReader::parseVirial, this), false);
 
-    addKeyword(string("rcoulomb"), &InputFileReader::parseCoulombRadius, false);
-    addKeyword(string("long_range"), &InputFileReader::parseCoulombLongRange, false);
-    addKeyword(string("wolf_param"), &InputFileReader::parseWolfParameter, false);
+    addKeyword(string("rcoulomb"), bind_front(&InputFileReader::parseCoulombRadius, this), false);
+    addKeyword(string("long_range"), bind_front(&InputFileReader::parseCoulombLongRange, this), false);
+    addKeyword(string("wolf_param"), bind_front(&InputFileReader::parseWolfParameter, this), false);
 
-    addKeyword(string("noncoulomb"), &InputFileReader::parseNonCoulombType, false);
+    addKeyword(string("noncoulomb"), bind_front(&InputFileReader::parseNonCoulombType, this), false);
 
-    addKeyword(string("cell-list"), &InputFileReader::parseCellListActivated, false);
-    addKeyword(string("cell-number"), &InputFileReader::parseNumberOfCells, false);
+    addKeyword(string("cell-list"), bind_front(&InputFileReader::parseCellListActivated, this), false);
+    addKeyword(string("cell-number"), bind_front(&InputFileReader::parseNumberOfCells, this), false);
 
-    addKeyword(string("thermostat"), &InputFileReader::parseThermostat, false);
-    addKeyword(string("temp"), &InputFileReader::parseTemperature, false);
-    addKeyword(string("t_relaxation"), &InputFileReader::parseThermostatRelaxationTime, false);
+    addKeyword(string("thermostat"), bind_front(&InputFileReader::parseThermostat, this), false);
+    addKeyword(string("temp"), bind_front(&InputFileReader::parseTemperature, this), false);
+    addKeyword(string("t_relaxation"), bind_front(&InputFileReader::parseThermostatRelaxationTime, this), false);
 
-    addKeyword(string("manostat"), &InputFileReader::parseManostat, false);
-    addKeyword(string("pressure"), &InputFileReader::parsePressure, false);
-    addKeyword(string("p_relaxation"), &InputFileReader::parseManostatRelaxationTime, false);
-    addKeyword(string("compressibility"), &InputFileReader::parseCompressibility, false);
+    addKeyword(string("manostat"), bind_front(&InputFileReader::parseManostat, this), false);
+    addKeyword(string("pressure"), bind_front(&InputFileReader::parsePressure, this), false);
+    addKeyword(string("p_relaxation"), bind_front(&InputFileReader::parseManostatRelaxationTime, this), false);
+    addKeyword(string("compressibility"), bind_front(&InputFileReader::parseCompressibility, this), false);
 
-    addKeyword(string("nscale"), &InputFileReader::parseNScale, false);
-    addKeyword(string("fscale"), &InputFileReader::parseFScale, false);
-    addKeyword(string("nreset"), &InputFileReader::parseNReset, false);
-    addKeyword(string("freset"), &InputFileReader::parseFReset, false);
+    addKeyword(string("nscale"), bind_front(&InputFileReader::parseNScale, this), false);
+    addKeyword(string("fscale"), bind_front(&InputFileReader::parseFScale, this), false);
+    addKeyword(string("nreset"), bind_front(&InputFileReader::parseNReset, this), false);
+    addKeyword(string("freset"), bind_front(&InputFileReader::parseFReset, this), false);
 
-    addKeyword(string("shake"), &InputFileReader::parseShakeActivated, false);
-    addKeyword(string("shake-tolerance"), &InputFileReader::parseShakeTolerance, false);
-    addKeyword(string("shake-iter"), &InputFileReader::parseShakeIteration, false);
-    addKeyword(string("rattle-iter"), &InputFileReader::parseRattleIteration, false);
-    addKeyword(string("rattle-tolerance"), &InputFileReader::parseRattleTolerance, false);
+    addKeyword(string("shake"), bind_front(&InputFileReader::parseShakeActivated, this), false);
+    addKeyword(string("shake-tolerance"), bind_front(&InputFileReader::parseShakeTolerance, this), false);
+    addKeyword(string("shake-iter"), bind_front(&InputFileReader::parseShakeIteration, this), false);
+    addKeyword(string("rattle-iter"), bind_front(&InputFileReader::parseRattleIteration, this), false);
+    addKeyword(string("rattle-tolerance"), bind_front(&InputFileReader::parseRattleTolerance, this), false);
 
-    addKeyword(string("topology_file"), &InputFileReader::parseTopologyFilename, false);
-    addKeyword(string("parameter_file"), &InputFileReader::parseParameterFilename, false);
+    addKeyword(string("topology_file"), bind_front(&InputFileReader::parseTopologyFilename, this), false);
+    addKeyword(string("parameter_file"), bind_front(&InputFileReader::parseParameterFilename, this), false);
 
-    addKeyword(string("force-field"), &InputFileReader::parseForceFieldType, false);
+    addKeyword(string("force-field"), bind_front(&InputFileReader::parseForceFieldType, this), false);
 }
 
 /**
@@ -127,7 +174,7 @@ void InputFileReader::process(const vector<string> &lineElements)
         throw InputFileException("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
 
     ParseFunc parserFunc = _keywordFuncMap[keyword];
-    (this->*parserFunc)(lineElements);
+    parserFunc(lineElements);
 
     ++_keywordCountMap[keyword];
 }

@@ -6,6 +6,7 @@
 #include "exceptions.hpp"
 #include "output.hpp"
 
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
@@ -25,7 +26,7 @@ namespace readInput
 
 }   // namespace readInput
 
-using ParseFunc = void (readInput::InputFileReader::*)(const std::vector<std::string> &);
+using ParseFunc = std::function<void(const std::vector<std::string> &)>;
 
 /**
  * @class InputFileReader
