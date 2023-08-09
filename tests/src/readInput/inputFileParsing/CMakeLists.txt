@@ -1,14 +1,15 @@
 set(source_files
 
     # testInputFileParser.cpp
-    # testParserSimulationBox.cpp
+    testParserSimulationBox.cpp
+
     # testParserCelllist.cpp
     # testParserConstraints.cpp
     # testParserGeneral.cpp
     # testParserIntegrator.cpp
     # testParserManostat.cpp
     # testParserOutput.cpp
-    # testParserResetKinetics.cpp
+    testParserResetKinetics.cpp
     testParserThermostat.cpp
     testParserTimings.cpp
     testParserTopology.cpp

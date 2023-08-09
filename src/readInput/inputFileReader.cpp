@@ -82,7 +82,7 @@ void InputFileReader::process(const vector<string> &lineElements)
     const auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw InputFileException("Invalid keyword \"" + keyword + "\" at line " + to_string(_lineNumber));
+        throw InputFileException(format("Invalid keyword \"{}\" at line {}", keyword, _lineNumber));
 
     ParseFunc parserFunc = _keywordFuncMap[keyword];
     parserFunc(lineElements, _lineNumber);

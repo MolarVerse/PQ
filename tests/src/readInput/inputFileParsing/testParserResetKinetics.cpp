@@ -1,48 +1,77 @@
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace ::testing;
 
+/**
+ * @brief tests parsing the "nscale" command
+ *
+ * @details if the nscale is negative it throws inputFileException
+ */
 TEST_F(TestInputFileReader, testParseNScale)
 {
-    vector<string> lineElements = {"nscale", "=", "3"};
-    _inputFileReader->parseNScale(lineElements);
+    InputFileParserResetKinetics parser(_engine);
+    vector<string>               lineElements = {"nscale", "=", "3"};
+    parser.parseNScale(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNScale(), 3);
-    lineElements = {"temperature", "=", "-1"};
-    EXPECT_THROW(_inputFileReader->parseNScale(lineElements), customException::InputFileException);
+
+    lineElements = {"nscale", "=", "-1"};
+    EXPECT_THROW_MSG(parser.parseNScale(lineElements, 0), customException::InputFileException, "Nscale must be positive");
 }
 
+/**
+ * @brief tests parsing the "fscale" command
+ *
+ * @details if the fscale is negative it throws inputFileException
+ */
 TEST_F(TestInputFileReader, testParseFScale)
 {
-    vector<string> lineElements = {"fscale", "=", "3"};
-    _inputFileReader->parseFScale(lineElements);
+    InputFileParserResetKinetics parser(_engine);
+    vector<string>               lineElements = {"fscale", "=", "3"};
+    parser.parseFScale(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getFScale(), 3);
-    lineElements = {"temperature", "=", "-1"};
-    EXPECT_THROW(_inputFileReader->parseFScale(lineElements), customException::InputFileException);
+
+    lineElements = {"fscale", "=", "-1"};
+    EXPECT_THROW_MSG(parser.parseFScale(lineElements, 0), customException::InputFileException, "Fscale must be positive");
 }
 
+/**
+ * @brief tests parsing the "nreset" command
+ *
+ * @details if the nreset is negative it throws inputFileException
+ */
 TEST_F(TestInputFileReader, testParseNReset)
 {
-    vector<string> lineElements = {"nreset", "=", "3"};
-    _inputFileReader->parseNReset(lineElements);
+    InputFileParserResetKinetics parser(_engine);
+    vector<string>               lineElements = {"nreset", "=", "3"};
+    parser.parseNReset(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNReset(), 3);
-    lineElements = {"temperature", "=", "-1"};
-    EXPECT_THROW(_inputFileReader->parseNReset(lineElements), customException::InputFileException);
+
+    lineElements = {"nreset", "=", "-1"};
+    EXPECT_THROW_MSG(parser.parseNReset(lineElements, 0), customException::InputFileException, "Nreset must be positive");
 }
 
+/**
+ * @brief tests parsing the "freset" command
+ *
+ * @details if the freset is negative it throws inputFileException
+ */
 TEST_F(TestInputFileReader, testParseFReset)
 {
-    vector<string> lineElements = {"freset", "=", "3"};
-    _inputFileReader->parseFReset(lineElements);
+    InputFileParserResetKinetics parser(_engine);
+    vector<string>               lineElements = {"freset", "=", "3"};
+    parser.parseFReset(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getFReset(), 3);
-    lineElements = {"temperature", "=", "-1"};
-    EXPECT_THROW(_inputFileReader->parseFReset(lineElements), customException::InputFileException);
+
+    lineElements = {"freset", "=", "-1"};
+    EXPECT_THROW_MSG(parser.parseFReset(lineElements, 0), customException::InputFileException, "Freset must be positive");
 }
 
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

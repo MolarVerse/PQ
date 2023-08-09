@@ -20,6 +20,8 @@ InputFileParserSimulationBox::InputFileParserSimulationBox(engine::Engine &engin
  * @brief parses the coulomb cutoff radius
  *
  * @param lineElements
+ *
+ * @throw InputFileException if the cutoff radius is negative
  */
 void InputFileParserSimulationBox::parseCoulombRadius(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -27,8 +29,8 @@ void InputFileParserSimulationBox::parseCoulombRadius(const vector<string> &line
 
     const auto cutOff = stod(lineElements[2]);
     if (cutOff < 0.0)
-        throw InputFileException("Coulomb radius cutoff must be positive - \"" + lineElements[2] + "\" at line " +
-                                 to_string(lineNumber) + "in input file");
+        throw InputFileException(
+            format("Coulomb radius cutoff must be positive - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
     _engine.getSimulationBox().setCoulombRadiusCutOff(cutOff);
 }

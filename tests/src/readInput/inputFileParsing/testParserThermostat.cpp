@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     EXPECT_EQ(_engine.getSettings().getThermostat(), "berendsen");
 
     lineElements = {"thermostat", "=", "notValid"};
-    EXPECT_THROW_MSG(parser.parseThermostatRelaxationTime(lineElements, 0),
+    EXPECT_THROW_MSG(parser.parseThermostat(lineElements, 0),
                      customException::InputFileException,
                      "Invalid thermostat \"notValid\" at line 0 in input file");
 }
