@@ -35,7 +35,10 @@ void readInput::readGuffDat(Engine &engine)
 GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine)
 {
     _filename = _engine.getSettings().getGuffDatFilename();
-    if (!fileExists(_filename)) throw InputFileException("Could not open guffdat file " + _filename + ".");
+    if (!fileExists(_filename))
+    {
+        throw InputFileException(format("Could not open guffdat file {}", _filename));
+    }
 }
 
 /**
@@ -61,9 +64,13 @@ void GuffDatReader::read()
         auto lineCommands = getLineCommands(line, _lineNumber);
 
         if (lineCommands.size() - 1 != defaults::_NUMBER_OF_GUFF_ENTRIES_)
-            throw GuffDatException("Invalid number of commands (" + to_string(lineCommands.size() - 1) + ") in line " +
-                                   to_string(_lineNumber) + " " + to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
-                                   " are allowed.");
+        {
+            const auto message = format("Invalid number of commands ({}) in line {} - {} are allowed",
+                                        lineCommands.size() - 1,
+                                        _lineNumber,
+                                        defaults::_NUMBER_OF_GUFF_ENTRIES_);
+            throw GuffDatException(message);
+        }
 
         parseLine(lineCommands);
 
@@ -128,7 +135,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     }
     catch (const RstFileException &)
     {
-        throw GuffDatException("Invalid molecule type in line " + to_string(_lineNumber));
+        throw GuffDatException(format("Invalid molecule type in line {}", _lineNumber));
     }
 
     try
@@ -138,7 +145,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     }
     catch (const std::exception &)
     {
-        throw GuffDatException("Invalid atom type in line " + to_string(_lineNumber));
+        throw GuffDatException(format("Invalid atom type in line {}", _lineNumber));
     }
 
     double rncCutOff = stod(lineCommands[4]);

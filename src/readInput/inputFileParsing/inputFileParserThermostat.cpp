@@ -38,28 +38,39 @@ void InputFileParserThermostat::parseThermostat(const vector<string> &lineElemen
         _engine.getSettings().setThermostat("berendsen");
     }
     else
-        throw InputFileException("Invalid thermostat \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(format("Invalid thermostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }
 
 /**
  * @brief Parse the temperature used in the simulation
  *
  * @param lineElements
+ *
+ * @throws InputFileException if temperature is negative
  */
 void InputFileParserThermostat::parseTemperature(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getSettings().setTemperature(stod(lineElements[2]));
+    const auto temperature = stod(lineElements[2]);
+
+    if (temperature < 0) throw InputFileException("Temperature cannot be negative");
+
+    _engine.getSettings().setTemperature(temperature);
 }
 
 /**
  * @brief parses the relaxation time of the thermostat
  *
  * @param lineElements
+ *
+ * @throws InputFileException if relaxation time is negative
  */
 void InputFileParserThermostat::parseThermostatRelaxationTime(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getSettings().setRelaxationTime(stod(lineElements[2]));
+    const auto relaxationTime = stod(lineElements[2]);
+
+    if (relaxationTime < 0) throw InputFileException("Relaxation time of thermostat cannot be negative");
+
+    _engine.getSettings().setRelaxationTime(relaxationTime);
 }

@@ -142,6 +142,7 @@
         "nreset",
         "nscale",
         "nstep",
+        "nsteps",
         "outputfreq",
         "PARAMETERFILEEXCEPTION",
         "pimd",

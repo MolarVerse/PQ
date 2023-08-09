@@ -107,8 +107,8 @@ TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
     _guffDatReader->setFilename("data/guffDatReader/guffNumberLineElementsError.dat");
     EXPECT_THROW_MSG(_guffDatReader->read(),
                      customException::GuffDatException,
-                     "Invalid number of commands (5) in line 3 " + std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
-                         " are allowed.");
+                     "Invalid number of commands (5) in line 3 - " + std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
+                         " are allowed");
 }
 
 /**

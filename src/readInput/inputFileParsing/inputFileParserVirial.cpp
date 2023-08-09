@@ -21,6 +21,8 @@ InputFileParserVirial::InputFileParserVirial(engine::Engine &engine) : InputFile
  * @brief parses virial command
  *
  * @param lineElements
+ *
+ * @throws InputFileException if invalid virial keyword
  */
 void InputFileParserVirial::parseVirial(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -35,6 +37,5 @@ void InputFileParserVirial::parseVirial(const vector<string> &lineElements, cons
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else
-        throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(format("Invalid virial setting \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

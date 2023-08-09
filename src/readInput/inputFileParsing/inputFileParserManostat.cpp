@@ -40,8 +40,7 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
         _engine.getSettings().setManostat("berendsen");
     }
     else
-        throw InputFileException("Invalid manostat \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(format("Invalid manostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }
 
 /**
@@ -59,11 +58,17 @@ void InputFileParserManostat::parsePressure(const vector<string> &lineElements, 
  * @brief parses the relaxation time of the manostat
  *
  * @param lineElements
+ *
+ * @throw InputFileException if relaxation time is negative
  */
 void InputFileParserManostat::parseManostatRelaxationTime(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getSettings().setTauManostat(stod(lineElements[2]));
+    const auto relaxationTime = stod(lineElements[2]);
+
+    if (relaxationTime < 0) throw InputFileException("Relaxation time of manostat cannot be negative");
+
+    _engine.getSettings().setTauManostat(relaxationTime);
 }
 
 /**
@@ -78,8 +83,8 @@ void InputFileParserManostat::parseCompressibility(const vector<string> &lineEle
     checkCommand(lineElements, lineNumber);
     const auto compressibility = stod(lineElements[2]);
     if (compressibility < 0.0)
-        throw InputFileException("Invalid compressibility \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file - has to be positive");
+        throw InputFileException(
+            format("Invalid compressibility \"{}\" at line {} in input file - has to be positive", lineElements[2], lineNumber));
 
     _engine.getSettings().setCompressibility(compressibility);
 }

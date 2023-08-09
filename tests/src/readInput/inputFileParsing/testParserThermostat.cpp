@@ -1,42 +1,73 @@
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace ::testing;
 
+/**
+ * @brief tests parsing the "temperature" command
+ *
+ * @details if the temperature is negative it throws inputFileException
+ *
+ */
 TEST_F(TestInputFileReader, testParseTemperature)
 {
-    vector<string> lineElements = {"temperature", "=", "300.0"};
-    _inputFileReader->parseTemperature(lineElements);
+    InputFileParserThermostat parser(_engine);
+    vector<string>            lineElements = {"temperature", "=", "300.0"};
+    parser.parseTemperature(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getTemperature(), 300.0);
+
     lineElements = {"temperature", "=", "-100.0"};
-    EXPECT_THROW(_inputFileReader->parseTemperature(lineElements), customException::InputFileException);
+    EXPECT_THROW_MSG(
+        parser.parseTemperature(lineElements, 0), customException::InputFileException, "Temperature cannot be negative");
 }
 
+/**
+ * @brief tests parsing the "t_relaxation" command
+ *
+ * @details if the relaxation time of the thermostat is negative it throws inputFileException
+ *
+ */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    vector<string> lineElements = {"temperature", "=", "0.1"};
-    _inputFileReader->parseThermostatRelaxationTime(lineElements);
-    EXPECT_EQ(_engine.getSettings().getRelaxationTime(), 0.1);
-    lineElements = {"temperature", "=", "-100.0"};
-    EXPECT_THROW(_inputFileReader->parseTemperature(lineElements), customException::InputFileException);
+    InputFileParserThermostat parser(_engine);
+    vector<string>            lineElements = {"t_relaxation", "=", "10.0"};
+    parser.parseThermostatRelaxationTime(lineElements, 0);
+    EXPECT_EQ(_engine.getSettings().getRelaxationTime(), 10.0);
+
+    lineElements = {"t_relaxation", "=", "-100.0"};
+    EXPECT_THROW_MSG(parser.parseThermostatRelaxationTime(lineElements, 0),
+                     customException::InputFileException,
+                     "Relaxation time of thermostat cannot be negative");
 }
 
+/**
+ * @brief tests parsing the "thermostat" command
+ *
+ * @details if the thermostat is not valid it throws inputFileException - valid options are "none" and "berendsen"
+ *
+ */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    vector<string> lineElements = {"thermostat", "=", "none"};
-    _inputFileReader->parseThermostat(lineElements);
+    InputFileParserThermostat parser(_engine);
+    vector<string>            lineElements = {"thermostat", "=", "none"};
+    parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getThermostat(), "none");
+
     lineElements = {"thermostat", "=", "berendsen"};
-    _inputFileReader->parseThermostat(lineElements);
+    parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getThermostat(), "berendsen");
-    lineElements = {"thermostat", "=", "notvalid"};
-    EXPECT_THROW(_inputFileReader->parseThermostat(lineElements), customException::InputFileException);
+
+    lineElements = {"thermostat", "=", "notValid"};
+    EXPECT_THROW_MSG(parser.parseThermostatRelaxationTime(lineElements, 0),
+                     customException::InputFileException,
+                     "Invalid thermostat \"notValid\" at line 0 in input file");
 }
 
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

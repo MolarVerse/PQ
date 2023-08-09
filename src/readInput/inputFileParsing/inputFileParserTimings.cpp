@@ -34,9 +34,15 @@ void InputFileParserTimings::parseTimeStep(const vector<string> &lineElements, c
  * @brief parse number of steps of simulation and set it in timings
  *
  * @param lineElements
+ *
+ * @throws InputFileException if number of steps is negative
  */
 void InputFileParserTimings::parseNumberOfSteps(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getTimings().setNumberOfSteps(stoi(lineElements[2]));
+    const auto numberOfSteps = stoi(lineElements[2]);
+
+    if (numberOfSteps < 0) throw customException::InputFileException("Number of steps cannot be negative");
+
+    _engine.getTimings().setNumberOfSteps(size_t(numberOfSteps));
 }

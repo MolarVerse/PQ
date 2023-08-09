@@ -17,6 +17,6 @@ foreach(source_file ${source_files})
     add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
 endforeach()
 
-# add_subdirectory(inputFileParsing)
+add_subdirectory(inputFileParsing)
 add_subdirectory(topologyReader)
 add_subdirectory(parameterFileReader)
