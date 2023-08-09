@@ -1,4 +1,5 @@
-#include "inputFileReader.hpp"
+#include "exceptions.hpp"
+#include "inputFileParser.hpp"
 
 #include <iostream>
 
@@ -7,13 +8,23 @@ using namespace readInput;
 using namespace customException;
 
 /**
- * @brief parse start file of simulation and set it in settings
+ * @brief Construct a new Input File Parser General:: Input File Parser General object
  *
- * @param lineElements
+ * @param engine
  */
-void InputFileReader::parseStartFilename(const vector<string> &lineElements)
+InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFileParser(engine)
 {
-    checkCommand(lineElements, _lineNumber);
+
+    addKeyword(string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
+    addKeyword(string("start_file"), bind_front(&InputFileParserGeneral::parseStartFilename, this), true);
+    addKeyword(string("moldescriptor_file"), bind_front(&InputFileParserGeneral::parseMoldescriptorFilename, this), false);
+    addKeyword(string("guff_path"), bind_front(&InputFileParserGeneral::parseGuffPath, this), false);
+    addKeyword(string("guff_file"), bind_front(&InputFileParserGeneral::parseGuffDatFilename, this), false);
+}
+
+void InputFileParserGeneral::parseStartFilename(const vector<string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
     _engine.getSettings().setStartFilename(lineElements[2]);
 }
 
@@ -22,9 +33,9 @@ void InputFileReader::parseStartFilename(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseMoldescriptorFilename(const vector<string> &lineElements)
+void InputFileParserGeneral::parseMoldescriptorFilename(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     _engine.getSettings().setMoldescriptorFilename(lineElements[2]);
 }
 
@@ -33,9 +44,9 @@ void InputFileReader::parseMoldescriptorFilename(const vector<string> &lineEleme
  *
  * @param lineElements
  */
-void InputFileReader::parseGuffPath(const vector<string> &lineElements)
+void InputFileParserGeneral::parseGuffPath(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     _engine.getSettings().setGuffPath(lineElements[2]);
 }
 
@@ -44,9 +55,9 @@ void InputFileReader::parseGuffPath(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseGuffDatFilename(const vector<string> &lineElements)
+void InputFileParserGeneral::parseGuffDatFilename(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     _engine.getSettings().setGuffDatFilename(lineElements[2]);
 }
 
@@ -57,12 +68,12 @@ void InputFileReader::parseGuffDatFilename(const vector<string> &lineElements)
  *
  * @throw InputFileException if jobtype is not recognised
  */
-void InputFileReader::parseJobType(const vector<string> &lineElements)
+void InputFileParserGeneral::parseJobType(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "mm-md")
         _engine.getSettings().setJobtype("MMMD");
     else
-        throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                                  "in input file");
 }

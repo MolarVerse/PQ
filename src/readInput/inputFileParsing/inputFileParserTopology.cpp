@@ -1,13 +1,29 @@
 #include "exceptions.hpp"
-#include "inputFileReader.hpp"
+#include "inputFileParser.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace customException;
 
-void InputFileReader::parseTopologyFilename(const vector<string> &lineElements)
+/**
+ * @brief Construct a new Input File Parser Topology:: Input File Parser Topology object
+ *
+ * @param engine
+ */
+InputFileParserTopology::InputFileParserTopology(engine::Engine &engine) : InputFileParser(engine)
 {
-    checkCommand(lineElements, _lineNumber);
+    addKeyword(string("topology_file"), bind_front(&InputFileParserTopology::parseTopologyFilename, this), false);
+}
+
+/**
+ * @brief parse topology file name of simulation and set it in settings
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserTopology::parseTopologyFilename(const vector<string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 

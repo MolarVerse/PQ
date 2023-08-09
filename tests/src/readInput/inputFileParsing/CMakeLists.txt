@@ -1,6 +1,6 @@
 set(source_files
     testInputFileParser.cpp
-    testParserBox.cpp
+    testParserSimulationBox.cpp
     testParserCelllist.cpp
     testParserConstraints.cpp
     testParserGeneral.cpp

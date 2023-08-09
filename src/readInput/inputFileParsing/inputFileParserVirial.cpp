@@ -1,4 +1,4 @@
-#include "inputFileReader.hpp"
+#include "inputFileParser.hpp"
 
 #include <iostream>
 
@@ -8,13 +8,23 @@ using namespace virial;
 using namespace customException;
 
 /**
+ * @brief Construct a new Input File Parser Virial:: Input File Parser Virial object
+ *
+ * @param engine
+ */
+InputFileParserVirial::InputFileParserVirial(engine::Engine &engine) : InputFileParser(engine)
+{
+    addKeyword(string("virial"), bind_front(&InputFileParserVirial::parseVirial, this), false);
+}
+
+/**
  * @brief parses virial command
  *
  * @param lineElements
  */
-void InputFileReader::parseVirial(const vector<string> &lineElements)
+void InputFileParserVirial::parseVirial(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "molecular")
     {
         _engine.makeVirial(VirialMolecular());
@@ -25,6 +35,6 @@ void InputFileReader::parseVirial(const vector<string> &lineElements)
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else
-        throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        throw InputFileException("Invalid virial setting \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                                  "in input file");
 }

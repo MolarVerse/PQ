@@ -18,14 +18,14 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
 
     _fp.open(_filename);
 
-    _fp << "Step " << step << endl;
+    _fp << "Step " << step << '\n' << flush;
 
     _fp << "Box ";
     _fp << "  ";
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
     _fp << simBox.getBoxAngles();
-    _fp << endl;
+    _fp << '\n' << flush;
     for (const auto &molecule : simBox.getMolecules())
     {
         const auto numberOfAtoms = molecule.getNumberOfAtoms();
@@ -82,7 +82,7 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
             _fp << setw(15);
             _fp << molecule.getAtomForce(i)[2];
 
-            _fp << endl;
+            _fp << '\n' << flush;
         }
     }
 }

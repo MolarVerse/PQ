@@ -106,9 +106,8 @@ inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, Physical
 
                         totalCoulombEnergy += energy;
 
-                        const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                        if (distance < rncCutOff)
+                        if (const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                            distance < rncCutOff)
                         {
                             _nonCoulombPotential->calcNonCoulomb(
                                 simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
@@ -220,9 +219,8 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                         totalCoulombEnergy += energy;
 
-                        const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                        if (distance < rncCutOff)
+                        if (const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                            distance < rncCutOff)
                         {
                             _nonCoulombPotential->calcNonCoulomb(
                                 simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
@@ -315,9 +313,9 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
                             totalCoulombEnergy += energy;
 
-                            const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                            if (distance < rncCutOff)
+                            if (const auto rncCutOff =
+                                    simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
+                                distance < rncCutOff)
                             {
                                 _nonCoulombPotential->calcNonCoulomb(
                                     simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),

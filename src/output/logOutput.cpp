@@ -7,7 +7,10 @@ using namespace output;
  * @brief write a warning message to the log file if density and box dimensions are set
  *
  */
-void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl; }
+void LogOutput::writeDensityWarning()
+{
+    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << '\n' << flush;
+}
 
 /**
  * @brief write initial momentum to log file
@@ -16,6 +19,6 @@ void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensi
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << endl;
-    _fp << initialMomentumMessage(momentum) << endl;
+    _fp << '\n' << flush;
+    _fp << initialMomentumMessage(momentum) << '\n' << flush;
 }

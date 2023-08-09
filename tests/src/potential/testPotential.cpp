@@ -46,8 +46,6 @@ TEST(TestPotential, bruteForce)
     auto guffReader = readInput::GuffDatReader(engine);
     guffReader.setupGuffMaps();
 
-    std::cout << engine.getSimulationBox().getGuffCoefficients().size() << std::endl;
-
     const auto coefficients1 = std::vector{1.0, 1.0, 1.0, 1.0};
     const auto coefficients2 = std::vector{2.0, 1.0, 2.0, 1.0};
 
@@ -135,8 +133,6 @@ TEST(TestPotential, cellList)
     auto guffReader = readInput::GuffDatReader(engine);
     guffReader.setupGuffMaps();
 
-    std::cout << engine.getSimulationBox().getGuffCoefficients().size() << std::endl;
-
     const auto coefficients1 = std::vector{1.0, 1.0, 1.0, 1.0};
     const auto coefficients2 = std::vector{2.0, 1.0, 2.0, 1.0};
 
@@ -179,11 +175,6 @@ TEST(TestPotential, cellList)
 
     potential.calculateForces(engine.getSimulationBox(), physicalData, engine.getCellList());
 
-    std::cout << std::setprecision(15) << engine.getSimulationBox().getMolecule(0).getAtomForce(0) << std::endl;
-    std::cout << std::setprecision(15) << engine.getSimulationBox().getMolecule(0).getAtomForce(1) << std::endl;
-    std::cout << std::setprecision(15) << engine.getSimulationBox().getMolecule(1).getAtomForce(0) << std::endl;
-    std::cout << std::setprecision(15) << physicalData.getCoulombEnergy() << std::endl;
-    std::cout << std::setprecision(15) << physicalData.getNonCoulombEnergy() << std::endl;
     EXPECT_DOUBLE_EQ(engine.getSimulationBox().getMolecule(0).getAtomForce(0)[0], -3.0740753285297435);
     EXPECT_DOUBLE_EQ(engine.getSimulationBox().getMolecule(0).getAtomForce(0)[1], 1.0);
     EXPECT_DOUBLE_EQ(engine.getSimulationBox().getMolecule(0).getAtomForce(0)[2], 1.0);

@@ -18,7 +18,7 @@ void StdoutOutput::writeDensityWarning() const
     }
     catch (const UserInputExceptionWarning &e)
     {
-        cout << e.what() << endl << endl;
+        cout << e.what() << '\n' << '\n' << flush;
     }
 }
 
@@ -29,6 +29,6 @@ void StdoutOutput::writeDensityWarning() const
  */
 void StdoutOutput::writeInitialMomentum(const double momentum) const
 {
-    cout << endl;
-    cout << initialMomentumMessage(momentum) << endl;
+    cout << '\n';
+    cout << initialMomentumMessage(momentum) << '\n';
 }

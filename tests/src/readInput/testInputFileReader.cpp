@@ -23,6 +23,7 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
         string required_string;
         bool   required_bool;
 
+        if (istringstream(line).str().empty()) continue;
         istringstream(line) >> keyword >> required_string;
         istringstream(required_string) >> std::boolalpha >> required_bool;
 
@@ -36,7 +37,11 @@ TEST_F(TestInputFileReader, testAddKeyword)
     vector<string> keywordsRef(0);
     vector<bool>   requiredRef(0);
 
-    readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
+    ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
+
+    EXPECT_EQ(_inputFileReader->getKeywordCountMap().size(), keywordsRef.size());
+    EXPECT_EQ(_inputFileReader->getKeywordRequiredMap().size(), keywordsRef.size());
+    EXPECT_EQ(_inputFileReader->getKeywordFuncMap().size(), keywordsRef.size());
 
     for (size_t i = 0; i < keywordsRef.size(); i++)
     {
@@ -101,7 +106,7 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     vector<string> keywordsRef(0);
     vector<bool>   requiredRef(0);
 
-    readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
+    ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
     vector<int> requiredIndex(0);
 
@@ -121,6 +126,7 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         string keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
+        cout << requiredIndex.size() << endl;
         ASSERT_THROW(_inputFileReader->postProcess(), InputFileException);
         _inputFileReader->setKeywordCount(keyword, 1);
     }

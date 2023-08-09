@@ -13,16 +13,16 @@ using namespace potential;
  * @param distance
  * @param energy
  * @param force
- * @param energy_cutoff
- * @param force_cutoff
+ * @param energyCutoff
+ * @param forceCutoff
  */
 void GuffLennardJones::calcNonCoulomb(const vector<double> &guffCoefficients,
                                       const double          rncCutoff,
                                       const double          distance,
                                       double               &energy,
                                       double               &force,
-                                      const double          energy_cutoff,
-                                      const double          force_cutoff) const
+                                      const double          energyCutoff,
+                                      const double          forceCutoff) const
 {
     const double c6  = guffCoefficients[0];
     const double c12 = guffCoefficients[2];
@@ -33,6 +33,6 @@ void GuffLennardJones::calcNonCoulomb(const vector<double> &guffCoefficients,
     energy  = c12 / distance_12 + c6 / distance_6;
     force  += 12 * c12 / (distance_12 * distance) + 6 * c6 / (distance_6 * distance);
 
-    energy -= energy_cutoff + force_cutoff * (rncCutoff - distance);
-    force  -= force_cutoff;
+    energy -= energyCutoff + forceCutoff * (rncCutoff - distance);
+    force  -= forceCutoff;
 }

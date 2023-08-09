@@ -1,9 +1,23 @@
 #include "exceptions.hpp"
-#include "inputFileReader.hpp"
+#include "inputFileParser.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace customException;
+
+/**
+ * @brief Construct a new Input File Parser Constraints:: Input File Parser Constraints object
+ *
+ * @param engine
+ */
+InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) : InputFileParser(engine)
+{
+    addKeyword(string("shake"), bind_front(&InputFileParserConstraints::parseShakeActivated, this), false);
+    addKeyword(string("shake-tolerance"), bind_front(&InputFileParserConstraints::parseShakeTolerance, this), false);
+    addKeyword(string("shake-iter"), bind_front(&InputFileParserConstraints::parseShakeIteration, this), false);
+    addKeyword(string("rattle-iter"), bind_front(&InputFileParserConstraints::parseRattleIteration, this), false);
+    addKeyword(string("rattle-tolerance"), bind_front(&InputFileParserConstraints::parseRattleTolerance, this), false);
+}
 
 /**
  * @brief parsing if shake is activated
@@ -12,9 +26,9 @@ using namespace customException;
  *
  * @param lineElements
  */
-void InputFileReader::parseShakeActivated(const vector<string> &lineElements)
+void InputFileParserConstraints::parseShakeActivated(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "on")
         _engine.getConstraints().activate();
     else if (lineElements[2] == "off")
@@ -23,7 +37,7 @@ void InputFileReader::parseShakeActivated(const vector<string> &lineElements)
     }
     else
     {
-        auto message  = "Invalid shake keyword \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) + "in input file\n";
+        auto message  = "Invalid shake keyword \"" + lineElements[2] + "\" at line " + to_string(lineNumber) + "in input file\n";
         message      += R"(Possible keywords are "on" and "off")";
         throw InputFileException(message);
     }
@@ -34,15 +48,15 @@ void InputFileReader::parseShakeActivated(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseShakeTolerance(const vector<string> &lineElements)
+void InputFileParserConstraints::parseShakeTolerance(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
 
     auto tolerance = stod(lineElements[2]);
 
     if (tolerance < 0.0)
     {
-        auto message = "Invalid shake tolerance \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        auto message = "Invalid shake tolerance \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                        "in input file - Tolerance must be positive\n";
         throw InputFileException(message);
     }
@@ -55,15 +69,15 @@ void InputFileReader::parseShakeTolerance(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseShakeIteration(const vector<string> &lineElements)
+void InputFileParserConstraints::parseShakeIteration(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
 
     auto iteration = stoi(lineElements[2]);
 
     if (iteration < 0)
     {
-        auto message = "Invalid shake iteration \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        auto message = "Invalid shake iteration \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                        "in input file - Iteration must be positive\n";
         throw InputFileException(message);
     }
@@ -76,15 +90,15 @@ void InputFileReader::parseShakeIteration(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseRattleTolerance(const vector<string> &lineElements)
+void InputFileParserConstraints::parseRattleTolerance(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
 
     auto tolerance = stod(lineElements[2]);
 
     if (tolerance < 0.0)
     {
-        auto message = "Invalid rattle tolerance \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        auto message = "Invalid rattle tolerance \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                        "in input file - Tolerance must be positive\n";
         throw InputFileException(message);
     }
@@ -97,15 +111,15 @@ void InputFileReader::parseRattleTolerance(const vector<string> &lineElements)
  *
  * @param lineElements
  */
-void InputFileReader::parseRattleIteration(const vector<string> &lineElements)
+void InputFileParserConstraints::parseRattleIteration(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
 
     auto iteration = stoi(lineElements[2]);
 
     if (iteration < 0)
     {
-        auto message = "Invalid rattle iteration \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        auto message = "Invalid rattle iteration \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                        "in input file - Iteration must be positive\n";
         throw InputFileException(message);
     }

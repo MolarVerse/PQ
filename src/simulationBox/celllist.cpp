@@ -89,12 +89,12 @@ void CellList::addCellPointers(Cell &cell)
 {
     const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
-    int i0 = -_nNeighbourCells[0];
-    int i1 = _nNeighbourCells[0];
-    int j0 = -_nNeighbourCells[1];
-    int j1 = _nNeighbourCells[1];
-    int k0 = -_nNeighbourCells[2];
-    int k1 = _nNeighbourCells[2];
+    auto i0 = -int(_nNeighbourCells[0]);
+    auto j0 = -int(_nNeighbourCells[1]);
+    auto k0 = -int(_nNeighbourCells[2]);
+    auto i1 = int(_nNeighbourCells[0]);
+    auto j1 = int(_nNeighbourCells[1]);
+    auto k1 = int(_nNeighbourCells[2]);
 
     for (int i = i0; i <= i1; ++i)
     {
@@ -109,8 +109,8 @@ void CellList::addCellPointers(Cell &cell)
                 auto neighbourCellIndex  = ijk + Vec3Di(cell.getCellIndex());
                 neighbourCellIndex      -= Vec3Di(_nCells) * Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
 
-                const auto neighbourCellIndexScalar =
-                    neighbourCellIndex[0] * _nCells[1] * _nCells[2] + neighbourCellIndex[1] * _nCells[2] + neighbourCellIndex[2];
+                const auto neighbourCellIndexScalar = size_t(neighbourCellIndex[0]) * _nCells[1] * _nCells[2] +
+                                                      size_t(neighbourCellIndex[1]) * _nCells[2] + size_t(neighbourCellIndex[2]);
 
                 Cell *neighbourCell = &_cells[neighbourCellIndexScalar];
 
@@ -187,7 +187,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
  * @param cellIndices
  * @return size_t
  */
-size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
+[[nodiscard]] size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
 {
     return cellIndices[0] * _nCells[1] * _nCells[2] + cellIndices[1] * _nCells[2] + cellIndices[2];
 }
@@ -199,7 +199,7 @@ size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
  * @param position
  * @return Vec3Dul
  */
-Vec3Dul CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position)
+[[nodiscard]] Vec3Dul CellList::getCellIndexOfMolecule(const SimulationBox &simulationBox, const Vec3D &position) const
 {
     const auto box = simulationBox.getBoxDimensions();
 

@@ -13,18 +13,18 @@ using namespace potential;
  * @param distance
  * @param energy
  * @param force
- * @param energy_cutoff
- * @param force_cutoff
+ * @param energyCutoff
+ * @param forceCutoff
  */
 void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
                               const double distance,
                               double      &energy,
                               double      &force,
-                              const double energy_cutoff,
-                              const double force_cutoff) const
+                              const double energyCutoff,
+                              const double forceCutoff) const
 {
-    energy  = coulombCoefficient * (1 / distance) - energy_cutoff - force_cutoff * (_coulombRadiusCutOff - distance);
-    force  += coulombCoefficient * (1 / (distance * distance)) - force_cutoff;
+    energy  = coulombCoefficient * (1 / distance) - energyCutoff - forceCutoff * (_coulombRadiusCutOff - distance);
+    force  += coulombCoefficient * (1 / (distance * distance)) - forceCutoff;
 }
 
 /**
@@ -32,16 +32,16 @@ void GuffCoulomb::calcCoulomb(const double coulombCoefficient,
  *
  * @details calculates Wolf parameters
  *
- * @param coulombRadiusCutoff
+ * @param coulombRadiusCutOff
  * @param kappa
  */
-GuffWolfCoulomb::GuffWolfCoulomb(const double coulombRadiusCutoff, const double kappa)
-    : CoulombPotential::CoulombPotential(coulombRadiusCutoff), _kappa(kappa)
+GuffWolfCoulomb::GuffWolfCoulomb(const double coulombRadiusCutOff, const double kappa)
+    : CoulombPotential::CoulombPotential(coulombRadiusCutOff), _kappa(kappa)
 {
-    _wolfParameter1 = ::erfc(_kappa * coulombRadiusCutoff) / coulombRadiusCutoff;
+    _wolfParameter1 = ::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
     _wolfParameter2 = 2.0 * _kappa / ::sqrt(M_PI);
-    _wolfParameter3 = _wolfParameter1 / coulombRadiusCutoff +
-                      _wolfParameter2 * ::exp(-_kappa * _kappa * coulombRadiusCutoff * coulombRadiusCutoff) / coulombRadiusCutoff;
+    _wolfParameter3 = _wolfParameter1 / coulombRadiusCutOff +
+                      _wolfParameter2 * ::exp(-_kappa * _kappa * coulombRadiusCutOff * coulombRadiusCutOff) / coulombRadiusCutOff;
 }
 
 /**

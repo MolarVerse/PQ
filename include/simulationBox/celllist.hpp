@@ -42,23 +42,23 @@ class simulationBox::CellList
     void addCellPointers(Cell &);
 
     size_t                 getCellIndex(const linearAlgebra::Vec3Dul &cellIndices) const;
-    linearAlgebra::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const linearAlgebra::Vec3D &);
+    linearAlgebra::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const linearAlgebra::Vec3D &) const;
 
-    void activate() { _activated = true; }
-    bool isActivated() const { return _activated; }
+    void               activate() { _activated = true; }
+    [[nodiscard]] bool isActivated() const { return _activated; }
 
     void addCell(const Cell &cell) { _cells.push_back(cell); }
+    void resizeCells(const size_t nCells) { _cells.resize(nCells); }
 
     /***************************
      * standard getter methods *
      ***************************/
 
-    linearAlgebra::Vec3Dul getNumberOfCells() const { return _nCells; }
-    linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const { return _nNeighbourCells; }
-    linearAlgebra::Vec3D   getCellSize() const { return _cellSize; }
-    std::vector<Cell>      getCells() const { return _cells; }
-    void                   resizeCells(const size_t nCells) { _cells.resize(nCells); }
-    Cell                  &getCell(const size_t index) { return _cells[index]; }
+    [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfCells() const { return _nCells; }
+    [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const { return _nNeighbourCells; }
+    [[nodiscard]] linearAlgebra::Vec3D   getCellSize() const { return _cellSize; }
+    [[nodiscard]] std::vector<Cell>      getCells() const { return _cells; }
+    [[nodiscard]] Cell                  &getCell(const size_t index) { return _cells[index]; }
 
     /***************************
      * standard setter methods *

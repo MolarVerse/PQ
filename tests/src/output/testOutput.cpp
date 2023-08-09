@@ -24,7 +24,7 @@ TEST(TestOutput, setSpecialOutputFrequency)
 {
     auto output = output::Output("default.out");
     output::Output::setOutputFrequency(0);
-    EXPECT_EQ(output.getOutputFrequency(), INT64_MAX);
+    EXPECT_EQ(output.getOutputFrequency(), UINT64_MAX);
 }
 
 int main(int argc, char **argv)

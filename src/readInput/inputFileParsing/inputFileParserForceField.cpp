@@ -1,4 +1,4 @@
-#include "inputFileReader.hpp"
+#include "inputFileParser.hpp"
 
 #include <memory>
 
@@ -7,13 +7,23 @@ using namespace readInput;
 using namespace customException;
 
 /**
+ * @brief Construct a new Input File Parser Force Field:: Input File Parser Force Field object
+ *
+ * @param engine
+ */
+InputFileParserForceField::InputFileParserForceField(engine::Engine &engine) : InputFileParser(engine)
+{
+    addKeyword(string("force-field"), bind_front(&InputFileParserForceField::parseForceFieldType, this), false);
+}
+
+/**
  * @brief Parse the integrator used in the simulation
  *
  * @param lineElements
  */
-void InputFileReader::parseForceFieldType(const vector<string> &lineElements)
+void InputFileParserForceField::parseForceFieldType(const vector<string> &lineElements, const size_t lineNumber)
 {
-    checkCommand(lineElements, _lineNumber);
+    checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "on")
     {
         _engine.getForceFieldPtr()->activate();
@@ -30,6 +40,6 @@ void InputFileReader::parseForceFieldType(const vector<string> &lineElements)
         _engine.getForceFieldPtr()->deactivateNonCoulombic();
     }
     else
-        throw InputFileException("Invalid force-field keyword \"" + lineElements[2] + "\" at line " + to_string(_lineNumber) +
+        throw InputFileException("Invalid force-field keyword \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
                                  "in input file - possible keywords are \"on\", \"off\" or \"bonded\"");
 }
