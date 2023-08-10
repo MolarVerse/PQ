@@ -57,12 +57,36 @@ class engine::Engine
     void takeStep();
     void writeOutput();
 
-    template <typename T> void makeIntegrator(T integrator) { _integrator = std::make_unique<T>(integrator); }
-    template <typename T> void makePotential(T potential) { _potential = std::make_unique<T>(potential); }
-    template <typename T> void makeThermostat(T thermostat) { _thermostat = std::make_unique<T>(thermostat); }
-    template <typename T> void makeManostat(T manostat) { _manostat = std::make_unique<T>(manostat); }
-    template <typename T> void makeVirial(T virial) { _virial = std::make_unique<T>(virial); }
-    template <typename T> void makeResetKinetics(T resetKinetics) { _resetKinetics = std::make_unique<T>(resetKinetics); }
+    template <typename T>
+    void makeIntegrator(T integrator)
+    {
+        _integrator = std::make_unique<T>(integrator);
+    }
+    template <typename T>
+    void makePotential(T potential)
+    {
+        _potential = std::make_unique<T>(potential);
+    }
+    template <typename T>
+    void makeThermostat(T thermostat)
+    {
+        _thermostat = std::make_unique<T>(thermostat);
+    }
+    template <typename T>
+    void makeManostat(T manostat)
+    {
+        _manostat = std::make_unique<T>(manostat);
+    }
+    template <typename T>
+    void makeVirial(T virial)
+    {
+        _virial = std::make_unique<T>(virial);
+    }
+    template <typename T>
+    void makeResetKinetics(T resetKinetics)
+    {
+        _resetKinetics = std::make_unique<T>(resetKinetics);
+    }
 
     /***************************
      *                         *
@@ -70,33 +94,33 @@ class engine::Engine
      *                         *
      ***************************/
 
-    settings::Settings           &getSettings() { return _settings; }
-    timings::Timings             &getTimings() { return _timings; }
-    simulationBox::CellList      &getCellList() { return _cellList; }
-    simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
-    physicalData::PhysicalData   &getPhysicalData() { return _physicalData; }
-    physicalData::PhysicalData   &getAveragePhysicalData() { return _averagePhysicalData; }
-    virial::Virial               &getVirial() { return *_virial; }
-    integrator::Integrator       &getIntegrator() { return *_integrator; }
-    constraints::Constraints     &getConstraints() { return _constraints; }
-    forceField::ForceField       &getForceField() { return _forceField; }
-    potential::Potential         &getPotential() { return *_potential; }
-    thermostat::Thermostat       &getThermostat() { return *_thermostat; }
-    manostat::Manostat           &getManostat() { return *_manostat; }
-    resetKinetics::ResetKinetics &getResetKinetics() { return *_resetKinetics; }
+    [[nodiscard]] settings::Settings           &getSettings() { return _settings; }
+    [[nodiscard]] timings::Timings             &getTimings() { return _timings; }
+    [[nodiscard]] simulationBox::CellList      &getCellList() { return _cellList; }
+    [[nodiscard]] simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }
+    [[nodiscard]] physicalData::PhysicalData   &getPhysicalData() { return _physicalData; }
+    [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData() { return _averagePhysicalData; }
+    [[nodiscard]] virial::Virial               &getVirial() { return *_virial; }
+    [[nodiscard]] integrator::Integrator       &getIntegrator() { return *_integrator; }
+    [[nodiscard]] constraints::Constraints     &getConstraints() { return _constraints; }
+    [[nodiscard]] forceField::ForceField       &getForceField() { return _forceField; }
+    [[nodiscard]] potential::Potential         &getPotential() { return *_potential; }
+    [[nodiscard]] thermostat::Thermostat       &getThermostat() { return *_thermostat; }
+    [[nodiscard]] manostat::Manostat           &getManostat() { return *_manostat; }
+    [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics() { return *_resetKinetics; }
 
-    engine::EngineOutput     &getEngineOutput() { return _engineOutput; }
-    output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-    output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-    output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
-    output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
-    output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-    output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
-    output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-    output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-    output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+    [[nodiscard]] engine::EngineOutput     &getEngineOutput() { return _engineOutput; }
+    [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+    [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
+    [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
+    [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
+    [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
+    [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
+    [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
+    [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
+    [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
 
-    forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+    [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
 };
 
 #endif   // _ENGINE_HPP_

@@ -25,6 +25,8 @@ InputFileParserManostat::InputFileParserManostat(engine::Engine &engine) : Input
  * @brief Parse the manostat used in the simulation
  *
  * @param lineElements
+ *
+ * @throws InputFileException if manostat is not berendsen or none
  */
 void InputFileParserManostat::parseManostat(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -40,7 +42,10 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
         _engine.getSettings().setManostat("berendsen");
     }
     else
-        throw InputFileException(format("Invalid manostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
+        throw InputFileException(
+            format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
+                   lineElements[2],
+                   lineNumber));
 }
 
 /**
@@ -82,9 +87,7 @@ void InputFileParserManostat::parseCompressibility(const vector<string> &lineEle
 {
     checkCommand(lineElements, lineNumber);
     const auto compressibility = stod(lineElements[2]);
-    if (compressibility < 0.0)
-        throw InputFileException(
-            format("Invalid compressibility \"{}\" at line {} in input file - has to be positive", lineElements[2], lineNumber));
+    if (compressibility < 0.0) throw InputFileException("Compressibility cannot be negative");
 
     _engine.getSettings().setCompressibility(compressibility);
 }

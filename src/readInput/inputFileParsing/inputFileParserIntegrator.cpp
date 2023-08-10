@@ -22,6 +22,8 @@ InputFileParserIntegrator::InputFileParserIntegrator(engine::Engine &engine) : I
  * @brief Parse the integrator used in the simulation
  *
  * @param lineElements
+ *
+ * @throws InputFileException if integrator is not valid - currently only velocity verlet is supported
  */
 void InputFileParserIntegrator::parseIntegrator(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -29,6 +31,5 @@ void InputFileParserIntegrator::parseIntegrator(const vector<string> &lineElemen
     if (lineElements[2] == "v-verlet")
         _engine.makeIntegrator(VelocityVerlet());
     else
-        throw InputFileException("Invalid integrator \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(format("Invalid integrator \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

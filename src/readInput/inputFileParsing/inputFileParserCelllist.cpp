@@ -20,6 +20,8 @@ InputFileParserCellList::InputFileParserCellList(engine::Engine &engine) : Input
  * @brief Parses if cell-list should be used in simulation
  *
  * @param lineElements
+ *
+ * @throws InputFileException if cell-list keyword is not "on" or "off"
  */
 void InputFileParserCellList::parseCellListActivated(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -27,22 +29,20 @@ void InputFileParserCellList::parseCellListActivated(const vector<string> &lineE
     if (lineElements[2] == "on")
         _engine.getCellList().activate();
     else if (lineElements[2] == "off")
-    {
-        // default
-    }
+        _engine.getCellList().deactivate();
     else
-    {
-        auto message =
-            "Invalid cell-list keyword \"" + lineElements[2] + "\" at line " + to_string(lineNumber) + "in input file\n";
-        message += R"(Possible keywords are "on" and "off")";
-        throw InputFileException(message);
-    }
+        throw InputFileException(
+            format(R"(Invalid cell-list keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+                   lineElements[2],
+                   lineNumber));
 }
 
 /**
  * @brief Parses the number of cells used for each dimension
  *
  * @param lineElements
+ *
+ * @throws InputFileException if number of cells is not positive
  */
 void InputFileParserCellList::parseNumberOfCells(const vector<string> &lineElements, const size_t lineNumber)
 {

@@ -45,6 +45,7 @@ class simulationBox::CellList
     linearAlgebra::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const linearAlgebra::Vec3D &) const;
 
     void               activate() { _activated = true; }
+    void               deactivate() { _activated = false; }
     [[nodiscard]] bool isActivated() const { return _activated; }
 
     void addCell(const Cell &cell) { _cells.push_back(cell); }

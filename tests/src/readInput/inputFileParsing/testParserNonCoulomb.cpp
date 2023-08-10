@@ -1,32 +1,36 @@
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace ::testing;
 
 /**
- * @brief tests the parsing of the noncoulomb type
+ * @brief tests parsing the "noncoulomb" command
  *
- * @details possible options are "none", "lj" and "buck"
+ * @details possible options are "none", "lj" and "buck" - otherwise throws inputFileException
  *
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    vector<string> lineElements = {"noncoulomb", "=", "none"};
-    _inputFileReader->parseNonCoulombType(lineElements);
+    InputFileParserNonCoulombType parser(_engine);
+    vector<string>                lineElements = {"noncoulomb", "=", "none"};
+    parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "none");
 
     lineElements = {"noncoulomb", "=", "lj"};
-    _inputFileReader->parseNonCoulombType(lineElements);
+    parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "lj");
 
     lineElements = {"noncoulomb", "=", "buck"};
-    _inputFileReader->parseNonCoulombType(lineElements);
+    parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "buck");
 
     lineElements = {"coulomb", "=", "notValid"};
-    EXPECT_THROW(_inputFileReader->parseNonCoulombType(lineElements), customException::InputFileException);
+    EXPECT_THROW_MSG(parser.parseNonCoulombType(lineElements, 0),
+                     customException::InputFileException,
+                     "Invalid nonCoulomb type \"notValid\" at line 0 in input file. Possible options are: lj, buck and none");
 }
 
 int main(int argc, char **argv)

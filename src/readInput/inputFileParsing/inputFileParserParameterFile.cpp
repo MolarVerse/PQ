@@ -21,6 +21,8 @@ InputFileParserParameterFile::InputFileParserParameterFile(engine::Engine &engin
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if parameter filename is empty or file does not exist
  */
 void InputFileParserParameterFile::parseParameterFilename(const vector<string> &lineElements, const size_t lineNumber)
 {

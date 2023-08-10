@@ -25,6 +25,8 @@ InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) :
  * @details only "on" and "off" (default) are valid keywords
  *
  * @param lineElements
+ *
+ * @throws InputFileException if keyword is not valid - currently only on and off are supported
  */
 void InputFileParserConstraints::parseShakeActivated(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -32,13 +34,12 @@ void InputFileParserConstraints::parseShakeActivated(const vector<string> &lineE
     if (lineElements[2] == "on")
         _engine.getConstraints().activate();
     else if (lineElements[2] == "off")
-    {
-        // default
-    }
+        _engine.getConstraints().deactivate();
     else
     {
-        auto message  = "Invalid shake keyword \"" + lineElements[2] + "\" at line " + to_string(lineNumber) + "in input file\n";
-        message      += R"(Possible keywords are "on" and "off")";
+        auto message = format(R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+                              lineElements[2],
+                              lineNumber);
         throw InputFileException(message);
     }
 }
@@ -47,6 +48,8 @@ void InputFileParserConstraints::parseShakeActivated(const vector<string> &lineE
  * @brief parsing shake tolerance
  *
  * @param lineElements
+ *
+ * @throw InputFileException if tolerance is negative
  */
 void InputFileParserConstraints::parseShakeTolerance(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -54,20 +57,17 @@ void InputFileParserConstraints::parseShakeTolerance(const vector<string> &lineE
 
     auto tolerance = stod(lineElements[2]);
 
-    if (tolerance < 0.0)
-    {
-        auto message = "Invalid shake tolerance \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                       "in input file - Tolerance must be positive\n";
-        throw InputFileException(message);
-    }
+    if (tolerance < 0.0) throw InputFileException("Shake tolerance must be positive");
 
-    _engine.getSettings().setShakeTolerance(stod(lineElements[2]));
+    _engine.getSettings().setShakeTolerance(tolerance);
 }
 
 /**
  * @brief parsing shake iteration
  *
  * @param lineElements
+ *
+ * @throw InputFileException if iteration is negative
  */
 void InputFileParserConstraints::parseShakeIteration(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -75,20 +75,17 @@ void InputFileParserConstraints::parseShakeIteration(const vector<string> &lineE
 
     auto iteration = stoi(lineElements[2]);
 
-    if (iteration < 0)
-    {
-        auto message = "Invalid shake iteration \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                       "in input file - Iteration must be positive\n";
-        throw InputFileException(message);
-    }
+    if (iteration < 0) throw InputFileException("Maximum shake iterations must be positive");
 
-    _engine.getSettings().setShakeMaxIter(iteration);
+    _engine.getSettings().setShakeMaxIter(size_t(iteration));
 }
 
 /**
  * @brief parsing rattle tolerance
  *
  * @param lineElements
+ *
+ * @throw InputFileException if tolerance is negative
  */
 void InputFileParserConstraints::parseRattleTolerance(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -96,12 +93,7 @@ void InputFileParserConstraints::parseRattleTolerance(const vector<string> &line
 
     auto tolerance = stod(lineElements[2]);
 
-    if (tolerance < 0.0)
-    {
-        auto message = "Invalid rattle tolerance \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                       "in input file - Tolerance must be positive\n";
-        throw InputFileException(message);
-    }
+    if (tolerance < 0.0) throw InputFileException("Rattle tolerance must be positive");
 
     _engine.getSettings().setRattleTolerance(tolerance);
 }
@@ -110,6 +102,8 @@ void InputFileParserConstraints::parseRattleTolerance(const vector<string> &line
  * @brief parsing rattle iteration
  *
  * @param lineElements
+ *
+ * @throw InputFileException if iteration is negative
  */
 void InputFileParserConstraints::parseRattleIteration(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -117,12 +111,7 @@ void InputFileParserConstraints::parseRattleIteration(const vector<string> &line
 
     auto iteration = stoi(lineElements[2]);
 
-    if (iteration < 0)
-    {
-        auto message = "Invalid rattle iteration \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                       "in input file - Iteration must be positive\n";
-        throw InputFileException(message);
-    }
+    if (iteration < 0) throw InputFileException("Maximum rattle iterations must be positive");
 
-    _engine.getSettings().setRattleMaxIter(iteration);
+    _engine.getSettings().setRattleMaxIter(size_t(iteration));
 }

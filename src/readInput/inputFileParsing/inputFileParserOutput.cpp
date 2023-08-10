@@ -29,6 +29,8 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
  * @brief parse output frequency of simulation and set it in output statically
  *
  * @param lineElements
+ *
+ * @throws InputFileException if output frequency is negative
  */
 void InputFileParserOutput::parseOutputFreq(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -36,10 +38,10 @@ void InputFileParserOutput::parseOutputFreq(const vector<string> &lineElements, 
 
     const auto outputFrequency = stoi(lineElements[2]);
     if (outputFrequency < 0)
-        throw customException::InputFileException("Output frequency cannot be negative - \"" + lineElements[2] + "\" at line " +
-                                                  to_string(lineNumber) + "in input file");
+        throw customException::InputFileException(
+            format("Output frequency cannot be negative - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
-    Output::setOutputFrequency(static_cast<size_t>(outputFrequency));
+    Output::setOutputFrequency(size_t(outputFrequency));
 }
 
 /**

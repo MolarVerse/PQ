@@ -9,14 +9,14 @@ using namespace readInput;
 /**
  * @brief check if second argument is "="
  *
- * @param lineElement
+ * @param stringView
  * @param _lineNumber
  *
  * @throw InputFileException if second argument is not "="
  */
-void readInput::checkEqualSign(const string_view &lineElement, const size_t lineNumber)
+void readInput::checkEqualSign(const string_view &stringView, const size_t lineNumber)
 {
-    if (lineElement != "=") throw InputFileException("Invalid command at line " + to_string(lineNumber) + "in input file");
+    if (stringView != "=") throw InputFileException(format("Invalid command at line {} in input file", lineNumber));
 }
 
 /**
@@ -32,7 +32,7 @@ void readInput::checkEqualSign(const string_view &lineElement, const size_t line
 void readInput::checkCommandArray(const vector<string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() < 3)
-        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
+        throw InputFileException(format("Invalid number of arguments at line {} in input file", lineNumber));
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -48,7 +48,7 @@ void readInput::checkCommandArray(const vector<string> &lineElements, const size
 void readInput::checkCommand(const vector<string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() != 3)
-        throw InputFileException("Invalid number of arguments at line " + to_string(lineNumber) + "in input file");
+        throw InputFileException(format("Invalid number of arguments at line {} in input file", lineNumber));
 
     checkEqualSign(lineElements[1], lineNumber);
 }

@@ -123,6 +123,7 @@
         "inputfile",
         "INPUTFILEEXCEPTION",
         "jobtype",
+        "jobtypes",
         "Lennard",
         "LOGOUTPUT",
         "LOOPTIME",

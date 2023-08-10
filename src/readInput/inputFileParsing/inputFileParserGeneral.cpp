@@ -22,6 +22,12 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
     addKeyword(string("guff_file"), bind_front(&InputFileParserGeneral::parseGuffDatFilename, this), false);
 }
 
+/**
+ * @brief parse start file of simulation and set it in settings
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
 void InputFileParserGeneral::parseStartFilename(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
@@ -42,12 +48,11 @@ void InputFileParserGeneral::parseMoldescriptorFilename(const vector<string> &li
 /**
  * @brief parse guff path of simulation and set it in settings
  *
- * @param lineElements
+ * @throws InputFileException deprecated keyword
  */
-void InputFileParserGeneral::parseGuffPath(const vector<string> &lineElements, const size_t lineNumber)
+[[noreturn]] void InputFileParserGeneral::parseGuffPath(const vector<string> &, const size_t)
 {
-    checkCommand(lineElements, lineNumber);
-    _engine.getSettings().setGuffPath(lineElements[2]);
+    throw InputFileException(R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)");
 }
 
 /**
@@ -74,6 +79,5 @@ void InputFileParserGeneral::parseJobType(const vector<string> &lineElements, co
     if (lineElements[2] == "mm-md")
         _engine.getSettings().setJobtype("MMMD");
     else
-        throw InputFileException("Invalid jobtype \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(format("Invalid jobtype \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

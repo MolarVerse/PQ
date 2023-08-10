@@ -22,6 +22,8 @@ InputFileParserNonCoulombType::InputFileParserNonCoulombType(engine::Engine &eng
  * @details possible options are "none", "lj" and "buck"
  *
  * @param lineElements
+ *
+ * @throws InputFileException if invalid nonCoulomb type
  */
 void InputFileParserNonCoulombType::parseNonCoulombType(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -33,6 +35,8 @@ void InputFileParserNonCoulombType::parseNonCoulombType(const vector<string> &li
     else if (lineElements[2] == "buck")
         _engine.getSettings().setNonCoulombType("buck");
     else
-        throw InputFileException("Invalid nonCoulomb type \"" + lineElements[2] + "\" at line " + to_string(lineNumber) +
-                                 "in input file");
+        throw InputFileException(
+            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck and none",
+                   lineElements[2],
+                   lineNumber));
 }

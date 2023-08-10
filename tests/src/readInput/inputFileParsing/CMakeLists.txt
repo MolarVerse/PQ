@@ -1,23 +1,22 @@
 set(source_files
 
-    # testInputFileParser.cpp
+    testInputFileParser.cpp
     testParserSimulationBox.cpp
-
-    # testParserCelllist.cpp
-    # testParserConstraints.cpp
-    # testParserGeneral.cpp
-    # testParserIntegrator.cpp
-    # testParserManostat.cpp
-    # testParserOutput.cpp
+    testParserForceField.cpp
+    testParserCelllist.cpp
+    testParserConstraints.cpp
+    testParserGeneral.cpp
+    testParserIntegrator.cpp
+    testParserManostat.cpp
+    testParserOutput.cpp
     testParserResetKinetics.cpp
     testParserThermostat.cpp
     testParserTimings.cpp
     testParserTopology.cpp
     testParserVirial.cpp
-
-    # testParserCoulombLongRange.cpp
-    # testParserNonCoulomb.cpp
-    # testParserParameterFile.cpp
+    testParserCoulombLongRange.cpp
+    testParserNonCoulomb.cpp
+    testParserParameterFile.cpp
 )
 
 foreach(source_file ${source_files})

@@ -94,9 +94,10 @@ class readInput::InputFileParserGeneral : public readInput::InputFileParser
 
     void parseStartFilename(const std::vector<std::string> &, const size_t);
     void parseMoldescriptorFilename(const std::vector<std::string> &, const size_t);
-    void parseGuffPath(const std::vector<std::string> &, const size_t);
     void parseGuffDatFilename(const std::vector<std::string> &, const size_t);
     void parseJobType(const std::vector<std::string> &, const size_t);
+
+    [[noreturn]] void parseGuffPath(const std::vector<std::string> &, const size_t);
 };
 
 class readInput::InputFileParserIntegrator : public readInput::InputFileParser

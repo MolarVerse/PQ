@@ -1,33 +1,55 @@
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace readInput;
 using namespace ::testing;
 
-TEST_F(TestInputFileReader, testParseCellListActivated)
+/**
+ * @brief tests parsing the "cell-list" command
+ *
+ * @details possible options are on or off - otherwise throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    vector<string> lineElements = {"cell-list", "=", "off"};
-    _inputFileReader->parseCellListActivated(lineElements);
+    InputFileParserCellList parser(_engine);
+    vector<string>          lineElements = {"cell-list", "=", "off"};
+    parser.parseCellListActivated(lineElements, 0);
     EXPECT_FALSE(_engine.getCellList().isActivated());
+
     lineElements = {"cell-list", "=", "on"};
-    _inputFileReader->parseCellListActivated(lineElements);
+    parser.parseCellListActivated(lineElements, 0);
     EXPECT_TRUE(_engine.getCellList().isActivated());
-    lineElements = {"cell-list", "=", "1"};
-    EXPECT_THROW(_inputFileReader->parseCellListActivated(lineElements), customException::InputFileException);
+
+    lineElements = {"cell-list", "=", "notValid"};
+    EXPECT_THROW_MSG(parser.parseCellListActivated(lineElements, 0),
+                     customException::InputFileException,
+                     R"(Invalid cell-list keyword "notValid" at line 0 in input file\n Possible keywords are "on" and "off")");
 }
 
-TEST_F(TestInputFileReader, testNumberOfCells)
+/**
+ * @brief tests parsing the "cell-number" command
+ *
+ * @details if the number of cells is negative or 0, throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, numberOfCells)
 {
-    vector<string> lineElements = {"ncelss", "=", "3"};
-    _inputFileReader->parseNumberOfCells(lineElements);
+    InputFileParserCellList parser(_engine);
+    vector<string>          lineElements = {"cell-number", "=", "3"};
+    parser.parseNumberOfCells(lineElements, 0);
     EXPECT_EQ(_engine.getCellList().getNumberOfCells(), linearAlgebra::Vec3Dul(3, 3, 3));
-    lineElements = {"ncelss", "=", "0"};
-    EXPECT_THROW(_inputFileReader->parseNumberOfCells(lineElements), customException::InputFileException);
+
+    lineElements = {"cell-number", "=", "0"};
+    EXPECT_THROW_MSG(parser.parseNumberOfCells(lineElements, 0),
+                     customException::InputFileException,
+                     "Number of cells must be positive - number of cells = 0");
 }
 
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

@@ -7,7 +7,7 @@ using namespace readInput;
 using namespace ::testing;
 
 /**
- * @brief tests parsing the "temperature" command
+ * @brief tests parsing the "temp" command
  *
  * @details if the temperature is negative it throws inputFileException
  *
@@ -15,11 +15,11 @@ using namespace ::testing;
 TEST_F(TestInputFileReader, testParseTemperature)
 {
     InputFileParserThermostat parser(_engine);
-    vector<string>            lineElements = {"temperature", "=", "300.0"};
+    vector<string>            lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getTemperature(), 300.0);
 
-    lineElements = {"temperature", "=", "-100.0"};
+    lineElements = {"temp", "=", "-100.0"};
     EXPECT_THROW_MSG(
         parser.parseTemperature(lineElements, 0), customException::InputFileException, "Temperature cannot be negative");
 }
