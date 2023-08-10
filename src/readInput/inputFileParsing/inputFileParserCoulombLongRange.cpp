@@ -1,4 +1,4 @@
-#include "inputFileParser.hpp"
+#include "inputFileParserCoulombLongRange.hpp"
 
 #include <memory>
 

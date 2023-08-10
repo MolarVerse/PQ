@@ -9,14 +9,14 @@ using namespace readInput;
 /**
  * @brief check if second argument is "="
  *
- * @param stringView
+ * @param view
  * @param _lineNumber
  *
  * @throw InputFileException if second argument is not "="
  */
-void readInput::checkEqualSign(const string_view &stringView, const size_t lineNumber)
+void readInput::checkEqualSign(const string_view &view, const size_t lineNumber)
 {
-    if (stringView != "=") throw InputFileException(format("Invalid command at line {} in input file", lineNumber));
+    if (view != "=") throw InputFileException(format("Invalid command at line {} in input file", lineNumber));
 }
 
 /**

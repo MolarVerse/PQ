@@ -1,5 +1,6 @@
+#include "inputFileParserTopology.hpp"
+
 #include "exceptions.hpp"
-#include "inputFileParser.hpp"
 #include "stringUtilities.hpp"
 
 using namespace std;

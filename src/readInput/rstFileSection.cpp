@@ -27,7 +27,7 @@ bool BoxSection::isHeader() { return true; }
 void BoxSection::process(vector<string> &lineElements, Engine &engine)
 {
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
-        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Box section must have 4 or 7 elements");
+        throw RstFileException(format("Error in line {}: Box section must have 4 or 7 elements", _lineNumber));
 
     engine.getSimulationBox().setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
 
@@ -39,10 +39,9 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
 
 bool NoseHooverSection::isHeader() { return true; }
 
-// TODO: implement this function
 void NoseHooverSection::process(vector<string> &, Engine &)
 {
-    throw RstFileException("Error in line " + to_string(_lineNumber) + ": Nose-Hoover section not implemented yet");
+    throw RstFileException(format("Error in line {}: Nose-Hoover section not implemented yet", _lineNumber));
 }
 
 bool StepCountSection::isHeader() { return true; }
@@ -59,11 +58,12 @@ bool StepCountSection::isHeader() { return true; }
 void StepCountSection::process(vector<string> &lineElements, Engine &engine)
 {
     if (lineElements.size() != 2)
-        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count section must have 2 elements");
+        throw RstFileException(format("Error in line {}: Step count section must have 2 elements", _lineNumber));
 
     auto stepCount = stoi(lineElements[1]);
 
-    if (stepCount < 0) throw RstFileException("Error in line " + to_string(_lineNumber) + ": Step count must be positive");
+    if (stepCount < 0)
+        throw RstFileException(format("Error in line {}: Step count must be positive", _lineNumber));
 
     engine.getTimings().setStepCount(size_t(stepCount));
 }
@@ -86,7 +86,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     unique_ptr<Molecule> molecule;
 
     if (lineElements.size() != 21)
-        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 21 elements");
+        throw RstFileException(format("Error in line {}: Atom section must have 21 elements", _lineNumber));
 
     size_t moltype = stoul(lineElements[2]);
 
@@ -97,7 +97,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     catch (const RstFileException &e)
     {
         cout << e.what() << '\n';
-        cout << "Error in linenumber " + to_string(_lineNumber) + " in restart file" << '\n';
+        cout << "Error in linenumber " << _lineNumber << " in restart file; Moltype not found\n";
         throw;
     }
 
@@ -106,14 +106,15 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
     while (true)
     {
         if (molecule->getMoltype() != moltype)
-            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " +
-                                   to_string(molecule->getNumberOfAtoms()) + " atoms");
+            throw RstFileException(
+                format("Error in line {}: Molecule must have {} atoms", _lineNumber, molecule->getNumberOfAtoms()));
 
         processAtomLine(lineElements, *molecule);
 
         ++atomCounter;
 
-        if (atomCounter == molecule->getNumberOfAtoms()) break;
+        if (atomCounter == molecule->getNumberOfAtoms())
+            break;
 
         checkAtomLine(lineElements, line, *molecule);
 
@@ -123,7 +124,7 @@ void AtomSection::process(vector<string> &lineElements, Engine &engine)
         }
 
         if ((lineElements.size() != 21) && (lineElements.size() != 12))
-            throw RstFileException("Error in line " + to_string(_lineNumber) + ": Atom section must have 12 or 21 elements");
+            throw RstFileException(format("Error in line {}: Atom section must have 12 or 21 elements", _lineNumber));
 
         moltype = stoul(lineElements[2]);
 
@@ -162,8 +163,7 @@ void AtomSection::checkAtomLine(vector<string> &lineElements, string &line, cons
     ++_lineNumber;
 
     if (!getline(*_fp, line))
-        throw RstFileException("Error in line " + to_string(_lineNumber) + ": Molecule must have " +
-                               to_string(molecule.getNumberOfAtoms()) + " atoms");
+        throw RstFileException(format("Error in line {}: Molecule must have {} atoms", _lineNumber, molecule.getNumberOfAtoms()));
 
     line         = removeComments(line, "#");
     lineElements = splitString(line);

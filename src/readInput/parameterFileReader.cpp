@@ -12,21 +12,12 @@ using namespace readInput::parameterFile;
 ParameterFileReader::ParameterFileReader(const string &filename, engine::Engine &engine)
     : _filename(filename), _fp(filename), _engine(engine)
 {
-    _parameterFileSections.push_back(new TypesSection());
-    _parameterFileSections.push_back(new BondSection());
-    _parameterFileSections.push_back(new AngleSection());
-    _parameterFileSections.push_back(new DihedralSection());
-    _parameterFileSections.push_back(new ImproperDihedralSection());
-    _parameterFileSections.push_back(new NonCoulombicsSection());
-}
-
-/**
- * @brief Destructor
- */
-ParameterFileReader::~ParameterFileReader()
-{
-    for (auto *section : _parameterFileSections)
-        delete section;
+    _parameterFileSections.push_back(make_unique<TypesSection>());
+    _parameterFileSections.push_back(make_unique<BondSection>());
+    _parameterFileSections.push_back(make_unique<AngleSection>());
+    _parameterFileSections.push_back(make_unique<DihedralSection>());
+    _parameterFileSections.push_back(make_unique<ImproperDihedralSection>());
+    _parameterFileSections.push_back(make_unique<NonCoulombicsSection>());
 }
 
 /**

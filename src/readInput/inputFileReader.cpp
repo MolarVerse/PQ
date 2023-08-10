@@ -1,6 +1,22 @@
 #include "inputFileReader.hpp"
 
 #include "constants.hpp"
+#include "inputFileParserCellList.hpp"
+#include "inputFileParserConstraints.hpp"
+#include "inputFileParserCoulombLongRange.hpp"
+#include "inputFileParserForceField.hpp"
+#include "inputFileParserGeneral.hpp"
+#include "inputFileParserIntegrator.hpp"
+#include "inputFileParserManostat.hpp"
+#include "inputFileParserNonCoulombType.hpp"
+#include "inputFileParserOutput.hpp"
+#include "inputFileParserParameterFile.hpp"
+#include "inputFileParserResetKinetics.hpp"
+#include "inputFileParserSimulationBox.hpp"
+#include "inputFileParserThermostat.hpp"
+#include "inputFileParserTimings.hpp"
+#include "inputFileParserTopology.hpp"
+#include "inputFileParserVirial.hpp"
 #include "stringUtilities.hpp"
 
 #include <boost/algorithm/string.hpp>
@@ -23,6 +39,7 @@ using namespace resetKinetics;
  * @brief Construct a new Input File Reader:: Input File Reader object
  *
  * @param filename
+ * @param engine
  */
 InputFileReader::InputFileReader(const std::string &filename, engine::Engine &engine) : _filename(filename), _engine(engine)
 {

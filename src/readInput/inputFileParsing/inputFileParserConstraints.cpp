@@ -1,5 +1,6 @@
+#include "inputFileParserConstraints.hpp"
+
 #include "exceptions.hpp"
-#include "inputFileParser.hpp"
 
 using namespace std;
 using namespace readInput;

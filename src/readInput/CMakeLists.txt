@@ -17,6 +17,7 @@ add_library(readInput
 target_include_directories(readInput
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/readInput
+    ${PROJECT_SOURCE_DIR}/include/readInput/inputFileParser/
 )
 
 target_link_libraries(readInput

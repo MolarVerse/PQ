@@ -1,4 +1,5 @@
 #include "exceptions.hpp"
+#include "inputFileParserVirial.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 

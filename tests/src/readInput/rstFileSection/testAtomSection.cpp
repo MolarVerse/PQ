@@ -1,5 +1,6 @@
 #include "exceptions.hpp"
 #include "testRstFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 #include <cassert>
 #include <filesystem>
@@ -16,32 +17,51 @@ using namespace simulationBox;
 using namespace customException;
 using namespace linearAlgebra;
 
-TEST_F(TestAtomSection, testKeyword) { EXPECT_EQ(_section->keyword(), ""); }
+/**
+ * @brief tests the keyword function
+ *
+ */
+TEST_F(TestAtomSection, keyword) { EXPECT_EQ(_section->keyword(), ""); }
 
-TEST_F(TestAtomSection, testIsHeader) { EXPECT_FALSE(_section->isHeader()); }
+/**
+ * @brief tests the isHeader function
+ *
+ */
+TEST_F(TestAtomSection, isHeader) { EXPECT_FALSE(_section->isHeader()); }
 
-TEST_F(TestAtomSection, testNumberOfArguments)
+/**
+ * @brief tests the numberOfArguments function
+ *
+ */
+TEST_F(TestAtomSection, numberOfArguments)
 {
-    for (int i = 0; i < 25; ++i)
+    _section->_lineNumber = 7;
+    for (size_t i = 0; i < 25; ++i)
         if (i != 21)
         {
             auto line = vector<string>(i);
-            ASSERT_THROW(_section->process(line, _engine), RstFileException);
+            ASSERT_THROW_MSG(
+                _section->process(line, _engine), RstFileException, "Error in line 7: Atom section must have 21 elements");
         }
 }
 
-TEST_F(TestAtomSection, testMoltypeNotFound)
+/**
+ * @brief tests if moltype is not found in process function
+ *
+ */
+TEST_F(TestAtomSection, moltypeNotFound)
 {
     auto line = vector<string>(21);
     line[2]   = "1";
-    ASSERT_THROW(_section->process(line, _engine), RstFileException);
+    ASSERT_THROW_MSG(_section->process(line, _engine), RstFileException, "Molecule type 1 not found");
 }
 
-TEST_F(TestAtomSection, testNotEnoughAtomsInMolecule)
+TEST_F(TestAtomSection, notEnoughElementsInLine)
 {
-    auto line = vector<string>(21);
-    line[2]   = "1";
-    for (int i = 3; i < 21; ++i)
+    _section->_lineNumber = 7;
+    auto line             = vector<string>(21);
+    line[2]               = "1";
+    for (size_t i = 3; i < 21; ++i)
         line[i] = "1.0";
 
     string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
@@ -64,7 +84,7 @@ TEST_F(TestAtomSection, testNotEnoughAtomsInMolecule)
     ASSERT_THROW(_section->process(line, _engine), RstFileException);
 }
 
-TEST_F(TestAtomSection, testNumberOfArgumentsWithinMolecule)
+TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
 {
     auto line = vector<string>(21);
     line[2]   = "1";
@@ -152,5 +172,5 @@ TEST_F(TestAtomSection, testProcessAtomLine)
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

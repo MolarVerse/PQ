@@ -1,8 +1,4 @@
 set(source_files
-    testBoxSection.cpp
-    testNoseHooverSection.cpp
-    testStepCountSection.cpp
-    testAtomSection.cpp
     testRstFileReader.cpp
     testMoldescriptorReader.cpp
     testGuffDatReader.cpp
@@ -20,3 +16,4 @@ endforeach()
 add_subdirectory(inputFileParsing)
 add_subdirectory(topologyReader)
 add_subdirectory(parameterFileReader)
+add_subdirectory(rstFileSection)

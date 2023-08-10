@@ -14,6 +14,12 @@ using namespace readInput;
 using namespace engine;
 using namespace customException;
 
+/**
+ * @brief Construct a new Rst File Reader:: Rst File Reader object
+ *
+ * @param filename
+ * @param engine
+ */
 RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename(filename), _fp(filename), _engine(engine)
 {
     _sections.push_back(make_unique<BoxSection>());
@@ -46,7 +52,7 @@ void RstFileReader::read()
     vector<string> lineElements;
     int            lineNumber = 1;
 
-    if (_fp.fail()) throw InputFileException("\"" + _filename + "\"" + " File not found");
+    if (_fp.fail()) throw InputFileException(format(R"("{}" File not found)", _filename));
 
     while (getline(_fp, line))
     {

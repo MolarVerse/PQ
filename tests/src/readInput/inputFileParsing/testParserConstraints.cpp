@@ -1,6 +1,10 @@
 #include "exceptions.hpp"
+#include "inputFileParserConstraints.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+
+#include <gtest/gtest.h>
+#include <string>
 
 using namespace std;
 using namespace readInput;

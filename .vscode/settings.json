@@ -107,6 +107,7 @@
         "${workspaceFolder}/.build"
     ],
     "cSpell.words": [
+        "Allman",
         "Berendsen",
         "COUL",
         "coulombic",
@@ -134,6 +135,7 @@
         "MMMD",
         "moldescriptor",
         "MOLDESCRIPTOREXCEPTION",
+        "moldescritor",
         "moltype",
         "mtest",
         "Neighbouring",
@@ -149,6 +151,7 @@
         "pimd",
         "progressbar",
         "qmcf",
+        "qmcfc",
         "rcoulomb",
         "RSTFILEEXCEPTION",
         "RSTFILEOUTPUT",

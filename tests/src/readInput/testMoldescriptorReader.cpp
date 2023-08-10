@@ -1,59 +1,72 @@
 #include "exceptions.hpp"
 #include "testMoldesctripotReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace ::testing;
 using namespace readInput;
 using namespace customException;
 
-TEST_F(TestMoldescriptorReader, testFileNotFound)
+/**
+ * @brief tests constructor of MoldescriptorReader
+ *
+ */
+TEST_F(TestMoldescriptorReader, constructor)
 {
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/missingFile.txt");
-    ASSERT_THROW(MoldescriptorReader reader(_engine), InputFileException);
-}
+    ASSERT_THROW_MSG(
+        MoldescriptorReader reader(_engine), InputFileException, "\"data/moldescriptorReader/missingFile.txt\" File not found");
 
-TEST_F(TestMoldescriptorReader, testConstructor)
-{
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptor.dat");
     ASSERT_NO_THROW(MoldescriptorReader reader(_engine));
 }
 
-TEST_F(TestMoldescriptorReader, testArguentsInMoldescriptor)
+/**
+ * @brief tests if line entry has at least 2 elements
+ *
+ */
+TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
 {
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorWithOneWordLine.dat");
     MoldescriptorReader reader(_engine);
-    ASSERT_THROW(reader.read(), MolDescriptorException);
+    ASSERT_THROW_MSG(reader.read(), MolDescriptorException, "Error in moldescriptor file at line 1");
 }
 
-TEST_F(TestMoldescriptorReader, testArgumentsinMoleculeSection)
+/**
+ * @brief tests number of entries for molecule section in moldescriptor
+ *
+ */
+TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
 {
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorWithErrorInAtomArguments.dat");
     MoldescriptorReader reader(_engine);
-    ASSERT_THROW(reader.read(), MolDescriptorException);
+    ASSERT_THROW_MSG(reader.read(), MolDescriptorException, "Error in moldescriptor file at line 4");
 
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorWithErrorInAtomArguments2.dat");
     MoldescriptorReader reader2(_engine);
-    ASSERT_THROW(reader2.read(), MolDescriptorException);
+    ASSERT_THROW_MSG(reader2.read(), MolDescriptorException, "Error in moldescriptor file at line 5");
 
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorWithErrorInMolArguments.dat");
     MoldescriptorReader reader3(_engine);
-    ASSERT_THROW(reader3.read(), MolDescriptorException);
+    ASSERT_THROW_MSG(reader3.read(), MolDescriptorException, "Error in moldescriptor file at line 3");
 }
 
 /**
  * @brief test reading of moldescriptor.dat
  *
- * TODO: add more tests to check if the data is read correctly
- *
  */
-TEST_F(TestMoldescriptorReader, testMoldescriptorReader)
+TEST_F(TestMoldescriptorReader, moldescriptorReader)
 {
     _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
     MoldescriptorReader reader(_engine);
     ASSERT_NO_THROW(reader.read());
 }
 
-TEST_F(TestMoldescriptorReader, testSpecialTypes)
+/**
+ * @brief test reading of special types
+ *
+ */
+TEST_F(TestMoldescriptorReader, specialTypes)
 {
     _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
     readMolDescriptor(_engine);
@@ -61,17 +74,37 @@ TEST_F(TestMoldescriptorReader, testSpecialTypes)
     ASSERT_EQ(_engine.getSimulationBox().getAmmoniaType(), 2);
 }
 
-TEST_F(TestMoldescriptorReader, testToManyAtomsPerMoltype)
+/**
+ * @brief tests if there are to many atoms per moltype
+ *
+ */
+TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
 {
     _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat");
     MoldescriptorReader reader2(_engine);
-    ASSERT_THROW(reader2.read(), MolDescriptorException);
+    ASSERT_THROW_MSG(reader2.read(), MolDescriptorException, "Error in moldescriptor file at line 3");
 }
 
-// TODO: build more large test cases with real simulation input to test everything!!!
+/**
+ * @brief tests if non coulombic force field is activated but no global can der Waals parameter given
+ *
+ */
+TEST_F(TestMoldescriptorReader, globalVdwTypes)
+{
+    _engine.getForceFieldPtr()->activateNonCoulombic();
+
+    _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat");
+    EXPECT_NO_THROW(readMolDescriptor(_engine));
+
+    _engine.getSettings().setMoldescriptorFilename("data/moldescriptorReader/moldescriptor_withMissingGlobalVdwTypes.dat");
+    EXPECT_THROW_MSG(readMolDescriptor(_engine),
+                     MolDescriptorException,
+                     "Error in moldescriptor file at line 6 - force field noncoulombics is activated but no global can der Waals "
+                     "parameter given");
+}
 
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

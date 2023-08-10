@@ -1,4 +1,5 @@
 #include "exceptions.hpp"
+#include "inputFileParserCoulombLongRange.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 

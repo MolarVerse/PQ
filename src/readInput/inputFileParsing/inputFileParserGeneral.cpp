@@ -1,5 +1,6 @@
+#include "inputFileParserGeneral.hpp"
+
 #include "exceptions.hpp"
-#include "inputFileParser.hpp"
 
 #include <iostream>
 

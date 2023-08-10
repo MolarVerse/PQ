@@ -13,7 +13,7 @@ AllowShortIfStatementsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortIfStatementsOnASingleLine: Never
 
 AlignTrailingComments: true
 AlignConsecutiveMacros: Consecutive

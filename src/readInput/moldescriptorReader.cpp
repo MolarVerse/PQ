@@ -18,6 +18,8 @@ using namespace customException;
 /**
  * @brief constructor
  *
+ * @details opens moldescritor file pointer
+ *
  * @param engine
  *
  * @throw InputFileException if file not found
@@ -27,7 +29,7 @@ MoldescriptorReader::MoldescriptorReader(Engine &engine)
 {
     _fp.open(_filename);
 
-    if (_fp.fail()) throw InputFileException("\"" + _filename + "\"" + " File not found");
+    if (_fp.fail()) throw InputFileException(format(R"("{}" File not found)", _filename));
 }
 
 /**
@@ -43,6 +45,8 @@ void readInput::readMolDescriptor(Engine &engine)
 
 /**
  * @brief read moldescriptor file
+ *
+ * @throws MolDescriptorException if there is an error in the moldescriptor file
  */
 void MoldescriptorReader::read()
 {
@@ -60,7 +64,7 @@ void MoldescriptorReader::read()
 
         if (lineElements.empty())
             continue;
-        else if (lineElements.size() > 1)   // TODO: probably works only for now
+        else if (lineElements.size() > 1)
         {
             if (boost::algorithm::to_lower_copy(lineElements[0]) == "water_type")
                 _engine.getSimulationBox().setWaterType(stoi(lineElements[1]));
@@ -70,7 +74,7 @@ void MoldescriptorReader::read()
                 processMolecule(lineElements);
         }
         else
-            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
     }
 }
 
@@ -78,12 +82,14 @@ void MoldescriptorReader::read()
  * @brief process molecule
  *
  * @param lineElements
+ *
+ * @throws MolDescriptorException if there is an error in the moldescriptor file
  */
 void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 {
     string line;
 
-    if (lineElements.size() < 3) throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+    if (lineElements.size() < 3) throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
 
     Molecule molecule(lineElements[0]);
 
@@ -96,14 +102,18 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 
     while (atomCount < molecule.getNumberOfAtoms())
     {
-        if (_fp.eof()) throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+        if (_fp.eof()) throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
         getline(_fp, line);
         line         = removeComments(line, "#");
         lineElements = splitString(line);
 
         ++_lineNumber;
 
-        if ((3 == lineElements.size()) || (4 == lineElements.size()))
+        if (lineElements.empty())
+            continue;
+        else
+
+            if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));
@@ -112,14 +122,14 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             ++atomCount;
         }
         else
-            throw MolDescriptorException("Error in moldescriptor file at line " + to_string(_lineNumber));
+            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
 
         if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
-                throw MolDescriptorException(
-                    "Error in moldescriptor file at line " + to_string(_lineNumber) +
-                    " force field noncoulombics is activated but no global can der Waals parameter given!");
+                throw MolDescriptorException(format("Error in moldescriptor file at line {} - force field noncoulombics is "
+                                                    "activated but no global can der Waals parameter given",
+                                                    _lineNumber));
 
             molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
         }

@@ -2,44 +2,52 @@
 
 #include "exceptions.hpp"
 #include "moldescriptorReader.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 using namespace ::testing;
 using namespace readInput;
 using namespace customException;
 
-TEST_F(TestRstFileReader, testDetermineSection)
+/**
+ * @brief tests determineSection base on the first element of the line
+ *
+ */
+TEST_F(TestRstFileReader, determineSection)
 {
     string        filename = "examples/setup/h2o_qmcfc.rst";
     RstFileReader rstFileReader(filename, _engine);
 
-    auto lineElements = vector<string>{"sTeP", "1"};
-    auto section      = rstFileReader.determineSection(lineElements);
+    auto  lineElements = vector<string>{"sTeP", "1"};
+    auto *section      = rstFileReader.determineSection(lineElements);
     EXPECT_EQ(section->keyword(), "step");
-
-    // lineElements = vector<string>{"cHI"};
-    // section      = rstFileReader.determineSection(lineElements);
-    // EXPECT_EQ(section->keyword(), "chi");
 
     lineElements = vector<string>{"Box"};
     section      = rstFileReader.determineSection(lineElements);
     EXPECT_EQ(section->keyword(), "box");
 
-    lineElements = vector<string>{"NOTAHEADERSECTION"};
+    lineElements = vector<string>{"notAHeaderSection"};
     section      = rstFileReader.determineSection(lineElements);
     EXPECT_EQ(section->keyword(), "");
 }
 
-TEST_F(TestRstFileReader, testFileNotFound)
+/**
+ * @brief tests if the restart file is not found
+ *
+ */
+TEST_F(TestRstFileReader, fileNotFound)
 {
     string        filename = "examples/setup/FILENOTFOUND.rst";
     RstFileReader rstFileReader(filename, _engine);
 
-    ASSERT_THROW(rstFileReader.read(), InputFileException);
+    ASSERT_THROW_MSG(rstFileReader.read(), InputFileException, "\"examples/setup/FILENOTFOUND.rst\" File not found");
 }
 
-// TODO: build combined test classes for such cases
-TEST_F(TestRstFileReader, testRstFileReading)
+/**
+ * @brief test full read restart file function
+ *
+ */
+TEST_F(TestRstFileReader, rstFileReading)
 {
     _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
     MoldescriptorReader moldescriptor(_engine);
@@ -54,5 +62,5 @@ TEST_F(TestRstFileReader, testRstFileReading)
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

@@ -41,7 +41,7 @@ class readInput::parameterFile::ParameterFileSection
     void setLineNumber(int lineNumber) { _lineNumber = lineNumber; }
     void setFp(std::ifstream *fp) { _fp = fp; }
 
-    int getLineNumber() const { return _lineNumber; }
+    [[nodiscard]] int getLineNumber() const { return _lineNumber; }
 };
 
 /**
@@ -135,7 +135,7 @@ class readInput::parameterFile::NonCoulombicsSection : public readInput::paramet
     void        processMorse(std::vector<std::string> &, engine::Engine &) const;
 
     void setNonCoulombicType(forceField::NonCoulombicType nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
-    forceField::NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
+    [[nodiscard]] forceField::NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
 };
 
 #endif   // _PARAMETER_FILE_SECTION_HPP_

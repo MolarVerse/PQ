@@ -27,11 +27,10 @@ class readInput::parameterFile::ParameterFileReader
     std::ifstream   _fp;
     engine::Engine &_engine;
 
-    std::vector<readInput::parameterFile::ParameterFileSection *> _parameterFileSections;
+    std::vector<std::unique_ptr<readInput::parameterFile::ParameterFileSection>> _parameterFileSections;
 
   public:
     ParameterFileReader(const std::string &filename, engine::Engine &engine);
-    ~ParameterFileReader();
 
     bool isNeeded() const;
     // void read();
