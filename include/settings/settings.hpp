@@ -32,11 +32,12 @@ class settings::Settings
 
     // filenames and paths for later setup
     std::string _startFilename;
-    std::string _moldescriptorFilename = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
-    std::string _guffPath              = ".";                                          // not backward compatible
-    std::string _guffDatFilename       = defaults::_GUFF_FILENAME_DEFAULT_;
-    std::string _topologyFilename      = "";
-    std::string _parameterFilename     = "";
+    std::string _moldescriptorFilename  = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
+    std::string _guffPath               = ".";                                          // not backward compatible
+    std::string _guffDatFilename        = defaults::_GUFF_FILENAME_DEFAULT_;
+    std::string _topologyFilename       = "";
+    std::string _parameterFilename      = "";
+    std::string _intraNonBondedFilename = "";
 
     std::string _jobtype;
 
@@ -75,6 +76,7 @@ class settings::Settings
     [[nodiscard]] std::string getGuffDatFilename() const { return _guffDatFilename; }
     [[nodiscard]] std::string getTopologyFilename() const { return _topologyFilename; }
     [[nodiscard]] std::string getParameterFilename() const { return _parameterFilename; }
+    [[nodiscard]] std::string getIntraNonBondedFilename() const { return _intraNonBondedFilename; }
 
     [[nodiscard]] std::string getJobtype() const { return _jobtype; }
 
@@ -118,6 +120,7 @@ class settings::Settings
     void setGuffDatFilename(const std::string_view guffDatFilename) { _guffDatFilename = guffDatFilename; }
     void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
     void setParameterFilename(const std::string_view parameterFilename) { _parameterFilename = parameterFilename; }
+    void setIntraNonBondedFilename(const std::string_view filename) { _intraNonBondedFilename = filename; }
 
     void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
 

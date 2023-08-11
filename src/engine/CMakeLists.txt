@@ -26,6 +26,7 @@ target_link_libraries(engine
     physicalData
     virial
     forceField
+    intraNonBonded
 )
 
 install(TARGETS engine

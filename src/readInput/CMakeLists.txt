@@ -1,23 +1,20 @@
-file(GLOB InputFileParserFiles ${CMAKE_CURRENT_SOURCE_DIR}/inputFileParsing/inputFileParser*.cpp)
 
 add_library(readInput
-    rstFileReader.cpp
-    rstFileSection.cpp
-    moldescriptorReader.cpp
     guffDatReader.cpp
-    topologyReader.cpp
-    topologySection.cpp
+    inputFileReader.cpp
+    intraNonBondedReader.cpp
+    moldescriptorReader.cpp
     parameterFileReader.cpp
     parameterFileSection.cpp
-
-    inputFileReader.cpp
-    ${InputFileParserFiles}
+    rstFileReader.cpp
+    rstFileSection.cpp
+    topologyReader.cpp
+    topologySection.cpp
 )
 
 target_include_directories(readInput
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/readInput
-    ${PROJECT_SOURCE_DIR}/include/readInput/inputFileParser/
 )
 
 target_link_libraries(readInput
@@ -28,8 +25,11 @@ target_link_libraries(readInput
     config
     gtest
     forceField
+    inputFileParser
 )
 
 install(TARGETS readInput
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+add_subdirectory(inputFileParsing)

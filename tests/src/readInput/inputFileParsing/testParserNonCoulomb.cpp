@@ -1,5 +1,5 @@
 #include "exceptions.hpp"
-#include "inputFileParserNonCoulombType.hpp"
+#include "inputFileParserNonCoulomb.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -15,8 +15,8 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    InputFileParserNonCoulombType parser(_engine);
-    vector<string>                lineElements = {"noncoulomb", "=", "none"};
+    InputFileParserNonCoulomb parser(_engine);
+    vector<string>            lineElements = {"noncoulomb", "=", "none"};
     parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "none");
 

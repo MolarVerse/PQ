@@ -8,7 +8,7 @@
 #include "inputFileParserGeneral.hpp"
 #include "inputFileParserIntegrator.hpp"
 #include "inputFileParserManostat.hpp"
-#include "inputFileParserNonCoulombType.hpp"
+#include "inputFileParserNonCoulomb.hpp"
 #include "inputFileParserOutput.hpp"
 #include "inputFileParserParameterFile.hpp"
 #include "inputFileParserResetKinetics.hpp"
@@ -50,7 +50,7 @@ InputFileReader::InputFileReader(const std::string &filename, engine::Engine &en
     _parsers.push_back(make_unique<InputFileParserGeneral>(_engine));
     _parsers.push_back(make_unique<InputFileParserIntegrator>(_engine));
     _parsers.push_back(make_unique<InputFileParserManostat>(_engine));
-    _parsers.push_back(make_unique<InputFileParserNonCoulombType>(_engine));
+    _parsers.push_back(make_unique<InputFileParserNonCoulomb>(_engine));
     _parsers.push_back(make_unique<InputFileParserOutput>(_engine));
     _parsers.push_back(make_unique<InputFileParserParameterFile>(_engine));
     _parsers.push_back(make_unique<InputFileParserResetKinetics>(_engine));
@@ -96,7 +96,7 @@ void InputFileReader::addKeywords()
  */
 void InputFileReader::process(const vector<string> &lineElements)
 {
-    const auto keyword = boost::algorithm::to_lower_copy(lineElements[0]);
+    const auto keyword = toLowerCopy(lineElements[0]);
 
     if (!_keywordFuncMap.contains(keyword))
         throw InputFileException(format("Invalid keyword \"{}\" at line {}", keyword, _lineNumber));
@@ -117,7 +117,8 @@ void InputFileReader::read()
     ifstream inputFile(_filename);
     string   line;
 
-    if (inputFile.fail()) throw InputFileException("\"" + _filename + "\"" + " File not found");
+    if (inputFile.fail())
+        throw InputFileException("\"" + _filename + "\"" + " File not found");
 
     while (getline(inputFile, line))
     {
@@ -132,7 +133,8 @@ void InputFileReader::read()
         for (const auto lineCommands = getLineCommands(line, _lineNumber); const string &command : lineCommands)
         {
             const auto lineElements = splitString(command);
-            if (lineElements.empty()) continue;
+            if (lineElements.empty())
+                continue;
 
             process(lineElements);
         }
@@ -167,7 +169,8 @@ void InputFileReader::postProcess()
         if (_keywordRequiredMap[keyword] && (0 == count))
             throw InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
-        if (count > 1) throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
+        if (count > 1)
+            throw InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     }
 
     _engine.getSettings().setMoldescriptorFilename(_engine.getSettings().getGuffPath() + "/" +

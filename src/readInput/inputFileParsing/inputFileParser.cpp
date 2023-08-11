@@ -1,5 +1,7 @@
 #include "inputFileParser.hpp"
 
+#include "stringUtilities.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -16,7 +18,8 @@ using namespace readInput;
  */
 void readInput::checkEqualSign(const string_view &view, const size_t lineNumber)
 {
-    if (view != "=") throw InputFileException(format("Invalid command at line {} in input file", lineNumber));
+    if (view != "=")
+        throw InputFileException(format("Invalid command at line {} in input file", lineNumber));
 }
 
 /**
@@ -70,7 +73,8 @@ void readInput::checkCommand(const vector<string> &lineElements, const size_t li
  */
 void InputFileParser::addKeyword(const string &keyword, ParseFunc parserFunc, bool required)
 {
-    _keywordFuncMap.try_emplace(keyword, parserFunc);
-    _keywordRequiredMap.try_emplace(keyword, required);
-    _keywordCountMap.try_emplace(keyword, 0);
+    const auto keywordLowerCase = utilities::toLowerCopy(keyword);
+    _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
+    _keywordRequiredMap.try_emplace(keywordLowerCase, required);
+    _keywordCountMap.try_emplace(keywordLowerCase, 0);
 }

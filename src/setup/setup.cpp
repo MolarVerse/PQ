@@ -5,8 +5,10 @@
 #include "guffDatReader.hpp"
 #include "inputFileReader.hpp"
 #include "integratorSetup.hpp"
+#include "intraNonBondedReader.hpp"
 #include "manostatSetup.hpp"
 #include "moldescriptorReader.hpp"
+#include "parameterFileReader.hpp"
 #include "potentialSetup.hpp"
 #include "resetKineticsSetup.hpp"
 #include "rstFileReader.hpp"
@@ -59,6 +61,12 @@ void setup::readFiles(const string &inputFilename, Engine &engine)
 
     cout << "Reading topology file..." << endl;
     topology::readTopologyFile(engine);
+
+    cout << "Reading parameter file..." << endl;
+    parameterFile::readParameterFile(engine);
+
+    cout << "Reading intra non bonded file..." << endl;
+    readIntraNonBondedFile(engine);
 }
 
 /**
