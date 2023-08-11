@@ -32,9 +32,11 @@ TopologyReader::TopologyReader(const string &filename, engine::Engine &engine)
  */
 bool TopologyReader::isNeeded() const
 {
-    if (_engine.getConstraints().isActivated()) return true;
+    if (_engine.getConstraints().isActivated())
+        return true;
 
-    if (_engine.getForceField().isActivated()) return true;
+    if (_engine.getForceField().isActivated())
+        return true;
 
     return false;
 }
@@ -48,9 +50,11 @@ void TopologyReader::read()
     vector<string> lineElements;
     int            lineNumber = 1;
 
-    if (!isNeeded()) return;
+    if (!isNeeded())
+        return;
 
-    if (_filename.empty()) throw customException::InputFileException("Topology file needed for requested simulation setup");
+    if (_filename.empty())
+        throw customException::InputFileException("Topology file needed for requested simulation setup");
 
     if (!filesystem::exists(_filename))
         throw customException::InputFileException("Topology file \"" + _filename + "\"" + " File not found");
@@ -86,7 +90,8 @@ TopologySection *TopologyReader::determineSection(const vector<string> &lineElem
     const auto iterEnd = _topologySections.end();
 
     for (auto section = _topologySections.begin(); section != iterEnd; ++section)
-        if ((*section)->keyword() == toLowerCopy(lineElements[0])) return (*section).get();
+        if ((*section)->keyword() == toLowerCopy(lineElements[0]))
+            return (*section).get();
 
     throw customException::TopologyException("Unknown or already passed keyword \"" + lineElements[0] + "\" in topology file");
 }

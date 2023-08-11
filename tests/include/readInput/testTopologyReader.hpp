@@ -8,6 +8,12 @@
 #include <gtest/gtest.h>
 #include <string>
 
+/**
+ * @class TestTopologyReader
+ *
+ * @brief Fixture class for testing the TopologyReader class
+ *
+ */
 class TestTopologyReader : public ::testing::Test
 {
   protected:

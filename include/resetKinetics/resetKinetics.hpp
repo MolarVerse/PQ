@@ -17,7 +17,7 @@ namespace resetKinetics
 /**
  * @class ResetKinetics
  *
- * @brief dummy base class for the reset of the kinetics
+ * @brief base class for the reset of the kinetics
  *
  */
 class resetKinetics::ResetKinetics
@@ -47,10 +47,10 @@ class resetKinetics::ResetKinetics
     void         resetTemperature(const physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
     void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
 
-    size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
-    size_t getFrequencyTemperatureReset() const { return _frequencyTemperatureReset; }
-    size_t getNStepsMomentumReset() const { return _nStepsMomentumReset; }
-    size_t getFrequencyMomentumReset() const { return _frequencyMomentumReset; }
+    [[nodiscard]] size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
+    [[nodiscard]] size_t getFrequencyTemperatureReset() const { return _frequencyTemperatureReset; }
+    [[nodiscard]] size_t getNStepsMomentumReset() const { return _nStepsMomentumReset; }
+    [[nodiscard]] size_t getFrequencyMomentumReset() const { return _frequencyMomentumReset; }
 };
 
 /**

@@ -92,35 +92,38 @@ class simulationBox::Molecule
      * standard getter methods *
      ***************************/
 
-    size_t getMoltype() const { return _moltype; }
-    size_t getNumberOfAtoms() const { return _numberOfAtoms; }
-    size_t getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
-    size_t getAtomType(const size_t index) const { return _atomTypes[index]; }
-    size_t getInternalAtomType(const size_t externalAtomType) { return _externalToInternalAtomTypes.at(externalAtomType); }
-    size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
+    [[nodiscard]] size_t getMoltype() const { return _moltype; }
+    [[nodiscard]] size_t getNumberOfAtoms() const { return _numberOfAtoms; }
+    [[nodiscard]] size_t getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
+    [[nodiscard]] size_t getAtomType(const size_t index) const { return _atomTypes[index]; }
+    [[nodiscard]] size_t getInternalAtomType(const size_t externalAtomType)
+    {
+        return _externalToInternalAtomTypes.at(externalAtomType);
+    }
+    [[nodiscard]] size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
 
-    size_t getExternalGlobalVDWType(const size_t index) const { return _externalGlobalVDWTypes[index]; }
-    int    getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
+    [[nodiscard]] size_t getExternalGlobalVDWType(const size_t index) const { return _externalGlobalVDWTypes[index]; }
+    [[nodiscard]] int    getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
 
-    double getCharge() const { return _charge; }
-    double getMolMass() const { return _molMass; }
-    double getPartialCharge(const size_t index) const { return _partialCharges[index]; }
-    double getAtomMass(const size_t index) const { return _masses[index]; }
+    [[nodiscard]] double getCharge() const { return _charge; }
+    [[nodiscard]] double getMolMass() const { return _molMass; }
+    [[nodiscard]] double getPartialCharge(const size_t index) const { return _partialCharges[index]; }
+    [[nodiscard]] double getAtomMass(const size_t index) const { return _masses[index]; }
 
-    std::string getName() const { return _name; }
-    std::string getAtomName(const size_t index) const { return _atomNames[index]; }
-    std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; }
+    [[nodiscard]] std::string getName() const { return _name; }
+    [[nodiscard]] std::string getAtomName(const size_t index) const { return _atomNames[index]; }
+    [[nodiscard]] std::string getAtomTypeName(const size_t index) const { return _atomTypeNames[index]; }
 
-    linearAlgebra::Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
-    linearAlgebra::Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
-    linearAlgebra::Vec3D getAtomForce(const size_t index) const { return _forces[index]; }
-    linearAlgebra::Vec3D getAtomShiftForce(const size_t index) const { return _shiftForces[index]; }
-    linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
+    [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(const size_t index) const { return _positions[index]; }
+    [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(const size_t index) const { return _velocities[index]; }
+    [[nodiscard]] linearAlgebra::Vec3D getAtomForce(const size_t index) const { return _forces[index]; }
+    [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(const size_t index) const { return _shiftForces[index]; }
+    [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
 
-    std::vector<size_t> getExternalAtomTypes() const { return _externalAtomTypes; }
-    std::vector<size_t> getExternalGlobalVDWTypes() const { return _externalGlobalVDWTypes; }
+    [[nodiscard]] std::vector<size_t> &getExternalAtomTypes() { return _externalAtomTypes; }
+    [[nodiscard]] std::vector<size_t> &getExternalGlobalVDWTypes() { return _externalGlobalVDWTypes; }
 
-    std::vector<linearAlgebra::Vec3D> getAtomShiftForces() const { return _shiftForces; }
+    [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomShiftForces() const { return _shiftForces; }
 
     /***************************
      * standard setter methods *

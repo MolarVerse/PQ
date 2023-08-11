@@ -8,6 +8,12 @@
 #include <gtest/gtest.h>
 #include <string>
 
+/**
+ * @class TestParameterFileReader
+ *
+ * @brief Fixture class for testing the ParameterFileReader class
+ *
+ */
 class TestParameterFileReader : public ::testing::Test
 {
   protected:

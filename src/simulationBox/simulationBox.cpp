@@ -103,7 +103,7 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
     if (const auto molecule = ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
     else
-        throw RstFileException("Molecule type " + to_string(moltype) + " not found");
+        throw RstFileException(format("Molecule type {} not found", moltype));
 }
 
 /**
@@ -122,10 +122,11 @@ pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t ato
     {
         sum += molecule.getNumberOfAtoms();
 
-        if (sum >= atomIndex) return make_pair(&molecule, atomIndex - (sum - molecule.getNumberOfAtoms()) - 1);
+        if (sum >= atomIndex)
+            return make_pair(&molecule, atomIndex - (sum - molecule.getNumberOfAtoms()) - 1);
     }
 
-    throw UserInputException("Atom index " + to_string(atomIndex) + " out of range - total number of atoms: " + to_string(sum));
+    throw UserInputException(format("Atom index {} out of range - total number of atoms: {}", atomIndex, sum));
 }
 
 /**

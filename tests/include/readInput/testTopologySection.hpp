@@ -8,6 +8,12 @@
 #include <gtest/gtest.h>
 #include <string>
 
+/**
+ * @class TestTopologySection
+ *
+ * @brief Fixture class for testing the TopologySection class
+ *
+ */
 class TestTopologySection : public ::testing::Test
 {
   protected:

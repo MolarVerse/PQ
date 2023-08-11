@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestMoldescriptorReader
+ *
+ * @brief Fixture class for testing the MoldescriptorReader class
+ *
+ */
 class TestMoldescriptorReader : public ::testing::Test
 {
   protected:

@@ -69,44 +69,44 @@ class settings::Settings
      * standard getters *
      ********************/
 
-    std::string getStartFilename() const { return _startFilename; }
-    std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
-    std::string getGuffPath() const { return _guffPath; }
-    std::string getGuffDatFilename() const { return _guffDatFilename; }
-    std::string getTopologyFilename() const { return _topologyFilename; }
-    std::string getParameterFilename() const { return _parameterFilename; }
+    [[nodiscard]] std::string getStartFilename() const { return _startFilename; }
+    [[nodiscard]] std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
+    [[nodiscard]] std::string getGuffPath() const { return _guffPath; }
+    [[nodiscard]] std::string getGuffDatFilename() const { return _guffDatFilename; }
+    [[nodiscard]] std::string getTopologyFilename() const { return _topologyFilename; }
+    [[nodiscard]] std::string getParameterFilename() const { return _parameterFilename; }
 
-    std::string getJobtype() const { return _jobtype; }
+    [[nodiscard]] std::string getJobtype() const { return _jobtype; }
 
-    std::string getThermostat() const { return _thermostat.second; }
-    bool        getThermostatSet() const { return _thermostat.first; }
-    double      getTemperature() const { return _temperature.second; }
-    bool        getTemperatureSet() const { return _temperature.first; }
-    double      getRelaxationTime() const { return _relaxationTime.second; }
-    bool        getRelaxationTimeSet() const { return _relaxationTime.first; }
+    [[nodiscard]] std::string getThermostat() const { return _thermostat.second; }
+    [[nodiscard]] bool        getThermostatSet() const { return _thermostat.first; }
+    [[nodiscard]] double      getTemperature() const { return _temperature.second; }
+    [[nodiscard]] bool        getTemperatureSet() const { return _temperature.first; }
+    [[nodiscard]] double      getRelaxationTime() const { return _relaxationTime.second; }
+    [[nodiscard]] bool        getRelaxationTimeSet() const { return _relaxationTime.first; }
 
-    std::string getManostat() const { return _manostat.second; }
-    bool        getManostatSet() const { return _manostat.first; }
-    double      getPressure() const { return _pressure.second; }
-    bool        getPressureSet() const { return _pressure.first; }
-    double      getTauManostat() const { return _tauManostat.second; }
-    bool        getTauManostatSet() const { return _tauManostat.first; }
-    double      getCompressibility() const { return _compressibility; }
+    [[nodiscard]] std::string getManostat() const { return _manostat.second; }
+    [[nodiscard]] bool        getManostatSet() const { return _manostat.first; }
+    [[nodiscard]] double      getPressure() const { return _pressure.second; }
+    [[nodiscard]] bool        getPressureSet() const { return _pressure.first; }
+    [[nodiscard]] double      getTauManostat() const { return _tauManostat.second; }
+    [[nodiscard]] bool        getTauManostatSet() const { return _tauManostat.first; }
+    [[nodiscard]] double      getCompressibility() const { return _compressibility; }
 
-    size_t getNScale() const { return _nScale; }
-    size_t getFScale() const { return _fScale; }
-    size_t getNReset() const { return _nReset; }
-    size_t getFReset() const { return _fReset; }
+    [[nodiscard]] size_t getNScale() const { return _nScale; }
+    [[nodiscard]] size_t getFScale() const { return _fScale; }
+    [[nodiscard]] size_t getNReset() const { return _nReset; }
+    [[nodiscard]] size_t getFReset() const { return _fReset; }
 
-    double getShakeTolerance() const { return _shakeTolerance; }
-    size_t getShakeMaxIter() const { return _shakeMaxIter; }
-    double getRattleTolerance() const { return _rattleTolerance; }
-    size_t getRattleMaxIter() const { return _rattleMaxIter; }
+    [[nodiscard]] double getShakeTolerance() const { return _shakeTolerance; }
+    [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
+    [[nodiscard]] double getRattleTolerance() const { return _rattleTolerance; }
+    [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }
 
-    std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
-    double      getWolfParameter() const { return _wolfParameter; }
+    [[nodiscard]] std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
+    [[nodiscard]] double      getWolfParameter() const { return _wolfParameter; }
 
-    std::string getNonCoulombType() const { return _nonCoulombType; }
+    [[nodiscard]] std::string getNonCoulombType() const { return _nonCoulombType; }
 
     /********************
      * standard setters *

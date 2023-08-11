@@ -8,6 +8,12 @@
 #include <gtest/gtest.h>
 #include <string>
 
+/**
+ * @class TestParameterFileSection
+ *
+ * @brief Fixture class for testing the ParameterFileSection class
+ *
+ */
 class TestParameterFileSection : public ::testing::Test
 {
   protected:

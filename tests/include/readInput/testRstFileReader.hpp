@@ -6,6 +6,10 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @brief Fixture class for testing the RstFileReader class
+ * 
+ */
 class TestRstFileReader : public ::testing::Test
 {
   protected:

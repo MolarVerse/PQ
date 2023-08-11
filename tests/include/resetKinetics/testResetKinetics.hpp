@@ -6,6 +6,12 @@
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestResetKinetics
+ *
+ * @brief Fixture class for testing the ResetKinetics class
+ *
+ */
 class TestResetKinetics : public ::testing::Test
 {
   protected:

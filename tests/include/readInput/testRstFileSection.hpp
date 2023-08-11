@@ -24,6 +24,12 @@ class TestBoxSection : public ::testing::Test
     engine::Engine             _engine;
 };
 
+/**
+ * @class TestBondSection
+ *
+ * @brief Test fixture for testing the BondSection class.
+ *
+ */
 class TestNoseHooverSection : public ::testing::Test
 {
   protected:
@@ -39,6 +45,12 @@ class TestNoseHooverSection : public ::testing::Test
     engine::Engine             _engine;
 };
 
+/**
+ * @class TestBondSection
+ *
+ * @brief Test fixture for testing the BondSection class.
+ *
+ */
 class TestStepCountSection : public ::testing::Test
 {
   protected:
@@ -54,6 +66,12 @@ class TestStepCountSection : public ::testing::Test
     engine::Engine             _engine;
 };
 
+/**
+ * @class TestBondSection
+ *
+ * @brief Test fixture for testing the BondSection class.
+ *
+ */
 class TestAtomSection : public ::testing::Test
 {
   protected:

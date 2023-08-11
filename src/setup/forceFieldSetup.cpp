@@ -72,6 +72,8 @@ void ForceFieldSetup::setupDihedrals()
     {
         const auto dihedralType = forceField->findDihedralTypeById(dihedral.getType());
         dihedral.setForceConstant(dihedralType.getForceConstant());
+        dihedral.setPhaseShift(dihedralType.getPhaseShift());
+        dihedral.setPeriodicity(dihedralType.getPeriodicity());
     };
 
     ranges::for_each(forceField->getDihedrals(), addForceFieldParameters);
@@ -95,6 +97,8 @@ void ForceFieldSetup::setupImproperDihedrals()
     {
         const auto improperType = forceField->findImproperDihedralTypeById(improper.getType());
         improper.setForceConstant(improperType.getForceConstant());
+        improper.setPhaseShift(improperType.getPhaseShift());
+        improper.setPeriodicity(improperType.getPeriodicity());
     };
 
     ranges::for_each(forceField->getImproperDihedrals(), addForceFieldParameters);

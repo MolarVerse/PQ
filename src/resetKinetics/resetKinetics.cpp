@@ -23,7 +23,7 @@ void ResetKinetics::reset(const size_t, PhysicalData &, simulationBox::Simulatio
  */
 void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    if ((step <= _nStepsMomentumReset) || (step % _frequencyMomentumReset == 0))
+    if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
     {
         ResetKinetics::resetMomentum(physicalData, simBox);
         physicalData.calculateTemperature(simBox);
@@ -32,6 +32,11 @@ void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulat
 
 /**
  * @brief reset the temperature and the momentum of the system
+ *
+ * @details reset temperature and momentum if number of steps is smaller than nscale
+ *          reset temperature and momentum if number of steps is a multiple of fscale
+ *          reset only momentum if number of steps is smaller than nreset
+ *          reset only momentum if number of steps is a multiple of freset
  *
  * @note important to recalculate the momentum after the temperature reset
  *       and the temperature after the momentum reset
@@ -42,14 +47,14 @@ void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulat
  */
 void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    if ((step <= _nStepsTemperatureReset) || (step % _frequencyTemperatureReset == 0))
+    if ((step <= _nStepsTemperatureReset) || (0 == step % _frequencyTemperatureReset))
     {
         ResetKinetics::resetTemperature(physicalData, simBox);
         physicalData.calculateKineticEnergyAndMomentum(simBox);
         ResetKinetics::resetMomentum(physicalData, simBox);
         physicalData.calculateTemperature(simBox);
     }
-    else if ((step <= _nStepsMomentumReset) || (step % _frequencyMomentumReset == 0))
+    else if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
     {
         ResetKinetics::resetMomentum(physicalData, simBox);
         physicalData.calculateTemperature(simBox);
@@ -58,6 +63,8 @@ void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simu
 
 /**
  * @brief reset the temperature of the system - hard scaling
+ *
+ * @details calculate hard scaling factor for target temperature and current temperature and scale all velocities
  *
  * @param physicalData
  * @param simBox
@@ -73,6 +80,8 @@ void ResetKinetics::resetTemperature(const PhysicalData &physicalData, simulatio
 
 /**
  * @brief reset the momentum of the system
+ *
+ * @details subtract momentum correction from all velocities - correction is the total momentum divided by the total mass
  *
  * @param physicalData
  * @param simBox

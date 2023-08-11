@@ -10,7 +10,7 @@
 namespace readInput::parameterFile
 {
     class ParameterFileReader;
-    // void readParameterFile(engine::Engine &);
+    void readParameterFile(engine::Engine &);
 
 }   // namespace readInput::parameterFile
 
@@ -32,9 +32,9 @@ class readInput::parameterFile::ParameterFileReader
   public:
     ParameterFileReader(const std::string &filename, engine::Engine &engine);
 
-    bool isNeeded() const;
-    // void read();
-    // readInput::TopologySection *determineSection(const std::vector<std::string> &);
+    bool                                            isNeeded() const;
+    void                                            read();
+    readInput::parameterFile::ParameterFileSection *determineSection(const std::vector<std::string> &);
 
     void setFilename(const std::string_view &filename) { _filename = filename; }
 };

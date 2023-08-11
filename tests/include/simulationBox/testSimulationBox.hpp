@@ -1,6 +1,6 @@
-#ifndef _TEST_SIMULATIONBOX_HPP_
+#ifndef _TEST_SIMULATION_BOX_HPP_
 
-#define _TEST_SIMULATIONBOX_HPP_
+#define _TEST_SIMULATION_BOX_HPP_
 
 #include "simulationBox.hpp"
 
@@ -47,4 +47,4 @@ class TestSimulationBox : public ::testing::Test
     simulationBox::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_SIMULATIONBOX_HPP_
+#endif   // _TEST_SIMULATION_BOX_HPP_
