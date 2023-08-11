@@ -96,7 +96,8 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
     EXPECT_EQ(molecule2, &(_simulationBox->getMolecules()[1]));
     EXPECT_EQ(atomIndex2, 0);
 
-    EXPECT_THROW(_simulationBox->findMoleculeByAtomIndex(6), customException::UserInputException);
+    EXPECT_THROW([[maybe_unused]] const auto dummy = _simulationBox->findMoleculeByAtomIndex(6);
+                 , customException::UserInputException);
 }
 
 /**
@@ -153,6 +154,38 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(1), 0);
     EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(3), 1);
     EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(5), 2);
+}
+
+/**
+ * @brief tests moleculeTypeExists function
+ *
+ */
+TEST_F(TestSimulationBox, moleculeTypeExists)
+{
+    _simulationBox->getMoleculeTypes()[0].setMoltype(1);
+    _simulationBox->getMoleculeTypes()[1].setMoltype(2);
+
+    EXPECT_TRUE(_simulationBox->moleculeTypeExists(1));
+    EXPECT_FALSE(_simulationBox->moleculeTypeExists(3));
+}
+
+/**
+ * @brief tests findMoleculeTypeByString function
+ *
+ * @details findMoleculeTypeByString returns an optional size_t.
+ *
+ */
+TEST_F(TestSimulationBox, findMoleculeTypeByString)
+{
+    auto *molecule1 = &(_simulationBox->getMoleculeTypes()[0]);
+    auto *molecule2 = &(_simulationBox->getMoleculeTypes()[1]);
+
+    molecule1->setName("mol1");
+    molecule2->setName("mol2");
+
+    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
+    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);
+    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol3").has_value(), false);
 }
 
 int main(int argc, char **argv)

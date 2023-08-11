@@ -85,6 +85,15 @@ TEST(TestExceptions, manostatException)
     EXPECT_THROW_MSG(throw customException::ManostatException("test"), customException::ManostatException, "test");
 }
 
+/**
+ * @brief tests throwing intraNonBonded exception
+ *
+ */
+TEST(TestExceptions, intraNonBondedException)
+{
+    EXPECT_THROW_MSG(throw customException::IntraNonBondedException("test"), customException::IntraNonBondedException, "test");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

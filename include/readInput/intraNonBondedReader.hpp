@@ -18,8 +18,11 @@ namespace readInput
 class readInput::IntraNonBondedReader
 {
   private:
-    std::string     _filename;
-    std::ifstream   _fp;
+    std::string   _filename;
+    std::ifstream _fp;
+
+    size_t _lineNumber;
+
     engine::Engine &_engine;
 
   public:

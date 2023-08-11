@@ -10,4 +10,6 @@
   - code file should be fine
   - tests are a big mess -> clean them up
 
+-introduce more optionals instead of throwing exceptions to early
+
 - introduce more complex exception handling with classes

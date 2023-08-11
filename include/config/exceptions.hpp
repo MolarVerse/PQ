@@ -24,6 +24,7 @@ namespace customException
     class TopologyException;
     class ParameterFileException;
     class ManostatException;
+    class IntraNonBondedException;
     enum class ExceptionType : size_t;
 }   // namespace customException
 
@@ -176,6 +177,19 @@ class customException::ParameterFileException : public customException::CustomEx
  * @brief Exception for manostat errors
  */
 class customException::ManostatException : public customException::CustomException
+{
+  public:
+    using customException::CustomException::CustomException;
+
+    const char *what() const throw() override;
+};
+
+/**
+ * @class IntraNonBondedException inherits from CustomException
+ *
+ * @brief Exception for intra non bonded errors
+ */
+class customException::IntraNonBondedException : public customException::CustomException
 {
   public:
     using customException::CustomException::CustomException;

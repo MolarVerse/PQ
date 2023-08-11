@@ -107,6 +107,36 @@ Molecule SimulationBox::findMoleculeType(const size_t moltype) const
 }
 
 /**
+ * @brief see if molecule type exists by moltype
+ *
+ * @param moleculeType
+ * @return true
+ * @return false
+ */
+bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
+{
+    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
+
+    return ranges::find_if(_moleculeTypes, isMoleculeType) != _moleculeTypes.end();
+}
+
+/**
+ * @brief find molecule type by string
+ *
+ * @param identifier
+ * @return optional<size_t>
+ */
+optional<size_t> SimulationBox::findMoleculeTypeByString(const string &identifier) const
+{
+    auto isMoleculeName = [&identifier](const Molecule &mol) { return mol.getName() == identifier; };
+
+    if (const auto molecule = ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
+        return molecule->getMoltype();
+    else
+        return nullopt;
+}
+
+/**
  * @brief find molecule by atom index
  *
  * @details return a pair of a pointer to the molecule and the index of the atom in the molecule

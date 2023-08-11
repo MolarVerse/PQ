@@ -7,6 +7,8 @@
 #include "exceptions.hpp"
 #include "molecule.hpp"
 
+#include <map>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -70,15 +72,18 @@ class simulationBox::SimulationBox
 
   public:
     void checkCoulombRadiusCutOff(customException::ExceptionType) const;
-
-    size_t getNumberOfAtoms() const;
-
-    Molecule                      findMoleculeType(const size_t moltype) const;
-    std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
-    void                          setupExternalToInternalGlobalVdwTypesMap();
+    void setupExternalToInternalGlobalVdwTypesMap();
 
     void calculateDegreesOfFreedom();
     void calculateCenterOfMassMolecules();
+
+    size_t getNumberOfAtoms() const;
+
+    bool moleculeTypeExists(const size_t) const;
+
+    [[nodiscard]] std::optional<size_t>         findMoleculeTypeByString(const std::string &) const;
+    [[nodiscard]] Molecule                      findMoleculeType(const size_t) const;
+    [[nodiscard]] std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t);
 
     void resizeGuff(c_ul numberOfMoleculeTypes);
     void resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes);
