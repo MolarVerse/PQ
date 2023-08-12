@@ -67,6 +67,12 @@ class forceField::ForceField
     linearAlgebra::Matrix<std::shared_ptr<NonCoulombicPair>> _nonCoulombicPairsMatrix;
 
   public:
+    void calculateBondedInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    void calculateBondInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    void calculateAngleInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    void calculateDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    void calculateImproperDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+
     void deleteNotNeededNonCoulombicPairs(const std::vector<size_t> &);
     void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
     void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::shared_ptr<NonCoulombicPair>> &);

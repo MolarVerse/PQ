@@ -26,9 +26,15 @@ class physicalData::PhysicalData
     double _temperature;
     double _pressure;
     double _momentum;
+
     double _kineticEnergy;
     double _coulombEnergy;
     double _nonCoulombEnergy;
+
+    double _bondEnergy;
+    double _angleEnergy;
+    double _dihedralEnergy;
+    double _improperEnergy;
 
     linearAlgebra::Vec3D _virial;
     linearAlgebra::Vec3D _momentumVector;
@@ -60,30 +66,43 @@ class physicalData::PhysicalData
     void setTemperature(const double temperature) { _temperature = temperature; }
     void setPressure(const double pressure) { _pressure = pressure; }
     void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
-    void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
-    void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
+
     void setMomentum(const double momentum) { _momentum = momentum; }
     void setMomentumVector(const linearAlgebra::Vec3D &vec) { _momentumVector = vec; }
+
     void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
     void setKineticEnergyAtomicVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
     void setKineticEnergyMolecularVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyMolecularVector = vec; }
+    void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
+    void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
+
+    void setBondEnergy(const double bondEnergy) { _bondEnergy = bondEnergy; }
+    void setAngleEnergy(const double angleEnergy) { _angleEnergy = angleEnergy; }
+    void setDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy = dihedralEnergy; }
+    void setImproperEnergy(const double improperEnergy) { _improperEnergy = improperEnergy; }
 
     /********************
      * standard getters *
      ********************/
 
-    double          getVolume() const { return _volume; }
-    double          getDensity() const { return _density; }
-    double          getTemperature() const { return _temperature; }
-    double          getPressure() const { return _pressure; }
-    double          getMomentum() const { return _momentum; }
-    double          getNonCoulombEnergy() const { return _nonCoulombEnergy; }
-    double          getCoulombEnergy() const { return _coulombEnergy; }
-    double          getKineticEnergy() const { return _kineticEnergy; }
-    linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
-    linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
-    linearAlgebra::Vec3D getVirial() const { return _virial; }
-    linearAlgebra::Vec3D getMomentumVector() const { return _momentumVector; }
+    [[nodiscard]] double getVolume() const { return _volume; }
+    [[nodiscard]] double getDensity() const { return _density; }
+    [[nodiscard]] double getTemperature() const { return _temperature; }
+    [[nodiscard]] double getPressure() const { return _pressure; }
+    [[nodiscard]] double getMomentum() const { return _momentum; }
+
+    [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
+    [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }
+    [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
+    [[nodiscard]] double getBondEnergy() const { return _bondEnergy; }
+    [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
+    [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }
+    [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
+
+    [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
+    [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
+    [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
+    [[nodiscard]] linearAlgebra::Vec3D getMomentumVector() const { return _momentumVector; }
 };
 
 #endif   // _PHYSICAL_DATA_HPP_

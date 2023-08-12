@@ -4,6 +4,7 @@
 
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "simulationBox.hpp"
 
 namespace intraNonBonded
 {
@@ -35,17 +36,21 @@ class intraNonBonded::IntraNonBonded
     IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
     bool               _isActivated        = false;
 
-    std::vector<IntraNonBondedContainer> _intraNonBondedTypes;
-    std::vector<IntraNonBondedMap>       _intraNonBondedInteractions;
+    std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
+    std::vector<IntraNonBondedMap>       _intraNonBondedMaps;
 
   public:
+    IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
+
+    void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
+
     void addIntraNonBondedContainer(const IntraNonBondedContainer &intraNonBondedType)
     {
-        _intraNonBondedTypes.push_back(intraNonBondedType);
+        _intraNonBondedContainers.push_back(intraNonBondedType);
     }
     void addIntraNonBondedMap(const IntraNonBondedMap &intraNonBondedInteraction)
     {
-        _intraNonBondedInteractions.push_back(intraNonBondedInteraction);
+        _intraNonBondedMaps.push_back(intraNonBondedInteraction);
     }
 
     void               activate() { _isActivated = true; }
@@ -53,8 +58,8 @@ class intraNonBonded::IntraNonBonded
     [[nodiscard]] bool isActivated() const { return _isActivated; }
 
     [[nodiscard]] IntraNonBondedType                   getIntraNonBondedType() const { return _intraNonBondedType; }
-    [[nodiscard]] std::vector<IntraNonBondedContainer> getIntraNonBondedContainers() const { return _intraNonBondedTypes; }
-    [[nodiscard]] std::vector<IntraNonBondedMap>       getIntraNonBondedMaps() const { return _intraNonBondedInteractions; }
+    [[nodiscard]] std::vector<IntraNonBondedContainer> getIntraNonBondedContainers() const { return _intraNonBondedContainers; }
+    [[nodiscard]] std::vector<IntraNonBondedMap>       getIntraNonBondedMaps() const { return _intraNonBondedMaps; }
 };
 
 /**

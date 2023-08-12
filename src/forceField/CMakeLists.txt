@@ -20,6 +20,7 @@ target_link_libraries(forceField
     connectivity
     linearAlgebra
     utilities
+    physicalData
 )
 
 install(TARGETS forceField

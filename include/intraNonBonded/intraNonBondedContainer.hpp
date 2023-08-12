@@ -27,6 +27,8 @@ class intraNonBonded::IntraNonBondedContainer
     {
     }
 
+    IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
+
     [[nodiscard]] size_t                        getMolType() const { return _molType; }
     [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const { return _atomIndices; }
 };

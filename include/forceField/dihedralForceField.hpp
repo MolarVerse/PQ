@@ -4,6 +4,8 @@
 
 #include "dihedral.hpp"
 #include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 #include <cstddef>
 #include <vector>
@@ -34,14 +36,16 @@ class forceField::DihedralForceField : public connectivity::Dihedral
                        size_t                                        type)
         : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
+    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &){};
+
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
     void setPeriodicity(double periodicity) { _periodicity = periodicity; }
     void setPhaseShift(double phaseShift) { _phaseShift = phaseShift; }
 
-    size_t getType() const { return _type; }
-    double getForceConstant() const { return _forceConstant; }
-    double getPeriodicity() const { return _periodicity; }
-    double getPhaseShift() const { return _phaseShift; }
+    [[nodiscard]] size_t getType() const { return _type; }
+    [[nodiscard]] double getForceConstant() const { return _forceConstant; }
+    [[nodiscard]] double getPeriodicity() const { return _periodicity; }
+    [[nodiscard]] double getPhaseShift() const { return _phaseShift; }
 };
 
 #endif   // _DIHEDRAL_FORCE_FIELD_HPP_

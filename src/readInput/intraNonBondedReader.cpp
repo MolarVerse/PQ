@@ -67,9 +67,20 @@ void IntraNonBondedReader::read()
         }
         else
             moleculeType = moleculeTypeFromString.value();
+
+        processMolecule(moleculeType);
     }
 }
 
+/**
+ * @brief processes the intra nonBonded interactions for a given molecule type
+ *
+ * @details the atomIndices vector is a vector of vectors. The first index is the reference atom index. The second index is the
+ * atom index that interacts with the reference atom. The sign of the atom index indicates the type of interaction. If the sign is
+ * negative then the interaction is a 1-4 interaction and has to be scaled accordingly.
+ *
+ * @param moleculeType
+ */
 void IntraNonBondedReader::processMolecule(const size_t moleculeType)
 {
     string line;
@@ -94,6 +105,26 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
             ++_lineNumber;
             endedNormal = true;
             break;
+        }
+
+        const auto referenceAtomIndex = size_t(stoi(lineElements[0]) - 1);
+
+        if (referenceAtomIndex >= numberOfAtoms)
+            throw customException::IntraNonBondedException(
+                format(R"(ERROR: reference atom index "{}" in line {} in file {} is out of range)",
+                       lineElements[0],
+                       _lineNumber,
+                       _filename));
+
+        for (size_t i = 1; i < lineElements.size(); ++i)
+        {
+            const auto atomIndex = stoi(lineElements[i]) - 1;
+
+            if (::abs(atomIndex) >= int(numberOfAtoms))
+                throw customException::IntraNonBondedException(format(
+                    R"(ERROR: atom index "{}" in line {} in file {} is out of range)", lineElements[i], _lineNumber, _filename));
+
+            atomIndices[referenceAtomIndex].push_back(atomIndex);
         }
 
         ++_lineNumber;

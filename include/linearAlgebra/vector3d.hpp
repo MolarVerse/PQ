@@ -11,10 +11,13 @@
 
 namespace linearAlgebra
 {
-    template <typename T> using iterator       = typename std::array<T, 3>::iterator;
-    template <typename T> using const_iterator = typename std::array<T, 3>::const_iterator;
+    template <typename T>
+    using iterator = typename std::array<T, 3>::iterator;
+    template <typename T>
+    using const_iterator = typename std::array<T, 3>::const_iterator;
 
-    template <class T> class Vector3D;
+    template <class T>
+    class Vector3D;
 
     using Vec3D   = Vector3D<double>;
     using Vec3Di  = Vector3D<int>;
@@ -28,7 +31,8 @@ namespace linearAlgebra
  *
  * @tparam T
  */
-template <class T> class linearAlgebra::Vector3D
+template <class T>
+class linearAlgebra::Vector3D
 {
   private:
     union
@@ -293,7 +297,8 @@ template <class T> class linearAlgebra::Vector3D
      * @tparam U
      * @return Vector3D<U>
      */
-    template <class U> explicit operator Vector3D<U>() const
+    template <class U>
+    explicit operator Vector3D<U>() const
     {
         return Vector3D<U>(static_cast<U>(_x), static_cast<U>(_y), static_cast<U>(_z));
     }
@@ -377,6 +382,18 @@ template <class T> class linearAlgebra::Vector3D
      * @param v2
      */
     friend T dot(Vector3D<T> v1, Vector3D<T> v2) { return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z; }
+
+    /**
+     * @brief cross product of two vectors
+     *
+     * @param v1
+     * @param v2
+     * @return Vector3D<T>
+     */
+    friend Vector3D<T> cross(Vector3D<T> v1, Vector3D<T> v2)
+    {
+        return Vector3D<T>(v1._y * v2._z - v1._z * v2._y, v1._z * v2._x - v1._x * v2._z, v1._x * v2._y - v1._y * v2._x);
+    }
 
     /**
      * @brief ostream operator for vector3d

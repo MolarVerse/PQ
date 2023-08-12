@@ -259,3 +259,34 @@ optional<shared_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInterna
     else
         return nullopt;
 }
+
+void ForceField::calculateBondedInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    calculateBondedInteractions(box, physicalData);
+    calculateBondedInteractions(box, physicalData);
+    calculateBondedInteractions(box, physicalData);
+    calculateBondedInteractions(box, physicalData);
+}
+
+void ForceField::calculateBondInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    ranges::for_each(_bonds, [&box, &physicalData](auto &bond) { bond.calculateEnergyAndForces(box, physicalData); });
+}
+
+void ForceField::calculateAngleInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    ranges::for_each(_angles, [&box, &physicalData](auto &angle) { angle.calculateEnergyAndForces(box, physicalData); });
+}
+
+void ForceField::calculateDihedralInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    ranges::for_each(_dihedrals, [&box, &physicalData](auto &torsion) { torsion.calculateEnergyAndForces(box, physicalData); });
+}
+
+void ForceField::calculateImproperDihedralInteractions(const simulationBox::SimulationBox &box,
+                                                       physicalData::PhysicalData         &physicalData)
+{
+    ranges::for_each(_improperDihedrals,
+                     [&box, &physicalData](auto &improperTorsion)
+                     { improperTorsion.calculateEnergyAndForces(box, physicalData); });
+}

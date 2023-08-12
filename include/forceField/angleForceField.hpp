@@ -4,6 +4,8 @@
 
 #include "angle.hpp"
 #include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 #include <cstddef>
 #include <vector>
@@ -30,6 +32,8 @@ class forceField::AngleForceField : public connectivity::Angle
   public:
     AngleForceField(const std::vector<simulationBox::Molecule *> &molecules, const std::vector<size_t> &atomIndices, size_t type)
         : connectivity::Angle(molecules, atomIndices), _type(type){};
+
+    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
     void setEquilibriumAngle(double equilibriumAngle) { _equilibriumAngle = equilibriumAngle; }
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
