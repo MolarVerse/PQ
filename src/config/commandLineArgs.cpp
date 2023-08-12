@@ -18,9 +18,11 @@ using namespace customException;
 void CommandLineArgs::detectFlags()
 {
     for (const auto &arg : _argv)
-        if (boost::starts_with(arg, "-")) throw UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
+        if (boost::starts_with(arg, "-"))
+            throw UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
 
-    if (_argc < 2) throw UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
+    if (_argc < 2)
+        throw UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
 
     _inputFileName = _argv[1];
 }

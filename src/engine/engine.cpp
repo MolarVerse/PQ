@@ -38,24 +38,24 @@ void Engine::run()
 
     _timings.endTimer();
 
-    cout << endl << endl;
+    cout << '\n' << '\n';
 
-    cout << "Total time: " << static_cast<long long>(_timings.calculateElapsedTime()) * 1e-3 << "s" << endl;
+    cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
 
-    cout << endl << endl;
+    cout << '\n' << '\n';
 
-    cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << endl;
-    cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << endl;
-    cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << endl;
+    cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << '\n';
+    cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << '\n';
+    cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << '\n';
 
-    cout << "Temperature: " << _physicalData.getTemperature() << endl;
-    cout << "Momentum: " << _physicalData.getMomentum() << endl;
+    cout << "Temperature: " << _physicalData.getTemperature() << '\n';
+    cout << "Momentum: " << _physicalData.getMomentum() << '\n';
 
-    cout << "Volume: " << _physicalData.getVolume() << endl;
-    cout << "Density: " << _physicalData.getDensity() << endl;
-    cout << "Pressure: " << _physicalData.getPressure() << endl;
+    cout << "Volume: " << _physicalData.getVolume() << '\n';
+    cout << "Density: " << _physicalData.getDensity() << '\n';
+    cout << "Pressure: " << _physicalData.getPressure() << '\n';
 
-    cout << endl << endl;
+    cout << '\n' << '\n';
 }
 
 /**
@@ -115,7 +115,7 @@ void Engine::writeOutput()
 
     const auto outputFrequency = Output::getOutputFrequency();
 
-    if (_step % outputFrequency == 0)
+    if (0 == _step % outputFrequency)
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
 

@@ -31,4 +31,6 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox &box, Physical
 
     _molecules[0]->addAtomForce(_atomIndices[0], force);
     _molecules[1]->addAtomForce(_atomIndices[1], -force);
+
+    physicalData.addVirial(force * dPosition);
 }

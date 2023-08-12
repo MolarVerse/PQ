@@ -42,19 +42,19 @@ class simulationBox::Cell
      * standard getter methods *
      ***************************/
 
-    size_t            getNumberOfMolecules() const { return _molecules.size(); }
-    size_t            getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
-    linearAlgebra::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
-    linearAlgebra::Vec3D   getUpperBoundary() const { return _upperBoundary; }
-    linearAlgebra::Vec3Dul getCellIndex() const { return _cellIndex; }
+    [[nodiscard]] size_t                 getNumberOfMolecules() const { return _molecules.size(); }
+    [[nodiscard]] size_t                 getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
+    [[nodiscard]] linearAlgebra::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
+    [[nodiscard]] linearAlgebra::Vec3D   getUpperBoundary() const { return _upperBoundary; }
+    [[nodiscard]] linearAlgebra::Vec3Dul getCellIndex() const { return _cellIndex; }
 
-    Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
-    std::vector<Molecule *> getMolecules() const { return _molecules; }
+    [[nodiscard]] Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
+    [[nodiscard]] std::vector<Molecule *> getMolecules() const { return _molecules; }
 
-    Cell               *getNeighbourCell(const size_t index) const { return _neighbourCells[index]; }
-    std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
+    [[nodiscard]] Cell               *getNeighbourCell(const size_t index) const { return _neighbourCells[index]; }
+    [[nodiscard]] std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
 
-    const std::vector<size_t> &getAtomIndices(const size_t index) const { return _atomIndices[index]; }
+    [[nodiscard]] const std::vector<size_t> &getAtomIndices(const size_t index) const { return _atomIndices[index]; }
 
     /***************************
      * standard setter methods *

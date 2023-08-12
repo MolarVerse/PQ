@@ -50,19 +50,19 @@ class simulationBox::Box
     void setBoxAngles(const linearAlgebra::Vec3D &);
     void setDensity(const double density);
 
-    double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
+    [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
 
     /*******************************
      * standard getter and setters *
      *******************************/
 
-    linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
-    linearAlgebra::Vec3D getBoxAngles() const { return _boxAngles; }
-    double          getTotalMass() const { return _totalMass; }
-    double          getTotalCharge() const { return _totalCharge; }
-    double          getDensity() const { return _density; }
-    double          getVolume() const { return _volume; }
-    bool            getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+    [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
+    [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _boxAngles; }
+    [[nodiscard]] double               getTotalMass() const { return _totalMass; }
+    [[nodiscard]] double               getTotalCharge() const { return _totalCharge; }
+    [[nodiscard]] double               getDensity() const { return _density; }
+    [[nodiscard]] double               getVolume() const { return _volume; }
+    [[nodiscard]] bool                 getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
     void setTotalMass(const double totalMass) { _totalMass = totalMass; }
     void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }

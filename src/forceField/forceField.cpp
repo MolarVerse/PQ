@@ -22,7 +22,7 @@ const BondType &ForceField::findBondTypeById(const size_t id) const
     if (const auto bondType = ranges::find_if(_bondTypes, isBondId); bondType != _bondTypes.end())
         return *bondType;
     else
-        throw customException::TopologyException("Bond type with id " + to_string(id) + " not found.");
+        throw customException::TopologyException(format("Bond type with id {} not found.", id));
 }
 
 /**
@@ -40,7 +40,7 @@ const AngleType &ForceField::findAngleTypeById(const size_t id) const
     if (const auto angleType = ranges::find_if(_angleTypes, isAngleId); angleType != _angleTypes.end())
         return *angleType;
     else
-        throw customException::TopologyException("Angle type with id " + to_string(id) + " not found.");
+        throw customException::TopologyException(format("Angle type with id {} not found.", id));
 }
 
 /**
@@ -58,7 +58,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
     if (const auto dihedralType = ranges::find_if(_dihedralTypes, isDihedralId); dihedralType != _dihedralTypes.end())
         return *dihedralType;
     else
-        throw customException::TopologyException("Dihedral type with id " + to_string(id) + " not found.");
+        throw customException::TopologyException(format("Dihedral type with id {} not found.", id));
 }
 
 /**
@@ -77,7 +77,7 @@ const DihedralType &ForceField::findImproperDihedralTypeById(const size_t id) co
         dihedralType != _improperDihedralTypes.end())
         return *dihedralType;
     else
-        throw customException::TopologyException("Improper dihedral type with id " + to_string(id) + " not found.");
+        throw customException::TopologyException(format("Improper dihedral type with id {} not found.", id));
 }
 
 /**
@@ -198,10 +198,12 @@ void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
                 {
                     const auto vdwType1 = (*nonCoulombicPair1)->getVanDerWaalsType1();
                     const auto vdwType2 = (*nonCoulombicPair1)->getVanDerWaalsType2();
-                    throw customException::ParameterFileException("Non-coulombic pairs with global van der Waals types " +
-                                                                  to_string(vdwType1) + ", " + to_string(vdwType2) + " and " +
-                                                                  to_string(vdwType2) + ", " + to_string(vdwType1) +
-                                                                  " in the parameter file have different parameters");
+                    throw customException::ParameterFileException(format(
+                        "Non-coulombic pairs with global van der Waals types {}, {} and {}, {} in the parameter file have different parameters",
+                        vdwType1,
+                        vdwType2,
+                        vdwType2,
+                        vdwType1));
                 }
 
                 _nonCoulombicPairsMatrix[i][j] = *nonCoulombicPair1;
@@ -262,10 +264,10 @@ optional<shared_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInterna
 
 void ForceField::calculateBondedInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    calculateBondedInteractions(box, physicalData);
-    calculateBondedInteractions(box, physicalData);
-    calculateBondedInteractions(box, physicalData);
-    calculateBondedInteractions(box, physicalData);
+    calculateBondInteractions(box, physicalData);
+    calculateAngleInteractions(box, physicalData);
+    calculateDihedralInteractions(box, physicalData);
+    calculateImproperDihedralInteractions(box, physicalData);
 }
 
 void ForceField::calculateBondInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)

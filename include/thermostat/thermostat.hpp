@@ -35,8 +35,8 @@ class thermostat::Thermostat
 
     virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    void   setTimestep(const double timestep) { _timestep = timestep; }
-    double getTimestep() const { return _timestep; }
+    void                 setTimestep(const double timestep) { _timestep = timestep; }
+    [[nodiscard]] double getTimestep() const { return _timestep; }
 };
 
 /**
@@ -56,8 +56,8 @@ class thermostat::BerendsenThermostat : public thermostat::Thermostat
 
     void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
-    double getTau() const { return _tau; }
-    void   setTau(const double tau) { _tau = tau; }
+    [[nodiscard]] double getTau() const { return _tau; }
+    void                 setTau(const double tau) { _tau = tau; }
 };
 
 #endif   // _THERMOSTAT_HPP_

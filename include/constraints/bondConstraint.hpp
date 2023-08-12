@@ -22,7 +22,7 @@ namespace constraints
 class constraints::BondConstraint : public connectivity::Bond
 {
   private:
-    double          _targetBondLength;
+    double               _targetBondLength;
     linearAlgebra::Vec3D _shakeDistanceRef;
 
   public:
@@ -35,10 +35,10 @@ class constraints::BondConstraint : public connectivity::Bond
 
     void calculateConstraintBondRef(const simulationBox::SimulationBox &);
 
-    double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
-    double calculateVelocityDelta() const;
-    bool   applyShake(const simulationBox::SimulationBox &, double, double);
-    bool   applyRattle(double);
+    [[nodiscard]] double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
+    [[nodiscard]] double calculateVelocityDelta() const;
+    bool                 applyShake(const simulationBox::SimulationBox &, double, double);
+    bool                 applyRattle(double);
 
     /**************************************
      *                                    *
@@ -48,8 +48,8 @@ class constraints::BondConstraint : public connectivity::Bond
 
     void setShakeDistanceRef(linearAlgebra::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
-    double          getTargetBondLength() const { return _targetBondLength; }
-    linearAlgebra::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }
+    [[nodiscard]] double               getTargetBondLength() const { return _targetBondLength; }
+    [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }
 };
 
 #endif   // _BOND_CONSTRAINT_HPP_

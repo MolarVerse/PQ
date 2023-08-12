@@ -37,10 +37,10 @@ class virial::Virial
 
     virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-    linearAlgebra::Vec3D getVirial() const { return _virial; }
-    void            setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
+    void                               setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
+    [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
 
-    std::string getVirialType() const { return _virialType; }
+    [[nodiscard]] std::string getVirialType() const { return _virialType; }
 };
 
 /**

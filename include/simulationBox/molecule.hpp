@@ -59,8 +59,8 @@ class simulationBox::Molecule
     void scaleVelocities(const double scaleFactor);
     void correctVelocities(const linearAlgebra::Vec3D &correction);
 
-    size_t getNumberOfAtomTypes();
-    void   resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
+    void                 resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
+    [[nodiscard]] size_t getNumberOfAtomTypes();
 
     /************************
      * standard add methods *

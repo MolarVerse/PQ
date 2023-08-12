@@ -8,10 +8,10 @@ using namespace constraints;
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox &simBox)
+void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox &simulationBox)
 {
     std::ranges::for_each(_bondConstraints,
-                          [&simBox](auto &bondConstraint) { bondConstraint.calculateConstraintBondRef(simBox); });
+                          [&simulationBox](auto &bondConstraint) { bondConstraint.calculateConstraintBondRef(simulationBox); });
 }
 
 /**
@@ -19,7 +19,7 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
  *
  * @TODO: implement check if not converged with own exception type
  */
-void Constraints::applyShake(const simulationBox::SimulationBox &simBox)
+void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
     auto   converged = false;
     size_t iter      = 0;
@@ -29,8 +29,8 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simBox)
         converged = true;
 
         std::ranges::for_each(_bondConstraints,
-                              [&simBox, &converged, this](auto &bondConstraint)
-                              { converged = converged && bondConstraint.applyShake(simBox, _shakeTolerance, _dt); });
+                              [&simulationBox, &converged, this](auto &bondConstraint)
+                              { converged = converged && bondConstraint.applyShake(simulationBox, _shakeTolerance, _dt); });
 
         ++iter;
     }

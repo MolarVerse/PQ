@@ -57,6 +57,8 @@ class physicalData::PhysicalData
         getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
     }
 
+    void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
+
     /********************
      * standard setters *
      ********************/
