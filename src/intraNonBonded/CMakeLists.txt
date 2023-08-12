@@ -1,6 +1,6 @@
 add_library(intraNonBonded
     intraNonBonded.cpp
-    intraNonBondedInteraction.cpp
+    intraNonBondedMap.cpp
 )
 
 target_include_directories(intraNonBonded

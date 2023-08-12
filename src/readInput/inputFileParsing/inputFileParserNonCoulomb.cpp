@@ -68,7 +68,7 @@ void InputFileParserNonCoulomb::parseIntraNonBondedType(const vector<string> &li
         _engine.getIntraNonBonded().deactivate();
     else if (lineElements[2] == "guff")
     {
-        _engine.makeIntraNonBonded(intraNonBonded::IntraNonBondedForceField());
+        _engine.makeIntraNonBonded(intraNonBonded::IntraNonBondedGuff());
         _engine.getIntraNonBonded().activate();
     }
     else if (lineElements[2] == "force-field")
@@ -78,7 +78,7 @@ void InputFileParserNonCoulomb::parseIntraNonBondedType(const vector<string> &li
     }
     else
         throw InputFileException(format(
-            "Invalid intraNonBonded type \"{}\" at line {} in input file. Possible options are: guff, force-field and none",
+            "Invalid intra-nonBonded type \"{}\" at line {} in input file. Possible options are: guff, force-field and none",
             lineElements[2],
             lineNumber));
 }
