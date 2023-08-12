@@ -75,8 +75,8 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
     string line;
     auto   endedNormal = false;
 
-    const auto             numberOfAtoms = _engine.getSimulationBox().findMoleculeType(moleculeType).getNumberOfAtoms();
-    vector<vector<size_t>> atomIndices(numberOfAtoms, vector<size_t>(0));
+    const auto          numberOfAtoms = _engine.getSimulationBox().findMoleculeType(moleculeType).getNumberOfAtoms();
+    vector<vector<int>> atomIndices(numberOfAtoms, vector<int>(0));
 
     while (getline(_fp, line))
     {
