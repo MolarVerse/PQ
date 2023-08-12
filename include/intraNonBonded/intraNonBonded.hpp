@@ -39,8 +39,14 @@ class intraNonBonded::IntraNonBonded
     std::vector<IntraNonBondedMap>       _intraNonBondedInteractions;
 
   public:
-    void addIntraNonBondedContainer(const IntraNonBondedContainer &intraNonBondedType);
-    void addIntraNonBondedMap(const IntraNonBondedMap &intraNonBondedInteraction);
+    void addIntraNonBondedContainer(const IntraNonBondedContainer &intraNonBondedType)
+    {
+        _intraNonBondedTypes.push_back(intraNonBondedType);
+    }
+    void addIntraNonBondedMap(const IntraNonBondedMap &intraNonBondedInteraction)
+    {
+        _intraNonBondedInteractions.push_back(intraNonBondedInteraction);
+    }
 
     void               activate() { _isActivated = true; }
     void               deactivate() { _isActivated = false; }

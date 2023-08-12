@@ -69,3 +69,39 @@ void IntraNonBondedReader::read()
             moleculeType = moleculeTypeFromString.value();
     }
 }
+
+void IntraNonBondedReader::processMolecule(const size_t moleculeType)
+{
+    string line;
+    auto   endedNormal = false;
+
+    const auto             numberOfAtoms = _engine.getSimulationBox().findMoleculeType(moleculeType).getNumberOfAtoms();
+    vector<vector<size_t>> atomIndices(numberOfAtoms, vector<size_t>(0));
+
+    while (getline(_fp, line))
+    {
+        line                    = utilities::removeComments(line, "#");
+        const auto lineElements = utilities::splitString(line);
+
+        ++_lineNumber;
+        if (lineElements.empty())
+        {
+            continue;
+        }
+
+        if (utilities::toLowerCopy(lineElements[0]) == "end")
+        {
+            ++_lineNumber;
+            endedNormal = true;
+            break;
+        }
+
+        ++_lineNumber;
+    }
+
+    if (!endedNormal)
+        throw customException::IntraNonBondedException(
+            format(R"(ERROR: could not find "END" in line {} in file {})", _lineNumber, _filename));
+
+    _engine.getIntraNonBonded().addIntraNonBondedContainer(intraNonBonded::IntraNonBondedContainer(moleculeType, atomIndices));
+}

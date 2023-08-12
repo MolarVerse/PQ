@@ -29,6 +29,7 @@ class readInput::IntraNonBondedReader
     IntraNonBondedReader(const std::string &filename, engine::Engine &engine) : _filename(filename), _engine(engine) {}
 
     void read();
+    void processMolecule(const size_t);
     bool isNeeded() const { return _engine.getIntraNonBonded().isActivated(); }
 };
 
