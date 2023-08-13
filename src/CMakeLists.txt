@@ -19,3 +19,5 @@ add_subdirectory(connectivity)
 add_subdirectory(forceField)
 add_subdirectory(settings)
 add_subdirectory(intraNonBonded)
+
+add_subdirectory(potential_new)

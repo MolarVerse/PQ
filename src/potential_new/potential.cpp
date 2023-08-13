@@ -5,37 +5,9 @@
 
 using namespace std;
 using namespace simulationBox;
-using namespace potential;
+using namespace potential_new;
 using namespace physicalData;
 using namespace linearAlgebra;
-
-/**
- * @brief copy constructor for potential
- *
- * @param potential
- */
-Potential::Potential(const Potential &potential)
-    : _coulombType(potential._coulombType), _nonCoulombType(potential._nonCoulombType)
-{
-}
-
-/**
- * @brief copy assignment for potential
- *
- * @param potential
- *
- * @return
- */
-Potential &Potential::operator=(const Potential &potential)
-{
-    if (this != &potential)
-    {
-        _coulombType    = potential._coulombType;
-        _nonCoulombType = potential._nonCoulombType;
-    }
-
-    return *this;
-}
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
