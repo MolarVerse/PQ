@@ -36,7 +36,7 @@ class forceField::DihedralForceField : public connectivity::Dihedral
                        size_t                                        type)
         : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
-    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &){};
+    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &, bool);
 
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
     void setPeriodicity(double periodicity) { _periodicity = periodicity; }

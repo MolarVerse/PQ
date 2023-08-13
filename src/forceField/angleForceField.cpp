@@ -29,7 +29,6 @@ void AngleForceField::calculateEnergyAndForces(const SimulationBox &box, Physica
 
     const auto distance12 = ::sqrt(distance12Squared);
     const auto distance13 = ::sqrt(distance13Squared);
-    const auto distance23 = norm(dPosition23);
 
     auto cosine = dot(dPosition12, dPosition13) / (distance12 * distance13);
 
@@ -58,10 +57,4 @@ void AngleForceField::calculateEnergyAndForces(const SimulationBox &box, Physica
 
     _molecules[0]->addAtomForce(_atomIndices[0], force2);
     _molecules[2]->addAtomForce(_atomIndices[2], -force2);
-
-    force             = forceMagnitude / distance23;
-    const auto force3 = force * dPosition23;
-
-    _molecules[1]->addAtomForce(_atomIndices[1], force3);
-    _molecules[2]->addAtomForce(_atomIndices[2], -force3);
 }
