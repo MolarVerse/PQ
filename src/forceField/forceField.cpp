@@ -198,12 +198,13 @@ void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
                 {
                     const auto vdwType1 = (*nonCoulombicPair1)->getVanDerWaalsType1();
                     const auto vdwType2 = (*nonCoulombicPair1)->getVanDerWaalsType2();
-                    throw customException::ParameterFileException(format(
-                        "Non-coulombic pairs with global van der Waals types {}, {} and {}, {} in the parameter file have different parameters",
-                        vdwType1,
-                        vdwType2,
-                        vdwType2,
-                        vdwType1));
+                    throw customException::ParameterFileException(
+                        format("Non-coulombic pairs with global van der Waals types {}, {} and {}, {} in the parameter file have "
+                               "different parameters",
+                               vdwType1,
+                               vdwType2,
+                               vdwType2,
+                               vdwType1));
                 }
 
                 _nonCoulombicPairsMatrix[i][j] = *nonCoulombicPair1;
@@ -249,9 +250,10 @@ optional<shared_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInterna
         {
             auto vdwType1 = (*firstNonCoulombicPair)->getVanDerWaalsType1();
             auto vdwType2 = (*firstNonCoulombicPair)->getVanDerWaalsType2();
-            throw customException::ParameterFileException("Non coulombic pair with global van der waals types " +
-                                                          to_string(vdwType1) + " and " + to_string(vdwType2) +
-                                                          " is defined twice in the parameter file.");
+            throw customException::ParameterFileException(
+                format("Non coulombic pair with global van der waals types {} and {} is defined twice in the parameter file.",
+                       vdwType1,
+                       vdwType2));
         }
         else
         {
