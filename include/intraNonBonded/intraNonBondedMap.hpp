@@ -4,6 +4,8 @@
 
 #include "intraNonBondedContainer.hpp"
 #include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 #include <cstddef>
 
@@ -31,6 +33,8 @@ class intraNonBonded::IntraNonBondedMap
 
     [[nodiscard]] IntraNonBondedContainer *getIntraNonBondedType() const { return _intraNonBondedType; }
     [[nodiscard]] simulationBox::Molecule *getMolecule() const { return molecule; }
+
+    [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const { return _intraNonBondedType->getAtomIndices(); }
 };
 
 #endif   // _INTRA_NON_BONDED_MAP_HPP_

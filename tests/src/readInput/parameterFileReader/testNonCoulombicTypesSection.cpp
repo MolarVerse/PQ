@@ -18,7 +18,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getC6(), 1.22);
     EXPECT_EQ(pair->getC12(), 234.3);
-    EXPECT_EQ(pair->getCutOff(), 324.3);
+    EXPECT_EQ(pair->getRadialCutOff(), 324.3);
 
     lineElements = {"0", "1", "1.22", "234.3"};
     nonCoulombicsSection.processLJ(lineElements, *_engine);
@@ -29,7 +29,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getC6(), 1.22);
     EXPECT_EQ(pair2->getC12(), 234.3);
-    EXPECT_EQ(pair2->getCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
     EXPECT_THROW(nonCoulombicsSection.processLJ(lineElements, *_engine), customException::ParameterFileException);
@@ -47,7 +47,7 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
     EXPECT_EQ(pair->getA(), 1.22);
     EXPECT_EQ(pair->getDRho(), 234.3);
     EXPECT_EQ(pair->getC6(), 324.3);
-    EXPECT_EQ(pair->getCutOff(), 435.0);
+    EXPECT_EQ(pair->getRadialCutOff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
@@ -59,7 +59,7 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
     EXPECT_EQ(pair2->getA(), 1.22);
     EXPECT_EQ(pair2->getDRho(), 234.3);
     EXPECT_EQ(pair2->getC6(), 324.3);
-    EXPECT_EQ(pair2->getCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW(nonCoulombicsSection.processBuckingham(lineElements, *_engine), customException::ParameterFileException);
@@ -77,7 +77,7 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
     EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
     EXPECT_EQ(pair->getWellWidth(), 234.3);
     EXPECT_EQ(pair->getEquilibriumDistance(), 324.3);
-    EXPECT_EQ(pair->getCutOff(), 435.0);
+    EXPECT_EQ(pair->getRadialCutOff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processMorse(lineElements, *_engine);
@@ -88,7 +88,7 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
     EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
     EXPECT_EQ(pair2->getWellWidth(), 234.3);
     EXPECT_EQ(pair2->getEquilibriumDistance(), 324.3);
-    EXPECT_EQ(pair2->getCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW(nonCoulombicsSection.processMorse(lineElements, *_engine), customException::ParameterFileException);

@@ -108,6 +108,16 @@ void ForceFieldSetup::setupImproperDihedrals()
 
 void ForceFieldSetup::setupNonCoulombics()
 {
+
+    ranges::for_each(_engine.getForceFieldPtr()->getNonCoulombicPairsVector(),
+                     [](auto &nonCoulombicPair)
+                     {
+                         const auto &[energy, force] =
+                             nonCoulombicPair->calculateEnergyAndForce(nonCoulombicPair->getRadialCutOff());
+                         nonCoulombicPair->setEnergyCutOff(energy);
+                         nonCoulombicPair->setForceCutOff(force);
+                     });
+
     _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
 
     _engine.getForceFieldPtr()->determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());

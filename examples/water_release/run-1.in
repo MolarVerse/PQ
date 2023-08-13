@@ -72,7 +72,7 @@
 # MOLDESCRIPTOR
 #-----------------------------------------
   #moldescriptor_file = test.dat;
-  guff_path = .;
+#  guff_path = .;
 
 # THERMOSTAT
 #-----------------------------------------

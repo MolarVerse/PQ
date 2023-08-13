@@ -11,6 +11,8 @@ target_include_directories(intraNonBonded
 target_link_libraries(intraNonBonded
     PUBLIC
     simulationBox
+    physicalData
+    forceField
 )
 
 install(TARGETS intraNonBonded

@@ -15,8 +15,8 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     std::vector<std::string>               lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
     readInput::parameterFile::TypesSection typesSection;
     typesSection.process(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getScale14Coulomb(), 0.23);
-    EXPECT_EQ(_engine->getForceField().getScale14VanDerWaals(), 0.99);
+    EXPECT_EQ(_engine->getIntraNonBonded().getScale14Coulomb(), 0.23);
+    EXPECT_EQ(_engine->getIntraNonBonded().getScale14VanDerWaals(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);

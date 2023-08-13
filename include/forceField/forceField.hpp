@@ -51,9 +51,6 @@ class forceField::ForceField
     NonCoulombicType _nonCoulombicType        = NonCoulombicType::LJ;   // LJ
     MixingRule       _mixingRule              = MixingRule::NONE;       // no mixing rule
 
-    double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
-    double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
-
     std::vector<BondForceField>     _bonds;
     std::vector<AngleForceField>    _angles;
     std::vector<DihedralForceField> _dihedrals;
@@ -124,9 +121,6 @@ class forceField::ForceField
      *                  *
      ********************/
 
-    void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
-    void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
-
     void setNonCoulombicType(const NonCoulombicType &nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
 
     void initNonCoulombicPairsMatrix(const size_t n)
@@ -139,9 +133,6 @@ class forceField::ForceField
      * standard getters *
      *                  *
      ********************/
-
-    [[nodiscard]] double getScale14Coulomb() const { return _scale14Coulomb; }
-    [[nodiscard]] double getScale14VanDerWaals() const { return _scale14VanDerWaals; }
 
     [[nodiscard]] NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
 

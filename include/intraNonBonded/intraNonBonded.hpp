@@ -2,8 +2,10 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
+#include "forceField.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "physicalData.hpp"
 #include "simulationBox.hpp"
 
 namespace intraNonBonded
@@ -36,10 +38,14 @@ class intraNonBonded::IntraNonBonded
     IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
     bool               _isActivated        = false;
 
+    double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
+    double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
+
     std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
     std::vector<IntraNonBondedMap>       _intraNonBondedMaps;
 
   public:
+    void calculateEnergyAndForces(simulationBox::SimulationBox &, forceField::ForceField &, physicalData::PhysicalData &);
     IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
 
     void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
@@ -57,6 +63,11 @@ class intraNonBonded::IntraNonBonded
     void               deactivate() { _isActivated = false; }
     [[nodiscard]] bool isActivated() const { return _isActivated; }
 
+    void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
+    void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
+
+    [[nodiscard]] double                               getScale14Coulomb() const { return _scale14Coulomb; }
+    [[nodiscard]] double                               getScale14VanDerWaals() const { return _scale14VanDerWaals; }
     [[nodiscard]] IntraNonBondedType                   getIntraNonBondedType() const { return _intraNonBondedType; }
     [[nodiscard]] std::vector<IntraNonBondedContainer> getIntraNonBondedContainers() const { return _intraNonBondedContainers; }
     [[nodiscard]] std::vector<IntraNonBondedMap>       getIntraNonBondedMaps() const { return _intraNonBondedMaps; }

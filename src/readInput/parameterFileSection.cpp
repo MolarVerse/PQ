@@ -95,8 +95,8 @@ void TypesSection::processSection(vector<string> &lineElements, engine::Engine &
         throw customException::ParameterFileException(format(
             "Wrong scaleVanDerWaals in parameter file types section at line {} - has to be between 0 and 1!", _lineNumber));
 
-    engine.getForceField().setScale14Coulomb(scaleCoulomb);
-    engine.getForceField().setScale14VanDerWaals(scaleVanDerWaals);
+    engine.getIntraNonBonded().setScale14Coulomb(scaleCoulomb);
+    engine.getIntraNonBonded().setScale14VanDerWaals(scaleVanDerWaals);
 }
 
 /**
