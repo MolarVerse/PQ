@@ -26,7 +26,7 @@ target_link_libraries(readInput
     gtest
     forceField
     inputFileParser
-    potential_new
+    potential
 )
 
 install(TARGETS readInput

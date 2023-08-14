@@ -16,7 +16,7 @@ TEST_F(TestBondConstraint, calcRefBondLength)
  */
 TEST_F(TestBondConstraint, calculateDistanceDelta)
 {
-    _bondConstraint->calculateDistanceDelta(*_box);
+    _bondConstraint->calculateConstraintBondRef(*_box);
     const auto distanceSquared         = normSquared(linearAlgebra::Vec3D(0.0, -1.0, -2.0));
     const auto targetBondLengthSquared = _targetBondLength * _targetBondLength;
     EXPECT_EQ(_bondConstraint->calculateDistanceDelta(*_box),
@@ -53,7 +53,6 @@ TEST_F(TestBondConstraint, applyShake)
 TEST_F(TestBondConstraint, calculateVelocityDelta)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    _bondConstraint->calculateDistanceDelta(*_box);
     const auto scalarProduct = dot(linearAlgebra::Vec3D(-1.0, -1.0, -1.0), linearAlgebra::Vec3D(0.0, -1.0, -2.0));
     EXPECT_EQ(_bondConstraint->calculateVelocityDelta(), -scalarProduct / (1.0 + 0.5) / 5.0);
 }

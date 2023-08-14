@@ -4,15 +4,15 @@
 
 #include "coulombPotential.hpp"
 
-namespace potential_new
+namespace potential
 {
     class GuffCoulomb;
-}   // namespace potential_new
+}   // namespace potential
 
 using c_ul     = const size_t;
 using vector4d = std::vector<std::vector<std::vector<std::vector<double>>>>;
 
-class potential_new::GuffCoulomb : public potential_new::CoulombPotential
+class potential::GuffCoulomb : public potential::CoulombPotential
 {
   private:
     vector4d _guffCoulombCoefficients;

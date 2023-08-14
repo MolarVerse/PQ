@@ -82,7 +82,7 @@ void setup::setupEngine(Engine &engine)
     setupThermostat(engine);
     setupManostat(engine);
     setupResetKinetics(engine);
-    setupPotential(engine);
+    setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
     setupIntegrator(engine);
     setupConstraints(engine);
 

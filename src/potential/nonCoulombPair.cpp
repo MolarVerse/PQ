@@ -1,6 +1,6 @@
 #include "nonCoulombPair.hpp"
 
-using namespace potential_new;
+using namespace potential;
 
 /**
  * @brief operator overload for the comparison of two NonCoulombPair objects

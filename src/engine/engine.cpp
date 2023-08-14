@@ -85,7 +85,7 @@ void Engine::takeStep()
     _cellList.updateCellList(_simulationBox);
 
     // _potential->calculateForces(_simulationBox, _physicalData, _cellList);
-    _potentialNew->calculateForces(_simulationBox, _physicalData, _cellList);
+    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
 

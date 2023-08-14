@@ -2,6 +2,7 @@
 
 #define _TEST_GUFFDAT_READER_HPP_
 
+#include "coulombShiftedPotential.hpp"
 #include "guffDatReader.hpp"
 #include "potential.hpp"
 
@@ -40,8 +41,9 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);
 
         _engine->makePotential(potential::PotentialBruteForce());
-        _engine->getPotential().setNonCoulombPotential(potential::GuffNonCoulomb());
-        _engine->getPotential().setCoulombPotential(potential::GuffCoulomb(_engine->getSimulationBox().getCoulombRadiusCutOff()));
+        _engine->getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
+        _engine->getPotential().makeCoulombPotential(
+            potential::CoulombShiftedPotential(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
         _engine->getSettings().setGuffDatFilename("data/guffDatReader/guff.dat");
 

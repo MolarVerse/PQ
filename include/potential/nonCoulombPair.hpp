@@ -1,20 +1,20 @@
-#ifndef _NON_COULOMB_PAIR_NEW_HPP_   // TODO: refactor this to _NON_COULOMB_PAIR_HPP_
+#ifndef _NON_COULOMB_PAIR_HPP_
 
-#define _NON_COULOMB_PAIR_NEW_HPP_
+#define _NON_COULOMB_PAIR_HPP_
 
 #include "mathUtilities.hpp"
 
 #include <cstddef>
 #include <vector>
 
-namespace potential_new
+namespace potential
 {
     class NonCoulombPair;
     class LennardJonesPair;
     class BuckinghamPair;
     class MorsePair;
     class GuffPair;
-}   // namespace potential_new
+}   // namespace potential
 
 /**
  * @class NonCoulombPair
@@ -25,7 +25,7 @@ namespace potential_new
  *         constructor with cut-off radius only is for guff representation
  *
  */
-class potential_new::NonCoulombPair
+class potential::NonCoulombPair
 {
   protected:
     size_t _vanDerWaalsType1;
@@ -68,7 +68,7 @@ class potential_new::NonCoulombPair
  * @brief represents a pair of Lennard-Jones types
  *
  */
-class potential_new::LennardJonesPair : public potential_new::NonCoulombPair
+class potential::LennardJonesPair : public potential::NonCoulombPair
 {
   private:
     double _c6;
@@ -98,7 +98,7 @@ class potential_new::LennardJonesPair : public potential_new::NonCoulombPair
  * @brief represents a pair of Buckingham types
  *
  */
-class potential_new::BuckinghamPair : public potential_new::NonCoulombPair
+class potential::BuckinghamPair : public potential::NonCoulombPair
 {
   private:
     double _a;
@@ -140,7 +140,7 @@ class potential_new::BuckinghamPair : public potential_new::NonCoulombPair
  * @brief represents a pair of Morse types
  *
  */
-class potential_new::MorsePair : public potential_new::NonCoulombPair
+class potential::MorsePair : public potential::NonCoulombPair
 {
   private:
     double _dissociationEnergy;
@@ -185,7 +185,7 @@ class potential_new::MorsePair : public potential_new::NonCoulombPair
  * @brief represents a pair of Guff types (full guff formula)
  *
  */
-class potential_new::GuffPair : public potential_new::NonCoulombPair
+class potential::GuffPair : public potential::NonCoulombPair
 {
   private:
     std::vector<double> _coefficients;
@@ -200,4 +200,4 @@ class potential_new::GuffPair : public potential_new::NonCoulombPair
     std::pair<double, double> calculateEnergyAndForce(const double distance) const override;
 };
 
-#endif   // _NON_COULOMB_PAIR_NEW_HPP_
+#endif   // _NON_COULOMB_PAIR_HPP_

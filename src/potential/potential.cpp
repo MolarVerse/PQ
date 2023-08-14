@@ -9,32 +9,78 @@ using namespace potential;
 using namespace physicalData;
 using namespace linearAlgebra;
 
-/**
- * @brief copy constructor for potential
- *
- * @param potential
- */
-Potential::Potential(const Potential &potential)
-    : _coulombType(potential._coulombType), _nonCoulombType(potential._nonCoulombType)
+std::pair<double, double> Potential::calculateSingleInteraction(const linearAlgebra::Vec3D &box,
+                                                                simulationBox::Molecule    &molecule1,
+                                                                simulationBox::Molecule    &molecule2,
+                                                                const size_t                atom1,
+                                                                const size_t                atom2)
 {
-}
+    auto coulombEnergy    = 0.0;
+    auto nonCoulombEnergy = 0.0;
 
-/**
- * @brief copy assignment for potential
- *
- * @param potential
- *
- * @return
- */
-Potential &Potential::operator=(const Potential &potential)
-{
-    if (this != &potential)
+    const auto xyz_i = molecule1.getAtomPosition(atom1);
+    const auto xyz_j = molecule2.getAtomPosition(atom2);
+
+    auto dxyz = xyz_i - xyz_j;
+
+    const auto txyz = -box * round(dxyz / box);
+
+    // dxyz += txyz;
+    dxyz[0] += txyz[0];
+    dxyz[1] += txyz[1];
+    dxyz[2] += txyz[2];
+
+    const double distanceSquared = normSquared(dxyz);
+
+    if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff(); distanceSquared < RcCutOff * RcCutOff)
     {
-        _coulombType    = potential._coulombType;
-        _nonCoulombType = potential._nonCoulombType;
+        const double distance   = ::sqrt(distanceSquared);
+        const size_t atomType_i = molecule1.getAtomType(atom1);
+        const size_t atomType_j = molecule2.getAtomType(atom2);
+
+        // const size_t externalGlobalVdwType_i = molecule1.getExternalGlobalVDWType(atom1);
+        // const size_t externalGlobalVdwType_j = molecule2.getExternalGlobalVDWType(atom2);
+
+        // const size_t globalVdwType_i =
+        // simBox.getExternalToInternalGlobalVDWTypes().at(externalGlobalVdwType_i); const size_t globalVdwType_j
+        // = simBox.getExternalToInternalGlobalVDWTypes().at(externalGlobalVdwType_j);
+
+        const size_t globalVdwType_i = 0;
+        const size_t globalVdwType_j = 0;
+
+        const auto moltype_i = molecule1.getMoltype();
+        const auto moltype_j = molecule2.getMoltype();
+
+        const auto combinedIndices = {moltype_i, moltype_j, atomType_i, atomType_j, globalVdwType_i, globalVdwType_j};
+
+        const auto coulombPreFactor = 1.0;   // TODO: implement for force field
+
+        auto [energy, force] = _coulombPotential->calculate(combinedIndices, distance, coulombPreFactor);
+        coulombEnergy        = energy;
+
+        const auto nonCoulombicPair = _nonCoulombPotential->getNonCoulombPair(combinedIndices);
+
+        if (const auto rncCutOff = nonCoulombicPair->getRadialCutOff(); distance < rncCutOff)
+        {
+            const auto &[energy, nonCoulombForce] = nonCoulombicPair->calculateEnergyAndForce(distance);
+            nonCoulombEnergy                      = energy;
+
+            force += nonCoulombForce;
+        }
+
+        force /= distance;
+
+        const auto forcexyz = force * dxyz;
+
+        const auto shiftForcexyz = forcexyz * txyz;
+
+        molecule1.addAtomForce(atom1, forcexyz);
+        molecule2.addAtomForce(atom2, -forcexyz);
+
+        molecule1.addAtomShiftForce(atom1, shiftForcexyz);
     }
 
-    return *this;
+    return {coulombEnergy, nonCoulombEnergy};
 }
 
 /**
@@ -45,94 +91,33 @@ Potential &Potential::operator=(const Potential &potential)
  */
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
-
-    const auto   box      = simBox.getBoxDimensions();
-    const double RcCutOff = simBox.getCoulombRadiusCutOff();
+    const auto box = simBox.getBoxDimensions();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
-    double energy                = 0.0;
 
     // inter molecular forces
     const size_t numberOfMolecules = simBox.getNumberOfMolecules();
 
-    for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
+    for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
     {
-        auto        &molecule_i                = simBox.getMolecule(mol_i);
-        const size_t moltype_i                 = molecule_i.getMoltype();
-        const size_t numberOfAtomsInMolecule_i = molecule_i.getNumberOfAtoms();
+        auto        &molecule1                 = simBox.getMolecule(mol1);
+        const size_t numberOfAtomsInMolecule_i = molecule1.getNumberOfAtoms();
 
-        for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+        for (size_t mol2 = 0; mol2 < mol1; ++mol2)
         {
-            auto        &molecule_j                = simBox.getMolecule(mol_j);
-            const size_t moltype_j                 = molecule_j.getMoltype();
-            const size_t numberOfAtomsInMolecule_j = molecule_j.getNumberOfAtoms();
+            auto        &molecule2                 = simBox.getMolecule(mol2);
+            const size_t numberOfAtomsInMolecule_j = molecule2.getNumberOfAtoms();
 
-            for (size_t atom_i = 0; atom_i < numberOfAtomsInMolecule_i; ++atom_i)
+            for (size_t atom1 = 0; atom1 < numberOfAtomsInMolecule_i; ++atom1)
             {
-                for (size_t atom_j = 0; atom_j < numberOfAtomsInMolecule_j; ++atom_j)
+                for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j; ++atom2)
                 {
-                    const auto xyz_i = molecule_i.getAtomPosition(atom_i);
-                    const auto xyz_j = molecule_j.getAtomPosition(atom_j);
+                    const auto [coulombEnergy, nonCoulombEnergy] =
+                        calculateSingleInteraction(box, molecule1, molecule2, atom1, atom2);
 
-                    auto dxyz = xyz_i - xyz_j;
-
-                    const auto txyz = -box * round(dxyz / box);
-
-                    // dxyz += txyz;
-                    dxyz[0] += txyz[0];
-                    dxyz[1] += txyz[1];
-                    dxyz[2] += txyz[2];
-
-                    const double distanceSquared = normSquared(dxyz);
-
-                    if (distanceSquared < RcCutOff * RcCutOff)
-                    {
-                        const double distance   = ::sqrt(distanceSquared);
-                        const size_t atomType_i = molecule_i.getAtomType(atom_i);
-                        const size_t atomType_j = molecule_j.getAtomType(atom_j);
-
-                        const double coulombCoefficient =
-                            simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                        auto force = 0.0;
-
-                        _coulombPotential->calcCoulomb(
-                            coulombCoefficient,
-                            distance,
-                            energy,
-                            force,
-                            simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                            simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                        totalCoulombEnergy += energy;
-
-                        if (const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-                            distance < rncCutOff)
-                        {
-                            _nonCoulombPotential->calcNonCoulomb(
-                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
-                                rncCutOff,
-                                distance,
-                                energy,
-                                force,
-                                simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                            totalNonCoulombEnergy += energy;
-                        }
-
-                        force /= distance;
-
-                        const auto forcexyz = force * dxyz;
-
-                        const auto shiftForcexyz = forcexyz * txyz;
-
-                        molecule_i.addAtomForce(atom_i, forcexyz);
-                        molecule_j.addAtomForce(atom_j, -forcexyz);
-
-                        molecule_i.addAtomShiftForce(atom_i, shiftForcexyz);
-                    }
+                    totalCoulombEnergy    += coulombEnergy;
+                    totalNonCoulombEnergy += nonCoulombEnergy;
                 }
             }
         }
@@ -156,192 +141,61 @@ inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalDa
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
-    double energy                = 0.0;
 
-    const double RcCutOff        = simBox.getCoulombRadiusCutOff();
-    const double RcCutOffSquared = RcCutOff * RcCutOff;
-
-    auto dxyz = Vec3D(0.0, 0.0, 0.0);
-
-    for (const auto &cell_i : cellList.getCells())
+    for (const auto &cell1 : cellList.getCells())
     {
-        const auto numberOfMolecules = cell_i.getNumberOfMolecules();
+        const auto numberOfMolecules = cell1.getNumberOfMolecules();
 
-        for (size_t mol_i = 0; mol_i < numberOfMolecules; ++mol_i)
+        for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
         {
-            auto        *molecule_i = cell_i.getMolecule(mol_i);
-            const size_t moltype_i  = molecule_i->getMoltype();
+            auto *molecule1 = cell1.getMolecule(mol1);
 
-            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+            for (size_t mol2 = 0; mol2 < mol1; ++mol2)
             {
-                auto        *molecule_j = cell_i.getMolecule(mol_j);
-                const size_t moltype_j  = molecule_j->getMoltype();
+                auto *molecule2 = cell1.getMolecule(mol2);
 
-                for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
+                for (const size_t atom1 : cell1.getAtomIndices(mol1))
                 {
-                    const size_t atomType_i = molecule_i->getAtomType(atom_i);
-                    const auto   xyz_i      = molecule_i->getAtomPosition(atom_i);
-
-                    for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
+                    for (const size_t atom2 : cell1.getAtomIndices(mol2))
                     {
-                        const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-                        // auto       dxyz  = xyz_i - xyz_j;
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
 
-                        dxyz[0]         = xyz_i[0] - xyz_j[0];
-                        dxyz[1]         = xyz_i[1] - xyz_j[1];
-                        dxyz[2]         = xyz_i[2] - xyz_j[2];
-                        const auto txyz = -box * round(dxyz / box);
-
-                        // dxyz += txyz;
-
-                        dxyz[0] += txyz[0];
-                        dxyz[1] += txyz[1];
-                        dxyz[2] += txyz[2];
-
-                        const double distanceSquared = normSquared(dxyz);
-
-                        if (distanceSquared > RcCutOffSquared)
-                            continue;
-
-                        const double distance   = ::sqrt(distanceSquared);
-                        const size_t atomType_j = molecule_j->getAtomType(atom_j);
-
-                        const double coulombCoefficient =
-                            simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                        auto force = 0.0;
-
-                        _coulombPotential->calcCoulomb(
-                            coulombCoefficient,
-                            distance,
-                            energy,
-                            force,
-                            simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                            simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                        totalCoulombEnergy += energy;
-
-                        if (const auto rncCutOff = simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-                            distance < rncCutOff)
-                        {
-                            _nonCoulombPotential->calcNonCoulomb(
-                                simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
-                                rncCutOff,
-                                distance,
-                                energy,
-                                force,
-                                simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                            totalNonCoulombEnergy += energy;
-                        }
-
-                        force /= distance;
-
-                        const auto forcexyz      = force * dxyz;
-                        const auto shiftForcexyz = forcexyz * txyz;
-
-                        molecule_i->addAtomForce(atom_i, forcexyz);
-                        molecule_j->addAtomForce(atom_j, -forcexyz);
-
-                        molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
                     }
                 }
             }
         }
     }
-    for (const auto &cell_i : cellList.getCells())
+    for (const auto &cell1 : cellList.getCells())
     {
-        const auto numberOfMoleculesInCell_i = cell_i.getNumberOfMolecules();
+        const auto numberOfMoleculesInCell_i = cell1.getNumberOfMolecules();
 
-        for (const auto *cell_j : cell_i.getNeighbourCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
         {
-            const auto numberOfMoleculesInCell_j = cell_j->getNumberOfMolecules();
+            const auto numberOfMoleculesInCell_j = cell2->getNumberOfMolecules();
 
-            for (size_t mol_i = 0; mol_i < numberOfMoleculesInCell_i; ++mol_i)
+            for (size_t mol1 = 0; mol1 < numberOfMoleculesInCell_i; ++mol1)
             {
-                auto        *molecule_i = cell_i.getMolecule(mol_i);
-                const size_t moltype_i  = molecule_i->getMoltype();
+                auto *molecule1 = cell1.getMolecule(mol1);
 
-                for (const auto atom_i : cell_i.getAtomIndices(mol_i))
+                for (const auto atom1 : cell1.getAtomIndices(mol1))
                 {
-                    const size_t atomType_i = molecule_i->getAtomType(atom_i);
-                    const auto   xyz_i      = molecule_i->getAtomPosition(atom_i);
-
-                    for (size_t mol_j = 0; mol_j < numberOfMoleculesInCell_j; ++mol_j)
+                    for (size_t mol2 = 0; mol2 < numberOfMoleculesInCell_j; ++mol2)
                     {
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                        auto *molecule2 = cell2->getMolecule(mol2);
 
-                        if (molecule_i == molecule_j)
+                        if (molecule1 == molecule2)
                             continue;
 
-                        const size_t moltype_j = molecule_j->getMoltype();
-
-                        for (const auto atom_j : cell_j->getAtomIndices(mol_j))
+                        for (const auto atom2 : cell2->getAtomIndices(mol2))
                         {
-                            const auto xyz_j = molecule_j->getAtomPosition(atom_j);
-                            // auto       dxyz  = xyz_i - xyz_j;
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
 
-                            dxyz[0] = xyz_i[0] - xyz_j[0];
-                            dxyz[1] = xyz_i[1] - xyz_j[1];
-                            dxyz[2] = xyz_i[2] - xyz_j[2];
-
-                            const auto txyz = -box * round(dxyz / box);
-
-                            // dxyz += txyz;
-
-                            dxyz[0] += txyz[0];
-                            dxyz[1] += txyz[1];
-                            dxyz[2] += txyz[2];
-
-                            const double distanceSquared = normSquared(dxyz);
-
-                            if (distanceSquared > RcCutOffSquared)
-                                continue;
-
-                            const double distance   = ::sqrt(distanceSquared);
-                            const size_t atomType_j = molecule_j->getAtomType(atom_j);
-
-                            const double coulombCoefficient =
-                                simBox.getCoulombCoefficient(moltype_i, moltype_j, atomType_i, atomType_j);
-
-                            auto force = 0.0;
-
-                            _coulombPotential->calcCoulomb(
-                                coulombCoefficient,
-                                distance,
-                                energy,
-                                force,
-                                simBox.getCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                simBox.getCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                            totalCoulombEnergy += energy;
-
-                            if (const auto rncCutOff =
-                                    simBox.getNonCoulombRadiusCutOff(moltype_i, moltype_j, atomType_i, atomType_j);
-                                distance < rncCutOff)
-                            {
-                                _nonCoulombPotential->calcNonCoulomb(
-                                    simBox.getGuffCoefficients(moltype_i, moltype_j, atomType_i, atomType_j),
-                                    rncCutOff,
-                                    distance,
-                                    energy,
-                                    force,
-                                    simBox.getNonCoulombEnergyCutOff(moltype_i, moltype_j, atomType_i, atomType_j),
-                                    simBox.getNonCoulombForceCutOff(moltype_i, moltype_j, atomType_i, atomType_j));
-
-                                totalNonCoulombEnergy += energy;
-                            }
-
-                            force /= distance;
-
-                            const auto forcexyz      = force * dxyz;
-                            const auto shiftForcexyz = forcexyz * txyz;
-
-                            molecule_i->addAtomForce(atom_i, forcexyz);
-                            molecule_j->addAtomForce(atom_j, -forcexyz);
-
-                            molecule_i->addAtomShiftForce(atom_i, shiftForcexyz);
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
                         }
                     }
                 }

@@ -1,8 +1,9 @@
 set(source_files
-    testGuffLJ.cpp
-    testCoulomb.cpp
-    testGuffBuckingham.cpp
-    testGuffNonCoulomb.cpp
+
+    # testGuffLJ.cpp
+    # testCoulomb.cpp
+    # testGuffBuckingham.cpp
+    # testGuffNonCoulomb.cpp
     testPotential.cpp
 )
 

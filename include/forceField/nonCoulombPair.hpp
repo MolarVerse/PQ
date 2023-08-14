@@ -1,6 +1,6 @@
-#ifndef _NON_COULOMB_PAIR_HPP_
+#ifndef _NON_COULOMB_PAIR_HPP_OLD_
 
-#define _NON_COULOMB_PAIR_HPP_
+#define _NON_COULOMB_PAIR_HPP_OLD_
 
 #include "mathUtilities.hpp"
 
@@ -142,4 +142,4 @@ class forceField::MorsePair : public forceField::NonCoulombPair
     [[nodiscard]] double getEquilibriumDistance() const { return _equilibriumDistance; }
 };
 
-#endif   // _NON_COULOMB_PAIR_HPP_
+#endif   // _NON_COULOMB_PAIR_HPP_OLD_
