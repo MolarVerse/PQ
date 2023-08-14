@@ -1,7 +1,5 @@
 add_library(potential
     potential.cpp
-    nonCoulombPair.cpp
-    nonCoulombPotential.cpp
 )
 
 target_include_directories(potential
@@ -16,6 +14,7 @@ target_link_libraries(potential
     physicalData
     simulationBox
     coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS potential
@@ -23,3 +22,4 @@ install(TARGETS potential
 )
 
 add_subdirectory(coulomb)
+add_subdirectory(nonCoulomb)
