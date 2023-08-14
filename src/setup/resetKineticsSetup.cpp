@@ -31,16 +31,17 @@ void ResetKineticsSetup::setup()
 
     if (nScale != 0 || fScale != 0)
     {
-        if (fScale == 0) fScale = numberOfSteps + 1;
-        if (fReset == 0) fReset = numberOfSteps + 1;
-        // TODO: check if this works
+        if (0 == fScale)
+            fScale = numberOfSteps + 1;
+        if (0 == fReset)
+            fReset = numberOfSteps + 1;
         _engine.makeResetKinetics(ResetTemperature(nScale, fScale, nReset, fReset, targetTemperature));
     }
     else if (nReset != 0 || fReset != 0)
     {
         fScale = numberOfSteps + 1;
-        if (fReset == 0) fReset = numberOfSteps + 1;
-        // TODO: check if this works
+        if (0 == fReset)
+            fReset = numberOfSteps + 1;
         _engine.makeResetKinetics(ResetMomentum(nScale, fScale, nReset, fReset, targetTemperature));
     }
 }

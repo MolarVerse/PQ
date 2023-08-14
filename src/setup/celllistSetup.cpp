@@ -21,7 +21,7 @@ void setup::setupCellList(engine::Engine &engine)
  */
 void CellListSetup::setup()
 {
-    if (_engine.getCellList().isActivated())
+    if (_engine.isCellListActivated())
     {
         _engine.getCellList().setup(_engine.getSimulationBox());
         _engine.makePotential(PotentialCellList());

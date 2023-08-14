@@ -62,6 +62,19 @@ class engine::Engine
     void takeStep();
     void writeOutput();
 
+    [[nodiscard]] bool isForceFieldActivated() const { return _forceField.isActivated(); }
+    [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
+    [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
+    [[nodiscard]] bool isCellListActivated() const { return _cellList.isActivated(); }
+    [[nodiscard]] bool isConstraintsActivated() const { return _constraints.isActivated(); }
+    [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded->isActivated(); }
+
+    /************************************
+     *                                  *
+     * standard make unique_ptr methods *
+     *                                  *
+     ************************************/
+
     template <typename T>
     void makeIntegrator(T integrator)
     {

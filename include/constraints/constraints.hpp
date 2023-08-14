@@ -24,7 +24,7 @@ namespace constraints
 class constraints::Constraints
 {
   private:
-    bool _activated = false;
+    bool _activated = defaults::_CONSTRAINTS_ARE_ACTIVE_DEFAULT_;
 
     size_t _shakeMaxIter;
     size_t _rattleMaxIter;
@@ -37,9 +37,9 @@ class constraints::Constraints
     std::vector<BondConstraint> _bondConstraints;
 
   public:
-    void activate() { _activated = true; }
-    void deactivate() { _activated = false; }
-    bool isActivated() const { return _activated; }
+    void               activate() { _activated = true; }
+    void               deactivate() { _activated = false; }
+    [[nodiscard]] bool isActivated() const { return _activated; }
 
     void calculateConstraintBondRefs(const simulationBox::SimulationBox &simulationBox);
 
@@ -54,14 +54,14 @@ class constraints::Constraints
      *                         *
      ***************************/
 
-    const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
+    [[nodiscard]] const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
 
-    size_t getShakeMaxIter() const { return _shakeMaxIter; }
-    size_t getRattleMaxIter() const { return _rattleMaxIter; }
-    double getShakeTolerance() const { return _shakeTolerance; }
-    double getRattleTolerance() const { return _rattleTolerance; }
+    [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
+    [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }
+    [[nodiscard]] double getShakeTolerance() const { return _shakeTolerance; }
+    [[nodiscard]] double getRattleTolerance() const { return _rattleTolerance; }
 
-    double getDt() const { return _dt; }
+    [[nodiscard]] double getDt() const { return _dt; }
 
     /***************************
      *                         *

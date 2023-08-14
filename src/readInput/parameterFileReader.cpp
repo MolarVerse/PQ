@@ -32,10 +32,7 @@ ParameterFileReader::ParameterFileReader(const string &filename, engine::Engine 
  */
 bool ParameterFileReader::isNeeded() const
 {
-    if (_engine.getConstraints().isActivated())
-        return true;
-
-    if (_engine.getForceField().isActivated())
+    if (_engine.isForceFieldActivated())
         return true;
 
     return false;

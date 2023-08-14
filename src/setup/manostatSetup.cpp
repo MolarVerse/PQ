@@ -21,14 +21,13 @@ void setup::setupManostat(engine::Engine &engine)
 /**
  * @brief setup manostat
  *
- * TODO: include warnings if value set but not used
- *
  */
 void ManostatSetup::setup()
 {
     if (_engine.getSettings().getManostat() == "berendsen")
     {
-        if (!_engine.getSettings().getPressureSet()) throw InputFileException("Pressure not set for Berendsen manostat");
+        if (!_engine.getSettings().getPressureSet())
+            throw InputFileException("Pressure not set for Berendsen manostat");
 
         _engine.makeManostat(BerendsenManostat(_engine.getSettings().getPressure(),
                                                _engine.getSettings().getTauManostat() * constants::_PS_TO_FS_,

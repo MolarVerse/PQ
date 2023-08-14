@@ -22,7 +22,7 @@ namespace simulationBox
 class simulationBox::CellList
 {
   private:
-    bool _activated = false;
+    bool _activated = defaults::_CELL_LIST_IS_ACTIVE_DEFAULT_;
 
     std::vector<Cell> _cells;
 

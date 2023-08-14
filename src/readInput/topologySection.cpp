@@ -53,8 +53,9 @@ void TopologySection::process(vector<string> &lineElements, engine::Engine &engi
 void ShakeSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 4)
-        throw customException::TopologyException("Wrong number of arguments in topology file shake section at line " +
-                                                 to_string(_lineNumber) + " - number of elements has to be 4!");
+        throw customException::TopologyException(
+            format("Wrong number of arguments in topology file shake section at line {} - number of elements has to be 4!",
+                   _lineNumber));
 
     auto atom1      = stoul(lineElements[0]);
     auto atom2      = stoul(lineElements[1]);
@@ -62,8 +63,8 @@ void ShakeSection::processSection(vector<string> &lineElements, engine::Engine &
     // TODO: auto linker = lineElements[3];
 
     if (atom1 == atom2)
-        throw customException::TopologyException("Topology file shake section at line " + to_string(_lineNumber) +
-                                                 " - atoms cannot be the same!");
+        throw customException::TopologyException(
+            format("Topology file shake section at line {} - atoms cannot be the same!", _lineNumber));
 
     auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -81,8 +82,8 @@ void ShakeSection::processSection(vector<string> &lineElements, engine::Engine &
 void ShakeSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException("Topology file shake section at line " + to_string(_lineNumber) +
-                                                 " - no end of section found!");
+        throw customException::TopologyException(
+            format("Topology file shake section at line {} - no end of section found!", _lineNumber));
 }
 
 /**
@@ -94,8 +95,9 @@ void ShakeSection::endedNormally(bool endedNormal) const
 void BondSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 3 && lineElements.size() != 4)
-        throw customException::TopologyException("Wrong number of arguments in topology file bond section at line " +
-                                                 to_string(_lineNumber) + " - number of elements has to be 3 or 4!");
+        throw customException::TopologyException(
+            format("Wrong number of arguments in topology file bond section at line {} - number of elements has to be 3 or 4!",
+                   _lineNumber));
 
     auto atom1    = stoul(lineElements[0]);
     auto atom2    = stoul(lineElements[1]);
@@ -103,8 +105,8 @@ void BondSection::processSection(vector<string> &lineElements, engine::Engine &e
     // TODO: auto linker = lineElements[3];
 
     if (atom1 == atom2)
-        throw customException::TopologyException("Topology file shake section at line " + to_string(_lineNumber) +
-                                                 " - atoms cannot be the same!");
+        throw customException::TopologyException(
+            format("Topology file shake section at line {} - atoms cannot be the same!", _lineNumber));
 
     auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -122,8 +124,8 @@ void BondSection::processSection(vector<string> &lineElements, engine::Engine &e
 void BondSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException("Topology file bond section at line " + to_string(_lineNumber) +
-                                                 " - no end of section found!");
+        throw customException::TopologyException(
+            format("Topology file bond section at line {} - no end of section found!", _lineNumber));
 }
 
 /**
@@ -135,8 +137,9 @@ void BondSection::endedNormally(bool endedNormal) const
 void AngleSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw customException::TopologyException("Wrong number of arguments in topology file angle section at line " +
-                                                 to_string(_lineNumber) + " - number of elements has to be 4 or 5!");
+        throw customException::TopologyException(
+            format("Wrong number of arguments in topology file angle section at line {} - number of elements has to be 4 or 5!",
+                   _lineNumber));
 
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
@@ -144,8 +147,8 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
     auto angleType = stoul(lineElements[3]);
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
-        throw customException::TopologyException("Topology file angle section at line " + to_string(_lineNumber) +
-                                                 " - atoms cannot be the same!");
+        throw customException::TopologyException(
+            format("Topology file angle section at line {} - atoms cannot be the same!", _lineNumber));
 
     auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -165,8 +168,8 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
 void AngleSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException("Topology file angle section at line " + to_string(_lineNumber) +
-                                                 " - no end of section found!");
+        throw customException::TopologyException(
+            format("Topology file angle section at line {} - no end of section found!", _lineNumber));
 }
 
 /**
@@ -178,8 +181,9 @@ void AngleSection::endedNormally(bool endedNormal) const
 void DihedralSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw customException::TopologyException("Wrong number of arguments in topology file dihedral section at line " +
-                                                 to_string(_lineNumber) + " - number of elements has to be 5 or 6!");
+        throw customException::TopologyException(format(
+            "Wrong number of arguments in topology file dihedral section at line {} - number of elements has to be 5 or 6!",
+            _lineNumber));
 
     auto atom1        = stoul(lineElements[0]);
     auto atom2        = stoul(lineElements[1]);
@@ -188,8 +192,8 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
     auto dihedralType = stoul(lineElements[4]);
 
     if (atom1 == atom2 || atom1 == atom3 || atom1 == atom4 || atom2 == atom3 || atom2 == atom4 || atom3 == atom4)
-        throw customException::TopologyException("Topology file dihedral section at line " + to_string(_lineNumber) +
-                                                 " - atoms cannot be the same!");
+        throw customException::TopologyException(
+            format("Topology file dihedral section at line {} - atoms cannot be the same!", _lineNumber));
 
     auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -210,8 +214,8 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
 void DihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException("Topology file dihedral section at line " + to_string(_lineNumber) +
-                                                 " - no end of section found!");
+        throw customException::TopologyException(
+            format("Topology file dihedral section at line {} - no end of section found!", _lineNumber));
 }
 
 /**
@@ -223,8 +227,9 @@ void DihedralSection::endedNormally(bool endedNormal) const
 void ImproperDihedralSection::processSection(vector<string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw customException::TopologyException("Wrong number of arguments in topology file improper dihedral section at line " +
-                                                 to_string(_lineNumber) + " - number of elements has to be 5 or 6!");
+        throw customException::TopologyException(format("Wrong number of arguments in topology file improper dihedral section at "
+                                                        "line {} - number of elements has to be 5 or 6!",
+                                                        _lineNumber));
 
     auto atom1                = stoul(lineElements[0]);
     auto atom2                = stoul(lineElements[1]);
@@ -233,8 +238,8 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
     auto improperDihedralType = stoul(lineElements[4]);
 
     if (atom1 == atom2 || atom1 == atom3 || atom1 == atom4 || atom2 == atom3 || atom2 == atom4 || atom3 == atom4)
-        throw customException::TopologyException("Topology file improper dihedral section at line " + to_string(_lineNumber) +
-                                                 " - atoms cannot be the same!");
+        throw customException::TopologyException(
+            format("Topology file improper dihedral section at line {} - atoms cannot be the same!", _lineNumber));
 
     auto &&[molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
@@ -255,6 +260,6 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
 void ImproperDihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException("Topology file improper dihedral section at line " + to_string(_lineNumber) +
-                                                 " - no end of section found!");
+        throw customException::TopologyException(
+            format("Topology file improper dihedral section at line {} - no end of section found!", _lineNumber));
 }

@@ -86,9 +86,7 @@ void PotentialSetup::setupNonCoulomb()
     // TODO: from here on only potential new
 
     if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
-    {
         _engine.getPotentialNew().makeNonCoulombPotential(potential_new::ForceFieldNonCoulomb());
-    }
     else
         _engine.getPotentialNew().makeNonCoulombPotential(potential_new::GuffNonCoulomb());
 }

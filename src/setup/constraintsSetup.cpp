@@ -20,6 +20,9 @@ void setup::setupConstraints(engine::Engine &engine)
  */
 void ConstraintsSetup::setup()
 {
+    if (!_engine.isConstraintsActivated())
+        return;
+
     setupTolerances();
     setupMaxIterations();
     setupRefBondLengths();

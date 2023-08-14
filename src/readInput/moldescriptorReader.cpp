@@ -29,13 +29,16 @@ MoldescriptorReader::MoldescriptorReader(Engine &engine)
 {
     _fp.open(_filename);
 
-    if (_fp.fail()) throw InputFileException(format(R"("{}" File not found)", _filename));
+    if (_fp.fail())
+        throw InputFileException(format(R"("{}" File not found)", _filename));
 }
 
 /**
  * @brief read moldescriptor file
  *
  * @param engine
+ *
+ * @TODO: for pure QM-MD turn off reading
  */
 void readInput::readMolDescriptor(Engine &engine)
 {
@@ -89,7 +92,8 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 {
     string line;
 
-    if (lineElements.size() < 3) throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+    if (lineElements.size() < 3)
+        throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
 
     Molecule molecule(lineElements[0]);
 
@@ -102,7 +106,8 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 
     while (atomCount < molecule.getNumberOfAtoms())
     {
-        if (_fp.eof()) throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+        if (_fp.eof())
+            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
         getline(_fp, line);
         line         = removeComments(line, "#");
         lineElements = splitString(line);

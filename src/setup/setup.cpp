@@ -86,5 +86,5 @@ void setup::setupEngine(Engine &engine)
     setupIntegrator(engine);
     setupConstraints(engine);
 
-    setupForceField(engine);   // important to setup force field after potential!!!
+    setupForceField(engine);
 }

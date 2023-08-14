@@ -23,7 +23,7 @@ void ForceFieldSetup::setup()
 
 void setup::setupForceField(engine::Engine &engine)
 {
-    if (!engine.getForceFieldPtr()->isActivated())
+    if (!engine.isForceFieldActivated())
         return;
 
     ForceFieldSetup forceFieldSetup(engine);
@@ -128,6 +128,7 @@ void ForceFieldSetup::setupImproperDihedrals()
     forceField->clearImproperDihedralTypes();
 }
 
+// TODO: move this into setup potential with a bit less function calls maybe?
 void ForceFieldSetup::setupNonCoulombics()
 {
 

@@ -30,7 +30,7 @@ class readInput::IntraNonBondedReader
 
     void read();
     void processMolecule(const size_t);
-    bool isNeeded() const { return _engine.getIntraNonBonded().isActivated(); }
+    bool isNeeded() const { return _engine.isIntraNonBondedActivated(); }
 };
 
 #endif   // _INTRA_NON_BONDED_READER_HPP_
