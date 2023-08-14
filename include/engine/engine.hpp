@@ -11,6 +11,7 @@
 #include "manostat.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "potential_new.hpp"
 #include "resetKinetics.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
@@ -47,12 +48,14 @@ class engine::Engine
     engine::EngineOutput         _engineOutput;
 
     std::unique_ptr<integrator::Integrator>         _integrator     = std::make_unique<integrator::VelocityVerlet>();
-    std::unique_ptr<potential::Potential>           _potential      = std::make_unique<potential::PotentialBruteForce>();
     std::unique_ptr<thermostat::Thermostat>         _thermostat     = std::make_unique<thermostat::Thermostat>();
     std::unique_ptr<manostat::Manostat>             _manostat       = std::make_unique<manostat::Manostat>();
     std::unique_ptr<virial::Virial>                 _virial         = std::make_unique<virial::VirialMolecular>();
     std::unique_ptr<resetKinetics::ResetKinetics>   _resetKinetics  = std::make_unique<resetKinetics::ResetKinetics>();
     std::unique_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded = std::make_unique<intraNonBonded::IntraNonBondedGuff>();
+
+    std::unique_ptr<potential::Potential>     _potential    = std::make_unique<potential::PotentialBruteForce>();
+    std::unique_ptr<potential_new::Potential> _potentialNew = std::make_unique<potential_new::PotentialBruteForce>();   // TODO:
 
   public:
     void run();
@@ -68,6 +71,11 @@ class engine::Engine
     void makePotential(T potential)
     {
         _potential = std::make_unique<T>(potential);
+    }
+    template <typename T>
+    void makePotentialNew(T potentialNew)   // TODO:
+    {
+        _potentialNew = std::make_unique<T>(potentialNew);
     }
     template <typename T>
     void makeThermostat(T thermostat)
@@ -113,6 +121,7 @@ class engine::Engine
     [[nodiscard]] virial::Virial                 &getVirial() { return *_virial; }
     [[nodiscard]] integrator::Integrator         &getIntegrator() { return *_integrator; }
     [[nodiscard]] potential::Potential           &getPotential() { return *_potential; }
+    [[nodiscard]] potential_new::Potential       &getPotentialNew() { return *_potentialNew; }   // TODO:
     [[nodiscard]] thermostat::Thermostat         &getThermostat() { return *_thermostat; }
     [[nodiscard]] manostat::Manostat             &getManostat() { return *_manostat; }
     [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return *_resetKinetics; }

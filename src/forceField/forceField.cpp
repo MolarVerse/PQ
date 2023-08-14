@@ -104,7 +104,7 @@ void ForceField::deleteNotNeededNonCoulombicPairs(const vector<size_t> &external
 }
 
 /**
- * @brief determines internal global van der Waals types and sets them in the NonCoulombicPair objects
+ * @brief determines internal global van der Waals types and sets them in the NonCoulombPair objects
  *
  * @param _externalToInternalGlobalVDWTypes
  */
@@ -124,11 +124,11 @@ void ForceField::determineInternalGlobalVdwTypes(const map<size_t, size_t> &exte
  *
  * @details self interacting means that both internal or external types are the same
  *
- * @return vector<shared_ptr<NonCoulombicPair>>
+ * @return vector<shared_ptr<NonCoulombPair>>
  */
-vector<shared_ptr<NonCoulombicPair>> ForceField::getSelfInteractionNonCoulombicPairs() const
+vector<shared_ptr<NonCoulombPair>> ForceField::getSelfInteractionNonCoulombicPairs() const
 {
-    vector<shared_ptr<NonCoulombicPair>> selfInteractionNonCoulombicPairs;
+    vector<shared_ptr<NonCoulombPair>> selfInteractionNonCoulombicPairs;
 
     auto addSelfInteractionPairs = [&selfInteractionNonCoulombicPairs](const auto &nonCoulombicPair)
     {
@@ -146,7 +146,7 @@ vector<shared_ptr<NonCoulombicPair>> ForceField::getSelfInteractionNonCoulombicP
  *
  * @param diagonalElements
  */
-void ForceField::fillDiagonalElementsOfNonCoulombicPairsMatrix(vector<shared_ptr<NonCoulombicPair>> &diagonalElements)
+void ForceField::fillDiagonalElementsOfNonCoulombicPairsMatrix(vector<shared_ptr<NonCoulombPair>> &diagonalElements)
 {
     ranges::sort(diagonalElements,
                  [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
@@ -231,12 +231,12 @@ void ForceField::fillNonDiagonalElementsOfNonCoulombicPairsMatrix()
  *
  * @param internalType1
  * @param internalType2
- * @return optional<shared_ptr<NonCoulombicPair>>
+ * @return optional<shared_ptr<NonCoulombPair>>
  *
  * @throws if the non coulombic pair is found twice
  */
-optional<shared_ptr<NonCoulombicPair>> ForceField::findNonCoulombicPairByInternalTypes(size_t internalType1,
-                                                                                       size_t internalType2) const
+optional<shared_ptr<NonCoulombPair>> ForceField::findNonCoulombicPairByInternalTypes(size_t internalType1,
+                                                                                     size_t internalType2) const
 {
     auto findByInternalAtomTypes = [internalType1, internalType2](const auto &nonCoulombicPair)
     { return nonCoulombicPair->getInternalType1() == internalType1 && nonCoulombicPair->getInternalType2() == internalType2; };

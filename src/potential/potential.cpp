@@ -45,6 +45,7 @@ Potential &Potential::operator=(const Potential &potential)
  */
 inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
+
     const auto   box      = simBox.getBoxDimensions();
     const double RcCutOff = simBox.getCoulombRadiusCutOff();
 

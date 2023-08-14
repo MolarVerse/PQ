@@ -1,16 +1,23 @@
-#ifndef _NON_COULOMB_POTENTIAL_HPP_
+#ifndef _NON_COULOMB_POTENTIAL_NEW_HPP_   // TODO: refactor this to _NON_COULOMB_POTENTIAL_HPP_
 
-#define _NON_COULOMB_POTENTIAL_HPP_
+#define _NON_COULOMB_POTENTIAL_NEW_HPP_
 
+#include "matrix.hpp"
+#include "nonCoulombPair.hpp"
+
+#include <memory>
 #include <vector>
 
-namespace potential
+namespace potential_new
 {
     class NonCoulombPotential;
     class GuffNonCoulomb;
-    class GuffLennardJones;
-    class GuffBuckingham;
-}   // namespace potential
+    class ForceFieldNonCoulomb;
+}   // namespace potential_new
+
+using c_ul = const size_t;
+using vector4dNonCoulombicPair =
+    std::vector<std::vector<std::vector<std::vector<std::shared_ptr<potential_new::NonCoulombPair>>>>>;
 
 /**
  * @class NonCoulombPotential
@@ -18,57 +25,64 @@ namespace potential
  * @brief NonCoulombPotential is a base class for all non coulomb potentials
  *
  */
-class potential::NonCoulombPotential
+class potential_new::NonCoulombPotential
 {
   public:
     virtual ~NonCoulombPotential() = default;
-    virtual void calcNonCoulomb(
-        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const = 0;
+
+    virtual void resizeGuff(c_ul){};
+    virtual void resizeGuff(c_ul, c_ul){};
+    virtual void resizeGuff(c_ul, c_ul, c_ul){};
+    virtual void resizeGuff(c_ul, c_ul, c_ul, c_ul){};
+
+    virtual void setGuffNonCoulombicPair(const std::vector<size_t> &, const std::shared_ptr<NonCoulombPair> &){};
+
+    virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) = 0;
+
+    [[nodiscard]] size_t getMolType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[0]; }
+    [[nodiscard]] size_t getMolType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[1]; }
+    [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[2]; }
+    [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[3]; }
+    [[nodiscard]] size_t getGlobalVdwType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[4]; }
+    [[nodiscard]] size_t getGlobalVdwType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[5]; }
 };
 
-/**
- * @class GuffNonCoulomb
- *
- * @brief
- * GuffNonCoulomb inherits NonCoulombPotential
- * GuffNonCoulomb is a class for the full Guff potential
- *
- */
-class potential::GuffNonCoulomb : public potential::NonCoulombPotential
+class potential_new::GuffNonCoulomb : public potential_new::NonCoulombPotential
 {
   public:
-    void calcNonCoulomb(
-        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
+    vector4dNonCoulombicPair _guffNonCoulombPairs;
+
+    void resizeGuff(c_ul numberOfMoleculeTypes) override { _guffNonCoulombPairs.resize(numberOfMoleculeTypes); }
+    void resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes) override { _guffNonCoulombPairs[m1].resize(numberOfMoleculeTypes); }
+    void resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms) override { _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms); }
+    void resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms) override
+    {
+        _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms);
+    }
+
+    void setGuffNonCoulombicPair(const std::vector<size_t>             &molAtomVdwIndices,
+                                 const std::shared_ptr<NonCoulombPair> &nonCoulombPair) override
+    {
+        _guffNonCoulombPairs[getMolType1(molAtomVdwIndices) - 1][getMolType2(molAtomVdwIndices) - 1]
+                            [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)] = nonCoulombPair;
+    }
+
+    std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
+    {
+        return _guffNonCoulombPairs[getMolType1(molAtomVdwIndices) - 1][getMolType2(molAtomVdwIndices) - 1]
+                                   [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)];
+    }
 };
 
-/**
- * @class GuffLennardJones
- *
- * @brief
- * GuffLennardJones inherits NonCoulombPotential
- * GuffLennardJones is a class for the Lennard-Jones part of the Guff potential
- * it uses only parameters 1(C6) and 3(C12) of the guffdat file
- */
-class potential::GuffLennardJones : public potential::NonCoulombPotential
+class potential_new::ForceFieldNonCoulomb : public potential_new::NonCoulombPotential
 {
   public:
-    void calcNonCoulomb(
-        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
+    linearAlgebra::Matrix<std::shared_ptr<potential_new::NonCoulombPair>> _nonCoulombicPairsMatrix;
+
+    std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
+    {
+        return _nonCoulombicPairsMatrix[getGlobalVdwType1(molAtomVdwIndices)][getGlobalVdwType2(molAtomVdwIndices)];
+    }
 };
 
-/**
- * @class GuffBuckingham
- *
- * @brief
- * GuffBuckingham inherits NonCoulombPotential
- * GuffBuckingham is a class for the Buckingham part of the Guff potential
- * it uses only parameters 1(A), 2(B) and 3(C) of the guffdat file
- */
-class potential::GuffBuckingham : public potential::NonCoulombPotential
-{
-  public:
-    void calcNonCoulomb(
-        const std::vector<double> &, const double, const double, double &, double &, const double, const double) const override;
-};
-
-#endif   // _NON_COULOMB_POTENTIAL_HPP_
+#endif   // _NON_COULOMB_POTENTIAL_NEW_HPP_

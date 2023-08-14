@@ -66,7 +66,7 @@ class potential::GuffWolfCoulomb : public potential::CoulombPotential
 
     void calcCoulomb(const double, const double, double &, double &, const double, const double) const override;
 
-    double getKappa() const { return _kappa; }
+    [[nodiscard]] double getKappa() const { return _kappa; }
 };
 
 #endif   // _COULOMB_POTENTIAL_HPP_

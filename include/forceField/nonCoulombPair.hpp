@@ -1,6 +1,6 @@
-#ifndef _NON_COULOMBIC_PAIR_HPP_
+#ifndef _NON_COULOMB_PAIR_HPP_
 
-#define _NON_COULOMBIC_PAIR_HPP_
+#define _NON_COULOMB_PAIR_HPP_
 
 #include "mathUtilities.hpp"
 
@@ -9,19 +9,19 @@
 
 namespace forceField
 {
-    class NonCoulombicPair;
+    class NonCoulombPair;
     class LennardJonesPair;
     class BuckinghamPair;
     class MorsePair;
 }   // namespace forceField
 
 /**
- * @class NonCoulombicPair
+ * @class NonCoulombPair
  *
  * @brief base class representing a pair of non-coulombic types
  *
  */
-class forceField::NonCoulombicPair
+class forceField::NonCoulombPair
 {
   protected:
     size_t _vanDerWaalsType1;
@@ -34,11 +34,11 @@ class forceField::NonCoulombicPair
     double _forceCutOff  = 0.0;
 
   public:
-    NonCoulombicPair(const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff)
+    NonCoulombPair(const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff)
         : _vanDerWaalsType1(vanDerWaalsType1), _vanDerWaalsType2(vanDerWaalsType2), _radialCutOff(cutOff){};
-    virtual ~NonCoulombicPair() = default;
+    virtual ~NonCoulombPair() = default;
 
-    [[nodiscard]] bool operator==(const NonCoulombicPair &other) const;
+    [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
     virtual std::pair<double, double> calculateEnergyAndForce(const double distance) const = 0;
 
@@ -60,7 +60,7 @@ class forceField::NonCoulombicPair
  * @brief represents a pair of Lennard-Jones types
  *
  */
-class forceField::LennardJonesPair : public forceField::NonCoulombicPair
+class forceField::LennardJonesPair : public forceField::NonCoulombPair
 {
   private:
     double _c6;
@@ -69,7 +69,7 @@ class forceField::LennardJonesPair : public forceField::NonCoulombicPair
   public:
     LennardJonesPair(
         const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff, const double c6, const double c12)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
 
     [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
@@ -85,7 +85,7 @@ class forceField::LennardJonesPair : public forceField::NonCoulombicPair
  * @brief represents a pair of Buckingham types
  *
  */
-class forceField::BuckinghamPair : public forceField::NonCoulombicPair
+class forceField::BuckinghamPair : public forceField::NonCoulombPair
 {
   private:
     double _a;
@@ -99,7 +99,7 @@ class forceField::BuckinghamPair : public forceField::NonCoulombicPair
                    const double a,
                    const double dRho,
                    const double c6)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
 
     [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
@@ -116,7 +116,7 @@ class forceField::BuckinghamPair : public forceField::NonCoulombicPair
  * @brief represents a pair of Morse types
  *
  */
-class forceField::MorsePair : public forceField::NonCoulombicPair
+class forceField::MorsePair : public forceField::NonCoulombPair
 {
   private:
     double _dissociationEnergy;
@@ -130,7 +130,7 @@ class forceField::MorsePair : public forceField::NonCoulombicPair
               const double dissociationEnergy,
               const double wellWidth,
               const double equilibriumDistance)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
           _wellWidth(wellWidth), _equilibriumDistance(equilibriumDistance){};
 
     [[nodiscard]] bool operator==(const MorsePair &other) const;
@@ -142,4 +142,4 @@ class forceField::MorsePair : public forceField::NonCoulombicPair
     [[nodiscard]] double getEquilibriumDistance() const { return _equilibriumDistance; }
 };
 
-#endif   // _NON_COULOMBIC_PAIR_HPP_
+#endif   // _NON_COULOMB_PAIR_HPP_

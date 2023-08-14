@@ -1,9 +1,9 @@
-#include "nonCoulombicPair.hpp"
+#include "nonCoulombPair.hpp"
 
-using namespace potential_new;
+using namespace forceField;
 
 /**
- * @brief operator overload for the comparison of two NonCoulombicPair objects
+ * @brief operator overload for the comparison of two NonCoulombPair objects
  *
  * @details returns also true if the two types are switched
  *
@@ -11,7 +11,7 @@ using namespace potential_new;
  * @return true
  * @return false
  */
-bool NonCoulombicPair::operator==(const NonCoulombicPair &other) const
+bool NonCoulombPair::operator==(const NonCoulombPair &other) const
 {
     auto isEqual = _vanDerWaalsType1 == other._vanDerWaalsType1;
     isEqual      = isEqual && _vanDerWaalsType2 == other._vanDerWaalsType2;
@@ -33,7 +33,7 @@ bool NonCoulombicPair::operator==(const NonCoulombicPair &other) const
  */
 bool LennardJonesPair::operator==(const LennardJonesPair &other) const
 {
-    return NonCoulombicPair::operator==(other) && utilities::compare(_c6, other._c6) && utilities::compare(_c12, other._c12);
+    return NonCoulombPair::operator==(other) && utilities::compare(_c6, other._c6) && utilities::compare(_c12, other._c12);
 }
 
 /**
@@ -63,7 +63,7 @@ std::pair<double, double> LennardJonesPair::calculateEnergyAndForce(const double
  */
 bool BuckinghamPair::operator==(const BuckinghamPair &other) const
 {
-    return NonCoulombicPair::operator==(other) && utilities::compare(_a, other._a) && utilities::compare(_dRho, other._dRho) &&
+    return NonCoulombPair::operator==(other) && utilities::compare(_a, other._a) && utilities::compare(_dRho, other._dRho) &&
            utilities::compare(_c6, other._c6);
 }
 
@@ -92,7 +92,7 @@ std::pair<double, double> BuckinghamPair::calculateEnergyAndForce(const double d
  */
 bool MorsePair::operator==(const MorsePair &other) const
 {
-    return NonCoulombicPair::operator==(other) && utilities::compare(_dissociationEnergy, other._dissociationEnergy) &&
+    return NonCoulombPair::operator==(other) && utilities::compare(_dissociationEnergy, other._dissociationEnergy) &&
            utilities::compare(_wellWidth, other._wellWidth) &&
            utilities::compare(_equilibriumDistance, other._equilibriumDistance);
 }

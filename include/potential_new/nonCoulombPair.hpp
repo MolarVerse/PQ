@@ -1,6 +1,6 @@
-#ifndef _NON_COULOMBIC_PAIR_HPP_
+#ifndef _NON_COULOMB_PAIR_NEW_HPP_   // TODO: refactor this to _NON_COULOMB_PAIR_HPP_
 
-#define _NON_COULOMBIC_PAIR_HPP_
+#define _NON_COULOMB_PAIR_NEW_HPP_
 
 #include "mathUtilities.hpp"
 
@@ -9,14 +9,15 @@
 
 namespace potential_new
 {
-    class NonCoulombicPair;
+    class NonCoulombPair;
     class LennardJonesPair;
     class BuckinghamPair;
     class MorsePair;
+    class GuffPair;
 }   // namespace potential_new
 
 /**
- * @class NonCoulombicPair
+ * @class NonCoulombPair
  *
  * @brief base class representing a pair of non-coulombic types
  *
@@ -24,7 +25,7 @@ namespace potential_new
  *         constructor with cut-off radius only is for guff representation
  *
  */
-class potential_new::NonCoulombicPair
+class potential_new::NonCoulombPair
 {
   protected:
     size_t _vanDerWaalsType1;
@@ -37,13 +38,15 @@ class potential_new::NonCoulombicPair
     double _forceCutOff  = 0.0;
 
   public:
-    NonCoulombicPair(const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff)
+    NonCoulombPair(const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff)
         : _vanDerWaalsType1(vanDerWaalsType1), _vanDerWaalsType2(vanDerWaalsType2), _radialCutOff(cutOff){};
-    explicit NonCoulombicPair(const double cutOff) : _radialCutOff(cutOff){};
-    virtual ~NonCoulombicPair() = default;
+    explicit NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
+    explicit NonCoulombPair(const double cutoff, const double energyCutoff, const double forceCutoff)
+        : _radialCutOff(cutoff), _energyCutOff(energyCutoff), _forceCutOff(forceCutoff){};
+    virtual ~NonCoulombPair() = default;
 
     // TODO: think of a way to generalize this also for guff routine
-    [[nodiscard]] bool operator==(const NonCoulombicPair &other) const;
+    [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
     virtual std::pair<double, double> calculateEnergyAndForce(const double distance) const = 0;
 
@@ -65,7 +68,7 @@ class potential_new::NonCoulombicPair
  * @brief represents a pair of Lennard-Jones types
  *
  */
-class potential_new::LennardJonesPair : public potential_new::NonCoulombicPair
+class potential_new::LennardJonesPair : public potential_new::NonCoulombPair
 {
   private:
     double _c6;
@@ -74,9 +77,12 @@ class potential_new::LennardJonesPair : public potential_new::NonCoulombicPair
   public:
     LennardJonesPair(
         const size_t vanDerWaalsType1, const size_t vanDerWaalsType2, const double cutOff, const double c6, const double c12)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _c6(c6), _c12(c12){};
 
-    LennardJonesPair(const double cutOff, const double c6, const double c12) : NonCoulombicPair(cutOff), _c6(c6), _c12(c12){};
+    LennardJonesPair(const double cutOff, const double c6, const double c12) : NonCoulombPair(cutOff), _c6(c6), _c12(c12){};
+
+    LennardJonesPair(const double cutOff, const double energyCutoff, const double forceCutoff, const double c6, const double c12)
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _c6(c6), _c12(c12){};
 
     [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
@@ -92,7 +98,7 @@ class potential_new::LennardJonesPair : public potential_new::NonCoulombicPair
  * @brief represents a pair of Buckingham types
  *
  */
-class potential_new::BuckinghamPair : public potential_new::NonCoulombicPair
+class potential_new::BuckinghamPair : public potential_new::NonCoulombPair
 {
   private:
     double _a;
@@ -106,9 +112,18 @@ class potential_new::BuckinghamPair : public potential_new::NonCoulombicPair
                    const double a,
                    const double dRho,
                    const double c6)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
+
     BuckinghamPair(const double cutOff, const double a, const double dRho, const double c6)
-        : NonCoulombicPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
+        : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
+
+    BuckinghamPair(const double cutOff,
+                   const double energyCutoff,
+                   const double forceCutoff,
+                   const double a,
+                   const double dRho,
+                   const double c6)
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _a(a), _dRho(dRho), _c6(c6){};
 
     [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
@@ -125,7 +140,7 @@ class potential_new::BuckinghamPair : public potential_new::NonCoulombicPair
  * @brief represents a pair of Morse types
  *
  */
-class potential_new::MorsePair : public potential_new::NonCoulombicPair
+class potential_new::MorsePair : public potential_new::NonCoulombPair
 {
   private:
     double _dissociationEnergy;
@@ -139,10 +154,20 @@ class potential_new::MorsePair : public potential_new::NonCoulombicPair
               const double dissociationEnergy,
               const double wellWidth,
               const double equilibriumDistance)
-        : NonCoulombicPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _dissociationEnergy(dissociationEnergy),
           _wellWidth(wellWidth), _equilibriumDistance(equilibriumDistance){};
+
     MorsePair(const double cutOff, const double dissociationEnergy, const double wellWidth, const double equilibriumDistance)
-        : NonCoulombicPair(cutOff), _dissociationEnergy(dissociationEnergy), _wellWidth(wellWidth),
+        : NonCoulombPair(cutOff), _dissociationEnergy(dissociationEnergy), _wellWidth(wellWidth),
+          _equilibriumDistance(equilibriumDistance){};
+
+    MorsePair(const double cutOff,
+              const double energyCutoff,
+              const double forceCutoff,
+              const double dissociationEnergy,
+              const double wellWidth,
+              const double equilibriumDistance)
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _dissociationEnergy(dissociationEnergy), _wellWidth(wellWidth),
           _equilibriumDistance(equilibriumDistance){};
 
     [[nodiscard]] bool operator==(const MorsePair &other) const;
@@ -154,4 +179,25 @@ class potential_new::MorsePair : public potential_new::NonCoulombicPair
     [[nodiscard]] double getEquilibriumDistance() const { return _equilibriumDistance; }
 };
 
-#endif   // _NON_COULOMBIC_PAIR_HPP_
+/**
+ * @class GuffPair
+ *
+ * @brief represents a pair of Guff types (full guff formula)
+ *
+ */
+class potential_new::GuffPair : public potential_new::NonCoulombPair
+{
+  private:
+    std::vector<double> _coefficients;
+
+  public:
+    GuffPair(const double cutOff, const std::vector<double> &coefficients)
+        : NonCoulombPair(cutOff), _coefficients(coefficients){};
+
+    GuffPair(const double cutOff, const double energyCutoff, const double forceCutoff, const std::vector<double> &coefficients)
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _coefficients(coefficients){};
+
+    std::pair<double, double> calculateEnergyAndForce(const double distance) const override;
+};
+
+#endif   // _NON_COULOMB_PAIR_NEW_HPP_

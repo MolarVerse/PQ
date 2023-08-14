@@ -50,7 +50,8 @@ void InputFileParserCoulombLongRange::parseWolfParameter(const vector<string> &l
 {
     checkCommand(lineElements, lineNumber);
     auto wolfParameter = stod(lineElements[2]);
-    if (wolfParameter < 0.0) throw InputFileException("Wolf parameter cannot be negative");
+    if (wolfParameter < 0.0)
+        throw InputFileException("Wolf parameter cannot be negative");
 
     _engine.getSettings().setWolfParameter(wolfParameter);
 }

@@ -36,9 +36,11 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const vector<string> &lineEl
         _engine.getSettings().setNonCoulombType("lj");
     else if (lineElements[2] == "buck")
         _engine.getSettings().setNonCoulombType("buck");
+    else if (lineElements[2] == "morse")
+        _engine.getSettings().setNonCoulombType("morse");
     else
         throw InputFileException(
-            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck and none",
+            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and none",
                    lineElements[2],
                    lineNumber));
 }

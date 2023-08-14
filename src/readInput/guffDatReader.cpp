@@ -14,6 +14,7 @@ using namespace simulationBox;
 using namespace readInput;
 using namespace engine;
 using namespace customException;
+using namespace potential_new;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
@@ -22,6 +23,9 @@ using namespace customException;
  */
 void readInput::readGuffDat(Engine &engine)
 {
+    if (engine.getForceFieldPtr()->isNonCoulombicActivated())
+        return;
+
     GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();
     guffDat.read();
@@ -84,6 +88,7 @@ void GuffDatReader::read()
  */
 void GuffDatReader::setupGuffMaps()
 {
+
     const size_t numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size();
 
     _engine.getSimulationBox().resizeGuff(numberOfMoleculeTypes);
@@ -109,6 +114,44 @@ void GuffDatReader::setupGuffMaps()
 
             for (size_t k = 0; k < numberOfAtomTypes_i; ++k)
                 _engine.getSimulationBox().resizeGuff(i, j, k, numberOfAtomTypes_j);
+        }
+    }
+
+    // TODO: from here on potential_new
+
+    _engine.getPotentialNew().getCoulombPotential().resizeGuff(numberOfMoleculeTypes);
+    _engine.getPotentialNew().getNonCoulombPotential().resizeGuff(numberOfMoleculeTypes);
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+    {
+        _engine.getPotentialNew().getCoulombPotential().resizeGuff(i, numberOfMoleculeTypes);
+        _engine.getPotentialNew().getNonCoulombPotential().resizeGuff(i, numberOfMoleculeTypes);
+    }
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+    {
+        const size_t numberOfAtomTypes = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
+
+        for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
+        {
+            _engine.getPotentialNew().getCoulombPotential().resizeGuff(i, j, numberOfAtomTypes);
+            _engine.getPotentialNew().getNonCoulombPotential().resizeGuff(i, j, numberOfAtomTypes);
+        }
+    }
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
+    {
+        const size_t numberOfAtomTypes_i = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
+
+        for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
+        {
+            const size_t numberOfAtomTypes_j = _engine.getSimulationBox().getMoleculeType(j).getNumberOfAtomTypes();
+
+            for (size_t k = 0; k < numberOfAtomTypes_i; ++k)
+            {
+                _engine.getPotentialNew().getCoulombPotential().resizeGuff(i, j, k, numberOfAtomTypes_j);
+                _engine.getPotentialNew().getNonCoulombPotential().resizeGuff(i, j, k, numberOfAtomTypes_j);
+            }
         }
     }
 }
@@ -150,7 +193,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     double rncCutOff = stod(lineCommands[4]);
 
-    if (rncCutOff < 0.0) rncCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
+    if (rncCutOff < 0.0)
+        rncCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
 
     const double   coulombCoefficient = stod(lineCommands[5]);
     vector<double> guffCoefficients(22);
@@ -191,4 +235,72 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     _engine.getSimulationBox().setNonCoulombEnergyCutOff(moltype2, moltype1, atomType2, atomType1, energy);
     _engine.getSimulationBox().setNonCoulombForceCutOff(moltype1, moltype2, atomType1, atomType2, force);
     _engine.getSimulationBox().setNonCoulombForceCutOff(moltype2, moltype1, atomType2, atomType1, force);
+
+    // TODO: potential_new
+
+    CoulombPotential::setCoulombRadiusCutOff(_engine.getSimulationBox().getCoulombRadiusCutOff());
+
+    _engine.getPotentialNew().getCoulombPotential().setGuffCoulombCoefficient(
+        moltype1, moltype2, atomType1, atomType2, coulombCoefficient);
+    _engine.getPotentialNew().getCoulombPotential().setGuffCoulombCoefficient(
+        moltype2, moltype1, atomType2, atomType1, coulombCoefficient);
+
+    // TODO: calculate in postsetup cutoff values of noncoulombic pairs
+    if (_engine.getSettings().getNonCoulombType() == "lj")
+    {
+        auto lennardJonesPair                  = LennardJonesPair(rncCutOff, guffCoefficients[0], guffCoefficients[2]);
+        const auto [energyCutOff, forceCutOff] = lennardJonesPair.calculateEnergyAndForce(rncCutOff);
+
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype1, moltype2, atomType1, atomType2},
+            make_shared<LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype2, moltype1, atomType2, atomType1},
+            make_shared<LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
+    }
+    else if (_engine.getSettings().getNonCoulombType() == "buck")
+    {
+        auto buckinghamPair = BuckinghamPair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
+        const auto [energyCutOff, forceCutOff] = buckinghamPair.calculateEnergyAndForce(rncCutOff);
+
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype1, moltype2, atomType1, atomType2},
+            make_shared<BuckinghamPair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype2, moltype1, atomType2, atomType1},
+            make_shared<BuckinghamPair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
+    }
+    else if (_engine.getSettings().getNonCoulombType() == "morse")
+    {
+        auto morsePair = MorsePair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
+        const auto [energyCutOff, forceCutOff] = morsePair.calculateEnergyAndForce(rncCutOff);
+
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype1, moltype2, atomType1, atomType2},
+            make_shared<MorsePair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {
+                moltype2,
+                moltype1,
+                atomType2,
+                atomType1,
+            },
+            make_shared<MorsePair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
+    }
+    else
+    {
+        auto guffPair                          = GuffPair(rncCutOff, guffCoefficients);
+        const auto [energyCutOff, forceCutOff] = guffPair.calculateEnergyAndForce(rncCutOff);
+
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype1, moltype2, atomType1, atomType2},
+            make_shared<GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
+        _engine.getPotentialNew().getNonCoulombPotential().setGuffNonCoulombicPair(
+            {moltype2, moltype1, atomType2, atomType1},
+            make_shared<GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
+    }
 }

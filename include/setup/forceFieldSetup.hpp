@@ -22,7 +22,7 @@ class setup::ForceFieldSetup
   public:
     explicit ForceFieldSetup(engine::Engine &engine) : _engine(engine){};
 
-    void setup(){};
+    void setup();
     void setupBonds();
     void setupAngles();
     void setupDihedrals();

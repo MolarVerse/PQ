@@ -16,6 +16,8 @@ target_link_libraries(engine
     integrator
     manostat
     potential
+    potential_new
+
     resetKinetics
     settings
     thermostat

@@ -3,6 +3,7 @@
 using namespace std;
 using namespace setup;
 using namespace potential;
+using namespace potential_new;   // TODO:
 
 /**
  * @brief wrapper for setup potential
@@ -32,6 +33,7 @@ void PotentialSetup::setup()
 void PotentialSetup::setupCoulomb()
 {
     const auto coulombRadiusCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
+    auto       wolfParameter       = _engine.getSettings().getWolfParameter();
 
     if (_engine.getPotential().getCoulombType() == "guff")
     {
@@ -39,8 +41,28 @@ void PotentialSetup::setupCoulomb()
             _engine.getPotential().setCoulombPotential(GuffCoulomb(coulombRadiusCutOff));
         else if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
         {
-            auto wolfParameter = _engine.getSettings().getWolfParameter();
             _engine.getPotential().setCoulombPotential(GuffWolfCoulomb(coulombRadiusCutOff, wolfParameter));
+        }
+    }
+
+    // TODO: from here on only potential new
+
+    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    {
+        if (_engine.getSettings().getCoulombLongRangeType() == "none")
+            _engine.getPotentialNew().makeCoulombPotential(ForceFieldShiftedPotential(coulombRadiusCutOff));
+        else if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
+        {
+            _engine.getPotentialNew().makeCoulombPotential(ForceFieldWolf(coulombRadiusCutOff, wolfParameter));
+        }
+    }
+    else
+    {
+        if (_engine.getSettings().getCoulombLongRangeType() == "none")
+            _engine.getPotentialNew().makeCoulombPotential(GuffCoulombShiftedPotential(coulombRadiusCutOff));
+        else if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
+        {
+            _engine.getPotentialNew().makeCoulombPotential(GuffCoulombWolf(coulombRadiusCutOff, wolfParameter));
         }
     }
 }
@@ -54,10 +76,19 @@ void PotentialSetup::setupNonCoulomb()
     if (_engine.getPotential().getNonCoulombType() == "guff")
     {
         if (_engine.getSettings().getNonCoulombType() == "none")
-            _engine.getPotential().setNonCoulombPotential(GuffNonCoulomb());
+            _engine.getPotential().setNonCoulombPotential(potential::GuffNonCoulomb());
         else if (_engine.getSettings().getNonCoulombType() == "lj")
             _engine.getPotential().setNonCoulombPotential(GuffLennardJones());
         else if (_engine.getSettings().getNonCoulombType() == "buck")
             _engine.getPotential().setNonCoulombPotential(GuffBuckingham());
     }
+
+    // TODO: from here on only potential new
+
+    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    {
+        _engine.getPotentialNew().makeNonCoulombPotential(potential_new::ForceFieldNonCoulomb());
+    }
+    else
+        _engine.getPotentialNew().makeNonCoulombPotential(potential_new::GuffNonCoulomb());
 }

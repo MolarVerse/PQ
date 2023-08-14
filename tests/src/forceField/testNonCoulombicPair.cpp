@@ -1,4 +1,4 @@
-#include "nonCoulombicPair.hpp"
+#include "nonCoulombPair.hpp"
 
 #include <gtest/gtest.h>
 

@@ -124,7 +124,7 @@
 // //     auto forceField       = forceField::ForceField();
 // //     auto nonCoulombicPair = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-// //     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair));
+// //     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
 // //     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
 // //     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 1);
@@ -142,7 +142,7 @@
 //     auto forceField       = forceField::ForceField();
 //     auto nonCoulombicPair = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
 //     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
 //     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 0);
@@ -158,8 +158,8 @@
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
 
 //     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
 
@@ -183,10 +183,10 @@
 //     auto nonCoulombicPair3 = forceField::LennardJonesPair(2, 2, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair4 = forceField::LennardJonesPair(5, 5, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair3));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair4));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair3));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair4));
 
 //     // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
 //     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -211,9 +211,9 @@
 //     nonCoulombicPair2.setInternalType1(9);
 //     nonCoulombicPair2.setInternalType2(9);
 
-//     std::vector<std::shared_ptr<forceField::NonCoulombicPair>> diagonalElements = {
-//         std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1),
-//         std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2)};
+//     std::vector<std::shared_ptr<forceField::NonCoulombPair>> diagonalElements = {
+//         std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1),
+//         std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2)};
 
 //     forceField.fillDiagonalElementsOfNonCoulombicPairsMatrix(diagonalElements);
 
@@ -235,8 +235,8 @@
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
 
 //     // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
 //     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -257,8 +257,8 @@
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
 
 //     // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
 //     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -279,9 +279,9 @@
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(1, 5, 2.0, 5.0, 1.0);
 //     auto nonCoulombicPair3 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair3));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair3));
 
 //     // these two lines were already tested in TestForceField_determineInternalGlobalVdwTypes
 //     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -301,7 +301,7 @@
 //     auto forceField        = forceField::ForceField();
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
 
 //     forceField.initNonCoulombicPairsMatrix(2);
 
@@ -325,7 +325,7 @@
 //     auto forceField        = forceField::ForceField();
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
 
 //     forceField.initNonCoulombicPairsMatrix(2);
 
@@ -349,7 +349,7 @@
 //     auto forceField        = forceField::ForceField();
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(2, 1, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
 
 //     forceField.initNonCoulombicPairsMatrix(2);
 
@@ -375,8 +375,8 @@
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(2, 1, 2.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
 
 //     forceField.initNonCoulombicPairsMatrix(2);
 
@@ -402,8 +402,8 @@
 //     auto nonCoulombicPair1 = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
 //     auto nonCoulombicPair2 = forceField::LennardJonesPair(2, 1, 5.0, 1.0, 1.0);
 
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair1));
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombicPair>(nonCoulombicPair2));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair1));
+//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair2));
 
 //     forceField.initNonCoulombicPairsMatrix(2);
 

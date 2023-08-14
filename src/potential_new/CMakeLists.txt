@@ -1,12 +1,8 @@
 add_library(potential_new
-    potential.cpp
-    nonCoulombicPair.cpp
-
-    guffLJ.cpp
-    guffBuckingham.cpp
-    guffNonCoulomb.cpp
-
-    guffCoulomb.cpp
+    potential_new.cpp
+    nonCoulombPair.cpp
+    coulombPotential.cpp
+    nonCoulombPotential.cpp
 )
 
 target_include_directories(potential_new

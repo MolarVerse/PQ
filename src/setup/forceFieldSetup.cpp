@@ -8,6 +8,28 @@ using namespace std;
 using namespace setup;
 using namespace forceField;
 
+void ForceFieldSetup::setup()
+{
+    setupBonds();
+    setupAngles();
+    setupDihedrals();
+    setupImproperDihedrals();
+
+    if (!_engine.getForceFieldPtr()->isNonCoulombicActivated())
+        return;
+
+    setupNonCoulombics();
+}
+
+void setup::setupForceField(engine::Engine &engine)
+{
+    if (!engine.getForceFieldPtr()->isActivated())
+        return;
+
+    ForceFieldSetup forceFieldSetup(engine);
+    forceFieldSetup.setup();
+}
+
 /**
  * @brief setup all bonds for force field
  *

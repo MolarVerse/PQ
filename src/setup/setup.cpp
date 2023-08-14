@@ -2,6 +2,7 @@
 
 #include "celllistSetup.hpp"
 #include "constraintsSetup.hpp"
+#include "forceFieldSetup.hpp"
 #include "guffDatReader.hpp"
 #include "inputFileReader.hpp"
 #include "integratorSetup.hpp"
@@ -84,4 +85,6 @@ void setup::setupEngine(Engine &engine)
     setupPotential(engine);
     setupIntegrator(engine);
     setupConstraints(engine);
+
+    setupForceField(engine);   // important to setup force field after potential!!!
 }

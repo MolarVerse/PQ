@@ -10,7 +10,7 @@
 #include "dihedralForceField.hpp"
 #include "dihedralType.hpp"
 #include "matrix.hpp"
-#include "nonCoulombicPair.hpp"
+#include "nonCoulombPair.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -56,12 +56,12 @@ class forceField::ForceField
     std::vector<DihedralForceField> _dihedrals;
     std::vector<DihedralForceField> _improperDihedrals;
 
-    std::vector<BondType>                                    _bondTypes;
-    std::vector<AngleType>                                   _angleTypes;
-    std::vector<DihedralType>                                _dihedralTypes;
-    std::vector<DihedralType>                                _improperDihedralTypes;
-    std::vector<std::shared_ptr<NonCoulombicPair>>           _nonCoulombicPairsVector;
-    linearAlgebra::Matrix<std::shared_ptr<NonCoulombicPair>> _nonCoulombicPairsMatrix;
+    std::vector<BondType>                                  _bondTypes;
+    std::vector<AngleType>                                 _angleTypes;
+    std::vector<DihedralType>                              _dihedralTypes;
+    std::vector<DihedralType>                              _improperDihedralTypes;
+    std::vector<std::shared_ptr<NonCoulombPair>>           _nonCoulombicPairsVector;
+    linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> _nonCoulombicPairsMatrix;
 
   public:
     void calculateBondedInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
@@ -72,12 +72,12 @@ class forceField::ForceField
 
     void deleteNotNeededNonCoulombicPairs(const std::vector<size_t> &);
     void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
-    void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::shared_ptr<NonCoulombicPair>> &);
+    void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::shared_ptr<NonCoulombPair>> &);
     void fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
 
-    std::vector<std::shared_ptr<NonCoulombicPair>>   getSelfInteractionNonCoulombicPairs() const;
-    std::optional<std::shared_ptr<NonCoulombicPair>> findNonCoulombicPairByInternalTypes(size_t internalType1,
-                                                                                         size_t internalType2) const;
+    std::vector<std::shared_ptr<NonCoulombPair>>   getSelfInteractionNonCoulombicPairs() const;
+    std::optional<std::shared_ptr<NonCoulombPair>> findNonCoulombicPairByInternalTypes(size_t internalType1,
+                                                                                       size_t internalType2) const;
 
     const BondType     &findBondTypeById(size_t id) const;
     const AngleType    &findAngleTypeById(size_t id) const;
@@ -104,7 +104,7 @@ class forceField::ForceField
     {
         _improperDihedralTypes.push_back(improperDihedralType);
     }
-    void addNonCoulombicPair(std::shared_ptr<NonCoulombicPair> nonCoulombicPair)
+    void addNonCoulombicPair(std::shared_ptr<NonCoulombPair> nonCoulombicPair)
     {
         _nonCoulombicPairsVector.push_back(std::move(nonCoulombicPair));
     }
@@ -125,7 +125,7 @@ class forceField::ForceField
 
     void initNonCoulombicPairsMatrix(const size_t n)
     {
-        _nonCoulombicPairsMatrix = linearAlgebra::Matrix<std::shared_ptr<NonCoulombicPair>>(n);
+        _nonCoulombicPairsMatrix = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>(n);
     }
 
     /********************
@@ -146,11 +146,8 @@ class forceField::ForceField
     [[nodiscard]] const std::vector<DihedralType> &getDihedralTypes() const { return _dihedralTypes; }
     [[nodiscard]] const std::vector<DihedralType> &getImproperDihedralTypes() const { return _improperDihedralTypes; }
 
-    [[nodiscard]] std::vector<std::shared_ptr<NonCoulombicPair>> &getNonCoulombicPairsVector()
-    {
-        return _nonCoulombicPairsVector;
-    }
-    [[nodiscard]] linearAlgebra::Matrix<std::shared_ptr<NonCoulombicPair>> &getNonCoulombicPairsMatrix()
+    [[nodiscard]] std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsVector() { return _nonCoulombicPairsVector; }
+    [[nodiscard]] linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsMatrix()
     {
         return _nonCoulombicPairsMatrix;
     }

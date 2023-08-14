@@ -76,10 +76,18 @@ class potential::Potential
     NonCoulombPotential *getNonCoulombPotential() const { return _nonCoulombPotential.get(); }
     CoulombPotential    *getCoulombPotential() const { return _coulombPotential.get(); }
 
-    void                    setCoulombType(const std::string_view coulombType) { _coulombType = coulombType; }
-    void                    setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; }
-    template <class T> void setCoulombPotential(const T &potential) { _coulombPotential = std::make_unique<T>(potential); }
-    template <class T> void setNonCoulombPotential(const T &potential) { _nonCoulombPotential = std::make_unique<T>(potential); }
+    void setCoulombType(const std::string_view coulombType) { _coulombType = coulombType; }
+    void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; }
+    template <class T>
+    void setCoulombPotential(const T &potential)
+    {
+        _coulombPotential = std::make_unique<T>(potential);
+    }
+    template <class T>
+    void setNonCoulombPotential(const T &potential)
+    {
+        _nonCoulombPotential = std::make_unique<T>(potential);
+    }
 };
 
 /**
