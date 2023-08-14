@@ -55,7 +55,7 @@ GuffCoulombShiftedPotential::calculate(const std::vector<size_t> &molAtomVdwIndi
     auto atomType1 = getAtomType1(molAtomVdwIndices);
     auto atomType2 = getAtomType2(molAtomVdwIndices);
 
-    _coulombPreFactor = _guffCoulombCoefficients[molType1][molType2][atomType1][atomType2];
+    _coulombPreFactor = _guffCoulombCoefficients[molType1 - 1][molType2 - 1][atomType1][atomType2];
 
     return calculateEnergyAndForce(distance);
 }
