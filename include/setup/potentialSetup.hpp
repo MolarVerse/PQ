@@ -27,6 +27,7 @@ class setup::PotentialSetup
     void setup();
     void setupCoulomb();
     void setupNonCoulomb();
+    void setupNonCoulombicPairs();
 };
 
 #endif   // _POTENTIAL_SETUP_HPP_

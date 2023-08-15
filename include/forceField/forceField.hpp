@@ -19,12 +19,12 @@
 namespace forceField
 {
     class ForceField;
-    enum class NonCoulombicType : size_t;
-    enum class MixingRule : size_t;
+    enum class NonCoulombType : size_t;   // TODO: remove
+    enum class MixingRule : size_t;       // TODO: remove
 
 }   // namespace forceField
 
-enum class forceField::NonCoulombicType : size_t
+enum class forceField::NonCoulombType : size_t   // TODO: remove
 {
     LJ,
     LJ_9_12,   // at the momentum just dummy for testing not implemented yet
@@ -32,7 +32,7 @@ enum class forceField::NonCoulombicType : size_t
     MORSE
 };
 
-enum class forceField::MixingRule : size_t
+enum class forceField::MixingRule : size_t   // TODO: remove
 {
     NONE
 };
@@ -46,10 +46,10 @@ enum class forceField::MixingRule : size_t
 class forceField::ForceField
 {
   private:
-    bool             _isActivated             = false;
-    bool             _isNonCoulombicActivated = false;
-    NonCoulombicType _nonCoulombicType        = NonCoulombicType::LJ;   // LJ
-    MixingRule       _mixingRule              = MixingRule::NONE;       // no mixing rule
+    bool           _isActivated             = false;
+    bool           _isNonCoulombicActivated = false;
+    NonCoulombType _nonCoulombType          = NonCoulombType::LJ;   // LJ
+    MixingRule     _mixingRule              = MixingRule::NONE;     // no mixing rule
 
     std::vector<BondForceField>     _bonds;
     std::vector<AngleForceField>    _angles;
@@ -121,7 +121,7 @@ class forceField::ForceField
      *                  *
      ********************/
 
-    void setNonCoulombicType(const NonCoulombicType &nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
+    void setNonCoulombType(const NonCoulombType &nonCoulombicType) { _nonCoulombType = nonCoulombicType; }
 
     void initNonCoulombicPairsMatrix(const size_t n)
     {
@@ -134,7 +134,7 @@ class forceField::ForceField
      *                  *
      ********************/
 
-    [[nodiscard]] NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
+    [[nodiscard]] NonCoulombType getNonCoulombType() const { return _nonCoulombType; }
 
     [[nodiscard]] std::vector<BondForceField>     &getBonds() { return _bonds; }
     [[nodiscard]] std::vector<AngleForceField>    &getAngles() { return _angles; }

@@ -51,6 +51,9 @@ class potential::NonCoulombPair
     void setInternalType1(const size_t internalType1) { _internalType1 = internalType1; }
     void setInternalType2(const size_t internalType2) { _internalType2 = internalType2; }
 
+    void setEnergyCutOff(const double energyCutoff) { _energyCutOff = energyCutoff; }
+    void setForceCutOff(const double forceCutoff) { _forceCutOff = forceCutoff; }
+
     [[nodiscard]] size_t getVanDerWaalsType1() const { return _vanDerWaalsType1; }
     [[nodiscard]] size_t getVanDerWaalsType2() const { return _vanDerWaalsType2; }
     [[nodiscard]] size_t getInternalType1() const { return _internalType1; }

@@ -124,7 +124,7 @@ class readInput::parameterFile::ImproperDihedralSection : public readInput::para
 class readInput::parameterFile::NonCoulombicsSection : public readInput::parameterFile::ParameterFileSection
 {
   private:
-    forceField::NonCoulombicType _nonCoulombicType;
+    forceField::NonCoulombType _nonCoulombType;
 
   public:
     std::string keyword() override { return "noncoulombics"; }
@@ -134,8 +134,8 @@ class readInput::parameterFile::NonCoulombicsSection : public readInput::paramet
     void        processBuckingham(std::vector<std::string> &, engine::Engine &) const;
     void        processMorse(std::vector<std::string> &, engine::Engine &) const;
 
-    void setNonCoulombicType(forceField::NonCoulombicType nonCoulombicType) { _nonCoulombicType = nonCoulombicType; }
-    [[nodiscard]] forceField::NonCoulombicType getNonCoulombicType() const { return _nonCoulombicType; }
+    void setNonCoulombType(forceField::NonCoulombType nonCoulombicType) { _nonCoulombType = nonCoulombicType; }
+    [[nodiscard]] forceField::NonCoulombType getNonCoulombType() const { return _nonCoulombType; }
 };
 
 #endif   // _PARAMETER_FILE_SECTION_HPP_

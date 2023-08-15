@@ -19,7 +19,8 @@ void setup::setupCellList(engine::Engine &engine)
  * @brief setup cell list
  *
  */
-void CellListSetup::setup()
+void CellListSetup::setup()   // TODO: define here a copy constructor otherwise this does not work for noncoulombic pairs which
+                              // are set while readine parameter file
 {
     if (_engine.isCellListActivated())
     {

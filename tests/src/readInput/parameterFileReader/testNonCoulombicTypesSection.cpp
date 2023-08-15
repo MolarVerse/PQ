@@ -99,19 +99,19 @@ TEST_F(TestParameterFileSection, processHeader)
     std::vector<std::string> lineElements = {"noncoulombics"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(nonCoulombicsSection.getNonCoulombicType(), forceField::NonCoulombicType::LJ);
+    EXPECT_EQ(nonCoulombicsSection.getNonCoulombType(), forceField::NonCoulombType::LJ);
 
     lineElements = {"noncoulombics", "lj"};
     nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(nonCoulombicsSection.getNonCoulombicType(), forceField::NonCoulombicType::LJ);
+    EXPECT_EQ(nonCoulombicsSection.getNonCoulombType(), forceField::NonCoulombType::LJ);
 
     lineElements = {"noncoulombics", "buckingham"};
     nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(nonCoulombicsSection.getNonCoulombicType(), forceField::NonCoulombicType::BUCKINGHAM);
+    EXPECT_EQ(nonCoulombicsSection.getNonCoulombType(), forceField::NonCoulombType::BUCKINGHAM);
 
     lineElements = {"noncoulombics", "morse"};
     nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(nonCoulombicsSection.getNonCoulombicType(), forceField::NonCoulombicType::MORSE);
+    EXPECT_EQ(nonCoulombicsSection.getNonCoulombType(), forceField::NonCoulombType::MORSE);
 
     lineElements = {"noncoulombics", "lj", "dummy"};
     EXPECT_THROW(nonCoulombicsSection.processHeader(lineElements, *_engine), customException::ParameterFileException);
@@ -124,27 +124,27 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
 {
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     NonCoulombicsSection     nonCoulombicsSection;
-    nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::LJ);
+    nonCoulombicsSection.setNonCoulombType(forceField::NonCoulombType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 1);
     EXPECT_NO_THROW(
         dynamic_cast<const forceField::LennardJonesPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::BUCKINGHAM);
+    nonCoulombicsSection.setNonCoulombType(forceField::NonCoulombType::BUCKINGHAM);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
     EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 2);
     EXPECT_NO_THROW(
         dynamic_cast<const forceField::BuckinghamPair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::MORSE);
+    nonCoulombicsSection.setNonCoulombType(forceField::NonCoulombType::MORSE);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
     EXPECT_EQ(_engine->getForceField().getNonCoulombicPairsVector().size(), 3);
     EXPECT_NO_THROW(dynamic_cast<const forceField::MorsePair *>(_engine->getForceField().getNonCoulombicPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    nonCoulombicsSection.setNonCoulombicType(forceField::NonCoulombicType::LJ_9_12);
+    nonCoulombicsSection.setNonCoulombType(forceField::NonCoulombType::LJ_9_12);
     EXPECT_THROW(nonCoulombicsSection.processSection(lineElements, *_engine), customException::ParameterFileException);
 }
 

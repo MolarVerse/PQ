@@ -5,6 +5,8 @@
 #include "forceFieldNonCoulomb.hpp"
 #include "guffNonCoulomb.hpp"
 
+#include <ranges>
+
 using namespace std;
 using namespace setup;
 using namespace potential;
@@ -27,6 +29,11 @@ void PotentialSetup::setup()
 {
     setupCoulomb();
     setupNonCoulomb();
+
+    if (!_engine.isForceFieldNonCoulombicsActivated())
+        return;
+
+    setupNonCoulombicPairs();
 }
 
 /**
@@ -62,4 +69,20 @@ void PotentialSetup::setupNonCoulomb()
         _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     else
         _engine.getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
+}
+
+void PotentialSetup::setupNonCoulombicPairs()
+{
+    ranges::for_each(_engine.getPotential().getNonCoulombicPairsVector(),
+                     [](auto &nonCoulombicPair)
+                     {
+                         const auto &[energy, force] =
+                             nonCoulombicPair->calculateEnergyAndForce(nonCoulombicPair->getRadialCutOff());
+                         nonCoulombicPair->setEnergyCutOff(energy);
+                         nonCoulombicPair->setForceCutOff(force);
+                     });
+
+    _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
+
+    // _engine.getForceFieldPtr()->determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
 }
