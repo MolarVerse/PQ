@@ -9,6 +9,16 @@ using namespace potential;
 using namespace physicalData;
 using namespace linearAlgebra;
 
+/**
+ * @brief inner part of the double loop to calculate non-bonded inter molecular interactions
+ *
+ * @param box
+ * @param molecule1
+ * @param molecule2
+ * @param atom1
+ * @param atom2
+ * @return std::pair<double, double>
+ */
 std::pair<double, double> Potential::calculateSingleInteraction(const linearAlgebra::Vec3D &box,
                                                                 simulationBox::Molecule    &molecule1,
                                                                 simulationBox::Molecule    &molecule2,
@@ -38,8 +48,9 @@ std::pair<double, double> Potential::calculateSingleInteraction(const linearAlge
         const size_t atomType_i = molecule1.getAtomType(atom1);
         const size_t atomType_j = molecule2.getAtomType(atom2);
 
-        // const size_t externalGlobalVdwType_i = molecule1.getExternalGlobalVDWType(atom1);
-        // const size_t externalGlobalVdwType_j = molecule2.getExternalGlobalVDWType(atom2);
+        // TODO: think of a clever solution for guff routine
+        //  const size_t externalGlobalVdwType_i = molecule1.getExternalGlobalVDWType(atom1);
+        //  const size_t externalGlobalVdwType_j = molecule2.getExternalGlobalVDWType(atom2);
 
         // const size_t globalVdwType_i =
         // simBox.getExternalToInternalGlobalVDWTypes().at(externalGlobalVdwType_i); const size_t globalVdwType_j
@@ -81,128 +92,4 @@ std::pair<double, double> Potential::calculateSingleInteraction(const linearAlge
     }
 
     return {coulombEnergy, nonCoulombEnergy};
-}
-
-/**
- * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
- *
- * @param simBox
- * @param physicalData
- */
-inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
-{
-    const auto box = simBox.getBoxDimensions();
-
-    double totalCoulombEnergy    = 0.0;
-    double totalNonCoulombEnergy = 0.0;
-
-    // inter molecular forces
-    const size_t numberOfMolecules = simBox.getNumberOfMolecules();
-
-    for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
-    {
-        auto        &molecule1                 = simBox.getMolecule(mol1);
-        const size_t numberOfAtomsInMolecule_i = molecule1.getNumberOfAtoms();
-
-        for (size_t mol2 = 0; mol2 < mol1; ++mol2)
-        {
-            auto        &molecule2                 = simBox.getMolecule(mol2);
-            const size_t numberOfAtomsInMolecule_j = molecule2.getNumberOfAtoms();
-
-            for (size_t atom1 = 0; atom1 < numberOfAtomsInMolecule_i; ++atom1)
-            {
-                for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j; ++atom2)
-                {
-                    const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(box, molecule1, molecule2, atom1, atom2);
-
-                    totalCoulombEnergy    += coulombEnergy;
-                    totalNonCoulombEnergy += nonCoulombEnergy;
-                }
-            }
-        }
-    }
-
-    physicalData.setCoulombEnergy(totalCoulombEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
-}
-
-// TODO: check if cutoff is smaller than smallest cell size
-/**
- * @brief calculates forces, coulombic and non-coulombic energy for cell list routine
- *
- * @param simBox
- * @param physicalData
- * @param cellList
- */
-inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
-{
-    const auto box = simBox.getBoxDimensions();
-
-    double totalCoulombEnergy    = 0.0;
-    double totalNonCoulombEnergy = 0.0;
-
-    for (const auto &cell1 : cellList.getCells())
-    {
-        const auto numberOfMolecules = cell1.getNumberOfMolecules();
-
-        for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
-        {
-            auto *molecule1 = cell1.getMolecule(mol1);
-
-            for (size_t mol2 = 0; mol2 < mol1; ++mol2)
-            {
-                auto *molecule2 = cell1.getMolecule(mol2);
-
-                for (const size_t atom1 : cell1.getAtomIndices(mol1))
-                {
-                    for (const size_t atom2 : cell1.getAtomIndices(mol2))
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
-
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-                }
-            }
-        }
-    }
-    for (const auto &cell1 : cellList.getCells())
-    {
-        const auto numberOfMoleculesInCell_i = cell1.getNumberOfMolecules();
-
-        for (const auto *cell2 : cell1.getNeighbourCells())
-        {
-            const auto numberOfMoleculesInCell_j = cell2->getNumberOfMolecules();
-
-            for (size_t mol1 = 0; mol1 < numberOfMoleculesInCell_i; ++mol1)
-            {
-                auto *molecule1 = cell1.getMolecule(mol1);
-
-                for (const auto atom1 : cell1.getAtomIndices(mol1))
-                {
-                    for (size_t mol2 = 0; mol2 < numberOfMoleculesInCell_j; ++mol2)
-                    {
-                        auto *molecule2 = cell2->getMolecule(mol2);
-
-                        if (molecule1 == molecule2)
-                            continue;
-
-                        for (const auto atom2 : cell2->getAtomIndices(mol2))
-                        {
-                            const auto [coulombEnergy, nonCoulombEnergy] =
-                                calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
-
-                            totalCoulombEnergy    += coulombEnergy;
-                            totalNonCoulombEnergy += nonCoulombEnergy;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    physicalData.setCoulombEnergy(totalCoulombEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }

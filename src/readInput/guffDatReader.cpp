@@ -1,8 +1,12 @@
 #include "guffDatReader.hpp"
 
+#include "buckinghamPair.hpp"
 #include "defaults.hpp"
 #include "exceptions.hpp"
 #include "guffNonCoulomb.hpp"
+#include "guffPair.hpp"
+#include "lennardJonesPair.hpp"
+#include "morsePair.hpp"
 #include "stringUtilities.hpp"
 
 #include <cmath>

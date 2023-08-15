@@ -1,5 +1,7 @@
 add_library(potential
     potential.cpp
+    potentialBruteForce.cpp
+    potentialCellList.cpp
 )
 
 target_include_directories(potential

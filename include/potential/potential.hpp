@@ -15,6 +15,17 @@ namespace potential
     class PotentialCellList;
 }   // namespace potential
 
+/**
+ * @class Potential
+ *
+ * @brief base class for all potential routines
+ *
+ * @details
+ * possible options:
+ * - brute force
+ * - cell list
+ *
+ */
 class potential::Potential
 {
   protected:
@@ -43,12 +54,24 @@ class potential::Potential
     [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const { return *_nonCoulombPotential; }
 };
 
+/**
+ * @class PotentialBruteForce
+ *
+ * @brief brute force implementation of the potential
+ *
+ */
 class potential::PotentialBruteForce : public potential::Potential
 {
   public:
     void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
 };
 
+/**
+ * @class PotentialCellList
+ *
+ * @brief cell list implementation of the potential
+ *
+ */
 class potential::PotentialCellList : public potential::Potential
 {
   public:

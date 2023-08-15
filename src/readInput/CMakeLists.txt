@@ -27,6 +27,7 @@ target_link_libraries(readInput
     forceField
     inputFileParser
     potential
+    nonCoulombPotential
 )
 
 install(TARGETS readInput

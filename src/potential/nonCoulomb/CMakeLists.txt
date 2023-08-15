@@ -1,5 +1,10 @@
 add_library(nonCoulombPotential
     nonCoulombPair.cpp
+    lennardJonesPair.cpp
+    buckinghamPair.cpp
+    morsePair.cpp
+    guffPair.cpp
+
     nonCoulombPotential.cpp
     guffNonCoulomb.cpp
     forceFieldNonCoulomb.cpp
