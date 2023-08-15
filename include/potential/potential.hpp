@@ -4,6 +4,7 @@
 
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
+#include "matrix.hpp"
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -50,9 +51,10 @@ class potential::Potential
     NonCoulombType _nonCoulombType = NonCoulombType::LJ;   // LJ
     MixingRule     _mixingRule     = MixingRule::NONE;     // no mixing rule
 
-    std::unique_ptr<CoulombPotential>            _coulombPotential;
-    std::unique_ptr<NonCoulombPotential>         _nonCoulombPotential;
-    std::vector<std::shared_ptr<NonCoulombPair>> _nonCoulombicPairsVector;
+    std::unique_ptr<CoulombPotential>                      _coulombPotential;
+    std::unique_ptr<NonCoulombPotential>                   _nonCoulombPotential;
+    std::vector<std::shared_ptr<NonCoulombPair>>           _nonCoulombicPairsVector;
+    linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> _nonCoulombicPairsMatrix;
 
   public:
     virtual ~Potential() = default;
@@ -62,6 +64,17 @@ class potential::Potential
     virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
     void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair) { _nonCoulombicPairsVector.push_back(pair); }
+
+    void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
+    void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::shared_ptr<NonCoulombPair>> &);
+    void fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+    std::vector<std::shared_ptr<NonCoulombPair>>   getSelfInteractionNonCoulombicPairs() const;
+    std::optional<std::shared_ptr<NonCoulombPair>> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
+
+    void initNonCoulombicPairsMatrix(const size_t n)
+    {
+        _nonCoulombicPairsMatrix = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>(n);
+    }
 
     template <typename T>
     void makeCoulombPotential(T coulombPotential)
