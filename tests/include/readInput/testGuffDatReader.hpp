@@ -4,6 +4,7 @@
 
 #include "coulombShiftedPotential.hpp"
 #include "guffDatReader.hpp"
+#include "guffNonCoulomb.hpp"
 #include "potential.hpp"
 
 #include <gtest/gtest.h>

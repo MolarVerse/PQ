@@ -4,6 +4,14 @@
 
 using namespace potential;
 
+/**
+ * @brief Construct a new Coulomb Wolf:: Coulomb Wolf object
+ *
+ * @details this constructor calculates automatically the three need wolf parameters from kappa in order to gain speed
+ *
+ * @param coulombRadiusCutOff
+ * @param kappa
+ */
 CoulombWolf::CoulombWolf(const double coulombRadiusCutOff, const double kappa) : CoulombPotential(coulombRadiusCutOff)
 {
     _kappa          = kappa;
@@ -13,6 +21,12 @@ CoulombWolf::CoulombWolf(const double coulombRadiusCutOff, const double kappa) :
                       _wolfParameter2 * ::exp(-_kappa * _kappa * coulombRadiusCutOff * coulombRadiusCutOff) / coulombRadiusCutOff;
 }
 
+/**
+ * @brief calculate the energy and force of the Coulomb potential with Wolf summation as long range correction
+ *
+ * @param distance
+ * @return std::pair<double, double>
+ */
 [[nodiscard]] std::pair<double, double> CoulombWolf::calculateEnergyAndForce(const double distance) const
 {
 

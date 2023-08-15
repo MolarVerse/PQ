@@ -1,6 +1,8 @@
 add_library(nonCoulombPotential
     nonCoulombPair.cpp
     nonCoulombPotential.cpp
+    guffNonCoulomb.cpp
+    forceFieldNonCoulomb.cpp
 )
 
 target_include_directories(nonCoulombPotential

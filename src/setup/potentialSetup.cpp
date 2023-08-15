@@ -2,6 +2,8 @@
 
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "guffNonCoulomb.hpp"
 
 using namespace std;
 using namespace setup;

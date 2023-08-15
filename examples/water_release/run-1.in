@@ -82,8 +82,8 @@
    pressure   = 1.013;
    p_relaxation = 0.1;
    nscale = 5;
-   #cell-list = on;
-   #cell-number = 10;
+   cell-list = on;
+   cell-number = 10;
 #  friction   = 0.035;
 
 # VIRIAL

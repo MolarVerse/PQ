@@ -28,6 +28,7 @@ target_link_libraries(setup
     gtest
     potential
     coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS setup
