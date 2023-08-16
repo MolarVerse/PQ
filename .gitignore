@@ -1,5 +1,7 @@
 .cache/
 
+.trunk/
+
 **/gmon.out
 
 build*

@@ -45,7 +45,6 @@ class intraNonBonded::IntraNonBonded
     std::vector<IntraNonBondedMap>       _intraNonBondedMaps;
 
   public:
-    void calculateEnergyAndForces(simulationBox::SimulationBox &, forceField::ForceField &, physicalData::PhysicalData &);
     IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
 
     void fillIntraNonBondedMaps(simulationBox::SimulationBox &);

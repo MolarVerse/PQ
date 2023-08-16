@@ -229,31 +229,6 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
  */
 void NonCoulombicsSection::processHeader(vector<string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 1 && lineElements.size() != 2)
-        throw customException::ParameterFileException(format("Wrong number of arguments in parameter file in nonCoulombics "
-                                                             "header at line {} - number of elements has to be 1 or 2!",
-                                                             _lineNumber));
-
-    if (2 == lineElements.size())
-    {
-        const auto type = utilities::toLowerCopy(lineElements[1]);
-
-        if (type == "lj")
-            engine.getForceField().setNonCoulombType(forceField::NonCoulombType::LJ);
-        else if (type == "buckingham")
-            engine.getForceField().setNonCoulombType(forceField::NonCoulombType::BUCKINGHAM);
-        else if (type == "morse")
-            engine.getForceField().setNonCoulombType(forceField::NonCoulombType::MORSE);
-        else
-            throw customException::ParameterFileException(format("Invalid type of nonCoulombic in parameter file nonCoulombic "
-                                                                 "section at line {} - has to be lj, buckingham or morse!",
-                                                                 _lineNumber));
-    }
-
-    _nonCoulombType = engine.getForceField().getNonCoulombType();
-
-    // to put non coulombic pairs into potential TODO:
-
     if (2 == lineElements.size())
     {
         const auto type = utilities::toLowerCopy(lineElements[1]);
@@ -269,6 +244,8 @@ void NonCoulombicsSection::processHeader(vector<string> &lineElements, engine::E
                                                                  "section at line {} - has to be lj, buckingham or morse!",
                                                                  _lineNumber));
     }
+
+    _nonCoulombType = engine.getPotential().getNonCoulombType();
 }
 
 /**
@@ -283,26 +260,14 @@ void NonCoulombicsSection::processSection(vector<string> &lineElements, engine::
 {
     switch (_nonCoulombType)
     {
-    case forceField::NonCoulombType::LJ: processLJ(lineElements, engine); break;
-    case forceField::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;
-    case forceField::NonCoulombType::MORSE: processMorse(lineElements, engine); break;
+    case potential::NonCoulombType::LJ: processLJ(lineElements, engine); break;
+    case potential::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;
+    case potential::NonCoulombType::MORSE: processMorse(lineElements, engine); break;
     default:
         throw customException::ParameterFileException(format(
             "Wrong type of nonCoulombic in parameter file nonCoulombic section at line {}  - has to be lj, buckingham or morse!",
             _lineNumber));
     }
-    // to put non coulombic pairs into potential TODO:
-
-    // switch (_nonCoulombType)
-    // {
-    // case potential::NonCoulombType::LJ: processLJ(lineElements, engine); break;
-    // case potential::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;
-    // case potential::NonCoulombType::MORSE: processMorse(lineElements, engine); break;
-    // default:
-    //     throw customException::ParameterFileException(format(
-    //         "Wrong type of nonCoulombic in parameter file nonCoulombic section at line {}  - has to be lj, buckingham or
-    //         morse!", _lineNumber));
-    // }
 }
 
 /**
@@ -328,8 +293,6 @@ void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engin
 
     const auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
 
-    engine.getForceField().addNonCoulombicPair(make_shared<forceField::LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12));
-    // to put non coulombic pairs into potential TODO:
     engine.getPotential().addNonCoulombicPair(make_shared<potential::LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12));
 }
 
@@ -357,9 +320,6 @@ void NonCoulombicsSection::processBuckingham(vector<string> &lineElements, engin
 
     const auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
 
-    engine.getForceField().addNonCoulombicPair(
-        make_shared<forceField::BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6));
-    // to put non coulombic pairs into potential TODO:
     engine.getPotential().addNonCoulombicPair(make_shared<potential::BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6));
 }
 
@@ -387,9 +347,6 @@ void NonCoulombicsSection::processMorse(vector<string> &lineElements, engine::En
 
     const auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
 
-    engine.getForceField().addNonCoulombicPair(
-        make_shared<forceField::MorsePair>(atomType1, atomType2, cutOff, dissociationEnergy, wellWidth, equilibriumDistance));
-    // to put non coulombic pairs into potential TODO:
     engine.getPotential().addNonCoulombicPair(
         make_shared<potential::MorsePair>(atomType1, atomType2, cutOff, dissociationEnergy, wellWidth, equilibriumDistance));
 }

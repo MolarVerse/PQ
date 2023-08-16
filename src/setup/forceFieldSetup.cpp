@@ -14,11 +14,6 @@ void ForceFieldSetup::setup()
     setupAngles();
     setupDihedrals();
     setupImproperDihedrals();
-
-    if (!_engine.getForceFieldPtr()->isNonCoulombicActivated())
-        return;
-
-    setupNonCoulombics();
 }
 
 void setup::setupForceField(engine::Engine &engine)
@@ -126,43 +121,4 @@ void ForceFieldSetup::setupImproperDihedrals()
     ranges::for_each(forceField->getImproperDihedrals(), addForceFieldParameters);
 
     forceField->clearImproperDihedralTypes();
-}
-
-// TODO: move this into setup potential with a bit less function calls maybe?
-void ForceFieldSetup::setupNonCoulombics()
-{
-
-    ranges::for_each(_engine.getForceFieldPtr()->getNonCoulombicPairsVector(),
-                     [](auto &nonCoulombicPair)
-                     {
-                         const auto &[energy, force] =
-                             nonCoulombicPair->calculateEnergyAndForce(nonCoulombicPair->getRadialCutOff());
-                         nonCoulombicPair->setEnergyCutOff(energy);
-                         nonCoulombicPair->setForceCutOff(force);
-                     });
-
-    _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
-
-    _engine.getForceFieldPtr()->determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
-
-    const auto numberOfGlobalVdwTypes           = _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
-    auto       selfInteractionNonCoulombicPairs = _engine.getForceFieldPtr()->getSelfInteractionNonCoulombicPairs();
-
-    if (selfInteractionNonCoulombicPairs.size() != numberOfGlobalVdwTypes)
-        throw customException::ParameterFileException(
-            "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
-
-    ranges::sort(selfInteractionNonCoulombicPairs,
-                 [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
-                 { return nonCoulombicPair1->getInternalType1() < nonCoulombicPair2->getInternalType1(); });
-
-    for (size_t i = 0; i < numberOfGlobalVdwTypes; ++i)
-        if (selfInteractionNonCoulombicPairs[i]->getInternalType1() != i)
-            throw customException::ParameterFileException(
-                "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
-
-    _engine.getForceFieldPtr()->fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
-    _engine.getForceFieldPtr()->fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
-
-    _engine.getForceFieldPtr()->clearNonCoulombicPairs();
 }

@@ -6,7 +6,6 @@ add_library(forceField
     dihedralForceField.cpp
     dihedralType.cpp
     forceField.cpp
-    nonCoulombPair.cpp
 )
 
 target_include_directories(forceField

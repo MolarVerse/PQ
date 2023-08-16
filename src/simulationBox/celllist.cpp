@@ -3,7 +3,6 @@
 #include "cell.hpp"
 #include "simulationBox.hpp"
 
-#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -104,7 +103,8 @@ void CellList::addCellPointers(Cell &cell)
             {
                 const auto ijk = Vec3Di(i, j, k);
 
-                if (ijk == Vec3Di(0, 0, 0)) continue;
+                if (ijk == Vec3Di(0, 0, 0))
+                    continue;
 
                 auto neighbourCellIndex  = ijk + Vec3Di(cell.getCellIndex());
                 neighbourCellIndex      -= Vec3Di(_nCells) * Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
@@ -116,7 +116,8 @@ void CellList::addCellPointers(Cell &cell)
 
                 cell.addNeighbourCell(neighbourCell);
 
-                if (cell.getNumberOfNeighbourCells() == (totalCellNeighbours - 1) / 2) return;
+                if (cell.getNumberOfNeighbourCells() == (totalCellNeighbours - 1) / 2)
+                    return;
             }
         }
     }
@@ -131,7 +132,8 @@ void CellList::addCellPointers(Cell &cell)
  */
 void CellList::updateCellList(SimulationBox &simulationBox)
 {
-    if (!_activated) return;
+    if (!_activated)
+        return;
 
     if (simulationBox.getBoxSizeHasChanged())
     {
@@ -170,7 +172,8 @@ void CellList::updateCellList(SimulationBox &simulationBox)
             const auto cellIndex       = getCellIndex(atomCellIndices);
 
             const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(cellIndex, vector<size_t>({j}));
-            if (!successful) mapCellIndexToAtomIndex[cellIndex].push_back(j);
+            if (!successful)
+                mapCellIndexToAtomIndex[cellIndex].push_back(j);
         }
 
         for (const auto &[cellIndex, atomIndices] : mapCellIndexToAtomIndex)

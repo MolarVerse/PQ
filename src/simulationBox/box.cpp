@@ -3,9 +3,9 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -54,7 +54,8 @@ void Box::setBoxAngles(const Vec3D &boxAngles)
  */
 void Box::setDensity(const double density)
 {
-    if (density < 0.0) throw InputFileException("Density must be positive - density = " + to_string(density));
+    if (density < 0.0)
+        throw InputFileException(format("Density must be positive - density = {}", density));
 
     _density = density;
 }

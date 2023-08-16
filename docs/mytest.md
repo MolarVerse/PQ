@@ -1,3 +1,3 @@
-## Virial Calculation
+# Virial Calculation
 
 [testlink](@ref virial/virial.hpp)
