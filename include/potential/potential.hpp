@@ -99,6 +99,11 @@ class potential::Potential
     [[nodiscard]] CoulombPotential                             &getCoulombPotential() const { return *_coulombPotential; }
     [[nodiscard]] NonCoulombPotential                          &getNonCoulombPotential() const { return *_nonCoulombPotential; }
     [[nodiscard]] std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsVector() { return _nonCoulombicPairsVector; }
+
+    [[nodiscard]] linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsMatrix()
+    {
+        return _nonCoulombicPairsMatrix;
+    }
 };
 
 /**

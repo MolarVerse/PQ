@@ -66,6 +66,10 @@ void PotentialSetup::setupNonCoulomb()
         _engine.getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
 }
 
+/**
+ * @brief TODO: explain in detail!!!!!!!!!!!!!!!!!!!
+ *
+ */
 void PotentialSetup::setupNonCoulombicPairs()
 {
     ranges::for_each(_engine.getPotential().getNonCoulombicPairsVector(),
