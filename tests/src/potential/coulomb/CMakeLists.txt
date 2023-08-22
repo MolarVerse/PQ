@@ -1,5 +1,7 @@
 set(source_files
-    testPotential.cpp
+    testCoulombPotential.cpp
+    testCoulombShiftedPotential.cpp
+    testCoulombWolf.cpp
 )
 
 foreach(source_file ${source_files})
@@ -9,6 +11,3 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name} PRIVATE readInput potential config gtest gtest_main gmock gmock_main)
     add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
 endforeach()
-
-add_subdirectory(coulomb)
-add_subdirectory(nonCoulomb)

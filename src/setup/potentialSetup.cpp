@@ -52,11 +52,6 @@ void PotentialSetup::setupCoulomb()
     {
         _engine.getPotential().makeCoulombPotential(CoulombWolf(coulombRadiusCutOff, wolfParameter));
     }
-
-    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
-        _engine.getPotential().getCoulombPotential().setCoulombPreFactorToForceField();
-    else
-        _engine.getPotential().getCoulombPotential().setCoulombPreFactorToGuff();
 }
 
 /**

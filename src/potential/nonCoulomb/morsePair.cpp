@@ -27,7 +27,7 @@ std::pair<double, double> MorsePair::calculateEnergyAndForce(const double distan
     const auto expTerm = std::exp(-_wellWidth * (distance - _equilibriumDistance));
     const auto energy =
         _dissociationEnergy * (1.0 - expTerm) * (1.0 - expTerm) - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
-    const auto force = -2.0 * _dissociationEnergy * _wellWidth * expTerm * (1.0 - expTerm) / distance - _forceCutOff;
+    const auto force = -2.0 * _dissociationEnergy * _wellWidth * expTerm * (1.0 - expTerm) - _forceCutOff;
 
     return {energy, force};
 }

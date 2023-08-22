@@ -12,6 +12,9 @@ namespace readInput
     void readGuffDat(engine::Engine &);
 }   // namespace readInput
 
+using c_ul     = const size_t;
+using vector4d = std::vector<std::vector<std::vector<std::vector<double>>>>;
+
 /**
  * @class GuffDatReader
  *
@@ -24,6 +27,8 @@ class readInput::GuffDatReader
     size_t      _lineNumber = 1;
     std::string _filename   = defaults::_GUFF_FILENAME_DEFAULT_;   // gets overridden by the engine in the constructor
 
+    vector4d _guffCoulombCoefficients;
+
     engine::Engine &_engine;
 
   public:
@@ -32,6 +37,7 @@ class readInput::GuffDatReader
     void setupGuffMaps();
     void parseLine(std::vector<std::string> &);
     void read();
+    void postProcessSetup();
 
     void setFilename(const std::string_view &filename) { _filename = filename; }
 };

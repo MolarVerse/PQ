@@ -77,6 +77,7 @@ class simulationBox::Molecule
 
     void addPartialCharge(const double partialCharge) { _partialCharges.push_back(partialCharge); }
     void addExternalGlobalVDWType(const size_t globalVDWType) { _externalGlobalVDWTypes.push_back(globalVDWType); }
+    void addInternalGlobalVDWType(const size_t globalVDWType) { _internalGlobalVDWTypes.push_back(globalVDWType); }
     void addAtomMass(const double mass) { _masses.push_back(mass); }
     void addAtomicNumber(const int atomicNumber) { _atomicNumbers.push_back(atomicNumber); }
 
@@ -103,6 +104,7 @@ class simulationBox::Molecule
     [[nodiscard]] size_t getExternalAtomType(const size_t index) const { return _externalAtomTypes[index]; }
 
     [[nodiscard]] size_t getExternalGlobalVDWType(const size_t index) const { return _externalGlobalVDWTypes[index]; }
+    [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const { return _internalGlobalVDWTypes[index]; }
     [[nodiscard]] int    getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
 
     [[nodiscard]] double getCharge() const { return _charge; }
@@ -135,6 +137,7 @@ class simulationBox::Molecule
     void setMolMass(const double molMass) { _molMass = molMass; }
     void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
 
+    void setPartialCharge(const size_t index, const double partialCharge) { _partialCharges[index] = partialCharge; }
     void setAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _positions[index] = position; }
     void setAtomVelocity(const size_t index, const linearAlgebra::Vec3D &velocity) { _velocities[index] = velocity; }
     void setAtomForce(const size_t index, const linearAlgebra::Vec3D &force) { _forces[index] = force; }

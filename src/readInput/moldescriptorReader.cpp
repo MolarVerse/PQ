@@ -116,9 +116,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
 
         if (lineElements.empty())
             continue;
-        else
-
-            if ((3 == lineElements.size()) || (4 == lineElements.size()))
+        else if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));

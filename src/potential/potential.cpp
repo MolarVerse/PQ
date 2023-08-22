@@ -209,25 +209,17 @@ std::pair<double, double> Potential::calculateSingleInteraction(const linearAlge
         const size_t atomType_i = molecule1.getAtomType(atom1);
         const size_t atomType_j = molecule2.getAtomType(atom2);
 
-        // TODO: think of a clever solution for guff routine
-        //  const size_t externalGlobalVdwType_i = molecule1.getExternalGlobalVDWType(atom1);
-        //  const size_t externalGlobalVdwType_j = molecule2.getExternalGlobalVDWType(atom2);
-
-        // const size_t globalVdwType_i =
-        // simBox.getExternalToInternalGlobalVDWTypes().at(externalGlobalVdwType_i); const size_t globalVdwType_j
-        // = simBox.getExternalToInternalGlobalVDWTypes().at(externalGlobalVdwType_j);
-
-        const size_t globalVdwType_i = 0;
-        const size_t globalVdwType_j = 0;
+        const auto globalVdwType_i = molecule1.getInternalGlobalVDWType(atom1);
+        const auto globalVdwType_j = molecule2.getInternalGlobalVDWType(atom2);
 
         const auto moltype_i = molecule1.getMoltype();
         const auto moltype_j = molecule2.getMoltype();
 
         const auto combinedIndices = {moltype_i, moltype_j, atomType_i, atomType_j, globalVdwType_i, globalVdwType_j};
 
-        const auto coulombPreFactor = 1.0;   // TODO: implement for force field
+        const auto coulombPreFactor = molecule1.getPartialCharge(atomType_i) * molecule2.getPartialCharge(atomType_j);
 
-        auto [energy, force] = _coulombPotential->calculate(combinedIndices, distance, coulombPreFactor);
+        auto [energy, force] = _coulombPotential->calculate(distance, coulombPreFactor);
         coulombEnergy        = energy;
 
         const auto nonCoulombicPair = _nonCoulombPotential->getNonCoulombPair(combinedIndices);

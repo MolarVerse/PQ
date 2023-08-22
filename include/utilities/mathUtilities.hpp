@@ -18,6 +18,17 @@ namespace utilities
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
 
+    template <typename T>
+    int sign(const T &a)
+    {
+        if (compare(a, T(0)))
+            return 0;
+        else if (a > T(0))
+            return 1;
+        else
+            return -1;
+    }
+
 }   // namespace utilities
 
 #endif   // _MATH_UTILITIES_HPP_

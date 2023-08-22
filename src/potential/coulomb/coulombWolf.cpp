@@ -1,5 +1,7 @@
 #include "coulombWolf.hpp"
 
+#include "constants.hpp"
+
 #include <cmath>
 
 using namespace potential;
@@ -27,8 +29,10 @@ CoulombWolf::CoulombWolf(const double coulombRadiusCutOff, const double kappa) :
  * @param distance
  * @return std::pair<double, double>
  */
-[[nodiscard]] std::pair<double, double> CoulombWolf::calculateEnergyAndForce(const double distance) const
+[[nodiscard]] std::pair<double, double> CoulombWolf::calculate(const double distance, const double chargeProduct) const
 {
+
+    const auto coulombPrefactor = chargeProduct * constants::_COULOMB_PREFACTOR_;
 
     const auto kappaDistance = _kappa * distance;
     const auto erfcFactor    = ::erfc(kappaDistance);
@@ -37,8 +41,8 @@ CoulombWolf::CoulombWolf(const double coulombRadiusCutOff, const double kappa) :
     auto force =
         erfcFactor / (distance * distance) + _wolfParameter2 * ::exp(-kappaDistance * kappaDistance) / distance - _wolfParameter3;
 
-    energy *= _coulombPreFactor;
-    force  *= _coulombPreFactor;
+    energy *= coulombPrefactor;
+    force  *= coulombPrefactor;
 
     return {energy, force};
 }

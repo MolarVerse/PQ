@@ -2,6 +2,8 @@
 
 #define _CONSTANTS_HPP_
 
+#include <cmath>
+
 namespace constants
 {
 
@@ -47,11 +49,12 @@ namespace constants
     static constexpr double _KCAL_PER_MOL_TO_JOULE_ = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
 
     /**
-     * @brief Conversion factors for electron related data
+     * @brief Conversion factors for charge related data
      */
     static constexpr double _ELECTRON_CHARGE_         = 1.6021766208e-19;   // in Coulomb
     static constexpr double _ELECTRON_CHARGE_SQUARED_ = _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
-    static constexpr double _ELECTRON_MASS_           = 9.10938356e-31;   // in kg
+    static constexpr double _ELECTRON_MASS_           = 9.10938356e-31;    // in kg
+    static constexpr double _PERMITTIVITY_VACUUM_     = 8.854187817e-12;   // in F/m
 
     /**
      * @brief Conversion factors for time units
@@ -109,6 +112,12 @@ namespace constants
     static constexpr double _PASCAL_TO_BAR_   = 1.0e-5;
     static constexpr double _BAR_TO_PASCAL_   = 1.0 / _PASCAL_TO_BAR_;
     static constexpr double _PRESSURE_FACTOR_ = _ENERGY_UNIT_TO_SI_ / _VOLUME_UNIT_TO_SI_ * _PASCAL_TO_BAR_;
+
+    /**
+     * @brief Conversion factors for coulomb preFactor
+     */
+    static constexpr double _COULOMB_PREFACTOR_ =
+        1 / (4 * M_PI * _PERMITTIVITY_VACUUM_) * _ELECTRON_CHARGE_SQUARED_ * _JOULE_TO_KCAL_PER_MOL_ * _METER_TO_ANGSTROM_;
 
 }   // namespace constants
 

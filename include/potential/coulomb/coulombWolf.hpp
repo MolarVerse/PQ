@@ -28,7 +28,7 @@ class potential::CoulombWolf : public potential::CoulombPotential
   public:
     explicit CoulombWolf(const double coulombRadiusCutOff, const double kappa);
 
-    [[nodiscard]] std::pair<double, double> calculateEnergyAndForce(const double) const override;
+    [[nodiscard]] std::pair<double, double> calculate(const double, const double) const override;
 
     static void setKappa(const double kappa) { _kappa = kappa; }
     static void setWolfParameter1(const double wolfParameter1) { _wolfParameter1 = wolfParameter1; }

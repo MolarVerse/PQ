@@ -31,10 +31,10 @@ class connectivity::Bond : public connectivity::ConnectivityElement
      *                         *
      ***************************/
 
-    simulationBox::Molecule *getMolecule1() const { return _molecules[0]; }
-    simulationBox::Molecule *getMolecule2() const { return _molecules[1]; }
-    size_t                   getAtomIndex1() const { return _atomIndices[0]; }
-    size_t                   getAtomIndex2() const { return _atomIndices[1]; }
+    [[nodiscard]] simulationBox::Molecule *getMolecule1() const { return _molecules[0]; }
+    [[nodiscard]] simulationBox::Molecule *getMolecule2() const { return _molecules[1]; }
+    [[nodiscard]] size_t                   getAtomIndex1() const { return _atomIndices[0]; }
+    [[nodiscard]] size_t                   getAtomIndex2() const { return _atomIndices[1]; }
 };
 
 #endif   // _BOND_HPP_

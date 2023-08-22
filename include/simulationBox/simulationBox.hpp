@@ -74,7 +74,7 @@ class simulationBox::SimulationBox
     bool moleculeTypeExists(const size_t) const;
 
     [[nodiscard]] std::optional<size_t>         findMoleculeTypeByString(const std::string &) const;
-    [[nodiscard]] Molecule                      findMoleculeType(const size_t) const;
+    [[nodiscard]] Molecule                     &findMoleculeType(const size_t);
     [[nodiscard]] std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t);
 
     void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }

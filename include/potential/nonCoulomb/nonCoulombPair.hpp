@@ -24,10 +24,10 @@ namespace potential
 class potential::NonCoulombPair
 {
   protected:
-    size_t _vanDerWaalsType1;
-    size_t _vanDerWaalsType2;
-    size_t _internalType1;
-    size_t _internalType2;
+    size_t _vanDerWaalsType1 = 0;
+    size_t _vanDerWaalsType2 = 0;
+    size_t _internalType1    = 0;
+    size_t _internalType2    = 0;
 
     double _radialCutOff;
     double _energyCutOff = 0.0;

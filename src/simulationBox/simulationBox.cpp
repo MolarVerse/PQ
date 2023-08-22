@@ -26,7 +26,7 @@ size_t SimulationBox::getNumberOfAtoms() const
  *
  * @throw RstFileException if molecule type not found
  */
-Molecule SimulationBox::findMoleculeType(const size_t moltype) const
+Molecule &SimulationBox::findMoleculeType(const size_t moltype)
 {
     auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
 
@@ -112,6 +112,16 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
     const size_t size = _externalGlobalVdwTypes.size();
     for (size_t i = 0; i < size; ++i)
         _externalToInternalGlobalVDWTypes.try_emplace(_externalGlobalVdwTypes[i], i);
+
+    auto setInternalGlobalVdwTypes = [&externalToInternalGlobalVDWTypes = _externalToInternalGlobalVDWTypes](auto &molecule)
+    {
+        ranges::for_each(
+            molecule.getExternalGlobalVDWTypes(),
+            [&externalToInternalGlobalVDWTypes = externalToInternalGlobalVDWTypes, &molecule = molecule](auto &externalVdwType)
+            { molecule.addInternalGlobalVDWType(externalToInternalGlobalVDWTypes.at(externalVdwType)); });
+    };
+
+    ranges::for_each(_molecules, setInternalGlobalVdwTypes);
 }
 
 /**

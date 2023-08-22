@@ -25,7 +25,7 @@ std::pair<double, double> BuckinghamPair::calculateEnergyAndForce(const double d
 {
     const auto distanceSixth = distance * distance * distance * distance * distance * distance;
     const auto expTerm       = std::exp(_dRho * distance);
-    const auto energy        = _a * expTerm - _c6 / distanceSixth - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
+    const auto energy        = _a * expTerm + _c6 / distanceSixth - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
     const auto force         = -_a * _dRho * expTerm + 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
 
     return {energy, force};

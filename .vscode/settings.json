@@ -99,7 +99,8 @@
         "stacktrace": "cpp",
         "syncstream": "cpp",
         "format": "cpp",
-        "stdfloat": "cpp"
+        "stdfloat": "cpp",
+        "*.inc": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -149,6 +150,7 @@
         "outputfreq",
         "PARAMETERFILEEXCEPTION",
         "pimd",
+        "PREFACTOR",
         "progressbar",
         "qmcf",
         "qmcfc",

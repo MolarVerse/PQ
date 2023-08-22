@@ -1,15 +1,9 @@
-- finish refactoring code
-- make larger change potential
-  - make one inner routine function
-  - split up into two files potential.dat
-  - extend celllist tests for full coverage
-- finish parameter file reader! (especially tests!!!)
-  - finish .cpp and .hpp
-  - also parameter file setup incomplete (not tested)
+- finish intra non bonded routine
+
 - completely rebuild tests of restart file reading and sections
-  - code file should be fine
+  - code should be fine
   - tests are a big mess -> clean them up
 
--introduce more optionals instead of throwing exceptions to early
+- introduce more optionals instead of throwing exceptions to early
 
 - introduce more complex exception handling with classes
