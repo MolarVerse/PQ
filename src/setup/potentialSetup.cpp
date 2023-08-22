@@ -72,7 +72,9 @@ void PotentialSetup::setupNonCoulomb()
  */
 void PotentialSetup::setupNonCoulombicPairs()
 {
-    ranges::for_each(_engine.getPotential().getNonCoulombicPairsVector(),
+    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
+
+    ranges::for_each(potential.getNonCoulombicPairsVector(),
                      [](auto &nonCoulombicPair)
                      {
                          const auto &[energy, force] =
@@ -82,10 +84,10 @@ void PotentialSetup::setupNonCoulombicPairs()
                      });
 
     _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
-    _engine.getPotential().determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
+    potential.determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
 
     const auto numberOfGlobalVdwTypes           = _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
-    auto       selfInteractionNonCoulombicPairs = _engine.getPotential().getSelfInteractionNonCoulombicPairs();
+    auto       selfInteractionNonCoulombicPairs = potential.getSelfInteractionNonCoulombicPairs();
 
     if (selfInteractionNonCoulombicPairs.size() != numberOfGlobalVdwTypes)
         throw customException::ParameterFileException(
@@ -100,6 +102,6 @@ void PotentialSetup::setupNonCoulombicPairs()
             throw customException::ParameterFileException(
                 "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
 
-    _engine.getPotential().fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
-    _engine.getPotential().fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+    potential.fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
+    potential.fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
 }

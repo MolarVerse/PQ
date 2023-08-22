@@ -3,7 +3,6 @@ set(source_files
     testAngleType.cpp
     testBondType.cpp
     testDihedralType.cpp
-    testNonCoulombicPair.cpp
 )
 
 foreach(source_file ${source_files})

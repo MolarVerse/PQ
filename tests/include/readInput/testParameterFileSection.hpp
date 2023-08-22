@@ -3,6 +3,7 @@
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
 #include "engine.hpp"
+#include "forceFieldNonCoulomb.hpp"
 
 #include <fstream>
 #include <gtest/gtest.h>
@@ -32,6 +33,8 @@ class TestParameterFileSection : public ::testing::Test
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
+
+        _engine->getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     }
 
     void TearDown() override

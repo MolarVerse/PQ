@@ -9,6 +9,9 @@ namespace potential
     class GuffNonCoulomb;
 }   // namespace potential
 
+using c_ul                     = const size_t;
+using vector4dNonCoulombicPair = std::vector<std::vector<std::vector<std::vector<std::shared_ptr<potential::NonCoulombPair>>>>>;
+
 /**
  * @class GuffNonCoulomb
  *

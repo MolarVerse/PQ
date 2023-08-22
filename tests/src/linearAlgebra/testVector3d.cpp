@@ -415,6 +415,18 @@ TEST(TestVector3d, scalarProduct)
 }
 
 /**
+ * @brief tests cross product for Vector3D
+ *
+ */
+TEST(TestVector3d, crossProduct)
+{
+    const auto vec1 = Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = Vec3D(2.0, 3.0, 4.0);
+
+    EXPECT_EQ(cross(vec1, vec2), Vec3D(-1.0, 2.0, -1.0));
+}
+
+/**
  * @brief tests os stream for Vector3D
  *
  */

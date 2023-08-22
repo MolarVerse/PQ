@@ -44,7 +44,7 @@ TEST_F(TestSimulationBox, findMoleculeType)
     const auto molecule = _simulationBox->findMoleculeType(1);
     EXPECT_EQ(molecule.getMoltype(), 1);
 
-    EXPECT_THROW(_simulationBox->findMoleculeType(3), customException::RstFileException);
+    EXPECT_THROW([[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3), customException::RstFileException);
 }
 
 /**

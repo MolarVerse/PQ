@@ -1,5 +1,6 @@
 set(source_files
     testStringUtilities.cpp
+    testMathUtilities.cpp
 )
 
 foreach(source_file ${source_files})

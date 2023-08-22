@@ -50,7 +50,10 @@ ParameterFileSection *ParameterFileReader::determineSection(const std::vector<st
 
     for (auto section = _parameterFileSections.begin(); section != iterEnd; ++section)
         if ((*section)->keyword() == toLowerCopy(lineElements[0]))
+        {
+            _parameterFileSections.erase(section);
             return (*section).get();
+        }
 
     throw customException::ParameterFileException("Unknown or already passed keyword \"" + lineElements[0] +
                                                   "\" in parameter file");

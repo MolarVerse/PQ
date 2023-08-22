@@ -18,6 +18,8 @@ TEST_F(TestParameterFileReader, isNeeded)
     EXPECT_TRUE(_parameterFileReader->isNeeded());
 }
 
+TEST_F(TestParameterFileReader, determineSection) {}
+
 int main(int argc, char **argv)
 {
     InitGoogleTest(&argc, argv);
