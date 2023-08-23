@@ -1,0 +1,264 @@
+
+
+	--->>> QMCFC Engine 1.7 <<<--- 
+
+ (+) Simulation run started on: Wed Aug 23 12:37:19 2023
+
+
+
+	 Your infile for this simulation was
+   ---------------------------------------------------
+
+	# Example file for a QMCF MD simulation of Zn(II)-Amyloid
+	# lines starting with '#' are comments
+	# The entire input is case insensitive (except filenames)
+	
+	
+	# MD Keywords
+	
+	    # Type of this run
+	      jobtype = mm-md;
+	
+	    # Number of steps to be performed and timestep in fs
+	      nstep= 2; timestep = 2.0; nreset = 50; 
+	#nreset_angular = 50;
+	
+	    # Output of coordinates, velocities ans solute charges enabled
+	      write_traj = on;
+	
+	    # Output frequency of ALL data files
+	      output_freq = 1; 
+	
+	    # Coulombic cutoff 
+	      rcoulomb= 12.0; 
+	
+	    # Density of the system - affects boxsize
+	      density = 0.997; 
+	
+	    # Enabling reaction field and giving a proper dielectric constant
+	      #long_range = rf; epsilon = 78.35530853;
+	
+	    # Temperature algorithm (Nose-Hoover Chain), Coupling frequency omega in 1/s,  
+	    # number of coupled thermostats (chainlength) and target temperature in K
+	    # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
+	      thermostat = berendsen; omega = 1500.0; nh-chainlength = 5; temp = 298.15;
+	
+	      #integrator = v-verlet-rattle; rattle = 23;
+	      integrator = v-verlet;
+	
+	      force-field = on;  
+	      guff_path = .; nonbonded = force-field;
+	
+	      cell-list = on; cell-number = 10;
+	 
+	# Input Files
+	
+	     start_file       = amy-preeq.rst; 
+	
+	     parameter_file   = qmcfc.param;
+	     topology_file    = mod_top.top;
+	
+	
+	# Output Files
+	
+	     output_file      = amy-zn-01.out; 
+	     info_file        = amy-zn-01.info;
+	     energy_file      = amy-zn-01.en; 
+	     traj_file        = amy-zn-01.xyz;
+	     vel_file         = amy-zn-01.vel;
+	     charge_file      = amy-zn-01.chrg; 
+	     restart_file     = amy-zn-01.rst;
+	
+	# end of infile
+	
+	
+
+
+   ---------------------------------------------------
+
+
+ (+) Input file run-01.in read successfully
+       28 keywords have been read
+
+ (+) Reading moldescriptor at
+     /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/moldescriptor.dat
+
+     SUCCESS: Data of 32 unit types have been read
+
+ (+) Reading sytem information from
+     restart file 'amy-preeq.rst'
+
+     SUCCESS: Molecular units:   8441
+              Atoms:            25808
+
+	     >> MOLECULE UNITS <<
+
+           1 Molecule(s) of type  1 (NASP)
+           3 Molecule(s) of type  2 (ALA)
+           2 Molecule(s) of type  3 (GLU)
+           3 Molecule(s) of type  4 (PHE)
+           1 Molecule(s) of type  5 (ARG)
+           2 Molecule(s) of type  7 (ASP)
+           2 Molecule(s) of type  8 (SER)
+           6 Molecule(s) of type  9 (GLY)
+           1 Molecule(s) of type  10 (TYR)
+           6 Molecule(s) of type  12 (VAL)
+           1 Molecule(s) of type  15 (GLN)
+           2 Molecule(s) of type  16 (LYS)
+           2 Molecule(s) of type  17 (LEU)
+           1 Molecule(s) of type  18 (ASN)
+           3 Molecule(s) of type  19 (ILE)
+           1 Molecule(s) of type  20 (MET)
+           1 Molecule(s) of type  21 (CALA)
+           1 Molecule(s) of type  22 (Na+)
+        8393 Molecule(s) of type  23 (WAT)
+           1 Molecule(s) of type  24 (Zn)
+           1 Molecule(s) of type  25 (HIC_BB)
+           1 Molecule(s) of type  26 (HIC_SC)
+           1 Molecule(s) of type  27 (GLZ_BB)
+           1 Molecule(s) of type  28 (GLZ_SC)
+           1 Molecule(s) of type  29 (HIG_BB)
+           1 Molecule(s) of type  30 (HIG_SC)
+           1 Molecule(s) of type  31 (HIH_BB)
+           1 Molecule(s) of type  32 (HIH_SC)
+
+ (!) Warning: Box data taken from restart file amy-preeq.rst.
+     Density recalculated - input density  0.99700 is ignored.
+
+	      >> SYSTEM DATA <<
+
+           XBOX    =    63.85728 A
+           YBOX    =    63.85728 A
+           ZBOX    =    63.85728 A
+           VOLUME  = 260394.21718 A�
+           Density =  0.99349 kg/dm³
+           Charge  =       -1 e
+
+	    >> INITIAL MOMENTUM <<
+                p = 4.56655e-11 amu * A / fs
+
+ (+) Initializing force-field
+
+ (+) Reading force-field parameters at
+     /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/qmcfc.param
+
+	* Reading bond parameters
+	    SUCCESS: Data of 47 bonds read
+
+	* Reading angle parameters
+	    SUCCESS: Data of 98 angles read
+
+	* Reading dihedral parameters
+	    SUCCESS: Data of 60 dihedrals read
+
+	* Reading improper parameters
+	    SUCCESS: Data of 3 impropers read
+
+	* Reading noncoulombic parameters
+	    SUCCESS: Data of 324 noncoulombics read
+
+         558 lines processed
+
+ (+) Reading force-field intra-nonbonded data at
+     /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/intra_nonbonded.dat
+
+ (+) Reading topology information from file
+     'mod_top.top'
+
+	* Reading bond topology data
+	    SUCCESS: Data of 330 bond(s) read
+
+	* Reading shake topology data
+	    SUCCESS: Data of 308 shake bond(s) read
+
+	* Reading angle topology data
+	    SUCCESS: Data of 1156 angle(s) read
+
+	* Reading dihedral topology data
+	    SUCCESS: Data of 2369 dihedral(s) read
+
+	* Reading improper dihedral topology data
+	    SUCCESS: Data of 131 improper dihedral(s) read
+
+ (+) Force-field initalization complete
+
+ (+) Initialising Constants
+
+	* Velocity Verlet
+		Time step: 2.00 fs
+
+	* Coulombic Interactions
+		Cutoff:  12.00 A
+
+	* Reaction field
+		Dielectric Constant:   0.00
+
+	* Thermostat -- Berendsen
+		Relaxation time   :   0.10 ps
+		Target Temperature: 298.15 K
+		kT                : 5.92e-01 kcal/mol
+
+	* Manostat -- none
+
+	* Data output
+		Output Frequency:    1 (2.0 fs)
+
+ (+) Initializing cellist
+
+		Size of cells:       x    6.39 A
+		                     y    6.39 A
+		                     z    6.39 A
+
+		Cells within cutoff: x    2
+		                     y    2
+		                     z    2
+
+		Total Cells:          1000
+		Volume ratio:         8.00
+
+ (+) Creating data files....SUCCESS
+
+ (+) General initalization complete
+
+ (+) Entering MM -- simulation loop
+
+       Requested Number of Steps:           2
+       Step Counter:                        0
+       Linear momentum reset requested for     50 step(s)
+
+ (+) Starting Simulation...
+
+   STEP NUMBER	           1		TOTAL STEPS	           1
+   SIMULATION TIME     0.002		TEMPERATURE	     266.022
+   PRESSURE	   -1223.604		E(MM)		  -59560.168
+   E(KIN)	   20383.302		E(INTRA)	       0.000
+   E(BOND)	     119.591		E(ANGLE)	     416.295
+   E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
+   E(COULOMB)	  -96537.759		E(NONCOULOMB)	   12218.226
+   E(RF)	    3432.411		E(THREEBODY)	       0.000
+   MOMENTUM	   6.496e-14		LOOPTIME 	       1.000
+
+
+   STEP NUMBER	           2		TOTAL STEPS	           2
+   SIMULATION TIME     0.004		TEMPERATURE	     466.059
+   PRESSURE	   -6208.759		E(MM)		  -59559.280
+   E(KIN)	   35710.650		E(INTRA)	       0.000
+   E(BOND)	     126.928		E(ANGLE)	     427.245
+   E(DIHEDRAL)	     390.238		E(IMPROPER)	      17.426
+   E(COULOMB)	 -112313.407		E(NONCOULOMB)	   12171.811
+   E(RF)	    3909.830		E(THREEBODY)	       0.000
+   MOMENTUM	   2.248e-14		LOOPTIME 	       1.000
+
+
+
+
+*********************************************************
+*                                                       *
+*                 QMCFC ENDED NORMALLY                  *
+*                                                       *
+*********************************************************
+
+
+
+ (+) Simulation time: 2.000000
+

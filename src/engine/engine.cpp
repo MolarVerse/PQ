@@ -79,16 +79,22 @@ void Engine::run()
  */
 void Engine::takeStep()
 {
+    cout << "test" << endl;
     _integrator->firstStep(_simulationBox);
 
+    cout << "test" << endl;
     _constraints.applyShake(_simulationBox);
 
+    cout << "test" << endl;
     _cellList.updateCellList(_simulationBox);
 
+    cout << "test" << endl;
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
+    cout << "test" << endl;
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
+    cout << "test" << endl;
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _integrator->secondStep(_simulationBox);

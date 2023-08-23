@@ -53,6 +53,11 @@ class potential::Potential
         _nonCoulombPotential = std::make_shared<T>(nonCoulombPotential);
     }
 
+    void setNonCoulombPotential(std::shared_ptr<NonCoulombPotential> nonCoulombPotential)
+    {
+        _nonCoulombPotential = nonCoulombPotential;
+    }
+
     [[nodiscard]] CoulombPotential                    &getCoulombPotential() const { return *_coulombPotential; }
     [[nodiscard]] NonCoulombPotential                 &getNonCoulombPotential() const { return *_nonCoulombPotential; }
     [[nodiscard]] std::shared_ptr<CoulombPotential>    getCoulombPotentialSharedPtr() const { return _coulombPotential; }

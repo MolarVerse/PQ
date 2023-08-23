@@ -1,5 +1,7 @@
 #include "inputFileParserForceField.hpp"
 
+#include "forceFieldNonCoulomb.hpp"
+
 #include <memory>
 
 using namespace std;
@@ -30,6 +32,7 @@ void InputFileParserForceField::parseForceFieldType(const vector<string> &lineEl
     {
         _engine.getForceFieldPtr()->activate();
         _engine.getForceFieldPtr()->activateNonCoulombic();
+        _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());   // TODO: test this one
     }
     else if (lineElements[2] == "off")
     {
