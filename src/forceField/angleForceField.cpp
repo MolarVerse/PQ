@@ -12,9 +12,9 @@ using namespace physicalData;
  */
 void AngleForceField::calculateEnergyAndForces(const SimulationBox &box, PhysicalData &physicalData)
 {
-    const auto position2 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of angle
 
-    const auto position1 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of angle
+    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
 
     auto dPosition12 = position1 - position2;

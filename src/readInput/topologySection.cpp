@@ -155,7 +155,7 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
     auto &&[molecule3, atomIndex3] = engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
 
     auto angleForceField =
-        forceField::AngleForceField({molecule1, molecule2, molecule3}, {atomIndex1, atomIndex2, atomIndex3}, angleType);
+        forceField::AngleForceField({molecule2, molecule1, molecule3}, {atomIndex2, atomIndex1, atomIndex3}, angleType);
 
     engine.getForceField().addAngle(angleForceField);
 }

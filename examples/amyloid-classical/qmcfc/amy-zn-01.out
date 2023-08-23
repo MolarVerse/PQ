@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Wed Aug 23 23:53:03 2023
+ (+) Simulation run started on: Thu Aug 24 00:37:46 2023
 
 
 
@@ -135,7 +135,7 @@
            Charge  =       -1 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.56642e-11 amu * A / fs
+                p = 4.56655e-11 amu * A / fs
 
  (+) Initializing force-field
 
@@ -167,6 +167,15 @@
 
 	* Reading bond topology data
 	    SUCCESS: Data of 330 bond(s) read
+
+	* Reading angle topology data
+	    SUCCESS: Data of 1156 angle(s) read
+
+	* Reading dihedral topology data
+	    SUCCESS: Data of 2369 dihedral(s) read
+
+	* Reading improper dihedral topology data
+	    SUCCESS: Data of 131 improper dihedral(s) read
 
  (+) Force-field initalization complete
 
@@ -216,25 +225,25 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.002		TEMPERATURE	     218.886
-   PRESSURE	    1193.647		E(MM)		   16957.898
-   E(KIN)	   16838.567		E(INTRA)	       0.000
-   E(BOND)	     119.331		E(ANGLE)	       0.000
-   E(DIHEDRAL)	       0.000		E(IMPROPER)	       0.000
+   SIMULATION TIME     0.002		TEMPERATURE	     218.661
+   PRESSURE	    1137.891		E(MM)		   17764.446
+   E(KIN)	   16821.300		E(INTRA)	       0.000
+   E(BOND)	     119.331		E(ANGLE)	     416.059
+   E(DIHEDRAL)	     390.673		E(IMPROPER)	      17.082
    E(COULOMB)	       0.000		E(NONCOULOMB)	       0.000
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   4.602e-14		LOOPTIME 	       0.000
+   MOMENTUM	   9.368e-14		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           2		TOTAL STEPS	           2
-   SIMULATION TIME     0.004		TEMPERATURE	     220.414
-   PRESSURE	    1143.576		E(MM)		   17080.530
-   E(KIN)	   16956.178		E(INTRA)	       0.000
-   E(BOND)	     124.352		E(ANGLE)	       0.000
-   E(DIHEDRAL)	       0.000		E(IMPROPER)	       0.000
+   SIMULATION TIME     0.004		TEMPERATURE	     220.094
+   PRESSURE	    1078.676		E(MM)		   17888.299
+   E(KIN)	   16931.555		E(INTRA)	       0.000
+   E(BOND)	     123.830		E(ANGLE)	     425.249
+   E(DIHEDRAL)	     390.309		E(IMPROPER)	      17.356
    E(COULOMB)	       0.000		E(NONCOULOMB)	       0.000
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   2.612e-14		LOOPTIME 	       0.000
+   MOMENTUM	   1.474e-14		LOOPTIME 	       0.000
 
 
 

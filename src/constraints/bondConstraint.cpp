@@ -48,6 +48,7 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
         auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
         const auto shakeForce = delta / (invMass1 + invMass2) / normSquared(_shakeDistanceRef);
+        std::cout << invMass1 << " " << invMass2 << std::endl;
 
         auto dPosition = shakeForce * _shakeDistanceRef;
 
