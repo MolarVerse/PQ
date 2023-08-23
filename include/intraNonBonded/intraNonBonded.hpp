@@ -2,17 +2,17 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
+#include "coulombPotential.hpp"
 #include "forceField.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 
 namespace intraNonBonded
 {
     class IntraNonBonded;
-    class IntraNonBondedGuff;
-    class IntraNonBondedForceField;
     enum class IntraNonBondedType : size_t;
 }   // namespace intraNonBonded
 
@@ -38,14 +38,14 @@ class intraNonBonded::IntraNonBonded
     IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
     bool               _isActivated        = false;
 
-    double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
-    double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
-
-    std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
-    std::vector<IntraNonBondedMap>       _intraNonBondedMaps;
+    std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
+    std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
+    std::vector<IntraNonBondedContainer>            _intraNonBondedContainers;
+    std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
 
   public:
-    IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
+    void                                   calculate(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
 
     void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
 
@@ -62,36 +62,18 @@ class intraNonBonded::IntraNonBonded
     void               deactivate() { _isActivated = false; }
     [[nodiscard]] bool isActivated() const { return _isActivated; }
 
-    void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
-    void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
+    void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &nonCoulombPotential)
+    {
+        _nonCoulombPotential = nonCoulombPotential;
+    }
+    void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &coulombPotential)
+    {
+        _coulombPotential = coulombPotential;
+    }
 
-    [[nodiscard]] double                               getScale14Coulomb() const { return _scale14Coulomb; }
-    [[nodiscard]] double                               getScale14VanDerWaals() const { return _scale14VanDerWaals; }
     [[nodiscard]] IntraNonBondedType                   getIntraNonBondedType() const { return _intraNonBondedType; }
     [[nodiscard]] std::vector<IntraNonBondedContainer> getIntraNonBondedContainers() const { return _intraNonBondedContainers; }
     [[nodiscard]] std::vector<IntraNonBondedMap>       getIntraNonBondedMaps() const { return _intraNonBondedMaps; }
-};
-
-/**
- * @class IntraNonBondedGuff
- *
- * @brief inherits from IntraNonBonded
- */
-class intraNonBonded::IntraNonBondedGuff : public IntraNonBonded
-{
-  public:
-    IntraNonBondedGuff() : IntraNonBonded() { _intraNonBondedType = IntraNonBondedType::GUFF; }
-};
-
-/**
- * @class IntraNonBondedForceField
- *
- * @brief inherits from IntraNonBonded
- */
-class intraNonBonded::IntraNonBondedForceField : public IntraNonBonded
-{
-  public:
-    IntraNonBondedForceField() : IntraNonBonded() { _intraNonBondedType = IntraNonBondedType::FORCE_FIELD; }
 };
 
 #endif   // _INTRA_NON_BONDED_HPP_

@@ -32,8 +32,8 @@ namespace potential
 class potential::Potential
 {
   protected:
-    std::unique_ptr<CoulombPotential>    _coulombPotential;
-    std::unique_ptr<NonCoulombPotential> _nonCoulombPotential;
+    std::shared_ptr<CoulombPotential>    _coulombPotential;
+    std::shared_ptr<NonCoulombPotential> _nonCoulombPotential;
 
   public:
     virtual ~Potential() = default;
@@ -45,16 +45,18 @@ class potential::Potential
     template <typename T>
     void makeCoulombPotential(T coulombPotential)
     {
-        _coulombPotential = std::make_unique<T>(coulombPotential);
+        _coulombPotential = std::make_shared<T>(coulombPotential);
     }
     template <typename T>
     void makeNonCoulombPotential(T nonCoulombPotential)
     {
-        _nonCoulombPotential = std::make_unique<T>(nonCoulombPotential);
+        _nonCoulombPotential = std::make_shared<T>(nonCoulombPotential);
     }
 
-    [[nodiscard]] CoulombPotential    &getCoulombPotential() const { return *_coulombPotential; }
-    [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const { return *_nonCoulombPotential; }
+    [[nodiscard]] CoulombPotential                    &getCoulombPotential() const { return *_coulombPotential; }
+    [[nodiscard]] NonCoulombPotential                 &getNonCoulombPotential() const { return *_nonCoulombPotential; }
+    [[nodiscard]] std::shared_ptr<CoulombPotential>    getCoulombPotentialSharedPtr() const { return _coulombPotential; }
+    [[nodiscard]] std::shared_ptr<NonCoulombPotential> getNonCoulombPotentialSharedPtr() const { return _nonCoulombPotential; }
 };
 
 /**

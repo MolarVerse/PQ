@@ -47,7 +47,8 @@ class linearAlgebra::Vector3D
     };
 
   public:
-    Vector3D() = default;
+    ~Vector3D() = default;
+    Vector3D()  = default;
     Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
     Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
     explicit Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};

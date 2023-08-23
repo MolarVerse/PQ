@@ -72,7 +72,8 @@ void InputFileParserManostat::parseManostatRelaxationTime(const vector<string> &
     checkCommand(lineElements, lineNumber);
     const auto relaxationTime = stod(lineElements[2]);
 
-    if (relaxationTime < 0) throw InputFileException("Relaxation time of manostat cannot be negative");
+    if (relaxationTime < 0)
+        throw InputFileException("Relaxation time of manostat cannot be negative");
 
     _engine.getSettings().setTauManostat(relaxationTime);
 }
@@ -88,7 +89,8 @@ void InputFileParserManostat::parseCompressibility(const vector<string> &lineEle
 {
     checkCommand(lineElements, lineNumber);
     const auto compressibility = stod(lineElements[2]);
-    if (compressibility < 0.0) throw InputFileException("Compressibility cannot be negative");
+    if (compressibility < 0.0)
+        throw InputFileException("Compressibility cannot be negative");
 
     _engine.getSettings().setCompressibility(compressibility);
 }

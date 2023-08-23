@@ -62,18 +62,19 @@ void Engine::run()
  * @brief Takes one step in the simulation.
  *
  * @details The step is taken in the following order:
- *  1. First step of the integrator
- *  2. Apply SHAKE
- *  3. Update cell list
- *  4. Calculate forces
- *  5. Calculate constraint bond references
- *  6. Second step of the integrator
- *  7. Apply RATTLE
- *  8. Apply thermostat
- *  9. Calculate kinetic energy and momentum
- * 10. Calculate virial
- * 11. Apply manostat
- * 12. Reset temperature and momentum
+ *  1.  First step of the integrator
+ *  2.  Apply SHAKE
+ *  3.  Update cell list
+ *  4.1 Calculate forces
+ *  4.2 Calculate intra non bonded forces
+ *  5.  Calculate constraint bond references
+ *  6.  Second step of the integrator
+ *  7.  Apply RATTLE
+ *  8.  Apply thermostat
+ *  9.  Calculate kinetic energy and momentum
+ * 10.  Calculate virial
+ * 11.  Apply manostat
+ * 12.  Reset temperature and momentum
  *
  */
 void Engine::takeStep()
@@ -84,8 +85,9 @@ void Engine::takeStep()
 
     _cellList.updateCellList(_simulationBox);
 
-    // _potential->calculateForces(_simulationBox, _physicalData, _cellList);
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+
+    _intraNonBonded.calculate(_simulationBox, _physicalData);
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
 

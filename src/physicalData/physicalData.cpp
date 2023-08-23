@@ -57,15 +57,18 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
  */
 void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
-    _coulombEnergy    += physicalData.getCoulombEnergy();
-    _nonCoulombEnergy += physicalData.getNonCoulombEnergy();
-    _temperature      += physicalData.getTemperature();
-    _momentum         += physicalData.getMomentum();
-    _kineticEnergy    += physicalData.getKineticEnergy();
-    _volume           += physicalData.getVolume();
-    _density          += physicalData.getDensity();
-    _virial           += physicalData.getVirial();
-    _pressure         += physicalData.getPressure();
+    _coulombEnergy         += physicalData.getCoulombEnergy();
+    _nonCoulombEnergy      += physicalData.getNonCoulombEnergy();
+    _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
+    _intraNonCoulombEnergy += physicalData.getIntraNonCoulombEnergy();
+
+    _temperature   += physicalData.getTemperature();
+    _momentum      += physicalData.getMomentum();
+    _kineticEnergy += physicalData.getKineticEnergy();
+    _volume        += physicalData.getVolume();
+    _density       += physicalData.getDensity();
+    _virial        += physicalData.getVirial();
+    _pressure      += physicalData.getPressure();
 }
 
 /**
@@ -75,15 +78,18 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
  */
 void PhysicalData::makeAverages(const double outputFrequency)
 {
-    _coulombEnergy    /= outputFrequency;
-    _nonCoulombEnergy /= outputFrequency;
-    _temperature      /= outputFrequency;
-    _momentum         /= outputFrequency;
-    _kineticEnergy    /= outputFrequency;
-    _volume           /= outputFrequency;
-    _density          /= outputFrequency;
-    _virial           /= outputFrequency;
-    _pressure         /= outputFrequency;
+    _coulombEnergy         /= outputFrequency;
+    _nonCoulombEnergy      /= outputFrequency;
+    _intraCoulombEnergy    /= outputFrequency;
+    _intraNonCoulombEnergy /= outputFrequency;
+
+    _temperature   /= outputFrequency;
+    _momentum      /= outputFrequency;
+    _kineticEnergy /= outputFrequency;
+    _volume        /= outputFrequency;
+    _density       /= outputFrequency;
+    _virial        /= outputFrequency;
+    _pressure      /= outputFrequency;
 }
 
 /**

@@ -44,8 +44,8 @@ class integrator::Integrator
      * standard getters and setters *
      ********************************/
 
-    std::string_view getIntegratorType() const { return _integratorType; }
-    double           getDt() const { return _dt; }
+    [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
+    [[nodiscard]] double           getDt() const { return _dt; }
 
     void setDt(const double dt) { _dt = dt; }
 };

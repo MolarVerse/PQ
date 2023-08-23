@@ -32,9 +32,18 @@ class readInput::parameterFile::ParameterFileReader
   public:
     ParameterFileReader(const std::string &filename, engine::Engine &engine);
 
-    bool                                            isNeeded() const;
-    void                                            read();
+    bool isNeeded() const;
+    void read();
+
     readInput::parameterFile::ParameterFileSection *determineSection(const std::vector<std::string> &);
+    void                                            deleteSection(const readInput::parameterFile::ParameterFileSection *section);
+
+    [[nodiscard]] std::vector<std::unique_ptr<readInput::parameterFile::ParameterFileSection>> &getParameterFileSections()
+    {
+        return _parameterFileSections;
+    }
+
+    [[nodiscard]] const std::string &getFilename() const { return _filename; }
 
     void setFilename(const std::string_view &filename) { _filename = filename; }
 };

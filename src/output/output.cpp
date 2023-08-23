@@ -3,6 +3,7 @@
 #include "exceptions.hpp"
 
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <stdexcept>
 
@@ -44,7 +45,8 @@ void Output::setFilename(const string_view &filename)
     _filename = filename;
 #endif
 
-    if (_filename.empty()) throw InputFileException("Filename cannot be empty");
+    if (_filename.empty())
+        throw InputFileException("Filename cannot be empty");
 
     if (const ifstream fp(_filename.c_str()); fp.good())
         throw InputFileException("File already exists - filename = " + string(_filename));
@@ -83,7 +85,8 @@ void Output::openFile()
 {
     _fp.open(_filename);
 
-    if (!_fp.is_open()) throw InputFileException("Could not open file - filename = " + _filename);
+    if (!_fp.is_open())
+        throw InputFileException("Could not open file - filename = " + _filename);
 }
 
 /**
@@ -94,5 +97,5 @@ void Output::openFile()
  */
 string Output::initialMomentumMessage(const double momentum) const
 {
-    return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
+    return format("Initial momentum = {} Angstrom * amu / fs", momentum);
 }

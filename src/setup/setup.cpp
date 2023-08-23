@@ -7,6 +7,7 @@
 #include "inputFileReader.hpp"
 #include "integratorSetup.hpp"
 #include "intraNonBondedReader.hpp"
+#include "intraNonBondedSetup.hpp"
 #include "manostatSetup.hpp"
 #include "moldescriptorReader.hpp"
 #include "parameterFileReader.hpp"
@@ -51,22 +52,22 @@ void setup::setupSimulation(const string &inputFilename, Engine &engine)
  */
 void setup::readFiles(const string &inputFilename, Engine &engine)
 {
-    cout << "Reading input file..." << endl;
+    cout << "Reading input file..." << '\n';
     readInputFile(inputFilename, engine);
 
-    cout << "Reading moldescriptor..." << endl;
+    cout << "Reading moldescriptor..." << '\n';
     readMolDescriptor(engine);
 
-    cout << "Reading rst file..." << endl;
+    cout << "Reading rst file..." << '\n';
     readRstFile(engine);
 
-    cout << "Reading topology file..." << endl;
+    cout << "Reading topology file..." << '\n';
     topology::readTopologyFile(engine);
 
-    cout << "Reading parameter file..." << endl;
+    cout << "Reading parameter file..." << '\n';
     parameterFile::readParameterFile(engine);
 
-    cout << "Reading intra non bonded file..." << endl;
+    cout << "Reading intra non bonded file..." << '\n';
     readIntraNonBondedFile(engine);
 }
 
@@ -86,5 +87,6 @@ void setup::setupEngine(Engine &engine)
     setupIntegrator(engine);
     setupConstraints(engine);
 
+    setupIntraNonBonded(engine);
     setupForceField(engine);
 }

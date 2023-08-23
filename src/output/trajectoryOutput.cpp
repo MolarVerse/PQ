@@ -18,9 +18,9 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
     _fp << simBox.getBoxAngles();
-    _fp << endl;
+    _fp << '\n';
 
-    _fp << endl;
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -45,7 +45,7 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
             _fp << setw(15);
             _fp << molecule.getAtomPosition(i)[2];
 
-            _fp << endl;
+            _fp << '\n';
         }
     }
 }
@@ -62,9 +62,9 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
     _fp << simBox.getBoxAngles();
-    _fp << endl;
+    _fp << '\n';
 
-    _fp << endl;
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -89,7 +89,7 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
             _fp << setw(20);
             _fp << molecule.getAtomVelocity(i)[2];
 
-            _fp << endl;
+            _fp << '\n';
         }
     }
 }
@@ -106,9 +106,9 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
     _fp << simBox.getBoxAngles();
-    _fp << endl;
+    _fp << '\n';
 
-    _fp << endl;
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -133,7 +133,7 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
             _fp << setw(15);
             _fp << molecule.getAtomForce(i)[2];
 
-            _fp << endl;
+            _fp << '\n';
         }
     }
 }
@@ -150,9 +150,9 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
     _fp << simBox.getBoxDimensions();
     _fp << "  ";
     _fp << simBox.getBoxAngles();
-    _fp << endl;
+    _fp << '\n';
 
-    _fp << endl;
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -171,7 +171,7 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
             _fp << right;
             _fp << molecule.getPartialCharge(i);
 
-            _fp << endl;
+            _fp << '\n';
         }
     }
 }

@@ -4,6 +4,7 @@
 #include "buckinghamPair.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "intraNonBondedMap.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
 #include "stringUtilities.hpp"
@@ -26,6 +27,7 @@ void ParameterFileSection::process(vector<string> &lineElements, engine::Engine 
 
     while (getline(*_fp, line))
     {
+
         line         = utilities::removeComments(line, "#");
         lineElements = utilities::splitString(line);
 
@@ -81,7 +83,7 @@ void TypesSection::process(vector<string> &lineElements, engine::Engine &engine)
  * @throw customException::ParameterFileException if scaleCoulomb is not between 0 and 1
  * @throw customException::ParameterFileException if scaleVanDerWaals is not between 0 and 1
  */
-void TypesSection::processSection(vector<string> &lineElements, engine::Engine &engine)
+void TypesSection::processSection(vector<string> &lineElements, engine::Engine &)
 {
     if (lineElements.size() != 8)
         throw customException::ParameterFileException(
@@ -99,8 +101,8 @@ void TypesSection::processSection(vector<string> &lineElements, engine::Engine &
         throw customException::ParameterFileException(format(
             "Wrong scaleVanDerWaals in parameter file types section at line {} - has to be between 0 and 1!", _lineNumber));
 
-    engine.getIntraNonBonded().setScale14Coulomb(scaleCoulomb);
-    engine.getIntraNonBonded().setScale14VanDerWaals(scaleVanDerWaals);
+    intraNonBonded::IntraNonBondedMap::setScale14Coulomb(scaleCoulomb);
+    intraNonBonded::IntraNonBondedMap::setScale14VanDerWaals(scaleVanDerWaals);
 }
 
 /**

@@ -2,6 +2,8 @@
 
 #include "stringUtilities.hpp"
 
+#include <ranges>
+
 using namespace std;
 using namespace readInput::parameterFile;
 using namespace utilities;
@@ -50,13 +52,22 @@ ParameterFileSection *ParameterFileReader::determineSection(const std::vector<st
 
     for (auto section = _parameterFileSections.begin(); section != iterEnd; ++section)
         if ((*section)->keyword() == toLowerCopy(lineElements[0]))
-        {
-            _parameterFileSections.erase(section);
             return (*section).get();
-        }
 
     throw customException::ParameterFileException("Unknown or already passed keyword \"" + lineElements[0] +
                                                   "\" in parameter file");
+}
+
+/**
+ * @brief deletes section from _parameterFileSections
+ *
+ * @param section
+ */
+void ParameterFileReader::deleteSection(const ParameterFileSection *section)
+{
+    auto       sectionIsEqual = [section](auto &sectionUniquePtr) { return sectionUniquePtr.get() == section; };
+    const auto result         = ranges::find_if(_parameterFileSections, sectionIsEqual);
+    _parameterFileSections.erase(result);
 }
 
 /**
@@ -94,6 +105,8 @@ void ParameterFileReader::read()
         section->setFp(&_fp);
         section->process(lineElements, _engine);
         lineNumber = section->getLineNumber();
+
+        deleteSection(section);
     }
 }
 

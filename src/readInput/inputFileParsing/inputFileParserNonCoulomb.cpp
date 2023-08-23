@@ -62,6 +62,8 @@ void InputFileParserNonCoulomb::parseIntraNonBondedFile(const vector<string> &li
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * TODO: probably more or less useless, since the type is determined via inter contributions
  */
 void InputFileParserNonCoulomb::parseIntraNonBondedType(const vector<string> &lineElements, const size_t lineNumber)
 {
@@ -70,12 +72,10 @@ void InputFileParserNonCoulomb::parseIntraNonBondedType(const vector<string> &li
         _engine.getIntraNonBonded().deactivate();
     else if (lineElements[2] == "guff")
     {
-        _engine.makeIntraNonBonded(intraNonBonded::IntraNonBondedGuff());
         _engine.getIntraNonBonded().activate();
     }
     else if (lineElements[2] == "force-field")
     {
-        _engine.makeIntraNonBonded(intraNonBonded::IntraNonBondedForceField());
         _engine.getIntraNonBonded().activate();
     }
     else

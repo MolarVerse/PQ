@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 #ifdef WITH_MPI
     for (int i = 1; i < size; i++)
     {
-        auto path = "procid_pimd-qmcf_" + to_string(i);
+        auto path = "procId_pimd-qmcf_" + to_string(i);
         filesystem::remove_all(path);
     }
     MPI_Finalize();

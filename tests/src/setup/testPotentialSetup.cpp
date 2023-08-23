@@ -1,51 +1,54 @@
-// #include "constants.hpp"
-// #include "exceptions.hpp"
-// #include "potentialSetup.hpp"
-// #include "testSetup.hpp"
+#include "constants.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "coulombWolf.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "guffNonCoulomb.hpp"
+#include "potentialSetup.hpp"
+#include "testSetup.hpp"
 
-// using namespace setup;
+using namespace setup;
 
-// TEST_F(TestSetup, setupCoulombPotential)
-// {
-//     _engine.getPotential().setCoulombType("guff");
-//     PotentialSetup potentialSetup(_engine);
-//     potentialSetup.setup();
+/**
+ * @brief setup the coulomb potential
+ */
+TEST_F(TestSetup, setupCoulombPotential)
+{
+    _engine.getSettings().setCoulombLongRangeType("none");
+    PotentialSetup potentialSetup(_engine);
+    potentialSetup.setupCoulomb();
 
-//     EXPECT_EQ(typeid(*(_engine.getPotential().getCoulombPotential())), typeid(potential::GuffCoulomb));
-//     EXPECT_NO_THROW(setupPotential(_engine));
+    EXPECT_EQ(typeid(_engine.getPotential().getCoulombPotential()), typeid(potential::CoulombShiftedPotential));
 
-//     _engine.getSettings().setCoulombLongRangeType("wolf");
-//     PotentialSetup potentialSetup2(_engine);
-//     potentialSetup2.setup();
+    _engine.getSettings().setCoulombLongRangeType("wolf");
+    PotentialSetup potentialSetup2(_engine);
+    potentialSetup2.setup();
 
-//     EXPECT_EQ(typeid(*(_engine.getPotential().getCoulombPotential())), typeid(potential::GuffWolfCoulomb));
-//     const auto *wolfCoulomb = dynamic_cast<potential::GuffWolfCoulomb *>(_engine.getPotential().getCoulombPotential());
-//     EXPECT_EQ(wolfCoulomb->getKappa(), 0.25);
-// }
+    EXPECT_EQ(typeid(_engine.getPotential().getCoulombPotential()), typeid(potential::CoulombWolf));
+    const auto &wolfCoulomb = dynamic_cast<potential::CoulombWolf &>(_engine.getPotential().getCoulombPotential());
+    EXPECT_EQ(wolfCoulomb.getKappa(), 0.25);
+}
 
-// TEST_F(TestSetup, setupNonCoulombPotential)
-// {
-//     _engine.getPotential().setNonCoulombType("guff");
-//     PotentialSetup potentialSetup(_engine);
-//     potentialSetup.setup();
+/**
+ * @brief setup the non coulomb potential
+ */
+TEST_F(TestSetup, setupNonCoulombPotential)
+{
+    _engine.getForceField().activateNonCoulombic();
+    PotentialSetup potentialSetup(_engine);
+    potentialSetup.setupNonCoulomb();
 
-//     EXPECT_EQ(typeid(*(_engine.getPotential().getNonCoulombPotential())), typeid(potential::GuffNonCoulomb));
+    EXPECT_EQ(typeid(_engine.getPotential().getNonCoulombPotential()), typeid(potential::ForceFieldNonCoulomb));
 
-//     EXPECT_NO_THROW(setupPotential(_engine));
+    _engine.getForceField().deactivateNonCoulombic();
+    PotentialSetup potentialSetup2(_engine);
+    potentialSetup2.setupNonCoulomb();
 
-//     _engine.getSettings().setNonCoulombType("lj");
-//     PotentialSetup potentialSetup2(_engine);
-//     potentialSetup2.setup();
-//     EXPECT_EQ(typeid(*(_engine.getPotential().getNonCoulombPotential())), typeid(potential::GuffLennardJones));
+    EXPECT_EQ(typeid(_engine.getPotential().getNonCoulombPotential()), typeid(potential::GuffNonCoulomb));
+}
 
-//     _engine.getSettings().setNonCoulombType("buck");
-//     PotentialSetup potentialSetup3(_engine);
-//     potentialSetup3.setup();
-//     EXPECT_EQ(typeid(*(_engine.getPotential().getNonCoulombPotential())), typeid(potential::GuffBuckingham));
-// }
-
-// int main(int argc, char **argv)
-// {
-//     ::testing::InitGoogleTest(&argc, argv);
-//     return ::RUN_ALL_TESTS();
-// }
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

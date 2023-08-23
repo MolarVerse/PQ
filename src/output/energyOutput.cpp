@@ -66,5 +66,5 @@ void EnergyOutput::write(const size_t step, const PhysicalData &data)
     _fp << right;
     _fp << setw(20);
     _fp << 0.0;
-    _fp << endl;
+    _fp << '\n';
 }

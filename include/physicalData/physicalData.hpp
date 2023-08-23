@@ -30,6 +30,8 @@ class physicalData::PhysicalData
     double _kineticEnergy;
     double _coulombEnergy;
     double _nonCoulombEnergy;
+    double _intraCoulombEnergy;
+    double _intraNonCoulombEnergy;
 
     double _bondEnergy;
     double _angleEnergy;
@@ -58,6 +60,8 @@ class physicalData::PhysicalData
     }
 
     void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
+    void addIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy += intraCoulombEnergy; }
+    void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy += intraNonCoulombEnergy; }
 
     /********************
      * standard setters *
@@ -77,6 +81,8 @@ class physicalData::PhysicalData
     void setKineticEnergyMolecularVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyMolecularVector = vec; }
     void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
     void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
+    void setIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy = intraCoulombEnergy; }
+    void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy = intraNonCoulombEnergy; }
 
     void setBondEnergy(const double bondEnergy) { _bondEnergy = bondEnergy; }
     void setAngleEnergy(const double angleEnergy) { _angleEnergy = angleEnergy; }
@@ -95,7 +101,10 @@ class physicalData::PhysicalData
 
     [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
     [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }
+    [[nodiscard]] double getIntraCoulombEnergy() const { return _intraCoulombEnergy; }
+    [[nodiscard]] double getIntraNonCoulombEnergy() const { return _intraNonCoulombEnergy; }
     [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
+
     [[nodiscard]] double getBondEnergy() const { return _bondEnergy; }
     [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
     [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }

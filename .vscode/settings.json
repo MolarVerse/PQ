@@ -172,5 +172,8 @@
         "Virial",
         "Waals"
     ],
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-error"
+    ]
 }

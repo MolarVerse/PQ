@@ -1,6 +1,7 @@
 add_library(intraNonBonded
     intraNonBonded.cpp
     intraNonBondedMap.cpp
+    intraNonBondedContainer.cpp
 )
 
 target_include_directories(intraNonBonded
@@ -13,6 +14,9 @@ target_link_libraries(intraNonBonded
     simulationBox
     physicalData
     forceField
+    potential
+    nonCoulombPotential
+    coulombPotential
 )
 
 install(TARGETS intraNonBonded

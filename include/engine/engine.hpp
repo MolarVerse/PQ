@@ -36,23 +36,23 @@ class engine::Engine
   private:
     size_t _step = 1;
 
-    settings::Settings           _settings;
-    timings::Timings             _timings;
-    simulationBox::CellList      _cellList;
-    simulationBox::SimulationBox _simulationBox;
-    physicalData::PhysicalData   _physicalData;
-    physicalData::PhysicalData   _averagePhysicalData;
-    constraints::Constraints     _constraints;
-    forceField::ForceField       _forceField;
-    engine::EngineOutput         _engineOutput;
+    settings::Settings             _settings;
+    timings::Timings               _timings;
+    simulationBox::CellList        _cellList;
+    simulationBox::SimulationBox   _simulationBox;
+    physicalData::PhysicalData     _physicalData;
+    physicalData::PhysicalData     _averagePhysicalData;
+    constraints::Constraints       _constraints;
+    forceField::ForceField         _forceField;
+    engine::EngineOutput           _engineOutput;
+    intraNonBonded::IntraNonBonded _intraNonBonded;
 
-    std::unique_ptr<integrator::Integrator>         _integrator     = std::make_unique<integrator::VelocityVerlet>();
-    std::unique_ptr<thermostat::Thermostat>         _thermostat     = std::make_unique<thermostat::Thermostat>();
-    std::unique_ptr<manostat::Manostat>             _manostat       = std::make_unique<manostat::Manostat>();
-    std::unique_ptr<virial::Virial>                 _virial         = std::make_unique<virial::VirialMolecular>();
-    std::unique_ptr<resetKinetics::ResetKinetics>   _resetKinetics  = std::make_unique<resetKinetics::ResetKinetics>();
-    std::unique_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded = std::make_unique<intraNonBonded::IntraNonBondedGuff>();
-    std::unique_ptr<potential::Potential>           _potential      = std::make_unique<potential::PotentialBruteForce>();
+    std::unique_ptr<integrator::Integrator>       _integrator    = std::make_unique<integrator::VelocityVerlet>();
+    std::unique_ptr<thermostat::Thermostat>       _thermostat    = std::make_unique<thermostat::Thermostat>();
+    std::unique_ptr<manostat::Manostat>           _manostat      = std::make_unique<manostat::Manostat>();
+    std::unique_ptr<virial::Virial>               _virial        = std::make_unique<virial::VirialMolecular>();
+    std::unique_ptr<resetKinetics::ResetKinetics> _resetKinetics = std::make_unique<resetKinetics::ResetKinetics>();
+    std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
 
   public:
     void run();
@@ -64,7 +64,7 @@ class engine::Engine
     [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
     [[nodiscard]] bool isCellListActivated() const { return _cellList.isActivated(); }
     [[nodiscard]] bool isConstraintsActivated() const { return _constraints.isActivated(); }
-    [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded->isActivated(); }
+    [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded.isActivated(); }
 
     /************************************
      *                                  *
@@ -102,11 +102,6 @@ class engine::Engine
     {
         _resetKinetics = std::make_unique<T>(resetKinetics);
     }
-    template <typename T>
-    void makeIntraNonBonded(T intraNonBonded)
-    {
-        _intraNonBonded = std::make_unique<T>(intraNonBonded);
-    }
 
     /***************************
      *                         *
@@ -129,7 +124,7 @@ class engine::Engine
     [[nodiscard]] thermostat::Thermostat         &getThermostat() { return *_thermostat; }
     [[nodiscard]] manostat::Manostat             &getManostat() { return *_manostat; }
     [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return *_resetKinetics; }
-    [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return *_intraNonBonded; }
+    [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
 
     [[nodiscard]] engine::EngineOutput     &getEngineOutput() { return _engineOutput; }
     [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
