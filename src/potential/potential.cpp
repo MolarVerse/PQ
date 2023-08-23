@@ -23,7 +23,7 @@ std::pair<double, double> Potential::calculateSingleInteraction(const linearAlge
                                                                 simulationBox::Molecule    &molecule1,
                                                                 simulationBox::Molecule    &molecule2,
                                                                 const size_t                atom1,
-                                                                const size_t                atom2)
+                                                                const size_t                atom2) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;

@@ -19,13 +19,13 @@
       output_freq = 1; 
 
     # Coulombic cutoff 
-      rcoulomb= 12.0; 
+      rcoulomb = 0.01; 
 
     # Density of the system - affects boxsize
       density = 0.997; 
 
     # Enabling reaction field and giving a proper dielectric constant
-      #long_range = rf; epsilon = 78.35530853;
+      long_range = none; epsilon = 78.35530853;
 
     # Temperature algorithm (Nose-Hoover Chain), Coupling frequency omega in 1/s,  
     # number of coupled thermostats (chainlength) and target temperature in K

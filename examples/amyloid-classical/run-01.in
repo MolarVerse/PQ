@@ -19,7 +19,7 @@
       output_freq = 1; 
 
     # Coulombic cutoff 
-      rcoulomb = 12.0; 
+      rcoulomb = 0.01; 
 
     # Density of the system - affects boxsize
       density = 0.997; 
@@ -37,6 +37,7 @@
       integrator = v-verlet;
 
       force-field = on;  
+      shake = off;
       #guff_path = .; 
       #nonbonded = force-field;
 
@@ -48,7 +49,7 @@
 
      parameter_file   = qmcfc.param;
      topology_file    = mod_top.top;
-     intra-nonbonded_file = intranonbonded.dat;
+     intra-nonbonded_file = intra_nonbonded.dat;
 
 
 # Output Files

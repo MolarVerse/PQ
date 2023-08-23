@@ -18,12 +18,12 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox &box, Physical
 
     box.applyPBC(dPosition);
 
-    const auto distance      = normSquared(dPosition);
+    const auto distance      = norm(dPosition);
     const auto deltaDistance = distance - _equilibriumBondLength;
 
     auto forceMagnitude = -_forceConstant * deltaDistance;
 
-    physicalData.setBondEnergy(-forceMagnitude * deltaDistance / 2.0);
+    physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
     forceMagnitude /= distance;
 

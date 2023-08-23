@@ -29,7 +29,7 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(co
  */
 void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
 {
-    auto fillSingleMap = [this](auto molecule)
+    auto fillSingleMap = [this](auto &molecule)
     {
         auto *intraNonBondedContainer = findIntraNonBondedContainerByMolType(molecule.getMoltype());
         _intraNonBondedMaps.push_back(IntraNonBondedMap(&molecule, intraNonBondedContainer));

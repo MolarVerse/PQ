@@ -12,8 +12,9 @@ using namespace physicalData;
  */
 void AngleForceField::calculateEnergyAndForces(const SimulationBox &box, PhysicalData &physicalData)
 {
-    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+    const auto position2 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of angle
+
+    const auto position1 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
 
     auto dPosition12 = position1 - position2;
@@ -41,20 +42,20 @@ void AngleForceField::calculateEnergyAndForces(const SimulationBox &box, Physica
 
     auto forceMagnitude = -_forceConstant * deltaAngle;
 
-    physicalData.setAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
+    physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
     const auto normalDistance = distance12 * distance13 * ::sin(angle);
-    const auto normalPosition = cross(dPosition12, dPosition13) / normalDistance;
+    const auto normalPosition = cross(dPosition13, dPosition12) / normalDistance;
 
     auto       force  = forceMagnitude / distance12Squared;
     const auto force1 = force * cross(dPosition12, normalPosition);
 
-    _molecules[0]->addAtomForce(_atomIndices[0], force1);
-    _molecules[1]->addAtomForce(_atomIndices[1], -force1);
+    _molecules[0]->addAtomForce(_atomIndices[0], -force1);
+    _molecules[1]->addAtomForce(_atomIndices[1], force1);
 
     force             = forceMagnitude / distance13Squared;
     const auto force2 = force * cross(normalPosition, dPosition13);
 
-    _molecules[0]->addAtomForce(_atomIndices[0], force2);
-    _molecules[2]->addAtomForce(_atomIndices[2], -force2);
+    _molecules[0]->addAtomForce(_atomIndices[0], -force2);
+    _molecules[2]->addAtomForce(_atomIndices[2], force2);
 }

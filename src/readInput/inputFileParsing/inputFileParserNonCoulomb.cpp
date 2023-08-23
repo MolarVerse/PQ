@@ -54,6 +54,7 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const vector<string> &lineEl
 void InputFileParserNonCoulomb::parseIntraNonBondedFile(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+    _engine.getIntraNonBonded().activate();
     _engine.getSettings().setIntraNonBondedFilename(lineElements[2]);
 }
 

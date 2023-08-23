@@ -62,6 +62,11 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
     _intraNonCoulombEnergy += physicalData.getIntraNonCoulombEnergy();
 
+    _bondEnergy     += physicalData.getBondEnergy();
+    _angleEnergy    += physicalData.getAngleEnergy();
+    _dihedralEnergy += physicalData.getDihedralEnergy();
+    _improperEnergy += physicalData.getImproperEnergy();
+
     _temperature   += physicalData.getTemperature();
     _momentum      += physicalData.getMomentum();
     _kineticEnergy += physicalData.getKineticEnergy();
@@ -82,6 +87,11 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _nonCoulombEnergy      /= outputFrequency;
     _intraCoulombEnergy    /= outputFrequency;
     _intraNonCoulombEnergy /= outputFrequency;
+
+    _bondEnergy     /= outputFrequency;
+    _angleEnergy    /= outputFrequency;
+    _dihedralEnergy /= outputFrequency;
+    _improperEnergy /= outputFrequency;
 
     _temperature   /= outputFrequency;
     _momentum      /= outputFrequency;

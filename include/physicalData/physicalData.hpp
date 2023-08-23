@@ -62,6 +62,10 @@ class physicalData::PhysicalData
     void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
     void addIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy += intraCoulombEnergy; }
     void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy += intraNonCoulombEnergy; }
+    void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
+    void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
+    void addDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy += dihedralEnergy; }
+    void addImproperEnergy(const double improperEnergy) { _improperEnergy += improperEnergy; }
 
     /********************
      * standard setters *

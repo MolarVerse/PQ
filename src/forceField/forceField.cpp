@@ -82,6 +82,11 @@ const DihedralType &ForceField::findImproperDihedralTypeById(const size_t id) co
 
 void ForceField::calculateBondedInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
+    physicalData.setBondEnergy(0.0);
+    physicalData.setAngleEnergy(0.0);
+    physicalData.setDihedralEnergy(0.0);
+    physicalData.setImproperEnergy(0.0);
+
     calculateBondInteractions(box, physicalData);
     calculateAngleInteractions(box, physicalData);
     calculateDihedralInteractions(box, physicalData);

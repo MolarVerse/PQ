@@ -2,6 +2,7 @@
 
 #include "bondType.hpp"
 #include "buckinghamPair.hpp"
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "intraNonBondedMap.hpp"
@@ -150,7 +151,7 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
                    _lineNumber));
 
     auto id               = stoul(lineElements[0]);
-    auto equilibriumAngle = stod(lineElements[1]);
+    auto equilibriumAngle = stod(lineElements[1]) * constants::_DEG_TO_RAD_;
     auto forceConstant    = stod(lineElements[2]);
 
     auto angleType = forceField::AngleType(id, equilibriumAngle, forceConstant);
@@ -177,7 +178,7 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
-    auto phaseShift    = stod(lineElements[3]);
+    auto phaseShift    = stod(lineElements[3]) * constants::_DEG_TO_RAD_;
 
     if (periodicity < 0.0)
         throw customException::ParameterFileException(
@@ -207,7 +208,7 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
-    auto phaseShift    = stod(lineElements[3]);
+    auto phaseShift    = stod(lineElements[3]) * constants::_DEG_TO_RAD_;
 
     if (periodicity < 0.0)
         throw customException::ParameterFileException(
@@ -296,7 +297,9 @@ void NonCoulombicsSection::processLJ(vector<string> &lineElements, engine::Engin
     const auto c6        = stod(lineElements[2]);
     const auto c12       = stod(lineElements[3]);
 
-    const auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+    auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+
+    cutOff = cutOff < 0.0 ? potential::CoulombPotential::getCoulombRadiusCutOff() : cutOff;
 
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(engine.getPotential().getNonCoulombPotential());
     potential.addNonCoulombicPair(make_shared<potential::LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12));

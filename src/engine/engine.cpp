@@ -46,10 +46,18 @@ void Engine::run()
 
     cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << '\n';
     cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << '\n';
+    cout << "intra coulomb energy " << _physicalData.getIntraCoulombEnergy() << '\n';
+    cout << "intra non coulomb energy " << _physicalData.getIntraNonCoulombEnergy() << '\n';
+    cout << "bond energy " << _physicalData.getBondEnergy() << '\n';
+    cout << "angle energy " << _physicalData.getAngleEnergy() << '\n';
+    cout << "dihedral energy " << _physicalData.getDihedralEnergy() << '\n';
+    cout << "improper energy " << _physicalData.getImproperEnergy() << '\n';
     cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << '\n';
+    cout << '\n';
 
     cout << "Temperature: " << _physicalData.getTemperature() << '\n';
     cout << "Momentum: " << _physicalData.getMomentum() << '\n';
+    cout << '\n';
 
     cout << "Volume: " << _physicalData.getVolume() << '\n';
     cout << "Density: " << _physicalData.getDensity() << '\n';
@@ -79,22 +87,18 @@ void Engine::run()
  */
 void Engine::takeStep()
 {
-    cout << "test" << endl;
     _integrator->firstStep(_simulationBox);
 
-    cout << "test" << endl;
     _constraints.applyShake(_simulationBox);
 
-    cout << "test" << endl;
     _cellList.updateCellList(_simulationBox);
 
-    cout << "test" << endl;
-    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+    // _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
-    cout << "test" << endl;
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
-    cout << "test" << endl;
+    _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
+
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _integrator->secondStep(_simulationBox);

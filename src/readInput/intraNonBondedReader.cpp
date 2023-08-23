@@ -20,11 +20,19 @@ void readInput::readIntraNonBondedFile(engine::Engine &engine)
 /**
  * @brief reads the intra non bonded interactions from the intraNonBonded file
  *
+ * @TODO: error handling for filename
+ *
  */
 void IntraNonBondedReader::read()
 {
     if (!isNeeded())
         return;
+
+    if (_filename.empty())
+        throw customException::IntraNonBondedException("Intra non bonded file needed for requested simulation setup");
+
+    if (!filesystem::exists(_filename))
+        throw customException::IntraNonBondedException("Intra non bonded file \"" + _filename + "\"" + " File not found");
 
     string         line;
     vector<string> lineElements;
@@ -118,7 +126,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
 
         for (size_t i = 1; i < lineElements.size(); ++i)
         {
-            const auto atomIndex = stoi(lineElements[i]) - 1;
+            const auto atomIndex = (::abs(stoi(lineElements[i])) - 1) * utilities::sign(stoi(lineElements[i]));
 
             if (::abs(atomIndex) >= int(numberOfAtoms))
                 throw customException::IntraNonBondedException(format(

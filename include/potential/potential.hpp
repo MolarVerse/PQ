@@ -39,7 +39,7 @@ class potential::Potential
     virtual ~Potential() = default;
 
     std::pair<double, double> calculateSingleInteraction(
-        const linearAlgebra::Vec3D &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t);
+        const linearAlgebra::Vec3D &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
     virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
     template <typename T>

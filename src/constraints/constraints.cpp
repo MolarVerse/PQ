@@ -21,6 +21,9 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
+    if (!_activated)
+        return;
+
     auto   converged = false;
     size_t iter      = 0;
 
@@ -28,7 +31,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
     {
         converged = true;
 
-        std::cout << "applyShake: " << iter << "\n";
+        std::cout << "test" << std::endl;
 
         std::ranges::for_each(_bondConstraints,
                               [&simulationBox, &converged, this](auto &bondConstraint)
@@ -45,6 +48,9 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
  */
 void Constraints::applyRattle()
 {
+    if (!_activated)
+        return;
+
     auto   converged = false;
     size_t iter      = 0;
 

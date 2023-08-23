@@ -26,7 +26,10 @@ class readInput::IntraNonBondedReader
     engine::Engine &_engine;
 
   public:
-    IntraNonBondedReader(const std::string &filename, engine::Engine &engine) : _filename(filename), _engine(engine) {}
+    IntraNonBondedReader(const std::string &filename, engine::Engine &engine)
+        : _filename(filename), _fp(filename), _engine(engine)
+    {
+    }
 
     void read();
     void processMolecule(const size_t);

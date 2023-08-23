@@ -6,6 +6,12 @@
 
 namespace constants
 {
+    /**
+     * @brief conversion factors for degrees
+     *
+     */
+    static constexpr double _DEG_TO_RAD_ = M_PI / 180.0;
+    static constexpr double _RAD_TO_DEG_ = 180.0 / M_PI;
 
     /**
      * @brief Conversion factors for mass units
