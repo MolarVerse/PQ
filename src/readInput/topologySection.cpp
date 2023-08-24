@@ -155,6 +155,16 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
     auto atom2     = stoul(lineElements[1]);
     auto atom3     = stoul(lineElements[2]);
     auto angleType = stoul(lineElements[3]);
+    auto isLinker  = false;
+
+    if (5 == lineElements.size())
+    {
+        if (lineElements[4] == "*")
+            isLinker = true;
+        else
+            throw customException::TopologyException(
+                format("Fifth entry in topology file in angle section has to be a \'*\' or empty at line {}!", _lineNumber));
+    }
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
         throw customException::TopologyException(
@@ -166,6 +176,7 @@ void AngleSection::processSection(vector<string> &lineElements, engine::Engine &
 
     auto angleForceField =
         forceField::AngleForceField({molecule2, molecule1, molecule3}, {atomIndex2, atomIndex1, atomIndex3}, angleType);
+    angleForceField.setIsLinker(isLinker);
 
     engine.getForceField().addAngle(angleForceField);
 }

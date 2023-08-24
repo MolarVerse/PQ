@@ -31,13 +31,10 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
     if (_isLinker)
     {
-        std::cout << "Linker bond" << std::endl;
         // if (distance < CoulombPotential::getCoulombRadiusCutOff())
         {
             const auto chargeProduct =
                 _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);
-
-            std::cout << "Charge product: " << chargeProduct << std::endl;
 
             const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
 
@@ -54,14 +51,6 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox    &box,
             const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
 
             const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-
-            std::cout << nonCoulombPair->getRadialCutOff() << std::endl;
-            std::cout << nonCoulombPair->getVanDerWaalsType1() << std::endl;
-            std::cout << nonCoulombPair->getVanDerWaalsType2() << std::endl;
-            std::cout << vdwType1 << std::endl;
-            std::cout << vdwType2 << std::endl;
-            std::cout << _molecules[0]->getExternalGlobalVDWType(_atomIndices[0]) << std::endl;
-            std::cout << _molecules[1]->getExternalGlobalVDWType(_atomIndices[1]) << std::endl;
 
             if (distance < 0)   // nonCoulombPair->getRadialCutOff())
             {

@@ -7,7 +7,7 @@
 
 
 #      N_BOND_I  N_BOND_J  N_LINK_BONDS
-BONDS      220        330         1
+BONDS      220        330         50
          1      5      9
          5      7      6
          5     13      7
@@ -20,7 +20,7 @@ BONDS      220        330         1
         17     19      6
         17     23      7
         23     24      0
-        23     25      1       # MM-MM Linker
+        23     25      1       * # MM-MM Linker
         25     27     12
         27     29      6
         27     38      7
@@ -29,7 +29,7 @@ BONDS      220        330         1
         35     36     13
         35     37     13
         38     39      0
-        38     40      1       # MM-MM Linker
+        38     40      1       * # MM-MM Linker
         40     42     12
         42     44      6
         42     58      7
@@ -41,7 +41,7 @@ BONDS      220        330         1
         52     54     15
         54     56     15
         58     59      0
-        58     60      1       # MM-MM Linker
+        58     60      1       * # MM-MM Linker
         60     62     12
         62     64      6
         62     82      7
@@ -52,23 +52,23 @@ BONDS      220        330         1
         75     76     18
         75     79     18
         82     83      0
-        82     84      1       # MM-MM Linker
+        82     84      1       * # MM-MM Linker
         84     86     12
         86     88      7
-        86     90      6       # MM-MM Linker
+        86     90      6       * # MM-MM Linker
         88     89      0
-        88    102      1       # MM-MM Linker
+        88    102      1       * # MM-MM Linker
         90     93     30
         93     94     28
         93     99     29
         94     95     27
-        94    101     21       # MM-MM Linker
+        94    101     21       * # MM-MM Linker
         95     97     25
         97     99     23
-       101    166     20       # MM-MM Linker
-       101    167     20       # MM-MM Linker
-       101    198     21       # MM-MM Linker
-       101    211     21       # MM-MM Linker
+       101    166     20       * # MM-MM Linker
+       101    167     20       * # MM-MM Linker
+       101    198     21       * # MM-MM Linker
+       101    211     21       * # MM-MM Linker
        102    104     12
        104    106      6
        104    112      7
@@ -76,17 +76,17 @@ BONDS      220        330         1
        109    110      2
        109    111      2
        112    113      0
-       112    114      1       # MM-MM Linker
+       112    114      1       * # MM-MM Linker
        114    116     12
        116    118      6
        116    123      7
        118    121     32
        123    124      0
-       123    125      1       # MM-MM Linker
+       123    125      1       * # MM-MM Linker
        125    127     12
        127    130      7
        130    131      0
-       130    132      1       # MM-MM Linker
+       130    132      1       * # MM-MM Linker
        132    134     12
        134    136      6
        134    151      7
@@ -99,12 +99,12 @@ BONDS      220        330         1
        144    147     34
        147    149     15
        151    152      0
-       151    153      1       # MM-MM Linker
+       151    153      1       * # MM-MM Linker
        153    155     12
        155    157      7
-       155    159      6       # MM-MM Linker
+       155    159      6       * # MM-MM Linker
        157    158      0
-       157    168      1       # MM-MM Linker
+       157    168      1       * # MM-MM Linker
        159    162      6
        162    165      7
        165    166     13
@@ -115,12 +115,12 @@ BONDS      220        330         1
        172    174      6
        172    178      6
        182    183      0
-       182    184      1       # MM-MM Linker
+       182    184      1       * # MM-MM Linker
        184    186     12
        186    188      7
-       186    190      6       # MM-MM Linker
+       186    190      6       * # MM-MM Linker
        188    189      0
-       188    201      1       # MM-MM Linker
+       188    201      1       * # MM-MM Linker
        190    193     30
        193    194     36
        193    199     29
@@ -129,9 +129,9 @@ BONDS      220        330         1
        198    199     35
        201    203     12
        203    205      7
-       203    207      6       # MM-MM Linker
+       203    207      6       * # MM-MM Linker
        205    206      0
-       205    218      1       # MM-MM Linker
+       205    218      1       * # MM-MM Linker
        207    210     30
        210    211     28
        210    216     29
@@ -146,7 +146,7 @@ BONDS      220        330         1
        228    229      0
        228    230      1
        233    234      0
-       233    235      1       # MM-MM Linker
+       233    235      1       * # MM-MM Linker
        235    237     12
        237    239      6
        237    255      7
@@ -155,7 +155,7 @@ BONDS      220        330         1
        245    248      6
        248    251      9
        255    256      0
-       255    257      1       # MM-MM Linker
+       255    257      1       * # MM-MM Linker
        257    259     12
        259    261      6
        259    274      7
@@ -163,14 +163,14 @@ BONDS      220        330         1
        264    266     38
        264    270     38
        274    275      0
-       274    276      1       # MM-MM Linker
+       274    276      1       * # MM-MM Linker
        276    278     12
        278    280      6
        278    290      7
        280    282      6
        280    286      6
        290    291      0
-       290    292      1       # MM-MM Linker
+       290    292      1       * # MM-MM Linker
        292    294     12
        294    296      6
        294    310      7
@@ -182,7 +182,7 @@ BONDS      220        330         1
        304    306     15
        306    308     15
        310    311      0
-       310    312      1       # MM-MM Linker
+       310    312      1       * # MM-MM Linker
        312    314     12
        314    316      6
        314    330      7
@@ -194,12 +194,12 @@ BONDS      220        330         1
        324    326     15
        326    328     15
        330    331      0
-       330    332      1       # MM-MM Linker
+       330    332      1       * # MM-MM Linker
        332    334     12
        334    336      6
        334    340      7
        340    341      0
-       340    342      1       # MM-MM Linker
+       340    342      1       * # MM-MM Linker
        342    344     12
        344    346      6
        344    355      7
@@ -208,7 +208,7 @@ BONDS      220        330         1
        352    353     13
        352    354     13
        355    356      0
-       355    357      1       # MM-MM Linker
+       355    357      1       * # MM-MM Linker
        357    359     12
        359    361      6
        359    367      7
@@ -216,24 +216,24 @@ BONDS      220        330         1
        364    365      2
        364    366      2
        367    368      0
-       367    369      1       # MM-MM Linker
+       367    369      1       * # MM-MM Linker
        369    371     12
        371    373      6
        371    383      7
        373    375      6
        373    379      6
        383    384      0
-       383    385      1       # MM-MM Linker
+       383    385      1       * # MM-MM Linker
        385    387     12
        387    390      7
        390    391      0
-       390    392      1       # MM-MM Linker
+       390    392      1       * # MM-MM Linker
        392    394     12
        394    396      6
        394    401      7
        396    399     32
        401    402      0
-       401    403      1       # MM-MM Linker
+       401    403      1       * # MM-MM Linker
        403    405     12
        405    407      6
        405    415      7
@@ -241,7 +241,7 @@ BONDS      220        330         1
        410    411     39
        410    412     40
        415    416      0
-       415    417      1       # MM-MM Linker
+       415    417      1       * # MM-MM Linker
        417    419     12
        419    421      6
        419    437      7
@@ -250,16 +250,16 @@ BONDS      220        330         1
        427    430      6
        430    433      9
        437    438      0
-       437    439      1       # MM-MM Linker
+       437    439      1       * # MM-MM Linker
        439    441     12
        441    444      7
        444    445      0
-       444    446      1       # MM-MM Linker
+       444    446      1       * # MM-MM Linker
        446    448     12
        448    450      6
        448    454      7
        454    455      0
-       454    456      1       # MM-MM Linker
+       454    456      1       * # MM-MM Linker
        456    458     12
        458    460      6
        458    473      7
@@ -267,7 +267,7 @@ BONDS      220        330         1
        460    466      6
        466    469      6
        473    474      0
-       473    475      1       # MM-MM Linker
+       473    475      1       * # MM-MM Linker
        475    477     12
        477    479      6
        477    492      7
@@ -275,11 +275,11 @@ BONDS      220        330         1
        479    485      6
        485    488      6
        492    493      0
-       492    494      1       # MM-MM Linker
+       492    494      1       * # MM-MM Linker
        494    496     12
        496    499      7
        499    500      0
-       499    501      1       # MM-MM Linker
+       499    501      1       * # MM-MM Linker
        501    503     12
        503    505      6
        503    518      7
@@ -287,7 +287,7 @@ BONDS      220        330         1
        508    510     38
        508    514     38
        518    519      0
-       518    520      1       # MM-MM Linker
+       518    520      1       * # MM-MM Linker
        520    522     12
        522    524      6
        522    535      7
@@ -295,36 +295,36 @@ BONDS      220        330         1
        527    530     44
        530    531     44
        535    536      0
-       535    537      1       # MM-MM Linker
+       535    537      1       * # MM-MM Linker
        537    539     12
        539    541      6
        539    551      7
        541    543      6
        541    547      6
        551    552      0
-       551    553      1       # MM-MM Linker
+       551    553      1       * # MM-MM Linker
        553    555     12
        555    558      7
        558    559      0
-       558    560      1       # MM-MM Linker
+       558    560      1       * # MM-MM Linker
        560    562     12
        562    565      7
        565    566      0
-       565    567      1       # MM-MM Linker
+       565    567      1       * # MM-MM Linker
        567    569     12
        569    571      6
        569    581      7
        571    573      6
        571    577      6
        581    582      0
-       581    583      1       # MM-MM Linker
+       581    583      1       * # MM-MM Linker
        583    585     12
        585    587      6
        585    597      7
        587    589      6
        587    593      6
        597    598      0
-       597    599      1       # MM-MM Linker
+       597    599      1       * # MM-MM Linker
        599    601     12
        601    603      6
        601    616      7
@@ -332,7 +332,7 @@ BONDS      220        330         1
        603    609      6
        609    612      6
        616    617      0
-       616    618      1       # MM-MM Linker
+       616    618      1       * # MM-MM Linker
        618    620     12
        620    622      6
        620    626      7
@@ -661,7 +661,7 @@ END
 
 
 #      N_ANGLE_CENTER  N_ANGLE_TARGET  N_LINK_ANGLES
-ANGLES        265             1156            0
+ANGLES        265             1156            205
          2      1      3     15
          2      1      4     15
          2      1      5     14
@@ -684,10 +684,10 @@ ANGLES        265             1156            0
          7     10     12      7
         11     10     12      3
          5     13     14     12
-         5     13     15     13       # MM-MM Linker
-        14     13     15      0       # MM-MM Linker
-        13     15     16      1       # MM-MM Linker
-        13     15     17      2       # MM-MM Linker
+         5     13     15     13       * # MM-MM Linker
+        14     13     15      0       * # MM-MM Linker
+        13     15     16      1       * # MM-MM Linker
+        13     15     17      2       * # MM-MM Linker
         16     15     17     21
         15     17     18     22
         15     17     19     23
@@ -702,10 +702,10 @@ ANGLES        265             1156            0
         20     19     22      5
         21     19     22      5
         17     23     24     12
-        17     23     25     13       # MM-MM Linker
-        24     23     25      0       # MM-MM Linker
-        23     25     26      1       # MM-MM Linker
-        23     25     27      2       # MM-MM Linker
+        17     23     25     13       * # MM-MM Linker
+        24     23     25      0       * # MM-MM Linker
+        23     25     26      1       * # MM-MM Linker
+        23     25     27      2       * # MM-MM Linker
         26     25     27     21
         25     27     28     22
         25     27     29     23
@@ -729,10 +729,10 @@ ANGLES        265             1156            0
         32     35     37     27
         36     35     37     25
         27     38     39     12
-        27     38     40     13       # MM-MM Linker
-        39     38     40      0       # MM-MM Linker
-        38     40     41      1       # MM-MM Linker
-        38     40     42      2       # MM-MM Linker
+        27     38     40     13       * # MM-MM Linker
+        39     38     40      0       * # MM-MM Linker
+        38     40     41      1       * # MM-MM Linker
+        38     40     42      2       * # MM-MM Linker
         41     40     42     21
         40     42     43     22
         40     42     44     23
@@ -765,10 +765,10 @@ ANGLES        265             1156            0
         47     56     57     29
         54     56     57     29
         42     58     59     12
-        42     58     60     13       # MM-MM Linker
-        59     58     60      0       # MM-MM Linker
-        58     60     61      1       # MM-MM Linker
-        58     60     62      2       # MM-MM Linker
+        42     58     60     13       * # MM-MM Linker
+        59     58     60      0       * # MM-MM Linker
+        58     60     61      1       * # MM-MM Linker
+        58     60     62      2       * # MM-MM Linker
         61     60     62     21
         60     62     63     22
         60     62     64     23
@@ -807,23 +807,23 @@ ANGLES        265             1156            0
         75     79     81     36
         80     79     81     34
         62     82     83     12
-        62     82     84     13       # MM-MM Linker
-        83     82     84      0       # MM-MM Linker
-        82     84     85      1       # MM-MM Linker
-        82     84     86      2       # MM-MM Linker
+        62     82     84     13       * # MM-MM Linker
+        83     82     84      0       * # MM-MM Linker
+        82     84     85      1       * # MM-MM Linker
+        82     84     86      2       * # MM-MM Linker
         85     84     86     21
         84     86     87     22
         84     86     88     24
-        84     86     90     23       # MM-MM Linker
+        84     86     90     23       * # MM-MM Linker
         87     86     88     20
-        87     86     90     19       # MM-MM Linker
-        90     86     88      6       # MM-MM Linker
+        87     86     90     19       * # MM-MM Linker
+        90     86     88      6       * # MM-MM Linker
         86     88     89     12
-        86     88    102     13       # MM-MM Linker
-        89     88    102      0       # MM-MM Linker
-        86     90     91     10       # MM-MM Linker
-        86     90     92     10       # MM-MM Linker
-        86     90     93     62       # MM-MM Linker
+        86     88    102     13       * # MM-MM Linker
+        89     88    102      0       * # MM-MM Linker
+        86     90     91     10       * # MM-MM Linker
+        86     90     92     10       * # MM-MM Linker
+        86     90     93     62       * # MM-MM Linker
         91     90     92      5
         91     90     93     59
         92     90     93     59
@@ -831,8 +831,8 @@ ANGLES        265             1156            0
         90     93     99     61
         94     93     99     51
         93     94     95     56
-        93     94    101     45       # MM-MM Linker
-        95     94    101     43       # MM-MM Linker
+        93     94    101     45       * # MM-MM Linker
+        95     94    101     43       * # MM-MM Linker
         94     95     96     53
         94     95     97     52
         96     95     97     48
@@ -842,18 +842,18 @@ ANGLES        265             1156            0
         93     99     97     57
         93     99    100     58
         97     99    100     47
-        94    101    166     54       # MM-MM Linker
-        94    101    167     54       # MM-MM Linker
-        94    101    198     55       # MM-MM Linker
-        94    101    211     55       # MM-MM Linker
+        94    101    166     54       * # MM-MM Linker
+        94    101    167     54       * # MM-MM Linker
+        94    101    198     55       * # MM-MM Linker
+        94    101    211     55       * # MM-MM Linker
        166    101    167     71  
-       166    101    198     54       # MM-MM Linker
-       166    101    211     54       # MM-MM Linker
-       167    101    198     54       # MM-MM Linker
-       167    101    211     54       # MM-MM Linker
-       198    101    211     55       # MM-MM Linker
-        88    102    103      1       # MM-MM Linker
-        88    102    104      2       # MM-MM Linker
+       166    101    198     54       * # MM-MM Linker
+       166    101    211     54       * # MM-MM Linker
+       167    101    198     54       * # MM-MM Linker
+       167    101    211     54       * # MM-MM Linker
+       198    101    211     55       * # MM-MM Linker
+        88    102    103      1       * # MM-MM Linker
+        88    102    104      2       * # MM-MM Linker
        103    102    104     21
        102    104    105     22
        102    104    106     23
@@ -871,10 +871,10 @@ ANGLES        265             1156            0
        106    109    111      7
        110    109    111      3
        104    112    113     12
-       104    112    114     13       # MM-MM Linker
-       113    112    114      0       # MM-MM Linker
-       112    114    115      1       # MM-MM Linker
-       112    114    116      2       # MM-MM Linker
+       104    112    114     13       * # MM-MM Linker
+       113    112    114      0       * # MM-MM Linker
+       112    114    115      1       * # MM-MM Linker
+       112    114    116      2       * # MM-MM Linker
        115    114    116     21
        114    116    117     22
        114    116    118     23
@@ -890,10 +890,10 @@ ANGLES        265             1156            0
        120    118    121     63
        118    121    122     64
        116    123    124     12
-       116    123    125     13       # MM-MM Linker
-       124    123    125      0       # MM-MM Linker
-       123    125    126      1       # MM-MM Linker
-       123    125    127      2       # MM-MM Linker
+       116    123    125     13       * # MM-MM Linker
+       124    123    125      0       * # MM-MM Linker
+       123    125    126      1       * # MM-MM Linker
+       123    125    127      2       * # MM-MM Linker
        126    125    127     21
        125    127    128     22
        125    127    129     22
@@ -902,10 +902,10 @@ ANGLES        265             1156            0
        128    127    130     20
        129    127    130     20
        127    130    131     12
-       127    130    132     13       # MM-MM Linker
-       131    130    132      0       # MM-MM Linker
-       130    132    133      1       # MM-MM Linker
-       130    132    134      2       # MM-MM Linker
+       127    130    132     13       * # MM-MM Linker
+       131    130    132      0       * # MM-MM Linker
+       130    132    133      1       * # MM-MM Linker
+       130    132    134      2       * # MM-MM Linker
        133    132    134     21
        132    134    135     22
        132    134    136     23
@@ -939,23 +939,23 @@ ANGLES        265             1156            0
        139    149    150     29
        147    149    150     29
        134    151    152     12
-       134    151    153     13       # MM-MM Linker
-       152    151    153      0       # MM-MM Linker
-       151    153    154      1       # MM-MM Linker
-       151    153    155      2       # MM-MM Linker
+       134    151    153     13       * # MM-MM Linker
+       152    151    153      0       * # MM-MM Linker
+       151    153    154      1       * # MM-MM Linker
+       151    153    155      2       * # MM-MM Linker
        154    153    155     21
        153    155    156     22
        153    155    157     24
-       153    155    159     23       # MM-MM Linker
+       153    155    159     23       * # MM-MM Linker
        156    155    157     20
-       156    155    159     19       # MM-MM Linker
-       159    155    157      6       # MM-MM Linker
+       156    155    159     19       * # MM-MM Linker
+       159    155    157      6       * # MM-MM Linker
        155    157    158     12
-       155    157    168     13       # MM-MM Linker
-       158    157    168      0       # MM-MM Linker
-       155    159    160     10       # MM-MM Linker
-       155    159    161     10       # MM-MM Linker
-       155    159    162     28       # MM-MM Linker
+       155    157    168     13       * # MM-MM Linker
+       158    157    168      0       * # MM-MM Linker
+       155    159    160     10       * # MM-MM Linker
+       155    159    161     10       * # MM-MM Linker
+       155    159    162     28       * # MM-MM Linker
        160    159    161      5
        160    159    162     10
        161    159    162     10
@@ -968,10 +968,10 @@ ANGLES        265             1156            0
        162    165    166     27
        162    165    167     27
        166    165    167     25
-       101    166    165     42       # MM-MM Linker
-       101    167    165     42       # MM-MM Linker
-       157    168    169      1       # MM-MM Linker
-       157    168    170      2       # MM-MM Linker
+       101    166    165     42       * # MM-MM Linker
+       101    167    165     42       * # MM-MM Linker
+       157    168    169      1       * # MM-MM Linker
+       157    168    170      2       * # MM-MM Linker
        169    168    170     21
        168    170    171     22
        168    170    172     23
@@ -998,23 +998,23 @@ ANGLES        265             1156            0
        179    178    181      5
        180    178    181      5
        170    182    183     12
-       170    182    184     13       # MM-MM Linker
-       183    182    184      0       # MM-MM Linker
-       182    184    185      1       # MM-MM Linker
-       182    184    186      2       # MM-MM Linker
+       170    182    184     13       * # MM-MM Linker
+       183    182    184      0       * # MM-MM Linker
+       182    184    185      1       * # MM-MM Linker
+       182    184    186      2       * # MM-MM Linker
        185    184    186     21
        184    186    187     22
        184    186    188     24
-       184    186    190     23       # MM-MM Linker
+       184    186    190     23       * # MM-MM Linker
        187    186    188     20
-       187    186    190     19       # MM-MM Linker
-       190    186    188      6       # MM-MM Linker
+       187    186    190     19       * # MM-MM Linker
+       190    186    188      6       * # MM-MM Linker
        186    188    189     12
-       186    188    201     13       # MM-MM Linker
-       189    188    201      0       # MM-MM Linker
-       186    190    191     10       # MM-MM Linker
-       186    190    192     10       # MM-MM Linker
-       186    190    193     62       # MM-MM Linker
+       186    188    201     13       * # MM-MM Linker
+       189    188    201      0       * # MM-MM Linker
+       186    190    191     10       * # MM-MM Linker
+       186    190    192     10       * # MM-MM Linker
+       186    190    193     62       * # MM-MM Linker
        191    190    192      5
        191    190    193     59
        192    190    193     59
@@ -1027,35 +1027,35 @@ ANGLES        265             1156            0
        194    196    197     48
        194    196    198     52
        197    196    198     53
-       101    198    196     43       # MM-MM Linker
-       101    198    199     44       # MM-MM Linker
+       101    198    196     43       * # MM-MM Linker
+       101    198    199     44       * # MM-MM Linker
        196    198    199     73
        193    199    198     77
        193    199    200     58
        198    199    200     72
-       188    201    202      1       # MM-MM Linker
-       188    201    203      2       # MM-MM Linker
+       188    201    202      1       * # MM-MM Linker
+       188    201    203      2       * # MM-MM Linker
        202    201    203     21
        201    203    204     22
        201    203    205     24
-       201    203    207     23       # MM-MM Linker
+       201    203    207     23       * # MM-MM Linker
        204    203    205     20
-       204    203    207     19       # MM-MM Linker
-       207    203    205      6       # MM-MM Linker
+       204    203    207     19       * # MM-MM Linker
+       207    203    205      6       * # MM-MM Linker
        203    205    206     12
-       203    205    218     13       # MM-MM Linker
-       206    205    218      0       # MM-MM Linker
-       203    207    208     10       # MM-MM Linker
-       203    207    209     10       # MM-MM Linker
-       203    207    210     62       # MM-MM Linker
+       203    205    218     13       * # MM-MM Linker
+       206    205    218      0       * # MM-MM Linker
+       203    207    208     10       * # MM-MM Linker
+       203    207    209     10       * # MM-MM Linker
+       203    207    210     62       * # MM-MM Linker
        208    207    209      5
        208    207    210     59
        209    207    210     59
        207    210    211     60
        207    210    216     61
        211    210    216     51
-       101    211    210     45       # MM-MM Linker
-       101    211    212     43       # MM-MM Linker
+       101    211    210     45       * # MM-MM Linker
+       101    211    212     43       * # MM-MM Linker
        210    211    212     56
        211    212    213     53
        211    212    214     52
@@ -1066,8 +1066,8 @@ ANGLES        265             1156            0
        210    216    214     57
        210    216    217     58
        214    216    217     47
-       205    218    219      1       # MM-MM Linker
-       205    218    220      2       # MM-MM Linker
+       205    218    219      1       * # MM-MM Linker
+       205    218    220      2       * # MM-MM Linker
        219    218    220     21
        218    220    221     22
        218    220    222     23
@@ -1094,10 +1094,10 @@ ANGLES        265             1156            0
        228    230    232      1
        231    230    232     79
        220    233    234     12
-       220    233    235     13       # MM-MM Linker
-       234    233    235      0       # MM-MM Linker
-       233    235    236      1       # MM-MM Linker
-       233    235    237      2       # MM-MM Linker
+       220    233    235     13       * # MM-MM Linker
+       234    233    235      0       * # MM-MM Linker
+       233    235    236      1       * # MM-MM Linker
+       233    235    237      2       * # MM-MM Linker
        236    235    237     21
        235    237    238     22
        235    237    239     23
@@ -1136,10 +1136,10 @@ ANGLES        265             1156            0
        252    251    254     15
        253    251    254     15
        237    255    256     12
-       237    255    257     13       # MM-MM Linker
-       256    255    257      0       # MM-MM Linker
-       255    257    258      1       # MM-MM Linker
-       255    257    259      2       # MM-MM Linker
+       237    255    257     13       * # MM-MM Linker
+       256    255    257      0       * # MM-MM Linker
+       255    257    258      1       * # MM-MM Linker
+       255    257    259      2       * # MM-MM Linker
        258    257    259     21
        257    259    260     22
        257    259    261     23
@@ -1172,10 +1172,10 @@ ANGLES        265             1156            0
        271    270    273      5
        272    270    273      5
        259    274    275     12
-       259    274    276     13       # MM-MM Linker
-       275    274    276      0       # MM-MM Linker
-       274    276    277      1       # MM-MM Linker
-       274    276    278      2       # MM-MM Linker
+       259    274    276     13       * # MM-MM Linker
+       275    274    276      0       * # MM-MM Linker
+       274    276    277      1       * # MM-MM Linker
+       274    276    278      2       * # MM-MM Linker
        277    276    278     21
        276    278    279     22
        276    278    280     23
@@ -1202,10 +1202,10 @@ ANGLES        265             1156            0
        287    286    289      5
        288    286    289      5
        278    290    291     12
-       278    290    292     13       # MM-MM Linker
-       291    290    292      0       # MM-MM Linker
-       290    292    293      1       # MM-MM Linker
-       290    292    294      2       # MM-MM Linker
+       278    290    292     13       * # MM-MM Linker
+       291    290    292      0       * # MM-MM Linker
+       290    292    293      1       * # MM-MM Linker
+       290    292    294      2       * # MM-MM Linker
        293    292    294     21
        292    294    295     22
        292    294    296     23
@@ -1238,10 +1238,10 @@ ANGLES        265             1156            0
        299    308    309     29
        306    308    309     29
        294    310    311     12
-       294    310    312     13       # MM-MM Linker
-       311    310    312      0       # MM-MM Linker
-       310    312    313      1       # MM-MM Linker
-       310    312    314      2       # MM-MM Linker
+       294    310    312     13       * # MM-MM Linker
+       311    310    312      0       * # MM-MM Linker
+       310    312    313      1       * # MM-MM Linker
+       310    312    314      2       * # MM-MM Linker
        313    312    314     21
        312    314    315     22
        312    314    316     23
@@ -1274,10 +1274,10 @@ ANGLES        265             1156            0
        319    328    329     29
        326    328    329     29
        314    330    331     12
-       314    330    332     13       # MM-MM Linker
-       331    330    332      0       # MM-MM Linker
-       330    332    333      1       # MM-MM Linker
-       330    332    334      2       # MM-MM Linker
+       314    330    332     13       * # MM-MM Linker
+       331    330    332      0       * # MM-MM Linker
+       330    332    333      1       * # MM-MM Linker
+       330    332    334      2       * # MM-MM Linker
        333    332    334     21
        332    334    335     22
        332    334    336     23
@@ -1292,10 +1292,10 @@ ANGLES        265             1156            0
        337    336    339      5
        338    336    339      5
        334    340    341     12
-       334    340    342     13       # MM-MM Linker
-       341    340    342      0       # MM-MM Linker
-       340    342    343      1       # MM-MM Linker
-       340    342    344      2       # MM-MM Linker
+       334    340    342     13       * # MM-MM Linker
+       341    340    342      0       * # MM-MM Linker
+       340    342    343      1       * # MM-MM Linker
+       340    342    344      2       * # MM-MM Linker
        343    342    344     21
        342    344    345     22
        342    344    346     23
@@ -1319,10 +1319,10 @@ ANGLES        265             1156            0
        349    352    354     27
        353    352    354     25
        344    355    356     12
-       344    355    357     13       # MM-MM Linker
-       356    355    357      0       # MM-MM Linker
-       355    357    358      1       # MM-MM Linker
-       355    357    359      2       # MM-MM Linker
+       344    355    357     13       * # MM-MM Linker
+       356    355    357      0       * # MM-MM Linker
+       355    357    358      1       * # MM-MM Linker
+       355    357    359      2       * # MM-MM Linker
        358    357    359     21
        357    359    360     22
        357    359    361     23
@@ -1340,10 +1340,10 @@ ANGLES        265             1156            0
        361    364    366      7
        365    364    366      3
        359    367    368     12
-       359    367    369     13       # MM-MM Linker
-       368    367    369      0       # MM-MM Linker
-       367    369    370      1       # MM-MM Linker
-       367    369    371      2       # MM-MM Linker
+       359    367    369     13       * # MM-MM Linker
+       368    367    369      0       * # MM-MM Linker
+       367    369    370      1       * # MM-MM Linker
+       367    369    371      2       * # MM-MM Linker
        370    369    371     21
        369    371    372     22
        369    371    373     23
@@ -1370,10 +1370,10 @@ ANGLES        265             1156            0
        380    379    382      5
        381    379    382      5
        371    383    384     12
-       371    383    385     13       # MM-MM Linker
-       384    383    385      0       # MM-MM Linker
-       383    385    386      1       # MM-MM Linker
-       383    385    387      2       # MM-MM Linker
+       371    383    385     13       * # MM-MM Linker
+       384    383    385      0       * # MM-MM Linker
+       383    385    386      1       * # MM-MM Linker
+       383    385    387      2       * # MM-MM Linker
        386    385    387     21
        385    387    388     22
        385    387    389     22
@@ -1382,10 +1382,10 @@ ANGLES        265             1156            0
        388    387    390     20
        389    387    390     20
        387    390    391     12
-       387    390    392     13       # MM-MM Linker
-       391    390    392      0       # MM-MM Linker
-       390    392    393      1       # MM-MM Linker
-       390    392    394      2       # MM-MM Linker
+       387    390    392     13       * # MM-MM Linker
+       391    390    392      0       * # MM-MM Linker
+       390    392    393      1       * # MM-MM Linker
+       390    392    394      2       * # MM-MM Linker
        393    392    394     21
        392    394    395     22
        392    394    396     23
@@ -1401,10 +1401,10 @@ ANGLES        265             1156            0
        398    396    399     63
        396    399    400     64
        394    401    402     12
-       394    401    403     13       # MM-MM Linker
-       402    401    403      0       # MM-MM Linker
-       401    403    404      1       # MM-MM Linker
-       401    403    405      2       # MM-MM Linker
+       394    401    403     13       * # MM-MM Linker
+       402    401    403      0       * # MM-MM Linker
+       401    403    404      1       * # MM-MM Linker
+       401    403    405      2       * # MM-MM Linker
        404    403    405     21
        403    405    406     22
        403    405    407     23
@@ -1425,10 +1425,10 @@ ANGLES        265             1156            0
        410    412    414     86
        413    412    414     79
        405    415    416     12
-       405    415    417     13       # MM-MM Linker
-       416    415    417      0       # MM-MM Linker
-       415    417    418      1       # MM-MM Linker
-       415    417    419      2       # MM-MM Linker
+       405    415    417     13       * # MM-MM Linker
+       416    415    417      0       * # MM-MM Linker
+       415    417    418      1       * # MM-MM Linker
+       415    417    419      2       * # MM-MM Linker
        418    417    419     21
        417    419    420     22
        417    419    421     23
@@ -1467,10 +1467,10 @@ ANGLES        265             1156            0
        434    433    436     15
        435    433    436     15
        419    437    438     12
-       419    437    439     13       # MM-MM Linker
-       438    437    439      0       # MM-MM Linker
-       437    439    440      1       # MM-MM Linker
-       437    439    441      2       # MM-MM Linker
+       419    437    439     13       * # MM-MM Linker
+       438    437    439      0       * # MM-MM Linker
+       437    439    440      1       * # MM-MM Linker
+       437    439    441      2       * # MM-MM Linker
        440    439    441     21
        439    441    442     22
        439    441    443     22
@@ -1479,10 +1479,10 @@ ANGLES        265             1156            0
        442    441    444     20
        443    441    444     20
        441    444    445     12
-       441    444    446     13       # MM-MM Linker
-       445    444    446      0       # MM-MM Linker
-       444    446    447      1       # MM-MM Linker
-       444    446    448      2       # MM-MM Linker
+       441    444    446     13       * # MM-MM Linker
+       445    444    446      0       * # MM-MM Linker
+       444    446    447      1       * # MM-MM Linker
+       444    446    448      2       * # MM-MM Linker
        447    446    448     21
        446    448    449     22
        446    448    450     23
@@ -1497,10 +1497,10 @@ ANGLES        265             1156            0
        451    450    453      5
        452    450    453      5
        448    454    455     12
-       448    454    456     13       # MM-MM Linker
-       455    454    456      0       # MM-MM Linker
-       454    456    457      1       # MM-MM Linker
-       454    456    458      2       # MM-MM Linker
+       448    454    456     13       * # MM-MM Linker
+       455    454    456      0       * # MM-MM Linker
+       454    456    457      1       * # MM-MM Linker
+       454    456    458      2       * # MM-MM Linker
        457    456    458     21
        456    458    459     22
        456    458    460     23
@@ -1533,10 +1533,10 @@ ANGLES        265             1156            0
        470    469    472      5
        471    469    472      5
        458    473    474     12
-       458    473    475     13       # MM-MM Linker
-       474    473    475      0       # MM-MM Linker
-       473    475    476      1       # MM-MM Linker
-       473    475    477      2       # MM-MM Linker
+       458    473    475     13       * # MM-MM Linker
+       474    473    475      0       * # MM-MM Linker
+       473    475    476      1       * # MM-MM Linker
+       473    475    477      2       * # MM-MM Linker
        476    475    477     21
        475    477    478     22
        475    477    479     23
@@ -1569,10 +1569,10 @@ ANGLES        265             1156            0
        489    488    491      5
        490    488    491      5
        477    492    493     12
-       477    492    494     13       # MM-MM Linker
-       493    492    494      0       # MM-MM Linker
-       492    494    495      1       # MM-MM Linker
-       492    494    496      2       # MM-MM Linker
+       477    492    494     13       * # MM-MM Linker
+       493    492    494      0       * # MM-MM Linker
+       492    494    495      1       * # MM-MM Linker
+       492    494    496      2       * # MM-MM Linker
        495    494    496     21
        494    496    497     22
        494    496    498     22
@@ -1581,10 +1581,10 @@ ANGLES        265             1156            0
        497    496    499     20
        498    496    499     20
        496    499    500     12
-       496    499    501     13       # MM-MM Linker
-       500    499    501      0       # MM-MM Linker
-       499    501    502      1       # MM-MM Linker
-       499    501    503      2       # MM-MM Linker
+       496    499    501     13       * # MM-MM Linker
+       500    499    501      0       * # MM-MM Linker
+       499    501    502      1       * # MM-MM Linker
+       499    501    503      2       * # MM-MM Linker
        502    501    503     21
        501    503    504     22
        501    503    505     23
@@ -1617,10 +1617,10 @@ ANGLES        265             1156            0
        515    514    517      5
        516    514    517      5
        503    518    519     12
-       503    518    520     13       # MM-MM Linker
-       519    518    520      0       # MM-MM Linker
-       518    520    521      1       # MM-MM Linker
-       518    520    522      2       # MM-MM Linker
+       503    518    520     13       * # MM-MM Linker
+       519    518    520      0       * # MM-MM Linker
+       518    520    521      1       * # MM-MM Linker
+       518    520    522      2       * # MM-MM Linker
        521    520    522     21
        520    522    523     22
        520    522    524     23
@@ -1648,10 +1648,10 @@ ANGLES        265             1156            0
        532    531    534     38
        533    531    534     38
        522    535    536     12
-       522    535    537     13       # MM-MM Linker
-       536    535    537      0       # MM-MM Linker
-       535    537    538      1       # MM-MM Linker
-       535    537    539      2       # MM-MM Linker
+       522    535    537     13       * # MM-MM Linker
+       536    535    537      0       * # MM-MM Linker
+       535    537    538      1       * # MM-MM Linker
+       535    537    539      2       * # MM-MM Linker
        538    537    539     21
        537    539    540     22
        537    539    541     23
@@ -1678,10 +1678,10 @@ ANGLES        265             1156            0
        548    547    550      5
        549    547    550      5
        539    551    552     12
-       539    551    553     13       # MM-MM Linker
-       552    551    553      0       # MM-MM Linker
-       551    553    554      1       # MM-MM Linker
-       551    553    555      2       # MM-MM Linker
+       539    551    553     13       * # MM-MM Linker
+       552    551    553      0       * # MM-MM Linker
+       551    553    554      1       * # MM-MM Linker
+       551    553    555      2       * # MM-MM Linker
        554    553    555     21
        553    555    556     22
        553    555    557     22
@@ -1690,10 +1690,10 @@ ANGLES        265             1156            0
        556    555    558     20
        557    555    558     20
        555    558    559     12
-       555    558    560     13       # MM-MM Linker
-       559    558    560      0       # MM-MM Linker
-       558    560    561      1       # MM-MM Linker
-       558    560    562      2       # MM-MM Linker
+       555    558    560     13       * # MM-MM Linker
+       559    558    560      0       * # MM-MM Linker
+       558    560    561      1       * # MM-MM Linker
+       558    560    562      2       * # MM-MM Linker
        561    560    562     21
        560    562    563     22
        560    562    564     22
@@ -1702,10 +1702,10 @@ ANGLES        265             1156            0
        563    562    565     20
        564    562    565     20
        562    565    566     12
-       562    565    567     13       # MM-MM Linker
-       566    565    567      0       # MM-MM Linker
-       565    567    568      1       # MM-MM Linker
-       565    567    569      2       # MM-MM Linker
+       562    565    567     13       * # MM-MM Linker
+       566    565    567      0       * # MM-MM Linker
+       565    567    568      1       * # MM-MM Linker
+       565    567    569      2       * # MM-MM Linker
        568    567    569     21
        567    569    570     22
        567    569    571     23
@@ -1732,10 +1732,10 @@ ANGLES        265             1156            0
        578    577    580      5
        579    577    580      5
        569    581    582     12
-       569    581    583     13       # MM-MM Linker
-       582    581    583      0       # MM-MM Linker
-       581    583    584      1       # MM-MM Linker
-       581    583    585      2       # MM-MM Linker
+       569    581    583     13       * # MM-MM Linker
+       582    581    583      0       * # MM-MM Linker
+       581    583    584      1       * # MM-MM Linker
+       581    583    585      2       * # MM-MM Linker
        584    583    585     21
        583    585    586     22
        583    585    587     23
@@ -1762,10 +1762,10 @@ ANGLES        265             1156            0
        594    593    596      5
        595    593    596      5
        585    597    598     12
-       585    597    599     13       # MM-MM Linker
-       598    597    599      0       # MM-MM Linker
-       597    599    600      1       # MM-MM Linker
-       597    599    601      2       # MM-MM Linker
+       585    597    599     13       * # MM-MM Linker
+       598    597    599      0       * # MM-MM Linker
+       597    599    600      1       * # MM-MM Linker
+       597    599    601      2       * # MM-MM Linker
        600    599    601     21
        599    601    602     22
        599    601    603     23
@@ -1798,10 +1798,10 @@ ANGLES        265             1156            0
        613    612    615      5
        614    612    615      5
        601    616    617     12
-       601    616    618     13       # MM-MM Linker
-       617    616    618      0       # MM-MM Linker
-       616    618    619      1       # MM-MM Linker
-       616    618    620      2       # MM-MM Linker
+       601    616    618     13       * # MM-MM Linker
+       617    616    618      0       * # MM-MM Linker
+       616    618    619      1       * # MM-MM Linker
+       616    618    620      2       * # MM-MM Linker
        619    618    620     21
        618    620    621     22
        618    620    622     23

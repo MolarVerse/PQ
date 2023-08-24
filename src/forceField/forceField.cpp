@@ -97,7 +97,9 @@ void ForceField::calculateBondInteractions(const simulationBox::SimulationBox &b
 
 void ForceField::calculateAngleInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    ranges::for_each(_angles, [&box, &physicalData](auto &angle) { angle.calculateEnergyAndForces(box, physicalData); });
+    ranges::for_each(_angles,
+                     [&box, &physicalData, this](auto &angle)
+                     { angle.calculateEnergyAndForces(box, physicalData, *_coulombPotential, *_nonCoulombPotential); });
 }
 
 void ForceField::calculateDihedralInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)

@@ -41,29 +41,6 @@ void Engine::run()
     cout << '\n' << '\n';
 
     cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
-
-    cout << '\n' << '\n';
-
-    cout << "Coulomb energy: " << _physicalData.getCoulombEnergy() << '\n';
-    cout << "Non Coulomb energy: " << _physicalData.getNonCoulombEnergy() << '\n';
-    cout << "intra coulomb energy " << _physicalData.getIntraCoulombEnergy() << '\n';
-    cout << "intra non coulomb energy " << _physicalData.getIntraNonCoulombEnergy() << '\n';
-    cout << "bond energy " << _physicalData.getBondEnergy() << '\n';
-    cout << "angle energy " << _physicalData.getAngleEnergy() << '\n';
-    cout << "dihedral energy " << _physicalData.getDihedralEnergy() << '\n';
-    cout << "improper energy " << _physicalData.getImproperEnergy() << '\n';
-    cout << "Kinetic energy: " << _physicalData.getKineticEnergy() << '\n';
-    cout << '\n';
-
-    cout << "Temperature: " << _physicalData.getTemperature() << '\n';
-    cout << "Momentum: " << _physicalData.getMomentum() << '\n';
-    cout << '\n';
-
-    cout << "Volume: " << _physicalData.getVolume() << '\n';
-    cout << "Density: " << _physicalData.getDensity() << '\n';
-    cout << "Pressure: " << _physicalData.getPressure() << '\n';
-
-    cout << '\n' << '\n';
 }
 
 /**
@@ -145,6 +122,29 @@ void Engine::writeOutput()
         _engineOutput.writeForceFile(_simulationBox);
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
+
+        cout << '\n' << '\n';
+
+        cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
+        cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
+        cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
+        cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
+        cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
+        cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
+        cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
+        cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
+        cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
+        cout << '\n';
+
+        cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
+        cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
+        cout << '\n';
+
+        cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
+        cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
+        cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
+
+        cout << '\n' << '\n';
 
         _averagePhysicalData = PhysicalData();
     }

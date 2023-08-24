@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------------
 |     Some information about the running simulation:                		|
 ---------------------------------------------------------------------------------
-|     SIMULATION TIME	       0.000		TEMPERATURE	     200.633	|
-|     PRESSURE		 -149599.330		E(MM)		 1017247.495	|
-|     E(KIN)		   15434.422		E(INTRA)	       0.000	|
-|     E(BOND)		     120.309		E(ANGLE)	     409.072	|
-|     E(DIHEDRAL)	     390.180		E(IMPROPER)	       0.000	|
-|     E(COULOMB)	 1000893.512		E(NONCOULOMB)	       0.000	|
+|     SIMULATION TIME	       0.004		TEMPERATURE	244335972.946	|
+|     PRESSURE		235246780.286		E(MM)		18076604645.744	|
+|     E(KIN)		18796436853.191		E(INTRA)	       0.000	|
+|     E(BOND)		79422798.177		E(ANGLE)	   31032.495	|
+|     E(DIHEDRAL)	    1148.893		E(IMPROPER)	       0.000	|
+|     E(COULOMB)	-799287187.011		E(NONCOULOMB)	       0.000	|
 |     E(RF)		       0.000		E(THREEBODY)	       0.000	|
-|     MOMENTUM		   1.109e-14		LOOPTIME 	       0.000	|
+|     MOMENTUM		   7.172e-14		LOOPTIME 	       0.000	|
 ---------------------------------------------------------------------------------
 
