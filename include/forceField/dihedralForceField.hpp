@@ -2,8 +2,10 @@
 
 #define _DIHEDRAL_FORCE_FIELD_HPP_
 
+#include "coulombPotential.hpp"
 #include "dihedral.hpp"
 #include "molecule.hpp"
+#include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 
@@ -25,6 +27,7 @@ class forceField::DihedralForceField : public connectivity::Dihedral
 {
   private:
     size_t _type;
+    bool   _isLinker = false;
 
     double _forceConstant;
     double _periodicity;
@@ -36,8 +39,13 @@ class forceField::DihedralForceField : public connectivity::Dihedral
                        size_t                                        type)
         : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
-    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &, bool);
+    void calculateEnergyAndForces(const simulationBox::SimulationBox &,
+                                  physicalData::PhysicalData &,
+                                  bool,
+                                  const potential::CoulombPotential &,
+                                  potential::NonCoulombPotential &);
 
+    void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
     void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
     void setPeriodicity(double periodicity) { _periodicity = periodicity; }
     void setPhaseShift(double phaseShift) { _phaseShift = phaseShift; }

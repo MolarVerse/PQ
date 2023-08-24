@@ -105,13 +105,15 @@ void ForceField::calculateAngleInteractions(const simulationBox::SimulationBox &
 void ForceField::calculateDihedralInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     ranges::for_each(_dihedrals,
-                     [&box, &physicalData](auto &dihedral) { dihedral.calculateEnergyAndForces(box, physicalData, false); });
+                     [&box, &physicalData, this](auto &dihedral)
+                     { dihedral.calculateEnergyAndForces(box, physicalData, false, *_coulombPotential, *_nonCoulombPotential); });
 }
 
 void ForceField::calculateImproperDihedralInteractions(const simulationBox::SimulationBox &box,
                                                        physicalData::PhysicalData         &physicalData)
 {
-    ranges::for_each(_improperDihedrals,
-                     [&box, &physicalData](auto &improperDihedral)
-                     { improperDihedral.calculateEnergyAndForces(box, physicalData, true); });
+    ranges::for_each(
+        _improperDihedrals,
+        [&box, &physicalData, this](auto &improperDihedral)
+        { improperDihedral.calculateEnergyAndForces(box, physicalData, true, *_coulombPotential, *_nonCoulombPotential); });
 }

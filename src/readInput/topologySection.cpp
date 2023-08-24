@@ -211,6 +211,16 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
     auto atom3        = stoul(lineElements[2]);
     auto atom4        = stoul(lineElements[3]);
     auto dihedralType = stoul(lineElements[4]);
+    auto isLinker     = false;
+
+    if (6 == lineElements.size())
+    {
+        if (lineElements[5] == "*")
+            isLinker = true;
+        else
+            throw customException::TopologyException(
+                format("Sixth entry in topology file in dihedral section has to be a \'*\' or empty at line {}!", _lineNumber));
+    }
 
     if (atom1 == atom2 || atom1 == atom3 || atom1 == atom4 || atom2 == atom3 || atom2 == atom4 || atom3 == atom4)
         throw customException::TopologyException(
@@ -223,6 +233,7 @@ void DihedralSection::processSection(vector<string> &lineElements, engine::Engin
 
     auto dihedralForceField = forceField::DihedralForceField(
         {molecule1, molecule2, molecule3, molecule4}, {atomIndex1, atomIndex2, atomIndex3, atomIndex4}, dihedralType);
+    dihedralForceField.setIsLinker(isLinker);
 
     engine.getForceField().addDihedral(dihedralForceField);
 }
@@ -257,6 +268,16 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
     auto atom3                = stoul(lineElements[2]);
     auto atom4                = stoul(lineElements[3]);
     auto improperDihedralType = stoul(lineElements[4]);
+    auto isLinker             = false;
+
+    if (6 == lineElements.size())
+    {
+        if (lineElements[5] == "*")
+            isLinker = true;
+        else
+            throw customException::TopologyException(format(
+                "Sixth entry in topology file in improper dihedral section has to be a \'*\' or empty at line {}!", _lineNumber));
+    }
 
     if (atom1 == atom2 || atom1 == atom3 || atom1 == atom4 || atom2 == atom3 || atom2 == atom4 || atom3 == atom4)
         throw customException::TopologyException(
@@ -269,6 +290,7 @@ void ImproperDihedralSection::processSection(vector<string> &lineElements, engin
 
     auto improperDihedralForceField = forceField::DihedralForceField(
         {molecule1, molecule2, molecule3, molecule4}, {atomIndex1, atomIndex2, atomIndex3, atomIndex4}, improperDihedralType);
+    improperDihedralForceField.setIsLinker(isLinker);
 
     engine.getForceField().addImproperDihedral(improperDihedralForceField);
 }
