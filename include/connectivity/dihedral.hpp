@@ -6,19 +6,18 @@
 
 namespace connectivity
 {
-    class Dihedral;
-}
+    /**
+     * @class Dihedral
+     *
+     * @brief dihedral object containing all dihedral information
+     *
+     */
+    class Dihedral : public ConnectivityElement
+    {
+      public:
+        using ConnectivityElement::ConnectivityElement;
+    };
 
-/**
- * @class Dihedral
- *
- * @brief dihedral object containing all dihedral information
- *
- */
-class connectivity::Dihedral : public connectivity::ConnectivityElement
-{
-  public:
-    using connectivity::ConnectivityElement::ConnectivityElement;
-};
+}   // namespace connectivity
 
 #endif   // _DIHEDRAL_HPP_

@@ -1,3 +1,10 @@
+
+
+for next merge on jag home pc - keep only config.hpp files (excluding exceptions.hpp)
+
+
+
+
 - finish intra non bonded routine
 
 - completely rebuild tests of restart file reading and sections
