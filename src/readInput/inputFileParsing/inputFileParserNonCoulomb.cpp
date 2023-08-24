@@ -15,7 +15,6 @@ InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine) : I
 {
     addKeyword(string("noncoulomb"), bind_front(&InputFileParserNonCoulomb::parseNonCoulombType, this), false);
     addKeyword(string("intra-nonBonded_file"), bind_front(&InputFileParserNonCoulomb::parseIntraNonBondedFile, this), false);
-    addKeyword(string("intra-nonBonded_type"), bind_front(&InputFileParserNonCoulomb::parseIntraNonBondedType, this), false);
 }
 
 /**
@@ -30,8 +29,8 @@ InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine) : I
 void InputFileParserNonCoulomb::parseNonCoulombType(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "none")
-        _engine.getSettings().setNonCoulombType("none");
+    if (lineElements[2] == "guff")
+        _engine.getSettings().setNonCoulombType("guff");
     else if (lineElements[2] == "lj")
         _engine.getSettings().setNonCoulombType("lj");
     else if (lineElements[2] == "buck")
@@ -40,7 +39,7 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const vector<string> &lineEl
         _engine.getSettings().setNonCoulombType("morse");
     else
         throw InputFileException(
-            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and none",
+            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and guff",
                    lineElements[2],
                    lineNumber));
 }
@@ -56,32 +55,4 @@ void InputFileParserNonCoulomb::parseIntraNonBondedFile(const vector<string> &li
     checkCommand(lineElements, lineNumber);
     _engine.getIntraNonBonded().activate();
     _engine.getSettings().setIntraNonBondedFilename(lineElements[2]);
-}
-
-/**
- * @brief Parse the type of the intraNonBonded combinations (none, guff or force-field)
- *
- * @param lineElements
- * @param lineNumber
- *
- * TODO: probably more or less useless, since the type is determined via inter contributions
- */
-void InputFileParserNonCoulomb::parseIntraNonBondedType(const vector<string> &lineElements, const size_t lineNumber)
-{
-    checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "none")
-        _engine.getIntraNonBonded().deactivate();
-    else if (lineElements[2] == "guff")
-    {
-        _engine.getIntraNonBonded().activate();
-    }
-    else if (lineElements[2] == "force-field")
-    {
-        _engine.getIntraNonBonded().activate();
-    }
-    else
-        throw InputFileException(format(
-            "Invalid intra-nonBonded type \"{}\" at line {} in input file. Possible options are: guff, force-field and none",
-            lineElements[2],
-            lineNumber));
 }

@@ -84,17 +84,6 @@ namespace constants
     /**
      * @brief Conversion factors for velocity verlet integrator
      *
-     * @details
-     * [F] = kcal/mol/Angstrom
-     * [m] = amu
-     * [v] = Angstrom/s
-     * [t] = fs
-     *
-     * [v] = [t] * [F] / [m]
-     *
-     * [F'] = J/m = [F] * 4.184 * 1000 / 6.022140857e23 / 1e-10 = [F] * _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER / _ANGSTROM_TO_METER_
-     * [m'] = kg = [m] * 1.660539040e-27 = [m] * _AMU_TO_KG_
-     *
      */
     static constexpr double _V_VERLET_VELOCITY_FACTOR_ =
         0.5 * (_FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_) * _TIME_UNIT_TO_SI_ * _SI_TO_VELOCITY_UNIT_;

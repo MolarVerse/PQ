@@ -37,8 +37,9 @@ class constraints::BondConstraint : public connectivity::Bond
 
     [[nodiscard]] double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
     [[nodiscard]] double calculateVelocityDelta() const;
-    bool                 applyShake(const simulationBox::SimulationBox &, double, double);
-    bool                 applyRattle(double);
+
+    bool applyShake(const simulationBox::SimulationBox &, double tolerance, double timestep);
+    bool applyRattle(double tolerance);
 
     /**************************************
      *                                    *
@@ -46,7 +47,7 @@ class constraints::BondConstraint : public connectivity::Bond
      *                                    *
      **************************************/
 
-    void setShakeDistanceRef(linearAlgebra::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
+    void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
     [[nodiscard]] double               getTargetBondLength() const { return _targetBondLength; }
     [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }

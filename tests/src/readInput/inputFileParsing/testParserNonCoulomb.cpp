@@ -17,9 +17,9 @@ using namespace ::testing;
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
     InputFileParserNonCoulomb parser(_engine);
-    vector<string>            lineElements = {"noncoulomb", "=", "none"};
+    vector<string>            lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "none");
+    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "guff");
 
     lineElements = {"noncoulomb", "=", "lj"};
     parser.parseNonCoulombType(lineElements, 0);
@@ -34,41 +34,22 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "morse");
 
     lineElements = {"coulomb", "=", "notValid"};
-    EXPECT_THROW_MSG(parser.parseNonCoulombType(lineElements, 0),
-                     customException::InputFileException,
-                     "Invalid nonCoulomb type \"notValid\" at line 0 in input file. Possible options are: lj, buck, morse and none");
+    EXPECT_THROW_MSG(
+        parser.parseNonCoulombType(lineElements, 0),
+        customException::InputFileException,
+        "Invalid nonCoulomb type \"notValid\" at line 0 in input file. Possible options are: lj, buck, morse and guff");
 }
 
+/**
+ * @brief tests parsing the intra non bonded file name
+ *
+ */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
     InputFileParserNonCoulomb parser(_engine);
     vector<string>            lineElements = {"intra-nonBonded_file", "=", "intra.dat"};
     parser.parseIntraNonBondedFile(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getIntraNonBondedFilename(), "intra.dat");
-}
-
-TEST_F(TestInputFileReader, parseIntraNonBondedType)
-{
-    InputFileParserNonCoulomb parser(_engine);
-    vector<string>            lineElements = {"intra-nonBonded_type", "=", "guff"};
-    parser.parseIntraNonBondedType(lineElements, 0);
-    EXPECT_EQ(_engine.getIntraNonBonded().getIntraNonBondedType(), intraNonBonded::IntraNonBondedType::GUFF);
-    EXPECT_TRUE(_engine.getIntraNonBonded().isActivated());
-
-    lineElements = {"intra-nonBonded_type", "=", "force-field"};
-    parser.parseIntraNonBondedType(lineElements, 0);
-    EXPECT_EQ(_engine.getIntraNonBonded().getIntraNonBondedType(), intraNonBonded::IntraNonBondedType::FORCE_FIELD);
-    EXPECT_TRUE(_engine.getIntraNonBonded().isActivated());
-
-    lineElements = {"intra-nonBonded_type", "=", "none"};
-    parser.parseIntraNonBondedType(lineElements, 0);
-    EXPECT_FALSE(_engine.getIntraNonBonded().isActivated());
-
-    lineElements = {"intra-nonBonded_type", "=", "notValid"};
-    EXPECT_THROW_MSG(
-        parser.parseIntraNonBondedType(lineElements, 0),
-        customException::InputFileException,
-        "Invalid intra-nonBonded type \"notValid\" at line 0 in input file. Possible options are: guff, force-field and none");
 }
 
 int main(int argc, char **argv)

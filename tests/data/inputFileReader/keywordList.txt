@@ -27,7 +27,6 @@ compressibility         false
 
 noncoulomb              false
 intra-nonBonded_file    false
-intra-nonBonded_type    false
 
 output_freq             false
 output_file             false
