@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Thu Aug 24 00:37:46 2023
+ (+) Simulation run started on: Thu Aug 24 09:09:45 2023
 
 
 
@@ -20,7 +20,7 @@
 	      jobtype = mm-md;
 	
 	    # Number of steps to be performed and timestep in fs
-	      nstep= 2; timestep = 2.0; nreset = 50; 
+	      nstep= 2; timestep = 2.0e-10; nreset = 50; 
 	#nreset_angular = 50;
 	
 	    # Output of coordinates, velocities ans solute charges enabled
@@ -174,15 +174,12 @@
 	* Reading dihedral topology data
 	    SUCCESS: Data of 2369 dihedral(s) read
 
-	* Reading improper dihedral topology data
-	    SUCCESS: Data of 131 improper dihedral(s) read
-
  (+) Force-field initalization complete
 
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 2.00 fs
+		Time step: 0.00 fs
 
 	* Coulombic Interactions
 		Cutoff:   0.01 A
@@ -197,7 +194,7 @@
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (2.0 fs)
+		Output Frequency:    1 (0.0 fs)
 
  (+) Initializing cellist
 
@@ -225,25 +222,25 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.002		TEMPERATURE	     218.661
-   PRESSURE	    1137.891		E(MM)		   17764.446
-   E(KIN)	   16821.300		E(INTRA)	       0.000
-   E(BOND)	     119.331		E(ANGLE)	     416.059
-   E(DIHEDRAL)	     390.673		E(IMPROPER)	      17.082
-   E(COULOMB)	       0.000		E(NONCOULOMB)	       0.000
+   SIMULATION TIME     0.000		TEMPERATURE	     200.633
+   PRESSURE	 -149599.330		E(MM)		 1017247.495
+   E(KIN)	   15434.422		E(INTRA)	       0.000
+   E(BOND)	     120.309		E(ANGLE)	     409.072
+   E(DIHEDRAL)	     390.180		E(IMPROPER)	       0.000
+   E(COULOMB)	 1000893.512		E(NONCOULOMB)	       0.000
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   9.368e-14		LOOPTIME 	       0.000
+   MOMENTUM	   3.963e-14		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           2		TOTAL STEPS	           2
-   SIMULATION TIME     0.004		TEMPERATURE	     220.094
-   PRESSURE	    1078.676		E(MM)		   17888.299
-   E(KIN)	   16931.555		E(INTRA)	       0.000
-   E(BOND)	     123.830		E(ANGLE)	     425.249
-   E(DIHEDRAL)	     390.309		E(IMPROPER)	      17.356
-   E(COULOMB)	       0.000		E(NONCOULOMB)	       0.000
+   SIMULATION TIME     0.000		TEMPERATURE	     200.633
+   PRESSURE	 -149599.330		E(MM)		 1017247.495
+   E(KIN)	   15434.422		E(INTRA)	       0.000
+   E(BOND)	     120.309		E(ANGLE)	     409.072
+   E(DIHEDRAL)	     390.180		E(IMPROPER)	       0.000
+   E(COULOMB)	 1000893.512		E(NONCOULOMB)	       0.000
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   1.474e-14		LOOPTIME 	       0.000
+   MOMENTUM	   1.109e-14		LOOPTIME 	       0.000
 
 
 
@@ -256,5 +253,5 @@
 
 
 
- (+) Simulation time: 1.000000
+ (+) Simulation time: 0.000000
 

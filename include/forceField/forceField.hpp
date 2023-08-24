@@ -6,10 +6,12 @@
 #include "angleType.hpp"
 #include "bondForceField.hpp"
 #include "bondType.hpp"
+#include "coulombPotential.hpp"
 #include "defaults.hpp"
 #include "dihedralForceField.hpp"
 #include "dihedralType.hpp"
 #include "matrix.hpp"
+#include "nonCoulombPotential.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -42,6 +44,9 @@ class forceField::ForceField
     std::vector<AngleType>    _angleTypes;
     std::vector<DihedralType> _dihedralTypes;
     std::vector<DihedralType> _improperDihedralTypes;
+
+    std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
+    std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
   public:
     void calculateBondedInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
@@ -86,6 +91,15 @@ class forceField::ForceField
      * standard setters *
      *                  *
      ********************/
+
+    void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &nonCoulombPotential)
+    {
+        _nonCoulombPotential = nonCoulombPotential;
+    }
+    void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &coulombPotential)
+    {
+        _coulombPotential = coulombPotential;
+    }
 
     /********************
      *                  *

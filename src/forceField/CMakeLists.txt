@@ -20,6 +20,9 @@ target_link_libraries(forceField
     linearAlgebra
     utilities
     physicalData
+    potential
+    coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS forceField

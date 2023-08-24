@@ -50,6 +50,7 @@ class physicalData::PhysicalData
 
     void updateAverages(const PhysicalData &);
     void makeAverages(const double);
+    void clearData();
 
     std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =
         std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
@@ -60,8 +61,12 @@ class physicalData::PhysicalData
     }
 
     void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
+
+    void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }
+    void addNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy += nonCoulombEnergy; }
     void addIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy += intraCoulombEnergy; }
     void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy += intraNonCoulombEnergy; }
+
     void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
     void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
     void addDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy += dihedralEnergy; }

@@ -3,7 +3,9 @@
 #define _BOND_FORCE_FIELD_HPP_
 
 #include "bond.hpp"
+#include "coulombPotential.hpp"
 #include "molecule.hpp"
+#include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 
 #include <cstddef>
@@ -23,6 +25,7 @@ class forceField::BondForceField : public connectivity::Bond
 {
   private:
     size_t _type;
+    bool   _isLinker = false;
 
     double _equilibriumBondLength;
     double _forceConstant;
@@ -32,10 +35,14 @@ class forceField::BondForceField : public connectivity::Bond
         simulationBox::Molecule *molecule1, simulationBox::Molecule *molecule2, size_t atomIndex1, size_t atomIndex2, size_t type)
         : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type){};
 
-    void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+    void calculateEnergyAndForces(const simulationBox::SimulationBox &,
+                                  physicalData::PhysicalData &,
+                                  const potential::CoulombPotential &,
+                                  potential::NonCoulombPotential &);
 
-    void setEquilibriumBondLength(double equilibriumBondLength) { _equilibriumBondLength = equilibriumBondLength; }
-    void setForceConstant(double forceConstant) { _forceConstant = forceConstant; }
+    void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+    void setEquilibriumBondLength(const double equilibriumBondLength) { _equilibriumBondLength = equilibriumBondLength; }
+    void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
 
     [[nodiscard]] size_t getType() const { return _type; }
     [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }

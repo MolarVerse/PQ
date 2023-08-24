@@ -3,6 +3,7 @@
 using namespace forceField;
 using namespace simulationBox;
 using namespace physicalData;
+using namespace potential;
 
 /**
  * @brief calculate energy and forces for a single bond
@@ -10,7 +11,10 @@ using namespace physicalData;
  * @param box
  * @param physicalData
  */
-void BondForceField::calculateEnergyAndForces(const SimulationBox &box, PhysicalData &physicalData)
+void BondForceField::calculateEnergyAndForces(const SimulationBox    &box,
+                                              PhysicalData           &physicalData,
+                                              const CoulombPotential &coulombPotential,
+                                              NonCoulombPotential    &nonCoulombPotential)
 {
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -24,6 +28,50 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox &box, Physical
     auto forceMagnitude = -_forceConstant * deltaDistance;
 
     physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
+
+    if (_isLinker)
+    {
+        std::cout << "Linker bond" << std::endl;
+        // if (distance < CoulombPotential::getCoulombRadiusCutOff())
+        {
+            const auto chargeProduct =
+                _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);
+
+            std::cout << "Charge product: " << chargeProduct << std::endl;
+
+            const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
+
+            forceMagnitude -= coulombForce;
+            physicalData.addCoulombEnergy(-coulombEnergy);
+
+            const auto molType1  = _molecules[0]->getMoltype();
+            const auto molType2  = _molecules[1]->getMoltype();
+            const auto atomType1 = _molecules[0]->getAtomType(_atomIndices[0]);
+            const auto atomType2 = _molecules[1]->getAtomType(_atomIndices[1]);
+            const auto vdwType1  = _molecules[0]->getInternalGlobalVDWType(_atomIndices[0]);
+            const auto vdwType2  = _molecules[1]->getInternalGlobalVDWType(_atomIndices[1]);
+
+            const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
+
+            const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
+
+            std::cout << nonCoulombPair->getRadialCutOff() << std::endl;
+            std::cout << nonCoulombPair->getVanDerWaalsType1() << std::endl;
+            std::cout << nonCoulombPair->getVanDerWaalsType2() << std::endl;
+            std::cout << vdwType1 << std::endl;
+            std::cout << vdwType2 << std::endl;
+            std::cout << _molecules[0]->getExternalGlobalVDWType(_atomIndices[0]) << std::endl;
+            std::cout << _molecules[1]->getExternalGlobalVDWType(_atomIndices[1]) << std::endl;
+
+            if (distance < 0)   // nonCoulombPair->getRadialCutOff())
+            {
+                const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance);
+
+                forceMagnitude -= nonCoulombForce;
+                physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
+            }
+        }
+    }
 
     forceMagnitude /= distance;
 

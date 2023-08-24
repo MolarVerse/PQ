@@ -99,10 +99,19 @@ void BondSection::processSection(vector<string> &lineElements, engine::Engine &e
             format("Wrong number of arguments in topology file bond section at line {} - number of elements has to be 3 or 4!",
                    _lineNumber));
 
-    auto atom1    = stoul(lineElements[0]);
-    auto atom2    = stoul(lineElements[1]);
-    auto bondType = stoul(lineElements[2]);
-    // TODO: auto linker = lineElements[3];
+    const auto atom1    = stoul(lineElements[0]);
+    const auto atom2    = stoul(lineElements[1]);
+    const auto bondType = stoul(lineElements[2]);
+    auto       isLinker = false;
+
+    if (4 == lineElements.size())
+    {
+        if (lineElements[3] == "*")
+            isLinker = true;
+        else
+            throw customException::TopologyException(
+                format("Forth entry in topology file in bond section has to be a \'*\' or empty at line {}!", _lineNumber));
+    }
 
     if (atom1 == atom2)
         throw customException::TopologyException(
@@ -112,6 +121,7 @@ void BondSection::processSection(vector<string> &lineElements, engine::Engine &e
     auto &&[molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
 
     auto bondForceField = forceField::BondForceField(molecule1, molecule2, atomIndex1, atomIndex2, bondType);
+    bondForceField.setIsLinker(isLinker);
 
     engine.getForceField().addBond(bondForceField);
 }

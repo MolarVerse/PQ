@@ -103,6 +103,31 @@ void PhysicalData::makeAverages(const double outputFrequency)
 }
 
 /**
+ * @brief clear all physicalData in order to call add functions
+ *
+ */
+void PhysicalData::clearData()
+{
+    _coulombEnergy         = 0.0;
+    _nonCoulombEnergy      = 0.0;
+    _intraCoulombEnergy    = 0.0;
+    _intraNonCoulombEnergy = 0.0;
+
+    _bondEnergy     = 0.0;
+    _angleEnergy    = 0.0;
+    _dihedralEnergy = 0.0;
+    _improperEnergy = 0.0;
+
+    _temperature   = 0.0;
+    _momentum      = 0.0;
+    _kineticEnergy = 0.0;
+    _volume        = 0.0;
+    _density       = 0.0;
+    _virial        = Vec3D();
+    _pressure      = 0.0;
+}
+
+/**
  * @brief calculate temperature
  *
  * @param simulationBox

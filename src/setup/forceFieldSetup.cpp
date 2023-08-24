@@ -10,6 +10,9 @@ using namespace forceField;
 
 void ForceFieldSetup::setup()
 {
+    _engine.getForceField().setNonCoulombPotential(_engine.getPotential().getNonCoulombPotentialSharedPtr());
+    _engine.getForceField().setCoulombPotential(_engine.getPotential().getCoulombPotentialSharedPtr());
+
     setupBonds();
     setupAngles();
     setupDihedrals();
