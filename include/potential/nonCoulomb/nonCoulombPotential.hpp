@@ -39,6 +39,7 @@ class potential::NonCoulombPotential
   protected:
     NonCoulombType _nonCoulombType = NonCoulombType::LJ;   // LJ
     MixingRule     _mixingRule     = MixingRule::NONE;     // no mixing rule TODO: implement (including input file keyword)
+
   public:
     virtual ~NonCoulombPotential() = default;
 

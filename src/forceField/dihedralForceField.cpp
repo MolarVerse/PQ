@@ -86,8 +86,8 @@ void DihedralForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
             const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance14, chargeProduct);
 
-            forceMagnitude = -coulombForce;
-            physicalData.addCoulombEnergy(-coulombEnergy);
+            forceMagnitude = -coulombForce * (1.0 - _scale14Coulomb);
+            physicalData.addCoulombEnergy(-coulombEnergy * (1.0 - _scale14Coulomb));
 
             const auto molType1  = _molecules[0]->getMoltype();
             const auto molType2  = _molecules[3]->getMoltype();
@@ -98,14 +98,13 @@ void DihedralForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
             const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
 
-            const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-
-            if (distance14 < 0)   // nonCoulombPair->getRadialCutOff())
+            if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
+                distance14 < nonCoulombPair->getRadialCutOff())
             {
                 const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance14);
 
-                forceMagnitude -= nonCoulombForce;
-                physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
+                forceMagnitude -= nonCoulombForce * (1.0 - _scale14VanDerWaals);
+                physicalData.addNonCoulombEnergy(-nonCoulombEnergy * (1.0 - _scale14VanDerWaals));
             }
 
             forceMagnitude /= distance14;
@@ -114,8 +113,8 @@ void DihedralForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
             physicalData.addVirial(forcexyz * dPosition14);
 
-            _molecules[1]->addAtomForce(_atomIndices[0], forcexyz);
-            _molecules[2]->addAtomForce(_atomIndices[3], -forcexyz);
+            _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
+            _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);
         }
     }
 }

@@ -70,7 +70,7 @@ void Engine::takeStep()
 
     _cellList.updateCellList(_simulationBox);
 
-    // _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 

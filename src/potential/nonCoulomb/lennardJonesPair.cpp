@@ -1,5 +1,7 @@
 #include "lennardJonesPair.hpp"
 
+#include <iostream>
+
 using namespace potential;
 
 /**

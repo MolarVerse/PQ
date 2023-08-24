@@ -9,6 +9,17 @@ namespace constants
 {
     /**
      * @brief Map of atom names to their masses
+     *
+     * @details special atom names are:
+     *
+     * d deuterium
+     * t tritium
+     *
+     * q with mass 999.0
+     * x with mass 999.0
+     * cav with mass 1000.0
+     * sup with mass 1000000.0
+     * dum with mass 1.0
      */
     const std::map<std::string, double> atomMassMap = {
         {"h", 1.00794},     {"d", 2.014101778}, {"t", 3.0160492675}, {"he", 4.002602},  {"li", 6.941},     {"be", 9.012182},

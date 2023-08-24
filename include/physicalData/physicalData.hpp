@@ -21,27 +21,27 @@ namespace physicalData
 class physicalData::PhysicalData
 {
   private:
-    double _volume;
-    double _density;
-    double _temperature;
-    double _pressure;
-    double _momentum;
+    double _volume      = 0.0;
+    double _density     = 0.0;
+    double _temperature = 0.0;
+    double _pressure    = 0.0;
+    double _momentum    = 0.0;
 
-    double _kineticEnergy;
-    double _coulombEnergy;
-    double _nonCoulombEnergy;
-    double _intraCoulombEnergy;
-    double _intraNonCoulombEnergy;
+    double _kineticEnergy         = 0.0;
+    double _coulombEnergy         = 0.0;
+    double _nonCoulombEnergy      = 0.0;
+    double _intraCoulombEnergy    = 0.0;
+    double _intraNonCoulombEnergy = 0.0;
 
-    double _bondEnergy;
-    double _angleEnergy;
-    double _dihedralEnergy;
-    double _improperEnergy;
+    double _bondEnergy     = 0.0;
+    double _angleEnergy    = 0.0;
+    double _dihedralEnergy = 0.0;
+    double _improperEnergy = 0.0;
 
-    linearAlgebra::Vec3D _virial;
-    linearAlgebra::Vec3D _momentumVector;
-    linearAlgebra::Vec3D _kineticEnergyAtomicVector;
-    linearAlgebra::Vec3D _kineticEnergyMolecularVector;
+    linearAlgebra::Vec3D _virial                       = {0.0, 0.0, 0.0};
+    linearAlgebra::Vec3D _momentumVector               = {0.0, 0.0, 0.0};
+    linearAlgebra::Vec3D _kineticEnergyAtomicVector    = {0.0, 0.0, 0.0};
+    linearAlgebra::Vec3D _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
 
   public:
     void calculateTemperature(simulationBox::SimulationBox &);

@@ -104,6 +104,8 @@ void TypesSection::processSection(vector<string> &lineElements, engine::Engine &
 
     intraNonBonded::IntraNonBondedMap::setScale14Coulomb(scaleCoulomb);
     intraNonBonded::IntraNonBondedMap::setScale14VanDerWaals(scaleVanDerWaals);
+    forceField::DihedralForceField::setScale14Coulomb(scaleCoulomb);
+    forceField::DihedralForceField::setScale14VanDerWaals(scaleVanDerWaals);
 }
 
 /**

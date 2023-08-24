@@ -9,6 +9,17 @@ namespace constants
 {
     /**
      * @brief Map of atom names to atomic numbers
+     *
+     * @note special atom names are:
+     *
+     * d deuterium
+     * t tritium
+     *
+     * q with atomic number 999
+     * x with atomic number 999
+     * cav with atomic number 1000
+     * sup with atomic number 1000000
+     * dum with atomic number 1
      */
     const std::map<std::string, int> atomNumberMap = {
         {"h", 1},         {"d", 1},   {"t", 1},    {"he", 2},   {"li", 3},   {"be", 4},   {"b", 5},   {"c", 6},   {"n", 7},

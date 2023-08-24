@@ -9,7 +9,8 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 2; timestep = 2.0; nreset = 50; 
+      nstep = 100; timestep = 0.2; nreset = 50; 
+      nscale = 100;
 #nreset_angular = 50;
 
     # Output of coordinates, velocities ans solute charges enabled
@@ -19,7 +20,7 @@
       output_freq = 1; 
 
     # Coulombic cutoff 
-      rcoulomb = 0.01; 
+      rcoulomb = 12.0; 
 
     # Density of the system - affects boxsize
       density = 0.997; 

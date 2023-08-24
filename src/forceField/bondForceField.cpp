@@ -29,36 +29,32 @@ void BondForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
     physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-    if (_isLinker)
+    if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
     {
-        // if (distance < CoulombPotential::getCoulombRadiusCutOff())
+        const auto chargeProduct =
+            _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);
+
+        const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
+
+        forceMagnitude -= coulombForce;
+        physicalData.addCoulombEnergy(-coulombEnergy);
+
+        const auto molType1  = _molecules[0]->getMoltype();
+        const auto molType2  = _molecules[1]->getMoltype();
+        const auto atomType1 = _molecules[0]->getAtomType(_atomIndices[0]);
+        const auto atomType2 = _molecules[1]->getAtomType(_atomIndices[1]);
+        const auto vdwType1  = _molecules[0]->getInternalGlobalVDWType(_atomIndices[0]);
+        const auto vdwType2  = _molecules[1]->getInternalGlobalVDWType(_atomIndices[1]);
+
+        const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
+
+        if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
+            distance < nonCoulombPair->getRadialCutOff())
         {
-            const auto chargeProduct =
-                _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);
+            const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance);
 
-            const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
-
-            forceMagnitude -= coulombForce;
-            physicalData.addCoulombEnergy(-coulombEnergy);
-
-            const auto molType1  = _molecules[0]->getMoltype();
-            const auto molType2  = _molecules[1]->getMoltype();
-            const auto atomType1 = _molecules[0]->getAtomType(_atomIndices[0]);
-            const auto atomType2 = _molecules[1]->getAtomType(_atomIndices[1]);
-            const auto vdwType1  = _molecules[0]->getInternalGlobalVDWType(_atomIndices[0]);
-            const auto vdwType2  = _molecules[1]->getInternalGlobalVDWType(_atomIndices[1]);
-
-            const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
-
-            const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-
-            if (distance < 0)   // nonCoulombPair->getRadialCutOff())
-            {
-                const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance);
-
-                forceMagnitude -= nonCoulombForce;
-                physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
-            }
+            forceMagnitude -= nonCoulombForce;
+            physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
         }
     }
 

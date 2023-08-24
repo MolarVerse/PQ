@@ -87,9 +87,8 @@ void AngleForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
             const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
 
-            const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-
-            if (distance23 < 0)   // nonCoulombPair->getRadialCutOff())
+            if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
+                distance23 < nonCoulombPair->getRadialCutOff())
             {
                 const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance23);
 

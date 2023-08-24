@@ -121,8 +121,6 @@ void PhysicalData::clearData()
     _temperature   = 0.0;
     _momentum      = 0.0;
     _kineticEnergy = 0.0;
-    _volume        = 0.0;
-    _density       = 0.0;
     _virial        = {0.0, 0.0, 0.0};
     _pressure      = 0.0;
 }
