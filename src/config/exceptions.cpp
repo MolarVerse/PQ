@@ -1,5 +1,7 @@
 #include "exceptions.hpp"
 
+#include <iostream>
+
 using namespace std;
 using namespace customException;
 
