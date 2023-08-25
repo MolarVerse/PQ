@@ -1,7 +1,5 @@
 #include "coulombPotential.hpp"
 
-#include "constants.hpp"
-
 using namespace potential;
 
 /**

@@ -128,3 +128,14 @@ const char *IntraNonBondedException::what() const throw()
     colorfulOutput(Color::FG_RED, "IntraNonBondedError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @return const char*
+ */
+const char *ShakeException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "ShakeError");
+    return _message.c_str();
+}

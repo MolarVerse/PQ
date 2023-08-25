@@ -1,4 +1,11 @@
+#include "cell.hpp"           // for Cell, simulationBox
+#include "celllist.hpp"       // for CellList
+#include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
+
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 using namespace potential;
 using namespace simulationBox;

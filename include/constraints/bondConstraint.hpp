@@ -3,10 +3,15 @@
 #define _BOND_CONSTRAINT_HPP_
 
 #include "bond.hpp"
-#include "simulationBox.hpp"
 #include "vector3d.hpp"
 
 #include <cstddef>
+
+namespace simulationBox
+{
+    class SimulationBox;
+    class Molecule;
+}   // namespace simulationBox
 
 namespace constraints
 {
@@ -15,6 +20,8 @@ namespace constraints
      * @class BondConstraint inherits from Bond
      *
      * @brief constraint object for single bond length
+     *
+     * @details it performs the shake and rattle algorithm on a bond constraint
      *
      */
     class BondConstraint : public connectivity::Bond
@@ -33,18 +40,11 @@ namespace constraints
 
         void calculateConstraintBondRef(const simulationBox::SimulationBox &);
 
-<<<<<<< HEAD
-    [[nodiscard]] double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
-    [[nodiscard]] double calculateVelocityDelta() const;
-
-    bool applyShake(const simulationBox::SimulationBox &, double tolerance, double timestep);
-    bool applyRattle(double tolerance);
-=======
         [[nodiscard]] double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
         [[nodiscard]] double calculateVelocityDelta() const;
-        bool                 applyShake(const simulationBox::SimulationBox &, double, double);
-        bool                 applyRattle(double);
->>>>>>> a8f4fada88e966d9b7f2e37b7ec9aa306293a3dc
+
+        [[nodiscard]] bool applyShake(const simulationBox::SimulationBox &, double tolerance, double timestep);
+        [[nodiscard]] bool applyRattle(double tolerance);
 
         /**************************************
          *                                    *
@@ -52,11 +52,7 @@ namespace constraints
          *                                    *
          **************************************/
 
-<<<<<<< HEAD
-    void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
-=======
-        void setShakeDistanceRef(linearAlgebra::Vec3D shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
->>>>>>> a8f4fada88e966d9b7f2e37b7ec9aa306293a3dc
+        void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }
 
         [[nodiscard]] double               getTargetBondLength() const { return _targetBondLength; }
         [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const { return _shakeDistanceRef; }

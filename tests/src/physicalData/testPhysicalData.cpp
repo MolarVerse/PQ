@@ -1,6 +1,7 @@
 #include "testPhysicalData.hpp"
 
 #include "constants.hpp"
+#include "vector3d.hpp"   // for sum
 
 /**
  * @brief tests makeAverages function

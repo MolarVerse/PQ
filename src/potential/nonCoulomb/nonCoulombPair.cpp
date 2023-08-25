@@ -1,5 +1,7 @@
 #include "nonCoulombPair.hpp"
 
+#include "mathUtilities.hpp"   // for compare
+
 using namespace potential;
 
 /**

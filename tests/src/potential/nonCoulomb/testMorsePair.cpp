@@ -1,5 +1,6 @@
 #include "morsePair.hpp"
 
+#include <cmath>   // for exp, pow
 #include <gtest/gtest.h>
 
 using namespace potential;

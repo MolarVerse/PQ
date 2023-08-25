@@ -1,4 +1,6 @@
+#include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace potential;
 using namespace simulationBox;

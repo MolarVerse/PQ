@@ -1,5 +1,12 @@
 #include "angleForceField.hpp"
 
+#include "coulombPotential.hpp"
+#include "molecule.hpp"
+#include "nonCoulombPair.hpp"   // for NonCoulombPair
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+
 using namespace forceField;
 using namespace simulationBox;
 using namespace physicalData;

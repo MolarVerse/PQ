@@ -1,6 +1,8 @@
 #include "testThermostat.hpp"
 
 #include "constants.hpp"
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
 
 TEST_F(TestThermostat, calculateTemperature)
 {

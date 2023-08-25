@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"
 
+#include <format>   // for format
 #include <ranges>
 
 using namespace std;

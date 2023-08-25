@@ -185,6 +185,19 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /**
+     * @class ShakeException inherits from CustomException
+     *
+     * @brief Exception for SHAKE errors
+     */
+    class ShakeException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_

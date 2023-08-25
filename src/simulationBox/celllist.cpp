@@ -1,9 +1,11 @@
 #include "celllist.hpp"
 
 #include "cell.hpp"
+#include "molecule.hpp"
 #include "simulationBox.hpp"
 
-#include <iostream>
+#include <algorithm>
+#include <map>
 
 using namespace std;
 using namespace simulationBox;

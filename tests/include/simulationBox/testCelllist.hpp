@@ -1,8 +1,9 @@
-#ifndef _TEST_CELLLIST_HPP_
+#ifndef _TEST_CELL_LIST_HPP_
 
-#define _TEST_CELLLIST_HPP_
+#define _TEST_CELL_LIST_HPP_
 
 #include "celllist.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <gtest/gtest.h>
 
@@ -30,4 +31,4 @@ class TestCellList : public ::testing::Test
     simulationBox::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_CELLLIST_HPP_
+#endif   // _TEST_CELL_LIST_HPP_

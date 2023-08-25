@@ -2,10 +2,9 @@
 
 #include "exceptions.hpp"
 
-#include <filesystem>
+#include <cstdint>   // for UINT64_MAX
 #include <format>
 #include <fstream>
-#include <stdexcept>
 
 #ifdef WITH_MPI
 #include <mpi.h>

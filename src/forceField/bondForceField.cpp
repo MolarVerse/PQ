@@ -1,5 +1,16 @@
 #include "bondForceField.hpp"
 
+#include "coulombPotential.hpp"
+#include "molecule.hpp"
+#include "nonCoulombPair.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "vector3d.hpp"
+
+#include <memory>
+#include <vector>
+
 using namespace forceField;
 using namespace simulationBox;
 using namespace physicalData;

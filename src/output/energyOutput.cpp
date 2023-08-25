@@ -1,6 +1,9 @@
 #include "energyOutput.hpp"
 
+#include "physicalData.hpp"   // for PhysicalData
+
 #include <iomanip>
+#include <ostream>   // for basic_ostream, operator<<
 
 using namespace std;
 using namespace physicalData;

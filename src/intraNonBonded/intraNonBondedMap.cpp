@@ -1,5 +1,7 @@
 #include "intraNonBondedMap.hpp"
 
+#include "nonCoulombPair.hpp"   // for NonCoulombPair
+
 using namespace intraNonBonded;
 
 void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPotential,

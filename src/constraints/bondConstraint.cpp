@@ -1,7 +1,11 @@
 #include "bondConstraint.hpp"
 
+#include "molecule.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
+
+#include <cmath>
+#include <vector>
 
 using namespace constraints;
 
@@ -23,8 +27,8 @@ void BondConstraint::calculateConstraintBondRef(const simulationBox::SimulationB
  */
 double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox &simBox) const
 {
-    auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+    const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+    const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
 
     auto dPosition = pos1 - pos2;
     simBox.applyPBC(dPosition);
@@ -38,27 +42,28 @@ double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox
 /**
  * @brief applies the shake algorithm to a bond constraint
  *
+ * @details if delta is not smaller than tolerance, the shake algorithm is applied
+ *
  */
 bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, double tolerance, double timestep)
 {
 
     if (const auto delta = calculateDistanceDelta(simBox); std::fabs(delta) > tolerance)
     {
-        auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
-        auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
+        const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+        const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
         const auto shakeForce = delta / (invMass1 + invMass2) / normSquared(_shakeDistanceRef);
-        std::cout << invMass1 << " " << invMass2 << std::endl;
 
-        auto dPosition = shakeForce * _shakeDistanceRef;
+        const auto dPosition = shakeForce * _shakeDistanceRef;
 
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
         _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
 
-        dPosition = dPosition / timestep;
+        const auto dVelocity = dPosition / timestep;
 
-        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dPosition);
-        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dPosition);
+        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
+        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);
 
         return false;
     }
@@ -72,9 +77,9 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
  */
 [[nodiscard]] double BondConstraint::calculateVelocityDelta() const
 {
-    auto dv = _molecules[0]->getAtomVelocity(_atomIndices[0]) - _molecules[1]->getAtomVelocity(_atomIndices[1]);
+    const auto dVelocity = _molecules[0]->getAtomVelocity(_atomIndices[0]) - _molecules[1]->getAtomVelocity(_atomIndices[1]);
 
-    auto scalarProduct = dot(dv, _shakeDistanceRef);
+    const auto scalarProduct = dot(dVelocity, _shakeDistanceRef);
 
     const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
     const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
@@ -87,19 +92,20 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
 /**
  * @brief applies the rattle algorithm to a bond constraint
  *
+ * @details if delta is not smaller than tolerance, the rattle algorithm is applied
+ *
  */
 bool BondConstraint::applyRattle(double tolerance)
 {
-
     if (const auto delta = calculateVelocityDelta(); std::fabs(delta) > tolerance)
     {
-        const auto dv = delta * _shakeDistanceRef;
+        const auto dVelocity = delta * _shakeDistanceRef;
 
         const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
         const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
-        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dv);
-        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dv);
+        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
+        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);
 
         return false;
     }

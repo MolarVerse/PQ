@@ -1,6 +1,9 @@
 #include "intraNonBondedReader.hpp"
 
+#include "mathUtilities.hpp"   // for sign
 #include "stringUtilities.hpp"
+
+#include <filesystem>   // for exists
 
 using namespace readInput;
 using namespace std;

@@ -1,5 +1,10 @@
 #include "constraints.hpp"
 
+#include "exceptions.hpp"
+
+#include <algorithm>   // for for_each
+#include <string_view>
+
 using namespace constraints;
 
 /**
@@ -17,7 +22,7 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
 /**
  * @brief applies the shake algorithm to all bond constraints
  *
- * @TODO: implement check if not converged with own exception type
+ * @throws customException::ShakeException if shake algorithm does not converge
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
@@ -31,20 +36,21 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
     {
         converged = true;
 
-        std::cout << "test" << std::endl;
-
         std::ranges::for_each(_bondConstraints,
                               [&simulationBox, &converged, this](auto &bondConstraint)
                               { converged = converged && bondConstraint.applyShake(simulationBox, _shakeTolerance, _dt); });
 
         ++iter;
     }
+
+    if (!converged)
+        throw customException::ShakeException("Shake algorithm did not converge.");
 }
 
 /**
  * @brief applies the rattle algorithm to all bond constraints
  *
- * @TODO: implement check if not converged with own exception type
+ * @throws customException::ShakeException if rattle algorithm does not converge
  */
 void Constraints::applyRattle()
 {
@@ -64,4 +70,7 @@ void Constraints::applyRattle()
 
         ++iter;
     }
+
+    if (!converged)
+        throw customException::ShakeException("Rattle algorithm did not converge.");
 }

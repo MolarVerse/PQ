@@ -2,7 +2,9 @@
 
 #define _MATH_UTILITIES_HPP_
 
-#include <cmath>
+#include <cmath>     // for fabs
+#include <cstdlib>   // for abs
+#include <limits>    // for numeric_limits
 
 namespace utilities
 {

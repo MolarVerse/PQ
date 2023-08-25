@@ -3,6 +3,8 @@
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
+#include <filesystem>   // for exists
+
 using namespace std;
 using namespace readInput::topology;
 using namespace utilities;

@@ -2,7 +2,8 @@
 
 #define _TEST_TRAJECTORYOUTPUT_HPP_
 
-#include "trajectoryOutput.hpp"
+#include "simulationBox.hpp"      // for SimulationBox
+#include "trajectoryOutput.hpp"   // for TrajectoryOutput
 
 #include <gtest/gtest.h>
 

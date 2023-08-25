@@ -1,6 +1,7 @@
 #include "forceFieldNonCoulomb.hpp"
 
 #include "exceptions.hpp"
+#include "nonCoulombPair.hpp"   // for NonCoulombPair
 
 #include <format>
 #include <map>

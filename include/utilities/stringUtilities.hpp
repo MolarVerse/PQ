@@ -2,7 +2,9 @@
 
 #define _STRING_UTILITIES_HPP_
 
+#include <cstddef>
 #include <string>
+#include <string_view>
 #include <vector>
 
 /**

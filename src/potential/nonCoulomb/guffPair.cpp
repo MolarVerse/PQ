@@ -1,5 +1,7 @@
 #include "guffPair.hpp"
 
+#include <cmath>   // for exp, pow
+
 using namespace potential;
 
 /**

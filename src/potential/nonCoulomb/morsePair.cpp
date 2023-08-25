@@ -1,5 +1,9 @@
 #include "morsePair.hpp"
 
+#include "mathUtilities.hpp"   // for compare
+
+#include <cmath>   // for exp
+
 using namespace potential;
 
 /**

@@ -2,29 +2,32 @@
 
 #define _INTRA_NON_BONDED_SETUP_HPP_
 
-#include "engine.hpp"
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace setup
 {
-    class IntraNonBondedSetup;
     void setupIntraNonBonded(engine::Engine &);
+
+    /**
+     * @class IntraNonBondedSetup
+     *
+     * @brief Setup intra non bonded interactions
+     *
+     */
+    class IntraNonBondedSetup
+    {
+      private:
+        engine::Engine &_engine;
+
+      public:
+        explicit IntraNonBondedSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
 }   // namespace setup
-
-/**
- * @class IntraNonBondedSetup
- *
- * @brief Setup intra non bonded interactions
- *
- */
-class setup::IntraNonBondedSetup
-{
-  private:
-    engine::Engine &_engine;
-
-  public:
-    explicit IntraNonBondedSetup(engine::Engine &engine) : _engine(engine){};
-
-    void setup();
-};
 
 #endif   // _INTRA_NON_BONDED_SETUP_HPP_

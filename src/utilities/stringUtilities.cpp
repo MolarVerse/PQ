@@ -3,8 +3,15 @@
 #include "exceptions.hpp"
 
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>          // for is_any_of
+#include <boost/algorithm/string/detail/classification.hpp>   // for is_any_ofF
+#include <boost/algorithm/string/split.hpp>                   // for split
+#include <boost/iterator/iterator_facade.hpp>                 // for operator!=
+#include <boost/type_index/type_index_facade.hpp>             // for operator==
+#include <cctype>                                             // for isspace
+#include <format>                                             // for format
 #include <fstream>
+#include <functional>   // for identity
 #include <sstream>
 #include <string>
 #include <vector>
@@ -21,7 +28,8 @@ using namespace customException;
  */
 string utilities::removeComments(string &line, const string_view &commentChar)
 {
-    if (const auto commentPos = line.find(commentChar); commentPos != string::npos) line = line.substr(0, commentPos);
+    if (const auto commentPos = line.find(commentChar); commentPos != string::npos)
+        line = line.substr(0, commentPos);
     return line;
 }
 
@@ -40,10 +48,10 @@ vector<string> utilities::getLineCommands(const string &line, const size_t lineN
 
     for (auto i = static_cast<int>(line.size() - 1); i >= 0; --i)
     {
-        if (line[static_cast<size_t>(i)] == ';')
+        if (';' == line[static_cast<size_t>(i)])
             break;
         else if (!::isspace(line[static_cast<size_t>(i)]))
-            throw InputFileException("Missing semicolon in input file at line " + to_string(lineNumber));
+            throw InputFileException(format("Missing semicolon in input file at line {}", lineNumber));
     }
 
     vector<string> lineCommands;

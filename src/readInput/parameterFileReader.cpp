@@ -1,7 +1,13 @@
 #include "parameterFileReader.hpp"
 
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, ParameterFileExce...
+#include "settings.hpp"     // for Settings
 #include "stringUtilities.hpp"
 
+#include <algorithm>    // for max
+#include <filesystem>   // for exists
+#include <istream>      // for basic_istream, ifstream, std
 #include <ranges>
 
 using namespace std;

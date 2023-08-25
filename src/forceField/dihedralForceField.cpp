@@ -1,5 +1,17 @@
 #include "dihedralForceField.hpp"
 
+#include "connectivityElement.hpp"   // for ConnectivityElement
+#include "coulombPotential.hpp"      // for CoulombPotential
+#include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "physicalData.hpp"          // for PhysicalData
+#include "simulationBox.hpp"         // for SimulationBox
+#include "vector3d.hpp"              // for cross, dot, norm, normSquared
+
+#include <cmath>    // for acos, cos, sin, sqrt
+#include <memory>   // for shared_ptr, __shared_ptr_access
+
 using namespace forceField;
 using namespace simulationBox;
 using namespace physicalData;

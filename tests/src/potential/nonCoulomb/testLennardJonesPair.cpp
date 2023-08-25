@@ -1,5 +1,6 @@
 #include "lennardJonesPair.hpp"
 
+#include <cmath>   // for pow
 #include <gtest/gtest.h>
 
 using namespace potential;

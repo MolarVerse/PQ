@@ -1,5 +1,9 @@
 #include "intraNonBondedSetup.hpp"
 
+#include "engine.hpp"           // for Engine
+#include "intraNonBonded.hpp"   // for IntraNonBonded
+#include "potential.hpp"        // for Potential
+
 using namespace setup;
 
 /**

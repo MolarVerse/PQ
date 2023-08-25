@@ -1,6 +1,9 @@
 #include "thermostat.hpp"
 
 #include "constants.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <cmath>
 

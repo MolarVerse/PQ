@@ -1,5 +1,8 @@
 #include "testCelllist.hpp"
 
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+
 using namespace std;
 
 TEST_F(TestCellList, determineCellSize)

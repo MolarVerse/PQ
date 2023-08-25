@@ -4,6 +4,7 @@
 
 #include "vector3d.hpp"
 
+#include <algorithm>
 #include <map>
 #include <string>
 #include <vector>

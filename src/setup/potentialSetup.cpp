@@ -4,6 +4,7 @@
 #include "coulombWolf.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "guffNonCoulomb.hpp"
+#include "nonCoulombPair.hpp"   // for NonCoulombPair
 
 #include <ranges>
 

@@ -3,6 +3,14 @@
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult, AssertionRe...
+#include <algorithm>       // for copy
+#include <cstddef>         // for size_t, std
+#include <map>             // for map
+#include <optional>        // for optional
+#include <string>          // for allocator, string
+#include <vector>          // for vector
+
 using namespace std;
 
 /**

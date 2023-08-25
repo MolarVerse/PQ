@@ -2,7 +2,8 @@
 
 #define _TEST_PHYSICAL_DATA_HPP_
 
-#include "physicalData.hpp"
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <gtest/gtest.h>
 

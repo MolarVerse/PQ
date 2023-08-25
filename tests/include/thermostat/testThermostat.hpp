@@ -2,6 +2,8 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
 #include "thermostat.hpp"
 
 #include <gtest/gtest.h>

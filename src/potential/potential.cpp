@@ -1,5 +1,10 @@
 #include "potential.hpp"
 
+#include "coulombPotential.hpp"      // for CoulombPotential
+#include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+
 #include <cmath>
 #include <iostream>
 

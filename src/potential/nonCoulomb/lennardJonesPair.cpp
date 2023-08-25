@@ -1,6 +1,6 @@
 #include "lennardJonesPair.hpp"
 
-#include <iostream>
+#include "mathUtilities.hpp"   // for compare
 
 using namespace potential;
 

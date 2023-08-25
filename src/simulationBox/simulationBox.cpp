@@ -2,7 +2,9 @@
 
 #include "exceptions.hpp"
 
-#include <ranges>
+#include <algorithm>
+#include <format>
+#include <numeric>
 
 using namespace std;
 using namespace simulationBox;

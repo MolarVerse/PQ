@@ -2,46 +2,47 @@
 
 #define _OUTPUT_HPP_
 
+#include <cstddef>   // for size_t
 #include <fstream>
 #include <string>
+#include <string_view>   // for string_view
 
 namespace output
 {
-    class Output;
-}
+    /**
+     * @class Output
+     *
+     * @brief Base class for output files
+     *
+     */
+    class Output
+    {
+      protected:
+        std::string          _filename;
+        std::ofstream        _fp;
+        inline static size_t _outputFrequency = 1;
+        int                  _rank;
 
-/**
- * @class Output
- *
- * @brief Base class for output files
- *
- */
-class output::Output
-{
-  protected:
-    std::string          _filename;
-    std::ofstream        _fp;
-    inline static size_t _outputFrequency = 1;
-    int                  _rank;
+        void openFile();
 
-    void openFile();
+      public:
+        explicit Output(const std::string &filename) : _filename(filename){};
 
-  public:
-    explicit Output(const std::string &filename) : _filename(filename){};
+        void setFilename(const std::string_view &);
+        void close() { _fp.close(); }
 
-    void setFilename(const std::string_view &);
-    void close() { _fp.close(); }
+        static void setOutputFrequency(const size_t);
 
-    static void setOutputFrequency(const size_t);
+        std::string initialMomentumMessage(const double) const;
 
-    std::string initialMomentumMessage(const double) const;
+        /********************************
+         * standard getters and setters *
+         ********************************/
 
-    /********************************
-     * standard getters and setters *
-     ********************************/
+        std::string   getFilename() const { return _filename; }
+        static size_t getOutputFrequency() { return _outputFrequency; }
+    };
 
-    std::string   getFilename() const { return _filename; }
-    static size_t getOutputFrequency() { return _outputFrequency; }
-};
+}   // namespace output
 
 #endif   // _OUTPUT_HPP_

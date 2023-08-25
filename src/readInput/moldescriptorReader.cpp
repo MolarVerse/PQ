@@ -1,11 +1,21 @@
 #include "moldescriptorReader.hpp"
 
+#include "cell.hpp"           // for simulationBox
+#include "engine.hpp"         // for Engine
+#include "engineOutput.hpp"   // for engine
 #include "exceptions.hpp"
+#include "forceField.hpp"   // for ForceField
 #include "molecule.hpp"
+#include "settings.hpp"        // for Settings
+#include "simulationBox.hpp"   // for SimulationBox
 #include "stringUtilities.hpp"
 
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/case_conv.hpp>   // for to_lower_copy
+#include <boost/iterator/iterator_facade.hpp>     // for operator!=
+#include <format>                                 // for format
+#include <stddef.h>                               // for size_t
 #include <string>
 
 using namespace std;

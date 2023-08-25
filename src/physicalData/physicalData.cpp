@@ -1,8 +1,10 @@
 #include "physicalData.hpp"
 
 #include "constants.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
-#include <cmath>
+#include <cstddef>   // for size_t
 #include <vector>
 
 using namespace std;

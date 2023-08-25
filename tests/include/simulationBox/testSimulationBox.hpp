@@ -2,9 +2,11 @@
 
 #define _TEST_SIMULATION_BOX_HPP_
 
-#include "simulationBox.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
 class TestSimulationBox : public ::testing::Test
 {
