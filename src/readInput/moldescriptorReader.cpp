@@ -1,22 +1,18 @@
 #include "moldescriptorReader.hpp"
 
-#include "cell.hpp"           // for simulationBox
-#include "engine.hpp"         // for Engine
-#include "engineOutput.hpp"   // for engine
-#include "exceptions.hpp"
-#include "forceField.hpp"   // for ForceField
-#include "molecule.hpp"
-#include "settings.hpp"        // for Settings
-#include "simulationBox.hpp"   // for SimulationBox
-#include "stringUtilities.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for MolDescriptorException
+#include "forceField.hpp"        // for ForceField
+#include "molecule.hpp"          // for Molecule
+#include "settings.hpp"          // for Settings
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stringUtilities.hpp"   // for removeComments, splitString
 
-#include <algorithm>
-#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>   // for to_lower_copy
 #include <boost/iterator/iterator_facade.hpp>     // for operator!=
+#include <cstddef>                                // for size_t
 #include <format>                                 // for format
-#include <stddef.h>                               // for size_t
-#include <string>
+#include <string>                                 // for basic_string, string
 
 using namespace std;
 using namespace utilities;

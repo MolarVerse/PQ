@@ -3,9 +3,11 @@
 #include "exceptions.hpp"
 #include "simulationBox.hpp"
 
-#include <algorithm>   // for for_each
-#include <format>      // for format
-#include <ranges>      // for ranges::find_if
+#include <algorithm>    // for for_each
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ranges>       // for ranges::find_if
+#include <string>       // for string
 
 using namespace std;
 using namespace intraNonBonded;

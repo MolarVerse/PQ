@@ -4,7 +4,8 @@
 #include "exceptions.hpp"   // for InputFileException
 #include "timings.hpp"      // for Timings
 
-#include <functional>   // for _Bind_front_t, bind_front
+#include <functional>    // for _Bind_front_t, bind_front
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace readInput;

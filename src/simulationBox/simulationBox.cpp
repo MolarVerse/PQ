@@ -2,13 +2,11 @@
 
 #include "exceptions.hpp"
 
-#include <algorithm>
-#include <format>
-#include <numeric>
+#include <algorithm>   // for sort, unique
+#include <format>      // for format
+#include <numeric>     // for accumulate
 
-using namespace std;
 using namespace simulationBox;
-using namespace customException;
 
 /**
  * @brief calculates the number of atoms of all molecules in the simulation box
@@ -21,7 +19,7 @@ size_t SimulationBox::getNumberOfAtoms() const
 }
 
 /**
- * @brief find molecule type my moltype
+ * @brief find molecule type by moltype if (size_t)
  *
  * @param moltype
  * @return Molecule
@@ -32,14 +30,14 @@ Molecule &SimulationBox::findMoleculeType(const size_t moltype)
 {
     auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
 
-    if (const auto molecule = ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
+    if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
     else
-        throw RstFileException(format("Molecule type {} not found", moltype));
+        throw customException::RstFileException(std::format("Molecule type {} not found", moltype));
 }
 
 /**
- * @brief see if molecule type exists by moltype
+ * @brief checks if molecule type exists by moltype id (size_t)
  *
  * @param moleculeType
  * @return true
@@ -49,23 +47,25 @@ bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
 {
     auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
 
-    return ranges::find_if(_moleculeTypes, isMoleculeType) != _moleculeTypes.end();
+    return std::ranges::find_if(_moleculeTypes, isMoleculeType) != _moleculeTypes.end();
 }
 
 /**
- * @brief find molecule type by string
+ * @brief find molecule type by string id
+ *
+ * @details return an optional - if moltype found it returns the moltype as a size_t otherwise it returns nullopt
  *
  * @param identifier
  * @return optional<size_t>
  */
-optional<size_t> SimulationBox::findMoleculeTypeByString(const string &identifier) const
+std::optional<size_t> SimulationBox::findMoleculeTypeByString(const std::string &identifier) const
 {
     auto isMoleculeName = [&identifier](const Molecule &mol) { return mol.getName() == identifier; };
 
-    if (const auto molecule = ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
+    if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
         return molecule->getMoltype();
     else
-        return nullopt;
+        return std::nullopt;
 }
 
 /**
@@ -76,7 +76,7 @@ optional<size_t> SimulationBox::findMoleculeTypeByString(const string &identifie
  * @param atomIndex
  * @return pair<Molecule *, size_t>
  */
-pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t atomIndex)
+std::pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t atomIndex)
 {
     size_t sum = 0;
 
@@ -85,18 +85,29 @@ pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_t ato
         sum += molecule.getNumberOfAtoms();
 
         if (sum >= atomIndex)
-            return make_pair(&molecule, atomIndex - (sum - molecule.getNumberOfAtoms()) - 1);
+            return std::make_pair(&molecule, atomIndex - (sum - molecule.getNumberOfAtoms()) - 1);
     }
 
-    throw UserInputException(format("Atom index {} out of range - total number of atoms: {}", atomIndex, sum));
+    throw customException::UserInputException(
+        std::format("Atom index {} out of range - total number of atoms: {}", atomIndex, sum));
 }
 
 /**
  * @brief make external to internal global vdw types map
  *
+ * @details the function consists of multiple steps:
+ * 1) fill the external global vdw types vector with all external global vdw types from all molecules
+ * 2) sort and erase duplicates
+ * 3) fill the external to internal global vdw types map - internal vdw types are defined via increasing indices
+ * 4) set the internal global vdw types for all molecules
+ *
  */
 void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 {
+    /******************************************************************************************************
+     * 1) fill the external global vdw types vector with all external global vdw types from all molecules *
+     ******************************************************************************************************/
+
     auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
     {
         externalGlobalVdwTypes.insert(externalGlobalVdwTypes.end(),
@@ -104,30 +115,44 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
                                       molecule.getExternalGlobalVDWTypes().end());
     };
 
-    ranges::for_each(_molecules, fillExternalGlobalVdwTypes);
+    std::ranges::for_each(_molecules, fillExternalGlobalVdwTypes);
 
-    ranges::sort(_externalGlobalVdwTypes);
-    const auto duplicates = ranges::unique(_externalGlobalVdwTypes);
+    /********************************
+     * 2) sort and erase duplicates *
+     *******************************/
+
+    std::ranges::sort(_externalGlobalVdwTypes);
+    const auto duplicates = std::ranges::unique(_externalGlobalVdwTypes);
     _externalGlobalVdwTypes.erase(duplicates.begin(), duplicates.end());
 
-    // c++23 with ranges::views::enumerate
+    /*****************************************************************************************************************
+     * 3) fill the external to internal global vdw types map - internal vdw types are defined via increasing indices *
+     *****************************************************************************************************************/
+
+    // c++23 with std::ranges::views::enumerate
     const size_t size = _externalGlobalVdwTypes.size();
     for (size_t i = 0; i < size; ++i)
         _externalToInternalGlobalVDWTypes.try_emplace(_externalGlobalVdwTypes[i], i);
 
+    /**********************************************************
+     * 4) set the internal global vdw types for all molecules *
+     * ********************************************************/
+
     auto setInternalGlobalVdwTypes = [&externalToInternalGlobalVDWTypes = _externalToInternalGlobalVDWTypes](auto &molecule)
     {
-        ranges::for_each(
+        std::ranges::for_each(
             molecule.getExternalGlobalVDWTypes(),
             [&externalToInternalGlobalVDWTypes = externalToInternalGlobalVDWTypes, &molecule = molecule](auto &externalVdwType)
             { molecule.addInternalGlobalVDWType(externalToInternalGlobalVDWTypes.at(externalVdwType)); });
     };
 
-    ranges::for_each(_molecules, setInternalGlobalVdwTypes);
+    std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
 }
 
 /**
  * @brief calculate degrees of freedom
+ *
+ * @TODO: at the moment only implemented for 3D periodic systems
  *
  */
 void SimulationBox::calculateDegreesOfFreedom()
@@ -143,7 +168,8 @@ void SimulationBox::calculateDegreesOfFreedom()
  */
 void SimulationBox::calculateCenterOfMassMolecules()
 {
-    ranges::for_each(_molecules, [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box.getBoxDimensions()); });
+    std::ranges::for_each(_molecules,
+                          [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box.getBoxDimensions()); });
 }
 
 /**
@@ -151,14 +177,14 @@ void SimulationBox::calculateCenterOfMassMolecules()
  *
  * @throw UserInputException if coulomb radius cut off is larger than half of the minimal box dimension
  */
-void SimulationBox::checkCoulombRadiusCutOff(ExceptionType exceptionType) const
+void SimulationBox::checkCoulombRadiusCutOff(customException::ExceptionType exceptionType) const
 {
     if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
     {
         const auto *message = "Coulomb radius cut off is larger than half of the minimal box dimension";
-        if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
-            throw ManostatException(message);
+        if (exceptionType == customException::ExceptionType::MANOSTATEXCEPTION)
+            throw customException::ManostatException(message);
         else
-            throw UserInputException(message);
+            throw customException::UserInputException(message);
     }
 }

@@ -5,7 +5,8 @@
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
-#include <cmath>
+#include <algorithm>   // for copy
+#include <cmath>       // for sqrt
 
 using namespace std;
 using namespace simulationBox;

@@ -1,6 +1,13 @@
 #include "inputFileParserNonCoulomb.hpp"
 
-#include <memory>
+#include "engine.hpp"           // for Engine
+#include "exceptions.hpp"       // for InputFileException, customException
+#include "intraNonBonded.hpp"   // for IntraNonBonded
+#include "settings.hpp"         // for Settings
+
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
 using namespace std;
 using namespace readInput;

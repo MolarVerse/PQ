@@ -1,19 +1,32 @@
 #include "guffDatReader.hpp"
 
-#include "buckinghamPair.hpp"
-#include "constants.hpp"
-#include "defaults.hpp"
-#include "exceptions.hpp"
-#include "guffNonCoulomb.hpp"
-#include "guffPair.hpp"
-#include "lennardJonesPair.hpp"
-#include "mathUtilities.hpp"
-#include "morsePair.hpp"
-#include "stringUtilities.hpp"
+#include "angleForceField.hpp"       // for potential
+#include "buckinghamPair.hpp"        // for BuckinghamPair
+#include "connectivityElement.hpp"   // for simulationBox
+#include "constants.hpp"             // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for GuffDatException, InputFileException
+#include "forceField.hpp"            // for ForceField
+#include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
+#include "guffPair.hpp"              // for GuffPair
+#include "lennardJonesPair.hpp"      // for LennardJonesPair
+#include "mathUtilities.hpp"         // for sign, utilities
+#include "molecule.hpp"              // for Molecule
+#include "morsePair.hpp"             // for MorsePair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "potential.hpp"             // for Potential
+#include "settings.hpp"              // for Settings
+#include "simulationBox.hpp"         // for SimulationBox
+#include "stringUtilities.hpp"       // for fileExists, getLineCommands, removeComments, splitString
 
-#include <cmath>
-#include <fstream>
-#include <sstream>
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <exception>    // for exception
+#include <format>       // for format
+#include <fstream>      // for basic_istream, ifstream, std
+#include <functional>   // for identity
+#include <memory>       // for make_shared
 
 using namespace std;
 using namespace utilities;

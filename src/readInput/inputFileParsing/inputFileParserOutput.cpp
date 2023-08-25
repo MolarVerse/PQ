@@ -1,9 +1,17 @@
 #include "inputFileParserOutput.hpp"
 
-#include <cstddef>
-#include <iostream>
+#include "energyOutput.hpp"       // for EnergyOutput
+#include "engine.hpp"             // for Engine
+#include "exceptions.hpp"         // for InputFileException
+#include "infoOutput.hpp"         // for InfoOutput
+#include "logOutput.hpp"          // for LogOutput
+#include "output.hpp"             // for Output, output
+#include "rstFileOutput.hpp"      // for RstFileOutput
+#include "trajectoryOutput.hpp"   // for TrajectoryOutput
 
-using namespace std;
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
+
 using namespace readInput;
 using namespace output;
 
@@ -14,15 +22,15 @@ using namespace output;
  */
 InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFileParser(engine)
 {
-    addKeyword(string("output_freq"), bind_front(&InputFileParserOutput::parseOutputFreq, this), false);
-    addKeyword(string("output_file"), bind_front(&InputFileParserOutput::parseLogFilename, this), false);
-    addKeyword(string("info_file"), bind_front(&InputFileParserOutput::parseInfoFilename, this), false);
-    addKeyword(string("energy_file"), bind_front(&InputFileParserOutput::parseEnergyFilename, this), false);
-    addKeyword(string("traj_file"), bind_front(&InputFileParserOutput::parseTrajectoryFilename, this), false);
-    addKeyword(string("vel_file"), bind_front(&InputFileParserOutput::parseVelocityFilename, this), false);
-    addKeyword(string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
-    addKeyword(string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
-    addKeyword(string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+    addKeyword(std::string("output_freq"), bind_front(&InputFileParserOutput::parseOutputFreq, this), false);
+    addKeyword(std::string("output_file"), bind_front(&InputFileParserOutput::parseLogFilename, this), false);
+    addKeyword(std::string("info_file"), bind_front(&InputFileParserOutput::parseInfoFilename, this), false);
+    addKeyword(std::string("energy_file"), bind_front(&InputFileParserOutput::parseEnergyFilename, this), false);
+    addKeyword(std::string("traj_file"), bind_front(&InputFileParserOutput::parseTrajectoryFilename, this), false);
+    addKeyword(std::string("vel_file"), bind_front(&InputFileParserOutput::parseVelocityFilename, this), false);
+    addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
+    addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
+    addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
 }
 
 /**
@@ -32,7 +40,7 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
  *
  * @throws InputFileException if output frequency is negative
  */
-void InputFileParserOutput::parseOutputFreq(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseOutputFreq(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -49,7 +57,7 @@ void InputFileParserOutput::parseOutputFreq(const vector<string> &lineElements, 
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseLogFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseLogFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getLogOutput().setFilename(lineElements[2]);
@@ -60,7 +68,7 @@ void InputFileParserOutput::parseLogFilename(const vector<string> &lineElements,
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseInfoFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getInfoOutput().setFilename(lineElements[2]);
@@ -71,7 +79,7 @@ void InputFileParserOutput::parseInfoFilename(const vector<string> &lineElements
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseEnergyFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getEnergyOutput().setFilename(lineElements[2]);
@@ -82,7 +90,7 @@ void InputFileParserOutput::parseEnergyFilename(const vector<string> &lineElemen
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseTrajectoryFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getXyzOutput().setFilename(lineElements[2]);
@@ -93,7 +101,7 @@ void InputFileParserOutput::parseTrajectoryFilename(const vector<string> &lineEl
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseVelocityFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getVelOutput().setFilename(lineElements[2]);
@@ -104,7 +112,7 @@ void InputFileParserOutput::parseVelocityFilename(const vector<string> &lineElem
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseForceFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getForceOutput().setFilename(lineElements[2]);
@@ -115,7 +123,7 @@ void InputFileParserOutput::parseForceFilename(const vector<string> &lineElement
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseRestartFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getRstFileOutput().setFilename(lineElements[2]);
@@ -126,7 +134,7 @@ void InputFileParserOutput::parseRestartFilename(const vector<string> &lineEleme
  *
  * @param lineElements
  */
-void InputFileParserOutput::parseChargeFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getChargeOutput().setFilename(lineElements[2]);

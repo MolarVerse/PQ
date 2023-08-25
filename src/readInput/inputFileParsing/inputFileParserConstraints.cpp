@@ -1,6 +1,14 @@
 #include "inputFileParserConstraints.hpp"
 
-#include "exceptions.hpp"
+#include "constraints.hpp"   // for Constraints
+#include "engine.hpp"        // for Engine
+#include "exceptions.hpp"    // for InputFileException, customException
+#include "settings.hpp"      // for Settings
+
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <functional>    // for _Bind_front_t, bind_front
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace readInput;
@@ -58,7 +66,8 @@ void InputFileParserConstraints::parseShakeTolerance(const vector<string> &lineE
 
     auto tolerance = stod(lineElements[2]);
 
-    if (tolerance < 0.0) throw InputFileException("Shake tolerance must be positive");
+    if (tolerance < 0.0)
+        throw InputFileException("Shake tolerance must be positive");
 
     _engine.getSettings().setShakeTolerance(tolerance);
 }
@@ -76,7 +85,8 @@ void InputFileParserConstraints::parseShakeIteration(const vector<string> &lineE
 
     auto iteration = stoi(lineElements[2]);
 
-    if (iteration < 0) throw InputFileException("Maximum shake iterations must be positive");
+    if (iteration < 0)
+        throw InputFileException("Maximum shake iterations must be positive");
 
     _engine.getSettings().setShakeMaxIter(size_t(iteration));
 }
@@ -94,7 +104,8 @@ void InputFileParserConstraints::parseRattleTolerance(const vector<string> &line
 
     auto tolerance = stod(lineElements[2]);
 
-    if (tolerance < 0.0) throw InputFileException("Rattle tolerance must be positive");
+    if (tolerance < 0.0)
+        throw InputFileException("Rattle tolerance must be positive");
 
     _engine.getSettings().setRattleTolerance(tolerance);
 }
@@ -112,7 +123,8 @@ void InputFileParserConstraints::parseRattleIteration(const vector<string> &line
 
     auto iteration = stoi(lineElements[2]);
 
-    if (iteration < 0) throw InputFileException("Maximum rattle iterations must be positive");
+    if (iteration < 0)
+        throw InputFileException("Maximum rattle iterations must be positive");
 
     _engine.getSettings().setRattleMaxIter(size_t(iteration));
 }

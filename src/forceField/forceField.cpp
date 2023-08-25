@@ -3,9 +3,10 @@
 #include "exceptions.hpp"
 
 #include <algorithm>
-#include <format>   // for format
-#include <ranges>   // for find_if, ranges::find_if
-#include <string>   // for string
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ranges>       // for find_if, ranges::find_if
+#include <string>       // for string
 
 using namespace forceField;
 using namespace std;

@@ -2,12 +2,13 @@
 
 #define _CELL_LIST_HPP_
 
-#include "cell.hpp"
-#include "defaults.hpp"
-#include "vector3d.hpp"
+#include "cell.hpp"       // for Cell
+#include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
+#include "vector3d.hpp"   // for Vec3Dul, Vec3D
 
-#include <cstddef>
-#include <vector>
+#include <algorithm>   // for max
+#include <cstddef>     // for size_t
+#include <vector>      // for vector
 
 namespace simulationBox
 {

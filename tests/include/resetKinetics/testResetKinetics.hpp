@@ -2,7 +2,9 @@
 
 #define _TEST_RESET_KINETICS_HPP_
 
-#include "resetKinetics.hpp"
+#include "physicalData.hpp"    // for PhysicalData
+#include "resetKinetics.hpp"   // for ResetKinetics
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <gtest/gtest.h>
 

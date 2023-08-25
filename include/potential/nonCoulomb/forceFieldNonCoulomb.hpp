@@ -5,11 +5,12 @@
 #include "matrix.hpp"
 #include "nonCoulombPotential.hpp"
 
-#include <map>        // for map
-#include <memory>     // for shared_ptr
-#include <optional>   // for optional
-#include <stddef.h>   // for size_t
-#include <vector>     // for vector
+#include <algorithm>   // for copy, max
+#include <cstddef>     // for size_t
+#include <map>         // for map
+#include <memory>      // for shared_ptr
+#include <optional>    // for optional
+#include <vector>      // for vector
 
 namespace potential
 {

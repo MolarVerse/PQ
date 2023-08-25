@@ -2,6 +2,7 @@
 
 #define _TEST_INPUT_FILE_READER_H_
 
+#include "engine.hpp"
 #include "inputFileReader.hpp"
 
 #include <gtest/gtest.h>

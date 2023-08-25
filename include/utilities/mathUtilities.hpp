@@ -8,18 +8,44 @@
 
 namespace utilities
 {
+    /**
+     * @brief compares two numbers with a tolerance
+     *
+     * @tparam T
+     * @param a
+     * @param b
+     * @param tolerance
+     * @return true
+     * @return false
+     */
     template <typename T>
     bool compare(const T &a, const T &b, const T &tolerance)
     {
         return std::abs(a - b) < tolerance;
     }
 
+    /**
+     * @brief compares two numbers via machine precision
+     *
+     * @tparam T
+     * @param a
+     * @param b
+     * @return true
+     * @return false
+     */
     template <typename T>
     bool compare(const T &a, const T &b)
     {
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
 
+    /**
+     * @brief calculates the sign of a number
+     *
+     * @tparam T
+     * @param a
+     * @return int
+     */
     template <typename T>
     int sign(const T &a)
     {

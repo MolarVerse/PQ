@@ -1,11 +1,18 @@
 #include "rstFileSection.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for RstFileException, customException
+#include "molecule.hpp"          // for Molecule
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stringUtilities.hpp"   // for removeComments, splitString, utilities
+#include "timings.hpp"           // for Timings
 
-#include <fstream>
-#include <iostream>
-#include <string>
+#include <cstddef>    // for size_t
+#include <format>     // for format
+#include <fstream>    // for operator<<, basic_ostream::operator<<
+#include <iostream>   // for cout
+#include <memory>     // for unique_ptr, make_unique
+#include <string>     // for stod, string, stoul, getline, stoi
 
 using namespace std;
 using namespace utilities;

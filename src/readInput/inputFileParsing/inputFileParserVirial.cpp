@@ -1,8 +1,13 @@
 #include "inputFileParserVirial.hpp"
 
-#include <iostream>
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for InputFileException, customException
+#include "physicalData.hpp"   // for PhysicalData
+#include "virial.hpp"         // for VirialAtomic, VirialMolecular, virial
 
-using namespace std;
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
+
 using namespace readInput;
 using namespace virial;
 using namespace customException;
@@ -14,7 +19,7 @@ using namespace customException;
  */
 InputFileParserVirial::InputFileParserVirial(engine::Engine &engine) : InputFileParser(engine)
 {
-    addKeyword(string("virial"), bind_front(&InputFileParserVirial::parseVirial, this), false);
+    addKeyword(std::string("virial"), bind_front(&InputFileParserVirial::parseVirial, this), false);
 }
 
 /**
@@ -24,7 +29,7 @@ InputFileParserVirial::InputFileParserVirial(engine::Engine &engine) : InputFile
  *
  * @throws InputFileException if invalid virial keyword
  */
-void InputFileParserVirial::parseVirial(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserVirial::parseVirial(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "molecular")

@@ -1,8 +1,24 @@
 #include "topologySection.hpp"
 
-#include "bondConstraint.hpp"
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "angleForceField.hpp"      // for AngleForceField
+#include "bondConstraint.hpp"       // for BondConstraint
+#include "bondForceField.hpp"       // for BondForceField
+#include "constraints.hpp"          // for Constraints
+#include "dihedralForceField.hpp"   // for DihedralForceField
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for TopologyException
+#include "forceField.hpp"           // for ForceField
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for removeComments, splitString, toLow...
+
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <istream>   // for basic_istream, ifstream
+
+namespace simulationBox
+{
+    class Molecule;
+}   // namespace simulationBox
 
 using namespace std;
 using namespace readInput::topology;

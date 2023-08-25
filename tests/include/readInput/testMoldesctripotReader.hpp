@@ -2,6 +2,7 @@
 
 #define _TEST_MOLDESCRIPTOR_READER_H_
 
+#include "engine.hpp"
 #include "moldescriptorReader.hpp"
 
 #include <gtest/gtest.h>

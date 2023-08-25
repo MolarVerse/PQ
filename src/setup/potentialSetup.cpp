@@ -14,12 +14,13 @@
 #include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
 
-#include <algorithm>    // for __for_each_fn, __sort_fn
-#include <cstddef>      // for size_t
-#include <functional>   // for identity
-#include <memory>       // for swap, shared_ptr, __shared_ptr_access
-#include <string>       // for operator==
-#include <vector>       // for vector
+#include <algorithm>     // for __for_each_fn, __sort_fn
+#include <cstddef>       // for size_t
+#include <functional>    // for identity
+#include <memory>        // for swap, shared_ptr, __shared_ptr_access
+#include <string>        // for operator==
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using namespace setup;
 using namespace potential;

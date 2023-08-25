@@ -2,7 +2,8 @@
 
 #define _TEST_RSTFILEOUTPUT_HPP_
 
-#include "rstFileOutput.hpp"
+#include "rstFileOutput.hpp"   // for RstFileOutput
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <gtest/gtest.h>
 

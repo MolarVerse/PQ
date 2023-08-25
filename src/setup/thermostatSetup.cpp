@@ -7,7 +7,8 @@
 #include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
 #include "timings.hpp"      // for Timings
 
-#include <string>   // for operator==
+#include <string>        // for operator==
+#include <string_view>   // for string_view
 
 using namespace setup;
 using namespace thermostat;

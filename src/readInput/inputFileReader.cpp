@@ -1,30 +1,35 @@
 #include "inputFileReader.hpp"
 
-#include "constants.hpp"
-#include "inputFileParserCellList.hpp"
-#include "inputFileParserConstraints.hpp"
-#include "inputFileParserCoulombLongRange.hpp"
-#include "inputFileParserForceField.hpp"
-#include "inputFileParserGeneral.hpp"
-#include "inputFileParserIntegrator.hpp"
-#include "inputFileParserManostat.hpp"
-#include "inputFileParserNonCoulomb.hpp"
-#include "inputFileParserOutput.hpp"
-#include "inputFileParserParameterFile.hpp"
-#include "inputFileParserResetKinetics.hpp"
-#include "inputFileParserSimulationBox.hpp"
-#include "inputFileParserThermostat.hpp"
-#include "inputFileParserTimings.hpp"
-#include "inputFileParserTopology.hpp"
-#include "inputFileParserVirial.hpp"
-#include "stringUtilities.hpp"
+#include "engine.hpp"                            // for Engine
+#include "exceptions.hpp"                        // for InputFileException
+#include "inputFileParserCellList.hpp"           // for InputFileParserCellList
+#include "inputFileParserConstraints.hpp"        // for InputFileParserConstr...
+#include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulom...
+#include "inputFileParserForceField.hpp"         // for InputFileParserForceF...
+#include "inputFileParserGeneral.hpp"            // for InputFileParserGeneral
+#include "inputFileParserIntegrator.hpp"         // for InputFileParserIntegr...
+#include "inputFileParserManostat.hpp"           // for InputFileParserManostat
+#include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCou...
+#include "inputFileParserOutput.hpp"             // for InputFileParserOutput
+#include "inputFileParserParameterFile.hpp"      // for InputFileParserParame...
+#include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetK...
+#include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimula...
+#include "inputFileParserThermostat.hpp"         // for InputFileParserThermo...
+#include "inputFileParserTimings.hpp"            // for InputFileParserTimings
+#include "inputFileParserTopology.hpp"           // for InputFileParserTopology
+#include "inputFileParserVirial.hpp"             // for InputFileParserVirial
+#include "manostat.hpp"                          // for manostat
+#include "resetKinetics.hpp"                     // for resetKinetics
+#include "settings.hpp"                          // for Settings
+#include "stringUtilities.hpp"                   // for getLineCommands, remo...
+#include "thermostat.hpp"                        // for thermostat
 
-#include <boost/algorithm/string.hpp>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
+#include <algorithm>   // for __for_each_fn, for_each
+#include <format>      // for format
+#include <fstream>     // for ifstream, basic_istream
+#include <map>         // for map, operator==, _Rb_...
+#include <string>      // for char_traits, string
+#include <vector>      // for vector
 
 using namespace std;
 using namespace utilities;

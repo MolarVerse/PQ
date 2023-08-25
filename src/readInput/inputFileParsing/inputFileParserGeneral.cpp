@@ -1,10 +1,13 @@
 #include "inputFileParserGeneral.hpp"
 
-#include "exceptions.hpp"
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "settings.hpp"     // for Settings
 
-#include <iostream>
+#include <format>        // for format
+#include <functional>    // for _Bind_front_t, bind_front
+#include <string_view>   // for string_view
 
-using namespace std;
 using namespace readInput;
 using namespace customException;
 
@@ -16,11 +19,11 @@ using namespace customException;
 InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFileParser(engine)
 {
 
-    addKeyword(string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
-    addKeyword(string("start_file"), bind_front(&InputFileParserGeneral::parseStartFilename, this), true);
-    addKeyword(string("moldescriptor_file"), bind_front(&InputFileParserGeneral::parseMoldescriptorFilename, this), false);
-    addKeyword(string("guff_path"), bind_front(&InputFileParserGeneral::parseGuffPath, this), false);
-    addKeyword(string("guff_file"), bind_front(&InputFileParserGeneral::parseGuffDatFilename, this), false);
+    addKeyword(std::string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
+    addKeyword(std::string("start_file"), bind_front(&InputFileParserGeneral::parseStartFilename, this), true);
+    addKeyword(std::string("moldescriptor_file"), bind_front(&InputFileParserGeneral::parseMoldescriptorFilename, this), false);
+    addKeyword(std::string("guff_path"), bind_front(&InputFileParserGeneral::parseGuffPath, this), false);
+    addKeyword(std::string("guff_file"), bind_front(&InputFileParserGeneral::parseGuffDatFilename, this), false);
 }
 
 /**
@@ -29,7 +32,7 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserGeneral::parseStartFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserGeneral::parseStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getSettings().setStartFilename(lineElements[2]);
@@ -40,7 +43,7 @@ void InputFileParserGeneral::parseStartFilename(const vector<string> &lineElemen
  *
  * @param lineElements
  */
-void InputFileParserGeneral::parseMoldescriptorFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserGeneral::parseMoldescriptorFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getSettings().setMoldescriptorFilename(lineElements[2]);
@@ -51,7 +54,7 @@ void InputFileParserGeneral::parseMoldescriptorFilename(const vector<string> &li
  *
  * @throws InputFileException deprecated keyword
  */
-[[noreturn]] void InputFileParserGeneral::parseGuffPath(const vector<string> &, const size_t)
+[[noreturn]] void InputFileParserGeneral::parseGuffPath(const std::vector<std::string> &, const size_t)
 {
     throw InputFileException(R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)");
 }
@@ -61,7 +64,7 @@ void InputFileParserGeneral::parseMoldescriptorFilename(const vector<string> &li
  *
  * @param lineElements
  */
-void InputFileParserGeneral::parseGuffDatFilename(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserGeneral::parseGuffDatFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     _engine.getSettings().setGuffDatFilename(lineElements[2]);
@@ -74,7 +77,7 @@ void InputFileParserGeneral::parseGuffDatFilename(const vector<string> &lineElem
  *
  * @throw InputFileException if jobtype is not recognised
  */
-void InputFileParserGeneral::parseJobType(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserGeneral::parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "mm-md")

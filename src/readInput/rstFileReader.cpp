@@ -1,12 +1,15 @@
 #include "rstFileReader.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException
+#include "settings.hpp"          // for Settings
+#include "stringUtilities.hpp"   // for removeComments, splitString
 
-#include <boost/algorithm/string.hpp>
-#include <fstream>
-#include <iostream>
-#include <string>
+#include <boost/algorithm/string/case_conv.hpp>   // for to_lower_copy
+#include <boost/iterator/iterator_facade.hpp>     // for operator!=
+#include <format>                                 // for format
+#include <fstream>                                // for basic_istream, ifstream
+#include <string>                                 // for basic_string, string
 
 using namespace std;
 using namespace utilities;
@@ -36,7 +39,8 @@ RstFileReader::RstFileReader(const string &filename, Engine &engine) : _filename
 RstFileSection *RstFileReader::determineSection(vector<string> &lineElements)
 {
     for (const auto &section : _sections)
-        if (section->keyword() == boost::algorithm::to_lower_copy(lineElements[0])) return section.get();
+        if (section->keyword() == boost::algorithm::to_lower_copy(lineElements[0]))
+            return section.get();
 
     return _atomSection.get();
 }
@@ -52,7 +56,8 @@ void RstFileReader::read()
     vector<string> lineElements;
     int            lineNumber = 1;
 
-    if (_fp.fail()) throw InputFileException(format(R"("{}" File not found)", _filename));
+    if (_fp.fail())
+        throw InputFileException(format(R"("{}" File not found)", _filename));
 
     while (getline(_fp, line))
     {

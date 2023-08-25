@@ -1,9 +1,22 @@
 #include "intraNonBondedReader.hpp"
 
-#include "mathUtilities.hpp"   // for sign
-#include "stringUtilities.hpp"
+#include "exceptions.hpp"                // for IntraNonBondedException
+#include "intraNonBonded.hpp"            // for IntraNonBonded
+#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
+#include "mathUtilities.hpp"             // for sign, utilities
+#include "molecule.hpp"                  // for Molecule
+#include "settings.hpp"                  // for Settings
+#include "simulationBox.hpp"             // for SimulationBox
+#include "stringUtilities.hpp"           // for removeComments, splitString
 
-#include <filesystem>   // for exists
+#include <algorithm>     // for copy, fill_n
+#include <cstdlib>       // for abs, size_t
+#include <filesystem>    // for exists
+#include <format>        // for format
+#include <istream>       // for basic_istream, ifstream, std
+#include <optional>      // for operator==, optional, nullopt
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using namespace readInput;
 using namespace std;

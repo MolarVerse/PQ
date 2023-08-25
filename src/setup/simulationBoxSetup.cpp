@@ -13,11 +13,13 @@
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stdoutOutput.hpp"      // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy
+#include "vector3d.hpp"          // for Vec3D
 
-#include <cstddef>   // for size_t
-#include <map>       // for map
-#include <string>    // for allocator, operator+, char_traits
-#include <vector>    // for vector
+#include <cstddef>       // for size_t
+#include <map>           // for map
+#include <string>        // for allocator, operator+, char_traits
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using namespace std;
 using namespace setup;

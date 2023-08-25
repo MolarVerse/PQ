@@ -1,14 +1,15 @@
 #include "box.hpp"
 
-#include "constants.hpp"
-#include "exceptions.hpp"
+#include "constants.hpp"    // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "exceptions.hpp"   // for RstFileException, InputFileException, customException
 
-#include <algorithm>
-#include <cmath>
-#include <format>
-#include <iostream>
-#include <string>
-#include <string_view>
+#include <algorithm>     // for __any_of_fn, any_of
+#include <cmath>         // for cos, M_PI, cbrt, sqrt
+#include <format>        // for format
+#include <functional>    // for identity
+#include <iostream>      // for std
+#include <string>        // for string
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace simulationBox;

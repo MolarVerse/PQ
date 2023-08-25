@@ -1,6 +1,12 @@
 #include "inputFileParserSimulationBox.hpp"
 
-#include "exceptions.hpp"
+#include "engine.hpp"          // for Engine
+#include "exceptions.hpp"      // for InputFileException, customException
+#include "simulationBox.hpp"   // for SimulationBox
+
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
 using namespace std;
 using namespace readInput;

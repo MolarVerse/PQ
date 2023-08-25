@@ -5,8 +5,9 @@
 #include "settings.hpp"   // for Settings
 #include "stringUtilities.hpp"
 
-#include <cstddef>      // for size_t
-#include <functional>   // for bind_front
+#include <cstddef>       // for size_t
+#include <functional>    // for bind_front
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace readInput;

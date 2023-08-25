@@ -3,6 +3,7 @@
 #define _TEST_GUFFDAT_READER_HPP_
 
 #include "coulombShiftedPotential.hpp"
+#include "engine.hpp"
 #include "guffDatReader.hpp"
 #include "guffNonCoulomb.hpp"
 #include "potential.hpp"

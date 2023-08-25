@@ -1,6 +1,14 @@
 #include "inputFileParserThermostat.hpp"
 
-#include <memory>
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "settings.hpp"     // for Settings
+#include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
+
+#include <cstddef>       // for size_t, std
+#include <format>        // for format
+#include <functional>    // for _Bind_front_t, bind_front
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace readInput;
@@ -53,7 +61,8 @@ void InputFileParserThermostat::parseTemperature(const vector<string> &lineEleme
     checkCommand(lineElements, lineNumber);
     const auto temperature = stod(lineElements[2]);
 
-    if (temperature < 0) throw InputFileException("Temperature cannot be negative");
+    if (temperature < 0)
+        throw InputFileException("Temperature cannot be negative");
 
     _engine.getSettings().setTemperature(temperature);
 }
@@ -70,7 +79,8 @@ void InputFileParserThermostat::parseThermostatRelaxationTime(const vector<strin
     checkCommand(lineElements, lineNumber);
     const auto relaxationTime = stod(lineElements[2]);
 
-    if (relaxationTime < 0) throw InputFileException("Relaxation time of thermostat cannot be negative");
+    if (relaxationTime < 0)
+        throw InputFileException("Relaxation time of thermostat cannot be negative");
 
     _engine.getSettings().setRelaxationTime(relaxationTime);
 }

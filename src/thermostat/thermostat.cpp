@@ -7,9 +7,7 @@
 #include <cmath>    // for sqrt
 #include <vector>   // for vector
 
-using namespace simulationBox;
 using namespace thermostat;
-using namespace physicalData;
 
 /**
  * @brief apply thermostat - base class
@@ -19,7 +17,7 @@ using namespace physicalData;
  * @param simulationBox
  * @param physicalData
  */
-void Thermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
+void Thermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
     physicalData.calculateTemperature(simulationBox);
 }
@@ -27,10 +25,12 @@ void Thermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &phy
 /**
  * @brief apply thermostat - Berendsen
  *
+ * @link https://doi.org/10.1063/1.448118
+ *
  * @param simulationBox
  * @param physicalData
  */
-void BerendsenThermostat::applyThermostat(SimulationBox &simulationBox, PhysicalData &physicalData)
+void BerendsenThermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
     physicalData.calculateTemperature(simulationBox);
 

@@ -8,13 +8,13 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 /**
  * @namespace virial
@@ -27,6 +27,8 @@ namespace virial
      * @class Virial
      *
      * @brief Base class for virial calculation
+     *
+     * @details implements virial calculation, which is valid for both atomic and molecular systems
      */
     class Virial
     {
@@ -40,16 +42,18 @@ namespace virial
 
         virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-        void                               setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
-        [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
+        void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
 
-        [[nodiscard]] std::string getVirialType() const { return _virialType; }
+        [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
+        [[nodiscard]] std::string          getVirialType() const { return _virialType; }
     };
 
     /**
      * @class VirialMolecular
      *
      * @brief Class for virial calculation of molecular systems
+     *
+     * @details overrides calculateVirial() function to include intra-molecular virial correction
      */
     class VirialMolecular : public Virial
     {
@@ -64,6 +68,8 @@ namespace virial
      * @class VirialAtomic
      *
      * @brief Class for virial calculation of atomic systems
+     *
+     * @details dummy class for atomic systems, since no virial correction is needed
      *
      */
     class VirialAtomic : public Virial

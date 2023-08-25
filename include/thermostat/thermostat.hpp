@@ -4,13 +4,13 @@
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 /**
  * @namespace thermostat
@@ -21,6 +21,8 @@ namespace thermostat
      * @class Thermostat
      *
      * @brief Thermostat is a base class for all thermostats
+     *
+     * @details it provides a dummy function applyThermostat() which does only calculate the temperature
      *
      */
     class Thermostat
@@ -44,7 +46,9 @@ namespace thermostat
     /**
      * @class BerendsenThermostat
      *
-     * @brief BerendsenThermostat is a class for Berendsen thermostat
+     * @brief BerendsenThermostat is a class for the Berendsen thermostat
+     *
+     * @link https://doi.org/10.1063/1.448118
      *
      */
     class BerendsenThermostat : public Thermostat
@@ -54,9 +58,7 @@ namespace thermostat
 
       public:
         BerendsenThermostat() = default;
-        explicit BerendsenThermostat(const double targetTemperature, const double tau) : Thermostat(targetTemperature), _tau(tau)
-        {
-        }
+        explicit BerendsenThermostat(const double targetTemp, const double tau) : Thermostat(targetTemp), _tau(tau) {}
 
         void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 

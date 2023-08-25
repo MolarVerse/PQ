@@ -7,9 +7,7 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-using namespace simulationBox;
 using namespace virial;
-using namespace physicalData;
 
 /**
  * @brief calculate virial for general systems
@@ -20,9 +18,9 @@ using namespace physicalData;
  * @param simulationBox
  * @param physicalData
  */
-void Virial::calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData)
+void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
-    _virial = {0.0, 0.0, 0.0};
+    _virial = physicalData.getVirial();
 
     for (auto &molecule : simulationBox.getMolecules())
     {
@@ -53,7 +51,7 @@ void Virial::calculateVirial(SimulationBox &simulationBox, PhysicalData &physica
  * @param simulationBox
  * @param physicalData
  */
-void VirialMolecular::calculateVirial(SimulationBox &simulationBox, PhysicalData &physicalData)
+void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
     Virial::calculateVirial(simulationBox, physicalData);
 
@@ -69,10 +67,8 @@ void VirialMolecular::calculateVirial(SimulationBox &simulationBox, PhysicalData
  *
  * @param simulationBox
  */
-void VirialMolecular::intraMolecularVirialCorrection(SimulationBox &simulationBox)
+void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBox &simulationBox)
 {
-    const auto box = simulationBox.getBoxDimensions();
-
     for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto   centerOfMass  = molecule.getCenterOfMass();
@@ -85,7 +81,7 @@ void VirialMolecular::intraMolecularVirialCorrection(SimulationBox &simulationBo
 
             auto dxyz = xyz - centerOfMass;
 
-            dxyz -= box * round(dxyz / box);
+            simulationBox.applyPBC(dxyz);
 
             _virial -= forcexyz * dxyz;
         }

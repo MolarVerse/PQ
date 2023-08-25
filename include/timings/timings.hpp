@@ -2,12 +2,13 @@
 
 #define _TIMINGS_HPP_
 
-#include <chrono>    // for duration_cast, high_resolution_clock, operator-
-#include <cstddef>   // for size_t
+#include <bits/chrono.h>   // for duration_cast, high_resolution_clock, operator-
+#include <cstddef>         // for size_t
 
 namespace timings
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    using ms   = std::chrono::milliseconds;
 
     /**
      * @class Timings
@@ -15,7 +16,7 @@ namespace timings
      * @brief Stores all timings information
      *
      * @details
-     *  stores as well internal simulation timings
+     *  stores internal simulation timings
      *  as well as all timings corresponding to
      *  execution time
      *
@@ -24,8 +25,8 @@ namespace timings
     {
       private:
         size_t _stepCount     = 0;
-        double _timestep      = 0;
         size_t _numberOfSteps = 0;
+        double _timestep      = 0.0;
 
         Time _start;
         Time _end;
@@ -34,10 +35,7 @@ namespace timings
         void beginTimer() { _start = std::chrono::high_resolution_clock::now(); }
         void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
 
-        [[nodiscard]] long calculateElapsedTime() const
-        {
-            return std::chrono::duration_cast<std::chrono::milliseconds>(_end - _start).count();
-        }
+        [[nodiscard]] long calculateElapsedTime() const { return std::chrono::duration_cast<ms>(_end - _start).count(); }
 
         /********************************
          * standard getters and setters *
