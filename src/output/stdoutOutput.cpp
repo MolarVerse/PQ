@@ -1,8 +1,9 @@
 #include "stdoutOutput.hpp"
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"   // for UserInputExceptionWarning, customException
 
-#include <iostream>
+#include <iostream>   // for operator<<, char_traits, basic_ostream, cout
+#include <string>     // for operator<<
 
 using namespace std;
 using namespace output;

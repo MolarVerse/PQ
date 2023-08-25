@@ -1,12 +1,11 @@
 #include "molecule.hpp"
 
-#include "atomMassMap.hpp"
-#include "atomNumberMap.hpp"
-#include "exceptions.hpp"
 #include "vector3d.hpp"
 
-#include <algorithm>
-#include <cmath>
+#include <algorithm>    // for ranges::for_each
+#include <functional>   // for identity, equal_to
+#include <iterator>     // for _Size, size
+#include <ranges>       // for subrange
 
 using namespace std;
 using namespace simulationBox;

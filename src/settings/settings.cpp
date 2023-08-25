@@ -2,7 +2,8 @@
 
 #include "exceptions.hpp"
 
-using namespace std;
+#include <utility>   // for make_pair
+
 using namespace settings;
 using namespace customException;
 
@@ -11,14 +12,14 @@ using namespace customException;
  *
  * @param temperature
  */
-void Settings::setTemperature(double temperature) { _temperature = make_pair(true, temperature); }
+void Settings::setTemperature(double temperature) { _temperature = std::make_pair(true, temperature); }
 
 /**
  * @brief set relaxation time for thermostat
  *
  * @param relaxationTime
  */
-void Settings::setRelaxationTime(double relaxationTime) { _relaxationTime = make_pair(true, relaxationTime); }
+void Settings::setRelaxationTime(double relaxationTime) { _relaxationTime = std::make_pair(true, relaxationTime); }
 
 /**
  * @brief set relaxation time for manostat
@@ -27,4 +28,4 @@ void Settings::setRelaxationTime(double relaxationTime) { _relaxationTime = make
  *
  * @throw InputFileException if relaxation time is negative
  */
-void Settings::setTauManostat(double tauManostat) { _tauManostat = make_pair(true, tauManostat); }
+void Settings::setTauManostat(double tauManostat) { _tauManostat = std::make_pair(true, tauManostat); }

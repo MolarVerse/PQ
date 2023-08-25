@@ -12,7 +12,6 @@
 #include <vector>
 
 using namespace forceField;
-using namespace simulationBox;
 using namespace physicalData;
 using namespace potential;
 
@@ -22,10 +21,10 @@ using namespace potential;
  * @param box
  * @param physicalData
  */
-void BondForceField::calculateEnergyAndForces(const SimulationBox    &box,
-                                              PhysicalData           &physicalData,
-                                              const CoulombPotential &coulombPotential,
-                                              NonCoulombPotential    &nonCoulombPotential)
+void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox &box,
+                                              PhysicalData                       &physicalData,
+                                              const CoulombPotential             &coulombPotential,
+                                              NonCoulombPotential                &nonCoulombPotential)
 {
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);

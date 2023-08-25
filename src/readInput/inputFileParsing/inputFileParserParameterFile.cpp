@@ -1,7 +1,12 @@
 #include "inputFileParserParameterFile.hpp"
 
+#include "engine.hpp"   // for Engine
 #include "exceptions.hpp"
+#include "settings.hpp"   // for Settings
 #include "stringUtilities.hpp"
+
+#include <cstddef>      // for size_t
+#include <functional>   // for bind_front
 
 using namespace std;
 using namespace readInput;
@@ -31,9 +36,11 @@ void InputFileParserParameterFile::parseParameterFilename(const vector<string> &
 
     const auto &filename = lineElements[2];
 
-    if (filename.empty()) throw InputFileException("Parameter filename cannot be empty");
+    if (filename.empty())
+        throw InputFileException("Parameter filename cannot be empty");
 
-    if (!utilities::fileExists(filename)) throw InputFileException("Cannot open parameter file - filename = " + string(filename));
+    if (!utilities::fileExists(filename))
+        throw InputFileException("Cannot open parameter file - filename = " + string(filename));
 
     _engine.getSettings().setParameterFilename(filename);
 }

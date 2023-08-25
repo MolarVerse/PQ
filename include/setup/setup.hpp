@@ -2,9 +2,12 @@
 
 #define _SETUP_HPP_
 
-#include "engine.hpp"
+#include <string>   // for string
 
-#include <string>
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 /**
  * @namespace setup

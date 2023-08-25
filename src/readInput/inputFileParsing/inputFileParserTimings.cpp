@@ -1,6 +1,10 @@
 #include "inputFileParserTimings.hpp"
 
-#include <iostream>
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException
+#include "timings.hpp"      // for Timings
+
+#include <functional>   // for _Bind_front_t, bind_front
 
 using namespace std;
 using namespace readInput;
@@ -42,7 +46,8 @@ void InputFileParserTimings::parseNumberOfSteps(const vector<string> &lineElemen
     checkCommand(lineElements, lineNumber);
     const auto numberOfSteps = stoi(lineElements[2]);
 
-    if (numberOfSteps < 0) throw customException::InputFileException("Number of steps cannot be negative");
+    if (numberOfSteps < 0)
+        throw customException::InputFileException("Number of steps cannot be negative");
 
     _engine.getTimings().setNumberOfSteps(size_t(numberOfSteps));
 }

@@ -100,7 +100,9 @@
         "syncstream": "cpp",
         "format": "cpp",
         "stdfloat": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "__locale": "cpp",
+        "__string": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [

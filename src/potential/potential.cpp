@@ -6,7 +6,6 @@
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
 #include <cmath>
-#include <iostream>
 
 using namespace std;
 using namespace simulationBox;

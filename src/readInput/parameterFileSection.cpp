@@ -3,6 +3,7 @@
 #include "bondType.hpp"
 #include "buckinghamPair.hpp"
 #include "constants.hpp"
+#include "coulombPotential.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "intraNonBondedMap.hpp"

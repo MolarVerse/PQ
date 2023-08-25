@@ -1,6 +1,10 @@
 #include "resetKineticsSetup.hpp"
 
-using namespace std;
+#include "engine.hpp"          // for Engine
+#include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...
+#include "settings.hpp"        // for Settings
+#include "timings.hpp"         // for Timings
+
 using namespace setup;
 using namespace resetKinetics;
 

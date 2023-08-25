@@ -1,7 +1,12 @@
 #include "inputFileParserTopology.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "settings.hpp"          // for Settings
+#include "stringUtilities.hpp"   // for fileExists, utilities
+
+#include <cstddef>      // for size_t, std
+#include <functional>   // for _Bind_front_t, bind_front
 
 using namespace std;
 using namespace readInput;
@@ -32,9 +37,11 @@ void InputFileParserTopology::parseTopologyFilename(const vector<string> &lineEl
 
     const auto &filename = lineElements[2];
 
-    if (filename.empty()) throw InputFileException("Topology filename cannot be empty");
+    if (filename.empty())
+        throw InputFileException("Topology filename cannot be empty");
 
-    if (!fileExists(filename)) throw InputFileException("Cannot open topology file - filename = " + filename);
+    if (!fileExists(filename))
+        throw InputFileException("Cannot open topology file - filename = " + filename);
 
     _engine.getSettings().setTopologyFilename(filename);
 }

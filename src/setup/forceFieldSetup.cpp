@@ -1,10 +1,13 @@
 #include "forceFieldSetup.hpp"
 
-#include "exceptions.hpp"
+#include "angleForceField.hpp"   // for forceField
+#include "engine.hpp"            // for Engine
+#include "forceField.hpp"        // for ForceField
+#include "potential.hpp"         // for Potential
 
-#include <ranges>
+#include <algorithm>    // for __for_each_fn, for_each
+#include <functional>   // for identity
 
-using namespace std;
 using namespace setup;
 using namespace forceField;
 
@@ -47,7 +50,7 @@ void ForceFieldSetup::setupBonds()
         bond.setForceConstant(bondType.getForceConstant());
     };
 
-    ranges::for_each(forceField->getBonds(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getBonds(), addForceFieldParameters);
 
     forceField->clearBondTypes();
 }
@@ -71,7 +74,7 @@ void ForceFieldSetup::setupAngles()
         angle.setForceConstant(angleType.getForceConstant());
     };
 
-    ranges::for_each(forceField->getAngles(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getAngles(), addForceFieldParameters);
 
     forceField->clearAngleTypes();
 }
@@ -96,7 +99,7 @@ void ForceFieldSetup::setupDihedrals()
         dihedral.setPeriodicity(dihedralType.getPeriodicity());
     };
 
-    ranges::for_each(forceField->getDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getDihedrals(), addForceFieldParameters);
 
     forceField->clearDihedralTypes();
 }
@@ -121,7 +124,7 @@ void ForceFieldSetup::setupImproperDihedrals()
         improper.setPeriodicity(improperType.getPeriodicity());
     };
 
-    ranges::for_each(forceField->getImproperDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getImproperDihedrals(), addForceFieldParameters);
 
     forceField->clearImproperDihedralTypes();
 }

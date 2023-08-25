@@ -1,6 +1,13 @@
 #include "rstFileOutput.hpp"
 
-#include <iomanip>
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for operator<<
+
+#include <iomanip>   // for operator<<, setw, setprecision, left
+#include <ostream>   // for basic_ostream, operator<<, flush, std
+#include <string>    // for char_traits, operator<<
+#include <vector>    // for vector
 
 using namespace output;
 using namespace std;

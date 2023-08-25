@@ -2,50 +2,57 @@
 
 #define _PARAMETER_FILE_READER_HPP_
 
-#include "engine.hpp"
 #include "parameterFileSection.hpp"
 
+#include <fstream>   // for ifstream
+#include <memory>    // for unique_ptr
 #include <string>
+#include <string_view>   // for string_view
+#include <vector>        // for vector
+
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace readInput::parameterFile
 {
-    class ParameterFileReader;
     void readParameterFile(engine::Engine &);
 
-}   // namespace readInput::parameterFile
-
-/**
- * @class ParameterReader
- *
- * @brief reads parameter file and sets settings
- *
- */
-class readInput::parameterFile::ParameterFileReader
-{
-  private:
-    std::string     _filename;
-    std::ifstream   _fp;
-    engine::Engine &_engine;
-
-    std::vector<std::unique_ptr<readInput::parameterFile::ParameterFileSection>> _parameterFileSections;
-
-  public:
-    ParameterFileReader(const std::string &filename, engine::Engine &engine);
-
-    bool isNeeded() const;
-    void read();
-
-    readInput::parameterFile::ParameterFileSection *determineSection(const std::vector<std::string> &);
-    void                                            deleteSection(const readInput::parameterFile::ParameterFileSection *section);
-
-    [[nodiscard]] std::vector<std::unique_ptr<readInput::parameterFile::ParameterFileSection>> &getParameterFileSections()
+    /**
+     * @class ParameterReader
+     *
+     * @brief reads parameter file and sets settings
+     *
+     */
+    class ParameterFileReader
     {
-        return _parameterFileSections;
-    }
+      private:
+        std::string     _filename;
+        std::ifstream   _fp;
+        engine::Engine &_engine;
 
-    [[nodiscard]] const std::string &getFilename() const { return _filename; }
+        std::vector<std::unique_ptr<ParameterFileSection>> _parameterFileSections;
 
-    void setFilename(const std::string_view &filename) { _filename = filename; }
-};
+      public:
+        ParameterFileReader(const std::string &filename, engine::Engine &engine);
+
+        bool isNeeded() const;
+        void read();
+
+        ParameterFileSection *determineSection(const std::vector<std::string> &);
+        void                  deleteSection(const ParameterFileSection *section);
+
+        [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections()
+        {
+            return _parameterFileSections;
+        }
+
+        [[nodiscard]] const std::string &getFilename() const { return _filename; }
+
+        void setFilename(const std::string_view &filename) { _filename = filename; }
+    };
+
+}   // namespace readInput::parameterFile
 
 #endif   // _PARAMETER_FILE_READER_HPP_

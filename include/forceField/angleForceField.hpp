@@ -3,14 +3,26 @@
 #define _ANGLE_FORCE_FIELD_HPP_
 
 #include "angle.hpp"
-#include "coulombPotential.hpp"
-#include "molecule.hpp"
-#include "nonCoulombPotential.hpp"
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
 
-#include <cstddef>
-#include <vector>
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
+
+namespace simulationBox
+{
+    class SimulationBox;
+    class Molecule;
+}   // namespace simulationBox
+
+namespace physicalData
+{
+    class PhysicalData;
+}   // namespace physicalData
+
+namespace potential
+{
+    class CoulombPotential;
+    class NonCoulombPotential;
+}   // namespace potential
 
 namespace forceField
 {

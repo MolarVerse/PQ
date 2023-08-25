@@ -5,10 +5,9 @@
 #include "settings.hpp"     // for Settings
 #include "stringUtilities.hpp"
 
-#include <algorithm>    // for max
+#include <algorithm>    // for ranges::find_if
 #include <filesystem>   // for exists
-#include <istream>      // for basic_istream, ifstream, std
-#include <ranges>
+#include <functional>   // for identity
 
 using namespace std;
 using namespace readInput::parameterFile;
@@ -16,6 +15,8 @@ using namespace utilities;
 
 /**
  * @brief constructor
+ *
+ * @details initializes file pointer _fp with filename and adds all parameter file sections to _parameterFileSections
  *
  * @param filename
  * @param engine

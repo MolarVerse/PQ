@@ -4,6 +4,7 @@
 
 #include "manostat.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 #include <gtest/gtest.h>
 

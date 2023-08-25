@@ -1,6 +1,13 @@
 #include "resetKinetics.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _S_TO_FS_
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData, physicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vector3D
+
+#include <cmath>    // for sqrt
+#include <vector>   // for vector
 
 using namespace std;
 using namespace resetKinetics;

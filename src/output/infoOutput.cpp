@@ -1,6 +1,9 @@
 #include "infoOutput.hpp"
 
+#include "physicalData.hpp"   // for PhysicalData
+
 #include <iomanip>
+#include <ostream>   // for operator<<, basic_ostream, ostream, endl
 
 using namespace std;
 using namespace physicalData;

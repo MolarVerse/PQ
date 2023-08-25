@@ -2,6 +2,8 @@
 
 #define _TEST_VIRIAL_HPP_
 
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 #include "virial.hpp"
 
 #include <gtest/gtest.h>

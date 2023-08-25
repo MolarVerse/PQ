@@ -2,29 +2,33 @@
 
 #define _INPUT_FILE_PARSER_TOPOLOGY_HPP_
 
-#include "engine.hpp"
 #include "inputFileParser.hpp"
 
-#include <string>
-#include <vector>
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
+
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace readInput
 {
-    class InputFileParserTopology;
+    /**
+     * @class InputFileParserTopology inherits from InputFileParser
+     *
+     * @brief Parses the topology commands in the input file
+     *
+     */
+    class InputFileParserTopology : public InputFileParser
+    {
+      public:
+        explicit InputFileParserTopology(engine::Engine &);
+
+        void parseTopologyFilename(const std::vector<std::string> &, const size_t);
+    };
+
 }   // namespace readInput
-
-/**
- * @class InputFileParserTopology inherits from InputFileParser
- *
- * @brief Parses the topology commands in the input file
- *
- */
-class readInput::InputFileParserTopology : public readInput::InputFileParser
-{
-  public:
-    explicit InputFileParserTopology(engine::Engine &);
-
-    void parseTopologyFilename(const std::vector<std::string> &, const size_t);
-};
 
 #endif   // _INPUT_FILE_PARSER_TOPOLOGY_HPP_

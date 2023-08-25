@@ -1,10 +1,12 @@
 #include "virial.hpp"
 
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox
+#include "simulationBox.hpp"   // for SimulationBox
 
-using namespace std;
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
+
 using namespace simulationBox;
 using namespace virial;
 using namespace physicalData;

@@ -1,10 +1,11 @@
 #include "integrator.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for operator*, Vector3D
 
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include <vector>   // for vector
 
 using namespace std;
 using namespace simulationBox;
@@ -40,7 +41,7 @@ void Integrator::integratePositions(Molecule &molecule, const size_t index, cons
     const auto velocities = molecule.getAtomVelocity(index);
 
     positions += _dt * velocities * constants::_FS_TO_S_;
-    applyPBC(simBox, positions);
+    simBox.applyPBC(positions);
 
     molecule.setAtomPosition(index, positions);
 }

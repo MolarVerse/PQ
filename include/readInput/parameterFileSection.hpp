@@ -4,6 +4,7 @@
 
 #include "engine.hpp"
 #include "forceField.hpp"
+#include "nonCoulombPotential.hpp"   // for NonCoulombType
 
 namespace readInput::parameterFile
 {

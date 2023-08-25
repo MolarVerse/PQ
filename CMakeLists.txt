@@ -62,6 +62,7 @@ set(iwyu_path_and_options
     ${iwyu_path}
 
     # -Xiwyu
+    # --verbose=6
     # --mapping_file=${PROJECT_SOURCE_DIR}/.iwyu.imp
 )
 

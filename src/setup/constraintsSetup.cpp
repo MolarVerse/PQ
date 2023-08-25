@@ -1,8 +1,11 @@
 #include "constraintsSetup.hpp"
 
-using namespace std;
+#include "constraints.hpp"   // for Constraints
+#include "engine.hpp"        // for Engine
+#include "settings.hpp"      // for Settings
+#include "timings.hpp"       // for Timings
+
 using namespace setup;
-using namespace constraints;
 
 /**
  * @brief wrapper for setup constraints

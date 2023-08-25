@@ -1,11 +1,23 @@
 #include "simulationBoxSetup.hpp"
 
-#include "atomMassMap.hpp"
-#include "atomNumberMap.hpp"
-#include "constants.hpp"
-#include "engine.hpp"
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "atomMassMap.hpp"       // for atomMassMap
+#include "atomNumberMap.hpp"     // for atomNumberMap
+#include "cell.hpp"              // for simulationBox
+#include "constants.hpp"         // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for MolDescriptorException, UserInputException, InputFileException
+#include "logOutput.hpp"         // for LogOutput
+#include "mathUtilities.hpp"     // for compare
+#include "molecule.hpp"          // for Molecule
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stdoutOutput.hpp"      // for StdoutOutput
+#include "stringUtilities.hpp"   // for toLowerCopy
+
+#include <cstddef>   // for size_t
+#include <map>       // for map
+#include <string>    // for allocator, operator+, char_traits
+#include <vector>    // for vector
 
 using namespace std;
 using namespace setup;
@@ -164,9 +176,9 @@ void SimulationBoxSetup::checkBoxSettings()
     auto box     = _engine.getSimulationBox().getBoxDimensions();
     auto density = _engine.getSimulationBox().getDensity();
 
-    if ((density == 0.0) && (box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
+    if (compare(density, 0.0) && compare(box[0], 0.0) && compare(box[1], 0.0) && compare(box[2], 0.0))
         throw customException::UserInputException("Box dimensions and density not set");
-    else if ((box[0] == 0.0) && (box[1] == 0.0) && (box[2] == 0.0))
+    else if (compare(box[0], 0.0) && compare(box[1], 0.0) && compare(box[2], 0.0))
     {
         const auto boxDimensions = _engine.getSimulationBox().calculateBoxDimensionsFromDensity();
         _engine.getSimulationBox().setBoxDimensions(boxDimensions);

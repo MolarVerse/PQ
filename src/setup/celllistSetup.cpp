@@ -1,6 +1,10 @@
 #include "celllistSetup.hpp"
 
-using namespace std;
+#include "angleForceField.hpp"   // for potential
+#include "celllist.hpp"          // for CellList
+#include "engine.hpp"            // for Engine
+#include "potential.hpp"         // for PotentialBruteForce, PotentialCellList
+
 using namespace setup;
 using namespace potential;
 
@@ -19,8 +23,7 @@ void setup::setupCellList(engine::Engine &engine)
  * @brief setup cell list
  *
  */
-void CellListSetup::setup()   // TODO: define here a copy constructor otherwise this does not work for noncoulombic pairs which
-                              // are set while readine parameter file
+void CellListSetup::setup()
 {
     auto nonCoulombPotential = _engine.getPotential().getNonCoulombPotentialSharedPtr();
     if (_engine.isCellListActivated())

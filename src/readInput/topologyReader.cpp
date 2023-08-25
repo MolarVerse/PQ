@@ -1,7 +1,11 @@
 #include "topologyReader.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "constraints.hpp"       // for Constraints
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, TopologyException
+#include "forceField.hpp"        // for ForceField
+#include "settings.hpp"          // for Settings
+#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
 
 #include <filesystem>   // for exists
 

@@ -1,8 +1,15 @@
 #include "manostat.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _PRESSURE_FACTOR_
+#include "exceptions.hpp"      // for ExceptionType
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox
+#include "simulationBox.hpp"   // for SimulationBox
 
-using namespace std;
+#include <cmath>        // for pow
+#include <functional>   // for function
+#include <vector>       // for vector
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace manostat;

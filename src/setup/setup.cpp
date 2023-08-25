@@ -20,6 +20,11 @@
 
 #include <iostream>
 
+namespace engine
+{
+    class Engine;
+}   // namespace engine
+
 using namespace std;
 using namespace engine;
 using namespace readInput;

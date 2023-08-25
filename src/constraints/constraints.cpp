@@ -2,8 +2,8 @@
 
 #include "exceptions.hpp"
 
-#include <algorithm>   // for for_each
-#include <string_view>
+#include <algorithm>    // for ranges::for_each
+#include <functional>   // for identity
 
 using namespace constraints;
 

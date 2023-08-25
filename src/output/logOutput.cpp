@@ -1,5 +1,8 @@
 #include "logOutput.hpp"
 
+#include <ostream>   // for basic_ostream, operator<<, flush, std
+#include <string>    // for char_traits, operator<<
+
 using namespace std;
 using namespace output;
 

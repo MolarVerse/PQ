@@ -6,7 +6,6 @@
 #include <cmath>      // for ceil, fabs, floor, rint, sqrt
 #include <cstddef>    // for size_t
 #include <iostream>   // for ostream
-#include <tuple>      // for array
 
 namespace linearAlgebra
 {

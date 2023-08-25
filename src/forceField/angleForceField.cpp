@@ -6,9 +6,12 @@
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "vector3d.hpp"   // for Vector3D, cross, operator*, normS...
+
+#include <cmath>    // for acos, sin, sqrt
+#include <memory>   // for __shared_ptr_access, shared_ptr
 
 using namespace forceField;
-using namespace simulationBox;
 using namespace physicalData;
 using namespace potential;
 
@@ -18,10 +21,10 @@ using namespace potential;
  * @param box
  * @param physicalData
  */
-void AngleForceField::calculateEnergyAndForces(const SimulationBox    &box,
-                                               PhysicalData           &physicalData,
-                                               const CoulombPotential &coulombPotential,
-                                               NonCoulombPotential    &nonCoulombPotential)
+void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBox &box,
+                                               PhysicalData                       &physicalData,
+                                               const CoulombPotential             &coulombPotential,
+                                               NonCoulombPotential                &nonCoulombPotential)
 {
 
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of angle

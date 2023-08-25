@@ -4,6 +4,7 @@
 
 #include "energyOutput.hpp"
 #include "infoOutput.hpp"
+#include "physicalData.hpp"   // for PhysicalData
 
 #include <gtest/gtest.h>
 

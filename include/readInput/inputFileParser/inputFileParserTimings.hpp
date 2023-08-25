@@ -2,30 +2,34 @@
 
 #define _INPUT_FILE_PARSER_TIMINGS_HPP_
 
-#include "engine.hpp"
 #include "inputFileParser.hpp"
 
-#include <string>
-#include <vector>
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
+
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace readInput
 {
-    class InputFileParserTimings;
+    /**
+     * @class InputFileParserTimings inherits from InputFileParser
+     *
+     * @brief Parses the timings commands in the input file
+     *
+     */
+    class InputFileParserTimings : public InputFileParser
+    {
+      public:
+        explicit InputFileParserTimings(engine::Engine &);
+
+        void parseTimeStep(const std::vector<std::string> &, const size_t);
+        void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
+    };
+
 }   // namespace readInput
-
-/**
- * @class InputFileParserTimings inherits from InputFileParser
- *
- * @brief Parses the timings commands in the input file
- *
- */
-class readInput::InputFileParserTimings : public readInput::InputFileParser
-{
-  public:
-    explicit InputFileParserTimings(engine::Engine &);
-
-    void parseTimeStep(const std::vector<std::string> &, const size_t);
-    void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
-};
 
 #endif   // _INPUT_FILE_PARSER_TIMINGS_HPP_

@@ -2,29 +2,32 @@
 
 #define _INTEGRATOR_SETUP_HPP_
 
-#include "engine.hpp"
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace setup
 {
-    class IntegratorSetup;
     void setupIntegrator(engine::Engine &);
+
+    /**
+     * @class IntegratorSetup
+     *
+     * @brief Setup Integrator
+     *
+     */
+    class IntegratorSetup
+    {
+      private:
+        engine::Engine &_engine;
+
+      public:
+        explicit IntegratorSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
 }   // namespace setup
-
-/**
- * @class IntegratorSetup
- *
- * @brief Setup Integrator
- *
- */
-class setup::IntegratorSetup
-{
-  private:
-    engine::Engine &_engine;
-
-  public:
-    explicit IntegratorSetup(engine::Engine &engine) : _engine(engine){};
-
-    void setup();
-};
 
 #endif   // _INTEGRATOR_SETUP_HPP_

@@ -3,6 +3,8 @@
 #define _TEST_INTEGRATOR_HPP_
 
 #include "integrator.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
 #include <gtest/gtest.h>
 

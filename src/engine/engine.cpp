@@ -1,7 +1,12 @@
 #include "engine.hpp"
 
+#include "cell.hpp"
 #include "constants.hpp"
+#include "energyOutput.hpp"
+#include "logOutput.hpp"
+#include "output.hpp"
 #include "progressbar.hpp"
+#include "stdoutOutput.hpp"
 
 #include <iostream>
 

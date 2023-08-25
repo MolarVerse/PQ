@@ -2,29 +2,32 @@
 
 #define _RESET_KINETICS_SETUP_HPP_
 
-#include "engine.hpp"
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace setup
 {
-    class ResetKineticsSetup;
     void setupResetKinetics(engine::Engine &);
+
+    /**
+     * @class ResetKineticsSetup
+     *
+     * @brief Setup reset kinetics
+     *
+     */
+    class ResetKineticsSetup
+    {
+      private:
+        engine::Engine &_engine;
+
+      public:
+        explicit ResetKineticsSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
 }   // namespace setup
-
-/**
- * @class ResetKineticsSetup
- *
- * @brief Setup reset kinetics
- *
- */
-class setup::ResetKineticsSetup
-{
-  private:
-    engine::Engine &_engine;
-
-  public:
-    explicit ResetKineticsSetup(engine::Engine &engine) : _engine(engine){};
-
-    void setup();
-};
 
 #endif   // _RESET_KINETICS_SETUP_HPP_

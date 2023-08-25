@@ -1,9 +1,11 @@
 #include "intraNonBonded.hpp"
 
 #include "exceptions.hpp"
+#include "simulationBox.hpp"
 
-#include <format>   // for format
-#include <ranges>
+#include <algorithm>   // for for_each
+#include <format>      // for format
+#include <ranges>      // for ranges::find_if
 
 using namespace std;
 using namespace intraNonBonded;

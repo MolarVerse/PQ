@@ -1,10 +1,3 @@
-
-
-- engine skipped (until now for iwyu and refactoring)
-
-
-
-
 - finish intra non bonded routine
 
 - completely rebuild tests of restart file reading and sections
@@ -14,3 +7,7 @@
 - introduce more optionals instead of throwing exceptions to early
 
 - introduce more complex exception handling with classes
+
+- clean up CMakeLists.txt files
+
+- check iwyu for apps, tools and tests 

@@ -7,6 +7,7 @@
 #include <cstddef>   // for size_t
 #include <iomanip>
 #include <ostream>   // for ofstream, basic_ostream, operator<<
+#include <string>    // for operator<<
 #include <vector>    // for vector
 
 using namespace std;

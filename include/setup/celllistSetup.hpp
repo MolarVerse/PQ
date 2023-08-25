@@ -2,27 +2,30 @@
 
 #define _CELL_LIST_SETUP_HPP_
 
-#include "engine.hpp"
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 namespace setup
 {
-    class CellListSetup;
     void setupCellList(engine::Engine &);
+
+    /**
+     * @class SetupCellList
+     *
+     */
+    class CellListSetup
+    {
+      private:
+        engine::Engine &_engine;
+
+      public:
+        explicit CellListSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
 }   // namespace setup
-
-/**
- * @class SetupCellList
- *
- */
-class setup::CellListSetup
-{
-  private:
-    engine::Engine &_engine;
-
-  public:
-    explicit CellListSetup(engine::Engine &engine) : _engine(engine){};
-
-    void setup();
-};
 
 #endif   // _CELL_LIST_SETUP_HPP_

@@ -1,5 +1,14 @@
 #include "engineOutput.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;
+}   // namespace physicalData
+namespace simulationBox
+{
+    class SimulationBox;
+}   // namespace simulationBox
+
 using namespace engine;
 
 /**

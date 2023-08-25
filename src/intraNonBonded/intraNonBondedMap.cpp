@@ -1,6 +1,15 @@
 #include "intraNonBondedMap.hpp"
 
-#include "nonCoulombPair.hpp"   // for NonCoulombPair
+#include "coulombPotential.hpp"      // for CoulombPotential
+#include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "physicalData.hpp"          // for PhysicalData
+#include "simulationBox.hpp"         // for SimulationBox
+#include "vector3d.hpp"              // for norm, operator*, Vector3D
+
+#include <cstdlib>   // for abs, size_t
+#include <memory>    // for __shared_ptr_access, shared_ptr
 
 using namespace intraNonBonded;
 

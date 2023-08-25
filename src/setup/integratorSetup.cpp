@@ -1,14 +1,16 @@
 #include "integratorSetup.hpp"
 
-using namespace std;
+#include "engine.hpp"       // for Engine
+#include "integrator.hpp"   // for Integrator
+#include "timings.hpp"      // for Timings
+
 using namespace setup;
-using namespace engine;
 
 /**
  * @brief wrapper for setupTimings
  *
  */
-void setup::setupIntegrator(Engine &engine)
+void setup::setupIntegrator(engine::Engine &engine)
 {
     IntegratorSetup integratorSetup(engine);
     integratorSetup.setup();

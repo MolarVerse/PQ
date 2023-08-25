@@ -4,8 +4,9 @@
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 
-#include <algorithm>
-#include <map>
+#include <algorithm>    // for ranges::for_each
+#include <functional>   // for identity
+#include <map>          // for map
 
 using namespace std;
 using namespace simulationBox;

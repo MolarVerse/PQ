@@ -1,9 +1,14 @@
 #include "manostatSetup.hpp"
 
-#include "constants.hpp"
-#include "exceptions.hpp"
+#include "constants.hpp"    // for _PS_TO_FS_
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "manostat.hpp"     // for BerendsenManostat, Manostat, manostat
+#include "settings.hpp"     // for Settings
+#include "timings.hpp"      // for Timings
 
-using namespace std;
+#include <string>   // for operator==
+
 using namespace setup;
 using namespace customException;
 using namespace manostat;
