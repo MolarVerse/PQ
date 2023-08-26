@@ -28,7 +28,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
     std::string   line;
     getline(file, line);
     getline(file, line);
-    EXPECT_EQ(line, "Initial momentum = 0.100000 Angstrom * amu / fs");
+    EXPECT_EQ(line, "Initial momentum = 0.1 Angstrom * amu / fs");
 }
 
 int main(int argc, char **argv)

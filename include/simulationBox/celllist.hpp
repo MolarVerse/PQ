@@ -28,29 +28,31 @@ namespace simulationBox
         std::vector<Cell> _cells;
 
         linearAlgebra::Vec3D   _cellSize;
-        linearAlgebra::Vec3Dul _nNeighbourCells = {0, 0, 0};
-        linearAlgebra::Vec3Dul _nCells          = {
-            defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_, defaults::_NUMBER_OF_CELLS_DEFAULT_};
+        linearAlgebra::Vec3Dul _nNeighbourCells{0, 0, 0};
+        linearAlgebra::Vec3Dul _nCells{defaults::_NUMBER_OF_CELLS_DEFAULT_};
 
       public:
         void setup(const SimulationBox &);
         void updateCellList(SimulationBox &);
 
-        void determineCellSize(const SimulationBox &);
-        void determineCellBoundaries(const SimulationBox &);
+        void determineCellSize(const linearAlgebra::Vec3D &box);
+        void determineCellBoundaries(const linearAlgebra::Vec3D &box);
+        void checkCoulombCutoff(const double coulombCutoff) const;
 
-        void addNeighbouringCells(const SimulationBox &);
-        void addCellPointers(Cell &);
+        void addNeighbouringCells(const double coulombCutoff);
+        void addNeighbouringCellPointers(Cell &);
+        void addMoleculesToCells(SimulationBox &simulationBox);
 
-        size_t                 getCellIndex(const linearAlgebra::Vec3Dul &cellIndices) const;
-        linearAlgebra::Vec3Dul getCellIndexOfMolecule(const SimulationBox &, const linearAlgebra::Vec3D &) const;
+        [[nodiscard]] size_t                 getCellIndex(const linearAlgebra::Vec3Dul &cellIndices) const;
+        [[nodiscard]] linearAlgebra::Vec3Dul getCellIndexOfAtom(const linearAlgebra::Vec3D &box,
+                                                                const linearAlgebra::Vec3D &position) const;
 
         void               activate() { _activated = true; }
         void               deactivate() { _activated = false; }
         [[nodiscard]] bool isActivated() const { return _activated; }
 
+        void resizeCells() { _cells.resize(prod(_nCells)); }
         void addCell(const Cell &cell) { _cells.push_back(cell); }
-        void resizeCells(const size_t nCells) { _cells.resize(nCells); }
 
         /***************************
          * standard getter methods *
@@ -67,10 +69,7 @@ namespace simulationBox
          ***************************/
 
         void setNumberOfCells(const size_t nCells) { _nCells = {nCells, nCells, nCells}; }
-        void setNumberOfNeighbourCells(const size_t nNeighbourCells)
-        {
-            _nNeighbourCells = {nNeighbourCells, nNeighbourCells, nNeighbourCells};
-        }
+        void setNumberOfNeighbourCells(const size_t nCells) { _nNeighbourCells = linearAlgebra::Vec3Dul(nCells); }
     };
 
 }   // namespace simulationBox

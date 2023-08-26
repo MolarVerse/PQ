@@ -35,6 +35,7 @@ TEST_F(TestSetup, setupCoulombPotential)
 TEST_F(TestSetup, setupNonCoulombPotential)
 {
     _engine.getForceField().activateNonCoulombic();
+    _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(_engine);
     potentialSetup.setupNonCoulomb();
 
@@ -46,6 +47,21 @@ TEST_F(TestSetup, setupNonCoulombPotential)
 
     EXPECT_EQ(typeid(_engine.getPotential().getNonCoulombPotential()), typeid(potential::GuffNonCoulomb));
 }
+
+/**
+ * @brief dummy test for setupPotential - all single components are tested individually - should not throw anything
+ *
+ */
+TEST_F(TestSetup, setupPotential)
+{
+    EXPECT_NO_THROW(setupPotential(_engine));
+
+    _engine.getForceField().activateNonCoulombic();
+    _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
+    EXPECT_NO_THROW(setupPotential(_engine));
+}
+
+// TEST_F(TestSetup, setupNonCoulombicPairs)
 
 int main(int argc, char **argv)
 {

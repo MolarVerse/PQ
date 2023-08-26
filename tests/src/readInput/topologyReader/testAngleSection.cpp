@@ -9,7 +9,7 @@
  */
 TEST_F(TestTopologySection, processSectionAngle)
 {
-    std::vector<std::string>          lineElements = {"1", "2", "3", "7"};
+    std::vector<std::string>          lineElements = {"2", "1", "3", "7"};
     readInput::topology::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getAngles().size(), 1);

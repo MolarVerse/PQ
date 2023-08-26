@@ -352,6 +352,14 @@ namespace linearAlgebra
         friend T minimum(Vector3D<T> v) { return std::min(v._x, std::min(v._y, v._z)); }
 
         /**
+         * @brief maximum of vector
+         *
+         * @param v
+         * @return T
+         */
+        friend T maximum(Vector3D<T> v) { return std::max(v._x, std::max(v._y, v._z)); }
+
+        /**
          * @brief sum of vector
          *
          * @param v

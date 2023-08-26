@@ -52,9 +52,9 @@ namespace settings
         std::string _jobtype;
 
         // thermostat settings for later setup
-        std::pair<bool, std::string> _thermostat;   // pair.first = check if thermostat was set
-        std::pair<bool, double>      _temperature;
-        std::pair<bool, double>      _relaxationTime = std::make_pair(false, 0.1);   // pay attention here default value in ps
+        std::string             _thermostat     = defaults::_THERMOSTAT_DEFAULT_;                     // none
+        double                  _relaxationTime = defaults::_BERENDSEN_THERMOSTAT_RELAXATION_TIME_;   // 0.1 ps
+        std::pair<bool, double> _temperature;   // no default value here - if thermostat different than none, user has to set it
 
         // manostat settings for later setup
         std::pair<bool, std::string> _manostat;   // pair.first = check if thermostat was set
@@ -90,12 +90,10 @@ namespace settings
 
         [[nodiscard]] std::string getJobtype() const { return _jobtype; }
 
-        [[nodiscard]] std::string getThermostat() const { return _thermostat.second; }
-        [[nodiscard]] bool        getThermostatSet() const { return _thermostat.first; }
+        [[nodiscard]] std::string getThermostat() const { return _thermostat; }
         [[nodiscard]] double      getTemperature() const { return _temperature.second; }
         [[nodiscard]] bool        getTemperatureSet() const { return _temperature.first; }
-        [[nodiscard]] double      getRelaxationTime() const { return _relaxationTime.second; }
-        [[nodiscard]] bool        getRelaxationTimeSet() const { return _relaxationTime.first; }
+        [[nodiscard]] double      getRelaxationTime() const { return _relaxationTime; }
 
         [[nodiscard]] std::string getManostat() const { return _manostat.second; }
         [[nodiscard]] bool        getManostatSet() const { return _manostat.first; }
@@ -134,9 +132,9 @@ namespace settings
 
         void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
 
-        void setThermostat(const std::string_view thermostat) { _thermostat = std::make_pair(true, thermostat); }
-        void setTemperature(const double temperature);
-        void setRelaxationTime(const double relaxationTime);
+        void setThermostat(const std::string_view thermostat) { _thermostat = thermostat; }
+        void setRelaxationTime(const double relaxationTime) { _relaxationTime = relaxationTime; }
+        void setTemperature(double temperature) { _temperature = std::make_pair(true, temperature); }
 
         void setManostat(const std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
         void setPressure(const double pressure) { _pressure = std::make_pair(true, pressure); }

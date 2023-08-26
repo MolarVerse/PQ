@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"
 #include "testParameterFileSection.hpp"
@@ -17,7 +18,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     angleSection.processSection(lineElements, *_engine);
     EXPECT_EQ(_engine->getForceField().getAngleTypes().size(), 1);
     EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getId(), 0);
-    EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getEquilibriumAngle(), 1.22);
+    EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getEquilibriumAngle(), 1.22 * constants::_DEG_TO_RAD_);
     EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getForceConstant(), 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};

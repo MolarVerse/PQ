@@ -35,7 +35,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getC6(), 1.22);
     EXPECT_EQ(pair2->getC12(), 234.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), _engine->getSimulationBox().getCoulombRadiusCutOff());
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
     EXPECT_THROW(nonCoulombicsSection.processLJ(lineElements, *_engine), customException::ParameterFileException);

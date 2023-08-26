@@ -2,30 +2,33 @@
 
 #include "vector3d.hpp"
 
-#include <algorithm>    // for ranges::for_each
+#include <algorithm>    // for std::ranges::for_each
 #include <functional>   // for identity, equal_to
 #include <iterator>     // for _Size, size
 #include <ranges>       // for subrange
 
-using namespace std;
 using namespace simulationBox;
-using namespace linearAlgebra;
 
 /**
  * @brief finds number of different atom types in molecule
  *
  * @return int
  */
-size_t Molecule::getNumberOfAtomTypes() { return _externalAtomTypes.size() - ranges::size(ranges::unique(_externalAtomTypes)); }
+size_t Molecule::getNumberOfAtomTypes()
+{
+    return _externalAtomTypes.size() - std::ranges::size(std::ranges::unique(_externalAtomTypes));
+}
 
 /**
  * @brief calculates the center of mass of the molecule
  *
+ * @details distances are calculated relative to the first atom
+ *
  * @param box
  */
-void Molecule::calculateCenterOfMass(const Vec3D &box)
+void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
 {
-    _centerOfMass            = Vec3D();
+    _centerOfMass            = linearAlgebra::Vec3D();
     const auto positionAtom1 = getAtomPosition(0);
 
     // TODO: sonarlint until now not compatible with c++23
@@ -34,7 +37,7 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
     //      auto const &[mass, position]  = pair;
     //      _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
     //  };
-    //  ranges::for_each(ranges::views::zip(_masses, _positions), f);
+    //  std::ranges::for_each(std::ranges::views::zip(_masses, _positions), f);
 
     for (size_t i = 0; i < _numberOfAtoms; ++i)
     {
@@ -52,29 +55,29 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
  *
  * @param shiftFactors
  */
-void Molecule::scale(const Vec3D &shiftFactors)
+void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    ranges::for_each(_positions, [shift](auto &position) { position += shift; });
+    std::ranges::for_each(_positions, [shift](auto &position) { position += shift; });
 }
 
 /**
- * @brief scales the velocities of the molecule
+ * @brief scales the velocities of the molecule with a multiplicative factor
  *
  * @param scaleFactor
  */
 void Molecule::scaleVelocities(const double scaleFactor)
 {
-    ranges::for_each(_velocities, [scaleFactor](auto &velocity) { velocity *= scaleFactor; });
+    std::ranges::for_each(_velocities, [scaleFactor](auto &velocity) { velocity *= scaleFactor; });
 }
 
 /**
- * @brief corrects the velocities of the molecule
+ * @brief corrects the velocities of the molecule by a given shift vector
  *
  * @param correction
  */
-void Molecule::correctVelocities(const Vec3D &correction)
+void Molecule::correctVelocities(const linearAlgebra::Vec3D &correction)
 {
-    ranges::for_each(_velocities, [correction](auto &velocity) { velocity -= correction; });
+    std::ranges::for_each(_velocities, [correction](auto &velocity) { velocity -= correction; });
 }

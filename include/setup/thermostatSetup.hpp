@@ -4,8 +4,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
 namespace setup
 {
@@ -14,7 +14,7 @@ namespace setup
     /**
      * @class ThermostatSetup
      *
-     * @brief Setup thermostat
+     * @brief this class setups up the thermostat for the simulation
      *
      */
     class ThermostatSetup

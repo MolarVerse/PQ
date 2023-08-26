@@ -9,13 +9,9 @@ namespace simulationBox
     /**
      * @class Box
      *
-     * @brief
+     * @brief This class stores all the information about the box.
      *
-     *  This class stores all the information about the box.
-     *
-     * @details
-     *
-     *  This class is used to store the box dimensions and angles.
+     * @TODO: think of a way to implement non orthogonal boxes - maybe inheritance?
      *
      */
     class Box
@@ -32,20 +28,11 @@ namespace simulationBox
         bool _boxSizeHasChanged = false;
 
       public:
-        double calculateVolume();
+        double                             calculateVolume();
+        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity();
 
-        linearAlgebra::Vec3D calculateBoxDimensionsFromDensity();
-
-        void applyPBC(linearAlgebra::Vec3D &) const;
-        void scaleBox(const linearAlgebra::Vec3D &);
-
-        /***********************************
-         * non-standard getter and setters *
-         ***********************************/
-
-        void setBoxDimensions(const linearAlgebra::Vec3D &);
-        void setBoxAngles(const linearAlgebra::Vec3D &);
-        void setDensity(const double density);
+        void applyPBC(linearAlgebra::Vec3D &position) const;
+        void scaleBox(const linearAlgebra::Vec3D &scalingFactors);
 
         [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
 
@@ -61,6 +48,9 @@ namespace simulationBox
         [[nodiscard]] double               getVolume() const { return _volume; }
         [[nodiscard]] bool                 getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
+        void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _boxDimensions = boxDimensions; }
+        void setBoxAngles(const linearAlgebra::Vec3D &boxAngles) { _boxAngles = boxAngles; }
+        void setDensity(const double density) { _density = density; }
         void setTotalMass(const double totalMass) { _totalMass = totalMass; }
         void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
         void setVolume(const double volume) { _volume = volume; }

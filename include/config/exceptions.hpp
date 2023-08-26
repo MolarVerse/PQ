@@ -198,6 +198,19 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /*
+     * @class CellListException inherits from CustomException
+     *
+     * @brief Exception for CellList errors
+     */
+    class CellListException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_

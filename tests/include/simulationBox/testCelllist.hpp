@@ -15,6 +15,7 @@ class TestCellList : public ::testing::Test
         _cellList = new simulationBox::CellList();
         _cellList->setNumberOfCells(2);
         _cellList->setNumberOfNeighbourCells(1);
+        _cellList->resizeCells();
 
         _simulationBox = new simulationBox::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});

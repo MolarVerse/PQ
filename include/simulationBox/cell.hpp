@@ -15,7 +15,7 @@ namespace simulationBox
     /**
      * @class Cell
      *
-     * @brief Cell is a class for cell
+     * @brief Cell is a class for a single cell in the cellList
      *
      */
     class Cell
@@ -42,11 +42,11 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t                 getNumberOfMolecules() const { return _molecules.size(); }
-        [[nodiscard]] size_t                 getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
-        [[nodiscard]] linearAlgebra::Vec3D   getLowerBoundary() const { return _lowerBoundary; }
-        [[nodiscard]] linearAlgebra::Vec3D   getUpperBoundary() const { return _upperBoundary; }
-        [[nodiscard]] linearAlgebra::Vec3Dul getCellIndex() const { return _cellIndex; }
+        [[nodiscard]] size_t                        getNumberOfMolecules() const { return _molecules.size(); }
+        [[nodiscard]] size_t                        getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
+        [[nodiscard]] const linearAlgebra::Vec3D   &getLowerBoundary() const { return _lowerBoundary; }
+        [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const { return _upperBoundary; }
+        [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const { return _cellIndex; }
 
         [[nodiscard]] Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
         [[nodiscard]] std::vector<Molecule *> getMolecules() const { return _molecules; }

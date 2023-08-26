@@ -35,6 +35,7 @@ void InputFileParserSimulationBox::parseCoulombRadius(const vector<string> &line
     checkCommand(lineElements, lineNumber);
 
     const auto cutOff = stod(lineElements[2]);
+
     if (cutOff < 0.0)
         throw InputFileException(
             format("Coulomb radius cutoff must be positive - \"{}\" at line {} in input file", lineElements[2], lineNumber));
@@ -46,9 +47,17 @@ void InputFileParserSimulationBox::parseCoulombRadius(const vector<string> &line
  * @brief parse density of simulation and set it in simulation box
  *
  * @param lineElements
+ *
+ * @throw InputFileException if the density is negative
  */
 void InputFileParserSimulationBox::parseDensity(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getSimulationBox().setDensity(stod(lineElements[2]));
+
+    const auto density = stod(lineElements[2]);
+
+    if (density < 0.0)
+        throw InputFileException(format("Density must be positive - density = {}", density));
+
+    _engine.getSimulationBox().setDensity(density);
 }

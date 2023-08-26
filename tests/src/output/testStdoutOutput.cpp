@@ -23,7 +23,7 @@ TEST_F(TestStdoutOutput, writeInitialMomentum)
     _stdoutOutput->writeInitialMomentum(0.1);
     std::string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ(output, "\nInitial momentum = 0.100000 Angstrom * amu / fs\n");
+    EXPECT_EQ(output, "\nInitial momentum = 0.1 Angstrom * amu / fs\n");
 }
 
 int main(int argc, char **argv)

@@ -28,6 +28,7 @@ void CellListSetup::setup()
     auto nonCoulombPotential = _engine.getPotential().getNonCoulombPotentialSharedPtr();
     if (_engine.isCellListActivated())
     {
+        _engine.getCellList().resizeCells();
         _engine.getCellList().setup(_engine.getSimulationBox());
         _engine.makePotential(PotentialCellList());
     }

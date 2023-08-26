@@ -30,18 +30,30 @@ bool BoxSection::isHeader() { return true; }
  * @param engine object containing the engine
  *
  * @throws RstFileException if the number of elements in the line is not 4 or 7
+ * @throws RstFileException if the box dimensions are not positive
+ * @throws RstFileException if the box angles are not positive or larger than 90°
  */
 void BoxSection::process(vector<string> &lineElements, Engine &engine)
 {
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
         throw RstFileException(format("Error in line {}: Box section must have 4 or 7 elements", _lineNumber));
 
-    engine.getSimulationBox().setBoxDimensions({stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])});
+    const auto boxDimensions = linearAlgebra::Vec3D{stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])};
+
+    if (ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
+        throw RstFileException("All box dimensions must be positive");
+
+    engine.getSimulationBox().setBoxDimensions(boxDimensions);
 
     if (7 == lineElements.size())
-        engine.getSimulationBox().setBoxAngles({stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])});
-    else
-        engine.getSimulationBox().setBoxAngles({90.0, 90.0, 90.0});
+    {
+        const auto boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
+
+        if (ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
+            throw RstFileException("Box angles must be positive and smaller than 90°");
+
+        engine.getSimulationBox().setBoxAngles(boxAngles);
+    }
 }
 
 bool NoseHooverSection::isHeader() { return true; }

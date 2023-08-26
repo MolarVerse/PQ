@@ -11,55 +11,7 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-using namespace std;
 using namespace simulationBox;
-using namespace linearAlgebra;
-using namespace customException;
-
-/**
- * @brief Set the Box Dimensions in Box object
- *
- * @param boxDimensions
- *
- * @throw RstFileException if any of the dimensions is negative
- */
-void Box::setBoxDimensions(const Vec3D &boxDimensions)
-{
-    if (ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
-        throw RstFileException("All box dimensions must be positive");
-
-    _boxDimensions = boxDimensions;
-}
-
-/**
- * @brief Set the Box Angles in Box object
- *
- * @param boxAngles
- *
- * @throw RstFileException if any of the angles is negative or greater than 90°
- */
-void Box::setBoxAngles(const Vec3D &boxAngles)
-{
-    if (ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
-        throw RstFileException("Box angles must be positive and smaller than 90°");
-
-    _boxAngles = boxAngles;
-}
-
-/**
- * @brief Set the Density in Box object
- *
- * @param density
- *
- * @throw InputFileException if density is negative
- */
-void Box::setDensity(const double density)
-{
-    if (density < 0.0)
-        throw InputFileException(format("Density must be positive - density = {}", density));
-
-    _density = density;
-}
 
 /**
  * @brief Calculate the volume of the box
@@ -94,27 +46,29 @@ double Box::calculateVolume()
  *
  * @return vector<double>
  */
-Vec3D Box::calculateBoxDimensionsFromDensity()
+linearAlgebra::Vec3D Box::calculateBoxDimensionsFromDensity()
 {
     _volume = _totalMass / (_density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
 
-    return Vec3D(::cbrt(_volume));
+    return linearAlgebra::Vec3D(::cbrt(_volume));
 }
 
 /**
  * @brief applies the periodic boundary conditions
  *
- * @param dxyz
+ * @TODO: implement this for non-orthogonal boxes
+ *
+ * @param position
  */
-void Box::applyPBC(Vec3D &dxyz) const { dxyz -= _boxDimensions * round(dxyz / _boxDimensions); }
+void Box::applyPBC(linearAlgebra::Vec3D &position) const { position -= _boxDimensions * round(position / _boxDimensions); }
 
 /**
- * @brief scales the cell dimensions
+ * @brief scales the cell dimensions and recalculates the volume
  *
- * @param scaleFactors
+ * @param scalingFactors
  */
-void Box::scaleBox(const Vec3D &scaleFactors)
+void Box::scaleBox(const linearAlgebra::Vec3D &scalingFactors)
 {
-    _boxDimensions *= scaleFactors;
+    _boxDimensions *= scalingFactors;
     calculateVolume();
 }

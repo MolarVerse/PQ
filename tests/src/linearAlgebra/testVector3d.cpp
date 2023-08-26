@@ -354,6 +354,25 @@ TEST(TestVector3d, minimum)
 }
 
 /**
+ * @brief tests maximum for Vector3D
+ *
+ */
+TEST(TestVector3d, maximum)
+{
+    const auto vec1 = Vec3D(0.0, 1.0, 2.0);
+
+    EXPECT_EQ(maximum(vec1), 2.0);
+
+    const auto vec2 = Vec3Di(0, 1, 2);
+
+    EXPECT_EQ(maximum(vec2), 2);
+
+    const auto vec3 = Vec3Dul(0, 1, 2);
+
+    EXPECT_EQ(maximum(vec3), 2);
+}
+
+/**
  * @brief tests sum for Vector3D
  *
  */

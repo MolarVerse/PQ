@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"
 #include "testParameterFileSection.hpp"
@@ -19,7 +20,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
     EXPECT_EQ(_engine->getForceField().getImproperDihedralTypes()[0].getId(), 0);
     EXPECT_EQ(_engine->getForceField().getImproperDihedralTypes()[0].getForceConstant(), 1.22);
     EXPECT_EQ(_engine->getForceField().getImproperDihedralTypes()[0].getPeriodicity(), 234.3);
-    EXPECT_EQ(_engine->getForceField().getImproperDihedralTypes()[0].getPhaseShift(), 324.3);
+    EXPECT_EQ(_engine->getForceField().getImproperDihedralTypes()[0].getPhaseShift(), 324.3 * constants::_DEG_TO_RAD_);
 
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW(improperDihedralSection.processSection(lineElements, *_engine), customException::ParameterFileException);

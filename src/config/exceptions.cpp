@@ -139,3 +139,14 @@ const char *ShakeException::what() const throw()
     colorfulOutput(Color::FG_RED, "ShakeError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @return const char*
+ */
+const char *CellListException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "CellListError");
+    return _message.c_str();
+}

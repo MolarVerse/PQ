@@ -1,21 +1,23 @@
 #include "testCelllist.hpp"
 
+#include "exceptions.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace std;
 
 TEST_F(TestCellList, determineCellSize)
 {
-    _cellList->determineCellSize(*_simulationBox);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     EXPECT_EQ(_cellList->getCellSize(), linearAlgebra::Vec3D(5.0, 5.0, 5.0));
 }
 
 TEST_F(TestCellList, determineCellBoundaries)
 {
-    _cellList->determineCellSize(*_simulationBox);
-    _cellList->resizeCells(prod(_cellList->getNumberOfCells()));
-    _cellList->determineCellBoundaries(*_simulationBox);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    _cellList->resizeCells();
+    _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
     auto cells = _cellList->getCells();
 
@@ -31,34 +33,33 @@ TEST_F(TestCellList, determineCellBoundaries)
 
 TEST_F(TestCellList, getCellIndex)
 {
-
-    const auto cellIndices = linearAlgebra::Vec3Dul(1, 2, 3);
-    _cellList->getCellIndex(cellIndices);
+    const auto                  cellIndices = linearAlgebra::Vec3Dul(1, 2, 3);
+    [[maybe_unused]] const auto dummy       = _cellList->getCellIndex(cellIndices);
 
     EXPECT_EQ(_cellList->getCellIndex(cellIndices), 1 * 2 * 2 + 2 * 2 + 3);
 }
 
-TEST_F(TestCellList, getCellIndexOfMolecule)
+TEST_F(TestCellList, getCellIndexOfAtom)
 {
     const auto position1 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
     const auto position2 = linearAlgebra::Vec3D(6.0, 7.0, 8.0);
 
-    _cellList->determineCellSize(*_simulationBox);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
-    EXPECT_EQ(_cellList->getCellIndexOfMolecule(*_simulationBox, position1), linearAlgebra::Vec3Dul(1, 1, 1));
-    EXPECT_EQ(_cellList->getCellIndexOfMolecule(*_simulationBox, position2), linearAlgebra::Vec3Dul(0, 0, 0));
+    EXPECT_EQ(_cellList->getCellIndexOfAtom(_simulationBox->getBoxDimensions(), position1), linearAlgebra::Vec3Dul(1, 1, 1));
+    EXPECT_EQ(_cellList->getCellIndexOfAtom(_simulationBox->getBoxDimensions(), position2), linearAlgebra::Vec3Dul(0, 0, 0));
 }
 
-TEST_F(TestCellList, addCellPointers)
+TEST_F(TestCellList, addNeighbouringCellPointers)
 {
     auto cell = simulationBox::Cell();
     cell.setCellIndex(linearAlgebra::Vec3Dul(0, 0, 0));
 
     _cellList->setNumberOfCells(7);
-    _cellList->determineCellSize(*_simulationBox);
-    _cellList->resizeCells(prod(_cellList->getNumberOfCells()));
-    _cellList->determineCellBoundaries(*_simulationBox);
-    _cellList->addCellPointers(cell);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    _cellList->resizeCells();
+    _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
+    _cellList->addNeighbouringCellPointers(cell);
 
     const auto neighbourCells = cell.getNeighbourCells();
 
@@ -81,10 +82,10 @@ TEST_F(TestCellList, addCellPointers)
 TEST_F(TestCellList, addNeighbouringCells)
 {
     _cellList->setNumberOfCells(7);
-    _cellList->determineCellSize(*_simulationBox);
-    _cellList->resizeCells(prod(_cellList->getNumberOfCells()));
-    _cellList->determineCellBoundaries(*_simulationBox);
-    _cellList->addNeighbouringCells(*_simulationBox);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    _cellList->resizeCells();
+    _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
+    _cellList->addNeighbouringCells(_simulationBox->getCoulombRadiusCutOff());
 
     for (const auto &cell : _cellList->getCells())
     {
@@ -96,6 +97,21 @@ TEST_F(TestCellList, addNeighbouringCells)
 }
 
 /**
+ * @brief testing checkCoulombCutoff method
+ *
+ */
+TEST_F(TestCellList, checkCoulombCutoff)
+{
+    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    EXPECT_NO_THROW(_cellList->checkCoulombCutoff({200.0}));
+
+    EXPECT_THROW_MSG(_cellList->checkCoulombCutoff({0.1}),
+                     customException::CellListException,
+                     "Coulomb cutoff is smaller than half of the largest cell size.");
+}
+
+/**
  * @brief testing updateCellList and setup method
  *
  * TODO: think of a clever way to break this test into smaller tests
@@ -103,6 +119,7 @@ TEST_F(TestCellList, addNeighbouringCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
+    _simulationBox->setCoulombRadiusCutOff(22.0);
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
     _cellList->activate();
 
@@ -114,7 +131,7 @@ TEST_F(TestCellList, updateCellList)
     _simulationBox->addMolecule(molecule);
 
     _cellList->setup(*_simulationBox);
-    const auto cellSizeOld = _cellList->getCellSize();
+    auto cellSizeOld = _cellList->getCellSize();
 
     _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
     _simulationBox->setBoxSizeHasChanged(true);
@@ -122,6 +139,12 @@ TEST_F(TestCellList, updateCellList)
     _cellList->updateCellList(*_simulationBox);
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
+
+    _simulationBox->setBoxSizeHasChanged(false);
+    cellSizeOld = _cellList->getCellSize();
+    _cellList->updateCellList(*_simulationBox);
+
+    EXPECT_EQ(_cellList->getCellSize(), cellSizeOld);
 }
 
 int main(int argc, char **argv)

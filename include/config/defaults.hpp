@@ -33,6 +33,10 @@ namespace defaults
     static constexpr double _SCALE_14_COULOMB_DEFAULT_       = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_ = 1.0;
     static constexpr char   _NONCOULOMB_TYPE_DEFAULT_[]      = "guff";   // default is guff
+
+    static constexpr char   _THERMOSTAT_DEFAULT_[]                 = "none";   // default is no thermostat
+    static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;      // in ps
+
 }   // namespace defaults
 
 #endif   // _DEFAULTS_HPP_

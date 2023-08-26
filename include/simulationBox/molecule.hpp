@@ -59,8 +59,9 @@ namespace simulationBox
         void scaleVelocities(const double scaleFactor);
         void correctVelocities(const linearAlgebra::Vec3D &correction);
 
-        void                 resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
         [[nodiscard]] size_t getNumberOfAtomTypes();
+
+        void resizeAtomShiftForces() { _shiftForces.resize(_forces.size()); }
 
         /************************
          * standard add methods *
@@ -83,10 +84,13 @@ namespace simulationBox
 
         void addAtomPosition(const linearAlgebra::Vec3D &position) { _positions.push_back(position); }
         void addAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _positions[index] += position; }
+
         void addAtomVelocity(const linearAlgebra::Vec3D &velocity) { _velocities.push_back(velocity); }
         void addAtomVelocity(const size_t index, const linearAlgebra::Vec3D &velocity) { _velocities[index] += velocity; }
+
         void addAtomForce(const linearAlgebra::Vec3D &force) { _forces.push_back(force); }
         void addAtomForce(const size_t index, const linearAlgebra::Vec3D &force) { _forces[index] += force; }
+
         void addAtomShiftForce(const size_t index, const linearAlgebra::Vec3D &shiftForce) { _shiftForces[index] += shiftForce; }
 
         /***************************
@@ -136,16 +140,15 @@ namespace simulationBox
         void setCharge(const double charge) { _charge = charge; }
         void setMolMass(const double molMass) { _molMass = molMass; }
         void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
-
         void setPartialCharge(const size_t index, const double partialCharge) { _partialCharges[index] = partialCharge; }
         void setAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _positions[index] = position; }
         void setAtomVelocity(const size_t index, const linearAlgebra::Vec3D &velocity) { _velocities[index] = velocity; }
         void setAtomForce(const size_t index, const linearAlgebra::Vec3D &force) { _forces[index] = force; }
         void setAtomShiftForces(const size_t index, const linearAlgebra::Vec3D &shiftForce) { _shiftForces[index] = shiftForce; }
-        void setAtomForcesToZero() { std::ranges::fill(_forces, linearAlgebra::Vec3D(0.0, 0.0, 0.0)); }
         void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass) { _centerOfMass = centerOfMass; }
-
         void setExternalAtomTypes(const std::vector<size_t> &externalAtomTypes) { _externalAtomTypes = externalAtomTypes; }
+
+        void setAtomForcesToZero() { std::ranges::fill(_forces, linearAlgebra::Vec3D(0.0, 0.0, 0.0)); }
     };
 
 }   // namespace simulationBox

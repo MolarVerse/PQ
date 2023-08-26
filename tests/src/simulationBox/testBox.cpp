@@ -15,9 +15,6 @@ TEST_F(TestBox, setBoxDimensions)
     Vec3D boxDimensions = {1.0, 2.0, 3.0};
     _box->setBoxDimensions(boxDimensions);
     EXPECT_EQ(_box->getBoxDimensions(), boxDimensions);
-
-    boxDimensions = {-1.0, 2.0, 3.0};
-    ASSERT_THROW(_box->setBoxDimensions(boxDimensions), RstFileException);
 }
 
 TEST_F(TestBox, setBoxAngles)
@@ -25,12 +22,6 @@ TEST_F(TestBox, setBoxAngles)
     Vec3D boxAngles = {10.0, 20.0, 30.0};
     _box->setBoxAngles(boxAngles);
     EXPECT_EQ(_box->getBoxAngles(), boxAngles);
-
-    boxAngles = {-10.0, 20.0, 30.0};
-    ASSERT_THROW(_box->setBoxAngles(boxAngles), RstFileException);
-
-    boxAngles = {10.0, 20.0, 100.0};
-    ASSERT_THROW(_box->setBoxAngles(boxAngles), RstFileException);
 }
 
 TEST_F(TestBox, setDensity)
@@ -38,9 +29,6 @@ TEST_F(TestBox, setDensity)
     double density = 1.0;
     _box->setDensity(density);
     EXPECT_EQ(_box->getDensity(), density);
-
-    density = -1.0;
-    ASSERT_THROW(_box->setDensity(density), InputFileException);
 }
 
 TEST_F(TestBox, calculateBoxDimensionsFromDensity)
@@ -59,7 +47,7 @@ TEST_F(TestBox, calculateVolume)
     EXPECT_EQ(_box->calculateVolume(), 6.0);
 }
 
-TEST_F(TestBox, applyPeriodiicBoundaryConditions)
+TEST_F(TestBox, applyPeriodicBoundaryConditions)
 {
     const Vec3D boxDimensions = {1.0, 2.0, 3.0};
     _box->setBoxDimensions(boxDimensions);

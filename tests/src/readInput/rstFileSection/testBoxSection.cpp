@@ -29,15 +29,15 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
-    vector<string> line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
-    _section->process(line, _engine);
-    ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
-    ASSERT_THAT(_engine.getSimulationBox().getBoxAngles(), ElementsAre(90.0, 90.0, 70.0));
-
-    line = {"box", "1.0", "2.0", "3.0"};
+    vector<string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, _engine);
     ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
     ASSERT_THAT(_engine.getSimulationBox().getBoxAngles(), ElementsAre(90.0, 90.0, 90.0));
+
+    line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
+    _section->process(line, _engine);
+    ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
+    ASSERT_THAT(_engine.getSimulationBox().getBoxAngles(), ElementsAre(90.0, 90.0, 70.0));
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
     ASSERT_THROW(_section->process(line, _engine), RstFileException);
@@ -52,5 +52,5 @@ TEST_F(TestBoxSection, testProcess)
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }
