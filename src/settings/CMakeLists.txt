@@ -1,5 +1,8 @@
 add_library(settings
     settings.cpp
+    simulationBoxSettings.cpp
+    manostatSettings.cpp
+    thermostatSettings.cpp
 )
 
 target_include_directories(settings

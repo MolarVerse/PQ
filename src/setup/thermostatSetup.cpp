@@ -5,7 +5,8 @@
 #include "exceptions.hpp"   // for InputFileException
 #include "settings.hpp"     // for Settings
 #include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
-#include "timings.hpp"      // for Timings
+#include "thermostatSettings.hpp"
+#include "timings.hpp"   // for Timings
 
 #include <format>        // for format
 #include <string>        // for operator==
@@ -30,26 +31,26 @@ void setup::setupThermostat(engine::Engine &engine)
  * @brief setup thermostat
  *
  * @details checks if a thermostat was set in the input file,
- * If a thermostat was selected than the user has to provide a temperature for the thermostat.
+ * If a thermostat was selected than the user has to provide a target temperature for the thermostat.
  *
  * @note the base class Thermostat does not apply any temperature coupling to the system and therefore it represents the none
  * thermostat.
- *
  *
  * @throws InputFileException if no temperature was set for the thermostat
  *
  */
 void ThermostatSetup::setup()
 {
-    const auto thermostat = _engine.getSettings().getThermostat();
+    const auto thermostatType = settings::ThermostatSettings::getThermostatType();
 
-    if (thermostat != "none")
-        if (!_engine.getSettings().getTemperatureSet())
-            throw customException::InputFileException(std::format("Temperature not set for {} thermostat", thermostat));
+    if (thermostatType != "none")
+        if (!settings::ThermostatSettings::isTemperatureSet())
+            throw customException::InputFileException(std::format("Temperature not set for {} thermostat", thermostatType));
 
-    if (thermostat == "berendsen")
-        _engine.makeThermostat(thermostat::BerendsenThermostat(
-            _engine.getSettings().getTemperature(), _engine.getSettings().getRelaxationTime() * constants::_PS_TO_FS_));
+    if (thermostatType == "berendsen")
+        _engine.makeThermostat(
+            thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                            settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
     else
         _engine.makeThermostat(thermostat::Thermostat());
 

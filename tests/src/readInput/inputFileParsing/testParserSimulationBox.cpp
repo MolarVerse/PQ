@@ -1,5 +1,6 @@
 #include "exceptions.hpp"
 #include "inputFileParserSimulationBox.hpp"
+#include "simulationBoxSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -12,10 +13,16 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseDensity)
 {
+    EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
     InputFileParserSimulationBox parser(_engine);
     const vector<string>         lineElements = {"density", "=", "1.0"};
     parser.parseDensity(lineElements, 0);
     EXPECT_EQ(_engine.getSimulationBox().getDensity(), 1.0);
+    EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
+
+    const vector<string> lineElements2 = {"density", "=", "-1.0"};
+    EXPECT_THROW_MSG(
+        parser.parseDensity(lineElements2, 0), customException::InputFileException, "Density must be positive - density = -1");
 }
 
 /**

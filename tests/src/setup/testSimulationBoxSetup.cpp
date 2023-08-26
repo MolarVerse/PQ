@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
+#include "simulationBoxSettings.hpp"
 #include "simulationBoxSetup.hpp"
 #include "testSetup.hpp"
 
@@ -64,7 +65,7 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("H");
     molecule.addAtomName("D");
-    molecule.addAtomName("NOTANATOMNAME");
+    molecule.addAtomName("NotAnAtomName");
 
     _engine.getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(_engine);
@@ -88,6 +89,7 @@ TEST_F(TestSetup, testSetTotalMass)
     _engine.getSimulationBox().getMolecules().push_back(molecule2);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.setAtomMasses();
+    simulationBoxSetup.calculateMolMasses();
     simulationBoxSetup.calculateTotalMass();
 
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getTotalMass(), 12.0107 + 3 * 1.00794 + 15.9994);
@@ -110,7 +112,7 @@ TEST_F(TestSetup, testSetMolMass)
     _engine.getSimulationBox().getMolecules().push_back(molecule2);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.setAtomMasses();
-    simulationBoxSetup.calculateMolMass();
+    simulationBoxSetup.calculateMolMasses();
 
     EXPECT_DOUBLE_EQ(_engine.getSimulationBox().getMolecules()[0].getMolMass(), 12.0107 + 1 * 1.00794 + 15.9994);
 }
@@ -136,6 +138,8 @@ TEST_F(TestSetup, testSetTotalCharge)
 
 TEST_F(TestSetup, testNoDensityNoBox)
 {
+    settings::SimulationBoxSettings::setDensitySet(false);
+    settings::SimulationBoxSettings::setBoxSet(false);
     SimulationBoxSetup simulationBoxSetup(_engine);
     ASSERT_THROW(simulationBoxSetup.checkBoxSettings(), UserInputException);
 }
@@ -144,6 +148,8 @@ TEST_F(TestSetup, testNoDensity)
 {
     _engine.getSimulationBox().setTotalMass(6000);
     _engine.getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    settings::SimulationBoxSettings::setDensitySet(false);
+    settings::SimulationBoxSettings::setBoxSet(true);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -155,6 +161,8 @@ TEST_F(TestSetup, testNoBox)
 {
     _engine.getSimulationBox().setTotalMass(6000);
     _engine.getSimulationBox().setDensity(constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    settings::SimulationBoxSettings::setBoxSet(false);
+    settings::SimulationBoxSettings::setDensitySet(true);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -167,6 +175,8 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     _engine.getSimulationBox().setTotalMass(6000);
     _engine.getSimulationBox().setDensity(12341243.1234);   // this should be ignored
     _engine.getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    settings::SimulationBoxSettings::setDensitySet(true);
+    settings::SimulationBoxSettings::setBoxSet(true);
     SimulationBoxSetup simulationBoxSetup(_engine);
     simulationBoxSetup.checkBoxSettings();
 

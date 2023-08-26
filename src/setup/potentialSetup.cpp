@@ -26,7 +26,7 @@ using namespace setup;
 using namespace potential;
 
 /**
- * @brief wrapper for setup potential
+ * @brief wrapper to create PotentialSetup object and call setup
  *
  */
 void setup::setupPotential(engine::Engine &engine)
@@ -37,6 +37,8 @@ void setup::setupPotential(engine::Engine &engine)
 
 /**
  * @brief sets all nonBonded potential types
+ *
+ * @details if forceFieldNonCoulombics are activated it sets up also the nonCoulombic pairs
  *
  */
 void PotentialSetup::setup()
@@ -53,6 +55,10 @@ void PotentialSetup::setup()
 /**
  * @brief sets coulomb potential type
  *
+ * @details possible types are:
+ * 1) none (shifted coulomb potential)
+ * 2) wolf (wolf long range correction)
+ *
  * @param coulombType
  */
 void PotentialSetup::setupCoulomb()
@@ -60,16 +66,16 @@ void PotentialSetup::setupCoulomb()
     const auto coulombRadiusCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
     auto       wolfParameter       = _engine.getSettings().getWolfParameter();
 
-    if (_engine.getSettings().getCoulombLongRangeType() == "none")
-        _engine.getPotential().makeCoulombPotential(CoulombShiftedPotential(coulombRadiusCutOff));
-    else if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
-    {
+    if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
         _engine.getPotential().makeCoulombPotential(CoulombWolf(coulombRadiusCutOff, wolfParameter));
-    }
+    else
+        _engine.getPotential().makeCoulombPotential(CoulombShiftedPotential(coulombRadiusCutOff));
 }
 
 /**
  * @brief sets nonCoulomb potential type
+ *
+ * @details decides wether to use Guff or ForceFieldNonCoulomb potential
  *
  */
 void PotentialSetup::setupNonCoulomb()
@@ -84,7 +90,20 @@ void PotentialSetup::setupNonCoulomb()
 }
 
 /**
- * @brief TODO: explain in detail!!!!!!!!!!!!!!!!!!!
+ * @brief sets up nonCoulombic pairs in the ForceFieldNonCoulomb potential
+ *
+ * @details Following steps are performed:
+ * 1) calculate energy and force cut off for each nonCoulombic pair
+ * 2) determine internal global vdw types
+ * 3) check if all self interacting non coulombics are set
+ * 4) sort self interacting non coulombics
+ * 5) check if all self interacting non coulombics are set
+ * 6) fill diagonal elements of nonCoulombicPairsMatrix
+ * 7) fill non diagonal elements of nonCoulombicPairsMatrix
+ *
+ * @throws customException::ParameterFileException if not all self interacting non coulombics are set
+ *
+ * @TODO: delete not needed nonCoulombicPairs before checking size
  *
  */
 void PotentialSetup::setupNonCoulombicPairs()

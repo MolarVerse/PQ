@@ -55,11 +55,10 @@ namespace manostat
     class BerendsenManostat : public Manostat
     {
       private:
-        double _tau             = defaults::_TAU_MANOSTAT_DEFAULT_;
-        double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;
+        double _tau;
+        double _compressibility;
 
       public:
-        using Manostat::Manostat;
         explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
             : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
         {

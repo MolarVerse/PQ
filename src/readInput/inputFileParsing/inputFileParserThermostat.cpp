@@ -4,6 +4,7 @@
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "settings.hpp"     // for Settings
 #include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
+#include "thermostatSettings.hpp"
 
 #include <cstddef>       // for size_t, std
 #include <format>        // for format
@@ -36,15 +37,9 @@ void InputFileParserThermostat::parseThermostat(const vector<string> &lineElemen
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "none")
-    {
-        _engine.makeThermostat(Thermostat());
-        _engine.getSettings().setThermostat("none");
-    }
+        settings::ThermostatSettings::setThermostatType("none");
     else if (lineElements[2] == "berendsen")
-    {
-        _engine.makeThermostat(BerendsenThermostat());
-        _engine.getSettings().setThermostat("berendsen");
-    }
+        settings::ThermostatSettings::setThermostatType("berendsen");
     else
         throw InputFileException(format("Invalid thermostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }
@@ -64,7 +59,8 @@ void InputFileParserThermostat::parseTemperature(const vector<string> &lineEleme
     if (temperature < 0)
         throw InputFileException("Temperature cannot be negative");
 
-    _engine.getSettings().setTemperature(temperature);
+    settings::ThermostatSettings::setTemperatureSet(true);
+    settings::ThermostatSettings::setTargetTemperature(temperature);
 }
 
 /**
@@ -82,5 +78,5 @@ void InputFileParserThermostat::parseThermostatRelaxationTime(const vector<strin
     if (relaxationTime < 0)
         throw InputFileException("Relaxation time of thermostat cannot be negative");
 
-    _engine.getSettings().setRelaxationTime(relaxationTime);
+    settings::ThermostatSettings::setRelaxationTime(relaxationTime);
 }

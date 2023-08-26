@@ -51,17 +51,6 @@ namespace settings
 
         std::string _jobtype;
 
-        // thermostat settings for later setup
-        std::string             _thermostat     = defaults::_THERMOSTAT_DEFAULT_;                     // none
-        double                  _relaxationTime = defaults::_BERENDSEN_THERMOSTAT_RELAXATION_TIME_;   // 0.1 ps
-        std::pair<bool, double> _temperature;   // no default value here - if thermostat different than none, user has to set it
-
-        // manostat settings for later setup
-        std::pair<bool, std::string> _manostat;   // pair.first = check if thermostat was set
-        std::pair<bool, double>      _pressure;
-        std::pair<bool, double>      _tauManostat     = std::make_pair(false, 1.0);   // pay attention here default value in ps
-        double                       _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;   // 4.5e-5
-
         // shake settings for later setup
         double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;    // 1e-8
         size_t _shakeMaxIter    = defaults::_SHAKE_MAX_ITER_DEFAULT_;     // 20
@@ -89,19 +78,6 @@ namespace settings
         [[nodiscard]] std::string getIntraNonBondedFilename() const { return _intraNonBondedFilename; }
 
         [[nodiscard]] std::string getJobtype() const { return _jobtype; }
-
-        [[nodiscard]] std::string getThermostat() const { return _thermostat; }
-        [[nodiscard]] double      getTemperature() const { return _temperature.second; }
-        [[nodiscard]] bool        getTemperatureSet() const { return _temperature.first; }
-        [[nodiscard]] double      getRelaxationTime() const { return _relaxationTime; }
-
-        [[nodiscard]] std::string getManostat() const { return _manostat.second; }
-        [[nodiscard]] bool        getManostatSet() const { return _manostat.first; }
-        [[nodiscard]] double      getPressure() const { return _pressure.second; }
-        [[nodiscard]] bool        getPressureSet() const { return _pressure.first; }
-        [[nodiscard]] double      getTauManostat() const { return _tauManostat.second; }
-        [[nodiscard]] bool        getTauManostatSet() const { return _tauManostat.first; }
-        [[nodiscard]] double      getCompressibility() const { return _compressibility; }
 
         [[nodiscard]] size_t getNScale() const { return _nScale; }
         [[nodiscard]] size_t getFScale() const { return _fScale; }
@@ -131,15 +107,6 @@ namespace settings
         void setIntraNonBondedFilename(const std::string_view filename) { _intraNonBondedFilename = filename; }
 
         void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
-
-        void setThermostat(const std::string_view thermostat) { _thermostat = thermostat; }
-        void setRelaxationTime(const double relaxationTime) { _relaxationTime = relaxationTime; }
-        void setTemperature(double temperature) { _temperature = std::make_pair(true, temperature); }
-
-        void setManostat(const std::string_view manostat) { _manostat = std::make_pair(true, manostat); }
-        void setPressure(const double pressure) { _pressure = std::make_pair(true, pressure); }
-        void setTauManostat(const double tauManostat);
-        void setCompressibility(const double compressibility) { _compressibility = compressibility; }
 
         void setNScale(const size_t nScale) { _nScale = nScale; }
         void setFScale(const size_t fScale) { _fScale = fScale; }

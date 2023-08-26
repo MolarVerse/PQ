@@ -3,7 +3,8 @@
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "manostat.hpp"     // for BerendsenManostat, Manostat, manostat
-#include "settings.hpp"     // for Settings
+#include "manostatSettings.hpp"
+#include "settings.hpp"   // for Settings
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
@@ -39,15 +40,9 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "none")
-    {
-        _engine.makeManostat(Manostat());
-        _engine.getSettings().setManostat("none");
-    }
+        settings::ManostatSettings::setManostatType("none");
     else if (lineElements[2] == "berendsen")
-    {
-        _engine.makeManostat(BerendsenManostat());
-        _engine.getSettings().setManostat("berendsen");
-    }
+        settings::ManostatSettings::setManostatType("berendsen");
     else
         throw InputFileException(
             format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
@@ -63,7 +58,9 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
 void InputFileParserManostat::parsePressure(const vector<string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getSettings().setPressure(stod(lineElements[2]));
+
+    settings::ManostatSettings::setTargetPressure(stod(lineElements[2]));
+    settings::ManostatSettings::setPressureSet(true);
 }
 
 /**
@@ -81,7 +78,7 @@ void InputFileParserManostat::parseManostatRelaxationTime(const vector<string> &
     if (relaxationTime < 0)
         throw InputFileException("Relaxation time of manostat cannot be negative");
 
-    _engine.getSettings().setTauManostat(relaxationTime);
+    settings::ManostatSettings::setTauManostat(relaxationTime);
 }
 
 /**
@@ -95,8 +92,9 @@ void InputFileParserManostat::parseCompressibility(const vector<string> &lineEle
 {
     checkCommand(lineElements, lineNumber);
     const auto compressibility = stod(lineElements[2]);
+
     if (compressibility < 0.0)
         throw InputFileException("Compressibility cannot be negative");
 
-    _engine.getSettings().setCompressibility(compressibility);
+    settings::ManostatSettings::setCompressibility(compressibility);
 }

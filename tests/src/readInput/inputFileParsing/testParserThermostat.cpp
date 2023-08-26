@@ -1,6 +1,7 @@
 #include "exceptions.hpp"
 #include "inputFileParserThermostat.hpp"
 #include "testInputFileReader.hpp"
+#include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 
 using namespace std;
@@ -15,10 +16,14 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseTemperature)
 {
+    EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
+
     InputFileParserThermostat parser(_engine);
     vector<string>            lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getTemperature(), 300.0);
+
+    EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), true);
+    EXPECT_EQ(settings::ThermostatSettings::getTargetTemperature(), 300.0);
 
     lineElements = {"temp", "=", "-100.0"};
     EXPECT_THROW_MSG(
@@ -36,7 +41,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
     InputFileParserThermostat parser(_engine);
     vector<string>            lineElements = {"t_relaxation", "=", "10.0"};
     parser.parseThermostatRelaxationTime(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getRelaxationTime(), 10.0);
+    EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
 
     lineElements = {"t_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(parser.parseThermostatRelaxationTime(lineElements, 0),
@@ -55,11 +60,11 @@ TEST_F(TestInputFileReader, testParseThermostat)
     InputFileParserThermostat parser(_engine);
     vector<string>            lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getThermostat(), "none");
+    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), "none");
 
     lineElements = {"thermostat", "=", "berendsen"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getThermostat(), "berendsen");
+    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), "berendsen");
 
     lineElements = {"thermostat", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseThermostat(lineElements, 0),

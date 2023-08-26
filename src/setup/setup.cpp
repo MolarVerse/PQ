@@ -39,14 +39,14 @@ void setup::setupSimulation(const string &inputFilename, Engine &engine)
 {
     readFiles(inputFilename, engine);
 
-    cout << "setup engine..." << endl;
+    cout << "setup engine..." << '\n';
     setupEngine(engine);
 
     // needs setup of engine before reading guff.dat
-    cout << "Reading guff.dat..." << endl;
+    cout << "Reading guff.dat..." << '\n';
     readGuffDat(engine);
 
-    cout << "Setup complete!" << endl;
+    cout << "Setup complete!" << '\n';
 }
 
 /**

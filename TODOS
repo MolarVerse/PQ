@@ -1,4 +1,6 @@
-- finish intra non bonded routine
+- check whats wrong with logoutput routine (strange binary output)
+
+- finish intra non bonded routine (to test against qmcfc)
 
 - completely rebuild tests of restart file reading and sections
   - code should be fine

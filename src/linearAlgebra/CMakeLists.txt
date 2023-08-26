@@ -9,6 +9,10 @@ target_include_directories(linearAlgebra
     ${PROJECT_SOURCE_DIR}/src/linearAlgebra
 )
 
+target_link_libraries(linearAlgebra
+    PUBLIC
+)
+
 install(TARGETS linearAlgebra
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -1,11 +1,12 @@
 #include "rstFileSection.hpp"
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for RstFileException, customException
-#include "molecule.hpp"          // for Molecule
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for removeComments, splitString, utilities
-#include "timings.hpp"           // for Timings
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for RstFileException, customException
+#include "molecule.hpp"                // for Molecule
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for setBoxSet
+#include "stringUtilities.hpp"         // for removeComments, splitString, utilities
+#include "timings.hpp"                 // for Timings
 
 #include <cstddef>    // for size_t
 #include <format>     // for format
@@ -54,6 +55,8 @@ void BoxSection::process(vector<string> &lineElements, Engine &engine)
 
         engine.getSimulationBox().setBoxAngles(boxAngles);
     }
+
+    settings::SimulationBoxSettings::setBoxSet(true);
 }
 
 bool NoseHooverSection::isHeader() { return true; }

@@ -1,8 +1,9 @@
 #include "inputFileParserSimulationBox.hpp"
 
-#include "engine.hpp"          // for Engine
-#include "exceptions.hpp"      // for InputFileException, customException
-#include "simulationBox.hpp"   // for SimulationBox
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for InputFileException, customException
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for setDensitySet
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -59,5 +60,6 @@ void InputFileParserSimulationBox::parseDensity(const vector<string> &lineElemen
     if (density < 0.0)
         throw InputFileException(format("Density must be positive - density = {}", density));
 
+    settings::SimulationBoxSettings::setDensitySet(true);
     _engine.getSimulationBox().setDensity(density);
 }

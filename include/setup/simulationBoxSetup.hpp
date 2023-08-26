@@ -30,7 +30,7 @@ namespace setup
         void setAtomMasses();
         void setAtomicNumbers();
 
-        void calculateMolMass();
+        void calculateMolMasses();
         void calculateTotalMass();
         void calculateTotalCharge();
 

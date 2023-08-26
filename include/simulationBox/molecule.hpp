@@ -25,7 +25,7 @@ namespace simulationBox
         size_t      _moltype;
         size_t      _numberOfAtoms;
 
-        double _charge;
+        double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
         std::vector<std::string> _atomNames;
@@ -111,10 +111,13 @@ namespace simulationBox
         [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const { return _internalGlobalVDWTypes[index]; }
         [[nodiscard]] int    getAtomicNumber(const size_t index) const { return _atomicNumbers[index]; }
 
-        [[nodiscard]] double getCharge() const { return _charge; }
-        [[nodiscard]] double getMolMass() const { return _molMass; }
-        [[nodiscard]] double getPartialCharge(const size_t index) const { return _partialCharges[index]; }
-        [[nodiscard]] double getAtomMass(const size_t index) const { return _masses[index]; }
+        [[nodiscard]] double              getCharge() const { return _charge; }
+        [[nodiscard]] double              getPartialCharge(const size_t index) const { return _partialCharges[index]; }
+        [[nodiscard]] std::vector<double> getPartialCharges() const { return _partialCharges; }
+
+        [[nodiscard]] double              getMolMass() const { return _molMass; }
+        [[nodiscard]] double              getAtomMass(const size_t index) const { return _masses[index]; }
+        [[nodiscard]] std::vector<double> getAtomMasses() const { return _masses; }
 
         [[nodiscard]] std::string getName() const { return _name; }
         [[nodiscard]] std::string getAtomName(const size_t index) const { return _atomNames[index]; }

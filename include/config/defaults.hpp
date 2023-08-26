@@ -18,9 +18,6 @@ namespace defaults
     static constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;
     static constexpr char   _COULOMB_LONG_RANGE_TYPE_DEFAULT_[] = "none";   // default no coulomb long range correction
 
-    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // default value for berendsen manostat
-    static constexpr double _TAU_MANOSTAT_DEFAULT_          = 1.0;        // in ps
-
     static constexpr bool   _CONSTRAINTS_ARE_ACTIVE_DEFAULT_ = false;
     static constexpr size_t _SHAKE_MAX_ITER_DEFAULT_         = 20;
     static constexpr size_t _RATTLE_MAX_ITER_DEFAULT_        = 20;
@@ -36,6 +33,10 @@ namespace defaults
 
     static constexpr char   _THERMOSTAT_DEFAULT_[]                 = "none";   // default is no thermostat
     static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;      // in ps
+
+    static constexpr char   _MANOSTAT_DEFAULT_[]                 = "none";     // default is no manostat
+    static constexpr double _BERENDSEN_MANOSTAT_RELAXATION_TIME_ = 1.0;        // in ps
+    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_      = 4.591e-5;   // default value for berendsen manostat
 
 }   // namespace defaults
 

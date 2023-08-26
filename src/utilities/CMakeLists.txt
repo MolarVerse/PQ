@@ -12,6 +12,7 @@ target_include_directories(utilities
 target_link_libraries(utilities
     PUBLIC
     config
+    linearAlgebra
 )
 
 install(TARGETS utilities

@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
+#include "manostatSettings.hpp"
 #include "manostatSetup.hpp"
 #include "testSetup.hpp"
 
@@ -8,6 +9,8 @@ using namespace customException;
 
 /**
  * @TODO: refactor this test to use the new setupManostat function
+ *
+ * @TODO: include compressibility in the test
  *
  */
 TEST_F(TestSetup, setup)
@@ -19,16 +22,17 @@ TEST_F(TestSetup, setup)
 
     EXPECT_EQ(_engine.getManostat().getTimestep(), 0.1);
 
-    _engine.getSettings().setManostat("berendsen");
+    settings::ManostatSettings::setManostatType("berendsen");
     EXPECT_THROW(manostatSetup.setup(), InputFileException);
 
-    _engine.getSettings().setPressure(300.0);
+    settings::ManostatSettings::setPressureSet(true);
+    settings::ManostatSettings::setTargetPressure(300.0);
     EXPECT_NO_THROW(manostatSetup.setup());
 
     auto berendsenManostat = dynamic_cast<manostat::BerendsenManostat &>(_engine.getManostat());
     EXPECT_EQ(berendsenManostat.getTau(), 1.0 * 1000);
 
-    _engine.getSettings().setTauManostat(0.2);
+    settings::ManostatSettings::setTauManostat(0.2);
     EXPECT_NO_THROW(manostatSetup.setup());
 
     auto berendsenManostat2 = dynamic_cast<manostat::BerendsenManostat &>(_engine.getManostat());
@@ -40,5 +44,5 @@ TEST_F(TestSetup, setup)
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

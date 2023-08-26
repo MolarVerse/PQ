@@ -2,6 +2,8 @@
 
 #define _MATH_UTILITIES_HPP_
 
+#include "vector3d.hpp"
+
 #include <cmath>     // for fabs
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
@@ -38,6 +40,8 @@ namespace utilities
     {
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
+
+    bool compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b);
 
     /**
      * @brief calculates the sign of a number

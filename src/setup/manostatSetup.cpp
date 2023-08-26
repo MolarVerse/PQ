@@ -1,18 +1,18 @@
 #include "manostatSetup.hpp"
 
-#include "constants.hpp"    // for _PS_TO_FS_
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "manostat.hpp"     // for BerendsenManostat, Manostat, manostat
-#include "settings.hpp"     // for Settings
-#include "timings.hpp"      // for Timings
+#include "constants.hpp"          // for _PS_TO_FS_
+#include "engine.hpp"             // for Engine
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
+#include "timings.hpp"            // for Timings
 
+#include <format>        // for format
 #include <string>        // for operator==
 #include <string_view>   // for string_view
 
 using namespace setup;
-using namespace customException;
-using namespace manostat;
 
 /**
  * @brief wrapper for setupManostat
@@ -27,18 +27,29 @@ void setup::setupManostat(engine::Engine &engine)
 /**
  * @brief setup manostat
  *
+ * @details checks if a manostat was set in the input file,
+ * If a manostat was selected than the user has to provide a target pressure for the manostat.
+ *
+ * @note the base class manostat does not apply any pressure coupling to the system and therefore it represents the none
+ * manostat.
+ *
+ * @throws InputFileException if no pressure was set for the manostat
+ *
  */
 void ManostatSetup::setup()
 {
-    if (_engine.getSettings().getManostat() == "berendsen")
-    {
-        if (!_engine.getSettings().getPressureSet())
-            throw InputFileException("Pressure not set for Berendsen manostat");
+    const auto manostatType = settings::ManostatSettings::getManostatType();
 
-        _engine.makeManostat(BerendsenManostat(_engine.getSettings().getPressure(),
-                                               _engine.getSettings().getTauManostat() * constants::_PS_TO_FS_,
-                                               _engine.getSettings().getCompressibility()));
-    }
+    if (manostatType != "none")
+        if (!settings::ManostatSettings::isPressureSet())
+            throw customException::InputFileException(std::format("Pressure not set for {} manostat", manostatType));
+
+    if (manostatType == "berendsen")
+        _engine.makeManostat(manostat::BerendsenManostat(settings::ManostatSettings::getTargetPressure(),
+                                                         settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
+                                                         settings::ManostatSettings::getCompressibility()));
+    else
+        _engine.makeManostat(manostat::Manostat());
 
     _engine.getManostat().setTimestep(_engine.getTimings().getTimestep());
 }

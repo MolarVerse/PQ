@@ -1,15 +1,15 @@
 #include "resetKineticsSetup.hpp"
 
-#include "engine.hpp"          // for Engine
-#include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...
-#include "settings.hpp"        // for Settings
-#include "timings.hpp"         // for Timings
+#include "engine.hpp"               // for Engine
+#include "resetKinetics.hpp"        // for ResetMomentum, ResetTemperature, resetK...
+#include "settings.hpp"             // for Settings
+#include "thermostatSettings.hpp"   // for getTargetTemperature
+#include "timings.hpp"              // for Timings
 
 using namespace setup;
-using namespace resetKinetics;
 
 /**
- * @brief wrapper for setupResetKinetics
+ * @brief constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup
  *
  */
 void setup::setupResetKinetics(engine::Engine &engine)
@@ -21,6 +21,10 @@ void setup::setupResetKinetics(engine::Engine &engine)
 /**
  * @brief setup nscale, fscale, nreset, freset
  *
+ * @details decides if temperature and momentum or only temperature is reset
+ * It checks if either fscale or freset is set to 0 and sets it to the number of steps + 1, so that the reset is not performed.
+ * nreset and freset are set to 0 if they are not set.
+ *
  */
 void ResetKineticsSetup::setup()
 {
@@ -29,7 +33,7 @@ void ResetKineticsSetup::setup()
     auto nReset = _engine.getSettings().getNReset();
     auto fReset = _engine.getSettings().getFReset();
 
-    const auto targetTemperature = _engine.getSettings().getTemperature();
+    const auto targetTemperature = settings::ThermostatSettings::getTargetTemperature();
 
     const auto numberOfSteps = _engine.getTimings().getNumberOfSteps();
 
@@ -39,13 +43,17 @@ void ResetKineticsSetup::setup()
             fScale = numberOfSteps + 1;
         if (0 == fReset)
             fReset = numberOfSteps + 1;
-        _engine.makeResetKinetics(ResetTemperature(nScale, fScale, nReset, fReset, targetTemperature));
+
+        _engine.makeResetKinetics(resetKinetics::ResetTemperature(nScale, fScale, nReset, fReset, targetTemperature));
     }
     else if (nReset != 0 || fReset != 0)
     {
         fScale = numberOfSteps + 1;
         if (0 == fReset)
             fReset = numberOfSteps + 1;
-        _engine.makeResetKinetics(ResetMomentum(nScale, fScale, nReset, fReset, targetTemperature));
+
+        _engine.makeResetKinetics(resetKinetics::ResetMomentum(nScale, fScale, nReset, fReset, targetTemperature));
     }
+    else
+        _engine.makeResetKinetics(resetKinetics::ResetKinetics());
 }

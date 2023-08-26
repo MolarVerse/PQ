@@ -1,4 +1,5 @@
 #include "exceptions.hpp"
+#include "simulationBoxSettings.hpp"
 #include "testRstFileSection.hpp"
 
 #include <cassert>
@@ -29,6 +30,8 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
+    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
+
     vector<string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, _engine);
     ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), ElementsAre(1.0, 2.0, 3.0));
@@ -47,6 +50,8 @@ TEST_F(TestBoxSection, testProcess)
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
     ASSERT_THROW(_section->process(line, _engine), RstFileException);
+
+    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
 }
 
 int main(int argc, char **argv)
