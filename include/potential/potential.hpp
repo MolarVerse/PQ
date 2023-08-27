@@ -22,9 +22,8 @@ namespace simulationBox
 
 namespace potential
 {
-    class CoulombPotential;       // forward declaration
-    class NonCoulombPotential;    // forward declaration
-    class ForceFieldNonCoulomb;   // forward declaration
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 
     /**
      * @class Potential

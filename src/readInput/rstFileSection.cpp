@@ -4,16 +4,20 @@
 #include "exceptions.hpp"              // for RstFileException, customException
 #include "molecule.hpp"                // for Molecule
 #include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for setBoxSet
-#include "stringUtilities.hpp"         // for removeComments, splitString, utilities
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "stringUtilities.hpp"         // for removeComments, splitString
 #include "timings.hpp"                 // for Timings
+#include "vector3d.hpp"                // for Vec3D
 
-#include <cstddef>    // for size_t
-#include <format>     // for format
-#include <fstream>    // for operator<<, basic_ostream::operator<<
-#include <iostream>   // for cout
-#include <memory>     // for unique_ptr, make_unique
-#include <string>     // for stod, string, stoul, getline, stoi
+#include <algorithm>     // for __any_of_fn, any_of
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <fstream>       // for operator<<, basic_ostream::oper...
+#include <functional>    // for identity
+#include <iostream>      // for cout
+#include <memory>        // for unique_ptr, make_unique
+#include <string>        // for stod, string, stoul, getline, stoi
+#include <string_view>   // for string_view
 
 using namespace std;
 using namespace utilities;

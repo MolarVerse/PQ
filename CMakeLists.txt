@@ -47,7 +47,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 include(mpi)
 include(doxygen)
 include(testing)
-include(iwyu)
 
 add_subdirectory(tests)
 include(benchmarking)
@@ -56,3 +55,5 @@ include(benchmarking)
 add_subdirectory(src)
 add_subdirectory(apps)
 add_subdirectory(tools)
+
+include(iwyu)

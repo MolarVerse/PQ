@@ -13,7 +13,7 @@ if(CMAKE_IWYU)
         # --mapping_file=${PROJECT_SOURCE_DIR}/.iwyu.imp
     )
 
-    function(print_all_targets DIR)
+    function(recursiveTargets DIR)
         get_property(TGTS DIRECTORY "${DIR}" PROPERTY BUILDSYSTEM_TARGETS)
 
         foreach(TGT IN LISTS TGTS)
@@ -24,9 +24,10 @@ if(CMAKE_IWYU)
         get_property(SUBDIRS DIRECTORY "${DIR}" PROPERTY SUBDIRECTORIES)
 
         foreach(SUBDIR IN LISTS SUBDIRS)
-            print_all_targets("${SUBDIR}")
+            recursiveTargets("${SUBDIR}")
         endforeach()
     endfunction()
 
-    print_all_targets("${PROJECT_SOURCE_DIR}")
+    recursiveTargets(src)
+    recursiveTargets(tests)
 endif()

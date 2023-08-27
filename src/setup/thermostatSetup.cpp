@@ -3,14 +3,12 @@
 #include "constants.hpp"    // for _PS_TO_FS_
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException
-#include "settings.hpp"     // for Settings
 #include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
 #include "thermostatSettings.hpp"
 #include "timings.hpp"   // for Timings
 
-#include <format>        // for format
-#include <string>        // for operator==
-#include <string_view>   // for string_view
+#include <format>   // for format
+#include <string>   // for operator==
 
 using namespace setup;
 

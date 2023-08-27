@@ -2,7 +2,6 @@
 
 #define _MANOSTAT_HPP_
 
-#include "defaults.hpp"   // for _COMPRESSIBILITY_WATER_DEFAULT_, _TAU_MANOST...
 #include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData

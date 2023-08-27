@@ -13,11 +13,11 @@
 #include "simulationBoxSettings.hpp"   // for getDensitySet, getBoxSet
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"         // for toLowerCopy
-#include "vector3d.hpp"                // for Vec3D
 
 #include <algorithm>     // for ranges::for_each
 #include <cstddef>       // for size_t
 #include <format>        // for format
+#include <functional>    // for identity
 #include <map>           // for map
 #include <numeric>       // for accumulate
 #include <string>        // for allocator, operator+, char_traits

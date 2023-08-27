@@ -9,6 +9,10 @@ using namespace setup;
 /**
  * @brief Setup intra non bonded interactions
  *
+ * @details Setup the coulombPotential and nonCoulombPotential in the IntraNonBonded class. Then the IntraNonBonded maps vector is
+ * filled with all single intraNonBonded maps. A single intraNonBonded map is a class containing the molecule pointer and the
+ * IntraNonBonded container which represents the molecule type of the molecule pointer.
+ *
  */
 void IntraNonBondedSetup::setup()
 {

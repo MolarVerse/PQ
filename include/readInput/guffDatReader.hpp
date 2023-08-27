@@ -4,7 +4,7 @@
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
 
-#include <stddef.h>      // for size_t
+#include <cstddef>       // for size_t
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 #include <vector>        // for vector

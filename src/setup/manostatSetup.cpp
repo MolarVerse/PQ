@@ -5,12 +5,10 @@
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
-#include "settings.hpp"           // for Settings
 #include "timings.hpp"            // for Timings
 
-#include <format>        // for format
-#include <string>        // for operator==
-#include <string_view>   // for string_view
+#include <format>   // for format
+#include <string>   // for operator==
 
 using namespace setup;
 

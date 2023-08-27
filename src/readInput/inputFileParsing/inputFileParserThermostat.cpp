@@ -1,8 +1,6 @@
 #include "inputFileParserThermostat.hpp"
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "settings.hpp"     // for Settings
 #include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
 #include "thermostatSettings.hpp"
 

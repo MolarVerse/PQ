@@ -19,7 +19,6 @@
 #include <cstddef>       // for size_t
 #include <string>        // for string, allocator
 #include <string_view>   // for basic_string_view, string_view
-#include <utility>       // for pair, make_pair
 
 namespace settings
 {

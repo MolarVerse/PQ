@@ -1,12 +1,14 @@
 #include "celllist.hpp"
 
 #include "cell.hpp"            // for Cell
+#include "exceptions.hpp"      // for CellListException
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
-#include <algorithm>    // for ranges::for_each
-#include <functional>   // for identity
-#include <map>          // for map
+#include <algorithm>     // for ranges::for_each
+#include <functional>    // for identity
+#include <map>           // for map
+#include <string_view>   // for string_view
 
 using namespace simulationBox;
 using namespace linearAlgebra;
