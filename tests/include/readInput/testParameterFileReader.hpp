@@ -2,11 +2,13 @@
 
 #define _TEST_PARAMETER_FILE_READER_HPP_
 
-#include "engine.hpp"
-#include "parameterFileReader.hpp"
+#include "engine.hpp"                // for Engine
+#include "molecule.hpp"              // for Molecule
+#include "parameterFileReader.hpp"   // for ParameterFileReader
+#include "simulationBox.hpp"         // for SimulationBox
 
-#include <gtest/gtest.h>
-#include <string>
+#include <gtest/gtest.h>   // for Test
+#include <string>          // for allocator
 
 /**
  * @class TestParameterFileReader

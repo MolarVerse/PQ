@@ -1,7 +1,13 @@
 #include "testTopologySection.hpp"
 
-#include "exceptions.hpp"
-#include "topologySection.hpp"
+#include "bondConstraint.hpp"    // for BondConstraint
+#include "constraints.hpp"       // for Constraints
+#include "exceptions.hpp"        // for TopologyException
+#include "topologySection.hpp"   // for ShakeSection, topology
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <fstream>         // for operator<<, ofstream, basic_ostream
+#include <vector>          // for vector
 
 using namespace ::testing;
 using namespace readInput::topology;

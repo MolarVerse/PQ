@@ -1,7 +1,10 @@
 #include "testParameterFileSection.hpp"
 
-#include "exceptions.hpp"
-#include "parameterFileSection.hpp"
+#include "parameterFileSection.hpp"   // for BondSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <fstream>         // for operator<<, ofstream, basic_ostream
+#include <vector>          // for vector
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this

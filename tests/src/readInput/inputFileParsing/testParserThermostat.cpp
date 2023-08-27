@@ -1,8 +1,15 @@
-#include "exceptions.hpp"
-#include "inputFileParserThermostat.hpp"
-#include "testInputFileReader.hpp"
-#include "thermostatSettings.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"                  // for InputFileException
+#include "inputFileParser.hpp"             // for readInput
+#include "inputFileParserThermostat.hpp"   // for InputFileParserThermostat
+#include "testInputFileReader.hpp"         // for TestInputFileReader
+#include "thermostatSettings.hpp"          // for ThermostatSettings
+#include "throwWithMessage.hpp"            // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

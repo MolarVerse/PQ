@@ -1,6 +1,16 @@
-#include "exceptions.hpp"
-#include "testMoldesctripotReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                    // for Engine
+#include "exceptions.hpp"                // for MolDescriptorException
+#include "forceField.hpp"                // for ForceField
+#include "moldescriptorReader.hpp"       // for MoldescriptorReader
+#include "settings.hpp"                  // for Settings
+#include "simulationBox.hpp"             // for SimulationBox
+#include "testMoldesctripotReader.hpp"   // for TestMoldescriptorReader
+#include "throwWithMessage.hpp"          // for ASSERT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <iosfwd>          // for std
+#include <string>          // for allocator, basic_string
 
 using namespace std;
 using namespace ::testing;

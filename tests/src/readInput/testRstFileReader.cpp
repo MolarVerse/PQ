@@ -1,8 +1,16 @@
 #include "testRstFileReader.hpp"
 
-#include "exceptions.hpp"
-#include "moldescriptorReader.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"            // for InputFileException, customException
+#include "moldescriptorReader.hpp"   // for MoldescriptorReader
+#include "rstFileReader.hpp"         // for RstFileReader, readRstFile
+#include "rstFileSection.hpp"        // for RstFileSection, readInput
+#include "settings.hpp"              // for Settings
+#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace ::testing;

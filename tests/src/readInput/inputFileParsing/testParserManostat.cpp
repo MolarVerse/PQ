@@ -1,8 +1,15 @@
-#include "exceptions.hpp"
-#include "inputFileParserManostat.hpp"
-#include "manostatSettings.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"                // for InputFileException
+#include "inputFileParser.hpp"           // for readInput
+#include "inputFileParserManostat.hpp"   // for InputFileParserManostat
+#include "manostatSettings.hpp"          // for ManostatSettings
+#include "testInputFileReader.hpp"       // for TestInputFileReader
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

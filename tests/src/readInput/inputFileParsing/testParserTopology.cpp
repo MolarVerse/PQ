@@ -1,7 +1,16 @@
-#include "exceptions.hpp"
-#include "inputFileParserTopology.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                    // for Engine
+#include "exceptions.hpp"                // for InputFileException
+#include "inputFileParser.hpp"           // for readInput
+#include "inputFileParserTopology.hpp"   // for InputFileParserTopology
+#include "settings.hpp"                  // for Settings
+#include "testInputFileReader.hpp"       // for TestInputFileReader
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

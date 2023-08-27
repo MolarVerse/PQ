@@ -1,8 +1,15 @@
 #include "testParameterFileReader.hpp"
 
-#include "exceptions.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"             // for InputFileException, ParameterFileException
+#include "forceField.hpp"             // for ForceField
+#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "parameterFileSection.hpp"   // for AngleSection, BondSection, ...
+#include "potential.hpp"              // for Potential
+#include "settings.hpp"               // for Settings
+#include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, Asserti...
+#include <vector>          // for vector
 
 using namespace ::testing;
 

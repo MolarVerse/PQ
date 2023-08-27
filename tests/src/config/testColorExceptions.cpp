@@ -1,6 +1,10 @@
-#include "exceptions.hpp"
+#include "color.hpp"        // for Code
+#include "exceptions.hpp"   // for CustomException
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, CaptureStdout, GetCapturedStdout
+#include <string>          // for allocator, string
+#include <string_view>     // for string_view
 
 /**
  * @brief tests colorful output for FG_RED

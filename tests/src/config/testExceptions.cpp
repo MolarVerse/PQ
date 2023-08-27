@@ -1,7 +1,10 @@
-#include "exceptions.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"         // for GuffDatException, InputFileException
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
+#include <string_view>     // for string_view
 
 /**
  * @brief tests throwing input file exception

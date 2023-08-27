@@ -2,10 +2,14 @@
 
 #define _TEST_INPUT_FILE_READER_H_
 
-#include "engine.hpp"
-#include "inputFileReader.hpp"
+#include "engine.hpp"            // for Engine
+#include "inputFileReader.hpp"   // for InputFileReader
 
-#include <gtest/gtest.h>
+#include <cstdio>          // for remove
+#include <exception>       // for exception
+#include <gtest/gtest.h>   // for Test
+#include <iostream>        // for operator<<, basic_ostream, cerr, ostream
+#include <string>          // for allocator, string
 
 /**
  * @class TestInputFileReader

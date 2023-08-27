@@ -1,7 +1,15 @@
-#include "exceptions.hpp"
-#include "forceField.hpp"
-#include "testTopologySection.hpp"
-#include "topologySection.hpp"
+#include "bondForceField.hpp"        // for BondForceField
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for TopologyException
+#include "forceField.hpp"            // for ForceField
+#include "simulationBox.hpp"         // for SimulationBox
+#include "testTopologySection.hpp"   // for TestTopologySection
+#include "topologySection.hpp"       // for BondSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 /**
  * @brief test bond section processing one line

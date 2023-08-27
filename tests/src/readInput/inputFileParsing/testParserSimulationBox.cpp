@@ -1,8 +1,17 @@
-#include "exceptions.hpp"
-#include "inputFileParserSimulationBox.hpp"
-#include "simulationBoxSettings.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                         // for Engine
+#include "exceptions.hpp"                     // for InputFileException
+#include "inputFileParser.hpp"                // for readInput
+#include "inputFileParserSimulationBox.hpp"   // for InputFileParserSimulationBox
+#include "simulationBox.hpp"                  // for SimulationBox
+#include "simulationBoxSettings.hpp"          // for SimulationBoxSettings
+#include "testInputFileReader.hpp"            // for TestInputFileReader
+#include "throwWithMessage.hpp"               // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

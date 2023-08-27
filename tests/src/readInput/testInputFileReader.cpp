@@ -1,9 +1,17 @@
 #include "testInputFileReader.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "inputFileParser.hpp"   // for readInput
+#include "settings.hpp"          // for Settings
+#include "stringUtilities.hpp"   // for getLineCommands, utilities
 
-#include <gmock/gmock.h>
+#include "gmock/gmock.h"   // for ElementsAre
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <algorithm>       // for max, fill_n, copy
+#include <map>             // for map
+#include <sstream>         // for basic_istringstream
+#include <stddef.h>        // for size_t
+#include <vector>          // for vector, _Bit_iterator, _Bit_reference
 
 using namespace std;
 using namespace readInput;
@@ -23,7 +31,8 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
         string required_string;
         bool   required_bool;
 
-        if (istringstream(line).str().empty()) continue;
+        if (istringstream(line).str().empty())
+            continue;
         istringstream(line) >> keyword >> required_string;
         istringstream(required_string) >> std::boolalpha >> required_bool;
 

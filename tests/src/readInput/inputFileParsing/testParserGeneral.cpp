@@ -1,9 +1,19 @@
-#include "exceptions.hpp"
-#include "inputFileParserGeneral.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                   // for Engine
+#include "exceptions.hpp"               // for InputFileException
+#include "inputFileParser.hpp"          // for readInput
+#include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
+#include "settings.hpp"                 // for Settings
+#include "testInputFileReader.hpp"      // for TestInputFileReader
+#include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
 
-using namespace std;
+#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
+-- -
+
+   using namespace std;
 using namespace readInput;
 using namespace ::testing;
 

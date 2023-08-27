@@ -1,8 +1,16 @@
-#include "exceptions.hpp"
-#include "inputFileParserNonCoulomb.hpp"
-#include "intraNonBonded.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                      // for Engine
+#include "exceptions.hpp"                  // for InputFileException
+#include "inputFileParser.hpp"             // for readInput
+#include "inputFileParserNonCoulomb.hpp"   // for InputFileParserNonCoulomb
+#include "settings.hpp"                    // for Settings
+#include "testInputFileReader.hpp"         // for TestInputFileReader
+#include "throwWithMessage.hpp"            // for EXPECT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

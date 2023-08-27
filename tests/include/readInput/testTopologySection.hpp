@@ -2,11 +2,13 @@
 
 #define _TEST_TOPOLOGY_SECTION_HPP_
 
-#include "engine.hpp"
+#include "engine.hpp"          // for Engine
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
-#include <fstream>
-#include <gtest/gtest.h>
-#include <string>
+#include <gtest/gtest.h>   // for Test
+#include <stdio.h>         // for remove
+#include <string>          // for allocator, string
 
 /**
  * @class TestTopologySection

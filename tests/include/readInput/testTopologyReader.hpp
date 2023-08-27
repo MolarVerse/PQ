@@ -2,11 +2,13 @@
 
 #define _TEST_TOPOLOGY_READER_HPP_
 
-#include "engine.hpp"
-#include "topologyReader.hpp"
+#include "engine.hpp"           // for Engine
+#include "molecule.hpp"         // for Molecule
+#include "simulationBox.hpp"    // for SimulationBox
+#include "topologyReader.hpp"   // for TopologyReader
 
-#include <gtest/gtest.h>
-#include <string>
+#include <gtest/gtest.h>   // for Test
+#include <string>          // for allocator
 
 /**
  * @class TestTopologyReader

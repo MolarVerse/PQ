@@ -2,12 +2,15 @@
 
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
-#include "engine.hpp"
-#include "forceFieldNonCoulomb.hpp"
+#include "engine.hpp"                 // for Engine
+#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "molecule.hpp"               // for Molecule
+#include "potential.hpp"              // for Potential
+#include "simulationBox.hpp"          // for SimulationBox
 
-#include <fstream>
-#include <gtest/gtest.h>
-#include <string>
+#include <gtest/gtest.h>   // for Test
+#include <stdio.h>         // for remove
+#include <string>          // for allocator, string
 
 /**
  * @class TestParameterFileSection

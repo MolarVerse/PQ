@@ -1,7 +1,16 @@
-#include "exceptions.hpp"
-#include "inputFileParserIntegrator.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "engine.hpp"                      // for Engine
+#include "exceptions.hpp"                  // for InputFileException, customException
+#include "inputFileParser.hpp"             // for readInput
+#include "inputFileParserIntegrator.hpp"   // for InputFileParserIntegrator
+#include "integrator.hpp"                  // for Integrator
+#include "testInputFileReader.hpp"         // for TestInputFileReader
+#include "throwWithMessage.hpp"            // for ASSERT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

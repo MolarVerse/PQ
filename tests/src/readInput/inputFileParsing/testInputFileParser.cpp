@@ -1,6 +1,16 @@
-#include "inputFileParserGeneral.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"               // for InputFileException
+#include "inputFileParser.hpp"          // for ParseFunc, checkCommand
+#include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
+#include "testInputFileReader.hpp"      // for TestInputFileReader
+#include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <functional>      // for _Bind_front_t, bind_front
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <iosfwd>          // for std
+#include <map>             // for map
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace readInput;

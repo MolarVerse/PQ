@@ -1,8 +1,11 @@
-#include "commandLineArgs.hpp"
-#include "exceptions.hpp"
-#include "throwWithMessage.hpp"
+#include "commandLineArgs.hpp"    // for CommandLineArgs
+#include "exceptions.hpp"         // for UserInputException
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogl...
+#include <string>          // for string, allocator, char_traits, basi...
+#include <vector>          // for vector
 
 /**
  * @brief tests detecting flags and input file name via console input

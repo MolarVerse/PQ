@@ -1,6 +1,11 @@
 #include "testTopologyReader.hpp"
 
-#include "exceptions.hpp"
+#include "constraints.hpp"   // for Constraints
+#include "exceptions.hpp"    // for InputFileException, TopologyException
+#include "forceField.hpp"    // for ForceField
+#include "settings.hpp"      // for Settings
+
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 
 using namespace ::testing;
 
