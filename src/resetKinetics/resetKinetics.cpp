@@ -6,35 +6,29 @@
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vector3D
 
-#include <cmath>    // for sqrt
-#include <vector>   // for vector
+#include <cmath>     // for sqrt
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
-using namespace std;
 using namespace resetKinetics;
-using namespace physicalData;
 
 /**
  * @brief dummy reset function in case no reset is needed
  *
  */
-void ResetKinetics::reset(const size_t, PhysicalData &, simulationBox::SimulationBox &) const {}
+void ResetKinetics::reset(const size_t, physicalData::PhysicalData &, simulationBox::SimulationBox &) const {}
 
 /**
  * @brief reset the momentum of the system
- *
- * @note important to recalculate the new temperature after the reset
  *
  * @param step
  * @param physicalData
  * @param simBox
  */
-void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetMomentum::reset(const size_t step, physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
     if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
-    {
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
-    }
 }
 
 /**
@@ -45,27 +39,21 @@ void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulat
  *          reset only momentum if number of steps is smaller than nreset
  *          reset only momentum if number of steps is a multiple of freset
  *
- * @note important to recalculate the momentum after the temperature reset
- *       and the temperature after the momentum reset
- *
  * @param step
  * @param physicalData
  * @param simBox
  */
-void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetTemperature::reset(const size_t                  step,
+                             physicalData::PhysicalData   &physicalData,
+                             simulationBox::SimulationBox &simBox) const
 {
     if ((step <= _nStepsTemperatureReset) || (0 == step % _frequencyTemperatureReset))
     {
         ResetKinetics::resetTemperature(physicalData, simBox);
-        physicalData.calculateKineticEnergyAndMomentum(simBox);
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
     }
     else if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
-    {
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
-    }
 }
 
 /**
@@ -76,13 +64,16 @@ void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simu
  * @param physicalData
  * @param simBox
  */
-void ResetKinetics::resetTemperature(const PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
     const auto temperature = physicalData.getTemperature();
     const auto lambda      = ::sqrt(_targetTemperature / temperature);
 
     for (auto &molecule : simBox.getMolecules())
         molecule.scaleVelocities(lambda);
+
+    physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateTemperature(simBox);
 }
 
 /**
@@ -93,7 +84,7 @@ void ResetKinetics::resetTemperature(const PhysicalData &physicalData, simulatio
  * @param physicalData
  * @param simBox
  */
-void ResetKinetics::resetMomentum(PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
     const auto momentumVector     = physicalData.getMomentumVector() * constants::_S_TO_FS_;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
@@ -102,4 +93,5 @@ void ResetKinetics::resetMomentum(PhysicalData &physicalData, simulationBox::Sim
         molecule.correctVelocities(momentumCorrection);
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateTemperature(simBox);
 }

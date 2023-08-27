@@ -1,7 +1,7 @@
 #include "moldescriptorReader.hpp"
 
 #include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for MolDescriptorException
+#include "exceptions.hpp"        // for customException::MolDescriptorException
 #include "forceField.hpp"        // for ForceField
 #include "molecule.hpp"          // for Molecule
 #include "settings.hpp"          // for Settings
@@ -14,12 +14,7 @@
 #include <format>                                 // for format
 #include <string>                                 // for basic_string, string
 
-using namespace std;
-using namespace utilities;
-using namespace simulationBox;
 using namespace readInput;
-using namespace engine;
-using namespace customException;
 
 /**
  * @brief constructor
@@ -28,15 +23,15 @@ using namespace customException;
  *
  * @param engine
  *
- * @throw InputFileException if file not found
+ * @throw customException::InputFileException if file not found
  */
-MoldescriptorReader::MoldescriptorReader(Engine &engine)
+MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
     : _filename(engine.getSettings().getMoldescriptorFilename()), _engine(engine)
 {
     _fp.open(_filename);
 
     if (_fp.fail())
-        throw InputFileException(format(R"("{}" File not found)", _filename));
+        throw customException::InputFileException(std::format(R"("{}" File not found)", _filename));
 }
 
 /**
@@ -46,7 +41,7 @@ MoldescriptorReader::MoldescriptorReader(Engine &engine)
  *
  * @TODO: for pure QM-MD turn off reading
  */
-void readInput::readMolDescriptor(Engine &engine)
+void readInput::readMolDescriptor(engine::Engine &engine)
 {
     MoldescriptorReader reader(engine);
     reader.read();
@@ -55,19 +50,18 @@ void readInput::readMolDescriptor(Engine &engine)
 /**
  * @brief read moldescriptor file
  *
- * @throws MolDescriptorException if there is an error in the moldescriptor file
+ * @throws customException::MolDescriptorException if there is an error in the moldescriptor file
  */
 void MoldescriptorReader::read()
 {
-    string         line;
-    vector<string> lineElements;
+    std::string line;
 
     _lineNumber = 0;
 
     while (getline(_fp, line))
     {
-        line         = removeComments(line, "#");
-        lineElements = splitString(line);
+        line              = utilities::removeComments(line, "#");
+        auto lineElements = utilities::splitString(line);
 
         ++_lineNumber;
 
@@ -75,15 +69,15 @@ void MoldescriptorReader::read()
             continue;
         else if (lineElements.size() > 1)
         {
-            if (boost::algorithm::to_lower_copy(lineElements[0]) == "water_type")
-                _engine.getSimulationBox().setWaterType(stoi(lineElements[1]));
-            else if (boost::algorithm::to_lower_copy(lineElements[0]) == "ammonia_type")
-                _engine.getSimulationBox().setAmmoniaType(stoi(lineElements[1]));
+            if ("water_type" == utilities::toLowerCopy(lineElements[0]))
+                _engine.getSimulationBox().setWaterType(std::stoi(lineElements[1]));
+            else if ("ammonia_type" == utilities::toLowerCopy(lineElements[0]))
+                _engine.getSimulationBox().setAmmoniaType(std::stoi(lineElements[1]));
             else
                 processMolecule(lineElements);
         }
         else
-            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
     }
 }
 
@@ -92,16 +86,16 @@ void MoldescriptorReader::read()
  *
  * @param lineElements
  *
- * @throws MolDescriptorException if there is an error in the moldescriptor file
+ * @throws customException::MolDescriptorException if there is an error in the moldescriptor file
  */
-void MoldescriptorReader::processMolecule(vector<string> &lineElements)
+void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements)
 {
-    string line;
+    std::string line;
 
     if (lineElements.size() < 3)
-        throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+        throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
 
-    Molecule molecule(lineElements[0]);
+    simulationBox::Molecule molecule(lineElements[0]);
 
     molecule.setNumberOfAtoms(stoul(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
@@ -113,10 +107,10 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
     while (atomCount < molecule.getNumberOfAtoms())
     {
         if (_fp.eof())
-            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
         getline(_fp, line);
-        line         = removeComments(line, "#");
-        lineElements = splitString(line);
+        line         = utilities::removeComments(line, "#");
+        lineElements = utilities::splitString(line);
 
         ++_lineNumber;
 
@@ -131,14 +125,15 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
             ++atomCount;
         }
         else
-            throw MolDescriptorException(format("Error in moldescriptor file at line {}", _lineNumber));
+            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
 
         if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
-                throw MolDescriptorException(format("Error in moldescriptor file at line {} - force field noncoulombics is "
-                                                    "activated but no global can der Waals parameter given",
-                                                    _lineNumber));
+                throw customException::MolDescriptorException(
+                    std::format("Error in moldescriptor file at line {} - force field noncoulombics is "
+                                "activated but no global can der Waals parameter given",
+                                _lineNumber));
 
             molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
         }
@@ -156,7 +151,7 @@ void MoldescriptorReader::processMolecule(vector<string> &lineElements)
  *
  * @param molecule
  */
-void MoldescriptorReader::convertExternalToInternalAtomTypes(Molecule &molecule) const
+void MoldescriptorReader::convertExternalToInternalAtomTypes(simulationBox::Molecule &molecule) const
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

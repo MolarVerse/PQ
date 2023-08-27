@@ -17,6 +17,7 @@ target_link_libraries(intraNonBonded
     potential
     nonCoulombPotential
     coulombPotential
+    settings
 )
 
 install(TARGETS intraNonBonded

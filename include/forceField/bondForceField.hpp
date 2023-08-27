@@ -58,6 +58,7 @@ namespace forceField
         void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
 
         [[nodiscard]] size_t getType() const { return _type; }
+        [[nodiscard]] bool   isLinker() const { return _isLinker; }
         [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
         [[nodiscard]] double getForceConstant() const { return _forceConstant; }
     };

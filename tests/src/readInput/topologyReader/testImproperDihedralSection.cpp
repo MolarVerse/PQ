@@ -1,15 +1,10 @@
-#include "dihedralForceField.hpp"    // for DihedralForceField
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "forceField.hpp"            // for ForceField
-#include "simulationBox.hpp"         // for SimulationBox
-#include "testTopologySection.hpp"   // for TestTopologySection
-#include "topologySection.hpp"       // for ImproperDihedralSection
+#include "exceptions.hpp"
+#include "forceField.hpp"
+#include "improperDihedralSection.hpp"
+#include "testTopologySection.hpp"
+#include "topologySection.hpp"
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
+#include <gtest/gtest.h>
 
 /**
  * @brief test impropers section processing one line

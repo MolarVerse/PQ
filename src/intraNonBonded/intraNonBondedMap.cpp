@@ -5,8 +5,9 @@
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
-#include "simulationBox.hpp"         // for SimulationBox
-#include "vector3d.hpp"              // for norm, operator*, Vector3D
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for norm, operator*, Vector3D
 
 #include <cstdlib>   // for abs, size_t
 #include <memory>    // for __shared_ptr_access, shared_ptr
@@ -48,8 +49,8 @@ void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPot
 
                 if (scale)
                 {
-                    energy *= _scale14Coulomb;
-                    force  *= _scale14Coulomb;
+                    energy *= settings::PotentialSettings::getScale14Coulomb();
+                    force  *= settings::PotentialSettings::getScale14Coulomb();
                 }
                 coulombEnergy += energy;
 
@@ -69,8 +70,8 @@ void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPot
 
                     if (scale)
                     {
-                        energy          *= _scale14VanDerWaals;
-                        nonCoulombForce *= _scale14VanDerWaals;
+                        energy          *= settings::PotentialSettings::getScale14VanDerWaals();
+                        nonCoulombForce *= settings::PotentialSettings::getScale14VanDerWaals();
                     }
 
                     nonCoulombEnergy += energy;

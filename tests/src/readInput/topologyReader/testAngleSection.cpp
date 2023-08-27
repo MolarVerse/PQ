@@ -1,15 +1,10 @@
-#include "angleForceField.hpp"       // for AngleForceField
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "forceField.hpp"            // for ForceField
-#include "simulationBox.hpp"         // for SimulationBox
-#include "testTopologySection.hpp"   // for TestTopologySection
-#include "topologySection.hpp"       // for AngleSection
+#include "angleSection.hpp"
+#include "exceptions.hpp"
+#include "forceField.hpp"
+#include "testTopologySection.hpp"
+#include "topologySection.hpp"
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
+#include <gtest/gtest.h>
 
 /**
  * @brief test angle section processing one line
@@ -28,11 +23,19 @@ TEST_F(TestTopologySection, processSectionAngle)
     EXPECT_EQ(_engine->getForceField().getAngles()[0].getAtomIndices()[1], 0);
     EXPECT_EQ(_engine->getForceField().getAngles()[0].getAtomIndices()[2], 1);
     EXPECT_EQ(_engine->getForceField().getAngles()[0].getType(), 7);
+    EXPECT_EQ(_engine->getForceField().getAngles()[0].isLinker(), false);
+
+    lineElements = {"2", "1", "3", "7", "*"};
+    angleSection.processSection(lineElements, *_engine);
+    EXPECT_EQ(_engine->getForceField().getAngles()[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW(angleSection.processSection(lineElements, *_engine), customException::TopologyException);
 
     lineElements = {"1", "2", "7"};
+    EXPECT_THROW(angleSection.processSection(lineElements, *_engine), customException::TopologyException);
+
+    lineElements = {"1", "2", "3", "7", "#"};
     EXPECT_THROW(angleSection.processSection(lineElements, *_engine), customException::TopologyException);
 }
 

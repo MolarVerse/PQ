@@ -12,8 +12,8 @@
 #include "testSetup.hpp"            // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <stddef.h>        // for size_t
 #include <vector>          // for vector, allocator
 
 /**
@@ -262,6 +262,57 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     EXPECT_EQ(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getForceConstant(), 4.0);
     EXPECT_EQ(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getPeriodicity(), 5.0);
     EXPECT_EQ(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getPhaseShift(), 6.0);
+}
+
+/**
+ * @brief setupForceField should do nothing if force field is not activated
+ *
+ */
+TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
+{
+    _engine.getForceField().activate();
+
+    auto molecule1 = simulationBox::Molecule();
+    _engine.getSimulationBox().addMolecule(molecule1);
+    auto *molecule1Ptr = &_engine.getSimulationBox().getMolecule(0);
+
+    auto bond     = forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, 0);
+    auto angle    = forceField::AngleForceField({molecule1Ptr, molecule1Ptr, molecule1Ptr}, {0, 1, 2}, 0);
+    auto dihedral = forceField::DihedralForceField({molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr}, {0, 1, 2, 3}, 0);
+    auto improperDihedral =
+        forceField::DihedralForceField({molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr}, {0, 1, 2, 3}, 0);
+
+    _engine.getForceFieldPtr()->addBond(bond);
+    _engine.getForceFieldPtr()->addAngle(angle);
+    _engine.getForceFieldPtr()->addDihedral(dihedral);
+    _engine.getForceFieldPtr()->addImproperDihedral(improperDihedral);
+
+    auto bondType             = forceField::BondType(0, 1.0, 2.0);
+    auto angleType            = forceField::AngleType(0, 2.0, 3.0);
+    auto dihedralType         = forceField::DihedralType(0, 3.0, 4.0, 5.0);
+    auto improperDihedralType = forceField::DihedralType(0, 4.0, 5.0, 6.0);
+
+    _engine.getForceFieldPtr()->addBondType(bondType);
+    _engine.getForceFieldPtr()->addAngleType(angleType);
+    _engine.getForceFieldPtr()->addDihedralType(dihedralType);
+    _engine.getForceFieldPtr()->addImproperDihedralType(improperDihedralType);
+
+    _engine.getForceField().deactivate();
+    setup::setupForceField(_engine);
+
+    EXPECT_NE(_engine.getForceFieldPtr()->getBonds()[0].getEquilibriumBondLength(), 1.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getBonds()[0].getForceConstant(), 2.0);
+
+    EXPECT_NE(_engine.getForceFieldPtr()->getAngles()[0].getEquilibriumAngle(), 2.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getAngles()[0].getForceConstant(), 3.0);
+
+    EXPECT_NE(_engine.getForceFieldPtr()->getDihedrals()[0].getForceConstant(), 3.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getDihedrals()[0].getPeriodicity(), 4.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getDihedrals()[0].getPhaseShift(), 5.0);
+
+    EXPECT_NE(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getForceConstant(), 4.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getPeriodicity(), 5.0);
+    EXPECT_NE(_engine.getForceFieldPtr()->getImproperDihedrals()[0].getPhaseShift(), 6.0);
 }
 
 int main(int argc, char **argv)

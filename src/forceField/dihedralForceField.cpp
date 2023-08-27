@@ -6,8 +6,9 @@
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
-#include "simulationBox.hpp"         // for SimulationBox
-#include "vector3d.hpp"              // for cross, dot, norm, normSquared
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for cross, dot, norm, normSquared
 
 #include <cmath>    // for acos, cos, sin, sqrt
 #include <memory>   // for shared_ptr, __shared_ptr_access
@@ -98,8 +99,8 @@ void DihedralForceField::calculateEnergyAndForces(const SimulationBox    &box,
 
             const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance14, chargeProduct);
 
-            forceMagnitude = -coulombForce * (1.0 - _scale14Coulomb);
-            physicalData.addCoulombEnergy(-coulombEnergy * (1.0 - _scale14Coulomb));
+            forceMagnitude = -coulombForce * (1.0 - settings::PotentialSettings::getScale14Coulomb());
+            physicalData.addCoulombEnergy(-coulombEnergy * (1.0 - settings::PotentialSettings::getScale14Coulomb()));
 
             const auto molType1  = _molecules[0]->getMoltype();
             const auto molType2  = _molecules[3]->getMoltype();
@@ -115,8 +116,9 @@ void DihedralForceField::calculateEnergyAndForces(const SimulationBox    &box,
             {
                 const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance14);
 
-                forceMagnitude -= nonCoulombForce * (1.0 - _scale14VanDerWaals);
-                physicalData.addNonCoulombEnergy(-nonCoulombEnergy * (1.0 - _scale14VanDerWaals));
+                forceMagnitude -= nonCoulombForce * (1.0 - settings::PotentialSettings::getScale14VanDerWaals());
+                physicalData.addNonCoulombEnergy(-nonCoulombEnergy *
+                                                 (1.0 - settings::PotentialSettings::getScale14VanDerWaals()));
             }
 
             forceMagnitude /= distance14;

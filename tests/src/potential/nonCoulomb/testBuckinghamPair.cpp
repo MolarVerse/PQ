@@ -3,9 +3,8 @@
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <cmath>           // for pow, exp
+#include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT...
-#include <stddef.h>        // for size_t
-#include <string>          // for allocator, string
 #include <vector>          // for vector
 
 using namespace potential;
@@ -60,10 +59,10 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
     auto distance        = 2.0;
     auto [energy, force] = potential.calculateEnergyAndForce(distance);
 
-    auto helper = coefficients[0] * exp(coefficients[1] * distance);
+    auto helper = coefficients[0] * ::exp(coefficients[1] * distance);
 
-    EXPECT_DOUBLE_EQ(energy, helper + coefficients[2] / pow(distance, 6) - energyCutoff - forceCutoff * (rncCutoff - distance));
-    EXPECT_DOUBLE_EQ(force, -helper * coefficients[1] + 6.0 * coefficients[2] / pow(distance, 7) - forceCutoff);
+    EXPECT_DOUBLE_EQ(energy, helper + coefficients[2] / ::pow(distance, 6) - energyCutoff - forceCutoff * (rncCutoff - distance));
+    EXPECT_DOUBLE_EQ(force, -helper * coefficients[1] + 6.0 * coefficients[2] / ::pow(distance, 7) - forceCutoff);
 }
 
 int main(int argc, char **argv)

@@ -34,9 +34,6 @@ namespace intraNonBonded
     class IntraNonBondedMap
     {
       private:
-        static inline double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;
-        static inline double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
-
         simulationBox::Molecule *_molecule;
         IntraNonBondedContainer *_intraNonBondedType;
 
@@ -54,14 +51,6 @@ namespace intraNonBonded
         [[nodiscard]] IntraNonBondedContainer      *getIntraNonBondedType() const { return _intraNonBondedType; }
         [[nodiscard]] simulationBox::Molecule      *getMolecule() const { return _molecule; }
         [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const { return _intraNonBondedType->getAtomIndices(); }
-        [[nodiscard]] static double                 getScale14Coulomb() { return _scale14Coulomb; }
-        [[nodiscard]] static double                 getScale14VanDerWaals() { return _scale14VanDerWaals; }
-
-        static void setScale14Coulomb(const double scale14Coulomb) { IntraNonBondedMap::_scale14Coulomb = scale14Coulomb; }
-        static void setScale14VanDerWaals(const double scale14VanDerWaals)
-        {
-            IntraNonBondedMap::_scale14VanDerWaals = scale14VanDerWaals;
-        }
     };
 
 }   // namespace intraNonBonded

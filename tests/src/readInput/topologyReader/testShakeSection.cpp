@@ -1,16 +1,7 @@
-#include "bondConstraint.hpp"        // for BondConstraint
-#include "constraints.hpp"           // for Constraints
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "simulationBox.hpp"         // for SimulationBox
-#include "testTopologySection.hpp"   // for TestTopologySection
-#include "topologySection.hpp"       // for ShakeSection
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <algorithm>       // for copy
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
+#include "exceptions.hpp"
+#include "shakeSection.hpp"
+#include "testTopologySection.hpp"
+#include "topologySection.hpp"
 
 /**
  * @brief test shake section processing one line

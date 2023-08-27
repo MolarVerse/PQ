@@ -2,12 +2,10 @@
 
 #define _VEC3D_HPP_
 
-#include <algorithm>   // IWYU pragma: keep
-#include <array>       // for array
-#include <cmath>       // for ceil, fabs, floor, rint, sqrt
-#include <cstddef>     // for size_t
-#include <iostream>    // for ostream
-#include <tuple>       // for array
+#include <array>      // for array
+#include <cmath>      // for ceil, fabs, floor, rint, sqrt
+#include <cstddef>    // for size_t
+#include <iostream>   // for ostream
 
 namespace linearAlgebra
 {

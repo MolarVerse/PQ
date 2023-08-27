@@ -4,8 +4,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
 namespace setup
 {
@@ -13,6 +13,8 @@ namespace setup
 
     /**
      * @class ForceFieldSetup
+     *
+     * @brief setup all bonded contributions in the force field
      *
      */
     class ForceFieldSetup

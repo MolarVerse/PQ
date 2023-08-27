@@ -3,6 +3,8 @@ add_library(settings
     simulationBoxSettings.cpp
     manostatSettings.cpp
     thermostatSettings.cpp
+    constraintSettings.cpp
+    potentialSettings.cpp
 )
 
 target_include_directories(settings

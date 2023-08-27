@@ -2,9 +2,8 @@
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, Ini...
 #include <memory>          // for allocator
-#include <string_view>     // for string_view
 
 /**
  * @brief tests throwing input file exception

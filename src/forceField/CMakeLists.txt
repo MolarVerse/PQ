@@ -23,6 +23,7 @@ target_link_libraries(forceField
     potential
     coulombPotential
     nonCoulombPotential
+    settings
 )
 
 install(TARGETS forceField

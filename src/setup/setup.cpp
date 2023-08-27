@@ -13,7 +13,7 @@
 #include "parameterFileReader.hpp"
 #include "potentialSetup.hpp"
 #include "resetKineticsSetup.hpp"
-#include "rstFileReader.hpp"
+#include "restartFileReader.hpp"
 #include "simulationBoxSetup.hpp"
 #include "thermostatSetup.hpp"
 #include "topologyReader.hpp"
@@ -22,57 +22,56 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
-using namespace std;
 using namespace engine;
 using namespace readInput;
 
 /**
  * @brief setup the engine
  *
- * @param inputFilename
+ * @param inputFileName
  * @param engine
  */
-void setup::setupSimulation(const string &inputFilename, Engine &engine)
+void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
-    readFiles(inputFilename, engine);
+    readFiles(inputFileName, engine);
 
-    cout << "setup engine..." << '\n';
+    std::cout << "setup engine..." << '\n';
     setupEngine(engine);
 
     // needs setup of engine before reading guff.dat
-    cout << "Reading guff.dat..." << '\n';
+    std::cout << "Reading guff.dat..." << '\n';
     readGuffDat(engine);
 
-    cout << "Setup complete!" << '\n';
+    std::cout << "Setup complete!" << '\n';
 }
 
 /**
  * @brief reads all the files needed for the simulation
  *
- * @param inputFilename
+ * @param inputFileName
  * @param engine
  */
-void setup::readFiles(const string &inputFilename, Engine &engine)
+void setup::readFiles(const std::string &inputFileName, Engine &engine)
 {
-    cout << "Reading input file..." << '\n';
-    readInputFile(inputFilename, engine);
+    std::cout << "Reading input file..." << '\n';
+    readInputFile(inputFileName, engine);
 
-    cout << "Reading moldescriptor..." << '\n';
+    std::cout << "Reading moldescriptor..." << '\n';
     readMolDescriptor(engine);
 
-    cout << "Reading rst file..." << '\n';
-    readRstFile(engine);
+    std::cout << "Reading rst file..." << '\n';
+    restartFile::readRestartFile(engine);
 
-    cout << "Reading topology file..." << '\n';
+    std::cout << "Reading topology file..." << '\n';
     topology::readTopologyFile(engine);
 
-    cout << "Reading parameter file..." << '\n';
+    std::cout << "Reading parameter file..." << '\n';
     parameterFile::readParameterFile(engine);
 
-    cout << "Reading intra non bonded file..." << '\n';
+    std::cout << "Reading intra non bonded file..." << '\n';
     readIntraNonBondedFile(engine);
 }
 

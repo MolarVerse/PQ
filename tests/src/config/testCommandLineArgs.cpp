@@ -4,7 +4,7 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogl...
-#include <string>          // for string, allocator, char_traits, basi...
+#include <string>          // for allocator, basic_string, operator+
 #include <vector>          // for vector
 
 /**

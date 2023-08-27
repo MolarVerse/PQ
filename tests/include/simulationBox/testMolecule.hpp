@@ -5,9 +5,7 @@
 #include "molecule.hpp"   // for Molecule
 #include "vector3d.hpp"   // for Vec3D
 
-#include <algorithm>       // for copy
 #include <gtest/gtest.h>   // for Test
-#include <stddef.h>        // for size_t
 
 class TestMolecule : public ::testing::Test
 {

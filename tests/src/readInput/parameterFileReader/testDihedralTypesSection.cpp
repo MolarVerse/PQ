@@ -1,4 +1,5 @@
 #include "constants.hpp"
+#include "dihedralSection.hpp"
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"
 #include "testParameterFileSection.hpp"

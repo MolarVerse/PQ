@@ -120,6 +120,7 @@
         "forcexyz",
         "freset",
         "fscale",
+        "GTEST",
         "guffdat",
         "GUFFDATEXCEPTION",
         "guffpath",

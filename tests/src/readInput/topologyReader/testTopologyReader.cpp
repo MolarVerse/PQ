@@ -34,8 +34,9 @@ TEST_F(TestTopologyReader, isNeeded)
  */
 TEST_F(TestTopologyReader, determineSection)
 {
-    EXPECT_NO_THROW(_topologyReader->determineSection({"shake"}));
-    EXPECT_THROW(_topologyReader->determineSection({"unknown"}), customException::TopologyException);
+    EXPECT_NO_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"shake"}));
+    EXPECT_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"unknown"}),
+                 customException::TopologyException);
 }
 
 /**

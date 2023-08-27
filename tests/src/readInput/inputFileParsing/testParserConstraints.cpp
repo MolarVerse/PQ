@@ -1,11 +1,8 @@
-#include "constraints.hpp"                  // for Constraints
-#include "engine.hpp"                       // for Engine
-#include "exceptions.hpp"                   // for InputFileException
-#include "inputFileParser.hpp"              // for readInput
-#include "inputFileParserConstraints.hpp"   // for InputFileParserConstraints
-#include "settings.hpp"                     // for Settings
-#include "testInputFileReader.hpp"          // for TestInputFileReader
-#include "throwWithMessage.hpp"             // for EXPECT_THROW_MSG
+#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "exceptions.hpp"
+#include "inputFileParserConstraints.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
@@ -51,7 +48,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
     InputFileParserConstraints parser(_engine);
     vector<string>             lineElements = {"shake-tolerance", "=", "0.0001"};
     parser.parseShakeTolerance(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getShakeTolerance(), 0.0001);
+    EXPECT_EQ(settings::ConstraintSettings::getShakeTolerance(), 0.0001);
 
     lineElements = {"shake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
@@ -69,7 +66,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
     InputFileParserConstraints parser(_engine);
     vector<string>             lineElements = {"shake-iter", "=", "100"};
     parser.parseShakeIteration(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getShakeMaxIter(), 100);
+    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 100);
 
     lineElements = {"shake-iter", "=", "-100"};
     EXPECT_THROW_MSG(parser.parseShakeIteration(lineElements, 0),
@@ -88,7 +85,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
     InputFileParserConstraints parser(_engine);
     vector<string>             lineElements = {"rattle-tolerance", "=", "0.0001"};
     parser.parseRattleTolerance(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getRattleTolerance(), 0.0001);
+    EXPECT_EQ(settings::ConstraintSettings::getRattleTolerance(), 0.0001);
 
     lineElements = {"rattle-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
@@ -106,7 +103,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
     InputFileParserConstraints parser(_engine);
     vector<string>             lineElements = {"rattle-iter", "=", "100"};
     parser.parseRattleIteration(lineElements, 0);
-    EXPECT_EQ(100, _engine.getSettings().getRattleMaxIter());
+    EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 100);
 
     lineElements = {"rattle-iter", "=", "-100"};
     EXPECT_THROW_MSG(parser.parseRattleIteration(lineElements, 0),
