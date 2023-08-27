@@ -9,8 +9,18 @@
 #include <functional>   // for identity
 
 using namespace setup;
-using namespace forceField;
 
+/**
+ * @brief setup force field
+ *
+ * @details
+ * 1) set nonCoulombPotential and coulombPotential in the ForceField class
+ * 2) setup bonds
+ * 3) setup angles
+ * 4) setup dihedrals
+ * 5) setup improper dihedrals
+ *
+ */
 void ForceFieldSetup::setup()
 {
     _engine.getForceField().setNonCoulombPotential(_engine.getPotential().getNonCoulombPotentialSharedPtr());
@@ -22,6 +32,13 @@ void ForceFieldSetup::setup()
     setupImproperDihedrals();
 }
 
+/**
+ * @brief wrapper to construct ForceFieldSetup object and setup the force field
+ *
+ * @details the setup is only performed if the force field is activated
+ *
+ * @param engine
+ */
 void setup::setupForceField(engine::Engine &engine)
 {
     if (!engine.isForceFieldActivated())

@@ -50,12 +50,6 @@ namespace settings
 
         std::string _jobtype;
 
-        // shake settings for later setup
-        double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;    // 1e-8
-        size_t _shakeMaxIter    = defaults::_SHAKE_MAX_ITER_DEFAULT_;     // 20
-        double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;   // 1e-8
-        size_t _rattleMaxIter   = defaults::_RATTLE_MAX_ITER_DEFAULT_;    // 20
-
         // coulomb long range settings for later setup
         std::string _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // none
         double      _wolfParameter        = defaults::_WOLF_PARAMETER_DEFAULT_;            // 0.25
@@ -83,11 +77,6 @@ namespace settings
         [[nodiscard]] size_t getNReset() const { return _nReset; }
         [[nodiscard]] size_t getFReset() const { return _fReset; }
 
-        [[nodiscard]] double getShakeTolerance() const { return _shakeTolerance; }
-        [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
-        [[nodiscard]] double getRattleTolerance() const { return _rattleTolerance; }
-        [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }
-
         [[nodiscard]] std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
         [[nodiscard]] double      getWolfParameter() const { return _wolfParameter; }
 
@@ -111,11 +100,6 @@ namespace settings
         void setFScale(const size_t fScale) { _fScale = fScale; }
         void setNReset(const size_t nReset) { _nReset = nReset; }
         void setFReset(const size_t fReset) { _fReset = fReset; }
-
-        void setShakeTolerance(const double shakeTolerance) { _shakeTolerance = shakeTolerance; }
-        void setShakeMaxIter(const size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
-        void setRattleTolerance(const double rattleTolerance) { _rattleTolerance = rattleTolerance; }
-        void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
 
         void setCoulombLongRangeType(const std::string_view coulombLongRangeType)
         {

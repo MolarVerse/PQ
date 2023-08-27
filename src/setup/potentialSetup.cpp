@@ -28,6 +28,7 @@ using namespace potential;
 /**
  * @brief wrapper to create PotentialSetup object and call setup
  *
+ * @param engine
  */
 void setup::setupPotential(engine::Engine &engine)
 {

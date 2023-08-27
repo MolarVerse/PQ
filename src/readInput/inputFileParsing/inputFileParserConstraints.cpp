@@ -1,9 +1,10 @@
 #include "inputFileParserConstraints.hpp"
 
-#include "constraints.hpp"   // for Constraints
-#include "engine.hpp"        // for Engine
-#include "exceptions.hpp"    // for InputFileException, customException
-#include "settings.hpp"      // for Settings
+#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "constraints.hpp"          // for Constraints
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException, customException
+#include "settings.hpp"             // for Settings
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
@@ -69,7 +70,7 @@ void InputFileParserConstraints::parseShakeTolerance(const vector<string> &lineE
     if (tolerance < 0.0)
         throw InputFileException("Shake tolerance must be positive");
 
-    _engine.getSettings().setShakeTolerance(tolerance);
+    settings::ConstraintSettings::setShakeTolerance(tolerance);
 }
 
 /**
@@ -88,7 +89,7 @@ void InputFileParserConstraints::parseShakeIteration(const vector<string> &lineE
     if (iteration < 0)
         throw InputFileException("Maximum shake iterations must be positive");
 
-    _engine.getSettings().setShakeMaxIter(size_t(iteration));
+    settings::ConstraintSettings::setShakeMaxIter(size_t(iteration));
 }
 
 /**
@@ -107,7 +108,7 @@ void InputFileParserConstraints::parseRattleTolerance(const vector<string> &line
     if (tolerance < 0.0)
         throw InputFileException("Rattle tolerance must be positive");
 
-    _engine.getSettings().setRattleTolerance(tolerance);
+    settings::ConstraintSettings::setRattleTolerance(tolerance);
 }
 
 /**
@@ -126,5 +127,5 @@ void InputFileParserConstraints::parseRattleIteration(const vector<string> &line
     if (iteration < 0)
         throw InputFileException("Maximum rattle iterations must be positive");
 
-    _engine.getSettings().setRattleMaxIter(size_t(iteration));
+    settings::ConstraintSettings::setRattleMaxIter(size_t(iteration));
 }

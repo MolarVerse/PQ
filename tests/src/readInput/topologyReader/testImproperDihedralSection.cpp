@@ -1,7 +1,10 @@
 #include "exceptions.hpp"
 #include "forceField.hpp"
+#include "improperDihedralSection.hpp"
 #include "testTopologySection.hpp"
 #include "topologySection.hpp"
+
+#include <gtest/gtest.h>
 
 /**
  * @brief test impropers section processing one line

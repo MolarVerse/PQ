@@ -1,6 +1,7 @@
 #include "testTopologySection.hpp"
 
 #include "exceptions.hpp"
+#include "shakeSection.hpp"
 #include "topologySection.hpp"
 
 using namespace ::testing;
@@ -14,15 +15,15 @@ TEST_F(TestTopologySection, processShakeSection)
 {
     ShakeSection shakeSection;
 
-    std::ofstream _outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFilename.c_str());
 
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0 0\n";
-    _outputStream << "         \n";
-    _outputStream << "2 3 1.2 0\n";
-    _outputStream << "end" << std::endl;
+    outputStream << "shake\n";
+    outputStream << "1 2 1.0 0\n";
+    outputStream << "         \n";
+    outputStream << "2 3 1.2 0\n";
+    outputStream << "end" << '\n' << std::flush;
 
-    _outputStream.close();
+    outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
     std::ifstream fp(_topologyFilename.c_str());
@@ -58,13 +59,13 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
 {
     ShakeSection shakeSection;
 
-    std::ofstream _outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFilename.c_str());
 
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0\n";
-    _outputStream << "end" << std::endl;
+    outputStream << "shake\n";
+    outputStream << "1 2 1.0\n";
+    outputStream << "end" << '\n' << std::flush;
 
-    _outputStream.close();
+    outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
     std::ifstream fp(_topologyFilename.c_str());
@@ -82,13 +83,13 @@ TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
 {
     ShakeSection shakeSection;
 
-    std::ofstream _outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFilename.c_str());
 
-    _outputStream << "shake\n";
-    _outputStream << "1 1 1.0 0\n";
-    _outputStream << "end" << std::endl;
+    outputStream << "shake\n";
+    outputStream << "1 1 1.0 0\n";
+    outputStream << "end" << '\n' << std::flush;
 
-    _outputStream.close();
+    outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
     std::ifstream fp(_topologyFilename.c_str());
@@ -106,15 +107,15 @@ TEST_F(TestTopologySection, processShakeSection_missingEnd)
 {
     ShakeSection shakeSection;
 
-    std::ofstream _outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFilename.c_str());
 
-    _outputStream << "shake\n";
-    _outputStream << "1 2 1.0 0\n";
-    _outputStream << "         \n";
-    _outputStream << "2 3 1.2 0\n";
-    _outputStream << "" << std::endl;
+    outputStream << "shake\n";
+    outputStream << "1 2 1.0 0\n";
+    outputStream << "         \n";
+    outputStream << "2 3 1.2 0\n";
+    outputStream << "" << '\n' << std::flush;
 
-    _outputStream.close();
+    outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
     std::ifstream fp(_topologyFilename.c_str());

@@ -4,8 +4,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
 namespace setup
 {

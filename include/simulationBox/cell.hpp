@@ -4,7 +4,7 @@
 
 #include "vector3d.hpp"   // for Vec3D, Vec3Dul
 
-#include <algorithm>   // for max, copy
+#include <algorithm>   // IWYU pragma: keep
 #include <cstddef>     // for size_t
 #include <vector>      // for vector
 

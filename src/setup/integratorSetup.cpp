@@ -7,8 +7,9 @@
 using namespace setup;
 
 /**
- * @brief wrapper for setupTimings
+ * @brief constructs a new Integrator Setup:: Integrator Setup object and calls setup
  *
+ * @param engine
  */
 void setup::setupIntegrator(engine::Engine &engine)
 {

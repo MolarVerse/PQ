@@ -1,3 +1,4 @@
+#include "bondSection.hpp"
 #include "exceptions.hpp"
 #include "forceField.hpp"
 #include "testTopologySection.hpp"
@@ -18,11 +19,19 @@ TEST_F(TestTopologySection, processSectionBond)
     EXPECT_EQ(_engine->getForceField().getBonds()[0].getAtomIndex1(), 0);
     EXPECT_EQ(_engine->getForceField().getBonds()[0].getAtomIndex2(), 0);
     EXPECT_EQ(_engine->getForceField().getBonds()[0].getType(), 7);
+    EXPECT_EQ(_engine->getForceField().getBonds()[0].isLinker(), false);
+
+    lineElements = {"1", "2", "7", "*"};
+    bondSection.processSection(lineElements, *_engine);
+    EXPECT_EQ(_engine->getForceField().getBonds()[1].isLinker(), true);
 
     lineElements = {"1", "1", "7"};
     EXPECT_THROW(bondSection.processSection(lineElements, *_engine), customException::TopologyException);
 
     lineElements = {"1", "2", "7", "1", "2"};
+    EXPECT_THROW(bondSection.processSection(lineElements, *_engine), customException::TopologyException);
+
+    lineElements = {"1", "2", "7", "#"};
     EXPECT_THROW(bondSection.processSection(lineElements, *_engine), customException::TopologyException);
 }
 

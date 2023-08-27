@@ -15,6 +15,7 @@ using namespace setup;
 /**
  * @brief wrapper for setupManostat
  *
+ * @param engine
  */
 void setup::setupManostat(engine::Engine &engine)
 {

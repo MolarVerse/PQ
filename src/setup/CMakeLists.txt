@@ -21,6 +21,7 @@ target_include_directories(setup
 target_link_libraries(setup
     PUBLIC
     readInput
+    topologyFileReader
     engine
     utilities
     output

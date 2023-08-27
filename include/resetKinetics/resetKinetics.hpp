@@ -6,20 +6,20 @@
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace resetKinetics
 {
     /**
      * @class ResetKinetics
      *
-     * @brief base class for the reset of the kinetics
+     * @brief base class for the reset of the kinetics - represents also class for no reset
      *
      */
     class ResetKinetics
@@ -46,7 +46,7 @@ namespace resetKinetics
         virtual ~ResetKinetics() = default;
 
         virtual void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
-        void         resetTemperature(const physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
+        void         resetTemperature(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
         void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
 
         [[nodiscard]] size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }

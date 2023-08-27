@@ -1,7 +1,10 @@
+#include "dihedralSection.hpp"
 #include "exceptions.hpp"
 #include "forceField.hpp"
 #include "testTopologySection.hpp"
 #include "topologySection.hpp"
+
+#include <gtest/gtest.h>
 
 /**
  * @brief test dihedral section processing one line
@@ -22,11 +25,19 @@ TEST_F(TestTopologySection, processSectionDihedral)
     EXPECT_EQ(_engine->getForceField().getDihedrals()[0].getAtomIndices()[2], 1);
     EXPECT_EQ(_engine->getForceField().getDihedrals()[0].getAtomIndices()[3], 2);
     EXPECT_EQ(_engine->getForceField().getDihedrals()[0].getType(), 7);
+    EXPECT_EQ(_engine->getForceField().getDihedrals()[0].isLinker(), false);
+
+    lineElements = {"1", "2", "3", "4", "7", "*"};
+    dihedralSection.processSection(lineElements, *_engine);
+    EXPECT_EQ(_engine->getForceField().getDihedrals()[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW(dihedralSection.processSection(lineElements, *_engine), customException::TopologyException);
 
     lineElements = {"1", "2", "7"};
+    EXPECT_THROW(dihedralSection.processSection(lineElements, *_engine), customException::TopologyException);
+
+    lineElements = {"1", "2", "3", "4", "7", "#"};
     EXPECT_THROW(dihedralSection.processSection(lineElements, *_engine), customException::TopologyException);
 }
 

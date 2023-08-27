@@ -8,7 +8,7 @@
 #include <algorithm>     // for ranges::for_each
 #include <functional>    // for identity
 #include <map>           // for map
-#include <string_view>   // for string_view
+#include <string_view>   // IWYU pragma: keep
 
 using namespace simulationBox;
 using namespace linearAlgebra;

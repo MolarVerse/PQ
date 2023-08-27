@@ -8,8 +8,6 @@ add_library(readInput
     parameterFileSection.cpp
     rstFileReader.cpp
     rstFileSection.cpp
-    topologyReader.cpp
-    topologySection.cpp
 )
 
 target_include_directories(readInput
@@ -35,3 +33,4 @@ install(TARGETS readInput
 )
 
 add_subdirectory(inputFileParsing)
+add_subdirectory(topologyFileReader)

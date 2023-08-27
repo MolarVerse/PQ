@@ -1,15 +1,17 @@
 #include "constraintsSetup.hpp"
 
-#include "constraints.hpp"   // for Constraints
-#include "engine.hpp"        // for Engine
-#include "settings.hpp"      // for Settings
-#include "timings.hpp"       // for Timings
+#include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
+#include "constraints.hpp"          // for Constraints
+#include "engine.hpp"               // for Engine
+#include "settings.hpp"             // for Settings
+#include "timings.hpp"              // for Timings
 
 using namespace setup;
 
 /**
- * @brief wrapper for setup constraints
+ * @brief constructs a new Constraints Setup:: Constraints Setup object and calls setup
  *
+ * @param engine
  */
 void setup::setupConstraints(engine::Engine &engine)
 {
@@ -20,6 +22,7 @@ void setup::setupConstraints(engine::Engine &engine)
 /**
  * @brief sets constraints data in constraints object
  *
+ * @details sets tolerances, max iterations, reference bond lengths and timestep
  */
 void ConstraintsSetup::setup()
 {
@@ -38,8 +41,8 @@ void ConstraintsSetup::setup()
  */
 void ConstraintsSetup::setupTolerances()
 {
-    _engine.getConstraints().setShakeTolerance(_engine.getSettings().getShakeTolerance());
-    _engine.getConstraints().setRattleTolerance(_engine.getSettings().getRattleTolerance());
+    _engine.getConstraints().setShakeTolerance(settings::ConstraintSettings::getShakeTolerance());
+    _engine.getConstraints().setRattleTolerance(settings::ConstraintSettings::getRattleTolerance());
 }
 
 /**
@@ -48,8 +51,8 @@ void ConstraintsSetup::setupTolerances()
  */
 void ConstraintsSetup::setupMaxIterations()
 {
-    _engine.getConstraints().setShakeMaxIter(_engine.getSettings().getShakeMaxIter());
-    _engine.getConstraints().setRattleMaxIter(_engine.getSettings().getRattleMaxIter());
+    _engine.getConstraints().setShakeMaxIter(settings::ConstraintSettings::getShakeMaxIter());
+    _engine.getConstraints().setRattleMaxIter(settings::ConstraintSettings::getRattleMaxIter());
 }
 
 /**

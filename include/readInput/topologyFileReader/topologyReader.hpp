@@ -12,8 +12,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
 namespace readInput::topology
 {
@@ -37,9 +37,9 @@ namespace readInput::topology
       public:
         TopologyReader(const std::string &filename, engine::Engine &engine);
 
-        bool             isNeeded() const;
-        void             read();
-        TopologySection *determineSection(const std::vector<std::string> &);
+        void                           read();
+        [[nodiscard]] bool             isNeeded() const;
+        [[nodiscard]] TopologySection *determineSection(const std::vector<std::string> &lineElements);
 
         void setFilename(const std::string_view &filename) { _filename = filename; }
     };

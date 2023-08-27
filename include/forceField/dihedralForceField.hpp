@@ -66,13 +66,14 @@ namespace forceField
         static void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
         static void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
 
-        [[nodiscard]] static double getScale14Coulomb() { return _scale14Coulomb; }
-        [[nodiscard]] static double getScale14VanDerWaals() { return _scale14VanDerWaals; }
-
         [[nodiscard]] size_t getType() const { return _type; }
+        [[nodiscard]] bool   isLinker() const { return _isLinker; }
         [[nodiscard]] double getForceConstant() const { return _forceConstant; }
         [[nodiscard]] double getPeriodicity() const { return _periodicity; }
         [[nodiscard]] double getPhaseShift() const { return _phaseShift; }
+
+        [[nodiscard]] static double getScale14Coulomb() { return _scale14Coulomb; }
+        [[nodiscard]] static double getScale14VanDerWaals() { return _scale14VanDerWaals; }
     };
 
 }   // namespace forceField

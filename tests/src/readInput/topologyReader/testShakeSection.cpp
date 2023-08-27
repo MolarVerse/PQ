@@ -1,4 +1,5 @@
 #include "exceptions.hpp"
+#include "shakeSection.hpp"
 #include "testTopologySection.hpp"
 #include "topologySection.hpp"
 

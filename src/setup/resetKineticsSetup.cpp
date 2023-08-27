@@ -11,6 +11,7 @@ using namespace setup;
 /**
  * @brief constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup
  *
+ * @param engine
  */
 void setup::setupResetKinetics(engine::Engine &engine)
 {

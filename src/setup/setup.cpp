@@ -22,8 +22,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // forward declaration
+}
 
 using namespace std;
 using namespace engine;
@@ -32,12 +32,12 @@ using namespace readInput;
 /**
  * @brief setup the engine
  *
- * @param inputFilename
+ * @param inputFileName
  * @param engine
  */
-void setup::setupSimulation(const string &inputFilename, Engine &engine)
+void setup::setupSimulation(const string &inputFileName, Engine &engine)
 {
-    readFiles(inputFilename, engine);
+    readFiles(inputFileName, engine);
 
     cout << "setup engine..." << '\n';
     setupEngine(engine);
@@ -52,13 +52,13 @@ void setup::setupSimulation(const string &inputFilename, Engine &engine)
 /**
  * @brief reads all the files needed for the simulation
  *
- * @param inputFilename
+ * @param inputFileName
  * @param engine
  */
-void setup::readFiles(const string &inputFilename, Engine &engine)
+void setup::readFiles(const string &inputFileName, Engine &engine)
 {
     cout << "Reading input file..." << '\n';
-    readInputFile(inputFilename, engine);
+    readInputFile(inputFileName, engine);
 
     cout << "Reading moldescriptor..." << '\n';
     readMolDescriptor(engine);
