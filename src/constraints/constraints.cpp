@@ -2,9 +2,8 @@
 
 #include "exceptions.hpp"
 
-#include <algorithm>     // for ranges::for_each
-#include <functional>    // for identity
-#include <string_view>   // IWYU pragma: keep
+#include <algorithm>    // for ranges::for_each
+#include <functional>   // for identity
 
 using namespace constraints;
 

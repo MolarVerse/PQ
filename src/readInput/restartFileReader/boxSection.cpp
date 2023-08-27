@@ -1,0 +1,53 @@
+#include "boxSection.hpp"
+
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBoxSettings.hpp"
+#include "vector3d.hpp"
+
+#include <format>   // for format
+#include <ranges>   // for any_of
+#include <string>   // for string
+#include <vector>   // for vector
+
+using namespace readInput::restartFile;
+
+/**
+ * @brief processes the box section of the rst file
+ *
+ * @details the box section can have 4 or 7 elements. If it has 4 elements, the box is assumed to be orthogonal. If it has 7
+ * elements, the box is assumed to be triclinic. The second to fourth elements are the box dimensions, the next 3 elements are the
+ * box angles.
+ *
+ * @param lineElements all elements of the line
+ * @param engine object containing the engine
+ *
+ * @throws customException::RstFileException if the number of elements in the line is not 4 or 7
+ * @throws customException::RstFileException if the box dimensions are not positive
+ * @throws customException::RstFileException if the box angles are not positive or larger than 90°
+ */
+void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+{
+    if ((lineElements.size() != 4) && (lineElements.size() != 7))
+        throw customException::RstFileException(
+            std::format("Error in line {}: Box section must have 4 or 7 elements", _lineNumber));
+
+    const auto boxDimensions = linearAlgebra::Vec3D{stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])};
+
+    if (std::ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
+        throw customException::RstFileException("All box dimensions must be positive");
+
+    engine.getSimulationBox().setBoxDimensions(boxDimensions);
+
+    if (7 == lineElements.size())
+    {
+        const auto boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
+
+        if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
+            throw customException::RstFileException("Box angles must be positive and smaller than 90°");
+
+        engine.getSimulationBox().setBoxAngles(boxAngles);
+    }
+
+    settings::SimulationBoxSettings::setBoxSet(true);
+}

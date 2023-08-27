@@ -1,3 +1,4 @@
+#include "angleSection.hpp"
 #include "constants.hpp"
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"

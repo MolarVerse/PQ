@@ -4,7 +4,6 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <iostream>
-#include <string_view>   // IWYU pragma: keep
 
 using namespace std;
 using namespace customException;

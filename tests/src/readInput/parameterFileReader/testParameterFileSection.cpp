@@ -1,6 +1,11 @@
 #include "testParameterFileSection.hpp"
 
+#include "angleSection.hpp"
+#include "bondSection.hpp"
+#include "dihedralSection.hpp"
 #include "exceptions.hpp"
+#include "improperDihedralSection.hpp"
+#include "nonCoulombicsSection.hpp"
 #include "parameterFileSection.hpp"
 
 /**

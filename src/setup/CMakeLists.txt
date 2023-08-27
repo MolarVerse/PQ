@@ -22,6 +22,9 @@ target_link_libraries(setup
     PUBLIC
     readInput
     topologyFileReader
+    restartFileReader
+    parameterFileReader
+
     engine
     utilities
     output

@@ -4,6 +4,7 @@ add_library(settings
     manostatSettings.cpp
     thermostatSettings.cpp
     constraintSettings.cpp
+    potentialSettings.cpp
 )
 
 target_include_directories(settings

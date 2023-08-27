@@ -1,7 +1,9 @@
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"
+#include "potentialSettings.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "typesSection.hpp"
 
 using namespace ::testing;
 using namespace readInput::parameterFile;
@@ -15,8 +17,8 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     std::vector<std::string>               lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
     readInput::parameterFile::TypesSection typesSection;
     typesSection.process(lineElements, *_engine);
-    EXPECT_EQ(intraNonBonded::IntraNonBondedMap::getScale14Coulomb(), 0.23);
-    EXPECT_EQ(intraNonBonded::IntraNonBondedMap::getScale14VanDerWaals(), 0.99);
+    EXPECT_EQ(settings::PotentialSettings::getScale14Coulomb(), 0.23);
+    EXPECT_EQ(settings::PotentialSettings::getScale14VanDerWaals(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);

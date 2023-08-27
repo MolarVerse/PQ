@@ -1,5 +1,6 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
+#include "improperDihedralSection.hpp"
 #include "parameterFileSection.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"

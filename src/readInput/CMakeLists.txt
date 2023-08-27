@@ -4,10 +4,6 @@ add_library(readInput
     inputFileReader.cpp
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
-    parameterFileReader.cpp
-    parameterFileSection.cpp
-    rstFileReader.cpp
-    rstFileSection.cpp
 )
 
 target_include_directories(readInput
@@ -18,19 +14,14 @@ target_include_directories(readInput
 target_link_libraries(readInput
     PUBLIC
     engine
-    utilities
-    output
-    config
-    gtest
-    forceField
     inputFileParser
-    potential
-    nonCoulombPotential
 )
 
 install(TARGETS readInput
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
 
-add_subdirectory(inputFileParsing)
+add_subdirectory(inputFileParser)
 add_subdirectory(topologyFileReader)
+add_subdirectory(restartFileReader)
+add_subdirectory(parameterFileReader)

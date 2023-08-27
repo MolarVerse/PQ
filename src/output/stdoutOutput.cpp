@@ -2,9 +2,8 @@
 
 #include "exceptions.hpp"   // for UserInputExceptionWarning, customException
 
-#include <iostream>      // for operator<<, char_traits, basic_ostream, cout
-#include <string>        // for operator<<
-#include <string_view>   // for string_view
+#include <iostream>   // for operator<<, char_traits, basic_ostream, cout
+#include <string>     // for operator<<
 
 using namespace std;
 using namespace output;

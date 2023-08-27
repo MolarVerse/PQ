@@ -1,4 +1,4 @@
-#include "testRstFileReader.hpp"
+#include "testRestartFileReader.hpp"
 
 #include "exceptions.hpp"
 #include "moldescriptorReader.hpp"
@@ -15,8 +15,8 @@ using namespace customException;
  */
 TEST_F(TestRstFileReader, determineSection)
 {
-    string        filename = "examples/setup/h2o_qmcfc.rst";
-    RstFileReader rstFileReader(filename, _engine);
+    string                         filename = "examples/setup/h2o_qmcfc.rst";
+    restartFile::RestartFileReader rstFileReader(filename, _engine);
 
     auto  lineElements = vector<string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -37,8 +37,8 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, fileNotFound)
 {
-    string        filename = "examples/setup/FILENOTFOUND.rst";
-    RstFileReader rstFileReader(filename, _engine);
+    string                         filename = "examples/setup/FILENOTFOUND.rst";
+    restartFile::RestartFileReader rstFileReader(filename, _engine);
 
     ASSERT_THROW_MSG(rstFileReader.read(), InputFileException, "\"examples/setup/FILENOTFOUND.rst\" File not found");
 }
@@ -56,7 +56,7 @@ TEST_F(TestRstFileReader, rstFileReading)
     _engine.getSettings().setStartFilename(filename);
 
     moldescriptor.read();
-    ASSERT_NO_THROW(readRstFile(_engine));
+    ASSERT_NO_THROW(restartFile::readRestartFile(_engine));
 }
 
 int main(int argc, char **argv)

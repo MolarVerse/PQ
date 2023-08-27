@@ -1,6 +1,6 @@
-#include "exceptions.hpp"           // for RstFileException, customException
-#include "rstFileSection.hpp"       // for RstFileSection, readInput
-#include "testRstFileSection.hpp"   // for TestNoseHooverSection
+#include "exceptions.hpp"               // for RstFileException, customException
+#include "restartFileSection.hpp"       // for RstFileSection, readInput
+#include "testRestartFileSection.hpp"   // for TestNoseHooverSection
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPart...
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
@@ -28,5 +28,5 @@ TEST_F(TestNoseHooverSection, testProcess)
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return ::RUN_ALL_TESTS();
 }

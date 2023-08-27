@@ -4,9 +4,8 @@
 
 #include "vector3d.hpp"   // for Vec3D, Vec3Dul
 
-#include <algorithm>   // IWYU pragma: keep
-#include <cstddef>     // for size_t
-#include <vector>      // for vector
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 namespace simulationBox
 {

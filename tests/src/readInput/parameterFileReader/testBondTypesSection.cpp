@@ -1,3 +1,4 @@
+#include "bondSection.hpp"
 #include "exceptions.hpp"
 #include "parameterFileSection.hpp"
 #include "testParameterFileSection.hpp"

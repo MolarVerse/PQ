@@ -10,9 +10,9 @@
 #include <boost/type_index/type_index_facade.hpp>             // for operator==
 #include <cctype>                                             // for isspace
 #include <format>                                             // for format
-#include <fstream>                                            // IWYU pragma: keep
+#include <fstream>                                            // for basic_istream, ifstream
 #include <functional>                                         // for identity
-#include <sstream>                                            // IWYU pragma: keep
+#include <sstream>                                            // for sstream
 #include <string>                                             // for string
 #include <vector>                                             // for vector
 

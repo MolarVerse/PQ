@@ -1,25 +1,25 @@
-#include "cell.hpp"                 // for simulationBox
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for RstFileException, customException
-#include "molecule.hpp"             // for Molecule
-#include "rstFileSection.hpp"       // for RstFileSection, AtomSection, readI...
-#include "simulationBox.hpp"        // for SimulationBox
-#include "testRstFileSection.hpp"   // for TestAtomSection
-#include "throwWithMessage.hpp"     // for ASSERT_THROW_MSG
-#include "vector3d.hpp"             // for linearAlgebra
+#include "cell.hpp"                     // for simulationBox
+#include "engine.hpp"                   // for Engine
+#include "exceptions.hpp"               // for RstFileException, customException
+#include "molecule.hpp"                 // for Molecule
+#include "restartFileSection.hpp"       // for RstFileSection, AtomSection, readI...
+#include "simulationBox.hpp"            // for SimulationBox
+#include "testRestartFileSection.hpp"   // for TestAtomSection
+#include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
+#include "vector3d.hpp"                 // for linearAlgebra
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatte...
 #include "gtest/gtest.h"   // for Message, TestPartResult, Assertion...
 #include <algorithm>       // for max
+#include <cstddef>         // for size_t
 #include <fstream>         // for ifstream, std
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <stddef.h>        // for size_t
 #include <string>          // for string, stod, allocator, basic_string
 #include <vector>          // for vector
 
 using namespace std;
 using namespace testing;
-using namespace readInput;
+using namespace readInput::restartFile;
 using namespace simulationBox;
 using namespace customException;
 using namespace linearAlgebra;
@@ -44,11 +44,11 @@ TEST_F(TestAtomSection, numberOfArguments)
 {
     _section->_lineNumber = 7;
     for (size_t i = 0; i < 25; ++i)
-        if (i != 21)
+        if (i != 12 && i != 21)
         {
             auto line = vector<string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, _engine), RstFileException, "Error in line 7: Atom section must have 21 elements");
+                _section->process(line, _engine), RstFileException, "Error in line 7: Atom section must have 12 or 21 elements");
         }
 }
 
@@ -95,7 +95,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
 {
     auto line = vector<string>(21);
     line[2]   = "1";
-    for (int i = 3; i < 21; ++i)
+    for (size_t i = 3; i < 21; ++i)
         line[i] = "1.0";
 
     string filename = "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
@@ -114,7 +114,7 @@ TEST_F(TestAtomSection, testProcess)
 {
     auto line = vector<string>(21);
     line[2]   = "1";
-    for (int i = 3; i < 21; ++i)
+    for (size_t i = 3; i < 21; ++i)
         line[i] = "1.0";
 
     string filename = "data/atomSection/testProcess.rst";
@@ -134,14 +134,14 @@ TEST_F(TestAtomSection, testProcess)
 
     line    = vector<string>(21);
     line[2] = "2";
-    for (int i = 3; i < 21; ++i)
+    for (size_t i = 3; i < 21; ++i)
         line[i] = "1.0";
 
     _section->process(line, _engine);
 
     line    = vector<string>(21);
     line[2] = "1";
-    for (int i = 3; i < 21; ++i)
+    for (size_t i = 3; i < 21; ++i)
         line[i] = "1.0";
 
     _section->process(line, _engine);
@@ -164,10 +164,10 @@ TEST_F(TestAtomSection, testProcessAtomLine)
 
     auto line = vector<string>(21);
     line[0]   = "Ar";
-    for (int i = 3; i < 21; ++i)
+    for (size_t i = 3; i < 21; ++i)
         line[i] = to_string(i + i / 10.0);
 
-    static_cast<AtomSection *>(_section)->processAtomLine(line, molecule);
+    dynamic_cast<AtomSection *>(_section)->processAtomLine(line, molecule);
 
     ASSERT_THAT(molecule.getAtomPosition(0), ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
     ASSERT_THAT(molecule.getAtomVelocity(0), ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));

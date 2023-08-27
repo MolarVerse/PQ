@@ -5,10 +5,9 @@
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
-#include <algorithm>     // for ranges::for_each
-#include <functional>    // for identity
-#include <map>           // for map
-#include <string_view>   // IWYU pragma: keep
+#include <algorithm>    // for ranges::for_each
+#include <functional>   // for identity
+#include <map>          // for map
 
 using namespace simulationBox;
 using namespace linearAlgebra;

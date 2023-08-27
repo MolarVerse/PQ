@@ -1,5 +1,9 @@
+#include "atomSection.hpp"
+#include "boxSection.hpp"
 #include "engine.hpp"
-#include "rstFileSection.hpp"
+#include "noseHooverSection.hpp"
+#include "restartFileSection.hpp"
+#include "stepCountSection.hpp"
 
 #include <gtest/gtest.h>
 
@@ -14,14 +18,14 @@ class TestBoxSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new readInput::BoxSection;
+        _section = new readInput::restartFile::BoxSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    readInput::RstFileSection *_section;
-    engine::Engine             _engine;
+    readInput::restartFile::RestartFileSection *_section;
+    engine::Engine                              _engine;
 };
 
 /**
@@ -35,14 +39,14 @@ class TestNoseHooverSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new readInput::NoseHooverSection;
+        _section = new readInput::restartFile::NoseHooverSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    readInput::RstFileSection *_section;
-    engine::Engine             _engine;
+    readInput::restartFile::RestartFileSection *_section;
+    engine::Engine                              _engine;
 };
 
 /**
@@ -56,14 +60,14 @@ class TestStepCountSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new readInput::StepCountSection;
+        _section = new readInput::restartFile::StepCountSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    readInput::RstFileSection *_section;
-    engine::Engine             _engine;
+    readInput::restartFile::RestartFileSection *_section;
+    engine::Engine                              _engine;
 };
 
 /**
@@ -77,12 +81,12 @@ class TestAtomSection : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _section = new readInput::AtomSection;
+        _section = new readInput::restartFile::AtomSection;
         _engine  = engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
-    readInput::RstFileSection *_section;
-    engine::Engine             _engine;
+    readInput::restartFile::RestartFileSection *_section;
+    engine::Engine                              _engine;
 };

@@ -12,8 +12,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput::parameterFile
 {
@@ -40,17 +40,16 @@ namespace readInput::parameterFile
         bool isNeeded() const;
         void read();
 
-        ParameterFileSection *determineSection(const std::vector<std::string> &);
-        void                  deleteSection(const ParameterFileSection *section);
+        [[nodiscard]] ParameterFileSection *determineSection(const std::vector<std::string> &lineElements);
+        void                                deleteSection(const ParameterFileSection *section);
+
+        void setFilename(const std::string_view &filename) { _filename = filename; }
 
         [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections()
         {
             return _parameterFileSections;
         }
-
         [[nodiscard]] const std::string &getFilename() const { return _filename; }
-
-        void setFilename(const std::string_view &filename) { _filename = filename; }
     };
 
 }   // namespace readInput::parameterFile
