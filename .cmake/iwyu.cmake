@@ -28,5 +28,5 @@ if(CMAKE_IWYU)
         endforeach()
     endfunction()
 
-    print_all_targets(src)
+    print_all_targets("${PROJECT_SOURCE_DIR}")
 endif()
