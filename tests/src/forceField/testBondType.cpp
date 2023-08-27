@@ -1,6 +1,8 @@
-#include "bondType.hpp"
+#include "bondType.hpp"   // for BondType
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
+#include <string>          // for allocator, string
 
 /**
  * @brief tests operator== for BondType

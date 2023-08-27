@@ -1,14 +1,21 @@
-#include "exceptions.hpp"
-#include "testRstFileSection.hpp"
-#include "throwWithMessage.hpp"
+#include "cell.hpp"                 // for simulationBox
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for RstFileException, customException
+#include "molecule.hpp"             // for Molecule
+#include "rstFileSection.hpp"       // for RstFileSection, AtomSection, readI...
+#include "simulationBox.hpp"        // for SimulationBox
+#include "testRstFileSection.hpp"   // for TestAtomSection
+#include "throwWithMessage.hpp"     // for ASSERT_THROW_MSG
+#include "vector3d.hpp"             // for linearAlgebra
 
-#include <cassert>
-#include <filesystem>
-#include <fstream>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <string>
-#include <vector>
+#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatte...
+#include "gtest/gtest.h"   // for Message, TestPartResult, Assertion...
+#include <algorithm>       // for max
+#include <fstream>         // for ifstream, std
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <stddef.h>        // for size_t
+#include <string>          // for string, stod, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace testing;

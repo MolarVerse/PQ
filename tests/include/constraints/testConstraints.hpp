@@ -2,11 +2,14 @@
 
 #define _TEST_CONSTRAINTS_HPP_
 
-#include "constraints.hpp"
-#include "molecule.hpp"
-#include "simulationBox.hpp"
+#include "bondConstraint.hpp"   // for BondConstraint
+#include "constraints.hpp"      // for Constraints
+#include "molecule.hpp"         // for Molecule
+#include "simulationBox.hpp"    // for SimulationBox
+#include "vector3d.hpp"         // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <vector>          // for vector
 
 /**
  * @class TestConstraints

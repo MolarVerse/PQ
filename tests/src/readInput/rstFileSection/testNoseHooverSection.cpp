@@ -1,11 +1,12 @@
-#include "exceptions.hpp"
-#include "testRstFileSection.hpp"
+#include "exceptions.hpp"           // for RstFileException, customException
+#include "rstFileSection.hpp"       // for RstFileSection, readInput
+#include "testRstFileSection.hpp"   // for TestNoseHooverSection
 
-#include <cassert>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <string>
-#include <vector>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPart...
+#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
+#include <iosfwd>          // for std
+#include <string>          // for string, allocator
+#include <vector>          // for vector
 
 using namespace std;
 using namespace testing;

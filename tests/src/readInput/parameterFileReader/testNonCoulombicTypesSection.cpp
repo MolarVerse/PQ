@@ -1,12 +1,23 @@
-#include "buckinghamPair.hpp"
-#include "exceptions.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "guffPair.hpp"
-#include "lennardJonesPair.hpp"
-#include "morsePair.hpp"
-#include "parameterFileSection.hpp"
-#include "testParameterFileSection.hpp"
-#include "throwWithMessage.hpp"
+#include "buckinghamPair.hpp"             // for BuckinghamPair
+#include "engine.hpp"                     // for Engine
+#include "exceptions.hpp"                 // for ParameterFileException
+#include "forceFieldNonCoulomb.hpp"       // for ForceFieldNonCoulomb
+#include "lennardJonesPair.hpp"           // for LennardJonesPair
+#include "morsePair.hpp"                  // for MorsePair
+#include "nonCoulombPair.hpp"             // for NonCoulombPair
+#include "nonCoulombPotential.hpp"        // for NonCoulombType, NonCoulombPo...
+#include "parameterFileSection.hpp"       // for NonCoulombicsSection, parame...
+#include "potential.hpp"                  // for Potential
+#include "simulationBox.hpp"              // for SimulationBox
+#include "testParameterFileSection.hpp"   // for TestParameterFileSection
+#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, tes...
+#include <algorithm>       // for copy
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <memory>          // for allocator, shared_ptr
+#include <string>          // for string, basic_string
+#include <vector>          // for vector
 
 using namespace ::testing;
 using namespace readInput::parameterFile;

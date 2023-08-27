@@ -1,6 +1,8 @@
-#include "dihedralType.hpp"
+#include "dihedralType.hpp"   // for DihedralType
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_...
+#include <string>          // for allocator, string
 
 /**
  * @brief tests operator== for DihedralType

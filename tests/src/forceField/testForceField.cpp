@@ -1,8 +1,13 @@
-#include "exceptions.hpp"
-#include "forceField.hpp"
-#include "throwWithMessage.hpp"
+#include "angleType.hpp"          // for AngleType
+#include "bondType.hpp"           // for BondType
+#include "dihedralType.hpp"       // for DihedralType
+#include "exceptions.hpp"         // for TopologyException
+#include "forceField.hpp"         // for ForceField
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, EXP...
+#include <string>          // for allocator, operator+, to_string, cha...
 
 /**
  * @brief tests findBondTypeById function

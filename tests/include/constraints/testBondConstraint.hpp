@@ -2,11 +2,13 @@
 
 #define _TEST_BOND_CONSTRAINT_HPP_
 
-#include "bondConstraint.hpp"
-#include "molecule.hpp"
-#include "simulationBox.hpp"
+#include "bondConstraint.hpp"   // for BondConstraint
+#include "molecule.hpp"         // for Molecule
+#include "simulationBox.hpp"    // for SimulationBox
+#include "vector3d.hpp"         // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <vector>          // for vector
 
 /**
  * @class TestBondConstraint

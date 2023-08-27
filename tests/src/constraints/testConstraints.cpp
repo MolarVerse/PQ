@@ -1,5 +1,7 @@
 #include "testConstraints.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+
 /**
  * @brief tests calculation of all bond constraints ref bond lengths
  *
