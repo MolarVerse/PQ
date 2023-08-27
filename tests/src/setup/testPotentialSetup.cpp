@@ -1,11 +1,18 @@
-#include "constants.hpp"
-#include "coulombShiftedPotential.hpp"
-#include "coulombWolf.hpp"
-#include "exceptions.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "guffNonCoulomb.hpp"
-#include "potentialSetup.hpp"
-#include "testSetup.hpp"
+#include "coulombPotential.hpp"          // for CoulombPotential
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "coulombWolf.hpp"               // for CoulombWolf
+#include "engine.hpp"                    // for Engine
+#include "forceField.hpp"                // for ForceField
+#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
+#include "potential.hpp"                 // for Potential
+#include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
+#include "settings.hpp"                  // for Settings
+#include "testSetup.hpp"                 // for TestSetup
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 

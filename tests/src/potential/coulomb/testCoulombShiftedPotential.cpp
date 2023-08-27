@@ -1,7 +1,10 @@
-#include "constants.hpp"
-#include "coulombShiftedPotential.hpp"
+#include "constants.hpp"                 // for _COULOMB_PREFACTOR_
+#include "coulombPotential.hpp"          // for potential
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ
+#include <memory>          // for allocator
 
 using namespace potential;
 

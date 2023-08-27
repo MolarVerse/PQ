@@ -1,6 +1,10 @@
 #include "testIntegrator.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"   // for _V_VERLET_VELOCITY_FACTOR_, _FS_TO_S_
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, AssertionResult
+#include <string>          // for allocator, string
+#include <vector>          // for vector
 
 /**
  * @brief tests function integrate velocities of velocity verlet integrator

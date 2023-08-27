@@ -2,10 +2,14 @@
 
 #define _TEST_TRAJECTORYOUTPUT_HPP_
 
+#include "molecule.hpp"           // for Molecule
 #include "simulationBox.hpp"      // for SimulationBox
 #include "trajectoryOutput.hpp"   // for TrajectoryOutput
+#include "vector3d.hpp"           // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
+#include <stdio.h>         // for remove
 
 /**
  * @class TestTrajectoryOutput

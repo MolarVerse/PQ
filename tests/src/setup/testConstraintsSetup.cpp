@@ -1,7 +1,13 @@
-#include "constants.hpp"
-#include "constraintsSetup.hpp"
-#include "exceptions.hpp"
-#include "testSetup.hpp"
+#include "constraints.hpp"        // for Constraints
+#include "constraintsSetup.hpp"   // for ConstraintsSetup, setupConstraints
+#include "engine.hpp"             // for Engine
+#include "exceptions.hpp"         // for customException
+#include "settings.hpp"           // for Settings
+#include "testSetup.hpp"          // for TestSetup
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ, Init...
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 using namespace customException;

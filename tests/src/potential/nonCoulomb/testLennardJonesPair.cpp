@@ -1,7 +1,12 @@
-#include "lennardJonesPair.hpp"
+#include "lennardJonesPair.hpp"   // for LennardJonesPair
+#include "nonCoulombPair.hpp"     // for potential
 
-#include <cmath>   // for pow
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartRe...
+#include <cmath>           // for pow
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPE...
+#include <stddef.h>        // for size_t
+#include <string>          // for allocator, string
+#include <vector>          // for vector
 
 using namespace potential;
 

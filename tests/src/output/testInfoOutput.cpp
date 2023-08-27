@@ -1,4 +1,10 @@
-#include "testEnergyOutput.hpp"
+#include "infoOutput.hpp"         // for InfoOutput
+#include "testEnergyOutput.hpp"   // for TestEnergyOutput
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_T...
+#include <iosfwd>          // for ifstream
+#include <string>          // for getline, allocator, string
 
 /**
  * @brief tests writing info file

@@ -1,8 +1,12 @@
 #include "testBox.hpp"
 
-#include "constants.hpp"
-#include "exceptions.hpp"
-#include "vector3d.hpp"
+#include "constants.hpp"    // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "exceptions.hpp"   // for customException
+#include "vector3d.hpp"     // for Vec3D, linearAlgebra
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for std
+#include <memory>          // for allocator
 
 using namespace std;
 using namespace linearAlgebra;

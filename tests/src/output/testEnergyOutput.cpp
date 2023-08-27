@@ -1,5 +1,9 @@
 #include "testEnergyOutput.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for ifstream
+#include <string>          // for getline, allocator, string
+
 /**
  * @brief tests writing energy output file
  *

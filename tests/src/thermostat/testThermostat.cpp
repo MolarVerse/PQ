@@ -1,8 +1,12 @@
 #include "testThermostat.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _TEMPERATURE_FACTOR_
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <math.h>          // for sqrt
+#include <memory>          // for allocator
 
 TEST_F(TestThermostat, calculateTemperature)
 {

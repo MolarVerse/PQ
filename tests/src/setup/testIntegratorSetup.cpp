@@ -1,7 +1,13 @@
-#include "constants.hpp"
-#include "exceptions.hpp"
-#include "integratorSetup.hpp"
-#include "testSetup.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for customException
+#include "integrator.hpp"        // for Integrator
+#include "integratorSetup.hpp"   // for setupIntegrator, IntegratorSetup, setup
+#include "testSetup.hpp"         // for TestSetup
+#include "timings.hpp"           // for Timings
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, InitGoogleTest
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 using namespace customException;

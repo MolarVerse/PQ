@@ -2,9 +2,11 @@
 
 #define _TEST_LOGOUTPUT_HPP_
 
-#include "logOutput.hpp"
+#include "logOutput.hpp"   // for LogOutput
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
+#include <stdio.h>         // for remove
 
 /**
  * @class TestLogOutput

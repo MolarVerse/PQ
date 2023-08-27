@@ -1,5 +1,8 @@
 #include "testStdoutOutput.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <string>          // for allocator, string
+
 /**
  * @brief Test writeDensityWarning
  *

@@ -2,11 +2,13 @@
 
 #define _TEST_ENERGY_OUTPUT_HPP_
 
-#include "energyOutput.hpp"
-#include "infoOutput.hpp"
-#include "physicalData.hpp"   // for PhysicalData
+#include "energyOutput.hpp"   // for EnergyOutput
+#include "infoOutput.hpp"     // for InfoOutput
+#include "physicalData.hpp"   // for PhysicalDat
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
+#include <stdio.h>         // for remove
 
 /**
  * @class TestEnergyOutput

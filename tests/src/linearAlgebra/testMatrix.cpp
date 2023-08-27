@@ -1,6 +1,8 @@
-#include "matrix.hpp"
+#include "matrix.hpp"   // for Matrix, linearAlgebra
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), InitG...
+#include <memory>          // for allocator
 
 using namespace linearAlgebra;
 

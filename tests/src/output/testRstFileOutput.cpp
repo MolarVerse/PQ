@@ -1,5 +1,9 @@
 #include "testRstFileOutput.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for ifstream
+#include <string>          // for getline, allocator, string
+
 /**
  * @brief tests writing the restart file
  *

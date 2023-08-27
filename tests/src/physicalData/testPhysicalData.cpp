@@ -1,7 +1,10 @@
 #include "testPhysicalData.hpp"
 
-#include "constants.hpp"
-#include "vector3d.hpp"   // for sum
+#include "constants.hpp"   // for _KINETIC_ENERGY_FACTOR_, _FS_TO_S_, _TEMPER...
+#include "vector3d.hpp"    // for operator*, Vector3D, Vec3D, sum, norm
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <memory>          // for allocator
 
 /**
  * @brief tests makeAverages function

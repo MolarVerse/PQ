@@ -1,8 +1,20 @@
-#include "forceFieldSetup.hpp"
-#include "testSetup.hpp"
-#include "throwWithMessage.hpp"
+#include "angleForceField.hpp"      // for AngleForceField
+#include "angleType.hpp"            // for AngleType
+#include "bondForceField.hpp"       // for BondForceField
+#include "bondType.hpp"             // for BondType
+#include "dihedralForceField.hpp"   // for DihedralForceField
+#include "dihedralType.hpp"         // for DihedralType
+#include "engine.hpp"               // for Engine
+#include "forceField.hpp"           // for ForceField
+#include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
+#include "molecule.hpp"             // for Molecule
+#include "simulationBox.hpp"        // for SimulationBox
+#include "testSetup.hpp"            // for TestSetup
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <stddef.h>        // for size_t
+#include <vector>          // for vector, allocator
 
 /**
  * @brief test setupBonds function

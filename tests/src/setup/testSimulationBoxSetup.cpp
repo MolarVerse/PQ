@@ -1,10 +1,21 @@
-#include "constants.hpp"
-#include "exceptions.hpp"
-#include "simulationBoxSettings.hpp"
-#include "simulationBoxSetup.hpp"
-#include "testSetup.hpp"
+#include "cell.hpp"                    // for simulationBox
+#include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_P...
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for MolDescriptorException, InputFi...
+#include "molecule.hpp"                // for Molecule
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "simulationBoxSetup.hpp"      // for SimulationBoxSetup, setupSimula...
+#include "testSetup.hpp"               // for TestSetup
+#include "vector3d.hpp"                // for Vec3D
 
-#include <cmath>
+#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include <algorithm>       // for max
+#include <cmath>           // for cbrt
+#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, TestI...
+#include <iosfwd>          // for std
+#include <string>          // for allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 using namespace ::testing;

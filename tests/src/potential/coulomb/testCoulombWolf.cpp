@@ -1,7 +1,11 @@
-#include "constants.hpp"
-#include "coulombWolf.hpp"
+#include "constants.hpp"          // for _COULOMB_PREFACTOR_
+#include "coulombPotential.hpp"   // for potential
+#include "coulombWolf.hpp"        // for CoulombWolf
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, Init...
+#include <math.h>          // for erfc, exp, sqrt, M_PI
+#include <memory>          // for allocator
 
 using namespace potential;
 

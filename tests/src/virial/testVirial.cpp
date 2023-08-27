@@ -1,5 +1,8 @@
 #include "testVirial.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <memory>          // for allocator
+
 TEST_F(TestVirial, calculateVirial)
 {
     const auto force_mol1_atom1 = _simulationBox->getMolecule(0).getAtomForce(0);

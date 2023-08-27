@@ -2,11 +2,13 @@
 
 #define _TEST_VIRIAL_HPP_
 
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
-#include "virial.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
+#include "virial.hpp"          // for Virial
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
 class TestVirial : public ::testing::Test
 {

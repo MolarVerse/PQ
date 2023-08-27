@@ -1,8 +1,14 @@
-#include "constants.hpp"
-#include "exceptions.hpp"
-#include "manostatSettings.hpp"
-#include "manostatSetup.hpp"
-#include "testSetup.hpp"
+#include "engine.hpp"             // for Engine
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "manostat.hpp"           // for BerendsenManostat, Manostat
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "manostatSetup.hpp"      // for ManostatSetup, setupManostat, setup
+#include "testSetup.hpp"          // for TestSetup
+#include "timings.hpp"            // for Timings
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 using namespace customException;

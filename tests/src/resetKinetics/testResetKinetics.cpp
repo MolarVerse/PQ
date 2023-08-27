@@ -1,5 +1,9 @@
 #include "testResetKinetics.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <math.h>          // for sqrt
+#include <string>          // for allocator, basic_string
+
 /**
  * @brief tests the resetTemperature method
  *

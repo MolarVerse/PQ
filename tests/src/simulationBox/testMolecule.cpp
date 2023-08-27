@@ -1,5 +1,9 @@
 #include "testMolecule.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for std
+#include <vector>          // for allocator, vector
+
 using namespace std;
 
 TEST_F(TestMolecule, calculateCenterOfMass)
@@ -20,7 +24,7 @@ TEST_F(TestMolecule, scaleAtoms)
 
     _molecule->calculateCenterOfMass({10.0, 10.0, 10.0});
 
-    const auto            centerOfMassBeforeScaling = _molecule->getCenterOfMass();
+    const auto                 centerOfMassBeforeScaling = _molecule->getCenterOfMass();
     const linearAlgebra::Vec3D shift                     = centerOfMassBeforeScaling * (scale - 1.0);
 
     _molecule->scale(scale);
@@ -32,7 +36,7 @@ TEST_F(TestMolecule, scaleAtoms)
 
 TEST_F(TestMolecule, scaleVelocities)
 {
-    const double          scale         = 2.0;
+    const double               scale         = 2.0;
     const linearAlgebra::Vec3D atomVelocity1 = _molecule->getAtomVelocity(0);
     const linearAlgebra::Vec3D atomVelocity2 = _molecule->getAtomVelocity(1);
     const linearAlgebra::Vec3D atomVelocity3 = _molecule->getAtomVelocity(2);

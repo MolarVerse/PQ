@@ -2,11 +2,13 @@
 
 #define _TEST_RESET_KINETICS_HPP_
 
+#include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "resetKinetics.hpp"   // for ResetKinetics
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
 /**
  * @class TestResetKinetics

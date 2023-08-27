@@ -1,9 +1,9 @@
-#include "constants.hpp"
-#include "coulombPotential.hpp"
-#include "coulombShiftedPotential.hpp"
+#include "coulombPotential.hpp"          // for CoulombPotential, potential
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 
-#include <cmath>
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#include <memory>          // for allocator
 
 using namespace potential;
 

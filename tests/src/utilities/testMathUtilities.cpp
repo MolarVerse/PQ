@@ -1,6 +1,10 @@
-#include "mathUtilities.hpp"
+#include "mathUtilities.hpp"   // for compare, sign, utilities
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
+#include <limits>          // for numeric_limits
+#include <string>          // for allocator, string
 
 using namespace utilities;
 

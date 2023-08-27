@@ -2,11 +2,13 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
+#include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-#include "thermostat.hpp"
+#include "thermostat.hpp"      // for Thermostat
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
 class TestThermostat : public ::testing::Test
 {

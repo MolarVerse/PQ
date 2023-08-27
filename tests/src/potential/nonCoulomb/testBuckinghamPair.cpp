@@ -1,7 +1,12 @@
-#include "buckinghamPair.hpp"
+#include "buckinghamPair.hpp"   // for BuckinghamPair
+#include "nonCoulombPair.hpp"   // for potential
 
-#include <cmath>   // for exp, pow
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <cmath>           // for pow, exp
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT...
+#include <stddef.h>        // for size_t
+#include <string>          // for allocator, string
+#include <vector>          // for vector
 
 using namespace potential;
 

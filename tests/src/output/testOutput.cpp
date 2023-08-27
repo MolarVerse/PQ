@@ -1,9 +1,10 @@
-#include "exceptions.hpp"
-#include "output.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"         // for InputFileException
+#include "output.hpp"             // for Output
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-#include "gtest/gtest.h"
-#include <filesystem>
+#include "gtest/gtest.h"   // for Test, Message, TestPartResult, InitG...
+#include <memory>          // for allocator
+#include <stdint.h>        // for UINT64_MAX
 
 /**
  * @brief tests setting output filename

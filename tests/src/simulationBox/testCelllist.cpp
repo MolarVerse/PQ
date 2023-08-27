@@ -1,9 +1,16 @@
 #include "testCelllist.hpp"
 
-#include "exceptions.hpp"
-#include "molecule.hpp"
-#include "simulationBox.hpp"
-#include "throwWithMessage.hpp"
+#include "cell.hpp"               // for Cell
+#include "exceptions.hpp"         // for CellListException
+#include "molecule.hpp"           // for Molecule
+#include "simulationBox.hpp"      // for SimulationBox
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "vector3d.hpp"           // for Vec3Dul, Vec3D, Vector3D
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for std
+#include <string>          // for allocator, basic_string
+#include <vector>          // for vector
 
 using namespace std;
 

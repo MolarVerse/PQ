@@ -1,8 +1,14 @@
-#include "constants.hpp"
-#include "exceptions.hpp"
-#include "testSetup.hpp"
-#include "thermostatSettings.hpp"
-#include "thermostatSetup.hpp"
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException, customException
+#include "testSetup.hpp"            // for TestSetup
+#include "thermostat.hpp"           // for BerendsenThermostat, Thermostat
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "thermostatSetup.hpp"      // for ThermostatSetup, setupThermostat
+#include "timings.hpp"              // for Timings
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGo...
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 using namespace customException;

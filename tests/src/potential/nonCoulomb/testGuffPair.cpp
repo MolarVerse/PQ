@@ -1,7 +1,10 @@
-#include "guffPair.hpp"
+#include "guffPair.hpp"         // for GuffPair
+#include "nonCoulombPair.hpp"   // for potential
 
-#include <cmath>   // for exp, pow
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for pow, exp
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, InitGo...
+#include <vector>          // for vector, allocator
 
 using namespace potential;
 

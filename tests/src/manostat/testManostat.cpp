@@ -1,7 +1,15 @@
 #include "testManostat.hpp"
 
-#include "constants.hpp"
-#include "throwWithMessage.hpp"
+#include "constants.hpp"          // for _PRESSURE_FACTOR_
+#include "exceptions.hpp"         // for ManostatException
+#include "molecule.hpp"           // for Molecule
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "vector3d.hpp"           // for Vector3D, Vec3D
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for std
+#include <math.h>          // for pow
+#include <memory>          // for allocator
 
 using namespace std;
 
