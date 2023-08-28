@@ -11,9 +11,8 @@
 #include <iosfwd>          // for std
 #include <string>          // for string, allocator
 #include <vector>          // for vector
--- -
 
-   using namespace std;
+using namespace std;
 using namespace readInput;
 using namespace ::testing;
 

@@ -1,10 +1,15 @@
-#include "angleSection.hpp"
-#include "exceptions.hpp"
-#include "forceField.hpp"
-#include "testTopologySection.hpp"
-#include "topologySection.hpp"
+#include "angleForceField.hpp"       // for AngleForceField
+#include "angleSection.hpp"          // for AngleSection
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for TopologyException
+#include "forceField.hpp"            // for ForceField
+#include "simulationBox.hpp"         // for SimulationBox
+#include "testTopologySection.hpp"   // for TestTopologySection
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 /**
  * @brief test angle section processing one line

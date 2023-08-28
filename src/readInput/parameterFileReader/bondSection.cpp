@@ -1,8 +1,9 @@
 #include "bondSection.hpp"
 
-#include "engine.hpp"
-#include "exceptions.hpp"
-#include "forceField.hpp"
+#include "bondType.hpp"     // for BondType
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for ParameterFileException
+#include "forceField.hpp"   // for ForceField
 
 #include <format>   // for format
 

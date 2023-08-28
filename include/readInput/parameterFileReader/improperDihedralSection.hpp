@@ -2,7 +2,15 @@
 
 #define _IMPROPER_DIHEDRAL_SECTION_HPP_
 
-#include "parameterFileSection.hpp"
+#include "parameterFileSection.hpp"   // for ParameterFileSection
+
+#include <string>   // for allocator, string
+#include <vector>   // for vector
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
 
 namespace readInput::parameterFile
 {

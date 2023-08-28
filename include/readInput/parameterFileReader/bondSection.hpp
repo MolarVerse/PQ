@@ -4,6 +4,14 @@
 
 #include "parameterFileSection.hpp"
 
+#include <string>   // for allocator, string
+#include <vector>   // for vector
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
+
 namespace readInput::parameterFile
 {
     /**

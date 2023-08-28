@@ -10,6 +10,11 @@
 
 class TestAtomSection_testProcessAtomLine_Test;   // Friend test class
 
+namespace engine
+{
+    class Engine;   // Forward declaration
+}
+
 namespace simulationBox
 {
     class Molecule;   // Forward declaration

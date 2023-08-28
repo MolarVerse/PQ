@@ -1,14 +1,17 @@
 #include "boxSection.hpp"
 
-#include "engine.hpp"
-#include "exceptions.hpp"
-#include "simulationBoxSettings.hpp"
-#include "vector3d.hpp"
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for RstFileException
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "vector3d.hpp"                // for Vec3D
 
-#include <format>   // for format
-#include <ranges>   // for any_of
-#include <string>   // for string
-#include <vector>   // for vector
+#include <algorithm>     // for __any_of_fn, any_of
+#include <format>        // for format
+#include <functional>    // for identity
+#include <string>        // for stod, string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using namespace readInput::restartFile;
 

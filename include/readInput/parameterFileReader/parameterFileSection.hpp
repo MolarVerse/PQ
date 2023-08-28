@@ -2,19 +2,13 @@
 
 #define _PARAMETER_FILE_SECTION_HPP_
 
-#include <cstddef>   // for size_t
-#include <iosfwd>    // for ifstream
-#include <string>    // for string, allocator
-#include <vector>    // for vector
+#include <iosfwd>   // for ifstream
+#include <string>   // for string, allocator
+#include <vector>   // for vector
 
 namespace engine
 {
     class Engine;   // Forward declaration
-}
-
-namespace potential
-{
-    enum class NonCoulombType : size_t;   // Forward declaration
 }
 
 namespace readInput::parameterFile

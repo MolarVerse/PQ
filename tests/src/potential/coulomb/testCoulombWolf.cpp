@@ -3,8 +3,8 @@
 #include "coulombWolf.hpp"        // for CoulombWolf
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for erfc, exp, sqrt, M_PI
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, Init...
-#include <math.h>          // for erfc, exp, sqrt, M_PI
 #include <memory>          // for allocator
 
 using namespace potential;

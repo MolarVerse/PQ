@@ -14,11 +14,9 @@ using namespace std;
 using namespace setup;
 using namespace engine;
 
-int pimd_qmcf(int argc, char *argv[])
+static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
 {
-    // TODO: cleanup this piece of code when knowing how to do it properly
-    vector<string> arguments(argv, argv + argc);
-    auto           commandLineArgs = CommandLineArgs(argc, arguments);
+    auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
     auto engine = Engine();
@@ -48,11 +46,12 @@ int main(int argc, char *argv[])
 #endif
     try
     {
-        pimd_qmcf(argc, argv);
+        auto arguments = vector<string>(argv, argv + argc);
+        ::pimdQmcf(argc, arguments);
     }
     catch (const exception &e)
     {
-        cout << "Exception: " << e.what() << endl;
+        cout << "Exception: " << e.what() << '\n' << flush;
 #ifdef WITH_MPI
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif

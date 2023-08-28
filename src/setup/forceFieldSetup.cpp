@@ -1,9 +1,8 @@
 #include "forceFieldSetup.hpp"
 
-#include "angleForceField.hpp"   // for forceField
-#include "engine.hpp"            // for Engine
-#include "forceField.hpp"        // for ForceField
-#include "potential.hpp"         // for Potential
+#include "engine.hpp"       // for Engine
+#include "forceField.hpp"   // for ForceField
+#include "potential.hpp"    // for Potential
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <functional>   // for identity

@@ -1,12 +1,10 @@
 #include "testParameterFileSection.hpp"
 
-#include "angleSection.hpp"
-#include "bondSection.hpp"
-#include "dihedralSection.hpp"
-#include "exceptions.hpp"
-#include "improperDihedralSection.hpp"
-#include "nonCoulombicsSection.hpp"
-#include "parameterFileSection.hpp"
+#include "bondSection.hpp"   // for BondSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <ostream>         // for operator<<, ofstream, basic_ostream, endl
+#include <vector>          // for vector
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this

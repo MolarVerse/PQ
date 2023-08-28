@@ -1,26 +1,9 @@
 #include "parameterFileSection.hpp"
 
-#include "angleType.hpp"              // for AngleType
-#include "bondType.hpp"               // for BondType
-#include "buckinghamPair.hpp"         // for BuckinghamPair
-#include "constants.hpp"              // for _DEG_TO_RAD_
-#include "coulombPotential.hpp"       // for CoulombPotential
-#include "dihedralForceField.hpp"     // for DihedralForceField
-#include "dihedralType.hpp"           // for DihedralType
-#include "engine.hpp"                 // for Engine
-#include "exceptions.hpp"             // for ParameterFileException
-#include "forceField.hpp"             // for ForceField
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "intraNonBondedMap.hpp"      // for IntraNonBondedMap
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "morsePair.hpp"              // for MorsePair
-#include "nonCoulombPotential.hpp"    // for NonCoulombPotential, NonCoulombType
-#include "potential.hpp"              // for Potential
-#include "stringUtilities.hpp"        // for toLowerCopy, removeComments, splitString
+#include "exceptions.hpp"        // for ParameterFileException
+#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
 
-#include <format>    // for format
-#include <istream>   // for basic_istream, ifstream, std
-#include <memory>    // for allocator, make_shared
+#include <fstream>   // for getline
 
 using namespace readInput::parameterFile;
 

@@ -8,7 +8,6 @@
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateForma...
 #include "gtest/gtest.h"   // for Message, TestPartResult, Assert...
-#include <algorithm>       // for copy
 #include <cstddef>         // for size_t, std
 #include <gtest/gtest.h>   // for TestInfo (ptr only), ASSERT_THROW
 #include <string>          // for string, allocator, basic_string

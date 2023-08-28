@@ -2,8 +2,8 @@
 
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "moldescriptorReader.hpp"   // for MoldescriptorReader
-#include "rstFileReader.hpp"         // for RstFileReader, readRstFile
-#include "rstFileSection.hpp"        // for RstFileSection, readInput
+#include "restartFileReader.hpp"     // for RstFileReader, readRstFile
+#include "restartFileSection.hpp"    // for RstFileSection, readInput
 #include "settings.hpp"              // for Settings
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 

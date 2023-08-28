@@ -7,10 +7,8 @@
 
 #include "gmock/gmock.h"   // for ElementsAre
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <algorithm>       // for max, fill_n, copy
 #include <map>             // for map
 #include <sstream>         // for basic_istringstream
-#include <stddef.h>        // for size_t
 #include <vector>          // for vector, _Bit_iterator, _Bit_reference
 
 using namespace std;
@@ -28,16 +26,16 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
     {
 
         string keyword;
-        string required_string;
-        bool   required_bool;
+        string requiredString = "";
+        bool   requiredBool   = false;
 
         if (istringstream(line).str().empty())
             continue;
-        istringstream(line) >> keyword >> required_string;
-        istringstream(required_string) >> std::boolalpha >> required_bool;
+        istringstream(line) >> keyword >> requiredString;
+        istringstream(requiredString) >> std::boolalpha >> requiredBool;
 
         keywords.push_back(keyword);
-        required.push_back(required_bool);
+        required.push_back(requiredBool);
     }
 }
 
@@ -52,7 +50,7 @@ TEST_F(TestInputFileReader, testAddKeyword)
     EXPECT_EQ(_inputFileReader->getKeywordRequiredMap().size(), keywordsRef.size());
     EXPECT_EQ(_inputFileReader->getKeywordFuncMap().size(), keywordsRef.size());
 
-    for (size_t i = 0; i < keywordsRef.size(); i++)
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
         string keyword  = keywordsRef[i];
         bool   required = requiredRef[i];
@@ -64,7 +62,7 @@ TEST_F(TestInputFileReader, testAddKeyword)
 
 TEST_F(TestInputFileReader, testGetLineCommands)
 {
-    auto line = "nstep = 1";
+    auto *line = "nstep = 1";
     ASSERT_THROW(getLineCommands(line, 1), InputFileException);
 
     line = "nstep = 1;";
@@ -117,9 +115,9 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
     ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<int> requiredIndex(0);
+    vector<size_t> requiredIndex(0);
 
-    for (size_t i = 0; i < keywordsRef.size(); i++)
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
         string keyword  = keywordsRef[i];
         bool   required = requiredRef[i];
@@ -135,7 +133,6 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         string keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        cout << requiredIndex.size() << endl;
         ASSERT_THROW(_inputFileReader->postProcess(), InputFileException);
         _inputFileReader->setKeywordCount(keyword, 1);
     }
@@ -146,11 +143,11 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
     vector<string> keywordsRef(0);
     vector<bool>   requiredRef(0);
 
-    readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
+    ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<int> requiredIndex(0);
+    vector<size_t> requiredIndex(0);
 
-    for (size_t i = 0; i < keywordsRef.size(); i++)
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
         string keyword  = keywordsRef[i];
         bool   required = requiredRef[i];
@@ -162,7 +159,7 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
         }
     }
 
-    for (auto const &index : requiredIndex)
+    for (const auto &index : requiredIndex)
     {
         if (index != 1)
         {
@@ -174,16 +171,16 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
     }
 }
 
-TEST_F(TestInputFileReader, testMoldescriptorfileProcess)
+TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 {
     vector<string> keywordsRef(0);
     vector<bool>   requiredRef(0);
 
-    readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
+    ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<int> requiredIndex(0);
+    vector<size_t> requiredIndex(0);
 
-    for (size_t i = 0; i < keywordsRef.size(); i++)
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
         string keyword  = keywordsRef[i];
         bool   required = requiredRef[i];
@@ -196,11 +193,11 @@ TEST_F(TestInputFileReader, testMoldescriptorfileProcess)
     }
 
     _engine.getSettings().setGuffPath("guffpath");
-    _engine.getSettings().setMoldescriptorFilename("moldescriptorfile");
+    _engine.getSettings().setMoldescriptorFilename("moldescriptorFile");
 
     _inputFileReader->postProcess();
 
-    EXPECT_EQ(_engine.getSettings().getMoldescriptorFilename(), "guffpath/moldescriptorfile");
+    EXPECT_EQ(_engine.getSettings().getMoldescriptorFilename(), "guffpath/moldescriptorFile");
 }
 
 int main(int argc, char **argv)

@@ -26,7 +26,7 @@ using namespace readInput::parameterFile;
  * @param engine
  */
 ParameterFileReader::ParameterFileReader(const std::string &filename, engine::Engine &engine)
-    : _filename(filename), _fp(filename), _engine(engine)
+    : _fileName(filename), _fp(filename), _engine(engine)
 {
     _parameterFileSections.push_back(std::make_unique<TypesSection>());
     _parameterFileSections.push_back(std::make_unique<BondSection>());
@@ -96,11 +96,11 @@ void ParameterFileReader::read()
     if (!isNeeded())
         return;
 
-    if (_filename.empty())
+    if (_fileName.empty())
         throw customException::InputFileException("Parameter file needed for requested simulation setup");
 
-    if (!std::filesystem::exists(_filename))
-        throw customException::InputFileException("Parameter file \"" + _filename + "\"" + " File not found");
+    if (!std::filesystem::exists(_fileName))
+        throw customException::InputFileException("Parameter file \"" + _fileName + "\"" + " File not found");
 
     std::string line;
     int         lineNumber = 1;

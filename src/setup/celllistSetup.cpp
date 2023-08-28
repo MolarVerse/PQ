@@ -1,9 +1,8 @@
 #include "celllistSetup.hpp"
 
-#include "angleForceField.hpp"   // for potential
-#include "celllist.hpp"          // for CellList
-#include "engine.hpp"            // for Engine
-#include "potential.hpp"         // for PotentialBruteForce, PotentialCellList
+#include "celllist.hpp"    // for CellList
+#include "engine.hpp"      // for Engine
+#include "potential.hpp"   // for PotentialBruteForce, PotentialCellList, Potential
 
 using namespace setup;
 

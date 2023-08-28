@@ -3,7 +3,6 @@
 #include "constraintsSetup.hpp"     // for ConstraintsSetup, setupConstraints
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for customException
-#include "settings.hpp"             // for Settings
 #include "testSetup.hpp"            // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult

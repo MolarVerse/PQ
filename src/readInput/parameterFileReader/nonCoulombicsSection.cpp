@@ -1,16 +1,19 @@
 #include "nonCoulombicsSection.hpp"
 
-#include "buckinghamPair.hpp"
-#include "coulombPotential.hpp"
-#include "engine.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "lennardJonesPair.hpp"
-#include "morsePair.hpp"
-#include "nonCoulombPotential.hpp"
-#include "stringUtilities.hpp"
+#include "buckinghamPair.hpp"         // for BuckinghamPair
+#include "coulombPotential.hpp"       // for CoulombPotential
+#include "engine.hpp"                 // for Engine
+#include "exceptions.hpp"             // for ParameterFileException
+#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "lennardJonesPair.hpp"       // for LennardJonesPair
+#include "morsePair.hpp"              // for MorsePair
+#include "nonCoulombPotential.hpp"    // for NonCoulombPotential, NonCoulombType
+#include "potential.hpp"              // for Potential
+#include "stringUtilities.hpp"        // for toLowerCopy
 
 #include <format>   // for format
-#include <string>   // for string
+#include <memory>   // for make_shared
+#include <string>   // for stod, stoul, string, operator==
 
 using namespace readInput::parameterFile;
 

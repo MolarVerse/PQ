@@ -1,8 +1,11 @@
-#include "constraintSettings.hpp"   // for ConstraintSettings
-#include "exceptions.hpp"
-#include "inputFileParserConstraints.hpp"
-#include "testInputFileReader.hpp"
-#include "throwWithMessage.hpp"
+#include "constraintSettings.hpp"           // for ConstraintSettings
+#include "constraints.hpp"                  // for Constraints
+#include "engine.hpp"                       // for Engine
+#include "exceptions.hpp"                   // for InputFileException
+#include "inputFileParser.hpp"              // for readInput
+#include "inputFileParserConstraints.hpp"   // for InputFileParserConstraints
+#include "testInputFileReader.hpp"          // for TestInputFileReader
+#include "throwWithMessage.hpp"             // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F

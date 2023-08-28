@@ -28,7 +28,7 @@ namespace readInput::parameterFile
     class ParameterFileReader
     {
       private:
-        std::string     _filename;
+        std::string     _fileName;
         std::ifstream   _fp;
         engine::Engine &_engine;
 
@@ -43,13 +43,13 @@ namespace readInput::parameterFile
         [[nodiscard]] ParameterFileSection *determineSection(const std::vector<std::string> &lineElements);
         void                                deleteSection(const ParameterFileSection *section);
 
-        void setFilename(const std::string_view &filename) { _filename = filename; }
+        void setFilename(const std::string_view &filename) { _fileName = filename; }
 
         [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections()
         {
             return _parameterFileSections;
         }
-        [[nodiscard]] const std::string &getFilename() const { return _filename; }
+        [[nodiscard]] const std::string &getFilename() const { return _fileName; }
     };
 
 }   // namespace readInput::parameterFile

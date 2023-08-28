@@ -2,7 +2,10 @@
 
 #define _BOND_SECTION_HPP_
 
-#include "topologySection.hpp"
+#include "topologySection.hpp"   // for TopologySection
+
+#include <string>   // for allocator, string
+#include <vector>   // for vector
 
 namespace engine
 {

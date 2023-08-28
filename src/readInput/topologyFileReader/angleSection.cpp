@@ -1,12 +1,20 @@
 #include "angleSection.hpp"
 
-#include "angleForceField.hpp"   // for BondForceField
+#include "angleForceField.hpp"   // for AngleForceField
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for TopologyException
+#include "forceField.hpp"        // for ForceField
+#include "simulationBox.hpp"     // for SimulationBox
 
-#include <format>   // for format
-#include <string>   // for string, allocator
-#include <vector>   // for vector
+#include <format>     // for format
+#include <stddef.h>   // for size_t
+#include <string>     // for stoul, string, operator==, char_traits
+#include <vector>     // for vector
+
+namespace simulationBox
+{
+    class Molecule;   // Forward declaration
+}
 
 using namespace readInput::topology;
 

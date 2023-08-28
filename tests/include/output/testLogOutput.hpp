@@ -22,7 +22,7 @@ class TestLogOutput : public ::testing::Test
     void TearDown() override
     {
         delete _logOutput;
-        remove("default.out");
+        ::remove("default.out");
     }
 
     output::LogOutput *_logOutput;

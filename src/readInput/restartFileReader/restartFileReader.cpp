@@ -25,7 +25,7 @@ using namespace readInput::restartFile;
  * @param engine
  */
 RestartFileReader::RestartFileReader(const std::string &filename, engine::Engine &engine)
-    : _filename(filename), _fp(filename), _engine(engine)
+    : _fileName(filename), _fp(filename), _engine(engine)
 {
     _sections.push_back(std::make_unique<BoxSection>());
     _sections.push_back(std::make_unique<NoseHooverSection>());
@@ -55,7 +55,7 @@ RestartFileSection *RestartFileReader::determineSection(std::vector<std::string>
 void RestartFileReader::read()
 {
     if (_fp.fail())
-        throw customException::InputFileException(std::format(R"("{}" File not found)", _filename));
+        throw customException::InputFileException(std::format(R"("{}" File not found)", _fileName));
 
     std::string line;
     int         lineNumber = 1;

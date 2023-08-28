@@ -28,7 +28,7 @@ namespace readInput::topology
     class TopologyReader
     {
       private:
-        std::string     _filename;
+        std::string     _fileName;
         std::ifstream   _fp;
         engine::Engine &_engine;
 
@@ -41,7 +41,7 @@ namespace readInput::topology
         [[nodiscard]] bool             isNeeded() const;
         [[nodiscard]] TopologySection *determineSection(const std::vector<std::string> &lineElements);
 
-        void setFilename(const std::string_view &filename) { _filename = filename; }
+        void setFilename(const std::string_view &filename) { _fileName = filename; }
     };
 
 }   // namespace readInput::topology

@@ -1,6 +1,7 @@
 #include "testBondConstraint.hpp"
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <string>          // for string
 
 /**
  * @brief tests calculation of bond constraint ref bond length

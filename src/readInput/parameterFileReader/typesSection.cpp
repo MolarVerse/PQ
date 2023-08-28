@@ -1,11 +1,14 @@
 #include "typesSection.hpp"
 
-#include "exceptions.hpp"   // for ParameterFileException
-#include "forceField.hpp"
-#include "intraNonBonded.hpp"
-#include "potentialSettings.hpp"
+#include "exceptions.hpp"          // for ParameterFileException
+#include "potentialSettings.hpp"   // for PotentialSettings
 
 #include <format>   // for format
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
 
 using namespace readInput::parameterFile;
 

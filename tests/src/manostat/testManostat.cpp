@@ -7,8 +7,8 @@
 #include "vector3d.hpp"           // for Vector3D, Vec3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for pow
 #include <iosfwd>          // for std
-#include <math.h>          // for pow
 #include <memory>          // for allocator
 
 using namespace std;

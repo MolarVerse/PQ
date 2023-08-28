@@ -59,7 +59,7 @@ class TestTrajectoryOutput : public ::testing::Test
     {
         delete _trajectoryOutput;
         delete _simulationBox;
-        remove("default.xyz");
+        ::remove("default.xyz");
     }
 
     output::TrajectoryOutput     *_trajectoryOutput;

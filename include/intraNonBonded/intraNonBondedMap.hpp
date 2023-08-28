@@ -2,7 +2,6 @@
 
 #define _INTRA_NON_BONDED_MAP_HPP_
 
-#include "defaults.hpp"
 #include "intraNonBondedContainer.hpp"
 
 #include <vector>   // for vector

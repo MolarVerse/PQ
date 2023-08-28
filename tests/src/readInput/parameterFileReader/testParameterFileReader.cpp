@@ -1,14 +1,20 @@
 #include "testParameterFileReader.hpp"
 
-#include "angleSection.hpp"
-#include "bondSection.hpp"
-#include "dihedralSection.hpp"
-#include "exceptions.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "improperDihedralSection.hpp"
-#include "nonCoulombicsSection.hpp"
-#include "throwWithMessage.hpp"
-#include "typesSection.hpp"
+#include "angleSection.hpp"              // for AngleSection
+#include "bondSection.hpp"               // for BondSection
+#include "dihedralSection.hpp"           // for DihedralSection
+#include "exceptions.hpp"                // for InputFileException, ParameterFileException
+#include "forceField.hpp"                // for ForceField
+#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
+#include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
+#include "potential.hpp"                 // for Potential
+#include "settings.hpp"                  // for Settings
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "typesSection.hpp"              // for TypesSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, AssertHelper, Test
+#include <vector>          // for vector
 
 using namespace ::testing;
 
@@ -54,7 +60,7 @@ TEST_F(TestParameterFileReader, determineSection)
 
     EXPECT_THROW_MSG([[maybe_unused]] const auto dummy = _parameterFileReader->determineSection({"notAValidSection"}),
                      customException::ParameterFileException,
-                     "Unknown or already passed keyword \"notAValidSection\" in parameter file");
+                     "Unknown or already parsed keyword \"notAValidSection\" in parameter file");
 }
 
 /**

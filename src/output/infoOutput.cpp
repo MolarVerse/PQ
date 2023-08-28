@@ -19,7 +19,7 @@ void InfoOutput::write(const double simulationTime, const PhysicalData &data)
 {
     _fp.close();
 
-    _fp.open(_filename);
+    _fp.open(_fileName);
 
     writeHeader();
 

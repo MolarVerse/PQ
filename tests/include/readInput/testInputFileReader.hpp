@@ -6,9 +6,7 @@
 #include "inputFileReader.hpp"   // for InputFileReader
 
 #include <cstdio>          // for remove
-#include <exception>       // for exception
 #include <gtest/gtest.h>   // for Test
-#include <iostream>        // for operator<<, basic_ostream, cerr, ostream
 #include <string>          // for allocator, string
 
 /**
@@ -29,25 +27,15 @@ class TestInputFileReader : public ::testing::Test
     void TearDown() override
     {
         delete _inputFileReader;
-        remove_file();
+        removeFile();
     }
 
-    std::string _filename = "";
+    std::string _fileName = "";
 
     engine::Engine              _engine;
     readInput::InputFileReader *_inputFileReader;
 
-    void remove_file()
-    {
-        try
-        {
-            std::remove(_filename.c_str());
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << e.what() << '\n';
-        }
-    }
+    void removeFile() const { std::remove(_fileName.c_str()); }
 };
 
 #endif

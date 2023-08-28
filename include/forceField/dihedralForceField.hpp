@@ -2,7 +2,6 @@
 
 #define _DIHEDRAL_FORCE_FIELD_HPP_
 
-#include "defaults.hpp"   // for _SCALE_14_COULOMB_DEFAULT_, _SCALE_14_VAN_DER_WAALS_DEFAULT_
 #include "dihedral.hpp"
 
 #include <cstddef>

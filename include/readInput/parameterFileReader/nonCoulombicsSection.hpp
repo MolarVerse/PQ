@@ -2,7 +2,21 @@
 
 #define _NON_COULOMBICS_SECTION_HPP_
 
-#include "parameterFileSection.hpp"
+#include "parameterFileSection.hpp"   // for ParameterFileSection
+
+#include <cstddef>   // for size_t
+#include <string>    // for allocator, string
+#include <vector>    // for vector
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
+
+namespace potential
+{
+    enum class NonCoulombType : size_t;   // forward declaration
+}
 
 namespace readInput::parameterFile
 {

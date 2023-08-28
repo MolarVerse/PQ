@@ -23,7 +23,7 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
 {
     _fp.close();
 
-    _fp.open(_filename);
+    _fp.open(_fileName);
 
     _fp << "Step " << step << '\n' << flush;
 

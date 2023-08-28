@@ -8,11 +8,10 @@
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
-#include <boost/algorithm/string/case_conv.hpp>   // for to_lower_copy
-#include <boost/iterator/iterator_facade.hpp>     // for operator!=
-#include <cstddef>                                // for size_t
-#include <format>                                 // for format
-#include <string>                                 // for basic_string, string
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <string>        // for basic_string, string
+#include <string_view>   // for string_view
 
 using namespace readInput;
 
@@ -26,16 +25,16 @@ using namespace readInput;
  * @throw customException::InputFileException if file not found
  */
 MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
-    : _filename(engine.getSettings().getMoldescriptorFilename()), _engine(engine)
+    : _fileName(engine.getSettings().getMoldescriptorFilename()), _engine(engine)
 {
-    _fp.open(_filename);
+    _fp.open(_fileName);
 
     if (_fp.fail())
-        throw customException::InputFileException(std::format(R"("{}" File not found)", _filename));
+        throw customException::InputFileException(std::format(R"("{}" File not found)", _fileName));
 }
 
 /**
- * @brief read moldescriptor file
+ * @brief wrapper to construct MoldescriptorReader and read moldescriptor file
  *
  * @param engine
  *
@@ -49,6 +48,12 @@ void readInput::readMolDescriptor(engine::Engine &engine)
 
 /**
  * @brief read moldescriptor file
+ *
+ * @details Processes each line of the moldescriptor file. If a molecule is found the molecule is processed in a separate
+ * function. Following keywords are recognized:
+ * - water_type <int> - sets the water type
+ * - ammonia_type <int> - sets the ammonia type
+ * - <molecule_name> <number_of_atoms> <charge> - defines a molecule
  *
  * @throws customException::MolDescriptorException if there is an error in the moldescriptor file
  */
@@ -82,32 +87,43 @@ void MoldescriptorReader::read()
 }
 
 /**
- * @brief process molecule
+ * @brief process molecule in moldescriptor file
+ *
+ * @details Processes the header line of a molecule and then reads the atom lines. The header line has to have following format:
+ * <molecule_name> <number_of_atoms> <charge> ...
+ * The atom lines have to have following format:
+ * <atom_name> <external_atom_type> <partial_charge> [<external_vdw_type>] (external_vdw_type optional if noncoulombics is not
+ * activated)
+ * After processing the atom lines the external atom types are converted to internal atom types
  *
  * @param lineElements
  *
- * @throws customException::MolDescriptorException if there is an error in the moldescriptor file
+ * @throws customException::MolDescriptorException if number of arguments of header line is less than 3
+ * @throws customException::MolDescriptorException if eof is reached before all atoms of a molecule are read
+ * @throws customException::MolDescriptorException if number of arguments of atom line is not 3 or 4
+ * @throws customException::MolDescriptorException if noncoulombics is activated but no global van der Waals parameter
  */
 void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements)
 {
-    std::string line;
-
     if (lineElements.size() < 3)
-        throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
+        throw customException::MolDescriptorException(
+            std::format("Not enough arguments in moldescriptor file at line {}", _lineNumber));
 
     simulationBox::Molecule molecule(lineElements[0]);
 
     molecule.setNumberOfAtoms(stoul(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
-
     molecule.setMoltype(_engine.getSimulationBox().getMoleculeTypes().size() + 1);
 
-    size_t atomCount = 0;
+    std::string line;
+    size_t      atomCount = 0;
 
     while (atomCount < molecule.getNumberOfAtoms())
     {
         if (_fp.eof())
-            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
+            throw customException::MolDescriptorException(
+                "Error reading of moldescriptor stopped before last molecule was finished");
+
         getline(_fp, line);
         line         = utilities::removeComments(line, "#");
         lineElements = utilities::splitString(line);
@@ -125,14 +141,15 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
             ++atomCount;
         }
         else
-            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
+            throw customException::MolDescriptorException(
+                std::format("Atom line in moldescriptor file at line {} has to have 3 or 4 elements", _lineNumber));
 
         if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
                 throw customException::MolDescriptorException(
                     std::format("Error in moldescriptor file at line {} - force field noncoulombics is "
-                                "activated but no global can der Waals parameter given",
+                                "activated but no global van der Waals parameter given",
                                 _lineNumber));
 
             molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
@@ -141,13 +158,14 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
 
     convertExternalToInternalAtomTypes(molecule);
 
-    _engine.getSimulationBox().getMoleculeTypes().push_back(molecule);
+    _engine.getSimulationBox().addMoleculeType(molecule);
 }
 
 /**
  * @brief convert external to internal atom types
  *
- * @details in order to manage if user declares for example only atom type 1 and 3
+ * @details In order to manage if user declares for example only atom type 1 and 3 in the moldescriptor file, the internal atom
+ * types are the 0 and 1.
  *
  * @param molecule
  */

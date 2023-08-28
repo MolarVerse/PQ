@@ -56,7 +56,7 @@ class TestRstFileOutput : public ::testing::Test
     {
         delete _rstFileOutput;
         delete _simulationBox;
-        remove("default.rst");
+        ::remove("default.rst");
     }
 
     output::RstFileOutput        *_rstFileOutput;

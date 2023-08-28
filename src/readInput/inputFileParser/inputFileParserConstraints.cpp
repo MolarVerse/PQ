@@ -4,7 +4,6 @@
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for InputFileException, customException
-#include "settings.hpp"             // for Settings
 
 #include <cstddef>       // for size_t
 #include <format>        // for format

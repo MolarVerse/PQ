@@ -1,8 +1,10 @@
 #include "shakeSection.hpp"
 
 #include "bondConstraint.hpp"   // for BondConstraint
+#include "constraints.hpp"      // for Constraints
 #include "engine.hpp"           // for Engine
 #include "exceptions.hpp"       // for TopologyException
+#include "simulationBox.hpp"    // for SimulationBox
 
 #include <format>   // for format
 

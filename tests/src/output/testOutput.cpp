@@ -3,8 +3,8 @@
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Test, Message, TestPartResult, InitG...
+#include <cstdint>         // for UINT64_MAX
 #include <memory>          // for allocator
-#include <stdint.h>        // for UINT64_MAX
 
 /**
  * @brief tests setting output filename

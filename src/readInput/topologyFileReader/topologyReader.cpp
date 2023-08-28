@@ -28,7 +28,7 @@ using namespace readInput::topology;
  * @param engine
  */
 TopologyReader::TopologyReader(const std::string &filename, engine::Engine &engine)
-    : _filename(filename), _fp(filename), _engine(engine)
+    : _fileName(filename), _fp(filename), _engine(engine)
 {
     _topologySections.push_back(std::make_unique<ShakeSection>());
     _topologySections.push_back(std::make_unique<BondSection>());
@@ -74,11 +74,11 @@ void TopologyReader::read()
     if (!isNeeded())
         return;
 
-    if (_filename.empty())
+    if (_fileName.empty())
         throw customException::InputFileException("Topology file needed for requested simulation setup");
 
-    if (!std::filesystem::exists(_filename))
-        throw customException::InputFileException("Topology file \"" + _filename + "\"" + " File not found");
+    if (!std::filesystem::exists(_fileName))
+        throw customException::InputFileException("Topology file \"" + _fileName + "\"" + " File not found");
 
     while (getline(_fp, line))
     {

@@ -1,7 +1,6 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <iosfwd>          // for std
 #include <vector>          // for allocator, vector
 
 using namespace std;

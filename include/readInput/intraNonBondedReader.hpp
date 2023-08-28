@@ -4,9 +4,9 @@
 
 #include "engine.hpp"   // for Engine
 
-#include <iosfwd>     // for ifstream
-#include <stddef.h>   // for size_t
-#include <string>     // for string
+#include <cstddef>   // for size_t
+#include <iosfwd>    // for ifstream
+#include <string>    // for string
 
 namespace readInput
 {
@@ -20,22 +20,25 @@ namespace readInput
     class IntraNonBondedReader
     {
       private:
-        std::string   _filename;
+        std::string   _fileName;
         std::ifstream _fp;
 
-        size_t _lineNumber;
+        size_t _lineNumber = 1;
 
         engine::Engine &_engine;
 
       public:
-        IntraNonBondedReader(const std::string &filename, engine::Engine &engine)
-            : _filename(filename), _fp(filename), _engine(engine)
-        {
-        }
+        IntraNonBondedReader(const std::string &fileName, engine::Engine &engine)
+            : _fileName(fileName), _fp(fileName), _engine(engine){};
 
-        void read();
-        void processMolecule(const size_t);
-        bool isNeeded() const { return _engine.isIntraNonBondedActivated(); }
+        void                 read();
+        void                 processMolecule(const size_t moleculeType);
+        void                 checkDuplicates() const;
+        [[nodiscard]] bool   isNeeded() const { return _engine.isIntraNonBondedActivated(); }
+        [[nodiscard]] size_t findMoleculeType(const std::string &identifier) const;
+
+        void setFileName(const std::string_view &fileName) { _fileName = fileName; }
+        void reInitializeFp() { _fp = std::ifstream(_fileName); }
     };
 
 }   // namespace readInput

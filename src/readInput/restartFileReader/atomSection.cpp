@@ -1,14 +1,17 @@
 #include "atomSection.hpp"
 
-#include "engine.hpp"
-#include "exceptions.hpp"
-#include "molecule.hpp"
-#include "stringUtilities.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for RstFileException
+#include "molecule.hpp"          // for Molecule
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stringUtilities.hpp"   // for removeComments, splitString
 
-#include <format>   // for format
-#include <memory>   // for unique_ptr, make_unique
-#include <string>   // for string, getline, basic_string
-#include <vector>   // for vector
+#include <format>     // for format
+#include <iostream>   // for operator<<, basic_ostream::operator<<
+#include <memory>     // for unique_ptr, make_unique
+#include <stddef.h>   // for size_t
+#include <string>     // for string, stod, stoul, getline, char_traits
+#include <vector>     // for vector
 
 using namespace readInput::restartFile;
 

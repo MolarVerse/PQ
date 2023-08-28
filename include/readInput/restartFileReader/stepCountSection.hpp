@@ -7,6 +7,11 @@
 #include <string>   // for string
 #include <vector>   // for vector
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}
+
 namespace readInput::restartFile
 {
     /**

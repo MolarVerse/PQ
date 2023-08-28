@@ -59,10 +59,10 @@ void readInput::readGuffDat(Engine &engine)
  */
 GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine)
 {
-    _filename = _engine.getSettings().getGuffDatFilename();
-    if (!fileExists(_filename))
+    _fileName = _engine.getSettings().getGuffDatFilename();
+    if (!fileExists(_fileName))
     {
-        throw InputFileException(format("Could not open guffdat file {}", _filename));
+        throw InputFileException(format("Could not open guffdat file {}", _fileName));
     }
 }
 
@@ -73,7 +73,7 @@ GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine)
  */
 void GuffDatReader::read()
 {
-    ifstream fp(_filename);
+    ifstream fp(_fileName);
     string   line;
 
     while (getline(fp, line))

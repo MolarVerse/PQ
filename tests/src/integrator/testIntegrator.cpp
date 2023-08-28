@@ -3,6 +3,7 @@
 #include "constants.hpp"   // for _V_VERLET_VELOCITY_FACTOR_, _FS_TO_S_
 
 #include "gtest/gtest.h"   // for CmpHelperFloatingPointEQ, Message
+#include <string>          // for string
 #include <vector>          // for allocator, vector
 
 /**

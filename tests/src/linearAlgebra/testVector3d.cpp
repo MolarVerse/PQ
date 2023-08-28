@@ -2,9 +2,9 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertionResult
 #include <array>           // for array
+#include <cmath>           // for sqrt
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), ASSER...
 #include <iostream>        // for cout, ostream
-#include <math.h>          // for sqrt
 #include <string>          // for allocator, string
 
 using namespace linearAlgebra;

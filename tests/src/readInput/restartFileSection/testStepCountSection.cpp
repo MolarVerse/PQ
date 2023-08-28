@@ -5,6 +5,7 @@
 #include "timings.hpp"                  // for Timings
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPart...
+#include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
 #include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string

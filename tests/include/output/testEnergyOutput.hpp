@@ -38,8 +38,8 @@ class TestEnergyOutput : public ::testing::Test
         delete _infoOutput;
         delete _energyOutput;
         delete _physicalData;
-        remove("default.info");
-        remove("default.en");
+        ::remove("default.info");
+        ::remove("default.en");
     }
 
     output::InfoOutput         *_infoOutput;

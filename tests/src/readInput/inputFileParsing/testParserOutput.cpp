@@ -48,10 +48,10 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
 TEST_F(TestInputFileReader, testParseLogFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "log.txt";
-    vector<string> lineElements = {"logfilename", "=", _filename};
+    _fileName                   = "log.txt";
+    vector<string> lineElements = {"logfilename", "=", _fileName};
     parser.parseLogFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getLogOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getLogOutput().getFilename(), _fileName);
 }
 
 /**
@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
 TEST_F(TestInputFileReader, testParseInfoFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "info.txt";
+    _fileName                   = "info.txt";
     vector<string> lineElements = {"infoFilename", "=", "info.txt"};
     parser.parseInfoFilename(lineElements, 0);
     EXPECT_EQ(_engine.getInfoOutput().getFilename(), "info.txt");
@@ -74,10 +74,10 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
 TEST_F(TestInputFileReader, testParseEnergyFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "energy.txt";
-    vector<string> lineElements = {"energyFilename", "=", _filename};
+    _fileName                   = "energy.txt";
+    vector<string> lineElements = {"energyFilename", "=", _fileName};
     parser.parseEnergyFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getEnergyOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getEnergyOutput().getFilename(), _fileName);
 }
 
 /**
@@ -87,10 +87,10 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
 TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "trajectory.xyz";
-    vector<string> lineElements = {"trajectoryFilename", "=", _filename};
+    _fileName                   = "trajectory.xyz";
+    vector<string> lineElements = {"trajectoryFilename", "=", _fileName};
     parser.parseTrajectoryFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getXyzOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getXyzOutput().getFilename(), _fileName);
 }
 
 /**
@@ -100,10 +100,10 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 TEST_F(TestInputFileReader, testVelocityFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "velocity.xyz";
-    vector<string> lineElements = {"velocityFilename", "=", _filename};
+    _fileName                   = "velocity.xyz";
+    vector<string> lineElements = {"velocityFilename", "=", _fileName};
     parser.parseVelocityFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getVelOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getVelOutput().getFilename(), _fileName);
 }
 
 /**
@@ -113,10 +113,10 @@ TEST_F(TestInputFileReader, testVelocityFilename)
 TEST_F(TestInputFileReader, testForceFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "force.xyz";
-    vector<string> lineElements = {"forceFilename", "=", _filename};
+    _fileName                   = "force.xyz";
+    vector<string> lineElements = {"forceFilename", "=", _fileName};
     parser.parseForceFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getForceOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getForceOutput().getFilename(), _fileName);
 }
 
 /**
@@ -126,10 +126,10 @@ TEST_F(TestInputFileReader, testForceFilename)
 TEST_F(TestInputFileReader, testParseRestartFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "restart.xyz";
-    vector<string> lineElements = {"restartFilename", "=", _filename};
+    _fileName                   = "restart.xyz";
+    vector<string> lineElements = {"restartFilename", "=", _fileName};
     parser.parseRestartFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getRstFileOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getRstFileOutput().getFilename(), _fileName);
 }
 
 /**
@@ -139,10 +139,10 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
 TEST_F(TestInputFileReader, testChargeFilename)
 {
     InputFileParserOutput parser(_engine);
-    _filename                   = "charge.xyz";
-    vector<string> lineElements = {"chargeFilename", "=", _filename};
+    _fileName                   = "charge.xyz";
+    vector<string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
-    EXPECT_EQ(_engine.getChargeOutput().getFilename(), _filename);
+    EXPECT_EQ(_engine.getChargeOutput().getFilename(), _fileName);
 }
 
 int main(int argc, char **argv)

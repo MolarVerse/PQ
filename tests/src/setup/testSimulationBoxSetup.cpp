@@ -10,7 +10,6 @@
 #include "vector3d.hpp"                // for Vec3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
-#include <algorithm>       // for max
 #include <cmath>           // for cbrt
 #include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, TestI...
 #include <iosfwd>          // for std

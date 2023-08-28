@@ -46,7 +46,7 @@ using namespace resetKinetics;
  * @param filename
  * @param engine
  */
-InputFileReader::InputFileReader(const std::string &filename, engine::Engine &engine) : _filename(filename), _engine(engine)
+InputFileReader::InputFileReader(const std::string &filename, engine::Engine &engine) : _fileName(filename), _engine(engine)
 {
     _parsers.push_back(make_unique<InputFileParserCellList>(_engine));
     _parsers.push_back(make_unique<InputFileParserConstraints>(_engine));
@@ -119,11 +119,11 @@ void InputFileReader::process(const vector<string> &lineElements)
  */
 void InputFileReader::read()
 {
-    ifstream inputFile(_filename);
+    ifstream inputFile(_fileName);
     string   line;
 
     if (inputFile.fail())
-        throw InputFileException("\"" + _filename + "\"" + " File not found");
+        throw InputFileException("\"" + _fileName + "\"" + " File not found");
 
     while (getline(inputFile, line))
     {

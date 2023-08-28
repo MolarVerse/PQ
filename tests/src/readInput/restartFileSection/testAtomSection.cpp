@@ -1,4 +1,4 @@
-#include "cell.hpp"                     // for simulationBox
+#include "atomSection.hpp"              // for AtomSection
 #include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for RstFileException, customException
 #include "molecule.hpp"                 // for Molecule
@@ -10,7 +10,6 @@
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatte...
 #include "gtest/gtest.h"   // for Message, TestPartResult, Assertion...
-#include <algorithm>       // for max
 #include <cstddef>         // for size_t
 #include <fstream>         // for ifstream, std
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ

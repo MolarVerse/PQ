@@ -8,13 +8,13 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace simulationBox
 {
-    class Molecule;
-}   // namespace simulationBox
+    class Molecule;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -30,7 +30,7 @@ namespace readInput
     {
       private:
         int               _lineNumber;
-        const std::string _filename;
+        const std::string _fileName;
         std::ifstream     _fp;
 
         engine::Engine &_engine;
@@ -39,7 +39,7 @@ namespace readInput
         explicit MoldescriptorReader(engine::Engine &engine);
 
         void read();
-        void processMolecule(std::vector<std::string> &);
+        void processMolecule(std::vector<std::string> &lineElements);
         void convertExternalToInternalAtomTypes(simulationBox::Molecule &) const;
     };
 

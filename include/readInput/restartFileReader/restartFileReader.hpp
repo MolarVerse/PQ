@@ -28,7 +28,7 @@ namespace readInput::restartFile
     class RestartFileReader
     {
       private:
-        const std::string _filename;
+        const std::string _fileName;
         std::ifstream     _fp;
         engine::Engine   &_engine;
 

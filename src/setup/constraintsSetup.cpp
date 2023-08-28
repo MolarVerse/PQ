@@ -3,7 +3,6 @@
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
-#include "settings.hpp"             // for Settings
 #include "timings.hpp"              // for Timings
 
 using namespace setup;

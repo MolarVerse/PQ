@@ -1,12 +1,9 @@
 #include "commandLineArgs.hpp"
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"   // for UserInputException
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <iostream>
-
-using namespace std;
-using namespace customException;
+#include <boost/algorithm/string/predicate.hpp>   // for starts_with
+#include <string_view>                            // for string_view
 
 /**
  * @brief Detects flags in the command line arguments.
@@ -18,10 +15,10 @@ void CommandLineArgs::detectFlags()
 {
     for (const auto &arg : _argv)
         if (boost::starts_with(arg, "-"))
-            throw UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
+            throw customException::UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
 
     if (_argc < 2)
-        throw UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
+        throw customException::UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
 
     _inputFileName = _argv[1];
 }

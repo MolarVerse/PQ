@@ -6,6 +6,11 @@
 #include <string>   // for string
 #include <vector>   // for vector
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}
+
 // TODO: not implemented yet
 
 using namespace readInput::restartFile;

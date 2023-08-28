@@ -30,25 +30,25 @@ void Output::setFilename(const string_view &filename)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0)
     {
-        _filename = filename;
+        _fileName = filename;
     }
     else
     {
         const auto baseFilename = "procId_pimd-qmcf_";
         filesystem::create_directory(baseFilename + to_string(procId));
-        _filename = filename;
-        _filename = baseFilename + to_string(procId) + "/" + _filename;
+        _fileName = filename;
+        _fileName = baseFilename + to_string(procId) + "/" + _fileName;
     }
 #else
 
-    _filename = filename;
+    _fileName = filename;
 #endif
 
-    if (_filename.empty())
+    if (_fileName.empty())
         throw InputFileException("Filename cannot be empty");
 
-    if (const ifstream fp(_filename.c_str()); fp.good())
-        throw InputFileException("File already exists - filename = " + string(_filename));
+    if (const ifstream fp(_fileName.c_str()); fp.good())
+        throw InputFileException("File already exists - filename = " + string(_fileName));
 
     openFile();
 }
@@ -82,10 +82,10 @@ void Output::setOutputFrequency(const size_t outputFreq)
  */
 void Output::openFile()
 {
-    _fp.open(_filename);
+    _fp.open(_fileName);
 
     if (!_fp.is_open())
-        throw InputFileException("Could not open file - filename = " + _filename);
+        throw InputFileException("Could not open file - filename = " + _fileName);
 }
 
 /**

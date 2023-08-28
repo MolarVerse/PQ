@@ -4,9 +4,9 @@
 
 #include "inputFileParser.hpp"   // for InputFileParser
 
-#include <stddef.h>   // for size_t
-#include <string>     // for string
-#include <vector>     // for vector
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 namespace engine
 {

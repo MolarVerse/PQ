@@ -14,7 +14,6 @@
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, tes...
-#include <algorithm>       // for copy
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 #include <memory>          // for allocator, shared_ptr
 #include <string>          // for string, basic_string

@@ -1,9 +1,14 @@
-#include "exceptions.hpp"
-#include "parameterFileSection.hpp"
-#include "potentialSettings.hpp"
-#include "testParameterFileSection.hpp"
-#include "throwWithMessage.hpp"
-#include "typesSection.hpp"
+#include "exceptions.hpp"                 // for ParameterFileException
+#include "parameterFileSection.hpp"       // for parameterFile
+#include "potentialSettings.hpp"          // for PotentialSettings
+#include "testParameterFileSection.hpp"   // for TestParameterFileSection
+#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "typesSection.hpp"               // for TypesSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, tes...
+#include <gtest/gtest.h>   // for EXPECT_THROW, TestInfo (ptr ...
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace ::testing;
 using namespace readInput::parameterFile;

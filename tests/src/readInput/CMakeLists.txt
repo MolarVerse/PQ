@@ -3,6 +3,7 @@ set(source_files
     testMoldescriptorReader.cpp
     testGuffDatReader.cpp
     testInputFileReader.cpp
+    testIntraNonBondedReader.cpp
 )
 
 foreach(source_file ${source_files})

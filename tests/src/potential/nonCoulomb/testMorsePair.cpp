@@ -4,7 +4,8 @@
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <cmath>           // for exp, pow
 #include <cstddef>         // for size_t
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT...
+#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
+#include <string>          // for string
 #include <vector>          // for vector
 
 using namespace potential;
