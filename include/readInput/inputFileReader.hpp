@@ -14,8 +14,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 /**
  * @brief namespace for reading input files
@@ -23,9 +23,9 @@ namespace engine
  */
 namespace readInput
 {
-    void readInputFile(const std::string &, engine::Engine &);
+    void readInputFile(const std::string_view &fileName, engine::Engine &);
 
-    using ParseFunc = std::function<void(const std::vector<std::string> &, const size_t)>;
+    using ParseFunc = std::function<void(const std::vector<std::string> &lineElements, const size_t lineNumber)>;
 
     /**
      * @class InputFileReader
@@ -48,11 +48,11 @@ namespace readInput
         size_t _lineNumber = 1;
 
       public:
-        InputFileReader(const std::string &filename, engine::Engine &engine);
+        InputFileReader(const std::string_view &fileName, engine::Engine &engine);
 
         void read();
         void addKeywords();
-        void process(const std::vector<std::string> &);
+        void process(const std::vector<std::string> &lineElements);
         void postProcess();
 
         /********************************
@@ -61,7 +61,7 @@ namespace readInput
          *                              *
          ********************************/
 
-        void setFilename(const std::string_view filename) { _fileName = filename; }
+        void setFilename(const std::string_view fileName) { _fileName = fileName; }
         void setKeywordCount(const std::string &keyword, const size_t count) { _keywordCountMap[keyword] = count; }
 
         [[nodiscard]] size_t getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; }

@@ -1,26 +1,25 @@
 #include "inputFileParser.hpp"
 
-#include "exceptions.hpp"        // for InputFileException, customException
+#include "exceptions.hpp"        // for InputFileException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 #include <format>        // for format
 #include <string_view>   // for string_view
 
-using namespace customException;
 using namespace readInput;
 
 /**
- * @brief check if second argument is "="
+ * @brief check if parameter is "="
  *
  * @param view
  * @param _lineNumber
  *
- * @throw InputFileException if second argument is not "="
+ * @throw customException::InputFileException if argument is not "="
  */
 void readInput::checkEqualSign(const std::string_view &view, const size_t lineNumber)
 {
     if (view != "=")
-        throw InputFileException(std::format("Invalid command at line {} in input file", lineNumber));
+        throw customException::InputFileException(std::format("Invalid command at line {} in input file", lineNumber));
 }
 
 /**
@@ -29,14 +28,15 @@ void readInput::checkEqualSign(const std::string_view &view, const size_t lineNu
  * @param lineElements
  * @param _lineNumber
  *
- * @throw InputFileException if command array has less than 3 elements
+ * @throw customException::InputFileException if command array has less than 3 elements
  *
  * @note this function is used for commands that have an array as their third argument
  */
 void readInput::checkCommandArray(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() < 3)
-        throw InputFileException(std::format("Invalid number of arguments at line {} in input file", lineNumber));
+        throw customException::InputFileException(
+            std::format("Invalid number of arguments at line {} in input file", lineNumber));
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -47,12 +47,13 @@ void readInput::checkCommandArray(const std::vector<std::string> &lineElements, 
  * @param lineElements
  * @param _lineNumber
  *
- * @throw InputFileException if command array has less or more than 3 elements
+ * @throw customException::InputFileException if command array has less or more than 3 elements
  */
 void readInput::checkCommand(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     if (lineElements.size() != 3)
-        throw InputFileException(std::format("Invalid number of arguments at line {} in input file", lineNumber));
+        throw customException::InputFileException(
+            std::format("Invalid number of arguments at line {} in input file", lineNumber));
 
     checkEqualSign(lineElements[1], lineNumber);
 }

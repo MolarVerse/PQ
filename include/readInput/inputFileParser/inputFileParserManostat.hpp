@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,10 +26,10 @@ namespace readInput
       public:
         explicit InputFileParserManostat(engine::Engine &);
 
-        void parseManostat(const std::vector<std::string> &, const size_t);
-        void parsePressure(const std::vector<std::string> &, const size_t);
-        void parseManostatRelaxationTime(const std::vector<std::string> &, const size_t);
-        void parseCompressibility(const std::vector<std::string> &, const size_t);
+        void parseManostat(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parsePressure(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseManostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseCompressibility(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

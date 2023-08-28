@@ -2,11 +2,15 @@
 
 #define _INPUT_FILE_PARSER_CELL_LIST_HPP_
 
-#include "engine.hpp"
 #include "inputFileParser.hpp"
 
 #include <string>
 #include <vector>
+
+namespace engine
+{
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -21,8 +25,8 @@ namespace readInput
       public:
         explicit InputFileParserCellList(engine::Engine &);
 
-        void parseCellListActivated(const std::vector<std::string> &, const size_t);
-        void parseNumberOfCells(const std::vector<std::string> &, const size_t);
+        void parseCellListActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNumberOfCells(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

@@ -16,7 +16,7 @@ namespace simulationBox
     class Molecule;   // Forward declaration
 }
 
-namespace readInput
+namespace readInput::molDescriptor
 {
     void readMolDescriptor(engine::Engine &);
 
@@ -43,6 +43,6 @@ namespace readInput
         void convertExternalToInternalAtomTypes(simulationBox::Molecule &) const;
     };
 
-}   // namespace readInput
+}   // namespace readInput::molDescriptor
 
 #endif   // _MOLDESCRIPTOR_READER_HPP_

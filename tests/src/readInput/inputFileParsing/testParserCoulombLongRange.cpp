@@ -2,6 +2,7 @@
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParser.hpp"                   // for readInput
 #include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
+#include "potentialSettings.hpp"                 // for PotentialSettings
 #include "settings.hpp"                          // for Settings
 #include "testInputFileReader.hpp"               // for TestInputFileReader
 #include "throwWithMessage.hpp"                  // for EXPECT_THROW_MSG
@@ -12,9 +13,7 @@
 #include <string>          // for string, allocator
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "long-range" command
@@ -25,13 +24,13 @@ using namespace ::testing;
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
     InputFileParserCoulombLongRange parser(_engine);
-    vector<string>                  lineElements = {"long-range", "=", "none"};
+    std::vector<std::string>        lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getCoulombLongRangeType(), "none");
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "none");
 
     lineElements = {"long-range", "=", "wolf"};
     parser.parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getCoulombLongRangeType(), "wolf");
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "wolf");
 
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseCoulombLongRange(lineElements, 0),
@@ -48,9 +47,9 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
     InputFileParserCoulombLongRange parser(_engine);
-    vector<string>                  lineElements = {"wolf_param", "=", "1.0"};
+    std::vector<std::string>        lineElements = {"wolf_param", "=", "1.0"};
     parser.parseWolfParameter(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getWolfParameter(), 1.0);
+    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
@@ -59,6 +58,6 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

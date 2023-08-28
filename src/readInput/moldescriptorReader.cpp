@@ -13,7 +13,7 @@
 #include <string>        // for basic_string, string
 #include <string_view>   // for string_view
 
-using namespace readInput;
+using namespace readInput::molDescriptor;
 
 /**
  * @brief constructor
@@ -40,7 +40,7 @@ MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
  *
  * @TODO: for pure QM-MD turn off reading
  */
-void readInput::readMolDescriptor(engine::Engine &engine)
+void readInput::molDescriptor::readMolDescriptor(engine::Engine &engine)
 {
     MoldescriptorReader reader(engine);
     reader.read();

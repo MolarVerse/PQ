@@ -19,14 +19,14 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-using namespace readInput;
+using namespace readInput::intraNonBonded;
 
 /**
  * @brief construct IntraNonBondedReader object and read the file
  *
  * @param engine
  */
-void readInput::readIntraNonBondedFile(engine::Engine &engine)
+void readInput::intraNonBonded::readIntraNonBondedFile(engine::Engine &engine)
 {
     IntraNonBondedReader reader(engine.getSettings().getIntraNonBondedFilename(), engine);
     reader.read();
@@ -187,7 +187,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
         throw customException::IntraNonBondedException(
             format(R"(ERROR: could not find "END" for moltype "{}" in file "{}")", moleculeType, _fileName));
 
-    _engine.getIntraNonBonded().addIntraNonBondedContainer(intraNonBonded::IntraNonBondedContainer(moleculeType, atomIndices));
+    _engine.getIntraNonBonded().addIntraNonBondedContainer(::intraNonBonded::IntraNonBondedContainer(moleculeType, atomIndices));
 }
 
 /**

@@ -14,15 +14,15 @@ TEST_F(TestParameterFileSection, processParameterSection)
 {
     readInput::parameterFile::BondSection section;
 
-    std::ofstream _outputStream(_parameterFilename.c_str());
+    std::ofstream outputStream(_parameterFilename.c_str());
 
-    _outputStream << "bonds\n";
-    _outputStream << "1 2 1.0\n";
-    _outputStream << "         \n";
-    _outputStream << "2 3 1.2\n";
-    _outputStream << "end" << std::endl;
+    outputStream << "bonds\n";
+    outputStream << "1 2 1.0\n";
+    outputStream << "         \n";
+    outputStream << "2 3 1.2\n";
+    outputStream << "end" << '\n' << std::flush;
 
-    _outputStream.close();
+    outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
     std::ifstream fp(_parameterFilename.c_str());

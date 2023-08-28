@@ -11,14 +11,14 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
-    void checkEqualSign(const std::string_view &view, const size_t);
-    void checkCommand(const std::vector<std::string> &, const size_t);
-    void checkCommandArray(const std::vector<std::string> &, const size_t);
+    void checkEqualSign(const std::string_view &view, const size_t lineNumber);
+    void checkCommand(const std::vector<std::string> &lineElements, const size_t lineNumber);
+    void checkCommandArray(const std::vector<std::string> &lineElements, const size_t lineNumber);
 
     using ParseFunc = std::function<void(const std::vector<std::string> &, const size_t)>;
 

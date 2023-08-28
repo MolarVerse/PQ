@@ -14,7 +14,7 @@
 
 using namespace std;
 using namespace ::testing;
-using namespace readInput;
+using namespace readInput::molDescriptor;
 using namespace customException;
 
 /**

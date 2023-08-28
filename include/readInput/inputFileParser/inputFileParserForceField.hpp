@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,7 +26,7 @@ namespace readInput
       public:
         explicit InputFileParserForceField(engine::Engine &);
 
-        void parseForceFieldType(const std::vector<std::string> &, const size_t);
+        void parseForceFieldType(const std::vector<std::string> &lineElements, const size_t);
     };
 
 }   // namespace readInput

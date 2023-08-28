@@ -90,7 +90,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
     _engine->getSettings().setIntraNonBondedFilename("data/intraNonBondedReader/intraNonBonded.dat");
-    readInput::readIntraNonBondedFile(*_engine);
+    readInput::intraNonBonded::readIntraNonBondedFile(*_engine);
 
     const auto container = _engine->getIntraNonBonded().getIntraNonBondedContainers()[0];
     EXPECT_EQ(container.getMolType(), 0);

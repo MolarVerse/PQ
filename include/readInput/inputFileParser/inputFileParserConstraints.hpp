@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,11 +26,11 @@ namespace readInput
       public:
         explicit InputFileParserConstraints(engine::Engine &);
 
-        void parseShakeActivated(const std::vector<std::string> &, const size_t);
-        void parseShakeTolerance(const std::vector<std::string> &, const size_t);
-        void parseShakeIteration(const std::vector<std::string> &, const size_t);
-        void parseRattleTolerance(const std::vector<std::string> &, const size_t);
-        void parseRattleIteration(const std::vector<std::string> &, const size_t);
+        void parseShakeActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseShakeTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseShakeIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRattleTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRattleIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

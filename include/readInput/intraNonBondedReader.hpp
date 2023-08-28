@@ -8,7 +8,7 @@
 #include <iosfwd>    // for ifstream
 #include <string>    // for string
 
-namespace readInput
+namespace readInput::intraNonBonded
 {
     void readIntraNonBondedFile(engine::Engine &);
 
@@ -41,6 +41,6 @@ namespace readInput
         void reInitializeFp() { _fp = std::ifstream(_fileName); }
     };
 
-}   // namespace readInput
+}   // namespace readInput::intraNonBonded
 
 #endif   // _INTRA_NON_BONDED_READER_HPP_

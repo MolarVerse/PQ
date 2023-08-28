@@ -192,12 +192,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
         }
     }
 
-    _engine.getSettings().setGuffPath("guffpath");
-    _engine.getSettings().setMoldescriptorFilename("moldescriptorFile");
-
-    _inputFileReader->postProcess();
-
-    EXPECT_EQ(_engine.getSettings().getMoldescriptorFilename(), "guffpath/moldescriptorFile");
+    EXPECT_NO_THROW(_inputFileReader->postProcess());
 }
 
 int main(int argc, char **argv)

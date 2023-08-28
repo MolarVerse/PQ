@@ -1,40 +1,46 @@
 #include "inputFileParserManostat.hpp"
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "manostat.hpp"     // for BerendsenManostat, Manostat, manostat
-#include "manostatSettings.hpp"
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "manostatSettings.hpp"   // for ManostatSettings
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
-using namespace std;
 using namespace readInput;
-using namespace manostat;
-using namespace customException;
 
 /**
  * @brief Construct a new Input File Parser Manostat:: Input File Parser Manostat object
+ *
+ * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
+ * 1) manostat <string>
+ * 2) pressure <double> (only required if manostat is not none)
+ * 3) p_relaxation <double>
+ * 4) compressibility <double>
  *
  * @param engine
  */
 InputFileParserManostat::InputFileParserManostat(engine::Engine &engine) : InputFileParser(engine)
 {
-    addKeyword(string("manostat"), bind_front(&InputFileParserManostat::parseManostat, this), false);
-    addKeyword(string("pressure"), bind_front(&InputFileParserManostat::parsePressure, this), false);
-    addKeyword(string("p_relaxation"), bind_front(&InputFileParserManostat::parseManostatRelaxationTime, this), false);
-    addKeyword(string("compressibility"), bind_front(&InputFileParserManostat::parseCompressibility, this), false);
+    addKeyword(std::string("manostat"), bind_front(&InputFileParserManostat::parseManostat, this), false);
+    addKeyword(std::string("pressure"), bind_front(&InputFileParserManostat::parsePressure, this), false);
+    addKeyword(std::string("p_relaxation"), bind_front(&InputFileParserManostat::parseManostatRelaxationTime, this), false);
+    addKeyword(std::string("compressibility"), bind_front(&InputFileParserManostat::parseCompressibility, this), false);
 }
 
 /**
  * @brief Parse the manostat used in the simulation
  *
+ * @details Possible options are:
+ * 1) "none" - no manostat is used (default)
+ * 2) "berendsen" - berendsen manostat is used
+ *
  * @param lineElements
  *
- * @throws InputFileException if manostat is not berendsen or none
+ * @throws customException::InputFileException if manostat is not berendsen or none
  */
-void InputFileParserManostat::parseManostat(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserManostat::parseManostat(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "none")
@@ -42,7 +48,7 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
     else if (lineElements[2] == "berendsen")
         settings::ManostatSettings::setManostatType("berendsen");
     else
-        throw InputFileException(
+        throw customException::InputFileException(
             format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
                    lineElements[2],
                    lineNumber));
@@ -51,9 +57,11 @@ void InputFileParserManostat::parseManostat(const vector<string> &lineElements, 
 /**
  * @brief Parse the pressure used in the simulation
  *
+ * @details no default value - if needed it has to be set in the input file
+ *
  * @param lineElements
  */
-void InputFileParserManostat::parsePressure(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserManostat::parsePressure(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -64,17 +72,19 @@ void InputFileParserManostat::parsePressure(const vector<string> &lineElements, 
 /**
  * @brief parses the relaxation time of the manostat
  *
+ * @details default value is 1.0
+ *
  * @param lineElements
  *
- * @throw InputFileException if relaxation time is negative
+ * @throw customException::InputFileException if relaxation time is negative
  */
-void InputFileParserManostat::parseManostatRelaxationTime(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserManostat::parseManostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     const auto relaxationTime = stod(lineElements[2]);
 
     if (relaxationTime < 0)
-        throw InputFileException("Relaxation time of manostat cannot be negative");
+        throw customException::InputFileException("Relaxation time of manostat cannot be negative");
 
     settings::ManostatSettings::setTauManostat(relaxationTime);
 }
@@ -82,17 +92,19 @@ void InputFileParserManostat::parseManostatRelaxationTime(const vector<string> &
 /**
  * @brief Parse the compressibility used in the simulation (isothermal compressibility)
  *
+ * @details default value is 4.5e-5
+ *
  * @param lineElements
  *
- * @throw InputFileException if compressibility is negative
+ * @throw customException::InputFileException if compressibility is negative
  */
-void InputFileParserManostat::parseCompressibility(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserManostat::parseCompressibility(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     const auto compressibility = stod(lineElements[2]);
 
     if (compressibility < 0.0)
-        throw InputFileException("Compressibility cannot be negative");
+        throw customException::InputFileException("Compressibility cannot be negative");
 
     settings::ManostatSettings::setCompressibility(compressibility);
 }

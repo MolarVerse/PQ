@@ -11,6 +11,7 @@
 #include "nonCoulombPair.hpp"            // for NonCoulombPair
 #include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
+#include "potentialSettings.hpp"         // for PotentialSettings
 #include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
 
@@ -65,9 +66,9 @@ void PotentialSetup::setup()
 void PotentialSetup::setupCoulomb()
 {
     const auto coulombRadiusCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
-    auto       wolfParameter       = _engine.getSettings().getWolfParameter();
+    auto       wolfParameter       = settings::PotentialSettings::getWolfParameter();
 
-    if (_engine.getSettings().getCoulombLongRangeType() == "wolf")
+    if (settings::PotentialSettings::getCoulombLongRangeType() == "wolf")
         _engine.getPotential().makeCoulombPotential(CoulombWolf(coulombRadiusCutOff, wolfParameter));
     else
         _engine.getPotential().makeCoulombPotential(CoulombShiftedPotential(coulombRadiusCutOff));

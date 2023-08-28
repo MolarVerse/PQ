@@ -42,17 +42,12 @@ namespace settings
         // filenames and paths for later setup
         std::string _startFilename;
         std::string _moldescriptorFilename  = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;   // for backward compatibility
-        std::string _guffPath               = ".";                                          // not backward compatible
         std::string _guffDatFilename        = defaults::_GUFF_FILENAME_DEFAULT_;
         std::string _topologyFilename       = "";
         std::string _parameterFilename      = "";
         std::string _intraNonBondedFilename = "";
 
         std::string _jobtype;
-
-        // coulomb long range settings for later setup
-        std::string _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // none
-        double      _wolfParameter        = defaults::_WOLF_PARAMETER_DEFAULT_;            // 0.25
 
         // noncoulomb settings for later setup
         std::string _nonCoulombType = defaults::_NONCOULOMB_TYPE_DEFAULT_;   // none
@@ -64,7 +59,6 @@ namespace settings
 
         [[nodiscard]] std::string getStartFilename() const { return _startFilename; }
         [[nodiscard]] std::string getMoldescriptorFilename() const { return _moldescriptorFilename; }
-        [[nodiscard]] std::string getGuffPath() const { return _guffPath; }
         [[nodiscard]] std::string getGuffDatFilename() const { return _guffDatFilename; }
         [[nodiscard]] std::string getTopologyFilename() const { return _topologyFilename; }
         [[nodiscard]] std::string getParameterFilename() const { return _parameterFilename; }
@@ -77,9 +71,6 @@ namespace settings
         [[nodiscard]] size_t getNReset() const { return _nReset; }
         [[nodiscard]] size_t getFReset() const { return _fReset; }
 
-        [[nodiscard]] std::string getCoulombLongRangeType() const { return _coulombLongRangeType; }
-        [[nodiscard]] double      getWolfParameter() const { return _wolfParameter; }
-
         [[nodiscard]] std::string getNonCoulombType() const { return _nonCoulombType; }
 
         /********************
@@ -88,7 +79,6 @@ namespace settings
 
         void setStartFilename(const std::string_view startFilename) { _startFilename = startFilename; }
         void setMoldescriptorFilename(const std::string_view filename) { _moldescriptorFilename = filename; }
-        void setGuffPath(const std::string_view guffPath) { _guffPath = guffPath; }
         void setGuffDatFilename(const std::string_view guffDatFilename) { _guffDatFilename = guffDatFilename; }
         void setTopologyFilename(const std::string_view topologyFilename) { _topologyFilename = topologyFilename; }
         void setParameterFilename(const std::string_view parameterFilename) { _parameterFilename = parameterFilename; }
@@ -100,12 +90,6 @@ namespace settings
         void setFScale(const size_t fScale) { _fScale = fScale; }
         void setNReset(const size_t nReset) { _nReset = nReset; }
         void setFReset(const size_t fReset) { _fReset = fReset; }
-
-        void setCoulombLongRangeType(const std::string_view coulombLongRangeType)
-        {
-            _coulombLongRangeType = coulombLongRangeType;
-        }
-        void setWolfParameter(const double wolfParameter) { _wolfParameter = wolfParameter; }
 
         void setNonCoulombType(const std::string_view nonCoulombType) { _nonCoulombType = nonCoulombType; }
     };

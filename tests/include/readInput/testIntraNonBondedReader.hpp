@@ -20,8 +20,8 @@
 class TestIntraNonBondedReader : public ::testing::Test
 {
   protected:
-    engine::Engine                  *_engine;
-    readInput::IntraNonBondedReader *_intraNonBondedReader;
+    engine::Engine                                  *_engine;
+    readInput::intraNonBonded::IntraNonBondedReader *_intraNonBondedReader;
 
     void SetUp() override
     {
@@ -35,7 +35,8 @@ class TestIntraNonBondedReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(molecule1);
         _engine->getIntraNonBonded().activate();
 
-        _intraNonBondedReader = new readInput::IntraNonBondedReader("data/intraNonBondedReader/intraNonBonded.dat", *_engine);
+        _intraNonBondedReader =
+            new readInput::intraNonBonded::IntraNonBondedReader("data/intraNonBondedReader/intraNonBonded.dat", *_engine);
     }
 
     void TearDown() override

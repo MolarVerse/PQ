@@ -6,6 +6,7 @@
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "potential.hpp"                 // for Potential
+#include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
 #include "settings.hpp"                  // for Settings
 #include "testSetup.hpp"                 // for TestSetup
@@ -21,13 +22,13 @@ using namespace setup;
  */
 TEST_F(TestSetup, setupCoulombPotential)
 {
-    _engine.getSettings().setCoulombLongRangeType("none");
+    settings::PotentialSettings::setCoulombLongRangeType("none");
     PotentialSetup potentialSetup(_engine);
     potentialSetup.setupCoulomb();
 
     EXPECT_EQ(typeid(_engine.getPotential().getCoulombPotential()), typeid(potential::CoulombShiftedPotential));
 
-    _engine.getSettings().setCoulombLongRangeType("wolf");
+    settings::PotentialSettings::setCoulombLongRangeType("wolf");
     PotentialSetup potentialSetup2(_engine);
     potentialSetup2.setup();
 

@@ -4,10 +4,10 @@
 #include "exceptions.hpp"   // for RstFileException
 #include "timings.hpp"      // for Timings
 
-#include <format>     // for format
-#include <stddef.h>   // for size_t
-#include <string>     // for string, stoi
-#include <vector>     // for vector
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <string>    // for string, stoi
+#include <vector>    // for vector
 
 using namespace readInput::restartFile;
 

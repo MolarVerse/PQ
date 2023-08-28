@@ -58,7 +58,7 @@ TEST_F(TestRstFileReader, fileNotFound)
 TEST_F(TestRstFileReader, rstFileReading)
 {
     _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
-    MoldescriptorReader moldescriptor(_engine);
+    molDescriptor::MoldescriptorReader moldescriptor(_engine);
 
     string filename = "examples/setup/h2o-qmcf.rst";
     _engine.getSettings().setStartFilename(filename);

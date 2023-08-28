@@ -28,7 +28,7 @@ namespace simulationBox
 
         linearAlgebra::Vec3D   _cellSize;
         linearAlgebra::Vec3Dul _nNeighbourCells{0, 0, 0};
-        linearAlgebra::Vec3Dul _nCells{defaults::_NUMBER_OF_CELLS_DEFAULT_};
+        linearAlgebra::Vec3Dul _nCells{defaults::_NUMBER_OF_CELLS_DEFAULT_};   // 7x7x7
 
       public:
         void setup(const SimulationBox &);

@@ -6,10 +6,10 @@
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
+#include <cstddef>    // for size_t
 #include <format>     // for format
 #include <iostream>   // for operator<<, basic_ostream::operator<<
 #include <memory>     // for unique_ptr, make_unique
-#include <stddef.h>   // for size_t
 #include <string>     // for string, stod, stoul, getline, char_traits
 #include <vector>     // for vector
 

@@ -60,7 +60,7 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
     readInputFile(inputFileName, engine);
 
     std::cout << "Reading moldescriptor..." << '\n';
-    readMolDescriptor(engine);
+    molDescriptor::readMolDescriptor(engine);
 
     std::cout << "Reading rst file..." << '\n';
     restartFile::readRestartFile(engine);
@@ -72,7 +72,7 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
     parameterFile::readParameterFile(engine);
 
     std::cout << "Reading intra non bonded file..." << '\n';
-    readIntraNonBondedFile(engine);
+    readInput::intraNonBonded::readIntraNonBondedFile(engine);
 }
 
 /**
