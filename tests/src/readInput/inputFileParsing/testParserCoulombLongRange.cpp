@@ -35,7 +35,8 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseCoulombLongRange(lineElements, 0),
                      customException::InputFileException,
-                     "Invalid long-range type for coulomb correction \"notValid\" at line 0 in input file");
+                     "Invalid long-range type for coulomb correction \"notValid\" at line 0 in input file - possible options are "
+                     "\"none\", \"wolf\"");
 }
 
 /**
