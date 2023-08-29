@@ -24,9 +24,7 @@ namespace timings
     class Timings
     {
       private:
-        size_t _stepCount     = 0;
-        size_t _numberOfSteps = 0;
-        double _timestep      = 0.0;
+        size_t _stepCount = 0;
 
         Time _start;
         Time _end;
@@ -42,12 +40,8 @@ namespace timings
          ********************************/
 
         [[nodiscard]] size_t getStepCount() const { return _stepCount; }
-        [[nodiscard]] size_t getNumberOfSteps() const { return _numberOfSteps; }
-        [[nodiscard]] double getTimestep() const { return _timestep; }
 
         void setStepCount(const size_t stepCount) { _stepCount = stepCount; }
-        void setTimestep(const double timestep) { _timestep = timestep; }
-        void setNumberOfSteps(const size_t numberOfSteps) { _numberOfSteps = numberOfSteps; }
     };
 
 }   // namespace timings

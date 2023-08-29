@@ -3,6 +3,7 @@
 #define _TEST_TOPOLOGY_READER_HPP_
 
 #include "engine.hpp"           // for Engine
+#include "fileSettings.hpp"     // for FileSettings
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
 #include "topologyReader.hpp"   // for TopologyReader
@@ -36,6 +37,7 @@ class TestTopologyReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule2);
 
         _topologyReader = new readInput::topology::TopologyReader("data/topologyReader/topology.top", *_engine);
+        settings::FileSettings::setIsTopologyFileNameSet();
     }
 
     void TearDown() override

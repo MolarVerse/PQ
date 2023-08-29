@@ -13,10 +13,20 @@
 #include <functional>   // for _Bind_front_t, bind_front
 
 using namespace readInput;
-using namespace output;
 
 /**
  * @brief Construct a new Input File Parser Output:: Input File Parser Output object
+ *
+ * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
+ * 1) output_freq <size_t>
+ * 2) output_file <string>
+ * 3) info_file <string>
+ * 4) energy_file <string>
+ * 5) traj_file <string>
+ * 6) vel_file <string>
+ * 7) force_file <string>
+ * 8) restart_file <string>
+ * 9) charge_file <string>
  *
  * @param engine
  */
@@ -36,6 +46,8 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
 /**
  * @brief parse output frequency of simulation and set it in output statically
  *
+ * @details default value is 1
+ *
  * @param lineElements
  *
  * @throws InputFileException if output frequency is negative
@@ -49,11 +61,13 @@ void InputFileParserOutput::parseOutputFreq(const std::vector<std::string> &line
         throw customException::InputFileException(
             format("Output frequency cannot be negative - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
-    Output::setOutputFrequency(size_t(outputFrequency));
+    output::Output::setOutputFrequency(size_t(outputFrequency));
 }
 
 /**
  * @brief parse log filename of simulation and add it to output
+ *
+ * @details default value is default.out
  *
  * @param lineElements
  */
@@ -66,6 +80,8 @@ void InputFileParserOutput::parseLogFilename(const std::vector<std::string> &lin
 /**
  * @brief parse info filename of simulation and add it to output
  *
+ * @details default value is default.info
+ *
  * @param lineElements
  */
 void InputFileParserOutput::parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
@@ -76,6 +92,8 @@ void InputFileParserOutput::parseInfoFilename(const std::vector<std::string> &li
 
 /**
  * @brief parse energy filename of simulation and add it to output
+ *
+ * @details default value is default.en
  *
  * @param lineElements
  */
@@ -88,6 +106,8 @@ void InputFileParserOutput::parseEnergyFilename(const std::vector<std::string> &
 /**
  * @brief parse trajectory filename of simulation and add it to output
  *
+ * @details default value is default.xyz
+ *
  * @param lineElements
  */
 void InputFileParserOutput::parseTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
@@ -98,6 +118,8 @@ void InputFileParserOutput::parseTrajectoryFilename(const std::vector<std::strin
 
 /**
  * @brief parse velocity filename of simulation and add it to output
+ *
+ * @details default value is default.vel
  *
  * @param lineElements
  */
@@ -110,6 +132,8 @@ void InputFileParserOutput::parseVelocityFilename(const std::vector<std::string>
 /**
  * @brief parse velocity filename of simulation and add it to output
  *
+ * @details default value is default.force
+ *
  * @param lineElements
  */
 void InputFileParserOutput::parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
@@ -121,6 +145,8 @@ void InputFileParserOutput::parseForceFilename(const std::vector<std::string> &l
 /**
  * @brief parse restart filename of simulation and add it to output
  *
+ * @details default value is default.rst
+ *
  * @param lineElements
  */
 void InputFileParserOutput::parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
@@ -131,6 +157,8 @@ void InputFileParserOutput::parseRestartFilename(const std::vector<std::string> 
 
 /**
  * @brief parse charge filename of simulation and add it to output
+ *
+ * @details default value is default.chrg
  *
  * @param lineElements
  */

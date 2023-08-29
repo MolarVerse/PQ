@@ -6,6 +6,7 @@
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "timings.hpp"            // for Timings
+#include "timingsSettings.hpp"    // for TimingsSettings
 
 #include <format>   // for format
 #include <string>   // for operator==
@@ -50,5 +51,5 @@ void ManostatSetup::setup()
     else
         _engine.makeManostat(manostat::Manostat());
 
-    _engine.getManostat().setTimestep(_engine.getTimings().getTimestep());
+    _engine.getManostat().setTimestep(settings::TimingsSettings::getTimeStep());
 }

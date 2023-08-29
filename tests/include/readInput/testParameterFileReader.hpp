@@ -3,6 +3,7 @@
 #define _TEST_PARAMETER_FILE_READER_HPP_
 
 #include "engine.hpp"                // for Engine
+#include "fileSettings.hpp"          // for FileSettings
 #include "molecule.hpp"              // for Molecule
 #include "parameterFileReader.hpp"   // for ParameterFileReader
 #include "simulationBox.hpp"         // for SimulationBox
@@ -37,6 +38,7 @@ class TestParameterFileReader : public ::testing::Test
 
         _parameterFileReader =
             new readInput::parameterFile::ParameterFileReader("data/parameterFileReader/param.param", *_engine);
+        settings::FileSettings::setIsParameterFileNameSet();
     }
 
     void TearDown() override

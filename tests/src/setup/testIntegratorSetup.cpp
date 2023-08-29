@@ -3,7 +3,7 @@
 #include "integrator.hpp"        // for Integrator
 #include "integratorSetup.hpp"   // for setupIntegrator, IntegratorSetup, setup
 #include "testSetup.hpp"         // for TestSetup
-#include "timings.hpp"           // for Timings
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, InitGoogleTest
@@ -14,7 +14,7 @@ using namespace customException;
 
 TEST_F(TestSetup, integratorSetup_SetTimeStep)
 {
-    _engine.getTimings().setTimestep(0.001);
+    settings::TimingsSettings::setTimeStep(0.001);
     IntegratorSetup integratorSetup(_engine);
     integratorSetup.setup();
     EXPECT_DOUBLE_EQ(_engine.getIntegrator().getDt(), 0.001);

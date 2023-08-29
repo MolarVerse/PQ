@@ -1,27 +1,27 @@
 #include "inputFileParserTimings.hpp"
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException
-#include "timings.hpp"      // for Timings
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 #include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
-using namespace std;
 using namespace readInput;
 
 /**
- * @brief check if second argument is "="
+ * @brief Construct a new Input File Parser Timings:: Input File Parser Timings object
  *
- * @param lineElement
- * @param _lineNumber
+ * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
+ * 1) timestep <double> (required)
+ * 2) nstep <size_t> (required)
  *
- * @throw InputFileException if second argument is not "="
+ * @param engine
  */
 InputFileParserTimings::InputFileParserTimings(engine::Engine &engine) : InputFileParser(engine)
 {
-    addKeyword(string("timestep"), bind_front(&InputFileParserTimings::parseTimeStep, this), true);
-    addKeyword(string("nstep"), bind_front(&InputFileParserTimings::parseNumberOfSteps, this), true);
+    addKeyword(std::string("timestep"), bind_front(&InputFileParserTimings::parseTimeStep, this), true);
+    addKeyword(std::string("nstep"), bind_front(&InputFileParserTimings::parseNumberOfSteps, this), true);
 }
 
 /**
@@ -29,10 +29,10 @@ InputFileParserTimings::InputFileParserTimings(engine::Engine &engine) : InputFi
  *
  * @param lineElements
  */
-void InputFileParserTimings::parseTimeStep(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserTimings::parseTimeStep(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getTimings().setTimestep(stod(lineElements[2]));
+    settings::TimingsSettings::setTimeStep(stod(lineElements[2]));
 }
 
 /**
@@ -42,13 +42,14 @@ void InputFileParserTimings::parseTimeStep(const vector<string> &lineElements, c
  *
  * @throws InputFileException if number of steps is negative
  */
-void InputFileParserTimings::parseNumberOfSteps(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserTimings::parseNumberOfSteps(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+
     const auto numberOfSteps = stoi(lineElements[2]);
 
     if (numberOfSteps < 0)
         throw customException::InputFileException("Number of steps cannot be negative");
 
-    _engine.getTimings().setNumberOfSteps(size_t(numberOfSteps));
+    settings::TimingsSettings::setNumberOfSteps(size_t(numberOfSteps));
 }

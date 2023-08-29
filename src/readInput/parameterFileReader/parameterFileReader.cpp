@@ -96,11 +96,8 @@ void ParameterFileReader::read()
     if (!isNeeded())
         return;
 
-    if (_fileName.empty())
+    if (!settings::FileSettings::isParameterFileNameSet())
         throw customException::InputFileException("Parameter file needed for requested simulation setup");
-
-    if (!std::filesystem::exists(_fileName))
-        throw customException::InputFileException("Parameter file \"" + _fileName + "\"" + " File not found");
 
     std::string line;
     int         lineNumber = 1;

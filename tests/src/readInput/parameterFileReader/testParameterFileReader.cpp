@@ -107,37 +107,10 @@ TEST_F(TestParameterFileReader, deleteSection)
 TEST_F(TestParameterFileReader, read_fileNameEmpty)
 {
     _engine->getForceField().activate();
-    _parameterFileReader->setFilename("");
+    settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_THROW_MSG(_parameterFileReader->read(),
                      customException::InputFileException,
                      "Parameter file needed for requested simulation setup");
-}
-
-/**
- * @brief tests read function
- *
- * @details if forceField is not activated, reading should be skipped
- *
- */
-TEST_F(TestParameterFileReader, read_notNeeded)
-{
-    _engine->getForceField().deactivate();
-    _parameterFileReader->setFilename("");
-    EXPECT_NO_THROW(_parameterFileReader->read());
-}
-
-/**
- * @brief tests read function
- *
- * @details if file does not exists, exception should be thrown
- *
- */
-TEST_F(TestParameterFileReader, read_fileDoesNotExists)
-{
-    _engine->getForceField().activate();
-    _parameterFileReader->setFilename("doesNotExists");
-    EXPECT_THROW_MSG(
-        _parameterFileReader->read(), customException::InputFileException, "Parameter file \"doesNotExists\" File not found");
 }
 
 TEST_F(TestParameterFileReader, readParameterFile)
@@ -145,6 +118,13 @@ TEST_F(TestParameterFileReader, readParameterFile)
     _engine->getForceField().activate();
     _engine->getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     settings::FileSettings::setParameterFileName("data/parameterFileReader/param.param");
+    EXPECT_NO_THROW(readInput::parameterFile::readParameterFile(*_engine));
+}
+
+TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
+{
+    _engine->getForceField().deactivate();
+    settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_NO_THROW(readInput::parameterFile::readParameterFile(*_engine));
 }
 

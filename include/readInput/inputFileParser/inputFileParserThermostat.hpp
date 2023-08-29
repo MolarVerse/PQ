@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,9 +26,9 @@ namespace readInput
       public:
         explicit InputFileParserThermostat(engine::Engine &);
 
-        void parseThermostat(const std::vector<std::string> &, const size_t);
-        void parseTemperature(const std::vector<std::string> &, const size_t);
-        void parseThermostatRelaxationTime(const std::vector<std::string> &, const size_t);
+        void parseThermostat(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseTemperature(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseThermostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

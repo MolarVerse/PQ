@@ -49,10 +49,7 @@ TEST_F(TestTopologyReader, read)
     _engine->getConstraints().activate();
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _topologyReader->setFilename("");
-    EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
-
-    _topologyReader->setFilename("nonExistingFile.top");
+    settings::FileSettings::unsetIsTopologyFileNameSet();
     EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
 }
 

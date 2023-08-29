@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,15 +26,15 @@ namespace readInput
       public:
         explicit InputFileParserOutput(engine::Engine &);
 
-        void parseOutputFreq(const std::vector<std::string> &, const size_t);
-        void parseLogFilename(const std::vector<std::string> &, const size_t);
-        void parseInfoFilename(const std::vector<std::string> &, const size_t);
-        void parseEnergyFilename(const std::vector<std::string> &, const size_t);
-        void parseTrajectoryFilename(const std::vector<std::string> &, const size_t);
-        void parseVelocityFilename(const std::vector<std::string> &, const size_t);
-        void parseForceFilename(const std::vector<std::string> &, const size_t);
-        void parseRestartFilename(const std::vector<std::string> &, const size_t);
-        void parseChargeFilename(const std::vector<std::string> &, const size_t);
+        void parseOutputFreq(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseLogFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

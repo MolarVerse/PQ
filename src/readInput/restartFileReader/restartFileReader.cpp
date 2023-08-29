@@ -53,9 +53,6 @@ RestartFileSection *RestartFileReader::determineSection(std::vector<std::string>
  */
 void RestartFileReader::read()
 {
-    if (_fp.fail())
-        throw customException::InputFileException(std::format(R"("{}" File not found)", _fileName));
-
     std::string line;
     int         lineNumber = 1;
 

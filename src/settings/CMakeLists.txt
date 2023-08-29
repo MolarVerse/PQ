@@ -6,6 +6,8 @@ add_library(settings
     constraintSettings.cpp
     potentialSettings.cpp
     fileSettings.cpp
+    resetKineticsSettings.cpp
+    timingsSettings.cpp
 )
 
 target_include_directories(settings

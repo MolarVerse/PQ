@@ -68,8 +68,6 @@ void InputFileParserFiles::parseIntraNonBondedFile(const std::vector<std::string
  * @param lineElements
  * @param lineNumber
  *
- * TODO:
- *
  * @throws customException::InputFileException if topology filename is empty or file does not exist
  */
 void InputFileParserFiles::parseTopologyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
@@ -78,13 +76,11 @@ void InputFileParserFiles::parseTopologyFilename(const std::vector<std::string> 
 
     const auto &filename = lineElements[2];
 
-    if (filename.empty())
-        throw customException::InputFileException("Topology filename cannot be empty");
-
     if (!utilities::fileExists(filename))
         throw customException::InputFileException("Cannot open topology file - filename = " + filename);
 
     settings::FileSettings::setTopologyFileName(filename);
+    settings::FileSettings::setIsTopologyFileNameSet();
 }
 
 /**
@@ -101,13 +97,11 @@ void InputFileParserFiles::parseParameterFilename(const std::vector<std::string>
 
     const auto &filename = lineElements[2];
 
-    if (filename.empty())
-        throw customException::InputFileException("Parameter filename cannot be empty");
-
     if (!utilities::fileExists(filename))
         throw customException::InputFileException("Cannot open parameter file - filename = " + filename);
 
     settings::FileSettings::setParameterFileName(filename);
+    settings::FileSettings::setIsParameterFileNameSet();
 }
 
 /**
@@ -119,11 +113,19 @@ void InputFileParserFiles::parseParameterFilename(const std::vector<std::string>
 void InputFileParserFiles::parseStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    settings::FileSettings::setStartFileName(lineElements[2]);
+
+    const auto &filename = lineElements[2];
+
+    if (!utilities::fileExists(filename))
+        throw customException::InputFileException("Cannot open start file - filename = " + filename);
+
+    settings::FileSettings::setStartFileName(filename);
 }
 
 /**
  * @brief parse moldescriptor file of simulation and set it in settings
+ *
+ * @details default is moldescriptor.dat
  *
  * @param lineElements
  *
@@ -155,10 +157,20 @@ void InputFileParserFiles::parseMoldescriptorFilename(const std::vector<std::str
 /**
  * @brief parse guff dat file of simulation and set it in settings
  *
+ * @details default is guff.dat
+ *
  * @param lineElements
+ *
+ * @throws customException::InputFileException if file does not exist
  */
 void InputFileParserFiles::parseGuffDatFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    settings::FileSettings::setGuffDatFileName(lineElements[2]);
+
+    const auto &filename = lineElements[2];
+
+    if (!utilities::fileExists(filename))
+        throw customException::InputFileException("Cannot open guff file - filename = " + filename);
+
+    settings::FileSettings::setGuffDatFileName(filename);
 }

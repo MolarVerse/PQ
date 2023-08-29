@@ -40,18 +40,6 @@ TEST_F(TestRstFileReader, determineSection)
 }
 
 /**
- * @brief tests if the restart file is not found
- *
- */
-TEST_F(TestRstFileReader, fileNotFound)
-{
-    string                         filename = "examples/setup/FILENOTFOUND.rst";
-    restartFile::RestartFileReader rstFileReader(filename, _engine);
-
-    ASSERT_THROW_MSG(rstFileReader.read(), InputFileException, "\"examples/setup/FILENOTFOUND.rst\" File not found");
-}
-
-/**
  * @brief test full read restart file function
  *
  */

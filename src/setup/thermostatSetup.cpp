@@ -1,11 +1,11 @@
 #include "thermostatSetup.hpp"
 
-#include "constants.hpp"    // for _PS_TO_FS_
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException
-#include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
-#include "thermostatSettings.hpp"
-#include "timings.hpp"   // for Timings
+#include "constants.hpp"            // for _PS_TO_FS_
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException
+#include "thermostat.hpp"           // for BerendsenThermostat, Thermostat, thermostat
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 #include <format>   // for format
 #include <string>   // for operator==
@@ -52,5 +52,5 @@ void ThermostatSetup::setup()
     else
         _engine.makeThermostat(thermostat::Thermostat());
 
-    _engine.getThermostat().setTimestep(_engine.getTimings().getTimestep());
+    _engine.getThermostat().setTimestep(settings::TimingsSettings::getTimeStep());
 }

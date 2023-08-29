@@ -1,8 +1,8 @@
 #include "integratorSetup.hpp"
 
-#include "engine.hpp"       // for Engine
-#include "integrator.hpp"   // for Integrator
-#include "timings.hpp"      // for Timings
+#include "engine.hpp"            // for Engine
+#include "integrator.hpp"        // for Integrator
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace setup;
 
@@ -21,4 +21,4 @@ void setup::setupIntegrator(engine::Engine &engine)
  * @brief sets timestep in integrator
  *
  */
-void IntegratorSetup::setup() { _engine.getIntegrator().setDt(_engine.getTimings().getTimestep()); }
+void IntegratorSetup::setup() { _engine.getIntegrator().setDt(settings::TimingsSettings::getTimeStep()); }

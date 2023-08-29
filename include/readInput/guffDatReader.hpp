@@ -11,8 +11,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -31,7 +31,7 @@ namespace readInput
     {
       private:
         size_t      _lineNumber = 1;
-        std::string _fileName   = defaults::_GUFF_FILENAME_DEFAULT_;   // gets overridden by the engine in the constructor
+        std::string _fileName   = defaults::_GUFF_FILENAME_DEFAULT_;
 
         vector4d _guffCoulombCoefficients;
 
@@ -41,7 +41,7 @@ namespace readInput
         explicit GuffDatReader(engine::Engine &engine);
 
         void setupGuffMaps();
-        void parseLine(std::vector<std::string> &);
+        void parseLine(std::vector<std::string> &lineElements);
         void read();
         void postProcessSetup();
 

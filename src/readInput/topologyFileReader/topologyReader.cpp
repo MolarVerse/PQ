@@ -74,11 +74,8 @@ void TopologyReader::read()
     if (!isNeeded())
         return;
 
-    if (_fileName.empty())
+    if (!settings::FileSettings::isTopologyFileNameSet())
         throw customException::InputFileException("Topology file needed for requested simulation setup");
-
-    if (!std::filesystem::exists(_fileName))
-        throw customException::InputFileException("Topology file \"" + _fileName + "\"" + " File not found");
 
     while (getline(_fp, line))
     {

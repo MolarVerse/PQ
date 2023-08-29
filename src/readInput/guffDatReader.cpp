@@ -25,24 +25,18 @@
 #include <cmath>        // for sqrt
 #include <exception>    // for exception
 #include <format>       // for format
-#include <fstream>      // for basic_istream, ifstream, std
-#include <functional>   // for identity
+#include <fstream>      // for basic_istream, std::ifstream, std
+#include <functional>   // for idestd::ntity
 #include <memory>       // for make_shared
 
-using namespace std;
-using namespace utilities;
-using namespace simulationBox;
 using namespace readInput;
-using namespace engine;
-using namespace customException;
-using namespace potential;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
  *
  * @param engine
  */
-void readInput::readGuffDat(Engine &engine)
+void readInput::readGuffDat(engine::Engine &engine)
 {
     if (engine.getForceFieldPtr()->isNonCoulombicActivated())
         return;
@@ -58,21 +52,24 @@ void readInput::readGuffDat(Engine &engine)
  *
  * @param engine
  */
-GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine) { _fileName = settings::FileSettings::getGuffDatFileName(); }
+GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
+{
+    _fileName = settings::FileSettings::getGuffDatFileName();
+}
 
 /**
  * @brief reads the guff.dat file
  *
- * @throws GuffDatException if the file is invalid
+ * @throws customException::GuffDatException if the file is invalid
  */
 void GuffDatReader::read()
 {
-    ifstream fp(_fileName);
-    string   line;
+    std::ifstream fp(_fileName);
+    std::string   line;
 
     while (getline(fp, line))
     {
-        line = removeComments(line, "#");
+        line = utilities::removeComments(line, "#");
 
         if (line.empty())
         {
@@ -80,15 +77,15 @@ void GuffDatReader::read()
             continue;
         }
 
-        auto lineCommands = getLineCommands(line, _lineNumber);
+        auto lineCommands = utilities::getLineCommands(line, _lineNumber);
 
         if (lineCommands.size() - 1 != defaults::_NUMBER_OF_GUFF_ENTRIES_)
         {
-            const auto message = format("Invalid number of commands ({}) in line {} - {} are allowed",
-                                        lineCommands.size() - 1,
-                                        _lineNumber,
-                                        defaults::_NUMBER_OF_GUFF_ENTRIES_);
-            throw GuffDatException(message);
+            const auto message = std::format("Invalid number of commands ({}) in line {} - {} are allowed",
+                                             lineCommands.size() - 1,
+                                             _lineNumber,
+                                             defaults::_NUMBER_OF_GUFF_ENTRIES_);
+            throw customException::GuffDatException(message);
         }
 
         parseLine(lineCommands);
@@ -152,12 +149,12 @@ void GuffDatReader::setupGuffMaps()
  *
  * æTODO: introduce keyword to ignore coulomb preFactors and use moldescriptor instead
  *
- * @throws GuffDatException if the line is invalid
+ * @throws customException::GuffDatException if the line is invalid
  */
-void GuffDatReader::parseLine(vector<string> &lineCommands)
+void GuffDatReader::parseLine(std::vector<std::string> &lineCommands)
 {
-    Molecule molecule1;
-    Molecule molecule2;
+    simulationBox::Molecule molecule1;
+    simulationBox::Molecule molecule2;
 
     size_t atomType1 = 0;
     size_t atomType2 = 0;
@@ -167,9 +164,9 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
         molecule1 = _engine.getSimulationBox().findMoleculeType(stoul(lineCommands[0]));
         molecule2 = _engine.getSimulationBox().findMoleculeType(stoul(lineCommands[2]));
     }
-    catch (const RstFileException &)
+    catch (const customException::RstFileException &)   // TODO: change to GuffDatException or general type - maybe optional
     {
-        throw GuffDatException(format("Invalid molecule type in line {}", _lineNumber));
+        throw customException::GuffDatException(std::format("Invalid molecule type in line {}", _lineNumber));
     }
 
     try
@@ -179,7 +176,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     }
     catch (const std::exception &)
     {
-        throw GuffDatException(format("Invalid atom type in line {}", _lineNumber));
+        throw customException::GuffDatException(std::format("Invalid atom type in line {}", _lineNumber));
     }
 
     double rncCutOff = stod(lineCommands[4]);
@@ -187,8 +184,8 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
     if (rncCutOff < 0.0)
         rncCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
 
-    const double   coulombCoefficient = stod(lineCommands[5]);
-    vector<double> guffCoefficients(22);
+    const double        coulombCoefficient = stod(lineCommands[5]);
+    std::vector<double> guffCoefficients(22);
 
     for (size_t i = 0; i < 22; ++i)
         guffCoefficients[i] = stod(lineCommands[i + 6]);
@@ -203,38 +200,40 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     if (settings::PotentialSettings::getNonCoulombType() == "lj")
     {
-        auto lennardJonesPair                  = LennardJonesPair(rncCutOff, guffCoefficients[0], guffCoefficients[2]);
+        auto lennardJonesPair                  = potential::LennardJonesPair(rncCutOff, guffCoefficients[0], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = lennardJonesPair.calculateEnergyAndForce(rncCutOff);
 
         guffNonCoulomb.setGuffNonCoulombicPair(
             {moltype1, moltype2, atomType1, atomType2},
-            make_shared<LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
+            std::make_shared<potential::LennardJonesPair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
         guffNonCoulomb.setGuffNonCoulombicPair(
             {moltype2, moltype1, atomType2, atomType1},
-            make_shared<LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
+            std::make_shared<potential::LennardJonesPair>(
+                rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
     }
     else if (settings::PotentialSettings::getNonCoulombType() == "buck")
     {
-        auto buckinghamPair = BuckinghamPair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
+        auto buckinghamPair = potential::BuckinghamPair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = buckinghamPair.calculateEnergyAndForce(rncCutOff);
 
         guffNonCoulomb.setGuffNonCoulombicPair(
             {moltype1, moltype2, atomType1, atomType2},
-            make_shared<BuckinghamPair>(
+            std::make_shared<potential::BuckinghamPair>(
                 rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
         guffNonCoulomb.setGuffNonCoulombicPair(
             {moltype2, moltype1, atomType2, atomType1},
-            make_shared<BuckinghamPair>(
+            std::make_shared<potential::BuckinghamPair>(
                 rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
     }
     else if (settings::PotentialSettings::getNonCoulombType() == "morse")
     {
-        auto morsePair = MorsePair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
+        auto morsePair = potential::MorsePair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = morsePair.calculateEnergyAndForce(rncCutOff);
 
         guffNonCoulomb.setGuffNonCoulombicPair(
             {moltype1, moltype2, atomType1, atomType2},
-            make_shared<MorsePair>(
+            std::make_shared<potential::MorsePair>(
                 rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
         guffNonCoulomb.setGuffNonCoulombicPair(
             {
@@ -243,18 +242,20 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
                 atomType2,
                 atomType1,
             },
-            make_shared<MorsePair>(
+            std::make_shared<potential::MorsePair>(
                 rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
     }
     else
     {
-        auto guffPair                          = GuffPair(rncCutOff, guffCoefficients);
+        auto guffPair                          = potential::GuffPair(rncCutOff, guffCoefficients);
         const auto [energyCutOff, forceCutOff] = guffPair.calculateEnergyAndForce(rncCutOff);
 
-        guffNonCoulomb.setGuffNonCoulombicPair({moltype1, moltype2, atomType1, atomType2},
-                                               make_shared<GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
-        guffNonCoulomb.setGuffNonCoulombicPair({moltype2, moltype1, atomType2, atomType1},
-                                               make_shared<GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
+        guffNonCoulomb.setGuffNonCoulombicPair(
+            {moltype1, moltype2, atomType1, atomType2},
+            std::make_shared<potential::GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
+        guffNonCoulomb.setGuffNonCoulombicPair(
+            {moltype2, moltype1, atomType2, atomType1},
+            std::make_shared<potential::GuffPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients));
     }
 }
 
@@ -282,7 +283,7 @@ void GuffDatReader::postProcessSetup()
             auto coulombCoefficient = _guffCoulombCoefficients[i][i][atomType][atomType];
 
             auto partialCharge =
-                ::sqrt(coulombCoefficient / constants::_COULOMB_PREFACTOR_) * sign(moleculeType->getPartialCharge(j));
+                ::sqrt(coulombCoefficient / constants::_COULOMB_PREFACTOR_) * utilities::sign(moleculeType->getPartialCharge(j));
 
             moleculeType->setPartialCharge(j, partialCharge);
         }
@@ -299,5 +300,5 @@ void GuffDatReader::postProcessSetup()
         }
     };
 
-    ranges::for_each(_engine.getSimulationBox().getMolecules(), setPartialCharges);
+    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setPartialCharges);
 }

@@ -28,7 +28,6 @@ namespace settings
         static bool inline _isTopologyFileNameSet       = false;
         static bool inline _isParameterFileNameSet      = false;
         static bool inline _isIntraNonBondedFileNameSet = false;
-        static bool inline _isStartFileNameSet          = false;
 
       public:
         /********************
@@ -45,7 +44,6 @@ namespace settings
         [[nodiscard]] static bool isTopologyFileNameSet() { return _isTopologyFileNameSet; }
         [[nodiscard]] static bool isParameterFileNameSet() { return _isParameterFileNameSet; }
         [[nodiscard]] static bool isIntraNonBondedFileNameSet() { return _isIntraNonBondedFileNameSet; }
-        [[nodiscard]] static bool isStartFileNameSet() { return _isStartFileNameSet; }
 
         /********************
          * standard setters *
@@ -61,12 +59,10 @@ namespace settings
         static void setIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = true; }
         static void setIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = true; }
         static void setIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = true; }
-        static void setIsStartFileNameSet() { FileSettings::_isStartFileNameSet = true; }
 
         static void unsetIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = false; }
         static void unsetIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = false; }
         static void unsetIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = false; }
-        static void unsetIsStartFileNameSet() { FileSettings::_isStartFileNameSet = false; }
     };
 
 }   // namespace settings

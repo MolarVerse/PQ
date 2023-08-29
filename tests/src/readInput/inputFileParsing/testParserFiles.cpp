@@ -80,8 +80,13 @@ TEST_F(TestInputFileReader, testStartFileName)
 {
     InputFileParserFiles parser(_engine);
     vector<string>       lineElements = {"startFile_name", "=", "start.xyz"};
+    EXPECT_THROW_MSG(parser.parseStartFilename(lineElements, 0),
+                     customException::InputFileException,
+                     "Cannot open start file - filename = start.xyz");
+
+    lineElements = {"startFile_name", "=", "data/atomSection/testProcess.rst"};
     parser.parseStartFilename(lineElements, 0);
-    EXPECT_EQ(settings::FileSettings::getStartFileName(), "start.xyz");
+    EXPECT_EQ(settings::FileSettings::getStartFileName(), "data/atomSection/testProcess.rst");
 }
 
 /**
@@ -92,8 +97,13 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
     InputFileParserFiles parser(_engine);
     vector<string>       lineElements = {"moldescriptorFile_name", "=", "moldescriptor.txt"};
+    EXPECT_THROW_MSG(parser.parseMoldescriptorFilename(lineElements, 0),
+                     customException::InputFileException,
+                     "Cannot open moldescriptor file - filename = moldescriptor.txt - file not found");
+
+    lineElements = {"moldescriptorFile_name", "=", "data/moldescriptorReader/moldescriptor.dat"};
     parser.parseMoldescriptorFilename(lineElements, 0);
-    EXPECT_EQ(settings::FileSettings::getMolDescriptorFileName(), "moldescriptor.txt");
+    EXPECT_EQ(settings::FileSettings::getMolDescriptorFileName(), "data/moldescriptorReader/moldescriptor.dat");
 }
 
 /**
@@ -117,8 +127,13 @@ TEST_F(TestInputFileReader, guffDatFilename)
 {
     InputFileParserFiles parser(_engine);
     vector<string>       lineElements = {"guffdat_file", "=", "guff.dat"};
+    EXPECT_THROW_MSG(parser.parseGuffDatFilename(lineElements, 0),
+                     customException::InputFileException,
+                     "Cannot open guff file - filename = guff.dat");
+
+    lineElements = {"guffdat_file", "=", "data/guffDatReader/guff.dat"};
     parser.parseGuffDatFilename(lineElements, 0);
-    EXPECT_EQ(settings::FileSettings::getGuffDatFileName(), "guff.dat");
+    EXPECT_EQ(settings::FileSettings::getGuffDatFileName(), "data/guffDatReader/guff.dat");
 }
 
 int main(int argc, char **argv)

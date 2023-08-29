@@ -7,16 +7,11 @@
 #include "output.hpp"
 #include "progressbar.hpp"
 #include "stdoutOutput.hpp"
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 #include <iostream>
 
-using namespace std;
-using namespace simulationBox;
-using namespace physicalData;
-using namespace settings;
-using namespace timings;
 using namespace engine;
-using namespace output;
 
 void Engine::run()
 {
@@ -30,7 +25,7 @@ void Engine::run()
     _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
     _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());
 
-    const auto  numberOfSteps = _timings.getNumberOfSteps();
+    const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));
 
     for (; _step <= numberOfSteps; ++_step)
@@ -43,9 +38,9 @@ void Engine::run()
 
     _timings.endTimer();
 
-    cout << '\n' << '\n';
+    std::cout << '\n' << '\n';
 
-    cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
+    std::cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
 }
 
 /**
@@ -109,13 +104,13 @@ void Engine::writeOutput()
     _averagePhysicalData.updateAverages(_physicalData);
     _physicalData.clearData();
 
-    const auto outputFrequency = Output::getOutputFrequency();
+    const auto outputFrequency = output::Output::getOutputFrequency();
 
     if (0 == _step % outputFrequency)
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
 
-        const auto dt             = _timings.getTimestep();
+        const auto dt             = settings::TimingsSettings::getTimeStep();
         const auto step0          = _timings.getStepCount();
         const auto effectiveStep  = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
@@ -128,29 +123,29 @@ void Engine::writeOutput()
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
-        cout << '\n' << '\n';
+        std::cout << '\n' << '\n';
 
-        cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
-        cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
-        cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
-        cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
-        cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
-        cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
-        cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
-        cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
-        cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
-        cout << '\n';
+        std::cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
+        std::cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
+        std::cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
+        std::cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
+        std::cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
+        std::cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
+        std::cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
+        std::cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
+        std::cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
+        std::cout << '\n';
 
-        cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
-        cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
-        cout << '\n';
+        std::cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
+        std::cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
+        std::cout << '\n';
 
-        cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
-        cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
-        cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
+        std::cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
+        std::cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
+        std::cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
 
-        cout << '\n' << '\n';
+        std::cout << '\n' << '\n';
 
-        _averagePhysicalData = PhysicalData();
+        _averagePhysicalData = physicalData::PhysicalData();
     }
 }

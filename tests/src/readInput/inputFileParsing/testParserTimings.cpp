@@ -4,7 +4,7 @@
 #include "inputFileParserTimings.hpp"   // for InputFileParserTimings
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
-#include "timings.hpp"                  // for Timings
+#include "timingsSettings.hpp"          // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
@@ -25,7 +25,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
     InputFileParserTimings parser(_engine);
     vector<string>         lineElements = {"timestep", "=", "1"};
     parser.parseTimeStep(lineElements, 0);
-    EXPECT_EQ(_engine.getTimings().getTimestep(), 1.0);
+    EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
 }
 
 /**
@@ -39,7 +39,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
     InputFileParserTimings parser(_engine);
     vector<string>         lineElements = {"nsteps", "=", "1000"};
     parser.parseNumberOfSteps(lineElements, 0);
-    EXPECT_EQ(_engine.getTimings().getNumberOfSteps(), 1000);
+    EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
 
     lineElements = {"nsteps", "=", "-1"};
     EXPECT_THROW_MSG(

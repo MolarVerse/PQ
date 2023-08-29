@@ -9,10 +9,12 @@
 #include <string_view>   // for string_view
 
 using namespace readInput;
-using namespace customException;
 
 /**
  * @brief Construct a new Input File Parser General:: Input File Parser General object
+ *
+ * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
+ * 1) jobtype <string> (required)
  *
  * @param engine
  */
@@ -24,15 +26,19 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
 /**
  * @brief parse jobtype of simulation and set it in settings
  *
+ * @details Possible options are:
+ * 1) mm-md
+ *
  * @param lineElements
  *
- * @throw InputFileException if jobtype is not recognised
+ * @throw customException::InputFileException if jobtype is not recognised
  */
 void InputFileParserGeneral::parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "mm-md")
-        _engine.getSettings().setJobtype("MMMD");
+        settings::Settings::setJobtype("MMMD");
     else
-        throw InputFileException(format("Invalid jobtype \"{}\" at line {} in input file", lineElements[2], lineNumber));
+        throw customException::InputFileException(
+            format("Invalid jobtype \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

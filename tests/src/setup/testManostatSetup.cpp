@@ -4,7 +4,7 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "manostatSetup.hpp"      // for ManostatSetup, setupManostat, setup
 #include "testSetup.hpp"          // for TestSetup
-#include "timings.hpp"            // for Timings
+#include "timingsSettings.hpp"    // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
@@ -23,7 +23,7 @@ TEST_F(TestSetup, setup)
 {
     ManostatSetup manostatSetup(_engine);
 
-    _engine.getTimings().setTimestep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
     manostatSetup.setup();
 
     EXPECT_EQ(_engine.getManostat().getTimestep(), 0.1);

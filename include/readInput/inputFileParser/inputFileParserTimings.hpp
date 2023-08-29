@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,8 +26,8 @@ namespace readInput
       public:
         explicit InputFileParserTimings(engine::Engine &);
 
-        void parseTimeStep(const std::vector<std::string> &, const size_t);
-        void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
+        void parseTimeStep(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNumberOfSteps(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

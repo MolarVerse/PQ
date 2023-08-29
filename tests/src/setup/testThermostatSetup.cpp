@@ -4,7 +4,7 @@
 #include "thermostat.hpp"           // for BerendsenThermostat, Thermostat
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "thermostatSetup.hpp"      // for ThermostatSetup, setupThermostat
-#include "timings.hpp"              // for Timings
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGo...
@@ -17,7 +17,7 @@ TEST_F(TestSetup, setupThermostat)
 {
     ThermostatSetup thermostatSetup(_engine);
 
-    _engine.getTimings().setTimestep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
     thermostatSetup.setup();
 
     EXPECT_EQ(_engine.getThermostat().getTimestep(), 0.1);
