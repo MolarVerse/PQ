@@ -1,15 +1,12 @@
-#include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParser.hpp"                   // for readInput
 #include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
 #include "potentialSettings.hpp"                 // for PotentialSettings
-#include "settings.hpp"                          // for Settings
 #include "testInputFileReader.hpp"               // for TestInputFileReader
 #include "throwWithMessage.hpp"                  // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only)
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator
 #include <vector>          // for vector
 

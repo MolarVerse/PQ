@@ -1,6 +1,6 @@
-#ifndef _CONFIGURATIONREADER_HPP_
+#ifndef _CONFIGURATION_READER_HPP_
 
-#define _CONFIGURATIONREADER_HPP_
+#define _CONFIGURATION_READER_HPP_
 
 #include "extxyzReader.hpp"
 #include "frame.hpp"
@@ -18,13 +18,13 @@ class ConfigurationReader
 
     std::fstream _fp;
 
-    size_t          _nAtoms  = 0;
-    size_t          _nFrames = 0;
+    size_t               _nAtoms  = 0;
+    size_t               _nFrames = 0;
     linearAlgebra::Vec3D _box;
 
     frameTools::Frame _frame;
 
-    ExtxyzReader _extxyzReader;
+    [[no_unique_address]] ExtxyzReader _extxyzReader;
 
   public:
     ConfigurationReader() = default;
@@ -37,4 +37,4 @@ class ConfigurationReader
     [[nodiscard]] bool isBoxSet(const linearAlgebra::Vec3D &box) const { return fabs(box) > 1e-15; }
 };
 
-#endif   // _CONFIGURATIONREADER_HPP_
+#endif   // _CONFIGURATION_READER_HPP_

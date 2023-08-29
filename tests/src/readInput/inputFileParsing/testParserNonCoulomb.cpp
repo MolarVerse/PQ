@@ -2,6 +2,7 @@
 #include "exceptions.hpp"                  // for InputFileException
 #include "inputFileParser.hpp"             // for readInput
 #include "inputFileParserNonCoulomb.hpp"   // for InputFileParserNonCoulomb
+#include "potentialSettings.hpp"           // for PotentialSettings
 #include "settings.hpp"                    // for Settings
 #include "testInputFileReader.hpp"         // for TestInputFileReader
 #include "throwWithMessage.hpp"            // for EXPECT_THROW_MSG
@@ -27,37 +28,25 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     InputFileParserNonCoulomb parser(_engine);
     vector<string>            lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "guff");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), "guff");
 
     lineElements = {"noncoulomb", "=", "lj"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "lj");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), "lj");
 
     lineElements = {"noncoulomb", "=", "buck"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "buck");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), "buck");
 
     lineElements = {"noncoulomb", "=", "morse"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getNonCoulombType(), "morse");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), "morse");
 
     lineElements = {"coulomb", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseNonCoulombType(lineElements, 0),
         customException::InputFileException,
         "Invalid nonCoulomb type \"notValid\" at line 0 in input file. Possible options are: lj, buck, morse and guff");
-}
-
-/**
- * @brief tests parsing the intra non bonded file name
- *
- */
-TEST_F(TestInputFileReader, parseIntraNonBondedFile)
-{
-    InputFileParserNonCoulomb parser(_engine);
-    vector<string>            lineElements = {"intra-nonBonded_file", "=", "intra.dat"};
-    parser.parseIntraNonBondedFile(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getIntraNonBondedFilename(), "intra.dat");
 }
 
 int main(int argc, char **argv)

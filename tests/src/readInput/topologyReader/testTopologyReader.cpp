@@ -1,9 +1,9 @@
 #include "testTopologyReader.hpp"
 
-#include "constraints.hpp"   // for Constraints
-#include "exceptions.hpp"    // for InputFileException, TopologyException
-#include "forceField.hpp"    // for ForceField
-#include "settings.hpp"      // for Settings
+#include "constraints.hpp"    // for Constraints
+#include "exceptions.hpp"     // for InputFileException, TopologyException
+#include "fileSettings.hpp"   // for FileSettings
+#include "forceField.hpp"     // for ForceField
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 
@@ -63,7 +63,7 @@ TEST_F(TestTopologyReader, read)
  */
 TEST_F(TestTopologyReader, readTopologyFile)
 {
-    _engine->getSettings().setTopologyFilename("topology.top");
+    settings::FileSettings::setTopologyFileName("topology.top");
     readInput::topology::readTopologyFile(*_engine);
 }
 

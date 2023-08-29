@@ -1,9 +1,7 @@
 #include "inputFileParserCoulombLongRange.hpp"
 
-#include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException, customException
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"            // for Settings
 
 #include <cstddef>       // for size_t, std
 #include <format>        // for format

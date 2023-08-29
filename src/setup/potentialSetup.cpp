@@ -12,7 +12,6 @@
 #include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
-#include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, __sort_fn

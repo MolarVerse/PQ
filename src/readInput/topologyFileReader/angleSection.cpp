@@ -6,10 +6,10 @@
 #include "forceField.hpp"        // for ForceField
 #include "simulationBox.hpp"     // for SimulationBox
 
-#include <format>     // for format
-#include <stddef.h>   // for size_t
-#include <string>     // for stoul, string, operator==, char_traits
-#include <vector>     // for vector
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <string>    // for stoul, string, operator==, char_traits
+#include <vector>    // for vector
 
 namespace simulationBox
 {

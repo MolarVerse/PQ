@@ -62,9 +62,8 @@ void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPot
 
                 const auto combinedIndices = {moltype, moltype, atomType, atomType, globalVdwType, globalVdwType};
 
-                const auto nonCoulombicPair = nonCoulombPotential->getNonCoulombPair(combinedIndices);
-
-                if (distance < nonCoulombicPair->getRadialCutOff())
+                if (const auto nonCoulombicPair = nonCoulombPotential->getNonCoulombPair(combinedIndices);
+                    distance < nonCoulombicPair->getRadialCutOff())
                 {
                     auto [energy, nonCoulombForce] = nonCoulombicPair->calculateEnergyAndForce(distance);
 

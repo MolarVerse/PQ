@@ -26,12 +26,7 @@ namespace readInput
       public:
         explicit InputFileParserGeneral(engine::Engine &);
 
-        void parseStartFilename(const std::vector<std::string> &, const size_t);
-        void parseMoldescriptorFilename(const std::vector<std::string> &, const size_t);
-        void parseGuffDatFilename(const std::vector<std::string> &, const size_t);
         void parseJobType(const std::vector<std::string> &, const size_t);
-
-        [[noreturn]] void parseGuffPath(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace readInput

@@ -25,8 +25,8 @@ namespace frameTools
         // standard getter and setter
         std::string getElementType() const { return _elementType; }
 
-        void                 setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
-        linearAlgebra::Vec3D getPosition() const { return _position; }
+        void                               setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
+        [[nodiscard]] linearAlgebra::Vec3D getPosition() const { return _position; }
     };
 }   // namespace frameTools
 

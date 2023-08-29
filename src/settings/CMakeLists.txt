@@ -5,6 +5,7 @@ add_library(settings
     thermostatSettings.cpp
     constraintSettings.cpp
     potentialSettings.cpp
+    fileSettings.cpp
 )
 
 target_include_directories(settings
@@ -15,7 +16,6 @@ target_include_directories(settings
 target_link_libraries(settings
     PUBLIC
     config
-    timings
 )
 
 install(TARGETS settings

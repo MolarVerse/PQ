@@ -2,6 +2,8 @@
 
 #define _MOLDESCRIPTOR_READER_HPP_
 
+#include "defaults.hpp"
+
 #include <fstream>   // for ifstream
 #include <string>    // for string
 #include <vector>    // for vector
@@ -29,9 +31,9 @@ namespace readInput::molDescriptor
     class MoldescriptorReader
     {
       private:
-        int               _lineNumber;
-        const std::string _fileName;
-        std::ifstream     _fp;
+        int           _lineNumber;
+        std::string   _fileName = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;
+        std::ifstream _fp;
 
         engine::Engine &_engine;
 

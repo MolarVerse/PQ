@@ -12,11 +12,10 @@ set(source_files
     testParserResetKinetics.cpp
     testParserThermostat.cpp
     testParserTimings.cpp
-    testParserTopology.cpp
     testParserVirial.cpp
     testParserCoulombLongRange.cpp
     testParserNonCoulomb.cpp
-    testParserParameterFile.cpp
+    testParserFiles.cpp
 )
 
 foreach(source_file ${source_files})

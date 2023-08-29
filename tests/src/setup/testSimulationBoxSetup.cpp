@@ -45,7 +45,7 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("H");
     molecule.addAtomName("D");
-    molecule.addAtomName("NOTANATOMNAME");
+    molecule.addAtomName("NotAnAtomName");
 
     _engine.getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(_engine);
@@ -214,7 +214,7 @@ TEST_F(TestSetup, testResizeAtomShiftForces)
     EXPECT_EQ(_engine.getSimulationBox().getMolecules()[1].getAtomShiftForces().size(), 1);
 }
 
-TEST_F(TestSetup, testChechRcCutoff)
+TEST_F(TestSetup, testCheckRcCutoff)
 {
     _engine.getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     _engine.getSimulationBox().setCoulombRadiusCutOff(14.0);

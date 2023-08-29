@@ -38,7 +38,7 @@
 //     engine.getSimulationBox().setCoulombRadiusCutOff(1000.0);
 //     engine.getSimulationBox().setBoxDimensions(linearAlgebra::Vec3D(100.0, 100.0, 100.0));
 
-//     engine.getSettings().setGuffDatFilename("data/guffDatReader/guff.dat");
+//     engine.getSettings().setGuffDatFileName("data/guffDatReader/guff.dat");
 //     auto guffReader = readInput::GuffDatReader(engine);
 //     guffReader.setupGuffMaps();
 

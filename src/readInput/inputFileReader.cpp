@@ -1,33 +1,27 @@
 #include "inputFileReader.hpp"
 
-#include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParserCellList.hpp"           // for InputFileParserCellList
-#include "inputFileParserConstraints.hpp"        // for InputFileParserConstr...
-#include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulom...
-#include "inputFileParserForceField.hpp"         // for InputFileParserForceF...
+#include "inputFileParserConstraints.hpp"        // for InputFileParserConstraints
+#include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
+#include "inputFileParserFiles.hpp"              // for InputFileParserFiles
+#include "inputFileParserForceField.hpp"         // for InputFileParserForceField
 #include "inputFileParserGeneral.hpp"            // for InputFileParserGeneral
-#include "inputFileParserIntegrator.hpp"         // for InputFileParserIntegr...
+#include "inputFileParserIntegrator.hpp"         // for InputFileParserIntegrator
 #include "inputFileParserManostat.hpp"           // for InputFileParserManostat
-#include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCou...
+#include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCoulomb
 #include "inputFileParserOutput.hpp"             // for InputFileParserOutput
-#include "inputFileParserParameterFile.hpp"      // for InputFileParserParame...
-#include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetK...
-#include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimula...
-#include "inputFileParserThermostat.hpp"         // for InputFileParserThermo...
+#include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetKinetics
+#include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimulationBox
+#include "inputFileParserThermostat.hpp"         // for InputFileParserThermostat
 #include "inputFileParserTimings.hpp"            // for InputFileParserTimings
-#include "inputFileParserTopology.hpp"           // for InputFileParserTopology
 #include "inputFileParserVirial.hpp"             // for InputFileParserVirial
-#include "manostat.hpp"                          // for manostat
-#include "resetKinetics.hpp"                     // for resetKinetics
-#include "settings.hpp"                          // for Settings
-#include "stringUtilities.hpp"                   // for getLineCommands, remo...
-#include "thermostat.hpp"                        // for thermostat
+#include "stringUtilities.hpp"                   // for getLineCommands, removeComments, splitString, toLowerCopy
 
 #include <algorithm>   // for __for_each_fn, for_each
 #include <format>      // for format
 #include <fstream>     // for ifstream, basic_istream
-#include <map>         // for map, operator==, _Rb_...
+#include <map>         // for map, operator==
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
@@ -47,18 +41,17 @@ InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engin
     _parsers.push_back(std::make_unique<InputFileParserCellList>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserConstraints>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserCoulombLongRange>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserFiles>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserForceField>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserGeneral>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserIntegrator>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserManostat>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserNonCoulomb>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserOutput>(_engine));
-    _parsers.push_back(std::make_unique<InputFileParserParameterFile>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserResetKinetics>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserSimulationBox>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserThermostat>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserTimings>(_engine));
-    _parsers.push_back(std::make_unique<InputFileParserTopology>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserVirial>(_engine));
 
     addKeywords();

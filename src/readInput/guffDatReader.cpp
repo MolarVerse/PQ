@@ -7,6 +7,7 @@
 #include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, InputFileException
+#include "fileSettings.hpp"          // for FileSettings
 #include "forceField.hpp"            // for ForceField
 #include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
 #include "guffPair.hpp"              // for GuffPair
@@ -16,7 +17,7 @@
 #include "morsePair.hpp"             // for MorsePair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "potential.hpp"             // for Potential
-#include "settings.hpp"              // for Settings
+#include "potentialSettings.hpp"     // for PotentialSettings
 #include "simulationBox.hpp"         // for SimulationBox
 #include "stringUtilities.hpp"       // for fileExists, getLineCommands, removeComments, splitString
 
@@ -57,14 +58,7 @@ void readInput::readGuffDat(Engine &engine)
  *
  * @param engine
  */
-GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine)
-{
-    _fileName = _engine.getSettings().getGuffDatFilename();
-    if (!fileExists(_fileName))
-    {
-        throw InputFileException(format("Could not open guffdat file {}", _fileName));
-    }
-}
+GuffDatReader::GuffDatReader(Engine &engine) : _engine(engine) { _fileName = settings::FileSettings::getGuffDatFileName(); }
 
 /**
  * @brief reads the guff.dat file
@@ -207,7 +201,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
 
     auto &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
 
-    if (_engine.getSettings().getNonCoulombType() == "lj")
+    if (settings::PotentialSettings::getNonCoulombType() == "lj")
     {
         auto lennardJonesPair                  = LennardJonesPair(rncCutOff, guffCoefficients[0], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = lennardJonesPair.calculateEnergyAndForce(rncCutOff);
@@ -219,7 +213,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
             {moltype2, moltype1, atomType2, atomType1},
             make_shared<LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[2]));
     }
-    else if (_engine.getSettings().getNonCoulombType() == "buck")
+    else if (settings::PotentialSettings::getNonCoulombType() == "buck")
     {
         auto buckinghamPair = BuckinghamPair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = buckinghamPair.calculateEnergyAndForce(rncCutOff);
@@ -233,7 +227,7 @@ void GuffDatReader::parseLine(vector<string> &lineCommands)
             make_shared<BuckinghamPair>(
                 rncCutOff, energyCutOff, forceCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]));
     }
-    else if (_engine.getSettings().getNonCoulombType() == "morse")
+    else if (settings::PotentialSettings::getNonCoulombType() == "morse")
     {
         auto morsePair = MorsePair(rncCutOff, guffCoefficients[0], guffCoefficients[1], guffCoefficients[2]);
         const auto [energyCutOff, forceCutOff] = morsePair.calculateEnergyAndForce(rncCutOff);

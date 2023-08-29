@@ -1,10 +1,10 @@
 #include "testRestartFileReader.hpp"
 
 #include "exceptions.hpp"            // for InputFileException, customException
+#include "fileSettings.hpp"          // for FileSettings
 #include "moldescriptorReader.hpp"   // for MoldescriptorReader
 #include "restartFileReader.hpp"     // for RstFileReader, readRstFile
 #include "restartFileSection.hpp"    // for RstFileSection, readInput
-#include "settings.hpp"              // for Settings
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -57,11 +57,11 @@ TEST_F(TestRstFileReader, fileNotFound)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
-    _engine.getSettings().setMoldescriptorFilename("examples/setup/moldescriptor.dat");
+    settings::FileSettings::setMolDescriptorFileName("examples/setup/moldescriptor.dat");
     molDescriptor::MoldescriptorReader moldescriptor(_engine);
 
     string filename = "examples/setup/h2o-qmcf.rst";
-    _engine.getSettings().setStartFilename(filename);
+    settings::FileSettings::setStartFileName(filename);
 
     moldescriptor.read();
     ASSERT_NO_THROW(restartFile::readRestartFile(_engine));

@@ -2,7 +2,6 @@
 
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "inputFileParser.hpp"   // for readInput
-#include "settings.hpp"          // for Settings
 #include "stringUtilities.hpp"   // for getLineCommands, utilities
 
 #include "gmock/gmock.h"   // for ElementsAre

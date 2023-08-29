@@ -1,8 +1,8 @@
 #include "testIntraNonBondedReader.hpp"
 
 #include "exceptions.hpp"                // for IntraNonBondedException
+#include "fileSettings.hpp"              // for FileSettings
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "settings.hpp"                  // for Settings
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, TEST_F
@@ -26,7 +26,7 @@ TEST_F(TestIntraNonBondedReader, findMoleculeType)
 
 TEST_F(TestIntraNonBondedReader, noFileSetByUser)
 {
-    _intraNonBondedReader->setFileName("");
+    settings::FileSettings::unsetIsIntraNonBondedFileNameSet();
     EXPECT_THROW_MSG(_intraNonBondedReader->read(),
                      customException::IntraNonBondedException,
                      "Intra non bonded file needed for requested simulation setup");
@@ -37,14 +37,6 @@ TEST_F(TestIntraNonBondedReader, readingNotNeeded)
     _intraNonBondedReader->setFileName("");
     _engine->getIntraNonBonded().deactivate();
     EXPECT_NO_THROW(_intraNonBondedReader->read());
-}
-
-TEST_F(TestIntraNonBondedReader, fileDoesNotExist)
-{
-    _intraNonBondedReader->setFileName("FileDoesNotExist");
-    EXPECT_THROW_MSG(_intraNonBondedReader->read(),
-                     customException::IntraNonBondedException,
-                     "Intra non bonded file \"FileDoesNotExist\" File not found");
 }
 
 TEST_F(TestIntraNonBondedReader, referenceAtomOutOfRange)
@@ -89,7 +81,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
-    _engine->getSettings().setIntraNonBondedFilename("data/intraNonBondedReader/intraNonBonded.dat");
+    settings::FileSettings::setIntraNonBondedFileName("data/intraNonBondedReader/intraNonBonded.dat");
     readInput::intraNonBonded::readIntraNonBondedFile(*_engine);
 
     const auto container = _engine->getIntraNonBonded().getIntraNonBondedContainers()[0];

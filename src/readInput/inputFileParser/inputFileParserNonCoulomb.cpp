@@ -1,65 +1,55 @@
 #include "inputFileParserNonCoulomb.hpp"
 
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for InputFileException, customException
-#include "intraNonBonded.hpp"   // for IntraNonBonded
-#include "settings.hpp"         // for Settings
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "potentialSettings.hpp"   // for PotentialSettings
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-using namespace std;
 using namespace readInput;
-using namespace customException;
 
 /**
  * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object
+ *
+ * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
+ * 1) noncoulomb <string>
  *
  * @param engine
  */
 InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine) : InputFileParser(engine)
 {
-    addKeyword(string("noncoulomb"), bind_front(&InputFileParserNonCoulomb::parseNonCoulombType, this), false);
-    addKeyword(string("intra-nonBonded_file"), bind_front(&InputFileParserNonCoulomb::parseIntraNonBondedFile, this), false);
+    addKeyword(std::string("noncoulomb"), bind_front(&InputFileParserNonCoulomb::parseNonCoulombType, this), false);
 }
 
 /**
  * @brief Parse the nonCoulombic type of the guff.dat file
  *
- * @details possible options are "none", "lj" and "buck"
+ * @details Possible options are:
+ * 1) "guff"  - guff.dat file is used (default)
+ * 2) "lj"
+ * 3) "buck"
+ * 4) "morse"
  *
  * @param lineElements
  *
- * @throws InputFileException if invalid nonCoulomb type
+ * @throws customException::InputFileException if invalid nonCoulomb type
  */
-void InputFileParserNonCoulomb::parseNonCoulombType(const vector<string> &lineElements, const size_t lineNumber)
+void InputFileParserNonCoulomb::parseNonCoulombType(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+
     if (lineElements[2] == "guff")
-        _engine.getSettings().setNonCoulombType("guff");
+        settings::PotentialSettings::setNonCoulombType("guff");
     else if (lineElements[2] == "lj")
-        _engine.getSettings().setNonCoulombType("lj");
+        settings::PotentialSettings::setNonCoulombType("lj");
     else if (lineElements[2] == "buck")
-        _engine.getSettings().setNonCoulombType("buck");
+        settings::PotentialSettings::setNonCoulombType("buck");
     else if (lineElements[2] == "morse")
-        _engine.getSettings().setNonCoulombType("morse");
+        settings::PotentialSettings::setNonCoulombType("morse");
     else
-        throw InputFileException(
+        throw customException::InputFileException(
             format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and guff",
                    lineElements[2],
                    lineNumber));
-}
-
-/**
- * @brief Parse the name of the file containing the intraNonBonded combinations
- *
- * @param lineElements
- * @param lineNumber
- */
-void InputFileParserNonCoulomb::parseIntraNonBondedFile(const vector<string> &lineElements, const size_t lineNumber)
-{
-    checkCommand(lineElements, lineNumber);
-    _engine.getIntraNonBonded().activate();
-    _engine.getSettings().setIntraNonBondedFilename(lineElements[2]);
 }

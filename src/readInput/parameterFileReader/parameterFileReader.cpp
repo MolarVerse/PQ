@@ -5,9 +5,9 @@
 #include "dihedralSection.hpp"           // for DihedralSection
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, ParameterFileExce...
+#include "fileSettings.hpp"              // for FileSettings
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
-#include "settings.hpp"                  // for Settings
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
 #include "typesSection.hpp"              // for TypesSection
 
@@ -135,6 +135,6 @@ void ParameterFileReader::read()
  */
 void readInput::parameterFile::readParameterFile(engine::Engine &engine)
 {
-    ParameterFileReader parameterFileReader(engine.getSettings().getParameterFilename(), engine);
+    ParameterFileReader parameterFileReader(settings::FileSettings::getParameterFilename(), engine);
     parameterFileReader.read();
 }

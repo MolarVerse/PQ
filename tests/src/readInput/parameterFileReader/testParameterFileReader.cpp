@@ -4,12 +4,12 @@
 #include "bondSection.hpp"               // for BondSection
 #include "dihedralSection.hpp"           // for DihedralSection
 #include "exceptions.hpp"                // for InputFileException, ParameterFileException
+#include "fileSettings.hpp"              // for FileSettings
 #include "forceField.hpp"                // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
 #include "potential.hpp"                 // for Potential
-#include "settings.hpp"                  // for Settings
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 #include "typesSection.hpp"              // for TypesSection
 
@@ -144,7 +144,7 @@ TEST_F(TestParameterFileReader, readParameterFile)
 {
     _engine->getForceField().activate();
     _engine->getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
-    _engine->getSettings().setParameterFilename("data/parameterFileReader/param.param");
+    settings::FileSettings::setParameterFileName("data/parameterFileReader/param.param");
     EXPECT_NO_THROW(readInput::parameterFile::readParameterFile(*_engine));
 }
 

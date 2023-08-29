@@ -10,8 +10,8 @@
 
 namespace engine
 {
-    class Engine;
-}   // namespace engine
+    class Engine;   // Forward declaration
+}
 
 namespace readInput
 {
@@ -26,9 +26,7 @@ namespace readInput
       public:
         explicit InputFileParserNonCoulomb(engine::Engine &);
 
-        void parseNonCoulombType(const std::vector<std::string> &, const size_t);
-        void parseIntraNonBondedFile(const std::vector<std::string> &, const size_t);
-        void parseIntraNonBondedType(const std::vector<std::string> &, const size_t);
+        void parseNonCoulombType(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

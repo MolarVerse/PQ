@@ -1,4 +1,5 @@
 #include "engine.hpp"
+
 #include "trajToComInFileReader.hpp"
 
 #include <iostream>
@@ -7,13 +8,15 @@ using namespace std;
 
 void Engine::addAnalysisRunnerKeys()
 {
-    _analysisRunnerKeys.try_emplace(
-        "trajectoryToCenterOfMass", [this](const string_view &inputFilename)
-        { _inputFileReaders.push_back(new TrajToComInFileReader(inputFilename)); });
+    _analysisRunnerKeys.try_emplace("trajectoryToCenterOfMass",
+                                    [this](const string_view &inputFilename)
+                                    { _inputFileReaders.push_back(new TrajToComInFileReader(inputFilename)); });
 }
 
 Engine::Engine(const string_view &executableName, const string_view &inputFileName)
-    : _executableName(executableName), _inputFilename(inputFileName) {}
+    : _executableName(executableName), _inputFilename(inputFileName)
+{
+}
 
 void Engine::run()
 {
@@ -47,21 +50,18 @@ void Engine::parseAnalysisRunners()
         }
         catch (const toml::parse_error &err)
         {
-            cerr
-                << "Error parsing file '" << *err.source().path
-                << "':\n"
-                << err.description()
-                << "\n  (" << err.source().begin << ")\n";
+            cerr << "Error parsing file '" << *err.source().path << "':\n"
+                 << err.description() << "\n  (" << err.source().begin << ")\n";
             exit(-1);
         }
 
         try
         {
-            const auto runners = tbl["analysis"]["runners"].as_array();
+            const auto *runners = tbl["analysis"]["runners"].as_array();
             runners->for_each(
                 [&](const toml::value<string> &runner)
                 {
-                    const auto runnerName = runner.value_or("none");
+                    const auto *runnerName = runner.value_or("none");
 
                     _analysisRunnerKeys.at(runnerName)(_inputFilename);
                 }
@@ -72,7 +72,7 @@ void Engine::parseAnalysisRunners()
         {
             cerr << "Error parsing file '" << _inputFilename << "':\n"
                  << "  " << err.what() << "\n";
-            exit(-1);
+            ::exit(-1);
         }
     }
 }

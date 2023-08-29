@@ -22,7 +22,7 @@ class TestParameterFileSection : public ::testing::Test
 {
   protected:
     engine::Engine *_engine;
-    std::string     _parameterFilename = "param.param";
+    std::string     _parameterFileName = "param.param";
 
     void SetUp() override
     {
@@ -43,7 +43,7 @@ class TestParameterFileSection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_parameterFilename.c_str());
+        ::remove(_parameterFileName.c_str());
     }
 };
 

@@ -3,6 +3,7 @@
 #define _TEST_INTRA_NON_BONDED_READER_HPP_
 
 #include "engine.hpp"                 // for Engine
+#include "fileSettings.hpp"           // for FileSettings
 #include "intraNonBonded.hpp"         // for IntraNonBonded
 #include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
 #include "molecule.hpp"               // for Molecule
@@ -37,6 +38,7 @@ class TestIntraNonBondedReader : public ::testing::Test
 
         _intraNonBondedReader =
             new readInput::intraNonBonded::IntraNonBondedReader("data/intraNonBondedReader/intraNonBonded.dat", *_engine);
+        settings::FileSettings::setIsIntraNonBondedFileNameSet();
     }
 
     void TearDown() override

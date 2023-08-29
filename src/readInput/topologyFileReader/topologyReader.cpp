@@ -6,9 +6,9 @@
 #include "dihedralSection.hpp"           // for DihedralSection
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, TopologyException
+#include "fileSettings.hpp"              // for FileSettings
 #include "forceField.hpp"                // for ForceField
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "settings.hpp"                  // for Settings
 #include "shakeSection.hpp"              // for ShakeSection
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
 
@@ -127,6 +127,6 @@ TopologySection *TopologyReader::determineSection(const std::vector<std::string>
  */
 void readInput::topology::readTopologyFile(engine::Engine &engine)
 {
-    TopologyReader topologyReader(engine.getSettings().getTopologyFilename(), engine);
+    TopologyReader topologyReader(settings::FileSettings::getTopologyFileName(), engine);
     topologyReader.read();
 }

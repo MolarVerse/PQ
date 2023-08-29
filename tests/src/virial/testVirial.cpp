@@ -31,7 +31,7 @@ TEST_F(TestVirial, calculateVirial)
 
 TEST_F(TestVirial, intramolecularCorrection)
 {
-    auto virialClass = new virial::VirialMolecular();
+    auto *virialClass = new virial::VirialMolecular();
     virialClass->setVirial(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     const auto force_mol1_atom1 = _simulationBox->getMolecule(0).getAtomForce(0);
     const auto force_mol1_atom2 = _simulationBox->getMolecule(0).getAtomForce(1);
@@ -62,7 +62,7 @@ TEST_F(TestVirial, intramolecularCorrection)
 
 TEST_F(TestVirial, calculateVirialMolecular)
 {
-    auto virialClass = new virial::VirialMolecular();
+    auto *virialClass = new virial::VirialMolecular();
     virialClass->setVirial(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     const auto force_mol1_atom1 = _simulationBox->getMolecule(0).getAtomForce(0);
     const auto force_mol1_atom2 = _simulationBox->getMolecule(0).getAtomForce(1);

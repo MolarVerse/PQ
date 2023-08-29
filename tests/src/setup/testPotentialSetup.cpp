@@ -8,7 +8,6 @@
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "settings.hpp"                  // for Settings
 #include "testSetup.hpp"                 // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult

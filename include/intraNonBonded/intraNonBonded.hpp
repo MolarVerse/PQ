@@ -55,7 +55,7 @@ namespace intraNonBonded
         std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
 
       public:
-        void                                   calculate(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        void                                   calculate(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
 
         void fillIntraNonBondedMaps(simulationBox::SimulationBox &);

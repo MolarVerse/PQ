@@ -8,7 +8,6 @@ UseTab: Never
 SpacesBeforeTrailingComments: 3
 NamespaceIndentation: All
 
-AllowShortIfStatementsOnASingleLine: true
 # AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: Empty

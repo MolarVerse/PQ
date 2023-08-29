@@ -10,13 +10,12 @@ add_library(inputFileParser
     inputFileParserManostat.cpp
     inputFileParserNonCoulomb.cpp
     inputFileParserOutput.cpp
-    inputFileParserParameterFile.cpp
     inputFileParserResetKinetics.cpp
     inputFileParserSimulationBox.cpp
     inputFileParserThermostat.cpp
     inputFileParserTimings.cpp
-    inputFileParserTopology.cpp
     inputFileParserVirial.cpp
+    inputFileParserFiles.cpp
 )
 
 target_include_directories(inputFileParser

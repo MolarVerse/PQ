@@ -2,9 +2,9 @@
 
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for customException::MolDescriptorException
+#include "fileSettings.hpp"      // for FileSettings
 #include "forceField.hpp"        // for ForceField
 #include "molecule.hpp"          // for Molecule
-#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
@@ -24,13 +24,10 @@ using namespace readInput::molDescriptor;
  *
  * @throw customException::InputFileException if file not found
  */
-MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
-    : _fileName(engine.getSettings().getMoldescriptorFilename()), _engine(engine)
+MoldescriptorReader::MoldescriptorReader(engine::Engine &engine) : _engine(engine)
 {
+    _fileName = settings::FileSettings::getMolDescriptorFileName();
     _fp.open(_fileName);
-
-    if (_fp.fail())
-        throw customException::InputFileException(std::format(R"("{}" File not found)", _fileName));
 }
 
 /**

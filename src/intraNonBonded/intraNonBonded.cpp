@@ -43,7 +43,7 @@ void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
     ranges::for_each(box.getMolecules(), fillSingleMap);
 }
 
-void IntraNonBonded::calculate(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+void IntraNonBonded::calculate(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     for (auto &intraNonBondedMap : _intraNonBondedMaps)
         intraNonBondedMap.calculate(_coulombPotential.get(), _nonCoulombPotential.get(), box, physicalData);

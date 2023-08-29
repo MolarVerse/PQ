@@ -20,7 +20,7 @@ class TestTopologySection : public ::testing::Test
 {
   protected:
     engine::Engine *_engine;
-    std::string     _topologyFilename = "shake.top";
+    std::string     _topologyFileName = "shake.top";
 
     void SetUp() override
     {
@@ -39,7 +39,7 @@ class TestTopologySection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_topologyFilename.c_str());
+        ::remove(_topologyFileName.c_str());
     }
 };
 

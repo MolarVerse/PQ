@@ -1,12 +1,11 @@
 #include "restartFileReader.hpp"
 
-#include "boxSection.hpp"
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for customException::InputFileException
-#include "noseHooverSection.hpp"
-#include "settings.hpp"   // for Settings
-#include "stepCountSection.hpp"
-#include "stringUtilities.hpp"   // for removeComments, splitString
+#include "boxSection.hpp"          // for BoxSection
+#include "exceptions.hpp"          // for customException::InputFileException
+#include "fileSettings.hpp"        // for FileSettings
+#include "noseHooverSection.hpp"   // for NoseHooverSection
+#include "stepCountSection.hpp"    // for StepCountSection
+#include "stringUtilities.hpp"     // for removeComments, splitString
 
 #include <format>    // for format
 #include <fstream>   // for basic_istream, ifstream
@@ -86,6 +85,6 @@ void RestartFileReader::read()
  */
 void readInput::restartFile::readRestartFile(engine::Engine &engine)
 {
-    RestartFileReader rstFileReader(engine.getSettings().getStartFilename(), engine);
+    RestartFileReader rstFileReader(settings::FileSettings::getStartFileName(), engine);
     rstFileReader.read();
 }

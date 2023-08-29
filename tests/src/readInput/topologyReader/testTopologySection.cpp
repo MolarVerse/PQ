@@ -21,7 +21,7 @@ TEST_F(TestTopologySection, processShakeSection)
 {
     ShakeSection shakeSection;
 
-    std::ofstream outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFileName.c_str());
 
     outputStream << "shake\n";
     outputStream << "1 2 1.0 0\n";
@@ -32,7 +32,7 @@ TEST_F(TestTopologySection, processShakeSection)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
+    std::ifstream fp(_topologyFileName.c_str());
     getline(fp, lineElements[0]);
 
     shakeSection.setFp(&fp);
@@ -65,7 +65,7 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
 {
     ShakeSection shakeSection;
 
-    std::ofstream outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFileName.c_str());
 
     outputStream << "shake\n";
     outputStream << "1 2 1.0\n";
@@ -74,7 +74,7 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
+    std::ifstream fp(_topologyFileName.c_str());
     getline(fp, lineElements[0]);
     shakeSection.setFp(&fp);
 
@@ -89,7 +89,7 @@ TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
 {
     ShakeSection shakeSection;
 
-    std::ofstream outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFileName.c_str());
 
     outputStream << "shake\n";
     outputStream << "1 1 1.0 0\n";
@@ -98,7 +98,7 @@ TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
+    std::ifstream fp(_topologyFileName.c_str());
     getline(fp, lineElements[0]);
     shakeSection.setFp(&fp);
 
@@ -113,7 +113,7 @@ TEST_F(TestTopologySection, processShakeSection_missingEnd)
 {
     ShakeSection shakeSection;
 
-    std::ofstream outputStream(_topologyFilename.c_str());
+    std::ofstream outputStream(_topologyFileName.c_str());
 
     outputStream << "shake\n";
     outputStream << "1 2 1.0 0\n";
@@ -124,7 +124,7 @@ TEST_F(TestTopologySection, processShakeSection_missingEnd)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFilename.c_str());
+    std::ifstream fp(_topologyFileName.c_str());
     getline(fp, lineElements[0]);
     shakeSection.setFp(&fp);
 
