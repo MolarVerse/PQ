@@ -7,14 +7,11 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <functional>      // for _Bind_front_t, bind_front
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <iosfwd>          // for std
 #include <map>             // for map
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace customException;
 
 /**
  * @brief tests checkCommand function
@@ -24,13 +21,17 @@ using namespace customException;
  */
 TEST_F(TestInputFileReader, checkCommand)
 {
-    auto lineElements = vector<string>{"test", "="};
-    ASSERT_THROW_MSG(checkCommand(lineElements, 1), InputFileException, "Invalid number of arguments at line 1 in input file");
+    auto lineElements = std::vector<std::string>{"test", "="};
+    ASSERT_THROW_MSG(checkCommand(lineElements, 1),
+                     customException::InputFileException,
+                     "Invalid number of arguments at line 1 in input file");
 
-    lineElements = vector<string>{"test", "=", "test2", "tooMany"};
-    ASSERT_THROW_MSG(checkCommand(lineElements, 1), InputFileException, "Invalid number of arguments at line 1 in input file");
+    lineElements = std::vector<std::string>{"test", "=", "test2", "tooMany"};
+    ASSERT_THROW_MSG(checkCommand(lineElements, 1),
+                     customException::InputFileException,
+                     "Invalid number of arguments at line 1 in input file");
 
-    lineElements = vector<string>{"test", "=", "test2"};
+    lineElements = std::vector<std::string>{"test", "=", "test2"};
     ASSERT_NO_THROW(checkCommand(lineElements, 1));
 }
 
@@ -42,14 +43,15 @@ TEST_F(TestInputFileReader, checkCommand)
  */
 TEST_F(TestInputFileReader, checkCommandArray)
 {
-    auto lineElements = vector<string>{"test", "="};
-    ASSERT_THROW_MSG(
-        checkCommandArray(lineElements, 1), InputFileException, "Invalid number of arguments at line 1 in input file");
+    auto lineElements = std::vector<std::string>{"test", "="};
+    ASSERT_THROW_MSG(checkCommandArray(lineElements, 1),
+                     customException::InputFileException,
+                     "Invalid number of arguments at line 1 in input file");
 
-    lineElements = vector<string>{"test", "=", "test2", "OK"};
+    lineElements = std::vector<std::string>{"test", "=", "test2", "OK"};
     ASSERT_NO_THROW(checkCommandArray(lineElements, 1));
 
-    lineElements = vector<string>{"test", "=", "test2"};
+    lineElements = std::vector<std::string>{"test", "=", "test2"};
     ASSERT_NO_THROW(checkCommandArray(lineElements, 1));
 }
 
@@ -59,7 +61,7 @@ TEST_F(TestInputFileReader, checkCommandArray)
  */
 TEST_F(TestInputFileReader, equalSign)
 {
-    ASSERT_THROW_MSG(checkEqualSign("a", 1), InputFileException, "Invalid command at line 1 in input file");
+    ASSERT_THROW_MSG(checkEqualSign("a", 1), customException::InputFileException, "Invalid command at line 1 in input file");
 
     ASSERT_NO_THROW(checkEqualSign("=", 1));
 }

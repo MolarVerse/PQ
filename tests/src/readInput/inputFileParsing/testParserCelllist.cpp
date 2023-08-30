@@ -9,13 +9,10 @@
 
 #include "gtest/gtest.h"   // for Message, AssertionResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, TEST_F, TestPartResult
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "cell-list" command
@@ -25,8 +22,8 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    InputFileParserCellList parser(_engine);
-    vector<string>          lineElements = {"cell-list", "=", "off"};
+    InputFileParserCellList  parser(_engine);
+    std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parser.parseCellListActivated(lineElements, 0);
     EXPECT_FALSE(_engine.getCellList().isActivated());
 
@@ -48,8 +45,8 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    InputFileParserCellList parser(_engine);
-    vector<string>          lineElements = {"cell-number", "=", "3"};
+    InputFileParserCellList  parser(_engine);
+    std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parser.parseNumberOfCells(lineElements, 0);
     EXPECT_EQ(_engine.getCellList().getNumberOfCells(), linearAlgebra::Vec3Dul(3, 3, 3));
 
@@ -61,6 +58,6 @@ TEST_F(TestInputFileReader, numberOfCells)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

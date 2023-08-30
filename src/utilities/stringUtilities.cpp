@@ -56,7 +56,7 @@ std::vector<std::string> utilities::getLineCommands(const std::string &line, con
     std::vector<std::string> lineCommands;
     boost::split(lineCommands, line, boost::is_any_of(";"));
 
-    return lineCommands;
+    return std::vector<std::string>(lineCommands.begin(), lineCommands.end() - 1);
 }
 
 /**

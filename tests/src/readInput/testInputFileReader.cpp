@@ -2,36 +2,30 @@
 
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "inputFileParser.hpp"   // for readInput
-#include "stringUtilities.hpp"   // for getLineCommands, utilities
 
-#include "gmock/gmock.h"   // for ElementsAre
-#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Message, TestPartResult
 #include <map>             // for map
 #include <sstream>         // for basic_istringstream
 #include <vector>          // for vector, _Bit_iterator, _Bit_reference
 
-using namespace std;
 using namespace readInput;
-using namespace utilities;
-using namespace ::testing;
-using namespace customException;
 
-void readKeywordList(const string &filename, vector<string> &keywords, vector<bool> &required)
+static void readKeywordList(const std::string &filename, std::vector<std::string> &keywords, std::vector<bool> &required)
 {
-    string   line;
-    ifstream inputFile(filename);
+    std::string   line;
+    std::ifstream inputFile(filename);
 
     while (getline(inputFile, line))
     {
 
-        string keyword;
-        string requiredString = "";
-        bool   requiredBool   = false;
+        std::string keyword;
+        std::string requiredString = "";
+        bool        requiredBool   = false;
 
-        if (istringstream(line).str().empty())
+        if (std::istringstream(line).str().empty())
             continue;
-        istringstream(line) >> keyword >> requiredString;
-        istringstream(requiredString) >> std::boolalpha >> requiredBool;
+        std::istringstream(line) >> keyword >> requiredString;
+        std::istringstream(requiredString) >> std::boolalpha >> requiredBool;
 
         keywords.push_back(keyword);
         required.push_back(requiredBool);
@@ -40,8 +34,8 @@ void readKeywordList(const string &filename, vector<string> &keywords, vector<bo
 
 TEST_F(TestInputFileReader, testAddKeyword)
 {
-    vector<string> keywordsRef(0);
-    vector<bool>   requiredRef(0);
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
 
     ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
@@ -51,75 +45,60 @@ TEST_F(TestInputFileReader, testAddKeyword)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        string keyword  = keywordsRef[i];
-        bool   required = requiredRef[i];
+        std::string keyword  = keywordsRef[i];
+        bool        required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
         EXPECT_EQ(_inputFileReader->getKeywordRequired(keyword), required);
     }
 }
 
-TEST_F(TestInputFileReader, testGetLineCommands)
-{
-    auto *line = "nstep = 1";
-    ASSERT_THROW(getLineCommands(line, 1), InputFileException);
-
-    line = "nstep = 1;";
-    ASSERT_THAT(getLineCommands(line, 1), ElementsAre("nstep = 1", ""));
-
-    line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(getLineCommands(line, 1), InputFileException);
-
-    line = "nstep = 1; nstep = 2;";
-    ASSERT_THAT(getLineCommands(line, 1), ElementsAre("nstep = 1", " nstep = 2", ""));
-}
-
 TEST_F(TestInputFileReader, testNotAValidKeyword)
 {
-    auto lineElements = vector<string>{"notAValidKeyword", "=", "1"};
-    ASSERT_THROW(_inputFileReader->process(lineElements), InputFileException);
+    auto lineElements = std::vector<std::string>{"notAValidKeyword", "=", "1"};
+    ASSERT_THROW(_inputFileReader->process(lineElements), customException::InputFileException);
 }
 
 TEST_F(TestInputFileReader, testProcess)
 {
-    auto lineElements = vector<string>{"nstep", "=", "1000"};
+    auto lineElements = std::vector<std::string>{"nstep", "=", "1000"};
     _inputFileReader->process(lineElements);
     EXPECT_EQ(_inputFileReader->getKeywordCount(lineElements[0]), 1);
 }
 
 TEST_F(TestInputFileReader, testRead)
 {
-    string filename = "data/inputFileReader/inputFile.txt";
+    std::string filename = "data/inputFileReader/inputFile.txt";
     _inputFileReader->setFilename(filename);
     ASSERT_NO_THROW(_inputFileReader->read());
 }
 
 TEST_F(TestInputFileReader, testReadFileNotFound)
 {
-    string filename = "data/inputFileReader/inputFileNotFound.txt";
+    std::string filename = "data/inputFileReader/inputFileNotFound.txt";
     _inputFileReader->setFilename(filename);
-    ASSERT_THROW(_inputFileReader->read(), InputFileException);
+    ASSERT_THROW(_inputFileReader->read(), customException::InputFileException);
 }
 
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
-    string filename = "data/inputFileReader/inputFile.txt";
+    std::string filename = "data/inputFileReader/inputFile.txt";
     ASSERT_NO_THROW(readInputFile(filename, _engine));
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 {
-    vector<string> keywordsRef(0);
-    vector<bool>   requiredRef(0);
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
 
     ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<size_t> requiredIndex(0);
+    std::vector<size_t> requiredIndex(0);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        string keyword  = keywordsRef[i];
-        bool   required = requiredRef[i];
+        std::string keyword  = keywordsRef[i];
+        bool        required = requiredRef[i];
 
         if (required)
         {
@@ -130,26 +109,26 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
     for (auto const &index : requiredIndex)
     {
-        string keyword = keywordsRef[index];
+        const auto &keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        ASSERT_THROW(_inputFileReader->postProcess(), InputFileException);
+        ASSERT_THROW(_inputFileReader->postProcess(), customException::InputFileException);
         _inputFileReader->setKeywordCount(keyword, 1);
     }
 }
 
 TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 {
-    vector<string> keywordsRef(0);
-    vector<bool>   requiredRef(0);
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
 
     ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<size_t> requiredIndex(0);
+    std::vector<size_t> requiredIndex(0);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        string keyword  = keywordsRef[i];
-        bool   required = requiredRef[i];
+        const auto &keyword  = keywordsRef[i];
+        bool        required = requiredRef[i];
 
         if (required)
         {
@@ -162,9 +141,9 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
     {
         if (index != 1)
         {
-            string keyword = keywordsRef[index];
+            const auto &keyword = keywordsRef[index];
             _inputFileReader->setKeywordCount(keyword, index);
-            ASSERT_THROW(_inputFileReader->postProcess(), InputFileException);
+            ASSERT_THROW(_inputFileReader->postProcess(), customException::InputFileException);
             _inputFileReader->setKeywordCount(keyword, 1);
         }
     }
@@ -172,17 +151,17 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 
 TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 {
-    vector<string> keywordsRef(0);
-    vector<bool>   requiredRef(0);
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
 
     ::readKeywordList("data/inputFileReader/keywordList.txt", keywordsRef, requiredRef);
 
-    vector<size_t> requiredIndex(0);
+    std::vector<size_t> requiredIndex(0);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        string keyword  = keywordsRef[i];
-        bool   required = requiredRef[i];
+        const auto &keyword  = keywordsRef[i];
+        bool        required = requiredRef[i];
 
         if (required)
         {
@@ -196,6 +175,6 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

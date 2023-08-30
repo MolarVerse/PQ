@@ -16,8 +16,6 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertHelper, Test
 #include <vector>          // for vector
 
-using namespace ::testing;
-
 /**
  * @brief tests isNeeded function
  *
@@ -130,6 +128,6 @@ TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

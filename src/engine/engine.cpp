@@ -1,15 +1,13 @@
 #include "engine.hpp"
 
-#include "cell.hpp"
-#include "constants.hpp"
-#include "energyOutput.hpp"
-#include "logOutput.hpp"
-#include "output.hpp"
-#include "progressbar.hpp"
-#include "stdoutOutput.hpp"
+#include "constants.hpp"         // for _FS_TO_PS_
+#include "logOutput.hpp"         // for LogOutput
+#include "output.hpp"            // for Output
+#include "progressbar.hpp"       // for progressbar
+#include "stdoutOutput.hpp"      // for StdoutOutput
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-#include <iostream>
+#include <iostream>   // for operator<<, cout, ostream, basic_ostream
 
 using namespace engine;
 

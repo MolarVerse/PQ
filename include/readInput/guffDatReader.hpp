@@ -14,12 +14,13 @@ namespace engine
     class Engine;   // Forward declaration
 }
 
-namespace readInput
+namespace readInput::guffdat
 {
     void readGuffDat(engine::Engine &);
 
-    using c_ul     = const size_t;
-    using vector4d = std::vector<std::vector<std::vector<std::vector<double>>>>;
+    using c_ul         = const size_t;
+    using vector4d     = std::vector<std::vector<std::vector<std::vector<double>>>>;
+    using vector4dBool = std::vector<std::vector<std::vector<std::vector<bool>>>>;
 
     /**
      * @class GuffDatReader
@@ -33,7 +34,8 @@ namespace readInput
         size_t      _lineNumber = 1;
         std::string _fileName   = defaults::_GUFF_FILENAME_DEFAULT_;
 
-        vector4d _guffCoulombCoefficients;
+        vector4d     _guffCoulombCoefficients;
+        vector4dBool _isGuffPairSet;
 
         engine::Engine &_engine;
 
@@ -41,13 +43,44 @@ namespace readInput
         explicit GuffDatReader(engine::Engine &engine);
 
         void setupGuffMaps();
-        void parseLine(std::vector<std::string> &lineElements);
+        void parseLine(const std::vector<std::string> &lineCommands);
         void read();
         void postProcessSetup();
+        void checkPartialCharges();
+        void addNonCoulombPair(const size_t               molType1,
+                               const size_t               molType2,
+                               const size_t               atomType1,
+                               const size_t               atomType2,
+                               const std::vector<double> &coefficients,
+                               const double               rncCutOff);
+        void addLennardJonesPair(const size_t               molType1,
+                                 const size_t               molType2,
+                                 const size_t               atomType1,
+                                 const size_t               atomType2,
+                                 const std::vector<double> &coefficients,
+                                 const double               rncCutOff);
+        void addBuckinghamPair(const size_t               molType1,
+                               const size_t               molType2,
+                               const size_t               atomType1,
+                               const size_t               atomType2,
+                               const std::vector<double> &coefficients,
+                               const double               rncCutOff);
+        void addMorsePair(const size_t               molType1,
+                          const size_t               molType2,
+                          const size_t               atomType1,
+                          const size_t               atomType2,
+                          const std::vector<double> &coefficients,
+                          const double               rncCutOff);
+        void addGuffPair(const size_t               molType1,
+                         const size_t               molType2,
+                         const size_t               atomType1,
+                         const size_t               atomType2,
+                         const std::vector<double> &coefficients,
+                         const double               rncCutOff);
 
         void setFilename(const std::string_view &filename) { _fileName = filename; }
     };
 
-}   // namespace readInput
+}   // namespace readInput::guffdat
 
 #endif   // _GUFF_DAT_READER_HPP_

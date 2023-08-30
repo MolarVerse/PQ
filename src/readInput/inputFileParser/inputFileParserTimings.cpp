@@ -1,6 +1,5 @@
 #include "inputFileParserTimings.hpp"
 
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "timingsSettings.hpp"   // for TimingsSettings
 

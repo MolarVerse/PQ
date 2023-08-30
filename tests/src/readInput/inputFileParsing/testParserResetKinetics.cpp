@@ -1,4 +1,3 @@
-#include "engine.hpp"                         // for Engine
 #include "exceptions.hpp"                     // for InputFileException
 #include "inputFileParser.hpp"                // for readInput
 #include "inputFileParserResetKinetics.hpp"   // for InputFileParserResetKinetics
@@ -8,13 +7,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "nscale" command
@@ -24,7 +20,7 @@ using namespace ::testing;
 TEST_F(TestInputFileReader, testParseNScale)
 {
     InputFileParserResetKinetics parser(_engine);
-    vector<string>               lineElements = {"nscale", "=", "3"};
+    std::vector<std::string>     lineElements = {"nscale", "=", "3"};
     parser.parseNScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
 
@@ -40,7 +36,7 @@ TEST_F(TestInputFileReader, testParseNScale)
 TEST_F(TestInputFileReader, testParseFScale)
 {
     InputFileParserResetKinetics parser(_engine);
-    vector<string>               lineElements = {"fscale", "=", "3"};
+    std::vector<std::string>     lineElements = {"fscale", "=", "3"};
     parser.parseFScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
 
@@ -56,7 +52,7 @@ TEST_F(TestInputFileReader, testParseFScale)
 TEST_F(TestInputFileReader, testParseNReset)
 {
     InputFileParserResetKinetics parser(_engine);
-    vector<string>               lineElements = {"nreset", "=", "3"};
+    std::vector<std::string>     lineElements = {"nreset", "=", "3"};
     parser.parseNReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
 
@@ -72,7 +68,7 @@ TEST_F(TestInputFileReader, testParseNReset)
 TEST_F(TestInputFileReader, testParseFReset)
 {
     InputFileParserResetKinetics parser(_engine);
-    vector<string>               lineElements = {"freset", "=", "3"};
+    std::vector<std::string>     lineElements = {"freset", "=", "3"};
     parser.parseFReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
 
@@ -82,6 +78,6 @@ TEST_F(TestInputFileReader, testParseFReset)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

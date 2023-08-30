@@ -13,7 +13,6 @@
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace ::testing;
 using namespace readInput::parameterFile;
 
 /**
@@ -50,6 +49,6 @@ TEST_F(TestParameterFileSection, endedNormallyDihedral)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

@@ -7,8 +7,9 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "morsePair.hpp"              // for MorsePair
-#include "nonCoulombPotential.hpp"    // for NonCoulombPotential, NonCoulombType
+#include "nonCoulombPotential.hpp"    // for NonCoulombPotential
 #include "potential.hpp"              // for Potential
+#include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
 
 #include <format>   // for format
@@ -38,11 +39,20 @@ void NonCoulombicsSection::processHeader(std::vector<std::string> &lineElements,
         const auto type = utilities::toLowerCopy(lineElements[1]);
 
         if (type == "lj")
-            potential.setNonCoulombType(potential::NonCoulombType::LJ);
+        {
+            potential.setNonCoulombType(settings::NonCoulombType::LJ);
+            settings::PotentialSettings::setNonCoulombType("lj");
+        }
         else if (type == "buckingham")
-            potential.setNonCoulombType(potential::NonCoulombType::BUCKINGHAM);
+        {
+            potential.setNonCoulombType(settings::NonCoulombType::BUCKINGHAM);
+            settings::PotentialSettings::setNonCoulombType("buck");
+        }
         else if (type == "morse")
-            potential.setNonCoulombType(potential::NonCoulombType::MORSE);
+        {
+            potential.setNonCoulombType(settings::NonCoulombType::MORSE);
+            settings::PotentialSettings::setNonCoulombType("morse");
+        }
         else
             throw customException::ParameterFileException(
                 std::format("Invalid type of nonCoulombic in parameter file nonCoulombic "
@@ -65,9 +75,9 @@ void NonCoulombicsSection::processSection(std::vector<std::string> &lineElements
 {
     switch (_nonCoulombType)
     {
-    case potential::NonCoulombType::LJ: processLJ(lineElements, engine); break;
-    case potential::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;
-    case potential::NonCoulombType::MORSE: processMorse(lineElements, engine); break;
+    case settings::NonCoulombType::LJ: processLJ(lineElements, engine); break;
+    case settings::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;
+    case settings::NonCoulombType::MORSE: processMorse(lineElements, engine); break;
     default:
         throw customException::ParameterFileException(std::format(
             "Wrong type of nonCoulombic in parameter file nonCoulombic section at line {}  - has to be lj, buckingham or morse!",

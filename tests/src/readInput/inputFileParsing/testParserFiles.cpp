@@ -7,13 +7,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "topology_file" command
@@ -78,8 +75,8 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    InputFileParserFiles parser(_engine);
-    vector<string>       lineElements = {"startFile_name", "=", "start.xyz"};
+    InputFileParserFiles     parser(_engine);
+    std::vector<std::string> lineElements = {"startFile_name", "=", "start.xyz"};
     EXPECT_THROW_MSG(parser.parseStartFilename(lineElements, 0),
                      customException::InputFileException,
                      "Cannot open start file - filename = start.xyz");
@@ -95,8 +92,8 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    InputFileParserFiles parser(_engine);
-    vector<string>       lineElements = {"moldescriptorFile_name", "=", "moldescriptor.txt"};
+    InputFileParserFiles     parser(_engine);
+    std::vector<std::string> lineElements = {"moldescriptorFile_name", "=", "moldescriptor.txt"};
     EXPECT_THROW_MSG(parser.parseMoldescriptorFilename(lineElements, 0),
                      customException::InputFileException,
                      "Cannot open moldescriptor file - filename = moldescriptor.txt - file not found");
@@ -112,8 +109,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    InputFileParserFiles parser(_engine);
-    vector<string>       lineElements = {"guff_path", "=", "guff"};
+    InputFileParserFiles     parser(_engine);
+    std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(parser.parseGuffPath(lineElements, 0),
                      customException::InputFileException,
                      R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)");
@@ -125,8 +122,8 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    InputFileParserFiles parser(_engine);
-    vector<string>       lineElements = {"guffdat_file", "=", "guff.dat"};
+    InputFileParserFiles     parser(_engine);
+    std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(parser.parseGuffDatFilename(lineElements, 0),
                      customException::InputFileException,
                      "Cannot open guff file - filename = guff.dat");
@@ -138,6 +135,6 @@ TEST_F(TestInputFileReader, guffDatFilename)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

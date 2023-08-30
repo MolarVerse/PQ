@@ -2,7 +2,7 @@
 #include "nonCoulombPair.hpp"   // for potential
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <cmath>           // for pow, exp
+#include <cmath>           // for ::pow, ::exp
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, InitGo...
 #include <vector>          // for vector, allocator
 
@@ -25,26 +25,28 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     auto distance              = 2.0;
     const auto [energy, force] = guffNonCoulomb.calculateEnergyAndForce(distance);
 
-    auto energyREF  = coefficients[0] / pow(distance, coefficients[1]) + coefficients[2] / pow(distance, coefficients[3]);
-    energyREF      += coefficients[4] / pow(distance, coefficients[5]) + coefficients[6] / pow(distance, coefficients[7]);
-    energyREF      += coefficients[8] / (1 + exp(coefficients[9] * (distance - coefficients[10])));
-    energyREF      += coefficients[11] / (1 + exp(coefficients[12] * (distance - coefficients[13])));
-    energyREF      += coefficients[14] * exp(coefficients[15] * pow(distance - coefficients[16], coefficients[17]));
-    energyREF      += coefficients[18] * exp(coefficients[19] * pow(distance - coefficients[20], coefficients[21]));
+    auto energyREF  = coefficients[0] / ::pow(distance, coefficients[1]) + coefficients[2] / ::pow(distance, coefficients[3]);
+    energyREF      += coefficients[4] / ::pow(distance, coefficients[5]) + coefficients[6] / ::pow(distance, coefficients[7]);
+    energyREF      += coefficients[8] / (1 + ::exp(coefficients[9] * (distance - coefficients[10])));
+    energyREF      += coefficients[11] / (1 + ::exp(coefficients[12] * (distance - coefficients[13])));
+    energyREF      += coefficients[14] * ::exp(coefficients[15] * ::pow(distance - coefficients[16], coefficients[17]));
+    energyREF      += coefficients[18] * ::exp(coefficients[19] * ::pow(distance - coefficients[20], coefficients[21]));
     energyREF      += -energyCutoff - forceCutoff * (rncCutoff - distance);
 
-    auto forceREF  = coefficients[0] * coefficients[1] / pow(distance, coefficients[1] + 1);
-    forceREF      += coefficients[2] * coefficients[3] / pow(distance, coefficients[3] + 1);
-    forceREF      += coefficients[4] * coefficients[5] / pow(distance, coefficients[5] + 1);
-    forceREF      += coefficients[6] * coefficients[7] / pow(distance, coefficients[7] + 1);
-    forceREF      += coefficients[8] * coefficients[9] * exp(coefficients[9] * (distance - coefficients[10])) /
-                pow(1 + exp(coefficients[9] * (distance - coefficients[10])), 2);
-    forceREF += coefficients[11] * coefficients[12] * exp(coefficients[12] * (distance - coefficients[13])) /
-                pow(1 + exp(coefficients[12] * (distance - coefficients[13])), 2);
-    forceREF -= coefficients[14] * coefficients[15] * exp(coefficients[15] * pow(distance - coefficients[16], coefficients[17])) *
-                pow(distance - coefficients[16], coefficients[17] - 1);
-    forceREF -= coefficients[18] * coefficients[19] * exp(coefficients[19] * pow(distance - coefficients[20], coefficients[21])) *
-                pow(distance - coefficients[20], coefficients[21] - 1);
+    auto forceREF  = coefficients[0] * coefficients[1] / ::pow(distance, coefficients[1] + 1);
+    forceREF      += coefficients[2] * coefficients[3] / ::pow(distance, coefficients[3] + 1);
+    forceREF      += coefficients[4] * coefficients[5] / ::pow(distance, coefficients[5] + 1);
+    forceREF      += coefficients[6] * coefficients[7] / ::pow(distance, coefficients[7] + 1);
+    forceREF      += coefficients[8] * coefficients[9] * ::exp(coefficients[9] * (distance - coefficients[10])) /
+                ::pow(1 + ::exp(coefficients[9] * (distance - coefficients[10])), 2);
+    forceREF += coefficients[11] * coefficients[12] * ::exp(coefficients[12] * (distance - coefficients[13])) /
+                ::pow(1 + ::exp(coefficients[12] * (distance - coefficients[13])), 2);
+    forceREF -= coefficients[14] * coefficients[15] *
+                ::exp(coefficients[15] * ::pow(distance - coefficients[16], coefficients[17])) *
+                ::pow(distance - coefficients[16], coefficients[17] - 1);
+    forceREF -= coefficients[18] * coefficients[19] *
+                ::exp(coefficients[19] * ::pow(distance - coefficients[20], coefficients[21])) *
+                ::pow(distance - coefficients[20], coefficients[21] - 1);
     forceREF -= forceCutoff;
 
     EXPECT_DOUBLE_EQ(energy, energyREF);

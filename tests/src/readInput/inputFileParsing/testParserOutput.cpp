@@ -13,14 +13,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
-using namespace output;
 
 /**
  * @brief tests parsing the "outputfreq" command
@@ -30,10 +26,10 @@ using namespace output;
  */
 TEST_F(TestInputFileReader, testParseOutputFreq)
 {
-    InputFileParserOutput parser(_engine);
-    vector<string>        lineElements = {"outputfreq", "=", "1000"};
+    InputFileParserOutput    parser(_engine);
+    std::vector<std::string> lineElements = {"outputfreq", "=", "1000"};
     parser.parseOutputFreq(lineElements, 0);
-    EXPECT_EQ(Output::getOutputFrequency(), 1000);
+    EXPECT_EQ(output::Output::getOutputFrequency(), 1000);
 
     lineElements = {"outputfreq", "=", "-1000"};
     EXPECT_THROW_MSG(parser.parseOutputFreq(lineElements, 0),
@@ -48,8 +44,8 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
 TEST_F(TestInputFileReader, testParseLogFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "log.txt";
-    vector<string> lineElements = {"logfilename", "=", _fileName};
+    _fileName                             = "log.txt";
+    std::vector<std::string> lineElements = {"logfilename", "=", _fileName};
     parser.parseLogFilename(lineElements, 0);
     EXPECT_EQ(_engine.getLogOutput().getFilename(), _fileName);
 }
@@ -61,8 +57,8 @@ TEST_F(TestInputFileReader, testParseLogFilename)
 TEST_F(TestInputFileReader, testParseInfoFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "info.txt";
-    vector<string> lineElements = {"infoFilename", "=", "info.txt"};
+    _fileName                             = "info.txt";
+    std::vector<std::string> lineElements = {"infoFilename", "=", "info.txt"};
     parser.parseInfoFilename(lineElements, 0);
     EXPECT_EQ(_engine.getInfoOutput().getFilename(), "info.txt");
 }
@@ -74,8 +70,8 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
 TEST_F(TestInputFileReader, testParseEnergyFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "energy.txt";
-    vector<string> lineElements = {"energyFilename", "=", _fileName};
+    _fileName                             = "energy.txt";
+    std::vector<std::string> lineElements = {"energyFilename", "=", _fileName};
     parser.parseEnergyFilename(lineElements, 0);
     EXPECT_EQ(_engine.getEnergyOutput().getFilename(), _fileName);
 }
@@ -87,8 +83,8 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
 TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "trajectory.xyz";
-    vector<string> lineElements = {"trajectoryFilename", "=", _fileName};
+    _fileName                             = "trajectory.xyz";
+    std::vector<std::string> lineElements = {"trajectoryFilename", "=", _fileName};
     parser.parseTrajectoryFilename(lineElements, 0);
     EXPECT_EQ(_engine.getXyzOutput().getFilename(), _fileName);
 }
@@ -100,8 +96,8 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 TEST_F(TestInputFileReader, testVelocityFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "velocity.xyz";
-    vector<string> lineElements = {"velocityFilename", "=", _fileName};
+    _fileName                             = "velocity.xyz";
+    std::vector<std::string> lineElements = {"velocityFilename", "=", _fileName};
     parser.parseVelocityFilename(lineElements, 0);
     EXPECT_EQ(_engine.getVelOutput().getFilename(), _fileName);
 }
@@ -113,8 +109,8 @@ TEST_F(TestInputFileReader, testVelocityFilename)
 TEST_F(TestInputFileReader, testForceFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "force.xyz";
-    vector<string> lineElements = {"forceFilename", "=", _fileName};
+    _fileName                             = "force.xyz";
+    std::vector<std::string> lineElements = {"forceFilename", "=", _fileName};
     parser.parseForceFilename(lineElements, 0);
     EXPECT_EQ(_engine.getForceOutput().getFilename(), _fileName);
 }
@@ -126,8 +122,8 @@ TEST_F(TestInputFileReader, testForceFilename)
 TEST_F(TestInputFileReader, testParseRestartFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "restart.xyz";
-    vector<string> lineElements = {"restartFilename", "=", _fileName};
+    _fileName                             = "restart.xyz";
+    std::vector<std::string> lineElements = {"restartFilename", "=", _fileName};
     parser.parseRestartFilename(lineElements, 0);
     EXPECT_EQ(_engine.getRstFileOutput().getFilename(), _fileName);
 }
@@ -139,14 +135,14 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
 TEST_F(TestInputFileReader, testChargeFilename)
 {
     InputFileParserOutput parser(_engine);
-    _fileName                   = "charge.xyz";
-    vector<string> lineElements = {"chargeFilename", "=", _fileName};
+    _fileName                             = "charge.xyz";
+    std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
     EXPECT_EQ(_engine.getChargeOutput().getFilename(), _fileName);
 }
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

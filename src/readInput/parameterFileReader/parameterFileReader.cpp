@@ -11,7 +11,6 @@
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
 #include "typesSection.hpp"              // for TypesSection
 
-#include <filesystem>   // for exists
 #include <functional>   // for identity
 #include <ranges>       // for __find_if_fn, find_if
 

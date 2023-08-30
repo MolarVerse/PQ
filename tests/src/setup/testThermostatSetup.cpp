@@ -11,7 +11,6 @@
 #include <string>          // for allocator, basic_string
 
 using namespace setup;
-using namespace customException;
 
 TEST_F(TestSetup, setupThermostat)
 {
@@ -23,7 +22,7 @@ TEST_F(TestSetup, setupThermostat)
     EXPECT_EQ(_engine.getThermostat().getTimestep(), 0.1);
 
     settings::ThermostatSettings::setThermostatType("berendsen");
-    EXPECT_THROW(thermostatSetup.setup(), InputFileException);
+    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
 
     settings::ThermostatSettings::setTargetTemperature(300);
     settings::ThermostatSettings::setTemperatureSet(true);

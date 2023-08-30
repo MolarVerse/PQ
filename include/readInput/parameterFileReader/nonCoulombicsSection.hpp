@@ -13,7 +13,7 @@ namespace engine
     class Engine;   // forward declaration
 }
 
-namespace potential
+namespace settings
 {
     enum class NonCoulombType : size_t;   // forward declaration
 }
@@ -29,7 +29,7 @@ namespace readInput::parameterFile
     class NonCoulombicsSection : public ParameterFileSection
     {
       private:
-        potential::NonCoulombType _nonCoulombType;
+        settings::NonCoulombType _nonCoulombType;
 
       public:
         [[nodiscard]] std::string keyword() override { return "noncoulombics"; }
@@ -40,8 +40,8 @@ namespace readInput::parameterFile
         void processBuckingham(std::vector<std::string> &lineElements, engine::Engine &) const;
         void processMorse(std::vector<std::string> &lineElements, engine::Engine &) const;
 
-        void setNonCoulombType(potential::NonCoulombType nonCoulombicType) { _nonCoulombType = nonCoulombicType; }
-        [[nodiscard]] potential::NonCoulombType getNonCoulombType() const { return _nonCoulombType; }
+        void setNonCoulombType(settings::NonCoulombType nonCoulombicType) { _nonCoulombType = nonCoulombicType; }
+        [[nodiscard]] settings::NonCoulombType getNonCoulombType() const { return _nonCoulombType; }
     };
 
 }   // namespace readInput::parameterFile

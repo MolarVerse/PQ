@@ -8,10 +8,7 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for pow
-#include <iosfwd>          // for std
 #include <memory>          // for allocator
-
-using namespace std;
 
 /**
  * @brief tests function calculate pressure

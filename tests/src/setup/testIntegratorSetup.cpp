@@ -1,5 +1,4 @@
 #include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for customException
 #include "integrator.hpp"        // for Integrator
 #include "integratorSetup.hpp"   // for setupIntegrator, IntegratorSetup, setup
 #include "testSetup.hpp"         // for TestSetup
@@ -10,7 +9,6 @@
 #include <string>          // for allocator, basic_string
 
 using namespace setup;
-using namespace customException;
 
 TEST_F(TestSetup, integratorSetup_SetTimeStep)
 {
@@ -24,6 +22,6 @@ TEST_F(TestSetup, integratorSetup_SetTimeStep)
 
 int main(int argc, char **argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

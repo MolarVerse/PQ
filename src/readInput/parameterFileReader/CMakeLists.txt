@@ -19,6 +19,7 @@ target_include_directories(parameterFileReader
 target_link_libraries(parameterFileReader
     PUBLIC
     engine
+    settings
 )
 
 install(TARGETS parameterFileReader

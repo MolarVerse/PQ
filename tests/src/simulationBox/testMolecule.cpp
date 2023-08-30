@@ -3,8 +3,6 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <vector>          // for allocator, vector
 
-using namespace std;
-
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
     const linearAlgebra::Vec3D box          = {10.0, 10.0, 10.0};

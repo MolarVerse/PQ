@@ -1,9 +1,7 @@
 #include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for customException
 #include "resetKinetics.hpp"           // for ResetMomentum, ResetTemperature
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "resetKineticsSetup.hpp"      // for ResetKineticsSetup, setupResetKine...
-#include "settings.hpp"                // for Settings
 #include "testSetup.hpp"               // for TestSetup
 #include "timingsSettings.hpp"         // for TimingsSettings
 
@@ -12,7 +10,6 @@
 #include <string>          // for allocator, basic_string
 
 using namespace setup;
-using namespace customException;
 
 TEST_F(TestSetup, setup)
 {

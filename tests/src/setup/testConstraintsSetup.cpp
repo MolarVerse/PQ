@@ -2,7 +2,6 @@
 #include "constraints.hpp"          // for Constraints
 #include "constraintsSetup.hpp"     // for ConstraintsSetup, setupConstraints
 #include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for customException
 #include "testSetup.hpp"            // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -10,7 +9,6 @@
 #include <string>          // for allocator, basic_string
 
 using namespace setup;
-using namespace customException;
 
 /**
  * @brief tests setupConstraints function for tolerances

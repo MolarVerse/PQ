@@ -1,3 +1,5 @@
+- check getNonCoulombTypeString
+
 - check whats wrong with logoutput routine (strange binary output)
 
 - finish intra non bonded routine (to test against qmcfc)

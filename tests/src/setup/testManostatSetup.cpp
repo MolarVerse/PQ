@@ -11,7 +11,6 @@
 #include <string>          // for allocator, basic_string
 
 using namespace setup;
-using namespace customException;
 
 /**
  * @TODO: refactor this test to use the new setupManostat function
@@ -29,7 +28,7 @@ TEST_F(TestSetup, setup)
     EXPECT_EQ(_engine.getManostat().getTimestep(), 0.1);
 
     settings::ManostatSettings::setManostatType("berendsen");
-    EXPECT_THROW(manostatSetup.setup(), InputFileException);
+    EXPECT_THROW(manostatSetup.setup(), customException::InputFileException);
 
     settings::ManostatSettings::setPressureSet(true);
     settings::ManostatSettings::setTargetPressure(300.0);

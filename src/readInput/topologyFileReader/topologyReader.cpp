@@ -12,9 +12,8 @@
 #include "shakeSection.hpp"              // for ShakeSection
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
 
-#include <filesystem>   // for exists
-#include <string>       // for string, basic_string, operator==, operator!=
-#include <vector>       // for vector
+#include <string>   // for string, basic_string, operator==, operator!=
+#include <vector>   // for vector
 
 using namespace readInput::topology;
 

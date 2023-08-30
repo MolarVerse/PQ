@@ -5,7 +5,6 @@
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
-#include "timings.hpp"            // for Timings
 #include "timingsSettings.hpp"    // for TimingsSettings
 
 #include <format>   // for format

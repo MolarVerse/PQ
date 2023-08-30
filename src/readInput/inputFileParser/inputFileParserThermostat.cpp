@@ -1,8 +1,7 @@
 #include "inputFileParserThermostat.hpp"
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "thermostat.hpp"   // for BerendsenThermostat, Thermostat, thermostat
-#include "thermostatSettings.hpp"
+#include "exceptions.hpp"           // for InputFileException, customException
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <cstddef>       // for size_t, std
 #include <format>        // for format

@@ -8,13 +8,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "jobtype" command
@@ -24,8 +21,8 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testJobType)
 {
-    InputFileParserGeneral parser(_engine);
-    vector<string>         lineElements = {"jobtype", "=", "mm-md"};
+    InputFileParserGeneral   parser(_engine);
+    std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     parser.parseJobType(lineElements, 0);
     EXPECT_EQ(_engine.getSettings().getJobtype(), "MMMD");
 
@@ -37,6 +34,6 @@ TEST_F(TestInputFileReader, testJobType)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

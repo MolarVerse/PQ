@@ -43,7 +43,7 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 
     // needs setup of engine before reading guff.dat
     std::cout << "Reading guff.dat..." << '\n';
-    readGuffDat(engine);
+    guffdat::readGuffDat(engine);
 
     std::cout << "Setup complete!" << '\n';
 }

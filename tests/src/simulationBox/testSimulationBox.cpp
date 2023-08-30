@@ -11,8 +11,6 @@
 #include <string>          // for string
 #include <vector>          // for vector
 
-using namespace std;
-
 /**
  * @brief tests numberOfAtoms function
  *

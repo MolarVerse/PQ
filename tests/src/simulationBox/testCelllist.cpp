@@ -8,11 +8,8 @@
 #include "vector3d.hpp"           // for Vec3Dul, Vec3D, Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <iosfwd>          // for std
 #include <string>          // for allocator, basic_string
 #include <vector>          // for vector
-
-using namespace std;
 
 TEST_F(TestCellList, determineCellSize)
 {

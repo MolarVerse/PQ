@@ -7,13 +7,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "temp" command
@@ -26,7 +23,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
     InputFileParserThermostat parser(_engine);
-    vector<string>            lineElements = {"temp", "=", "300.0"};
+    std::vector<std::string>  lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
 
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), true);
@@ -46,7 +43,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
     InputFileParserThermostat parser(_engine);
-    vector<string>            lineElements = {"t_relaxation", "=", "10.0"};
+    std::vector<std::string>  lineElements = {"t_relaxation", "=", "10.0"};
     parser.parseThermostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
 
@@ -65,7 +62,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 TEST_F(TestInputFileReader, testParseThermostat)
 {
     InputFileParserThermostat parser(_engine);
-    vector<string>            lineElements = {"thermostat", "=", "none"};
+    std::vector<std::string>  lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), "none");
 
@@ -81,6 +78,6 @@ TEST_F(TestInputFileReader, testParseThermostat)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

@@ -1,13 +1,11 @@
 #include "restartFileReader.hpp"
 
 #include "boxSection.hpp"          // for BoxSection
-#include "exceptions.hpp"          // for customException::InputFileException
 #include "fileSettings.hpp"        // for FileSettings
 #include "noseHooverSection.hpp"   // for NoseHooverSection
 #include "stepCountSection.hpp"    // for StepCountSection
 #include "stringUtilities.hpp"     // for removeComments, splitString
 
-#include <format>    // for format
 #include <fstream>   // for basic_istream, ifstream
 #include <string>    // for basic_string, string
 

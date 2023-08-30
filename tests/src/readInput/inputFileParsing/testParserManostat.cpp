@@ -7,13 +7,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "pressure" command
@@ -23,8 +20,8 @@ TEST_F(TestInputFileReader, ParsePressure)
 {
     EXPECT_EQ(settings::ManostatSettings::isPressureSet(), false);
 
-    InputFileParserManostat parser(_engine);
-    vector<string>          lineElements = {"pressure", "=", "300.0"};
+    InputFileParserManostat  parser(_engine);
+    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parser.parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
@@ -39,8 +36,8 @@ TEST_F(TestInputFileReader, ParsePressure)
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
-    InputFileParserManostat parser(_engine);
-    vector<string>          lineElements = {"p_relaxation", "=", "0.1"};
+    InputFileParserManostat  parser(_engine);
+    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
     parser.parseManostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
@@ -58,8 +55,8 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
  */
 TEST_F(TestInputFileReader, ParseManostat)
 {
-    InputFileParserManostat parser(_engine);
-    vector<string>          lineElements = {"manostat", "=", "none"};
+    InputFileParserManostat  parser(_engine);
+    std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parser.parseManostat(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getManostatType(), "none");
 
@@ -81,8 +78,8 @@ TEST_F(TestInputFileReader, ParseManostat)
  */
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
-    InputFileParserManostat parser(_engine);
-    vector<string>          lineElements = {"compressibility", "=", "0.1"};
+    InputFileParserManostat  parser(_engine);
+    std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
     parser.parseCompressibility(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
 
@@ -93,6 +90,6 @@ TEST_F(TestInputFileReader, ParseCompressibility)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

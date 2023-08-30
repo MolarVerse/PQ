@@ -8,14 +8,10 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
-#include <iosfwd>          // for std
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
 using namespace readInput;
-using namespace ::testing;
-using namespace customException;
 
 /**
  * @brief tests parsing the "integrator" command
@@ -26,17 +22,18 @@ using namespace customException;
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
     InputFileParserIntegrator parser(_engine);
-    vector<string>            lineElements = {"integrator", "=", "v-verlet"};
+    std::vector<std::string>  lineElements = {"integrator", "=", "v-verlet"};
     parser.parseIntegrator(lineElements, 0);
     EXPECT_EQ(_engine.getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};
-    ASSERT_THROW_MSG(
-        parser.parseIntegrator(lineElements, 0), InputFileException, "Invalid integrator \"notValid\" at line 0 in input file");
+    ASSERT_THROW_MSG(parser.parseIntegrator(lineElements, 0),
+                     customException::InputFileException,
+                     "Invalid integrator \"notValid\" at line 0 in input file");
 }
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

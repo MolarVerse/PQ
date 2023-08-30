@@ -7,8 +7,6 @@
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 
-using namespace ::testing;
-
 /**
  * @brief tests isNeeded function
  *
@@ -66,6 +64,6 @@ TEST_F(TestTopologyReader, readTopologyFile)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

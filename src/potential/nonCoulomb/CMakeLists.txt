@@ -21,6 +21,7 @@ target_link_libraries(nonCoulombPotential
     config
     utilities
     linearAlgebra
+    settings
 )
 
 install(TARGETS nonCoulombPotential

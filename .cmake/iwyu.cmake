@@ -30,4 +30,6 @@ if(CMAKE_IWYU)
 
     recursiveTargets(src)
     recursiveTargets(tests)
+    recursiveTargets(apps)
+    recursiveTargets(tools)
 endif()

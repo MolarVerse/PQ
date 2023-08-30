@@ -19,7 +19,23 @@ size_t SimulationBox::getNumberOfAtoms() const
 }
 
 /**
- * @brief find molecule type by moltype if (size_t)
+ * @brief finds molecule by moltype if (size_t)
+ *
+ * @param moltype
+ * @return std::optional<Molecule &>
+ */
+std::optional<Molecule> SimulationBox::findMolecule(const size_t moltype)
+{
+    auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
+
+    if (const auto molecule = std::ranges::find_if(_molecules, isMoleculeType); molecule != _molecules.end())
+        return *molecule;
+    else
+        return std::nullopt;
+}
+
+/**
+ * @brief find moleculeType by moltype if (size_t)
  *
  * @param moltype
  * @return Molecule

@@ -1,4 +1,3 @@
-#include "cell.hpp"                    // for simulationBox
 #include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_P...
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException, InputFi...
@@ -12,19 +11,14 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult, testing
 #include <cmath>           // for cbrt
 #include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, TestI...
-#include <iosfwd>          // for std
 #include <string>          // for allocator, basic_string
 #include <vector>          // for vector
 
-using namespace std;
-using namespace ::testing;
 using namespace setup;
-using namespace simulationBox;
-using namespace customException;
 
 TEST_F(TestSetup, testSetAtomMasses)
 {
-    Molecule molecule(1);
+    simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("C");
     molecule.addAtomName("H");
@@ -41,7 +35,7 @@ TEST_F(TestSetup, testSetAtomMasses)
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
 {
-    Molecule molecule(1);
+    simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("H");
     molecule.addAtomName("D");
@@ -49,12 +43,12 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
     _engine.getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(_engine);
-    ASSERT_THROW(simulationBoxSetup.setAtomMasses(), MolDescriptorException);
+    ASSERT_THROW(simulationBoxSetup.setAtomMasses(), customException::MolDescriptorException);
 }
 
 TEST_F(TestSetup, testSetAtomicNumbers)
 {
-    Molecule molecule(1);
+    simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("C");
     molecule.addAtomName("H");
@@ -71,7 +65,7 @@ TEST_F(TestSetup, testSetAtomicNumbers)
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 {
-    Molecule molecule(1);
+    simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
     molecule.addAtomName("H");
     molecule.addAtomName("D");
@@ -79,18 +73,18 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
     _engine.getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(_engine);
-    ASSERT_THROW(simulationBoxSetup.setAtomicNumbers(), MolDescriptorException);
+    ASSERT_THROW(simulationBoxSetup.setAtomicNumbers(), customException::MolDescriptorException);
 }
 
 TEST_F(TestSetup, testSetTotalMass)
 {
-    Molecule molecule1(1);
+    simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
     molecule1.addAtomName("C");
     molecule1.addAtomName("H");
     molecule1.addAtomName("O");
 
-    Molecule molecule2(2);
+    simulationBox::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
     molecule2.addAtomName("H");
     molecule2.addAtomName("H");
@@ -107,13 +101,13 @@ TEST_F(TestSetup, testSetTotalMass)
 
 TEST_F(TestSetup, testSetMolMass)
 {
-    Molecule molecule1(1);
+    simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
     molecule1.addAtomName("C");
     molecule1.addAtomName("H");
     molecule1.addAtomName("O");
 
-    Molecule molecule2(2);
+    simulationBox::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
     molecule2.addAtomName("H");
     molecule2.addAtomName("H");
@@ -129,7 +123,7 @@ TEST_F(TestSetup, testSetMolMass)
 
 TEST_F(TestSetup, testSetTotalCharge)
 {
-    Molecule molecule1(1);
+    simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
     molecule1.addAtomName("C");
     molecule1.addAtomName("H");
@@ -151,7 +145,7 @@ TEST_F(TestSetup, testNoDensityNoBox)
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(false);
     SimulationBoxSetup simulationBoxSetup(_engine);
-    ASSERT_THROW(simulationBoxSetup.checkBoxSettings(), UserInputException);
+    ASSERT_THROW(simulationBoxSetup.checkBoxSettings(), customException::UserInputException);
 }
 
 TEST_F(TestSetup, testNoDensity)
@@ -197,11 +191,11 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 TEST_F(TestSetup, testResizeAtomShiftForces)
 {
 
-    Molecule molecule1(1);
+    simulationBox::Molecule molecule1(1);
     molecule1.addAtomForce({1.0, 2.0, 3.0});
     molecule1.addAtomForce({4.0, 5.0, 6.0});
 
-    Molecule molecule2(2);
+    simulationBox::Molecule molecule2(2);
     molecule2.addAtomForce({7.0, 8.0, 9.0});
 
     _engine.getSimulationBox().addMolecule(molecule1);
@@ -234,7 +228,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
  */
 TEST_F(TestSetup, testFullSetup)
 {
-    Molecule molecule1(1);
+    simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
     molecule1.addAtomName("C");
     molecule1.addAtomName("H");
@@ -243,7 +237,7 @@ TEST_F(TestSetup, testFullSetup)
     molecule1.addPartialCharge(0.2);
     molecule1.addPartialCharge(-0.4);
 
-    Molecule molecule2(2);
+    simulationBox::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
     molecule2.addAtomName("H");
     molecule2.addAtomName("H");
@@ -263,6 +257,6 @@ TEST_F(TestSetup, testFullSetup)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }

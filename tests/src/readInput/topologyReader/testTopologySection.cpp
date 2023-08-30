@@ -10,7 +10,6 @@
 #include <ostream>         // for operator<<, basic_ostream, ofstream
 #include <vector>          // for vector
 
-using namespace ::testing;
 using namespace readInput::topology;
 
 /**
@@ -133,6 +132,6 @@ TEST_F(TestTopologySection, processShakeSection_missingEnd)
 
 int main(int argc, char **argv)
 {
-    InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv);
     return ::RUN_ALL_TESTS();
 }
