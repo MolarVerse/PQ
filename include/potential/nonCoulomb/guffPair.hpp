@@ -34,6 +34,8 @@ namespace potential
             : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _coefficients(coefficients){};
 
         [[nodiscard]] std::pair<double, double> calculateEnergyAndForce(const double distance) const override;
+
+        [[nodiscard]] std::vector<double> getCoefficients() const { return _coefficients; }
     };
 
 }   // namespace potential

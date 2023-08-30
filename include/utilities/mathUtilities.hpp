@@ -26,6 +26,8 @@ namespace utilities
         return std::abs(a - b) < tolerance;
     }
 
+    bool compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b, const double &tolerance);
+
     /**
      * @brief compares two numbers via machine precision
      *

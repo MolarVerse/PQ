@@ -21,8 +21,11 @@ namespace settings
         LJ_9_12,   // at the momentum just dummy for testing not implemented yet
         BUCKINGHAM,
         MORSE,
-        GUFF
+        GUFF,
+        NONE
     };
+
+    std::string string(const NonCoulombType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -33,9 +36,9 @@ namespace settings
     class PotentialSettings
     {
       private:
-        static inline std::string    _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // guff
-        static inline std::string    _nonCoulombTypeString = defaults::_NON_COULOMB_TYPE_DEFAULT_;   // none = shifted potential
-        static inline NonCoulombType _nonCoulombType       = NonCoulombType::LJ;                     // LJ
+        static inline std::string    _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // shifted potential
+        static inline std::string    _nonCoulombTypeString = defaults::_NON_COULOMB_TYPE_DEFAULT_;          // guff
+        static inline NonCoulombType _nonCoulombType       = NonCoulombType::GUFF;                          // LJ
 
         static inline double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;         // default is 1.0
         static inline double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;   // default is 1.0
@@ -44,13 +47,13 @@ namespace settings
 
       public:
         static void setNonCoulombType(const std::string_view &type);
+        static void setNonCoulombType(const NonCoulombType type) { _nonCoulombType = type; }
 
         /********************
          * standard setters *
          ********************/
 
         static void setCoulombLongRangeType(const std::string_view &type) { _coulombLongRangeType = type; }
-        static void setNonCoulombType(const NonCoulombType type) { _nonCoulombType = type; }
 
         static void setScale14Coulomb(double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
         static void setScale14VanDerWaals(double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }

@@ -22,45 +22,33 @@ using namespace readInput::parameterFile;
  * @brief processes the nonCoulombics header of the parameter file
  *
  * @note type of forceField can be given as second argument
- *       default is lj (Lennard Jones)
+ *       default is lj (Lennard Jones) which overrides default of guff
  *
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line is not 1 or 2
  * @throw customException::ParameterFileException if type of nonCoulombic is not lj, buckingham or morse
  */
-void NonCoulombicsSection::processHeader(std::vector<std::string> &lineElements, engine::Engine &engine)
+void NonCoulombicsSection::processHeader(std::vector<std::string> &lineElements, engine::Engine &)
 {
-    auto &potential = engine.getPotential().getNonCoulombPotential();
-
-    if (2 == lineElements.size())
+    if (lineElements.size() > 1)
     {
         const auto type = utilities::toLowerCopy(lineElements[1]);
 
         if (type == "lj")
-        {
-            potential.setNonCoulombType(settings::NonCoulombType::LJ);
             settings::PotentialSettings::setNonCoulombType("lj");
-        }
         else if (type == "buckingham")
-        {
-            potential.setNonCoulombType(settings::NonCoulombType::BUCKINGHAM);
             settings::PotentialSettings::setNonCoulombType("buck");
-        }
         else if (type == "morse")
-        {
-            potential.setNonCoulombType(settings::NonCoulombType::MORSE);
             settings::PotentialSettings::setNonCoulombType("morse");
-        }
         else
             throw customException::ParameterFileException(
                 std::format("Invalid type of nonCoulombic in parameter file nonCoulombic "
                             "section at line {} - has to be lj, buckingham or morse!",
                             _lineNumber));
     }
-
-    _nonCoulombType = potential.getNonCoulombType();
+    else
+        settings::PotentialSettings::setNonCoulombType("lj");   // default of guff gets overriden
 }
 
 /**
@@ -73,7 +61,7 @@ void NonCoulombicsSection::processHeader(std::vector<std::string> &lineElements,
  */
 void NonCoulombicsSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
 {
-    switch (_nonCoulombType)
+    switch (settings::PotentialSettings::getNonCoulombType())
     {
     case settings::NonCoulombType::LJ: processLJ(lineElements, engine); break;
     case settings::NonCoulombType::BUCKINGHAM: processBuckingham(lineElements, engine); break;

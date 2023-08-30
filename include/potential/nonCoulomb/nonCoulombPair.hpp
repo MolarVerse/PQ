@@ -43,17 +43,26 @@ namespace potential
 
         [[nodiscard]] virtual std::pair<double, double> calculateEnergyAndForce(const double distance) const = 0;
 
+        /********************
+         * standard setters *
+         ********************/
+
         void setInternalType1(const size_t internalType1) { _internalType1 = internalType1; }
         void setInternalType2(const size_t internalType2) { _internalType2 = internalType2; }
-
         void setEnergyCutOff(const double energyCutoff) { _energyCutOff = energyCutoff; }
         void setForceCutOff(const double forceCutoff) { _forceCutOff = forceCutoff; }
+
+        /********************
+         * standard getters *
+         ********************/
 
         [[nodiscard]] size_t getVanDerWaalsType1() const { return _vanDerWaalsType1; }
         [[nodiscard]] size_t getVanDerWaalsType2() const { return _vanDerWaalsType2; }
         [[nodiscard]] size_t getInternalType1() const { return _internalType1; }
         [[nodiscard]] size_t getInternalType2() const { return _internalType2; }
         [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
+        [[nodiscard]] double getEnergyCutOff() const { return _energyCutOff; }
+        [[nodiscard]] double getForceCutOff() const { return _forceCutOff; }
     };
 
 }   // namespace potential

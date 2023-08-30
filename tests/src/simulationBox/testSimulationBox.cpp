@@ -45,6 +45,19 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
  * @brief tests findMoleculeType function
  *
  */
+TEST_F(TestSimulationBox, findMolecule)
+{
+    auto molecule = _simulationBox->findMolecule(1);
+    EXPECT_EQ(molecule.value().getMoltype(), 1);
+
+    molecule = _simulationBox->findMolecule(3);
+    EXPECT_EQ(molecule, std::nullopt);
+}
+
+/**
+ * @brief tests findMoleculeType function
+ *
+ */
 TEST_F(TestSimulationBox, findMoleculeType)
 {
     const auto molecule = _simulationBox->findMoleculeType(1);

@@ -15,12 +15,12 @@ if(NOT ${GTest_FOUND})
     # For Windows: Prevent overriding the parent project's compiler/linker settings
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(gtest)
+    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 endif()
 
 if(NOT(${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease"))
     include(gcovr)
 
-    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
         NAME coverage EXECUTABLE ctest EXCLUDE

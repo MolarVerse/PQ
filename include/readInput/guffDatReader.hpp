@@ -79,6 +79,9 @@ namespace readInput::guffdat
                          const double               rncCutOff);
 
         void setFilename(const std::string_view &filename) { _fileName = filename; }
+
+        [[nodiscard]] vector4d     &getGuffCoulombCoefficients() { return _guffCoulombCoefficients; }
+        [[nodiscard]] vector4dBool &getIsGuffPairSet() { return _isGuffPairSet; }
     };
 
 }   // namespace readInput::guffdat

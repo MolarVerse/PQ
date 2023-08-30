@@ -28,9 +28,6 @@ namespace readInput::parameterFile
      */
     class NonCoulombicsSection : public ParameterFileSection
     {
-      private:
-        settings::NonCoulombType _nonCoulombType;
-
       public:
         [[nodiscard]] std::string keyword() override { return "noncoulombics"; }
 
@@ -39,9 +36,6 @@ namespace readInput::parameterFile
         void processLJ(std::vector<std::string> &lineElements, engine::Engine &) const;
         void processBuckingham(std::vector<std::string> &lineElements, engine::Engine &) const;
         void processMorse(std::vector<std::string> &lineElements, engine::Engine &) const;
-
-        void setNonCoulombType(settings::NonCoulombType nonCoulombicType) { _nonCoulombType = nonCoulombicType; }
-        [[nodiscard]] settings::NonCoulombType getNonCoulombType() const { return _nonCoulombType; }
     };
 
 }   // namespace readInput::parameterFile

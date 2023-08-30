@@ -4,6 +4,7 @@
 
 #include "coulombShiftedPotential.hpp"
 #include "engine.hpp"
+#include "fileSettings.hpp"
 #include "guffDatReader.hpp"
 #include "guffNonCoulomb.hpp"
 #include "potential.hpp"
@@ -47,9 +48,9 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getPotential().makeCoulombPotential(
             potential::CoulombShiftedPotential(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
-        _engine->getSettings().setGuffDatFileName("data/guffDatReader/guff.dat");
+        settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
 
-        _guffDatReader = new readInput::GuffDatReader(*_engine);
+        _guffDatReader = new readInput::guffdat::GuffDatReader(*_engine);
     }
 
     void TearDown() override
@@ -58,8 +59,8 @@ class TestGuffDatReader : public ::testing::Test
         delete _engine;
     }
 
-    readInput::GuffDatReader *_guffDatReader;
-    engine::Engine           *_engine;
+    readInput::guffdat::GuffDatReader *_guffDatReader;
+    engine::Engine                    *_engine;
 };
 
 #endif   // _TEST_GUFFDAT_READER_HPP_

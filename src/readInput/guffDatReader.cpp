@@ -64,7 +64,10 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
 /**
  * @brief reads the guff.dat file
  *
- * @throws customException::GuffDatException if the file is invalid
+ * @details the guff.dat file is read line by line. Each line is parsed and the guffNonCoulombicPair is constructed. For further
+ * details about the entries of the line see  the documentation of the guff.dat file.
+ *
+ * @throws customException::GuffDatException command line has not 28 entries
  */
 void GuffDatReader::read()
 {
@@ -86,7 +89,7 @@ void GuffDatReader::read()
         if (lineCommands.size() != defaults::_NUMBER_OF_GUFF_ENTRIES_)
         {
             const auto message = std::format("Invalid number of commands ({}) in line {} - {} are allowed",
-                                             lineCommands.size() - 1,
+                                             lineCommands.size(),
                                              _lineNumber,
                                              defaults::_NUMBER_OF_GUFF_ENTRIES_);
             throw customException::GuffDatException(message);
@@ -212,6 +215,18 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
     addNonCoulombPair(moltype1, moltype2, atomType1, atomType2, guffCoefficients, rncCutOff);
 }
 
+/**
+ * @brief checks which nonCoulombic type is given and adds the corresponding nonCoulombic pair
+ *
+ * @param molType1
+ * @param molType2
+ * @param atomType1
+ * @param atomType2
+ * @param coefficients
+ * @param rncCutOff
+ *
+ * @throws customException::UserInputException if nonCoulombic type is invalid
+ */
 void GuffDatReader::addNonCoulombPair(const size_t               molType1,
                                       const size_t               molType2,
                                       const size_t               atomType1,
@@ -236,14 +251,31 @@ void GuffDatReader::addNonCoulombPair(const size_t               molType1,
         addMorsePair(molType1, molType2, atomType1, atomType2, coefficients, rncCutOff);
         break;
     }
-    default:
+    case settings::NonCoulombType::GUFF:
     {
         addGuffPair(molType1, molType2, atomType1, atomType2, coefficients, rncCutOff);
         break;
     }
+    default:
+    {
+        throw customException::UserInputException(std::format(
+            "Invalid nonCoulombic type {} given", settings::string(settings::PotentialSettings::getNonCoulombType())));
+    }
     }
 }
 
+/**
+ * @brief adds a lennard jones pair to the guffNonCoulombic potential
+ *
+ * @details first guff coefficient is c6, third is c12
+ *
+ * @param molType1
+ * @param molType2
+ * @param atomType1
+ * @param atomType2
+ * @param coefficients
+ * @param rncCutOff
+ */
 void GuffDatReader::addLennardJonesPair(const size_t               molType1,
                                         const size_t               molType2,
                                         const size_t               atomType1,
@@ -264,6 +296,18 @@ void GuffDatReader::addLennardJonesPair(const size_t               molType1,
         std::make_shared<potential::LennardJonesPair>(rncCutOff, energyCutOff, forceCutOff, coefficients[0], coefficients[2]));
 }
 
+/**
+ * @brief adds a buckingham pair to the guffNonCoulombic potential
+ *
+ * @details first guff coefficient is a, second is dRho, third is c6
+ *
+ * @param molType1
+ * @param molType2
+ * @param atomType1
+ * @param atomType2
+ * @param coefficients
+ * @param rncCutOff
+ */
 void GuffDatReader::addBuckinghamPair(const size_t               molType1,
                                       const size_t               molType2,
                                       const size_t               atomType1,
@@ -286,6 +330,18 @@ void GuffDatReader::addBuckinghamPair(const size_t               molType1,
             rncCutOff, energyCutOff, forceCutOff, coefficients[0], coefficients[1], coefficients[2]));
 }
 
+/**
+ * @brief adds a morse pair to the guffNonCoulombic potential
+ *
+ * @details first guff coefficient is the dissociationEnergy , second is the wellWidth, third is the equilibriumDistance
+ *
+ * @param molType1
+ * @param molType2
+ * @param atomType1
+ * @param atomType2
+ * @param coefficients
+ * @param rncCutOff
+ */
 void GuffDatReader::addMorsePair(const size_t               molType1,
                                  const size_t               molType2,
                                  const size_t               atomType1,
@@ -313,6 +369,16 @@ void GuffDatReader::addMorsePair(const size_t               molType1,
             rncCutOff, energyCutOff, forceCutOff, coefficients[0], coefficients[1], coefficients[2]));
 }
 
+/**
+ * @brief adds a guff pair to the guffNonCoulombic potential
+ *
+ * @param molType1
+ * @param molType2
+ * @param atomType1
+ * @param atomType2
+ * @param coefficients
+ * @param rncCutOff
+ */
 void GuffDatReader::addGuffPair(const size_t               molType1,
                                 const size_t               molType2,
                                 const size_t               atomType1,
@@ -335,9 +401,8 @@ void GuffDatReader::addGuffPair(const size_t               molType1,
 /**
  * @brief post process guff.dat reading
  *
- * @details sets partial charges of molecule types from guff.dat coulomb Coefficients
- *
- * @TODO: check if all combinations of partial charges are valid
+ * @details sets partial charges of molecule types from guff.dat coulomb Coefficients and checks if the partial charges are
+ * in accordance with all guff.dat entries
  *
  */
 void GuffDatReader::postProcessSetup()
@@ -377,9 +442,10 @@ void GuffDatReader::postProcessSetup()
 }
 
 /**
- * @brief checks if the partial charges are valid
+ * @brief checks if the partial charges are in accordance with all guff.dat entries.
  *
- * @details all coulombCoefficient combinations have to be of the form q1 * q2 * 1 / (4 * pi * epsilon_0)
+ * @details The checks includes only moleculeTypes which are also used in the simulationBox, meaning that only the used
+ * coulombCoefficient are checked. All coulombCoefficient combinations have to be of the form q1 * q2 * 1 / (4 * pi * epsilon_0)
  *
  * @throws customException::GuffDatException if the partial charges are invalid
  *

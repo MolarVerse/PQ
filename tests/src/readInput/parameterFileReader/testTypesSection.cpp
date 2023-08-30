@@ -50,6 +50,17 @@ TEST_F(TestParameterFileSection, endedNormallyTypes)
                      "Parameter file types section ended abnormally!");
 }
 
+/**
+ * @brief just a dummy test for processHeader of types section as it is not used
+ *
+ */
+TEST_F(TestParameterFileSection, dummyHeaderTest)
+{
+    auto typesSection = TypesSection();
+    auto lineElements = std::vector<std::string>({"dummy"});
+    EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine));
+}
+
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);

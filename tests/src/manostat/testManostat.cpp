@@ -2,6 +2,7 @@
 
 #include "constants.hpp"          // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"         // for ManostatException
+#include "mathUtilities.hpp"      // for compare
 #include "molecule.hpp"           // for Molecule
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 #include "vector3d.hpp"           // for Vector3D, Vec3D
@@ -64,7 +65,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     EXPECT_DOUBLE_EQ(boxNew[0], (boxOld * scaleFactors)[0]);
     EXPECT_DOUBLE_EQ(boxNew[1], (boxOld * scaleFactors)[1]);
     EXPECT_DOUBLE_EQ(boxNew[2], (boxOld * scaleFactors)[2]);
-    EXPECT_EQ(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors);
+    EXPECT_TRUE(
+        utilities::compare(_box->getMolecule(0).getAtomPosition(0), linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors, 1e-9));
 }
 
 /**

@@ -39,12 +39,13 @@ namespace potential
                                 [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)] = nonCoulombPair;
         }
 
-        std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
+        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
         {
             return _guffNonCoulombPairs[getMolType1(molAtomVdwIndices) - 1][getMolType2(molAtomVdwIndices) - 1]
                                        [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)];
         }
 
+        [[nodiscard]] vector4dNonCoulombicPair getNonCoulombPairs() const { return _guffNonCoulombPairs; }
         [[nodiscard]] size_t getMolType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[0]; }
         [[nodiscard]] size_t getMolType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[1]; }
         [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[2]; }
