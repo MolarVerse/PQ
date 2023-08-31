@@ -192,11 +192,10 @@ TEST_F(TestSetup, testResizeAtomShiftForces)
 {
 
     simulationBox::Molecule molecule1(1);
-    molecule1.addAtomForce({1.0, 2.0, 3.0});
-    molecule1.addAtomForce({4.0, 5.0, 6.0});
+    molecule1.setNumberOfAtoms(2);
 
     simulationBox::Molecule molecule2(2);
-    molecule2.addAtomForce({7.0, 8.0, 9.0});
+    molecule2.setNumberOfAtoms(1);
 
     _engine.getSimulationBox().addMolecule(molecule1);
     _engine.getSimulationBox().addMolecule(molecule2);

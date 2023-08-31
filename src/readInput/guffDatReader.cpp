@@ -404,8 +404,32 @@ void GuffDatReader::addGuffPair(const size_t               molType1,
  * @details sets partial charges of molecule types from guff.dat coulomb Coefficients and checks if the partial charges are
  * in accordance with all guff.dat entries
  *
+ * @TODO: better comment
+ *
  */
 void GuffDatReader::postProcessSetup()
+{
+    checkNecessaryGuffPairs();
+
+    calculatePartialCharges();
+
+    _engine.getSimulationBox().setPartialChargesOfMoleculesFromMoleculeTypes();
+    _engine.getSimulationBox().resizeInternalGlobalVDWTypes();
+
+    checkPartialCharges();
+}
+
+/**
+ * @brief calculates the partial charges of the molecule types from the guff.dat coulomb coefficients
+ *
+ * @details the partial charges are calculated via sqrt(coulombCoefficient / constants::_COULOMB_PREFACTOR_) of the self
+ * interactions and then set to the molecule type
+ *
+ * @note the correct sign of the partial charge has already to be set in the moldescriptor file - otherwise it is impossible to
+ * determine the sign of the partial charge.
+ *
+ */
+void GuffDatReader::calculatePartialCharges()
 {
     for (size_t i = 0, numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size(); i < numberOfMoleculeTypes;
          ++i)
@@ -424,21 +448,6 @@ void GuffDatReader::postProcessSetup()
                 moleculeType->setPartialCharge(j, partialCharge);
         }
     }
-
-    auto setPartialCharges = [&engine = _engine](auto &molecule)
-    {
-        auto moleculeType = engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-
-        for (size_t atomIndex = 0; atomIndex < molecule.getNumberOfAtoms(); ++atomIndex)
-        {
-            molecule.setPartialCharge(atomIndex, moleculeType.getPartialCharge(atomIndex));
-            molecule.addInternalGlobalVDWType(0);
-        }
-    };
-
-    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setPartialCharges);
-
-    checkPartialCharges();
 }
 
 /**
@@ -495,4 +504,31 @@ void GuffDatReader::checkPartialCharges()
                 }
         }
     }
+}
+
+/**
+ * @brief check if all necessary guff pairs are set
+ *
+ * @details the necessary guff pairs are determined by the molecule types which are used in the simulation box in _molecules
+ * (defined by the restart file and not in the moldescriptor file) - the moldescriptor can have more molecule types than the
+ * actual simulation box (e.g. if the moldescriptor is used for multiple simulations).
+ *
+ * @throws customException::GuffDatException if a necessary guff pair is not set
+ */
+void GuffDatReader::checkNecessaryGuffPairs()
+{
+    const auto necessaryMoleculeTypes = _engine.getSimulationBox().findNecessaryMoleculeTypes();
+
+    for (const auto &moleculeType1 : necessaryMoleculeTypes)
+        for (const auto &moleculeType2 : necessaryMoleculeTypes)
+            for (size_t atomType1 = 0, numberOfAtoms1 = moleculeType1.getNumberOfAtoms(); atomType1 < numberOfAtoms1; ++atomType1)
+                for (size_t atomType2 = 0, numberOfAtoms2 = moleculeType2.getNumberOfAtoms(); atomType2 < numberOfAtoms2;
+                     ++atomType2)
+                    if (!_isGuffPairSet[moleculeType1.getMoltype() - 1][moleculeType2.getMoltype() - 1][atomType1][atomType2])
+                        throw customException::GuffDatException(
+                            std::format("No guff pair set for molecule types {} and {} and the {}. and the {}. atom type",
+                                        moleculeType1.getMoltype(),
+                                        moleculeType2.getMoltype(),
+                                        atomType1,
+                                        atomType2));
 }

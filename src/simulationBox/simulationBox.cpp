@@ -19,14 +19,14 @@ size_t SimulationBox::getNumberOfAtoms() const
 }
 
 /**
- * @brief finds molecule by moltype if (size_t)
+ * @brief finds molecule by moleculeType if (size_t)
  *
- * @param moltype
+ * @param moleculeType
  * @return std::optional<Molecule &>
  */
-std::optional<Molecule> SimulationBox::findMolecule(const size_t moltype)
+std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 {
-    auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
+    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_molecules, isMoleculeType); molecule != _molecules.end())
         return *molecule;
@@ -35,25 +35,25 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moltype)
 }
 
 /**
- * @brief find moleculeType by moltype if (size_t)
+ * @brief find moleculeType by moleculeType if (size_t)
  *
- * @param moltype
+ * @param moleculeType
  * @return Molecule
  *
  * @throw RstFileException if molecule type not found
  */
-Molecule &SimulationBox::findMoleculeType(const size_t moltype)
+Molecule &SimulationBox::findMoleculeType(const size_t moleculeType)
 {
-    auto isMoleculeType = [moltype](const Molecule &mol) { return mol.getMoltype() == moltype; };
+    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
     else
-        throw customException::RstFileException(std::format("Molecule type {} not found", moltype));
+        throw customException::RstFileException(std::format("Molecule type {} not found", moleculeType));
 }
 
 /**
- * @brief checks if molecule type exists by moltype id (size_t)
+ * @brief checks if molecule type exists by moleculeType id (size_t)
  *
  * @param moleculeType
  * @return true
@@ -69,14 +69,14 @@ bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
 /**
  * @brief find molecule type by string id
  *
- * @details return an optional - if moltype found it returns the moltype as a size_t otherwise it returns nullopt
+ * @details return an optional - if moleculeType found it returns the moleculeType as a size_t otherwise it returns nullopt
  *
- * @param identifier
+ * @param moleculeType
  * @return optional<size_t>
  */
-std::optional<size_t> SimulationBox::findMoleculeTypeByString(const std::string &identifier) const
+std::optional<size_t> SimulationBox::findMoleculeTypeByString(const std::string &moleculeType) const
 {
-    auto isMoleculeName = [&identifier](const Molecule &mol) { return mol.getName() == identifier; };
+    auto isMoleculeName = [&moleculeType](const Molecule &mol) { return mol.getName() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
         return molecule->getMoltype();
@@ -106,6 +106,64 @@ std::pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_
 
     throw customException::UserInputException(
         std::format("Atom index {} out of range - total number of atoms: {}", atomIndex, sum));
+}
+
+/**
+ * @brief find necessary molecule types
+ *
+ * @details The user can specify more molecule types in the moldescriptor file than actually necessary in the simulation. This
+ * function returns only the molecule types which are also present in the simulation box in _molecules.
+ *
+ * @return std::vector<Molecule>
+ */
+std::vector<Molecule> SimulationBox::findNecessaryMoleculeTypes()
+{
+    std::vector<Molecule> necessaryMoleculeTypes;
+
+    auto searchMoleculeTypes = [&necessaryMoleculeTypes](const Molecule &molecule)
+    {
+        auto predicate = [&molecule](const auto moleculeType) { return molecule.getMoltype() == moleculeType.getMoltype(); };
+
+        if (std::ranges::find_if(necessaryMoleculeTypes, predicate) == necessaryMoleculeTypes.end())
+            necessaryMoleculeTypes.push_back(molecule);
+    };
+
+    std::ranges::for_each(_molecules, searchMoleculeTypes);
+
+    return necessaryMoleculeTypes;
+}
+
+/**
+ * @brief set partial charges of molecules from molecule types
+ *
+ * @throw UserInputException if molecule type not found in _moleculeTypes
+ *
+ */
+void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
+{
+    auto setPartialCharges = [&moleculeTypes = _moleculeTypes](Molecule &molecule)
+    {
+        auto predicate = [&molecule](const auto moleculeType) { return molecule.getMoltype() == moleculeType.getMoltype(); };
+
+        if (const auto moleculeType = std::ranges::find_if(moleculeTypes, predicate); moleculeType != moleculeTypes.end())
+            molecule.setPartialCharges(moleculeType->getPartialCharges());
+        else
+            throw customException::UserInputException(
+                std::format("Molecule type {} not found in molecule types", molecule.getMoltype()));
+    };
+
+    std::ranges::for_each(_molecules, setPartialCharges);
+}
+
+/**
+ * @brief resize internal global vdw types of all molecules
+ *
+ */
+void SimulationBox::resizeInternalGlobalVDWTypes()
+{
+    auto resizeInternalGlobalVDWTypes = [](Molecule &molecule) { molecule.resizeInternalGlobalVDWTypes(); };
+
+    std::ranges::for_each(_molecules, resizeInternalGlobalVDWTypes);
 }
 
 /**

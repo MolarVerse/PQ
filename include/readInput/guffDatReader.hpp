@@ -46,7 +46,9 @@ namespace readInput::guffdat
         void parseLine(const std::vector<std::string> &lineCommands);
         void read();
         void postProcessSetup();
+        void calculatePartialCharges();
         void checkPartialCharges();
+        void checkNecessaryGuffPairs();
         void addNonCoulombPair(const size_t               molType1,
                                const size_t               molType2,
                                const size_t               atomType1,

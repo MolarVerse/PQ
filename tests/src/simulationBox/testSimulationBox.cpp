@@ -85,6 +85,34 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 }
 
 /**
+ * @brief tests findNecessaryMoleculeTypes function
+ *
+ */
+TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
+{
+    auto simulationBox = simulationBox::SimulationBox();
+    auto molecule1     = simulationBox::Molecule();
+    auto molecule2     = simulationBox::Molecule();
+    auto molecule3     = simulationBox::Molecule();
+
+    molecule1.setMoltype(1);
+    molecule2.setMoltype(2);
+    molecule3.setMoltype(3);
+
+    simulationBox.addMolecule(molecule1);
+    simulationBox.addMolecule(molecule2);
+    simulationBox.addMolecule(molecule3);
+    simulationBox.addMolecule(molecule2);
+    simulationBox.addMolecule(molecule1);
+
+    auto necessaryMoleculeTypes = simulationBox.findNecessaryMoleculeTypes();
+    EXPECT_EQ(necessaryMoleculeTypes.size(), 3);
+    EXPECT_EQ(necessaryMoleculeTypes[0].getMoltype(), 1);
+    EXPECT_EQ(necessaryMoleculeTypes[1].getMoltype(), 2);
+    EXPECT_EQ(necessaryMoleculeTypes[2].getMoltype(), 3);
+}
+
+/**
  * @brief tests checkCoulombRadiusCutoff function if the radius cut off is larger than half of the minimal box
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
@@ -170,6 +198,60 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol3").has_value(), false);
+}
+
+/**
+ * @brief tests setPartialChargesOfMoleculesFromMoleculeTypes function
+ *
+ */
+TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
+{
+    simulationBox::SimulationBox simulationBox;
+    simulationBox::Molecule      molecule1(1);
+    simulationBox::Molecule      molecule2(2);
+
+    molecule1.setPartialCharges({0.1, 0.2, 0.3});
+    molecule2.setPartialCharges({0.4, 0.5});
+
+    simulationBox::Molecule molecule3(1);
+    simulationBox::Molecule molecule4(2);
+    simulationBox::Molecule molecule5(1);
+
+    simulationBox.addMoleculeType(molecule1);
+    simulationBox.addMoleculeType(molecule2);
+
+    simulationBox.addMolecule(molecule3);
+    simulationBox.addMolecule(molecule4);
+    simulationBox.addMolecule(molecule5);
+
+    simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes();
+
+    EXPECT_EQ(simulationBox.getMolecule(0).getPartialCharges(), molecule1.getPartialCharges());
+    EXPECT_EQ(simulationBox.getMolecule(1).getPartialCharges(), molecule2.getPartialCharges());
+    EXPECT_EQ(simulationBox.getMolecule(2).getPartialCharges(), molecule1.getPartialCharges());
+}
+
+/**
+ * @brief tests setPartialChargesOfMoleculesFromMoleculeTypes function
+ *
+ */
+TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound)
+{
+    simulationBox::SimulationBox simulationBox;
+    simulationBox::Molecule      molecule1(1);
+
+    simulationBox.addMolecule(molecule1);
+
+    EXPECT_THROW_MSG(simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
+                     customException::UserInputException,
+                     "Molecule type 1 not found in molecule types");
+}
+
+TEST_F(TestSimulationBox, resizeInternalGlobalVDWTypes)
+{
+    _simulationBox->resizeInternalGlobalVDWTypes();
+    EXPECT_EQ(_simulationBox->getMolecule(0).getInternalGlobalVDWTypes().size(), 3);
+    EXPECT_EQ(_simulationBox->getMolecule(1).getInternalGlobalVDWTypes().size(), 2);
 }
 
 int main(int argc, char **argv)
