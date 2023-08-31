@@ -1,18 +1,27 @@
 #include "testGuffDatReader.hpp"
 
-#include "buckinghamPair.hpp"
-#include "defaults.hpp"
-#include "engine.hpp"
-#include "exceptions.hpp"
-#include "guffPair.hpp"
-#include "lennardJonesPair.hpp"
-#include "morsePair.hpp"
-#include "potentialSettings.hpp"
-#include "throwWithMessage.hpp"
+#include "buckinghamPair.hpp"        // for BuckinghamPair
+#include "constants.hpp"             // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for GuffDatException, UserInputException
+#include "guffPair.hpp"              // for GuffPair
+#include "lennardJonesPair.hpp"      // for LennardJonesPair
+#include "morsePair.hpp"             // for MorsePair
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "potentialSettings.hpp"     // for PotentialSettings, string
+#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
-#include <format>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for pow, exp
+#include <cstddef>         // for size_t
+#include <format>          // for format
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <memory>          // for allocator, shared_ptr
+#include <string>          // for string, basic_string, char_traits
+#include <vector>          // for vector
 
 using namespace readInput::guffdat;
 
@@ -99,45 +108,29 @@ TEST_F(TestGuffDatReader, setupGuffMaps)
     EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1][1][0].size(), 1);
 }
 
-// // /**
-// //  * @brief tests parseLine function
-// //  *
-// //  */
-// // TEST_F(TestGuffDatReader, parseLine)
-// // {
-// //     auto line = std::vector<std::string>{"1",   "1",   "2",   "3",   "-1.0", "10.0", "2.0", "2.0", "2.0", "2.0",
-// //                                          "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0", "2.0", "2.0",
-// //                                          "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0"};
-// //     _guffDatReader->setupGuffMaps();
-// //     EXPECT_NO_THROW(_guffDatReader->parseLine(line));
+/**
+ * @brief tests parseLine function
+ *
+ */
+TEST_F(TestGuffDatReader, parseLine)
+{
+    const auto line = std::vector<std::string>{"1",   "2",   "2",   "3",   "-1.0", "10.0", "2.0", "2.0", "3.0", "2.0",
+                                               "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0", "2.0", "2.0",
+                                               "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0"};
+    _guffDatReader->setupGuffMaps();
+    settings::PotentialSettings::setNonCoulombType("lj");
+    EXPECT_NO_THROW(_guffDatReader->parseLine(line));
 
-// //     EXPECT_EQ(_engine->getSimulationBox().getCoulombCoefficient(1, 2, 0, 0), 10.0);
+    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][1][0], 10.0);
+    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][0][0][1], 10.0);
+    EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[0][1][1][0]);
+    EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[1][0][0][1]);
 
-// //     EXPECT_EQ(_engine->getSimulationBox().getNonCoulombRadiusCutOff(1, 2, 0, 0), 12.5);
+    auto       &potential = dynamic_cast<potential::GuffNonCoulomb &>(_engine->getPotential().getNonCoulombPotential());
+    const auto &pair      = dynamic_cast<potential::LennardJonesPair &>(*potential.getNonCoulombPair({1, 2, 1, 0}).get());
 
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[0], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[1], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[2], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[3], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[4], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[5], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[6], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[7], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[8], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[9], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[10], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[11], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[12], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[13], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[14], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[15], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[16], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[17], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[18], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[19], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[20], 2.0);
-// //     EXPECT_EQ(_engine->getSimulationBox().getGuffCoefficients(1, 2, 0, 0)[21], 2.0);
-// // }
+    EXPECT_EQ(pair, potential::LennardJonesPair(_engine->getSimulationBox().getCoulombRadiusCutOff(), 2.0, 3.0));
+}
 
 TEST_F(TestGuffDatReader, addLennardJonesPair)
 {
@@ -279,6 +272,29 @@ TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
                      customException::GuffDatException,
                      "Invalid number of commands (5) in line 3 - " + std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) +
                          " are allowed");
+}
+
+TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
+{
+    _guffDatReader->setupGuffMaps();
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 0, 0, 1.0);
+
+    EXPECT_THROW_MSG(_guffDatReader->checkPartialCharges(),
+                     customException::GuffDatException,
+                     "Invalid coulomb coefficient guff file for molecule "
+                     "types 1 and 1 and the 1. and the 1. atom type. The coulomb coefficient should "
+                     "be 83.01592827602933 but is 1");
+}
+
+TEST_F(TestGuffDatReader, checkPartialCharges)
+{
+    _guffDatReader->setupGuffMaps();
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 0, 0, constants::_COULOMB_PREFACTOR_ * 0.5 * 0.5);
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 1, 0, -constants::_COULOMB_PREFACTOR_ * 0.5 * 0.25);
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 0, 1, -constants::_COULOMB_PREFACTOR_ * 0.5 * 0.25);
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 1, 1, constants::_COULOMB_PREFACTOR_ * 0.25 * 0.25);
+
+    EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
 }
 
 // /**

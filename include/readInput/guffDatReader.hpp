@@ -78,7 +78,23 @@ namespace readInput::guffdat
                          const std::vector<double> &coefficients,
                          const double               rncCutOff);
 
+        /********************
+         * standard setters *
+         ********************/
+
         void setFilename(const std::string_view &filename) { _fileName = filename; }
+        void setGuffCoulombCoefficients(c_ul molType1, c_ul molType2, c_ul atomType1, c_ul atomType2, const double coefficient)
+        {
+            _guffCoulombCoefficients[molType1][molType2][atomType1][atomType2] = coefficient;
+        }
+        void setIsGuffPairSet(c_ul molType1, c_ul molType2, c_ul atomType1, c_ul atomType2, const bool isSet)
+        {
+            _isGuffPairSet[molType1][molType2][atomType1][atomType2] = isSet;
+        }
+
+        /********************
+         * standard getters *
+         ********************/
 
         [[nodiscard]] vector4d     &getGuffCoulombCoefficients() { return _guffCoulombCoefficients; }
         [[nodiscard]] vector4dBool &getIsGuffPairSet() { return _isGuffPairSet; }

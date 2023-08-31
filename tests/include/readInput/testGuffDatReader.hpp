@@ -2,15 +2,16 @@
 
 #define _TEST_GUFFDAT_READER_HPP_
 
-#include "coulombShiftedPotential.hpp"
-#include "engine.hpp"
-#include "fileSettings.hpp"
-#include "guffDatReader.hpp"
-#include "guffNonCoulomb.hpp"
-#include "potential.hpp"
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "engine.hpp"                    // for Engine
+#include "fileSettings.hpp"              // for FileSettings
+#include "guffDatReader.hpp"             // for GuffDatReader
+#include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
+#include "molecule.hpp"                  // for Molecule
+#include "potential.hpp"                 // for PotentialBruteForce, Potential
+#include "simulationBox.hpp"             // for SimulationBox
 
-#include <gtest/gtest.h>
-#include <memory>
+#include <gtest/gtest.h>   // for Test
 
 /**
  * @class TestGuffDatReader
@@ -30,6 +31,8 @@ class TestGuffDatReader : public ::testing::Test
         molecule1.addExternalAtomType(2);
         molecule1.addExternalToInternalAtomTypeElement(1, 0);
         molecule1.addExternalToInternalAtomTypeElement(2, 1);
+        molecule1.addPartialCharge(0.5);
+        molecule1.addPartialCharge(-0.25);
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
@@ -40,6 +43,7 @@ class TestGuffDatReader : public ::testing::Test
         _engine = new engine::Engine();
         _engine->getSimulationBox().addMoleculeType(molecule1);
         _engine->getSimulationBox().addMoleculeType(molecule2);
+        _engine->getSimulationBox().addMolecule(molecule1);
 
         _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);
 

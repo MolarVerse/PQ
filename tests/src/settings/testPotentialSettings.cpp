@@ -1,6 +1,8 @@
-#include "potentialSettings.hpp"
+#include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, Test, TestInfo (ptr only)
+#include <memory>          // for allocator
 
 /**
  * @brief tests string function of enum nonCoulombType

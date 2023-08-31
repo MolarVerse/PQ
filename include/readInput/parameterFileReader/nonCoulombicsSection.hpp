@@ -13,11 +13,6 @@ namespace engine
     class Engine;   // forward declaration
 }
 
-namespace settings
-{
-    enum class NonCoulombType : size_t;   // forward declaration
-}
-
 namespace readInput::parameterFile
 {
     /**

@@ -9,7 +9,7 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for pow
-#include <memory>          // for allocator
+#include <string>          // for string, allocator
 
 /**
  * @brief tests function calculate pressure

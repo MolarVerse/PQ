@@ -13,7 +13,7 @@ namespace frameTools
       private:
         size_t _nAtoms;
 
-        double          _molMass      = 0.0;
+        double               _molMass      = 0.0;
         linearAlgebra::Vec3D _centerOfMass = {0.0, 0.0, 0.0};
 
         std::vector<Atom *> _atoms;
