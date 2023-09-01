@@ -401,10 +401,11 @@ void GuffDatReader::addGuffPair(const size_t               molType1,
 /**
  * @brief post process guff.dat reading
  *
- * @details sets partial charges of molecule types from guff.dat coulomb Coefficients and checks if the partial charges are
- * in accordance with all guff.dat entries
- *
- * @TODO: better comment
+ * @details following steps are performed:
+ * 1) check if all necessary guff pairs are set
+ * 2) calculate the partial charges of the molecule types from the guff.dat coulomb coefficients
+ * 3) resize the internal global vdw types // just for compatibility with force field
+ * 4) check if the partial charges are in accordance with all guff.dat entries
  *
  */
 void GuffDatReader::postProcessSetup()
@@ -412,8 +413,8 @@ void GuffDatReader::postProcessSetup()
     checkNecessaryGuffPairs();
 
     calculatePartialCharges();
-
     _engine.getSimulationBox().setPartialChargesOfMoleculesFromMoleculeTypes();
+
     _engine.getSimulationBox().resizeInternalGlobalVDWTypes();
 
     checkPartialCharges();
@@ -444,8 +445,7 @@ void GuffDatReader::calculatePartialCharges()
             auto partialCharge =
                 ::sqrt(coulombCoefficient / constants::_COULOMB_PREFACTOR_) * utilities::sign(moleculeType->getPartialCharge(j));
 
-            if (_isGuffPairSet[i][i][atomType][atomType])
-                moleculeType->setPartialCharge(j, partialCharge);
+            moleculeType->setPartialCharge(j, partialCharge);
         }
     }
 }
@@ -521,14 +521,16 @@ void GuffDatReader::checkNecessaryGuffPairs()
 
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
-            for (size_t atomType1 = 0, numberOfAtoms1 = moleculeType1.getNumberOfAtoms(); atomType1 < numberOfAtoms1; ++atomType1)
-                for (size_t atomType2 = 0, numberOfAtoms2 = moleculeType2.getNumberOfAtoms(); atomType2 < numberOfAtoms2;
-                     ++atomType2)
-                    if (!_isGuffPairSet[moleculeType1.getMoltype() - 1][moleculeType2.getMoltype() - 1][atomType1][atomType2])
+            for (size_t atomIndex1 = 0, numberOfAtoms1 = moleculeType1.getNumberOfAtoms(); atomIndex1 < numberOfAtoms1;
+                 ++atomIndex1)
+                for (size_t atomIndex2 = 0, numberOfAtoms2 = moleculeType2.getNumberOfAtoms(); atomIndex2 < numberOfAtoms2;
+                     ++atomIndex2)
+                    if (!_isGuffPairSet[moleculeType1.getMoltype() - 1][moleculeType2.getMoltype() - 1]
+                                       [moleculeType1.getAtomType(atomIndex1)][moleculeType2.getAtomType(atomIndex2)])
                         throw customException::GuffDatException(
-                            std::format("No guff pair set for molecule types {} and {} and the {}. and the {}. atom type",
+                            std::format("No guff pair set for molecule types {} and {} and atom types {} and the {}",
                                         moleculeType1.getMoltype(),
                                         moleculeType2.getMoltype(),
-                                        atomType1,
-                                        atomType2));
+                                        moleculeType1.getExternalAtomType(atomIndex1),
+                                        moleculeType2.getExternalAtomType(atomIndex2)));
 }

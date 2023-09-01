@@ -5,6 +5,7 @@
 #include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, UserInputException
+#include "forceField.hpp"            // for ForceField
 #include "guffPair.hpp"              // for GuffPair
 #include "lennardJonesPair.hpp"      // for LennardJonesPair
 #include "morsePair.hpp"             // for MorsePair
@@ -297,15 +298,90 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
     EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
 }
 
-// /**
-//  * @brief readGuffdat function testing
-//  *
-//  */
-// TEST_F(TestGuffDatReader, readGuffDat)
-// {
-//     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-//     EXPECT_NO_THROW(readInput::readGuffDat(*_engine));
-// }
+TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
+{
+    engine::Engine          engine;
+    simulationBox::Molecule molecule1(1);
+    simulationBox::Molecule molecule2(2);
+    simulationBox::Molecule molecule3(3);
+
+    molecule1.setNumberOfAtoms(2);
+    molecule2.setNumberOfAtoms(1);
+    molecule2.setNumberOfAtoms(3);
+
+    molecule1.addAtomType(0);
+    molecule1.addAtomType(1);
+    molecule1.addExternalAtomType(1);
+    molecule1.addExternalAtomType(4);
+
+    molecule2.addAtomType(0);
+    molecule2.addExternalAtomType(2);
+
+    molecule3.addAtomType(0);
+    molecule3.addAtomType(1);
+    molecule3.addAtomType(1);
+    molecule3.addExternalAtomType(1);
+    molecule3.addExternalAtomType(2);
+    molecule3.addExternalAtomType(2);
+
+    engine.getSimulationBox().addMolecule(molecule1);
+    engine.getSimulationBox().addMolecule(molecule2);
+    engine.getSimulationBox().addMoleculeType(molecule1);
+    engine.getSimulationBox().addMoleculeType(molecule2);
+    engine.getSimulationBox().addMoleculeType(molecule3);
+
+    GuffDatReader guffDatReader(engine);
+
+    engine.getPotential().setNonCoulombPotential(std::make_shared<potential::GuffNonCoulomb>());
+
+    guffDatReader.setupGuffMaps();
+    guffDatReader.setIsGuffPairSet(0, 0, 0, 0, true);
+    guffDatReader.setIsGuffPairSet(0, 0, 1, 0, true);
+    guffDatReader.setIsGuffPairSet(0, 0, 0, 1, true);
+    guffDatReader.setIsGuffPairSet(0, 0, 1, 1, true);
+    guffDatReader.setIsGuffPairSet(1, 0, 0, 0, true);
+    guffDatReader.setIsGuffPairSet(1, 0, 0, 1, true);
+    guffDatReader.setIsGuffPairSet(0, 1, 0, 0, true);
+    guffDatReader.setIsGuffPairSet(0, 1, 1, 0, true);
+
+    EXPECT_THROW_MSG(guffDatReader.checkNecessaryGuffPairs(),
+                     customException::GuffDatException,
+                     "No guff pair set for molecule types 2 and 2 and atom types 2 and the 2");
+
+    guffDatReader.setIsGuffPairSet(1, 1, 0, 0, true);
+
+    EXPECT_NO_THROW(guffDatReader.checkNecessaryGuffPairs());
+}
+
+TEST_F(TestGuffDatReader, calculatePartialCharges)
+{
+    _guffDatReader->setupGuffMaps();
+
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 0, 0, constants::_COULOMB_PREFACTOR_ * 0.5 * 0.5);
+    _guffDatReader->setGuffCoulombCoefficients(0, 0, 1, 1, constants::_COULOMB_PREFACTOR_ * 0.25 * 0.25);
+
+    _guffDatReader->calculatePartialCharges();
+
+    // EXPECT_EQ(_engine->getSimulationBox().getMolecule(0).getPartialCharges()[0], 0.5);
+    // EXPECT_EQ(_engine->getSimulationBox().getMolecule(0).getPartialCharges()[1], -0.25);
+}
+
+/**
+ * @brief readGuffdat function testing
+ *
+ */
+TEST_F(TestGuffDatReader, readGuffDat)
+{
+    _guffDatReader->setFilename("data/guffDatReader/guff.dat");
+    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+}
+
+TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowNotActivated)
+{
+    _guffDatReader->setFilename("");   // just to produce any kind of error
+    _engine->getForceFieldPtr()->activateNonCoulombic();
+    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+}
 
 int main(int argc, char **argv)
 {

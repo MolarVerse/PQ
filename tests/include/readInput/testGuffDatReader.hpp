@@ -9,6 +9,7 @@
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "molecule.hpp"                  // for Molecule
 #include "potential.hpp"                 // for PotentialBruteForce, Potential
+#include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 
 #include <gtest/gtest.h>   // for Test
@@ -33,12 +34,16 @@ class TestGuffDatReader : public ::testing::Test
         molecule1.addExternalToInternalAtomTypeElement(2, 1);
         molecule1.addPartialCharge(0.5);
         molecule1.addPartialCharge(-0.25);
+        molecule1.addAtomType(0);
+        molecule1.addAtomType(1);
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
         molecule2.setMoltype(2);
         molecule2.addExternalAtomType(3);
         molecule2.addExternalToInternalAtomTypeElement(3, 0);
+        molecule2.addPartialCharge(0.25);
+        molecule2.addAtomType(0);
 
         _engine = new engine::Engine();
         _engine->getSimulationBox().addMoleculeType(molecule1);
@@ -53,6 +58,7 @@ class TestGuffDatReader : public ::testing::Test
             potential::CoulombShiftedPotential(_engine->getSimulationBox().getCoulombRadiusCutOff()));
 
         settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
+        settings::PotentialSettings::setNonCoulombType("guff");
 
         _guffDatReader = new readInput::guffdat::GuffDatReader(*_engine);
     }
