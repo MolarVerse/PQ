@@ -8,10 +8,7 @@
 #include <vector>    // for vector
 
 using namespace potential;
-using namespace simulationBox;
-using namespace physicalData;
 
-// TODO: check if cutoff is smaller than smallest cell size
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for cell list routine
  *
@@ -24,7 +21,9 @@ using namespace physicalData;
  * @param physicalData
  * @param cellList
  */
-inline void PotentialCellList::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &cellList)
+inline void PotentialCellList::calculateForces(simulationBox::SimulationBox &simBox,
+                                               physicalData::PhysicalData   &physicalData,
+                                               simulationBox::CellList      &cellList)
 {
     const auto box = simBox.getBoxDimensions();
 

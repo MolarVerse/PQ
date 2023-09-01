@@ -189,7 +189,7 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
                                       molecule.getExternalGlobalVDWTypes().end());
     };
 
-    std::ranges::for_each(_molecules, fillExternalGlobalVdwTypes);
+    std::ranges::for_each(_moleculeTypes, fillExternalGlobalVdwTypes);
 
     /********************************
      * 2) sort and erase duplicates *
@@ -221,6 +221,7 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
+    std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes);
 }
 
 /**

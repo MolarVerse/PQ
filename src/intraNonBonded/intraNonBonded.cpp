@@ -6,10 +6,9 @@
 #include <algorithm>    // for for_each
 #include <format>       // for format
 #include <functional>   // for identity
-#include <ranges>       // for ranges::find_if
+#include <ranges>       // for std::ranges::find_if
 #include <string>       // for string
 
-using namespace std;
 using namespace intraNonBonded;
 
 /**
@@ -21,10 +20,12 @@ using namespace intraNonBonded;
 IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(const size_t molType)
 {
     auto findByMolType = [molType](const auto &intraNonBondedType) { return intraNonBondedType.getMolType() == molType; };
-    if (const auto it = ranges::find_if(_intraNonBondedContainers, findByMolType); it != _intraNonBondedContainers.end())
+
+    if (const auto it = std::ranges::find_if(_intraNonBondedContainers, findByMolType); it != _intraNonBondedContainers.end())
         return std::to_address(it);
     else
-        throw customException::IntraNonBondedException(format("IntraNonBondedContainer with molType {} not found!", molType));
+        throw customException::IntraNonBondedException(
+            std::format("IntraNonBondedContainer with molType {} not found!", molType));
 }
 
 /**
@@ -40,11 +41,13 @@ void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
         _intraNonBondedMaps.push_back(IntraNonBondedMap(&molecule, intraNonBondedContainer));
     };
 
-    ranges::for_each(box.getMolecules(), fillSingleMap);
+    std::ranges::for_each(box.getMolecules(), fillSingleMap);
 }
 
 void IntraNonBonded::calculate(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    for (auto &intraNonBondedMap : _intraNonBondedMaps)
-        intraNonBondedMap.calculate(_coulombPotential.get(), _nonCoulombPotential.get(), box, physicalData);
+    auto calculateSingleContribution = [this, &box, &physicalData](auto &intraNonBondedMap)
+    { intraNonBondedMap.calculate(_coulombPotential.get(), _nonCoulombPotential.get(), box, physicalData); };
+
+    std::ranges::for_each(_intraNonBondedMaps, calculateSingleContribution);
 }

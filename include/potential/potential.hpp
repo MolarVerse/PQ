@@ -35,7 +35,7 @@ namespace potential
      * - brute force
      * - cell list
      *
-     * @note _nonCoulombicPairsVector is just a container to store the nonCoulombicPairs for later processing
+     * @note _nonCoulombPairsVector is just a container to store the nonCoulombicPairs for later processing
      *
      */
     class Potential
@@ -47,15 +47,17 @@ namespace potential
       public:
         virtual ~Potential() = default;
 
-        std::pair<double, double> calculateSingleInteraction(
-            const linearAlgebra::Vec3D &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
         virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
+        std::pair<double, double> calculateSingleInteraction(
+            const linearAlgebra::Vec3D &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
+
         template <typename T>
-        void makeCoulombPotential(T coulombPotential)
+        void makeCoulombPotential(T p)
         {
-            _coulombPotential = std::make_shared<T>(coulombPotential);
+            _coulombPotential = std::make_shared<T>(p);
         }
+
         template <typename T>
         void makeNonCoulombPotential(T nonCoulombPotential)
         {

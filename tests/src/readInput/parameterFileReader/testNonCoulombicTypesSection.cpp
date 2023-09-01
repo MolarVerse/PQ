@@ -30,8 +30,8 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processLJ(lineElements, *_engine);
 
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 1);
-    auto *pair = dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombicPairsVector()[0].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
+    auto *pair = dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getC6(), 1.22);
@@ -40,8 +40,8 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
 
     lineElements = {"0", "1", "1.22", "234.3"};
     nonCoulombicsSection.processLJ(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 2);
-    auto *pair2 = dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombicPairsVector()[1].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
+    auto *pair2 = dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getC6(), 1.22);
@@ -59,8 +59,8 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 1);
-    auto *pair = dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombicPairsVector()[0].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
+    auto *pair = dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getA(), 1.22);
@@ -70,8 +70,8 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 2);
-    auto *pair2 = dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombicPairsVector()[1].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
+    auto *pair2 = dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getA(), 1.22);
@@ -90,8 +90,8 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
     std::vector<std::string> lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processMorse(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 1);
-    auto *pair = dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombicPairsVector()[0].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
+    auto *pair = dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombPairsVector()[0].get());
     EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
@@ -101,8 +101,8 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processMorse(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 2);
-    auto *pair2 = dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombicPairsVector()[1].get());
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
+    auto *pair2 = dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombPairsVector()[1].get());
     EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
@@ -148,20 +148,20 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     NonCoulombicsSection     nonCoulombicsSection;
     settings::PotentialSettings::setNonCoulombType(settings::NonCoulombType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 1);
-    EXPECT_NO_THROW(dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombicPairsVector()[0].get()));
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
+    EXPECT_NO_THROW(dynamic_cast<const potential::LennardJonesPair *>(potential.getNonCoulombPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     settings::PotentialSettings::setNonCoulombType(settings::NonCoulombType::BUCKINGHAM);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 2);
-    EXPECT_NO_THROW(dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombicPairsVector()[0].get()));
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
+    EXPECT_NO_THROW(dynamic_cast<const potential::BuckinghamPair *>(potential.getNonCoulombPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     settings::PotentialSettings::setNonCoulombType(settings::NonCoulombType::MORSE);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine));
-    EXPECT_EQ(potential.getNonCoulombicPairsVector().size(), 3);
-    EXPECT_NO_THROW(dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombicPairsVector()[0].get()));
+    EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 3);
+    EXPECT_NO_THROW(dynamic_cast<const potential::MorsePair *>(potential.getNonCoulombPairsVector()[0].get()));
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     settings::PotentialSettings::setNonCoulombType(settings::NonCoulombType::LJ_9_12);

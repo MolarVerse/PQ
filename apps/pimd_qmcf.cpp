@@ -1,27 +1,25 @@
-#include <filesystem>
-#include <iostream>
+#include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "engine.hpp"            // for Engine
+#include "setup.hpp"             // for setupSimulation, setup
+
+#include <cstdlib>     // for EXIT_SUCCESS
+#include <exception>   // for exception
+#include <iostream>    // for operator<<, basic_ostream, flush
+#include <string>      // for string
+#include <vector>      // for vector
 
 #ifdef WITH_MPI
 #include <mpi.h>
 #endif
-
-#include "celllist.hpp"
-#include "commandLineArgs.hpp"
-#include "engine.hpp"
-#include "setup.hpp"
-
-using namespace std;
-using namespace setup;
-using namespace engine;
 
 static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
 {
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    auto engine = Engine();
+    auto engine = engine::Engine();
 
-    setupSimulation(commandLineArgs.getInputFileName(), engine);
+    setup::setupSimulation(commandLineArgs.getInputFileName(), engine);
 
     /*
         HERE STARTS THE MAIN LOOP
@@ -46,12 +44,12 @@ int main(int argc, char *argv[])
 #endif
     try
     {
-        auto arguments = vector<string>(argv, argv + argc);
+        auto arguments = std::vector<std::string>(argv, argv + argc);
         ::pimdQmcf(argc, arguments);
     }
-    catch (const exception &e)
+    catch (const std::exception &e)
     {
-        cout << "Exception: " << e.what() << '\n' << flush;
+        std::cout << "Exception: " << e.what() << '\n' << std::flush;
 #ifdef WITH_MPI
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif

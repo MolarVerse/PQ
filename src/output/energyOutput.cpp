@@ -5,8 +5,6 @@
 #include <iomanip>
 #include <ostream>   // for basic_ostream, operator<<
 
-using namespace std;
-using namespace physicalData;
 using namespace output;
 
 /**
@@ -15,59 +13,59 @@ using namespace output;
  * @param step
  * @param data
  */
-void EnergyOutput::write(const size_t step, const PhysicalData &data)
+void EnergyOutput::write(const size_t step, const physicalData::PhysicalData &data)
 {
-    _fp << right;
-    _fp << setw(10);
+    _fp << std::right;
+    _fp << std::setw(10);
     _fp << step;
 
-    _fp << fixed;
-    _fp << setprecision(12);
+    _fp << std::fixed;
+    _fp << std::setprecision(12);
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getTemperature();
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getPressure();
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << 0.0;
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getKineticEnergy();
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << 0.0;
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getCoulombEnergy();
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getNonCoulombEnergy();
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << 0.0;
 
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << 0.0;
 
-    _fp << scientific;
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::scientific;
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << data.getMomentum();
 
-    _fp << fixed;
-    _fp << right;
-    _fp << setw(20);
+    _fp << std::fixed;
+    _fp << std::right;
+    _fp << std::setw(20);
     _fp << 0.0;
     _fp << '\n';
 }

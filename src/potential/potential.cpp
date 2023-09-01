@@ -7,11 +7,7 @@
 
 #include <cmath>   // for sqrt
 
-using namespace std;
-using namespace simulationBox;
 using namespace potential;
-using namespace physicalData;
-using namespace linearAlgebra;
 
 /**
  * @brief inner part of the double loop to calculate non-bonded inter molecular interactions

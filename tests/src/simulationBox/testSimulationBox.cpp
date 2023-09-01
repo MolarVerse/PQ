@@ -147,25 +147,30 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
  */
 TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
 {
-    auto *molecule1 = &(_simulationBox->getMolecule(0));
-    auto *molecule2 = &(_simulationBox->getMolecule(1));
 
-    molecule1->addExternalGlobalVDWType(1);
-    molecule1->addExternalGlobalVDWType(3);
-    molecule1->addExternalGlobalVDWType(5);
+    simulationBox::SimulationBox simulationBox;
+    simulationBox::Molecule      molecule1(1);
+    simulationBox::Molecule      molecule2(2);
 
-    molecule2->addExternalGlobalVDWType(3);
-    molecule2->addExternalGlobalVDWType(5);
+    molecule1.addExternalGlobalVDWType(1);
+    molecule1.addExternalGlobalVDWType(3);
+    molecule1.addExternalGlobalVDWType(5);
 
-    _simulationBox->setupExternalToInternalGlobalVdwTypesMap();
+    molecule2.addExternalGlobalVDWType(3);
+    molecule2.addExternalGlobalVDWType(5);
 
-    EXPECT_EQ(_simulationBox->getExternalGlobalVdwTypes().size(), 3);
-    EXPECT_EQ(_simulationBox->getExternalGlobalVdwTypes(), std::vector<size_t>({1, 3, 5}));
+    simulationBox.addMoleculeType(molecule1);
+    simulationBox.addMoleculeType(molecule2);
 
-    EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().size(), 3);
-    EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(1), 0);
-    EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(3), 1);
-    EXPECT_EQ(_simulationBox->getExternalToInternalGlobalVDWTypes().at(5), 2);
+    simulationBox.setupExternalToInternalGlobalVdwTypesMap();
+
+    EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes().size(), 3);
+    EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes(), std::vector<size_t>({1, 3, 5}));
+
+    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().size(), 3);
+    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(1), 0);
+    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(3), 1);
+    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(5), 2);
 }
 
 /**

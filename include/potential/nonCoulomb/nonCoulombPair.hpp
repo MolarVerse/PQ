@@ -39,8 +39,7 @@ namespace potential
 
         virtual ~NonCoulombPair() = default;
 
-        [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
-
+        [[nodiscard]] bool                              operator==(const NonCoulombPair &other) const;
         [[nodiscard]] virtual std::pair<double, double> calculateEnergyAndForce(const double distance) const = 0;
 
         /********************

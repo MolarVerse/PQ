@@ -9,6 +9,8 @@ using namespace potential;
  *
  * @details returns also true if the two types are switched
  *
+ * @note uses only the van der Waals types and the radial cut off
+ *
  * @param other
  * @return true
  * @return false

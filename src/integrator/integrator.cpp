@@ -55,11 +55,9 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
     const auto box = simBox.getBoxDimensions();
 
-    for (auto &molecule : simBox.getMolecules())
+    auto firstStepOfMolecule = [this, &simBox, &box](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             integrateVelocities(molecule, i);
             integratePositions(molecule, i, simBox);
@@ -67,7 +65,9 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 
         molecule.calculateCenterOfMass(box);
         molecule.setAtomForcesToZero();
-    }
+    };
+
+    std::ranges::for_each(simBox.getMolecules(), firstStepOfMolecule);
 }
 
 /**
@@ -77,13 +77,11 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
  */
 void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
-    for (auto &molecule : simBox.getMolecules())
+    auto secondStepOfMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-        {
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
             integrateVelocities(molecule, i);
-        }
-    }
+    };
+
+    std::ranges::for_each(simBox.getMolecules(), secondStepOfMolecule);
 }

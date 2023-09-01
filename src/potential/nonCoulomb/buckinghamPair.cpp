@@ -22,15 +22,18 @@ bool BuckinghamPair::operator==(const BuckinghamPair &other) const
 /**
  * @brief calculates the energy and force of a BuckinghamPair
  *
+ * @link https://doi.org/10.1098/rspa.1938.0173
+ *
  * @param distance
  * @return std::pair<double, double>
  */
 std::pair<double, double> BuckinghamPair::calculateEnergyAndForce(const double distance) const
 {
     const auto distanceSixth = distance * distance * distance * distance * distance * distance;
-    const auto expTerm       = std::exp(_dRho * distance);
-    const auto energy        = _a * expTerm + _c6 / distanceSixth - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
-    const auto force         = -_a * _dRho * expTerm + 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    const auto expTerm       = _a * std::exp(_dRho * distance);
+
+    const auto energy = expTerm + _c6 / distanceSixth - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
+    const auto force  = -_dRho * expTerm + 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
 
     return {energy, force};
 }

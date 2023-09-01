@@ -26,6 +26,8 @@ CoulombWolf::CoulombWolf(const double coulombRadiusCutOff, const double kappa) :
 /**
  * @brief calculate the energy and force of the Coulomb potential with Wolf summation as long range correction
  *
+ * @link https://doi.org/10.1063/1.478738
+ *
  * @param distance
  * @return std::pair<double, double>
  */

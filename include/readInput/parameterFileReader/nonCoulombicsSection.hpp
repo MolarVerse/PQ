@@ -4,9 +4,8 @@
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
 
-#include <cstddef>   // for size_t
-#include <string>    // for allocator, string
-#include <vector>    // for vector
+#include <string>   // for allocator, string
+#include <vector>   // for vector
 
 namespace engine
 {

@@ -29,9 +29,8 @@ namespace potential
       public:
         virtual ~NonCoulombPotential() = default;
 
-        [[nodiscard]] virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) = 0;
-
-        [[nodiscard]] MixingRule getMixingRule() const { return _mixingRule; }
+        [[nodiscard]] virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) = 0;
+        [[nodiscard]] MixingRule                              getMixingRule() const { return _mixingRule; }
 
         void setMixingRule(const MixingRule mixingRule) { _mixingRule = mixingRule; }
     };

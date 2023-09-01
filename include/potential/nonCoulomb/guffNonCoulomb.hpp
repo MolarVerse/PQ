@@ -32,24 +32,15 @@ namespace potential
         void resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms) { _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms); }
         void resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms) { _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms); }
 
-        void setGuffNonCoulombicPair(const std::vector<size_t>             &molAtomVdwIndices,
-                                     const std::shared_ptr<NonCoulombPair> &nonCoulombPair)
-        {
-            _guffNonCoulombPairs[getMolType1(molAtomVdwIndices) - 1][getMolType2(molAtomVdwIndices) - 1]
-                                [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)] = nonCoulombPair;
-        }
+        void setGuffNonCoulombicPair(const std::vector<size_t> &indices, const std::shared_ptr<NonCoulombPair> &nonCoulombPair);
 
-        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
-        {
-            return _guffNonCoulombPairs[getMolType1(molAtomVdwIndices) - 1][getMolType2(molAtomVdwIndices) - 1]
-                                       [getAtomType1(molAtomVdwIndices)][getAtomType2(molAtomVdwIndices)];
-        }
+        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) override;
+        [[nodiscard]] vector4dNonCoulombicPair        getNonCoulombPairs() const { return _guffNonCoulombPairs; }
 
-        [[nodiscard]] vector4dNonCoulombicPair getNonCoulombPairs() const { return _guffNonCoulombPairs; }
-        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[0]; }
-        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[1]; }
-        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[2]; }
-        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &molAtomVdwIndices) const { return molAtomVdwIndices[3]; }
+        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &indices) const { return indices[0]; }
+        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &indices) const { return indices[1]; }
+        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &indices) const { return indices[2]; }
+        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &indices) const { return indices[3]; }
     };
 
 }   // namespace potential

@@ -104,21 +104,12 @@ void PotentialSetup::setupNonCoulomb()
  *
  * @throws customException::ParameterFileException if not all self interacting non coulombics are set
  *
- * @TODO: delete not needed nonCoulombicPairs before checking size
- *
  */
 void PotentialSetup::setupNonCoulombicPairs()
 {
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
 
-    std::ranges::for_each(potential.getNonCoulombicPairsVector(),
-                          [](auto &nonCoulombicPair)
-                          {
-                              const auto &[energy, force] =
-                                  nonCoulombicPair->calculateEnergyAndForce(nonCoulombicPair->getRadialCutOff());
-                              nonCoulombicPair->setEnergyCutOff(energy);
-                              nonCoulombicPair->setForceCutOff(force);
-                          });
+    potential.setupNonCoulombicCutoffs();
 
     _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
     potential.determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
@@ -139,6 +130,6 @@ void PotentialSetup::setupNonCoulombicPairs()
             throw customException::ParameterFileException(
                 "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
 
-    potential.fillDiagonalElementsOfNonCoulombicPairsMatrix(selfInteractionNonCoulombicPairs);
-    potential.fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
+    potential.fillDiagonalElementsOfNonCoulombPairsMatrix(selfInteractionNonCoulombicPairs);
+    potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
 }

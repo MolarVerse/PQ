@@ -59,9 +59,7 @@ namespace manostat
 
       public:
         explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
-            : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
-        {
-        }
+            : Manostat(targetPressure), _tau(tau), _compressibility(compressibility){};
 
         void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 

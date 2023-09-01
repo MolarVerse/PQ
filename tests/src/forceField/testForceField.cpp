@@ -132,7 +132,7 @@ TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
 // //     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
 // //     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
-// //     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 1);
+// //     EXPECT_EQ(forceField.getNonCoulombPairsVector().size(), 1);
 // // }
 
 // /**
@@ -150,7 +150,7 @@ TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
 //     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
 //     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
 
-//     EXPECT_EQ(forceField.getNonCoulombicPairsVector().size(), 0);
+//     EXPECT_EQ(forceField.getNonCoulombPairsVector().size(), 0);
 // }
 
 int main(int argc, char **argv)

@@ -8,8 +8,8 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-    class Molecule;
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
 }   // namespace simulationBox
 
 namespace integrator

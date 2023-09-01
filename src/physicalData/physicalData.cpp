@@ -4,37 +4,33 @@
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
+#include <algorithm>
 #include <cstddef>   // for size_t
+#include <ranges>
 #include <vector>
 
-using namespace std;
-using namespace simulationBox;
 using namespace physicalData;
-using namespace linearAlgebra;
 
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
+void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &simulationBox)
 {
-    auto momentum = Vec3D();
+    _momentumVector               = linearAlgebra::Vec3D();
+    _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
+    _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
 
-    _momentumVector               = Vec3D();
-    _kineticEnergyAtomicVector    = Vec3D();
-    _kineticEnergyMolecularVector = Vec3D();
-
-    for (const auto &molecule : simulationBox.getMolecules())
+    auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms   = molecule.getNumberOfAtoms();
-        auto         momentumSquared = Vec3D();
+        auto momentumSquared = linearAlgebra::Vec3D();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
 
-            momentum = velocities * molecule.getAtomMass(i);
+            const auto momentum = velocities * molecule.getAtomMass(i);
 
             _momentumVector            += momentum;
             _kineticEnergyAtomicVector += momentum * velocities;
@@ -42,7 +38,9 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
         }
 
         _kineticEnergyMolecularVector += momentumSquared / molecule.getMolMass();
-    }
+    };
+
+    std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
     _momentumVector *= constants::_FS_TO_S_;
     _momentum        = norm(_momentumVector);
@@ -132,22 +130,22 @@ void PhysicalData::clearData()
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulationBox)
 {
     _temperature = 0.0;
 
-    for (const auto &molecule : simulationBox.getMolecules())
+    auto temperatureOfMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
             const auto mass       = molecule.getAtomMass(i);
 
             _temperature += mass * normSquared(velocities);
         }
-    }
+    };
 
-    _temperature *= constants::_TEMPERATURE_FACTOR_ / static_cast<double>(simulationBox.getDegreesOfFreedom());
+    std::ranges::for_each(simulationBox.getMolecules(), temperatureOfMolecule);
+
+    _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
 }

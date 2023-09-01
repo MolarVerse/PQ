@@ -10,17 +10,14 @@
 #include <functional>   // for function
 #include <vector>       // for vector
 
-using namespace simulationBox;
-using namespace physicalData;
 using namespace manostat;
-using namespace linearAlgebra;
 
 /**
  * @brief calculate the pressure of the system
  *
  * @param physicalData
  */
-void Manostat::calculatePressure(PhysicalData &physicalData)
+void Manostat::calculatePressure(physicalData::PhysicalData &physicalData)
 {
     const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
     const auto forceVirial = physicalData.getVirial();
@@ -38,7 +35,10 @@ void Manostat::calculatePressure(PhysicalData &physicalData)
  *
  * @param physicalData
  */
-void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calculatePressure(physicalData); }
+void Manostat::applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &physicalData)
+{
+    calculatePressure(physicalData);
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -46,19 +46,21 @@ void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calc
  * @param simBox
  * @param physicalData
  */
-void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physicalData)
+void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
     calculatePressure(physicalData);
 
-    const auto scaleFactors = Vec3D(::pow(1.0 - _compressibility * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
+    const auto linearScalingFactor = ::pow(1.0 - _compressibility * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
+    const auto scalingFactors      = linearAlgebra::Vec3D(linearScalingFactor);
 
-    simBox.scaleBox(scaleFactors);
+    simBox.scaleBox(scalingFactors);
 
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.scale(scaleFactors);
+    auto scaleMolecule = [&scalingFactors](auto &molecule) { molecule.scale(scalingFactors); };
+
+    std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
 }

@@ -15,53 +15,40 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
+}
+
+namespace potential
+{
+    using vec_shared_pair    = std::vector<std::shared_ptr<NonCoulombPair>>;
+    using matrix_shared_pair = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>;
 
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
       private:
-        std::vector<std::shared_ptr<NonCoulombPair>>           _nonCoulombicPairsVector;
-        linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> _nonCoulombicPairsMatrix;
+        vec_shared_pair    _nonCoulombPairsVector;
+        matrix_shared_pair _nonCoulombPairsMatrix;
 
       public:
-        void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair) { _nonCoulombicPairsVector.push_back(pair); }
+        void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair) { _nonCoulombPairsVector.push_back(pair); }
 
+        void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
-        void fillDiagonalElementsOfNonCoulombicPairsMatrix(std::vector<std::shared_ptr<NonCoulombPair>> &);
-        void fillNonDiagonalElementsOfNonCoulombicPairsMatrix();
-        std::vector<std::shared_ptr<NonCoulombPair>>   getSelfInteractionNonCoulombicPairs() const;
-        std::optional<std::shared_ptr<NonCoulombPair>> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
+        void fillDiagonalElementsOfNonCoulombPairsMatrix(vec_shared_pair &diagonalElements);
+        void fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+        void sortDiagonalElements(vec_shared_pair &diagonalElements);
+        void setOffDiagonalElement(const size_t atomType1, const size_t atomType2);
 
-        void initNonCoulombicPairsMatrix(const size_t n)
-        {
-            _nonCoulombicPairsMatrix = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>(n);
-        }
+        [[nodiscard]] vec_shared_pair                                getSelfInteractionNonCoulombicPairs() const;
+        [[nodiscard]] std::optional<std::shared_ptr<NonCoulombPair>> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
+        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) override;
 
-        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &molAtomVdwIndices) override
-        {
-            return _nonCoulombicPairsMatrix[getGlobalVdwType1(molAtomVdwIndices)][getGlobalVdwType2(molAtomVdwIndices)];
-        }
-        [[nodiscard]] size_t getGlobalVdwType1(const std::vector<size_t> &molAtomVdwIndices) const
-        {
-            return molAtomVdwIndices[4];
-        }
-        [[nodiscard]] size_t getGlobalVdwType2(const std::vector<size_t> &molAtomVdwIndices) const
-        {
-            return molAtomVdwIndices[5];
-        }
-        [[nodiscard]] std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsVector()
-        {
-            return _nonCoulombicPairsVector;
-        }
+        [[nodiscard]] size_t              getGlobalVdwType1(const std::vector<size_t> &indices) const { return indices[4]; }
+        [[nodiscard]] size_t              getGlobalVdwType2(const std::vector<size_t> &indices) const { return indices[5]; }
+        [[nodiscard]] vec_shared_pair    &getNonCoulombPairsVector() { return _nonCoulombPairsVector; }
+        [[nodiscard]] matrix_shared_pair &getNonCoulombPairsMatrix() { return _nonCoulombPairsMatrix; }
 
-        [[nodiscard]] linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> &getNonCoulombicPairsMatrix()
-        {
-            return _nonCoulombicPairsMatrix;
-        }
-
-        void setNonCoulombicPairsVector(const std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulombicPairsVector)
-        {
-            _nonCoulombicPairsVector = nonCoulombicPairsVector;
-        }
+        void setNonCoulombPairsVector(const vec_shared_pair &vec) { _nonCoulombPairsVector = vec; }
+        void setNonCoulombPairsMatrix(const matrix_shared_pair &mat) { _nonCoulombPairsMatrix = mat; }
     };
 
 }   // namespace potential

@@ -11,8 +11,6 @@ namespace simulationBox
 }   // namespace simulationBox
 
 using namespace potential;
-using namespace simulationBox;
-using namespace physicalData;
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
@@ -20,7 +18,9 @@ using namespace physicalData;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialBruteForce::calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+inline void PotentialBruteForce::calculateForces(simulationBox::SimulationBox &simBox,
+                                                 physicalData::PhysicalData   &physicalData,
+                                                 simulationBox::CellList &)
 {
     const auto box = simBox.getBoxDimensions();
 
