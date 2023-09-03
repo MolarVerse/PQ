@@ -112,6 +112,7 @@
     "cSpell.words": [
         "Allman",
         "Berendsen",
+        "CELLLISTEXCEPTION",
         "chrg",
         "COUL",
         "coulombic",
@@ -128,6 +129,7 @@
         "impropers",
         "inputfile",
         "INPUTFILEEXCEPTION",
+        "INTRANONBONDEDEXCEPTION",
         "iwyu",
         "jobtype",
         "jobtypes",
@@ -163,6 +165,7 @@
         "rcoulomb",
         "RSTFILEEXCEPTION",
         "RSTFILEOUTPUT",
+        "SHAKEEXCEPTION",
         "sonarlint",
         "STDOUTOUTPUT",
         "STREQ",

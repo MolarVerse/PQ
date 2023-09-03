@@ -2,16 +2,12 @@
 
 #define _EXCEPTIONS_HPP_
 
+#include "color.hpp"
+
 #include <cstddef>
 #include <exception>
 #include <string>
 #include <string_view>
-
-#ifdef WITH_MPI
-#include <mpi.h>
-#endif
-
-#include "color.hpp"
 
 namespace customException
 {
@@ -30,7 +26,10 @@ namespace customException
         GUFFDATEXCEPTION,
         TOPOLOGYEXCEPTION,
         PARAMETERFILEEXCEPTION,
-        MANOSTATEXCEPTION
+        MANOSTATEXCEPTION,
+        INTRANONBONDEDEXCEPTION,
+        SHAKEEXCEPTION,
+        CELLLISTEXCEPTION
     };
 
     /**

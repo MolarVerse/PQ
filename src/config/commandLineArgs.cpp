@@ -2,11 +2,10 @@
 
 #include "exceptions.hpp"   // for UserInputException
 
-#include <boost/algorithm/string/predicate.hpp>   // for starts_with
-#include <string_view>                            // for string_view
+#include <string_view>   // for string_view
 
 /**
- * @brief Detects flags in the command line arguments.
+ * @brief Detects flags in the command line arguments. First argument is the input file name.
  *
  * @throw UserInputException if a flag is detected (not yet implemented)
  * @throw UserInputException if no input file is specified
@@ -14,7 +13,7 @@
 void CommandLineArgs::detectFlags()
 {
     for (const auto &arg : _argv)
-        if (boost::starts_with(arg, "-"))
+        if ('-' == arg[0])
             throw customException::UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
 
     if (_argc < 2)

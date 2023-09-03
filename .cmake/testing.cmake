@@ -23,19 +23,23 @@ if(NOT(${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease"))
     include(gcovr)
 
     include(CodeCoverage)
-    setup_target_for_coverage_gcovr_html(
-        NAME coverage EXECUTABLE ctest EXCLUDE
-        tests*
-        _deps*
+    set(EXCLUDE_FOR_GCOVR
+        tests
+        _deps
         apps*
-        external*
-        apps*
-        benchmarks*
-        build*
-        .build*
-        tools*
+        external
+        apps
+        benchmarks
+        tools
+        build
         src/setup/setup.cpp
         src/engine/engine.cpp
+    )
+
+    setup_target_for_coverage_gcovr_html(
+        NAME coverage
+        EXECUTABLE ctest
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
     )
 
     setup_target_for_coverage_lcov(

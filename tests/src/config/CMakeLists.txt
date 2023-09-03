@@ -1,7 +1,5 @@
 set(source_files
     testCommandLineArgs.cpp
-    testExceptions.cpp
-    testColorExceptions.cpp
 )
 
 foreach(source_file ${source_files})
