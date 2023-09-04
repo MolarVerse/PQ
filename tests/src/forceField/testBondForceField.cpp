@@ -61,6 +61,16 @@ TEST(TestBondForceField, calculateEnergyAndForces)
                 testing::ElementsAre(testing::DoubleNear(virial[0], 1e-9),
                                      testing::DoubleNear(virial[1], 1e-9),
                                      testing::DoubleNear(virial[2], 1e-9)));
+
+    molecule.setAtomForce(0, {0.0, 0.0, 0.0});
+    molecule.setAtomForce(1, {0.0, 0.0, 0.0});
+    physicalData.setCoulombEnergy(0.0);
+
+    bondForceField.setIsLinker(true);
+
+    bondForceField.calculateEnergyAndForces(box, physicalData, coulombPotential, nonCoulombPotential);
+
+    EXPECT_NEAR(physicalData.getBondEnergy(), (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0, 1e-9);
 }
 
 int main(int argc, char **argv)
