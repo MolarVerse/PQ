@@ -19,6 +19,9 @@ namespace potential
 
 namespace potential
 {
+    using c_ul               = const size_t;
+    using shared_pair        = std::shared_ptr<NonCoulombPair>;
+    using c_shared_pair      = const std::shared_ptr<NonCoulombPair>;
     using vec_shared_pair    = std::vector<std::shared_ptr<NonCoulombPair>>;
     using matrix_shared_pair = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>;
 
@@ -29,7 +32,7 @@ namespace potential
         matrix_shared_pair _nonCoulombPairsMatrix;
 
       public:
-        void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair) { _nonCoulombPairsVector.push_back(pair); }
+        void addNonCoulombicPair(c_shared_pair &pair) { _nonCoulombPairsVector.push_back(pair); }
 
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
@@ -38,9 +41,9 @@ namespace potential
         void sortDiagonalElements(vec_shared_pair &diagonalElements);
         void setOffDiagonalElement(const size_t atomType1, const size_t atomType2);
 
-        [[nodiscard]] vec_shared_pair                                getSelfInteractionNonCoulombicPairs() const;
-        [[nodiscard]] std::optional<std::shared_ptr<NonCoulombPair>> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
-        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) override;
+        [[nodiscard]] vec_shared_pair            getSelfInteractionNonCoulombicPairs() const;
+        [[nodiscard]] std::optional<shared_pair> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
+        [[nodiscard]] shared_pair                getNonCoulombPair(const std::vector<size_t> &indices) override;
 
         [[nodiscard]] size_t              getGlobalVdwType1(const std::vector<size_t> &indices) const { return indices[4]; }
         [[nodiscard]] size_t              getGlobalVdwType2(const std::vector<size_t> &indices) const { return indices[5]; }
@@ -49,6 +52,11 @@ namespace potential
 
         void setNonCoulombPairsVector(const vec_shared_pair &vec) { _nonCoulombPairsVector = vec; }
         void setNonCoulombPairsMatrix(const matrix_shared_pair &mat) { _nonCoulombPairsMatrix = mat; }
+        template <typename T>
+        void setNonCoulombPairsMatrix(c_ul index1, c_ul index2, T &value)
+        {
+            _nonCoulombPairsMatrix[index1][index2] = std::make_shared<T>(value);
+        }
     };
 
 }   // namespace potential

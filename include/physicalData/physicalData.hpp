@@ -51,7 +51,7 @@ namespace physicalData
 
         void updateAverages(const PhysicalData &);
         void makeAverages(const double);
-        void clearData();
+        void clearData();   // TODO: refactor this to reset
 
         std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =
             std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);

@@ -3,11 +3,13 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombPotential
 #include "dihedralType.hpp"              // for DihedralType
 #include "exceptions.hpp"                // for TopologyException
+#include "forceField.hpp"                // correctLinker
 #include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for NonCoulombPotential
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
+#include "potentialSettings.hpp"         // for PotentialSettings
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -122,12 +124,18 @@ TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
                      "Improper dihedral type with id " + std::to_string(0) + " not found.");
 }
 
+/**
+ * @brief test correctLinker
+ *
+ */
 TEST(TestForceField, correctLinker)
 {
-    auto coulomPotential     = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
     auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
 
-    auto nonCoulombPair = potential::LennardJonesPair(size_t(0), size_t(1), 1.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(size_t(0), size_t(1), 5.0, 2.0, 4.0);
+    nonCoulombPotential.setNonCoulombPairsMatrix(linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2));
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -137,49 +145,30 @@ TEST(TestForceField, correctLinker)
     molecule.addInternalGlobalVDWType(1);
     molecule.addAtomType(0);
     molecule.addAtomType(1);
+    molecule.addPartialCharge(1.0);
+    molecule.addPartialCharge(-0.5);
 
     physicalData::PhysicalData physicalData;
 
-    auto forceField = forceField::ForceField();
+    const auto force =
+        forceField::correctLinker(coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0, false);
 
-    forceField.addNonCoulombicPair(std::make_shared<potential::NonCoulombPair>(nonCoulombPair));
+    EXPECT_NEAR(force, 104.37153798653807, 1e-9);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-9);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), 134.48580380716751, 1e-9);
+
+    physicalData.clearData();
+
+    settings::PotentialSettings::setScale14Coulomb(0.75);
+    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+
+    const auto forceScaled =
+        forceField::correctLinker(coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0, true);
+
+    EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-9);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -3, 1e-9);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), 33.621450951791878, 1e-9);
 }
-
-// /**
-//  * @brief tests deleteNotNeededNonCoulombicPairs function by deleting nothing
-//  *
-//  * @details if both vdw types of non coulombic pair are in vector of global vdw types, then non coulombic pair is need and not
-//  * deleted
-//  *
-//  */
-// // TEST(TestForceField, deleteNotNeededNonCoulombicPairs_deleteNothing)
-// // {
-// //     auto forceField       = forceField::ForceField();
-// //     auto nonCoulombicPair = forceField::LennardJonesPair(1, 2, 2.0, 1.0, 1.0);
-
-// //     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
-// //     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
-
-// //     EXPECT_EQ(forceField.getNonCoulombPairsVector().size(), 1);
-// // }
-
-// /**
-//  * @brief tests deleteNotNeededNonCoulombicPairs function by deleting one pair
-//  *
-//  * @details if both vdw types of non coulombic pair are in vector of global vdw types, then non coulombic pair is need and not
-//  * deleted
-//  *
-//  */
-// TEST(TestForceField, deleteNotNeededNonCoulombicPairs_deleteOnePair)
-// {
-//     auto forceField       = forceField::ForceField();
-//     auto nonCoulombicPair = forceField::LennardJonesPair(1, 5, 2.0, 1.0, 1.0);
-
-//     forceField.addNonCoulombicPair(std::make_shared<forceField::NonCoulombPair>(nonCoulombicPair));
-//     forceField.deleteNotNeededNonCoulombicPairs({1, 2, 3});
-
-//     EXPECT_EQ(forceField.getNonCoulombPairsVector().size(), 0);
-// }
 
 int main(int argc, char **argv)
 {
