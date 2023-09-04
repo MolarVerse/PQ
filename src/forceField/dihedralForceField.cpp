@@ -1,17 +1,13 @@
 #include "dihedralForceField.hpp"
 
 #include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"
-#include "molecule.hpp"              // for Molecule
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "physicalData.hpp"          // for PhysicalData
-#include "potentialSettings.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for cross, dot, norm, normSquared
+#include "forceField.hpp"         // for correctLinker
+#include "molecule.hpp"           // for Molecule
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
+#include "vector3d.hpp"           // for operator*, Vector3D, dot, cross, norm
 
-#include <cmath>    // for acos, cos, sin, sqrt
-#include <memory>   // for shared_ptr, __shared_ptr_access
+#include <cmath>   // for cos, sin
 
 using namespace forceField;
 

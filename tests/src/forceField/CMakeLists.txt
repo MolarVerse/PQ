@@ -1,9 +1,11 @@
 set(source_files
     testForceField.cpp
     testAngleType.cpp
+    testAngleForceField.cpp
     testBondType.cpp
     testBondForceField.cpp
     testDihedralType.cpp
+    testDihedralForceField.cpp
 )
 
 foreach(source_file ${source_files})

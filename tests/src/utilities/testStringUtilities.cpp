@@ -1,9 +1,10 @@
 #include "exceptions.hpp"        // for InputFileException
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
 
+#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <cstdio>          // for remove
 #include <fstream>         // for ofstream
-#include <gmock/gmock.h>   // for ElementsAre
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
 #include <string>          // for string, allocator
 #include <vector>          // for vector

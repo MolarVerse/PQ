@@ -1,16 +1,13 @@
 #include "bondForceField.hpp"
 
-#include "coulombPotential.hpp"
-#include "forceField.hpp"
-#include "molecule.hpp"
-#include "nonCoulombPair.hpp"
-#include "nonCoulombPotential.hpp"
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
-#include "vector3d.hpp"
+#include "coulombPotential.hpp"   // for CoulombPotential
+#include "forceField.hpp"         // for correctLinker
+#include "molecule.hpp"           // for Molecule
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
+#include "vector3d.hpp"           // for Vector3D, norm, operator*, Vec3D
 
-#include <memory>
-#include <vector>
+#include <vector>   // for vector
 
 using namespace forceField;
 

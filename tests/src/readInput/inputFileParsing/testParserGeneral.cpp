@@ -1,4 +1,3 @@
-#include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for InputFileException
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral

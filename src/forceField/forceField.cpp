@@ -1,11 +1,13 @@
 #include "forceField.hpp"
 
-#include "coulombPotential.hpp"
-#include "molecule.hpp"
-#include "nonCoulombPair.hpp"
-#include "nonCoulombPotential.hpp"
-#include "physicalData.hpp"
-#include "potentialSettings.hpp"
+#include "coulombPotential.hpp"      // for CoulombPotential
+#include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "physicalData.hpp"          // for PhysicalData
+#include "potentialSettings.hpp"     // for PotentialSettings
+
+#include <memory>   // for __shared_ptr_access, shared_ptr
 
 /**
  * @brief correct coulomb and non-coulomb energy and forces for linker connectivity elements

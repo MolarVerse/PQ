@@ -1,20 +1,28 @@
 #include "angleType.hpp"                 // for AngleType
 #include "bondType.hpp"                  // for BondType
-#include "coulombShiftedPotential.hpp"   // for CoulombPotential
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "dihedralType.hpp"              // for DihedralType
 #include "exceptions.hpp"                // for TopologyException
-#include "forceField.hpp"                // correctLinker
+#include "forceField.hpp"                // for correctLinker
 #include "forceFieldClass.hpp"           // for ForceField
-#include "forceFieldNonCoulomb.hpp"      // for NonCoulombPotential
+#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
+#include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, EXP...
-#include <string>          // for allocator, operator+, to_string, cha...
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST
+#include <memory>          // for shared_ptr
+#include <stddef.h>        // for size_t
+#include <string>          // for allocator, operator+, to_string
+
+namespace potential
+{
+    class NonCoulombPair;   // forward declaration
+}
 
 /**
  * @brief tests findBondTypeById function

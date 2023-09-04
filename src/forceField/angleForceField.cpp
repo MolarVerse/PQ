@@ -1,16 +1,13 @@
 #include "angleForceField.hpp"
 
-#include "coulombPotential.hpp"
-#include "forceField.hpp"
-#include "molecule.hpp"
-#include "nonCoulombPair.hpp"   // for NonCoulombPair
-#include "nonCoulombPotential.hpp"
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
-#include "vector3d.hpp"   // for Vector3D, cross, operator*, normS...
+#include "coulombPotential.hpp"   // for CoulombPotential
+#include "forceField.hpp"         // for correctLinker
+#include "molecule.hpp"           // for Molecule
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
+#include "vector3d.hpp"           // for Vector3D, cross, operator*, normSquared
 
-#include <cmath>    // for acos, sin, sqrt
-#include <memory>   // for __shared_ptr_access, shared_ptr
+#include <cmath>   // for sqrt, sin
 
 using namespace forceField;
 
