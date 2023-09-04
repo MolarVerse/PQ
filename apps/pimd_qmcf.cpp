@@ -1,4 +1,4 @@
-#include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "../include/readInput/commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine
 #include "setup.hpp"             // for setupSimulation, setup
 

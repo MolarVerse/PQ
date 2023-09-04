@@ -28,6 +28,10 @@ namespace forceField
 
         [[nodiscard]] bool operator==(const AngleType &other) const;
 
+        /***************************
+         * standard getter methods *
+         ***************************/
+
         [[nodiscard]] size_t getId() const { return _id; }
         [[nodiscard]] double getEquilibriumAngle() const { return _equilibriumAngle; }
         [[nodiscard]] double getForceConstant() const { return _forceConstant; }

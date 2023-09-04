@@ -14,11 +14,9 @@ if(BUILD_WITH_MPI)
 endif()
 
 target_link_libraries(pimd_qmcf
-  PRIVATE
   PUBLIC
   setup
   engine
-  config
 )
 
 install(TARGETS pimd_qmcf

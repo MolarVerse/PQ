@@ -2,6 +2,7 @@
 
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "timingsSettings.hpp"
 #include "vector3d.hpp"
 
 #include <cmath>
@@ -45,7 +46,7 @@ double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox
  * @details if delta is not smaller than tolerance, the shake algorithm is applied
  *
  */
-bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, double tolerance, double timestep)
+bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, double tolerance)
 {
 
     if (const auto delta = calculateDistanceDelta(simBox); std::fabs(delta) > tolerance)
@@ -60,7 +61,7 @@ bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, doub
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
         _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
 
-        const auto dVelocity = dPosition / timestep;
+        const auto dVelocity = dPosition / settings::TimingsSettings::getTimeStep();
 
         _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
         _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);

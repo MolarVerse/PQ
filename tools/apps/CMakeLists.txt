@@ -19,7 +19,7 @@ foreach(executable ${EXECUTABLES})
     target_link_libraries(${executable}
         PUBLIC
         engineTools
-        config
+        readInput
     )
 
     target_compile_options(${executable}

@@ -39,7 +39,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 
         std::ranges::for_each(_bondConstraints,
                               [&simulationBox, &converged, this](auto &bondConstraint)
-                              { converged = converged && bondConstraint.applyShake(simulationBox, _shakeTolerance, _dt); });
+                              { converged = converged && bondConstraint.applyShake(simulationBox, _shakeTolerance); });
 
         ++iter;
     }

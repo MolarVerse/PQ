@@ -14,20 +14,20 @@
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace engine
 {
     /**
      * @class EngineOutput
      *
-     * @brief contains unique pointers to all the output classes
+     * @brief contains unique pointers to all of the output classes
      *
      */
     class EngineOutput

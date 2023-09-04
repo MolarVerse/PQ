@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
 using namespace customException;
 
 /**
@@ -11,12 +10,12 @@ using namespace customException;
  * @param color
  * @param exception
  */
-void CustomException::colorfulOutput(const Color::Code color, const string_view exception) const
+void CustomException::colorfulOutput(const Color::Code color, const std::string_view exception) const
 {
     const Color::Modifier modifier(color);
     const Color::Modifier def(Color::FG_DEFAULT);
 
-    cout << modifier << exception << def << '\n' << std::flush;
+    std::cout << modifier << exception << def << '\n' << std::flush;
 }
 
 /**

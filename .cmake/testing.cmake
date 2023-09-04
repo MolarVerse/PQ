@@ -24,16 +24,16 @@ if(NOT(${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease"))
 
     include(CodeCoverage)
     set(EXCLUDE_FOR_GCOVR
+        "\.build"
         tests
-        _deps
-        apps*
-        external
+        build/_deps # don't know why build
         apps
+        external
         benchmarks
         tools
-        build
         src/setup/setup.cpp
-        src/engine/engine.cpp
+        src/engine/*
+        include/engine/*
     )
 
     setup_target_for_coverage_gcovr_html(
@@ -43,7 +43,7 @@ if(NOT(${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease"))
     )
 
     setup_target_for_coverage_lcov(
-        NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS "--no-external" EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)
+        NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS " --no-external " EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)
 endif()
 
 # add_subdirectory(tests)

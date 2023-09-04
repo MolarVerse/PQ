@@ -13,11 +13,7 @@ add_library(settings
 target_include_directories(settings
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/settings
-)
-
-target_link_libraries(settings
-    PUBLIC
-    config
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 install(TARGETS settings

@@ -10,7 +10,7 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
+    class SimulationBox;   // forward declaration
 }
 
 /**
@@ -37,8 +37,6 @@ namespace constraints
         double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
         double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
 
-        double _dt;
-
         std::vector<BondConstraint> _bondConstraints;
 
       public:
@@ -47,16 +45,22 @@ namespace constraints
         void applyShake(const simulationBox::SimulationBox &simulationBox);
         void applyRattle();
 
+        /*****************************
+         * standard activate methods *
+         *****************************/
+
         void               activate() { _activated = true; }
         void               deactivate() { _activated = false; }
         [[nodiscard]] bool isActivated() const { return _activated; }
 
+        /************************
+         * standard add methods *
+         ************************/
+
         void addBondConstraint(const BondConstraint &bondConstraint) { _bondConstraints.push_back(bondConstraint); }
 
         /***************************
-         *                         *
          * standard getter methods *
-         *                         *
          ***************************/
 
         [[nodiscard]] const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
@@ -66,20 +70,14 @@ namespace constraints
         [[nodiscard]] double getShakeTolerance() const { return _shakeTolerance; }
         [[nodiscard]] double getRattleTolerance() const { return _rattleTolerance; }
 
-        [[nodiscard]] double getDt() const { return _dt; }
-
         /***************************
-         *                         *
          * standard setter methods *
-         *                         *
          ***************************/
 
         void setShakeMaxIter(const size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
         void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
         void setShakeTolerance(const double shakeTolerance) { _shakeTolerance = shakeTolerance; }
         void setRattleTolerance(const double rattleTolerance) { _rattleTolerance = rattleTolerance; }
-
-        void setDt(const double dt) { _dt = dt; }
     };
 
 }   // namespace constraints

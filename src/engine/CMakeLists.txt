@@ -21,7 +21,6 @@ target_link_libraries(engine
     thermostat
     output
     simulationBox
-    config
     timings
     physicalData
     virial

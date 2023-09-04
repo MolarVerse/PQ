@@ -402,6 +402,32 @@ namespace linearAlgebra
         }
 
         /**
+         * @brief calculates the cosine of the angle between two vectors
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend double cos(Vector3D<T> v1, Vector3D<T> v2)
+        {
+            auto cosine = dot(v1, v2) / (norm(v1) * norm(v2));
+
+            cosine = cosine > 1.0 ? 1.0 : cosine;
+            cosine = cosine < -1.0 ? -1.0 : cosine;
+
+            return cosine;
+        }
+
+        /**
+         * @brief calculates the angle between two vectors
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend double angle(Vector3D<T> v1, Vector3D<T> v2) { return ::acos(cos(v1, v2)); }
+
+        /**
          * @brief ostream operator for vector3d
          *
          * @param os

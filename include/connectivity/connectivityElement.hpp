@@ -7,8 +7,8 @@
 
 namespace simulationBox
 {
-    class Molecule;
-}   // namespace simulationBox
+    class Molecule;   // forward declaration
+}
 
 namespace connectivity
 {

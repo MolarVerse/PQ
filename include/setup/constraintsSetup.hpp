@@ -30,7 +30,6 @@ namespace setup
         void setupTolerances();
         void setupMaxIterations();
         void setupRefBondLengths();
-        void setupTimestep();
     };
 
 }   // namespace setup

@@ -12,22 +12,22 @@
 #include <memory>   // for __shared_ptr_access, shared_ptr
 
 using namespace forceField;
-using namespace physicalData;
-using namespace potential;
 
 /**
- * @brief calculate energy and forces for a single angle
+ * @brief calculate energy and forces for a single alpha
+ *
+ * @details if angle is a linker angle, correct coulomb and non-coulomb energy and forces
  *
  * @param box
  * @param physicalData
  */
 void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBox &box,
-                                               PhysicalData                       &physicalData,
-                                               const CoulombPotential             &coulombPotential,
-                                               NonCoulombPotential                &nonCoulombPotential)
+                                               physicalData::PhysicalData         &physicalData,
+                                               const potential::CoulombPotential  &coulombPotential,
+                                               potential::NonCoulombPotential     &nonCoulombPotential)
 {
 
-    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of angle
+    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);   // central position of alpha
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
 
@@ -43,20 +43,14 @@ void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBo
     const auto distance12 = ::sqrt(distance12Squared);
     const auto distance13 = ::sqrt(distance13Squared);
 
-    auto cosine = dot(dPosition12, dPosition13) / (distance12 * distance13);
-
-    cosine = cosine > 1.0 ? 1.0 : cosine;
-    cosine = cosine < -1.0 ? -1.0 : cosine;
-
-    const auto angle = ::acos(cosine);
-
-    const auto deltaAngle = angle - _equilibriumAngle;
+    const auto alpha      = angle(dPosition12, dPosition13);
+    const auto deltaAngle = alpha - _equilibriumAngle;
 
     auto forceMagnitude = -_forceConstant * deltaAngle;
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    const auto normalDistance = distance12 * distance13 * ::sin(angle);
+    const auto normalDistance = distance12 * distance13 * ::sin(alpha);
     const auto normalPosition = cross(dPosition13, dPosition12) / normalDistance;
 
     auto force    = forceMagnitude / distance12Squared;
@@ -78,7 +72,7 @@ void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBo
 
         const auto distance23 = norm(dPosition23);
 
-        // if (distance23 < CoulombPotential::getCoulombRadiusCutOff())
+        if (distance23 < potential::CoulombPotential::getCoulombRadiusCutOff())
         {
             const auto chargeProduct =
                 _molecules[1]->getPartialCharge(_atomIndices[1]) * _molecules[2]->getPartialCharge(_atomIndices[2]);

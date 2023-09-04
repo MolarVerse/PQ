@@ -14,7 +14,6 @@ add_library(setup
 
 target_include_directories(setup
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/setup
 )
 
@@ -28,7 +27,6 @@ target_link_libraries(setup
     engine
     utilities
     output
-    config
     gtest
     potential
     coulombPotential

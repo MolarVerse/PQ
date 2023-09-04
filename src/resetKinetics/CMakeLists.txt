@@ -10,7 +10,6 @@ target_include_directories(resetKinetics
 
 target_link_libraries(resetKinetics
     PUBLIC
-    config
     simulationBox
     physicalData
 )

@@ -3,8 +3,6 @@ set(source_files
     testColorExceptions.cpp
 )
 
-set(gcvor_ctest_args "")
-
 foreach(source_file ${source_files})
     get_filename_component(test_name ${source_file} NAME_WE)
     add_executable(${test_name} ${source_file})
@@ -23,19 +21,14 @@ foreach(source_file ${source_files})
     )
     add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
 
-    set(gcvor_ctest_args "${gcvor_ctest_args}-R;${test_name};")
+    set_property(TEST ${test_name} PROPERTY LABELS exceptions)
 endforeach()
-
-MESSAGE(STATUS "gcvor_ctest_args: ${gcvor_ctest_args}")
-MESSAGE(STATUS "gcvor_ctest_args: ${EXCLUDE_FOR_GCOVR}  ")
 
 include(CodeCoverage)
 setup_target_for_coverage_gcovr_html(
     NAME coverage_exceptions
     EXCLUDE ${EXCLUDE_FOR_GCOVR}
     EXECUTABLE "ctest"
-    EXECUTABLE_ARGS "-R;testExceptions;-R;testColorExceptions"
-
-    # ${gcvor_ctest_args}
+    EXECUTABLE_ARGS "-L;exceptions"
     OUTPUT_PATH "coverage"
 )

@@ -8,7 +8,6 @@ target_include_directories(potential
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/potential
-    ${PROJECT_SOURCE_DIR}/include/potential/coulomb
 )
 
 target_link_libraries(potential

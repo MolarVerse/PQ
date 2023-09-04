@@ -28,6 +28,10 @@ namespace forceField
 
         [[nodiscard]] bool operator==(const BondType &other) const;
 
+        /***************************
+         * standard getter methods *
+         ***************************/
+
         [[nodiscard]] size_t getId() const { return _id; }
         [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
         [[nodiscard]] double getForceConstant() const { return _forceConstant; }

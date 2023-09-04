@@ -9,19 +9,19 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-    class Molecule;
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
 }   // namespace simulationBox
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 namespace potential
 {
-    class CoulombPotential;
-    class NonCoulombPotential;
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 }   // namespace potential
 
 namespace forceField
@@ -52,9 +52,17 @@ namespace forceField
                                       const potential::CoulombPotential &,
                                       potential::NonCoulombPotential &);
 
+        /***************************
+         * standard setter methods *
+         ***************************/
+
         void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
         void setEquilibriumAngle(const double equilibriumAngle) { _equilibriumAngle = equilibriumAngle; }
         void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] size_t getType() const { return _type; }
         [[nodiscard]] bool   isLinker() const { return _isLinker; }

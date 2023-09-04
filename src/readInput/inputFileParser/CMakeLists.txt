@@ -29,7 +29,6 @@ target_link_libraries(inputFileParser
     engine
     utilities
     output
-    config
     gtest
     forceField
     settings

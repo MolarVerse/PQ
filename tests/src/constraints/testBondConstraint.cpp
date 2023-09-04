@@ -1,5 +1,7 @@
 #include "testBondConstraint.hpp"
 
+#include "timingsSettings.hpp"
+
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <string>          // for string
 
@@ -37,8 +39,9 @@ TEST_F(TestBondConstraint, applyShake)
     const auto shakeForce = delta / (1.0 + 0.5) / normSquared(linearAlgebra::Vec3D(0.0, -1.0, -2.0));
     const auto dPos       = shakeForce * linearAlgebra::Vec3D(0.0, -1.0, -2.0);
     const auto timestep   = 2.0;
+    settings::TimingsSettings::setTimeStep(timestep);
 
-    EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0, timestep));
+    EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
 
     EXPECT_EQ(_box->getMolecules()[0].getAtomPosition(0), linearAlgebra::Vec3D(1.0, 1.0, 1.0) + dPos);
     EXPECT_EQ(_box->getMolecules()[0].getAtomPosition(1), linearAlgebra::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos);
@@ -46,7 +49,7 @@ TEST_F(TestBondConstraint, applyShake)
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0) + dPos / timestep);
     EXPECT_EQ(_box->getMolecules()[0].getAtomVelocity(1), linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * dPos / timestep);
 
-    EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0, timestep));
+    EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
 }
 
 /**

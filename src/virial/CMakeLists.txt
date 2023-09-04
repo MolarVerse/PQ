@@ -10,7 +10,6 @@ target_include_directories(virial
 
 target_link_libraries(virial
     PUBLIC
-    config
     simulationBox
     physicalData
 )

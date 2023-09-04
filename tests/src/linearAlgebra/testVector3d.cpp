@@ -451,6 +451,20 @@ TEST(TestVector3d, crossProduct)
 }
 
 /**
+ * @brief tests cos for Vector3D
+ *
+ * @details calculates the cosine of the angle between two vectors
+ *
+ */
+TEST(TestVector3d, cos)
+{
+    const auto vec1 = Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = Vec3D(2.0, 3.0, 4.0);
+
+    EXPECT_DOUBLE_EQ(cos(vec1, vec2), 0.9925833339709303);
+}
+
+/**
  * @brief tests os stream for Vector3D
  *
  */

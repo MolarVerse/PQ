@@ -4,6 +4,7 @@ add_library(readInput
     inputFileReader.cpp
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
+    commandLineArgs.cpp
 )
 
 target_include_directories(readInput

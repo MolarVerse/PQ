@@ -9,8 +9,8 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-    class Molecule;
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
 }   // namespace simulationBox
 
 namespace constraints
@@ -43,13 +43,11 @@ namespace constraints
         [[nodiscard]] double calculateDistanceDelta(const simulationBox::SimulationBox &) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
-        [[nodiscard]] bool applyShake(const simulationBox::SimulationBox &, double tolerance, double timestep);
+        [[nodiscard]] bool applyShake(const simulationBox::SimulationBox &, double tolerance);
         [[nodiscard]] bool applyRattle(double tolerance);
 
         /**************************************
-         *                                    *
          * standard getter and setter methods *
-         *                                    *
          **************************************/
 
         void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef) { _shakeDistanceRef = shakeDistanceRef; }

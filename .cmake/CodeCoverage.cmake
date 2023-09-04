@@ -569,7 +569,7 @@ function(setup_target_for_coverage_gcovr_html)
 
     # Running gcovr
     set(GCOVR_HTML_CMD
-        ${GCOVR_PATH} --html ${Coverage_OUTPUT_PATH}/index.html --html-details -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
+        ${GCOVR_PATH} --html ${Coverage_OUTPUT_PATH}/index.html --html-nested -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
         ${GCOVR_EXCLUDE_ARGS} --object-directory=${PROJECT_BINARY_DIR}
     )
 
@@ -598,9 +598,7 @@ function(setup_target_for_coverage_gcovr_html)
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
-        COMMENT "GCOVR_HTML_EXEC_TESTS_CMD"
-
-        # COMMENT "Running gcovr to produce HTML code coverage report."
+        COMMENT "Running gcovr to produce HTML code coverage report."
     )
 
     # Show info where to find the report

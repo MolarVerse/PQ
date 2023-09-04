@@ -15,18 +15,18 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace physicalData
 {
-    class PhysicalData;
+    class PhysicalData;   // forward declaration
 }
 
 namespace potential
 {
-    class CoulombPotential;
-    class NonCoulombPotential;
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 }   // namespace potential
 
 namespace forceField
@@ -68,13 +68,21 @@ namespace forceField
         const DihedralType &findDihedralTypeById(size_t id) const;
         const DihedralType &findImproperDihedralTypeById(size_t id) const;
 
-        void               activate() { _isActivated = true; }
-        void               deactivate() { _isActivated = false; }
-        [[nodiscard]] bool isActivated() const { return _isActivated; }
+        /*****************************
+         * standard activate methods *
+         *****************************/
 
-        void               activateNonCoulombic() { _isNonCoulombicActivated = true; }
-        void               deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
+        void activate() { _isActivated = true; }
+        void activateNonCoulombic() { _isNonCoulombicActivated = true; }
+        void deactivate() { _isActivated = false; }
+        void deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
+
+        [[nodiscard]] bool isActivated() const { return _isActivated; }
         [[nodiscard]] bool isNonCoulombicActivated() const { return _isNonCoulombicActivated; }
+
+        /************************
+         * standard add methods *
+         ************************/
 
         void addBond(const BondForceField &bond) { _bonds.push_back(bond); }
         void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
@@ -84,10 +92,11 @@ namespace forceField
         void addBondType(const BondType &bondType) { _bondTypes.push_back(bondType); }
         void addAngleType(const AngleType &angleType) { _angleTypes.push_back(angleType); }
         void addDihedralType(const DihedralType &dihedralType) { _dihedralTypes.push_back(dihedralType); }
-        void addImproperDihedralType(const DihedralType &improperDihedralType)
-        {
-            _improperDihedralTypes.push_back(improperDihedralType);
-        }
+        void addImproperDihedralType(const DihedralType &improperType) { _improperDihedralTypes.push_back(improperType); }
+
+        /**************************
+         * standard clear methods *
+         **************************/
 
         void clearBondTypes() { _bondTypes.clear(); }
         void clearAngleTypes() { _angleTypes.clear(); }
@@ -100,14 +109,8 @@ namespace forceField
          *                  *
          ********************/
 
-        void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &nonCoulombPotential)
-        {
-            _nonCoulombPotential = nonCoulombPotential;
-        }
-        void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &coulombPotential)
-        {
-            _coulombPotential = coulombPotential;
-        }
+        void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &pot) { _nonCoulombPotential = pot; }
+        void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &pot) { _coulombPotential = pot; }
 
         /********************
          *                  *

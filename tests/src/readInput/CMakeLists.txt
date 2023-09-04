@@ -4,6 +4,7 @@ set(source_files
     testGuffDatReader.cpp
     testInputFileReader.cpp
     testIntraNonBondedReader.cpp
+    testCommandLineArgs.cpp
 )
 
 foreach(source_file ${source_files})

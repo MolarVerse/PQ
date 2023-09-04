@@ -97,6 +97,24 @@ TEST(TestExceptions, intraNonBondedException)
     EXPECT_THROW_MSG(throw customException::IntraNonBondedException("test"), customException::IntraNonBondedException, "test");
 }
 
+/**
+ * @brief tests throwing intraNonBonded exception
+ *
+ */
+TEST(TestExceptions, shakeException)
+{
+    EXPECT_THROW_MSG(throw customException::ShakeException("test"), customException::ShakeException, "test");
+}
+
+/**
+ * @brief tests throwing intraNonBonded exception
+ *
+ */
+TEST(TestExceptions, cellListException)
+{
+    EXPECT_THROW_MSG(throw customException::CellListException("test"), customException::CellListException, "test");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

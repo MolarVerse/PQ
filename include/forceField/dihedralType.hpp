@@ -30,6 +30,10 @@ namespace forceField
 
         [[nodiscard]] bool operator==(const DihedralType &other) const;
 
+        /***************************
+         * standard getter methods *
+         ***************************/
+
         [[nodiscard]] size_t getId() const { return _id; }
         [[nodiscard]] double getForceConstant() const { return _forceConstant; }
         [[nodiscard]] double getPeriodicity() const { return _periodicity; }

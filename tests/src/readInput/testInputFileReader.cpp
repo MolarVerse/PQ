@@ -3,6 +3,7 @@
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "inputFileParser.hpp"   // for readInput
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Message, TestPartResult
 #include <map>             // for map
 #include <sstream>         // for basic_istringstream

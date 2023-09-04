@@ -5,7 +5,8 @@
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for operator*, Vector3D
 
-#include <vector>   // for vector
+#include <algorithm>    // for __for_each_fn, for_each
+#include <functional>   // for identity
 
 using namespace std;
 using namespace simulationBox;

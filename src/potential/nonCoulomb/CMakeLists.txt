@@ -18,7 +18,6 @@ target_include_directories(nonCoulombPotential
 
 target_link_libraries(nonCoulombPotential
     PUBLIC
-    config
     utilities
     linearAlgebra
     settings

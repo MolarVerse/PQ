@@ -10,7 +10,6 @@ target_include_directories(thermostat
 
 target_link_libraries(thermostat
     PUBLIC
-    config
     simulationBox
     physicalData
 )

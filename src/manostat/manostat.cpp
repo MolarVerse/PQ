@@ -2,13 +2,12 @@
 
 #include "constants.hpp"       // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"      // for ExceptionType
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
+#include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for pow
-#include <functional>   // for function
-#include <vector>       // for vector
+#include <functional>   // for identity, function
 
 using namespace manostat;
 

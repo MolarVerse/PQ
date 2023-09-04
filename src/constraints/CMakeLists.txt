@@ -13,6 +13,7 @@ target_link_libraries(constraints
     connectivity
     simulationBox
     linearAlgebra
+    settings
 )
 
 install(TARGETS constraints

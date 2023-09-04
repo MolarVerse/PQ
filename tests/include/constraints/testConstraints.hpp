@@ -27,11 +27,21 @@ class TestConstraints : public ::testing::Test
         molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule1.addAtomPosition(linearAlgebra::Vec3D(2.0, 0.0, 0.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(2.0, 2.0, 2.0));
+        molecule1.addAtomMass(1.0);
+        molecule1.addAtomMass(1.0);
+        molecule1.addAtomMass(1.0);
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(2);
         molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        molecule2.addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomMass(1.0);
+        molecule2.addAtomMass(1.0);
 
         _box = new simulationBox::SimulationBox();
         _box->addMolecule(molecule1);
@@ -45,6 +55,8 @@ class TestConstraints : public ::testing::Test
 
         _constraints->addBondConstraint(bondConstraint1);
         _constraints->addBondConstraint(bondConstraint2);
+
+        _constraints->activate();
     }
 
     virtual void TearDown()

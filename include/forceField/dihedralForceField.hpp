@@ -9,19 +9,19 @@
 
 namespace potential
 {
-    class CoulombPotential;
-    class NonCoulombPotential;
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 }   // namespace potential
 
 namespace simulationBox
 {
-    class SimulationBox;
-    class Molecule;
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
 }   // namespace simulationBox
 
 namespace physicalData
 {
-    class PhysicalData;
+    class PhysicalData;   // forward declaration
 }
 
 namespace forceField
@@ -50,14 +50,22 @@ namespace forceField
 
         void calculateEnergyAndForces(const simulationBox::SimulationBox &,
                                       physicalData::PhysicalData &,
-                                      bool,
+                                      const bool isImproperDihedral,
                                       const potential::CoulombPotential &,
                                       potential::NonCoulombPotential &);
+
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
         void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
         void setPeriodicity(const double periodicity) { _periodicity = periodicity; }
         void setPhaseShift(const double phaseShift) { _phaseShift = phaseShift; }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] size_t getType() const { return _type; }
         [[nodiscard]] bool   isLinker() const { return _isLinker; }

@@ -1,13 +1,10 @@
 #include "physicalData.hpp"
 
 #include "constants.hpp"
-#include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
 #include <algorithm>
 #include <cstddef>   // for size_t
-#include <ranges>
-#include <vector>
 
 using namespace physicalData;
 

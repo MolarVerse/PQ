@@ -3,7 +3,6 @@
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
-#include "timingsSettings.hpp"      // for getTimeStep
 
 using namespace setup;
 
@@ -31,7 +30,6 @@ void ConstraintsSetup::setup()
     setupTolerances();
     setupMaxIterations();
     setupRefBondLengths();
-    setupTimestep();
 }
 
 /**
@@ -59,9 +57,3 @@ void ConstraintsSetup::setupMaxIterations()
  *
  */
 void ConstraintsSetup::setupRefBondLengths() { _engine.getConstraints().calculateConstraintBondRefs(_engine.getSimulationBox()); }
-
-/**
- * @brief sets timestep in constraints
- *
- */
-void ConstraintsSetup::setupTimestep() { _engine.getConstraints().setDt(settings::TimingsSettings::getTimeStep()); }

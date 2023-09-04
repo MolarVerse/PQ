@@ -17,7 +17,7 @@ namespace defaults
     static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;   // in Angstrom
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;
-    static constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;
+    static constexpr double _WOLF_PARAMETER_DEFAULT_            = 0.25;     // TODO: add unit
     static constexpr char   _COULOMB_LONG_RANGE_TYPE_DEFAULT_[] = "none";   // default no coulomb long range correction
     static constexpr char   _NON_COULOMB_TYPE_DEFAULT_[]        = "guff";   // default is guff
 
@@ -28,7 +28,7 @@ namespace defaults
     static constexpr double _RATTLE_TOLERANCE_DEFAULT_       = 1e-8;
 
     static constexpr bool   _CELL_LIST_IS_ACTIVE_DEFAULT_ = false;   // default is brute force routine
-    static constexpr size_t _NUMBER_OF_CELLS_DEFAULT_     = 7;
+    static constexpr size_t _NUMBER_OF_CELLS_DEFAULT_     = 7;       // for each dimension
 
     static constexpr char   _THERMOSTAT_DEFAULT_[]                 = "none";   // default is no thermostat
     static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;      // in ps

@@ -12,19 +12,19 @@
 #include <vector>
 
 using namespace forceField;
-using namespace physicalData;
-using namespace potential;
 
 /**
  * @brief calculate energy and forces for a single bond
+ *
+ * @details if bond is a linker bond, correct coulomb and non-coulomb energy and forces
  *
  * @param box
  * @param physicalData
  */
 void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox &box,
-                                              PhysicalData                       &physicalData,
-                                              const CoulombPotential             &coulombPotential,
-                                              NonCoulombPotential                &nonCoulombPotential)
+                                              physicalData::PhysicalData         &physicalData,
+                                              const potential::CoulombPotential  &coulombPotential,
+                                              potential::NonCoulombPotential     &nonCoulombPotential)
 {
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -39,7 +39,7 @@ void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox
 
     physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-    if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
+    if (_isLinker && distance < potential::CoulombPotential::getCoulombRadiusCutOff())
     {
         const auto chargeProduct =
             _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);

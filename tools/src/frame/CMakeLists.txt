@@ -7,12 +7,12 @@ add_library(frameTools
 target_include_directories(frameTools
     PUBLIC
     ${PROJECT_SOURCE_DIR}/tools/include/frame
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(frameTools
     PUBLIC
     linearAlgebra
-    config
 )
 
 install(TARGETS frameTools
