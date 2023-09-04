@@ -1,6 +1,7 @@
 #include "dihedralForceField.hpp"
 
-#include "coulombPotential.hpp"      // for CoulombPotential
+#include "coulombPotential.hpp"   // for CoulombPotential
+#include "forceField.hpp"
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
@@ -86,32 +87,15 @@ void DihedralForceField::calculateEnergyAndForces(const simulationBox::Simulatio
 
         if (distance14 < potential::CoulombPotential::getCoulombRadiusCutOff())
         {
-            const auto chargeProduct =
-                _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[3]->getPartialCharge(_atomIndices[3]);
-
-            const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance14, chargeProduct);
-
-            forceMagnitude = -coulombForce * (1.0 - settings::PotentialSettings::getScale14Coulomb());
-            physicalData.addCoulombEnergy(-coulombEnergy * (1.0 - settings::PotentialSettings::getScale14Coulomb()));
-
-            const auto molType1  = _molecules[0]->getMoltype();
-            const auto molType2  = _molecules[3]->getMoltype();
-            const auto atomType1 = _molecules[0]->getAtomType(_atomIndices[0]);
-            const auto atomType2 = _molecules[3]->getAtomType(_atomIndices[3]);
-            const auto vdwType1  = _molecules[0]->getInternalGlobalVDWType(_atomIndices[0]);
-            const auto vdwType2  = _molecules[3]->getInternalGlobalVDWType(_atomIndices[3]);
-
-            const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
-
-            if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-                distance14 < nonCoulombPair->getRadialCutOff())
-            {
-                const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance14);
-
-                forceMagnitude -= nonCoulombForce * (1.0 - settings::PotentialSettings::getScale14VanDerWaals());
-                physicalData.addNonCoulombEnergy(-nonCoulombEnergy *
-                                                 (1.0 - settings::PotentialSettings::getScale14VanDerWaals()));
-            }
+            forceMagnitude = correctLinker(coulombPotential,
+                                           nonCoulombPotential,
+                                           physicalData,
+                                           _molecules[0],
+                                           _molecules[3],
+                                           _atomIndices[0],
+                                           _atomIndices[3],
+                                           distance14,
+                                           true);
 
             forceMagnitude /= distance14;
 

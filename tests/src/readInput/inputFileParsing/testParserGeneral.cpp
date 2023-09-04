@@ -24,7 +24,7 @@ TEST_F(TestInputFileReader, testJobType)
     InputFileParserGeneral   parser(_engine);
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     parser.parseJobType(lineElements, 0);
-    EXPECT_EQ(_engine.getSettings().getJobtype(), "MMMD");
+    EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseJobType(lineElements, 0),

@@ -2,7 +2,7 @@
 #include "dihedralType.hpp"               // for DihedralType
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for ParameterFileException
-#include "forceField.hpp"                 // for ForceField
+#include "forceFieldClass.hpp"            // for ForceField
 #include "improperDihedralSection.hpp"    // for ImproperDihedralSection
 #include "parameterFileSection.hpp"       // for parameterFile
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection

@@ -1,7 +1,7 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for MolDescriptorException
 #include "fileSettings.hpp"              // for FileSettings
-#include "forceField.hpp"                // for ForceField
+#include "forceFieldClass.hpp"           // for ForceField
 #include "moldescriptorReader.hpp"       // for MoldescriptorReader
 #include "simulationBox.hpp"             // for SimulationBox
 #include "testMoldesctripotReader.hpp"   // for TestMoldescriptorReader

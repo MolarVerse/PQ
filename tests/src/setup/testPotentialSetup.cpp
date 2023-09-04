@@ -2,7 +2,7 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
-#include "forceField.hpp"                // for ForceField
+#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "potential.hpp"                 // for Potential

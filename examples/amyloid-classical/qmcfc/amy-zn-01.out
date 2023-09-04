@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Thu Aug 24 09:43:11 2023
+ (+) Simulation run started on: Mon Sep  4 14:17:00 2023
 
 
 
@@ -20,7 +20,9 @@
 	      jobtype = mm-md;
 	
 	    # Number of steps to be performed and timestep in fs
-	      nstep= 2; timestep = 2.0; nreset = 50; 
+	      nstep= 1; timestep = 0.2; nreset = 50; 
+	
+	      nscale = 5;
 	#nreset_angular = 50;
 	
 	    # Output of coordinates, velocities ans solute charges enabled
@@ -30,7 +32,7 @@
 	      output_freq = 1; 
 	
 	    # Coulombic cutoff 
-	      rcoulomb = 0.01; 
+	      rcoulomb = 12.0; 
 	
 	    # Density of the system - affects boxsize
 	      density = 0.997; 
@@ -78,7 +80,7 @@
 
 
  (+) Input file run-01.in read successfully
-       30 keywords have been read
+       31 keywords have been read
 
  (+) Reading moldescriptor at
      /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/moldescriptor.dat
@@ -135,7 +137,7 @@
            Charge  =       -1 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.56655e-11 amu * A / fs
+                p = 4.56642e-11 amu * A / fs
 
  (+) Initializing force-field
 
@@ -174,15 +176,18 @@
 	* Reading dihedral topology data
 	    SUCCESS: Data of 2369 dihedral(s) read
 
+	* Reading improper dihedral topology data
+	    SUCCESS: Data of 131 improper dihedral(s) read
+
  (+) Force-field initalization complete
 
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 2.00 fs
+		Time step: 0.20 fs
 
 	* Coulombic Interactions
-		Cutoff:   0.01 A
+		Cutoff:  12.00 A
 
  (!) Warning: No longe Range correction requested.
 
@@ -194,7 +199,7 @@
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (2.0 fs)
+		Output Frequency:    1 (0.2 fs)
 
  (+) Initializing cellist
 
@@ -202,12 +207,12 @@
 		                     y    6.39 A
 		                     z    6.39 A
 
-		Cells within cutoff: x    1
-		                     y    1
-		                     z    1
+		Cells within cutoff: x    2
+		                     y    2
+		                     z    2
 
 		Total Cells:          1000
-		Volume ratio:        37.04
+		Volume ratio:         8.00
 
  (+) Creating data files....SUCCESS
 
@@ -215,32 +220,22 @@
 
  (+) Entering MM -- simulation loop
 
-       Requested Number of Steps:           2
+       Requested Number of Steps:           1
        Step Counter:                        0
+       Scaling requested for             5 step(s)
        Linear momentum reset requested for     50 step(s)
 
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.002		TEMPERATURE	43351358.939
-   PRESSURE	30638883.362		E(MM)		3255464281.537
-   E(KIN)	3334961573.520		E(INTRA)	       0.000
-   E(BOND)	     119.331		E(ANGLE)	     416.059
-   E(DIHEDRAL)	     390.673		E(IMPROPER)	       0.000
-   E(COULOMB)	-79498218.047		E(NONCOULOMB)	       0.000
+   SIMULATION TIME     0.000		TEMPERATURE	     201.448
+   PRESSURE	    -149.685		E(MM)		  -63237.806
+   E(KIN)	   15497.133		E(INTRA)	       0.000
+   E(BOND)	     119.763		E(ANGLE)	     409.390
+   E(DIHEDRAL)	     390.279		E(IMPROPER)	      16.965
+   E(COULOMB)	  -91805.567		E(NONCOULOMB)	   12134.230
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   4.982e-13		LOOPTIME 	       0.000
-
-
-   STEP NUMBER	           2		TOTAL STEPS	           2
-   SIMULATION TIME     0.004		TEMPERATURE	244335972.946
-   PRESSURE	235246780.286		E(MM)		18076604645.744
-   E(KIN)	18796436853.191		E(INTRA)	       0.000
-   E(BOND)	79422798.177		E(ANGLE)	   31032.495
-   E(DIHEDRAL)	    1148.893		E(IMPROPER)	       0.000
-   E(COULOMB)	-799287187.011		E(NONCOULOMB)	       0.000
-   E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   7.172e-14		LOOPTIME 	       0.000
+   MOMENTUM	   2.847e-14		LOOPTIME 	       1.000
 
 
 
@@ -253,5 +248,5 @@
 
 
 
- (+) Simulation time: 0.000000
+ (+) Simulation time: 3.000000
 

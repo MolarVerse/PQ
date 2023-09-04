@@ -1,10 +1,10 @@
 #include "dihedralSection.hpp"
 
-#include "constants.hpp"      // for _DEG_TO_RAD_
-#include "dihedralType.hpp"   // for DihedralType
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for ParameterFileException
-#include "forceField.hpp"     // for ForceField
+#include "constants.hpp"         // for _DEG_TO_RAD_
+#include "dihedralType.hpp"      // for DihedralType
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for ParameterFileException
+#include "forceFieldClass.hpp"   // for ForceField
 
 #include <format>   // for format
 

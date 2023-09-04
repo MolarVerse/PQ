@@ -1,9 +1,9 @@
 #include "testTopologyReader.hpp"
 
-#include "constraints.hpp"    // for Constraints
-#include "exceptions.hpp"     // for InputFileException, TopologyException
-#include "fileSettings.hpp"   // for FileSettings
-#include "forceField.hpp"     // for ForceField
+#include "constraints.hpp"       // for Constraints
+#include "exceptions.hpp"        // for InputFileException, TopologyException
+#include "fileSettings.hpp"      // for FileSettings
+#include "forceFieldClass.hpp"   // for ForceField
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 

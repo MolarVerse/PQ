@@ -5,7 +5,7 @@
 #include "dihedralForceField.hpp"   // for DihedralForceField
 #include "dihedralType.hpp"         // for DihedralType
 #include "engine.hpp"               // for Engine
-#include "forceField.hpp"           // for ForceField
+#include "forceFieldClass.hpp"      // for ForceField
 #include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
 #include "molecule.hpp"             // for Molecule
 #include "simulationBox.hpp"        // for SimulationBox

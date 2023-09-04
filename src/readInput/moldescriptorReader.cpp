@@ -3,7 +3,7 @@
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for customException::MolDescriptorException
 #include "fileSettings.hpp"      // for FileSettings
-#include "forceField.hpp"        // for ForceField
+#include "forceFieldClass.hpp"   // for ForceField
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString

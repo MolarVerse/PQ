@@ -6,7 +6,7 @@
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, InputFileException
 #include "fileSettings.hpp"          // for FileSettings
-#include "forceField.hpp"            // for ForceField
+#include "forceFieldClass.hpp"       // for ForceField
 #include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
 #include "guffPair.hpp"              // for GuffPair
 #include "lennardJonesPair.hpp"      // for LennardJonesPair

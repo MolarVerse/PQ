@@ -2,7 +2,7 @@
 
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
-#include "forceField.hpp"             // for ForceField
+#include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "potential.hpp"              // for Potential
 

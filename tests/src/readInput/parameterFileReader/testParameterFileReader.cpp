@@ -5,7 +5,7 @@
 #include "dihedralSection.hpp"           // for DihedralSection
 #include "exceptions.hpp"                // for InputFileException, ParameterFileException
 #include "fileSettings.hpp"              // for FileSettings
-#include "forceField.hpp"                // for ForceField
+#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection

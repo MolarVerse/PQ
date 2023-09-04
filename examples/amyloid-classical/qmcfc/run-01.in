@@ -9,9 +9,9 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep= 100; timestep = 0.2; nreset = 50; 
+      nstep= 1; timestep = 0.2; nreset = 50; 
 
-      nscale = 100;
+      nscale = 5;
 #nreset_angular = 50;
 
     # Output of coordinates, velocities ans solute charges enabled

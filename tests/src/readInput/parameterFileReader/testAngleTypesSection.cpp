@@ -3,7 +3,7 @@
 #include "constants.hpp"                  // for _DEG_TO_RAD_
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for ParameterFileException
-#include "forceField.hpp"                 // for ForceField
+#include "forceFieldClass.hpp"            // for ForceField
 #include "parameterFileSection.hpp"       // for parameterFile
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG

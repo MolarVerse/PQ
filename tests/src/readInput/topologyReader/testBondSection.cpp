@@ -2,7 +2,7 @@
 #include "bondSection.hpp"           // for BondSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "forceField.hpp"            // for ForceField
+#include "forceFieldClass.hpp"       // for ForceField
 #include "simulationBox.hpp"         // for SimulationBox
 #include "testTopologySection.hpp"   // for TestTopologySection
 

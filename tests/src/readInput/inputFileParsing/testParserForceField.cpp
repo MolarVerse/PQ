@@ -1,6 +1,6 @@
 #include "engine.hpp"                      // for Engine
 #include "exceptions.hpp"                  // for InputFileException, customException
-#include "forceField.hpp"                  // for ForceField
+#include "forceFieldClass.hpp"             // for ForceField
 #include "inputFileParser.hpp"             // for readInput
 #include "inputFileParserForceField.hpp"   // for InputFileParserForceField
 #include "testInputFileReader.hpp"         // for TestInputFileReader

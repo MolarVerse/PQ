@@ -1,6 +1,7 @@
 #include "bondForceField.hpp"
 
 #include "coulombPotential.hpp"
+#include "forceField.hpp"
 #include "molecule.hpp"
 #include "nonCoulombPair.hpp"
 #include "nonCoulombPotential.hpp"
@@ -41,31 +42,15 @@ void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox
 
     if (_isLinker && distance < potential::CoulombPotential::getCoulombRadiusCutOff())
     {
-        const auto chargeProduct =
-            _molecules[0]->getPartialCharge(_atomIndices[0]) * _molecules[1]->getPartialCharge(_atomIndices[1]);
-
-        const auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
-
-        forceMagnitude -= coulombForce;
-        physicalData.addCoulombEnergy(-coulombEnergy);
-
-        const auto molType1  = _molecules[0]->getMoltype();
-        const auto molType2  = _molecules[1]->getMoltype();
-        const auto atomType1 = _molecules[0]->getAtomType(_atomIndices[0]);
-        const auto atomType2 = _molecules[1]->getAtomType(_atomIndices[1]);
-        const auto vdwType1  = _molecules[0]->getInternalGlobalVDWType(_atomIndices[0]);
-        const auto vdwType2  = _molecules[1]->getInternalGlobalVDWType(_atomIndices[1]);
-
-        const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
-
-        if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
-            distance < nonCoulombPair->getRadialCutOff())
-        {
-            const auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance);
-
-            forceMagnitude -= nonCoulombForce;
-            physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
-        }
+        forceMagnitude += correctLinker(coulombPotential,
+                                        nonCoulombPotential,
+                                        physicalData,
+                                        _molecules[0],
+                                        _molecules[1],
+                                        _atomIndices[0],
+                                        _atomIndices[1],
+                                        distance,
+                                        false);
     }
 
     forceMagnitude /= distance;

@@ -1,163 +1,71 @@
 #include "forceField.hpp"
 
-#include "exceptions.hpp"
-
-#include <algorithm>
-#include <format>       // for format
-#include <functional>   // for identity
-#include <ranges>       // for find_if, std::ranges::find_if
-#include <string>       // for string
-
-using namespace forceField;
+#include "coulombPotential.hpp"
+#include "molecule.hpp"
+#include "nonCoulombPair.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
 
 /**
- * @brief find bond type by id
+ * @brief correct coulomb and non-coulomb energy and forces for linker connectivity elements
  *
- * @param id
- * @return const BondType&
- *
- * @throws customException::TopologyException if bond type with id not found
- */
-const BondType &ForceField::findBondTypeById(const size_t id) const
-{
-    auto isBondId = [id](const BondType &bondType) { return bondType.getId() == id; };
-
-    if (const auto bondType = std::ranges::find_if(_bondTypes, isBondId); bondType != _bondTypes.end())
-        return *bondType;
-    else
-        throw customException::TopologyException(std::format("Bond type with id {} not found.", id));
-}
-
-/**
- * @brief find angle type by id
- *
- * @param id
- * @return const AngleType&
- *
- * @throws customException::TopologyException if angle type with id not found
- */
-const AngleType &ForceField::findAngleTypeById(const size_t id) const
-{
-    auto isAngleId = [id](const AngleType &angleType) { return angleType.getId() == id; };
-
-    if (const auto angleType = std::ranges::find_if(_angleTypes, isAngleId); angleType != _angleTypes.end())
-        return *angleType;
-    else
-        throw customException::TopologyException(std::format("Angle type with id {} not found.", id));
-}
-
-/**
- * @brief find dihedral type by id
- *
- * @param id
- * @return const DihedralType&
- *
- * @throws customException::TopologyException if dihedral type with id not found
- */
-const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
-{
-    auto isDihedralId = [id](const DihedralType &dihedralType) { return dihedralType.getId() == id; };
-
-    if (const auto dihedralType = std::ranges::find_if(_dihedralTypes, isDihedralId); dihedralType != _dihedralTypes.end())
-        return *dihedralType;
-    else
-        throw customException::TopologyException(std::format("Dihedral type with id {} not found.", id));
-}
-
-/**
- * @brief find improper dihedral type by id
- *
- * @param id
- * @return const DihedralType&
- *
- * @throws customException::TopologyException if improper dihedral type with id not found
- */
-const DihedralType &ForceField::findImproperDihedralTypeById(const size_t id) const
-{
-    auto isImproperDihedralId = [id](const DihedralType &dihedralType) { return dihedralType.getId() == id; };
-
-    if (const auto dihedralType = std::ranges::find_if(_improperDihedralTypes, isImproperDihedralId);
-        dihedralType != _improperDihedralTypes.end())
-        return *dihedralType;
-    else
-        throw customException::TopologyException(std::format("Improper dihedral type with id {} not found.", id));
-}
-
-/**
- * @brief calculates all bonded interactions for:
- * 1) bonds
- * 2) angles
- * 3) dihedrals
- * 4) improper dihedrals
- *
- * @param box
+ * @param coulombPotential
+ * @param nonCoulombPotential
  * @param physicalData
+ * @param molecule1
+ * @param molecule2
+ * @param atomIndex1
+ * @param atomIndex2
+ * @param distance
+ * @return double
  */
-void ForceField::calculateBondedInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+double forceField::correctLinker(const potential::CoulombPotential &coulombPotential,
+                                 potential::NonCoulombPotential    &nonCoulombPotential,
+                                 physicalData::PhysicalData        &physicalData,
+                                 const simulationBox::Molecule     *molecule1,
+                                 const simulationBox::Molecule     *molecule2,
+                                 const size_t                       atomIndex1,
+                                 const size_t                       atomIndex2,
+                                 const double                       distance,
+                                 const bool                         isDihedral)
 {
-    calculateBondInteractions(box, physicalData);
-    calculateAngleInteractions(box, physicalData);
-    calculateDihedralInteractions(box, physicalData);
-    calculateImproperDihedralInteractions(box, physicalData);
-}
+    const auto chargeProduct = molecule1->getPartialCharge(atomIndex1) * molecule2->getPartialCharge(atomIndex2);
 
-/**
- * @brief calculates all bond interactions
- *
- * @param box
- * @param physicalData
- */
-void ForceField::calculateBondInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
-{
-    auto calculateBondInteraction = [&box, &physicalData, this](auto &bond)
-    { bond.calculateEnergyAndForces(box, physicalData, *_coulombPotential, *_nonCoulombPotential); };
+    auto [coulombEnergy, coulombForce] = coulombPotential.calculate(distance, chargeProduct);
 
-    std::ranges::for_each(_bonds, calculateBondInteraction);
-}
+    if (isDihedral)
+    {
+        coulombEnergy *= (1.0 - settings::PotentialSettings::getScale14Coulomb());
+        coulombForce  *= (1.0 - settings::PotentialSettings::getScale14Coulomb());
+    }
 
-/**
- * @brief calculates all angle interactions
- *
- * @param box
- * @param physicalData
- */
-void ForceField::calculateAngleInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
-{
-    auto calculateAngleInteraction = [&box, &physicalData, this](auto &angle)
-    { angle.calculateEnergyAndForces(box, physicalData, *_coulombPotential, *_nonCoulombPotential); };
+    auto forceMagnitude = -coulombForce;
+    physicalData.addCoulombEnergy(-coulombEnergy);
 
-    std::ranges::for_each(_angles, calculateAngleInteraction);
-}
+    const auto molType1  = molecule1->getMoltype();
+    const auto molType2  = molecule2->getMoltype();
+    const auto atomType1 = molecule1->getAtomType(atomIndex1);
+    const auto atomType2 = molecule2->getAtomType(atomIndex2);
+    const auto vdwType1  = molecule1->getInternalGlobalVDWType(atomIndex1);
+    const auto vdwType2  = molecule2->getInternalGlobalVDWType(atomIndex2);
 
-/**
- * @brief calculates all dihedral interactions
- *
- * @details set parameter isImproperDihedral to false
- *
- * @param box
- * @param physicalData
- */
-void ForceField::calculateDihedralInteractions(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
-{
-    auto calculateDihedralInteraction = [&box, &physicalData, this](auto &dihedral)
-    { dihedral.calculateEnergyAndForces(box, physicalData, false, *_coulombPotential, *_nonCoulombPotential); };
+    const auto combinedIndices = {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
 
-    std::ranges::for_each(_dihedrals, calculateDihedralInteraction);
-}
+    if (const auto nonCoulombPair = nonCoulombPotential.getNonCoulombPair(combinedIndices);
+        distance < nonCoulombPair->getRadialCutOff())
+    {
+        auto [nonCoulombEnergy, nonCoulombForce] = nonCoulombPair->calculateEnergyAndForce(distance);
 
-/**
- * @brief calculates all improper dihedral interactions
- *
- * @details set parameter isImproperDihedral to true
- *
- * @param box
- * @param physicalData
- */
-void ForceField::calculateImproperDihedralInteractions(const simulationBox::SimulationBox &box,
-                                                       physicalData::PhysicalData         &physicalData)
-{
-    auto calculateImproperDihedralInteraction = [&box, &physicalData, this](auto &dihedral)
-    { dihedral.calculateEnergyAndForces(box, physicalData, true, *_coulombPotential, *_nonCoulombPotential); };
+        if (isDihedral)
+        {
+            nonCoulombEnergy *= (1.0 - settings::PotentialSettings::getScale14VanDerWaals());
+            nonCoulombForce  *= (1.0 - settings::PotentialSettings::getScale14VanDerWaals());
+        }
 
-    std::ranges::for_each(_improperDihedrals, calculateImproperDihedralInteraction);
+        forceMagnitude -= nonCoulombForce;
+        physicalData.addNonCoulombEnergy(-nonCoulombEnergy);
+    }
+
+    return forceMagnitude;
 }

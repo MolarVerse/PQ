@@ -1,7 +1,7 @@
 #include "dihedralForceField.hpp"        // for DihedralForceField
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for TopologyException
-#include "forceField.hpp"                // for ForceField
+#include "forceFieldClass.hpp"           // for ForceField
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "simulationBox.hpp"             // for SimulationBox
 #include "testTopologySection.hpp"       // for TestTopologySection

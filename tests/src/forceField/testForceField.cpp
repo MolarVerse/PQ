@@ -1,9 +1,14 @@
-#include "angleType.hpp"          // for AngleType
-#include "bondType.hpp"           // for BondType
-#include "dihedralType.hpp"       // for DihedralType
-#include "exceptions.hpp"         // for TopologyException
-#include "forceField.hpp"         // for ForceField
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "angleType.hpp"                 // for AngleType
+#include "bondType.hpp"                  // for BondType
+#include "coulombShiftedPotential.hpp"   // for CoulombPotential
+#include "dihedralType.hpp"              // for DihedralType
+#include "exceptions.hpp"                // for TopologyException
+#include "forceFieldClass.hpp"           // for ForceField
+#include "forceFieldNonCoulomb.hpp"      // for NonCoulombPotential
+#include "lennardJonesPair.hpp"          // for LennardJonesPair
+#include "molecule.hpp"                  // for Molecule
+#include "physicalData.hpp"              // for PhysicalData
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, EXP...
@@ -115,6 +120,29 @@ TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
     EXPECT_THROW_MSG(forceField.findImproperDihedralTypeById(0),
                      customException::TopologyException,
                      "Improper dihedral type with id " + std::to_string(0) + " not found.");
+}
+
+TEST(TestForceField, correctLinker)
+{
+    auto coulomPotential     = potential::CoulombShiftedPotential(10.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+
+    auto nonCoulombPair = potential::LennardJonesPair(size_t(0), size_t(1), 1.0, 2.0, 4.0);
+
+    auto molecule = simulationBox::Molecule();
+
+    molecule.addAtomForce({0.0, 0.0, 0.0});
+    molecule.addAtomForce({0.0, 0.0, 0.0});
+    molecule.addInternalGlobalVDWType(0);
+    molecule.addInternalGlobalVDWType(1);
+    molecule.addAtomType(0);
+    molecule.addAtomType(1);
+
+    physicalData::PhysicalData physicalData;
+
+    auto forceField = forceField::ForceField();
+
+    forceField.addNonCoulombicPair(std::make_shared<potential::NonCoulombPair>(nonCoulombPair));
 }
 
 // /**

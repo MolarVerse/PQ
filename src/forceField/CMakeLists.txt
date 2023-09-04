@@ -5,6 +5,7 @@ add_library(forceField
     angleType.cpp
     dihedralForceField.cpp
     dihedralType.cpp
+    forceFieldClass.cpp
     forceField.cpp
 )
 

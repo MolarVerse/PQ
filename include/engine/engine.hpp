@@ -5,14 +5,13 @@
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
-#include "forceField.hpp"
+#include "forceFieldClass.hpp"
 #include "integrator.hpp"
 #include "intraNonBonded.hpp"
 #include "manostat.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "resetKinetics.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "thermostat.hpp"
 #include "timings.hpp"
@@ -45,7 +44,6 @@ namespace engine
         size_t _step = 1;
 
         EngineOutput                   _engineOutput;
-        settings::Settings             _settings;
         timings::Timings               _timings;
         simulationBox::CellList        _cellList;
         simulationBox::SimulationBox   _simulationBox;
@@ -117,7 +115,6 @@ namespace engine
          *                         *
          ***************************/
 
-        [[nodiscard]] settings::Settings           &getSettings() { return _settings; }
         [[nodiscard]] timings::Timings             &getTimings() { return _timings; }
         [[nodiscard]] simulationBox::CellList      &getCellList() { return _cellList; }
         [[nodiscard]] simulationBox::SimulationBox &getSimulationBox() { return _simulationBox; }

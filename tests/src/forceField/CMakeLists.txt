@@ -2,6 +2,7 @@ set(source_files
     testForceField.cpp
     testAngleType.cpp
     testBondType.cpp
+    testBondForceField.cpp
     testDihedralType.cpp
 )
 
@@ -15,6 +16,7 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         forceField
+        potential
         gtest
         gtest_main
         gmock

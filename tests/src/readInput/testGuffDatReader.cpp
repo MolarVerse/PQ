@@ -5,7 +5,7 @@
 #include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, UserInputException
-#include "forceField.hpp"            // for ForceField
+#include "forceFieldClass.hpp"       // for ForceField
 #include "guffPair.hpp"              // for GuffPair
 #include "lennardJonesPair.hpp"      // for LennardJonesPair
 #include "morsePair.hpp"             // for MorsePair

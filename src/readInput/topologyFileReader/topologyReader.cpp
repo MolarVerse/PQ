@@ -7,7 +7,7 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, TopologyException
 #include "fileSettings.hpp"              // for FileSettings
-#include "forceField.hpp"                // for ForceField
+#include "forceFieldClass.hpp"           // for ForceField
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "shakeSection.hpp"              // for ShakeSection
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
