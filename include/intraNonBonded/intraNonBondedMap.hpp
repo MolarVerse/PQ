@@ -51,6 +51,7 @@ namespace intraNonBonded
         [[nodiscard]] std::pair<double, double> calculateSingleInteraction(const size_t                atomIndex1,
                                                                            const int                   atomIndex2AsInt,
                                                                            const linearAlgebra::Vec3D &box,
+                                                                           physicalData::PhysicalData &,
                                                                            const potential::CoulombPotential *,
                                                                            potential::NonCoulombPotential *) const;
 

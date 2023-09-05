@@ -65,8 +65,16 @@ namespace physicalData
 
         void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }
         void addNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy += nonCoulombEnergy; }
-        void addIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy += intraCoulombEnergy; }
-        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy += intraNonCoulombEnergy; }
+        void addIntraCoulombEnergy(const double intraCoulombEnergy)
+        {
+            _intraCoulombEnergy += intraCoulombEnergy;
+            _coulombEnergy      += intraCoulombEnergy;
+        }
+        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
+        {
+            _intraNonCoulombEnergy += intraNonCoulombEnergy;
+            _nonCoulombEnergy      += intraNonCoulombEnergy;
+        }
 
         void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
         void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }

@@ -38,7 +38,7 @@ void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPot
         for (auto iter = atomIndices.begin(); iter != atomIndices.end(); ++iter)
         {
             const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
-                calculateSingleInteraction(atomIndex1, *iter, box, coulombPotential, nonCoulombPotential);
+                calculateSingleInteraction(atomIndex1, *iter, box, physicalData, coulombPotential, nonCoulombPotential);
 
             coulombEnergy    += coulombEnergyTemp;
             nonCoulombEnergy += nonCoulombEnergyTemp;
@@ -62,6 +62,7 @@ void IntraNonBondedMap::calculate(const potential::CoulombPotential  *coulombPot
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(const size_t                       atomIndex1,
                                                                         const int                          atomIndex2AsInt,
                                                                         const linearAlgebra::Vec3D        &box,
+                                                                        physicalData::PhysicalData        &physicalData,
                                                                         const potential::CoulombPotential *coulombPotential,
                                                                         potential::NonCoulombPotential *nonCoulombPotential) const
 {
@@ -123,6 +124,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(const si
         const auto forcexyz = force * dPos;
 
         const auto shiftForcexyz = forcexyz * txyz;
+
+        physicalData.addVirial(forcexyz * txyz);
 
         _molecule->addAtomForce(atomIndex1, forcexyz);
         _molecule->addAtomForce(atomIndex2, -forcexyz);

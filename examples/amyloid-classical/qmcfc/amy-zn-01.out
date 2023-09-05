@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Tue Sep  5 11:41:44 2023
+ (+) Simulation run started on: Tue Sep  5 12:49:13 2023
 
 
 
@@ -137,7 +137,7 @@
            Charge  =       -1 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.56655e-11 amu * A / fs
+                p = 4.56642e-11 amu * A / fs
 
  (+) Initializing force-field
 
@@ -238,7 +238,7 @@
    E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
    E(COULOMB)	  -96878.564		E(NONCOULOMB)	   12035.221
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   2.250e-14		LOOPTIME 	       0.000
+   MOMENTUM	   2.091e-14		LOOPTIME 	       2.000
 
 
 
@@ -251,5 +251,5 @@
 
 
 
- (+) Simulation time: 1.000000
+ (+) Simulation time: 4.000000
 

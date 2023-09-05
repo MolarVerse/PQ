@@ -5,6 +5,8 @@
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule
+#include "physicalData.hpp"              // for PhysicalData
+#include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 #include "vector3d.hpp"                  // for Vec3D
 
@@ -38,7 +40,10 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
     molecule.addPartialCharge(-0.5);
     molecule.resizeAtomShiftForces();
 
-    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(0, {{1}});
+    settings::PotentialSettings::setScale14Coulomb(0.75);
+    settings::PotentialSettings::setScale14VanDerWaals(0.75);
+
+    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(0, {{-1}});
     auto intraNonBondedMap  = intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
     auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
@@ -52,23 +57,59 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
     auto simulationBox = simulationBox::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
-    const auto [coulombEnergy, nonCoulombEnergy] = intraNonBondedMap.calculateSingleInteraction(
-        0, intraNonBondedType.getAtomIndices()[0][0], simulationBox.getBoxDimensions(), &coulombPotential, &nonCoulombPotential);
+    auto physicalData = physicalData::PhysicalData();
 
-    EXPECT_NEAR(coulombEnergy, -67.242901903583757, 1e-9);
-    EXPECT_NEAR(nonCoulombEnergy, 5.0, 1e-9);
+    const auto [coulombEnergy, nonCoulombEnergy] =
+        intraNonBondedMap.calculateSingleInteraction(0,
+                                                     intraNonBondedType.getAtomIndices()[0][0],
+                                                     simulationBox.getBoxDimensions(),
+                                                     physicalData,
+                                                     &coulombPotential,
+                                                     &nonCoulombPotential);
+
+    EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-9);
+    EXPECT_NEAR(nonCoulombEnergy, 5.0 * 0.75, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[1], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[2], 341.85768993269039 * 0.75, 1e-9);
+
+    molecule.setAtomForcesToZero();
+    molecule.setAtomShiftForces(0, {0.0, 0.0, 0.0});
+    physicalData.clearData();
+
+    intraNonBondedMap.calculate(&coulombPotential, &nonCoulombPotential, simulationBox, physicalData);
+
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), -67.242901903583757 * 0.75, 1e-9);
+    EXPECT_NEAR(physicalData.getIntraCoulombEnergy(), -67.242901903583757 * 0.75, 1e-9);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 5.0 * 0.75, 1e-9);
+    EXPECT_NEAR(physicalData.getIntraNonCoulombEnergy(), 5.0 * 0.75, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[1], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getVirial()[2], 341.85768993269039 * 0.75, 1e-9);
 }
 
 int main(int argc, char **argv)
