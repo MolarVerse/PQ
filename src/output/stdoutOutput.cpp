@@ -1,6 +1,7 @@
 #include "stdoutOutput.hpp"
 
-#include "exceptions.hpp"   // for UserInputExceptionWarning, customException
+#include "exceptions.hpp"       // for UserInputExceptionWarning, customException
+#include "outputMessages.hpp"   // for initialMomentumMessage
 
 #include <iostream>      // for operator<<, char_traits, basic_ostream, cout
 #include <string>        // for operator<<

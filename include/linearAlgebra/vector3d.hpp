@@ -11,6 +11,7 @@ namespace linearAlgebra
 {
     template <typename T>
     using iterator = typename std::array<T, 3>::iterator;
+
     template <typename T>
     using const_iterator = typename std::array<T, 3>::const_iterator;
 
@@ -45,7 +46,8 @@ namespace linearAlgebra
 
       public:
         ~Vector3D() = default;
-        Vector3D()  = default;
+
+        Vector3D() = default;
         Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
         Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
         explicit Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};

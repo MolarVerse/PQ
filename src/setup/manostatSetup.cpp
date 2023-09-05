@@ -49,6 +49,4 @@ void ManostatSetup::setup()
                                                          settings::ManostatSettings::getCompressibility()));
     else
         _engine.makeManostat(manostat::Manostat());
-
-    _engine.getManostat().setTimestep(settings::TimingsSettings::getTimeStep());
 }

@@ -1,5 +1,7 @@
 #include "logOutput.hpp"
 
+#include "outputMessages.hpp"   // for initialMomentumMessage
+
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
 

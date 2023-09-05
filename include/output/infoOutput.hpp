@@ -10,8 +10,8 @@
 
 namespace physicalData
 {
-    class PhysicalData;
-}   // namespace physicalData
+    class PhysicalData;   // forward declaration
+}
 
 namespace output
 {
@@ -26,10 +26,9 @@ namespace output
     {
       private:
         void writeHeader();
-        void writeLeft(
-            const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
-        void writeRight(
-            const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+        void writeLeft(const double value, const std::string_view &name, const std::string_view &unit);
+        void writeLeftScientific(const double value, const std::string_view &name, const std::string_view &unit);
+        void writeRight(const double value, const std::string_view &name, const std::string_view &unit);
 
       public:
         using Output::Output;

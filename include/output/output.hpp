@@ -33,8 +33,6 @@ namespace output
 
         static void setOutputFrequency(const size_t);
 
-        std::string initialMomentumMessage(const double) const;
-
         /********************************
          * standard getters and setters *
          ********************************/

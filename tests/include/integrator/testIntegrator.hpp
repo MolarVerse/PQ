@@ -2,10 +2,11 @@
 
 #define _TEST_INTEGRATOR_HPP_
 
-#include "integrator.hpp"      // for Integrator, VelocityVerlet
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
+#include "integrator.hpp"        // for Integrator, VelocityVerlet
+#include "molecule.hpp"          // for Molecule
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
+#include "vector3d.hpp"          // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
 
@@ -21,7 +22,7 @@ class TestIntegrator : public ::testing::Test
     virtual void SetUp()
     {
         _integrator = new integrator::VelocityVerlet();
-        _integrator->setDt(0.1);
+        settings::TimingsSettings::setTimeStep(0.1);
 
         _molecule1 = new simulationBox::Molecule();
         _molecule1->setNumberOfAtoms(2);

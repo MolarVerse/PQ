@@ -20,6 +20,7 @@ using namespace output;
  * @param filename
  *
  * @throw InputFileException if filename is empty
+ * @throw InputFileException if file already exists
  */
 void Output::setFilename(const string_view &filename)
 {
@@ -61,7 +62,6 @@ void Output::setFilename(const string_view &filename)
  * @throw InputFileException if output frequency is negative
  *
  * @note
- *
  *  if output frequency is 0, it is set to UINT64_MAX
  *  in order to avoid division by 0 in the output
  *
@@ -86,15 +86,4 @@ void Output::openFile()
 
     if (!_fp.is_open())
         throw InputFileException("Could not open file - filename = " + _fileName);
-}
-
-/**
- * @brief construct general initial momentum message
- *
- * @param momentum
- * @return string
- */
-string Output::initialMomentumMessage(const double momentum) const
-{
-    return format("Initial momentum = {} Angstrom * amu / fs", momentum);
 }

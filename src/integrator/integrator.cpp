@@ -1,9 +1,10 @@
 #include "integrator.hpp"
 
-#include "constants.hpp"       // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for operator*, Vector3D
+#include "constants.hpp"         // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
+#include "molecule.hpp"          // for Molecule
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
+#include "vector3d.hpp"          // for operator*, Vector3D
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <functional>   // for identity
@@ -22,7 +23,7 @@ void Integrator::integrateVelocities(simulationBox::Molecule &molecule, const si
     const auto forces     = molecule.getAtomForce(index);
     const auto mass       = molecule.getAtomMass(index);
 
-    velocities += _dt * forces / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
+    velocities += settings::TimingsSettings::getTimeStep() * forces / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
 
     molecule.setAtomVelocity(index, velocities);
 }
@@ -41,7 +42,7 @@ void Integrator::integratePositions(simulationBox::Molecule            &molecule
     auto       positions  = molecule.getAtomPosition(index);
     const auto velocities = molecule.getAtomVelocity(index);
 
-    positions += _dt * velocities * constants::_FS_TO_S_;
+    positions += settings::TimingsSettings::getTimeStep() * velocities * constants::_FS_TO_S_;
     simBox.applyPBC(positions);
 
     molecule.setAtomPosition(index, positions);

@@ -107,15 +107,15 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(const si
             distance < nonCoulombicPair->getRadialCutOff())
         {
 
-            auto [energy, nonCoulombForce] = nonCoulombicPair->calculateEnergyAndForce(distance);
+            auto [nonCoulombEnergyLocal, nonCoulombForce] = nonCoulombicPair->calculateEnergyAndForce(distance);
 
             if (scale)
             {
-                energy          *= settings::PotentialSettings::getScale14VanDerWaals();
-                nonCoulombForce *= settings::PotentialSettings::getScale14VanDerWaals();
+                nonCoulombEnergyLocal *= settings::PotentialSettings::getScale14VanDerWaals();
+                nonCoulombForce       *= settings::PotentialSettings::getScale14VanDerWaals();
             }
 
-            nonCoulombEnergy  = energy;
+            nonCoulombEnergy  = nonCoulombEnergyLocal;
             force            += nonCoulombForce;
         }
 

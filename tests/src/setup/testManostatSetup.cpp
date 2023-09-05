@@ -21,11 +21,7 @@ using namespace setup;
 TEST_F(TestSetup, setup)
 {
     ManostatSetup manostatSetup(_engine);
-
-    settings::TimingsSettings::setTimeStep(0.1);
     manostatSetup.setup();
-
-    EXPECT_EQ(_engine.getManostat().getTimestep(), 0.1);
 
     settings::ManostatSettings::setManostatType("berendsen");
     EXPECT_THROW(manostatSetup.setup(), customException::InputFileException);

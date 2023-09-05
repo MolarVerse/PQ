@@ -1,9 +1,10 @@
 #include "manostat.hpp"
 
-#include "constants.hpp"       // for _PRESSURE_FACTOR_
-#include "exceptions.hpp"      // for ExceptionType
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "constants.hpp"         // for _PRESSURE_FACTOR_
+#include "exceptions.hpp"        // for ExceptionType
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for pow
@@ -49,8 +50,10 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(physicalData);
 
-    const auto linearScalingFactor = ::pow(1.0 - _compressibility * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
-    const auto scalingFactors      = linearAlgebra::Vec3D(linearScalingFactor);
+    const auto linearScalingFactor = ::pow(
+        1.0 - _compressibility * settings::TimingsSettings::getTimeStep() / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
+
+    const auto scalingFactors = linearAlgebra::Vec3D(linearScalingFactor);
 
     simBox.scaleBox(scalingFactors);
 

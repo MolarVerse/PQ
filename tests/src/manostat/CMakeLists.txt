@@ -24,4 +24,17 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+
+    set_property(TEST ${test_name} PROPERTY LABELS manostat)
 endforeach()
+
+include(CodeCoverage)
+setup_target_for_coverage_gcovr_html(
+    NAME coverage_manostat
+    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+    # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/manostat
+    EXECUTABLE "ctest"
+    EXECUTABLE_ARGS "-L;manostat"
+    OUTPUT_PATH "coverage"
+)

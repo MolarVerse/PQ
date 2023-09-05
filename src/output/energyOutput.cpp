@@ -2,7 +2,7 @@
 
 #include "physicalData.hpp"   // for PhysicalData
 
-#include <iomanip>
+#include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<
 
 using namespace output;
@@ -15,57 +15,16 @@ using namespace output;
  */
 void EnergyOutput::write(const size_t step, const physicalData::PhysicalData &data)
 {
-    _fp << std::right;
-    _fp << std::setw(10);
-    _fp << step;
-
-    _fp << std::fixed;
-    _fp << std::setprecision(12);
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getTemperature();
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getPressure();
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << 0.0;
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getKineticEnergy();
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << 0.0;
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getCoulombEnergy();
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getNonCoulombEnergy();
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << 0.0;
-
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << 0.0;
-
-    _fp << std::scientific;
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << data.getMomentum();
-
-    _fp << std::fixed;
-    _fp << std::right;
-    _fp << std::setw(20);
-    _fp << 0.0;
-    _fp << '\n';
+    _fp << std::format("{:10d}\t", step);
+    _fp << std::format("{:20.12f}\t", data.getTemperature());
+    _fp << std::format("{:20.12f}\t", data.getPressure());
+    _fp << std::format("{:20.12f}\t", 0.0);
+    _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
+    _fp << std::format("{:20.12f}\t", 0.0);
+    _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
+    _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
+    _fp << std::format("{:20.12f}\t", 0.0);
+    _fp << std::format("{:20.12f}\t", 0.0);
+    _fp << std::format("{:20.12e}\t", data.getMomentum());
+    _fp << std::format("{:20.12f}\n", 0.0);
 }

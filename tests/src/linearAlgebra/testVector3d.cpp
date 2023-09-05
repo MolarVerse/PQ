@@ -465,6 +465,20 @@ TEST(TestVector3d, cos)
 }
 
 /**
+ * @brief tests angle for Vector3D
+ *
+ * @details calculates the angle between two vectors
+ *
+ */
+TEST(TestVector3d, angle)
+{
+    const auto vec1 = Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = Vec3D(2.0, 3.0, 4.0);
+
+    EXPECT_DOUBLE_EQ(angle(vec1, vec2), ::acos(cos(vec1, vec2)));
+}
+
+/**
  * @brief tests os stream for Vector3D
  *
  */

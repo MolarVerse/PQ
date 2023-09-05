@@ -5,6 +5,7 @@
 #include "mathUtilities.hpp"      // for compare
 #include "molecule.hpp"           // for Molecule
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "timingsSettings.hpp"    // for TimingsSettings
 #include "vector3d.hpp"           // for Vector3D, Vec3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -53,7 +54,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->addMolecule(molecule);
 
     _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
-    _manostat->setTimestep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5);
 
     const auto scaleFactors =
         linearAlgebra::Vec3D(::pow(1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_), 1.0 / 3.0));
@@ -79,7 +80,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBox
     _box->setBoxDimensions({2.0, 2.0, 2.0});
 
     _manostat = new manostat::BerendsenManostat(3.0 * constants::_PRESSURE_FACTOR_, 0.1, 4.5);
-    _manostat->setTimestep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5);
 
     EXPECT_THROW_MSG(_manostat->applyManostat(*_box, *_data),
                      customException::ManostatException,

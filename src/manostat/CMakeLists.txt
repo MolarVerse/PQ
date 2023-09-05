@@ -11,6 +11,8 @@ target_link_libraries(manostat
     PUBLIC
     virial
     physicalData
+    linearAlgebra
+    settings
 )
 
 install(TARGETS manostat

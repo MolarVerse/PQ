@@ -21,4 +21,4 @@ void setup::setupIntegrator(engine::Engine &engine)
  * @brief sets timestep in integrator
  *
  */
-void IntegratorSetup::setup() { _engine.getIntegrator().setDt(settings::TimingsSettings::getTimeStep()); }
+void IntegratorSetup::setup() {}

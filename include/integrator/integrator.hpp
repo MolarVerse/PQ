@@ -24,7 +24,6 @@ namespace integrator
     {
       protected:
         std::string _integratorType;
-        double      _dt;
 
       public:
         Integrator() = default;
@@ -42,9 +41,6 @@ namespace integrator
          ********************************/
 
         [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
-        [[nodiscard]] double           getDt() const { return _dt; }
-
-        void setDt(const double dt) { _dt = dt; }
     };
 
     /**
