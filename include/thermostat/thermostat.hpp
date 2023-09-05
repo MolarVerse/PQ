@@ -28,9 +28,9 @@ namespace thermostat
     class Thermostat
     {
       protected:
-        double _temperature;
-        double _targetTemperature;
-        double _timestep;
+        double _temperature       = 0.0;
+        double _targetTemperature = 0.0;
+        double _timestep          = 0.0;
 
       public:
         Thermostat() = default;

@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Mon Sep  4 14:17:00 2023
+ (+) Simulation run started on: Tue Sep  5 11:41:44 2023
 
 
 
@@ -20,7 +20,7 @@
 	      jobtype = mm-md;
 	
 	    # Number of steps to be performed and timestep in fs
-	      nstep= 1; timestep = 0.2; nreset = 50; 
+	      nstep= 1; timestep = 2.0; nreset = 50; 
 	
 	      nscale = 5;
 	#nreset_angular = 50;
@@ -32,7 +32,7 @@
 	      output_freq = 1; 
 	
 	    # Coulombic cutoff 
-	      rcoulomb = 12.0; 
+	      rcoulomb = 12.5; 
 	
 	    # Density of the system - affects boxsize
 	      density = 0.997; 
@@ -137,7 +137,7 @@
            Charge  =       -1 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.56642e-11 amu * A / fs
+                p = 4.56655e-11 amu * A / fs
 
  (+) Initializing force-field
 
@@ -170,6 +170,9 @@
 	* Reading bond topology data
 	    SUCCESS: Data of 330 bond(s) read
 
+	* Reading shake topology data
+	    SUCCESS: Data of 308 shake bond(s) read
+
 	* Reading angle topology data
 	    SUCCESS: Data of 1156 angle(s) read
 
@@ -184,10 +187,10 @@
  (+) Initialising Constants
 
 	* Velocity Verlet
-		Time step: 0.20 fs
+		Time step: 2.00 fs
 
 	* Coulombic Interactions
-		Cutoff:  12.00 A
+		Cutoff:  12.50 A
 
  (!) Warning: No longe Range correction requested.
 
@@ -199,7 +202,7 @@
 	* Manostat -- none
 
 	* Data output
-		Output Frequency:    1 (0.2 fs)
+		Output Frequency:    1 (2.0 fs)
 
  (+) Initializing cellist
 
@@ -228,14 +231,14 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.000		TEMPERATURE	     201.448
-   PRESSURE	    -149.685		E(MM)		  -63237.806
-   E(KIN)	   15497.133		E(INTRA)	       0.000
-   E(BOND)	     119.763		E(ANGLE)	     409.390
-   E(DIHEDRAL)	     390.279		E(IMPROPER)	      16.965
-   E(COULOMB)	  -91805.567		E(NONCOULOMB)	   12134.230
+   SIMULATION TIME     0.002		TEMPERATURE	     268.130
+   PRESSURE	   -1513.735		E(MM)		  -63354.883
+   E(KIN)	   20544.808		E(INTRA)	       0.000
+   E(BOND)	     119.591		E(ANGLE)	     416.295
+   E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
+   E(COULOMB)	  -96878.564		E(NONCOULOMB)	   12035.221
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   2.847e-14		LOOPTIME 	       1.000
+   MOMENTUM	   2.250e-14		LOOPTIME 	       0.000
 
 
 
@@ -248,5 +251,5 @@
 
 
 
- (+) Simulation time: 3.000000
+ (+) Simulation time: 1.000000
 

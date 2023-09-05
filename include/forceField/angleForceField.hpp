@@ -38,8 +38,8 @@ namespace forceField
         size_t _type;
         bool   _isLinker = false;
 
-        double _equilibriumAngle;
-        double _forceConstant;
+        double _equilibriumAngle = 0.0;
+        double _forceConstant    = 0.0;
 
       public:
         AngleForceField(const std::vector<simulationBox::Molecule *> &molecules,

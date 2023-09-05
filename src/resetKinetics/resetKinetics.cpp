@@ -73,7 +73,6 @@ void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, s
         molecule.scaleVelocities(lambda);
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
-    physicalData.calculateTemperature(simBox);
 }
 
 /**

@@ -3,8 +3,10 @@
 #include "exceptions.hpp"
 
 #include <algorithm>     // for ranges::for_each
+#include <format>        // for format
 #include <functional>    // for identity
 #include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using namespace constraints;
 
@@ -30,22 +32,28 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
     if (!_activated)
         return;
 
-    auto   converged = false;
-    size_t iter      = 0;
+    std::vector<bool> convergedVector;
+    bool              converged = false;
+
+    size_t iter = 0;
 
     while (!converged && iter <= _shakeMaxIter)
     {
-        converged = true;
+        convergedVector.clear();
 
-        std::ranges::for_each(_bondConstraints,
-                              [&simulationBox, &converged, this](auto &bondConstraint)
-                              { converged = converged && bondConstraint.applyShake(simulationBox, _shakeTolerance); });
+        auto applyShakeForSingleBond = [&simulationBox, &convergedVector, this](auto &bondConstraint)
+        { convergedVector.push_back(bondConstraint.applyShake(simulationBox, _shakeTolerance)); };
+
+        std::ranges::for_each(_bondConstraints, applyShakeForSingleBond);
+
+        converged = std::ranges::all_of(convergedVector, [](bool isConverged) { return isConverged; });
 
         ++iter;
     }
 
     if (!converged)
-        throw customException::ShakeException("Shake algorithm did not converge.");
+        throw customException::ShakeException(
+            std::format("Shake algorithm did not converge for {} bonds.", std::ranges::count(convergedVector, false)));
 }
 
 /**
@@ -58,20 +66,26 @@ void Constraints::applyRattle()
     if (!_activated)
         return;
 
-    auto   converged = false;
-    size_t iter      = 0;
+    std::vector<bool> convergedVector;
+    bool              converged = false;
+
+    size_t iter = 0;
 
     while (!converged && iter <= _rattleMaxIter)
     {
-        converged = true;
+        convergedVector.clear();
 
-        std::ranges::for_each(_bondConstraints,
-                              [&converged, this](auto &bondConstraint)
-                              { converged = converged && bondConstraint.applyRattle(_rattleTolerance); });
+        auto applyRattleForSingleBond = [&convergedVector, this](auto &bondConstraint)
+        { convergedVector.push_back(bondConstraint.applyRattle(_rattleTolerance)); };
+
+        std::ranges::for_each(_bondConstraints, applyRattleForSingleBond);
+
+        converged = std::ranges::all_of(convergedVector, [](bool isConverged) { return isConverged; });
 
         ++iter;
     }
 
     if (!converged)
-        throw customException::ShakeException("Rattle algorithm did not converge.");
+        throw customException::ShakeException(
+            std::format("Rattle algorithm did not converge for {} bonds.", std::ranges::count(convergedVector, false)));
 }

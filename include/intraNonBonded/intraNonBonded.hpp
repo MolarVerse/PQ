@@ -2,8 +2,8 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
-#include "intraNonBondedContainer.hpp"
-#include "intraNonBondedMap.hpp"
+#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
+#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
 
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr
@@ -11,22 +11,24 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace physicalData
 {
-    class PhysicalData;
+    class PhysicalData;   // forward declaration
 }
 
 namespace potential
 {
-    class CoulombPotential;
-    class NonCoulombPotential;
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 }   // namespace potential
 
 namespace intraNonBonded
 {
+    using vec_intra_container = std::vector<IntraNonBondedContainer>;
+
     /**
      * @brief enum class for the different types of intra non bonded interactions
      *
@@ -51,42 +53,43 @@ namespace intraNonBonded
 
         std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
-        std::vector<IntraNonBondedContainer>            _intraNonBondedContainers;
         std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
+        vec_intra_container                             _intraNonBondedContainers;
 
       public:
-        void                                   calculate(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
-
+        void calculate(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
 
-        void addIntraNonBondedContainer(const IntraNonBondedContainer &intraNonBondedType)
-        {
-            _intraNonBondedContainers.push_back(intraNonBondedType);
-        }
-        void addIntraNonBondedMap(const IntraNonBondedMap &intraNonBondedInteraction)
-        {
-            _intraNonBondedMaps.push_back(intraNonBondedInteraction);
-        }
+        [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
+
+        /*************************
+         * standard add methods  *
+         *************************/
+
+        void addIntraNonBondedContainer(const IntraNonBondedContainer &type) { _intraNonBondedContainers.push_back(type); }
+        void addIntraNonBondedMap(const IntraNonBondedMap &interaction) { _intraNonBondedMaps.push_back(interaction); }
+
+        /*****************************
+         * standard activate methods *
+         *****************************/
 
         void               activate() { _isActivated = true; }
         void               deactivate() { _isActivated = false; }
         [[nodiscard]] bool isActivated() const { return _isActivated; }
 
-        void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &nonCoulombPotential)
-        {
-            _nonCoulombPotential = nonCoulombPotential;
-        }
-        void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &coulombPotential)
-        {
-            _coulombPotential = coulombPotential;
-        }
+        /***************************
+         * standard setter methods *
+         ***************************/
 
-        [[nodiscard]] IntraNonBondedType                   getIntraNonBondedType() const { return _intraNonBondedType; }
-        [[nodiscard]] std::vector<IntraNonBondedContainer> getIntraNonBondedContainers() const
-        {
-            return _intraNonBondedContainers;
-        }
+        void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &pot) { _nonCoulombPotential = pot; }
+        void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &pot) { _coulombPotential = pot; }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] IntraNonBondedType             getIntraNonBondedType() const { return _intraNonBondedType; }
+        [[nodiscard]] vec_intra_container            getIntraNonBondedContainers() const { return _intraNonBondedContainers; }
         [[nodiscard]] std::vector<IntraNonBondedMap> getIntraNonBondedMaps() const { return _intraNonBondedMaps; }
     };
 

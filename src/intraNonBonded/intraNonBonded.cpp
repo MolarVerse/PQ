@@ -44,6 +44,12 @@ void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
     std::ranges::for_each(box.getMolecules(), fillSingleMap);
 }
 
+/**
+ * @brief calculate the intra non bonded interactions for each intraNonBondedMap
+ *
+ * @param box
+ * @param physicalData
+ */
 void IntraNonBonded::calculate(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     auto calculateSingleContribution = [this, &box, &physicalData](auto &intraNonBondedMap)

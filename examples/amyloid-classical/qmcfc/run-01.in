@@ -9,7 +9,7 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep= 1; timestep = 0.2; nreset = 50; 
+      nstep= 1; timestep = 2.0; nreset = 50; 
 
       nscale = 5;
 #nreset_angular = 50;
@@ -21,7 +21,7 @@
       output_freq = 1; 
 
     # Coulombic cutoff 
-      rcoulomb = 12.0; 
+      rcoulomb = 12.5; 
 
     # Density of the system - affects boxsize
       density = 0.997; 

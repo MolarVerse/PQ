@@ -53,12 +53,12 @@ void Engine::run()
  *  3.  Update cell list
  *  4.1 Calculate forces
  *  4.2 Calculate intra non bonded forces
- *  5.  Calculate constraint bond references
- *  6.  Second step of the integrator
- *  7.  Apply RATTLE
- *  8.  Apply thermostat
- *  9.  Calculate kinetic energy and momentum
- * 10.  Calculate virial
+ *  5.  Calculate virial
+ *  6.  Calculate constraint bond references
+ *  7.  Second step of the integrator
+ *  8.  Apply RATTLE
+ *  9.  Apply thermostat
+ * 10.  Calculate kinetic energy and momentum
  * 11.  Apply manostat
  * 12.  Reset temperature and momentum
  *
@@ -75,6 +75,8 @@ void Engine::takeStep()
 
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
+    _virial->calculateVirial(_simulationBox, _physicalData);
+
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
@@ -86,8 +88,6 @@ void Engine::takeStep()
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 
     _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
-
-    _virial->calculateVirial(_simulationBox, _physicalData);
 
     _manostat->applyManostat(_simulationBox, _physicalData);
 

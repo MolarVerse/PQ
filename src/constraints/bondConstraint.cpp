@@ -35,7 +35,7 @@ double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox
     simBox.applyPBC(dPosition);
 
     const auto distanceSquared = normSquared(dPosition);
-    const auto delta = 0.5 * (_targetBondLength * _targetBondLength - distanceSquared) / (_targetBondLength * _targetBondLength);
+    const auto delta           = 0.5 * (_targetBondLength * _targetBondLength - distanceSquared);
 
     return delta;
 }
@@ -49,7 +49,7 @@ double BondConstraint::calculateDistanceDelta(const simulationBox::SimulationBox
 bool BondConstraint::applyShake(const simulationBox::SimulationBox &simBox, double tolerance)
 {
 
-    if (const auto delta = calculateDistanceDelta(simBox); std::fabs(delta) > tolerance)
+    if (const auto delta = calculateDistanceDelta(simBox); std::fabs(delta / (_targetBondLength * _targetBondLength)) > tolerance)
     {
         const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
         const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);

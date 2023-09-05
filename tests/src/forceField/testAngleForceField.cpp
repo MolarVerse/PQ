@@ -82,6 +82,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
     molecule.setAtomForce(1, {0.0, 0.0, 0.0});
+    molecule.setAtomForce(2, {0.0, 0.0, 0.0});
     physicalData.clearData();
 
     bondForceField.setIsLinker(true);
@@ -95,9 +96,9 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
     EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(1)[1], 7.0737262359370403, 1e-9);
     EXPECT_NEAR(molecule.getAtomForce(1)[2], 12.69833478078059, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], -1.6561345041068474, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -7.4877598619637524, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.319385219820656, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(2)[1], -7.2807430489503959, 1e-9);
+    EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.733418845847369, 1e-9);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-9);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -0.016255999999999989, 1e-9);
     EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);

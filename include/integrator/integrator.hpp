@@ -2,8 +2,8 @@
 
 #define _INTEGRATOR_HPP_
 
-#include <cstddef>
-#include <string>
+#include <cstddef>       // for size_t
+#include <string>        // for string
 #include <string_view>   // for string_view
 
 namespace simulationBox
@@ -34,8 +34,8 @@ namespace integrator
         virtual void firstStep(simulationBox::SimulationBox &)  = 0;
         virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-        void integrateVelocities(simulationBox::Molecule &, const size_t) const;
-        void integratePositions(simulationBox::Molecule &, const size_t, const simulationBox::SimulationBox &) const;
+        void integrateVelocities(simulationBox::Molecule &, const size_t index) const;
+        void integratePositions(simulationBox::Molecule &, const size_t index, const simulationBox::SimulationBox &) const;
 
         /********************************
          * standard getters and setters *

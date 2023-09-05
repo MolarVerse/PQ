@@ -38,9 +38,9 @@ namespace forceField
         size_t _type;
         bool   _isLinker = false;
 
-        double _forceConstant;
-        double _periodicity;
-        double _phaseShift;
+        double _forceConstant = 0.0;
+        double _periodicity   = 0.0;
+        double _phaseShift    = 0.0;
 
       public:
         DihedralForceField(const std::vector<simulationBox::Molecule *> &molecules,

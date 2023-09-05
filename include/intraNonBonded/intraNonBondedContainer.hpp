@@ -2,8 +2,8 @@
 
 #define _INTRA_NON_BONDED_CONTAINER_HPP_
 
-#include <cstddef>
-#include <vector>
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 namespace intraNonBonded
 {
@@ -20,11 +20,11 @@ namespace intraNonBonded
 
       public:
         IntraNonBondedContainer(const size_t molType, const std::vector<std::vector<int>> &atomIndices)
-            : _molType(molType), _atomIndices(atomIndices)
-        {
-        }
+            : _molType(molType), _atomIndices(atomIndices){};
 
-        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(const size_t);
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] size_t                        getMolType() const { return _molType; }
         [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const { return _atomIndices; }
