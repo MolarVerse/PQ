@@ -2,7 +2,6 @@
 
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for InputFileException, customException
-#include "potentialSettings.hpp"       // for setCoulombRadiusCutOff
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 

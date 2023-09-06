@@ -44,12 +44,12 @@ namespace engine
         std::unique_ptr<output::InfoOutput>       _infoOutput    = std::make_unique<output::InfoOutput>("default.info");
 
       public:
-        void writeEnergyFile(const size_t, const physicalData::PhysicalData &);
+        void writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
         void writeXyzFile(simulationBox::SimulationBox &);
         void writeVelFile(simulationBox::SimulationBox &);
         void writeForceFile(simulationBox::SimulationBox &);
         void writeChargeFile(simulationBox::SimulationBox &);
-        void writeInfoFile(const double, const physicalData::PhysicalData &);
+        void writeInfoFile(const double simulationTime, const double loopTime, const physicalData::PhysicalData &);
         void writeRstFile(simulationBox::SimulationBox &, const size_t);
 
         output::EnergyOutput     &getEnergyOutput() { return *_energyOutput; }

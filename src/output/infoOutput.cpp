@@ -1,20 +1,26 @@
 #include "infoOutput.hpp"
 
-#include "physicalData.hpp"   // for PhysicalData
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "physicalData.hpp"         // for PhysicalData
 
-#include <format>   // for format
-#include <iomanip>
-#include <ostream>   // for operator<<, basic_ostream, ostream, endl
+#include <format>    // for format
+#include <ios>       // for ofstream
+#include <ostream>   // for operator<<, basic_ostream, char_traits
+#include <string>    // for operator<<
 
 using namespace output;
 
 /**
  * @brief write info file
  *
+ * @details Coulomb and Non-Coulomb energies contain the intra and inter energies. Bond, Angle, Dihedral and Improper energies are
+ * only available if the force field is active.
+ *
  * @param simulationTime
+ * @param loopTime
  * @param data
  */
-void InfoOutput::write(const double simulationTime, const physicalData::PhysicalData &data)
+void InfoOutput::write(const double simulationTime, const double loopTime, const physicalData::PhysicalData &data)
 {
     _fp.close();
 
@@ -26,16 +32,24 @@ void InfoOutput::write(const double simulationTime, const physicalData::Physical
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
-    writeRight(0.0, "E(TOT)", "kcal/mol");
+    writeRight(data.getPotentialEnergy(), "E(TOT)", "kcal/mol");
 
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
-    writeRight(0.0, "E(INTRA)", "kcal/mol");
+    writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
     writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
     writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
 
+    if (settings::ForceFieldSettings::isActive())
+    {
+        writeLeft(data.getBondEnergy(), "E(BOND)", "kcal/mol");
+        writeRight(data.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
+        writeLeft(data.getDihedralEnergy(), "E(DIHEDRAL)", "kcal/mol");
+        writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
+    }
+
     writeLeftScientific(data.getMomentum(), "MOMENTUM", "amuA/fs");
-    writeRight(0.0, "LOOPTIME", "s");
+    writeRight(loopTime, "LOOPTIME", "s");
 
     _fp << std::format("{:-^89}", "") << "\n\n";
 

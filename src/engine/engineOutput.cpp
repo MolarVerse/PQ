@@ -17,9 +17,9 @@ using namespace engine;
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeEnergyFile(const size_t step, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &physicalData)
 {
-    _energyOutput->write(step, physicalData);
+    _energyOutput->write(step, loopTime, physicalData);
 }
 
 /**
@@ -56,9 +56,9 @@ void EngineOutput::writeChargeFile(simulationBox::SimulationBox &simulationBox) 
  * @param time
  * @param physicalData
  */
-void EngineOutput::writeInfoFile(const double time, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeInfoFile(const double time, const double loopTime, const physicalData::PhysicalData &physicalData)
 {
-    _infoOutput->write(time, physicalData);
+    _infoOutput->write(time, loopTime, physicalData);
 }
 
 /**

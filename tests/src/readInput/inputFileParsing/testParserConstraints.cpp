@@ -25,11 +25,11 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     InputFileParserConstraints parser(_engine);
     std::vector<std::string>   lineElements = {"shake", "=", "off"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_FALSE(_engine.getConstraints().isActivated());
+    EXPECT_FALSE(_engine.getConstraints().isActive());
 
     lineElements = {"shake", "=", "on"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(_engine.getConstraints().isActivated());
+    EXPECT_TRUE(_engine.getConstraints().isActive());
 
     lineElements = {"shake", "=", "1"};
     EXPECT_THROW_MSG(parser.parseShakeActivated(lineElements, 0),

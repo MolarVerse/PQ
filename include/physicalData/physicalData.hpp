@@ -61,6 +61,9 @@ namespace physicalData
             getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
         }
 
+        [[nodiscard]] double getPotentialEnergy() const;
+        [[nodiscard]] double getIntraEnergy() const;
+
         void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
 
         void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }

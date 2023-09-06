@@ -4,8 +4,6 @@
 
 #include "output.hpp"   // for Output
 
-#include <cstddef>       // for size_t
-#include <ios>           // for ios_base
 #include <string_view>   // for string_view
 
 namespace physicalData
@@ -33,7 +31,7 @@ namespace output
       public:
         using Output::Output;
 
-        void write(const double, const physicalData::PhysicalData &data);
+        void write(const double simulationTime, const double loopTime, const physicalData::PhysicalData &data);
     };
 
 }   // namespace output

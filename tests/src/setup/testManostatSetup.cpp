@@ -4,7 +4,6 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "manostatSetup.hpp"      // for ManostatSetup, setupManostat, setup
 #include "testSetup.hpp"          // for TestSetup
-#include "timingsSettings.hpp"    // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...

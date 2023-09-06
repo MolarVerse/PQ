@@ -20,6 +20,7 @@ target_link_libraries(output
     utilities
     physicalData
     simulationBox
+    settings
 )
 
 install(TARGETS output

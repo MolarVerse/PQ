@@ -51,7 +51,7 @@ namespace constraints
 
         void               activate() { _activated = true; }
         void               deactivate() { _activated = false; }
-        [[nodiscard]] bool isActivated() const { return _activated; }
+        [[nodiscard]] bool isActive() const { return _activated; }
 
         /************************
          * standard add methods *

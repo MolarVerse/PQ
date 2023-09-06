@@ -4,6 +4,7 @@
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "potential.hpp"              // for Potential
 
 #include <cstddef>      // for size_t
@@ -42,18 +43,18 @@ void InputFileParserForceField::parseForceFieldType(const std::vector<std::strin
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "on")
     {
-        _engine.getForceFieldPtr()->activate();
+        settings::ForceFieldSettings::activate();
         _engine.getForceFieldPtr()->activateNonCoulombic();
         _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     }
     else if (lineElements[2] == "off")
     {
-        _engine.getForceFieldPtr()->deactivate();
+        settings::ForceFieldSettings::deactivate();
         _engine.getForceFieldPtr()->deactivateNonCoulombic();
     }
     else if (lineElements[2] == "bonded")
     {
-        _engine.getForceFieldPtr()->activate();
+        settings::ForceFieldSettings::activate();
         _engine.getForceFieldPtr()->deactivateNonCoulombic();
     }
     else

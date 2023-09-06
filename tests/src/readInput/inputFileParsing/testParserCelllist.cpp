@@ -25,11 +25,11 @@ TEST_F(TestInputFileReader, parseCellListActivated)
     InputFileParserCellList  parser(_engine);
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_FALSE(_engine.getCellList().isActivated());
+    EXPECT_FALSE(_engine.getCellList().isActive());
 
     lineElements = {"cell-list", "=", "on"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_TRUE(_engine.getCellList().isActivated());
+    EXPECT_TRUE(_engine.getCellList().isActive());
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseCellListActivated(lineElements, 0),

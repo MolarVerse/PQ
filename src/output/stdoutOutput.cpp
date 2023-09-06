@@ -35,5 +35,5 @@ void StdoutOutput::writeDensityWarning() const
 void StdoutOutput::writeInitialMomentum(const double momentum) const
 {
     cout << '\n';
-    cout << initialMomentumMessage(momentum) << '\n';
+    cout << initialMomentumMessage(momentum) << '\n' << flush;
 }

@@ -1,16 +1,29 @@
-#include "coulombShiftedPotential.hpp"
-#include "exceptions.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "intraNonBonded.hpp"
-#include "intraNonBondedContainer.hpp"
-#include "lennardJonesPair.hpp"
-#include "physicalData.hpp"
-#include "potentialSettings.hpp"
-#include "simulationBox.hpp"
-#include "throwWithMessage.hpp"
+#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "exceptions.hpp"                // for IntraNonBondedException
+#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "intraNonBonded.hpp"            // for IntraNonBonded
+#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
+#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
+#include "lennardJonesPair.hpp"          // for LennardJonesPair
+#include "matrix.hpp"                    // for Matrix
+#include "molecule.hpp"                  // for Molecule
+#include "physicalData.hpp"              // for PhysicalData
+#include "potentialSettings.hpp"         // for PotentialSettings
+#include "simulationBox.hpp"             // for SimulationBox
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cstddef>         // for size_t
 #include <format>          // for format
-#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
+#include <memory>          // for shared_ptr, allocator, make_shared
+#include <string>          // for basic_string
+#include <vector>          // for vector
+
+namespace potential
+{
+    class NonCoulombPair;   // forward declaration
+}
 
 /**
  * @brief test findIntraNonBondedContainerByMolType method

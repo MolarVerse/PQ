@@ -4,7 +4,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for operator<<
 
-#include <iomanip>   // for operator<<, setw, setprecision, left
+#include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
 #include <vector>    // for vector
@@ -27,67 +27,45 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
 
     _fp << "Step " << step << '\n' << flush;
 
-    _fp << "Box ";
-    _fp << "  ";
-    _fp << simBox.getBoxDimensions();
-    _fp << "  ";
-    _fp << simBox.getBoxAngles();
-    _fp << '\n' << flush;
+    _fp << "Box   " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n' << flush;
+
     for (const auto &molecule : simBox.getMolecules())
     {
-        const auto numberOfAtoms = molecule.getNumberOfAtoms();
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
-            _fp << left;
-            _fp << setw(5);
-            _fp << molecule.getAtomName(i);
+            _fp << format("{:<5}\t", molecule.getAtomName(i));
+            _fp << format("{:<5}\t", i + 1);
+            _fp << format("{:<5}\t", molecule.getMoltype());
 
-            _fp << left;
-            _fp << setw(5);
-            _fp << i + 1;
+            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                          molecule.getAtomPosition(i)[0],
+                          molecule.getAtomPosition(i)[1],
+                          molecule.getAtomPosition(i)[2]);
 
-            _fp << left;
-            _fp << setw(5);
-            _fp << molecule.getMoltype();
+            _fp << format("{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                          molecule.getAtomVelocity(i)[0],
+                          molecule.getAtomVelocity(i)[1],
+                          molecule.getAtomVelocity(i)[2]);
 
-            _fp << fixed;
-            _fp << setprecision(8);
-            _fp << right;
+            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                          molecule.getAtomForce(i)[0],
+                          molecule.getAtomForce(i)[1],
+                          molecule.getAtomForce(i)[2]);
 
-            _fp << setw(15);
-            _fp << molecule.getAtomPosition(i)[0];
+            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                          molecule.getAtomPosition(i)[0],
+                          molecule.getAtomPosition(i)[1],
+                          molecule.getAtomPosition(i)[2]);
 
-            _fp << setw(15);
-            _fp << molecule.getAtomPosition(i)[1];
+            _fp << format("{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                          molecule.getAtomVelocity(i)[0],
+                          molecule.getAtomVelocity(i)[1],
+                          molecule.getAtomVelocity(i)[2]);
 
-            _fp << setw(15);
-            _fp << molecule.getAtomPosition(i)[2];
-
-            _fp << scientific;
-            _fp << setprecision(8);
-            _fp << right;
-
-            _fp << setw(20);
-            _fp << molecule.getAtomVelocity(i)[0];
-
-            _fp << setw(20);
-            _fp << molecule.getAtomVelocity(i)[1];
-
-            _fp << setw(20);
-            _fp << molecule.getAtomVelocity(i)[2];
-
-            _fp << fixed;
-            _fp << setprecision(8);
-            _fp << right;
-
-            _fp << setw(15);
-            _fp << molecule.getAtomForce(i)[0];
-
-            _fp << setw(15);
-            _fp << molecule.getAtomForce(i)[1];
-
-            _fp << setw(15);
-            _fp << molecule.getAtomForce(i)[2];
+            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                          molecule.getAtomForce(i)[0],
+                          molecule.getAtomForce(i)[1],
+                          molecule.getAtomForce(i)[2]);
 
             _fp << '\n' << flush;
         }

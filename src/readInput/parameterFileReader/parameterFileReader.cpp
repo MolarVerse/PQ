@@ -3,9 +3,9 @@
 #include "angleSection.hpp"              // for AngleSection
 #include "bondSection.hpp"               // for BondSection
 #include "dihedralSection.hpp"           // for DihedralSection
-#include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, ParameterFileExce...
 #include "fileSettings.hpp"              // for FileSettings
+#include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
@@ -43,7 +43,7 @@ ParameterFileReader::ParameterFileReader(const std::string &filename, engine::En
  */
 bool ParameterFileReader::isNeeded() const
 {
-    if (_engine.isForceFieldActivated())
+    if (settings::ForceFieldSettings::isActive())
         return true;
 
     return false;

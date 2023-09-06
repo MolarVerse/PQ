@@ -24,13 +24,6 @@ class TestEnergyOutput : public ::testing::Test
         _infoOutput   = new output::InfoOutput("default.info");
         _energyOutput = new output::EnergyOutput("default.en");
         _physicalData = new physicalData::PhysicalData();
-
-        _physicalData->setTemperature(1.0);
-        _physicalData->setPressure(2.0);
-        _physicalData->setKineticEnergy(3.0);
-        _physicalData->setCoulombEnergy(4.0);
-        _physicalData->setNonCoulombEnergy(5.0);
-        _physicalData->setMomentum(6.0);
     }
 
     void TearDown() override

@@ -115,9 +115,10 @@ void Engine::writeOutput()
         const auto step0          = _timings.getStepCount();
         const auto effectiveStep  = _step + step0;
         const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
+        const auto loopTime       = _timings.calculateLoopTime(_step);
 
-        _engineOutput.writeEnergyFile(effectiveStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(simulationTime, _averagePhysicalData);
+        _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);

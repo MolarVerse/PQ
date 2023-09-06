@@ -146,3 +146,38 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
 
     _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
 }
+
+/**
+ * @brief calculate potential energy
+ *
+ * @return double
+ */
+double PhysicalData::getPotentialEnergy() const
+{
+    auto potentialEnergy = 0.0;
+
+    potentialEnergy += _bondEnergy;
+    potentialEnergy += _angleEnergy;
+    potentialEnergy += _dihedralEnergy;
+    potentialEnergy += _improperEnergy;
+
+    potentialEnergy += _coulombEnergy;      // intra + inter
+    potentialEnergy += _nonCoulombEnergy;   // intra + inter
+
+    return potentialEnergy;
+}
+
+/**
+ * @brief calculate intra energy
+ *
+ * @return double
+ */
+double PhysicalData::getIntraEnergy() const
+{
+    auto intraEnergy = 0.0;
+
+    intraEnergy += _intraCoulombEnergy;
+    intraEnergy += _intraNonCoulombEnergy;
+
+    return intraEnergy;
+}

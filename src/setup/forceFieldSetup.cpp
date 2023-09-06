@@ -1,8 +1,9 @@
 #include "forceFieldSetup.hpp"
 
-#include "engine.hpp"            // for Engine
-#include "forceFieldClass.hpp"   // for ForceField
-#include "potential.hpp"         // for Potential
+#include "engine.hpp"               // for Engine
+#include "forceFieldClass.hpp"      // for ForceField
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "potential.hpp"            // for Potential
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <functional>   // for identity
@@ -40,7 +41,7 @@ void ForceFieldSetup::setup()
  */
 void setup::setupForceField(engine::Engine &engine)
 {
-    if (!engine.isForceFieldActivated())
+    if (!settings::ForceFieldSettings::isActive())
         return;
 
     ForceFieldSetup forceFieldSetup(engine);

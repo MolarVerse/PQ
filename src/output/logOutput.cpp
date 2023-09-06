@@ -5,7 +5,6 @@
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
 
-using namespace std;
 using namespace output;
 
 /**
@@ -14,7 +13,7 @@ using namespace output;
  */
 void LogOutput::writeDensityWarning()
 {
-    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << '\n' << flush;
+    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << '\n' << std::flush;
 }
 
 /**
@@ -24,6 +23,6 @@ void LogOutput::writeDensityWarning()
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << '\n' << flush;
-    _fp << initialMomentumMessage(momentum) << '\n' << flush;
+    _fp << '\n' << std::flush;
+    _fp << initialMomentumMessage(momentum) << '\n' << std::flush;
 }

@@ -1,9 +1,5 @@
 #include "integratorSetup.hpp"
 
-#include "engine.hpp"            // for Engine
-#include "integrator.hpp"        // for Integrator
-#include "timingsSettings.hpp"   // for TimingsSettings
-
 using namespace setup;
 
 /**

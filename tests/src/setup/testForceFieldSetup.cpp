@@ -6,6 +6,7 @@
 #include "dihedralType.hpp"         // for DihedralType
 #include "engine.hpp"               // for Engine
 #include "forceFieldClass.hpp"      // for ForceField
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
 #include "molecule.hpp"             // for Molecule
 #include "simulationBox.hpp"        // for SimulationBox
@@ -216,7 +217,7 @@ TEST_F(TestSetup, forceFieldSetup_setupImproperDihedrals)
  */
 TEST_F(TestSetup, forceFieldSetup_setupForceField)
 {
-    _engine.getForceField().activate();
+    settings::ForceFieldSettings::activate();
 
     auto molecule1 = simulationBox::Molecule();
     _engine.getSimulationBox().addMolecule(molecule1);
@@ -270,7 +271,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
  */
 TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
 {
-    _engine.getForceField().activate();
+    settings::ForceFieldSettings::activate();
 
     auto molecule1 = simulationBox::Molecule();
     _engine.getSimulationBox().addMolecule(molecule1);
@@ -297,7 +298,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     _engine.getForceFieldPtr()->addDihedralType(dihedralType);
     _engine.getForceFieldPtr()->addImproperDihedralType(improperDihedralType);
 
-    _engine.getForceField().deactivate();
+    settings::ForceFieldSettings::deactivate();
     setup::setupForceField(_engine);
 
     EXPECT_NE(_engine.getForceFieldPtr()->getBonds()[0].getEquilibriumBondLength(), 1.0);

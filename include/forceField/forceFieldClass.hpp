@@ -40,7 +40,6 @@ namespace forceField
     class ForceField
     {
       private:
-        bool _isActivated             = false;
         bool _isNonCoulombicActivated = false;
 
         std::vector<BondForceField>     _bonds;
@@ -72,12 +71,9 @@ namespace forceField
          * standard activate methods *
          *****************************/
 
-        void activate() { _isActivated = true; }
         void activateNonCoulombic() { _isNonCoulombicActivated = true; }
-        void deactivate() { _isActivated = false; }
         void deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
 
-        [[nodiscard]] bool isActivated() const { return _isActivated; }
         [[nodiscard]] bool isNonCoulombicActivated() const { return _isNonCoulombicActivated; }
 
         /************************

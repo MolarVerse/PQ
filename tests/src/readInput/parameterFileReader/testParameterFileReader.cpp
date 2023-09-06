@@ -5,8 +5,8 @@
 #include "dihedralSection.hpp"           // for DihedralSection
 #include "exceptions.hpp"                // for InputFileException, ParameterFileException
 #include "fileSettings.hpp"              // for FileSettings
-#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
 #include "potential.hpp"                 // for Potential
@@ -26,7 +26,7 @@ TEST_F(TestParameterFileReader, isNeeded)
 {
     EXPECT_FALSE(_parameterFileReader->isNeeded());
 
-    _engine->getForceField().activate();
+    settings::ForceFieldSettings::activate();
     EXPECT_TRUE(_parameterFileReader->isNeeded());
 }
 
@@ -104,7 +104,7 @@ TEST_F(TestParameterFileReader, deleteSection)
  */
 TEST_F(TestParameterFileReader, read_fileNameEmpty)
 {
-    _engine->getForceField().activate();
+    settings::ForceFieldSettings::activate();
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_THROW_MSG(_parameterFileReader->read(),
                      customException::InputFileException,
@@ -113,7 +113,7 @@ TEST_F(TestParameterFileReader, read_fileNameEmpty)
 
 TEST_F(TestParameterFileReader, readParameterFile)
 {
-    _engine->getForceField().activate();
+    settings::ForceFieldSettings::activate();
     _engine->getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     settings::FileSettings::setParameterFileName("data/parameterFileReader/param.param");
     EXPECT_NO_THROW(readInput::parameterFile::readParameterFile(*_engine));
@@ -121,7 +121,7 @@ TEST_F(TestParameterFileReader, readParameterFile)
 
 TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 {
-    _engine->getForceField().deactivate();
+    settings::ForceFieldSettings::deactivate();
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_NO_THROW(readInput::parameterFile::readParameterFile(*_engine));
 }

@@ -9,6 +9,7 @@ namespace timings
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
     using ms   = std::chrono::milliseconds;
+    using ns   = std::chrono::nanoseconds;
 
     /**
      * @class Timings
@@ -33,7 +34,12 @@ namespace timings
         void beginTimer() { _start = std::chrono::high_resolution_clock::now(); }
         void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
 
-        [[nodiscard]] long calculateElapsedTime() const { return std::chrono::duration_cast<ms>(_end - _start).count(); }
+        [[nodiscard]] long   calculateElapsedTime() const { return std::chrono::duration_cast<ms>(_end - _start).count(); }
+        [[nodiscard]] double calculateLoopTime(const size_t numberOfSteps)
+        {
+            _end = std::chrono::high_resolution_clock::now();
+            return double(std::chrono::duration_cast<ns>(_end - _start).count()) * 1e-9 / double(numberOfSteps);
+        }
 
         /********************************
          * standard getters and setters *

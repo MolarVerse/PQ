@@ -1,9 +1,9 @@
 #include "testTopologyReader.hpp"
 
-#include "constraints.hpp"       // for Constraints
-#include "exceptions.hpp"        // for InputFileException, TopologyException
-#include "fileSettings.hpp"      // for FileSettings
-#include "forceFieldClass.hpp"   // for ForceField
+#include "constraints.hpp"          // for Constraints
+#include "exceptions.hpp"           // for InputFileException, TopologyException
+#include "fileSettings.hpp"         // for FileSettings
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 
@@ -22,7 +22,7 @@ TEST_F(TestTopologyReader, isNeeded)
     EXPECT_TRUE(_topologyReader->isNeeded());
 
     _engine->getConstraints().deactivate();
-    _engine->getForceField().activate();
+    settings::ForceFieldSettings::activate();
     EXPECT_TRUE(_topologyReader->isNeeded());
 }
 

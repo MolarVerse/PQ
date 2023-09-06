@@ -75,7 +75,7 @@ namespace intraNonBonded
 
         void               activate() { _isActivated = true; }
         void               deactivate() { _isActivated = false; }
-        [[nodiscard]] bool isActivated() const { return _isActivated; }
+        [[nodiscard]] bool isActive() const { return _isActivated; }
 
         /***************************
          * standard setter methods *

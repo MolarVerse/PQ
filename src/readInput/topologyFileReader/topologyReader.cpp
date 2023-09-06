@@ -7,7 +7,7 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, TopologyException
 #include "fileSettings.hpp"              // for FileSettings
-#include "forceFieldClass.hpp"           // for ForceField
+#include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "shakeSection.hpp"              // for ShakeSection
 #include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
@@ -45,10 +45,10 @@ TopologyReader::TopologyReader(const std::string &filename, engine::Engine &engi
  */
 bool TopologyReader::isNeeded() const
 {
-    if (_engine.getConstraints().isActivated())
+    if (_engine.getConstraints().isActive())
         return true;
 
-    if (_engine.getForceField().isActivated())
+    if (settings::ForceFieldSettings::isActive())
         return true;
 
     return false;

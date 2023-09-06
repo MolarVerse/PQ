@@ -8,6 +8,7 @@ add_library(settings
     fileSettings.cpp
     resetKineticsSettings.cpp
     timingsSettings.cpp
+    forceFieldSettings.cpp
 )
 
 target_include_directories(settings

@@ -1,6 +1,7 @@
 #include "engine.hpp"                      // for Engine
 #include "exceptions.hpp"                  // for InputFileException, customException
 #include "forceFieldClass.hpp"             // for ForceField
+#include "forceFieldSettings.hpp"          // for ForceFieldSettings
 #include "inputFileParser.hpp"             // for readInput
 #include "inputFileParserForceField.hpp"   // for InputFileParserForceField
 #include "testInputFileReader.hpp"         // for TestInputFileReader
@@ -24,17 +25,17 @@ TEST_F(TestInputFileReader, testParseForceField)
     InputFileParserForceField parser(_engine);
     std::vector<std::string>  lineElements = {"force-field", "=", "on"};
     parser.parseForceFieldType(lineElements, 0);
-    EXPECT_TRUE(_engine.getForceFieldPtr()->isActivated());
+    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_TRUE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "off"};
     parser.parseForceFieldType(lineElements, 0);
-    EXPECT_FALSE(_engine.getForceFieldPtr()->isActivated());
+    EXPECT_FALSE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "bonded"};
     parser.parseForceFieldType(lineElements, 0);
-    EXPECT_TRUE(_engine.getForceFieldPtr()->isActivated());
+    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"forceField", "=", "notValid"};
