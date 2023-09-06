@@ -9,8 +9,9 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 5; timestep = 2.0; nreset = 50; 
-      nscale = 5;
+      nstep = 2; timestep = 2.0; 
+      #nreset = 50; 
+      #nscale = 5;
 #nreset_angular = 50;
 
     # Output of coordinates, velocities ans solute charges enabled
@@ -31,14 +32,14 @@
     # Temperature algorithm (Nose-Hoover Chain), Coupling frequency omega in 1/s,  
     # number of coupled thermostats (chainlength) and target temperature in K
     # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
-      thermostat = berendsen; temp = 298.15;
-    #omega = 1500.0; nh-chainlength = 5; 
+      thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+#      manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
 
       #integrator = v-verlet-rattle; rattle = 23;
       integrator = v-verlet;
 
       force-field = on;  
-      shake = on;
+      #shake = on;
       #guff_path = .; 
       #nonbonded = force-field;
 

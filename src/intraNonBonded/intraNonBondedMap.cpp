@@ -125,8 +125,6 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(const si
 
         const auto shiftForcexyz = forcexyz * txyz;
 
-        physicalData.addVirial(forcexyz * txyz);
-
         _molecule->addAtomForce(atomIndex1, forcexyz);
         _molecule->addAtomForce(atomIndex2, -forcexyz);
 

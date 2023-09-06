@@ -1,6 +1,7 @@
 #include "energyOutput.hpp"
 
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 
 #include <format>    // for format
@@ -35,6 +36,12 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
         _fp << std::format("{:20.12f}\t", data.getAngleEnergy());
         _fp << std::format("{:20.12f}\t", data.getDihedralEnergy());
         _fp << std::format("{:20.12f}\t", data.getImproperEnergy());
+    }
+
+    if (settings::ManostatSettings::getManostatType() != "none")
+    {
+        _fp << std::format("{:20.12f}\t", data.getVolume());
+        _fp << std::format("{:20.12f}\t", data.getDensity());
     }
 
     _fp << std::format("{:20.5e}\t", data.getMomentum());

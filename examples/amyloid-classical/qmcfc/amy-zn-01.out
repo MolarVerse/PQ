@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Tue Sep  5 12:49:13 2023
+ (+) Simulation run started on: Wed Sep  6 23:18:20 2023
 
 
 
@@ -20,9 +20,9 @@
 	      jobtype = mm-md;
 	
 	    # Number of steps to be performed and timestep in fs
-	      nstep= 1; timestep = 2.0; nreset = 50; 
-	
-	      nscale = 5;
+	      nstep= 1; timestep = 2.0; 
+	      #nreset = 50; 
+	      #nscale = 5;
 	#nreset_angular = 50;
 	
 	    # Output of coordinates, velocities ans solute charges enabled
@@ -44,6 +44,8 @@
 	    # number of coupled thermostats (chainlength) and target temperature in K
 	    # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
 	      thermostat = berendsen; omega = 1500.0; nh-chainlength = 5; temp = 298.15;
+	      t_relaxation = 0.1;
+	      #manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
 	
 	      #integrator = v-verlet-rattle; rattle = 23;
 	      integrator = v-verlet;
@@ -80,7 +82,7 @@
 
 
  (+) Input file run-01.in read successfully
-       31 keywords have been read
+       30 keywords have been read
 
  (+) Reading moldescriptor at
      /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/moldescriptor.dat
@@ -225,20 +227,18 @@
 
        Requested Number of Steps:           1
        Step Counter:                        0
-       Scaling requested for             5 step(s)
-       Linear momentum reset requested for     50 step(s)
 
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.002		TEMPERATURE	     268.130
-   PRESSURE	   -1513.735		E(MM)		  -63354.883
-   E(KIN)	   20544.808		E(INTRA)	       0.000
+   SIMULATION TIME     0.002		TEMPERATURE	     268.104
+   PRESSURE	   -1513.740		E(MM)		  -63065.544
+   E(KIN)	   20542.815		E(INTRA)	       0.000
    E(BOND)	     119.591		E(ANGLE)	     416.295
    E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
-   E(COULOMB)	  -96878.564		E(NONCOULOMB)	   12035.221
+   E(COULOMB)	  -96685.480		E(NONCOULOMB)	   12133.470
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   2.091e-14		LOOPTIME 	       2.000
+   MOMENTUM	   4.613e-11		LOOPTIME 	       0.000
 
 
 
@@ -251,5 +251,5 @@
 
 
 
- (+) Simulation time: 4.000000
+ (+) Simulation time: 1.000000
 

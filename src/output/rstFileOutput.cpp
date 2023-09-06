@@ -47,22 +47,7 @@ void RstFileOutput::write(SimulationBox &simBox, const size_t step)
                           molecule.getAtomVelocity(i)[1],
                           molecule.getAtomVelocity(i)[2]);
 
-            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-                          molecule.getAtomForce(i)[0],
-                          molecule.getAtomForce(i)[1],
-                          molecule.getAtomForce(i)[2]);
-
-            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-                          molecule.getAtomPosition(i)[0],
-                          molecule.getAtomPosition(i)[1],
-                          molecule.getAtomPosition(i)[2]);
-
-            _fp << format("{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                          molecule.getAtomVelocity(i)[0],
-                          molecule.getAtomVelocity(i)[1],
-                          molecule.getAtomVelocity(i)[2]);
-
-            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+            _fp << format("{:15.8f}\t{:15.8f}\t{:15.8f}",
                           molecule.getAtomForce(i)[0],
                           molecule.getAtomForce(i)[1],
                           molecule.getAtomForce(i)[2]);

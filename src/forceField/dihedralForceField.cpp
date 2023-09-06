@@ -97,7 +97,8 @@ void DihedralForceField::calculateEnergyAndForces(const simulationBox::Simulatio
 
             const auto forcexyz = forceMagnitude * dPosition14;
 
-            physicalData.addVirial(forcexyz * dPosition14);
+            if (!isImproperDihedral)
+                physicalData.addVirial(forcexyz * dPosition14);
 
             _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
             _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);

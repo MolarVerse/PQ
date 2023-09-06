@@ -1,6 +1,7 @@
 #include "infoOutput.hpp"
 
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 
 #include <format>    // for format
@@ -46,6 +47,12 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
         writeLeft(data.getDihedralEnergy(), "E(DIHEDRAL)", "kcal/mol");
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
+    }
+
+    if (settings::ManostatSettings::getManostatType() != "none")
+    {
+        writeLeft(data.getVolume(), "VOLUME", "A^3");
+        writeRight(data.getDensity(), "DENSITY", "g/cm^3");
     }
 
     writeLeftScientific(data.getMomentum(), "MOMENTUM", "amuA/fs");
