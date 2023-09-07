@@ -22,6 +22,7 @@ namespace output
       public:
         using Output::Output;
 
+        void writeHeader(const simulationBox::SimulationBox &);
         void writeXyz(simulationBox::SimulationBox &);
         void writeVelocities(simulationBox::SimulationBox &);
         void writeForces(simulationBox::SimulationBox &);

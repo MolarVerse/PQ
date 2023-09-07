@@ -10,25 +10,26 @@
 #include <string>    // for operator<<
 #include <vector>    // for vector
 
-using namespace std;
-using namespace simulationBox;
 using namespace output;
+
+/**
+ * @brief Write the header of a trajectory files
+ *
+ * @param simBox
+ */
+void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
+{
+    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << "\n\n";
+}
 
 /**
  * @brief Write xyz file
  *
  * @param simBox
  */
-void TrajectoryOutput::writeXyz(SimulationBox &simBox)
+void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms();
-    _fp << "  ";
-    _fp << simBox.getBoxDimensions();
-    _fp << "  ";
-    _fp << simBox.getBoxAngles();
-    _fp << '\n';
-
-    _fp << '\n';
+    writeHeader(simBox);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -36,21 +37,21 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            _fp << left;
-            _fp << setw(5);
+            _fp << std::left;
+            _fp << std::setw(5);
             _fp << molecule.getAtomName(i);
 
-            _fp << fixed;
-            _fp << setprecision(8);
-            _fp << right;
+            _fp << std::fixed;
+            _fp << std::setprecision(8);
+            _fp << std::right;
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomPosition(i)[0];
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomPosition(i)[1];
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomPosition(i)[2];
 
             _fp << '\n';
@@ -63,16 +64,9 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
+void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms();
-    _fp << "  ";
-    _fp << simBox.getBoxDimensions();
-    _fp << "  ";
-    _fp << simBox.getBoxAngles();
-    _fp << '\n';
-
-    _fp << '\n';
+    writeHeader(simBox);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -80,21 +74,21 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            _fp << left;
-            _fp << setw(5);
+            _fp << std::left;
+            _fp << std::setw(5);
             _fp << molecule.getAtomName(i);
 
-            _fp << scientific;
-            _fp << setprecision(8);
-            _fp << right;
+            _fp << std::scientific;
+            _fp << std::setprecision(8);
+            _fp << std::right;
 
-            _fp << setw(20);
+            _fp << std::setw(20);
             _fp << molecule.getAtomVelocity(i)[0];
 
-            _fp << setw(20);
+            _fp << std::setw(20);
             _fp << molecule.getAtomVelocity(i)[1];
 
-            _fp << setw(20);
+            _fp << std::setw(20);
             _fp << molecule.getAtomVelocity(i)[2];
 
             _fp << '\n';
@@ -107,16 +101,9 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeForces(SimulationBox &simBox)
+void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms();
-    _fp << "  ";
-    _fp << simBox.getBoxDimensions();
-    _fp << "  ";
-    _fp << simBox.getBoxAngles();
-    _fp << '\n';
-
-    _fp << '\n';
+    writeHeader(simBox);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -124,21 +111,21 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            _fp << left;
-            _fp << setw(5);
+            _fp << std::left;
+            _fp << std::setw(5);
             _fp << molecule.getAtomName(i);
 
-            _fp << fixed;
-            _fp << setprecision(8);
-            _fp << right;
+            _fp << std::fixed;
+            _fp << std::setprecision(8);
+            _fp << std::right;
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomForce(i)[0];
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomForce(i)[1];
 
-            _fp << setw(15);
+            _fp << std::setw(15);
             _fp << molecule.getAtomForce(i)[2];
 
             _fp << '\n';
@@ -151,16 +138,9 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeCharges(SimulationBox &simBox)
+void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms();
-    _fp << "  ";
-    _fp << simBox.getBoxDimensions();
-    _fp << "  ";
-    _fp << simBox.getBoxAngles();
-    _fp << '\n';
-
-    _fp << '\n';
+    writeHeader(simBox);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -168,15 +148,16 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
-            _fp << left;
-            _fp << setw(5);
+            _fp << std::left;
+            _fp << std::setw(5);
             _fp << molecule.getAtomName(i);
 
-            _fp << fixed;
-            _fp << setprecision(8);
+            _fp << std::fixed;
+            _fp << std::setprecision(8);
+            _fp << std::right;
 
-            _fp << setw(15);
-            _fp << right;
+            _fp << std::setw(15);
+            _fp << std::right;
             _fp << molecule.getPartialCharge(i);
 
             _fp << '\n';

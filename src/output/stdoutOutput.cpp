@@ -7,9 +7,7 @@
 #include <string>        // for operator<<
 #include <string_view>   // for string_view
 
-using namespace std;
 using namespace output;
-using namespace customException;
 
 /**
  * @brief write a warning message to the stdout if density and box dimensions are set
@@ -19,11 +17,11 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
+        throw customException::UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
     }
-    catch (const UserInputExceptionWarning &e)
+    catch (const customException::UserInputExceptionWarning &e)
     {
-        cout << e.what() << '\n' << '\n' << flush;
+        std::cout << e.what() << '\n' << '\n' << std::flush;
     }
 }
 
@@ -34,6 +32,6 @@ void StdoutOutput::writeDensityWarning() const
  */
 void StdoutOutput::writeInitialMomentum(const double momentum) const
 {
-    cout << '\n';
-    cout << initialMomentumMessage(momentum) << '\n' << flush;
+    std::cout << '\n';
+    std::cout << initialMomentumMessage(momentum) << '\n' << std::flush;
 }
