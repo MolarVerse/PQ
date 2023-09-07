@@ -2,8 +2,8 @@
 
 namespace potential
 {
-    class NonCoulombPair;
-}   // namespace potential
+    class NonCoulombPair;   // forward declaration
+}
 
 using namespace potential;
 

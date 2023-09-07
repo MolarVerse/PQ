@@ -26,8 +26,24 @@ foreach(source_file ${source_files})
         gmock
         gmock_main
     )
-    add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
+    add_test(
+        NAME ${test_name}
+        COMMAND ${test_name}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
+    )
+
+    set_property(TEST ${test_name} PROPERTY LABELS readInput)
 endforeach()
+
+include(CodeCoverage)
+setup_target_for_coverage_gcovr_html(
+    NAME coverage_readInput
+    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+    EXECUTABLE "ctest"
+    EXECUTABLE_ARGS "-L;readInput"
+    OUTPUT_PATH "coverage"
+)
 
 add_subdirectory(inputFileParsing)
 add_subdirectory(topologyReader)

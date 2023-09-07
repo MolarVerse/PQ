@@ -1,3 +1,15 @@
+####### IMPORTANT
+
+- tests of constraints broken
+- tests of intraNonBonded broken
+- refactor of potential
+
+- initialize engine after reading input file
+
+
+
+
+
 - completely rebuild tests of restart file reading and sections
   - code should be fine
   - tests are a big mess -> clean them up

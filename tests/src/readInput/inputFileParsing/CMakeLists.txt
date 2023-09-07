@@ -39,4 +39,16 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+
+    set_property(TEST ${test_name} PROPERTY LABELS inputFileParser)
 endforeach()
+
+include(CodeCoverage)
+setup_target_for_coverage_gcovr_html(
+    NAME coverage_inputFileParser
+    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+    EXECUTABLE "ctest"
+    EXECUTABLE_ARGS "-L;inputFileParser"
+    OUTPUT_PATH "coverage"
+)

@@ -25,4 +25,16 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+
+    set_property(TEST ${test_name} PROPERTY LABELS coulombPotential)
 endforeach()
+
+include(CodeCoverage)
+setup_target_for_coverage_gcovr_html(
+    NAME coverage_coulombPotential
+    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+    EXECUTABLE "ctest"
+    EXECUTABLE_ARGS "-L;coulombPotential"
+    OUTPUT_PATH "coverage"
+)

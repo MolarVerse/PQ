@@ -103,7 +103,7 @@ void NonCoulombicsSection::processLJ(std::vector<std::string> &lineElements, eng
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
 
-    cutOff = cutOff < 0.0 ? potential::CoulombPotential::getCoulombRadiusCutOff() : cutOff;
+    cutOff = cutOff < 0.0 ? settings::PotentialSettings::getCoulombRadiusCutOff() : cutOff;
 
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(engine.getPotential().getNonCoulombPotential());
     potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12));
@@ -140,7 +140,9 @@ void NonCoulombicsSection::processBuckingham(std::vector<std::string> &lineEleme
     const auto dRho      = stod(lineElements[3]);
     const auto c6        = stod(lineElements[4]);
 
-    const auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+
+    cutOff = cutOff < 0.0 ? settings::PotentialSettings::getCoulombRadiusCutOff() : cutOff;
 
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(engine.getPotential().getNonCoulombPotential());
     potential.addNonCoulombicPair(std::make_shared<potential::BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6));
@@ -177,7 +179,9 @@ void NonCoulombicsSection::processMorse(std::vector<std::string> &lineElements, 
     const auto wellWidth           = stod(lineElements[3]);
     const auto equilibriumDistance = stod(lineElements[4]);
 
-    const auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+
+    cutOff = cutOff < 0.0 ? settings::PotentialSettings::getCoulombRadiusCutOff() : cutOff;
 
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(engine.getPotential().getNonCoulombPotential());
     potential.addNonCoulombicPair(

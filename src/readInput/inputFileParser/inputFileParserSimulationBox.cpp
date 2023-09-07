@@ -2,6 +2,7 @@
 
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for InputFileException, customException
+#include "potentialSettings.hpp"       // for PotentialSettings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 
@@ -32,7 +33,6 @@ InputFileParserSimulationBox::InputFileParserSimulationBox(engine::Engine &engin
  * @details default value is 12.5
  *
  * @param lineElements
- * @TODO:
  *
  * @throw customException::InputFileException if the cutoff radius is negative
  */
@@ -47,6 +47,7 @@ void InputFileParserSimulationBox::parseCoulombRadius(const std::vector<std::str
             format("Coulomb radius cutoff must be positive - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
     _engine.getSimulationBox().setCoulombRadiusCutOff(cutOff);
+    settings::PotentialSettings::setCoulombRadiusCutOff(cutOff);
 }
 
 /**

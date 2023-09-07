@@ -46,13 +46,13 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
     EXPECT_EQ(pair2->getC6(), 1.22);
     EXPECT_EQ(pair2->getC12(), 234.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), _engine->getSimulationBox().getCoulombRadiusCutOff());
+    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
     EXPECT_THROW(nonCoulombicsSection.processLJ(lineElements, *_engine), customException::ParameterFileException);
 }
 
-TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
+TEST_F(TestParameterFileSection, processSectionBuckingham)
 {
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(_engine->getPotential().getNonCoulombPotential());
 
@@ -77,13 +77,13 @@ TEST_F(TestParameterFileSection, processSectionLennardBuckingham)
     EXPECT_EQ(pair2->getA(), 1.22);
     EXPECT_EQ(pair2->getDRho(), 234.3);
     EXPECT_EQ(pair2->getC6(), 324.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW(nonCoulombicsSection.processBuckingham(lineElements, *_engine), customException::ParameterFileException);
 }
 
-TEST_F(TestParameterFileSection, processSectionLennardMorse)
+TEST_F(TestParameterFileSection, processSectionMorse)
 {
     auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(_engine->getPotential().getNonCoulombPotential());
 
@@ -108,7 +108,7 @@ TEST_F(TestParameterFileSection, processSectionLennardMorse)
     EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
     EXPECT_EQ(pair2->getWellWidth(), 234.3);
     EXPECT_EQ(pair2->getEquilibriumDistance(), 324.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), -1.0);
+    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW(nonCoulombicsSection.processMorse(lineElements, *_engine), customException::ParameterFileException);

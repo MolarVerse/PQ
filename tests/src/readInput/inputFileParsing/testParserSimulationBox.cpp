@@ -2,6 +2,7 @@
 #include "exceptions.hpp"                     // for InputFileException
 #include "inputFileParser.hpp"                // for readInput
 #include "inputFileParserSimulationBox.hpp"   // for InputFileParserSimulationBox
+#include "potentialSettings.hpp"              // for PotentialSettings
 #include "simulationBox.hpp"                  // for SimulationBox
 #include "simulationBoxSettings.hpp"          // for SimulationBoxSettings
 #include "testInputFileReader.hpp"            // for TestInputFileReader
@@ -43,6 +44,7 @@ TEST_F(TestInputFileReader, testParseCoulombRadius)
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parser.parseCoulombRadius(lineElements, 0);
     EXPECT_EQ(_engine.getSimulationBox().getCoulombRadiusCutOff(), 1.0);
+    EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};
     EXPECT_THROW_MSG(parser.parseCoulombRadius(lineElements2, 0),
