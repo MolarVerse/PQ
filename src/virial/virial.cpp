@@ -20,7 +20,7 @@ using namespace virial;
  */
 void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
-    _virial = physicalData.getVirial();
+    _virial = {0.0, 0.0, 0.0};
 
     for (auto &molecule : simulationBox.getMolecules())
     {
@@ -55,8 +55,6 @@ void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBo
 {
     Virial::calculateVirial(simulationBox, physicalData);
 
-    intraMolecularVirialCorrection(simulationBox);
-
     physicalData.setVirial(_virial);
 }
 
@@ -67,8 +65,11 @@ void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBo
  *
  * @param simulationBox
  */
-void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBox &simulationBox)
+void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBox &simulationBox,
+                                                     physicalData::PhysicalData   &physicalData)
 {
+    _virial = {0.0, 0.0, 0.0};
+
     for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto   centerOfMass  = molecule.getCenterOfMass();
@@ -86,4 +87,6 @@ void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBo
             _virial -= forcexyz * dxyz;
         }
     }
+
+    physicalData.addVirial(_virial);
 }

@@ -56,11 +56,12 @@ void Engine::run()
  *  5.  Calculate virial
  *  6.  Calculate constraint bond references
  *  7.  Second step of the integrator
- *  8.  Apply RATTLE
- *  9.  Apply thermostat
- * 10.  Calculate kinetic energy and momentum
- * 11.  Apply manostat
- * 12.  Reset temperature and momentum
+ *  8.  calculate intra molecular virial correction
+ *  9.  Apply RATTLE
+ * 10.  Apply thermostat
+ * 11.  Calculate kinetic energy and momentum
+ * 12.  Apply manostat
+ * 13.  Reset temperature and momentum
  *
  */
 void Engine::takeStep()
@@ -80,6 +81,8 @@ void Engine::takeStep()
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
+
+    _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     _integrator->secondStep(_simulationBox);
 

@@ -41,6 +41,7 @@ namespace virial
         virtual ~Virial() = default;
 
         virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
 
         void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
 
@@ -61,7 +62,7 @@ namespace virial
         VirialMolecular() : Virial() { _virialType = "molecular"; }
 
         void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
-        void intraMolecularVirialCorrection(simulationBox::SimulationBox &);
+        void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     };
 
     /**

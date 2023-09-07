@@ -39,7 +39,7 @@
       integrator = v-verlet;
 
       force-field = on;  
-      #shake = on;
+      shake = on;
       #guff_path = .; 
       #nonbonded = force-field;
 

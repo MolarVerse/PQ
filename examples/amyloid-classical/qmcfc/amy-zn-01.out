@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Wed Sep  6 23:18:20 2023
+ (+) Simulation run started on: Thu Sep  7 09:52:27 2023
 
 
 
@@ -20,7 +20,7 @@
 	      jobtype = mm-md;
 	
 	    # Number of steps to be performed and timestep in fs
-	      nstep= 1; timestep = 2.0; 
+	      nstep= 2; timestep = 2.0; 
 	      #nreset = 50; 
 	      #nscale = 5;
 	#nreset_angular = 50;
@@ -139,7 +139,7 @@
            Charge  =       -1 e
 
 	    >> INITIAL MOMENTUM <<
-                p = 4.56642e-11 amu * A / fs
+                p = 4.56655e-11 amu * A / fs
 
  (+) Initializing force-field
 
@@ -225,7 +225,7 @@
 
  (+) Entering MM -- simulation loop
 
-       Requested Number of Steps:           1
+       Requested Number of Steps:           2
        Step Counter:                        0
 
  (+) Starting Simulation...
@@ -238,7 +238,18 @@
    E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
    E(COULOMB)	  -96685.480		E(NONCOULOMB)	   12133.470
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   4.613e-11		LOOPTIME 	       0.000
+   MOMENTUM	   4.615e-11		LOOPTIME 	       1.000
+
+
+   STEP NUMBER	           2		TOTAL STEPS	           2
+   SIMULATION TIME     0.004		TEMPERATURE	     479.347
+   PRESSURE	   -6637.438		E(MM)		  -63066.213
+   E(KIN)	   36728.823		E(INTRA)	       0.000
+   E(BOND)	     127.075		E(ANGLE)	     427.430
+   E(DIHEDRAL)	     390.243		E(IMPROPER)	      17.441
+   E(COULOMB)	 -112844.990		E(NONCOULOMB)	   12087.766
+   E(RF)	       0.000		E(THREEBODY)	       0.000
+   MOMENTUM	   4.653e-11		LOOPTIME 	       1.000
 
 
 
@@ -251,5 +262,5 @@
 
 
 
- (+) Simulation time: 1.000000
+ (+) Simulation time: 2.000000
 

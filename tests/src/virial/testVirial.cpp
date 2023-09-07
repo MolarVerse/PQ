@@ -79,7 +79,9 @@ TEST_F(TestVirial, calculateVirialMolecular)
                         force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
                         force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
 
-    virialClass->intraMolecularVirialCorrection(*_simulationBox);
+    physicalData::PhysicalData physicalData;
+
+    virialClass->intraMolecularVirialCorrection(*_simulationBox, physicalData);
 
     EXPECT_EQ(virialClass->getVirial(), virial);
 }

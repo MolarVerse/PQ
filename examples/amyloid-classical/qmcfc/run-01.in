@@ -9,7 +9,7 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep= 1; timestep = 2.0; 
+      nstep= 2; timestep = 2.0; 
       #nreset = 50; 
       #nscale = 5;
 #nreset_angular = 50;
