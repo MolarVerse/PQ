@@ -83,15 +83,14 @@ void DihedralForceField::calculateEnergyAndForces(const simulationBox::Simulatio
 
         if (distance14 < potential::CoulombPotential::getCoulombRadiusCutOff())
         {
-            forceMagnitude = correctLinker(coulombPotential,
-                                           nonCoulombPotential,
-                                           physicalData,
-                                           _molecules[0],
-                                           _molecules[3],
-                                           _atomIndices[0],
-                                           _atomIndices[3],
-                                           distance14,
-                                           true);
+            forceMagnitude = correctLinker<DihedralForceField>(coulombPotential,
+                                                               nonCoulombPotential,
+                                                               physicalData,
+                                                               _molecules[0],
+                                                               _molecules[3],
+                                                               _atomIndices[0],
+                                                               _atomIndices[3],
+                                                               distance14);
 
             forceMagnitude /= distance14;
 

@@ -39,15 +39,14 @@ void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox
 
     if (_isLinker && distance < potential::CoulombPotential::getCoulombRadiusCutOff())
     {
-        forceMagnitude += correctLinker(coulombPotential,
-                                        nonCoulombPotential,
-                                        physicalData,
-                                        _molecules[0],
-                                        _molecules[1],
-                                        _atomIndices[0],
-                                        _atomIndices[1],
-                                        distance,
-                                        false);
+        forceMagnitude += correctLinker<BondForceField>(coulombPotential,
+                                                        nonCoulombPotential,
+                                                        physicalData,
+                                                        _molecules[0],
+                                                        _molecules[1],
+                                                        _atomIndices[0],
+                                                        _atomIndices[1],
+                                                        distance);
     }
 
     forceMagnitude /= distance;

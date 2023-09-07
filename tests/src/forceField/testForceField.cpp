@@ -257,8 +257,8 @@ TEST(TestForceField, correctLinker)
 
     physicalData::PhysicalData physicalData;
 
-    const auto force =
-        forceField::correctLinker(coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0, false);
+    const auto force = forceField::correctLinker<forceField::BondForceField>(
+        coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0);
 
     EXPECT_NEAR(force, 104.37153798653807, 1e-9);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-9);
@@ -269,8 +269,8 @@ TEST(TestForceField, correctLinker)
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    const auto forceScaled =
-        forceField::correctLinker(coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0, true);
+    const auto forceScaled = forceField::correctLinker<forceField::DihedralForceField>(
+        coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0);
 
     EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-9);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -3, 1e-9);

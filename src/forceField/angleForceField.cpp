@@ -72,15 +72,14 @@ void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBo
 
         if (distance23 < potential::CoulombPotential::getCoulombRadiusCutOff())
         {
-            forceMagnitude = correctLinker(coulombPotential,
-                                           nonCoulombPotential,
-                                           physicalData,
-                                           _molecules[1],
-                                           _molecules[2],
-                                           _atomIndices[1],
-                                           _atomIndices[2],
-                                           distance23,
-                                           false);
+            forceMagnitude = correctLinker<AngleForceField>(coulombPotential,
+                                                            nonCoulombPotential,
+                                                            physicalData,
+                                                            _molecules[1],
+                                                            _molecules[2],
+                                                            _atomIndices[1],
+                                                            _atomIndices[2],
+                                                            distance23);
 
             forceMagnitude /= distance23;
 
