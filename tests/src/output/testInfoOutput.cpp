@@ -1,5 +1,6 @@
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "infoOutput.hpp"           // for InfoOutput
+#include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
 
@@ -24,6 +25,8 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     _physicalData->setMomentum(6.0);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    settings::ForceFieldSettings::deactivate();
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, 0.1, *_physicalData);
@@ -125,6 +128,9 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     _physicalData->setVolume(11.0);
     _physicalData->setDensity(12.0);
 
+    settings::ForceFieldSettings::deactivate();
+    settings::ManostatSettings::setManostatType("Berendsen");
+
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, 0.1, *_physicalData);
     _infoOutput->close();
@@ -146,7 +152,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     getline(file, line);
     EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   VOLUME                 11.00000 amuA/fs  DENSITY                12.00000 s          |");
+    EXPECT_EQ(line, "|   VOLUME                 11.00000 A^3      DENSITY                12.00000 g/cm^3     |");
     getline(file, line);
     EXPECT_EQ(line, "|   MOMENTUM                6.0e+00 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);

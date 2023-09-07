@@ -34,7 +34,7 @@
     # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
       thermostat = berendsen; omega = 1500.0; nh-chainlength = 5; temp = 298.15;
       t_relaxation = 0.1;
-      #manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
+      manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
 
       #integrator = v-verlet-rattle; rattle = 23;
       integrator = v-verlet;

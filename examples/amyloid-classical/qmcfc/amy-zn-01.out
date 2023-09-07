@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Thu Sep  7 09:52:27 2023
+ (+) Simulation run started on: Thu Sep  7 11:06:23 2023
 
 
 
@@ -45,7 +45,7 @@
 	    # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
 	      thermostat = berendsen; omega = 1500.0; nh-chainlength = 5; temp = 298.15;
 	      t_relaxation = 0.1;
-	      #manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
+	      manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
 	
 	      #integrator = v-verlet-rattle; rattle = 23;
 	      integrator = v-verlet;
@@ -82,7 +82,7 @@
 
 
  (+) Input file run-01.in read successfully
-       30 keywords have been read
+       33 keywords have been read
 
  (+) Reading moldescriptor at
      /home/jag/projects/pimd_qmcf/examples/amyloid-classical/qmcfc/moldescriptor.dat
@@ -201,7 +201,12 @@
 		Target Temperature: 298.15 K
 		kT                : 5.92e-01 kcal/mol
 
-	* Manostat -- none
+	* Manostat -- Berendsen
+		Relaxation time:  0.10 ps
+		Target Pressure:  1.00 bar
+		Compressibility:  0.00 1/bar
+
+		isotropic coupling
 
 	* Data output
 		Output Frequency:    1 (2.0 fs)
@@ -238,18 +243,20 @@
    E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
    E(COULOMB)	  -96685.480		E(NONCOULOMB)	   12133.470
    E(RF)	       0.000		E(THREEBODY)	       0.000
+   VOLUME	  260032.052		DENSITY		    0.994877
    MOMENTUM	   4.615e-11		LOOPTIME 	       1.000
 
 
    STEP NUMBER	           2		TOTAL STEPS	           2
-   SIMULATION TIME     0.004		TEMPERATURE	     479.347
-   PRESSURE	   -6637.438		E(MM)		  -63066.213
-   E(KIN)	   36728.823		E(INTRA)	       0.000
-   E(BOND)	     127.075		E(ANGLE)	     427.430
-   E(DIHEDRAL)	     390.243		E(IMPROPER)	      17.441
-   E(COULOMB)	 -112844.990		E(NONCOULOMB)	   12087.766
+   SIMULATION TIME     0.004		TEMPERATURE	     479.490
+   PRESSURE	   -6430.175		E(MM)		  -62966.924
+   E(KIN)	   36739.789		E(INTRA)	       0.000
+   E(BOND)	     126.652		E(ANGLE)	     427.071
+   E(DIHEDRAL)	     390.258		E(IMPROPER)	      17.438
+   E(COULOMB)	 -112904.777		E(NONCOULOMB)	   12236.645
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   MOMENTUM	   4.653e-11		LOOPTIME 	       1.000
+   VOLUME	  258496.535		DENSITY		    1.000786
+   MOMENTUM	   4.594e-11		LOOPTIME 	       0.000
 
 
 
@@ -262,5 +269,5 @@
 
 
 
- (+) Simulation time: 2.000000
+ (+) Simulation time: 1.000000
 

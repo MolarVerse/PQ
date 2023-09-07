@@ -95,6 +95,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setVolume(19.0);
     _physicalData->setDensity(20.0);
 
+    settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType("Berendsen");
 
     _energyOutput->setFilename("default.en");
@@ -106,7 +107,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     std::getline(file, line);
     EXPECT_EQ(line,
               "       100\t      1.000000000000\t      2.000000000000\t      9.000000000000\t      3.000000000000\t     "
-              "19.000000000000\t      4.000000000000\t      5.000000000000\t        19.000000000000\t        20.000000000000\t   "
+              "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t   "
               "      6.00000e+00\t     0.10000");
 }
 
