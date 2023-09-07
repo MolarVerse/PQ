@@ -76,7 +76,7 @@ TEST(TestBondForceField, calculateEnergyAndForces)
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
     molecule.setAtomForce(1, {0.0, 0.0, 0.0});
-    physicalData.clearData();
+    physicalData.reset();
 
     bondForceField.setIsLinker(true);
 

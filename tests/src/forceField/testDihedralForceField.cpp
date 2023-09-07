@@ -98,7 +98,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
     molecule.setAtomForce(1, {0.0, 0.0, 0.0});
     molecule.setAtomForce(2, {0.0, 0.0, 0.0});
     molecule.setAtomForce(3, {0.0, 0.0, 0.0});
-    physicalData.clearData();
+    physicalData.reset();
 
     bondForceField.setIsLinker(false);
 
@@ -128,7 +128,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
     molecule.setAtomForce(1, {0.0, 0.0, 0.0});
     molecule.setAtomForce(2, {0.0, 0.0, 0.0});
     molecule.setAtomForce(3, {0.0, 0.0, 0.0});
-    physicalData.clearData();
+    physicalData.reset();
 
     bondForceField.setIsLinker(true);
 

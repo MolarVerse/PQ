@@ -264,7 +264,7 @@ TEST(TestForceField, correctLinker)
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-9);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 134.48580380716751, 1e-9);
 
-    physicalData.clearData();
+    physicalData.reset();
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);

@@ -87,7 +87,7 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
 
     molecule.setAtomForcesToZero();
     molecule.setAtomShiftForces(0, {0.0, 0.0, 0.0});
-    physicalData.clearData();
+    physicalData.reset();
 
     intraNonBondedMap.calculate(&coulombPotential, &nonCoulombPotential, simulationBox, physicalData);
 

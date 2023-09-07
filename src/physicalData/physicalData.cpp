@@ -80,6 +80,7 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
  */
 void PhysicalData::makeAverages(const double outputFrequency)
 {
+    _kineticEnergy         /= outputFrequency;
     _coulombEnergy         /= outputFrequency;
     _nonCoulombEnergy      /= outputFrequency;
     _intraCoulombEnergy    /= outputFrequency;
@@ -90,21 +91,21 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _dihedralEnergy /= outputFrequency;
     _improperEnergy /= outputFrequency;
 
-    _temperature   /= outputFrequency;
-    _momentum      /= outputFrequency;
-    _kineticEnergy /= outputFrequency;
-    _volume        /= outputFrequency;
-    _density       /= outputFrequency;
-    _virial        /= outputFrequency;
-    _pressure      /= outputFrequency;
+    _temperature /= outputFrequency;
+    _momentum    /= outputFrequency;
+    _volume      /= outputFrequency;
+    _density     /= outputFrequency;
+    _virial      /= outputFrequency;
+    _pressure    /= outputFrequency;
 }
 
 /**
  * @brief clear all physicalData in order to call add functions
  *
  */
-void PhysicalData::clearData()
+void PhysicalData::reset()
 {
+    _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;
     _nonCoulombEnergy      = 0.0;
     _intraCoulombEnergy    = 0.0;
@@ -115,11 +116,12 @@ void PhysicalData::clearData()
     _dihedralEnergy = 0.0;
     _improperEnergy = 0.0;
 
-    _temperature   = 0.0;
-    _momentum      = 0.0;
-    _kineticEnergy = 0.0;
-    _virial        = {0.0, 0.0, 0.0};
-    _pressure      = 0.0;
+    _temperature = 0.0;
+    _momentum    = 0.0;
+    _virial      = {0.0, 0.0, 0.0};
+    _pressure    = 0.0;
+    _volume      = 0.0;
+    _density     = 0.0;
 }
 
 /**
@@ -168,16 +170,38 @@ double PhysicalData::getPotentialEnergy() const
 }
 
 /**
- * @brief calculate intra energy
+ * @brief add intra coulomb energy
  *
- * @return double
+ * @details This function is used to add intra coulomb energy to the total coulomb energy
+ *
+ * @param intraCoulombEnergy
  */
-double PhysicalData::getIntraEnergy() const
+void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
 {
-    auto intraEnergy = 0.0;
+    _intraCoulombEnergy += intraCoulombEnergy;
+    _coulombEnergy      += intraCoulombEnergy;
+}
 
-    intraEnergy += _intraCoulombEnergy;
-    intraEnergy += _intraNonCoulombEnergy;
+/**
+ * @brief add intra non coulomb energy
+ *
+ * @details This function is used to add intra non coulomb energy to the total non coulomb energy
+ *
+ * @param intraNonCoulombEnergy
+ */
+void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
+{
+    _intraNonCoulombEnergy += intraNonCoulombEnergy;
+    _nonCoulombEnergy      += intraNonCoulombEnergy;
+}
 
-    return intraEnergy;
+/**
+ * @brief change kinetic virial to atomic
+ *
+ * @details This function is used to change the kinetic virial from molecular to atomic via a function pointer
+ *
+ */
+void PhysicalData::changeKineticVirialToAtomic()
+{
+    getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
 }

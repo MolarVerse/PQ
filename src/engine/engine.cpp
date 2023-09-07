@@ -106,7 +106,7 @@ void Engine::takeStep()
 void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
-    _physicalData.clearData();
+    _physicalData.reset();
 
     const auto outputFrequency = output::Output::getOutputFrequency();
 

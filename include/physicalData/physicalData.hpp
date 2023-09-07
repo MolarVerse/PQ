@@ -8,8 +8,8 @@
 
 namespace simulationBox
 {
-    class SimulationBox;
-}   // namespace simulationBox
+    class SimulationBox;   // forward declaration
+}
 
 namespace physicalData
 {
@@ -46,38 +46,29 @@ namespace physicalData
 
       public:
         void calculateTemperature(simulationBox::SimulationBox &);
-
         void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
-
-        void updateAverages(const PhysicalData &);
-        void makeAverages(const double);
-        void clearData();   // TODO: refactor this to reset
+        void changeKineticVirialToAtomic();
 
         std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =
             std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
 
-        void changeKineticVirialToAtomic()
-        {
-            getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
-        }
+        void updateAverages(const PhysicalData &);
+        void makeAverages(const double);
+        void reset();
+
+        void addIntraCoulombEnergy(const double intraCoulombEnergy);
+        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
 
         [[nodiscard]] double getPotentialEnergy() const;
-        [[nodiscard]] double getIntraEnergy() const;
+
+        /********************
+         * standard adders  *
+         ********************/
 
         void addVirial(const linearAlgebra::Vec3D virial) { _virial += virial; }
 
         void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }
         void addNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy += nonCoulombEnergy; }
-        void addIntraCoulombEnergy(const double intraCoulombEnergy)
-        {
-            _intraCoulombEnergy += intraCoulombEnergy;
-            _coulombEnergy      += intraCoulombEnergy;
-        }
-        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
-        {
-            _intraNonCoulombEnergy += intraNonCoulombEnergy;
-            _nonCoulombEnergy      += intraNonCoulombEnergy;
-        }
 
         void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
         void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
@@ -120,11 +111,12 @@ namespace physicalData
         [[nodiscard]] double getPressure() const { return _pressure; }
         [[nodiscard]] double getMomentum() const { return _momentum; }
 
+        [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
         [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
         [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }
         [[nodiscard]] double getIntraCoulombEnergy() const { return _intraCoulombEnergy; }
         [[nodiscard]] double getIntraNonCoulombEnergy() const { return _intraNonCoulombEnergy; }
-        [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
+        [[nodiscard]] double getIntraEnergy() const { return _intraCoulombEnergy + _intraNonCoulombEnergy; }
 
         [[nodiscard]] double getBondEnergy() const { return _bondEnergy; }
         [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
