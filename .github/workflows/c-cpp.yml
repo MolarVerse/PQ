@@ -58,7 +58,7 @@ jobs:
     - name: "Test Project"
       run: |
         cd build
-        make test
+        make coverage
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
