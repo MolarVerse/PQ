@@ -569,7 +569,7 @@ function(setup_target_for_coverage_gcovr_html)
 
     # Running gcovr
     set(GCOVR_HTML_CMD
-        ${GCOVR_PATH} --html ${Coverage_OUTPUT_PATH}/index.html --html-nested -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
+        ${GCOVR_PATH} --html ${Coverage_OUTPUT_PATH}/index.html -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
         ${GCOVR_EXCLUDE_ARGS} --object-directory=${PROJECT_BINARY_DIR}
     )
 
