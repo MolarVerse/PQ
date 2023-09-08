@@ -38,7 +38,7 @@ namespace potential
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
         void fillDiagonalElementsOfNonCoulombPairsMatrix(vec_shared_pair &diagonalElements);
         void fillOffDiagonalElementsOfNonCoulombPairsMatrix();
-        void sortDiagonalElements(vec_shared_pair &diagonalElements);
+        void sortNonCoulombicsPairs(vec_shared_pair &diagonalElements);
         void setOffDiagonalElement(const size_t atomType1, const size_t atomType2);
 
         [[nodiscard]] vec_shared_pair            getSelfInteractionNonCoulombicPairs() const;

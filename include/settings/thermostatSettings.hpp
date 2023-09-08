@@ -26,6 +26,9 @@ namespace settings
         static inline double _relaxationTime = defaults::_BERENDSEN_THERMOSTAT_RELAXATION_TIME_;   // 0.1 ps
 
       public:
+        ThermostatSettings()  = default;
+        ~ThermostatSettings() = default;
+
         static void setThermostatType(const std::string_view &thermostatType) { _thermostatType = thermostatType; }
         static void setTemperatureSet(const bool temperatureSet) { _isTemperatureSet = temperatureSet; }
         static void setTargetTemperature(const double targetTemperature) { _targetTemperature = targetTemperature; }

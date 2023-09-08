@@ -21,6 +21,9 @@ namespace settings
         static inline size_t _fReset = 0;
 
       public:
+        ResetKineticsSettings()  = default;
+        ~ResetKineticsSettings() = default;
+
         static void setNScale(const size_t nScale) { _nScale = nScale; }
         static void setFScale(const size_t fScale) { _fScale = fScale; }
         static void setNReset(const size_t nReset) { _nReset = nReset; }

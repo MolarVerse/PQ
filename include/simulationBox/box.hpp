@@ -34,11 +34,11 @@ namespace simulationBox
         void applyPBC(linearAlgebra::Vec3D &position) const;
         void scaleBox(const linearAlgebra::Vec3D &scalingFactors);
 
-        [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
+        /********************
+         * standard getters *
+         ********************/
 
-        /*******************************
-         * standard getter and setters *
-         *******************************/
+        [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
 
         [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
         [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _boxAngles; }
@@ -47,6 +47,10 @@ namespace simulationBox
         [[nodiscard]] double               getDensity() const { return _density; }
         [[nodiscard]] double               getVolume() const { return _volume; }
         [[nodiscard]] bool                 getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+
+        /********************
+         * standard setters *
+         ********************/
 
         void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _boxDimensions = boxDimensions; }
         void setBoxAngles(const linearAlgebra::Vec3D &boxAngles) { _boxAngles = boxAngles; }

@@ -12,6 +12,7 @@ target_link_libraries(thermostat
     PUBLIC
     simulationBox
     physicalData
+    settings
 )
 
 install(TARGETS thermostat

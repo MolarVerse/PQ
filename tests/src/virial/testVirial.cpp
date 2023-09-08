@@ -48,13 +48,6 @@ TEST_F(TestVirial, intramolecularCorrection)
     auto virial = force_mol1_atom1 * position_mol1_atom1 + force_mol1_atom2 * position_mol1_atom2 +
                   force_mol2_atom1 * position_mol2_atom1 + shiftForce_mol1_atom1 + shiftForce_mol1_atom2 + shiftForce_mol2_atom1;
 
-    const auto centerOfMass_mol1 = _simulationBox->getMolecule(0).getCenterOfMass();
-    const auto centerOfMass_mol2 = _simulationBox->getMolecule(1).getCenterOfMass();
-
-    virial += -force_mol1_atom1 * (position_mol1_atom1 - centerOfMass_mol1) -
-              force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
-              force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
-
     virialClass->calculateVirial(*_simulationBox, *_data);
 
     EXPECT_EQ(_data->getVirial(), virial);

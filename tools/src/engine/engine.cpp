@@ -1,8 +1,13 @@
 #include "engine.hpp"
 
-#include "trajToComInFileReader.hpp"
+#include "analysisRunner.hpp"          // for AnalysisRunner
+#include "toml.hpp"                    // for parse_error, operator<<, parse_file
+#include "trajToComInFileReader.hpp"   // for TrajToComInFileReader
 
-#include <iostream>
+#include <cstdlib>     // for exit
+#include <iostream>    // for operator<<, basic_ostream, ostream
+#include <memory>      // for allocator, __shared_ptr_access
+#include <stdexcept>   // for out_of_range
 
 using namespace std;
 

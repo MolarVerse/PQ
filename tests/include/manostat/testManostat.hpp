@@ -28,6 +28,7 @@ class TestManostat : public ::testing::Test
         _data->setKineticEnergyAtomicVector({1.0, 1.0, 1.0});
 
         _box = new simulationBox::SimulationBox();
+        _box->setVolume(2.0);
     }
 
     void TearDown() override

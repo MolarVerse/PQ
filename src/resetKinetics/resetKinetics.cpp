@@ -1,14 +1,14 @@
 #include "resetKinetics.hpp"
 
 #include "constants.hpp"       // for _S_TO_FS_
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData, physicalData
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vector3D
 
-#include <cmath>     // for sqrt
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <cstddef>      // for size_t
+#include <functional>   // for identity
 
 using namespace resetKinetics;
 
@@ -69,8 +69,7 @@ void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, s
     const auto temperature = physicalData.getTemperature();
     const auto lambda      = ::sqrt(_targetTemperature / temperature);
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.scaleVelocities(lambda);
+    std::ranges::for_each(simBox.getMolecules(), [lambda](auto &molecule) { molecule.scaleVelocities(lambda); });
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
 }
@@ -88,8 +87,8 @@ void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simu
     const auto momentumVector     = physicalData.getMomentumVector() * constants::_S_TO_FS_;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.correctVelocities(momentumCorrection);
+    std::ranges::for_each(simBox.getMolecules(),
+                          [momentumCorrection](auto &molecule) { molecule.correctVelocities(momentumCorrection); });
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
     physicalData.calculateTemperature(simBox);

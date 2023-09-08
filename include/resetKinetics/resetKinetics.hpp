@@ -49,6 +49,10 @@ namespace resetKinetics
         void         resetTemperature(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
         void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
 
+        /********************
+         * standard getters *
+         *******************/
+
         [[nodiscard]] size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
         [[nodiscard]] size_t getFrequencyTemperatureReset() const { return _frequencyTemperatureReset; }
         [[nodiscard]] size_t getNStepsMomentumReset() const { return _nStepsMomentumReset; }

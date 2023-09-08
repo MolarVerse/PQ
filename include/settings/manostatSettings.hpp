@@ -27,6 +27,9 @@ namespace settings
         static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;        // 4.5e-5 1/bar
 
       public:
+        ManostatSettings()  = default;
+        ~ManostatSettings() = default;
+
         static void setManostatType(const std::string_view &manostatType) { _manostatType = manostatType; }
         static void setPressureSet(const bool pressureSet) { _isPressureSet = pressureSet; }
         static void setTargetPressure(const double targetPressure) { _targetPressure = targetPressure; }

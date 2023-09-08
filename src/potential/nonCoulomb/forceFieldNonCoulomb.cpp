@@ -46,6 +46,7 @@ void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
  * @brief determines internal global van der Waals types and sets them in the NonCoulombPair objects
  *
  * @param _externalToInternalGlobalVDWTypes
+ *
  */
 void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &externalToInternalGlobalVDWTypes)
 {
@@ -59,13 +60,13 @@ void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(const std::map<size_t
 }
 
 /**
- * @brief sorts the diagonal elements of the non-coulombic pairs matrix
+ * @brief sorts the elements of a non-coulombic pairs vector
  *
- * @param diagonalElements
+ * @param nonCoulombicPairsVector
  *
  * @throw ParameterFileException if non-coulombic pairs with the same global van der Waals types are defined twice
  */
-void ForceFieldNonCoulomb::sortDiagonalElements(std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements)
+void ForceFieldNonCoulomb::sortNonCoulombicsPairs(std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulombicPairsVector)
 {
     auto isLess = [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
     {
@@ -77,14 +78,14 @@ void ForceFieldNonCoulomb::sortDiagonalElements(std::vector<std::shared_ptr<NonC
             return false;
     };
 
-    std::ranges::sort(diagonalElements, isLess);
+    std::ranges::sort(nonCoulombicPairsVector, isLess);
 
     auto compareSharedPointers = [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
     { return *nonCoulombicPair1 == *nonCoulombicPair2; };
 
-    const auto iter = std::ranges::adjacent_find(diagonalElements, compareSharedPointers);
+    const auto iter = std::ranges::adjacent_find(nonCoulombicPairsVector, compareSharedPointers);
 
-    if (iter != diagonalElements.end())
+    if (iter != nonCoulombicPairsVector.end())
         throw customException::ParameterFileException(
             std::format("Non-coulombic pairs with global van der Waals types {} and {} in the parameter file are defined twice",
                         (*iter)->getVanDerWaalsType1(),
@@ -99,7 +100,7 @@ void ForceFieldNonCoulomb::sortDiagonalElements(std::vector<std::shared_ptr<NonC
 void ForceFieldNonCoulomb::fillDiagonalElementsOfNonCoulombPairsMatrix(
     std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements)
 {
-    sortDiagonalElements(diagonalElements);
+    sortNonCoulombicsPairs(diagonalElements);
 
     _nonCoulombPairsMatrix = linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>(diagonalElements.size());
 

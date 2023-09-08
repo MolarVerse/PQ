@@ -34,7 +34,7 @@ namespace manostat
         explicit Manostat(const double targetPressure) : _targetPressure(targetPressure) {}
         virtual ~Manostat() = default;
 
-        void         calculatePressure(physicalData::PhysicalData &);
+        void         calculatePressure(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
     };
 

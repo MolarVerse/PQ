@@ -24,6 +24,9 @@ namespace settings
         static inline double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;   // 1e-8
 
       public:
+        ConstraintSettings()  = default;
+        ~ConstraintSettings() = default;
+
         static void setShakeMaxIter(const size_t shakeMaxIter) { _shakeMaxIter = shakeMaxIter; }
         static void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
         static void setShakeTolerance(const double shakeTolerance) { _shakeTolerance = shakeTolerance; }

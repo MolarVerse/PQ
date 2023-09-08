@@ -16,5 +16,22 @@ foreach(source_file ${source_files})
         gmock
         gmock_main
     )
-    add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
+    add_test(
+        NAME ${test_name}
+        COMMAND ${test_name}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
+    )
+
+    set_property(TEST ${test_name} PROPERTY LABELS settings)
 endforeach()
+
+include(CodeCoverage)
+setup_target_for_coverage_gcovr_html(
+    NAME coverage_settings
+    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+    # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/settings
+    EXECUTABLE "ctest"
+    EXECUTABLE_ARGS "-L;settings"
+    OUTPUT_PATH "coverage"
+)

@@ -19,6 +19,9 @@ namespace settings
         static inline size_t _numberOfSteps;
 
       public:
+        TimingsSettings()  = default;
+        ~TimingsSettings() = default;
+
         static void setTimeStep(const double timeStep) { _timeStep = timeStep; }
         static void setNumberOfSteps(const size_t numberOfSteps) { _numberOfSteps = numberOfSteps; }
 

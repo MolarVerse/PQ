@@ -1,7 +1,6 @@
 #include "nonCoulombicsSection.hpp"
 
 #include "buckinghamPair.hpp"         // for BuckinghamPair
-#include "coulombPotential.hpp"       // for CoulombPotential
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb

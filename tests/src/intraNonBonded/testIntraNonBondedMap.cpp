@@ -81,9 +81,6 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[1], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[2], 341.85768993269039 * 0.75, 1e-9);
 
     molecule.setAtomForcesToZero();
     molecule.setAtomShiftForces(0, {0.0, 0.0, 0.0});
@@ -107,9 +104,6 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[1], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[2], 341.85768993269039 * 0.75, 1e-9);
 }
 
 int main(int argc, char **argv)

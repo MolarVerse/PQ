@@ -21,6 +21,9 @@ namespace settings
         static inline std::string _jobtype;   // no default value
 
       public:
+        Settings()  = default;
+        ~Settings() = default;
+
         [[nodiscard]] static std::string getJobtype() { return _jobtype; }
 
         static void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }

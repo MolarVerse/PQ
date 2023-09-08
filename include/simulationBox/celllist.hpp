@@ -46,12 +46,16 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3Dul getCellIndexOfAtom(const linearAlgebra::Vec3D &box,
                                                                 const linearAlgebra::Vec3D &position) const;
 
+        void resizeCells() { _cells.resize(prod(_nCells)); }
+        void addCell(const Cell &cell) { _cells.push_back(cell); }
+
+        /*****************************
+         * standard activate methods *
+         *****************************/
+
         void               activate() { _activated = true; }
         void               deactivate() { _activated = false; }
         [[nodiscard]] bool isActive() const { return _activated; }
-
-        void resizeCells() { _cells.resize(prod(_nCells)); }
-        void addCell(const Cell &cell) { _cells.push_back(cell); }
 
         /***************************
          * standard getter methods *

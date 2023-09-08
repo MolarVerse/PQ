@@ -262,6 +262,54 @@ TEST(TestPotential, getSelfInteractionNonCoulombicPairs)
     EXPECT_EQ(selfInteractionNonCoulombicPairs.size(), 2);
 }
 
+/**
+ * @brief tests sortNonCoulombicsPairs
+ *
+ */
+TEST(TestPotential, sortNonCoulombicsPairs)
+{
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    auto vector = std::vector<std::shared_ptr<potential::NonCoulombPair>>();
+
+    auto pair1 = std::make_shared<potential::LennardJonesPair>(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    pair1->setInternalType1(1);
+    pair1->setInternalType2(5);
+    vector.push_back(pair1);
+    auto pair2 = std::make_shared<potential::LennardJonesPair>(size_t(2), size_t(2), 2.0, 1.0, 1.0);
+    pair2->setInternalType1(2);
+    pair2->setInternalType2(2);
+    vector.push_back(pair2);
+    auto pair3 = std::make_shared<potential::LennardJonesPair>(size_t(2), size_t(3), 2.0, 1.0, 1.0);
+    pair3->setInternalType1(2);
+    pair3->setInternalType2(3);
+    vector.push_back(pair3);
+    auto pair4 = std::make_shared<potential::LennardJonesPair>(size_t(1), size_t(4), 2.0, 1.0, 1.0);
+    pair4->setInternalType1(1);
+    pair4->setInternalType2(4);
+    vector.push_back(pair4);
+
+    potential.sortNonCoulombicsPairs(vector);
+
+    EXPECT_EQ(vector[0]->getInternalType1(), 1);
+    EXPECT_EQ(vector[0]->getInternalType2(), 4);
+    EXPECT_EQ(vector[1]->getInternalType1(), 1);
+    EXPECT_EQ(vector[1]->getInternalType2(), 5);
+    EXPECT_EQ(vector[2]->getInternalType1(), 2);
+    EXPECT_EQ(vector[2]->getInternalType2(), 2);
+    EXPECT_EQ(vector[3]->getInternalType1(), 2);
+    EXPECT_EQ(vector[3]->getInternalType2(), 3);
+
+    auto pair5 = std::make_shared<potential::LennardJonesPair>(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    pair5->setInternalType1(1);
+    pair5->setInternalType2(5);
+    vector.push_back(pair5);
+
+    EXPECT_THROW_MSG(potential.sortNonCoulombicsPairs(vector),
+                     customException::ParameterFileException,
+                     "Non-coulombic pairs with global van der Waals types 1 and 1 in the parameter file are defined twice");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

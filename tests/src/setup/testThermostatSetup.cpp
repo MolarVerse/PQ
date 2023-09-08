@@ -19,8 +19,6 @@ TEST_F(TestSetup, setupThermostat)
     settings::TimingsSettings::setTimeStep(0.1);
     thermostatSetup.setup();
 
-    EXPECT_EQ(_engine.getThermostat().getTimestep(), 0.1);
-
     settings::ThermostatSettings::setThermostatType("berendsen");
     EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
 

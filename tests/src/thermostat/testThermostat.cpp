@@ -1,8 +1,9 @@
 #include "testThermostat.hpp"
 
-#include "constants.hpp"       // for _TEMPERATURE_FACTOR_
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "constants.hpp"         // for _TEMPERATURE_FACTOR_
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for sqrt
@@ -32,7 +33,7 @@ TEST_F(TestThermostat, calculateTemperature)
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
-    _thermostat->setTimestep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
 
     const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);

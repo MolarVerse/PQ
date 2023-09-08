@@ -51,6 +51,4 @@ void ThermostatSetup::setup()
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
     else
         _engine.makeThermostat(thermostat::Thermostat());
-
-    _engine.getThermostat().setTimestep(settings::TimingsSettings::getTimeStep());
 }

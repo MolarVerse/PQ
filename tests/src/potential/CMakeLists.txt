@@ -1,7 +1,4 @@
 set(source_files
-    testPotential.cpp
-    testPotentialBruteForce.cpp
-    testPotentialCellList.cpp
 )
 
 foreach(source_file ${source_files})

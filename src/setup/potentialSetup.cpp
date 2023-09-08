@@ -125,11 +125,6 @@ void PotentialSetup::setupNonCoulombicPairs()
                       [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
                       { return nonCoulombicPair1->getInternalType1() < nonCoulombicPair2->getInternalType1(); });
 
-    for (size_t i = 0; i < numberOfGlobalVdwTypes; ++i)
-        if (selfInteractionNonCoulombicPairs[i]->getInternalType1() != i)
-            throw customException::ParameterFileException(
-                "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
-
     potential.fillDiagonalElementsOfNonCoulombPairsMatrix(selfInteractionNonCoulombicPairs);
     potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
 }

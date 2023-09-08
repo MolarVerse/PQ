@@ -18,7 +18,7 @@
  */
 TEST_F(TestManostat, CalculatePressure)
 {
-    _manostat->calculatePressure(*_data);
+    _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
 }
@@ -31,7 +31,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
 {
     _data->changeKineticVirialToAtomic();
 
-    _manostat->calculatePressure(*_data);
+    _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::_PRESSURE_FACTOR_);
 }

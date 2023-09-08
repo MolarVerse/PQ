@@ -49,6 +49,9 @@ namespace settings
         static inline double _wolfParameter = defaults::_WOLF_PARAMETER_DEFAULT_;   // default is 0.25
 
       public:
+        PotentialSettings()  = default;
+        ~PotentialSettings() = default;
+
         static void setNonCoulombType(const std::string_view &type);
         static void setNonCoulombType(const NonCoulombType type) { _nonCoulombType = type; }
 

@@ -30,6 +30,9 @@ namespace settings
         static bool inline _isIntraNonBondedFileNameSet = false;
 
       public:
+        FileSettings()  = default;
+        ~FileSettings() = default;
+
         /********************
          * standard getters *
          ********************/

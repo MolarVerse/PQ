@@ -9,8 +9,6 @@ namespace engine
 
 namespace setup
 {
-    void setupIntegrator(engine::Engine &);
-
     /**
      * @class IntegratorSetup
      *
@@ -24,8 +22,6 @@ namespace setup
 
       public:
         explicit IntegratorSetup(engine::Engine &engine) : _engine(engine){};
-
-        void setup();
     };
 
 }   // namespace setup

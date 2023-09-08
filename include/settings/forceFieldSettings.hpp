@@ -16,6 +16,9 @@ namespace settings
         static inline bool _active = false;
 
       public:
+        ForceFieldSettings()  = default;
+        ~ForceFieldSettings() = default;
+
         /********************
          * standard getters *
          ********************/

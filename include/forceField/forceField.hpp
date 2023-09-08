@@ -10,26 +10,11 @@
 #include "potentialSettings.hpp"     // for PotentialSettings
 
 #include <cstddef>   // for size_t
-
-namespace potential
-{
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
-}   // namespace potential
-
-namespace simulationBox
-{
-    class Molecule;   // forward declaration
-}
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include <memory>    // for __shared_ptr_access, shared_ptr
 
 namespace forceField
 {
-    class DihedralForceField;
+    class DihedralForceField;   // forward declaration
 }
 
 namespace forceField

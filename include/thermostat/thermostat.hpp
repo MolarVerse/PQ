@@ -30,7 +30,6 @@ namespace thermostat
       protected:
         double _temperature       = 0.0;
         double _targetTemperature = 0.0;
-        double _timestep          = 0.0;
 
       public:
         Thermostat() = default;
@@ -38,9 +37,6 @@ namespace thermostat
         virtual ~Thermostat() = default;
 
         virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-
-        void                 setTimestep(const double timestep) { _timestep = timestep; }
-        [[nodiscard]] double getTimestep() const { return _timestep; }
     };
 
     /**

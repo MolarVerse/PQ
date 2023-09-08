@@ -2,7 +2,7 @@
 
 	--->>> QMCFC Engine 1.7 <<<--- 
 
- (+) Simulation run started on: Thu Sep  7 11:06:23 2023
+ (+) Simulation run started on: Fri Sep  8 10:25:21 2023
 
 
 
@@ -32,7 +32,7 @@
 	      output_freq = 1; 
 	
 	    # Coulombic cutoff 
-	      rcoulomb = 12.5; 
+	      rcoulomb = 12.0; 
 	
 	    # Density of the system - affects boxsize
 	      density = 0.997; 
@@ -192,7 +192,7 @@
 		Time step: 2.00 fs
 
 	* Coulombic Interactions
-		Cutoff:  12.50 A
+		Cutoff:  12.00 A
 
  (!) Warning: No longe Range correction requested.
 
@@ -236,27 +236,27 @@
  (+) Starting Simulation...
 
    STEP NUMBER	           1		TOTAL STEPS	           1
-   SIMULATION TIME     0.002		TEMPERATURE	     268.104
-   PRESSURE	   -1513.740		E(MM)		  -63065.544
-   E(KIN)	   20542.815		E(INTRA)	       0.000
+   SIMULATION TIME     0.002		TEMPERATURE	     268.019
+   PRESSURE	   -1718.504		E(MM)		  -62841.740
+   E(KIN)	   20536.310		E(INTRA)	       0.000
    E(BOND)	     119.591		E(ANGLE)	     416.295
    E(DIHEDRAL)	     390.679		E(IMPROPER)	      17.088
-   E(COULOMB)	  -96685.480		E(NONCOULOMB)	   12133.470
+   E(COULOMB)	  -96540.102		E(NONCOULOMB)	   12218.400
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   VOLUME	  260032.052		DENSITY		    0.994877
-   MOMENTUM	   4.615e-11		LOOPTIME 	       1.000
+   VOLUME	  259983.094		DENSITY		    0.995064
+   MOMENTUM	   4.585e-11		LOOPTIME 	       0.000
 
 
    STEP NUMBER	           2		TOTAL STEPS	           2
-   SIMULATION TIME     0.004		TEMPERATURE	     479.490
-   PRESSURE	   -6430.175		E(MM)		  -62966.924
-   E(KIN)	   36739.789		E(INTRA)	       0.000
-   E(BOND)	     126.652		E(ANGLE)	     427.071
-   E(DIHEDRAL)	     390.258		E(IMPROPER)	      17.438
-   E(COULOMB)	 -112904.777		E(NONCOULOMB)	   12236.645
+   SIMULATION TIME     0.004		TEMPERATURE	     478.979
+   PRESSURE	   -6617.808		E(MM)		  -62730.930
+   E(KIN)	   36700.593		E(INTRA)	       0.000
+   E(BOND)	     126.598		E(ANGLE)	     427.020
+   E(DIHEDRAL)	     390.258		E(IMPROPER)	      17.436
+   E(COULOMB)	 -112734.863		E(NONCOULOMB)	   12342.029
    E(RF)	       0.000		E(THREEBODY)	       0.000
-   VOLUME	  258496.535		DENSITY		    1.000786
-   MOMENTUM	   4.594e-11		LOOPTIME 	       0.000
+   VOLUME	  258403.076		DENSITY		    1.001148
+   MOMENTUM	   4.553e-11		LOOPTIME 	       1.000
 
 
 
@@ -269,5 +269,5 @@
 
 
 
- (+) Simulation time: 1.000000
+ (+) Simulation time: 2.000000
 

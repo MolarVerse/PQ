@@ -59,7 +59,8 @@ TEST_F(TestConstraints, applyShake_notConverged)
 
     settings::TimingsSettings::setTimeStep(2.0);
 
-    EXPECT_THROW_MSG(_constraints->applyShake(*_box), customException::ShakeException, "Shake algorithm did not converge.");
+    EXPECT_THROW_MSG(
+        _constraints->applyShake(*_box), customException::ShakeException, "Shake algorithm did not converge for 2 bonds.");
 }
 
 /**
@@ -109,7 +110,8 @@ TEST_F(TestConstraints, applyRattle_notConverged)
     _constraints->setRattleTolerance(0.0);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    EXPECT_THROW_MSG(_constraints->applyRattle(), customException::ShakeException, "Rattle algorithm did not converge.");
+    EXPECT_THROW_MSG(
+        _constraints->applyRattle(), customException::ShakeException, "Rattle algorithm did not converge for 2 bonds.");
 }
 
 /**

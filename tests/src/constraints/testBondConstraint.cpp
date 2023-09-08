@@ -24,8 +24,7 @@ TEST_F(TestBondConstraint, calculateDistanceDelta)
     _bondConstraint->calculateConstraintBondRef(*_box);
     const auto distanceSquared         = normSquared(linearAlgebra::Vec3D(0.0, -1.0, -2.0));
     const auto targetBondLengthSquared = _targetBondLength * _targetBondLength;
-    EXPECT_EQ(_bondConstraint->calculateDistanceDelta(*_box),
-              0.5 * (targetBondLengthSquared - distanceSquared) / targetBondLengthSquared);
+    EXPECT_EQ(_bondConstraint->calculateDistanceDelta(*_box), 0.5 * (targetBondLengthSquared - distanceSquared));
 }
 
 /**

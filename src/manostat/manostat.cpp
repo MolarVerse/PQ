@@ -17,11 +17,11 @@ using namespace manostat;
  *
  * @param physicalData
  */
-void Manostat::calculatePressure(physicalData::PhysicalData &physicalData)
+void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
     const auto forceVirial = physicalData.getVirial();
-    const auto volume      = physicalData.getVolume();
+    const auto volume      = box.getVolume();
 
     _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
 
@@ -35,9 +35,9 @@ void Manostat::calculatePressure(physicalData::PhysicalData &physicalData)
  *
  * @param physicalData
  */
-void Manostat::applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &physicalData)
+void Manostat::applyManostat(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    calculatePressure(physicalData);
+    calculatePressure(box, physicalData);
 }
 
 /**
@@ -48,7 +48,7 @@ void Manostat::applyManostat(simulationBox::SimulationBox &, physicalData::Physi
  */
 void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
-    calculatePressure(physicalData);
+    calculatePressure(simBox, physicalData);
 
     const auto linearScalingFactor = ::pow(
         1.0 - _compressibility * settings::TimingsSettings::getTimeStep() / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
