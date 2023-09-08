@@ -24,7 +24,7 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS exceptions)
 endforeach()
 
-if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
+if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug)
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
         NAME coverage_exceptions
