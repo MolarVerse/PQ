@@ -34,9 +34,18 @@ jobs:
             dpkg -L $dep | while IFS= read -r f; do if test -f $f; then echo $f; fi; done | xargs cp --parents --target-directory ~/boost/
           done
         fi
+
+    - name: install gcc13
+      run: |
+        sudo apt update
+        sudo apt install gcc-13 g++-13
+      shell: bash
       
     - name: "Create build directory and run CMake"
       run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+      env:
+        CC: gcc-13
+        CXX: g++-13
 
     - name: "Build Project" 
       run: cmake --build build --target all -- -j20

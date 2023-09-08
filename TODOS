@@ -1,14 +1,6 @@
-####### IMPORTANT
-
-- tests of constraints broken
-- tests of intraNonBonded broken
-- refactor of potential
-
 - initialize engine after reading input file
 
-
-
-
+- eliminate boost from project
 
 - completely rebuild tests of restart file reading and sections
   - code should be fine
