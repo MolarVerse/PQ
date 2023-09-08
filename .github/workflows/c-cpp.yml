@@ -47,7 +47,7 @@ jobs:
       shell: bash
       
     - name: "Create build directory and run CMake"
-      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S . -B build -G "Unix Makefiles"
       env:
         CC: gcc-13
         CXX: g++-13
