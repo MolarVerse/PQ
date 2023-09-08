@@ -1,90 +1,95 @@
 #include "resetKinetics.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _S_TO_FS_
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vector3D
 
-using namespace std;
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <cstddef>      // for size_t
+#include <functional>   // for identity
+
 using namespace resetKinetics;
-using namespace physicalData;
-using namespace config;
 
 /**
  * @brief dummy reset function in case no reset is needed
  *
  */
-void ResetKinetics::reset(const size_t, PhysicalData &, simulationBox::SimulationBox &) const {}
+void ResetKinetics::reset(const size_t, physicalData::PhysicalData &, simulationBox::SimulationBox &) const {}
 
 /**
  * @brief reset the momentum of the system
- *
- * @note important to recalculate the new temperature after the reset
  *
  * @param step
  * @param physicalData
  * @param simBox
  */
-void ResetMomentum::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetMomentum::reset(const size_t step, physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    if ((step <= _nStepsMomentumReset) || (step % _frequencyMomentumReset == 0))
-    {
+    if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
-    }
 }
 
 /**
  * @brief reset the temperature and the momentum of the system
  *
- * @note important to recalculate the momentum after the temperature reset
- *       and the temperature after the momentum reset
+ * @details reset temperature and momentum if number of steps is smaller than nscale
+ *          reset temperature and momentum if number of steps is a multiple of fscale
+ *          reset only momentum if number of steps is smaller than nreset
+ *          reset only momentum if number of steps is a multiple of freset
  *
  * @param step
  * @param physicalData
  * @param simBox
  */
-void ResetTemperature::reset(const size_t step, PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetTemperature::reset(const size_t                  step,
+                             physicalData::PhysicalData   &physicalData,
+                             simulationBox::SimulationBox &simBox) const
 {
-    if ((step <= _nStepsTemperatureReset) || (step % _frequencyTemperatureReset == 0))
+    if ((step <= _nStepsTemperatureReset) || (0 == step % _frequencyTemperatureReset))
     {
         ResetKinetics::resetTemperature(physicalData, simBox);
-        physicalData.calculateKineticEnergyAndMomentum(simBox);
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
     }
-    else if ((step <= _nStepsMomentumReset) || (step % _frequencyMomentumReset == 0))
-    {
+    else if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
         ResetKinetics::resetMomentum(physicalData, simBox);
-        physicalData.calculateTemperature(simBox);
-    }
 }
 
 /**
  * @brief reset the temperature of the system - hard scaling
  *
+ * @details calculate hard scaling factor for target temperature and current temperature and scale all velocities
+ *
  * @param physicalData
  * @param simBox
  */
-void ResetKinetics::resetTemperature(PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
     const auto temperature = physicalData.getTemperature();
-    const auto lambda      = sqrt(_targetTemperature / temperature);
+    const auto lambda      = ::sqrt(_targetTemperature / temperature);
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.scaleVelocities(lambda);
+    std::ranges::for_each(simBox.getMolecules(), [lambda](auto &molecule) { molecule.scaleVelocities(lambda); });
+
+    physicalData.calculateKineticEnergyAndMomentum(simBox);
 }
 
 /**
  * @brief reset the momentum of the system
  *
+ * @details subtract momentum correction from all velocities - correction is the total momentum divided by the total mass
+ *
  * @param physicalData
  * @param simBox
  */
-void ResetKinetics::resetMomentum(PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    const auto momentumVector     = physicalData.getMomentumVector() * _S_TO_FS_;
+    const auto momentumVector     = physicalData.getMomentumVector() * constants::_S_TO_FS_;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.correctVelocities(momentumCorrection);
+    std::ranges::for_each(simBox.getMolecules(),
+                          [momentumCorrection](auto &molecule) { molecule.correctVelocities(momentumCorrection); });
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateTemperature(simBox);
 }

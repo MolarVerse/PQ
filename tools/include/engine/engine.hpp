@@ -2,26 +2,28 @@
 
 #define _TOOLENGINE_HPP_
 
-#include <string>
-#include <memory>
-#include <map>
-#include <functional>
+#include "inputFileReader.hpp"   // for InputFileReader
 
-#include "analysisRunner.hpp"
-#include "inputFileReader.hpp"
+#include <functional>    // for function
+#include <map>           // for map
+#include <string>        // for string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
+
+class AnalysisRunner;   // forward declaration
 
 class Engine
 {
-private:
+  private:
     std::string _executableName;
     std::string _inputFilename;
 
     std::map<std::string, std::function<void(const std::string_view &)>> _analysisRunnerKeys;
 
     std::vector<InputFileReader *> _inputFileReaders;
-    std::vector<AnalysisRunner *> _analysisRunners;
+    std::vector<AnalysisRunner *>  _analysisRunners;
 
-public:
+  public:
     Engine(const std::string_view &, const std::string_view &);
     ~Engine()
     {
@@ -34,4 +36,4 @@ public:
     void parseAnalysisRunners();
 };
 
-#endif // _ENGINE_HPP_
+#endif   // _ENGINE_HPP_

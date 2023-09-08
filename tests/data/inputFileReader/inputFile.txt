@@ -4,5 +4,5 @@ jobtype = mm-md;
 timestep = 0.2;
 
 
-start_file = start.rst;
+start_file = data/atomSection/testProcess.rst;
 rcoulomb = 9.0;

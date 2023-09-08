@@ -1,36 +1,39 @@
-#ifndef __INFOOUTPUT_HPP__
+#ifndef __INFO_OUTPUT_HPP__
 
-#define __INFOOUTPUT_HPP__
+#define __INFO_OUTPUT_HPP__
 
-#include "output.hpp"
-#include "physicalData.hpp"
+#include "output.hpp"   // for Output
 
-#include <functional>
+#include <string_view>   // for string_view
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
 
 namespace output
 {
-    class InfoOutput;
-}
 
-/**
- * @class InfoOutput inherits from Output
- *
- * @brief Output file for info file
- *
- */
-class output::InfoOutput : public output::Output
-{
-  private:
-    void writeHeader();
-    void
-    writeLeft(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
-    void
-    writeRight(const double, const std::string_view &, const std::string_view &, std::ios_base &(std::ios_base &), const size_t);
+    /**
+     * @class InfoOutput inherits from Output
+     *
+     * @brief Output file for info file
+     *
+     */
+    class InfoOutput : public Output
+    {
+      private:
+        void writeHeader();
+        void writeLeft(const double value, const std::string_view &name, const std::string_view &unit);
+        void writeLeftScientific(const double value, const std::string_view &name, const std::string_view &unit);
+        void writeRight(const double value, const std::string_view &name, const std::string_view &unit);
 
-  public:
-    using output::Output::Output;
+      public:
+        using Output::Output;
 
-    void write(const double, const physicalData::PhysicalData &data);
-};
+        void write(const double simulationTime, const double loopTime, const physicalData::PhysicalData &data);
+    };
 
-#endif /* __INFOOUTPUT_HPP__ */
+}   // namespace output
+
+#endif /* __INFO_OUTPUT_HPP__ */

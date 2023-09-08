@@ -1,18 +1,114 @@
 #include "testEnergyOutput.hpp"
 
-TEST_F(TestEnergyOutput, writeEnergyFile)
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "manostatSettings.hpp"     // for ManostatSettings
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for ifstream
+#include <string>          // for getline, allocator, string
+
+/**
+ * @brief tests writing energy output file
+ *
+ * @details minimal output data
+ *
+ */
+TEST_F(TestEnergyOutput, forceFieldNotActive)
 {
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(6.0);
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    settings::ForceFieldSettings::deactivate();
+
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, 0.1, *_physicalData);
     _energyOutput->close();
 
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(
-        line,
-        "       100      1.000000000000      2.000000000000      0.000000000000      3.000000000000      0.000000000000      "
-        "4.000000000000      5.000000000000      0.000000000000      0.000000000000  6.000000000000e+00      0.000000000000");
+    EXPECT_EQ(line,
+              "       100\t      1.000000000000\t      2.000000000000\t      9.000000000000\t      3.000000000000\t     "
+              "19.000000000000\t      4.000000000000\t      5.000000000000\t         6.00000e+00\t     0.10000");
+}
+
+/**
+ * @brief tests writing energy output file
+ *
+ * @details force field is set
+ *
+ */
+TEST_F(TestEnergyOutput, forceFieldActive)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(6.0);
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    _physicalData->setBondEnergy(19.0);
+    _physicalData->setAngleEnergy(20.0);
+    _physicalData->setDihedralEnergy(21.0);
+    _physicalData->setImproperEnergy(22.0);
+
+    settings::ForceFieldSettings::activate();
+
+    _energyOutput->setFilename("default.en");
+    _energyOutput->write(100.0, 0.1, *_physicalData);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line,
+              "       100\t      1.000000000000\t      2.000000000000\t     91.000000000000\t      3.000000000000\t     "
+              "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t     "
+              "21.000000000000\t     22.000000000000\t         6.00000e+00\t     0.10000");
+}
+
+/**
+ * @brief tests writing energy output file
+ *
+ * @details manostat is set
+ *
+ */
+TEST_F(TestEnergyOutput, manostatActive)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(6.0);
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    _physicalData->setVolume(19.0);
+    _physicalData->setDensity(20.0);
+
+    settings::ForceFieldSettings::deactivate();
+    settings::ManostatSettings::setManostatType("Berendsen");
+
+    _energyOutput->setFilename("default.en");
+    _energyOutput->write(100.0, 0.1, *_physicalData);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line,
+              "       100\t      1.000000000000\t      2.000000000000\t      9.000000000000\t      3.000000000000\t     "
+              "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t   "
+              "      6.00000e+00\t     0.10000");
 }
 
 int main(int argc, char **argv)

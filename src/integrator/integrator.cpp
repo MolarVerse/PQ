@@ -1,49 +1,51 @@
 #include "integrator.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"         // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
+#include "molecule.hpp"          // for Molecule
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
+#include "vector3d.hpp"          // for operator*, Vector3D
 
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include <algorithm>    // for __for_each_fn, for_each
+#include <functional>   // for identity
 
-using namespace std;
-using namespace simulationBox;
 using namespace integrator;
-using namespace config;
 
 /**
  * @brief integrates the velocities of a single atom
  *
  * @param molecule
- * @param i
+ * @param index
  */
-void Integrator::integrateVelocities(Molecule &molecule, const size_t i) const
+void Integrator::integrateVelocities(simulationBox::Molecule &molecule, const size_t index) const
 {
-    auto       velocities = molecule.getAtomVelocity(i);
-    const auto forces     = molecule.getAtomForce(i);
-    const auto mass       = molecule.getAtomMass(i);
+    auto       velocities = molecule.getAtomVelocity(index);
+    const auto forces     = molecule.getAtomForce(index);
+    const auto mass       = molecule.getAtomMass(index);
 
-    velocities += _dt * forces / mass * _V_VERLET_VELOCITY_FACTOR_;
+    velocities += settings::TimingsSettings::getTimeStep() * forces / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
 
-    molecule.setAtomVelocity(i, velocities);
+    molecule.setAtomVelocity(index, velocities);
 }
 
 /**
  * @brief integrates the positions of a single atom
  *
  * @param molecule
- * @param i
+ * @param index
  * @param simBox
  */
-void Integrator::integratePositions(Molecule &molecule, const size_t i, const SimulationBox &simBox) const
+void Integrator::integratePositions(simulationBox::Molecule            &molecule,
+                                    const size_t                        index,
+                                    const simulationBox::SimulationBox &simBox) const
 {
-    auto       positions  = molecule.getAtomPosition(i);
-    const auto velocities = molecule.getAtomVelocity(i);
+    auto       positions  = molecule.getAtomPosition(index);
+    const auto velocities = molecule.getAtomVelocity(index);
 
-    positions += _dt * velocities * _FS_TO_S_;
-    applyPBC(simBox, positions);
+    positions += settings::TimingsSettings::getTimeStep() * velocities * constants::_FS_TO_S_;
+    simBox.applyPBC(positions);
 
-    molecule.setAtomPositions(i, positions);
+    molecule.setAtomPosition(index, positions);
 }
 
 /**
@@ -51,15 +53,13 @@ void Integrator::integratePositions(Molecule &molecule, const size_t i, const Si
  *
  * @param simBox
  */
-void VelocityVerlet::firstStep(SimulationBox &simBox)
+void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
 {
     const auto box = simBox.getBoxDimensions();
 
-    for (auto &molecule : simBox.getMolecules())
+    auto firstStepForMolecule = [this, &simBox, &box](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             integrateVelocities(molecule, i);
             integratePositions(molecule, i, simBox);
@@ -67,7 +67,9 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 
         molecule.calculateCenterOfMass(box);
         molecule.setAtomForcesToZero();
-    }
+    };
+
+    std::ranges::for_each(simBox.getMolecules(), firstStepForMolecule);
 }
 
 /**
@@ -75,15 +77,13 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
  *
  * @param simBox
  */
-void VelocityVerlet::secondStep(SimulationBox &simBox)
+void VelocityVerlet::secondStep(simulationBox::SimulationBox &simBox)
 {
-    for (auto &molecule : simBox.getMolecules())
+    auto secondStepForMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-        {
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
             integrateVelocities(molecule, i);
-        }
-    }
+    };
+
+    std::ranges::for_each(simBox.getMolecules(), secondStepForMolecule);
 }

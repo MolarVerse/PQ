@@ -1,14 +1,25 @@
-#ifndef _ATOM_MASS_MAP_H_
+#ifndef _ATOM_MASS_MAP_HPP_
 
-#define _ATOM_MASS_MAP_H_
+#define _ATOM_MASS_MAP_HPP_
 
 #include <map>
 #include <string>
 
-namespace config
+namespace constants
 {
     /**
      * @brief Map of atom names to their masses
+     *
+     * @details special atom names are:
+     *
+     * d deuterium
+     * t tritium
+     *
+     * q with mass 999.0
+     * x with mass 999.0
+     * cav with mass 1000.0
+     * sup with mass 1000000.0
+     * dum with mass 1.0
      */
     const std::map<std::string, double> atomMassMap = {
         {"h", 1.00794},     {"d", 2.014101778}, {"t", 3.0160492675}, {"he", 4.002602},  {"li", 6.941},     {"be", 9.012182},
@@ -31,6 +42,6 @@ namespace config
         {"fm", 257.0951},   {"md", 258.0986},   {"no", 259.1009},    {"q", 999.00000},  {"x", 999.00000},  {"cav", 1000.00000},
         {"sup", 1000000.0}, {"dum", 1.0}};
 
-}   // namespace config
+}   // namespace constants
 
-#endif
+#endif   // _ATOM_MASS_MAP_HPP_

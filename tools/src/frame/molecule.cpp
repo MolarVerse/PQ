@@ -6,8 +6,7 @@
 
 using namespace std;
 using namespace frameTools;
-using namespace vector3d;
-using namespace config;
+using namespace linearAlgebra;
 
 /**
  * @brief calculates the center of mass of the molecule
@@ -20,10 +19,10 @@ void Molecule::calculateCenterOfMass(const Vec3D &box)
 
     const auto xyz_0 = _atoms[0]->getPosition();
 
-    for (auto atom : _atoms)
+    for (const auto *atom : _atoms)
     {
         const auto   atomName = atom->getElementType();
-        const double mass     = atomMassMap.at(atomName);
+        const double mass     = constants::atomMassMap.at(atomName);
         auto         position = atom->getPosition();
 
         position      -= box * round((position - xyz_0) / box);

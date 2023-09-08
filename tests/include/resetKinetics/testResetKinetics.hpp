@@ -2,10 +2,20 @@
 
 #define _TEST_RESET_KINETICS_HPP_
 
-#include "resetKinetics.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
+#include "resetKinetics.hpp"   // for ResetKinetics
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
+/**
+ * @class TestResetKinetics
+ *
+ * @brief Fixture class for testing the ResetKinetics class
+ *
+ */
 class TestResetKinetics : public ::testing::Test
 {
   protected:
@@ -18,14 +28,14 @@ class TestResetKinetics : public ::testing::Test
 
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule1.addAtomMass(1.0);
         molecule1.addAtomMass(1.0);
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.addAtomMass(1.0);
 
         _simulationBox->addMolecule(molecule1);

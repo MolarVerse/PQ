@@ -8,14 +8,14 @@ add_library(simulationBox
 
 target_include_directories(simulationBox
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(simulationBox
     PUBLIC
-    config
-    math
+    linearAlgebra
+    exceptions
 )
 
 install(TARGETS simulationBox

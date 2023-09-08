@@ -1,26 +1,29 @@
 #include "manostat.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"         // for _PRESSURE_FACTOR_
+#include "exceptions.hpp"        // for ExceptionType
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
-using namespace std;
-using namespace simulationBox;
-using namespace physicalData;
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for pow
+#include <functional>   // for identity, function
+
 using namespace manostat;
-using namespace vector3d;
-using namespace config;
 
 /**
  * @brief calculate the pressure of the system
  *
  * @param physicalData
  */
-void Manostat::calculatePressure(PhysicalData &physicalData)
+void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
     const auto forceVirial = physicalData.getVirial();
-    const auto volume      = physicalData.getVolume();
+    const auto volume      = box.getVolume();
 
-    _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * _PRESSURE_FACTOR_;
+    _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
 
     _pressure = mean(_pressureVector);
 
@@ -32,7 +35,10 @@ void Manostat::calculatePressure(PhysicalData &physicalData)
  *
  * @param physicalData
  */
-void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calculatePressure(physicalData); }
+void Manostat::applyManostat(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    calculatePressure(box, physicalData);
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -40,19 +46,23 @@ void Manostat::applyManostat(SimulationBox &, PhysicalData &physicalData) { calc
  * @param simBox
  * @param physicalData
  */
-void BerendsenManostat::applyManostat(SimulationBox &simBox, PhysicalData &physicalData)
+void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
-    calculatePressure(physicalData);
+    calculatePressure(simBox, physicalData);
 
-    const auto scaleFactors = Vec3D(pow(1.0 - _compressability * _timestep / _tau * (_targetPressure - _pressure), 1.0 / 3.0));
+    const auto linearScalingFactor = ::pow(
+        1.0 - _compressibility * settings::TimingsSettings::getTimeStep() / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
 
-    simBox.scaleBox(scaleFactors);
+    const auto scalingFactors = linearAlgebra::Vec3D(linearScalingFactor);
+
+    simBox.scaleBox(scalingFactors);
 
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    for (auto &molecule : simBox.getMolecules())
-        molecule.scale(scaleFactors);
+    simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    // calculatePressure(physicalData); TODO: talk to thh about this
+    auto scaleMolecule = [&scalingFactors](auto &molecule) { molecule.scale(scalingFactors); };
+
+    std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
 }

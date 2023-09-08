@@ -2,29 +2,33 @@
 
 #define _TRAJECTORY_OUTPUT_HPP_
 
-#include "output.hpp"
-#include "simulationBox.hpp"
+#include "output.hpp"   // for Output
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
 
 namespace output
 {
-    class TrajectoryOutput;
-}
+    /**
+     * @class TrajectoryOutput inherits from Output
+     *
+     * @brief Output for xyz, vel, force, charges files
+     *
+     */
+    class TrajectoryOutput : public Output
+    {
+      public:
+        using Output::Output;
 
-/**
- * @class TrajectoryOutput inherits from Output
- *
- * @brief Output file for xyz, vel, force files
- *
- */
-class output::TrajectoryOutput : public output::Output
-{
-  public:
-    using output::Output::Output;
+        void writeHeader(const simulationBox::SimulationBox &);
+        void writeXyz(simulationBox::SimulationBox &);
+        void writeVelocities(simulationBox::SimulationBox &);
+        void writeForces(simulationBox::SimulationBox &);
+        void writeCharges(simulationBox::SimulationBox &);
+    };
 
-    void writexyz(simulationBox::SimulationBox &);
-    void writeVelocities(simulationBox::SimulationBox &);
-    void writeForces(simulationBox::SimulationBox &);
-    void writeCharges(simulationBox::SimulationBox &);
-};
+}   // namespace output
 
 #endif   // _TRAJECTORY_OUTPUT_HPP_

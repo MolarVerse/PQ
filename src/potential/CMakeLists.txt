@@ -1,11 +1,7 @@
 add_library(potential
     potential.cpp
-
-    guffLJ.cpp
-    guffBuckingham.cpp
-    guffNonCoulomb.cpp
-
-    guffCoulomb.cpp
+    potentialBruteForce.cpp
+    potentialCellList.cpp
 )
 
 target_include_directories(potential
@@ -18,8 +14,13 @@ target_link_libraries(potential
     PUBLIC
     physicalData
     simulationBox
+    coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS potential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+add_subdirectory(coulomb)
+add_subdirectory(nonCoulomb)

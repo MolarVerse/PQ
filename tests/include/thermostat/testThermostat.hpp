@@ -2,9 +2,13 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
-#include "thermostat.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "thermostat.hpp"      // for Thermostat
+#include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
 
 class TestThermostat : public ::testing::Test
 {
@@ -21,14 +25,14 @@ class TestThermostat : public ::testing::Test
         molecule1.addAtomMass(1.0);
         molecule1.addAtomMass(1.0);
         molecule1.setMolMass(2.0);
-        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomVelocity(vector3d::Vec3D(1.0, 2.0, 3.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(1);
         molecule2.addAtomMass(1.0);
         molecule2.setMolMass(1.0);
-        molecule2.addAtomVelocity(vector3d::Vec3D(1.0, 1.0, 1.0));
+        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);

@@ -12,7 +12,6 @@ target_include_directories(configurationReaderTools
 target_link_libraries(configurationReaderTools
     PUBLIC
     frameTools
-    math
 )
 
 install(TARGETS configurationReaderTools

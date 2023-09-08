@@ -4,9 +4,16 @@
 
 #include "manostat.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 #include <gtest/gtest.h>
 
+/**
+ * @class TestManostat
+ *
+ * @brief Fixture for manostat tests.
+ *
+ */
 class TestManostat : public ::testing::Test
 {
   protected:
@@ -21,6 +28,7 @@ class TestManostat : public ::testing::Test
         _data->setKineticEnergyAtomicVector({1.0, 1.0, 1.0});
 
         _box = new simulationBox::SimulationBox();
+        _box->setVolume(2.0);
     }
 
     void TearDown() override

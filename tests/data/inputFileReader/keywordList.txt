@@ -1,20 +1,60 @@
-jobtype true       
-timestep true
-nstep true
-start_file true
-moldescriptor_file false
-guff_path false
-output_freq false
-output_file false
-info_file false
-energy_file false
-traj_file false
-vel_file false
-restart_file false
-charge_file false
-integrator true
-density false
-virial false
-cell-list false
-cell-number false
-rcoulomb false
+cell-list               false
+cell-number             false
+
+shake                   false
+shake-tolerance         false
+shake-iter              false
+rattle-iter             false
+rattle-tolerance        false
+
+long_range              false
+wolf_param              false
+
+force-field             false
+
+jobtype                 true       
+start_file              true
+moldescriptor_file      false
+guff_path               false
+guff_file               false
+
+integrator              false
+
+manostat                false
+pressure                false
+p_relaxation            false
+compressibility         false
+
+noncoulomb              false
+intra-nonBonded_file    false
+
+output_freq             false
+output_file             false
+info_file               false
+energy_file             false
+traj_file               false
+vel_file                false
+restart_file            false
+charge_file             false
+force_file              false
+
+parameter_file          false
+
+nscale                  false
+fscale                  false
+nreset                  false
+freset                  false
+
+rcoulomb                false
+density                 false
+
+thermostat              false
+temp                    false
+t_relaxation            false
+
+timestep                true
+nstep                   true
+
+topology_file           false
+
+virial                  false

@@ -1,34 +1,50 @@
 set(source_files
-    testBoxSection.cpp
-    testNoseHooverSection.cpp
-    testStepCountSection.cpp
-    testAtomSection.cpp
-    testRstFileReader.cpp
-
-    testParserBox.cpp
-    testParserIntegrator.cpp
-    testParserTimings.cpp
-    testParserOutput.cpp
-    testParserGeneral.cpp
-    testParserVirial.cpp
-    testParserThermostat.cpp
-    testParserManostat.cpp
-    testParserReset.cpp
-    testParserCelllist.cpp
-    testInputFileParser.cpp
-    testInputFileReader.cpp
-
-    testMoldescriptorReader.cpp
-
-    testGuffDatReader.cpp
-
-    testPostProcessSetup.cpp
+    testSimulationBoxSetup.cpp
+    testCelllistSetup.cpp
+    testThermostatSetup.cpp
+    testManostatSetup.cpp
+    testResetKineticsSetup.cpp
+    testPotentialSetup.cpp
+    testIntegratorSetup.cpp
+    testConstraintsSetup.cpp
+    testForceFieldSetup.cpp
+    testIntraNonBondedSetup.cpp
 )
 
 foreach(source_file ${source_files})
     get_filename_component(test_name ${source_file} NAME_WE)
     add_executable(${test_name} ${source_file})
-    target_include_directories(${test_name} PRIVATE ${PROJECT_SOURCE_DIR}/tests/include/setup)
-    target_link_libraries(${test_name} PRIVATE setup gtest gtest_main gmock gmock_main)
-    add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
+    target_include_directories(${test_name}
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/tests/include/setup
+        ${PROJECT_SOURCE_DIR}/tests/include/macros
+    )
+    target_link_libraries(${test_name}
+        PRIVATE
+        setup
+        gtest
+        gtest_main
+        gmock
+        gmock_main
+    )
+    add_test(
+        NAME ${test_name}
+        COMMAND ${test_name}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
+    )
+
+    set_property(TEST ${test_name} PROPERTY LABELS setup)
 endforeach()
+
+if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
+    include(CodeCoverage)
+    setup_target_for_coverage_gcovr_html(
+        NAME coverage_setup
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
+
+        # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/setup
+        EXECUTABLE "ctest"
+        EXECUTABLE_ARGS "-L;setup"
+        OUTPUT_PATH "coverage"
+    )
+endif()

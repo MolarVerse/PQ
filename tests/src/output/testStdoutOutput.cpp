@@ -1,5 +1,12 @@
 #include "testStdoutOutput.hpp"
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <string>          // for allocator, string
+
+/**
+ * @brief Test writeDensityWarning
+ *
+ */
 TEST_F(TestStdoutOutput, writeDensityWarning)
 {
     testing::internal::CaptureStdout();
@@ -9,35 +16,17 @@ TEST_F(TestStdoutOutput, writeDensityWarning)
     EXPECT_EQ(output, "\x1B[33mUserInputWarning\x1B[39m\nDensity and box dimensions set. Density will be ignored.\n\n");
 }
 
+/**
+ * @brief Test writeInitialMomentum
+ *
+ */
 TEST_F(TestStdoutOutput, writeInitialMomentum)
 {
     testing::internal::CaptureStdout();
     _stdoutOutput->writeInitialMomentum(0.1);
     std::string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ(output, "\nInitial momentum = 0.100000 Angstrom * amu / fs\n");
-}
-
-TEST_F(TestStdoutOutput, writeRelaxationTimeThermostatWarning)
-{
-    testing::internal::CaptureStdout();
-    _stdoutOutput->writeRelaxationTimeThermostatWarning();
-    std::string output = testing::internal::GetCapturedStdout();
-
-    EXPECT_EQ(output,
-              "\x1B[33mUserInputWarning\x1B[39m\nBerendsen thermostat set but no relaxation time given. Using default value of "
-              "0.1ps.\n\n");
-}
-
-TEST_F(TestStdoutOutput, writeRelaxationTimeManostatWarning)
-{
-    testing::internal::CaptureStdout();
-    _stdoutOutput->writeRelaxationTimeManostatWarning();
-    std::string output = testing::internal::GetCapturedStdout();
-
-    EXPECT_EQ(output,
-              "\x1B[33mUserInputWarning\x1B[39m\nBerendsen manostat set but no relaxation time given. Using default value of "
-              "1.0ps.\n\n");
+    EXPECT_EQ(output, "\nInitial momentum = 0.1 Angstrom * amu / fs\n");
 }
 
 int main(int argc, char **argv)

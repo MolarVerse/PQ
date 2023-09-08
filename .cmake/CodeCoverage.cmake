@@ -154,19 +154,18 @@ endif() # NOT GCOV_PATH
 # Check supported compiler (Clang, GNU and Flang)
 get_property(LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
 
-#FIXME: it does not work on rw2 debian build gcc
+# FIXME: it does not work on rw2 debian build gcc
 # foreach(LANG ${LANGUAGES})
-#     message(STATUS ${LANG})
-#     if("${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
-#         if("${CMAKE_${LANG}_COMPILER_VERSION}" VERSION_LESS 3)
-#             message(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
-#         endif()
-#     elseif(NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "GNU"
-#         AND NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(LLVM)?[Ff]lang")
-#         message(FATAL_ERROR "Compiler is not GNU or Flang! Aborting...")
-#     endif()
+# message(STATUS ${LANG})
+# if("${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+# if("${CMAKE_${LANG}_COMPILER_VERSION}" VERSION_LESS 3)
+# message(FATAL_ERROR "Clang version must be 3.0.0 or greater! Aborting...")
+# endif()
+# elseif(NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "GNU"
+# AND NOT "${CMAKE_${LANG}_COMPILER_ID}" MATCHES "(LLVM)?[Ff]lang")
+# message(FATAL_ERROR "Compiler is not GNU or Flang! Aborting...")
+# endif()
 # endforeach()
-
 set(COVERAGE_COMPILER_FLAGS "-g --coverage"
     CACHE INTERNAL "")
 
@@ -488,6 +487,7 @@ function(setup_target_for_coverage_gcovr_xml)
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
+
         COMMENT "Running gcovr to produce Cobertura code coverage report."
     )
 
@@ -517,7 +517,7 @@ endfunction() # setup_target_for_coverage_gcovr_xml
 function(setup_target_for_coverage_gcovr_html)
     set(options NONE)
     set(oneValueArgs BASE_DIRECTORY NAME)
-    set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
+    set(multiValueArgs EXCLUDE EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES OUTPUT_PATH)
     cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NOT GCOVR_PATH)
@@ -529,6 +529,10 @@ function(setup_target_for_coverage_gcovr_html)
         get_filename_component(BASEDIR ${Coverage_BASE_DIRECTORY} ABSOLUTE)
     else()
         set(BASEDIR ${PROJECT_SOURCE_DIR})
+    endif()
+
+    if(NOT(DEFINED Coverage_OUTPUT_PATH))
+        set(Coverage_OUTPUT_PATH ${Coverage_NAME})
     endif()
 
     # Collect excludes (CMake 3.4+: Also compute absolute paths)
@@ -560,12 +564,12 @@ function(setup_target_for_coverage_gcovr_html)
 
     # Create folder
     set(GCOVR_HTML_FOLDER_CMD
-        ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/${Coverage_NAME}
+        ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/${Coverage_OUTPUT_PATH}
     )
 
     # Running gcovr
     set(GCOVR_HTML_CMD
-        ${GCOVR_PATH} --html ${Coverage_NAME}/index.html --html-details -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
+        ${GCOVR_PATH} --html ${Coverage_OUTPUT_PATH}/index.html -r ${BASEDIR} ${GCOVR_ADDITIONAL_ARGS}
         ${GCOVR_EXCLUDE_ARGS} --object-directory=${PROJECT_BINARY_DIR}
     )
 
@@ -590,7 +594,7 @@ function(setup_target_for_coverage_gcovr_html)
         COMMAND ${GCOVR_HTML_FOLDER_CMD}
         COMMAND ${GCOVR_HTML_CMD}
 
-        BYPRODUCTS ${PROJECT_BINARY_DIR}/${Coverage_NAME}/index.html # report directory
+        BYPRODUCTS ${PROJECT_BINARY_DIR}/${Coverage_OUTPUT_PATH}/index.html # report directory
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
@@ -600,7 +604,7 @@ function(setup_target_for_coverage_gcovr_html)
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
         COMMAND ;
-        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
+        COMMENT "Open ./${Coverage_OUTPUT_PATH}/index.html in your browser to view the coverage report."
     )
 endfunction() # setup_target_for_coverage_gcovr_html
 

@@ -2,10 +2,17 @@
 
 #define _TEST_STDOUTOUTPUT_HPP_
 
-#include "stdoutOutput.hpp"
+#include "stdoutOutput.hpp"   // for StdoutOutput
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
 
+/**
+ * @class TestStdoutOutput
+ *
+ * @brief test suite for stdout output
+ *
+ */
 class TestStdoutOutput : public ::testing::Test
 {
   protected:

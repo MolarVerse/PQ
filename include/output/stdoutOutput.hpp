@@ -6,24 +6,21 @@
 
 namespace output
 {
-    class StdoutOutput;
-}
+    /**
+     * @class StdoutOutput inherits from Output
+     *
+     * @brief Output file for stdout
+     *
+     */
+    class StdoutOutput : public Output
+    {
+      public:
+        using Output::Output;
 
-/**
- * @class StdoutOutput inherits from Output
- *
- * @brief Output file for stdout
- *
- */
-class output::StdoutOutput : public output::Output
-{
-  public:
-    using output::Output::Output;
+        void writeDensityWarning() const;
+        void writeInitialMomentum(const double momentum) const;
+    };
 
-    void writeDensityWarning() const;
-    void writeRelaxationTimeThermostatWarning() const;
-    void writeRelaxationTimeManostatWarning() const;
-    void writeInitialMomentum(const double momentum) const;
-};
+}   // namespace output
 
 #endif   // _STDOUT_OUTPUT_HPP_

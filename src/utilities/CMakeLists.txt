@@ -1,5 +1,6 @@
 add_library(utilities
     stringUtilities.cpp
+    mathUtilities.cpp
 )
 
 target_include_directories(utilities
@@ -10,7 +11,8 @@ target_include_directories(utilities
 
 target_link_libraries(utilities
     PUBLIC
-    config
+    linearAlgebra
+    exceptions
 )
 
 install(TARGETS utilities

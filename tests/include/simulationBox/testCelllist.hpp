@@ -1,8 +1,9 @@
-#ifndef _TEST_CELLLIST_HPP_
+#ifndef _TEST_CELL_LIST_HPP_
 
-#define _TEST_CELLLIST_HPP_
+#define _TEST_CELL_LIST_HPP_
 
 #include "celllist.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 #include <gtest/gtest.h>
 
@@ -14,10 +15,11 @@ class TestCellList : public ::testing::Test
         _cellList = new simulationBox::CellList();
         _cellList->setNumberOfCells(2);
         _cellList->setNumberOfNeighbourCells(1);
+        _cellList->resizeCells();
 
         _simulationBox = new simulationBox::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox->setRcCutOff(1.5);
+        _simulationBox->setCoulombRadiusCutOff(1.5);
     }
 
     virtual void TearDown()
@@ -30,4 +32,4 @@ class TestCellList : public ::testing::Test
     simulationBox::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_CELLLIST_HPP_
+#endif   // _TEST_CELL_LIST_HPP_

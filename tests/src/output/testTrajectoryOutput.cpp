@@ -1,9 +1,17 @@
 #include "testTrajectoryOutput.hpp"
 
-TEST_F(TestTrajectoryOutput, writexyz)
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <iosfwd>          // for ifstream
+#include <string>          // for getline, allocator, string
+
+/**
+ * @brief Test the writeXyz method
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writexyz(*_simulationBox);
+    _trajectoryOutput->writeXyz(*_simulationBox);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -12,13 +20,17 @@ TEST_F(TestTrajectoryOutput, writexyz)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "H         1.00000000     1.00000000     1.00000000");
+    EXPECT_EQ(line, "H    \t     1.00000000\t     1.00000000\t     1.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "O         1.00000000     2.00000000     3.00000000");
+    EXPECT_EQ(line, "O    \t     1.00000000\t     2.00000000\t     3.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "Ar        1.00000000     1.00000000     1.00000000");
+    EXPECT_EQ(line, "Ar   \t     1.00000000\t     1.00000000\t     1.00000000");
 }
 
+/**
+ * @brief Test the writeVelocities method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeVelocities)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -31,13 +43,17 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "H          1.00000000e+00      1.00000000e+00      1.00000000e+00");
+    EXPECT_EQ(line, "H    \t      1.00000000e+00\t      1.00000000e+00\t      1.00000000e+00");
     getline(file, line);
-    EXPECT_EQ(line, "O          3.00000000e+00      4.00000000e+00      5.00000000e+00");
+    EXPECT_EQ(line, "O    \t      3.00000000e+00\t      4.00000000e+00\t      5.00000000e+00");
     getline(file, line);
-    EXPECT_EQ(line, "Ar         1.00000000e+00      1.00000000e+00      1.00000000e+00");
+    EXPECT_EQ(line, "Ar   \t      1.00000000e+00\t      1.00000000e+00\t      1.00000000e+00");
 }
 
+/**
+ * @brief Test the writeForces method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeForces)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -50,13 +66,17 @@ TEST_F(TestTrajectoryOutput, writeForces)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "H         1.00000000     1.00000000     1.00000000");
+    EXPECT_EQ(line, "H    \t     1.00000000\t     1.00000000\t     1.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "O         2.00000000     3.00000000     4.00000000");
+    EXPECT_EQ(line, "O    \t     2.00000000\t     3.00000000\t     4.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "Ar        1.00000000     1.00000000     1.00000000");
+    EXPECT_EQ(line, "Ar   \t     1.00000000\t     1.00000000\t     1.00000000");
 }
 
+/**
+ * @brief Test the writeXyz method
+ *
+ */
 TEST_F(TestTrajectoryOutput, writeCharges)
 {
     _trajectoryOutput->setFilename("default.xyz");
@@ -69,11 +89,11 @@ TEST_F(TestTrajectoryOutput, writeCharges)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "H         1.00000000");
+    EXPECT_EQ(line, "H    \t     1.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "O        -1.00000000");
+    EXPECT_EQ(line, "O    \t    -1.00000000");
     getline(file, line);
-    EXPECT_EQ(line, "Ar        0.00000000");
+    EXPECT_EQ(line, "Ar   \t     0.00000000");
 }
 
 int main(int argc, char **argv)

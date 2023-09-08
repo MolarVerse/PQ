@@ -11,8 +11,7 @@ target_include_directories(integrator
 target_link_libraries(integrator
     PUBLIC
     simulationBox
-    timings
-    config
+    settings
 )
 
 install(TARGETS integrator

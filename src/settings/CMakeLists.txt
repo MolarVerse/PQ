@@ -1,0 +1,22 @@
+add_library(settings
+    settings.cpp
+    simulationBoxSettings.cpp
+    manostatSettings.cpp
+    thermostatSettings.cpp
+    constraintSettings.cpp
+    potentialSettings.cpp
+    fileSettings.cpp
+    resetKineticsSettings.cpp
+    timingsSettings.cpp
+    forceFieldSettings.cpp
+)
+
+target_include_directories(settings
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include/settings
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+
+install(TARGETS settings
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

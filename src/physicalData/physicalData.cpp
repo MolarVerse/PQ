@@ -1,39 +1,33 @@
 #include "physicalData.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"       // for _FS_TO_S_, _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
+#include "simulationBox.hpp"   // for SimulationBox
 
-#include <cmath>
-#include <vector>
+#include <algorithm>   // for for_each
+#include <cstddef>     // for size_t
 
-using namespace std;
-using namespace simulationBox;
 using namespace physicalData;
-using namespace vector3d;
-using namespace config;
 
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBox)
+void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &simulationBox)
 {
-    auto momentum = Vec3D();
+    _momentumVector               = linearAlgebra::Vec3D();
+    _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
+    _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
 
-    _momentumVector               = Vec3D();
-    _kineticEnergyAtomicVector    = Vec3D();
-    _kineticEnergyMolecularVector = Vec3D();
-
-    for (const auto &molecule : simulationBox.getMolecules())
+    auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms   = molecule.getNumberOfAtoms();
-        auto         momentumSquared = Vec3D();
+        auto momentumSquared = linearAlgebra::Vec3D();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
 
-            momentum = velocities * molecule.getAtomMass(i);
+            const auto momentum = velocities * molecule.getAtomMass(i);
 
             _momentumVector            += momentum;
             _kineticEnergyAtomicVector += momentum * velocities;
@@ -41,13 +35,15 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
         }
 
         _kineticEnergyMolecularVector += momentumSquared / molecule.getMolMass();
-    }
+    };
 
-    _momentumVector *= _FS_TO_S_;
+    std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
+
+    _momentumVector *= constants::_FS_TO_S_;
     _momentum        = norm(_momentumVector);
 
-    _kineticEnergyAtomicVector    *= _KINETIC_ENERGY_FACTOR_;
-    _kineticEnergyMolecularVector *= _KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
 }
 
@@ -58,15 +54,23 @@ void PhysicalData::calculateKineticEnergyAndMomentum(SimulationBox &simulationBo
  */
 void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
-    _coulombEnergy    += physicalData.getCoulombEnergy();
-    _nonCoulombEnergy += physicalData.getNonCoulombEnergy();
-    _temperature      += physicalData.getTemperature();
-    _momentum         += physicalData.getMomentum();
-    _kineticEnergy    += physicalData.getKineticEnergy();
-    _volume           += physicalData.getVolume();
-    _density          += physicalData.getDensity();
-    _virial           += physicalData.getVirial();
-    _pressure         += physicalData.getPressure();
+    _coulombEnergy         += physicalData.getCoulombEnergy();
+    _nonCoulombEnergy      += physicalData.getNonCoulombEnergy();
+    _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
+    _intraNonCoulombEnergy += physicalData.getIntraNonCoulombEnergy();
+
+    _bondEnergy     += physicalData.getBondEnergy();
+    _angleEnergy    += physicalData.getAngleEnergy();
+    _dihedralEnergy += physicalData.getDihedralEnergy();
+    _improperEnergy += physicalData.getImproperEnergy();
+
+    _temperature   += physicalData.getTemperature();
+    _momentum      += physicalData.getMomentum();
+    _kineticEnergy += physicalData.getKineticEnergy();
+    _volume        += physicalData.getVolume();
+    _density       += physicalData.getDensity();
+    _virial        += physicalData.getVirial();
+    _pressure      += physicalData.getPressure();
 }
 
 /**
@@ -76,15 +80,48 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
  */
 void PhysicalData::makeAverages(const double outputFrequency)
 {
-    _coulombEnergy    /= outputFrequency;
-    _nonCoulombEnergy /= outputFrequency;
-    _temperature      /= outputFrequency;
-    _momentum         /= outputFrequency;
-    _kineticEnergy    /= outputFrequency;
-    _volume           /= outputFrequency;
-    _density          /= outputFrequency;
-    _virial           /= outputFrequency;
-    _pressure         /= outputFrequency;
+    _kineticEnergy         /= outputFrequency;
+    _coulombEnergy         /= outputFrequency;
+    _nonCoulombEnergy      /= outputFrequency;
+    _intraCoulombEnergy    /= outputFrequency;
+    _intraNonCoulombEnergy /= outputFrequency;
+
+    _bondEnergy     /= outputFrequency;
+    _angleEnergy    /= outputFrequency;
+    _dihedralEnergy /= outputFrequency;
+    _improperEnergy /= outputFrequency;
+
+    _temperature /= outputFrequency;
+    _momentum    /= outputFrequency;
+    _volume      /= outputFrequency;
+    _density     /= outputFrequency;
+    _virial      /= outputFrequency;
+    _pressure    /= outputFrequency;
+}
+
+/**
+ * @brief clear all physicalData in order to call add functions
+ *
+ */
+void PhysicalData::reset()
+{
+    _kineticEnergy         = 0.0;
+    _coulombEnergy         = 0.0;
+    _nonCoulombEnergy      = 0.0;
+    _intraCoulombEnergy    = 0.0;
+    _intraNonCoulombEnergy = 0.0;
+
+    _bondEnergy     = 0.0;
+    _angleEnergy    = 0.0;
+    _dihedralEnergy = 0.0;
+    _improperEnergy = 0.0;
+
+    _temperature = 0.0;
+    _momentum    = 0.0;
+    _virial      = {0.0, 0.0, 0.0};
+    _pressure    = 0.0;
+    _volume      = 0.0;
+    _density     = 0.0;
 }
 
 /**
@@ -92,22 +129,79 @@ void PhysicalData::makeAverages(const double outputFrequency)
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulationBox)
 {
     _temperature = 0.0;
 
-    for (const auto &molecule : simulationBox.getMolecules())
+    auto temperatureOfMolecule = [this](auto &molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
             const auto mass       = molecule.getAtomMass(i);
 
             _temperature += mass * normSquared(velocities);
         }
-    }
+    };
 
-    _temperature *= _TEMPERATURE_FACTOR_ / simulationBox.getDegreesOfFreedom();
+    std::ranges::for_each(simulationBox.getMolecules(), temperatureOfMolecule);
+
+    _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
+}
+
+/**
+ * @brief calculate potential energy
+ *
+ * @return double
+ */
+double PhysicalData::getPotentialEnergy() const
+{
+    auto potentialEnergy = 0.0;
+
+    potentialEnergy += _bondEnergy;
+    potentialEnergy += _angleEnergy;
+    potentialEnergy += _dihedralEnergy;
+    potentialEnergy += _improperEnergy;
+
+    potentialEnergy += _coulombEnergy;      // intra + inter
+    potentialEnergy += _nonCoulombEnergy;   // intra + inter
+
+    return potentialEnergy;
+}
+
+/**
+ * @brief add intra coulomb energy
+ *
+ * @details This function is used to add intra coulomb energy to the total coulomb energy
+ *
+ * @param intraCoulombEnergy
+ */
+void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
+{
+    _intraCoulombEnergy += intraCoulombEnergy;
+    _coulombEnergy      += intraCoulombEnergy;
+}
+
+/**
+ * @brief add intra non coulomb energy
+ *
+ * @details This function is used to add intra non coulomb energy to the total non coulomb energy
+ *
+ * @param intraNonCoulombEnergy
+ */
+void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
+{
+    _intraNonCoulombEnergy += intraNonCoulombEnergy;
+    _nonCoulombEnergy      += intraNonCoulombEnergy;
+}
+
+/**
+ * @brief change kinetic virial to atomic
+ *
+ * @details This function is used to change the kinetic virial from molecular to atomic via a function pointer
+ *
+ */
+void PhysicalData::changeKineticVirialToAtomic()
+{
+    getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
 }

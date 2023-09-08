@@ -1,13 +1,20 @@
 #include "logOutput.hpp"
 
-using namespace std;
+#include "outputMessages.hpp"   // for initialMomentumMessage
+
+#include <ostream>   // for basic_ostream, operator<<, flush, std
+#include <string>    // for char_traits, operator<<
+
 using namespace output;
 
 /**
  * @brief write a warning message to the log file if density and box dimensions are set
  *
  */
-void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensions set. Density will be ignored." << endl; }
+void LogOutput::writeDensityWarning()
+{
+    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << '\n' << std::flush;
+}
 
 /**
  * @brief write initial momentum to log file
@@ -16,24 +23,6 @@ void LogOutput::writeDensityWarning() { _fp << "WARNING: Density and box dimensi
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << endl;
-    _fp << initialMomentumMessage(momentum) << endl;
-}
-
-/**
- * @brief write warning message to log file if Berendsen thermostat is set but no relaxation time is given
- *
- */
-void LogOutput::writeRelaxationTimeThermostatWarning()
-{
-    _fp << "WARNING: Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps." << endl;
-}
-
-/**
- * @brief write warning message to log file if Berendsen manostat is set but no relaxation time is given
- *
- */
-void LogOutput::writeRelaxationTimeManostatWarning()
-{
-    _fp << "WARNING: Berendsen manostat set but no relaxation time given. Using default value of 1.0ps." << endl;
+    _fp << '\n' << std::flush;
+    _fp << initialMomentumMessage(momentum) << '\n' << std::flush;
 }

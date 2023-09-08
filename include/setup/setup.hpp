@@ -2,9 +2,12 @@
 
 #define _SETUP_HPP_
 
-#include "engine.hpp"
+#include <string>   // for string
 
-#include <string>
+namespace engine
+{
+    class Engine;
+}   // namespace engine
 
 /**
  * @namespace setup
@@ -17,7 +20,9 @@
  */
 namespace setup
 {
-    void setupEngine(const std::string &, engine::Engine &);
-}
+    void readFiles(const std::string &inputFileName, engine::Engine &);
+    void setupEngine(engine::Engine &);
+    void setupSimulation(const std::string &inputFileName, engine::Engine &);
+}   // namespace setup
 
 #endif   // _SETUP_HPP_

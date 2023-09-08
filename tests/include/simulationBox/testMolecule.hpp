@@ -2,9 +2,12 @@
 
 #define _TEST_MOLECULE_HPP_
 
-#include "molecule.hpp"
+#include "molecule.hpp"   // for Molecule
+#include "vector3d.hpp"   // for Vec3D
 
-#include <gtest/gtest.h>
+#include <algorithm>       // for copy
+#include <cstddef>         // for size_t
+#include <gtest/gtest.h>   // for Test
 
 class TestMolecule : public ::testing::Test
 {
@@ -12,19 +15,19 @@ class TestMolecule : public ::testing::Test
     virtual void SetUp()
     {
         _molecule = new simulationBox::Molecule();
-        _molecule->setExternalAtomTypes({1, 2, 3});
+        _molecule->setExternalAtomTypes({1, 2, 2});
 
-        _molecule->addAtomPosition(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomPosition(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomPosition(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
-        _molecule->addAtomVelocity(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomVelocity(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomVelocity(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomVelocity(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
-        _molecule->addAtomForce(vector3d::Vec3D(0.0, 0.0, 0.0));
-        _molecule->addAtomForce(vector3d::Vec3D(1.0, 0.0, 0.0));
-        _molecule->addAtomForce(vector3d::Vec3D(0.0, 1.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        _molecule->addAtomForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
 
         _molecule->addAtomMass(1.0);
         _molecule->addAtomMass(2.0);

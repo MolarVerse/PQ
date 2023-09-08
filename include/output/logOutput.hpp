@@ -6,24 +6,21 @@
 
 namespace output
 {
-    class LogOutput;
-}
+    /**
+     * @class LogOutput inherits from Output
+     *
+     * @brief Output file for log file
+     *
+     */
+    class LogOutput : public Output
+    {
+      public:
+        using Output::Output;
 
-/**
- * @class LogOutput inherits from Output
- *
- * @brief Output file for log file
- *
- */
-class output::LogOutput : public output::Output
-{
-  public:
-    using output::Output::Output;
+        void writeDensityWarning();
+        void writeInitialMomentum(const double momentum);
+    };
 
-    void writeDensityWarning();
-    void writeRelaxationTimeThermostatWarning();
-    void writeRelaxationTimeManostatWarning();
-    void writeInitialMomentum(const double momentum);
-};
+}   // namespace output
 
 #endif   // _LOG_OUTPUT_HPP_

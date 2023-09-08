@@ -6,14 +6,13 @@ add_library(frameTools
 
 target_include_directories(frameTools
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/tools/include/frame
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(frameTools
     PUBLIC
-    math
-    config
+    linearAlgebra
 )
 
 install(TARGETS frameTools

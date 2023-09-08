@@ -8,12 +8,11 @@ UseTab: Never
 SpacesBeforeTrailingComments: 3
 NamespaceIndentation: All
 
-AllowShortIfStatementsOnASingleLine: true
 # AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortIfStatementsOnASingleLine: Never
 
 AlignTrailingComments: true
 AlignConsecutiveMacros: Consecutive
@@ -25,7 +24,8 @@ AlignConsecutiveDeclarations: true
 BreakBeforeBraces: Allman
 
 BreakBeforeConceptDeclarations: Always
-AlwaysBreakTemplateDeclarations: MultiLine
+AlwaysBreakTemplateDeclarations: Yes  
+IndentRequiresClause: false
 
 BinPackArguments: false
 BinPackParameters: false

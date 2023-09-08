@@ -1,6 +1,13 @@
 #include "testThermostat.hpp"
 
-#include "constants.hpp"
+#include "constants.hpp"         // for _TEMPERATURE_FACTOR_
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for sqrt
+#include <memory>          // for allocator
 
 TEST_F(TestThermostat, calculateTemperature)
 {
@@ -20,13 +27,13 @@ TEST_F(TestThermostat, calculateTemperature)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    EXPECT_EQ(_data->getTemperature(), sum(kineticEnergyAtomicVector) * config::_TEMPERATURE_FACTOR_ / (nDOF));
+    EXPECT_EQ(_data->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF));
 }
 
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
-    _thermostat->setTimestep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
 
     const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);
@@ -42,9 +49,9 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    const auto oldTemperature = sum(kineticEnergyAtomicVector) * config::_TEMPERATURE_FACTOR_ / (nDOF);
+    const auto oldTemperature = sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / static_cast<double>(nDOF);
 
-    const auto berendsenFactor = sqrt(1.0 + (0.1 / 100.0) * (300.0 / oldTemperature - 1.0));
+    const auto berendsenFactor = ::sqrt(1.0 + 0.1 / 100.0 * (300.0 / oldTemperature - 1.0));
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 

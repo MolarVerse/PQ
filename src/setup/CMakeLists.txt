@@ -1,44 +1,36 @@
 add_library(setup
     setup.cpp
-
-    rstFileReader.cpp
-    rstFileSection.cpp
-
-    inputFileReader.cpp
-
-    inputFileParsing/inputFileParser.cpp
-    inputFileParsing/inputFileParserOutput.cpp
-    inputFileParsing/inputFileParserTimings.cpp
-    inputFileParsing/inputFileParserGeneral.cpp
-    inputFileParsing/inputFileParserIntegrator.cpp
-    inputFileParsing/inputFileParserBox.cpp
-    inputFileParsing/inputFileParserVirial.cpp
-    inputFileParsing/inputFileParserSimulationBox.cpp
-    inputFileParsing/inputFileParserCelllist.cpp
-    inputFileParsing/inputFileParserThermostat.cpp
-    inputFileParsing/inputFileParserManostat.cpp
-    inputFileParsing/inputFileParserReset.cpp
-
-    moldescriptorReader.cpp
-    postProcessSetup.cpp
-
-    guffDatReader.cpp
+    simulationBoxSetup.cpp
+    celllistSetup.cpp
+    thermostatSetup.cpp
+    manostatSetup.cpp
+    resetKineticsSetup.cpp
+    potentialSetup.cpp
+    integratorSetup.cpp
+    constraintsSetup.cpp
+    forceFieldSetup.cpp
+    intraNonBondedSetup.cpp
 )
 
 target_include_directories(setup
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/setup
 )
 
 target_link_libraries(setup
     PUBLIC
+    readInput
+    topologyFileReader
+    restartFileReader
+    parameterFileReader
+
     engine
     utilities
     output
-    config
     gtest
-    math
+    potential
+    coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS setup

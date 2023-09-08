@@ -1,14 +1,25 @@
-#ifndef _ATOM_NUMBER_MAP_H_
+#ifndef _ATOM_NUMBER_MAP_HPP_
 
-#define _ATOM_NUMBER_MAP_H_
+#define _ATOM_NUMBER_MAP_HPP_
 
 #include <map>
 #include <string>
 
-namespace config
+namespace constants
 {
     /**
      * @brief Map of atom names to atomic numbers
+     *
+     * @note special atom names are:
+     *
+     * d deuterium
+     * t tritium
+     *
+     * q with atomic number 999
+     * x with atomic number 999
+     * cav with atomic number 1000
+     * sup with atomic number 1000000
+     * dum with atomic number 1
      */
     const std::map<std::string, int> atomNumberMap = {
         {"h", 1},         {"d", 1},   {"t", 1},    {"he", 2},   {"li", 3},   {"be", 4},   {"b", 5},   {"c", 6},   {"n", 7},
@@ -25,6 +36,6 @@ namespace config
         {"cf", 98},       {"es", 99}, {"fm", 100}, {"md", 101}, {"no", 102}, {"lr", 103}, {"q", 999}, {"x", 999}, {"cav", 1000},
         {"sup", 1000000}, {"dum", 1}};
 
-}   // namespace config
+}   // namespace constants
 
-#endif
+#endif   // _ATOM_NUMBER_MAP_HPP_

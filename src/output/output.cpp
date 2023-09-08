@@ -1,10 +1,9 @@
 #include "output.hpp"
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"   // for InputFileException, customException
 
-#include <filesystem>
-#include <fstream>
-#include <stdexcept>
+#include <cstdint>   // for UINT64_MAX
+#include <fstream>   // for ifstream, ofstream, std
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -20,6 +19,7 @@ using namespace output;
  * @param filename
  *
  * @throw InputFileException if filename is empty
+ * @throw InputFileException if file already exists
  */
 void Output::setFilename(const string_view &filename)
 {
@@ -30,28 +30,25 @@ void Output::setFilename(const string_view &filename)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0)
     {
-        _filename = filename;
+        _fileName = filename;
     }
     else
     {
-        filesystem::create_directory("procid_pimd-qmcf_" + to_string(procId));
-        _filename = filename;
-        _filename = "procid_pimd-qmcf_" + to_string(procId) + "/" + _filename;
+        const auto baseFilename = "procId_pimd-qmcf_";
+        filesystem::create_directory(baseFilename + to_string(procId));
+        _fileName = filename;
+        _fileName = baseFilename + to_string(procId) + "/" + _fileName;
     }
 #else
 
-    _filename = filename;
+    _fileName = filename;
 #endif
 
-    if (_filename.empty())
-    {
+    if (_fileName.empty())
         throw InputFileException("Filename cannot be empty");
-    }
 
-    if (const ifstream fp(_filename.c_str()); fp.good())
-    {
-        throw InputFileException("File already exists - filename = " + string(_filename));
-    }
+    if (const ifstream fp(_fileName.c_str()); fp.good())
+        throw InputFileException("File already exists - filename = " + string(_fileName));
 
     openFile();
 }
@@ -64,20 +61,14 @@ void Output::setFilename(const string_view &filename)
  * @throw InputFileException if output frequency is negative
  *
  * @note
- *
- *  if output frequency is 0, it is set to INT32_MAX
+ *  if output frequency is 0, it is set to UINT64_MAX
  *  in order to avoid division by 0 in the output
- *
- * TODO: check if output frequency is positive in parser file
  *
  */
 void Output::setOutputFrequency(const size_t outputFreq)
 {
-    // if (outputFreq < 0)
-    //     throw InputFileException("Output frequency must be positive - output frequency = " + to_string(outputFreq));
-
-    if (outputFreq == 0)
-        _outputFrequency = INT64_MAX;
+    if (0 == outputFreq)
+        _outputFrequency = UINT64_MAX;
     else
         _outputFrequency = outputFreq;
 }
@@ -90,18 +81,8 @@ void Output::setOutputFrequency(const size_t outputFreq)
  */
 void Output::openFile()
 {
-    _fp.open(_filename);
+    _fp.open(_fileName);
 
-    if (!_fp.is_open()) throw InputFileException("Could not open file - filename = " + _filename);
-}
-
-/**
- * @brief construct general initial momentum message
- *
- * @param momentum
- * @return string
- */
-string Output::initialMomentumMessage(const double momentum) const
-{
-    return "Initial momentum = " + to_string(momentum) + " Angstrom * amu / fs";
+    if (!_fp.is_open())
+        throw InputFileException("Could not open file - filename = " + _fileName);
 }

@@ -1,0 +1,15 @@
+- initialize engine after reading input file
+
+- implement shake linker correction
+
+- eliminate boost from project
+
+- completely rebuild tests of restart file reading and sections
+  - code should be fine
+  - tests are a big mess -> clean them up
+
+- introduce more optionals instead of throwing exceptions to early
+
+- introduce more complex exception handling with classes
+
+- clean up CMakeLists.txt files

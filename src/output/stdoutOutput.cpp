@@ -1,10 +1,13 @@
 #include "stdoutOutput.hpp"
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"       // for UserInputExceptionWarning, customException
+#include "outputMessages.hpp"   // for initialMomentumMessage
 
-using namespace std;
+#include <iostream>      // for operator<<, char_traits, basic_ostream, cout
+#include <string>        // for operator<<
+#include <string_view>   // for string_view
+
 using namespace output;
-using namespace customException;
 
 /**
  * @brief write a warning message to the stdout if density and box dimensions are set
@@ -14,11 +17,11 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
+        throw customException::UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
     }
-    catch (const UserInputExceptionWarning &e)
+    catch (const customException::UserInputExceptionWarning &e)
     {
-        cout << e.what() << endl << endl;
+        std::cout << e.what() << '\n' << '\n' << std::flush;
     }
 }
 
@@ -29,38 +32,6 @@ void StdoutOutput::writeDensityWarning() const
  */
 void StdoutOutput::writeInitialMomentum(const double momentum) const
 {
-    cout << endl;
-    cout << initialMomentumMessage(momentum) << endl;
-}
-
-/**
- * @brief write warning message to stdout if Berendsen thermostat is set but no relaxation time is given
- *
- */
-void StdoutOutput::writeRelaxationTimeThermostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen thermostat set but no relaxation time given. Using default value of 0.1ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
-}
-
-/**
- * @brief write warning message to stdout if Berendsen manostat is set but no relaxation time is given
- *
- */
-void StdoutOutput::writeRelaxationTimeManostatWarning() const
-{
-    try
-    {
-        throw UserInputExceptionWarning("Berendsen manostat set but no relaxation time given. Using default value of 1.0ps.");
-    }
-    catch (const UserInputExceptionWarning &e)
-    {
-        cout << e.what() << endl << endl;
-    }
+    std::cout << '\n';
+    std::cout << initialMomentumMessage(momentum) << '\n' << std::flush;
 }
