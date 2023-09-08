@@ -41,10 +41,10 @@ jobs:
         sudo apt install gcc-13 g++-13
       shell: bash
 
-    - name: install gcovr
-      run: |
-        sudo apt-get install gcovr
-      shell: bash
+    # - name: install gcovr
+    #   run: |
+    #     sudo apt-get install gcovr
+    #   shell: bash
       
     - name: "Create build directory and run CMake"
       run: cmake -S . -B build -G "Unix Makefiles"
@@ -58,7 +58,7 @@ jobs:
     - name: "Test Project"
       run: |
         cd build
-        make coverage
+        make test
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
