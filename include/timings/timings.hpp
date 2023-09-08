@@ -2,8 +2,8 @@
 
 #define _TIMINGS_HPP_
 
-#include <bits/chrono.h>   // for duration_cast, high_resolution_clock, operator-
-#include <cstddef>         // for size_t
+#include <chrono>    // for duration_cast, high_resolution_clock, operator-
+#include <cstddef>   // for size_t
 
 namespace timings
 {
