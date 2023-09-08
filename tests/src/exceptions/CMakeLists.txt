@@ -24,11 +24,13 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS exceptions)
 endforeach()
 
-include(CodeCoverage)
-setup_target_for_coverage_gcovr_html(
-    NAME coverage_exceptions
-    EXCLUDE ${EXCLUDE_FOR_GCOVR}
-    EXECUTABLE "ctest"
-    EXECUTABLE_ARGS "-L;exceptions"
-    OUTPUT_PATH "coverage"
-)
+if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
+    include(CodeCoverage)
+    setup_target_for_coverage_gcovr_html(
+        NAME coverage_exceptions
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
+        EXECUTABLE "ctest"
+        EXECUTABLE_ARGS "-L;exceptions"
+        OUTPUT_PATH "coverage"
+    )
+endif()

@@ -35,15 +35,17 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS readInput)
 endforeach()
 
-include(CodeCoverage)
-setup_target_for_coverage_gcovr_html(
-    NAME coverage_readInput
-    EXCLUDE ${EXCLUDE_FOR_GCOVR}
+if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
+    include(CodeCoverage)
+    setup_target_for_coverage_gcovr_html(
+        NAME coverage_readInput
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
-    EXECUTABLE "ctest"
-    EXECUTABLE_ARGS "-L;readInput"
-    OUTPUT_PATH "coverage"
-)
+        EXECUTABLE "ctest"
+        EXECUTABLE_ARGS "-L;readInput"
+        OUTPUT_PATH "coverage"
+    )
+endif()
 
 add_subdirectory(inputFileParsing)
 add_subdirectory(topologyReader)

@@ -19,7 +19,7 @@ endif()
 
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
-if(NOT(${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease"))
+if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
     include(gcovr)
 
     include(CodeCoverage)
