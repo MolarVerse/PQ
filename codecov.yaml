@@ -1,7 +1,0 @@
-ignore:
-  #- build/
-  - external/
-  - _deps/
-  - tests/
-  - apps/
-  - benchmarks/

@@ -8,3 +8,5 @@ ignore:
   - tools/
   - src/setup/setup.cpp # just one combining all setup methods - working as interface
   - src/engine/engine.cpp # just one combining all engine methods - tested by integration tests
+codecov:
+  token: bf914a3c-fad4-4ea0-936e-5fdf8a80e211
