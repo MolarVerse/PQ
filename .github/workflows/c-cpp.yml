@@ -82,5 +82,5 @@ jobs:
       - name: Generate and send a code coverage report to Coveralls
         run: |
           cd build
-          coveralls --exclude lib --exclude tests --exclude build --gcov-options '\-lp'
+          coveralls --gcov gcov-13 --exclude lib --exclude tests --exclude build --gcov-options '\-lp'
         shell: bash
