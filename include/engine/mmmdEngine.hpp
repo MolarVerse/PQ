@@ -10,7 +10,7 @@ namespace engine
     /**
      * @class MmmdEngine
      *
-     * @brief Contains all the information needed to run the simulation
+     * @brief Contains all the information needed to run an MM MD simulation
      *
      */
     class MMMDEngine : public Engine

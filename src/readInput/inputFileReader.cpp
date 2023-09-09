@@ -1,5 +1,6 @@
 #include "inputFileReader.hpp"
 
+#include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParserCellList.hpp"           // for InputFileParserCellList
 #include "inputFileParserConstraints.hpp"        // for InputFileParserConstraints
@@ -143,6 +144,43 @@ void InputFileReader::read()
 
         ++_lineNumber;
     }
+}
+
+void InputFileReader::readJobType()
+{
+    std::ifstream inputFile(_fileName);
+
+    if (inputFile.fail())
+        throw customException::InputFileException("\"" + _fileName + "\"" + " File not found");
+
+    std::string line;
+
+    while (getline(inputFile, line))
+    {
+        line = utilities::removeComments(line, "#");
+
+        if (line.empty())
+        {
+            ++_lineNumber;
+            continue;
+        }
+
+        auto processInputCommand = [this](const auto &command)
+        {
+            const auto lineElements = utilities::splitString(command);
+            if (!lineElements.empty() && lineElements[0] != "jobtype")
+            {
+                auto parser = InputFileParserGeneral(_engine);
+                _engine     = std::move(parser.parseJobTypeForEngine(lineElements, _lineNumber));
+            }
+        };
+
+        std::ranges::for_each(utilities::getLineCommands(line, _lineNumber), processInputCommand);
+
+        ++_lineNumber;
+    }
+
+    throw customException::InputFileException("Missing keyword \"jobtype\" in input file");
 }
 
 /**

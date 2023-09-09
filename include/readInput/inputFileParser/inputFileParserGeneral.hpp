@@ -27,6 +27,8 @@ namespace readInput
         explicit InputFileParserGeneral(engine::Engine &);
 
         void parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
+        [[nodiscard]] engine::Engine &parseJobTypeForEngine(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace readInput

@@ -2,6 +2,7 @@
 
 #define _INPUT_FILE_READER_HPP_
 
+#include "engine.hpp"            // for Engine
 #include "inputFileParser.hpp"   // for InputFileParser
 
 #include <cstddef>       // for size_t
@@ -11,11 +12,6 @@
 #include <string>        // for string, operator<=>
 #include <string_view>   // for string_view
 #include <vector>        // for vector
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
 
 /**
  * @brief namespace for reading input files
@@ -48,8 +44,9 @@ namespace readInput
         size_t _lineNumber = 1;
 
       public:
-        InputFileReader(const std::string_view &fileName, engine::Engine &engine);
+        explicit InputFileReader(const std::string_view &fileName, engine::Engine &engine);
 
+        void readJobType();
         void read();
         void addKeywords();
         void process(const std::vector<std::string> &lineElements);

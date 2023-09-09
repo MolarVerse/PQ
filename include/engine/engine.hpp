@@ -61,8 +61,12 @@ namespace engine
         std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
 
       public:
+        Engine(const Engine &);
+
         Engine()          = default;
         virtual ~Engine() = default;
+
+        Engine &operator=(const Engine &);
 
         void         run();
         virtual void takeStep(){};

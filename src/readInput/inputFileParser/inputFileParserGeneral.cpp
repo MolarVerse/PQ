@@ -1,6 +1,7 @@
 #include "inputFileParserGeneral.hpp"
 
 #include "exceptions.hpp"   // for InputFileException, customException
+#include "mmmdEngine.hpp"   // for MMMDEngine
 #include "settings.hpp"     // for Settings
 
 #include <format>       // for format
@@ -22,7 +23,12 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
 }
 
 /**
- * @brief parse jobtype of simulation and set it in settings
+ * @brief parse jobtype of simulation left empty just to not parse it again after engine is generated
+ */
+void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, const size_t) {}
+
+/**
+ * @brief parse jobtype of simulation and set it in settings and generate engine
  *
  * @details Possible options are:
  * 1) mm-md
@@ -31,12 +37,17 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
  *
  * @throw customException::InputFileException if jobtype is not recognised
  */
-void InputFileParserGeneral::parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber)
+engine::Engine &InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string> &lineElements,
+                                                              const size_t                    lineNumber)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "mm-md")
+    {
         settings::Settings::setJobtype("MMMD");
+        auto engine = engine::MMMDEngine();
+        return engine;
+    }
     else
         throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" at line {} in input file", lineElements[2], lineNumber));
+            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md", lineElements[2]));
 }

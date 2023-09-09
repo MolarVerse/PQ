@@ -1,5 +1,6 @@
 #include "../include/readInput/commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"                                 // for Engine
+#include "inputFileReader.hpp"                        // for InputFileReader
 #include "mmmdEngine.hpp"                             // for MMMDEngine
 #include "setup.hpp"                                  // for setupSimulation, setup
 
@@ -18,7 +19,8 @@ static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    auto engine = engine::MMMDEngine();
+    auto  inputFileReader = readInput::InputFileReader(commandLineArgs.getInputFileName());
+    auto &engine          = inputFileReader.readJobType();
 
     setup::setupSimulation(commandLineArgs.getInputFileName(), engine);
 
