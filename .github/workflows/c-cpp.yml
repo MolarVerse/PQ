@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: ["main", "dev"]
+    branches: [main, dev]
   pull_request:
-    branches: ["main", "dev"]
+    branches: [main, dev]
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v1.0.3
         id: cache-boost
         with:
-          path: "~/boost"
+          path: ~/boost
           key: libboost-all-dev
 
       - name: Install boost
@@ -45,23 +45,29 @@ jobs:
           sudo apt-get install gcovr
         shell: bash
 
-      - name: "Create build directory and run CMake"
+      - name: Create build directory and run CMake
         run: cmake -S . -B build -G "Unix Makefiles"
         env:
           CC: gcc-13
           CXX: g++-13
 
-      - name: "Build Project"
+      - name: Build Project
         run: cmake --build build --target all -- -j20
 
-      - name: "Test Project"
+      - name: Test Project
         run: |
           cd build
           make coverage_xml
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     gcov: true
+      #     gcov_args: -r build --xml-outfile
+      #     token: ${{ secrets.CODECOV }}
+
+      - name: Generate and send a code coverage report to Coveralls
+        uses: threeal/gcovr-action@latest
         with:
-          gcov: true
-          gcov_args: -r build --xml-outfile
-          token: ${{ secrets.CODECOV }}
+          coveralls-send: true
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
