@@ -16,17 +16,17 @@ using namespace setup;
  */
 TEST_F(TestSetup, setupCellList)
 {
-    CellListSetup cellListSetup(_engine);
+    CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine.getPotential())), typeid(potential::PotentialBruteForce));
+    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialBruteForce));
 
-    _engine.getCellList().activate();
+    _engine->getCellList().activate();
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine.getPotential())), typeid(potential::PotentialCellList));
+    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialCellList));
 
-    EXPECT_NO_THROW(setupCellList(_engine));
+    EXPECT_NO_THROW(setupCellList(*_engine));
 }
 
 int main(int argc, char **argv)

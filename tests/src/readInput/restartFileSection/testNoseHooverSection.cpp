@@ -18,7 +18,7 @@ TEST_F(TestNoseHooverSection, testNumberOfArguments) { GTEST_SKIP(); }
 TEST_F(TestNoseHooverSection, testProcess)
 {
     auto line = std::vector<std::string>(0);
-    ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+    ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
 }
 
 int main(int argc, char **argv)

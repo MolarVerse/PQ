@@ -24,7 +24,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
         if (i != 4 && i != 7)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+            ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
         }
 }
 
@@ -33,23 +33,23 @@ TEST_F(TestBoxSection, testProcess)
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
-    _section->process(line, _engine);
-    ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), testing::ElementsAre(1.0, 2.0, 3.0));
-    ASSERT_THAT(_engine.getSimulationBox().getBoxAngles(), testing::ElementsAre(90.0, 90.0, 90.0));
+    _section->process(line, *_engine);
+    ASSERT_THAT(_engine->getSimulationBox().getBoxDimensions(), testing::ElementsAre(1.0, 2.0, 3.0));
+    ASSERT_THAT(_engine->getSimulationBox().getBoxAngles(), testing::ElementsAre(90.0, 90.0, 90.0));
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
-    _section->process(line, _engine);
-    ASSERT_THAT(_engine.getSimulationBox().getBoxDimensions(), testing::ElementsAre(1.0, 2.0, 3.0));
-    ASSERT_THAT(_engine.getSimulationBox().getBoxAngles(), testing::ElementsAre(90.0, 90.0, 70.0));
+    _section->process(line, *_engine);
+    ASSERT_THAT(_engine->getSimulationBox().getBoxDimensions(), testing::ElementsAre(1.0, 2.0, 3.0));
+    ASSERT_THAT(_engine->getSimulationBox().getBoxAngles(), testing::ElementsAre(90.0, 90.0, 70.0));
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
-    ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+    ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
-    ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+    ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
-    ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+    ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
 }

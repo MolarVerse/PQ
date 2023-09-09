@@ -20,7 +20,7 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testJobType)
 {
-    InputFileParserGeneral   parser(_engine);
+    InputFileParserGeneral   parser(*_engine);
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     parser.parseJobType(lineElements, 0);
     EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");

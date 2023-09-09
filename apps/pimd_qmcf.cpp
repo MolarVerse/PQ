@@ -1,6 +1,7 @@
 #include "../include/readInput/commandLineArgs.hpp"   // for CommandLineArgs
-#include "engine.hpp"            // for Engine
-#include "setup.hpp"             // for setupSimulation, setup
+#include "engine.hpp"                                 // for Engine
+#include "mmmdEngine.hpp"                             // for MMMDEngine
+#include "setup.hpp"                                  // for setupSimulation, setup
 
 #include <cstdlib>     // for EXIT_SUCCESS
 #include <exception>   // for exception
@@ -17,7 +18,7 @@ static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    auto engine = engine::Engine();
+    auto engine = engine::MMMDEngine();
 
     setup::setupSimulation(commandLineArgs.getInputFileName(), engine);
 

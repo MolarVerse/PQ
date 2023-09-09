@@ -19,7 +19,7 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseNScale)
 {
-    InputFileParserResetKinetics parser(_engine);
+    InputFileParserResetKinetics parser(*_engine);
     std::vector<std::string>     lineElements = {"nscale", "=", "3"};
     parser.parseNScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
@@ -35,7 +35,7 @@ TEST_F(TestInputFileReader, testParseNScale)
  */
 TEST_F(TestInputFileReader, testParseFScale)
 {
-    InputFileParserResetKinetics parser(_engine);
+    InputFileParserResetKinetics parser(*_engine);
     std::vector<std::string>     lineElements = {"fscale", "=", "3"};
     parser.parseFScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
@@ -51,7 +51,7 @@ TEST_F(TestInputFileReader, testParseFScale)
  */
 TEST_F(TestInputFileReader, testParseNReset)
 {
-    InputFileParserResetKinetics parser(_engine);
+    InputFileParserResetKinetics parser(*_engine);
     std::vector<std::string>     lineElements = {"nreset", "=", "3"};
     parser.parseNReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
@@ -67,7 +67,7 @@ TEST_F(TestInputFileReader, testParseNReset)
  */
 TEST_F(TestInputFileReader, testParseFReset)
 {
-    InputFileParserResetKinetics parser(_engine);
+    InputFileParserResetKinetics parser(*_engine);
     std::vector<std::string>     lineElements = {"freset", "=", "3"};
     parser.parseFReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);

@@ -22,7 +22,7 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
         if (i != 2)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+            ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
         }
 }
 
@@ -30,15 +30,15 @@ TEST_F(TestStepCountSection, testNegativeStepCount)
 {
     auto line = std::vector<std::string>(2);
     line[1]   = "-1";
-    ASSERT_THROW(_section->process(line, _engine), customException::RstFileException);
+    ASSERT_THROW(_section->process(line, *_engine), customException::RstFileException);
 }
 
 TEST_F(TestStepCountSection, testProcess)
 {
     auto line = std::vector<std::string>(2);
     line[1]   = "1000";
-    _section->process(line, _engine);
-    EXPECT_EQ(_engine.getTimings().getStepCount(), 1000);
+    _section->process(line, *_engine);
+    EXPECT_EQ(_engine->getTimings().getStepCount(), 1000);
 }
 
 int main(int argc, char **argv)

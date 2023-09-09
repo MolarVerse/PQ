@@ -74,7 +74,7 @@ TEST_F(TestInputFileReader, equalSign)
  */
 TEST_F(TestInputFileReader, addKeyword)
 {
-    InputFileParserGeneral parser(_engine);
+    InputFileParserGeneral parser(*_engine);
     const auto             initialSizeOfMaps = parser.getKeywordCountMap().size();
 
     parser.addKeyword("test", bind_front(&InputFileParserGeneral::parseJobType, parser), true);

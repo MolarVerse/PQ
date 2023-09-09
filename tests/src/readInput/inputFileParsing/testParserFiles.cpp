@@ -20,7 +20,7 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    InputFileParserFiles parser(_engine);
+    InputFileParserFiles parser(*_engine);
 
     std::vector<std::string> lineElements = {"topology_file", "=", "topology.txt"};
     EXPECT_THROW_MSG(parser.parseTopologyFilename(lineElements, 0),
@@ -40,7 +40,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
  */
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
-    InputFileParserFiles parser(_engine);
+    InputFileParserFiles parser(*_engine);
 
     std::vector<std::string> lineElements = {"parameter_file", "=", "param.txt"};
     EXPECT_THROW_MSG(parser.parseParameterFilename(lineElements, 0),
@@ -58,7 +58,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    InputFileParserFiles     parser(_engine);
+    InputFileParserFiles     parser(*_engine);
     std::vector<std::string> lineElements = {"intra-nonBonded_file", "=", "intra.dat"};
     EXPECT_THROW_MSG(parser.parseIntraNonBondedFile(lineElements, 0),
                      customException::InputFileException,
@@ -75,7 +75,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    InputFileParserFiles     parser(_engine);
+    InputFileParserFiles     parser(*_engine);
     std::vector<std::string> lineElements = {"startFile_name", "=", "start.xyz"};
     EXPECT_THROW_MSG(parser.parseStartFilename(lineElements, 0),
                      customException::InputFileException,
@@ -92,7 +92,7 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    InputFileParserFiles     parser(_engine);
+    InputFileParserFiles     parser(*_engine);
     std::vector<std::string> lineElements = {"moldescriptorFile_name", "=", "moldescriptor.txt"};
     EXPECT_THROW_MSG(parser.parseMoldescriptorFilename(lineElements, 0),
                      customException::InputFileException,
@@ -109,7 +109,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    InputFileParserFiles     parser(_engine);
+    InputFileParserFiles     parser(*_engine);
     std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(parser.parseGuffPath(lineElements, 0),
                      customException::InputFileException,
@@ -122,7 +122,7 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    InputFileParserFiles     parser(_engine);
+    InputFileParserFiles     parser(*_engine);
     std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(parser.parseGuffDatFilename(lineElements, 0),
                      customException::InputFileException,

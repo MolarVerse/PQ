@@ -21,10 +21,10 @@ using namespace readInput;
 TEST_F(TestInputFileReader, testParseDensity)
 {
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
-    InputFileParserSimulationBox   parser(_engine);
+    InputFileParserSimulationBox   parser(*_engine);
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parser.parseDensity(lineElements, 0);
-    EXPECT_EQ(_engine.getSimulationBox().getDensity(), 1.0);
+    EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
 
     const std::vector<std::string> lineElements2 = {"density", "=", "-1.0"};
@@ -40,10 +40,10 @@ TEST_F(TestInputFileReader, testParseDensity)
  */
 TEST_F(TestInputFileReader, testParseCoulombRadius)
 {
-    InputFileParserSimulationBox   parser(_engine);
+    InputFileParserSimulationBox   parser(*_engine);
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parser.parseCoulombRadius(lineElements, 0);
-    EXPECT_EQ(_engine.getSimulationBox().getCoulombRadiusCutOff(), 1.0);
+    EXPECT_EQ(_engine->getSimulationBox().getCoulombRadiusCutOff(), 1.0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};

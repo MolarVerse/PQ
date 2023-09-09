@@ -20,8 +20,8 @@ class TestInputFileReader : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _engine          = engine::Engine();
-        _inputFileReader = new readInput::InputFileReader("input.in", _engine);
+        _engine          = new engine::Engine();
+        _inputFileReader = new readInput::InputFileReader("input.in", *_engine);
     }
 
     void TearDown() override
@@ -32,7 +32,7 @@ class TestInputFileReader : public ::testing::Test
 
     std::string _fileName = "";
 
-    engine::Engine              _engine;
+    engine::Engine             *_engine;
     readInput::InputFileReader *_inputFileReader;
 
     void removeFile() const { std::remove(_fileName.c_str()); }
