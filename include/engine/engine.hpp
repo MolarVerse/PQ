@@ -40,7 +40,7 @@ namespace engine
      */
     class Engine
     {
-      private:
+      protected:
         size_t _step = 1;
 
         EngineOutput                   _engineOutput;
@@ -61,9 +61,11 @@ namespace engine
         std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
 
       public:
-        void run();
-        void takeStep();
-        void writeOutput();
+        virtual ~Engine() = default;
+
+        void         run();
+        virtual void takeStep(){};
+        void         writeOutput();
 
         [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
         [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
