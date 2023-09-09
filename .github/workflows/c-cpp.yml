@@ -65,7 +65,7 @@ jobs:
         with:
           gcov: true
           gcov_executable: gcov-13
-          token: ${{ secrets.CODECOV }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       # - name: Generate and send a code coverage report to Coveralls
       #   uses: threeal/gcovr-action@latest
