@@ -34,18 +34,20 @@ void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, cons
  * 1) mm-md
  *
  * @param lineElements
+ * @param lineNumber
+ * @param engine
  *
  * @throw customException::InputFileException if jobtype is not recognised
  */
-engine::Engine &InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string> &lineElements,
-                                                              const size_t                    lineNumber)
+void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string>  &lineElements,
+                                                   const size_t                     lineNumber,
+                                                   std::unique_ptr<engine::Engine> &engine)
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
-        auto engine = engine::MMMDEngine();
-        return engine;
+        engine.reset(new engine::MMMDEngine());
     }
     else
         throw customException::InputFileException(

@@ -15,19 +15,15 @@
 #include <mpi.h>
 #endif
 
-void test(std::unique_ptr<engine::Engine> &engine) { engine = std::unique_ptr<engine::MMMDEngine>(); }
+void test(std::unique_ptr<engine::Engine> &engine) { engine.reset(new engine::MMMDEngine()); }
 
 static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
 {
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    // auto  inputFileReader = readInput::InputFileReader(commandLineArgs.getInputFileName());
-    // auto &engine         k ,= inputFileReader.readJobType();
-
-    std::unique_ptr<engine::Engine> engine;
-
-    test(engine);
+    auto engine = std::unique_ptr<engine::Engine>();
+    readInput::readJobType(commandLineArgs.getInputFileName(), engine);
 
     setup::setupSimulation(commandLineArgs.getInputFileName(), *engine);
 

@@ -20,6 +20,7 @@
 namespace readInput
 {
     void readInputFile(const std::string_view &fileName, engine::Engine &);
+    void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
 
     using ParseFunc = std::function<void(const std::vector<std::string> &lineElements, const size_t lineNumber)>;
 
@@ -46,7 +47,6 @@ namespace readInput
       public:
         explicit InputFileReader(const std::string_view &fileName, engine::Engine &engine);
 
-        void readJobType();
         void read();
         void addKeywords();
         void process(const std::vector<std::string> &lineElements);

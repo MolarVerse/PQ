@@ -146,14 +146,16 @@ void InputFileReader::read()
     }
 }
 
-void InputFileReader::readJobType()
+void readInput::readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &engine)
 {
-    std::ifstream inputFile(_fileName);
+    std::ifstream inputFile(fileName);
 
     if (inputFile.fail())
-        throw customException::InputFileException("\"" + _fileName + "\"" + " File not found");
+        throw customException::InputFileException("\"" + fileName + "\"" + " File not found");
 
     std::string line;
+    size_t      lineNumber(1);
+    bool        jobtypeFound{false};
 
     while (getline(inputFile, line))
     {
@@ -161,26 +163,28 @@ void InputFileReader::readJobType()
 
         if (line.empty())
         {
-            ++_lineNumber;
+            ++lineNumber;
             continue;
         }
 
-        auto processInputCommand = [this](const auto &command)
+        auto processInputCommand = [lineNumber, &jobtypeFound, &engine](const auto &command)
         {
             const auto lineElements = utilities::splitString(command);
-            if (!lineElements.empty() && lineElements[0] != "jobtype")
+            if (!lineElements.empty() && "jobtype" == lineElements[0])
             {
-                auto parser = InputFileParserGeneral(_engine);
-                // _engine     = std::move(parser.parseJobTypeForEngine(lineElements, _lineNumber));
+                auto parser = InputFileParserGeneral(*engine);
+                parser.parseJobTypeForEngine(lineElements, lineNumber, engine);
+                jobtypeFound = true;
             }
         };
 
-        std::ranges::for_each(utilities::getLineCommands(line, _lineNumber), processInputCommand);
+        std::ranges::for_each(utilities::getLineCommands(line, lineNumber), processInputCommand);
 
-        ++_lineNumber;
+        ++lineNumber;
     }
 
-    throw customException::InputFileException("Missing keyword \"jobtype\" in input file");
+    if (!jobtypeFound)
+        throw customException::InputFileException("Missing keyword \"jobtype\" in input file");
 }
 
 /**
