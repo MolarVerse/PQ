@@ -15,7 +15,7 @@ namespace engine
 
 namespace simulationBox
 {
-    class Molecule;   // Forward declaration
+    class MoleculeType;   // Forward declaration
 }
 
 namespace readInput::molDescriptor

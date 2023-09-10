@@ -42,9 +42,9 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
  *
  * @throw RstFileException if molecule type not found
  */
-Molecule &SimulationBox::findMoleculeType(const size_t moleculeType)
+MoleculeType &SimulationBox::findMoleculeType(const size_t moleculeType)
 {
-    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto &mol) { return mol.getMoltype() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
@@ -61,7 +61,7 @@ Molecule &SimulationBox::findMoleculeType(const size_t moleculeType)
  */
 bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
 {
-    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto &mol) { return mol.getMoltype() == moleculeType; };
 
     return std::ranges::find_if(_moleculeTypes, isMoleculeType) != _moleculeTypes.end();
 }
@@ -76,7 +76,7 @@ bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
  */
 std::optional<size_t> SimulationBox::findMoleculeTypeByString(const std::string &moleculeType) const
 {
-    auto isMoleculeName = [&moleculeType](const Molecule &mol) { return mol.getName() == moleculeType; };
+    auto isMoleculeName = [&moleculeType](const auto &mol) { return mol.getName() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
         return molecule->getMoltype();
@@ -221,7 +221,7 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
-    std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes);
+    // std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes); TODO: check if necessary
 }
 
 /**

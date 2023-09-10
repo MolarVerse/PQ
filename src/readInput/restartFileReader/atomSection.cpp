@@ -49,7 +49,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
 
     try
     {
-        molecule = std::make_unique<simulationBox::Molecule>(engine.getSimulationBox().findMoleculeType(moltype));
+        molecule = std::make_unique<simulationBox::Molecule>(engine.getSimulationBox().findMoleculeType(moltype).getMoltype());
     }
     catch (const customException::RstFileException &e)
     {

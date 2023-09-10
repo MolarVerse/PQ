@@ -25,9 +25,10 @@ namespace simulationBox
         double _charge;
 
         std::vector<std::string> _atomNames;
+        std::vector<size_t>      _atomTypes;
         std::vector<size_t>      _externalAtomTypes;
-        std::vector<double>      _partialCharges;
         std::vector<size_t>      _externalGlobalVDWTypes;
+        std::vector<double>      _partialCharges;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
 
@@ -52,6 +53,7 @@ namespace simulationBox
         {
             _externalToInternalAtomTypes.try_emplace(key, value);
         }
+        void addAtomType(const size_t atomType) { _atomTypes.push_back(atomType); }
 
         /***************************
          * standard setter methods *
@@ -79,6 +81,13 @@ namespace simulationBox
         [[nodiscard]] std::vector<size_t>      getExternalAtomTypes() const { return _externalAtomTypes; }
         [[nodiscard]] std::vector<double>      getPartialCharges() const { return _partialCharges; }
         [[nodiscard]] std::vector<size_t>      getExternalGlobalVDWTypes() const { return _externalGlobalVDWTypes; }
+
+        [[nodiscard]] size_t getInternalAtomType(const size_t externalAtomType) const
+        {
+            return _externalToInternalAtomTypes.at(externalAtomType);
+        }
+
+        [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes() const { return _externalToInternalAtomTypes; }
     };
 
 }   // namespace simulationBox
