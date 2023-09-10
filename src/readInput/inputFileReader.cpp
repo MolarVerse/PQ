@@ -171,7 +171,7 @@ void InputFileReader::readJobType()
             if (!lineElements.empty() && lineElements[0] != "jobtype")
             {
                 auto parser = InputFileParserGeneral(_engine);
-                _engine     = std::move(parser.parseJobTypeForEngine(lineElements, _lineNumber));
+                // _engine     = std::move(parser.parseJobTypeForEngine(lineElements, _lineNumber));
             }
         };
 

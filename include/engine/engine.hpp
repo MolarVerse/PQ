@@ -66,7 +66,7 @@ namespace engine
         Engine()          = default;
         virtual ~Engine() = default;
 
-        Engine &operator=(const Engine &);
+        // Engine &operator=(const Engine &);
 
         void         run();
         virtual void takeStep(){};
