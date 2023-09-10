@@ -2,8 +2,10 @@
 
 #define _MOLECULE_TYPE_HPP_
 
-#include <string>   // for string
-#include <vector>   // for vector
+#include <map>           // for map
+#include <string>        // for string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 namespace simulationBox
 {
@@ -46,9 +48,9 @@ namespace simulationBox
             _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
         }
 
-        void addExternalToInternalAtomTypeElement(const size_t externalAtomType, const size_t internalAtomType)
+        void addExternalToInternalAtomTypeElement(const size_t value, const size_t key)
         {
-            _externalToInternalAtomTypes[externalAtomType] = internalAtomType;
+            _externalToInternalAtomTypes.try_emplace(key, value);
         }
 
         /***************************
