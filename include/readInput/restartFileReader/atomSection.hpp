@@ -33,7 +33,8 @@ namespace readInput::restartFile
     class AtomSection : public RestartFileSection
     {
       private:
-        void processAtomLine(std::vector<std::string> &lineElements, simulationBox::Molecule &) const;
+        void
+        processAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &, simulationBox::Molecule &) const;
         void processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &);
         void checkAtomLine(std::vector<std::string> &lineElements, const simulationBox::Molecule &);
 

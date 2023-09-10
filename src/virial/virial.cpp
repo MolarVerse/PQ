@@ -34,7 +34,7 @@ void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physic
 
             _virial += forcexyz * xyz + shiftForcexyz;
 
-            molecule.setAtomShiftForces(i, {0.0, 0.0, 0.0});
+            molecule.setAtomShiftForce(i, {0.0, 0.0, 0.0});
         }
     }
 

@@ -2,6 +2,7 @@ add_library(simulationBox
     box.cpp
     simulationBox.cpp
     molecule.cpp
+    moleculeType.cpp
     celllist.cpp
     cell.cpp
     atom.cpp

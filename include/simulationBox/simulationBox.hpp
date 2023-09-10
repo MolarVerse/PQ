@@ -54,7 +54,9 @@ namespace simulationBox
 
         Box _box;
 
-        std::vector<Atom>     _qmAtoms;
+        std::vector<Atom>         _atoms;
+        std::vector<const Atom *> _qmAtoms;
+
         std::vector<Molecule> _molecules;
         std::vector<Molecule> _moleculeTypes;
 
@@ -84,7 +86,8 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
-        void addQMAtom(const Atom &atom) { _qmAtoms.push_back(atom); }
+        void addAtom(const Atom &atom) { _atoms.push_back(atom); }
+        void addQMAtom(const Atom *atom) { _qmAtoms.push_back(atom); }
         void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
         void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
@@ -101,9 +104,10 @@ namespace simulationBox
         [[nodiscard]] Molecule &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
         [[nodiscard]] Molecule &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-        [[nodiscard]] std::vector<Atom>     &getQMAtoms() { return _qmAtoms; }
-        [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
-        [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
+        [[nodiscard]] std::vector<Atom>         &getAtoms() { return _atoms; }
+        [[nodiscard]] std::vector<const Atom *> &getQMAtoms() { return _qmAtoms; }
+        [[nodiscard]] std::vector<Molecule>     &getMolecules() { return _molecules; }
+        [[nodiscard]] std::vector<Molecule>     &getMoleculeTypes() { return _moleculeTypes; }
 
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
         [[nodiscard]] std::map<size_t, size_t> &getExternalToInternalGlobalVDWTypes()

@@ -70,7 +70,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
             throw customException::RstFileException(
                 std::format("Error in line {}: Molecule must have {} atoms", _lineNumber, molecule->getNumberOfAtoms()));
 
-        processAtomLine(lineElements, *molecule);
+        processAtomLine(lineElements, engine.getSimulationBox(), *molecule);
 
         ++atomCounter;
 
@@ -110,15 +110,21 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
  * but the old coordinates, velocities and forces are not used and also not read from the file
  *
  * @param lineElements
+ * @param simBox
  * @param molecule
  */
-void AtomSection::processAtomLine(std::vector<std::string> &lineElements, simulationBox::Molecule &molecule) const
+void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
+                                  simulationBox::SimulationBox &simBox,
+                                  simulationBox::Molecule      &molecule) const
 {
-    molecule.addAtomTypeName(lineElements[0]);
+    auto atom = simulationBox::Atom(lineElements[0]);
 
-    molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom.setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+
+    simBox.addAtom(atom);
+    molecule.addAtom(&(simBox.getAtoms().back()));
 }
 
 /**
@@ -137,7 +143,8 @@ void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simu
     atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     atom.setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 
-    simBox.addQMAtom(atom);
+    simBox.addAtom(atom);
+    simBox.addQMAtom(&(simBox.getAtoms().back()));
 }
 
 /**

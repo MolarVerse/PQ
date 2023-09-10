@@ -40,6 +40,8 @@ namespace simulationBox
 
         void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
         void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
+        void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
+        void addShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
 
@@ -50,7 +52,10 @@ namespace simulationBox
         [[nodiscard]] std::string getName() const { return _name; }
 
         [[nodiscard]] size_t getExternalAtomType() const { return _externalAtomType; }
+        [[nodiscard]] size_t getAtomType() const { return _atomType; }
+
         [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
+        [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
         [[nodiscard]] double getMass() const { return _mass; }
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
@@ -58,6 +63,7 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D getPosition() const { return _position; }
         [[nodiscard]] linearAlgebra::Vec3D getVelocity() const { return _velocity; }
         [[nodiscard]] linearAlgebra::Vec3D getForce() const { return _force; }
+        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const { return _shiftForce; }
 
         /***************************
          * standard setter methods *
@@ -70,6 +76,7 @@ namespace simulationBox
         void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
         void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }
         void setForce(const linearAlgebra::Vec3D &force) { _force = force; }
+        void setShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce = shiftForce; }
     };
 }   // namespace simulationBox
 
