@@ -8,7 +8,8 @@
 #include <string>               // for string
 #include <vector>               // for vector
 
-class TestAtomSection_testProcessAtomLine_Test;   // Friend test class
+class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
+class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
 
 namespace engine
 {
@@ -17,8 +18,9 @@ namespace engine
 
 namespace simulationBox
 {
-    class Molecule;   // Forward declaration
-}
+    class Molecule;        // Forward declaration
+    class SimulationBox;   // Forward declaration
+}   // namespace simulationBox
 
 namespace readInput::restartFile
 {
@@ -32,9 +34,11 @@ namespace readInput::restartFile
     {
       private:
         void processAtomLine(std::vector<std::string> &lineElements, simulationBox::Molecule &) const;
+        void processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &);
         void checkAtomLine(std::vector<std::string> &lineElements, const simulationBox::Molecule &);
 
         FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
+        FRIEND_TEST(::TestAtomSection, testProcessQMAtomLine);
 
       public:
         [[nodiscard]] std::string keyword() override { return ""; }

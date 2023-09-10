@@ -1,3 +1,4 @@
+#include "atom.hpp"                     // for Atom
 #include "atomSection.hpp"              // for AtomSection
 #include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for RstFileException, customException
@@ -150,6 +151,15 @@ TEST_F(TestAtomSection, testProcess)
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[2].getMoltype(), 1);
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[2].getNumberOfAtoms(), 3);
+
+    line    = std::vector<std::string>(21);
+    line[2] = "0";
+    for (size_t i = 3; i < 21; ++i)
+        line[i] = "1.0";
+
+    _section->process(line, *_engine);
+
+    EXPECT_EQ(_engine->getSimulationBox().getQMAtoms().size(), 1);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -168,6 +178,25 @@ TEST_F(TestAtomSection, testProcessAtomLine)
     ASSERT_THAT(molecule.getAtomForce(0), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
 
     ASSERT_EQ(molecule.getAtomTypeName(0), line[0]);
+}
+
+TEST_F(TestAtomSection, testProcessQMAtomLine)
+{
+    auto line = std::vector<std::string>(21);
+    line[0]   = "Ar";
+    for (size_t i = 3; i < 21; ++i)
+        line[i] = std::to_string(i + i / 10.0);
+
+    dynamic_cast<AtomSection *>(_section)->processQMAtomLine(line, _engine->getSimulationBox());
+
+    auto atoms = _engine->getSimulationBox().getQMAtoms();
+
+    ASSERT_EQ(atoms.size(), 1);
+    ASSERT_THAT(atoms[0].getPosition(), testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
+    ASSERT_THAT(atoms[0].getVelocity(), testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
+    ASSERT_THAT(atoms[0].getForce(), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
+
+    ASSERT_EQ(atoms[0].getName(), line[0]);
 }
 
 int main(int argc, char **argv)

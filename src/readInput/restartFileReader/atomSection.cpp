@@ -1,5 +1,6 @@
 #include "atomSection.hpp"
 
+#include "atom.hpp"              // for Atom
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
@@ -36,7 +37,14 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
      * find molecule by molecule type *
      *********************************/
 
-    size_t                                   moltype = stoul(lineElements[2]);
+    size_t moltype = stoul(lineElements[2]);
+
+    if (0 == moltype)
+    {
+        processQMAtomLine(lineElements, engine.getSimulationBox());
+        return;
+    }
+
     std::unique_ptr<simulationBox::Molecule> molecule;
 
     try
@@ -111,6 +119,25 @@ void AtomSection::processAtomLine(std::vector<std::string> &lineElements, simula
     molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+}
+
+/**
+ * @brief adds a single atom with moltype 0 to the simulation box _qmAtoms
+ *
+ * @details for details how the line looks like see processAtomLine
+ *
+ * @param lineElements
+ * @param simBox
+ */
+void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
+{
+    auto atom = simulationBox::Atom(lineElements[0]);
+
+    atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom.setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+
+    simBox.addQMAtom(atom);
 }
 
 /**

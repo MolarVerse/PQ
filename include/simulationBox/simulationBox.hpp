@@ -2,15 +2,16 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include "box.hpp"
-#include "defaults.hpp"
-#include "exceptions.hpp"
-#include "molecule.hpp"
+#include "atom.hpp"         // for Atom
+#include "box.hpp"          // for Box
+#include "defaults.hpp"     // for _COULOMB_CUT_OFF_DEFAULT_
+#include "exceptions.hpp"   // for ExceptionType
+#include "molecule.hpp"     // for Molecule
 
-#include <map>
-#include <optional>
-#include <string>
-#include <vector>
+#include <map>        // for map
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 /**
  * @namespace simulationBox
@@ -53,6 +54,7 @@ namespace simulationBox
 
         Box _box;
 
+        std::vector<Atom>     _qmAtoms;
         std::vector<Molecule> _molecules;
         std::vector<Molecule> _moleculeTypes;
 
@@ -82,6 +84,7 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
+        void addQMAtom(const Atom &atom) { _qmAtoms.push_back(atom); }
         void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
         void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
 
@@ -95,10 +98,12 @@ namespace simulationBox
         [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
         [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
 
+        [[nodiscard]] Molecule &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
+        [[nodiscard]] Molecule &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
+
+        [[nodiscard]] std::vector<Atom>     &getQMAtoms() { return _qmAtoms; }
         [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
         [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
-        [[nodiscard]] Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
-        [[nodiscard]] Molecule &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
         [[nodiscard]] std::map<size_t, size_t> &getExternalToInternalGlobalVDWTypes()
