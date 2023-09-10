@@ -146,6 +146,14 @@ void InputFileReader::read()
     }
 }
 
+/**
+ * @brief checks if in the input file jobtype keyword is set and calls the corresponding parser
+ *
+ * @details this is just the first parsing of the input file and includes only the jobtype keyword
+ *
+ * @param fileName
+ * @param engine
+ */
 void readInput::readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &engine)
 {
     std::ifstream inputFile(fileName);

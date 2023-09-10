@@ -28,7 +28,7 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFi
 void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, const size_t) {}
 
 /**
- * @brief parse jobtype of simulation and set it in settings and generate engine
+ * @brief parse jobtype of simulation and set it in settings and reset engine unique_ptr
  *
  * @details Possible options are:
  * 1) mm-md
