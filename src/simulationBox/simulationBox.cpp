@@ -158,10 +158,11 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
 /**
  * @brief resize internal global vdw types of all molecules
  *
+ * TODO: remove this one should be unnecessary
  */
 void SimulationBox::resizeInternalGlobalVDWTypes()
 {
-    auto resizeInternalGlobalVDWTypes = [](Molecule &molecule) { molecule.resizeInternalGlobalVDWTypes(); };
+    auto resizeInternalGlobalVDWTypes = [](Molecule &molecule) {};
 
     std::ranges::for_each(_molecules, resizeInternalGlobalVDWTypes);
 }
@@ -214,10 +215,9 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 
     auto setInternalGlobalVdwTypes = [&externalToInternalGlobalVDWTypes = _externalToInternalGlobalVDWTypes](auto &molecule)
     {
-        std::ranges::for_each(
-            molecule.getExternalGlobalVDWTypes(),
-            [&externalToInternalGlobalVDWTypes = externalToInternalGlobalVDWTypes, &molecule = molecule](auto &externalVdwType)
-            { molecule.addInternalGlobalVDWType(externalToInternalGlobalVDWTypes.at(externalVdwType)); });
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molecule.getAtom(i)->setInternalGlobalVDWType(
+                externalToInternalGlobalVDWTypes.at(molecule.getAtom(i)->getExternalGlobalVDWType()));
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);

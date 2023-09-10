@@ -17,23 +17,43 @@ namespace simulationBox
     {
       private:
         std::string _name;
+        std::string _atomTypeName;
+
+        size_t _externalGlobalVDWType;
+        size_t _internalGlobalVDWType;
+
+        size_t _externalAtomType;
+        size_t _atomType;
 
         int    _atomicNumber;
         double _mass;
+        double _partialCharge;
 
         linearAlgebra::Vec3D _position;
         linearAlgebra::Vec3D _velocity;
         linearAlgebra::Vec3D _force;
+        linearAlgebra::Vec3D _shiftForce;
 
       public:
         Atom() = default;
         explicit Atom(const std::string_view &name) : _name(name){};
+
+        void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
+        void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
+
+        void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
 
         /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]] std::string getName() const { return _name; }
+
+        [[nodiscard]] size_t getExternalAtomType() const { return _externalAtomType; }
+        [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
+
+        [[nodiscard]] double getMass() const { return _mass; }
+        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
 
         [[nodiscard]] linearAlgebra::Vec3D getPosition() const { return _position; }
         [[nodiscard]] linearAlgebra::Vec3D getVelocity() const { return _velocity; }
@@ -42,6 +62,10 @@ namespace simulationBox
         /***************************
          * standard setter methods *
          ***************************/
+
+        void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
+
+        void setInternalGlobalVDWType(const size_t internalGlobalVDWType) { _internalGlobalVDWType = internalGlobalVDWType; }
 
         void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
         void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }
