@@ -78,7 +78,7 @@ namespace simulationBox
         [[nodiscard]] MoleculeType                 &findMoleculeType(const size_t moleculeType);
         [[nodiscard]] std::optional<size_t>         findMoleculeTypeByString(const std::string &moleculeType) const;
         [[nodiscard]] std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
-        [[nodiscard]] std::vector<Molecule>         findNecessaryMoleculeTypes();
+        [[nodiscard]] std::vector<MoleculeType>     findNecessaryMoleculeTypes();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void resizeInternalGlobalVDWTypes();

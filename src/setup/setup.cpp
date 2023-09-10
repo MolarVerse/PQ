@@ -82,14 +82,30 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
+    std::cout << "setup simulation box" << '\n';
     setupSimulationBox(engine);
+
+    std::cout << "setup cell list" << '\n';
     setupCellList(engine);
+
+    std::cout << "setup thermostat" << '\n';
     setupThermostat(engine);
+
+    std::cout << "setup manostat" << '\n';
     setupManostat(engine);
+
+    std::cout << "setup reset kinetics" << '\n';
     setupResetKinetics(engine);
+
+    std::cout << "setup potential" << '\n';
     setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+    std::cout << "setup constraints" << '\n';
     setupConstraints(engine);
 
+    std::cout << "intra non bonded" << '\n';
     setupIntraNonBonded(engine);
+
+    std::cout << "setup force field" << '\n';
     setupForceField(engine);
 }

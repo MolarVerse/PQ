@@ -110,6 +110,18 @@ namespace simulationBox
             return partialCharges;
         }
 
+        [[nodiscard]] std::vector<double> getAtomMasses() const
+        {
+            std::vector<double> atomMasses(getNumberOfAtoms());
+
+            for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+            {
+                atomMasses[i] = _atoms[i]->getMass();
+            }
+
+            return atomMasses;
+        }
+
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes()
         {
             std::vector<size_t> externalGlobalVDWTypes(getNumberOfAtoms());

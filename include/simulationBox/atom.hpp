@@ -36,7 +36,6 @@ namespace simulationBox
 
       public:
         Atom() = default;
-        explicit Atom(const std::string_view &name) : _name(name){};
 
         void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
         void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
@@ -69,6 +68,10 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
+        void setAtomTypeName(const std::string_view &atomTypeName) { _atomTypeName = atomTypeName; }
+        void setAtomicNumber(const int atomicNumber) { _atomicNumber = atomicNumber; }
+
+        void setMass(const double mass) { _mass = mass; }
         void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
 
         void setInternalGlobalVDWType(const size_t internalGlobalVDWType) { _internalGlobalVDWType = internalGlobalVDWType; }

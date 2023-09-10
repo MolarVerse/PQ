@@ -80,7 +80,7 @@ void SimulationBoxSetup::setAtomMasses()
             if (!constants::atomMassMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.addAtomMass(constants::atomMassMap.at(keyword));
+                molecule.getAtom(i)->setMass(constants::atomMassMap.at(keyword));
         }
     };
 
@@ -103,7 +103,7 @@ void SimulationBoxSetup::setAtomicNumbers()
             if (!constants::atomNumberMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.addAtomicNumber(constants::atomNumberMap.at(keyword));
+                molecule.getAtom(i)->setAtomicNumber(constants::atomNumberMap.at(keyword));
         }
     };
 
@@ -206,11 +206,13 @@ void SimulationBoxSetup::checkBoxSettings()
 
 /**
  * @brief resizes atomShiftVectors to number of atoms
+ *
+ * TODO: i dont think this is needed anymore
  */
 void SimulationBoxSetup::resizeAtomShiftForces()
 {
-    std::ranges::for_each(_engine.getSimulationBox().getMolecules(),
-                          [](Molecule &molecule) { molecule.resizeAtomShiftForces(); });
+    // std::ranges::for_each(_engine.getSimulationBox().getMolecules(),
+    //                       [](Molecule &molecule) { molecule.resizeAtomShiftForces(); });
 }
 
 /**

@@ -116,16 +116,16 @@ std::pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_
  *
  * @return std::vector<Molecule>
  */
-std::vector<Molecule> SimulationBox::findNecessaryMoleculeTypes()
+std::vector<MoleculeType> SimulationBox::findNecessaryMoleculeTypes()
 {
-    std::vector<Molecule> necessaryMoleculeTypes;
+    std::vector<MoleculeType> necessaryMoleculeTypes;
 
-    auto searchMoleculeTypes = [&necessaryMoleculeTypes](const Molecule &molecule)
+    auto searchMoleculeTypes = [&necessaryMoleculeTypes, this](const auto &molecule)
     {
         auto predicate = [&molecule](const auto moleculeType) { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
         if (std::ranges::find_if(necessaryMoleculeTypes, predicate) == necessaryMoleculeTypes.end())
-            necessaryMoleculeTypes.push_back(molecule);
+            necessaryMoleculeTypes.push_back(findMoleculeType(molecule.getMoltype()));
     };
 
     std::ranges::for_each(_molecules, searchMoleculeTypes);

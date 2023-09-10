@@ -45,11 +45,11 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         return;
     }
 
-    std::unique_ptr<simulationBox::Molecule> molecule;
+    std::unique_ptr<simulationBox::MoleculeType> moleculeType;
 
     try
     {
-        molecule = std::make_unique<simulationBox::Molecule>(engine.getSimulationBox().findMoleculeType(moltype).getMoltype());
+        moleculeType = std::make_unique<simulationBox::MoleculeType>(engine.getSimulationBox().findMoleculeType(moltype));
     }
     catch (const customException::RstFileException &e)
     {
@@ -57,6 +57,12 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         std::cout << "Error in linenumber " << _lineNumber << " in restart file; Moltype not found\n";
         throw;
     }
+
+    auto molecule = std::make_unique<simulationBox::Molecule>(moleculeType->getMoltype());
+
+    molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
+    molecule->setName(moleculeType->getName());
+    molecule->setCharge(moleculeType->getCharge());
 
     size_t atomCounter = 0;
 
@@ -74,7 +80,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
 
         ++atomCounter;
 
-        if (atomCounter == molecule->getNumberOfAtoms())
+        if (atomCounter == moleculeType->getNumberOfAtoms())
             break;
 
         /* *********************************************
@@ -117,7 +123,9 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
                                   simulationBox::SimulationBox &simBox,
                                   simulationBox::Molecule      &molecule) const
 {
-    auto atom = simulationBox::Atom(lineElements[0]);
+    auto atom = simulationBox::Atom();
+
+    atom.setAtomTypeName(lineElements[0]);
 
     atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
@@ -137,7 +145,9 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
  */
 void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
 {
-    auto atom = simulationBox::Atom(lineElements[0]);
+    auto atom = simulationBox::Atom();
+
+    atom.setAtomTypeName(lineElements[0]);
 
     atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});

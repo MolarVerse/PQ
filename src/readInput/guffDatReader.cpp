@@ -167,8 +167,8 @@ void GuffDatReader::setupGuffMaps()
  */
 void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
 {
-    simulationBox::Molecule molecule1;
-    simulationBox::Molecule molecule2;
+    simulationBox::MoleculeType molecule1;
+    simulationBox::MoleculeType molecule2;
 
     try
     {
