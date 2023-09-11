@@ -116,11 +116,11 @@ TEST_F(TestAtomSection, testProcess)
 
     auto molecule = simulationBox::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
-    _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
+    _engine->getSimulationBox().addMoleculeType(molecule);
 
     auto molecule2 = simulationBox::MoleculeType(2);
     molecule2.setNumberOfAtoms(4);
-    _engine->getSimulationBox().getMoleculeTypes().push_back(molecule2);
+    _engine->getSimulationBox().addMoleculeType(molecule2);
 
     std::ifstream fp(filename);
     _section->_fp = &fp;
@@ -196,7 +196,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     ASSERT_THAT(atoms[0]->getVelocity(), testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
     ASSERT_THAT(atoms[0]->getForce(), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
 
-    ASSERT_EQ(atoms[0]->getName(), line[0]);
+    ASSERT_EQ(atoms[0]->getAtomTypeName(), line[0]);
 }
 
 int main(int argc, char **argv)

@@ -160,31 +160,42 @@ TEST(TestForceField, calculateBondedInteractions)
     auto molecule = simulationBox::Molecule();
 
     molecule.setMoltype(0);
-    molecule.setNumberOfAtoms(3);
-    molecule.addAtomPosition({0.0, 0.0, 0.0});
-    molecule.addAtomPosition({1.0, 1.0, 1.0});
-    molecule.addAtomPosition({1.0, 2.0, 3.0});
-    molecule.addAtomPosition({4.0, 2.0, 3.0});
+    molecule.setNumberOfAtoms(4);
 
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom4 = std::make_shared<simulationBox::Atom>();
 
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
+    atom1->setPosition({0.0, 0.0, 0.0});
+    atom2->setPosition({1.0, 1.0, 1.0});
+    atom3->setPosition({1.0, 2.0, 3.0});
+    atom4->setPosition({4.0, 2.0, 3.0});
 
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom3->setForce({0.0, 0.0, 0.0});
+    atom4->setForce({0.0, 0.0, 0.0});
 
-    molecule.addPartialCharge(1.0);
-    molecule.addPartialCharge(-0.5);
-    molecule.addPartialCharge(1.0);
-    molecule.addPartialCharge(-0.5);
+    atom1->setInternalGlobalVDWType(0);
+    atom2->setInternalGlobalVDWType(1);
+    atom3->setInternalGlobalVDWType(0);
+    atom4->setInternalGlobalVDWType(1);
+
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom3->setAtomType(0);
+    atom4->setAtomType(1);
+
+    atom1->setPartialCharge(1.0);
+    atom2->setPartialCharge(-0.5);
+    atom3->setPartialCharge(1.0);
+    atom4->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    molecule.addAtom(atom3);
+    molecule.addAtom(atom4);
 
     auto bondForceField     = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
     auto angleForceField    = forceField::AngleForceField({&molecule, &molecule, &molecule}, {0, 1, 2}, 0);
@@ -246,14 +257,20 @@ TEST(TestForceField, correctLinker)
 
     auto molecule = simulationBox::Molecule();
 
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
-    molecule.addPartialCharge(1.0);
-    molecule.addPartialCharge(-0.5);
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setInternalGlobalVDWType(0);
+    atom2->setInternalGlobalVDWType(1);
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom1->setPartialCharge(1.0);
+    atom2->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     physicalData::PhysicalData physicalData;
 

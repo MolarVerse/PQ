@@ -145,7 +145,7 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
  */
 void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
 {
-    auto atom = std::shared_ptr<simulationBox::Atom>();
+    auto atom = std::make_shared<simulationBox::Atom>();
 
     atom->setAtomTypeName(lineElements[0]);
 

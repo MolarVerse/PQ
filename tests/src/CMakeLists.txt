@@ -11,10 +11,8 @@ add_subdirectory(resetKinetics)
 add_subdirectory(output)
 add_subdirectory(utilities)
 add_subdirectory(readInput)
-
-# add_subdirectory(constraints)
-# add_subdirectory(forceField)
+add_subdirectory(constraints)
+add_subdirectory(forceField)
 add_subdirectory(settings)
 add_subdirectory(exceptions)
-
-# add_subdirectory(intraNonBonded)
+add_subdirectory(intraNonBonded)
