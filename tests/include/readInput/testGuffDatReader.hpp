@@ -25,29 +25,46 @@ class TestGuffDatReader : public ::testing::Test
   protected:
     void SetUp() override
     {
+        auto moleculeType1 = simulationBox::MoleculeType();
+        moleculeType1.setNumberOfAtoms(2);
+        moleculeType1.setMoltype(1);
+        moleculeType1.addExternalAtomType(1);
+        moleculeType1.addExternalAtomType(2);
+        moleculeType1.addExternalToInternalAtomTypeElement(1, 0);
+        moleculeType1.addExternalToInternalAtomTypeElement(2, 1);
+        moleculeType1.addPartialCharge(0.5);
+        moleculeType1.addPartialCharge(-0.25);
+        moleculeType1.addAtomType(0);
+        moleculeType1.addAtomType(1);
+
+        auto moleculeType2 = simulationBox::MoleculeType();
+        moleculeType2.setNumberOfAtoms(1);
+        moleculeType2.setMoltype(2);
+        moleculeType2.addExternalAtomType(3);
+        moleculeType2.addExternalToInternalAtomTypeElement(3, 0);
+        moleculeType2.addPartialCharge(0.25);
+        moleculeType2.addAtomType(0);
+
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(2);
         molecule1.setMoltype(1);
-        molecule1.addExternalAtomType(1);
-        molecule1.addExternalAtomType(2);
-        molecule1.addExternalToInternalAtomTypeElement(1, 0);
-        molecule1.addExternalToInternalAtomTypeElement(2, 1);
-        molecule1.addPartialCharge(0.5);
-        molecule1.addPartialCharge(-0.25);
-        molecule1.addAtomType(0);
-        molecule1.addAtomType(1);
 
-        auto molecule2 = simulationBox::Molecule();
-        molecule2.setNumberOfAtoms(1);
-        molecule2.setMoltype(2);
-        molecule2.addExternalAtomType(3);
-        molecule2.addExternalToInternalAtomTypeElement(3, 0);
-        molecule2.addPartialCharge(0.25);
-        molecule2.addAtomType(0);
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
+
+        atom1->setExternalAtomType(1);
+        atom2->setExternalAtomType(2);
+        atom1->setPartialCharge(0.5);
+        atom2->setPartialCharge(-0.25);
+        atom1->setAtomType(0);
+        atom2->setAtomType(1);
+
+        molecule1.addAtom(atom1);
+        molecule1.addAtom(atom2);
 
         _engine = new engine::Engine();
-        _engine->getSimulationBox().addMoleculeType(molecule1);
-        _engine->getSimulationBox().addMoleculeType(molecule2);
+        _engine->getSimulationBox().addMoleculeType(moleculeType1);
+        _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
         _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);

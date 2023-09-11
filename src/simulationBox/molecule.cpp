@@ -18,7 +18,7 @@ size_t Molecule::getNumberOfAtomTypes()
 {
     std::vector<size_t> externalAtomTypes;
 
-    std::ranges::transform(_atoms, std::back_inserter(externalAtomTypes), [](auto *atom) { return atom->getExternalAtomType(); });
+    std::ranges::transform(_atoms, std::back_inserter(externalAtomTypes), [](auto atom) { return atom->getExternalAtomType(); });
 
     return getNumberOfAtoms() - std::ranges::size(std::ranges::unique(externalAtomTypes));
 }
@@ -65,7 +65,7 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    std::ranges::for_each(_atoms, [shift](auto *atom) { atom->addPosition(shift); });
+    std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
 }
 
 /**
@@ -75,7 +75,7 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
  */
 void Molecule::scaleVelocities(const double scaleFactor)
 {
-    std::ranges::for_each(_atoms, [scaleFactor](auto *atom) { atom->scaleVelocity(scaleFactor); });
+    std::ranges::for_each(_atoms, [scaleFactor](auto atom) { atom->scaleVelocity(scaleFactor); });
 }
 
 /**
@@ -85,5 +85,5 @@ void Molecule::scaleVelocities(const double scaleFactor)
  */
 void Molecule::correctVelocities(const linearAlgebra::Vec3D &correction)
 {
-    std::ranges::for_each(_atoms, [correction](auto *atom) { atom->addVelocity(-correction); });
+    std::ranges::for_each(_atoms, [correction](auto atom) { atom->addVelocity(-correction); });
 }

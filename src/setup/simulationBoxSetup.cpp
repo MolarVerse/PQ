@@ -6,6 +6,7 @@
 #include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException, UserInputException, InputFileException
+#include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "logOutput.hpp"               // for LogOutput
 #include "molecule.hpp"                // for Molecule
 #include "physicalData.hpp"            // for PhysicalData
@@ -47,22 +48,101 @@ void setup::setupSimulationBox(engine::Engine &engine)
  * 3) calculate the molecular mass of each molecule in the simulation box
  * 4) calculate the total mass of the simulation box
  * 5) calculate the total charge of the simulation box
- * 6) resize atom shift force vectors of each molecule to match the number of atoms
  * 7) check if box dimensions and density are set
  * 8) check if cutoff radius is larger than half of the minimal box dimension
+ *
+ * @TODO: rewrtie doc
  *
  */
 void SimulationBoxSetup::setup()
 {
+    setAtomNames();
+    setAtomTypes();
+    if (settings::ForceFieldSettings::isActive())
+        setExternalVDWTypes();
+    setPartialCharges();
+
     setAtomMasses();
     setAtomicNumbers();
     calculateMolMasses();
     calculateTotalMass();
     calculateTotalCharge();
-    resizeAtomShiftForces();
 
     checkBoxSettings();
     checkRcCutoff();
+}
+
+/**
+ * @brief set all atomNames in atoms from moleculeTypes
+ *
+ */
+void SimulationBoxSetup::setAtomNames()
+{
+    auto setAtomNamesOfMolecule = [this](auto &molecule)
+    {
+        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        {
+            molecule.getAtom(i).setName(moleculeType.getAtomName(i));
+        }
+    };
+
+    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setAtomNamesOfMolecule);
+}
+
+/**
+ * @brief set all external and internal atomtypes for _atoms from _moleculeTypes
+ *
+ */
+void SimulationBoxSetup::setAtomTypes()
+{
+    auto setAtomTypesOfMolecule = [this](auto &molecule)
+    {
+        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        {
+            molecule.getAtom(i).setAtomType(moleculeType.getAtomType(i));
+            molecule.getAtom(i).setExternalAtomType(moleculeType.getExternalAtomType(i));
+        }
+    };
+
+    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setAtomTypesOfMolecule);
+}
+
+/**
+ * @brief set all external van der Waals types in atoms from moleculeTypes
+ *
+ */
+void SimulationBoxSetup::setExternalVDWTypes()
+{
+    auto setExternalVDWTypesOfMolecule = [this](auto &molecule)
+    {
+        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        {
+            molecule.getAtom(i).setExternalGlobalVDWType(moleculeType.getExternalGlobalVDWTypes()[i]);
+        }
+    };
+
+    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setExternalVDWTypesOfMolecule);
+}
+
+/**
+ * @brief set all partial charges in atoms from _moleculeTypes
+ *
+ */
+void SimulationBoxSetup::setPartialCharges()
+{
+    auto setPartialChargesOfMolecule = [this](auto &molecule)
+    {
+        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        {
+            molecule.getAtom(i).setPartialCharge(moleculeType.getPartialCharges()[i]);
+        }
+    };
+
+    std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setPartialChargesOfMolecule);
 }
 
 /**
@@ -80,7 +160,7 @@ void SimulationBoxSetup::setAtomMasses()
             if (!constants::atomMassMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.getAtom(i)->setMass(constants::atomMassMap.at(keyword));
+                molecule.getAtom(i).setMass(constants::atomMassMap.at(keyword));
         }
     };
 
@@ -103,7 +183,7 @@ void SimulationBoxSetup::setAtomicNumbers()
             if (!constants::atomNumberMap.contains(keyword))
                 throw customException::MolDescriptorException("Invalid atom name \"" + keyword + "\"");
             else
-                molecule.getAtom(i)->setAtomicNumber(constants::atomNumberMap.at(keyword));
+                molecule.getAtom(i).setAtomicNumber(constants::atomNumberMap.at(keyword));
         }
     };
 
@@ -202,17 +282,6 @@ void SimulationBoxSetup::checkBoxSettings()
 
     _engine.getPhysicalData().setVolume(_engine.getSimulationBox().getVolume());
     _engine.getPhysicalData().setDensity(_engine.getSimulationBox().getDensity());
-}
-
-/**
- * @brief resizes atomShiftVectors to number of atoms
- *
- * TODO: i dont think this is needed anymore
- */
-void SimulationBoxSetup::resizeAtomShiftForces()
-{
-    // std::ranges::for_each(_engine.getSimulationBox().getMolecules(),
-    //                       [](Molecule &molecule) { molecule.resizeAtomShiftForces(); });
 }
 
 /**

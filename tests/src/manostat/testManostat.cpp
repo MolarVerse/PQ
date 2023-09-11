@@ -47,7 +47,9 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     auto boxOld = _box->getBoxDimensions();
 
     auto molecule = simulationBox::Molecule();
-    molecule.addAtomPosition({1.0, 0.0, 0.0});
+    auto atom     = std::make_shared<simulationBox::Atom>();
+    atom->setPosition({1.0, 0.0, 0.0});
+    molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
     molecule.setNumberOfAtoms(1);
 

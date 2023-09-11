@@ -129,8 +129,15 @@ TEST_F(TestCellList, updateCellList)
 
     auto molecule = simulationBox::Molecule();
     molecule.setNumberOfAtoms(2);
-    molecule.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    molecule.addAtomPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    atom2->setPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     _simulationBox->addMolecule(molecule);
 

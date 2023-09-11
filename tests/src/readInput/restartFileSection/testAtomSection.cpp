@@ -68,7 +68,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = simulationBox::Molecule(1);
+    auto molecule = simulationBox::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -95,7 +95,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
 
     std::string filename = "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = simulationBox::Molecule(1);
+    auto molecule = simulationBox::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -114,11 +114,11 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = simulationBox::Molecule(1);
+    auto molecule = simulationBox::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-    auto molecule2 = simulationBox::Molecule(2);
+    auto molecule2 = simulationBox::MoleculeType(2);
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule2);
 
@@ -171,13 +171,13 @@ TEST_F(TestAtomSection, testProcessAtomLine)
     for (size_t i = 3; i < 21; ++i)
         line[i] = std::to_string(i + i / 10.0);
 
-    dynamic_cast<AtomSection *>(_section)->processAtomLine(line, molecule);
+    dynamic_cast<AtomSection *>(_section)->processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(molecule.getAtomPosition(0), testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
     ASSERT_THAT(molecule.getAtomVelocity(0), testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
     ASSERT_THAT(molecule.getAtomForce(0), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
 
-    ASSERT_EQ(molecule.getAtomTypeName(0), line[0]);
+    ASSERT_EQ(molecule.getAtom(0).getAtomTypeName(), line[0]);
 }
 
 TEST_F(TestAtomSection, testProcessQMAtomLine)
@@ -192,11 +192,11 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     auto atoms = _engine->getSimulationBox().getQMAtoms();
 
     ASSERT_EQ(atoms.size(), 1);
-    ASSERT_THAT(atoms[0].getPosition(), testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
-    ASSERT_THAT(atoms[0].getVelocity(), testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
-    ASSERT_THAT(atoms[0].getForce(), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
+    ASSERT_THAT(atoms[0]->getPosition(), testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5])));
+    ASSERT_THAT(atoms[0]->getVelocity(), testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8])));
+    ASSERT_THAT(atoms[0]->getForce(), testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11])));
 
-    ASSERT_EQ(atoms[0].getName(), line[0]);
+    ASSERT_EQ(atoms[0]->getName(), line[0]);
 }
 
 int main(int argc, char **argv)

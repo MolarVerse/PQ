@@ -21,23 +21,32 @@ class TestVirial : public ::testing::Test
         _simulationBox = new simulationBox::SimulationBox();
 
         auto molecule1 = simulationBox::Molecule();
+
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
+
         molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.resizeAtomShiftForces();
-        molecule1.setAtomShiftForces(0, linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.setAtomShiftForces(1, linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+
+        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setShiftForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule1.setCenterOfMass(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        molecule1.addAtom(atom1);
+        molecule1.addAtom(atom2);
 
         auto molecule2 = simulationBox::Molecule();
+
+        auto atom3 = std::make_shared<simulationBox::Atom>();
+
         molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.resizeAtomShiftForces();
-        molecule2.setAtomShiftForces(0, linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.setCenterOfMass(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);

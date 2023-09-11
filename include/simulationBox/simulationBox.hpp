@@ -55,8 +55,8 @@ namespace simulationBox
 
         Box _box;
 
-        std::vector<Atom>         _atoms;
-        std::vector<const Atom *> _qmAtoms;
+        std::vector<std::shared_ptr<Atom>> _atoms;
+        std::vector<std::shared_ptr<Atom>> _qmAtoms;
 
         std::vector<Molecule>     _molecules;
         std::vector<MoleculeType> _moleculeTypes;
@@ -87,8 +87,8 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
-        void addAtom(const Atom &atom) { _atoms.push_back(atom); }
-        void addQMAtom(const Atom *atom) { _qmAtoms.push_back(atom); }
+        void addAtom(std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
+        void addQMAtom(std::shared_ptr<Atom> atom) { _qmAtoms.push_back(atom); }
         void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
         void addMoleculeType(const MoleculeType &molecule) { _moleculeTypes.push_back(molecule); }
 
@@ -105,10 +105,10 @@ namespace simulationBox
         [[nodiscard]] Molecule     &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
         [[nodiscard]] MoleculeType &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
 
-        [[nodiscard]] std::vector<Atom>         &getAtoms() { return _atoms; }
-        [[nodiscard]] std::vector<const Atom *> &getQMAtoms() { return _qmAtoms; }
-        [[nodiscard]] std::vector<Molecule>     &getMolecules() { return _molecules; }
-        [[nodiscard]] std::vector<MoleculeType> &getMoleculeTypes() { return _moleculeTypes; }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms() { return _atoms; }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms() { return _qmAtoms; }
+        [[nodiscard]] std::vector<Molecule>              &getMolecules() { return _molecules; }
+        [[nodiscard]] std::vector<MoleculeType>          &getMoleculeTypes() { return _moleculeTypes; }
 
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
         [[nodiscard]] std::map<size_t, size_t> &getExternalToInternalGlobalVDWTypes()

@@ -59,13 +59,6 @@ TEST_F(TestMolecule, correctVelocities)
     EXPECT_EQ(_molecule->getAtomVelocity(2), atomVelocity3 - scale);
 }
 
-TEST_F(TestMolecule, resizeAtomShiftForces)
-{
-    EXPECT_EQ(_molecule->getAtomShiftForces().size(), 0);
-    _molecule->resizeAtomShiftForces();
-    EXPECT_EQ(_molecule->getAtomShiftForces().size(), 3);
-}
-
 TEST_F(TestMolecule, setAtomForceToZero)
 {
     _molecule->setAtomForcesToZero();

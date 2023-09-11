@@ -123,16 +123,16 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
                                   simulationBox::SimulationBox &simBox,
                                   simulationBox::Molecule      &molecule) const
 {
-    auto atom = simulationBox::Atom();
+    auto atom = std::make_shared<simulationBox::Atom>();
 
-    atom.setAtomTypeName(lineElements[0]);
+    atom->setAtomTypeName(lineElements[0]);
 
-    atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    atom.setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 
     simBox.addAtom(atom);
-    molecule.addAtom(&(simBox.getAtoms().back()));
+    molecule.addAtom(atom);
 }
 
 /**
@@ -145,16 +145,16 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
  */
 void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
 {
-    auto atom = simulationBox::Atom();
+    auto atom = std::shared_ptr<simulationBox::Atom>();
 
-    atom.setAtomTypeName(lineElements[0]);
+    atom->setAtomTypeName(lineElements[0]);
 
-    atom.setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    atom.setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    atom.setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 
     simBox.addAtom(atom);
-    simBox.addQMAtom(&(simBox.getAtoms().back()));
+    simBox.addQMAtom(atom);
 }
 
 /**

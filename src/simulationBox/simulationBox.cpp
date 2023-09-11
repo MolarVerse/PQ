@@ -160,12 +160,7 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
  *
  * TODO: remove this one should be unnecessary
  */
-void SimulationBox::resizeInternalGlobalVDWTypes()
-{
-    auto resizeInternalGlobalVDWTypes = [](Molecule &molecule) {};
-
-    std::ranges::for_each(_molecules, resizeInternalGlobalVDWTypes);
-}
+void SimulationBox::resizeInternalGlobalVDWTypes() {}
 
 /**
  * @brief make external to internal global vdw types map
@@ -183,11 +178,11 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
      * 1) fill the external global vdw types vector with all external global vdw types from all molecules *
      ******************************************************************************************************/
 
-    auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
+    auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &moleculeType)
     {
         externalGlobalVdwTypes.insert(externalGlobalVdwTypes.end(),
-                                      molecule.getExternalGlobalVDWTypes().begin(),
-                                      molecule.getExternalGlobalVDWTypes().end());
+                                      moleculeType.getExternalGlobalVDWTypes().begin(),
+                                      moleculeType.getExternalGlobalVDWTypes().end());
     };
 
     std::ranges::for_each(_moleculeTypes, fillExternalGlobalVdwTypes);
@@ -216,8 +211,8 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
     auto setInternalGlobalVdwTypes = [&externalToInternalGlobalVDWTypes = _externalToInternalGlobalVDWTypes](auto &molecule)
     {
         for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
-            molecule.getAtom(i)->setInternalGlobalVDWType(
-                externalToInternalGlobalVDWTypes.at(molecule.getAtom(i)->getExternalGlobalVDWType()));
+            molecule.getAtom(i).setInternalGlobalVDWType(
+                externalToInternalGlobalVDWTypes.at(molecule.getAtom(i).getExternalGlobalVDWType()));
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);

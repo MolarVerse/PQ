@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstddef>   // for size_t
 #include <map>
+#include <memory>
 #include <string>
 #include <string_view>   // for string_view
 #include <vector>
@@ -34,7 +35,7 @@ namespace simulationBox
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
 
-        std::vector<Atom *> _atoms;
+        std::vector<std::shared_ptr<Atom>> _atoms;
 
         linearAlgebra::Vec3D _centerOfMass = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
 
@@ -50,7 +51,7 @@ namespace simulationBox
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
 
-        void addAtom(Atom *atom) { _atoms.push_back(atom); }
+        void addAtom(std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
 
         // TODO: check if these are really necessary
 
@@ -66,7 +67,7 @@ namespace simulationBox
 
         void setAtomForcesToZero()
         {
-            std::ranges::for_each(_atoms, [](auto *atom) { atom->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0)); });
+            std::ranges::for_each(_atoms, [](auto atom) { atom->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0)); });
         }
 
         void addAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _atoms[index]->addPosition(position); }
@@ -82,6 +83,7 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D getAtomForce(const size_t index) const { return _atoms[index]->getForce(); }
         [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(const size_t index) const { return _atoms[index]->getShiftForce(); }
 
+        [[nodiscard]] int    getAtomicNumber(const size_t index) const { return _atoms[index]->getAtomicNumber(); }
         [[nodiscard]] double getAtomMass(const size_t index) const { return _atoms[index]->getMass(); }
         [[nodiscard]] double getPartialCharge(const size_t index) const { return _atoms[index]->getPartialCharge(); }
         [[nodiscard]] size_t getAtomType(const size_t index) const { return _atoms[index]->getAtomType(); }
@@ -147,7 +149,7 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        [[nodiscard]] Atom *getAtom(const size_t index) { return _atoms[index]; }
+        [[nodiscard]] Atom &getAtom(const size_t index) { return *(_atoms[index]); }
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
 

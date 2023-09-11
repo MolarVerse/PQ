@@ -49,6 +49,7 @@ namespace simulationBox
          ***************************/
 
         [[nodiscard]] std::string getName() const { return _name; }
+        [[nodiscard]] std::string getAtomTypeName() const { return _atomTypeName; }
 
         [[nodiscard]] size_t getExternalAtomType() const { return _externalAtomType; }
         [[nodiscard]] size_t getAtomType() const { return _atomType; }
@@ -56,6 +57,7 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
         [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
+        [[nodiscard]] int    getAtomicNumber() const { return _atomicNumber; }
         [[nodiscard]] double getMass() const { return _mass; }
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
 
@@ -68,12 +70,16 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
+        void setName(const std::string_view &name) { _name = name; }
         void setAtomTypeName(const std::string_view &atomTypeName) { _atomTypeName = atomTypeName; }
         void setAtomicNumber(const int atomicNumber) { _atomicNumber = atomicNumber; }
 
         void setMass(const double mass) { _mass = mass; }
         void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
 
+        void setAtomType(const size_t atomType) { _atomType = atomType; }
+        void setExternalAtomType(const size_t externalAtomType) { _externalAtomType = externalAtomType; }
+        void setExternalGlobalVDWType(const size_t externalGlobalVDWType) { _externalGlobalVDWType = externalGlobalVDWType; }
         void setInternalGlobalVDWType(const size_t internalGlobalVDWType) { _internalGlobalVDWType = internalGlobalVDWType; }
 
         void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }

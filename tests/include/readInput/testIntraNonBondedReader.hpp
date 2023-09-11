@@ -26,7 +26,7 @@ class TestIntraNonBondedReader : public ::testing::Test
 
     void SetUp() override
     {
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = simulationBox::MoleculeType();
         molecule1.setNumberOfAtoms(3);
         molecule1.setMoltype(0);
         molecule1.setName("molecule1");
