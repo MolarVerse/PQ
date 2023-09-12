@@ -21,6 +21,7 @@ namespace QM
     {
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
+        void execute() override;
     };
 }   // namespace QM
 

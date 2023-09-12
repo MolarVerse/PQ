@@ -10,6 +10,7 @@ add_library(setup
     constraintsSetup.cpp
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
+    qmSetup.cpp
 )
 
 target_include_directories(setup

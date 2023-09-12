@@ -148,6 +148,7 @@ void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simu
     auto atom = std::make_shared<simulationBox::Atom>();
 
     atom->setAtomTypeName(lineElements[0]);
+    atom->setName(lineElements[0]);
 
     atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
     atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});

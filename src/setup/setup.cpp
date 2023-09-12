@@ -12,8 +12,11 @@
 #include "moldescriptorReader.hpp"
 #include "parameterFileReader.hpp"
 #include "potentialSetup.hpp"
+#include "qmSetup.hpp"
+#include "qmmdEngine.hpp"
 #include "resetKineticsSetup.hpp"
 #include "restartFileReader.hpp"
+#include "settings.hpp"
 #include "simulationBoxSetup.hpp"
 #include "thermostatSetup.hpp"
 #include "topologyReader.hpp"
@@ -82,6 +85,12 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
+    if (settings::Settings::getIsQM())
+    {
+        std::cout << "setup QM" << '\n';
+        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
+    }
+
     std::cout << "setup simulation box" << '\n';
     setupSimulationBox(engine);
 
@@ -97,15 +106,18 @@ void setup::setupEngine(Engine &engine)
     std::cout << "setup reset kinetics" << '\n';
     setupResetKinetics(engine);
 
-    std::cout << "setup potential" << '\n';
-    setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+    if (settings::Settings::getIsMM())
+    {
+        std::cout << "setup potential" << '\n';
+        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+        std::cout << "intra non bonded" << '\n';
+        setupIntraNonBonded(engine);
+
+        std::cout << "setup force field" << '\n';
+        setupForceField(engine);
+    }
 
     std::cout << "setup constraints" << '\n';
     setupConstraints(engine);
-
-    std::cout << "intra non bonded" << '\n';
-    setupIntraNonBonded(engine);
-
-    std::cout << "setup force field" << '\n';
-    setupForceField(engine);
 }

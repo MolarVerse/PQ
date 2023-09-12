@@ -66,10 +66,11 @@ void RestartFileReader::read()
         }
 
         auto *section        = determineSection(lineElements);
-        section->_lineNumber = lineNumber++;
+        section->_lineNumber = lineNumber;
         section->_fp         = &_fp;
         section->process(lineElements, _engine);
         lineNumber = section->_lineNumber;
+        ++lineNumber;
     }
 }
 

@@ -14,6 +14,11 @@ target_link_libraries(QM
     simulationBox
 )
 
+target_compile_definitions(QM
+    PUBLIC
+    _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
+)
+
 install(TARGETS QM
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

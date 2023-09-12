@@ -68,9 +68,9 @@ namespace engine
 
         // Engine &operator=(const Engine &);
 
-        void         run();
+        virtual void run();
         virtual void takeStep(){};
-        void         writeOutput();
+        virtual void writeOutput();
 
         [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
         [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }

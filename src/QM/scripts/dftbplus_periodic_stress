@@ -1,0 +1,240 @@
+#!/usr/bin/perl
+#
+#  calc_forces.dftbplus 
+#
+#  Interface between QMCFC and DFTB+
+
+use strict;
+
+# script's name
+my $progname = $0;
+$progname =~ s{^.*/}{};
+
+# input data from the QMCFC programm
+my $charge             = $ARGV[0];             # charge of the qm region
+my $changed            = $ARGV[1];             # flag if define has to be run
+my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
+my $pointcharges       = $ARGV[3];             # pointcharge scheme
+my $nprocessors        = $ARGV[4];             # number of processors
+
+# various variables
+my @line;                                      # helper variable
+my $flag = undef;                              # helper variable
+my $start_flag         = "";                   # helper variable
+my $stop_flag          = "";                   # helper variable
+my $energy;                                    # QM energy
+my $control_contents   = "";                   # helper variable - control file modifications
+my $gaussian_out       = "";                   # output of define, dscf, and grad
+my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
+  '\s+iterations';		               # energy search string
+
+
+# files and commands
+my $dftb_exe          = "dftb+";             # executable
+my $dftb_chrg         = "charges.bin";       # resutl file: converged charges of all qm atoms
+my $dftb_template     = "dftb_in.template";  # required before you start
+my $dftb_input        = "dftb_in.hsd";       # dftb input file
+my $dftb_out          = "dftb.out";          # dftb output file
+my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
+
+my $qm_forces          = "qm_forces";           # result file: energy plus forces of all qm atoms
+my $qm_charges         = "qm_charges";          # restul file: partial charges of all qm atoms
+my $mm_forces          = "mm_forces";           # result file: forces of all mm atoms 
+my $stress_tensor_file = "stress_tensor";       # result file: stress tensor 
+my $stress_tensor_file_mat = "stress_tensor_mat";       # result file: stress tensor 
+
+my $qm_coords             = "coord";               # coordinates
+my $qm_coords_prev        = "coord.prev";          # coordinates previous step
+my $mm_pointcharges       = "mm_pointcharges";     # mm_pointcharges
+
+my $energy_found          = 0;                     # energy  control flag
+my $forces_found          = 0;                     # forces  control flag
+my $charges_found         = 0;                     # charges control flag
+my $stress_tensor_found   = 0;                     # stress-tensor control flag
+
+my $n_pc                  = 0;                     # charges control flag
+my $n_fields              = 0;
+
+`cat header coord > geom.gen`;   
+
+# count number of mm pointcharges
+open (MM_PC, "< $mm_pointcharges") or
+      die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
+
+while (<MM_PC>) 
+{
+   $n_pc ++;
+}
+
+close (MM_PC);
+
+
+# check if molecules have been exchanged between QM and MM region
+if ($changed == 1)
+{
+  # remove charges.bin   
+  unlink $dftb_chrg;
+   
+# create dftb_in.hsd from template  
+# and insert QM charge and GUESS FLAG
+  open (DFTB_TEMPLATE, "< $dftb_template") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
+
+  open (DFTB_IN, "> $dftb_input") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+
+  while (<DFTB_TEMPLATE>) 
+  {
+     s{__GUESS__}{ReadInitialCharges = No};  
+     s{__CHARGE__}{$charge};
+     s{__N_PC__}{$n_pc};
+     print DFTB_IN;
+  }
+
+  close (DFTB_TEMPLATE);
+  close (DFTB_IN);  
+}
+else
+{
+
+# create dftb_in.hsd from template  
+# and insert QM charge and GUESS FLAG
+  open (DFTB_TEMPLATE, "< $dftb_template") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
+
+  open (DFTB_IN, "> $dftb_input") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+
+  while (<DFTB_TEMPLATE>) 
+  {  
+    s{__GUESS__}{ReadInitialCharges = Yes};      
+    s{__CHARGE__}{$charge};
+    s{__N_PC__}{$n_pc};
+    print DFTB_IN;
+  }
+
+  close (DFTB_TEMPLATE);
+  close (DFTB_IN);
+}
+
+
+# execute dftb
+`dftb+ > run.out`;
+`mv detailed.out $dftb_out`;
+
+# extract energy and forces from Gaussian output and write forces to file
+
+open (DFTB_OUT, "< $dftb_out") or
+  die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
+
+open (FORCES, "> $qm_forces") or
+  die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+
+open (CHARGES, "> $qm_charges") or 
+  die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
+   
+open (MM_FORCES, "> $mm_forces") or
+  die "\n\n\t (-) $progname: Error opening file '$mm_forces'\n";
+
+open (STRESS_TENSOR, "> $stress_tensor_file") or
+  die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
+
+while (<DFTB_OUT>) 
+{
+  # extract energy
+
+    if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/) 
+    {
+      printf FORCES ("%20.9f\n", $1);
+      $energy_found = 1;
+    }
+
+    # extract forces
+    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)  
+    {
+      if (/^\s+-*\d/) 
+      {
+        @line = split;
+        $n_fields = scalar( @line  ) - 3;
+
+        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);      
+        $forces_found = 1;
+      }
+    }
+
+  # extract charges  
+  if ( (/^\s*Atom       Net charge/  .. /^\s*COMPONENT/ ) || (/^\s*Atomic gross charges/ .. /^\s*COMPONENT/) )
+  {
+    if (/^\s+\d+\s+/) 
+      {
+        @line = split;
+	printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]); 
+	$charges_found = 1;
+      }
+  }
+
+  # extract mm_forces
+  if (/^\s*Forces on external charges/ .. /^\s*Volume:/ ) 
+  {
+    if (/^\s+-*\d/)  
+      {
+        @line = split;
+	printf MM_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);       
+	$charges_found = 1;
+      }
+  }
+  
+  # extract stress tensor
+  if (/^\s*Total stress tensor/ .. /^\s*Total lattice derivs/ ) 
+  {
+    if (/^\s+-*\d/)  
+      {
+        @line = split;
+	printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
+	$stress_tensor_found = 1;
+      }
+  }  
+  
+}
+  
+  close (DFTB_OUT);   
+  close (FORCES);   
+  close (CHARGES);   
+  close (MM_FORCES);
+  close (STRESS_TENSOR);
+
+#`mv $stress_tensor_file $stress_tensor_file_mat`;
+#`julia /home/jag/qmcfc_dissociative_dev_20210111/scripts/diagonalize_stresstensor.jl $stress_tensor_file_mat`;
+
+# create the "log-file" for the last run
+`mv $dftb_out  $dftb_out_prev`;
+`mv $qm_coords $qm_coords_prev`;
+
+exit;
+
+if ($energy_found != 1)
+{
+     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+     printf("\n\t     QM energy has not been read!");
+}
+
+if ($forces_found != 1)
+{
+     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out$.");
+     printf("\n\t     QM forces have not been read!");
+}
+     
+if ($charges_found != 1)
+{
+     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+     printf("\n\t     QM charges have not been read!");     
+}     
+
+if ($stress_tensor_found != 1)
+{
+     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+     printf("\n\t     Stress tensor has not been read!");     
+} 
+     
+exit 0;
+

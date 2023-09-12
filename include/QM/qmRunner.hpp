@@ -2,6 +2,10 @@
 
 #define _QM_RUNNER_HPP_
 
+#define SCRIPT_PATH_ _SCRIPT_PATH_
+
+#include <string>
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -17,10 +21,15 @@ namespace QM
      */
     class QMRunner
     {
+      protected:
+        const std::string _scriptPath = SCRIPT_PATH_;
+
       public:
         virtual ~QMRunner() = default;
 
+        void         run(simulationBox::SimulationBox &);
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
+        virtual void execute()                                       = 0;
     };
 }   // namespace QM
 

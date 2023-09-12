@@ -12,6 +12,7 @@
 #include "inputFileParserManostat.hpp"           // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCoulomb
 #include "inputFileParserOutput.hpp"             // for InputFileParserOutput
+#include "inputFileParserQM.hpp"                 // for InputFileParserQM
 #include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetKinetics
 #include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimulationBox
 #include "inputFileParserThermostat.hpp"         // for InputFileParserThermostat
@@ -54,6 +55,7 @@ InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engin
     _parsers.push_back(std::make_unique<InputFileParserThermostat>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserTimings>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserVirial>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
 
     addKeywords();
 }

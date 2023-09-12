@@ -22,7 +22,13 @@ namespace engine
         std::unique_ptr<QM::QMRunner> _qmRunner = nullptr;
 
       public:
-        void takeStep() override {}
+        void takeStep() override;
+
+        template <typename T>
+        void setQMRunner(T runner)
+        {
+            _qmRunner = std::make_unique<T>(runner);
+        }
     };
 
 }   // namespace engine

@@ -10,6 +10,7 @@ add_library(inputFileParser
     inputFileParserManostat.cpp
     inputFileParserNonCoulomb.cpp
     inputFileParserOutput.cpp
+    inputFileParserQM.cpp
     inputFileParserResetKinetics.cpp
     inputFileParserSimulationBox.cpp
     inputFileParserThermostat.cpp
