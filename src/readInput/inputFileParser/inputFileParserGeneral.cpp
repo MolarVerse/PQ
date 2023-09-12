@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "mmmdEngine.hpp"   // for MMMDEngine
+#include "qmmdEngine.hpp"   // for QMMDEngine
 #include "settings.hpp"     // for Settings
 
 #include <format>       // for format
@@ -32,6 +33,7 @@ void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, cons
  *
  * @details Possible options are:
  * 1) mm-md
+ * 2) qm-md
  *
  * @param lineElements
  * @param lineNumber
@@ -47,9 +49,16 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     if (lineElements[2] == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
+        settings::Settings::setIsMM(true);
         engine.reset(new engine::MMMDEngine());
+    }
+    else if (lineElements[2] == "qm-md")
+    {
+        settings::Settings::setJobtype("QMMD");
+        settings::Settings::setIsQM(true);
+        engine.reset(new engine::QMMDEngine());
     }
     else
         throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md", lineElements[2]));
+            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md", lineElements[2]));
 }

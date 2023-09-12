@@ -71,8 +71,8 @@ namespace simulationBox
         void calculateDegreesOfFreedom();
         void calculateCenterOfMassMolecules();
 
-        [[nodiscard]] bool   moleculeTypeExists(const size_t) const;
-        [[nodiscard]] size_t getNumberOfAtoms() const;
+        [[nodiscard]] bool                     moleculeTypeExists(const size_t) const;
+        [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule>       findMolecule(const size_t moleculeType);
         [[nodiscard]] MoleculeType                 &findMoleculeType(const size_t moleculeType);
@@ -101,9 +101,13 @@ namespace simulationBox
         [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
         [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
         [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
+        [[nodiscard]] size_t getNumberOfAtoms() const { return _atoms.size(); }
+        [[nodiscard]] size_t getNumberOfQMAtoms() const { return _qmAtoms.size(); }
 
-        [[nodiscard]] Molecule     &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
-        [[nodiscard]] MoleculeType &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
+        [[nodiscard]] Atom         &getAtom(const size_t index) { return *(_atoms[index]); }
+        [[nodiscard]] Atom         &getQMAtom(const size_t index) { return *(_qmAtoms[index]); }
+        [[nodiscard]] Molecule     &getMolecule(const size_t index) { return _molecules[index]; }
+        [[nodiscard]] MoleculeType &getMoleculeType(const size_t index) { return _moleculeTypes[index]; }
 
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms() { return _atoms; }
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms() { return _qmAtoms; }

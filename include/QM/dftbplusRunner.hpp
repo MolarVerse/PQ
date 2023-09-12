@@ -1,0 +1,27 @@
+#ifndef _DFTBPLUS_RUNNER_HPP_
+
+#define _DFTBPLUS_RUNNER_HPP_
+
+#include "qmRunner.hpp"   // for QMRunner
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+namespace QM
+{
+    /**
+     * @class DFTBPlusRunner
+     *
+     * @brief class for running DFTB+ inheriting from QMRunner
+     *
+     */
+    class DFTBPlusRunner : public QMRunner
+    {
+      public:
+        void writeCoordsFile(simulationBox::SimulationBox &) override;
+    };
+}   // namespace QM
+
+#endif   // _DFTBPLUS_RUNNER_HPP_

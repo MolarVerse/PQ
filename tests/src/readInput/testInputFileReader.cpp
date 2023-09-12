@@ -9,6 +9,7 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Message, TestPartResult
 #include <map>             // for map
+#include <memory>          // for unique_ptr
 #include <sstream>         // for basic_istringstream
 #include <vector>          // for vector, _Bit_iterator, _Bit_reference
 

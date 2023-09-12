@@ -6,17 +6,9 @@
 #include <format>      // for format
 #include <numeric>     // for accumulate
 
-using namespace simulationBox;
-
-/**
- * @brief calculates the number of atoms of all molecules in the simulation box
- */
-size_t SimulationBox::getNumberOfAtoms() const
-{
-    auto accumulateFunc = [](const size_t sum, const Molecule &molecule) { return sum + molecule.getNumberOfAtoms(); };
-
-    return accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc);
-}
+using simulationBox::Molecule;
+using simulationBox::MoleculeType;
+using simulationBox::SimulationBox;
 
 /**
  * @brief finds molecule by moleculeType if (size_t)
@@ -257,4 +249,22 @@ void SimulationBox::checkCoulombRadiusCutOff(customException::ExceptionType exce
         else
             throw customException::UserInputException(message);
     }
+}
+
+/**
+ * @brief return all unique qm atom names
+ *
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
+{
+    std::vector<std::string> uniqueQMAtomNames;
+
+    std::ranges::transform(_qmAtoms, std::back_inserter(uniqueQMAtomNames), [](const auto &atom) { return atom->getName(); });
+    std::ranges::sort(uniqueQMAtomNames);
+    const auto [first, last] = std::ranges::unique(uniqueQMAtomNames);
+
+    uniqueQMAtomNames.erase(first, last);
+
+    return uniqueQMAtomNames;
 }

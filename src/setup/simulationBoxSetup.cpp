@@ -51,7 +51,7 @@ void setup::setupSimulationBox(engine::Engine &engine)
  * 7) check if box dimensions and density are set
  * 8) check if cutoff radius is larger than half of the minimal box dimension
  *
- * @TODO: rewrtie doc
+ * @TODO: rewrite doc
  *
  */
 void SimulationBoxSetup::setup()
@@ -88,10 +88,13 @@ void SimulationBoxSetup::setAtomNames()
     };
 
     std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setAtomNamesOfMolecule);
+
+    std::ranges::for_each(_engine.getSimulationBox().getAtoms(),
+                          [](auto &atom) { atom->setName(utilities::firstLetterToUpperCaseCopy(atom->getName())); });
 }
 
 /**
- * @brief set all external and internal atomtypes for _atoms from _moleculeTypes
+ * @brief set all external and internal atom types for _atoms from _moleculeTypes
  *
  */
 void SimulationBoxSetup::setAtomTypes()
@@ -212,10 +215,11 @@ void SimulationBoxSetup::calculateTotalMass()
 {
     const auto &molecules = _engine.getSimulationBox().getMolecules();
 
-    const double totalMass = std::accumulate(molecules.begin(),
-                                             molecules.end(),
-                                             0.0,
-                                             [](double sum, const Molecule &molecule) { return sum + molecule.getMolMass(); });
+    const double totalMass =
+        std::accumulate(molecules.begin(),
+                        molecules.end(),
+                        0.0,
+                        [](const double sum, const Molecule &molecule) { return sum + molecule.getMolMass(); });
 
     _engine.getSimulationBox().setTotalMass(totalMass);
 }

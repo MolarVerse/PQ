@@ -68,6 +68,19 @@ TEST(TestStringUtilities, toLowerCopy)
 }
 
 /**
+ * @brief test firstLetterToUpperCaseCopy function
+ *
+ */
+TEST(TestStringUtilities, firstLetterToUpperCaseCopy)
+{
+    std::string line = "TEST";
+    EXPECT_EQ("Test", utilities::firstLetterToUpperCaseCopy(line));
+
+    line = "test";
+    EXPECT_EQ("Test", utilities::firstLetterToUpperCaseCopy(line));
+}
+
+/**
  * @brief test check if file exists
  *
  */

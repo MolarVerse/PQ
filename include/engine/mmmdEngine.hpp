@@ -8,7 +8,7 @@ namespace engine
 {
 
     /**
-     * @class MmmdEngine
+     * @class MMMDEngine
      *
      * @brief Contains all the information needed to run an MM MD simulation
      *
@@ -16,9 +16,6 @@ namespace engine
     class MMMDEngine : public Engine
     {
       public:
-        MMMDEngine()  = default;
-        ~MMMDEngine() = default;
-
         void takeStep() override;
     };
 

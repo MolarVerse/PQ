@@ -59,6 +59,11 @@ class TestSimulationBox : public ::testing::Test
 
         _simulationBox->addMoleculeType(moleculeType1);
         _simulationBox->addMoleculeType(moleculeType2);
+        _simulationBox->addAtom(atom1);
+        _simulationBox->addAtom(atom2);
+        _simulationBox->addAtom(atom3);
+        _simulationBox->addAtom(atom4);
+        _simulationBox->addAtom(atom5);
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
     }

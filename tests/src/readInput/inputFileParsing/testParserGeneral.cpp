@@ -3,6 +3,7 @@
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
 #include "mmmdEngine.hpp"               // for MMMDEngine
+#include "qmmdEngine.hpp"               // for QMMDEngine
 #include "settings.hpp"                 // for Settings
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
@@ -28,12 +29,19 @@ TEST_F(TestInputFileReader, JobType)
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");
+    EXPECT_EQ(settings::Settings::getIsMM(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::MMMDEngine));
+
+    lineElements = {"jobtype", "=", "qm-md"};
+    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    EXPECT_EQ(settings::Settings::getJobtype(), "QMMD");
+    EXPECT_EQ(settings::Settings::getIsQM(), true);
+    EXPECT_EQ(typeid(*engine), typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseJobTypeForEngine(lineElements, 0, engine),
                      customException::InputFileException,
-                     "Invalid jobtype \"notValid\" in input file - possible values are: mm-md");
+                     "Invalid jobtype \"notValid\" in input file - possible values are: mm-md, qm-md");
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 }
