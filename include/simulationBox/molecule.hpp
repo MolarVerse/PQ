@@ -53,49 +53,38 @@ namespace simulationBox
 
         // TODO: check if these are really necessary
 
-        [[nodiscard]] std::string getAtomName(const size_t index) const { return _atoms[index]->getName(); }
+        [[nodiscard]] std::string getAtomName(c_ul index) const { return _atoms[index]->getName(); }
 
-        void setAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _atoms[index]->setPosition(position); }
-        void setAtomVelocity(const size_t index, const linearAlgebra::Vec3D &velocity) { _atoms[index]->setVelocity(velocity); }
-        void setAtomForce(const size_t index, const linearAlgebra::Vec3D &force) { _atoms[index]->setForce(force); }
-        void setAtomShiftForce(const size_t index, const linearAlgebra::Vec3D &shiftForce)
-        {
-            _atoms[index]->setShiftForce(shiftForce);
-        }
+        void setAtomPosition(c_ul index, const linearAlgebra::Vec3D &position) { _atoms[index]->setPosition(position); }
+        void setAtomVelocity(c_ul index, const linearAlgebra::Vec3D &velocity) { _atoms[index]->setVelocity(velocity); }
+        void setAtomForce(c_ul index, const linearAlgebra::Vec3D &force) { _atoms[index]->setForce(force); }
+        void setAtomShiftForce(c_ul index, const linearAlgebra::Vec3D &shiftForce) { _atoms[index]->setShiftForce(shiftForce); }
 
         void setAtomForcesToZero()
         {
-            std::ranges::for_each(_atoms, [](auto atom) { atom->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0)); });
+            std::ranges::for_each(_atoms, [](auto atom) { atom->setForce({0.0, 0.0, 0.0}); });
         }
 
-        void addAtomPosition(const size_t index, const linearAlgebra::Vec3D &position) { _atoms[index]->addPosition(position); }
-        void addAtomVelocity(const size_t index, const linearAlgebra::Vec3D &velocity) { _atoms[index]->addVelocity(velocity); }
-        void addAtomForce(const size_t index, const linearAlgebra::Vec3D &force) { _atoms[index]->addForce(force); }
-        void addAtomShiftForce(const size_t index, const linearAlgebra::Vec3D &shiftForce)
-        {
-            _atoms[index]->addShiftForce(shiftForce);
-        }
+        void addAtomPosition(c_ul index, const linearAlgebra::Vec3D &position) { _atoms[index]->addPosition(position); }
+        void addAtomVelocity(c_ul index, const linearAlgebra::Vec3D &velocity) { _atoms[index]->addVelocity(velocity); }
+        void addAtomForce(c_ul index, const linearAlgebra::Vec3D &force) { _atoms[index]->addForce(force); }
+        void addAtomShiftForce(c_ul index, const linearAlgebra::Vec3D &shiftForce) { _atoms[index]->addShiftForce(shiftForce); }
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(const size_t index) const { return _atoms[index]->getPosition(); }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(const size_t index) const { return _atoms[index]->getVelocity(); }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(const size_t index) const { return _atoms[index]->getForce(); }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(const size_t index) const { return _atoms[index]->getShiftForce(); }
+        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(c_ul index) const { return _atoms[index]->getPosition(); }
+        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(c_ul index) const { return _atoms[index]->getVelocity(); }
+        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(c_ul index) const { return _atoms[index]->getForce(); }
+        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(c_ul index) const { return _atoms[index]->getShiftForce(); }
 
-        [[nodiscard]] int    getAtomicNumber(const size_t index) const { return _atoms[index]->getAtomicNumber(); }
-        [[nodiscard]] double getAtomMass(const size_t index) const { return _atoms[index]->getMass(); }
-        [[nodiscard]] double getPartialCharge(const size_t index) const { return _atoms[index]->getPartialCharge(); }
-        [[nodiscard]] size_t getAtomType(const size_t index) const { return _atoms[index]->getAtomType(); }
-        [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const
-        {
-            return _atoms[index]->getInternalGlobalVDWType();
-        }
+        [[nodiscard]] int    getAtomicNumber(c_ul index) const { return _atoms[index]->getAtomicNumber(); }
+        [[nodiscard]] double getAtomMass(c_ul index) const { return _atoms[index]->getMass(); }
+        [[nodiscard]] double getPartialCharge(c_ul index) const { return _atoms[index]->getPartialCharge(); }
+        [[nodiscard]] size_t getAtomType(c_ul index) const { return _atoms[index]->getAtomType(); }
+        [[nodiscard]] size_t getInternalGlobalVDWType(c_ul index) const { return _atoms[index]->getInternalGlobalVDWType(); }
 
         void setPartialCharges(const std::vector<double> &partialCharges)
         {
             for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-            {
                 _atoms[i]->setPartialCharge(partialCharges[i]);
-            }
         }
 
         [[nodiscard]] std::vector<double> getPartialCharges() const
@@ -103,9 +92,7 @@ namespace simulationBox
             std::vector<double> partialCharges(getNumberOfAtoms());
 
             for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-            {
                 partialCharges[i] = _atoms[i]->getPartialCharge();
-            }
 
             return partialCharges;
         }
@@ -115,9 +102,7 @@ namespace simulationBox
             std::vector<double> atomMasses(getNumberOfAtoms());
 
             for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-            {
                 atomMasses[i] = _atoms[i]->getMass();
-            }
 
             return atomMasses;
         }
@@ -127,9 +112,7 @@ namespace simulationBox
             std::vector<size_t> externalGlobalVDWTypes(getNumberOfAtoms());
 
             for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-            {
                 externalGlobalVDWTypes[i] = _atoms[i]->getExternalGlobalVDWType();
-            }
 
             return externalGlobalVDWTypes;
         }
@@ -147,7 +130,7 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        [[nodiscard]] Atom                              &getAtom(const size_t index) { return *(_atoms[index]); }
+        [[nodiscard]] Atom                              &getAtom(c_ul index) { return *(_atoms[index]); }
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> getAtoms() { return _atoms; }
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
@@ -156,7 +139,7 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setNumberOfAtoms(const size_t numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
+        void setNumberOfAtoms(c_ul numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
 
         void setName(const std::string_view name) { _name = name; }
         void setMoltype(c_ul moltype) { _moltype = moltype; }
