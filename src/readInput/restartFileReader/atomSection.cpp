@@ -4,6 +4,7 @@
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
+#include "moleculeType.hpp"      // for MoleculeType
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 

@@ -5,7 +5,6 @@
 #include "exceptions.hpp"           // for InputFileException
 #include "thermostat.hpp"           // for BerendsenThermostat, Thermostat, thermostat
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "timingsSettings.hpp"      // for TimingsSettings
 
 #include <format>   // for format
 #include <string>   // for operator==

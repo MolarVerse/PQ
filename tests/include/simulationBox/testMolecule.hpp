@@ -2,12 +2,12 @@
 
 #define _TEST_MOLECULE_HPP_
 
+#include "atom.hpp"       // for Atom
 #include "molecule.hpp"   // for Molecule
 #include "vector3d.hpp"   // for Vec3D
 
-#include <algorithm>       // for copy
-#include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
 
 class TestMolecule : public ::testing::Test
 {

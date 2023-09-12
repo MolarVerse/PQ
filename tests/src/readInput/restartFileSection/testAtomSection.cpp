@@ -3,16 +3,18 @@
 #include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for RstFileException, customException
 #include "molecule.hpp"                 // for Molecule
-#include "restartFileSection.hpp"       // for RstFileSection, AtomSection, readI...
+#include "moleculeType.hpp"             // for MoleculeType
+#include "restartFileSection.hpp"       // for RstFileSection, AtomSection
 #include "simulationBox.hpp"            // for SimulationBox
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
-#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatte...
-#include "gtest/gtest.h"   // for Message, TestPartResult, Assertion...
+#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cstddef>         // for size_t
 #include <fstream>         // for ifstream, std
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <memory>          // for shared_ptr, __shared_ptr_access
 #include <string>          // for string, stod, allocator, basic_string
 #include <vector>          // for vector
 

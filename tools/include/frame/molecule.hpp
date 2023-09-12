@@ -2,9 +2,15 @@
 
 #define _MOLECULE_HPP_
 
-#include "atom.hpp"
+#include "vector3d.hpp"   // for Vec3D
 
+#include <cstddef>   // for size_t
 #include <vector>
+
+namespace frameTools
+{
+    class Atom;   // forward declaration
+}
 
 namespace frameTools
 {

@@ -1,5 +1,6 @@
 #include "testCelllist.hpp"
 
+#include "atom.hpp"               // for Atom
 #include "cell.hpp"               // for Cell
 #include "exceptions.hpp"         // for CellListException
 #include "molecule.hpp"           // for Molecule
@@ -8,6 +9,7 @@
 #include "vector3d.hpp"           // for Vec3Dul, Vec3D, Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <memory>          // for make_shared, __shared_ptr_access
 #include <string>          // for allocator, basic_string
 #include <vector>          // for vector
 

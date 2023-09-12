@@ -1,6 +1,5 @@
 #include "inputFileReader.hpp"
 
-#include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParserCellList.hpp"           // for InputFileParserCellList
 #include "inputFileParserConstraints.hpp"        // for InputFileParserConstraints
@@ -26,6 +25,11 @@
 #include <map>         // for map, operator==
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
 
 using namespace readInput;
 

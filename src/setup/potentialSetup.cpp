@@ -8,14 +8,13 @@
 #include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "nonCoulombPair.hpp"            // for NonCoulombPair
+#include "nonCoulombPair.hpp"            // IWYU pragma: keep for NonCoulombPair
 #include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, __sort_fn
-#include <cstddef>       // for size_t
 #include <functional>    // for identity
 #include <memory>        // for swap, shared_ptr, __shared_ptr_access
 #include <string>        // for operator==

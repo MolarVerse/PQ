@@ -2,10 +2,10 @@
 
 #include "celllistSetup.hpp"
 #include "constraintsSetup.hpp"
+#include "engine.hpp"
 #include "forceFieldSetup.hpp"
 #include "guffDatReader.hpp"
 #include "inputFileReader.hpp"
-#include "integratorSetup.hpp"
 #include "intraNonBondedReader.hpp"
 #include "intraNonBondedSetup.hpp"
 #include "manostatSetup.hpp"
@@ -22,11 +22,6 @@
 #include "topologyReader.hpp"
 
 #include <iostream>
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
 
 using namespace engine;
 using namespace readInput;

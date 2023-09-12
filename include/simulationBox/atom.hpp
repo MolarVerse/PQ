@@ -4,7 +4,9 @@
 
 #include "vector3d.hpp"   // for Vec3D
 
-#include <string>   // for string
+#include <cstddef>       // for size_t
+#include <string>        // for string
+#include <string_view>   // for string_view
 
 namespace simulationBox
 {

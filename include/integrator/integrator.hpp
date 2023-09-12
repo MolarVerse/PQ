@@ -2,14 +2,12 @@
 
 #define _INTEGRATOR_HPP_
 
-#include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
 
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
     class Atom;            // forward declaration
 }   // namespace simulationBox
 

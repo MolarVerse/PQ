@@ -1,5 +1,6 @@
 #include "inputFileParserGeneral.hpp"
 
+#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "mmmdEngine.hpp"   // for MMMDEngine
 #include "qmmdEngine.hpp"   // for QMMDEngine

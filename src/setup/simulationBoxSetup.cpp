@@ -1,8 +1,8 @@
 #include "simulationBoxSetup.hpp"
 
+#include "atom.hpp"                    // for Atom
 #include "atomMassMap.hpp"             // for atomMassMap
 #include "atomNumberMap.hpp"           // for atomNumberMap
-#include "cell.hpp"                    // for simulationBox
 #include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException, UserInputException, InputFileException

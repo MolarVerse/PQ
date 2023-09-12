@@ -2,11 +2,14 @@
 
 #define _TEST_SIMULATION_BOX_HPP_
 
+#include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
+#include "moleculeType.hpp"    // for MoleculeType
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for make_shared, __shared_ptr_access, share...
 
 class TestSimulationBox : public ::testing::Test
 {

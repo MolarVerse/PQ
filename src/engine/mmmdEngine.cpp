@@ -1,11 +1,19 @@
 #include "mmmdEngine.hpp"
 
-#include "constants.hpp"         // for _FS_TO_PS_
-#include "logOutput.hpp"         // for LogOutput
-#include "output.hpp"            // for Output
-#include "progressbar.hpp"       // for progressbar
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "celllist.hpp"          // for CellList
+#include "constraints.hpp"       // for Constraints
+#include "engineOutput.hpp"      // for engine
+#include "forceFieldClass.hpp"   // for ForceField
+#include "integrator.hpp"        // for Integrator
+#include "intraNonBonded.hpp"    // for IntraNonBonded
+#include "manostat.hpp"          // for Manostat
+#include "physicalData.hpp"      // for PhysicalData
+#include "potential.hpp"         // for Potential
+#include "resetKinetics.hpp"     // for ResetKinetics
+#include "thermostat.hpp"        // for Thermostat
+#include "virial.hpp"            // for Virial
+
+#include <memory>   // for unique_ptr
 
 using namespace engine;
 

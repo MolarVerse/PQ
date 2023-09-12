@@ -2,8 +2,9 @@
 
 #define _QM_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
+#include <cstddef>       // for size_t
+#include <string>        // for string
+#include <string_view>   // for string_view
 
 namespace settings
 {

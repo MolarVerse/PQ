@@ -1,7 +1,7 @@
 #include "integrator.hpp"
 
+#include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
-#include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for operator*, Vector3D
@@ -64,7 +64,7 @@ void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
 
     const auto box = simBox.getBoxDimensions();
 
-    auto calculateCOM = [this, &box](auto &molecule)
+    auto calculateCOM = [&box](auto &molecule)
     {
         molecule.calculateCenterOfMass(box);
         molecule.setAtomForcesToZero();

@@ -1,7 +1,6 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <vector>          // for allocator, vector
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {

@@ -1,9 +1,11 @@
 #include "qmSetup.hpp"
 
-#include "dftbplusRunner.hpp"
-#include "exceptions.hpp"
-#include "qmSettings.hpp"
-#include "qmmdEngine.hpp"
+#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "exceptions.hpp"       // for InputFileException
+#include "qmSettings.hpp"       // for QMMethod, QMSettings
+#include "qmmdEngine.hpp"       // for QMMDEngine
+
+#include <string_view>   // for string_view
 
 using setup::QMSetup;
 

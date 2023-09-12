@@ -1,10 +1,16 @@
 #include "dftbplusRunner.hpp"
 
+#include "atom.hpp"            // for Atom
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
-#include <format>    // for format
-#include <fstream>   // for ofstream
-#include <string>    // for string
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <fstream>      // for ofstream
+#include <functional>   // for identity
+#include <ranges>       // for borrowed_iterator_t, __distance_fn
+#include <string>       // for string
+#include <vector>       // for vector
 
 using QM::DFTBPlusRunner;
 

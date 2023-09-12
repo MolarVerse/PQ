@@ -2,14 +2,14 @@
 
 #define _CONFIGURATION_READER_HPP_
 
-#include "extxyzReader.hpp"
-#include "frame.hpp"
-#include "vector3d.hpp"
+#include "extxyzReader.hpp"   // for ExtxyzReader
+#include "frame.hpp"          // for Frame
+#include "vector3d.hpp"       // for fabs, Vec3D, Vector3D
 
-#include <fstream>
-#include <optional>
-#include <string>
-#include <vector>
+#include <cstddef>   // for size_t
+#include <fstream>   // for fstream
+#include <string>    // for string
+#include <vector>    // for vector
 
 class ConfigurationReader
 {

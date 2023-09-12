@@ -6,10 +6,11 @@
 #include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <algorithm>       // for max
 #include <cstddef>         // for size_t
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr o...
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 #include <map>             // for map
-#include <memory>          // for make_shared, shared_ptr, __share...
+#include <memory>          // for make_shared, shared_ptr
 #include <optional>        // for optional, nullopt
 #include <vector>          // for vector
 
