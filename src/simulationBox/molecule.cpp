@@ -67,23 +67,3 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
 
     std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
 }
-
-/**
- * @brief scales the velocities of the molecule with a multiplicative factor
- *
- * @param scaleFactor
- */
-void Molecule::scaleVelocities(const double scaleFactor)
-{
-    std::ranges::for_each(_atoms, [scaleFactor](auto atom) { atom->scaleVelocity(scaleFactor); });
-}
-
-/**
- * @brief corrects the velocities of the molecule by a given shift vector
- *
- * @param correction
- */
-void Molecule::correctVelocities(const linearAlgebra::Vec3D &correction)
-{
-    std::ranges::for_each(_atoms, [correction](auto atom) { atom->addVelocity(-correction); });
-}

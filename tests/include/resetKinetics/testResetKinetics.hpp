@@ -51,6 +51,9 @@ class TestResetKinetics : public ::testing::Test
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
+        _simulationBox->addAtom(atom1);
+        _simulationBox->addAtom(atom2);
+        _simulationBox->addAtom(atom3);
         _simulationBox->setTotalMass(3.0);
     }
 

@@ -1,14 +1,13 @@
 #include "../include/readInput/commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"                                 // for Engine
-#include "inputFileReader.hpp"                        // for InputFileReader
-#include "mmmdEngine.hpp"                             // for MMMDEngine
-#include "setup.hpp"                                  // for setupSimulation, setup
+#include "inputFileReader.hpp"                        // for readJobType
+#include "setup.hpp"                                  // for setupSimulation
 
 #include <cstdlib>     // for EXIT_SUCCESS
 #include <exception>   // for exception
-#include <iostream>    // for operator<<, basic_ostream, flush
+#include <iostream>    // for operator<<
 #include <memory>      // for unique_ptr
-#include <string>      // for string
+#include <string>      // for string, char_traits
 #include <vector>      // for vector
 
 #ifdef WITH_MPI

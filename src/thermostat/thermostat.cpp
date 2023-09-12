@@ -40,8 +40,7 @@ void BerendsenThermostat::applyThermostat(simulationBox::SimulationBox &simulati
     const auto berendsenFactor =
         ::sqrt(1.0 + settings::TimingsSettings::getTimeStep() / _tau * (_targetTemperature / _temperature - 1.0));
 
-    for (auto &molecule : simulationBox.getMolecules())
-        molecule.scaleVelocities(berendsenFactor);
+    std::ranges::for_each(simulationBox.getAtoms(), [berendsenFactor](auto &atom) { atom->scaleVelocity(berendsenFactor); });
 
     physicalData.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 }

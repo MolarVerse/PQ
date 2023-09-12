@@ -2,18 +2,24 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
+#include "exceptions.hpp"                // for ParameterFileException
 #include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
+#include "moleculeType.hpp"              // for MoleculeType
+#include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
+#include "simulationBox.hpp"             // for SimulationBox
 #include "testSetup.hpp"                 // for TestSetup
-#include "throwWithMessage.hpp"          // for throwWithMessage
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <memory>          // for make_shared
+#include <stddef.h>        // for size_t
 #include <string>          // for allocator, basic_string
 
 using namespace setup;

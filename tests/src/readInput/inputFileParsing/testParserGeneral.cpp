@@ -1,3 +1,4 @@
+#include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for InputFileException
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
@@ -6,8 +7,9 @@
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
 
-#include "gtest/gtest.h"   // for Message, TestPartResult, testing
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <memory>          // for unique_ptr
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector
 

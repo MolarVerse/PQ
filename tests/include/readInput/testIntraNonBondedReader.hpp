@@ -6,7 +6,7 @@
 #include "fileSettings.hpp"           // for FileSettings
 #include "intraNonBonded.hpp"         // for IntraNonBonded
 #include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
-#include "molecule.hpp"               // for Molecule
+#include "moleculeType.hpp"           // for MoleculeType
 #include "simulationBox.hpp"          // for SimulationBox
 
 #include <gtest/gtest.h>   // for Test

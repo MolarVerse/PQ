@@ -46,8 +46,6 @@ namespace simulationBox
 
         void calculateCenterOfMass(const linearAlgebra::Vec3D &);
         void scale(const linearAlgebra::Vec3D &);
-        void scaleVelocities(const double scaleFactor);
-        void correctVelocities(const linearAlgebra::Vec3D &correction);
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
 
@@ -149,7 +147,8 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        [[nodiscard]] Atom &getAtom(const size_t index) { return *(_atoms[index]); }
+        [[nodiscard]] Atom                              &getAtom(const size_t index) { return *(_atoms[index]); }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> getAtoms() { return _atoms; }
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
 

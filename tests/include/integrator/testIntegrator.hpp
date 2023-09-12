@@ -51,6 +51,8 @@ class TestIntegrator : public ::testing::Test
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
         _box->addMolecule(*_molecule1);
+        _box->addAtom(atom1);
+        _box->addAtom(atom2);
     }
 
     virtual void TearDown()

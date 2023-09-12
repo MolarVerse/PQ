@@ -1,18 +1,20 @@
+#include "atom.hpp"                    // for Atom
 #include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_P...
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException, InputFi...
 #include "molecule.hpp"                // for Molecule
+#include "moleculeType.hpp"            // for MoleculeType
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "simulationBoxSetup.hpp"      // for SimulationBoxSetup, setupSimula...
 #include "testSetup.hpp"               // for TestSetup
 #include "vector3d.hpp"                // for Vec3D
 
-#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for cbrt
 #include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, TestI...
-#include <memory>          // for make_shared
-#include <string>          // for allocator, basic_string
+#include <memory>          // for make_shared, __shared_ptr_access
+#include <string>          // for basic_string
 #include <vector>          // for vector
 
 using namespace setup;
