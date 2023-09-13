@@ -55,7 +55,7 @@ Starting initialization...
 --------------------------------------------------------------------------------
 WARNING!
 -> Dipole printed for extended system : value printed is not well defined
-Chosen random seed:          90035389
+Chosen random seed:          96233171
 Current stacksize:           8 [Mb] (recommended: unlimited)
 WARNING!
 -> Current stacksize not set to unlimited or hard limit, which might cause
@@ -124,10 +124,10 @@ Pressure:                           -0.307434E-05 au    -0.904501E+08 Pa
 --------------------------------------------------------------------------------
 DFTB+ running times                          cpu [s]             wall clock [s]
 --------------------------------------------------------------------------------
-Pre-SCC initialisation                 +       1.49 (  1.4%)       0.16 (  0.8%)
-SCC                                    +      84.25 ( 76.4%)      18.93 ( 86.9%)
-Post-SCC processing                    +      24.55 ( 22.3%)       2.67 ( 12.3%)
+Pre-SCC initialisation                 +       1.48 (  2.0%)       0.16 (  1.0%)
+SCC                                    +      67.58 ( 92.0%)      15.66 ( 94.9%)
+Post-SCC processing                    +       4.38 (  6.0%)       0.67 (  4.0%)
 --------------------------------------------------------------------------------
 Missing                                +       0.01 (  0.0%)       0.01 (  0.0%)
-Total                                  =     110.31 (100.0%)      21.77 (100.0%)
+Total                                  =      73.44 (100.0%)      16.49 (100.0%)
 --------------------------------------------------------------------------------

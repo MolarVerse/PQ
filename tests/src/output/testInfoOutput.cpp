@@ -2,6 +2,7 @@
 #include "infoOutput.hpp"           // for InfoOutput
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
+#include "settings.hpp"             // for Settings
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -27,6 +28,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
     settings::ForceFieldSettings::deactivate();
+    settings::Settings::activateMM();
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, 0.1, *_physicalData);
@@ -43,7 +45,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     getline(file, line);
     EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
-    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                  9.00000 kcal/mol   |");
+    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
     getline(file, line);
@@ -77,6 +79,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     _physicalData->setImproperEnergy(22.0);
 
     settings::ForceFieldSettings::activate();
+    settings::Settings::activateMM();
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, 0.1, *_physicalData);
@@ -93,7 +96,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     getline(file, line);
     EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
-    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 91.00000 kcal/mol   |");
+    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 94.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
     getline(file, line);
@@ -130,6 +133,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType("Berendsen");
+    settings::Settings::activateMM();
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, 0.1, *_physicalData);
@@ -146,7 +150,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     getline(file, line);
     EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
-    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                  9.00000 kcal/mol   |");
+    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
     getline(file, line);

@@ -61,7 +61,7 @@ namespace physicalData
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
 
-        [[nodiscard]] double getPotentialEnergy() const;
+        [[nodiscard]] double getTotalEnergy() const;
 
         /********************
          * standard adders  *

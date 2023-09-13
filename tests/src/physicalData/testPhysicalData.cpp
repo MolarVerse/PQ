@@ -21,6 +21,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
     EXPECT_EQ(_physicalData->getPressure(), 4.0);
+    EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
 }
 
 /**
@@ -40,6 +41,7 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
+    EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
 }
 
 /**
@@ -127,6 +129,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
     _physicalData->setVirial(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+    _physicalData->setQMEnergy(1.0);
 
     _physicalData->reset();
 
@@ -147,13 +150,14 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
     EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
 }
 
 /**
- * @brief tests getPotentialEnergy function
+ * @brief tests getTotalEnergy function
  *
  */
-TEST_F(TestPhysicalData, getPotentialEnergy)
+TEST_F(TestPhysicalData, getTotalEnergy)
 {
     _physicalData->setCoulombEnergy(1.0);
     _physicalData->setNonCoulombEnergy(2.0);
@@ -166,7 +170,10 @@ TEST_F(TestPhysicalData, getPotentialEnergy)
     _physicalData->setDihedralEnergy(7.0);
     _physicalData->setImproperEnergy(8.0);
 
-    EXPECT_EQ(_physicalData->getPotentialEnergy(), 1.0 + 2.0 + 5.0 + 6.0 + 7.0 + 8.0);
+    _physicalData->setKineticEnergy(9.0);
+    _physicalData->setQMEnergy(10.0);
+
+    EXPECT_EQ(_physicalData->getTotalEnergy(), 1.0 + 2.0 + 5.0 + 6.0 + 7.0 + 8.0 + 9.0 + 10.0);
 }
 
 /**

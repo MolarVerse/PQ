@@ -50,13 +50,13 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     if (lineElements[2] == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
-        settings::Settings::setIsMM(true);
+        settings::Settings::activateMM();
         engine.reset(new engine::MMMDEngine());
     }
     else if (lineElements[2] == "qm-md")
     {
         settings::Settings::setJobtype("QMMD");
-        settings::Settings::setIsQM(true);
+        settings::Settings::activateQM();
         engine.reset(new engine::QMMDEngine());
     }
     else

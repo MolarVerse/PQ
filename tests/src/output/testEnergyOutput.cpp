@@ -2,6 +2,7 @@
 
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
+#include "settings.hpp"             // for Settings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <iosfwd>          // for ifstream
@@ -25,6 +26,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
     settings::ForceFieldSettings::deactivate();
+    settings::Settings::activateMM();
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, 0.1, *_physicalData);
@@ -34,7 +36,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     std::string   line;
     std::getline(file, line);
     EXPECT_EQ(line,
-              "       100\t      1.000000000000\t      2.000000000000\t      9.000000000000\t      3.000000000000\t     "
+              "       100\t      1.000000000000\t      2.000000000000\t     12.000000000000\t      3.000000000000\t     "
               "19.000000000000\t      4.000000000000\t      5.000000000000\t         6.00000e+00\t     0.10000");
 }
 
@@ -61,6 +63,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setImproperEnergy(22.0);
 
     settings::ForceFieldSettings::activate();
+    settings::Settings::activateMM();
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, 0.1, *_physicalData);
@@ -70,7 +73,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     std::string   line;
     std::getline(file, line);
     EXPECT_EQ(line,
-              "       100\t      1.000000000000\t      2.000000000000\t     91.000000000000\t      3.000000000000\t     "
+              "       100\t      1.000000000000\t      2.000000000000\t     94.000000000000\t      3.000000000000\t     "
               "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t     "
               "21.000000000000\t     22.000000000000\t         6.00000e+00\t     0.10000");
 }
@@ -97,6 +100,7 @@ TEST_F(TestEnergyOutput, manostatActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType("Berendsen");
+    settings::Settings::activateMM();
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, 0.1, *_physicalData);
@@ -106,7 +110,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     std::string   line;
     std::getline(file, line);
     EXPECT_EQ(line,
-              "       100\t      1.000000000000\t      2.000000000000\t      9.000000000000\t      3.000000000000\t     "
+              "       100\t      1.000000000000\t      2.000000000000\t     12.000000000000\t      3.000000000000\t     "
               "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t   "
               "      6.00000e+00\t     0.10000");
 }

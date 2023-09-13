@@ -80,7 +80,7 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::getIsQM())
+    if (settings::Settings::isQMActivated())
     {
         std::cout << "setup QM" << '\n';
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
@@ -101,7 +101,7 @@ void setup::setupEngine(Engine &engine)
     std::cout << "setup reset kinetics" << '\n';
     setupResetKinetics(engine);
 
-    if (settings::Settings::getIsMM())
+    if (settings::Settings::isMMActivated())
     {
         std::cout << "setup potential" << '\n';
         setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff

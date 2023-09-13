@@ -29,13 +29,13 @@ TEST_F(TestInputFileReader, JobType)
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");
-    EXPECT_EQ(settings::Settings::getIsMM(), true);
+    EXPECT_EQ(settings::Settings::isMMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(settings::Settings::getJobtype(), "QMMD");
-    EXPECT_EQ(settings::Settings::getIsQM(), true);
+    EXPECT_EQ(settings::Settings::isQMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "notValid"};

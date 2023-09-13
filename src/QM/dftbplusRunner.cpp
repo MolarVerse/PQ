@@ -21,6 +21,11 @@
 
 using QM::DFTBPlusRunner;
 
+/**
+ * @brief writes the coords file in order to run the external qm program
+ *
+ * @param box
+ */
 void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
 {
     const std::string fileName = "coords";
@@ -58,6 +63,10 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     coordsFile.close();
 }
 
+/**
+ * @brief executes the qm script of the external program
+ *
+ */
 void DFTBPlusRunner::execute()
 {
     const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
@@ -69,6 +78,12 @@ void DFTBPlusRunner::execute()
     ::system(command.c_str());
 }
 
+/**
+ * @brief reads the force file (including qm energy) and sets the forces of the atoms
+ *
+ * @param box
+ * @param physicalData
+ */
 void DFTBPlusRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     const auto forceFileName = "qm_forces";

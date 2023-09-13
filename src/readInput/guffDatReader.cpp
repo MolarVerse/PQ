@@ -75,7 +75,7 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
  */
 bool GuffDatReader::isNeeded()
 {
-    if (!settings::Settings::getIsMM())
+    if (!settings::Settings::isMMActivated())
         return false;
     else if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         return false;

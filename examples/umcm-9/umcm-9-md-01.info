@@ -2,9 +2,9 @@
 |                                  PIMD-QMCF info file                                  |
 -----------------------------------------------------------------------------------------
 |   SIMULATION TIME        10.00400 ps       TEMPERATURE           268.46582 K          |
-|   PRESSURE              662.33983 bar      E(TOT)                  0.00000 kcal/mol   |
+|   PRESSURE              662.33983 bar      E(TOT)            -680324.45007 kcal/mol   |
+|   E(QM)             -680816.60036 kcal/mol N(QM ATOMS)             0.00000            |
 |   E(KIN)                492.15029 kcal/mol E(INTRA)                0.00000 kcal/mol   |
-|   E(COUL)                 0.00000 kcal/mol E(NON-COUL)             0.00000 kcal/mol   |
-|   MOMENTUM                4.3e-12 amuA/fs  LOOPTIME               19.14474 s          |
+|   MOMENTUM                4.3e-12 amuA/fs  LOOPTIME               17.01934 s          |
 -----------------------------------------------------------------------------------------
 

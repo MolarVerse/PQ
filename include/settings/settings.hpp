@@ -18,12 +18,17 @@ namespace settings
       private:
         static inline std::string _jobtype;   // no default value
 
-        static inline bool _isMM = false;
-        static inline bool _isQM = false;
+        static inline bool _isMMActivated = false;
+        static inline bool _isQMActivated = false;
 
       public:
         Settings()  = default;
         ~Settings() = default;
+
+        static void activateMM() { _isMMActivated = true; }
+        static void activateQM() { _isQMActivated = true; }
+        static void deactivateMM() { _isMMActivated = false; }
+        static void deactivateQM() { _isQMActivated = false; }
 
         /***************************
          * standard getter methods *
@@ -31,8 +36,8 @@ namespace settings
 
         [[nodiscard]] static std::string getJobtype() { return _jobtype; }
 
-        [[nodiscard]] static bool getIsMM() { return _isMM; }
-        [[nodiscard]] static bool getIsQM() { return _isQM; }
+        [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
+        [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
 
         /***************************
          * standard setter methods *
@@ -40,8 +45,8 @@ namespace settings
 
         static void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
 
-        static void setIsMM(const bool isMM) { _isMM = isMM; }
-        static void setIsQM(const bool isQM) { _isQM = isQM; }
+        static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
+        static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
     };
 
 }   // namespace settings

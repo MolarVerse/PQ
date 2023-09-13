@@ -160,7 +160,7 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
  *
  * @return double
  */
-double PhysicalData::getPotentialEnergy() const
+double PhysicalData::getTotalEnergy() const
 {
     auto potentialEnergy = 0.0;
 
@@ -171,6 +171,10 @@ double PhysicalData::getPotentialEnergy() const
 
     potentialEnergy += _coulombEnergy;      // intra + inter
     potentialEnergy += _nonCoulombEnergy;   // intra + inter
+
+    potentialEnergy += _kineticEnergy;
+
+    potentialEnergy += _qmEnergy;
 
     return potentialEnergy;
 }
