@@ -1,3 +1,4 @@
+#include "atom.hpp"                      // for Atom
 #include "bondForceField.hpp"            // for BondForceField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
@@ -10,7 +11,6 @@
 
 #include "gmock/gmock.h"   // for DoubleNear, ElementsAre
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <algorithm>       // for min
 #include <cmath>           // for sqrt
 #include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS

@@ -12,7 +12,6 @@ add_library(nonCoulombPotential
 
 target_include_directories(nonCoulombPotential
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/potential/nonCoulomb
 )
 

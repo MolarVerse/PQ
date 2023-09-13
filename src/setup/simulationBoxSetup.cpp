@@ -80,6 +80,9 @@ void SimulationBoxSetup::setAtomNames()
 {
     auto setAtomNamesOfMolecule = [this](auto &molecule)
     {
+        if (molecule.getMoltype() == 0)
+            return;
+
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -101,6 +104,9 @@ void SimulationBoxSetup::setAtomTypes()
 {
     auto setAtomTypesOfMolecule = [this](auto &molecule)
     {
+        if (molecule.getMoltype() == 0)
+            return;
+
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -120,6 +126,9 @@ void SimulationBoxSetup::setExternalVDWTypes()
 {
     auto setExternalVDWTypesOfMolecule = [this](auto &molecule)
     {
+        if (molecule.getMoltype() == 0)
+            return;
+
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -138,6 +147,9 @@ void SimulationBoxSetup::setPartialCharges()
 {
     auto setPartialChargesOfMolecule = [this](auto &molecule)
     {
+        if (molecule.getMoltype() == 0)
+            return;
+
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {

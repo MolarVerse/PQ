@@ -1,5 +1,12 @@
 #include "trajOutput.hpp"
 
+#include "frame.hpp"      // for Frame
+#include "molecule.hpp"   // for Molecule
+#include "vector3d.hpp"   // for Vec3D, operator<<
+
+#include <ostream>   // for operator<<, basic_ostream, char_traits, flush
+#include <vector>    // for vector
+
 using namespace frameTools;
 
 void TrajOutput::write(Frame &frame)

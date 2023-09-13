@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+class AnalysisRunner;   // forward declaration
+
 using namespace std;
 
 AnalysisRunner &TrajToComInFileReader::read()

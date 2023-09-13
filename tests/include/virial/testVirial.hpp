@@ -2,6 +2,7 @@
 
 #define _TEST_VIRIAL_HPP_
 
+#include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -9,6 +10,7 @@
 #include "virial.hpp"          // for Virial
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 
 class TestVirial : public ::testing::Test
 {

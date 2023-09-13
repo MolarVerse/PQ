@@ -146,7 +146,11 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
  */
 void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
 {
-    auto atom = std::make_shared<simulationBox::Atom>();
+    auto atom     = std::make_shared<simulationBox::Atom>();
+    auto molecule = std::make_unique<simulationBox::Molecule>(0);
+
+    molecule->setName("QM");
+    molecule->setNumberOfAtoms(1);
 
     atom->setAtomTypeName(lineElements[0]);
     atom->setName(lineElements[0]);
@@ -155,8 +159,11 @@ void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simu
     atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
     atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
 
+    molecule->addAtom(atom);
+
     simBox.addAtom(atom);
     simBox.addQMAtom(atom);
+    simBox.addMolecule(*molecule);
 }
 
 /**

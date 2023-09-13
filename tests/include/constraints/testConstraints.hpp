@@ -2,6 +2,7 @@
 
 #define _TEST_CONSTRAINTS_HPP_
 
+#include "atom.hpp"             // for Atom
 #include "bondConstraint.hpp"   // for BondConstraint
 #include "constraints.hpp"      // for Constraints
 #include "molecule.hpp"         // for Molecule
@@ -9,6 +10,7 @@
 #include "vector3d.hpp"         // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 #include <vector>          // for vector
 
 /**

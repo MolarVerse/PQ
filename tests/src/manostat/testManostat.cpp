@@ -1,5 +1,6 @@
 #include "testManostat.hpp"
 
+#include "atom.hpp"               // for Atom
 #include "constants.hpp"          // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"         // for ManostatException
 #include "mathUtilities.hpp"      // for compare
@@ -10,6 +11,7 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for pow
+#include <memory>          // for make_shared, __shared_ptr_access
 #include <string>          // for string, allocator
 
 /**

@@ -2,6 +2,7 @@
 
 #define _TEST_INTEGRATOR_HPP_
 
+#include "atom.hpp"              // for Atom
 #include "integrator.hpp"        // for Integrator, VelocityVerlet
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
@@ -9,6 +10,7 @@
 #include "vector3d.hpp"          // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
 
 /**
  * class TestIntegrator

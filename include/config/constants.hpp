@@ -49,10 +49,17 @@ namespace constants
     /**
      * @brief Conversion factors for energy units
      */
-    static constexpr double _KCAL_TO_JOULE_         = 4184.0;
-    static constexpr double _JOULE_TO_KCAL_         = 1.0 / _KCAL_TO_JOULE_;
-    static constexpr double _JOULE_TO_KCAL_PER_MOL_ = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
-    static constexpr double _KCAL_PER_MOL_TO_JOULE_ = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _KCAL_TO_JOULE_            = 4184.0;
+    static constexpr double _JOULE_TO_KCAL_            = 1.0 / _KCAL_TO_JOULE_;
+    static constexpr double _JOULE_TO_KCAL_PER_MOL_    = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_PER_MOL_TO_JOULE_    = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _HARTREE_TO_KCAL_PER_MOLE_ = 627.5096080305927;
+
+    /**
+     * @brief Conversion factors for force units
+     */
+    static constexpr double _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ =
+        _HARTREE_TO_KCAL_PER_MOLE_ / _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for charge related data

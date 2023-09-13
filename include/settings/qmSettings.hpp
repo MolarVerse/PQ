@@ -36,8 +36,8 @@ namespace settings
         static void setQMMethod(const QMMethod method) { _qmMethod = method; }
         static void setQMScript(const std::string_view &script) { _qmScript = script; }
 
-        [[nodiscard]] static QMMethod getQMMethod() { return _qmMethod; }
-        [[nodiscard]] std::string     getQMScript() { return _qmScript; }
+        [[nodiscard]] static QMMethod    getQMMethod() { return _qmMethod; }
+        [[nodiscard]] static std::string getQMScript() { return _qmScript; }
     };
 }   // namespace settings
 

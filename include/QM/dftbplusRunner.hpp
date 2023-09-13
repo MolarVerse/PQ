@@ -9,6 +9,11 @@ namespace simulationBox
     class SimulationBox;   // forward declaration
 }
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
 namespace QM
 {
     /**
@@ -22,6 +27,7 @@ namespace QM
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
+        void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     };
 }   // namespace QM
 

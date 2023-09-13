@@ -1,5 +1,15 @@
 #include "qmRunner.hpp"
 
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
 using QM::QMRunner;
 
 /**
@@ -7,8 +17,9 @@ using QM::QMRunner;
  *
  * @param box
  */
-void QMRunner::run(simulationBox::SimulationBox &box)
+void QMRunner::run(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
     writeCoordsFile(box);
     execute();
+    readForceFile(box, physicalData);
 }

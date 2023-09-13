@@ -1,3 +1,4 @@
+#include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb

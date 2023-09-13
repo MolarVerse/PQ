@@ -1,10 +1,17 @@
 #include "dftbplusRunner.hpp"
 
-#include "atom.hpp"            // for Atom
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
+#include "atom.hpp"              // for Atom
+#include "constants.hpp"         // for constants
+#include "exceptions.hpp"        // for InputFileException
+#include "physicalData.hpp"      // for PhysicalData
+#include "qmSettings.hpp"        // for QMSettings
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stringUtilities.hpp"   // for fileExists
+#include "vector3d.hpp"          // for Vec3D
 
+#include <algorithm>    // for __for_each_fn, for_each
 #include <cstddef>      // for size_t
+#include <cstdlib>      // for system
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
@@ -51,4 +58,42 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     coordsFile.close();
 }
 
-void DFTBPlusRunner::execute() {}
+void DFTBPlusRunner::execute()
+{
+    const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
+
+    if (!utilities::fileExists(scriptFileName))
+        throw customException::InputFileException(std::format("DFTB+ script file \"{}\" does not exist.", scriptFileName));
+
+    const auto command = std::format("{} 0 1 0 0 0", scriptFileName);
+    ::system(command.c_str());
+}
+
+void DFTBPlusRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+{
+    const auto forceFileName = "qm_forces";
+
+    std::ifstream forceFile(forceFileName);
+
+    if (!forceFile.is_open())
+        throw customException::InputFileException(std::format("DFTB+ force file \"{}\" does not exist.", forceFileName));
+
+    double energy = 0.0;
+
+    forceFile >> energy;
+
+    physicalData.setQMEnergy(energy * constants::_HARTREE_TO_KCAL_PER_MOLE_);
+
+    auto readForces = [&forceFile](auto &atom)
+    {
+        auto grad = linearAlgebra::Vec3D();
+
+        forceFile >> grad[0] >> grad[1] >> grad[2];
+
+        atom->setForce(-grad * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
+    };
+
+    std::ranges::for_each(box.getQMAtoms(), readForces);
+
+    forceFile.close();
+}

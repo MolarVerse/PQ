@@ -11,6 +11,11 @@ namespace simulationBox
     class SimulationBox;   // forward declaration
 }
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
 namespace QM
 {
     /**
@@ -27,9 +32,10 @@ namespace QM
       public:
         virtual ~QMRunner() = default;
 
-        void         run(simulationBox::SimulationBox &);
-        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
-        virtual void execute()                                       = 0;
+        void         run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void writeCoordsFile(simulationBox::SimulationBox &)                             = 0;
+        virtual void execute()                                                                   = 0;
+        virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &) = 0;
     };
 }   // namespace QM
 

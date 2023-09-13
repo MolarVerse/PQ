@@ -2,18 +2,20 @@
 
 #define _TRAJTOCOM_INFILEREADER_HPP_
 
-#include "inputFileReader.hpp"
-#include "trajToCom.hpp"
+#include "inputFileReader.hpp"   // for InputFileReader
+#include "trajToCom.hpp"         // for TrajToCom
+
+class AnalysisRunner;   // forward declaration
 
 class TrajToComInFileReader : public InputFileReader
 {
-private:
+  private:
     TrajToCom _runner;
 
-public:
+  public:
     using InputFileReader::InputFileReader;
 
     AnalysisRunner &read() override;
 };
 
-#endif // _TRAJECTORYTOCOM_INPUTINPUTFILEREADER_HPP_
+#endif   // _TRAJECTORYTOCOM_INPUTINPUTFILEREADER_HPP_

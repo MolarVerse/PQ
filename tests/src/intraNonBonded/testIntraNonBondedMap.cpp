@@ -13,7 +13,7 @@
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cstddef>         // for size_t
-#include <gtest/gtest.h>   // for Test, EXPECT_NEAR, InitGoogle...
+#include <gtest/gtest.h>   // for Test, EXPECT_NEAR, InitGoogleTest, RUN_ALL.
 #include <memory>          // for shared_ptr, allocator
 #include <vector>          // for vector
 

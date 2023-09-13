@@ -1,5 +1,6 @@
 #include "angleForceField.hpp"           // for AngleForceField
 #include "angleType.hpp"                 // for AngleType
+#include "atom.hpp"                      // for Atom
 #include "bondForceField.hpp"            // for BondForceField
 #include "bondType.hpp"                  // for BondType
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential

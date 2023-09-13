@@ -7,7 +7,7 @@
       jobtype = qm-md; #dim = 3d;
 
     # Number of steps to be performed and timestep in fs 
-      nstep = 1; timestep = 2;
+      nstep = 2; timestep = 2;
     # nscale=100;
 
     # Output of coordinates and velocities enabled
@@ -24,7 +24,7 @@
       
     # Temperature algorithm (Berendsen), Relaxation time in ps 
     # and target temperature in K
-    # thermostat = berendsen; temp = 297.714; t_relaxation = 0.1;
+     thermostat = berendsen; temp = 297.714; t_relaxation = 0.1;
 #      thermostat = nh-chain; temp = 298.15; t_relaxation = 0.1; omega = 1000.0;
 
     # Pressure coupling algorithm
@@ -65,6 +65,7 @@
       vel_file     = umcm-9-md-01.vel;
       charge_file  = umcm-9-md-01.chrg;
       restart_file = umcm-9-md-01.rst;
+      force_file   = umcm-9-md-01.force;
       
 # end of infile
 

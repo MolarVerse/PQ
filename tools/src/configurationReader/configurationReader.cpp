@@ -2,8 +2,9 @@
 
 #include "atom.hpp"   // for Atom, frameTools
 
-#include <sstream>>    // for istringstream
+#include <sstream>     // IWYU pragma: keep
 #include <stdexcept>   // for runtime_error
+#include <stdio.h>     // for EOF
 #include <string>      // for string, getline, basic_string
 
 using namespace std;

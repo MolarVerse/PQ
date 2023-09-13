@@ -71,6 +71,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _density       += physicalData.getDensity();
     _virial        += physicalData.getVirial();
     _pressure      += physicalData.getPressure();
+
+    _qmEnergy += physicalData.getQMEnergy();
 }
 
 /**
@@ -97,6 +99,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _density     /= outputFrequency;
     _virial      /= outputFrequency;
     _pressure    /= outputFrequency;
+
+    _qmEnergy /= outputFrequency;
 }
 
 /**
@@ -122,6 +126,8 @@ void PhysicalData::reset()
     _pressure    = 0.0;
     _volume      = 0.0;
     _density     = 0.0;
+
+    _qmEnergy = 0.0;
 }
 
 /**

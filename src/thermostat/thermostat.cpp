@@ -1,12 +1,12 @@
 #include "thermostat.hpp"
 
-#include "molecule.hpp"          // for Molecule
 #include "physicalData.hpp"      // for PhysicalData
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-#include <cmath>    // for sqrt
-#include <vector>   // for vector
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <functional>   // for identity
 
 using namespace thermostat;
 

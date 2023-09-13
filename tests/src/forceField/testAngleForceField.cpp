@@ -1,4 +1,5 @@
 #include "angleForceField.hpp"           // for BondForceField
+#include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair

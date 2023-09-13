@@ -1,3 +1,4 @@
+#include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "dihedralForceField.hpp"        // for BondForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb

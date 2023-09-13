@@ -2,13 +2,14 @@
 
 #define _TEST_TRAJECTORYOUTPUT_HPP_
 
+#include "atom.hpp"               // for Atom
 #include "molecule.hpp"           // for Molecule
 #include "simulationBox.hpp"      // for SimulationBox
 #include "trajectoryOutput.hpp"   // for TrajectoryOutput
 #include "vector3d.hpp"           // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
+#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
 #include <stdio.h>         // for remove
 
 /**

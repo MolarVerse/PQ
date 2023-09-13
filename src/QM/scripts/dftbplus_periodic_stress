@@ -43,8 +43,8 @@ my $mm_forces          = "mm_forces";           # result file: forces of all mm 
 my $stress_tensor_file = "stress_tensor";       # result file: stress tensor 
 my $stress_tensor_file_mat = "stress_tensor_mat";       # result file: stress tensor 
 
-my $qm_coords             = "coord";               # coordinates
-my $qm_coords_prev        = "coord.prev";          # coordinates previous step
+my $qm_coords             = "coords";               # coordinates
+my $qm_coords_prev        = "coords.prev";          # coordinates previous step
 my $mm_pointcharges       = "mm_pointcharges";     # mm_pointcharges
 
 my $energy_found          = 0;                     # energy  control flag
@@ -55,11 +55,11 @@ my $stress_tensor_found   = 0;                     # stress-tensor control flag
 my $n_pc                  = 0;                     # charges control flag
 my $n_fields              = 0;
 
-`cat header coord > geom.gen`;   
+`cat coords > geom.gen`;   
 
 # count number of mm pointcharges
-open (MM_PC, "< $mm_pointcharges") or
-      die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
+# open (MM_PC, "< $mm_pointcharges") or
+#       die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
 
 while (<MM_PC>) 
 {

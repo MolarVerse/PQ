@@ -2,6 +2,7 @@
 
 #define _TEST_RSTFILEOUTPUT_HPP_
 
+#include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "rstFileOutput.hpp"   // for RstFileOutput
 #include "simulationBox.hpp"   // for SimulationBox
