@@ -24,6 +24,9 @@ namespace QM
      */
     class DFTBPlusRunner : public QMRunner
     {
+      private:
+        bool _isFirstExecution = true;
+
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;

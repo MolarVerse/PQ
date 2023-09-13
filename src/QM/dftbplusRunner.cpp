@@ -74,8 +74,12 @@ void DFTBPlusRunner::execute()
     if (!utilities::fileExists(scriptFileName))
         throw customException::InputFileException(std::format("DFTB+ script file \"{}\" does not exist.", scriptFileName));
 
+    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+
     const auto command = std::format("{} 0 1 0 0 0", scriptFileName);
     ::system(command.c_str());
+
+    _isFirstExecution = false;
 }
 
 /**
