@@ -9,6 +9,7 @@ target_include_directories(maxwellBoltzmann
 
 target_link_libraries(maxwellBoltzmann
     PUBLIC
+    simulationBox
 )
 
 install(TARGETS maxwellBoltzmann
