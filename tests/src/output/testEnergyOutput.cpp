@@ -115,6 +115,45 @@ TEST_F(TestEnergyOutput, manostatActive)
               "      6.00000e+00\t     0.10000");
 }
 
+/**
+ * @brief tests writing energy output file
+ *
+ * @details qm is active is set
+ *
+ */
+TEST_F(TestEnergyOutput, qmActive)
+{
+    _physicalData->reset();
+
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setMomentum(6.0);
+    _physicalData->setIntraCoulombEnergy(0.0);
+    _physicalData->setIntraNonCoulombEnergy(0.0);
+
+    _physicalData->setQMEnergy(5.0);
+
+    _physicalData->setVolume(19.0);
+    _physicalData->setDensity(20.0);
+
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::activateQM();
+    settings::Settings::deactivateMM();
+    settings::ManostatSettings::setManostatType("none");
+
+    _energyOutput->setFilename("default.en");
+    _energyOutput->write(100.0, 0.1, *_physicalData);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line,
+              "       100\t      1.000000000000\t      2.000000000000\t      8.000000000000\t      5.000000000000\t      "
+              "0.000000000000\t      3.000000000000\t      0.000000000000\t         6.00000e+00\t     0.10000");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

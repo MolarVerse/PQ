@@ -29,6 +29,8 @@ namespace engine
         {
             _qmRunner = std::make_unique<T>(runner);
         }
+
+        [[nodiscard]] QM::QMRunner *getQMRunner() const { return _qmRunner.get(); }
     };
 
 }   // namespace engine

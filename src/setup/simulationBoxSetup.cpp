@@ -85,9 +85,7 @@ void SimulationBoxSetup::setAtomNames()
 
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
             molecule.getAtom(i).setName(moleculeType.getAtomName(i));
-        }
     };
 
     std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setAtomNamesOfMolecule);
@@ -131,9 +129,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
 
         auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
             molecule.getAtom(i).setExternalGlobalVDWType(moleculeType.getExternalGlobalVDWTypes()[i]);
-        }
     };
 
     std::ranges::for_each(_engine.getSimulationBox().getMolecules(), setExternalVDWTypesOfMolecule);

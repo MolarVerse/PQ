@@ -12,6 +12,7 @@
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "potentialSettings.hpp"     // for PotentialSettings, string
+#include "settings.hpp"              // for Settings
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
@@ -393,12 +394,24 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+    settings::Settings::activateMM();
+    _engine->getForceFieldPtr()->activateNonCoulombic();
+    settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
+    EXPECT_NO_THROW(readGuffDat(*_engine));
 }
 
 TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
+    settings::Settings::activateMM();
+    _engine->getForceFieldPtr()->activateNonCoulombic();
+    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+}
+
+TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowMMNotActivated)
+{
+    _guffDatReader->setFilename("");   // just to produce any kind of error
+    settings::Settings::activateMM();
     _engine->getForceFieldPtr()->activateNonCoulombic();
     EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
 }

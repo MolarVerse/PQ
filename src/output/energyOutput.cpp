@@ -26,14 +26,15 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
     _fp << std::format("{:20.12f}\t", data.getTemperature());
     _fp << std::format("{:20.12f}\t", data.getPressure());
     _fp << std::format("{:20.12f}\t", data.getTotalEnergy());
-    _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
-    _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
 
     if (settings::Settings::isQMActivated())
     {
         _fp << std::format("{:20.12f}\t", data.getQMEnergy());
-        _fp << std::format("{:20d}\t", 0);   // TODO: implement
+        _fp << std::format("{:20.12f}\t", 0.0);   // TODO: implement
     }
+
+    _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
+    _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
 
     if (settings::Settings::isMMActivated())
     {
