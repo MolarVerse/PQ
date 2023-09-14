@@ -20,8 +20,11 @@ namespace maxwellBoltzmann
     class MaxwellBoltzmann
     {
       private:
-        std::default_random_engine       generator;
-        std::normal_distribution<double> distribution{0.5, 1.0};
+        std::random_device _randomDevice{};
+        std::mt19937       _generator{_randomDevice()};
+
+      public:
+        void initializeVelocities(simulationBox::SimulationBox &);
     };
 }   // namespace maxwellBoltzmann
 
