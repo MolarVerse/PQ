@@ -25,7 +25,7 @@ InputFileParserSimulationBox::InputFileParserSimulationBox(engine::Engine &engin
 {
     addKeyword(std::string("rcoulomb"), bind_front(&InputFileParserSimulationBox::parseCoulombRadius, this), false);
     addKeyword(std::string("density"), bind_front(&InputFileParserSimulationBox::parseDensity, this), false);
-    addKeyword(std::string("init_velocities"), bind_front(&InputFileParserSimulationBox::parseDensity, this), false);
+    addKeyword(std::string("init_velocities"), bind_front(&InputFileParserSimulationBox::parseInitializeVelocities, this), false);
 }
 
 /**

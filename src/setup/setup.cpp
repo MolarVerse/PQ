@@ -86,6 +86,9 @@ void setup::setupEngine(Engine &engine)
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
     }
 
+    std::cout << "setup reset kinetics" << '\n';
+    setupResetKinetics(engine);
+
     std::cout << "setup simulation box" << '\n';
     setupSimulationBox(engine);
 
@@ -97,9 +100,6 @@ void setup::setupEngine(Engine &engine)
 
     std::cout << "setup manostat" << '\n';
     setupManostat(engine);
-
-    std::cout << "setup reset kinetics" << '\n';
-    setupResetKinetics(engine);
 
     if (settings::Settings::isMMActivated())
     {

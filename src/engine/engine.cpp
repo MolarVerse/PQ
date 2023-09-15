@@ -39,9 +39,6 @@ void Engine::run()
 {
     _timings.beginTimer();
 
-    _simulationBox.calculateDegreesOfFreedom();
-    _simulationBox.calculateCenterOfMassMolecules();
-
     _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());

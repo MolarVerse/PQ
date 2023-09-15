@@ -139,18 +139,8 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
 {
     _temperature = 0.0;
 
-    auto temperatureOfMolecule = [this](auto &molecule)
-    {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
-            const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass       = molecule.getAtomMass(i);
-
-            _temperature += mass * normSquared(velocities);
-        }
-    };
-
-    std::ranges::for_each(simulationBox.getMolecules(), temperatureOfMolecule);
+    std::ranges::for_each(simulationBox.getAtoms(),
+                          [this](auto &atom) { _temperature += atom->getMass() * normSquared(atom->getVelocity()); });
 
     _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
 }

@@ -8,6 +8,7 @@
 #include "exceptions.hpp"              // for MolDescriptorException, UserInputException, InputFileException
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "logOutput.hpp"               // for LogOutput
+#include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
 #include "molecule.hpp"                // for Molecule
 #include "physicalData.hpp"            // for PhysicalData
 #include "simulationBox.hpp"           // for SimulationBox
@@ -70,6 +71,11 @@ void SimulationBoxSetup::setup()
 
     checkBoxSettings();
     checkRcCutoff();
+
+    _engine.getSimulationBox().calculateDegreesOfFreedom();
+    _engine.getSimulationBox().calculateCenterOfMassMolecules();
+
+    initVelocities();
 }
 
 /**
@@ -307,4 +313,22 @@ void SimulationBoxSetup::checkRcCutoff()
         throw customException::InputFileException(
             std::format("Rc cutoff is larger than half of the minimal box dimension of {} Angstrom.",
                         _engine.getSimulationBox().getMinimalBoxDimension()));
+}
+
+void SimulationBoxSetup::initVelocities()
+{
+    if (settings::SimulationBoxSettings::getInitializeVelocities())
+    {
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
+
+        _engine.getPhysicalData().calculateTemperature(_engine.getSimulationBox());
+
+        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
+
+        _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
+        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
+
+        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
+    }
 }

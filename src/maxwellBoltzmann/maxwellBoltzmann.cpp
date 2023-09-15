@@ -26,6 +26,8 @@ void MaxwellBoltzmann::initializeVelocities(simulationBox::SimulationBox &simBox
 
         std::normal_distribution<double> distribution{0.0, stddev};
 
+        std::cout << distribution(_generator) << std::endl;
+
         atom->setVelocity({distribution(_generator), distribution(_generator), distribution(_generator)});
     };
 

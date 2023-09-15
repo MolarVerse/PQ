@@ -41,6 +41,8 @@ namespace setup
 
         void checkBoxSettings();
         void checkRcCutoff();
+
+        void initVelocities();
     };
 
 }   // namespace setup

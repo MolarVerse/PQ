@@ -32,6 +32,7 @@ target_link_libraries(setup
     potential
     coulombPotential
     nonCoulombPotential
+    maxwellBoltzmann
 )
 
 install(TARGETS setup
