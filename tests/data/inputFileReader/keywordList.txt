@@ -51,6 +51,7 @@ freset                  false
 
 rcoulomb                false
 density                 false
+init_velocities         false
 
 timestep                true
 nstep                   true

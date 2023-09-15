@@ -25,6 +25,7 @@ InputFileParserSimulationBox::InputFileParserSimulationBox(engine::Engine &engin
 {
     addKeyword(std::string("rcoulomb"), bind_front(&InputFileParserSimulationBox::parseCoulombRadius, this), false);
     addKeyword(std::string("density"), bind_front(&InputFileParserSimulationBox::parseDensity, this), false);
+    addKeyword(std::string("init_velocities"), bind_front(&InputFileParserSimulationBox::parseDensity, this), false);
 }
 
 /**
@@ -70,4 +71,30 @@ void InputFileParserSimulationBox::parseDensity(const std::vector<std::string> &
 
     settings::SimulationBoxSettings::setDensitySet(true);
     _engine.getSimulationBox().setDensity(density);
+}
+
+/**
+ * @brief parse if velocities should be initialized with maxwell boltzmann distribution
+ *
+ * @details possible options are:
+ * 1) true
+ * 2) false (default)
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserSimulationBox::parseInitializeVelocities(const std::vector<std::string> &lineElements,
+                                                             const size_t                    lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    if (lineElements[2] == "true")
+        settings::SimulationBoxSettings::setInitializeVelocities(true);
+    else if (lineElements[2] == "false")
+        settings::SimulationBoxSettings::setInitializeVelocities(false);
+    else
+        throw customException::InputFileException(std::format(
+            "Invalid value for initialize velocities - \"{}\" at line {} in input file. Possible options are: true, false",
+            lineElements[2],
+            lineNumber));
 }

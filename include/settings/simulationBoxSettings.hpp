@@ -13,18 +13,22 @@ namespace settings
     class SimulationBoxSettings
     {
       private:
-        static inline bool isDensitySet = false;
-        static inline bool isBoxSet     = false;
+        static inline bool _isDensitySet = false;
+        static inline bool _isBoxSet     = false;
+
+        static inline bool _initializeVelocities = false;
 
       public:
         SimulationBoxSettings()  = delete;
         ~SimulationBoxSettings() = delete;
 
-        static void setDensitySet(const bool densitySet) { isDensitySet = densitySet; }
-        static void setBoxSet(const bool boxSet) { isBoxSet = boxSet; }
+        static void setDensitySet(const bool densitySet) { _isDensitySet = densitySet; }
+        static void setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
+        static void setInitializeVelocities(const bool initializeVelocities) { _initializeVelocities = initializeVelocities; }
 
-        [[nodiscard]] static bool getDensitySet() { return isDensitySet; }
-        [[nodiscard]] static bool getBoxSet() { return isBoxSet; }
+        [[nodiscard]] static bool getDensitySet() { return _isDensitySet; }
+        [[nodiscard]] static bool getBoxSet() { return _isBoxSet; }
+        [[nodiscard]] static bool getInitializeVelocities() { return _initializeVelocities; }
     };
 }   // namespace settings
 
