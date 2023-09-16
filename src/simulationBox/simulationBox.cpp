@@ -11,6 +11,65 @@ using simulationBox::MoleculeType;
 using simulationBox::SimulationBox;
 
 /**
+ * @brief Copy constructor
+ *
+ * @details initializes new shared_ptr so that the copied SimulationBox object has its own atoms
+ *
+ * @param other
+ */
+SimulationBox::SimulationBox(const SimulationBox &other)
+    : _waterType(other._waterType), _ammoniaType(other._ammoniaType), _degreesOfFreedom(other._degreesOfFreedom),
+      _coulombRadiusCutOff(other._coulombRadiusCutOff), _box(other._box), _molecules(other._molecules),
+      _moleculeTypes(other._moleculeTypes), _externalGlobalVdwTypes(other._externalGlobalVdwTypes),
+      _externalToInternalGlobalVDWTypes(other._externalToInternalGlobalVDWTypes)
+{
+    for (size_t i = 0; i < other._atoms.size(); ++i)
+    {
+        this->_atoms.push_back(std::make_shared<Atom>(*other._atoms[i]));
+        this->_qmAtoms.push_back(std::make_shared<Atom>(*other._qmAtoms[i]));
+    }
+}
+
+/**
+ * @brief copy assignment
+ *
+ * @param other
+ * @return SimulationBox&
+ */
+SimulationBox &SimulationBox::operator=(const SimulationBox &other)
+{
+    SimulationBox temp(other);
+
+    temp.swap(*this);
+
+    return *this;
+}
+
+/**
+ * @brief swap two SimulationBox objects
+ *
+ * @param other
+ */
+void SimulationBox::swap(SimulationBox &other) noexcept
+{
+    std::swap(this->_waterType, other._waterType);
+    std::swap(this->_ammoniaType, other._ammoniaType);
+    std::swap(this->_degreesOfFreedom, other._degreesOfFreedom);
+    std::swap(this->_coulombRadiusCutOff, other._coulombRadiusCutOff);
+
+    std::swap(this->_box, other._box);
+
+    std::swap(this->_molecules, other._molecules);
+    std::swap(this->_moleculeTypes, other._moleculeTypes);
+
+    std::swap(this->_externalGlobalVdwTypes, other._externalGlobalVdwTypes);
+    std::swap(this->_externalToInternalGlobalVDWTypes, other._externalToInternalGlobalVDWTypes);
+
+    std::swap(this->_atoms, other._atoms);
+    std::swap(this->_qmAtoms, other._qmAtoms);
+}
+
+/**
  * @brief finds molecule by moleculeType if (size_t)
  *
  * @param moleculeType
