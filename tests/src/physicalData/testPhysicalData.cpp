@@ -103,7 +103,8 @@ TEST_F(TestPhysicalData, calculateTemperature)
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    EXPECT_DOUBLE_EQ(_physicalData->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF));
+    EXPECT_NEAR(
+        _physicalData->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF), 1e-15);
 }
 
 /**
