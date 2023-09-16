@@ -12,6 +12,7 @@ add_library(inputFileParser
     inputFileParserOutput.cpp
     inputFileParserQM.cpp
     inputFileParserResetKinetics.cpp
+    inputFileParserRingPolymer.cpp
     inputFileParserSimulationBox.cpp
     inputFileParserThermostat.cpp
     inputFileParserTimings.cpp

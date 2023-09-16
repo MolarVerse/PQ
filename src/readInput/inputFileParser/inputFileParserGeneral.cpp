@@ -1,10 +1,11 @@
 #include "inputFileParserGeneral.hpp"
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "mmmdEngine.hpp"   // for MMMDEngine
-#include "qmmdEngine.hpp"   // for QMMDEngine
-#include "settings.hpp"     // for Settings
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for InputFileException, customException
+#include "mmmdEngine.hpp"              // for MMMDEngine
+#include "qmmdEngine.hpp"              // for QMMDEngine
+#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
+#include "settings.hpp"                // for Settings
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
@@ -59,7 +60,14 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
         settings::Settings::activateQM();
         engine.reset(new engine::QMMDEngine());
     }
+    else if (lineElements[2] == "qm-rpmd")
+    {
+        settings::Settings::setJobtype("RingPolymerQMMD");
+        settings::Settings::activateQM();
+        settings::Settings::activateRingPolymerMD();
+        engine.reset(new engine::RingPolymerQMMDEngine());
+    }
     else
         throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md", lineElements[2]));
+            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", lineElements[2]));
 }

@@ -11,6 +11,7 @@ add_library(setup
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
     qmSetup.cpp
+    ringPolymerSetup.cpp
 )
 
 target_include_directories(setup

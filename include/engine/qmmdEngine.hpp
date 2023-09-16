@@ -16,12 +16,14 @@ namespace engine
      * @brief Contains all the information needed to run a QM MD simulation
      *
      */
-    class QMMDEngine : public Engine
+    class QMMDEngine : virtual public Engine
     {
       private:
         std::unique_ptr<QM::QMRunner> _qmRunner = nullptr;
 
       public:
+        ~QMMDEngine() override = default;
+
         void takeStep() override;
 
         template <typename T>

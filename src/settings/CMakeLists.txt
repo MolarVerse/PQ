@@ -10,6 +10,7 @@ add_library(settings
     timingsSettings.cpp
     forceFieldSettings.cpp
     qmSettings.cpp
+    ringPolymerSettings.cpp
 )
 
 target_include_directories(settings

@@ -16,6 +16,7 @@
 #include "qmmdEngine.hpp"
 #include "resetKineticsSetup.hpp"
 #include "restartFileReader.hpp"
+#include "ringPolymerSetup.hpp"
 #include "settings.hpp"
 #include "simulationBoxSetup.hpp"
 #include "thermostatSetup.hpp"
@@ -115,4 +116,10 @@ void setup::setupEngine(Engine &engine)
 
     std::cout << "setup constraints" << '\n';
     setupConstraints(engine);
+
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        std::cout << "setup ring polymer" << '\n';
+        setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
+    }
 }

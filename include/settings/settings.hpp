@@ -18,8 +18,9 @@ namespace settings
       private:
         static inline std::string _jobtype;   // no default value
 
-        static inline bool _isMMActivated = false;
-        static inline bool _isQMActivated = false;
+        static inline bool _isMMActivated            = false;
+        static inline bool _isQMActivated            = false;
+        static inline bool _isRingPolymerMDActivated = false;
 
       public:
         Settings()  = default;
@@ -27,8 +28,11 @@ namespace settings
 
         static void activateMM() { _isMMActivated = true; }
         static void activateQM() { _isQMActivated = true; }
+        static void activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
+
         static void deactivateMM() { _isMMActivated = false; }
         static void deactivateQM() { _isQMActivated = false; }
+        static void deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
 
         /***************************
          * standard getter methods *
@@ -38,6 +42,7 @@ namespace settings
 
         [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
         [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
+        [[nodiscard]] static bool isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
         /***************************
          * standard setter methods *
@@ -47,6 +52,7 @@ namespace settings
 
         static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
         static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
+        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD) { _isRingPolymerMDActivated = isRingPolymerMD; }
     };
 
 }   // namespace settings

@@ -12,7 +12,8 @@ using namespace readInput;
  * @brief Construct a new InputFileParserQM:: InputFileParserQM object
  *
  * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) jobtype <string> (required)
+ * 1) qm_prog <string>
+ * 2) qm_script <string>
  *
  * @param engine
  */
