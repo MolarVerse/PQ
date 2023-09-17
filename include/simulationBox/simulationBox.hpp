@@ -65,11 +65,7 @@ namespace simulationBox
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
       public:
-        SimulationBox() = default;
-        SimulationBox(const SimulationBox &);
-
-        SimulationBox &operator=(const SimulationBox &);
-        void           swap(SimulationBox &) noexcept;
+        void copy(const SimulationBox &);
 
         void checkCoulombRadiusCutOff(customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();

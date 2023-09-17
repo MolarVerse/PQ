@@ -12,6 +12,8 @@ void RingPolymerQMMDEngine::takeStep()
 
     std::ranges::for_each(_ringPolymerBeads, beforeRingPolymerCoupling);
 
+    coupleRingPolymerBeads();
+
     auto afterRingPolymerCoupling = [this](auto &bead)
     {
         _integrator->secondStep(bead);
@@ -24,4 +26,8 @@ void RingPolymerQMMDEngine::takeStep()
 
         _resetKinetics->reset(_step, _physicalData, bead);
     };
+
+    std::ranges::for_each(_ringPolymerBeads, afterRingPolymerCoupling);
+
+    combineBeads();
 }

@@ -11,62 +11,44 @@ using simulationBox::MoleculeType;
 using simulationBox::SimulationBox;
 
 /**
- * @brief Copy constructor
+ * @brief copy simulationBox object this
  *
- * @details initializes new shared_ptr so that the copied SimulationBox object has its own atoms
+ * @details shared_ptrs are not copied but new ones are created
  *
- * @param other
+ * @notes copy constructor is not used because it would break semantics here
+ *
+ * @param toCopy
  */
-SimulationBox::SimulationBox(const SimulationBox &other)
-    : _waterType(other._waterType), _ammoniaType(other._ammoniaType), _degreesOfFreedom(other._degreesOfFreedom),
-      _coulombRadiusCutOff(other._coulombRadiusCutOff), _box(other._box), _molecules(other._molecules),
-      _moleculeTypes(other._moleculeTypes), _externalGlobalVdwTypes(other._externalGlobalVdwTypes),
-      _externalToInternalGlobalVDWTypes(other._externalToInternalGlobalVDWTypes)
+void SimulationBox::copy(const SimulationBox &toCopy)
 {
-    for (size_t i = 0; i < other._atoms.size(); ++i)
+    this->_waterType                        = toCopy._waterType;
+    this->_ammoniaType                      = toCopy._ammoniaType;
+    this->_degreesOfFreedom                 = toCopy._degreesOfFreedom;
+    this->_coulombRadiusCutOff              = toCopy._coulombRadiusCutOff;
+    this->_box                              = toCopy._box;
+    this->_externalGlobalVdwTypes           = toCopy._externalGlobalVdwTypes;
+    this->_externalToInternalGlobalVDWTypes = toCopy._externalToInternalGlobalVDWTypes;
+
+    this->_molecules     = toCopy._molecules;
+    this->_moleculeTypes = toCopy._moleculeTypes;
+
+    this->_atoms.clear();
+    this->_qmAtoms.clear();
+    for (size_t i = 0; i < toCopy._atoms.size(); ++i)
     {
-        this->_atoms.push_back(std::make_shared<Atom>(*other._atoms[i]));
-        this->_qmAtoms.push_back(std::make_shared<Atom>(*other._qmAtoms[i]));
+        this->_atoms.push_back(std::make_shared<Atom>(*toCopy._atoms[i]));
+        this->_qmAtoms.push_back(std::make_shared<Atom>(*toCopy._qmAtoms[i]));
     }
-}
 
-/**
- * @brief copy assignment
- *
- * @param other
- * @return SimulationBox&
- */
-SimulationBox &SimulationBox::operator=(const SimulationBox &other)
-{
-    SimulationBox temp(other);
+    auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule &molecule)
+    {
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molecule.addAtom(this->_atoms[runningIndex++]);
 
-    temp.swap(*this);
+        return runningIndex;
+    };
 
-    return *this;
-}
-
-/**
- * @brief swap two SimulationBox objects
- *
- * @param other
- */
-void SimulationBox::swap(SimulationBox &other) noexcept
-{
-    std::swap(this->_waterType, other._waterType);
-    std::swap(this->_ammoniaType, other._ammoniaType);
-    std::swap(this->_degreesOfFreedom, other._degreesOfFreedom);
-    std::swap(this->_coulombRadiusCutOff, other._coulombRadiusCutOff);
-
-    std::swap(this->_box, other._box);
-
-    std::swap(this->_molecules, other._molecules);
-    std::swap(this->_moleculeTypes, other._moleculeTypes);
-
-    std::swap(this->_externalGlobalVdwTypes, other._externalGlobalVdwTypes);
-    std::swap(this->_externalToInternalGlobalVDWTypes, other._externalToInternalGlobalVDWTypes);
-
-    std::swap(this->_atoms, other._atoms);
-    std::swap(this->_qmAtoms, other._qmAtoms);
+    std::accumulate(this->_molecules.begin(), this->_molecules.end(), 0, fillAtomsInMolecules);
 }
 
 /**

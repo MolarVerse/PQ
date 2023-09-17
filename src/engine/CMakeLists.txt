@@ -3,6 +3,7 @@ add_library(engine
 
     mmmdEngine.cpp
     qmmdEngine.cpp
+    ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
     engineOutput.cpp

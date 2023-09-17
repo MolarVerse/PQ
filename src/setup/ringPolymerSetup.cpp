@@ -27,7 +27,8 @@ void RingPolymerSetup::setup()
 
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
     {
-        auto bead = _engine.getSimulationBox();
+        simulationBox::SimulationBox bead;
+        bead.copy(_engine.getSimulationBox());
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(bead);

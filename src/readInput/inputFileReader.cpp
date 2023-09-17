@@ -13,6 +13,7 @@
 #include "inputFileParserOutput.hpp"             // for InputFileParserOutput
 #include "inputFileParserQM.hpp"                 // for InputFileParserQM
 #include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetKinetics
+#include "inputFileParserRingPolymer.hpp"        // for InputFileParserRingPolymer
 #include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimulationBox
 #include "inputFileParserThermostat.hpp"         // for InputFileParserThermostat
 #include "inputFileParserTimings.hpp"            // for InputFileParserTimings
@@ -60,6 +61,7 @@ InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engin
     _parsers.push_back(std::make_unique<InputFileParserTimings>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserVirial>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserRingPolymer>(_engine));
 
     addKeywords();
 }
