@@ -21,7 +21,7 @@ namespace engine
     class RingPolymerQMMDEngine : public QMMDEngine, public RingPolymerEngine
     {
       public:
-        void takeStep() override{};
+        void takeStep() override;
     };
 }   // namespace engine
 

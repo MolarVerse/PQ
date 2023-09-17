@@ -18,7 +18,7 @@ namespace engine
      */
     class QMMDEngine : virtual public Engine
     {
-      private:
+      protected:
         std::unique_ptr<QM::QMRunner> _qmRunner = nullptr;
 
       public:

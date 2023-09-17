@@ -25,7 +25,7 @@ void RingPolymerSetup::setup()
     if (!settings::RingPolymerSettings::isNumberOfBeadsSet())
         throw customException::InputFileException("Number of beads not set for ring polymer simulation");
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads() - 1; ++i)
+    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
     {
         auto bead = _engine.getSimulationBox();
 
