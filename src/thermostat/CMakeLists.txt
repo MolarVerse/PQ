@@ -1,5 +1,7 @@
 add_library(thermostat
     thermostat.cpp
+    berendsenThermostat.cpp
+    langevinThermostat.cpp
 )
 
 target_include_directories(thermostat

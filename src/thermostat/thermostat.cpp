@@ -1,14 +1,16 @@
 #include "thermostat.hpp"
 
-#include "molecule.hpp"          // for Molecule
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "physicalData.hpp"
 
 #include <cmath>    // for sqrt
 #include <vector>   // for vector
 
-using namespace thermostat;
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+using thermostat::Thermostat;
 
 /**
  * @brief apply thermostat - base class
@@ -21,27 +23,4 @@ using namespace thermostat;
 void Thermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
     physicalData.calculateTemperature(simulationBox);
-}
-
-/**
- * @brief apply thermostat - Berendsen
- *
- * @link https://doi.org/10.1063/1.448118
- *
- * @param simulationBox
- * @param physicalData
- */
-void BerendsenThermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
-{
-    physicalData.calculateTemperature(simulationBox);
-
-    _temperature = physicalData.getTemperature();
-
-    const auto berendsenFactor =
-        ::sqrt(1.0 + settings::TimingsSettings::getTimeStep() / _tau * (_targetTemperature / _temperature - 1.0));
-
-    for (auto &molecule : simulationBox.getMolecules())
-        molecule.scaleVelocities(berendsenFactor);
-
-    physicalData.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 }
