@@ -24,10 +24,6 @@ void RingPolymerRestartFileOutput::write(std::vector<simulationBox::SimulationBo
 
     _fp.open(_fileName);
 
-    _fp << "Step " << step << '\n';
-
-    _fp << "Box   " << beads[0].getBoxDimensions() << "  " << beads[0].getBoxAngles() << '\n';
-
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
         {

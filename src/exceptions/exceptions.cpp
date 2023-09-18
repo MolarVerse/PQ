@@ -149,3 +149,14 @@ const char *CellListException::what() const throw()
     colorfulOutput(Color::FG_RED, "CellListError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *RingPolymerRestartFileException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "RingPolymerRestartFileError");
+    return _message.c_str();
+}

@@ -25,6 +25,7 @@ target_link_libraries(setup
     topologyFileReader
     restartFileReader
     parameterFileReader
+    ringPolymerRestartFileReader
 
     engine
     utilities

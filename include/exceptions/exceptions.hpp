@@ -29,7 +29,8 @@ namespace customException
         MANOSTATEXCEPTION,
         INTRANONBONDEDEXCEPTION,
         SHAKEEXCEPTION,
-        CELLLISTEXCEPTION
+        CELLLISTEXCEPTION,
+        RINGPOLYMERRESTARTFILEEXCEPTION
     };
 
     /**
@@ -197,12 +198,25 @@ namespace customException
         const char *what() const throw() override;
     };
 
-    /*
+    /**
      * @class CellListException inherits from CustomException
      *
      * @brief Exception for CellList errors
      */
     class CellListException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class RingPolymerRestartFileException inherits from CustomException
+     *
+     * @brief Exception for ring polymer restart file errors
+     */
+    class RingPolymerRestartFileException : public CustomException
     {
       public:
         using CustomException::CustomException;

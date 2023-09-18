@@ -1,7 +1,9 @@
 #include "ringPolymerSetup.hpp"
 
-#include "maxwellBoltzmann.hpp"      // for MaxwellBoltzmann
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "fileSettings.hpp"                   // for FileSettings
+#include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
+#include "ringPolymerRestartFileReader.hpp"   // for RingPolymerRestartFileReader
+#include "ringPolymerSettings.hpp"            // for RingPolymerSettings
 
 using setup::RingPolymerSetup;
 
@@ -30,9 +32,23 @@ void RingPolymerSetup::setup()
         simulationBox::SimulationBox bead;
         bead.copy(_engine.getSimulationBox());
 
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(bead);
-
         _engine.addRingPolymerBead(bead);
+    }
+
+    if (settings::FileSettings::isRingPolymerStartFileNameSet())
+    {
+        std::cout << "read ring polymer restart file" << std::endl;
+        readInput::ringPolymer::readRingPolymerRestartFile(_engine);
+    }
+    else
+    {
+        auto initVelocities = [](auto &bead)
+        {
+            // TODO: test if initializeVelocities is set
+            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+            maxwellBoltzmann.initializeVelocities(bead);
+        };
+
+        std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
     }
 }

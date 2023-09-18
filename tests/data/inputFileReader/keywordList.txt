@@ -14,6 +14,7 @@ force-field             false
 
 jobtype                 true       
 start_file              true
+rpmd_restart_file       true
 moldescriptor_file      false
 guff_path               false
 guff_file               false

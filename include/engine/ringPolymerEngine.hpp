@@ -30,6 +30,8 @@ namespace engine
         void addRingPolymerBead(const simulationBox::SimulationBox &bead) { _ringPolymerBeads.push_back(bead); }
         void coupleRingPolymerBeads();
         void combineBeads();
+
+        [[nodiscard]] std::vector<simulationBox::SimulationBox> &getRingPolymerBeads() { return _ringPolymerBeads; }
     };
 }   // namespace engine
 

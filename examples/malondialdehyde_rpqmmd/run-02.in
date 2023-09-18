@@ -7,7 +7,7 @@
       jobtype = qm-rpmd; #dim = 3d;
 
     # Number of steps to be performed and timestep in fs 
-      nstep = 1000; timestep = 0.2;
+      nstep = 2; timestep = 0.2;
       nreset = 100;
 
    rpmd_n_replica = 10;
@@ -59,21 +59,22 @@
 #      parameter_file = param.param;
 #      topology_file = shake_final.top;
 
-      start_file   = MALONDIALDEHYDE-eq.rst;
+      start_file        = malondialdehyde-01.rst;
+      rpmd_start_file   = malondialdehyde-01.rpmd.rst;
 
-      output_file    = malondialdehyde-01.out; 
-      info_file      = malondialdehyde-01.info;
-      energy_file    = malondialdehyde-01.en; 
-      traj_file      = malondialdehyde-01.xyz;
-      vel_file       = malondialdehyde-01.vel;
-      charge_file    = malondialdehyde-01.chrg;
-      restart_file   = malondialdehyde-01.rst;
-      force_file     = malondialdehyde-01.force;
-      rpmd_restart_file = malondialdehyde-01.rpmd.rst;
-      rpmd_traj_file = malondialdehyde-01.rpmd.xyz;
-      rpmd_vel_file = malondialdehyde-01.rpmd.vel;
-      rpmd_force_file = malondialdehyde-01.rpmd.force;
-      rpmd_charge_file = malondialdehyde-01.rpmd.chrg;
+      output_file       = malondialdehyde-02.out; 
+      info_file         = malondialdehyde-02.info;
+      energy_file       = malondialdehyde-02.en; 
+      traj_file         = malondialdehyde-02.xyz;
+      vel_file          = malondialdehyde-02.vel;
+      charge_file       = malondialdehyde-02.chrg;
+      restart_file      = malondialdehyde-02.rst;
+      force_file        = malondialdehyde-02.force;
+      rpmd_restart_file = malondialdehyde-02.rpmd.rst;
+      rpmd_traj_file    = malondialdehyde-02.rpmd.xyz;
+      rpmd_vel_file     = malondialdehyde-02.rpmd.vel;
+      rpmd_force_file   = malondialdehyde-02.rpmd.force;
+      rpmd_charge_file  = malondialdehyde-02.rpmd.chrg;
       
 # end of infile
 
