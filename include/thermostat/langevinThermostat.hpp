@@ -21,11 +21,18 @@ namespace thermostat
       public:
         LangevinThermostat() = default;
         explicit LangevinThermostat(const double targetTemperature, const double friction);
+        LangevinThermostat(const LangevinThermostat &);
 
         void applyLangevin(simulationBox::SimulationBox &);
 
         void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
         void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+
+        [[nodiscard]] double getFriction() const { return _friction; }
+        [[nodiscard]] double getSigma() const { return _sigma; }
+
+        void setFriction(const double friction) { _friction = friction; }
+        void setSigma(const double sigma) { _sigma = sigma; }
     };
 
 }   // namespace thermostat

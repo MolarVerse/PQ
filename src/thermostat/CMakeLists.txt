@@ -1,7 +1,9 @@
 add_library(thermostat
     thermostat.cpp
     berendsenThermostat.cpp
+    velocityRescalingThermostat.cpp
     langevinThermostat.cpp
+    noseHooverThermostat.cpp
 )
 
 target_include_directories(thermostat

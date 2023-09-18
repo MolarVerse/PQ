@@ -30,6 +30,7 @@ compressibility         false
 thermostat              false
 temp                    false
 t_relaxation            false
+friction                false
 
 noncoulomb              false
 intra-nonBonded_file    false

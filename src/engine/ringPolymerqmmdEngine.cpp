@@ -6,7 +6,10 @@ void RingPolymerQMMDEngine::takeStep()
 {
     auto beforeRingPolymerCoupling = [this](auto &bead)
     {
+        _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+
         _integrator->firstStep(bead);
+
         _qmRunner->run(bead, _physicalData);
     };
 

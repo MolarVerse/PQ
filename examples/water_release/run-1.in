@@ -42,7 +42,7 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
-   nstep       = 10;
+   nstep       = 1000;
    output_freq = 1;
 #   init_velocities = true;
    #write_traj  = on;
@@ -78,8 +78,8 @@
 # THERMOSTAT
 #-----------------------------------------
    temp       = 298.15;
-   thermostat = berendsen;
-   manostat   = berendsen;
+   thermostat = langevin;
+#   manostat   = berendsen;
    pressure   = 1.013;
    p_relaxation = 0.1;
    nscale = 5;

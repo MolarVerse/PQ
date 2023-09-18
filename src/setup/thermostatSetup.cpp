@@ -1,12 +1,14 @@
 #include "thermostatSetup.hpp"
 
-#include "berendsenThermostat.hpp"   // for BerendsenThermostat
-#include "constants.hpp"             // for _PS_TO_FS_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException
-#include "thermostat.hpp"            // for BerendsenThermostat, Thermostat, thermostat
-#include "thermostatSettings.hpp"    // for ThermostatSettings
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "berendsenThermostat.hpp"           // for BerendsenThermostat
+#include "constants.hpp"                     // for _PS_TO_FS_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for InputFileException
+#include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "thermostat.hpp"                    // for BerendsenThermostat, Thermostat, thermostat
+#include "thermostatSettings.hpp"            // for ThermostatSettings
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 #include <format>   // for format
 #include <string>   // for operator==
@@ -51,6 +53,14 @@ void ThermostatSetup::setup()
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
+    else if (thermostatType == settings::ThermostatType::VELOCITY_RESCALING)
+        _engine.makeThermostat(
+            thermostat::VelocityRescalingThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                    settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
+
+    else if (thermostatType == settings::ThermostatType::LANGEVIN)
+        _engine.makeThermostat(thermostat::LangevinThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                              settings::ThermostatSettings::getFriction()));
     else
         _engine.makeThermostat(thermostat::Thermostat());
 }

@@ -15,6 +15,7 @@ std::string settings::string(const ThermostatType &thermostatType)
     switch (thermostatType)
     {
     case ThermostatType::BERENDSEN: return "berendsen";
+    case ThermostatType::VELOCITY_RESCALING: return "velocity_rescaling";
     case ThermostatType::LANGEVIN: return "langevin";
     default: return "none";
     }
@@ -31,6 +32,8 @@ void ThermostatSettings::setThermostatType(const std::string_view &thermostatTyp
 
     if (thermostatTypeToLower == "berendsen")
         _thermostatType = ThermostatType::BERENDSEN;
+    else if (thermostatTypeToLower == "velocity_rescaling")
+        _thermostatType = ThermostatType::VELOCITY_RESCALING;
     else if (thermostatTypeToLower == "langevin")
         _thermostatType = ThermostatType::LANGEVIN;
     else

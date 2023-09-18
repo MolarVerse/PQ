@@ -10,6 +10,8 @@ using engine::QMMDEngine;
 
 void QMMDEngine::takeStep()
 {
+    _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+
     _integrator->firstStep(_simulationBox);
 
     _qmRunner->run(_simulationBox, _physicalData);
