@@ -137,16 +137,20 @@ namespace engine
         [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return *_resetKinetics; }
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
 
-        [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-        [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
-        [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-        [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        [[nodiscard]] EngineOutput                        &getEngineOutput() { return _engineOutput; }
+        [[nodiscard]] output::EnergyOutput                &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+        [[nodiscard]] output::TrajectoryOutput            &getXyzOutput() { return _engineOutput.getXyzOutput(); }
+        [[nodiscard]] output::TrajectoryOutput            &getVelOutput() { return _engineOutput.getVelOutput(); }
+        [[nodiscard]] output::TrajectoryOutput            &getForceOutput() { return _engineOutput.getForceOutput(); }
+        [[nodiscard]] output::TrajectoryOutput            &getChargeOutput() { return _engineOutput.getChargeOutput(); }
+        [[nodiscard]] output::LogOutput                   &getLogOutput() { return _engineOutput.getLogOutput(); }
+        [[nodiscard]] output::StdoutOutput                &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
+        [[nodiscard]] output::RstFileOutput               &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
+        [[nodiscard]] output::InfoOutput                  &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerTrajectoryOutput()
+        {
+            return _engineOutput.getRingPolymerTrajectoryOutput();
+        }
 
         [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
     };

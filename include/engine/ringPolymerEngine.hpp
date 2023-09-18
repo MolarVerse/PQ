@@ -25,7 +25,7 @@ namespace engine
         std::vector<simulationBox::SimulationBox> _ringPolymerBeads;
 
       public:
-        void takeStep() override{};
+        void writeOutput() override;
 
         void addRingPolymerBead(const simulationBox::SimulationBox &bead) { _ringPolymerBeads.push_back(bead); }
         void coupleRingPolymerBeads();

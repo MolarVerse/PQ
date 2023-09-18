@@ -71,3 +71,13 @@ void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, con
 {
     _rstFileOutput->write(simulationBox, step);
 }
+
+/**
+ * @brief wrapper for ring polymer xyz file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerTrajectoryOutput->writeXyz(beads);
+}

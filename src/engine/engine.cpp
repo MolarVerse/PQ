@@ -92,32 +92,6 @@ void Engine::writeOutput()
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
-        if (_step == settings::TimingsSettings::getNumberOfSteps())
-        {
-            std::cout << '\n' << '\n';
-
-            std::cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
-            std::cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
-            std::cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
-            std::cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
-            std::cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
-            std::cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
-            std::cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
-            std::cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
-            std::cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
-            std::cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
-            std::cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
-            std::cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
-
-            std::cout << '\n' << '\n';
-        }
-
         _averagePhysicalData = physicalData::PhysicalData();
     }
 }

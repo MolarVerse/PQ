@@ -1,10 +1,22 @@
 #include "ringPolymerEngine.hpp"
 
 #include "constants.hpp"             // for _RPMD_PREFACTOR_
+#include "output.hpp"                // for Output
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "thermostatSettings.hpp"    // for ThermostatSettings
 
-void engine::RingPolymerEngine::coupleRingPolymerBeads()
+using engine::Engine;
+using engine::RingPolymerEngine;
+
+void RingPolymerEngine::writeOutput()
+{
+    Engine::writeOutput();
+
+    if (0 == _step % output::Output::getOutputFrequency())
+        _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
+}
+
+void RingPolymerEngine::coupleRingPolymerBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
     const auto temperature   = settings::ThermostatSettings::getTargetTemperature();
@@ -29,7 +41,7 @@ void engine::RingPolymerEngine::coupleRingPolymerBeads()
     }
 }
 
-void engine::RingPolymerEngine::combineBeads()
+void RingPolymerEngine::combineBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
 

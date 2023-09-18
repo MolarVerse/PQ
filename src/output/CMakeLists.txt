@@ -8,6 +8,7 @@ add_library(output
     logOutput.cpp
     stdoutOutput.cpp
     rstFileOutput.cpp
+    ringPolymerTrajectoryOutput.cpp
 )
 
 target_include_directories(output

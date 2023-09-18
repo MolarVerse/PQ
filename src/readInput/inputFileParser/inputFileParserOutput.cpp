@@ -41,6 +41,7 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
     addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
     addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+    addKeyword(std::string("rpmd_traj_file"), bind_front(&InputFileParserOutput::parseRPMDTrajectoryFilename, this), false);
 }
 
 /**
@@ -166,4 +167,17 @@ void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
     _engine.getChargeOutput().setFilename(lineElements[2]);
+}
+
+/**
+ * @brief parse RPMD trajectory filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.xyz
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    _engine.getRingPolymerTrajectoryOutput().setFilename(lineElements[2]);
 }

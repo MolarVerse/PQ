@@ -42,6 +42,7 @@ void SimulationBox::copy(const SimulationBox &toCopy)
 
     auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule &molecule)
     {
+        molecule.getAtoms().clear();
         for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
             molecule.addAtom(this->_atoms[runningIndex++]);
 

@@ -61,14 +61,15 @@
 
       start_file   = MALONDIALDEHYDE-eq.rst;
 
-      output_file  = malondialdehyde-01.out; 
-      info_file    = malondialdehyde-01.info;
-      energy_file  = malondialdehyde-01.en; 
-      traj_file    = malondialdehyde-01.xyz;
-      vel_file     = malondialdehyde-01.vel;
-      charge_file  = malondialdehyde-01.chrg;
-      restart_file = malondialdehyde-01.rst;
-      force_file   = malondialdehyde-01.force;
+      output_file    = malondialdehyde-01.out; 
+      info_file      = malondialdehyde-01.info;
+      energy_file    = malondialdehyde-01.en; 
+      traj_file      = malondialdehyde-01.xyz;
+      vel_file       = malondialdehyde-01.vel;
+      charge_file    = malondialdehyde-01.chrg;
+      restart_file   = malondialdehyde-01.rst;
+      force_file     = malondialdehyde-01.force;
+      rpmd_traj_file = malondialdehyde-01.rpmd.xyz;
       
 # end of infile
 

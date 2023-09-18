@@ -130,8 +130,8 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        [[nodiscard]] Atom                              &getAtom(c_ul index) { return *(_atoms[index]); }
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> getAtoms() { return _atoms; }
+        [[nodiscard]] Atom                               &getAtom(c_ul index) { return *(_atoms[index]); }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms() { return _atoms; }
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
 
