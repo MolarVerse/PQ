@@ -60,3 +60,5 @@ virial                  false
 
 qm_prog                 false
 qm_script               false
+
+rpmd_n_replica          false
