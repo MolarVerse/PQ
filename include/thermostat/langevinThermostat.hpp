@@ -21,7 +21,7 @@ namespace thermostat
         LangevinThermostat() = default;
         explicit LangevinThermostat(const double targetTemperature);
 
-        virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
         virtual void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
     };
 
