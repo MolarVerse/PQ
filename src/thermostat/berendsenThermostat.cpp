@@ -1,5 +1,6 @@
 #include "berendsenThermostat.hpp"
 
+#include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
@@ -23,8 +24,8 @@ void BerendsenThermostat::applyThermostat(simulationBox::SimulationBox &simulati
     const auto berendsenFactor =
         ::sqrt(1.0 + settings::TimingsSettings::getTimeStep() / _tau * (_targetTemperature / _temperature - 1.0));
 
-    for (auto &molecule : simulationBox.getMolecules())
-        molecule.scaleVelocities(berendsenFactor);
+    for (const auto &atom : simulationBox.getAtoms())
+        atom->scaleVelocity(berendsenFactor);
 
     physicalData.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 }
