@@ -73,11 +73,52 @@ void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, con
 }
 
 /**
+ * @brief wrapper for ring polymer restart file output function
+ *
+ * @param simulationBox
+ * @param step
+ */
+void EngineOutput::writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &beads, const size_t step)
+{
+    _ringPolymerRstFileOutput->write(beads, step);
+}
+
+/**
  * @brief wrapper for ring polymer xyz file output function
  *
  * @param beads
  */
 void EngineOutput::writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &beads)
 {
-    _ringPolymerTrajectoryOutput->writeXyz(beads);
+    _ringPolymerXyzOutput->writeXyz(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer velocity file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerVelOutput->writeVelocities(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer force file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerForceOutput->writeForces(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer charge file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerChargeOutput->writeCharges(beads);
 }

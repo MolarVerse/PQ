@@ -13,7 +13,15 @@ void RingPolymerEngine::writeOutput()
     Engine::writeOutput();
 
     if (0 == _step % output::Output::getOutputFrequency())
+    {
+        const auto step0 = _timings.getStepCount();
+
+        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, step0 + _step);
         _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerChargeFile(_ringPolymerBeads);
+    }
 }
 
 void RingPolymerEngine::coupleRingPolymerBeads()

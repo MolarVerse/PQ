@@ -41,7 +41,11 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
     addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
     addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+    addKeyword(std::string("rpmd_restart_file"), bind_front(&InputFileParserOutput::parseRPMDRestartFilename, this), false);
     addKeyword(std::string("rpmd_traj_file"), bind_front(&InputFileParserOutput::parseRPMDTrajectoryFilename, this), false);
+    addKeyword(std::string("rpmd_vel_file"), bind_front(&InputFileParserOutput::parseRPMDVelocityFilename, this), false);
+    addKeyword(std::string("rpmd_force_file"), bind_front(&InputFileParserOutput::parseRPMDForceFilename, this), false);
+    addKeyword(std::string("rpmd_charge_file"), bind_front(&InputFileParserOutput::parseRPMDChargeFilename, this), false);
 }
 
 /**
@@ -170,6 +174,19 @@ void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &
 }
 
 /**
+ * @brief parse RPMD restart filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.rst
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    _engine.getRingPolymerRstFileOutput().setFilename(lineElements[2]);
+}
+
+/**
  * @brief parse RPMD trajectory filename of simulation and add it to output
  *
  * @details default value is default.rpmd.xyz
@@ -179,5 +196,44 @@ void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &
 void InputFileParserOutput::parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    _engine.getRingPolymerTrajectoryOutput().setFilename(lineElements[2]);
+    _engine.getRingPolymerXyzOutput().setFilename(lineElements[2]);
+}
+
+/**
+ * @brief parse RPMD velocity filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.vel
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    _engine.getRingPolymerVelOutput().setFilename(lineElements[2]);
+}
+
+/**
+ * @brief parse RPMD force filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.force
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    _engine.getRingPolymerForceOutput().setFilename(lineElements[2]);
+}
+
+/**
+ * @brief parse RPMD charge filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.chrg
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    _engine.getRingPolymerChargeOutput().setFilename(lineElements[2]);
 }

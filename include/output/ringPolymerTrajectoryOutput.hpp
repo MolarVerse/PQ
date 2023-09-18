@@ -26,9 +26,9 @@ namespace output
 
         void writeHeader(const simulationBox::SimulationBox &);
         void writeXyz(std::vector<simulationBox::SimulationBox> &);
-        void writeVelocities(std::vector<simulationBox::SimulationBox> &){};
-        void writeForces(std::vector<simulationBox::SimulationBox> &){};
-        void writeCharges(std::vector<simulationBox::SimulationBox> &){};
+        void writeVelocities(std::vector<simulationBox::SimulationBox> &);
+        void writeForces(std::vector<simulationBox::SimulationBox> &);
+        void writeCharges(std::vector<simulationBox::SimulationBox> &);
     };
 }   // namespace output
 

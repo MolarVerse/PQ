@@ -43,7 +43,11 @@ vel_file                false
 restart_file            false
 charge_file             false
 force_file              false
+rpmd_restart_file       false
 rpmd_traj_file          false
+rpmd_vel_file           false
+rpmd_force_file         false
+rpmd_charge_file        false
 
 nscale                  false
 fscale                  false

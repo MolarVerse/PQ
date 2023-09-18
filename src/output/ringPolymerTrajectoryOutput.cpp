@@ -42,3 +42,70 @@ void RingPolymerTrajectoryOutput::writeXyz(std::vector<simulationBox::Simulation
                 _fp << std::flush;
             }
 }
+
+/**
+ * @brief write the velocity file for all beads
+ *
+ * @param beads
+ */
+void RingPolymerTrajectoryOutput::writeVelocities(std::vector<simulationBox::SimulationBox> &beads)
+{
+    writeHeader(beads[0]);
+
+    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+        for (const auto &molecule : beads[i].getMolecules())
+            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+            {
+                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+
+                _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(j)[0]);
+                _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(j)[1]);
+                _fp << std::format("{:20.8e}\n", molecule.getAtomVelocity(j)[2]);
+
+                _fp << std::flush;
+            }
+}
+
+/**
+ * @brief write the force file for all beads
+ *
+ * @param beads
+ */
+void RingPolymerTrajectoryOutput::writeForces(std::vector<simulationBox::SimulationBox> &beads)
+{
+    writeHeader(beads[0]);
+
+    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+        for (const auto &molecule : beads[i].getMolecules())
+            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+            {
+                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+
+                _fp << std::format("{:15.8f}\t", molecule.getAtomForce(j)[0]);
+                _fp << std::format("{:15.8f}\t", molecule.getAtomForce(j)[1]);
+                _fp << std::format("{:15.8f}\n", molecule.getAtomForce(j)[2]);
+
+                _fp << std::flush;
+            }
+}
+
+/**
+ * @brief write the charge file for all beads
+ *
+ * @param beads
+ */
+void RingPolymerTrajectoryOutput::writeCharges(std::vector<simulationBox::SimulationBox> &beads)
+{
+    writeHeader(beads[0]);
+
+    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+        for (const auto &molecule : beads[i].getMolecules())
+            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+            {
+                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+
+                _fp << std::format("{:15.8f}\n", molecule.getPartialCharge(j));
+
+                _fp << std::flush;
+            }
+}

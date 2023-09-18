@@ -61,12 +61,8 @@ namespace engine
         std::unique_ptr<potential::Potential>         _potential     = std::make_unique<potential::PotentialBruteForce>();
 
       public:
-        // Engine(const Engine &);
-
         Engine()          = default;
         virtual ~Engine() = default;
-
-        // Engine &operator=(const Engine &);
 
         virtual void run();
         virtual void takeStep(){};
@@ -137,19 +133,35 @@ namespace engine
         [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return *_resetKinetics; }
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
 
-        [[nodiscard]] EngineOutput                        &getEngineOutput() { return _engineOutput; }
-        [[nodiscard]] output::EnergyOutput                &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-        [[nodiscard]] output::TrajectoryOutput            &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-        [[nodiscard]] output::TrajectoryOutput            &getVelOutput() { return _engineOutput.getVelOutput(); }
-        [[nodiscard]] output::TrajectoryOutput            &getForceOutput() { return _engineOutput.getForceOutput(); }
-        [[nodiscard]] output::TrajectoryOutput            &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-        [[nodiscard]] output::LogOutput                   &getLogOutput() { return _engineOutput.getLogOutput(); }
-        [[nodiscard]] output::StdoutOutput                &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-        [[nodiscard]] output::RstFileOutput               &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-        [[nodiscard]] output::InfoOutput                  &getInfoOutput() { return _engineOutput.getInfoOutput(); }
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerTrajectoryOutput()
+        [[nodiscard]] EngineOutput                         &getEngineOutput() { return _engineOutput; }
+        [[nodiscard]] output::EnergyOutput                 &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+        [[nodiscard]] output::TrajectoryOutput             &getXyzOutput() { return _engineOutput.getXyzOutput(); }
+        [[nodiscard]] output::TrajectoryOutput             &getVelOutput() { return _engineOutput.getVelOutput(); }
+        [[nodiscard]] output::TrajectoryOutput             &getForceOutput() { return _engineOutput.getForceOutput(); }
+        [[nodiscard]] output::TrajectoryOutput             &getChargeOutput() { return _engineOutput.getChargeOutput(); }
+        [[nodiscard]] output::LogOutput                    &getLogOutput() { return _engineOutput.getLogOutput(); }
+        [[nodiscard]] output::StdoutOutput                 &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
+        [[nodiscard]] output::RstFileOutput                &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
+        [[nodiscard]] output::InfoOutput                   &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        [[nodiscard]] output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput()
         {
-            return _engineOutput.getRingPolymerTrajectoryOutput();
+            return _engineOutput.getRingPolymerRstFileOutput();
+        }
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput()
+        {
+            return _engineOutput.getRingPolymerXyzOutput();
+        }
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput()
+        {
+            return _engineOutput.getRingPolymerVelOutput();
+        }
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput()
+        {
+            return _engineOutput.getRingPolymerForceOutput();
+        }
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput()
+        {
+            return _engineOutput.getRingPolymerChargeOutput();
         }
 
         [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
