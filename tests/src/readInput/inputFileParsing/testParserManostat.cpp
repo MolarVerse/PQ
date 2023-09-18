@@ -20,7 +20,7 @@ TEST_F(TestInputFileReader, ParsePressure)
 {
     EXPECT_EQ(settings::ManostatSettings::isPressureSet(), false);
 
-    InputFileParserManostat  parser(_engine);
+    InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parser.parsePressure(lineElements, 0);
 
@@ -36,7 +36,7 @@ TEST_F(TestInputFileReader, ParsePressure)
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
-    InputFileParserManostat  parser(_engine);
+    InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
     parser.parseManostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
@@ -55,7 +55,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
  */
 TEST_F(TestInputFileReader, ParseManostat)
 {
-    InputFileParserManostat  parser(_engine);
+    InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parser.parseManostat(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getManostatType(), "none");
@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, ParseManostat)
  */
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
-    InputFileParserManostat  parser(_engine);
+    InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
     parser.parseCompressibility(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);

@@ -71,6 +71,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _density       += physicalData.getDensity();
     _virial        += physicalData.getVirial();
     _pressure      += physicalData.getPressure();
+
+    _qmEnergy += physicalData.getQMEnergy();
 }
 
 /**
@@ -97,6 +99,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _density     /= outputFrequency;
     _virial      /= outputFrequency;
     _pressure    /= outputFrequency;
+
+    _qmEnergy /= outputFrequency;
 }
 
 /**
@@ -122,6 +126,8 @@ void PhysicalData::reset()
     _pressure    = 0.0;
     _volume      = 0.0;
     _density     = 0.0;
+
+    _qmEnergy = 0.0;
 }
 
 /**
@@ -133,18 +139,8 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
 {
     _temperature = 0.0;
 
-    auto temperatureOfMolecule = [this](auto &molecule)
-    {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
-            const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass       = molecule.getAtomMass(i);
-
-            _temperature += mass * normSquared(velocities);
-        }
-    };
-
-    std::ranges::for_each(simulationBox.getMolecules(), temperatureOfMolecule);
+    std::ranges::for_each(simulationBox.getAtoms(),
+                          [this](auto &atom) { _temperature += atom->getMass() * normSquared(atom->getVelocity()); });
 
     _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
 }
@@ -154,7 +150,7 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
  *
  * @return double
  */
-double PhysicalData::getPotentialEnergy() const
+double PhysicalData::getTotalEnergy() const
 {
     auto potentialEnergy = 0.0;
 
@@ -165,6 +161,10 @@ double PhysicalData::getPotentialEnergy() const
 
     potentialEnergy += _coulombEnergy;      // intra + inter
     potentialEnergy += _nonCoulombEnergy;   // intra + inter
+
+    potentialEnergy += _kineticEnergy;
+
+    potentialEnergy += _qmEnergy;
 
     return potentialEnergy;
 }

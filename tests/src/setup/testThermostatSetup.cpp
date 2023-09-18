@@ -15,7 +15,7 @@ using namespace setup;
 
 TEST_F(TestSetup, setupThermostat)
 {
-    ThermostatSetup thermostatSetup(_engine);
+    ThermostatSetup thermostatSetup(*_engine);
 
     settings::TimingsSettings::setTimeStep(0.1);
     thermostatSetup.setup();
@@ -27,16 +27,16 @@ TEST_F(TestSetup, setupThermostat)
     settings::ThermostatSettings::setTemperatureSet(true);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    const auto berendsenThermostat = dynamic_cast<thermostat::BerendsenThermostat &>(_engine.getThermostat());
+    const auto berendsenThermostat = dynamic_cast<thermostat::BerendsenThermostat &>(_engine->getThermostat());
     EXPECT_EQ(berendsenThermostat.getTau(), 0.1 * 1000);
 
     settings::ThermostatSettings::setRelaxationTime(0.2);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    const auto berendsenThermostat2 = dynamic_cast<thermostat::BerendsenThermostat &>(_engine.getThermostat());
+    const auto berendsenThermostat2 = dynamic_cast<thermostat::BerendsenThermostat &>(_engine->getThermostat());
     EXPECT_EQ(berendsenThermostat2.getTau(), 0.2 * 1000);
 
-    EXPECT_NO_THROW(setupThermostat(_engine));
+    EXPECT_NO_THROW(setupThermostat(*_engine));
 }
 
 int main(int argc, char **argv)

@@ -2,28 +2,27 @@
 
 #include "celllistSetup.hpp"
 #include "constraintsSetup.hpp"
+#include "engine.hpp"
 #include "forceFieldSetup.hpp"
 #include "guffDatReader.hpp"
 #include "inputFileReader.hpp"
-#include "integratorSetup.hpp"
 #include "intraNonBondedReader.hpp"
 #include "intraNonBondedSetup.hpp"
 #include "manostatSetup.hpp"
 #include "moldescriptorReader.hpp"
 #include "parameterFileReader.hpp"
 #include "potentialSetup.hpp"
+#include "qmSetup.hpp"
+#include "qmmdEngine.hpp"
 #include "resetKineticsSetup.hpp"
 #include "restartFileReader.hpp"
+#include "ringPolymerSetup.hpp"
+#include "settings.hpp"
 #include "simulationBoxSetup.hpp"
 #include "thermostatSetup.hpp"
 #include "topologyReader.hpp"
 
 #include <iostream>
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
 
 using namespace engine;
 using namespace readInput;
@@ -82,14 +81,45 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    setupSimulationBox(engine);
-    setupCellList(engine);
-    setupThermostat(engine);
-    setupManostat(engine);
+    if (settings::Settings::isQMActivated())
+    {
+        std::cout << "setup QM" << '\n';
+        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
+    }
+
+    std::cout << "setup reset kinetics" << '\n';
     setupResetKinetics(engine);
-    setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+    std::cout << "setup simulation box" << '\n';
+    setupSimulationBox(engine);
+
+    std::cout << "setup cell list" << '\n';
+    setupCellList(engine);
+
+    std::cout << "setup thermostat" << '\n';
+    setupThermostat(engine);
+
+    std::cout << "setup manostat" << '\n';
+    setupManostat(engine);
+
+    if (settings::Settings::isMMActivated())
+    {
+        std::cout << "setup potential" << '\n';
+        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+        std::cout << "intra non bonded" << '\n';
+        setupIntraNonBonded(engine);
+
+        std::cout << "setup force field" << '\n';
+        setupForceField(engine);
+    }
+
+    std::cout << "setup constraints" << '\n';
     setupConstraints(engine);
 
-    setupIntraNonBonded(engine);
-    setupForceField(engine);
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        std::cout << "setup ring polymer" << '\n';
+        setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
+    }
 }

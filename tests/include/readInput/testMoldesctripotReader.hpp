@@ -16,9 +16,9 @@
 class TestMoldescriptorReader : public ::testing::Test
 {
   protected:
-    void SetUp() override { _engine = engine::Engine(); }
+    void SetUp() override { _engine = new engine::Engine(); }
 
-    engine::Engine _engine;
+    engine::Engine *_engine;
 };
 
 #endif

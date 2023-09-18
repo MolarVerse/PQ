@@ -27,6 +27,11 @@ namespace setup
 
         void setup();
 
+        void setAtomNames();
+        void setAtomTypes();
+        void setExternalVDWTypes();
+        void setPartialCharges();
+
         void setAtomMasses();
         void setAtomicNumbers();
 
@@ -34,10 +39,10 @@ namespace setup
         void calculateTotalMass();
         void calculateTotalCharge();
 
-        void resizeAtomShiftForces();
-
         void checkBoxSettings();
         void checkRcCutoff();
+
+        void initVelocities();
     };
 
 }   // namespace setup

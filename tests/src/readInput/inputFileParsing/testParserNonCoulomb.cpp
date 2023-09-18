@@ -20,7 +20,7 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    InputFileParserNonCoulomb parser(_engine);
+    InputFileParserNonCoulomb parser(*_engine);
     std::vector<std::string>  lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getNonCoulombTypeString(), "guff");

@@ -12,6 +12,7 @@
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "potentialSettings.hpp"     // for PotentialSettings, string
+#include "settings.hpp"              // for Settings
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
@@ -300,35 +301,55 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::Engine          engine;
-    simulationBox::Molecule molecule1(1);
-    simulationBox::Molecule molecule2(2);
-    simulationBox::Molecule molecule3(3);
+    engine::Engine              engine;
+    simulationBox::Molecule     molecule1(1);
+    simulationBox::Molecule     molecule2(2);
+    simulationBox::MoleculeType moleculeType1(1);
+    simulationBox::MoleculeType moleculeType2(2);
+    simulationBox::MoleculeType moleculeType3(3);
 
     molecule1.setNumberOfAtoms(2);
     molecule2.setNumberOfAtoms(1);
     molecule2.setNumberOfAtoms(3);
 
-    molecule1.addAtomType(0);
-    molecule1.addAtomType(1);
-    molecule1.addExternalAtomType(1);
-    molecule1.addExternalAtomType(4);
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom3 = std::make_shared<simulationBox::Atom>();
 
-    molecule2.addAtomType(0);
-    molecule2.addExternalAtomType(2);
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom1->setExternalAtomType(1);
+    atom1->setExternalAtomType(4);
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
 
-    molecule3.addAtomType(0);
-    molecule3.addAtomType(1);
-    molecule3.addAtomType(1);
-    molecule3.addExternalAtomType(1);
-    molecule3.addExternalAtomType(2);
-    molecule3.addExternalAtomType(2);
+    moleculeType1.addAtomType(0);
+    moleculeType1.addAtomType(1);
+    moleculeType1.addExternalAtomType(1);
+    moleculeType1.addExternalAtomType(4);
+    moleculeType1.setNumberOfAtoms(2);
+
+    atom3->setAtomType(0);
+    atom3->setExternalAtomType(2);
+    molecule2.addAtom(atom3);
+
+    moleculeType2.addAtomType(0);
+    moleculeType2.addExternalAtomType(2);
+    moleculeType2.setNumberOfAtoms(1);
+
+    moleculeType3.addAtomType(0);
+    moleculeType3.addAtomType(1);
+    moleculeType3.addAtomType(1);
+    moleculeType3.addExternalAtomType(1);
+    moleculeType3.addExternalAtomType(2);
+    moleculeType3.addExternalAtomType(2);
+    moleculeType3.setNumberOfAtoms(3);
 
     engine.getSimulationBox().addMolecule(molecule1);
     engine.getSimulationBox().addMolecule(molecule2);
-    engine.getSimulationBox().addMoleculeType(molecule1);
-    engine.getSimulationBox().addMoleculeType(molecule2);
-    engine.getSimulationBox().addMoleculeType(molecule3);
+    engine.getSimulationBox().addMoleculeType(moleculeType1);
+    engine.getSimulationBox().addMoleculeType(moleculeType2);
+    engine.getSimulationBox().addMoleculeType(moleculeType3);
 
     GuffDatReader guffDatReader(engine);
 
@@ -373,12 +394,24 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+    settings::Settings::activateMM();
+    _engine->getForceFieldPtr()->activateNonCoulombic();
+    settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
+    EXPECT_NO_THROW(readGuffDat(*_engine));
 }
 
 TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
+    settings::Settings::activateMM();
+    _engine->getForceFieldPtr()->activateNonCoulombic();
+    EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
+}
+
+TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowMMNotActivated)
+{
+    _guffDatReader->setFilename("");   // just to produce any kind of error
+    settings::Settings::activateMM();
     _engine->getForceFieldPtr()->activateNonCoulombic();
     EXPECT_NO_THROW(readInput::guffdat::readGuffDat(*_engine));
 }

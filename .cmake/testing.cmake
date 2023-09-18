@@ -42,6 +42,12 @@ if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
     )
 
+    setup_target_for_coverage_gcovr_xml(
+        NAME coverage_xml
+        EXECUTABLE ctest
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
+    )
+
     setup_target_for_coverage_lcov(
         NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS " --no-external " EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)
 endif()

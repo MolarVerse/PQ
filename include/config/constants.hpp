@@ -16,6 +16,8 @@ namespace constants
     /**
      * @brief Conversion factors for mass units
      */
+    static constexpr double _GRAM_TO_KG_      = 1.0e-3;
+    static constexpr double _KG_TO_GRAM_      = 1.0 / _GRAM_TO_KG_;
     static constexpr double _AMU_TO_KG_       = 1.660539040e-27;
     static constexpr double _KG_TO_AMU_       = 1.0 / _AMU_TO_KG_;
     static constexpr double _AVOGADRO_NUMBER_ = _KG_TO_AMU_ / 1000;
@@ -31,6 +33,12 @@ namespace constants
 
     static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ = _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
     static constexpr double _BOHR_RADIUS_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_BOHR_RADIUS_;
+
+    /**
+     * @brief Conversion factors for area units
+     */
+    static constexpr double _ANGSTROM_SQUARED_TO_METER_SQUARED_ = _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
+    static constexpr double _METER_SQUARED_TO_ANGSTROM_SQUARED_ = 1 / _ANGSTROM_SQUARED_TO_METER_SQUARED_;
 
     /**
      * @brief Conversion factors for volume units
@@ -49,12 +57,26 @@ namespace constants
     /**
      * @brief Conversion factors for energy units
      */
-    static constexpr double _KCAL_TO_JOULE_          = 4184.0;
-    static constexpr double _JOULE_TO_KCAL_          = 1.0 / _KCAL_TO_JOULE_;
-    static constexpr double _JOULE_TO_KCAL_PER_MOL_  = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
-    static constexpr double _KCAL_PER_MOL_TO_JOULE_  = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
-    static constexpr double _BOLTZMANN_CONSTANT_     = 1.38064852e-23;   // in J/K
-    static constexpr double _UNIVERSAL_GAS_CONSTANT_ = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_TO_JOULE_         = 4184.0;
+    static constexpr double _JOULE_TO_KCAL_         = 1.0 / _KCAL_TO_JOULE_;
+    static constexpr double _JOULE_TO_KCAL_PER_MOL_ = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_PER_MOL_TO_JOULE_ = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
+
+    static constexpr double _PLANCK_CONSTANT_                 = 6.626070040e-34;
+    static constexpr double _REDUCED_PLANCK_CONSTANT_         = _PLANCK_CONSTANT_ / (2.0 * M_PI);
+    static constexpr double _REDUCED_PLANCK_CONSTANT_SQUARED_ = _REDUCED_PLANCK_CONSTANT_ * _REDUCED_PLANCK_CONSTANT_;
+
+    static constexpr double _HARTREE_TO_KCAL_PER_MOLE_ = 627.5094740631;
+
+    static constexpr double _BOLTZMANN_CONSTANT_         = 1.38064852e-23;   // in J/K
+    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_ = _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
+    static constexpr double _UNIVERSAL_GAS_CONSTANT_     = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
+
+    /**
+     * @brief Conversion factors for force units
+     */
+    static constexpr double _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ =
+        _HARTREE_TO_KCAL_PER_MOLE_ / _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for charge related data
@@ -114,6 +136,14 @@ namespace constants
      */
     static constexpr double _COULOMB_PREFACTOR_ =
         1 / (4 * M_PI * _PERMITTIVITY_VACUUM_) * _ELECTRON_CHARGE_SQUARED_ * _JOULE_TO_KCAL_PER_MOL_ * _METER_TO_ANGSTROM_;
+
+    /**
+     * @brief ring polymer molecular dynamics
+     *
+     * @TODO: add details
+     */
+    static constexpr double _RPMD_PREFACTOR_ = _BOLTZMANN_CONSTANT_SQUARED_ / _REDUCED_PLANCK_CONSTANT_SQUARED_ /
+                                               _METER_SQUARED_TO_ANGSTROM_SQUARED_ * _GRAM_TO_KG_ * _JOULE_TO_KCAL_;
 
 }   // namespace constants
 

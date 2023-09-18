@@ -5,6 +5,7 @@
 #include "inputFileParser.hpp"   // for InputFileParser
 
 #include <cstddef>   // for size_t
+#include <memory>    // for unique_ptr
 #include <string>    // for string
 #include <vector>    // for vector
 
@@ -27,6 +28,8 @@ namespace readInput
         explicit InputFileParserGeneral(engine::Engine &);
 
         void parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
+        void parseJobTypeForEngine(const std::vector<std::string> &, const size_t, std::unique_ptr<engine::Engine> &);
     };
 
 }   // namespace readInput

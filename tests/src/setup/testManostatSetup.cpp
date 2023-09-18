@@ -19,7 +19,7 @@ using namespace setup;
  */
 TEST_F(TestSetup, setup)
 {
-    ManostatSetup manostatSetup(_engine);
+    ManostatSetup manostatSetup(*_engine);
     manostatSetup.setup();
 
     settings::ManostatSettings::setManostatType("berendsen");
@@ -29,16 +29,16 @@ TEST_F(TestSetup, setup)
     settings::ManostatSettings::setTargetPressure(300.0);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    auto berendsenManostat = dynamic_cast<manostat::BerendsenManostat &>(_engine.getManostat());
+    auto berendsenManostat = dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
     EXPECT_EQ(berendsenManostat.getTau(), 1.0 * 1000);
 
     settings::ManostatSettings::setTauManostat(0.2);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    auto berendsenManostat2 = dynamic_cast<manostat::BerendsenManostat &>(_engine.getManostat());
+    auto berendsenManostat2 = dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
     EXPECT_EQ(berendsenManostat2.getTau(), 0.2 * 1000);
 
-    EXPECT_NO_THROW(setupManostat(_engine));
+    EXPECT_NO_THROW(setupManostat(*_engine));
 }
 
 int main(int argc, char **argv)

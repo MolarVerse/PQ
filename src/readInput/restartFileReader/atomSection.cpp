@@ -1,8 +1,10 @@
 #include "atomSection.hpp"
 
+#include "atom.hpp"              // for Atom
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
+#include "moleculeType.hpp"      // for MoleculeType
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
@@ -36,12 +38,19 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
      * find molecule by molecule type *
      *********************************/
 
-    size_t                                   moltype = stoul(lineElements[2]);
-    std::unique_ptr<simulationBox::Molecule> molecule;
+    size_t moltype = stoul(lineElements[2]);
+
+    if (0 == moltype)
+    {
+        processQMAtomLine(lineElements, engine.getSimulationBox());
+        return;
+    }
+
+    std::unique_ptr<simulationBox::MoleculeType> moleculeType;
 
     try
     {
-        molecule = std::make_unique<simulationBox::Molecule>(engine.getSimulationBox().findMoleculeType(moltype));
+        moleculeType = std::make_unique<simulationBox::MoleculeType>(engine.getSimulationBox().findMoleculeType(moltype));
     }
     catch (const customException::RstFileException &e)
     {
@@ -49,6 +58,12 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         std::cout << "Error in linenumber " << _lineNumber << " in restart file; Moltype not found\n";
         throw;
     }
+
+    auto molecule = std::make_unique<simulationBox::Molecule>(moleculeType->getMoltype());
+
+    molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
+    molecule->setName(moleculeType->getName());
+    molecule->setCharge(moleculeType->getCharge());
 
     size_t atomCounter = 0;
 
@@ -62,11 +77,11 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
             throw customException::RstFileException(
                 std::format("Error in line {}: Molecule must have {} atoms", _lineNumber, molecule->getNumberOfAtoms()));
 
-        processAtomLine(lineElements, *molecule);
+        processAtomLine(lineElements, engine.getSimulationBox(), *molecule);
 
         ++atomCounter;
 
-        if (atomCounter == molecule->getNumberOfAtoms())
+        if (atomCounter == moleculeType->getNumberOfAtoms())
             break;
 
         /* *********************************************
@@ -102,15 +117,53 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
  * but the old coordinates, velocities and forces are not used and also not read from the file
  *
  * @param lineElements
+ * @param simBox
  * @param molecule
  */
-void AtomSection::processAtomLine(std::vector<std::string> &lineElements, simulationBox::Molecule &molecule) const
+void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
+                                  simulationBox::SimulationBox &simBox,
+                                  simulationBox::Molecule      &molecule) const
 {
-    molecule.addAtomTypeName(lineElements[0]);
+    auto atom = std::make_shared<simulationBox::Atom>();
 
-    molecule.addAtomPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    molecule.addAtomVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    molecule.addAtomForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    atom->setAtomTypeName(lineElements[0]);
+
+    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+
+    simBox.addAtom(atom);
+    molecule.addAtom(atom);
+}
+
+/**
+ * @brief adds a single atom with moltype 0 to the simulation box _qmAtoms
+ *
+ * @details for details how the line looks like see processAtomLine
+ *
+ * @param lineElements
+ * @param simBox
+ */
+void AtomSection::processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &simBox)
+{
+    auto atom     = std::make_shared<simulationBox::Atom>();
+    auto molecule = std::make_unique<simulationBox::Molecule>(0);
+
+    molecule->setName("QM");
+    molecule->setNumberOfAtoms(1);
+
+    atom->setAtomTypeName(lineElements[0]);
+    atom->setName(lineElements[0]);
+
+    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
+    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
+    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+
+    molecule->addAtom(atom);
+
+    simBox.addAtom(atom);
+    simBox.addQMAtom(atom);
+    simBox.addMolecule(*molecule);
 }
 
 /**

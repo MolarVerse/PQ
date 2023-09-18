@@ -22,21 +22,21 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    InputFileParserForceField parser(_engine);
+    InputFileParserForceField parser(*_engine);
     std::vector<std::string>  lineElements = {"force-field", "=", "on"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_TRUE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_TRUE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "off"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_FALSE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "bonded"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine.getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
 
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(

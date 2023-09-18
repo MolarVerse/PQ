@@ -92,6 +92,21 @@ std::string utilities::toLowerCopy(std::string myString)
 }
 
 /**
+ * @brief converts the first letter of a string to upper case and the rest to lower case
+ *
+ * @param myString
+ * @return std::string
+ */
+std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
+{
+    myString[0] = char(::toupper(myString[0]));
+
+    std::ranges::for_each(myString | std::views::drop(1), [](char &c) { c = char(::tolower(c)); });
+
+    return myString;
+}
+
+/**
  * @brief checks if a file exists and can be opened
  *
  * @param filename

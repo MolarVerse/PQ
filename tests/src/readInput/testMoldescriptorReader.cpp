@@ -24,7 +24,7 @@ using namespace customException;
 TEST_F(TestMoldescriptorReader, constructor)
 {
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptor.dat");
-    ASSERT_NO_THROW(MoldescriptorReader reader(_engine));
+    ASSERT_NO_THROW(MoldescriptorReader reader(*_engine));
 }
 
 /**
@@ -34,7 +34,7 @@ TEST_F(TestMoldescriptorReader, constructor)
 TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
 {
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptorWithOneWordLine.dat");
-    MoldescriptorReader reader(_engine);
+    MoldescriptorReader reader(*_engine);
     ASSERT_THROW_MSG(reader.read(), MolDescriptorException, "Error in moldescriptor file at line 1");
 }
 
@@ -45,17 +45,17 @@ TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
 TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
 {
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptorWithErrorInAtomArguments.dat");
-    MoldescriptorReader reader(_engine);
+    MoldescriptorReader reader(*_engine);
     ASSERT_THROW_MSG(
         reader.read(), MolDescriptorException, "Atom line in moldescriptor file at line 4 has to have 3 or 4 elements");
 
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptorWithErrorInAtomArguments2.dat");
-    MoldescriptorReader reader2(_engine);
+    MoldescriptorReader reader2(*_engine);
     ASSERT_THROW_MSG(
         reader2.read(), MolDescriptorException, "Atom line in moldescriptor file at line 5 has to have 3 or 4 elements");
 
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptorWithErrorInMolArguments.dat");
-    MoldescriptorReader reader3(_engine);
+    MoldescriptorReader reader3(*_engine);
     ASSERT_THROW_MSG(reader3.read(), MolDescriptorException, "Not enough arguments in moldescriptor file at line 3");
 }
 
@@ -66,7 +66,7 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
 TEST_F(TestMoldescriptorReader, moldescriptorReader)
 {
     settings::FileSettings::setMolDescriptorFileName("examples/setup/moldescriptor.dat");
-    MoldescriptorReader reader(_engine);
+    MoldescriptorReader reader(*_engine);
     ASSERT_NO_THROW(reader.read());
 }
 
@@ -77,9 +77,9 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
     settings::FileSettings::setMolDescriptorFileName("examples/setup/moldescriptor.dat");
-    readMolDescriptor(_engine);
-    ASSERT_EQ(_engine.getSimulationBox().getWaterType(), 1);
-    ASSERT_EQ(_engine.getSimulationBox().getAmmoniaType(), 2);
+    readMolDescriptor(*_engine);
+    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), 1);
+    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), 2);
 }
 
 /**
@@ -89,7 +89,7 @@ TEST_F(TestMoldescriptorReader, specialTypes)
 TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
 {
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat");
-    MoldescriptorReader reader2(_engine);
+    MoldescriptorReader reader2(*_engine);
     ASSERT_THROW_MSG(
         reader2.read(), MolDescriptorException, "Error reading of moldescriptor stopped before last molecule was finished");
 }
@@ -100,13 +100,13 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _engine.getForceFieldPtr()->activateNonCoulombic();
+    _engine->getForceFieldPtr()->activateNonCoulombic();
 
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat");
-    EXPECT_NO_THROW(readMolDescriptor(_engine));
+    EXPECT_NO_THROW(readMolDescriptor(*_engine));
 
     settings::FileSettings::setMolDescriptorFileName("data/moldescriptorReader/moldescriptor_withMissingGlobalVdwTypes.dat");
-    EXPECT_THROW_MSG(readMolDescriptor(_engine),
+    EXPECT_THROW_MSG(readMolDescriptor(*_engine),
                      MolDescriptorException,
                      "Error in moldescriptor file at line 6 - force field noncoulombics is activated but no global van der Waals "
                      "parameter given");

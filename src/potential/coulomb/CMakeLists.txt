@@ -6,7 +6,6 @@ add_library(coulombPotential
 
 target_include_directories(coulombPotential
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/potential/coulomb
     ${PROJECT_SOURCE_DIR}/include/config
 )

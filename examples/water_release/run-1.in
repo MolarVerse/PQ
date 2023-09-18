@@ -44,6 +44,7 @@
    jobtype     = mm-md; timestep    = 0.5;
    nstep       = 10;
    output_freq = 1;
+#   init_velocities = true;
    #write_traj  = on;
 
 # SYSTEM RESTRAINTS

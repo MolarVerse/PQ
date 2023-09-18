@@ -1,3 +1,4 @@
+#include "atom.hpp"                      // for Atom
 #include "bondForceField.hpp"            // for BondForceField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
@@ -10,7 +11,6 @@
 
 #include "gmock/gmock.h"   // for DoubleNear, ElementsAre
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <algorithm>       // for min
 #include <cmath>           // for sqrt
 #include <cstddef>         // for size_t
 #include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS
@@ -38,16 +38,23 @@ TEST(TestBondForceField, calculateEnergyAndForces)
 
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(2);
-    molecule.addAtomPosition({0.0, 0.0, 0.0});
-    molecule.addAtomPosition({1.0, 2.0, 3.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
-    molecule.addPartialCharge(1.0);
-    molecule.addPartialCharge(-0.5);
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition({0.0, 0.0, 0.0});
+    atom2->setPosition({1.0, 2.0, 3.0});
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setInternalGlobalVDWType(0);
+    atom2->setInternalGlobalVDWType(1);
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom1->setPartialCharge(1.0);
+    atom2->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     auto bondForceField = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
     bondForceField.setEquilibriumBondLength(1.2);

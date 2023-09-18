@@ -1,11 +1,13 @@
 #include "../include/readInput/commandLineArgs.hpp"   // for CommandLineArgs
-#include "engine.hpp"            // for Engine
-#include "setup.hpp"             // for setupSimulation, setup
+#include "engine.hpp"                                 // for Engine
+#include "inputFileReader.hpp"                        // for readJobType
+#include "setup.hpp"                                  // for setupSimulation
 
 #include <cstdlib>     // for EXIT_SUCCESS
 #include <exception>   // for exception
-#include <iostream>    // for operator<<, basic_ostream, flush
-#include <string>      // for string
+#include <iostream>    // for operator<<
+#include <memory>      // for unique_ptr
+#include <string>      // for string, char_traits
 #include <vector>      // for vector
 
 #ifdef WITH_MPI
@@ -17,15 +19,16 @@ static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
-    auto engine = engine::Engine();
+    auto engine = std::unique_ptr<engine::Engine>();
+    readInput::readJobType(commandLineArgs.getInputFileName(), engine);
 
-    setup::setupSimulation(commandLineArgs.getInputFileName(), engine);
+    setup::setupSimulation(commandLineArgs.getInputFileName(), *engine);
 
     /*
         HERE STARTS THE MAIN LOOP
     */
 
-    engine.run();
+    engine->run();
 
     /*
         HERE ENDS THE MAIN LOOP

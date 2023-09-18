@@ -2,12 +2,14 @@
 
 #define _TEST_BOND_CONSTRAINT_HPP_
 
+#include "atom.hpp"             // for Atom
 #include "bondConstraint.hpp"   // for BondConstraint
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
 #include "vector3d.hpp"         // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 #include <vector>          // for vector
 
 /**
@@ -24,14 +26,20 @@ class TestBondConstraint : public ::testing::Test
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(3);
 
-        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
 
-        molecule1.addAtomMass(1.0);
-        molecule1.addAtomMass(2.0);
+        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setMass(1.0);
+        atom2->setMass(2.0);
+
+        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+
+        molecule1.addAtom(atom1);
+        molecule1.addAtom(atom2);
 
         _box = new simulationBox::SimulationBox();
         _box->addMolecule(molecule1);

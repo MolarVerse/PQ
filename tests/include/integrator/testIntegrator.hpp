@@ -2,6 +2,7 @@
 
 #define _TEST_INTEGRATOR_HPP_
 
+#include "atom.hpp"              // for Atom
 #include "integrator.hpp"        // for Integrator, VelocityVerlet
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
@@ -9,6 +10,7 @@
 #include "vector3d.hpp"          // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
 
 /**
  * class TestIntegrator
@@ -27,17 +29,23 @@ class TestIntegrator : public ::testing::Test
         _molecule1 = new simulationBox::Molecule();
         _molecule1->setNumberOfAtoms(2);
 
-        _molecule1->addAtomPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _molecule1->addAtomPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
 
-        _molecule1->addAtomVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _molecule1->addAtomVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
 
-        _molecule1->addAtomForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _molecule1->addAtomForce(linearAlgebra::Vec3D(1.0, 3.0, 5.0));
+        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-        _molecule1->addAtomMass(1.0);
-        _molecule1->addAtomMass(2.0);
+        atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setForce(linearAlgebra::Vec3D(1.0, 3.0, 5.0));
+
+        atom1->setMass(1.0);
+        atom2->setMass(2.0);
+
+        _molecule1->addAtom(atom1);
+        _molecule1->addAtom(atom2);
 
         _molecule1->setMolMass(3.0);
 
@@ -45,6 +53,8 @@ class TestIntegrator : public ::testing::Test
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
         _box->addMolecule(*_molecule1);
+        _box->addAtom(atom1);
+        _box->addAtom(atom2);
     }
 
     virtual void TearDown()

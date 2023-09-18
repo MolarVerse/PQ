@@ -2,8 +2,12 @@
 
 #define _TRAJ_OUTPUT_HPP_
 
-#include "frame.hpp"
-#include "output.hpp"
+#include "output.hpp"   // for Output
+
+namespace frameTools
+{
+    class Frame;   // forward declaration
+}
 
 class TrajOutput : public output::Output
 {

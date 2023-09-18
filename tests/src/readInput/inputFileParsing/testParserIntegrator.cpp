@@ -21,10 +21,10 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    InputFileParserIntegrator parser(_engine);
+    InputFileParserIntegrator parser(*_engine);
     std::vector<std::string>  lineElements = {"integrator", "=", "v-verlet"};
     parser.parseIntegrator(lineElements, 0);
-    EXPECT_EQ(_engine.getIntegrator().getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(_engine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(parser.parseIntegrator(lineElements, 0),

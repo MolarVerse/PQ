@@ -1,15 +1,12 @@
 #include "trajToCom.hpp"
-#include "atomMassMap.hpp"
 
-#include <iostream>
+#include "atom.hpp"       // for frameTools
+#include "molecule.hpp"   // for Molecule
 
 using namespace std;
 using namespace frameTools;
 
-void TrajToCom::setup()
-{
-    _configReader = ConfigurationReader(_xyzFiles);
-}
+void TrajToCom::setup() { _configReader = ConfigurationReader(_xyzFiles); }
 
 void TrajToCom::run()
 {

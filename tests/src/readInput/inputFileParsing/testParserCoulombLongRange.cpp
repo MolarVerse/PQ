@@ -20,7 +20,7 @@ using namespace readInput;
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
-    InputFileParserCoulombLongRange parser(_engine);
+    InputFileParserCoulombLongRange parser(*_engine);
     std::vector<std::string>        lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "none");
@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
  */
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
-    InputFileParserCoulombLongRange parser(_engine);
+    InputFileParserCoulombLongRange parser(*_engine);
     std::vector<std::string>        lineElements = {"wolf_param", "=", "1.0"};
     parser.parseWolfParameter(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);

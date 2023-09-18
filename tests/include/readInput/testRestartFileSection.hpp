@@ -19,13 +19,13 @@ class TestBoxSection : public ::testing::Test
     void SetUp() override
     {
         _section = new readInput::restartFile::BoxSection;
-        _engine  = engine::Engine();
+        _engine  = new engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
     readInput::restartFile::RestartFileSection *_section;
-    engine::Engine                              _engine;
+    engine::Engine                             *_engine;
 };
 
 /**
@@ -40,13 +40,13 @@ class TestNoseHooverSection : public ::testing::Test
     void SetUp() override
     {
         _section = new readInput::restartFile::NoseHooverSection;
-        _engine  = engine::Engine();
+        _engine  = new engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
     readInput::restartFile::RestartFileSection *_section;
-    engine::Engine                              _engine;
+    engine::Engine                             *_engine;
 };
 
 /**
@@ -61,13 +61,13 @@ class TestStepCountSection : public ::testing::Test
     void SetUp() override
     {
         _section = new readInput::restartFile::StepCountSection;
-        _engine  = engine::Engine();
+        _engine  = new engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
     readInput::restartFile::RestartFileSection *_section;
-    engine::Engine                              _engine;
+    engine::Engine                             *_engine;
 };
 
 /**
@@ -82,11 +82,11 @@ class TestAtomSection : public ::testing::Test
     void SetUp() override
     {
         _section = new readInput::restartFile::AtomSection;
-        _engine  = engine::Engine();
+        _engine  = new engine::Engine();
     }
 
     void TearDown() override { delete _section; }
 
     readInput::restartFile::RestartFileSection *_section;
-    engine::Engine                              _engine;
+    engine::Engine                             *_engine;
 };

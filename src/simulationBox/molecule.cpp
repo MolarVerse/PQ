@@ -16,7 +16,11 @@ using namespace simulationBox;
  */
 size_t Molecule::getNumberOfAtomTypes()
 {
-    return _externalAtomTypes.size() - std::ranges::size(std::ranges::unique(_externalAtomTypes));
+    std::vector<size_t> externalAtomTypes;
+
+    std::ranges::transform(_atoms, std::back_inserter(externalAtomTypes), [](auto atom) { return atom->getExternalAtomType(); });
+
+    return getNumberOfAtoms() - std::ranges::size(std::ranges::unique(externalAtomTypes));
 }
 
 /**
@@ -29,7 +33,7 @@ size_t Molecule::getNumberOfAtomTypes()
 void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
 {
     _centerOfMass            = linearAlgebra::Vec3D();
-    const auto positionAtom1 = getAtomPosition(0);
+    const auto positionAtom1 = _atoms[0]->getPosition();
 
     // TODO: sonarlint until now not compatible with c++23
     //  auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
@@ -39,10 +43,12 @@ void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
     //  };
     //  std::ranges::for_each(std::ranges::views::zip(_masses, _positions), f);
 
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
+    // TODO: change this loop to a range based for loop
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
     {
-        const auto mass     = _masses[i];
-        const auto position = _positions[i];
+        const auto mass     = _atoms[i]->getMass();
+        const auto position = _atoms[i]->getPosition();
 
         _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));
     }
@@ -59,25 +65,5 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    std::ranges::for_each(_positions, [shift](auto &position) { position += shift; });
-}
-
-/**
- * @brief scales the velocities of the molecule with a multiplicative factor
- *
- * @param scaleFactor
- */
-void Molecule::scaleVelocities(const double scaleFactor)
-{
-    std::ranges::for_each(_velocities, [scaleFactor](auto &velocity) { velocity *= scaleFactor; });
-}
-
-/**
- * @brief corrects the velocities of the molecule by a given shift vector
- *
- * @param correction
- */
-void Molecule::correctVelocities(const linearAlgebra::Vec3D &correction)
-{
-    std::ranges::for_each(_velocities, [correction](auto &velocity) { velocity -= correction; });
+    std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
 }

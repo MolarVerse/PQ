@@ -23,14 +23,14 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    InputFileParserVirial    parser(_engine);
+    InputFileParserVirial    parser(*_engine);
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parser.parseVirial(lineElements, 0);
-    EXPECT_EQ(_engine.getVirial().getVirialType(), "atomic");
+    EXPECT_EQ(_engine->getVirial().getVirialType(), "atomic");
 
     lineElements = {"virial", "=", "molecular"};
     parser.parseVirial(lineElements, 0);
-    EXPECT_EQ(_engine.getVirial().getVirialType(), "molecular");
+    EXPECT_EQ(_engine->getVirial().getVirialType(), "molecular");
 
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseVirial(lineElements, 0),

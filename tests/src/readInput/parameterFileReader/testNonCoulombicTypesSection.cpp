@@ -10,7 +10,6 @@
 #include "parameterFileSection.hpp"       // for NonCoulombicsSection, parame...
 #include "potential.hpp"                  // for Potential
 #include "potentialSettings.hpp"          // for PotentialSettings
-#include "simulationBox.hpp"              // for SimulationBox
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 

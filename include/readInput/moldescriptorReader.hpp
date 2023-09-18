@@ -15,7 +15,7 @@ namespace engine
 
 namespace simulationBox
 {
-    class Molecule;   // Forward declaration
+    class MoleculeType;   // Forward declaration
 }
 
 namespace readInput::molDescriptor
@@ -42,7 +42,7 @@ namespace readInput::molDescriptor
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(simulationBox::Molecule &) const;
+        void convertExternalToInternalAtomTypes(simulationBox::MoleculeType &) const;
     };
 
 }   // namespace readInput::molDescriptor

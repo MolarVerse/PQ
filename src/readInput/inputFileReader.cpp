@@ -11,7 +11,9 @@
 #include "inputFileParserManostat.hpp"           // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCoulomb
 #include "inputFileParserOutput.hpp"             // for InputFileParserOutput
+#include "inputFileParserQM.hpp"                 // for InputFileParserQM
 #include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetKinetics
+#include "inputFileParserRingPolymer.hpp"        // for InputFileParserRingPolymer
 #include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimulationBox
 #include "inputFileParserThermostat.hpp"         // for InputFileParserThermostat
 #include "inputFileParserTimings.hpp"            // for InputFileParserTimings
@@ -24,6 +26,11 @@
 #include <map>         // for map, operator==
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}
 
 using namespace readInput;
 
@@ -53,6 +60,8 @@ InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engin
     _parsers.push_back(std::make_unique<InputFileParserThermostat>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserTimings>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserVirial>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserRingPolymer>(_engine));
 
     addKeywords();
 }
@@ -143,6 +152,55 @@ void InputFileReader::read()
 
         ++_lineNumber;
     }
+}
+
+/**
+ * @brief checks if in the input file jobtype keyword is set and calls the corresponding parser
+ *
+ * @details this is just the first parsing of the input file and includes only the jobtype keyword
+ *
+ * @param fileName
+ * @param engine
+ */
+void readInput::readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &engine)
+{
+    std::ifstream inputFile(fileName);
+
+    if (inputFile.fail())
+        throw customException::InputFileException("\"" + fileName + "\"" + " File not found");
+
+    std::string line;
+    size_t      lineNumber(1);
+    bool        jobtypeFound{false};
+
+    while (getline(inputFile, line))
+    {
+        line = utilities::removeComments(line, "#");
+
+        if (line.empty())
+        {
+            ++lineNumber;
+            continue;
+        }
+
+        auto processInputCommand = [lineNumber, &jobtypeFound, &engine](const auto &command)
+        {
+            const auto lineElements = utilities::splitString(command);
+            if (!lineElements.empty() && "jobtype" == lineElements[0])
+            {
+                auto parser = InputFileParserGeneral(*engine);
+                parser.parseJobTypeForEngine(lineElements, lineNumber, engine);
+                jobtypeFound = true;
+            }
+        };
+
+        std::ranges::for_each(utilities::getLineCommands(line, lineNumber), processInputCommand);
+
+        ++lineNumber;
+    }
+
+    if (!jobtypeFound)
+        throw customException::InputFileException("Missing keyword \"jobtype\" in input file");
 }
 
 /**

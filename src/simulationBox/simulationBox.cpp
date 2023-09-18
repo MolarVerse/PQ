@@ -6,16 +6,49 @@
 #include <format>      // for format
 #include <numeric>     // for accumulate
 
-using namespace simulationBox;
+using simulationBox::Molecule;
+using simulationBox::MoleculeType;
+using simulationBox::SimulationBox;
 
 /**
- * @brief calculates the number of atoms of all molecules in the simulation box
+ * @brief copy simulationBox object this
+ *
+ * @details shared_ptrs are not copied but new ones are created
+ *
+ * @notes copy constructor is not used because it would break semantics here
+ *
+ * @param toCopy
  */
-size_t SimulationBox::getNumberOfAtoms() const
+void SimulationBox::copy(const SimulationBox &toCopy)
 {
-    auto accumulateFunc = [](const size_t sum, const Molecule &molecule) { return sum + molecule.getNumberOfAtoms(); };
+    this->_waterType                        = toCopy._waterType;
+    this->_ammoniaType                      = toCopy._ammoniaType;
+    this->_degreesOfFreedom                 = toCopy._degreesOfFreedom;
+    this->_coulombRadiusCutOff              = toCopy._coulombRadiusCutOff;
+    this->_box                              = toCopy._box;
+    this->_externalGlobalVdwTypes           = toCopy._externalGlobalVdwTypes;
+    this->_externalToInternalGlobalVDWTypes = toCopy._externalToInternalGlobalVDWTypes;
 
-    return accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc);
+    this->_molecules     = toCopy._molecules;
+    this->_moleculeTypes = toCopy._moleculeTypes;
+
+    this->_atoms.clear();
+    this->_qmAtoms.clear();
+    for (size_t i = 0; i < toCopy._atoms.size(); ++i)
+    {
+        this->_atoms.push_back(std::make_shared<Atom>(*toCopy._atoms[i]));
+        this->_qmAtoms.push_back(std::make_shared<Atom>(*toCopy._qmAtoms[i]));
+    }
+
+    auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule &molecule)
+    {
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molecule.addAtom(this->_atoms[runningIndex++]);
+
+        return runningIndex;
+    };
+
+    std::accumulate(this->_molecules.begin(), this->_molecules.end(), 0, fillAtomsInMolecules);
 }
 
 /**
@@ -42,9 +75,9 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
  *
  * @throw RstFileException if molecule type not found
  */
-Molecule &SimulationBox::findMoleculeType(const size_t moleculeType)
+MoleculeType &SimulationBox::findMoleculeType(const size_t moleculeType)
 {
-    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto &mol) { return mol.getMoltype() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeType); molecule != _moleculeTypes.end())
         return *molecule;
@@ -61,7 +94,7 @@ Molecule &SimulationBox::findMoleculeType(const size_t moleculeType)
  */
 bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
 {
-    auto isMoleculeType = [moleculeType](const Molecule &mol) { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto &mol) { return mol.getMoltype() == moleculeType; };
 
     return std::ranges::find_if(_moleculeTypes, isMoleculeType) != _moleculeTypes.end();
 }
@@ -76,7 +109,7 @@ bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
  */
 std::optional<size_t> SimulationBox::findMoleculeTypeByString(const std::string &moleculeType) const
 {
-    auto isMoleculeName = [&moleculeType](const Molecule &mol) { return mol.getName() == moleculeType; };
+    auto isMoleculeName = [&moleculeType](const auto &mol) { return mol.getName() == moleculeType; };
 
     if (const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeName); molecule != _moleculeTypes.end())
         return molecule->getMoltype();
@@ -116,16 +149,16 @@ std::pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(const size_
  *
  * @return std::vector<Molecule>
  */
-std::vector<Molecule> SimulationBox::findNecessaryMoleculeTypes()
+std::vector<MoleculeType> SimulationBox::findNecessaryMoleculeTypes()
 {
-    std::vector<Molecule> necessaryMoleculeTypes;
+    std::vector<MoleculeType> necessaryMoleculeTypes;
 
-    auto searchMoleculeTypes = [&necessaryMoleculeTypes](const Molecule &molecule)
+    auto searchMoleculeTypes = [&necessaryMoleculeTypes, this](const auto &molecule)
     {
         auto predicate = [&molecule](const auto moleculeType) { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
         if (std::ranges::find_if(necessaryMoleculeTypes, predicate) == necessaryMoleculeTypes.end())
-            necessaryMoleculeTypes.push_back(molecule);
+            necessaryMoleculeTypes.push_back(findMoleculeType(molecule.getMoltype()));
     };
 
     std::ranges::for_each(_molecules, searchMoleculeTypes);
@@ -158,13 +191,9 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
 /**
  * @brief resize internal global vdw types of all molecules
  *
+ * TODO: remove this one should be unnecessary
  */
-void SimulationBox::resizeInternalGlobalVDWTypes()
-{
-    auto resizeInternalGlobalVDWTypes = [](Molecule &molecule) { molecule.resizeInternalGlobalVDWTypes(); };
-
-    std::ranges::for_each(_molecules, resizeInternalGlobalVDWTypes);
-}
+void SimulationBox::resizeInternalGlobalVDWTypes() {}
 
 /**
  * @brief make external to internal global vdw types map
@@ -182,11 +211,11 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
      * 1) fill the external global vdw types vector with all external global vdw types from all molecules *
      ******************************************************************************************************/
 
-    auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &molecule)
+    auto fillExternalGlobalVdwTypes = [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &moleculeType)
     {
         externalGlobalVdwTypes.insert(externalGlobalVdwTypes.end(),
-                                      molecule.getExternalGlobalVDWTypes().begin(),
-                                      molecule.getExternalGlobalVDWTypes().end());
+                                      moleculeType.getExternalGlobalVDWTypes().begin(),
+                                      moleculeType.getExternalGlobalVDWTypes().end());
     };
 
     std::ranges::for_each(_moleculeTypes, fillExternalGlobalVdwTypes);
@@ -214,14 +243,13 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 
     auto setInternalGlobalVdwTypes = [&externalToInternalGlobalVDWTypes = _externalToInternalGlobalVDWTypes](auto &molecule)
     {
-        std::ranges::for_each(
-            molecule.getExternalGlobalVDWTypes(),
-            [&externalToInternalGlobalVDWTypes = externalToInternalGlobalVDWTypes, &molecule = molecule](auto &externalVdwType)
-            { molecule.addInternalGlobalVDWType(externalToInternalGlobalVDWTypes.at(externalVdwType)); });
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molecule.getAtom(i).setInternalGlobalVDWType(
+                externalToInternalGlobalVDWTypes.at(molecule.getAtom(i).getExternalGlobalVDWType()));
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
-    std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes);
+    // std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes); TODO: check if necessary
 }
 
 /**
@@ -262,4 +290,22 @@ void SimulationBox::checkCoulombRadiusCutOff(customException::ExceptionType exce
         else
             throw customException::UserInputException(message);
     }
+}
+
+/**
+ * @brief return all unique qm atom names
+ *
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
+{
+    std::vector<std::string> uniqueQMAtomNames;
+
+    std::ranges::transform(_qmAtoms, std::back_inserter(uniqueQMAtomNames), [](const auto &atom) { return atom->getName(); });
+    std::ranges::sort(uniqueQMAtomNames);
+    const auto [first, last] = std::ranges::unique(uniqueQMAtomNames);
+
+    uniqueQMAtomNames.erase(first, last);
+
+    return uniqueQMAtomNames;
 }

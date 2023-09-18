@@ -1,11 +1,15 @@
 #include "testInputFileReader.hpp"
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "inputFileParser.hpp"   // for readInput
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "inputFileParser.hpp"    // for readInput
+#include "mmmdEngine.hpp"         // for MMMDEngine
+#include "settings.hpp"           // for Settings
+#include "throwWithMessage.hpp"   // for throwWithMessage
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Message, TestPartResult
 #include <map>             // for map
+#include <memory>          // for unique_ptr
 #include <sstream>         // for basic_istringstream
 #include <vector>          // for vector, _Bit_iterator, _Bit_reference
 
@@ -84,7 +88,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(readInputFile(filename, _engine));
+    ASSERT_NO_THROW(readInputFile(filename, *_engine));
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
@@ -172,6 +176,24 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
     }
 
     EXPECT_NO_THROW(_inputFileReader->postProcess());
+}
+
+TEST_F(TestInputFileReader, testReadJobType)
+{
+    std::string filename = "data/inputFileReader/inputFile.txt";
+    auto        engine   = std::unique_ptr<engine::Engine>();
+    ASSERT_NO_THROW(readInput::readJobType(filename, engine));
+    EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");
+    EXPECT_EQ(typeid(*engine), typeid(engine::MMMDEngine));
+
+    filename = "fileNotFound";
+    ASSERT_THROW_MSG(
+        readInput::readJobType(filename, engine), customException::InputFileException, "\"fileNotFound\" File not found");
+
+    filename = "data/inputFileReader/missingJobType.txt";
+    ASSERT_THROW_MSG(readInput::readJobType(filename, engine),
+                     customException::InputFileException,
+                     "Missing keyword \"jobtype\" in input file");
 }
 
 int main(int argc, char **argv)

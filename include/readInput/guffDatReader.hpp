@@ -42,6 +42,7 @@ namespace readInput::guffdat
       public:
         explicit GuffDatReader(engine::Engine &engine);
 
+        bool isNeeded();
         void setupGuffMaps();
         void parseLine(const std::vector<std::string> &lineCommands);
         void read();

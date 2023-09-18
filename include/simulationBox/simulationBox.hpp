@@ -2,15 +2,17 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include "box.hpp"
-#include "defaults.hpp"
-#include "exceptions.hpp"
-#include "molecule.hpp"
+#include "atom.hpp"           // for Atom
+#include "box.hpp"            // for Box
+#include "defaults.hpp"       // for _COULOMB_CUT_OFF_DEFAULT_
+#include "exceptions.hpp"     // for ExceptionType
+#include "molecule.hpp"       // for Molecule
+#include "moleculeType.hpp"   // for MoleculeType
 
-#include <map>
-#include <optional>
-#include <string>
-#include <vector>
+#include <map>        // for map
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 /**
  * @namespace simulationBox
@@ -53,27 +55,32 @@ namespace simulationBox
 
         Box _box;
 
-        std::vector<Molecule> _molecules;
-        std::vector<Molecule> _moleculeTypes;
+        std::vector<std::shared_ptr<Atom>> _atoms;
+        std::vector<std::shared_ptr<Atom>> _qmAtoms;
+
+        std::vector<Molecule>     _molecules;
+        std::vector<MoleculeType> _moleculeTypes;
 
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
       public:
+        void copy(const SimulationBox &);
+
         void checkCoulombRadiusCutOff(customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
         void calculateCenterOfMassMolecules();
 
-        [[nodiscard]] bool   moleculeTypeExists(const size_t) const;
-        [[nodiscard]] size_t getNumberOfAtoms() const;
+        [[nodiscard]] bool                     moleculeTypeExists(const size_t) const;
+        [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule>       findMolecule(const size_t moleculeType);
-        [[nodiscard]] Molecule                     &findMoleculeType(const size_t moleculeType);
+        [[nodiscard]] MoleculeType                 &findMoleculeType(const size_t moleculeType);
         [[nodiscard]] std::optional<size_t>         findMoleculeTypeByString(const std::string &moleculeType) const;
         [[nodiscard]] std::pair<Molecule *, size_t> findMoleculeByAtomIndex(const size_t atomIndex);
-        [[nodiscard]] std::vector<Molecule>         findNecessaryMoleculeTypes();
+        [[nodiscard]] std::vector<MoleculeType>     findNecessaryMoleculeTypes();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void resizeInternalGlobalVDWTypes();
@@ -82,8 +89,10 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
+        void addAtom(std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
+        void addQMAtom(std::shared_ptr<Atom> atom) { _qmAtoms.push_back(atom); }
         void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
-        void addMoleculeType(const Molecule &molecule) { _moleculeTypes.push_back(molecule); }
+        void addMoleculeType(const MoleculeType &molecule) { _moleculeTypes.push_back(molecule); }
 
         /***************************
          * standard getter methods *
@@ -94,11 +103,18 @@ namespace simulationBox
         [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
         [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
         [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
+        [[nodiscard]] size_t getNumberOfAtoms() const { return _atoms.size(); }
+        [[nodiscard]] size_t getNumberOfQMAtoms() const { return _qmAtoms.size(); }
 
-        [[nodiscard]] std::vector<Molecule> &getMolecules() { return _molecules; }
-        [[nodiscard]] std::vector<Molecule> &getMoleculeTypes() { return _moleculeTypes; }
-        [[nodiscard]] Molecule              &getMolecule(const size_t moleculeIndex) { return _molecules[moleculeIndex]; }
-        [[nodiscard]] Molecule &getMoleculeType(const size_t moleculeTypeIndex) { return _moleculeTypes[moleculeTypeIndex]; }
+        [[nodiscard]] Atom         &getAtom(const size_t index) { return *(_atoms[index]); }
+        [[nodiscard]] Atom         &getQMAtom(const size_t index) { return *(_qmAtoms[index]); }
+        [[nodiscard]] Molecule     &getMolecule(const size_t index) { return _molecules[index]; }
+        [[nodiscard]] MoleculeType &getMoleculeType(const size_t index) { return _moleculeTypes[index]; }
+
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms() { return _atoms; }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms() { return _qmAtoms; }
+        [[nodiscard]] std::vector<Molecule>              &getMolecules() { return _molecules; }
+        [[nodiscard]] std::vector<MoleculeType>          &getMoleculeTypes() { return _moleculeTypes; }
 
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVdwTypes() { return _externalGlobalVdwTypes; }
         [[nodiscard]] std::map<size_t, size_t> &getExternalToInternalGlobalVDWTypes()

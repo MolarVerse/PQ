@@ -2,11 +2,13 @@
 
 #define _FRAME_HPP_
 
-#include "atom.hpp"
-#include "molecule.hpp"
+#include "atom.hpp"       // for Atom
+#include "molecule.hpp"   // for Molecule
+#include "vector3d.hpp"   // for Vec3D
 
-#include <string>
-#include <vector>
+#include <stddef.h>   // for size_t
+#include <string>     // for string
+#include <vector>     // for vector
 
 namespace frameTools
 {

@@ -1,7 +1,7 @@
 #include "integrator.hpp"
 
+#include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
-#include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for operator*, Vector3D
@@ -17,15 +17,15 @@ using namespace integrator;
  * @param molecule
  * @param index
  */
-void Integrator::integrateVelocities(simulationBox::Molecule &molecule, const size_t index) const
+void Integrator::integrateVelocities(simulationBox::Atom *atom) const
 {
-    auto       velocities = molecule.getAtomVelocity(index);
-    const auto forces     = molecule.getAtomForce(index);
-    const auto mass       = molecule.getAtomMass(index);
+    auto       velocity = atom->getVelocity();
+    const auto force    = atom->getForce();
+    const auto mass     = atom->getMass();
 
-    velocities += settings::TimingsSettings::getTimeStep() * forces / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
+    velocity += settings::TimingsSettings::getTimeStep() * force / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
 
-    molecule.setAtomVelocity(index, velocities);
+    atom->setVelocity(velocity);
 }
 
 /**
@@ -35,17 +35,15 @@ void Integrator::integrateVelocities(simulationBox::Molecule &molecule, const si
  * @param index
  * @param simBox
  */
-void Integrator::integratePositions(simulationBox::Molecule            &molecule,
-                                    const size_t                        index,
-                                    const simulationBox::SimulationBox &simBox) const
+void Integrator::integratePositions(simulationBox::Atom *atom, const simulationBox::SimulationBox &simBox) const
 {
-    auto       positions  = molecule.getAtomPosition(index);
-    const auto velocities = molecule.getAtomVelocity(index);
+    auto       position = atom->getPosition();
+    const auto velocity = atom->getVelocity();
 
-    positions += settings::TimingsSettings::getTimeStep() * velocities * constants::_FS_TO_S_;
-    simBox.applyPBC(positions);
+    position += settings::TimingsSettings::getTimeStep() * velocity * constants::_FS_TO_S_;
+    simBox.applyPBC(position);
 
-    molecule.setAtomPosition(index, positions);
+    atom->setPosition(position);
 }
 
 /**
@@ -55,21 +53,24 @@ void Integrator::integratePositions(simulationBox::Molecule            &molecule
  */
 void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
 {
+
+    auto integrate = [this, &simBox](auto &atom)
+    {
+        integrateVelocities(atom.get());
+        integratePositions(atom.get(), simBox);
+    };
+
+    std::ranges::for_each(simBox.getAtoms(), integrate);
+
     const auto box = simBox.getBoxDimensions();
 
-    auto firstStepForMolecule = [this, &simBox, &box](auto &molecule)
+    auto calculateCOM = [&box](auto &molecule)
     {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
-            integrateVelocities(molecule, i);
-            integratePositions(molecule, i, simBox);
-        }
-
         molecule.calculateCenterOfMass(box);
         molecule.setAtomForcesToZero();
     };
 
-    std::ranges::for_each(simBox.getMolecules(), firstStepForMolecule);
+    std::ranges::for_each(simBox.getMolecules(), calculateCOM);
 }
 
 /**
@@ -79,11 +80,5 @@ void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
  */
 void VelocityVerlet::secondStep(simulationBox::SimulationBox &simBox)
 {
-    auto secondStepForMolecule = [this](auto &molecule)
-    {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-            integrateVelocities(molecule, i);
-    };
-
-    std::ranges::for_each(simBox.getMolecules(), secondStepForMolecule);
+    std::ranges::for_each(simBox.getAtoms(), [this](auto atom) { integrateVelocities(atom.get()); });
 }

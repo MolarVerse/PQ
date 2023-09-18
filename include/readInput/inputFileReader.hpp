@@ -14,7 +14,7 @@
 
 namespace engine
 {
-    class Engine;   // Forward declaration
+    class Engine;   // forward declaration
 }
 
 /**
@@ -24,6 +24,7 @@ namespace engine
 namespace readInput
 {
     void readInputFile(const std::string_view &fileName, engine::Engine &);
+    void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
 
     using ParseFunc = std::function<void(const std::vector<std::string> &lineElements, const size_t lineNumber)>;
 
@@ -48,7 +49,7 @@ namespace readInput
         size_t _lineNumber = 1;
 
       public:
-        InputFileReader(const std::string_view &fileName, engine::Engine &engine);
+        explicit InputFileReader(const std::string_view &fileName, engine::Engine &engine);
 
         void read();
         void addKeywords();

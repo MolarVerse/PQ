@@ -2,7 +2,7 @@
 
 #define _TIMINGS_HPP_
 
-#include <chrono>    // for duration_cast, high_resolution_clock, operator-
+#include <chrono>    // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
 
 namespace timings

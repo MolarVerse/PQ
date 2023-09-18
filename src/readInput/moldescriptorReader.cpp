@@ -4,7 +4,7 @@
 #include "exceptions.hpp"        // for customException::MolDescriptorException
 #include "fileSettings.hpp"      // for FileSettings
 #include "forceFieldClass.hpp"   // for ForceField
-#include "molecule.hpp"          // for Molecule
+#include "moleculeType.hpp"      // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
@@ -106,7 +106,7 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
         throw customException::MolDescriptorException(
             std::format("Not enough arguments in moldescriptor file at line {}", _lineNumber));
 
-    simulationBox::Molecule molecule(lineElements[0]);
+    simulationBox::MoleculeType molecule(lineElements[0]);
 
     molecule.setNumberOfAtoms(stoul(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
@@ -166,7 +166,7 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
  *
  * @param molecule
  */
-void MoldescriptorReader::convertExternalToInternalAtomTypes(simulationBox::Molecule &molecule) const
+void MoldescriptorReader::convertExternalToInternalAtomTypes(simulationBox::MoleculeType &molecule) const
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

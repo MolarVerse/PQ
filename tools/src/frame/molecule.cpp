@@ -1,8 +1,10 @@
 #include "molecule.hpp"
 
-#include "atomMassMap.hpp"
+#include "atom.hpp"          // for Atom, frameTools
+#include "atomMassMap.hpp"   // for atomMassMap
 
-#include <iostream>
+#include <map>      // for map
+#include <string>   // for string, operator<=>
 
 using namespace std;
 using namespace frameTools;

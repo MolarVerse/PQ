@@ -28,6 +28,7 @@ namespace readInput
 
         void parseCoulombRadius(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseDensity(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseInitializeVelocities(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

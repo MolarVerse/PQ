@@ -39,6 +39,8 @@ namespace physicalData
         double _dihedralEnergy = 0.0;
         double _improperEnergy = 0.0;
 
+        double _qmEnergy = 0.0;
+
         linearAlgebra::Vec3D _virial                       = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _momentumVector               = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyAtomicVector    = {0.0, 0.0, 0.0};
@@ -59,7 +61,7 @@ namespace physicalData
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
 
-        [[nodiscard]] double getPotentialEnergy() const;
+        [[nodiscard]] double getTotalEnergy() const;
 
         /********************
          * standard adders  *
@@ -101,6 +103,8 @@ namespace physicalData
         void setDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy = dihedralEnergy; }
         void setImproperEnergy(const double improperEnergy) { _improperEnergy = improperEnergy; }
 
+        void setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
+
         /********************
          * standard getters *
          ********************/
@@ -122,6 +126,8 @@ namespace physicalData
         [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
         [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }
         [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
+
+        [[nodiscard]] double getQMEnergy() const { return _qmEnergy; }
 
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }

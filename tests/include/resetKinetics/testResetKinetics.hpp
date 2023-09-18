@@ -2,6 +2,7 @@
 
 #define _TEST_RESET_KINETICS_HPP_
 
+#include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "resetKinetics.hpp"   // for ResetKinetics
@@ -9,6 +10,7 @@
 #include "vector3d.hpp"        // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 
 /**
  * @class TestResetKinetics
@@ -27,19 +29,33 @@ class TestResetKinetics : public ::testing::Test
         _simulationBox = new simulationBox::SimulationBox();
 
         auto molecule1 = simulationBox::Molecule();
+
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
+
         molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomMass(1.0);
-        molecule1.addAtomMass(1.0);
+
+        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setMass(1.0);
+        atom2->setMass(1.0);
+        molecule1.addAtom(atom1);
+        molecule1.addAtom(atom2);
 
         auto molecule2 = simulationBox::Molecule();
+
+        auto atom3 = std::make_shared<simulationBox::Atom>();
+
         molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomMass(1.0);
+        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setMass(1.0);
+        molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
+        _simulationBox->addAtom(atom1);
+        _simulationBox->addAtom(atom2);
+        _simulationBox->addAtom(atom3);
         _simulationBox->setTotalMass(3.0);
     }
 

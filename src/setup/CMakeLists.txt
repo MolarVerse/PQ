@@ -10,6 +10,8 @@ add_library(setup
     constraintsSetup.cpp
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
+    qmSetup.cpp
+    ringPolymerSetup.cpp
 )
 
 target_include_directories(setup
@@ -31,6 +33,7 @@ target_link_libraries(setup
     potential
     coulombPotential
     nonCoulombPotential
+    maxwellBoltzmann
 )
 
 install(TARGETS setup

@@ -1,7 +1,6 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <vector>          // for allocator, vector
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
@@ -29,41 +28,6 @@ TEST_F(TestMolecule, scaleAtoms)
     EXPECT_EQ(_molecule->getAtomPosition(0), atomPosition1 + shift);
     EXPECT_EQ(_molecule->getAtomPosition(1), atomPosition2 + shift);
     EXPECT_EQ(_molecule->getAtomPosition(2), atomPosition3 + shift);
-}
-
-TEST_F(TestMolecule, scaleVelocities)
-{
-    const double               scale         = 2.0;
-    const linearAlgebra::Vec3D atomVelocity1 = _molecule->getAtomVelocity(0);
-    const linearAlgebra::Vec3D atomVelocity2 = _molecule->getAtomVelocity(1);
-    const linearAlgebra::Vec3D atomVelocity3 = _molecule->getAtomVelocity(2);
-
-    _molecule->scaleVelocities(scale);
-
-    EXPECT_EQ(_molecule->getAtomVelocity(0), atomVelocity1 * scale);
-    EXPECT_EQ(_molecule->getAtomVelocity(1), atomVelocity2 * scale);
-    EXPECT_EQ(_molecule->getAtomVelocity(2), atomVelocity3 * scale);
-}
-
-TEST_F(TestMolecule, correctVelocities)
-{
-    const linearAlgebra::Vec3D scale         = {1.0, 2.0, 4.0};
-    const linearAlgebra::Vec3D atomVelocity1 = _molecule->getAtomVelocity(0);
-    const linearAlgebra::Vec3D atomVelocity2 = _molecule->getAtomVelocity(1);
-    const linearAlgebra::Vec3D atomVelocity3 = _molecule->getAtomVelocity(2);
-
-    _molecule->correctVelocities(scale);
-
-    EXPECT_EQ(_molecule->getAtomVelocity(0), atomVelocity1 - scale);
-    EXPECT_EQ(_molecule->getAtomVelocity(1), atomVelocity2 - scale);
-    EXPECT_EQ(_molecule->getAtomVelocity(2), atomVelocity3 - scale);
-}
-
-TEST_F(TestMolecule, resizeAtomShiftForces)
-{
-    EXPECT_EQ(_molecule->getAtomShiftForces().size(), 0);
-    _molecule->resizeAtomShiftForces();
-    EXPECT_EQ(_molecule->getAtomShiftForces().size(), 3);
 }
 
 TEST_F(TestMolecule, setAtomForceToZero)

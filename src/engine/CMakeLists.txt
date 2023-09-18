@@ -1,5 +1,11 @@
 add_library(engine
     engine.cpp
+
+    mmmdEngine.cpp
+    qmmdEngine.cpp
+    ringPolymerEngine.cpp
+    ringPolymerqmmdEngine.cpp
+
     engineOutput.cpp
 )
 
@@ -26,6 +32,7 @@ target_link_libraries(engine
     virial
     forceField
     intraNonBonded
+    QM
 )
 
 install(TARGETS engine

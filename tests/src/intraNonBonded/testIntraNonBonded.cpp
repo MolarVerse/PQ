@@ -1,3 +1,4 @@
+#include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
@@ -100,17 +101,23 @@ TEST(TestIntraNonBonded, calculate)
 {
     auto molecule = simulationBox::Molecule(0);
     molecule.setNumberOfAtoms(2);
-    molecule.addAtomPosition({0.0, 0.0, 0.0});
-    molecule.addAtomPosition({0.0, 0.0, 11.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
-    molecule.addPartialCharge(0.5);
-    molecule.addPartialCharge(-0.5);
-    molecule.resizeAtomShiftForces();
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition({0.0, 0.0, 0.0});
+    atom2->setPosition({0.0, 0.0, 11.0});
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setInternalGlobalVDWType(0);
+    atom2->setInternalGlobalVDWType(1);
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom1->setPartialCharge(0.5);
+    atom2->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);

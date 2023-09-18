@@ -3,6 +3,7 @@
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
+#include "settings.hpp"             // for Settings
 
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, ofstream
@@ -24,11 +25,22 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.12f}\t", data.getTemperature());
     _fp << std::format("{:20.12f}\t", data.getPressure());
-    _fp << std::format("{:20.12f}\t", data.getPotentialEnergy());
+    _fp << std::format("{:20.12f}\t", data.getTotalEnergy());
+
+    if (settings::Settings::isQMActivated())
+    {
+        _fp << std::format("{:20.12f}\t", data.getQMEnergy());
+        _fp << std::format("{:20.12f}\t", 0.0);   // TODO: implement
+    }
+
     _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
     _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
-    _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
-    _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
+
+    if (settings::Settings::isMMActivated())
+    {
+        _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
+        _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
+    }
 
     if (settings::ForceFieldSettings::isActive())
     {

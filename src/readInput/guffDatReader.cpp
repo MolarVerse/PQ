@@ -16,6 +16,7 @@
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "potential.hpp"             // for Potential
 #include "potentialSettings.hpp"     // for PotentialSettings
+#include "settings.hpp"              // for settings
 #include "simulationBox.hpp"         // for SimulationBox
 #include "stringUtilities.hpp"       // for fileExists, getLineCommands, removeComments, splitString
 
@@ -42,10 +43,11 @@ using namespace readInput::guffdat;
  */
 void readInput::guffdat::readGuffDat(engine::Engine &engine)
 {
-    if (engine.getForceFieldPtr()->isNonCoulombicActivated())
+    GuffDatReader guffDat(engine);
+
+    if (!guffDat.isNeeded())
         return;
 
-    GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();
     guffDat.read();
     guffDat.postProcessSetup();
@@ -59,6 +61,26 @@ void readInput::guffdat::readGuffDat(engine::Engine &engine)
 GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
 {
     _fileName = settings::FileSettings::getGuffDatFileName();
+}
+
+/**
+ * @brief checks wether reading the guff.dat is necessary or not
+ *
+ * @details not necessary if:
+ * - mm is not active
+ * - force field non coulombics is active
+ *
+ * @return true
+ * @return false
+ */
+bool GuffDatReader::isNeeded()
+{
+    if (!settings::Settings::isMMActivated())
+        return false;
+    else if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+        return false;
+    else
+        return true;
 }
 
 /**
@@ -167,8 +189,8 @@ void GuffDatReader::setupGuffMaps()
  */
 void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
 {
-    simulationBox::Molecule molecule1;
-    simulationBox::Molecule molecule2;
+    simulationBox::MoleculeType molecule1;
+    simulationBox::MoleculeType molecule2;
 
     try
     {

@@ -69,7 +69,7 @@ void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, s
     const auto temperature = physicalData.getTemperature();
     const auto lambda      = ::sqrt(_targetTemperature / temperature);
 
-    std::ranges::for_each(simBox.getMolecules(), [lambda](auto &molecule) { molecule.scaleVelocities(lambda); });
+    std::ranges::for_each(simBox.getAtoms(), [lambda](auto &atom) { atom->scaleVelocity(lambda); });
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
 }
@@ -87,8 +87,7 @@ void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simu
     const auto momentumVector     = physicalData.getMomentumVector() * constants::_S_TO_FS_;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
 
-    std::ranges::for_each(simBox.getMolecules(),
-                          [momentumCorrection](auto &molecule) { molecule.correctVelocities(momentumCorrection); });
+    std::ranges::for_each(simBox.getAtoms(), [momentumCorrection](auto &atom) { atom->addVelocity(-momentumCorrection); });
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
     physicalData.calculateTemperature(simBox);

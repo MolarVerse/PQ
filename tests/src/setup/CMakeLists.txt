@@ -9,6 +9,7 @@ set(source_files
     testConstraintsSetup.cpp
     testForceFieldSetup.cpp
     testIntraNonBondedSetup.cpp
+    testQMSetup.cpp
 )
 
 foreach(source_file ${source_files})

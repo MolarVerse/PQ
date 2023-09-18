@@ -22,7 +22,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
 {
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
-    InputFileParserThermostat parser(_engine);
+    InputFileParserThermostat parser(*_engine);
     std::vector<std::string>  lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
 
@@ -42,7 +42,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    InputFileParserThermostat parser(_engine);
+    InputFileParserThermostat parser(*_engine);
     std::vector<std::string>  lineElements = {"t_relaxation", "=", "10.0"};
     parser.parseThermostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
  */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    InputFileParserThermostat parser(_engine);
+    InputFileParserThermostat parser(*_engine);
     std::vector<std::string>  lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), "none");

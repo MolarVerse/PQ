@@ -17,6 +17,8 @@ start_file              true
 moldescriptor_file      false
 guff_path               false
 guff_file               false
+topology_file           false
+parameter_file          false
 
 integrator              false
 
@@ -24,6 +26,10 @@ manostat                false
 pressure                false
 p_relaxation            false
 compressibility         false
+
+thermostat              false
+temp                    false
+t_relaxation            false
 
 noncoulomb              false
 intra-nonBonded_file    false
@@ -38,8 +44,6 @@ restart_file            false
 charge_file             false
 force_file              false
 
-parameter_file          false
-
 nscale                  false
 fscale                  false
 nreset                  false
@@ -47,14 +51,14 @@ freset                  false
 
 rcoulomb                false
 density                 false
-
-thermostat              false
-temp                    false
-t_relaxation            false
+init_velocities         false
 
 timestep                true
 nstep                   true
 
-topology_file           false
-
 virial                  false
+
+qm_prog                 false
+qm_script               false
+
+rpmd_n_replica          false

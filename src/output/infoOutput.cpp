@@ -3,6 +3,7 @@
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
+#include "settings.hpp"             // for Settings
 
 #include <format>    // for format
 #include <ios>       // for ofstream
@@ -33,13 +34,22 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
-    writeRight(data.getPotentialEnergy(), "E(TOT)", "kcal/mol");
+    writeRight(data.getTotalEnergy(), "E(TOT)", "kcal/mol");
+
+    if (settings::Settings::isQMActivated())
+    {
+        writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
+        writeRight(0, "N(QM ATOMS)", " ");   // TODO: implement
+    }
 
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
     writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
-    writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-    writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
+    if (settings::Settings::isMMActivated())
+    {
+        writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+        writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
+    }
 
     if (settings::ForceFieldSettings::isActive())
     {

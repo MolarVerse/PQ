@@ -1,9 +1,11 @@
 #include "configurationReader.hpp"
 
-#include "atom.hpp"
+#include "atom.hpp"   // for Atom, frameTools
 
-#include <iostream>
-#include <sstream>
+#include <sstream>     // IWYU pragma: keep
+#include <stdexcept>   // for runtime_error
+#include <stdio.h>     // for EOF
+#include <string>      // for string, getline, basic_string
 
 using namespace std;
 using namespace frameTools;
@@ -64,9 +66,11 @@ void ConfigurationReader::parseHeader()
 
     if (_nFrames != 0)
     {
-        if (_nAtoms != nAtoms) throw runtime_error("Number of atoms in the trajectory is not consistent");
+        if (_nAtoms != nAtoms)
+            throw runtime_error("Number of atoms in the trajectory is not consistent");
 
-        if (isBoxSet(box)) _box = box;
+        if (isBoxSet(box))
+            _box = box;
     }
     else
     {

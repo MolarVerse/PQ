@@ -1,0 +1,133 @@
+|===============================================================================
+|
+|  DFTB+ release 23.1
+|
+|  Copyright (C) 2006 - 2023  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|  * DFTB+, a software package for efficient approximate density functional
+|    theory based atomistic simulations, J. Chem. Phys. 152, 124101 (2020).
+|    [doi: 10.1063/1.5143190]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+Reading input file 'dftb_in.hsd'
+Parser version: 13
+
+--------------------------------------------------------------------------------
+***  Converting input from parser version  5 to parser version 13 ...
+WARNING!
+-> Keyword DampXH moved to HCorrection block
+Path: dftbplusinput/Hamiltonian/DFTB/DampXH
+Line: 25-25 (File: dftb_in.hsd)
+
+WARNING!
+-> Adding Damping to HCorrection
+Path: dftbplusinput/Hamiltonian/DFTB/HCorrection
+
+***  Done.
+
+Reading SK-files:
+/home/jag/skf_files/3ob-3-1/C-C.skf
+/home/jag/skf_files/3ob-3-1/C-H.skf
+/home/jag/skf_files/3ob-3-1/C-O.skf
+/home/jag/skf_files/3ob-3-1/C-Zn.skf
+/home/jag/skf_files/3ob-3-1/H-H.skf
+/home/jag/skf_files/3ob-3-1/H-O.skf
+/home/jag/skf_files/3ob-3-1/H-Zn.skf
+/home/jag/skf_files/3ob-3-1/O-O.skf
+/home/jag/skf_files/3ob-3-1/O-Zn.skf
+/home/jag/skf_files/3ob-3-1/Zn-Zn.skf
+Done.
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+WARNING!
+-> Dipole printed for extended system : value printed is not well defined
+Chosen random seed:          96233171
+Current stacksize:           8 [Mb] (recommended: unlimited)
+WARNING!
+-> Current stacksize not set to unlimited or hard limit, which might cause
+   random crashes (e.g. segmentation faults). It is advised to unlimit the
+   stacksize by issuing 'ulimit -s unlimited' (Linux) or setting it to the 
+   hard limit by 'ulimit -s hard' (Mac) in advance.
+Mode:                        Static calculation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-03
+Max. scc iterations:                    250
+Shell resolved Hubbard:      No
+Spin polarisation:           No
+Nr. of up electrons:          1212.000000
+Nr. of down electrons:        1212.000000
+Periodic boundaries:         Yes
+Electronic solver:           Relatively robust
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.200000
+Maximal SCC-cycles:                     250
+Nr. of chrg. vec. in memory:            250
+Electronic temperature:              0.100000E-07 H      0.272114E-06 eV
+Initial charges:             Set automatically (system chrg:   0.000E+00)
+Included shells:             C:  s, p
+                             H:  s
+                             O:  s, p
+                            Zn:  s, p, d
+K-points and weights:           1:  0.000000  0.000000  0.000000     1.000000
+
+K-points in absolute space:     1:  0.000000  0.000000  0.000000
+
+s-dftd3 library version:     0.7.0
+-> damping function:         rational damping
+Full 3rd order correction    Yes
+Damped SCC                   Yes
+Damped species(s):           H                                                 
+Extra options:
+                             Mulliken analysis
+                             Force calculation
+Force type                   original
+
+--------------------------------------------------------------------------------
+
+***  Geometry step: 0
+
+ iSCC Total electronic   Diff electronic      SCC error    
+    1    0.00000000E+00    0.00000000E+00    0.10375971E+01
+    2   -0.10952466E+04   -0.10952466E+04    0.74297949E+00
+    3   -0.10956437E+04   -0.39713821E+00    0.12089421E+00
+    4   -0.10959331E+04   -0.28938219E+00    0.75668639E-01
+    5   -0.10959512E+04   -0.18157365E-01    0.16120348E-01
+    6   -0.10959636E+04   -0.12312649E-01    0.57984932E-02
+    7   -0.10959638E+04   -0.23881737E-03    0.11829192E-02
+    8   -0.10959638E+04   -0.15330893E-04    0.57516136E-03
+    9   -0.10959638E+04   -0.34063751E-05    0.15212308E-03
+   10   -0.10959638E+04   -0.28145587E-06    0.49255640E-04
+>> Charges saved for restart in charges.bin
+
+Total Energy:                    -1084.9500814780 H       -29522.9938 eV
+Extrapolated to 0K:              -1084.9500814780 H       -29522.9938 eV
+Total Mermin free energy:        -1084.9500814780 H       -29522.9938 eV
+Force related energy:            -1084.9500814780 H       -29522.9938 eV
+
+Volume:                              0.232254E+06 au^3   0.344165E+05 A^3
+Pressure:                           -0.307434E-05 au    -0.904501E+08 Pa
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+Pre-SCC initialisation                 +       1.48 (  2.0%)       0.16 (  1.0%)
+SCC                                    +      67.58 ( 92.0%)      15.66 ( 94.9%)
+Post-SCC processing                    +       4.38 (  6.0%)       0.67 (  4.0%)
+--------------------------------------------------------------------------------
+Missing                                +       0.01 (  0.0%)       0.01 (  0.0%)
+Total                                  =      73.44 (100.0%)      16.49 (100.0%)
+--------------------------------------------------------------------------------
