@@ -8,7 +8,7 @@ void engine::RingPolymerEngine::coupleRingPolymerBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
     const auto temperature   = settings::ThermostatSettings::getTargetTemperature();
-    const auto rpmd_factor   = constants::_RPMD_PREFACTOR_ / (numberOfBeads * numberOfBeads * temperature * temperature);
+    const auto rpmd_factor   = constants::_RPMD_PREFACTOR_ * numberOfBeads * numberOfBeads * temperature * temperature;
 
     for (size_t i = 0; i < numberOfBeads; ++i)
     {

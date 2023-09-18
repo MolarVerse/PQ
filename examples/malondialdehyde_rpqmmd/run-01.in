@@ -7,7 +7,7 @@
       jobtype = qm-rpmd; #dim = 3d;
 
     # Number of steps to be performed and timestep in fs 
-      nstep = 100; timestep = 0.2;
+      nstep = 1000; timestep = 0.2;
       nreset = 100;
 
    rpmd_n_replica = 10;
