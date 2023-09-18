@@ -15,14 +15,17 @@ namespace thermostat
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
-        double _sigma = 0.0;
+        double _friction = 0.0;
+        double _sigma    = 0.0;
 
       public:
         LangevinThermostat() = default;
-        explicit LangevinThermostat(const double targetTemperature);
+        explicit LangevinThermostat(const double targetTemperature, const double friction);
 
-        virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
-        virtual void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
+        void applyLangevin(simulationBox::SimulationBox &);
+
+        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     };
 
 }   // namespace thermostat

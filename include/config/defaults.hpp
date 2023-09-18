@@ -30,8 +30,7 @@ namespace defaults
     static constexpr bool   _CELL_LIST_IS_ACTIVE_DEFAULT_ = false;   // default is brute force routine
     static constexpr size_t _NUMBER_OF_CELLS_DEFAULT_     = 7;       // for each dimension
 
-    static constexpr char   _THERMOSTAT_DEFAULT_[]                 = "none";   // default is no thermostat
-    static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;      // in ps
+    static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;   // in ps
 
     static constexpr char   _MANOSTAT_DEFAULT_[]                 = "none";     // default is no manostat
     static constexpr double _BERENDSEN_MANOSTAT_RELAXATION_TIME_ = 1.0;        // in ps

@@ -9,6 +9,20 @@
 
 namespace settings
 {
+
+    /**
+     * @brief enum class to store the type of thermostat
+     *
+     */
+    enum class ThermostatType
+    {
+        NONE,
+        BERENDSEN,
+        LANGEVIN
+    };
+
+    [[nodiscard]] std::string string(const ThermostatType &thermostatType);
+
     /**
      * @class ThermostatSettings
      *
@@ -18,7 +32,7 @@ namespace settings
     class ThermostatSettings
     {
       private:
-        static inline std::string _thermostatType = defaults::_MANOSTAT_DEFAULT_;   // none
+        static inline ThermostatType _thermostatType = ThermostatType::NONE;
 
         static inline bool _isTemperatureSet = false;
 
@@ -29,15 +43,17 @@ namespace settings
         ThermostatSettings()  = default;
         ~ThermostatSettings() = default;
 
-        static void setThermostatType(const std::string_view &thermostatType) { _thermostatType = thermostatType; }
+        static void setThermostatType(const std::string_view &thermostatType);
+
+        static void setThermostatType(const ThermostatType &thermostatType) { _thermostatType = thermostatType; }
         static void setTemperatureSet(const bool temperatureSet) { _isTemperatureSet = temperatureSet; }
         static void setTargetTemperature(const double targetTemperature) { _targetTemperature = targetTemperature; }
         static void setRelaxationTime(const double relaxationTime) { _relaxationTime = relaxationTime; }
 
-        [[nodiscard]] static std::string getThermostatType() { return _thermostatType; }
-        [[nodiscard]] static bool        isTemperatureSet() { return _isTemperatureSet; }
-        [[nodiscard]] static double      getTargetTemperature() { return _targetTemperature; }
-        [[nodiscard]] static double      getRelaxationTime() { return _relaxationTime; }
+        [[nodiscard]] static ThermostatType getThermostatType() { return _thermostatType; }
+        [[nodiscard]] static bool           isTemperatureSet() { return _isTemperatureSet; }
+        [[nodiscard]] static double         getTargetTemperature() { return _targetTemperature; }
+        [[nodiscard]] static double         getRelaxationTime() { return _relaxationTime; }
     };
 }   // namespace settings
 

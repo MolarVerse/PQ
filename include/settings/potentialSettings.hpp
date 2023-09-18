@@ -26,7 +26,7 @@ namespace settings
         NONE
     };
 
-    std::string string(const NonCoulombType nonCoulombType);
+    [[nodiscard]] std::string string(const NonCoulombType nonCoulombType);
 
     /**
      * @class PotentialSettings

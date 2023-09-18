@@ -2,6 +2,12 @@
 
 using namespace settings;
 
+/**
+ * @brief return string of nonCoulombType
+ *
+ * @param nonCoulombType
+ * @return std::string
+ */
 std::string settings::string(const NonCoulombType nonCoulombType)
 {
     switch (nonCoulombType)

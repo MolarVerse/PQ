@@ -42,11 +42,12 @@ void ThermostatSetup::setup()
 {
     const auto thermostatType = settings::ThermostatSettings::getThermostatType();
 
-    if (thermostatType != "none")
+    if (thermostatType != settings::ThermostatType::NONE)
         if (!settings::ThermostatSettings::isTemperatureSet())
-            throw customException::InputFileException(std::format("Temperature not set for {} thermostat", thermostatType));
+            throw customException::InputFileException(
+                std::format("Temperature not set for {} thermostat", settings::string(thermostatType)));
 
-    if (thermostatType == "berendsen")
+    if (thermostatType == settings::ThermostatType::BERENDSEN)
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));

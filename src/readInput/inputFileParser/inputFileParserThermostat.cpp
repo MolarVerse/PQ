@@ -46,9 +46,13 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
         settings::ThermostatSettings::setThermostatType("none");
     else if (lineElements[2] == "berendsen")
         settings::ThermostatSettings::setThermostatType("berendsen");
+    else if (lineElements[2] == "langevin")
+        settings::ThermostatSettings::setThermostatType("langevin");
     else
         throw customException::InputFileException(
-            format("Invalid thermostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
+            format("Invalid thermostat \"{}\" at line {} in input file. Possible options are: none, berendsen, langevin",
+                   lineElements[2],
+                   lineNumber));
 }
 
 /**
