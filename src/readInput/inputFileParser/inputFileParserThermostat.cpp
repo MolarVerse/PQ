@@ -54,9 +54,11 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
         settings::ThermostatSettings::setThermostatType("velocity_rescaling");
     else if (lineElements[2] == "langevin")
         settings::ThermostatSettings::setThermostatType("langevin");
+    else if (lineElements[2] == "nh-chain")
+        settings::ThermostatSettings::setThermostatType("nh-chain");
     else
         throw customException::InputFileException(format("Invalid thermostat \"{}\" at line {} in input file. Possible options "
-                                                         "are: none, berendsen, velocity_rescaling, langevin",
+                                                         "are: none, berendsen, velocity_rescaling, langevin, nh-chain",
                                                          lineElements[2],
                                                          lineNumber));
 }

@@ -20,17 +20,25 @@ namespace thermostat
         std::vector<double> _chi{0.0};
         std::vector<double> _zeta{0.0};
 
-        double _omegaFactor = 0.0;
+        double _couplingFrequency = 0.0;
 
       public:
         NoseHooverThermostat() = default;
-        explicit NoseHooverThermostat(const double targetTemp, const std::vector<double> &chi)
-            : Thermostat(targetTemp), _chi(chi){};
+        explicit NoseHooverThermostat(const double               targetTemp,
+                                      const std::vector<double> &chi,
+                                      const std::vector<double> &zeta,
+                                      const double               couplingFrequency)
+            : Thermostat(targetTemp), _chi(chi), _zeta(zeta), _couplingFrequency(couplingFrequency){};
 
         void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
 
         [[nodiscard]] std::vector<double> getChi() const { return _chi; }
-        void                              setChi(const std::vector<double> &chi) { _chi = chi; }
+        [[nodiscard]] std::vector<double> getZeta() const { return _zeta; }
+        [[nodiscard]] double              getCouplingFrequency() const { return _couplingFrequency; }
+
+        void setChi(const std::vector<double> &chi) { _chi = chi; }
+        void setZeta(const std::vector<double> &zeta) { _zeta = zeta; }
+        void setCouplingFrequency(const double couplingFrequency) { _couplingFrequency = couplingFrequency; }
     };
 }   // namespace thermostat
 

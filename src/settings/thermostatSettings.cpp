@@ -17,6 +17,7 @@ std::string settings::string(const ThermostatType &thermostatType)
     case ThermostatType::BERENDSEN: return "berendsen";
     case ThermostatType::VELOCITY_RESCALING: return "velocity_rescaling";
     case ThermostatType::LANGEVIN: return "langevin";
+    case ThermostatType::NOSE_HOOVER: return "nh-chain";
     default: return "none";
     }
 }
@@ -36,6 +37,8 @@ void ThermostatSettings::setThermostatType(const std::string_view &thermostatTyp
         _thermostatType = ThermostatType::VELOCITY_RESCALING;
     else if (thermostatTypeToLower == "langevin")
         _thermostatType = ThermostatType::LANGEVIN;
+    else if (thermostatTypeToLower == "nh-chain")
+        _thermostatType = ThermostatType::NOSE_HOOVER;
     else
         _thermostatType = ThermostatType::NONE;
 }

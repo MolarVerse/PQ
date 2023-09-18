@@ -78,11 +78,15 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::VELOCITY_RESCALING);
 
+    lineElements = {"thermostat", "=", "nh-chain"};
+    parser.parseThermostat(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::NOSE_HOOVER);
+
     lineElements = {"thermostat", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseThermostat(lineElements, 0),
                      customException::InputFileException,
                      "Invalid thermostat \"notValid\" at line 0 in input file. Possible options are: none, berendsen, "
-                     "velocity_rescaling, langevin");
+                     "velocity_rescaling, langevin, nh-chain");
 }
 
 int main(int argc, char **argv)

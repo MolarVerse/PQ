@@ -4,6 +4,7 @@
 
 #include "defaults.hpp"
 
+#include <map>           // for map
 #include <string>        // for string
 #include <string_view>   // for string_view
 
@@ -21,7 +22,8 @@ namespace settings
         NONE,
         BERENDSEN,
         VELOCITY_RESCALING,
-        LANGEVIN
+        LANGEVIN,
+        NOSE_HOOVER
     };
 
     [[nodiscard]] std::string string(const ThermostatType &thermostatType);
@@ -39,27 +41,53 @@ namespace settings
 
         static inline bool _isTemperatureSet = false;
 
+        static inline size_t _noseHooverChainLength = defaults::_NOSE_HOOVER_CHAIN_LENGTH_DEFAULT_;   // 3
+
         static inline double _targetTemperature;   // no default value - has to be set by user
-        static inline double _relaxationTime = defaults::_BERENDSEN_THERMOSTAT_RELAXATION_TIME_;   // 0.1 ps
-        static inline double _friction       = defaults::_LANGEVIN_THERMOSTAT_FRICTION_;           // 10.0 ps^-1
+        static inline double _relaxationTime              = defaults::_BERENDSEN_THERMOSTAT_RELAXATION_TIME_;   // 0.1 ps
+        static inline double _friction                    = defaults::_LANGEVIN_THERMOSTAT_FRICTION_;           // 10.0 ps^-1
+        static inline double _noseHooverCouplingFrequency = defaults::_NOSE_HOOVER_COUPLING_FREQUENCY_;         // 1.0e6
+
+        static inline std::map<size_t, double> _chi;    // no default value - has to be set by user
+        static inline std::map<size_t, double> _zeta;   // no default value - has to be set by user
 
       public:
         ThermostatSettings()  = default;
         ~ThermostatSettings() = default;
 
         static void setThermostatType(const std::string_view &thermostatType);
-
         static void setThermostatType(const ThermostatType &thermostatType) { _thermostatType = thermostatType; }
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        static void setNoseHooverChainLength(const size_t length) { _noseHooverChainLength = length; }
+
         static void setTemperatureSet(const bool temperatureSet) { _isTemperatureSet = temperatureSet; }
         static void setTargetTemperature(const double targetTemperature) { _targetTemperature = targetTemperature; }
         static void setRelaxationTime(const double relaxationTime) { _relaxationTime = relaxationTime; }
         static void setFriction(const double friction) { _friction = friction; }
+        static void setNoseHooverCouplingFrequency(const double frequency) { _noseHooverCouplingFrequency = frequency; }
+
+        static void addChi(const size_t index, const double chi) { _chi.try_emplace(index, chi); }
+        static void addZeta(const size_t index, const double zeta) { _zeta.try_emplace(index, zeta); }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] static size_t getNoseHooverChainLength() { return _noseHooverChainLength; }
 
         [[nodiscard]] static ThermostatType getThermostatType() { return _thermostatType; }
         [[nodiscard]] static bool           isTemperatureSet() { return _isTemperatureSet; }
         [[nodiscard]] static double         getTargetTemperature() { return _targetTemperature; }
         [[nodiscard]] static double         getRelaxationTime() { return _relaxationTime; }
         [[nodiscard]] static double         getFriction() { return _friction; }
+        [[nodiscard]] static double         getNoseHooverCouplingFrequency() { return _noseHooverCouplingFrequency; }
+
+        [[nodiscard]] static double getChi(const size_t index) { return _chi.at(index); }
+        [[nodiscard]] static double getZeta(const size_t index) { return _zeta.at(index); }
     };
 }   // namespace settings
 
