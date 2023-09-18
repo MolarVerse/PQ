@@ -1,5 +1,7 @@
 #include "potentialSettings.hpp"
 
+#include "stringUtilities.hpp"
+
 using namespace settings;
 
 /**
@@ -28,16 +30,17 @@ std::string settings::string(const NonCoulombType nonCoulombType)
  */
 void PotentialSettings::setNonCoulombType(const std::string_view &type)
 {
-    _nonCoulombTypeString = type;
-    if (type == "lj")
+    const auto typeToLower = utilities::toLowerCopy(type);
+
+    if (typeToLower == "lj")
         _nonCoulombType = NonCoulombType::LJ;
-    else if (type == "lj_9_12")
+    else if (typeToLower == "lj_9_12")
         _nonCoulombType = NonCoulombType::LJ_9_12;
-    else if (type == "buck")
+    else if (typeToLower == "buck")
         _nonCoulombType = NonCoulombType::BUCKINGHAM;
-    else if (type == "morse")
+    else if (typeToLower == "morse")
         _nonCoulombType = NonCoulombType::MORSE;
-    else if (type == "guff")
+    else if (typeToLower == "guff")
         _nonCoulombType = NonCoulombType::GUFF;
     else
         _nonCoulombType = NonCoulombType::NONE;

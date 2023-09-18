@@ -50,7 +50,7 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
         _fp << std::format("{:20.12f}\t", data.getImproperEnergy());
     }
 
-    if (settings::ManostatSettings::getManostatType() != "none")
+    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
     {
         _fp << std::format("{:20.12f}\t", data.getVolume());
         _fp << std::format("{:20.12f}\t", data.getDensity());

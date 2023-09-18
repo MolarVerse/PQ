@@ -11,6 +11,8 @@ namespace settings
 {
 
     /**
+     * @enum ThermostatType
+     *
      * @brief enum class to store the type of thermostat
      *
      */

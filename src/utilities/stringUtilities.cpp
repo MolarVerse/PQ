@@ -92,6 +92,14 @@ std::string utilities::toLowerCopy(std::string myString)
 }
 
 /**
+ * @brief returns a copy of a string all lower case
+ *
+ * @param myString
+ * @return string
+ */
+std::string utilities::toLowerCopy(const std::string_view myString) { return toLowerCopy(std::string(myString)); }
+
+/**
  * @brief converts the first letter of a string to upper case and the rest to lower case
  *
  * @param myString

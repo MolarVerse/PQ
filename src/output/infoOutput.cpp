@@ -59,7 +59,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
-    if (settings::ManostatSettings::getManostatType() != "none")
+    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
         writeRight(data.getDensity(), "DENSITY", "g/cm^3");

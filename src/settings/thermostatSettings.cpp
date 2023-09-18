@@ -1,5 +1,7 @@
 #include "thermostatSettings.hpp"
 
+#include "stringUtilities.hpp"   // for toLowerCopy
+
 using settings::ThermostatSettings;
 
 /**
@@ -25,9 +27,11 @@ std::string settings::string(const ThermostatType &thermostatType)
  */
 void ThermostatSettings::setThermostatType(const std::string_view &thermostatType)
 {
-    if (thermostatType == "berendsen")
+    const auto thermostatTypeToLower = utilities::toLowerCopy(thermostatType);
+
+    if (thermostatTypeToLower == "berendsen")
         _thermostatType = ThermostatType::BERENDSEN;
-    else if (thermostatType == "langevin")
+    else if (thermostatTypeToLower == "langevin")
         _thermostatType = ThermostatType::LANGEVIN;
     else
         _thermostatType = ThermostatType::NONE;
