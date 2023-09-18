@@ -49,10 +49,12 @@ namespace constants
     /**
      * @brief Conversion factors for energy units
      */
-    static constexpr double _KCAL_TO_JOULE_         = 4184.0;
-    static constexpr double _JOULE_TO_KCAL_         = 1.0 / _KCAL_TO_JOULE_;
-    static constexpr double _JOULE_TO_KCAL_PER_MOL_ = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
-    static constexpr double _KCAL_PER_MOL_TO_JOULE_ = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _KCAL_TO_JOULE_          = 4184.0;
+    static constexpr double _JOULE_TO_KCAL_          = 1.0 / _KCAL_TO_JOULE_;
+    static constexpr double _JOULE_TO_KCAL_PER_MOL_  = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_PER_MOL_TO_JOULE_  = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _BOLTZMANN_CONSTANT_     = 1.38064852e-23;   // in J/K
+    static constexpr double _UNIVERSAL_GAS_CONSTANT_ = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
 
     /**
      * @brief Conversion factors for charge related data
@@ -91,7 +93,6 @@ namespace constants
     /**
      * @brief Conversion factors for temperature calculation
      */
-    static constexpr double _BOLTZMANN_CONSTANT_ = 1.38064852e-23;   // in J/K
     static constexpr double _TEMPERATURE_FACTOR_ =
         _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _MASS_UNIT_TO_SI_ / _BOLTZMANN_CONSTANT_;
 

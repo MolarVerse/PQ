@@ -37,6 +37,7 @@ namespace thermostat
         virtual ~Thermostat() = default;
 
         virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
     };
 
 }   // namespace thermostat
