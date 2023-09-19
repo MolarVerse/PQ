@@ -5,6 +5,7 @@
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
 #include "thermostat.hpp"                    // for BerendsenThermostat, Thermostat, thermostat
 #include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "timingsSettings.hpp"               // for TimingsSettings
@@ -53,6 +54,7 @@ void ThermostatSetup::setup()
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
+
     else if (thermostatType == settings::ThermostatType::VELOCITY_RESCALING)
         _engine.makeThermostat(
             thermostat::VelocityRescalingThermostat(settings::ThermostatSettings::getTargetTemperature(),
@@ -61,6 +63,32 @@ void ThermostatSetup::setup()
     else if (thermostatType == settings::ThermostatType::LANGEVIN)
         _engine.makeThermostat(thermostat::LangevinThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                               settings::ThermostatSettings::getFriction()));
+
+    else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
+    {
+        const auto noseHooverChainLength = settings::ThermostatSettings::getNoseHooverChainLength();
+
+        auto thermostat = thermostat::NoseHooverThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                           std::vector<double>(noseHooverChainLength + 1, 0.0),
+                                                           std::vector<double>(noseHooverChainLength + 1, 0.0),
+                                                           settings::ThermostatSettings::getNoseHooverCouplingFrequency());
+
+        auto fillChi = [&thermostat, noseHooverChainLength](const auto pair)
+        {
+            if (pair.first > noseHooverChainLength)
+                throw customException::InputFileException(std::format(
+                    "Chi index {} is larger than the number of nose hoover chains {}", pair.first, noseHooverChainLength));
+
+            thermostat.setChi(size_t(pair.first - 1), pair.second);
+        };
+
+        auto fillZeta = [&thermostat](const auto pair) { thermostat.setZeta(size_t(pair.first - 1), pair.second); };
+
+        std::ranges::for_each(settings::ThermostatSettings::getChi(), fillChi);
+        std::ranges::for_each(settings::ThermostatSettings::getZeta(), fillZeta);
+
+        _engine.makeThermostat(thermostat);
+    }
     else
         _engine.makeThermostat(thermostat::Thermostat());
 }

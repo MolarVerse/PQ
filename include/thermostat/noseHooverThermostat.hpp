@@ -30,14 +30,27 @@ namespace thermostat
                                       const double               couplingFrequency)
             : Thermostat(targetTemp), _chi(chi), _zeta(zeta), _couplingFrequency(couplingFrequency){};
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
+        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyThermostatOnForces(simulationBox::SimulationBox &) override;
+
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] std::vector<double> getChi() const { return _chi; }
         [[nodiscard]] std::vector<double> getZeta() const { return _zeta; }
         [[nodiscard]] double              getCouplingFrequency() const { return _couplingFrequency; }
 
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        void setChi(const unsigned int index, const double chi) { _chi[index] = chi; }
         void setChi(const std::vector<double> &chi) { _chi = chi; }
+
+        void setZeta(const unsigned int index, const double zeta) { _zeta[index] = zeta; }
         void setZeta(const std::vector<double> &zeta) { _zeta = zeta; }
+
         void setCouplingFrequency(const double couplingFrequency) { _couplingFrequency = couplingFrequency; }
     };
 }   // namespace thermostat

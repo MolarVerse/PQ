@@ -1,6 +1,7 @@
 #include "noseHooverSection.hpp"
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"           // for RstFileException
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <format>   // for format
 #include <string>   // for string
@@ -11,12 +12,25 @@ namespace engine
     class Engine;   // forward declaration
 }
 
-// TODO: not implemented yet
+using readInput::restartFile::NoseHooverSection;
 
-using namespace readInput::restartFile;
-
-void NoseHooverSection::process(std::vector<std::string> &, engine::Engine &)
+/**
+ * @brief checks the number of arguments in the line
+ *
+ * @param lineElements all elements of the line
+ *
+ * @throws customException::RstFileException if the number of arguments is not correct
+ */
+void NoseHooverSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
 {
-    throw customException::RstFileException(
-        std::format("Error in line {}: Nose-Hoover section not implemented yet", _lineNumber));
+    if (4 != lineElements.size())
+        throw customException::RstFileException(
+            std::format("Error not enough arguments in line {} for a chi entry of the nose hoover thermostat", _lineNumber));
+
+    auto [iterChi, chiIsInserted]   = settings::ThermostatSettings::addChi(stoul(lineElements[1]), stod(lineElements[2]));
+    auto [iterZeta, zetaIsInserted] = settings::ThermostatSettings::addZeta(stoul(lineElements[1]), stod(lineElements[3]));
+
+    if (!chiIsInserted || !zetaIsInserted)
+        throw customException::RstFileException(
+            std::format("Error in line {} in restart file; chi or zeta entry already exists", _lineNumber));
 }

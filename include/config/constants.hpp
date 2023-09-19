@@ -68,9 +68,10 @@ namespace constants
 
     static constexpr double _HARTREE_TO_KCAL_PER_MOLE_ = 627.5094740631;
 
-    static constexpr double _BOLTZMANN_CONSTANT_         = 1.38064852e-23;   // in J/K
-    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_ = _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
-    static constexpr double _UNIVERSAL_GAS_CONSTANT_     = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
+    static constexpr double _BOLTZMANN_CONSTANT_                 = 1.38064852e-23;   // in J/K
+    static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ = _BOLTZMANN_CONSTANT_ * _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_         = _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
+    static constexpr double _UNIVERSAL_GAS_CONSTANT_             = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
 
     /**
      * @brief Conversion factors for force units

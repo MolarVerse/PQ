@@ -70,8 +70,8 @@ namespace settings
         static void setFriction(const double friction) { _friction = friction; }
         static void setNoseHooverCouplingFrequency(const double frequency) { _noseHooverCouplingFrequency = frequency; }
 
-        static void addChi(const size_t index, const double chi) { _chi.try_emplace(index, chi); }
-        static void addZeta(const size_t index, const double zeta) { _zeta.try_emplace(index, zeta); }
+        static auto addChi(const size_t index, const double chi) { return _chi.try_emplace(index, chi); }
+        static auto addZeta(const size_t index, const double zeta) { return _zeta.try_emplace(index, zeta); }
 
         /***************************
          * standard getter methods *
@@ -86,8 +86,8 @@ namespace settings
         [[nodiscard]] static double         getFriction() { return _friction; }
         [[nodiscard]] static double         getNoseHooverCouplingFrequency() { return _noseHooverCouplingFrequency; }
 
-        [[nodiscard]] static double getChi(const size_t index) { return _chi.at(index); }
-        [[nodiscard]] static double getZeta(const size_t index) { return _zeta.at(index); }
+        [[nodiscard]] static std::map<size_t, double> getChi() { return _chi; }
+        [[nodiscard]] static std::map<size_t, double> getZeta() { return _zeta; }
     };
 }   // namespace settings
 

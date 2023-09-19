@@ -84,7 +84,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         if (atomCounter == moleculeType->getNumberOfAtoms())
             break;
 
-        /* *********************************************
+        /***********************************************
          * check the next atom line                    *
          * if no atom line is found throw an exception *
          * because if molecule is finished the loop    *

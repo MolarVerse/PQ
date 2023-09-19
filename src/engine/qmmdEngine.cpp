@@ -16,6 +16,8 @@ void QMMDEngine::takeStep()
 
     _qmRunner->run(_simulationBox, _physicalData);
 
+    _thermostat->applyThermostatOnForces(_simulationBox);
+
     _integrator->secondStep(_simulationBox);
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);

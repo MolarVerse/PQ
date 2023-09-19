@@ -59,6 +59,8 @@ void MMMDEngine::takeStep()
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
+    _thermostat->applyThermostatOnForces(_simulationBox);
+
     _integrator->secondStep(_simulationBox);
 
     _constraints.applyRattle();
