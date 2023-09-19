@@ -268,6 +268,30 @@ void SimulationBox::calculateDegreesOfFreedom()
 }
 
 /**
+ * @brief calculate total mass of simulationBox
+ *
+ */
+void SimulationBox::calculateTotalMass()
+{
+    _totalMass = 0.0;
+
+    std::ranges::for_each(_atoms, [this](const auto &atom) { _totalMass += atom->getMass(); });
+}
+
+/**
+ * @brief calculate center of mass of simulationBox
+ *
+ */
+void SimulationBox::calculateCenterOfMass()
+{
+    _centerOfMass = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms, [this](const auto &atom) { _centerOfMass += atom->getMass() * atom->getPosition(); });
+
+    _centerOfMass /= _totalMass;
+}
+
+/**
  * @brief calculate center of mass of all molecules
  *
  */
@@ -275,6 +299,32 @@ void SimulationBox::calculateCenterOfMassMolecules()
 {
     std::ranges::for_each(_molecules,
                           [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box.getBoxDimensions()); });
+}
+
+/**
+ * @brief calculate momentum of simulationBox
+ *
+ */
+void SimulationBox::calculateMomentum()
+{
+    _momentum = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms, [this](const auto &atom) { _momentum += atom->getMass() * atom->getVelocity(); });
+}
+
+/**
+ * @brief calculate angular momentum of simulationBox
+ *
+ */
+void SimulationBox::calculateAngularMomentum()
+{
+    _angularMomentum = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms,
+                          [this](const auto &atom)
+                          { _angularMomentum += atom->getMass() * cross(atom->getPosition(), atom->getVelocity()); });
+
+    _angularMomentum -= cross(_centerOfMass, _momentum / _totalMass);
 }
 
 /**

@@ -44,14 +44,22 @@ namespace simulationBox
      *  The atoms positions, velocities and forces are stored in the SimulationBox class.
      *  Additional molecular information is also stored in the SimulationBox class.
      *
+     * @TODO: check what should be in box and what not and so on........
+     *
      */
     class SimulationBox
     {
       private:
-        int    _waterType;
-        int    _ammoniaType;
-        size_t _degreesOfFreedom    = 0;
-        double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        int _waterType;
+        int _ammoniaType;
+
+        size_t _degreesOfFreedom = 0;
+
+        double               _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        double               _totalMass           = 0.0;
+        linearAlgebra::Vec3D _centerOfMass        = linearAlgebra::Vec3D{0.0};
+        linearAlgebra::Vec3D _momentum            = linearAlgebra::Vec3D{0.0};
+        linearAlgebra::Vec3D _angularMomentum     = linearAlgebra::Vec3D{0.0};
 
         Box _box;
 
@@ -67,11 +75,15 @@ namespace simulationBox
       public:
         void copy(const SimulationBox &);
 
-        void checkCoulombRadiusCutOff(customException::ExceptionType) const;
+        void checkCoulombRadiusCutOff(const customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
+        void calculateTotalMass();
+        void calculateCenterOfMass();
         void calculateCenterOfMassMolecules();
+        void calculateMomentum();
+        void calculateAngularMomentum();
 
         [[nodiscard]] bool                     moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -98,13 +110,16 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int    getWaterType() const { return _waterType; }
-        [[nodiscard]] int    getAmmoniaType() const { return _ammoniaType; }
-        [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
-        [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
-        [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
-        [[nodiscard]] size_t getNumberOfAtoms() const { return _atoms.size(); }
-        [[nodiscard]] size_t getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+        [[nodiscard]] int                   getWaterType() const { return _waterType; }
+        [[nodiscard]] int                   getAmmoniaType() const { return _ammoniaType; }
+        [[nodiscard]] size_t                getNumberOfMolecules() const { return _molecules.size(); }
+        [[nodiscard]] size_t                getDegreesOfFreedom() const { return _degreesOfFreedom; }
+        [[nodiscard]] size_t                getNumberOfAtoms() const { return _atoms.size(); }
+        [[nodiscard]] size_t                getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+        [[nodiscard]] double                getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
+        [[nodiscard]] linearAlgebra::Vec3D &getCenterOfMass() { return _centerOfMass; }
+        [[nodiscard]] linearAlgebra::Vec3D &getMomentum() { return _momentum; }
+        [[nodiscard]] linearAlgebra::Vec3D &getAngularMomentum() { return _angularMomentum; }
 
         [[nodiscard]] Atom         &getAtom(const size_t index) { return *(_atoms[index]); }
         [[nodiscard]] Atom         &getQMAtom(const size_t index) { return *(_qmAtoms[index]); }

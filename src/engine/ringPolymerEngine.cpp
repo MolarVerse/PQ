@@ -53,7 +53,13 @@ void RingPolymerEngine::combineBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
-    std::ranges::for_each(_simulationBox.getAtoms(), [](auto &atom) { atom->setPosition({0.0, 0.0, 0.0}); });
+    std::ranges::for_each(_simulationBox.getAtoms(),
+                          [](auto &atom)
+                          {
+                              atom->setPosition({0.0, 0.0, 0.0});
+                              atom->setVelocity({0.0, 0.0, 0.0});
+                              atom->setForce({0.0, 0.0, 0.0});
+                          });
 
     auto addCoordinates = [this, numberOfBeads](auto &bead)
     {
@@ -62,6 +68,8 @@ void RingPolymerEngine::combineBeads()
             auto &atom = bead.getAtom(i);
 
             _simulationBox.getAtom(i).addPosition(atom.getPosition() / double(numberOfBeads));
+            _simulationBox.getAtom(i).addVelocity(atom.getVelocity() / double(numberOfBeads));
+            _simulationBox.getAtom(i).addForce(atom.getForce() / double(numberOfBeads));
         }
     };
 

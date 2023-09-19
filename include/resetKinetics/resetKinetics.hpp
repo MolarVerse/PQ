@@ -29,18 +29,25 @@ namespace resetKinetics
         size_t _frequencyTemperatureReset;
         size_t _nStepsMomentumReset;
         size_t _frequencyMomentumReset;
+        size_t _nStepsAngularReset;
+        size_t _frequencyAngularReset;
 
         double _targetTemperature;
 
       public:
         ResetKinetics() = default;
+        ResetKinetics(const size_t nStepsAngularReset, const size_t frequencyAngularReset)
+            : _nStepsAngularReset(nStepsAngularReset), _frequencyAngularReset(frequencyAngularReset){};
         ResetKinetics(const size_t nStepsTemperatureReset,
                       const size_t frequencyTemperatureReset,
                       const size_t nStepsMomentumReset,
                       const size_t frequencyMomentumReset,
+                      const size_t nStepsAngularReset,
+                      const size_t frequencyAngularReset,
                       const double targetTemperature)
             : _nStepsTemperatureReset(nStepsTemperatureReset), _frequencyTemperatureReset(frequencyTemperatureReset),
               _nStepsMomentumReset(nStepsMomentumReset), _frequencyMomentumReset(frequencyMomentumReset),
+              _nStepsAngularReset(nStepsAngularReset), _frequencyAngularReset(frequencyAngularReset),
               _targetTemperature(targetTemperature){};
 
         virtual ~ResetKinetics() = default;
@@ -48,6 +55,7 @@ namespace resetKinetics
         virtual void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
         void         resetTemperature(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
         void         resetMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
+        void         resetAngularMomentum(physicalData::PhysicalData &, simulationBox::SimulationBox &) const;
 
         /********************
          * standard getters *

@@ -26,6 +26,8 @@ InputFileParserResetKinetics::InputFileParserResetKinetics(engine::Engine &engin
     addKeyword(std::string("fscale"), bind_front(&InputFileParserResetKinetics::parseFScale, this), false);
     addKeyword(std::string("nreset"), bind_front(&InputFileParserResetKinetics::parseNReset, this), false);
     addKeyword(std::string("freset"), bind_front(&InputFileParserResetKinetics::parseFReset, this), false);
+    addKeyword(std::string("nreset_angular"), bind_front(&InputFileParserResetKinetics::parseNResetAngular, this), false);
+    addKeyword(std::string("freset_angular"), bind_front(&InputFileParserResetKinetics::parseFResetAngular, this), false);
 }
 
 /**
@@ -114,4 +116,48 @@ void InputFileParserResetKinetics::parseFReset(const std::vector<std::string> &l
         throw customException::InputFileException("Freset must be positive");
 
     settings::ResetKineticsSettings::setFReset(static_cast<size_t>(fReset));
+}
+
+/**
+ * @brief parse nreset_angular and set it in settings
+ *
+ * @details default value is 0
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throw customException::InputFileException if nreset_angular is negative
+ */
+void InputFileParserResetKinetics::parseNResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto nResetAngular = stoi(lineElements[2]);
+
+    if (nResetAngular < 0)
+        throw customException::InputFileException("Nreset_angular must be positive");
+
+    settings::ResetKineticsSettings::setNResetAngular(static_cast<size_t>(nResetAngular));
+}
+
+/**
+ * @brief parse freset_angular and set it in settings
+ *
+ * @details default value is 0 but then set to UINT_MAX in setup
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throw customException::InputFileException if freset_angular is negative
+ */
+void InputFileParserResetKinetics::parseFResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto fResetAngular = stoi(lineElements[2]);
+
+    if (fResetAngular < 0)
+        throw customException::InputFileException("Freset_angular must be positive");
+
+    settings::ResetKineticsSettings::setFResetAngular(static_cast<size_t>(fResetAngular));
 }

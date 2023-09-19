@@ -13,10 +13,16 @@
 using namespace resetKinetics;
 
 /**
- * @brief dummy reset function in case no reset is needed
+ * @brief checks to reset angular momentum
  *
  */
-void ResetKinetics::reset(const size_t, physicalData::PhysicalData &, simulationBox::SimulationBox &) const {}
+void ResetKinetics::reset(const size_t                  step,
+                          physicalData::PhysicalData   &physicalData,
+                          simulationBox::SimulationBox &simulationBox) const
+{
+    if ((step <= _nStepsAngularReset) || (0 == step % _frequencyAngularReset))
+        ResetKinetics::resetAngularMomentum(physicalData, simulationBox);
+}
 
 /**
  * @brief reset the momentum of the system
@@ -29,6 +35,8 @@ void ResetMomentum::reset(const size_t step, physicalData::PhysicalData &physica
 {
     if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
         ResetKinetics::resetMomentum(physicalData, simBox);
+
+    ResetKinetics::reset(step, physicalData, simBox);
 }
 
 /**
@@ -54,6 +62,8 @@ void ResetTemperature::reset(const size_t                  step,
     }
     else if ((step <= _nStepsMomentumReset) || (0 == step % _frequencyMomentumReset))
         ResetKinetics::resetMomentum(physicalData, simBox);
+
+    ResetKinetics::reset(step, physicalData, simBox);
 }
 
 /**
@@ -91,4 +101,11 @@ void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simu
 
     physicalData.calculateKineticEnergyAndMomentum(simBox);
     physicalData.calculateTemperature(simBox);
+}
+
+void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
+{
+    simBox.calculateCenterOfMass();
+    simBox.calculateMomentum();
+    simBox.calculateAngularMomentum();
 }

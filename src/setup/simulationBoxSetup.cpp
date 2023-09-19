@@ -76,6 +76,7 @@ void SimulationBoxSetup::setup()
     _engine.getSimulationBox().calculateCenterOfMassMolecules();
 
     initVelocities();
+    calculateTotalMass();
 }
 
 /**

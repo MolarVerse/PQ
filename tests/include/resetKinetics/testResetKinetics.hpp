@@ -23,15 +23,15 @@ class TestResetKinetics : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 300.0);
+        _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50, 11, 300.0);
         _data          = new physicalData::PhysicalData();
 
         _simulationBox = new simulationBox::SimulationBox();
 
         auto molecule1 = simulationBox::Molecule();
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<simulationBox::Atom>();
+        const auto atom2 = std::make_shared<simulationBox::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -44,7 +44,7 @@ class TestResetKinetics : public ::testing::Test
 
         auto molecule2 = simulationBox::Molecule();
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        const auto atom3 = std::make_shared<simulationBox::Atom>();
 
         molecule2.setNumberOfAtoms(1);
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
