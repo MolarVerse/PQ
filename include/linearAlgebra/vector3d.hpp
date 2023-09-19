@@ -29,7 +29,7 @@ namespace linearAlgebra
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     class Vector3D
     {
       private:

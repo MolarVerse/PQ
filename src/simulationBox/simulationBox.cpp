@@ -332,7 +332,7 @@ void SimulationBox::calculateAngularMomentum()
  *
  * @throw UserInputException if coulomb radius cut off is larger than half of the minimal box dimension
  */
-void SimulationBox::checkCoulombRadiusCutOff(customException::ExceptionType exceptionType) const
+void SimulationBox::checkCoulombRadiusCutOff(const customException::ExceptionType exceptionType) const
 {
     if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
     {
