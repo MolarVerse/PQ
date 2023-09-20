@@ -1,7 +1,7 @@
 add_library(linearAlgebra
     vector3d.cpp
     matrix.cpp
-    matrixnx3.cpp
+    staticMatrix3x3.cpp
 )
 
 target_include_directories(linearAlgebra

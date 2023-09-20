@@ -4,6 +4,7 @@
 
 #include <array>      // for array
 #include <cmath>      // for ceil, fabs, floor, rint, sqrt
+#include <concepts>   // for requires
 #include <cstddef>    // for size_t
 #include <iostream>   // for ostream
 
@@ -257,7 +258,11 @@ namespace linearAlgebra
          *
          * @note returns true if all members of vector are less than t
          */
-        bool operator<(const T t) const { return _x < t && _y < t && _z < t; }
+        bool operator<(const T t) const
+        requires std::is_fundamental_v<T>
+        {
+            return _x < t && _y < t && _z < t;
+        }
 
         /**
          * @brief > operator for vector3d and scalar
@@ -267,7 +272,11 @@ namespace linearAlgebra
          *
          * @note returns true if all members of vector are greater than t
          */
-        bool operator>(const T t) const { return _x > t && _y > t && _z > t; }
+        bool operator>(const T t) const
+        requires std::is_fundamental_v<T>
+        {
+            return _x > t && _y > t && _z > t;
+        }
 
         /**
          * @brief fabs of all entries of vector
