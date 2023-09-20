@@ -7,6 +7,22 @@
 
 namespace linearAlgebra
 {
+
+    /**
+     * @brief ostream operator for vector3d
+     *
+     * @param os
+     * @param v
+     * @return std::ostream&
+     */
+    template <typename T>
+    std::ostream &operator<<(std::ostream &os, const StaticMatrix3x3<T> &mat)
+    {
+        return os << "[[" << mat[0] << "]\n"
+                  << " [" << mat[1] << "]\n"
+                  << " [" << mat[2] << "]]";
+    }
+
     /**
      * @brief operator+= for two StaticMatrix3x3's
      *
@@ -59,7 +75,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief operator* for two StaticMatrix3x3's
+     * @brief operator* for StaticMatrix3x3 and scalar
      *
      * @param StaticMatrix3x3<T> mat, T t
      * @return StaticMatrix3x3<T>
@@ -71,7 +87,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief operator* for two StaticMatrix3x3's
+     * @brief operator* for StaticMatrix3x3 and scalar
      *
      * @param T t, StaticMatrix3x3<T> mat
      * @return StaticMatrix3x3<T>
@@ -80,6 +96,18 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator*(const T t, const StaticMatrix3x3<T> &mat)
     {
         return StaticMatrix3x3<T>(mat[0] * t, mat[1] * t, mat[2] * t);
+    }
+
+    /**
+     * @brief operator/ for StaticMatrix3x3 and scalar
+     *
+     * @param StaticMatrix3x3<T> mat, T t
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t)
+    {
+        return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
     }
 
     /**
@@ -128,18 +156,43 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief ostream operator for vector3d
+     * @brief cofactor matrix of a StaticMatrix3x3
      *
-     * @param os
-     * @param v
-     * @return std::ostream&
+     * @param mat
+     * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    std::ostream &operator<<(std::ostream &os, const StaticMatrix3x3<T> &mat)
+    StaticMatrix3x3<T> cofactorMatrix(const StaticMatrix3x3<T> &mat)
     {
-        return os << "[[" << mat[0] << "]\n"
-                  << " [" << mat[1] << "]\n"
-                  << " [" << mat[2] << "]]";
+        StaticMatrix3x3<T> result;
+
+        result[0][0] = mat[1][1] * mat[2][2] - mat[1][2] * mat[2][1];
+        result[0][1] = mat[0][2] * mat[2][1] - mat[0][1] * mat[2][2];
+        result[0][2] = mat[0][1] * mat[1][2] - mat[0][2] * mat[1][1];
+        result[1][0] = mat[1][2] * mat[2][0] - mat[1][0] * mat[2][2];
+        result[1][1] = mat[0][0] * mat[2][2] - mat[0][2] * mat[2][0];
+        result[1][2] = mat[0][2] * mat[1][0] - mat[0][0] * mat[1][2];
+        result[2][0] = mat[1][0] * mat[2][1] - mat[1][1] * mat[2][0];
+        result[2][1] = mat[0][1] * mat[2][0] - mat[0][0] * mat[2][1];
+        result[2][2] = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+
+        return result;
+    }
+
+    /**
+     * @brief inverse of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> inverse(const StaticMatrix3x3<T> &mat)
+    {
+        StaticMatrix3x3<T> result = cofactorMatrix(mat);
+
+        result = transpose(result);
+
+        return result / det(mat);
     }
 
 }   // namespace linearAlgebra

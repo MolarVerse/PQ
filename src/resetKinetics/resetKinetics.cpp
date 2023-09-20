@@ -1,9 +1,10 @@
 #include "resetKinetics.hpp"
 
-#include "constants.hpp"       // for _S_TO_FS_
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vector3D
+#include "constants.hpp"         // for _S_TO_FS_
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"          // for Vector3D
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for sqrt
@@ -108,4 +109,16 @@ void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalDat
     simBox.calculateCenterOfMass();
     simBox.calculateMomentum();
     simBox.calculateAngularMomentum();
+
+    linearAlgebra::StaticMatrix3x3<double> inertiaTensor{0.0};
+
+    auto addInertiaTensorOfAtom = [&inertiaTensor, &simBox](const auto &atom)
+    {
+        auto relativePosition  = atom->getPosition() - simBox.getCenterOfMass();
+        inertiaTensor         += linearAlgebra::vectorProduct(relativePosition, relativePosition) * atom->getMass();
+    };
+
+    std::ranges::for_each(simBox.getAtoms(), addInertiaTensorOfAtom);
+
+    const auto determinant = linearAlgebra::det(inertiaTensor);
 }
