@@ -56,6 +56,22 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result += rhs;
+
+        return result;
+    }
+
+    /**
      * @brief operator* for two StaticMatrix3x3's
      *
      * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
@@ -96,6 +112,26 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator*(const T t, const StaticMatrix3x3<T> &mat)
     {
         return StaticMatrix3x3<T>(mat[0] * t, mat[1] * t, mat[2] * t);
+    }
+
+    /**
+     * @brief operator* for StaticMatrix3x3 and Vector3D
+     *
+     * @tparam T
+     * @param mat
+     * @param vec
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    Vector3D<T> operator*(const StaticMatrix3x3<T> &mat, const Vector3D<T> &vec)
+    {
+        Vector3D<T> result;
+
+        result[0] = sum(mat[0] * vec);
+        result[1] = sum(mat[1] * vec);
+        result[2] = sum(mat[2] * vec);
+
+        return result;
     }
 
     /**
@@ -167,13 +203,13 @@ namespace linearAlgebra
         StaticMatrix3x3<T> result;
 
         result[0][0] = mat[1][1] * mat[2][2] - mat[1][2] * mat[2][1];
-        result[0][1] = mat[0][2] * mat[2][1] - mat[0][1] * mat[2][2];
-        result[0][2] = mat[0][1] * mat[1][2] - mat[0][2] * mat[1][1];
-        result[1][0] = mat[1][2] * mat[2][0] - mat[1][0] * mat[2][2];
+        result[0][1] = mat[1][2] * mat[2][0] - mat[1][0] * mat[2][2];
+        result[0][2] = mat[1][0] * mat[2][1] - mat[1][1] * mat[2][0];
+        result[1][0] = mat[0][2] * mat[2][1] - mat[0][1] * mat[2][2];
         result[1][1] = mat[0][0] * mat[2][2] - mat[0][2] * mat[2][0];
-        result[1][2] = mat[0][2] * mat[1][0] - mat[0][0] * mat[1][2];
-        result[2][0] = mat[1][0] * mat[2][1] - mat[1][1] * mat[2][0];
-        result[2][1] = mat[0][1] * mat[2][0] - mat[0][0] * mat[2][1];
+        result[1][2] = mat[0][1] * mat[2][0] - mat[0][0] * mat[2][1];
+        result[2][0] = mat[0][1] * mat[1][2] - mat[0][2] * mat[1][1];
+        result[2][1] = mat[0][2] * mat[1][0] - mat[0][0] * mat[1][2];
         result[2][2] = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
 
         return result;
@@ -193,6 +229,52 @@ namespace linearAlgebra
         result = transpose(result);
 
         return result / det(mat);
+    }
+
+    /**
+     * @brief build diagonalMatrix from a Vector3D
+     *
+     * @param vec
+     */
+    template <typename T>
+    StaticMatrix3x3<T> diagonalMatrix(const Vector3D<T> &vec)
+    {
+        StaticMatrix3x3<T> result{T()};
+
+        result[0][0] = vec[0];
+        result[1][1] = vec[1];
+        result[2][2] = vec[2];
+
+        return result;
+    }
+
+    /**
+     * @brief build diagonalMatrix from a scalar
+     *
+     * @param t
+     */
+    template <typename T>
+    StaticMatrix3x3<T> diagonalMatrix(const T t)
+    {
+        StaticMatrix3x3<T> result{T()};
+
+        result[0][0] = t;
+        result[1][1] = t;
+        result[2][2] = t;
+
+        return result;
+    }
+
+    /**
+     * @brief trace of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return T
+     */
+    template <typename T>
+    T trace(const StaticMatrix3x3<T> &mat)
+    {
+        return mat[0][0] + mat[1][1] + mat[2][2];
     }
 
 }   // namespace linearAlgebra

@@ -329,6 +329,7 @@ void SimulationBoxSetup::initVelocities()
 
         _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
         _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
+        _engine.getResetKinetics().resetAngularMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
 
         std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
     }

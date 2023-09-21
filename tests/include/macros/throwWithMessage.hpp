@@ -1,3 +1,7 @@
+#ifndef _EXPECT_THROW_WITH_MESSAGE_HPP_
+
+#define _EXPECT_THROW_WITH_MESSAGE_HPP_
+
 /**
  * @macro EXPECT_THROW_MSG
  *
@@ -29,3 +33,5 @@
  */
 #define ASSERT_THROW_MSG(statement, expected_exception, expected_what)                                                           \
     EXPECT_THROW_MSG(statement, expected_exception, expected_what)
+
+#endif   // _EXPECT_THROW_WITH_MESSAGE_HPP_

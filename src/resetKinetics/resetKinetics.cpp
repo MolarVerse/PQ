@@ -12,6 +12,11 @@
 #include <functional>   // for identity
 
 using namespace resetKinetics;
+using linearAlgebra::diagonalMatrix;
+using linearAlgebra::inverse;
+using linearAlgebra::StaticMatrix3x3;
+using linearAlgebra::trace;
+using linearAlgebra::vectorProduct;
 
 /**
  * @brief checks to reset angular momentum
@@ -110,15 +115,31 @@ void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalDat
     simBox.calculateMomentum();
     simBox.calculateAngularMomentum();
 
-    linearAlgebra::StaticMatrix3x3<double> inertiaTensor{0.0};
+    const auto centerOfMass = simBox.getCenterOfMass();
 
-    auto addInertiaTensorOfAtom = [&inertiaTensor, &simBox](const auto &atom)
+    StaticMatrix3x3 helperMatrix{0.0};
+
+    auto addInertiaTensorOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
     {
-        auto relativePosition  = atom->getPosition() - simBox.getCenterOfMass();
-        inertiaTensor         += linearAlgebra::vectorProduct(relativePosition, relativePosition) * atom->getMass();
+        auto relativePosition  = atom->getPosition() - centerOfMass;
+        helperMatrix          += vectorProduct(relativePosition, relativePosition) * atom->getMass();
     };
 
     std::ranges::for_each(simBox.getAtoms(), addInertiaTensorOfAtom);
 
-    const auto determinant = linearAlgebra::det(inertiaTensor);
+    const StaticMatrix3x3 inertiaTensor        = -helperMatrix + diagonalMatrix(trace(helperMatrix));
+    const StaticMatrix3x3 inverseInertiaTensor = inverse(inertiaTensor);
+
+    const auto angularVelocity = inverseInertiaTensor * simBox.getAngularMomentum();
+
+    auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
+    {
+        auto relativePosition = atom->getPosition() - centerOfMass;
+        atom->addVelocity(-cross(angularVelocity, relativePosition));
+    };
+
+    std::ranges::for_each(simBox.getAtoms(), correctVelocities);
+
+    physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateTemperature(simBox);
 }

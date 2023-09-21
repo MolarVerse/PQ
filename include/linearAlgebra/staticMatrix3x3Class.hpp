@@ -59,6 +59,13 @@ namespace linearAlgebra
          * @return bool
          */
         friend bool operator==(const StaticMatrix3x3 &lhs, const StaticMatrix3x3 &rhs) { return lhs._data == rhs._data; }
+
+        /**
+         * @brief unary operator- for StaticMatrix3x3
+         *
+         * @return StaticMatrix3x3
+         */
+        StaticMatrix3x3 operator-() { return StaticMatrix3x3(-_data[0], -_data[1], -_data[2]); }
     };
 }   // namespace linearAlgebra
 
