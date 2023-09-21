@@ -57,4 +57,7 @@ void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox,
         energyMomentum += ratio;
         energyFriction += _zeta[i];
     }
+
+    physicalData.setNoseHooverMomentumEnergy(energyMomentum);
+    physicalData.setNoseHooverFrictionEnergy(energyFriction);
 }

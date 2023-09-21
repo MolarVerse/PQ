@@ -31,6 +31,7 @@ thermostat              false
 temp                    false
 t_relaxation            false
 friction                false
+nh-chain_length         false
 coupling_frequency      false
 
 noncoulomb              false
