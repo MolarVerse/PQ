@@ -18,7 +18,7 @@ void QMMDEngine::takeStep()
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 
-    _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
+    _physicalData.calculateKinetics(_simulationBox);
 
     _manostat->applyManostat(_simulationBox, _physicalData);
 

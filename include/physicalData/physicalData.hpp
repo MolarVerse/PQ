@@ -43,12 +43,13 @@ namespace physicalData
 
         linearAlgebra::Vec3D _virial                       = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _momentumVector               = {0.0, 0.0, 0.0};
+        linearAlgebra::Vec3D _angularMomentumVector        = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyAtomicVector    = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
 
       public:
         void calculateTemperature(simulationBox::SimulationBox &);
-        void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
+        void calculateKinetics(simulationBox::SimulationBox &);
         void changeKineticVirialToAtomic();
 
         std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =

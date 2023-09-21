@@ -20,7 +20,7 @@ void RingPolymerQMMDEngine::takeStep()
 
         _thermostat->applyThermostat(bead, _physicalData);
 
-        _physicalData.calculateKineticEnergyAndMomentum(bead);
+        _physicalData.calculateKinetics(bead);
 
         _manostat->applyManostat(bead, _physicalData);
 

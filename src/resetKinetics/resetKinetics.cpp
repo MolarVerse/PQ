@@ -87,7 +87,7 @@ void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, s
 
     std::ranges::for_each(simBox.getAtoms(), [lambda](auto &atom) { atom->scaleVelocity(lambda); });
 
-    physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateKinetics(simBox);
 }
 
 /**
@@ -105,7 +105,7 @@ void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simu
 
     std::ranges::for_each(simBox.getAtoms(), [momentumCorrection](auto &atom) { atom->addVelocity(-momentumCorrection); });
 
-    physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateKinetics(simBox);
     physicalData.calculateTemperature(simBox);
 }
 
@@ -140,6 +140,6 @@ void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalDat
 
     std::ranges::for_each(simBox.getAtoms(), correctVelocities);
 
-    physicalData.calculateKineticEnergyAndMomentum(simBox);
+    physicalData.calculateKinetics(simBox);
     physicalData.calculateTemperature(simBox);
 }

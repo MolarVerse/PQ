@@ -45,12 +45,12 @@ TEST_F(TestPhysicalData, updateAverages)
 }
 
 /**
- * @brief tests calculateKineticEnergyAndMomentum function
+ * @brief tests calculateKinetics function
  *
  */
-TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
+TEST_F(TestPhysicalData, calculateKinetics)
 {
-    _physicalData->calculateKineticEnergyAndMomentum(*_simulationBox);
+    _physicalData->calculateKinetics(*_simulationBox);
 
     const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);

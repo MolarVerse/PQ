@@ -39,7 +39,7 @@ void Engine::run()
 {
     _timings.beginTimer();
 
-    _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
+    _physicalData.calculateKinetics(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
     _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());

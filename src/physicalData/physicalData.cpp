@@ -13,7 +13,7 @@ using namespace physicalData;
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &simulationBox)
+void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
 {
     _momentumVector               = linearAlgebra::Vec3D();
     _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
