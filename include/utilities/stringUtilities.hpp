@@ -19,6 +19,7 @@ namespace utilities
     std::vector<std::string> splitString(const std::string &);
 
     std::string toLowerCopy(std::string);
+    std::string toLowerCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
 
     bool fileExists(const std::string &);

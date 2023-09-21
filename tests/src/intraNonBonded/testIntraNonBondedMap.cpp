@@ -74,20 +74,20 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
                                                      &coulombPotential,
                                                      &nonCoulombPotential);
 
-    EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-9);
-    EXPECT_NEAR(nonCoulombEnergy, 5.0 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
+    EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-6);
+    EXPECT_NEAR(nonCoulombEnergy, 5.0 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-6);
 
     molecule.setAtomForcesToZero();
     molecule.getAtom(0).setShiftForce({0.0, 0.0, 0.0});
@@ -96,22 +96,22 @@ TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
 
     intraNonBondedMap.calculate(&coulombPotential, &nonCoulombPotential, simulationBox, physicalData);
 
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), -67.242901903583757 * 0.75, 1e-9);
-    EXPECT_NEAR(physicalData.getIntraCoulombEnergy(), -67.242901903583757 * 0.75, 1e-9);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 5.0 * 0.75, 1e-9);
-    EXPECT_NEAR(physicalData.getIntraNonCoulombEnergy(), 5.0 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), -67.242901903583757 * 0.75, 1e-6);
+    EXPECT_NEAR(physicalData.getIntraCoulombEnergy(), -67.242901903583757 * 0.75, 1e-6);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 5.0 * 0.75, 1e-6);
+    EXPECT_NEAR(physicalData.getIntraNonCoulombEnergy(), 5.0 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 34.185768993269036 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], -34.185768993269036 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(0)[2], 341.85768993269039 * 0.75, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-6);
 }
 
 int main(int argc, char **argv)

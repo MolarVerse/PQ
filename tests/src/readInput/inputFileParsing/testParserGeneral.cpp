@@ -4,6 +4,7 @@
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
 #include "mmmdEngine.hpp"               // for MMMDEngine
 #include "qmmdEngine.hpp"               // for QMMDEngine
+#include "ringPolymerqmmdEngine.hpp"    // for RingPolymerQMMDEngine
 #include "settings.hpp"                 // for Settings
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
@@ -37,6 +38,13 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_EQ(settings::Settings::getJobtype(), "QMMD");
     EXPECT_EQ(settings::Settings::isQMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::QMMDEngine));
+
+    lineElements = {"jobtype", "=", "qm-rpmd"};
+    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    EXPECT_EQ(settings::Settings::getJobtype(), "RingPolymerQMMD");
+    EXPECT_EQ(settings::Settings::isQMActivated(), true);
+    EXPECT_EQ(settings::Settings::isRingPolymerMDActivated(), true);
+    EXPECT_EQ(typeid(*engine), typeid(engine::RingPolymerQMMDEngine));
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseJobTypeForEngine(lineElements, 0, engine),

@@ -42,7 +42,7 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
-   nstep       = 10000;
+   nstep       = 100;
    output_freq = 1;
    #write_traj  = on;
 
@@ -77,11 +77,11 @@
 # THERMOSTAT
 #-----------------------------------------
    temp       = 298.15;
-   thermostat = berendsen;
+   thermostat = nh-chain;
    #manostat   = berendsen;
    pressure   = 1.013;
    p_relaxation = 0.1;
-   nscale = 100;
+   #nscale = 100;
    #cell-list = on;
    #cell-number = 10;
 #  friction   = 0.035;
@@ -92,14 +92,14 @@
 
 # FILES
 #-----------------------------------------
-   start_file   = h2o-qmcf.rst; 
+   start_file   = testset_02___mm_md_h2o-1.rst; 
 
-   output_file  = testset_02___mm_md_h2o-1.out; 
-   info_file    = testset_02___mm_md_h2o-1.info;
-   energy_file  = testset_02___mm_md_h2o-1.en; 
-   traj_file    = testset_02___mm_md_h2o-1.xyz;
-   vel_file     = testset_02___mm_md_h2o-1.vel;
-   restart_file = testset_02___mm_md_h2o-1.rst;
+   output_file  = testset_02___mm_md_h2o-2.out; 
+   info_file    = testset_02___mm_md_h2o-2.info;
+   energy_file  = testset_02___mm_md_h2o-2.en; 
+   traj_file    = testset_02___mm_md_h2o-2.xyz;
+   vel_file     = testset_02___mm_md_h2o-2.vel;
+   restart_file = testset_02___mm_md_h2o-2.rst;
 
 
 

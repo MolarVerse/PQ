@@ -39,6 +39,8 @@ using namespace engine;
  */
 void MMMDEngine::takeStep()
 {
+    _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+
     _integrator->firstStep(_simulationBox);
 
     _constraints.applyShake(_simulationBox);
@@ -56,6 +58,8 @@ void MMMDEngine::takeStep()
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
+
+    _thermostat->applyThermostatOnForces(_simulationBox);
 
     _integrator->secondStep(_simulationBox);
 

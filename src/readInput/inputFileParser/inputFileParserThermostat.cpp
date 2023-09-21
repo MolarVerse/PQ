@@ -17,6 +17,9 @@ using namespace readInput;
  * 1) thermostat <string>
  * 2) temp <double>
  * 3) t_relaxation <double>
+ * 4) friction <double>
+ * 5) nh-chain_length <size_t>
+ * 6) coupling_frequency <double>
  *
  * @param engine
  */
@@ -25,14 +28,20 @@ InputFileParserThermostat::InputFileParserThermostat(engine::Engine &engine) : I
     addKeyword(std::string("thermostat"), bind_front(&InputFileParserThermostat::parseThermostat, this), false);
     addKeyword(std::string("temp"), bind_front(&InputFileParserThermostat::parseTemperature, this), false);
     addKeyword(std::string("t_relaxation"), bind_front(&InputFileParserThermostat::parseThermostatRelaxationTime, this), false);
+    addKeyword(std::string("friction"), bind_front(&InputFileParserThermostat::parseThermostatFriction, this), false);
+    addKeyword(std::string("nh-chain_length"), bind_front(&InputFileParserThermostat::parseThermostatChainLength, this), false);
+    addKeyword(
+        std::string("coupling_frequency"), bind_front(&InputFileParserThermostat::parseThermostatCouplingFrequency, this), false);
 }
 
 /**
  * @brief Parse the thermostat used in the simulation
  *
  * @details Possible options are:
- * 1) none      - no thermostat (default)
- * 2) berendsen - berendsen thermostat
+ * 1) none               - no thermostat (default)
+ * 2) berendsen          - berendsen thermostat
+ * 3) velocity_rescaling - velocity rescaling thermostat
+ * 4) langevin           - langevin thermostat
  *
  * @param lineElements
  *
@@ -46,9 +55,17 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
         settings::ThermostatSettings::setThermostatType("none");
     else if (lineElements[2] == "berendsen")
         settings::ThermostatSettings::setThermostatType("berendsen");
+    else if (lineElements[2] == "velocity_rescaling")
+        settings::ThermostatSettings::setThermostatType("velocity_rescaling");
+    else if (lineElements[2] == "langevin")
+        settings::ThermostatSettings::setThermostatType("langevin");
+    else if (lineElements[2] == "nh-chain")
+        settings::ThermostatSettings::setThermostatType("nh-chain");
     else
-        throw customException::InputFileException(
-            format("Invalid thermostat \"{}\" at line {} in input file", lineElements[2], lineNumber));
+        throw customException::InputFileException(format("Invalid thermostat \"{}\" at line {} in input file. Possible options "
+                                                         "are: none, berendsen, velocity_rescaling, langevin, nh-chain",
+                                                         lineElements[2],
+                                                         lineNumber));
 }
 
 /**
@@ -93,4 +110,68 @@ void InputFileParserThermostat::parseThermostatRelaxationTime(const std::vector<
         throw customException::InputFileException("Relaxation time of thermostat cannot be negative");
 
     settings::ThermostatSettings::setRelaxationTime(relaxationTime);
+}
+
+/**
+ * @brief parses the friction of the langevin thermostat
+ *
+ * @details default value is 1,0e11
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if friction is negative
+ */
+void InputFileParserThermostat::parseThermostatFriction(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto friction = stod(lineElements[2]);
+
+    if (friction < 0)
+        throw customException::InputFileException("Friction of thermostat cannot be negative");
+
+    settings::ThermostatSettings::setFriction(friction * 1.0e12);
+}
+
+/**
+ * @brief parses the chain length of the nh-chain thermostat
+ *
+ * @details default value is 3
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if chain length is negative
+ */
+void InputFileParserThermostat::parseThermostatChainLength(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto chainLength = stoi(lineElements[2]);
+
+    if (chainLength < 0)
+        throw customException::InputFileException("Chain length of thermostat cannot be negative");
+
+    settings::ThermostatSettings::setNoseHooverChainLength(size_t(chainLength));
+}
+
+/**
+ * @brief parses the coupling frequency of the nh-chain thermostat
+ *
+ * @details default value is 1.0e3 cm⁻¹
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if coupling frequency is negative
+ */
+void InputFileParserThermostat::parseThermostatCouplingFrequency(const std::vector<std::string> &lineElements,
+                                                                 const size_t                    lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto couplingFrequency = stod(lineElements[2]);
+
+    if (couplingFrequency < 0)
+        throw customException::InputFileException("Coupling frequency of thermostat cannot be negative");
+
+    settings::ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
 }

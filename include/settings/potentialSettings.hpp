@@ -26,7 +26,7 @@ namespace settings
         NONE
     };
 
-    std::string string(const NonCoulombType nonCoulombType);
+    [[nodiscard]] std::string string(const NonCoulombType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -38,7 +38,6 @@ namespace settings
     {
       private:
         static inline std::string    _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // shifted potential
-        static inline std::string    _nonCoulombTypeString = defaults::_NON_COULOMB_TYPE_DEFAULT_;          // guff
         static inline NonCoulombType _nonCoulombType       = NonCoulombType::GUFF;                          // LJ
 
         static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;   // default is 12.5
@@ -61,17 +60,16 @@ namespace settings
 
         static void setCoulombLongRangeType(const std::string_view &type) { _coulombLongRangeType = type; }
 
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff) { _coulombRadiusCutOff = coulombRadiusCutOff; }
-        static void setScale14Coulomb(double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
-        static void setScale14VanDerWaals(double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
-        static void setWolfParameter(double wolfParameter) { _wolfParameter = wolfParameter; }
+        static void setCoulombRadiusCutOff(const double coulombRadiusCutOff) { _coulombRadiusCutOff = coulombRadiusCutOff; }
+        static void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
+        static void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
+        static void setWolfParameter(const double wolfParameter) { _wolfParameter = wolfParameter; }
 
         /********************
          * standard getters *
          ********************/
 
         [[nodiscard]] static std::string    getCoulombLongRangeType() { return _coulombLongRangeType; }
-        [[nodiscard]] static std::string    getNonCoulombTypeString() { return _nonCoulombTypeString; }
         [[nodiscard]] static NonCoulombType getNonCoulombType() { return _nonCoulombType; }
 
         [[nodiscard]] static double getCoulombRadiusCutOff() { return _coulombRadiusCutOff; }

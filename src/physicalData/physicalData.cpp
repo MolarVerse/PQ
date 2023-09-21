@@ -73,6 +73,9 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _pressure      += physicalData.getPressure();
 
     _qmEnergy += physicalData.getQMEnergy();
+
+    _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
+    _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
 }
 
 /**
@@ -101,6 +104,9 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _pressure    /= outputFrequency;
 
     _qmEnergy /= outputFrequency;
+
+    _noseHooverMomentumEnergy /= outputFrequency;
+    _noseHooverFrictionEnergy /= outputFrequency;
 }
 
 /**
@@ -128,6 +134,9 @@ void PhysicalData::reset()
     _density     = 0.0;
 
     _qmEnergy = 0.0;
+
+    _noseHooverMomentumEnergy = 0.0;
+    _noseHooverFrictionEnergy = 0.0;
 }
 
 /**

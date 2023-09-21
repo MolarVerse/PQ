@@ -41,6 +41,9 @@ namespace physicalData
 
         double _qmEnergy = 0.0;
 
+        double _noseHooverMomentumEnergy = 0.0;
+        double _noseHooverFrictionEnergy = 0.0;
+
         linearAlgebra::Vec3D _virial                       = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _momentumVector               = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _angularMomentumVector        = {0.0, 0.0, 0.0};
@@ -106,6 +109,9 @@ namespace physicalData
 
         void setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
 
+        void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
+        void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
+
         /********************
          * standard getters *
          ********************/
@@ -129,6 +135,9 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
 
         [[nodiscard]] double getQMEnergy() const { return _qmEnergy; }
+
+        [[nodiscard]] double getNoseHooverMomentumEnergy() const { return _noseHooverMomentumEnergy; }
+        [[nodiscard]] double getNoseHooverFrictionEnergy() const { return _noseHooverFrictionEnergy; }
 
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }

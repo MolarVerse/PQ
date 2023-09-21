@@ -23,19 +23,19 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     InputFileParserNonCoulomb parser(*_engine);
     std::vector<std::string>  lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombTypeString(), "guff");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::GUFF);
 
     lineElements = {"noncoulomb", "=", "lj"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombTypeString(), "lj");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::LJ);
 
     lineElements = {"noncoulomb", "=", "buck"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombTypeString(), "buck");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::BUCKINGHAM);
 
     lineElements = {"noncoulomb", "=", "morse"};
     parser.parseNonCoulombType(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombTypeString(), "morse");
+    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::MORSE);
 
     lineElements = {"coulomb", "=", "notValid"};
     EXPECT_THROW_MSG(

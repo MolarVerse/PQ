@@ -42,7 +42,8 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
-   nstep       = 10;
+   nstep       = 10000;
+   nscale = 100;
    output_freq = 1;
 #   init_velocities = true;
    #write_traj  = on;
@@ -79,10 +80,9 @@
 #-----------------------------------------
    temp       = 298.15;
    thermostat = berendsen;
-   manostat   = berendsen;
+#   manostat   = berendsen;
    pressure   = 1.013;
    p_relaxation = 0.1;
-   nscale = 5;
    #cell-list = on;
    #cell-number = 10;
 #  friction   = 0.035;

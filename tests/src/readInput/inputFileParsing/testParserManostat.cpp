@@ -58,11 +58,11 @@ TEST_F(TestInputFileReader, ParseManostat)
     InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parser.parseManostat(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getManostatType(), "none");
+    EXPECT_EQ(settings::ManostatSettings::getManostatType(), settings::ManostatType::NONE);
 
     lineElements = {"manostat", "=", "berendsen"};
     parser.parseManostat(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getManostatType(), "berendsen");
+    EXPECT_EQ(settings::ManostatSettings::getManostatType(), settings::ManostatType::BERENDSEN);
 
     lineElements = {"manostat", "=", "notValid"};
     EXPECT_THROW_MSG(parser.parseManostat(lineElements, 0),

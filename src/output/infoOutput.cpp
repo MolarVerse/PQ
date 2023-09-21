@@ -4,6 +4,7 @@
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <format>    // for format
 #include <ios>       // for ofstream
@@ -15,8 +16,13 @@ using namespace output;
 /**
  * @brief write info file
  *
- * @details Coulomb and Non-Coulomb energies contain the intra and inter energies. Bond, Angle, Dihedral and Improper energies are
- * only available if the force field is active.
+ * @details
+ * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
+ * - Bond, Angle, Dihedral and Improper energies are only available if the force field is active.
+ * - qm energy is only available if qm is active.
+ * - coulomb and non-coulomb energies are only available if mm is active.
+ * - volume and density are only available if manostat is active.
+ * - nose hoover momentum and friction energies are only available if nose hoover thermostat is active.
  *
  * @param simulationTime
  * @param loopTime
@@ -59,10 +65,16 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
-    if (settings::ManostatSettings::getManostatType() != "none")
+    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
         writeRight(data.getDensity(), "DENSITY", "g/cm^3");
+    }
+
+    if (settings::ThermostatSettings::getThermostatType() == settings::ThermostatType::NOSE_HOOVER)
+    {
+        writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH MOMENTUM)", "kcal/mol");
+        writeRight(data.getNoseHooverFrictionEnergy(), "E(NH FRICTION)", "kcal/mol");
     }
 
     writeLeftScientific(data.getMomentum(), "MOMENTUM", "amuA/fs");

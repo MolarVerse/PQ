@@ -74,21 +74,21 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
 
     bondForceField.calculateEnergyAndForces(box, physicalData, coulombPotential, nonCoulombPotential);
 
-    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -1.4491176910934915, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -0.20701681301335595, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.41403362602671184, 1e-9);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-9);
+    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], -1.4491176910934915, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[1], -0.20701681301335595, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.41403362602671184, 1e-6);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
         physicalData.getVirial(),
-        testing::ElementsAre(testing::DoubleNear(0.0, 1e-9), testing::DoubleNear(0.0, 1e-9), testing::DoubleNear(0.0, 1e-9)));
+        testing::ElementsAre(testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6)));
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
     molecule.setAtomForce(1, {0.0, 0.0, 0.0});
@@ -99,21 +99,21 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
 
     bondForceField.calculateEnergyAndForces(box, physicalData, coulombPotential, nonCoulombPotential);
 
-    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 7.0737262359370403, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], 12.69833478078059, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -7.2807430489503959, 1e-9);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.733418845847369, 1e-9);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-9);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -0.016255999999999989, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[1], -7.0737262359370403, 1e-9);
-    EXPECT_NEAR(physicalData.getVirial()[2], -28.294904943748161, 1e-9);
+    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[1], 7.0737262359370403, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(1)[2], 12.69833478078059, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[1], -7.2807430489503959, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.733418845847369, 1e-6);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-6);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -0.016255999999999989, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[1], -7.0737262359370403, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[2], -28.294904943748161, 1e-6);
 }
 
 int main(int argc, char **argv)

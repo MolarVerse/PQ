@@ -1,9 +1,10 @@
 #include "testThermostat.hpp"
 
-#include "constants.hpp"         // for _TEMPERATURE_FACTOR_
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "berendsenThermostat.hpp"   // for BerendsenThermostat
+#include "constants.hpp"             // for _TEMPERATURE_FACTOR_
+#include "physicalData.hpp"          // for PhysicalData
+#include "simulationBox.hpp"         // for SimulationBox
+#include "timingsSettings.hpp"       // for TimingsSettings
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for sqrt

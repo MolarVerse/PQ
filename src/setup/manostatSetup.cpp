@@ -38,11 +38,11 @@ void ManostatSetup::setup()
 {
     const auto manostatType = settings::ManostatSettings::getManostatType();
 
-    if (manostatType != "none")
+    if (manostatType != settings::ManostatType::NONE)
         if (!settings::ManostatSettings::isPressureSet())
-            throw customException::InputFileException(std::format("Pressure not set for {} manostat", manostatType));
+            throw customException::InputFileException(std::format("Pressure not set for {} manostat", string(manostatType)));
 
-    if (manostatType == "berendsen")
+    if (manostatType == settings::ManostatType::BERENDSEN)
         _engine.makeManostat(manostat::BerendsenManostat(settings::ManostatSettings::getTargetPressure(),
                                                          settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
                                                          settings::ManostatSettings::getCompressibility()));

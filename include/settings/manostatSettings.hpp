@@ -10,6 +10,20 @@
 namespace settings
 {
     /**
+     * @enum ManostatType
+     *
+     * @brief enum class to store the type of the manostat
+     *
+     */
+    enum class ManostatType
+    {
+        NONE,
+        BERENDSEN
+    };
+
+    [[nodiscard]] std::string string(const ManostatType &manostatType);
+
+    /**
      * @class ManostatSettings
      *
      * @brief static class to store settings of the manostat
@@ -18,7 +32,7 @@ namespace settings
     class ManostatSettings
     {
       private:
-        static inline std::string _manostatType = defaults::_MANOSTAT_DEFAULT_;   // none
+        static inline ManostatType _manostatType = ManostatType::NONE;
 
         static inline bool _isPressureSet = false;
 
@@ -30,17 +44,19 @@ namespace settings
         ManostatSettings()  = default;
         ~ManostatSettings() = default;
 
-        static void setManostatType(const std::string_view &manostatType) { _manostatType = manostatType; }
+        static void setManostatType(const std::string_view &manostatType);
+
+        static void setManostatType(const ManostatType &manostatType) { _manostatType = manostatType; }
         static void setPressureSet(const bool pressureSet) { _isPressureSet = pressureSet; }
         static void setTargetPressure(const double targetPressure) { _targetPressure = targetPressure; }
         static void setTauManostat(const double tauManostat) { _tauManostat = tauManostat; }
         static void setCompressibility(const double compressibility) { _compressibility = compressibility; }
 
-        [[nodiscard]] static std::string getManostatType() { return _manostatType; }
-        [[nodiscard]] static bool        isPressureSet() { return _isPressureSet; }
-        [[nodiscard]] static double      getTargetPressure() { return _targetPressure; }
-        [[nodiscard]] static double      getTauManostat() { return _tauManostat; }
-        [[nodiscard]] static double      getCompressibility() { return _compressibility; }
+        [[nodiscard]] static ManostatType getManostatType() { return _manostatType; }
+        [[nodiscard]] static bool         isPressureSet() { return _isPressureSet; }
+        [[nodiscard]] static double       getTargetPressure() { return _targetPressure; }
+        [[nodiscard]] static double       getTauManostat() { return _tauManostat; }
+        [[nodiscard]] static double       getCompressibility() { return _compressibility; }
     };
 
 }   // namespace settings

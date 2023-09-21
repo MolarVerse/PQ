@@ -19,6 +19,11 @@ target_include_directories(settings
     ${PROJECT_SOURCE_DIR}/include/config
 )
 
+target_link_libraries(settings
+    PUBLIC
+    utilities
+)
+
 install(TARGETS settings
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

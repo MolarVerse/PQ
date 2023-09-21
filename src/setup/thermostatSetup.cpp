@@ -1,10 +1,15 @@
 #include "thermostatSetup.hpp"
 
-#include "constants.hpp"            // for _PS_TO_FS_
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for InputFileException
-#include "thermostat.hpp"           // for BerendsenThermostat, Thermostat, thermostat
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "berendsenThermostat.hpp"           // for BerendsenThermostat
+#include "constants.hpp"                     // for _PS_TO_FS_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for InputFileException
+#include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
+#include "thermostat.hpp"                    // for BerendsenThermostat, Thermostat, thermostat
+#include "thermostatSettings.hpp"            // for ThermostatSettings
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 #include <format>   // for format
 #include <string>   // for operator==
@@ -40,14 +45,52 @@ void ThermostatSetup::setup()
 {
     const auto thermostatType = settings::ThermostatSettings::getThermostatType();
 
-    if (thermostatType != "none")
+    if (thermostatType != settings::ThermostatType::NONE)
         if (!settings::ThermostatSettings::isTemperatureSet())
-            throw customException::InputFileException(std::format("Temperature not set for {} thermostat", thermostatType));
+            throw customException::InputFileException(
+                std::format("Temperature not set for {} thermostat", settings::string(thermostatType)));
 
-    if (thermostatType == "berendsen")
+    if (thermostatType == settings::ThermostatType::BERENDSEN)
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
+
+    else if (thermostatType == settings::ThermostatType::VELOCITY_RESCALING)
+        _engine.makeThermostat(
+            thermostat::VelocityRescalingThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                    settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
+
+    else if (thermostatType == settings::ThermostatType::LANGEVIN)
+        _engine.makeThermostat(thermostat::LangevinThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                              settings::ThermostatSettings::getFriction()));
+
+    else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
+    {
+        const auto noseHooverChainLength       = settings::ThermostatSettings::getNoseHooverChainLength();
+        const auto noseHooverCouplingFrequency = settings::ThermostatSettings::getNoseHooverCouplingFrequency() *
+                                                 constants::_WAVE_NUMBER_IN_PER_CM_TO_FREQUENCY_IN_HZ_;
+
+        auto thermostat = thermostat::NoseHooverThermostat(settings::ThermostatSettings::getTargetTemperature(),
+                                                           std::vector<double>(noseHooverChainLength + 1, 0.0),
+                                                           std::vector<double>(noseHooverChainLength + 1, 0.0),
+                                                           noseHooverCouplingFrequency);
+
+        auto fillChi = [&thermostat, noseHooverChainLength](const auto pair)
+        {
+            if (pair.first > noseHooverChainLength)
+                throw customException::InputFileException(std::format(
+                    "Chi index {} is larger than the number of nose hoover chains {}", pair.first, noseHooverChainLength));
+
+            thermostat.setChi(size_t(pair.first - 1), pair.second);
+        };
+
+        auto fillZeta = [&thermostat](const auto pair) { thermostat.setZeta(size_t(pair.first - 1), pair.second); };
+
+        std::ranges::for_each(settings::ThermostatSettings::getChi(), fillChi);
+        std::ranges::for_each(settings::ThermostatSettings::getZeta(), fillZeta);
+
+        _engine.makeThermostat(thermostat);
+    }
     else
         _engine.makeThermostat(thermostat::Thermostat());
 }
