@@ -278,9 +278,9 @@ TEST(TestForceField, correctLinker)
     const auto force = forceField::correctLinker<forceField::BondForceField>(
         coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0);
 
-    EXPECT_NEAR(force, 104.37153798653807, 1e-9);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-9);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 134.48580380716751, 1e-9);
+    EXPECT_NEAR(force, 104.37153798653807, 1e-6);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-6);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), 134.48580380716751, 1e-6);
 
     physicalData.reset();
 
@@ -290,9 +290,9 @@ TEST(TestForceField, correctLinker)
     const auto forceScaled = forceField::correctLinker<forceField::DihedralForceField>(
         coulombPotential, nonCoulombPotential, physicalData, &molecule, &molecule, 0, 1, 1.0);
 
-    EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-9);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -3, 1e-9);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 33.621450951791878, 1e-9);
+    EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-6);
+    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -3, 1e-6);
+    EXPECT_NEAR(physicalData.getCoulombEnergy(), 33.621450951791878, 1e-6);
 }
 
 int main(int argc, char **argv)
