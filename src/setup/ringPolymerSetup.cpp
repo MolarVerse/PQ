@@ -50,5 +50,9 @@ void RingPolymerSetup::setup()
         };
 
         std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
+
+        _engine.getResetKinetics().resetMomentum();
+        _engine.getResetKinetics().resetTemperature();
+        _engine.getResetKinetics().resetAngularMomentum();
     }
 }
