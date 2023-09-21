@@ -33,24 +33,20 @@ void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox,
     const auto   kT               = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * _temperature;
     const auto   kT_target        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * _targetTemperature;
 
-    _chi[0]    += timestep * ((kT - kT_target) * degreesOfFreedom - _chi[0] * _chi[1] / _couplingFrequency);
-    auto ratio  = _chi[0] / (_couplingFrequency * degreesOfFreedom);
+    const auto omega = kT_target / _couplingFrequency / 9.0e20;
+
+    _chi[0]    += timestep * ((kT - kT_target) * degreesOfFreedom - _chi[0] * _chi[1] / omega);
+    auto ratio  = _chi[0] / (omega * degreesOfFreedom);
     _zeta[0]   += ratio * timestep;
     ratio      *= _chi[0];
 
     auto energyMomentum = ratio;
     auto energyFriction = degreesOfFreedom * _zeta[0];
 
-    std::cout << std::endl;
-    std::cout << "TEST" << std::endl;
-    std::cout << "chi[0] = " << _chi[0] << std::endl;
-    std::cout << "zeta[0] = " << _zeta[0] << std::endl;
-    std::cout << "ratio = " << ratio << std::endl;
-
     for (size_t i = 1; i < _chi.size() - 1; ++i)
     {
-        _chi[1]  += timestep * (ratio - kT_target - _chi[i] * _chi[i + 1] / _couplingFrequency);
-        ratio     = _chi[i] / _couplingFrequency;
+        _chi[1]  += timestep * (ratio - kT_target - _chi[i] * _chi[i + 1] / omega);
+        ratio     = _chi[i] / omega;
         _zeta[i] += ratio * timestep;
         ratio    *= _chi[i];
 
