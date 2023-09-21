@@ -30,6 +30,7 @@ namespace readInput
         void parseTemperature(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseThermostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseThermostatFriction(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseThermostatCouplingFrequency(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

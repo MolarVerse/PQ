@@ -27,6 +27,8 @@ InputFileParserThermostat::InputFileParserThermostat(engine::Engine &engine) : I
     addKeyword(std::string("temp"), bind_front(&InputFileParserThermostat::parseTemperature, this), false);
     addKeyword(std::string("t_relaxation"), bind_front(&InputFileParserThermostat::parseThermostatRelaxationTime, this), false);
     addKeyword(std::string("friction"), bind_front(&InputFileParserThermostat::parseThermostatFriction, this), false);
+    addKeyword(
+        std::string("coupling_frequency"), bind_front(&InputFileParserThermostat::parseThermostatCouplingFrequency, this), false);
 }
 
 /**
@@ -126,4 +128,26 @@ void InputFileParserThermostat::parseThermostatFriction(const std::vector<std::s
         throw customException::InputFileException("Friction of thermostat cannot be negative");
 
     settings::ThermostatSettings::setFriction(friction * 1.0e12);
+}
+
+/**
+ * @brief parses the coupling frequency of the nh-chain thermostat
+ *
+ * @details default value is 1.0e3
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if coupling frequency is negative
+ */
+void InputFileParserThermostat::parseThermostatCouplingFrequency(const std::vector<std::string> &lineElements,
+                                                                 const size_t                    lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto couplingFrequency = stod(lineElements[2]);
+
+    if (couplingFrequency < 0)
+        throw customException::InputFileException("Coupling frequency of thermostat cannot be negative");
+
+    settings::ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
 }

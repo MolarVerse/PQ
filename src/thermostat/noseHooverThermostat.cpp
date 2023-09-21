@@ -18,9 +18,14 @@ using thermostat::NoseHooverThermostat;
  */
 void NoseHooverThermostat::applyThermostatOnForces(simulationBox::SimulationBox &simBox)
 {
-    auto applyChi = [this](auto &atom) { atom->addForce(-_chi[0] * atom->getVelocity() * atom->getMass()); };
+    const auto   kT_target        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * _targetTemperature;
+    const double degreesOfFreedom = simBox.getDegreesOfFreedom();
+    const auto   factor =
+        _chi[0] * _couplingFrequency * _couplingFrequency / (kT_target * degreesOfFreedom) * constants::_MOMENTUM_TO_FORCE_;
 
-    std::ranges::for_each(simBox.getAtoms(), applyChi);
+    auto applyNoseHoover = [factor](auto &atom) { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
+
+    std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
 }
 
 void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
@@ -33,10 +38,9 @@ void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox,
     const auto   kT               = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * _temperature;
     const auto   kT_target        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * _targetTemperature;
 
-    const auto omega = kT_target / _couplingFrequency / 9.0e20;
-
-    _chi[0]    += timestep * ((kT - kT_target) * degreesOfFreedom - _chi[0] * _chi[1] / omega);
-    auto ratio  = _chi[0] / (omega * degreesOfFreedom);
+    _chi[0] += timestep *
+               ((kT - kT_target) * degreesOfFreedom - _chi[0] * _chi[1] / kT_target * _couplingFrequency * _couplingFrequency);
+    auto ratio  = _chi[0] / (kT_target * degreesOfFreedom) * _couplingFrequency * _couplingFrequency;
     _zeta[0]   += ratio * timestep;
     ratio      *= _chi[0];
 
@@ -45,8 +49,8 @@ void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox,
 
     for (size_t i = 1; i < _chi.size() - 1; ++i)
     {
-        _chi[1]  += timestep * (ratio - kT_target - _chi[i] * _chi[i + 1] / omega);
-        ratio     = _chi[i] / omega;
+        _chi[i]  += timestep * (ratio - kT_target - _chi[i] * _chi[i + 1] / kT_target * _couplingFrequency * _couplingFrequency);
+        ratio     = _chi[i] / kT_target * _couplingFrequency * _couplingFrequency;
         _zeta[i] += ratio * timestep;
         ratio    *= _chi[i];
 

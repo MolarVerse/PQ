@@ -66,12 +66,14 @@ void ThermostatSetup::setup()
 
     else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
     {
-        const auto noseHooverChainLength = settings::ThermostatSettings::getNoseHooverChainLength();
+        const auto noseHooverChainLength       = settings::ThermostatSettings::getNoseHooverChainLength();
+        const auto noseHooverCouplingFrequency = settings::ThermostatSettings::getNoseHooverCouplingFrequency() *
+                                                 constants::_WAVE_NUMBER_IN_PER_CM_TO_FREQUENCY_IN_HZ_;
 
         auto thermostat = thermostat::NoseHooverThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                            std::vector<double>(noseHooverChainLength + 1, 0.0),
                                                            std::vector<double>(noseHooverChainLength + 1, 0.0),
-                                                           settings::ThermostatSettings::getNoseHooverCouplingFrequency());
+                                                           noseHooverCouplingFrequency);
 
         auto fillChi = [&thermostat, noseHooverChainLength](const auto pair)
         {

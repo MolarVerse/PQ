@@ -33,7 +33,7 @@ namespace defaults
     static constexpr size_t _NOSE_HOOVER_CHAIN_LENGTH_DEFAULT_     = 3;        // default value for nose hoover chain length
     static constexpr double _BERENDSEN_THERMOSTAT_RELAXATION_TIME_ = 0.1;      // in ps
     static constexpr double _LANGEVIN_THERMOSTAT_FRICTION_         = 1.0e11;   // in s^-1
-    static constexpr double _NOSE_HOOVER_COUPLING_FREQUENCY_       = 1.0e6;
+    static constexpr double _NOSE_HOOVER_COUPLING_FREQUENCY_       = 1.0e3;    // in cm^-1
 
     static constexpr double _BERENDSEN_MANOSTAT_RELAXATION_TIME_ = 1.0;        // in ps
     static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_      = 4.591e-5;   // default value for berendsen manostat

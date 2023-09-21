@@ -17,10 +17,10 @@ namespace thermostat
     class NoseHooverThermostat : public Thermostat
     {
       private:
-        std::vector<double> _chi{0.0};
-        std::vector<double> _zeta{0.0};
+        std::vector<double> _chi{0.0};    // in kcal/mol s
+        std::vector<double> _zeta{0.0};   // unitless
 
-        double _couplingFrequency = 0.0;
+        double _couplingFrequency = 0.0;   // in 1/s
 
       public:
         NoseHooverThermostat() = default;
