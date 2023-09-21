@@ -1,35 +1,16 @@
 #include "engine.hpp"
 
-#include "constants.hpp"         // for _FS_TO_PS_
-#include "logOutput.hpp"         // for LogOutput
-#include "output.hpp"            // for Output
-#include "progressbar.hpp"       // for progressbar
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "constants.hpp"            // for _FS_TO_PS_
+#include "logOutput.hpp"            // for LogOutput
+#include "output.hpp"               // for Output
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "progressbar.hpp"          // for progressbar
+#include "stdoutOutput.hpp"         // for StdoutOutput
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 #include <iostream>   // for operator<<, cout, ostream, basic_ostream
 
 using namespace engine;
-
-// /**
-//  * @brief Construct a new Engine:: Engine object
-//  *
-//  * @details reinitializes all the unique pointers
-//  *
-//  * @param engineOutput
-//  */
-// Engine::Engine(const Engine &engine)
-//     : _cellList(engine._cellList), _simulationBox(engine._simulationBox), _physicalData(engine._physicalData),
-//       _averagePhysicalData(engine._averagePhysicalData), _constraints(engine._constraints), _forceField(engine._forceField),
-//       _intraNonBonded(engine._intraNonBonded)
-// {
-//     _integrator    = std::make_unique<integrator::VelocityVerlet>();
-//     _thermostat    = std::make_unique<thermostat::Thermostat>();
-//     _manostat      = std::make_unique<manostat::Manostat>();
-//     _virial        = std::make_unique<virial::VirialMolecular>();
-//     _resetKinetics = std::make_unique<resetKinetics::ResetKinetics>();
-//     _potential     = std::make_unique<potential::PotentialBruteForce>();
-// }
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -72,7 +53,7 @@ void Engine::writeOutput()
     _averagePhysicalData.updateAverages(_physicalData);
     _physicalData.reset();
 
-    const auto outputFrequency = output::Output::getOutputFrequency();
+    const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
 
     if (0 == _step % outputFrequency)
     {

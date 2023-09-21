@@ -11,6 +11,7 @@ add_library(settings
     forceFieldSettings.cpp
     qmSettings.cpp
     ringPolymerSettings.cpp
+    outputFileSettings.cpp
 )
 
 target_include_directories(settings

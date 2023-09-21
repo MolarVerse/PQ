@@ -14,7 +14,7 @@ force-field             false
 
 jobtype                 true       
 start_file              true
-rpmd_restart_file       true
+rpmd_restart_file       false
 moldescriptor_file      false
 guff_path               false
 guff_file               false
@@ -57,6 +57,8 @@ nscale                  false
 fscale                  false
 nreset                  false
 freset                  false
+nreset_angular          false
+freset_angular          false
 
 rcoulomb                false
 density                 false

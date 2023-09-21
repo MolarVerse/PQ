@@ -17,17 +17,6 @@ TEST(TestOutput, testSpecialSetFilename)
     EXPECT_THROW_MSG(output.setFilename("src"), customException::InputFileException, "File already exists - filename = src");
 }
 
-/**
- * @brief tests setting output frequency
- *
- */
-TEST(TestOutput, setSpecialOutputFrequency)
-{
-    auto output = output::Output("default.out");
-    output::Output::setOutputFrequency(0);
-    EXPECT_EQ(output.getOutputFrequency(), UINT64_MAX);
-}
-
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

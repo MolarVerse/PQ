@@ -12,6 +12,7 @@ add_library(setup
     intraNonBondedSetup.cpp
     qmSetup.cpp
     ringPolymerSetup.cpp
+    outputFilesSetup.cpp
 )
 
 target_include_directories(setup

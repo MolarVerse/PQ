@@ -14,6 +14,21 @@ namespace defaults
     static constexpr char   _GUFF_FILENAME_DEFAULT_[]          = "guff.dat";
     static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_           = 28;
 
+    static constexpr char _RESTART_FILENAME_DEFAULT_[]                 = "default.rst";
+    static constexpr char _ENERGY_FILENAME_DEFAULT_[]                  = "default.en";
+    static constexpr char _MOMENTUM_FILENAME_DEFAULT_[]                = "default.mom";
+    static constexpr char _TRAJECTORY_FILENAME_DEFAULT_[]              = "default.xyz";
+    static constexpr char _VELOCITY_FILENAME_DEFAULT_[]                = "default.vel";
+    static constexpr char _FORCE_FILENAME_DEFAULT_[]                   = "default.force";
+    static constexpr char _CHARGE_FILENAME_DEFAULT_[]                  = "default.charge";
+    static constexpr char _LOG_FILENAME_DEFAULT_[]                     = "default.out";
+    static constexpr char _INFO_FILENAME_DEFAULT_[]                    = "default.info";
+    static constexpr char _RING_POLYMER_RESTART_FILENAME_DEFAULT_[]    = "default.rpmd.rst";
+    static constexpr char _RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_[] = "default.rpmd.xyz";
+    static constexpr char _RING_POLYMER_VELOCITY_FILENAME_DEFAULT_[]   = "default.rpmd.vel";
+    static constexpr char _RING_POLYMER_FORCE_FILENAME_DEFAULT_[]      = "default.rpmd.force";
+    static constexpr char _RING_POLYMER_CHARGE_FILENAME_DEFAULT_[]     = "default.rpmd.charge";
+
     static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;   // in Angstrom
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;

@@ -2,6 +2,7 @@
 
 #include "constants.hpp"             // for _RPMD_PREFACTOR_
 #include "output.hpp"                // for Output
+#include "outputFileSettings.hpp"    // for OutputFileSettings
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "thermostatSettings.hpp"    // for ThermostatSettings
 
@@ -12,7 +13,7 @@ void RingPolymerEngine::writeOutput()
 {
     Engine::writeOutput();
 
-    if (0 == _step % output::Output::getOutputFrequency())
+    if (0 == _step % settings::OutputFileSettings::getOutputFrequency())
     {
         const auto step0 = _timings.getStepCount();
 

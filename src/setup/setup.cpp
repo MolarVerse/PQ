@@ -10,6 +10,7 @@
 #include "intraNonBondedSetup.hpp"
 #include "manostatSetup.hpp"
 #include "moldescriptorReader.hpp"
+#include "outputFilesSetup.hpp"
 #include "parameterFileReader.hpp"
 #include "potentialSetup.hpp"
 #include "qmSetup.hpp"
@@ -35,6 +36,12 @@ using namespace readInput;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
+    std::cout << "Reading input file..." << '\n';
+    readInputFile(inputFileName, engine);
+
+    std::cout << "setup output files..." << '\n';
+    setupOutputFiles(engine);
+
     readFiles(inputFileName, engine);
 
     std::cout << "setup engine..." << '\n';
@@ -55,9 +62,6 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
  */
 void setup::readFiles(const std::string &inputFileName, Engine &engine)
 {
-    std::cout << "Reading input file..." << '\n';
-    readInputFile(inputFileName, engine);
-
     std::cout << "Reading moldescriptor..." << '\n';
     molDescriptor::readMolDescriptor(engine);
 
