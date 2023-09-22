@@ -36,8 +36,6 @@ void ResetKineticsSetup::setup()
     const auto nResetAngular = settings::ResetKineticsSettings::getNResetAngular();
     auto       fResetAngular = settings::ResetKineticsSettings::getFResetAngular();
 
-    const auto targetTemperature = settings::ThermostatSettings::getTargetTemperature();
-
     const auto numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
 
     fScale        = (0 == fScale) ? numberOfSteps + 1 : fScale;
@@ -45,11 +43,9 @@ void ResetKineticsSetup::setup()
     fResetAngular = (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
 
     if ((nScale != 0) || (fScale != 0 && fScale < numberOfSteps + 1))
-        _engine.makeResetKinetics(
-            resetKinetics::ResetTemperature(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular, targetTemperature));
+        _engine.makeResetKinetics(resetKinetics::ResetTemperature(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular));
     else if ((nReset != 0) || (fReset != 0 && fReset < numberOfSteps + 1))
-        _engine.makeResetKinetics(
-            resetKinetics::ResetMomentum(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular, targetTemperature));
+        _engine.makeResetKinetics(resetKinetics::ResetMomentum(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular));
     else
         _engine.makeResetKinetics(resetKinetics::ResetKinetics(nResetAngular, fResetAngular));
 }

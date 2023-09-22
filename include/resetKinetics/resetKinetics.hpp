@@ -32,8 +32,6 @@ namespace resetKinetics
         size_t _nStepsAngularReset;
         size_t _frequencyAngularReset;
 
-        double _targetTemperature;
-
       public:
         ResetKinetics() = default;
         ResetKinetics(const size_t nStepsAngularReset, const size_t frequencyAngularReset)
@@ -43,12 +41,10 @@ namespace resetKinetics
                       const size_t nStepsMomentumReset,
                       const size_t frequencyMomentumReset,
                       const size_t nStepsAngularReset,
-                      const size_t frequencyAngularReset,
-                      const double targetTemperature)
+                      const size_t frequencyAngularReset)
             : _nStepsTemperatureReset(nStepsTemperatureReset), _frequencyTemperatureReset(frequencyTemperatureReset),
               _nStepsMomentumReset(nStepsMomentumReset), _frequencyMomentumReset(frequencyMomentumReset),
-              _nStepsAngularReset(nStepsAngularReset), _frequencyAngularReset(frequencyAngularReset),
-              _targetTemperature(targetTemperature){};
+              _nStepsAngularReset(nStepsAngularReset), _frequencyAngularReset(frequencyAngularReset){};
 
         virtual ~ResetKinetics() = default;
 

@@ -1,10 +1,11 @@
 #include "resetKinetics.hpp"
 
-#include "constants.hpp"         // for _S_TO_FS_
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "vector3d.hpp"          // for Vector3D
+#include "constants.hpp"            // for _S_TO_FS_
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "staticMatrix3x3.hpp"      // for StaticMatrix3x3
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for Vector3D
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for sqrt
@@ -82,12 +83,14 @@ void ResetTemperature::reset(const size_t                  step,
  */
 void ResetKinetics::resetTemperature(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
-    const auto temperature = physicalData.getTemperature();
-    const auto lambda      = ::sqrt(_targetTemperature / temperature);
+    const auto targetTemperature = settings::ThermostatSettings::getTargetTemperature();
+    const auto temperature       = physicalData.getTemperature();
+    const auto lambda            = ::sqrt(targetTemperature / temperature);
 
     std::ranges::for_each(simBox.getAtoms(), [lambda](auto &atom) { atom->scaleVelocity(lambda); });
 
     physicalData.calculateKinetics(simBox);
+    physicalData.calculateTemperature(simBox);
 }
 
 /**
@@ -143,4 +146,7 @@ void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalDat
 
     physicalData.calculateKinetics(simBox);
     physicalData.calculateTemperature(simBox);
+    simBox.calculateMomentum();
+    simBox.calculateAngularMomentum();
+    physicalData.setAngularMomentum(simBox.getAngularMomentum());
 }

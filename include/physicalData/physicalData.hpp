@@ -92,7 +92,9 @@ namespace physicalData
         void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
 
         void setMomentum(const double momentum) { _momentum = momentum; }
-        void setMomentumVector(const linearAlgebra::Vec3D &vec) { _momentumVector = vec; }
+        void setMomentum(const linearAlgebra::Vec3D &vec) { _momentumVector = vec; }
+
+        void setAngularMomentum(const linearAlgebra::Vec3D &vec) { _angularMomentumVector = vec; }
 
         void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
         void setKineticEnergyAtomicVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
@@ -143,6 +145,7 @@ namespace physicalData
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
         [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
         [[nodiscard]] linearAlgebra::Vec3D getMomentumVector() const { return _momentumVector; }
+        [[nodiscard]] linearAlgebra::Vec3D getAngularMomentumVector() const { return _angularMomentumVector; }
     };
 
 }   // namespace physicalData

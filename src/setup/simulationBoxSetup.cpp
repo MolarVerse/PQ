@@ -15,6 +15,7 @@
 #include "simulationBoxSettings.hpp"   // for getDensitySet, getBoxSet
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"         // for toLowerCopy
+#include "thermostatSettings.hpp"      // for ThermostatSettings
 
 #include <algorithm>     // for ranges::for_each
 #include <cstddef>       // for size_t
@@ -325,12 +326,13 @@ void SimulationBoxSetup::initVelocities()
 
         _engine.getPhysicalData().calculateTemperature(_engine.getSimulationBox());
 
-        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
+        std::cout << "Temperature after initialization: " << _engine.getPhysicalData().getTemperature() << std::endl;
 
         _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
         _engine.getResetKinetics().resetAngularMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
+        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
 
-        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
+        std::cout << "Temperature after reset: " << _engine.getPhysicalData().getTemperature() << std::endl;
+        std::cout << "Angular momentum after reset: " << _engine.getPhysicalData().getAngularMomentumVector() << std::endl;
     }
 }

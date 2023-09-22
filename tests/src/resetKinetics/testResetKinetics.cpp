@@ -38,7 +38,7 @@ TEST_F(TestResetKinetics, resetTemperature)
  */
 TEST_F(TestResetKinetics, resetMomentum)
 {
-    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
     _resetKinetics->resetMomentum(*_data, *_simulationBox);
 
     const auto velocity_mol1_atom1 =
@@ -71,7 +71,7 @@ TEST_F(TestResetKinetics, noReset) { EXPECT_NO_THROW(_resetKinetics->reset(10, *
  */
 TEST_F(TestResetKinetics, resetTemperatureNscale)
 {
-    _resetKinetics = new resetKinetics::ResetTemperature(10, 11, 0, 11, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetTemperature(10, 11, 0, 11, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
@@ -118,7 +118,7 @@ TEST_F(TestResetKinetics, resetTemperatureNscale)
  */
 TEST_F(TestResetKinetics, resetTemperatureFscale)
 {
-    _resetKinetics = new resetKinetics::ResetTemperature(0, 9, 0, 11, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetTemperature(0, 9, 0, 11, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
@@ -165,13 +165,13 @@ TEST_F(TestResetKinetics, resetTemperatureFscale)
  */
 TEST_F(TestResetKinetics, resetMomentumNreset)
 {
-    _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 10, 11, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 10, 11, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -212,13 +212,13 @@ TEST_F(TestResetKinetics, resetMomentumNreset)
  */
 TEST_F(TestResetKinetics, resetTemperatureNreset)
 {
-    _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 10, 11, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 10, 11, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -259,13 +259,13 @@ TEST_F(TestResetKinetics, resetTemperatureNreset)
  */
 TEST_F(TestResetKinetics, resetMomentumFreset)
 {
-    _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 0, 9, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 0, 9, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
@@ -306,13 +306,13 @@ TEST_F(TestResetKinetics, resetMomentumFreset)
  */
 TEST_F(TestResetKinetics, resetTemperatureFreset)
 {
-    _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 0, 9, 0, 11, 300.0);
+    _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 0, 9, 0, 11);
 
     const auto velocity_mol1_atom1_old = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2_old = _simulationBox->getMolecule(0).getAtomVelocity(1);
     const auto velocity_mol2_atom1_old = _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    _data->setMomentumVector(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
     _resetKinetics->reset(9, *_data, *_simulationBox);
 
