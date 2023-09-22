@@ -18,3 +18,4 @@ examples/**/perf*
 **/*.vel
 **/*.force
 **/*.chrg
+**/*.charge

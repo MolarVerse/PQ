@@ -42,7 +42,8 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
-   nstep       = 100;
+   nstep       = 1000;
+   freset_angular = 1;
    #nscale = 100;
    output_freq = 1;
 #   init_velocities = true;
@@ -79,7 +80,7 @@
 # THERMOSTAT
 #-----------------------------------------
    temp       = 298.15;
-   thermostat = nh-chain;
+   thermostat = berendsen;
 #   manostat   = berendsen;
    pressure   = 1.013;
    p_relaxation = 0.1;

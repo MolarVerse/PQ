@@ -1,8 +1,9 @@
 #include "inputFileParserIntegrator.hpp"
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "integrator.hpp"   // for VelocityVerlet, integrator
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "integrator.hpp"        // for VelocityVerlet, integrator
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -36,9 +37,12 @@ InputFileParserIntegrator::InputFileParserIntegrator(engine::Engine &engine) : I
 void InputFileParserIntegrator::parseIntegrator(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "v-verlet")
+
+    const auto integrator = utilities::toLowerCopy(lineElements[2]);
+
+    if (integrator == "v-verlet")
         _engine.makeIntegrator(integrator::VelocityVerlet());
     else
         throw customException::InputFileException(
-            format("Invalid integrator \"{}\" at line {} in input file", lineElements[2], lineNumber));
+            format("Invalid integrator \"{}\" at line {} in input file", integrator, lineNumber));
 }

@@ -1,6 +1,6 @@
-#ifndef _DFTBPLUS_RUNNER_HPP_
+#ifndef _PYSCF_RUNNER_HPP_
 
-#define _DFTBPLUS_RUNNER_HPP_
+#define _PYSCF_RUNNER_HPP_
 
 #include "qmRunner.hpp"   // for QMRunner
 
@@ -17,12 +17,12 @@ namespace physicalData
 namespace QM
 {
     /**
-     * @class DFTBPlusRunner
+     * @class PySCFRunner
      *
-     * @brief class for running DFTB+ inheriting from QMRunner
+     * @brief class for running PySCF inheriting from QMRunner
      *
      */
-    class DFTBPlusRunner : public QMRunner
+    class PySCFRunner : public QMRunner
     {
       private:
         bool _isFirstExecution = true;
@@ -31,6 +31,7 @@ namespace QM
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
     };
+
 }   // namespace QM
 
-#endif   // _DFTBPLUS_RUNNER_HPP_
+#endif   // _PYSCF_RUNNER_HPP_

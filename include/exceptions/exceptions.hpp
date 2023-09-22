@@ -224,6 +224,19 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /**
+     * @class QMRunnerException inherits from CustomException
+     *
+     * @brief Exception for QMRunner errors
+     */
+    class QMRunnerException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_

@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
@@ -43,15 +44,16 @@ InputFileParserManostat::InputFileParserManostat(engine::Engine &engine) : Input
 void InputFileParserManostat::parseManostat(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "none")
+
+    const auto manostat = utilities::toLowerCopy(lineElements[2]);
+
+    if (manostat == "none")
         settings::ManostatSettings::setManostatType("none");
-    else if (lineElements[2] == "berendsen")
+    else if (manostat == "berendsen")
         settings::ManostatSettings::setManostatType("berendsen");
     else
-        throw customException::InputFileException(
-            format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
-                   lineElements[2],
-                   lineNumber));
+        throw customException::InputFileException(std::format(
+            "Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none", manostat, lineNumber));
 }
 
 /**

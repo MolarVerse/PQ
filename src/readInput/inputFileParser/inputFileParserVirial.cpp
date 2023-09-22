@@ -1,9 +1,10 @@
 #include "inputFileParserVirial.hpp"
 
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for InputFileException, customException
-#include "physicalData.hpp"   // for PhysicalData
-#include "virial.hpp"         // for VirialAtomic, VirialMolecular, virial
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "physicalData.hpp"      // for PhysicalData
+#include "stringUtilities.hpp"   // for toLowerCopy
+#include "virial.hpp"            // for VirialAtomic, VirialMolecular, virial
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
@@ -37,16 +38,18 @@ InputFileParserVirial::InputFileParserVirial(engine::Engine &engine) : InputFile
 void InputFileParserVirial::parseVirial(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "molecular")
-    {
+
+    const auto virial = utilities::toLowerCopy(lineElements[2]);
+
+    if (virial == "molecular")
         _engine.makeVirial(virial::VirialMolecular());
-    }
-    else if (lineElements[2] == "atomic")
+
+    else if (virial == "atomic")
     {
         _engine.makeVirial(virial::VirialAtomic());
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else
         throw customException::InputFileException(
-            format("Invalid virial setting \"{}\" at line {} in input file", lineElements[2], lineNumber));
+            format("Invalid virial setting \"{}\" at line {} in input file", virial, lineNumber));
 }

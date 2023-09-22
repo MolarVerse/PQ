@@ -6,6 +6,7 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "potential.hpp"              // for Potential
+#include "stringUtilities.hpp"        // for toLowerCopy
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -41,18 +42,21 @@ InputFileParserForceField::InputFileParserForceField(engine::Engine &engine) : I
 void InputFileParserForceField::parseForceFieldType(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "on")
+
+    const auto forceFieldType = utilities::toLowerCopy(lineElements[2]);
+
+    if (forceFieldType == "on")
     {
         settings::ForceFieldSettings::activate();
         _engine.getForceFieldPtr()->activateNonCoulombic();
         _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
     }
-    else if (lineElements[2] == "off")
+    else if (forceFieldType == "off")
     {
         settings::ForceFieldSettings::deactivate();
         _engine.getForceFieldPtr()->deactivateNonCoulombic();
     }
-    else if (lineElements[2] == "bonded")
+    else if (forceFieldType == "bonded")
     {
         settings::ForceFieldSettings::activate();
         _engine.getForceFieldPtr()->deactivateNonCoulombic();
@@ -60,6 +64,6 @@ void InputFileParserForceField::parseForceFieldType(const std::vector<std::strin
     else
         throw customException::InputFileException(
             format(R"(Invalid force-field keyword "{}" at line {} in input file - possible keywords are "on", "off" or "bonded")",
-                   lineElements[2],
+                   forceFieldType,
                    lineNumber));
 }

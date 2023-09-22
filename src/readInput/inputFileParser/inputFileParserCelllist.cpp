@@ -4,6 +4,7 @@
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -42,14 +43,19 @@ InputFileParserCellList::InputFileParserCellList(engine::Engine &engine) : Input
 void InputFileParserCellList::parseCellListActivated(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "on")
+
+    const auto cellListActivated = utilities::toLowerCopy(lineElements[2]);
+
+    if (cellListActivated == "on")
         _engine.getCellList().activate();
-    else if (lineElements[2] == "off")
+
+    else if (cellListActivated == "off")
         _engine.getCellList().deactivate();
+
     else
         throw customException::InputFileException(
             format(R"(Invalid cell-list keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
-                   lineElements[2],
+                   cellListActivated,
                    lineNumber));
 }
 

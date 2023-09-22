@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"          // for InputFileException, customException
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "stringUtilities.hpp"     // for toLowerCopy
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -39,17 +40,19 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const std::vector<std::strin
 {
     checkCommand(lineElements, lineNumber);
 
-    if (lineElements[2] == "guff")
+    const auto type = utilities::toLowerCopy(lineElements[2]);
+
+    if (type == "guff")
         settings::PotentialSettings::setNonCoulombType("guff");
-    else if (lineElements[2] == "lj")
+    else if (type == "lj")
         settings::PotentialSettings::setNonCoulombType("lj");
-    else if (lineElements[2] == "buck")
+    else if (type == "buck")
         settings::PotentialSettings::setNonCoulombType("buck");
-    else if (lineElements[2] == "morse")
+    else if (type == "morse")
         settings::PotentialSettings::setNonCoulombType("morse");
     else
         throw customException::InputFileException(
             format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and guff",
-                   lineElements[2],
+                   type,
                    lineNumber));
 }

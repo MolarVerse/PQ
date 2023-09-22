@@ -111,6 +111,7 @@ void ResetKinetics::resetMomentum(physicalData::PhysicalData &physicalData, simu
 
 void ResetKinetics::resetAngularMomentum(physicalData::PhysicalData &physicalData, simulationBox::SimulationBox &simBox) const
 {
+    simBox.calculateTotalMass();
     simBox.calculateCenterOfMass();
     simBox.calculateMomentum();
     simBox.calculateAngularMomentum();

@@ -5,6 +5,7 @@
 #include "potentialSettings.hpp"       // for PotentialSettings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for setDensitySet
+#include "stringUtilities.hpp"         // for toLowerCopy
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -88,13 +89,17 @@ void InputFileParserSimulationBox::parseInitializeVelocities(const std::vector<s
 {
     checkCommand(lineElements, lineNumber);
 
-    if (lineElements[2] == "true")
+    const auto initializeVelocities = utilities::toLowerCopy(lineElements[2]);
+
+    if (initializeVelocities == "true")
         settings::SimulationBoxSettings::setInitializeVelocities(true);
-    else if (lineElements[2] == "false")
+
+    else if (initializeVelocities == "false")
         settings::SimulationBoxSettings::setInitializeVelocities(false);
+
     else
         throw customException::InputFileException(std::format(
             "Invalid value for initialize velocities - \"{}\" at line {} in input file. Possible options are: true, false",
-            lineElements[2],
+            initializeVelocities,
             lineNumber));
 }

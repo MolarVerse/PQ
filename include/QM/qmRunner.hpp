@@ -33,9 +33,9 @@ namespace QM
         virtual ~QMRunner() = default;
 
         void         run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void writeCoordsFile(simulationBox::SimulationBox &)                             = 0;
-        virtual void execute()                                                                   = 0;
-        virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &) = 0;
+        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
+        virtual void execute()                                       = 0;
+        virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
     };
 }   // namespace QM
 

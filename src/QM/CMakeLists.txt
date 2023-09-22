@@ -1,6 +1,8 @@
 add_library(QM
     qmRunner.cpp
+
     dftbplusRunner.cpp
+    pyscfRunner.cpp
 )
 
 target_include_directories(QM

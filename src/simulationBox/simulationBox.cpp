@@ -324,7 +324,7 @@ void SimulationBox::calculateAngularMomentum()
                           [this](const auto &atom)
                           { _angularMomentum += atom->getMass() * cross(atom->getPosition(), atom->getVelocity()); });
 
-    _angularMomentum -= cross(_centerOfMass, _momentum / _totalMass);
+    _angularMomentum -= cross(_centerOfMass, _momentum / _totalMass) * _totalMass;
 }
 
 /**

@@ -6,6 +6,7 @@
 #include "qmmdEngine.hpp"              // for QMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
+#include "stringUtilities.hpp"         // for toLowerCopy
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
@@ -48,19 +49,22 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
                                                    std::unique_ptr<engine::Engine> &engine)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "mm-md")
+
+    const auto jobtype = utilities::toLowerCopy(lineElements[2]);
+
+    if (jobtype == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
         settings::Settings::activateMM();
         engine.reset(new engine::MMMDEngine());
     }
-    else if (lineElements[2] == "qm-md")
+    else if (jobtype == "qm-md")
     {
         settings::Settings::setJobtype("QMMD");
         settings::Settings::activateQM();
         engine.reset(new engine::QMMDEngine());
     }
-    else if (lineElements[2] == "qm-rpmd")
+    else if (jobtype == "qm-rpmd")
     {
         settings::Settings::setJobtype("RingPolymerQMMD");
         settings::Settings::activateQM();
@@ -69,5 +73,5 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     }
     else
         throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", lineElements[2]));
+            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", jobtype));
 }
