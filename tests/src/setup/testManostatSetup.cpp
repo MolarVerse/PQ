@@ -1,9 +1,10 @@
-#include "engine.hpp"             // for Engine
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "manostat.hpp"           // for BerendsenManostat, Manostat
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "manostatSetup.hpp"      // for ManostatSetup, setupManostat, setup
-#include "testSetup.hpp"          // for TestSetup
+#include "berendsenManostat.hpp"   // for BerendsenManostat
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "manostat.hpp"            // for BerendsenManostat, Manostat
+#include "manostatSettings.hpp"    // for ManostatSettings
+#include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup
+#include "testSetup.hpp"           // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...

@@ -1,10 +1,11 @@
 #include "manostatSetup.hpp"
 
-#include "constants.hpp"          // for _PS_TO_FS_
-#include "engine.hpp"             // for Engine
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
-#include "manostatSettings.hpp"   // for ManostatSettings
+#include "berendsenManostat.hpp"   // for BerendsenManostat
+#include "constants.hpp"           // for _PS_TO_FS_
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "manostat.hpp"            // for BerendsenManostat, Manostat, manostat
+#include "manostatSettings.hpp"    // for ManostatSettings
 
 #include <format>   // for format
 #include <string>   // for operator==

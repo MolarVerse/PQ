@@ -14,3 +14,8 @@ install/
 examples/**/testset*
 examples/**/perf*
 
+**/*.chrg
+**/*.chrage
+**/*.xyz
+**/*.force
+**/*.vel
