@@ -8,7 +8,7 @@
 
     # Number of steps to be performed and timestep in fs 
       nstep = 100; timestep = 0.2;
-      freset_angular = 1;
+      init_velocities = true;
     # nscale=100;
 
     # Output of coordinates and velocities enabled
