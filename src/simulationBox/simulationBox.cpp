@@ -1,5 +1,6 @@
 #include "simulationBox.hpp"
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 
 #include <algorithm>   // for sort, unique
@@ -24,6 +25,7 @@ void SimulationBox::copy(const SimulationBox &toCopy)
     this->_waterType                        = toCopy._waterType;
     this->_ammoniaType                      = toCopy._ammoniaType;
     this->_degreesOfFreedom                 = toCopy._degreesOfFreedom;
+    this->_totalMass                        = toCopy._totalMass;
     this->_coulombRadiusCutOff              = toCopy._coulombRadiusCutOff;
     this->_box                              = toCopy._box;
     this->_externalGlobalVdwTypes           = toCopy._externalGlobalVdwTypes;
@@ -276,6 +278,8 @@ void SimulationBox::calculateTotalMass()
     _totalMass = 0.0;
 
     std::ranges::for_each(_atoms, [this](const auto &atom) { _totalMass += atom->getMass(); });
+
+    _box.setTotalMass(_totalMass);
 }
 
 /**
@@ -305,26 +309,46 @@ void SimulationBox::calculateCenterOfMassMolecules()
  * @brief calculate momentum of simulationBox
  *
  */
-void SimulationBox::calculateMomentum()
+linearAlgebra::Vec3D SimulationBox::calculateMomentum()
 {
-    _momentum = linearAlgebra::Vec3D{0.0};
+    auto momentum = linearAlgebra::Vec3D{0.0};
 
-    std::ranges::for_each(_atoms, [this](const auto &atom) { _momentum += atom->getMass() * atom->getVelocity(); });
+    std::ranges::for_each(_atoms, [&momentum](const auto &atom) { momentum += atom->getMass() * atom->getVelocity(); });
+
+    return momentum;
 }
 
 /**
  * @brief calculate angular momentum of simulationBox
  *
  */
-void SimulationBox::calculateAngularMomentum()
+linearAlgebra::Vec3D SimulationBox::calculateAngularMomentum(const linearAlgebra::Vec3D &momentum)
 {
-    _angularMomentum = linearAlgebra::Vec3D{0.0};
+    auto angularMomentum = linearAlgebra::Vec3D{0.0};
 
     std::ranges::for_each(_atoms,
-                          [this](const auto &atom)
-                          { _angularMomentum += atom->getMass() * cross(atom->getPosition(), atom->getVelocity()); });
+                          [&angularMomentum](const auto &atom)
+                          { angularMomentum += atom->getMass() * cross(atom->getPosition(), atom->getVelocity()); });
 
-    _angularMomentum -= cross(_centerOfMass, _momentum / _totalMass) * _totalMass;
+    angularMomentum -= cross(_centerOfMass, momentum / _totalMass) * _totalMass;
+
+    return angularMomentum;
+}
+
+/**
+ * @brief calculate temperature of simulationBox
+ *
+ */
+double SimulationBox::calculateTemperature()
+{
+    auto temperature = 0.0;
+
+    std::ranges::for_each(
+        _atoms, [&temperature](const auto &atom) { temperature += atom->getMass() * normSquared(atom->getVelocity()); });
+
+    temperature *= constants::_TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
+
+    return temperature;
 }
 
 /**

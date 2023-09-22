@@ -250,39 +250,6 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
     ASSERT_THROW(simulationBoxSetup.setAtomicNumbers(), customException::MolDescriptorException);
 }
 
-TEST_F(TestSetup, testSetTotalMass)
-{
-    simulationBox::Molecule molecule1(1);
-    molecule1.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
-    atom1->setName("C");
-    atom2->setName("H");
-    atom3->setName("O");
-    molecule1.addAtom(atom1);
-    molecule1.addAtom(atom2);
-    molecule1.addAtom(atom3);
-
-    simulationBox::Molecule molecule2(2);
-    molecule2.setNumberOfAtoms(2);
-    const auto atom4 = std::make_shared<simulationBox::Atom>();
-    const auto atom5 = std::make_shared<simulationBox::Atom>();
-    atom4->setName("H");
-    atom5->setName("H");
-    molecule2.addAtom(atom4);
-    molecule2.addAtom(atom5);
-
-    _engine->getSimulationBox().getMolecules().push_back(molecule1);
-    _engine->getSimulationBox().getMolecules().push_back(molecule2);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
-    simulationBoxSetup.setAtomMasses();
-    simulationBoxSetup.calculateMolMasses();
-    simulationBoxSetup.calculateTotalMass();
-
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getTotalMass(), 12.0107 + 3 * 1.00794 + 15.9994);
-}
-
 TEST_F(TestSetup, testSetMolMass)
 {
     simulationBox::Molecule molecule1(1);

@@ -67,8 +67,9 @@ void SimulationBoxSetup::setup()
     setAtomMasses();
     setAtomicNumbers();
     calculateMolMasses();
-    calculateTotalMass();
     calculateTotalCharge();
+
+    _engine.getSimulationBox().calculateTotalMass();
 
     checkBoxSettings();
     checkRcCutoff();
@@ -77,7 +78,6 @@ void SimulationBoxSetup::setup()
     _engine.getSimulationBox().calculateCenterOfMassMolecules();
 
     initVelocities();
-    calculateTotalMass();
 }
 
 /**
@@ -225,22 +225,6 @@ void SimulationBoxSetup::calculateMolMasses()
 }
 
 /**
- * @brief Calculates the total mass of the simulation box
- */
-void SimulationBoxSetup::calculateTotalMass()
-{
-    const auto &molecules = _engine.getSimulationBox().getMolecules();
-
-    const double totalMass =
-        std::accumulate(molecules.begin(),
-                        molecules.end(),
-                        0.0,
-                        [](const double sum, const Molecule &molecule) { return sum + molecule.getMolMass(); });
-
-    _engine.getSimulationBox().setTotalMass(totalMass);
-}
-
-/**
  * @brief Calculates the total charge of the simulation box
  */
 void SimulationBoxSetup::calculateTotalCharge()
@@ -323,16 +307,5 @@ void SimulationBoxSetup::initVelocities()
     {
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
-
-        _engine.getPhysicalData().calculateTemperature(_engine.getSimulationBox());
-
-        std::cout << "Temperature after initialization: " << _engine.getPhysicalData().getTemperature() << std::endl;
-
-        _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetAngularMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
-
-        std::cout << "Temperature after reset: " << _engine.getPhysicalData().getTemperature() << std::endl;
-        std::cout << "Angular momentum after reset: " << _engine.getPhysicalData().getAngularMomentumVector() << std::endl;
     }
 }

@@ -15,7 +15,7 @@ using namespace physicalData;
  */
 void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
 {
-    _momentumVector               = linearAlgebra::Vec3D();
+    _momentum                     = linearAlgebra::Vec3D();
     _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
     _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
 
@@ -29,7 +29,7 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 
             const auto momentum = velocities * molecule.getAtomMass(i);
 
-            _momentumVector            += momentum;
+            _momentum                  += momentum;
             _kineticEnergyAtomicVector += momentum * velocities;
             momentumSquared            += momentum * momentum;
         }
@@ -39,8 +39,7 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 
     std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
-    _momentumVector *= constants::_FS_TO_S_;
-    _momentum        = norm(_momentumVector);
+    _momentum *= constants::_FS_TO_S_;
 
     _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
@@ -65,7 +64,6 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _improperEnergy += physicalData.getImproperEnergy();
 
     _temperature   += physicalData.getTemperature();
-    _momentum      += physicalData.getMomentum();
     _kineticEnergy += physicalData.getKineticEnergy();
     _volume        += physicalData.getVolume();
     _density       += physicalData.getDensity();
@@ -73,6 +71,9 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _pressure      += physicalData.getPressure();
 
     _qmEnergy += physicalData.getQMEnergy();
+
+    _momentum        += physicalData.getMomentum();
+    _angularMomentum += physicalData.getAngularMomentum();
 
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
@@ -97,13 +98,15 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _improperEnergy /= outputFrequency;
 
     _temperature /= outputFrequency;
-    _momentum    /= outputFrequency;
     _volume      /= outputFrequency;
     _density     /= outputFrequency;
     _virial      /= outputFrequency;
     _pressure    /= outputFrequency;
 
     _qmEnergy /= outputFrequency;
+
+    _momentum        /= outputFrequency;
+    _angularMomentum /= outputFrequency;
 
     _noseHooverMomentumEnergy /= outputFrequency;
     _noseHooverFrictionEnergy /= outputFrequency;
@@ -127,13 +130,15 @@ void PhysicalData::reset()
     _improperEnergy = 0.0;
 
     _temperature = 0.0;
-    _momentum    = 0.0;
     _virial      = {0.0, 0.0, 0.0};
     _pressure    = 0.0;
     _volume      = 0.0;
     _density     = 0.0;
 
     _qmEnergy = 0.0;
+
+    _momentum        = {0.0, 0.0, 0.0};
+    _angularMomentum = {0.0, 0.0, 0.0};
 
     _noseHooverMomentumEnergy = 0.0;
     _noseHooverFrictionEnergy = 0.0;
@@ -146,12 +151,7 @@ void PhysicalData::reset()
  */
 void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulationBox)
 {
-    _temperature = 0.0;
-
-    std::ranges::for_each(simulationBox.getAtoms(),
-                          [this](auto &atom) { _temperature += atom->getMass() * normSquared(atom->getVelocity()); });
-
-    _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
+    _temperature = simulationBox.calculateTemperature();
 }
 
 /**

@@ -10,6 +10,7 @@ add_library(output
     rstFileOutput.cpp
     ringPolymerRestartFileOutput.cpp
     ringPolymerTrajectoryOutput.cpp
+    momentumOutput.cpp
 )
 
 target_include_directories(output

@@ -77,7 +77,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getNoseHooverFrictionEnergy(), "E(NH FRICTION)", "kcal/mol");
     }
 
-    writeLeftScientific(data.getMomentum(), "MOMENTUM", "amuA/fs");
+    writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
     writeRight(loopTime, "LOOPTIME", "s");
 
     _fp << std::format("{:-^89}", "") << "\n\n";

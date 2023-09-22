@@ -23,7 +23,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -69,7 +69,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -124,7 +124,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -176,7 +176,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(0.0);
     _physicalData->setIntraNonCoulombEnergy(0.0);
 

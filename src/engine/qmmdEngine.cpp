@@ -26,5 +26,5 @@ void QMMDEngine::takeStep()
 
     _manostat->applyManostat(_simulationBox, _physicalData);
 
-    _resetKinetics->reset(_step, _physicalData, _simulationBox);
+    _resetKinetics.reset(_step, _physicalData, _simulationBox);
 }

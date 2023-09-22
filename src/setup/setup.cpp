@@ -42,7 +42,7 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     std::cout << "setup output files..." << '\n';
     setupOutputFiles(engine);
 
-    readFiles(inputFileName, engine);
+    readFiles(engine);
 
     std::cout << "setup engine..." << '\n';
     setupEngine(engine);
@@ -60,7 +60,7 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(const std::string &inputFileName, Engine &engine)
+void setup::readFiles(Engine &engine)
 {
     std::cout << "Reading moldescriptor..." << '\n';
     molDescriptor::readMolDescriptor(engine);

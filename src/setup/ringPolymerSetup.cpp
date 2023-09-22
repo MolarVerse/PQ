@@ -44,15 +44,10 @@ void RingPolymerSetup::setup()
     {
         auto initVelocities = [](auto &bead)
         {
-            // TODO: test if initializeVelocities is set
             maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
             maxwellBoltzmann.initializeVelocities(bead);
         };
 
         std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
-
-        _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetAngularMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
     }
 }

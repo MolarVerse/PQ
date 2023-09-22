@@ -29,7 +29,7 @@ void RingPolymerQMMDEngine::takeStep()
 
         _manostat->applyManostat(bead, _physicalData);
 
-        _resetKinetics->reset(_step, _physicalData, bead);
+        _resetKinetics.reset(_step, _physicalData, bead);
     };
 
     std::ranges::for_each(_ringPolymerBeads, afterRingPolymerCoupling);

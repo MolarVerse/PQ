@@ -36,7 +36,6 @@ namespace setup
         void setAtomicNumbers();
 
         void calculateMolMasses();
-        void calculateTotalMass();
         void calculateTotalCharge();
 
         void checkBoxSettings();

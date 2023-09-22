@@ -22,8 +22,8 @@ void Engine::run()
 
     _physicalData.calculateKinetics(getSimulationBox());
 
-    _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
-    _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());
+    _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
+    _engineOutput.getStdoutOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));

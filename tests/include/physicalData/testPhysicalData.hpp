@@ -26,7 +26,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setCoulombEnergy(1.0);
         _physicalData->setNonCoulombEnergy(2.0);
         _physicalData->setTemperature(3.0);
-        _physicalData->setMomentum(4.0);
+        _physicalData->setMomentum(linearAlgebra::Vec3D(4.0));
         _physicalData->setKineticEnergy(5.0);
         _physicalData->setVolume(6.0);
         _physicalData->setDensity(7.0);
