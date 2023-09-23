@@ -19,7 +19,7 @@ using namespace output;
  */
 void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << "\n\n";
+    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
 }
 
 /**
@@ -30,6 +30,7 @@ void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -52,6 +53,7 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -74,6 +76,7 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << std::format("# Total force = {:.5e} kcal/mol/Angstrom\n", simBox.calculateTotalForce());
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -96,6 +99,7 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)

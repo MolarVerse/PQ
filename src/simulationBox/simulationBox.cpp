@@ -336,6 +336,20 @@ linearAlgebra::Vec3D SimulationBox::calculateAngularMomentum(const linearAlgebra
 }
 
 /**
+ * @brief calculate total force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateTotalForce()
+{
+    linearAlgebra::Vec3D totalForce(0.0);
+
+    std::ranges::for_each(_atoms, [&totalForce](const auto &atom) { totalForce += atom->getForce(); });
+
+    return norm(totalForce);
+}
+
+/**
  * @brief calculate temperature of simulationBox
  *
  */

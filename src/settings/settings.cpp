@@ -1,6 +1,8 @@
 #include "settings.hpp"
 
-#include "stringUtilities.hpp"
+#include "stringUtilities.hpp"   // for toLowerCopy
+
+#include <string>   // for operator==, string
 
 using settings::Settings;
 

@@ -1,8 +1,12 @@
-#include "matrixNear.hpp"
-#include "staticMatrix3x3.hpp"
-#include "vector3d.hpp"
+#include "matrixNear.hpp"             // for EXPECT_MATRIX_NEAR
+#include "staticMatrix3x3.hpp"        // for diagonalMatrix, inverse, operator*
+#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"               // for Vec3D, linearAlgebra
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST
+#include <iosfwd>          // for stringstream, ostream
+#include <memory>          // for allocator
 
 using namespace linearAlgebra;
 

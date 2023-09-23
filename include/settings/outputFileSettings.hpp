@@ -4,6 +4,10 @@
 
 #include "defaults.hpp"
 
+#include <cstddef>       // for size_t
+#include <string>        // for string, allocator
+#include <string_view>   // for string_view
+
 namespace settings
 {
     /**

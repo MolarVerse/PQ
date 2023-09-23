@@ -1,6 +1,6 @@
 #include "coulombShiftedPotential.hpp"
 
-#include "constants.hpp"
+#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 
 using namespace potential;
 

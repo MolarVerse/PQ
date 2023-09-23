@@ -2,8 +2,7 @@
 
 #define _SETTINGS_HPP_
 
-#include <string>        // for string, allocator
-#include <string_view>   // for basic_string_view, string_view
+#include <string_view>   // for string_view
 
 namespace settings
 {

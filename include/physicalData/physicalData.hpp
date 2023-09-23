@@ -5,6 +5,7 @@
 #include "vector3d.hpp"   // for Vec3D
 
 #include <functional>   // for _Bind_front_t, bind_front, function
+#include <vector>       // for vector
 
 namespace simulationBox
 {

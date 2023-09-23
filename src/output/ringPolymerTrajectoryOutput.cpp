@@ -17,7 +17,7 @@ using output::RingPolymerTrajectoryOutput;
 void RingPolymerTrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 {
     _fp << simBox.getNumberOfAtoms() * settings::RingPolymerSettings::getNumberOfBeads() << "  ";
-    _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << "\n\n";
+    _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
 }
 
 /**
@@ -28,6 +28,7 @@ void RingPolymerTrajectoryOutput::writeHeader(const simulationBox::SimulationBox
 void RingPolymerTrajectoryOutput::writeXyz(std::vector<simulationBox::SimulationBox> &beads)
 {
     writeHeader(beads[0]);
+    _fp << '\n';
 
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
@@ -51,6 +52,7 @@ void RingPolymerTrajectoryOutput::writeXyz(std::vector<simulationBox::Simulation
 void RingPolymerTrajectoryOutput::writeVelocities(std::vector<simulationBox::SimulationBox> &beads)
 {
     writeHeader(beads[0]);
+    _fp << '\n';
 
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
@@ -75,6 +77,11 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<simulationBox::Simulat
 {
     writeHeader(beads[0]);
 
+    auto totalForce = 0.0;
+    std::ranges::for_each(beads, [&totalForce](auto &bead) { totalForce += bead.calculateTotalForce(); });
+
+    _fp << std::format("# Total force = {:.5e} kcal/mol/Angstrom\n", totalForce);
+
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
             for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
@@ -97,6 +104,7 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<simulationBox::Simulat
 void RingPolymerTrajectoryOutput::writeCharges(std::vector<simulationBox::SimulationBox> &beads)
 {
     writeHeader(beads[0]);
+    _fp << '\n';
 
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())

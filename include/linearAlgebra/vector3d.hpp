@@ -2,11 +2,11 @@
 
 #define _VEC3D_HPP_
 
-#include <array>      // for array
-#include <cmath>      // for ceil, fabs, floor, rint, sqrt
-#include <concepts>   // for requires
-#include <cstddef>    // for size_t
-#include <iostream>   // for ostream
+#include <array>         // for array
+#include <cmath>         // for ceil, fabs, floor, rint, sqrt
+#include <cstddef>       // for size_t
+#include <iostream>      // for ostream
+#include <type_traits>   // for is_fundamental_v
 
 namespace linearAlgebra
 {

@@ -2,8 +2,11 @@
 
 #define _STATIC_MATRIX_3X3_HPP_
 
-#include "staticMatrix3x3Class.hpp"
-#include "vector3d.hpp"
+#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"               // for Vector3D
+
+#include <cstddef>   // for size_t
+#include <ostream>   // for operator<<, ostream
 
 namespace linearAlgebra
 {

@@ -84,6 +84,7 @@ namespace simulationBox
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();
         [[nodiscard]] linearAlgebra::Vec3D calculateAngularMomentum(const linearAlgebra::Vec3D &momentum);
+        double                             calculateTotalForce();
 
         [[nodiscard]] bool                     moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
