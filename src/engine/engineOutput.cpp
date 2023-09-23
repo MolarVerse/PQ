@@ -23,6 +23,17 @@ void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, con
 }
 
 /**
+ * @brief wrapper for momentum file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeMomentumFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _momentumOutput->write(step, physicalData);
+}
+
+/**
  * @brief wrapper for xyz file output function
  *
  * @param simulationBox

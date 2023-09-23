@@ -23,5 +23,5 @@ void MomentumOutput::write(const size_t step, const physicalData::PhysicalData &
     _fp << std::format("{:20.5e}\t", norm(data.getAngularMomentum()));
     _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[0]);
     _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[1]);
-    _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[2]);
+    _fp << std::format("{:20.5e}\n", data.getAngularMomentum()[2]);
 }

@@ -5,6 +5,7 @@
 #include "energyOutput.hpp"                   // for EnergyOutput
 #include "infoOutput.hpp"                     // for InfoOutput
 #include "logOutput.hpp"                      // for LogOutput
+#include "momentumOutput.hpp"                 // for MomentumOutput
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
 #include "rstFileOutput.hpp"                  // for RstFileOutput
@@ -35,15 +36,16 @@ namespace engine
     class EngineOutput
     {
       private:
-        std::unique_ptr<output::EnergyOutput>     _energyOutput  = std::make_unique<output::EnergyOutput>("default.en");
-        std::unique_ptr<output::TrajectoryOutput> _xyzOutput     = std::make_unique<output::TrajectoryOutput>("default.xyz");
-        std::unique_ptr<output::TrajectoryOutput> _velOutput     = std::make_unique<output::TrajectoryOutput>("default.vel");
-        std::unique_ptr<output::TrajectoryOutput> _forceOutput   = std::make_unique<output::TrajectoryOutput>("default.force");
-        std::unique_ptr<output::TrajectoryOutput> _chargeOutput  = std::make_unique<output::TrajectoryOutput>("default.chg");
-        std::unique_ptr<output::LogOutput>        _logOutput     = std::make_unique<output::LogOutput>("default.log");
-        std::unique_ptr<output::StdoutOutput>     _stdoutOutput  = std::make_unique<output::StdoutOutput>("stdout");
-        std::unique_ptr<output::RstFileOutput>    _rstFileOutput = std::make_unique<output::RstFileOutput>("default.rst");
-        std::unique_ptr<output::InfoOutput>       _infoOutput    = std::make_unique<output::InfoOutput>("default.info");
+        std::unique_ptr<output::EnergyOutput>     _energyOutput   = std::make_unique<output::EnergyOutput>("default.en");
+        std::unique_ptr<output::MomentumOutput>   _momentumOutput = std::make_unique<output::MomentumOutput>("default.mom");
+        std::unique_ptr<output::TrajectoryOutput> _xyzOutput      = std::make_unique<output::TrajectoryOutput>("default.xyz");
+        std::unique_ptr<output::TrajectoryOutput> _velOutput      = std::make_unique<output::TrajectoryOutput>("default.vel");
+        std::unique_ptr<output::TrajectoryOutput> _forceOutput    = std::make_unique<output::TrajectoryOutput>("default.force");
+        std::unique_ptr<output::TrajectoryOutput> _chargeOutput   = std::make_unique<output::TrajectoryOutput>("default.chg");
+        std::unique_ptr<output::LogOutput>        _logOutput      = std::make_unique<output::LogOutput>("default.log");
+        std::unique_ptr<output::StdoutOutput>     _stdoutOutput   = std::make_unique<output::StdoutOutput>("stdout");
+        std::unique_ptr<output::RstFileOutput>    _rstFileOutput  = std::make_unique<output::RstFileOutput>("default.rst");
+        std::unique_ptr<output::InfoOutput>       _infoOutput     = std::make_unique<output::InfoOutput>("default.info");
 
         std::unique_ptr<output::RingPolymerRestartFileOutput> _ringPolymerRstFileOutput =
             std::make_unique<output::RingPolymerRestartFileOutput>("default.rpmd.rst");
@@ -58,6 +60,7 @@ namespace engine
 
       public:
         void writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
+        void writeMomentumFile(const size_t step, const physicalData::PhysicalData &);
         void writeXyzFile(simulationBox::SimulationBox &);
         void writeVelFile(simulationBox::SimulationBox &);
         void writeForceFile(simulationBox::SimulationBox &);
@@ -72,6 +75,7 @@ namespace engine
         void writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &);
 
         output::EnergyOutput                 &getEnergyOutput() { return *_energyOutput; }
+        output::MomentumOutput               &getMomentumOutput() { return *_momentumOutput; }
         output::TrajectoryOutput             &getXyzOutput() { return *_xyzOutput; }
         output::TrajectoryOutput             &getVelOutput() { return *_velOutput; }
         output::TrajectoryOutput             &getForceOutput() { return *_forceOutput; }

@@ -56,6 +56,14 @@ namespace resetKinetics
         void resetAngularMomentum(simulationBox::SimulationBox &);
 
         /********************
+         * standard setters *
+         *******************/
+
+        void setTemperature(const double temperature) { _temperature = temperature; }
+        void setMomentum(const linearAlgebra::Vec3D &momentum) { _momentum = momentum; }
+        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum) { _angularMomentum = angularMomentum; }
+
+        /********************
          * standard getters *
          *******************/
 

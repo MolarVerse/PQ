@@ -29,7 +29,7 @@ void OutputFilesSetup::setup()
     _engine.getVelOutput().setFilename(settings::OutputFileSettings::getVelocityFileName());
     _engine.getForceOutput().setFilename(settings::OutputFileSettings::getForceFileName());
     _engine.getChargeOutput().setFilename(settings::OutputFileSettings::getChargeFileName());
-    //_engine.getMomentumOutput().setFilename(settings::OutputFileSettings::getMomentumFileName());
+    _engine.getMomentumOutput().setFilename(settings::OutputFileSettings::getMomentumFileName());
 
     _engine.getRingPolymerRstFileOutput().setFilename(settings::OutputFileSettings::getRingPolymerRestartFileName());
     _engine.getRingPolymerXyzOutput().setFilename(settings::OutputFileSettings::getRingPolymerTrajectoryFileName());
