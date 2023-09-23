@@ -4,6 +4,7 @@
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
+#include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <format>    // for format
@@ -46,6 +47,12 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     {
         writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
         writeRight(0, "N(QM ATOMS)", " ");   // TODO: implement
+    }
+
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        writeLeft(mean(data.getRingPolymerEnergy()), "E(MEAN RPMD)", "kcal/mol");
+        writeRight(max(data.getRingPolymerEnergy()), "E(MAX RPMD)", "kcal/mol");
     }
 
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");

@@ -9,6 +9,7 @@
     # Number of steps to be performed and timestep in fs 
       nstep = 10000; timestep = 0.1;
       nreset = 100;
+      freset = 10;
 
    rpmd_n_replica = 10;
 

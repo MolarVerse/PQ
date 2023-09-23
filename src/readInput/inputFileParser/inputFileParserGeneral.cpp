@@ -66,7 +66,7 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     }
     else if (jobtype == "qm-rpmd")
     {
-        settings::Settings::setJobtype("RingPolymerQMMD");
+        settings::Settings::setJobtype("Ring_Polymer_QMMD");
         settings::Settings::activateQM();
         settings::Settings::activateRingPolymerMD();
         engine.reset(new engine::RingPolymerQMMDEngine());

@@ -4,6 +4,7 @@
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
+#include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <format>    // for format
@@ -37,6 +38,12 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
     {
         _fp << std::format("{:20.12f}\t", data.getQMEnergy());
         _fp << std::format("{:20.12f}\t", 0.0);   // TODO: implement
+    }
+
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        _fp << std::format("{:20.12f}\t", mean(data.getRingPolymerEnergy()));
+        _fp << std::format("{:20.12f}\t", max(data.getRingPolymerEnergy()));
     }
 
     _fp << std::format("{:20.12f}\t", data.getKineticEnergy());

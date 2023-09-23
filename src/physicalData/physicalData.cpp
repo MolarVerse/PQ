@@ -77,6 +77,15 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
 
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
+
+    if (_ringPolymerEnergy.size() != physicalData.getRingPolymerEnergy().size())
+    {
+        _ringPolymerEnergy.clear();
+        _ringPolymerEnergy.resize(physicalData.getRingPolymerEnergy().size(), 0.0);
+    }
+
+    for (size_t i = 0; i < physicalData.getRingPolymerEnergy().size(); ++i)
+        _ringPolymerEnergy[i] += physicalData.getRingPolymerEnergy()[i];
 }
 
 /**
@@ -110,6 +119,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
 
     _noseHooverMomentumEnergy /= outputFrequency;
     _noseHooverFrictionEnergy /= outputFrequency;
+
+    std::ranges::for_each(_ringPolymerEnergy, [outputFrequency](auto &energy) { energy /= outputFrequency; });
 }
 
 /**
@@ -130,10 +141,10 @@ void PhysicalData::reset()
     _improperEnergy = 0.0;
 
     _temperature = 0.0;
-    _virial      = {0.0, 0.0, 0.0};
-    _pressure    = 0.0;
     _volume      = 0.0;
     _density     = 0.0;
+    _pressure    = 0.0;
+    _virial      = {0.0, 0.0, 0.0};
 
     _qmEnergy = 0.0;
 
@@ -142,6 +153,8 @@ void PhysicalData::reset()
 
     _noseHooverMomentumEnergy = 0.0;
     _noseHooverFrictionEnergy = 0.0;
+
+    std::ranges::for_each(_ringPolymerEnergy, [](auto &energy) { energy = 0.0; });
 }
 
 /**

@@ -31,23 +31,31 @@ void RingPolymerEngine::coupleRingPolymerBeads()
     const auto temperature   = settings::ThermostatSettings::getTargetTemperature();
     const auto rpmd_factor   = constants::_RPMD_PREFACTOR_ * numberOfBeads * numberOfBeads * temperature * temperature;
 
+    std::vector<double> ringPolymerEnergy(numberOfBeads, 0.0);
+
     for (size_t i = 0; i < numberOfBeads; ++i)
     {
         auto &bead1 = _ringPolymerBeads[i];
         auto &bead2 = _ringPolymerBeads[(i + 1) % numberOfBeads];
 
-        for (size_t j = 0; j < bead1.getNumberOfAtoms(); ++j)
+        for (size_t j = 0, numberOfAtoms = bead1.getNumberOfAtoms(); j < numberOfAtoms; ++j)
         {
             auto &atom1 = bead1.getAtom(j);
             auto &atom2 = bead2.getAtom(j);
 
+            const auto deltaPosition = atom2.getPosition() - atom1.getPosition();
+
             const auto forceConstant = rpmd_factor * atom1.getMass();
-            const auto force         = forceConstant * (atom2.getPosition() - atom1.getPosition());
+            const auto force         = forceConstant * deltaPosition;
+
+            ringPolymerEnergy[i] += 0.5 * forceConstant * normSquared(deltaPosition);
 
             atom1.addForce(force);
             atom2.addForce(-force);
         }
     }
+
+    _physicalData.setRingPolymerEnergy(ringPolymerEnergy);
 }
 
 void RingPolymerEngine::combineBeads()

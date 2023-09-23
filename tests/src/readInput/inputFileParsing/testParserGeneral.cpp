@@ -29,19 +29,19 @@ TEST_F(TestInputFileReader, JobType)
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), "MMMD");
+    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_MD);
     EXPECT_EQ(settings::Settings::isMMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), "QMMD");
+    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::QM_MD);
     EXPECT_EQ(settings::Settings::isQMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), "RingPolymerQMMD");
+    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::RING_POLYMER_QM_MD);
     EXPECT_EQ(settings::Settings::isQMActivated(), true);
     EXPECT_EQ(settings::Settings::isRingPolymerMDActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::RingPolymerQMMDEngine));

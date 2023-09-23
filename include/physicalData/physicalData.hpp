@@ -49,6 +49,8 @@ namespace physicalData
         linearAlgebra::Vec3D _kineticEnergyAtomicVector    = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
 
+        std::vector<double> _ringPolymerEnergy;
+
       public:
         void calculateTemperature(simulationBox::SimulationBox &);
         void calculateKinetics(simulationBox::SimulationBox &);
@@ -111,6 +113,8 @@ namespace physicalData
         void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
         void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
 
+        void setRingPolymerEnergy(const std::vector<double> ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+
         /********************
          * standard getters *
          ********************/
@@ -142,6 +146,8 @@ namespace physicalData
         [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
         [[nodiscard]] linearAlgebra::Vec3D getMomentum() const { return _momentum; }
         [[nodiscard]] linearAlgebra::Vec3D getAngularMomentum() const { return _angularMomentum; }
+
+        [[nodiscard]] std::vector<double> getRingPolymerEnergy() const { return _ringPolymerEnergy; }
     };
 
 }   // namespace physicalData
