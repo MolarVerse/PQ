@@ -1,11 +1,12 @@
 #include "manostatSetup.hpp"
 
-#include "berendsenManostat.hpp"   // for BerendsenManostat
-#include "constants.hpp"           // for _PS_TO_FS_
-#include "engine.hpp"              // for Engine
-#include "exceptions.hpp"          // for InputFileException, customException
-#include "manostat.hpp"            // for BerendsenManostat, Manostat, manostat
-#include "manostatSettings.hpp"    // for ManostatSettings
+#include "berendsenManostat.hpp"             // for BerendsenManostat
+#include "constants.hpp"                     // for _PS_TO_FS_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for InputFileException, customException
+#include "manostat.hpp"                      // for BerendsenManostat, Manostat, manostat
+#include "manostatSettings.hpp"              // for ManostatSettings
+#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 
 #include <format>   // for format
 #include <string>   // for operator==
@@ -47,6 +48,13 @@ void ManostatSetup::setup()
         _engine.makeManostat(manostat::BerendsenManostat(settings::ManostatSettings::getTargetPressure(),
                                                          settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
                                                          settings::ManostatSettings::getCompressibility()));
+
+    else if (manostatType == settings::ManostatType::STOCHASTIC_RESCALING)
+        _engine.makeManostat(
+            manostat::StochasticRescalingManostat(settings::ManostatSettings::getTargetPressure(),
+                                                  settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
+                                                  settings::ManostatSettings::getCompressibility()));
+
     else
         _engine.makeManostat(manostat::Manostat());
 }

@@ -18,8 +18,8 @@ namespace thermostat
 
       public:
         VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(const double targetTemp, const double tau) : Thermostat(targetTemp), _tau(tau) {}
         VelocityRescalingThermostat(const VelocityRescalingThermostat &);
+        explicit VelocityRescalingThermostat(const double targetTemp, const double tau) : Thermostat(targetTemp), _tau(tau) {}
 
         void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 

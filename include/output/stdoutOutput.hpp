@@ -17,6 +17,7 @@ namespace output
       public:
         using Output::Output;
 
+        void writeHeader() const;
         void writeDensityWarning() const;
         void writeInitialMomentum(const double momentum) const;
     };

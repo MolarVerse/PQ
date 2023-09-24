@@ -45,6 +45,7 @@ namespace simulationBox
         void addShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
+        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
 
         /***************************
          * standard getter methods *

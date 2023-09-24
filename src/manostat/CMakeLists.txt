@@ -2,6 +2,7 @@ add_library(manostat
     manostat.cpp
 
     berendsenManostat.cpp
+    stochasticRescalingManostat.cpp
     monteCarloManostat.cpp
 )
 

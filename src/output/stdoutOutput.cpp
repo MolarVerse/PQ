@@ -10,6 +10,13 @@
 using namespace output;
 
 /**
+ * @brief write header title
+ *
+ * @return string
+ */
+void StdoutOutput::writeHeader() const { std::cout << header() << '\n' << std::flush; }
+
+/**
  * @brief write a warning message to the stdout if density and box dimensions are set
  *
  */

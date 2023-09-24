@@ -18,7 +18,8 @@ namespace settings
     enum class ManostatType
     {
         NONE,
-        BERENDSEN
+        BERENDSEN,
+        STOCHASTIC_RESCALING
     };
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);

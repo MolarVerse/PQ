@@ -43,10 +43,16 @@ InputFileParserManostat::InputFileParserManostat(engine::Engine &engine) : Input
 void InputFileParserManostat::parseManostat(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+
     if (lineElements[2] == "none")
         settings::ManostatSettings::setManostatType("none");
+
     else if (lineElements[2] == "berendsen")
         settings::ManostatSettings::setManostatType("berendsen");
+
+    else if (lineElements[2] == "stochastic_rescaling")
+        settings::ManostatSettings::setManostatType("stochastic_rescaling");
+
     else
         throw customException::InputFileException(
             format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",

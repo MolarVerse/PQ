@@ -8,6 +8,13 @@
 using namespace output;
 
 /**
+ * @brief write header title
+ *
+ * @return string
+ */
+void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
+
+/**
  * @brief write a warning message to the log file if density and box dimensions are set
  *
  */
