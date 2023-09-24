@@ -30,7 +30,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 
     const auto stochasticFactor =
         ::sqrt(2.0 * constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature() *
-               compressibilityFactor / (physicalData.getVolume()) * constants::_PRESSURE_FACTOR_) *
+               compressibilityFactor / (simBox.getVolume()) * constants::_PRESSURE_FACTOR_) *
         std::normal_distribution<double>(0.0, 1.0)(_generator);
 
     const auto linearScalingFactor =
