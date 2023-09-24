@@ -12,6 +12,7 @@ add_library(setup
     intraNonBondedSetup.cpp
     qmSetup.cpp
     ringPolymerSetup.cpp
+    outputFilesSetup.cpp
 )
 
 target_include_directories(setup
@@ -25,6 +26,7 @@ target_link_libraries(setup
     topologyFileReader
     restartFileReader
     parameterFileReader
+    ringPolymerRestartFileReader
 
     engine
     utilities

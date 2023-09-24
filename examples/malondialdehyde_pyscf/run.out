@@ -1,0 +1,117 @@
+|===============================================================================
+|
+|  DFTB+ release 22.2
+|
+|  Copyright (C) 2006 - 2022  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|  * DFTB+, a software package for efficient approximate density functional
+|    theory based atomistic simulations, J. Chem. Phys. 152, 124101 (2020).
+|    [doi: 10.1063/1.5143190]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+Reading input file 'dftb_in.hsd'
+Parser version: 12
+
+--------------------------------------------------------------------------------
+***  Converting input from parser version  5 to parser version 12 ...
+WARNING!
+-> Keyword DampXH moved to HCorrection block
+Path: dftbplusinput/Hamiltonian/DFTB/DampXH
+Line: 25-25 (File: dftb_in.hsd)
+
+WARNING!
+-> Adding Damping to HCorrection
+Path: dftbplusinput/Hamiltonian/DFTB/HCorrection
+
+***  Done.
+
+Reading SK-files:
+/home/jag/skf_files/3ob-3-1/C-C.skf
+/home/jag/skf_files/3ob-3-1/C-H.skf
+/home/jag/skf_files/3ob-3-1/C-O.skf
+/home/jag/skf_files/3ob-3-1/H-H.skf
+/home/jag/skf_files/3ob-3-1/H-O.skf
+/home/jag/skf_files/3ob-3-1/O-O.skf
+Done.
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+WARNING!
+-> Dipole printed for extended system : value printed is not well defined
+OpenMP threads:              6
+Chosen random seed:          984632328
+Mode:                        Static calculation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-03
+Max. scc iterations:                    250
+Shell resolved Hubbard:      No
+Spin polarisation:           No
+Nr. of up electrons:            14.000000
+Nr. of down electrons:          14.000000
+Periodic boundaries:         Yes
+Electronic solver:           Relatively robust
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.200000
+Maximal SCC-cycles:                     250
+Nr. of chrg. vec. in memory:            250
+Electronic temperature:              0.100000E-07 H      0.272114E-06 eV
+Initial charges:             Read in from 'charges'
+Included shells:             C:  s, p
+                             H:  s
+                             O:  s, p
+K-points and weights:           1:  0.000000  0.000000  0.000000     1.000000
+
+K-points in absolute space:     1:  0.000000  0.000000  0.000000
+
+s-dftd3 library version:     0.7.0
+-> damping function:         rational damping
+Full 3rd order correction    Yes
+Damped SCC                   Yes
+Damped species(s):           H                                                 
+Extra options:
+                             Mulliken analysis
+                             Force calculation
+Force type                   original
+
+--------------------------------------------------------------------------------
+
+***  Geometry step: 0
+
+ iSCC Total electronic   Diff electronic      SCC error    
+    1    0.00000000E+00    0.00000000E+00    0.96349021E-02
+    2   -0.13462513E+02   -0.13462513E+02    0.59808543E-02
+    3   -0.13462517E+02   -0.49015470E-05    0.67046475E-03
+    4   -0.13462520E+02   -0.27371945E-05    0.18719588E-03
+    5   -0.13462520E+02   -0.35225726E-07    0.83153516E-04
+>> Charges saved for restart in charges.bin
+
+Total Energy:                      -13.2285965613 H         -359.9684 eV
+Extrapolated to 0K:                -13.2285965613 H         -359.9684 eV
+Total Mermin free energy:          -13.2285965613 H         -359.9684 eV
+Force related energy:              -13.2285965613 H         -359.9684 eV
+
+Volume:                              0.674833E+07 au^3   0.100000E+07 A^3
+Pressure:                            0.261308E-07 au     0.768794E+06 Pa
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+SCC                                    +       0.10 ( 87.0%)       0.01 ( 68.7%)
+Post-SCC processing                    +       0.01 (  9.7%)       0.00 ( 12.5%)
+--------------------------------------------------------------------------------
+Missing                                +       0.00 (  3.4%)       0.00 ( 18.8%)
+Total                                  =       0.11 (100.0%)       0.02 (100.0%)
+--------------------------------------------------------------------------------

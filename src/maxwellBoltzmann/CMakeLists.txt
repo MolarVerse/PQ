@@ -11,6 +11,7 @@ target_link_libraries(maxwellBoltzmann
     PUBLIC
     simulationBox
     settings
+    resetKinetics
 )
 
 install(TARGETS maxwellBoltzmann

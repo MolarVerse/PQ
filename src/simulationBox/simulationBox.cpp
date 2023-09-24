@@ -1,5 +1,6 @@
 #include "simulationBox.hpp"
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 
 #include <algorithm>   // for sort, unique
@@ -24,6 +25,7 @@ void SimulationBox::copy(const SimulationBox &toCopy)
     this->_waterType                        = toCopy._waterType;
     this->_ammoniaType                      = toCopy._ammoniaType;
     this->_degreesOfFreedom                 = toCopy._degreesOfFreedom;
+    this->_totalMass                        = toCopy._totalMass;
     this->_coulombRadiusCutOff              = toCopy._coulombRadiusCutOff;
     this->_box                              = toCopy._box;
     this->_externalGlobalVdwTypes           = toCopy._externalGlobalVdwTypes;
@@ -36,12 +38,14 @@ void SimulationBox::copy(const SimulationBox &toCopy)
     this->_qmAtoms.clear();
     for (size_t i = 0; i < toCopy._atoms.size(); ++i)
     {
-        this->_atoms.push_back(std::make_shared<Atom>(*toCopy._atoms[i]));
-        this->_qmAtoms.push_back(std::make_shared<Atom>(*toCopy._qmAtoms[i]));
+        auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
+        this->_atoms.push_back(atom);
+        this->_qmAtoms.push_back(atom);   // TODO: ATTENTION AT THE MOMENT ONLY VALID FOR ALL QM_CALCULATIONS
     }
 
     auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule &molecule)
     {
+        molecule.getAtoms().clear();
         for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
             molecule.addAtom(this->_atoms[runningIndex++]);
 
@@ -266,6 +270,32 @@ void SimulationBox::calculateDegreesOfFreedom()
 }
 
 /**
+ * @brief calculate total mass of simulationBox
+ *
+ */
+void SimulationBox::calculateTotalMass()
+{
+    _totalMass = 0.0;
+
+    std::ranges::for_each(_atoms, [this](const auto &atom) { _totalMass += atom->getMass(); });
+
+    _box.setTotalMass(_totalMass);
+}
+
+/**
+ * @brief calculate center of mass of simulationBox
+ *
+ */
+void SimulationBox::calculateCenterOfMass()
+{
+    _centerOfMass = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms, [this](const auto &atom) { _centerOfMass += atom->getMass() * atom->getPosition(); });
+
+    _centerOfMass /= _totalMass;
+}
+
+/**
  * @brief calculate center of mass of all molecules
  *
  */
@@ -276,11 +306,71 @@ void SimulationBox::calculateCenterOfMassMolecules()
 }
 
 /**
+ * @brief calculate momentum of simulationBox
+ *
+ */
+linearAlgebra::Vec3D SimulationBox::calculateMomentum()
+{
+    auto momentum = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms, [&momentum](const auto &atom) { momentum += atom->getMass() * atom->getVelocity(); });
+
+    return momentum;
+}
+
+/**
+ * @brief calculate angular momentum of simulationBox
+ *
+ */
+linearAlgebra::Vec3D SimulationBox::calculateAngularMomentum(const linearAlgebra::Vec3D &momentum)
+{
+    auto angularMomentum = linearAlgebra::Vec3D{0.0};
+
+    std::ranges::for_each(_atoms,
+                          [&angularMomentum](const auto &atom)
+                          { angularMomentum += atom->getMass() * cross(atom->getPosition(), atom->getVelocity()); });
+
+    angularMomentum -= cross(_centerOfMass, momentum / _totalMass) * _totalMass;
+
+    return angularMomentum;
+}
+
+/**
+ * @brief calculate total force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateTotalForce()
+{
+    linearAlgebra::Vec3D totalForce(0.0);
+
+    std::ranges::for_each(_atoms, [&totalForce](const auto &atom) { totalForce += atom->getForce(); });
+
+    return norm(totalForce);
+}
+
+/**
+ * @brief calculate temperature of simulationBox
+ *
+ */
+double SimulationBox::calculateTemperature()
+{
+    auto temperature = 0.0;
+
+    std::ranges::for_each(
+        _atoms, [&temperature](const auto &atom) { temperature += atom->getMass() * normSquared(atom->getVelocity()); });
+
+    temperature *= constants::_TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
+
+    return temperature;
+}
+
+/**
  * @brief checks if the coulomb radius cut off is smaller than half of the minimal box dimension
  *
  * @throw UserInputException if coulomb radius cut off is larger than half of the minimal box dimension
  */
-void SimulationBox::checkCoulombRadiusCutOff(customException::ExceptionType exceptionType) const
+void SimulationBox::checkCoulombRadiusCutOff(const customException::ExceptionType exceptionType) const
 {
     if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
     {

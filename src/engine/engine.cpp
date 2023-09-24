@@ -1,35 +1,16 @@
 #include "engine.hpp"
 
-#include "constants.hpp"         // for _FS_TO_PS_
-#include "logOutput.hpp"         // for LogOutput
-#include "output.hpp"            // for Output
-#include "progressbar.hpp"       // for progressbar
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "constants.hpp"            // for _FS_TO_PS_
+#include "logOutput.hpp"            // for LogOutput
+#include "output.hpp"               // for Output
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "progressbar.hpp"          // for progressbar
+#include "stdoutOutput.hpp"         // for StdoutOutput
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 #include <iostream>   // for operator<<, cout, ostream, basic_ostream
 
 using namespace engine;
-
-// /**
-//  * @brief Construct a new Engine:: Engine object
-//  *
-//  * @details reinitializes all the unique pointers
-//  *
-//  * @param engineOutput
-//  */
-// Engine::Engine(const Engine &engine)
-//     : _cellList(engine._cellList), _simulationBox(engine._simulationBox), _physicalData(engine._physicalData),
-//       _averagePhysicalData(engine._averagePhysicalData), _constraints(engine._constraints), _forceField(engine._forceField),
-//       _intraNonBonded(engine._intraNonBonded)
-// {
-//     _integrator    = std::make_unique<integrator::VelocityVerlet>();
-//     _thermostat    = std::make_unique<thermostat::Thermostat>();
-//     _manostat      = std::make_unique<manostat::Manostat>();
-//     _virial        = std::make_unique<virial::VirialMolecular>();
-//     _resetKinetics = std::make_unique<resetKinetics::ResetKinetics>();
-//     _potential     = std::make_unique<potential::PotentialBruteForce>();
-// }
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -39,10 +20,10 @@ void Engine::run()
 {
     _timings.beginTimer();
 
-    _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
+    _physicalData.calculateKinetics(getSimulationBox());
 
-    _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
-    _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());
+    _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
+    _engineOutput.getStdoutOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));
@@ -72,7 +53,7 @@ void Engine::writeOutput()
     _averagePhysicalData.updateAverages(_physicalData);
     _physicalData.reset();
 
-    const auto outputFrequency = output::Output::getOutputFrequency();
+    const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
 
     if (0 == _step % outputFrequency)
     {
@@ -85,38 +66,13 @@ void Engine::writeOutput()
         const auto loopTime       = _timings.calculateLoopTime(_step);
 
         _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
         _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
-
-        if (_step == settings::TimingsSettings::getNumberOfSteps())
-        {
-            std::cout << '\n' << '\n';
-
-            std::cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
-            std::cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
-            std::cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
-            std::cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
-            std::cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
-            std::cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
-            std::cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
-            std::cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
-            std::cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
-            std::cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
-            std::cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
-            std::cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
-
-            std::cout << '\n' << '\n';
-        }
 
         _averagePhysicalData = physicalData::PhysicalData();
     }

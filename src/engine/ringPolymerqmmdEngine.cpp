@@ -25,11 +25,11 @@ void RingPolymerQMMDEngine::takeStep()
 
         _thermostat->applyThermostat(bead, _physicalData);
 
-        _physicalData.calculateKineticEnergyAndMomentum(bead);
+        _physicalData.calculateKinetics(bead);
 
         _manostat->applyManostat(bead, _physicalData);
 
-        _resetKinetics->reset(_step, _physicalData, bead);
+        _resetKinetics.reset(_step, _physicalData, bead);
     };
 
     std::ranges::for_each(_ringPolymerBeads, afterRingPolymerCoupling);

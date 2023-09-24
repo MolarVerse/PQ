@@ -24,10 +24,12 @@ namespace settings
         static inline std::string _parameterFileName;
         static inline std::string _intraNonBondedFileName;
         static inline std::string _startFileName;
+        static inline std::string _ringPolymerStartFileName;
 
-        static bool inline _isTopologyFileNameSet       = false;
-        static bool inline _isParameterFileNameSet      = false;
-        static bool inline _isIntraNonBondedFileNameSet = false;
+        static bool inline _isTopologyFileNameSet         = false;
+        static bool inline _isParameterFileNameSet        = false;
+        static bool inline _isIntraNonBondedFileNameSet   = false;
+        static bool inline _isRingPolymerStartFileNameSet = false;
 
       public:
         FileSettings()  = default;
@@ -43,10 +45,12 @@ namespace settings
         [[nodiscard]] static std::string getParameterFilename() { return _parameterFileName; }
         [[nodiscard]] static std::string getIntraNonBondedFileName() { return _intraNonBondedFileName; }
         [[nodiscard]] static std::string getStartFileName() { return _startFileName; }
+        [[nodiscard]] static std::string getRingPolymerStartFileName() { return _ringPolymerStartFileName; }
 
         [[nodiscard]] static bool isTopologyFileNameSet() { return _isTopologyFileNameSet; }
         [[nodiscard]] static bool isParameterFileNameSet() { return _isParameterFileNameSet; }
         [[nodiscard]] static bool isIntraNonBondedFileNameSet() { return _isIntraNonBondedFileNameSet; }
+        [[nodiscard]] static bool isRingPolymerStartFileNameSet() { return _isRingPolymerStartFileNameSet; }
 
         /********************
          * standard setters *
@@ -58,14 +62,17 @@ namespace settings
         static void setParameterFileName(const std::string_view name) { FileSettings::_parameterFileName = name; }
         static void setIntraNonBondedFileName(const std::string_view name) { FileSettings::_intraNonBondedFileName = name; }
         static void setStartFileName(const std::string_view name) { FileSettings::_startFileName = name; }
+        static void setRingPolymerStartFileName(const std::string_view name) { FileSettings::_ringPolymerStartFileName = name; }
 
         static void setIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = true; }
         static void setIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = true; }
         static void setIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = true; }
+        static void setIsRingPolymerStartFileNameSet() { FileSettings::_isRingPolymerStartFileNameSet = true; }
 
         static void unsetIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = false; }
         static void unsetIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = false; }
         static void unsetIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = false; }
+        static void unsetIsRingPolymerStartFileNameSet() { FileSettings::_isRingPolymerStartFileNameSet = false; }
     };
 
 }   // namespace settings

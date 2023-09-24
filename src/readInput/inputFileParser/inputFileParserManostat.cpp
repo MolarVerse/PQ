@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
@@ -55,9 +56,9 @@ void InputFileParserManostat::parseManostat(const std::vector<std::string> &line
 
     else
         throw customException::InputFileException(
-            format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
-                   lineElements[2],
-                   lineNumber));
+            std::format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
+                        lineElements[2],
+                        lineNumber));
 }
 
 /**

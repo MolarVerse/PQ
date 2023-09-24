@@ -15,6 +15,7 @@
 #include "simulationBoxSettings.hpp"   // for getDensitySet, getBoxSet
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"         // for toLowerCopy
+#include "thermostatSettings.hpp"      // for ThermostatSettings
 
 #include <algorithm>     // for ranges::for_each
 #include <cstddef>       // for size_t
@@ -66,8 +67,9 @@ void SimulationBoxSetup::setup()
     setAtomMasses();
     setAtomicNumbers();
     calculateMolMasses();
-    calculateTotalMass();
     calculateTotalCharge();
+
+    _engine.getSimulationBox().calculateTotalMass();
 
     checkBoxSettings();
     checkRcCutoff();
@@ -223,22 +225,6 @@ void SimulationBoxSetup::calculateMolMasses()
 }
 
 /**
- * @brief Calculates the total mass of the simulation box
- */
-void SimulationBoxSetup::calculateTotalMass()
-{
-    const auto &molecules = _engine.getSimulationBox().getMolecules();
-
-    const double totalMass =
-        std::accumulate(molecules.begin(),
-                        molecules.end(),
-                        0.0,
-                        [](const double sum, const Molecule &molecule) { return sum + molecule.getMolMass(); });
-
-    _engine.getSimulationBox().setTotalMass(totalMass);
-}
-
-/**
  * @brief Calculates the total charge of the simulation box
  */
 void SimulationBoxSetup::calculateTotalCharge()
@@ -321,14 +307,5 @@ void SimulationBoxSetup::initVelocities()
     {
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
-
-        _engine.getPhysicalData().calculateTemperature(_engine.getSimulationBox());
-
-        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
-
-        _engine.getResetKinetics().resetMomentum(_engine.getPhysicalData(), _engine.getSimulationBox());
-        _engine.getResetKinetics().resetTemperature(_engine.getPhysicalData(), _engine.getSimulationBox());
-
-        std::cout << _engine.getPhysicalData().getTemperature() << std::endl;
     }
 }

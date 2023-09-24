@@ -16,7 +16,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
     EXPECT_EQ(_physicalData->getTemperature(), 1.5);
-    EXPECT_EQ(_physicalData->getMomentum(), 2.0);
+    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(2.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
@@ -36,7 +36,7 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0);
     EXPECT_EQ(_physicalData->getTemperature(), 6.0);
-    EXPECT_EQ(_physicalData->getMomentum(), 8.0);
+    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(8.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
@@ -45,12 +45,12 @@ TEST_F(TestPhysicalData, updateAverages)
 }
 
 /**
- * @brief tests calculateKineticEnergyAndMomentum function
+ * @brief tests calculateKinetics function
  *
  */
-TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
+TEST_F(TestPhysicalData, calculateKinetics)
 {
-    _physicalData->calculateKineticEnergyAndMomentum(*_simulationBox);
+    _physicalData->calculateKinetics(*_simulationBox);
 
     const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
     const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);
@@ -73,8 +73,7 @@ TEST_F(TestPhysicalData, calculateKineticEnergyAndMomentum)
             (mass_mol1_atom1 + mass_mol1_atom2) +
         (mass_mol2_atom1 * mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1) / mass_mol2_atom1;
 
-    EXPECT_EQ(_physicalData->getMomentumVector(), momentumVector * constants::_FS_TO_S_);
-    EXPECT_EQ(_physicalData->getMomentum(), norm(momentumVector) * constants::_FS_TO_S_);
+    EXPECT_EQ(_physicalData->getMomentum(), momentumVector * constants::_FS_TO_S_);
     EXPECT_EQ(_physicalData->getKineticEnergyAtomicVector(), kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_);
     EXPECT_EQ(_physicalData->getKineticEnergyMolecularVector(),
               kineticEnergyMolecularVector * constants::_KINETIC_ENERGY_FACTOR_);
@@ -125,7 +124,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setImproperEnergy(1.0);
 
     _physicalData->setTemperature(1.0);
-    _physicalData->setMomentum(1.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(1.0));
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
@@ -146,7 +145,7 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0);
 
     EXPECT_EQ(_physicalData->getTemperature(), 0.0);
-    EXPECT_EQ(_physicalData->getMomentum(), 0.0);
+    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(0.0));
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0);

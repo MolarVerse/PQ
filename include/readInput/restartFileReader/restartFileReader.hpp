@@ -22,7 +22,7 @@ namespace readInput::restartFile
     /**
      * @class RestartFileReader
      *
-     * @brief Reads a .rst file and returns a SimulationBox object
+     * @brief Reads a .rst file and sets the simulation box in the engine
      *
      */
     class RestartFileReader

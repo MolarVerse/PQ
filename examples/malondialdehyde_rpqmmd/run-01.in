@@ -7,8 +7,9 @@
       jobtype = qm-rpmd; #dim = 3d;
 
     # Number of steps to be performed and timestep in fs 
-      nstep = 100; timestep = 0.2;
+      nstep = 10000; timestep = 0.1;
       nreset = 100;
+      freset = 10;
 
    rpmd_n_replica = 10;
 
@@ -61,14 +62,19 @@
 
       start_file   = MALONDIALDEHYDE-eq.rst;
 
-      output_file  = malondialdehyde-01.out; 
-      info_file    = malondialdehyde-01.info;
-      energy_file  = malondialdehyde-01.en; 
-      traj_file    = malondialdehyde-01.xyz;
-      vel_file     = malondialdehyde-01.vel;
-      charge_file  = malondialdehyde-01.chrg;
-      restart_file = malondialdehyde-01.rst;
-      force_file   = malondialdehyde-01.force;
+      output_file    = malondialdehyde-01.out; 
+      info_file      = malondialdehyde-01.info;
+      energy_file    = malondialdehyde-01.en; 
+      traj_file      = malondialdehyde-01.xyz;
+      vel_file       = malondialdehyde-01.vel;
+      charge_file    = malondialdehyde-01.chrg;
+      restart_file   = malondialdehyde-01.rst;
+      force_file     = malondialdehyde-01.force;
+      rpmd_restart_file = malondialdehyde-01.rpmd.rst;
+      rpmd_traj_file = malondialdehyde-01.rpmd.xyz;
+      rpmd_vel_file = malondialdehyde-01.rpmd.vel;
+      rpmd_force_file = malondialdehyde-01.rpmd.force;
+      rpmd_charge_file = malondialdehyde-01.rpmd.chrg;
       
 # end of infile
 

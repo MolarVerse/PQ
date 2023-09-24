@@ -2,6 +2,7 @@
 
 #include "exceptions.hpp"          // for InputFileException, customException
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "stringUtilities.hpp"     // for toLowerCopy
 
 #include <cstddef>       // for size_t, std
 #include <format>        // for format
@@ -40,10 +41,15 @@ InputFileParserCoulombLongRange::InputFileParserCoulombLongRange(engine::Engine 
 void InputFileParserCoulombLongRange::parseCoulombLongRange(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
-    if (lineElements[2] == "none")
+
+    const auto type = utilities::toLowerCopy(lineElements[2]);
+
+    if (type == "none")
         settings::PotentialSettings::setCoulombLongRangeType("none");
-    else if (lineElements[2] == "wolf")
+
+    else if (type == "wolf")
         settings::PotentialSettings::setCoulombLongRangeType("wolf");
+
     else
         throw customException::InputFileException(format(
             R"(Invalid long-range type for coulomb correction "{}" at line {} in input file - possible options are "none", "wolf")",

@@ -30,6 +30,8 @@ namespace readInput
         void parseFScale(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseNReset(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseFReset(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseFResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput

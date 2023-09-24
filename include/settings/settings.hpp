@@ -2,11 +2,24 @@
 
 #define _SETTINGS_HPP_
 
-#include <string>        // for string, allocator
-#include <string_view>   // for basic_string_view, string_view
+#include <string_view>   // for string_view
 
 namespace settings
 {
+    /**
+     * @enum JobType
+     *
+     * @brief enum class to store the type of the job
+     *
+     */
+    enum class JobType
+    {
+        MM_MD,
+        QM_MD,
+        RING_POLYMER_QM_MD,
+        NONE
+    };
+
     /**
      * @class Settings
      *
@@ -16,7 +29,7 @@ namespace settings
     class Settings
     {
       private:
-        static inline std::string _jobtype;   // no default value
+        static inline JobType _jobtype;   // no default value
 
         static inline bool _isMMActivated            = false;
         static inline bool _isQMActivated            = false;
@@ -25,6 +38,9 @@ namespace settings
       public:
         Settings()  = default;
         ~Settings() = default;
+
+        static void setJobtype(const std::string_view jobtype);
+        static void setJobtype(const JobType jobtype) { _jobtype = jobtype; }
 
         static void activateMM() { _isMMActivated = true; }
         static void activateQM() { _isQMActivated = true; }
@@ -38,7 +54,7 @@ namespace settings
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static std::string getJobtype() { return _jobtype; }
+        [[nodiscard]] static JobType getJobtype() { return _jobtype; }
 
         [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
         [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
@@ -47,8 +63,6 @@ namespace settings
         /***************************
          * standard setter methods *
          ***************************/
-
-        static void setJobtype(const std::string_view jobtype) { _jobtype = jobtype; }
 
         static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
         static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }

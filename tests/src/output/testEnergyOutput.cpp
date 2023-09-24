@@ -3,6 +3,7 @@
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "settings.hpp"             // for Settings
+#include "vector3d.hpp"             // for Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <iosfwd>          // for ifstream
@@ -21,7 +22,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -37,7 +38,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     std::getline(file, line);
     EXPECT_EQ(line,
               "       100\t      1.000000000000\t      2.000000000000\t     12.000000000000\t      3.000000000000\t     "
-              "19.000000000000\t      4.000000000000\t      5.000000000000\t         6.00000e+00\t     0.10000");
+              "19.000000000000\t      4.000000000000\t      5.000000000000\t         1.03923e+01\t     0.10000");
 }
 
 /**
@@ -53,7 +54,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -75,7 +76,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     EXPECT_EQ(line,
               "       100\t      1.000000000000\t      2.000000000000\t     94.000000000000\t      3.000000000000\t     "
               "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t     "
-              "21.000000000000\t     22.000000000000\t         6.00000e+00\t     0.10000");
+              "21.000000000000\t     22.000000000000\t         1.03923e+01\t     0.10000");
 }
 
 /**
@@ -91,7 +92,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -112,7 +113,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     EXPECT_EQ(line,
               "       100\t      1.000000000000\t      2.000000000000\t     12.000000000000\t      3.000000000000\t     "
               "19.000000000000\t      4.000000000000\t      5.000000000000\t     19.000000000000\t     20.000000000000\t   "
-              "      6.00000e+00\t     0.10000");
+              "      1.03923e+01\t     0.10000");
 }
 
 /**
@@ -128,7 +129,7 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
-    _physicalData->setMomentum(6.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(0.0);
     _physicalData->setIntraNonCoulombEnergy(0.0);
 
@@ -151,7 +152,7 @@ TEST_F(TestEnergyOutput, qmActive)
     std::getline(file, line);
     EXPECT_EQ(line,
               "       100\t      1.000000000000\t      2.000000000000\t      8.000000000000\t      5.000000000000\t      "
-              "0.000000000000\t      3.000000000000\t      0.000000000000\t         6.00000e+00\t     0.10000");
+              "0.000000000000\t      3.000000000000\t      0.000000000000\t         1.03923e+01\t     0.10000");
 }
 
 int main(int argc, char **argv)

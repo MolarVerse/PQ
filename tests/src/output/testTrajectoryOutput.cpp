@@ -64,7 +64,7 @@ TEST_F(TestTrajectoryOutput, writeForces)
     getline(file, line);
     EXPECT_EQ(line, "3  10 10 10  90 90 90");
     getline(file, line);
-    EXPECT_EQ(line, "");
+    EXPECT_EQ(line, "# Total force = 8.77496e+00 kcal/mol/Angstrom");
     getline(file, line);
     EXPECT_EQ(line, "H    \t     1.00000000\t     1.00000000\t     1.00000000");
     getline(file, line);

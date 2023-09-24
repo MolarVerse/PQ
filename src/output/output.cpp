@@ -2,7 +2,6 @@
 
 #include "exceptions.hpp"   // for InputFileException, customException
 
-#include <cstdint>   // for UINT64_MAX
 #include <fstream>   // for ifstream, ofstream, std
 
 #ifdef WITH_MPI
@@ -51,26 +50,6 @@ void Output::setFilename(const string_view &filename)
         throw InputFileException("File already exists - filename = " + string(_fileName));
 
     openFile();
-}
-
-/**
- * @brief Sets the output frequency of the simulation
- *
- * @param outputFreq
- *
- * @throw InputFileException if output frequency is negative
- *
- * @note
- *  if output frequency is 0, it is set to UINT64_MAX
- *  in order to avoid division by 0 in the output
- *
- */
-void Output::setOutputFrequency(const size_t outputFreq)
-{
-    if (0 == outputFreq)
-        _outputFrequency = UINT64_MAX;
-    else
-        _outputFrequency = outputFreq;
 }
 
 /**

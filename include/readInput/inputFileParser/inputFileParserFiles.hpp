@@ -30,6 +30,7 @@ namespace readInput
         void parseTopologyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseParameterFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRingPolymerStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseMoldescriptorFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseGuffDatFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
 

@@ -1,6 +1,6 @@
-#ifndef _STATIC_MATRIX_HPP_
+#ifndef _MATRIX_HPP_
 
-#define _STATIC_MATRIX_HPP_
+#define _MATRIX_HPP_
 
 #include <algorithm>
 #include <cstddef>
@@ -69,4 +69,4 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#endif   // _STATIC_MATRIX_HPP_
+#endif   // _MATRIX_HPP_

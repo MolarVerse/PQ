@@ -1,7 +1,8 @@
 #include "inputFileParserQM.hpp"
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "qmSettings.hpp"   // for Settings
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "qmSettings.hpp"        // for Settings
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
@@ -33,8 +34,12 @@ void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElemen
 {
     checkCommand(lineElements, lineNumber);
 
-    if ("dftbplus" == lineElements[2])
+    const auto method = utilities::toLowerCopy(lineElements[2]);
+
+    if ("dftbplus" == method)
         settings::QMSettings::setQMMethod("dftbplus");
+    else if ("pyscf" == method)
+        settings::QMSettings::setQMMethod("pyscf");
     else
         throw customException::InputFileException(
             std::format("Invalid qm_prog \"{}\" in input file - possible values are: dftbplus", lineElements[2]));

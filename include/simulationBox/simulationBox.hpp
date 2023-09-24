@@ -44,14 +44,20 @@ namespace simulationBox
      *  The atoms positions, velocities and forces are stored in the SimulationBox class.
      *  Additional molecular information is also stored in the SimulationBox class.
      *
+     * @TODO: check what should be in box and what not and so on........
+     *
      */
     class SimulationBox
     {
       private:
-        int    _waterType;
-        int    _ammoniaType;
-        size_t _degreesOfFreedom    = 0;
-        double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        int _waterType;
+        int _ammoniaType;
+
+        size_t _degreesOfFreedom = 0;
+
+        double               _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        double               _totalMass           = 0.0;
+        linearAlgebra::Vec3D _centerOfMass        = linearAlgebra::Vec3D{0.0};
 
         Box _box;
 
@@ -67,11 +73,18 @@ namespace simulationBox
       public:
         void copy(const SimulationBox &);
 
-        void checkCoulombRadiusCutOff(customException::ExceptionType) const;
+        void checkCoulombRadiusCutOff(const customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
+        void calculateTotalMass();
+        void calculateCenterOfMass();
         void calculateCenterOfMassMolecules();
+
+        [[nodiscard]] double               calculateTemperature();
+        [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();
+        [[nodiscard]] linearAlgebra::Vec3D calculateAngularMomentum(const linearAlgebra::Vec3D &momentum);
+        double                             calculateTotalForce();
 
         [[nodiscard]] bool                     moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -98,13 +111,15 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int    getWaterType() const { return _waterType; }
-        [[nodiscard]] int    getAmmoniaType() const { return _ammoniaType; }
-        [[nodiscard]] double getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
-        [[nodiscard]] size_t getNumberOfMolecules() const { return _molecules.size(); }
-        [[nodiscard]] size_t getDegreesOfFreedom() const { return _degreesOfFreedom; }
-        [[nodiscard]] size_t getNumberOfAtoms() const { return _atoms.size(); }
-        [[nodiscard]] size_t getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+        [[nodiscard]] int                   getWaterType() const { return _waterType; }
+        [[nodiscard]] int                   getAmmoniaType() const { return _ammoniaType; }
+        [[nodiscard]] size_t                getNumberOfMolecules() const { return _molecules.size(); }
+        [[nodiscard]] size_t                getDegreesOfFreedom() const { return _degreesOfFreedom; }
+        [[nodiscard]] size_t                getNumberOfAtoms() const { return _atoms.size(); }
+        [[nodiscard]] size_t                getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+        [[nodiscard]] double                getTotalMass() const { return _totalMass; }
+        [[nodiscard]] double                getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
+        [[nodiscard]] linearAlgebra::Vec3D &getCenterOfMass() { return _centerOfMass; }
 
         [[nodiscard]] Atom         &getAtom(const size_t index) { return *(_atoms[index]); }
         [[nodiscard]] Atom         &getQMAtom(const size_t index) { return *(_qmAtoms[index]); }
@@ -128,6 +143,11 @@ namespace simulationBox
 
         void setWaterType(const int waterType) { _waterType = waterType; }
         void setAmmoniaType(const int ammoniaType) { _ammoniaType = ammoniaType; }
+        void setTotalMass(const double totalMass)
+        {
+            _totalMass = totalMass;
+            _box.setTotalMass(totalMass);
+        }
         void setCoulombRadiusCutOff(const double rcCutOff) { _coulombRadiusCutOff = rcCutOff; }
 
         /**********************************************
@@ -147,14 +167,12 @@ namespace simulationBox
         [[nodiscard]] bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
 
         [[nodiscard]] double               getDensity() const { return _box.getDensity(); }
-        [[nodiscard]] double               getTotalMass() const { return _box.getTotalMass(); }
         [[nodiscard]] double               getTotalCharge() const { return _box.getTotalCharge(); }
         [[nodiscard]] double               getVolume() const { return _box.getVolume(); }
         [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
         [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
 
         void setDensity(const double density) { _box.setDensity(density); }
-        void setTotalMass(const double mass) { _box.setTotalMass(mass); }
         void setTotalCharge(const double charge) { _box.setTotalCharge(charge); }
         void setVolume(const double volume) { _box.setVolume(volume); }
         void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }

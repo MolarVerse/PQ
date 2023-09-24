@@ -6,6 +6,7 @@
 #include "inputFileParserOutput.hpp"   // for InputFileParserOutput
 #include "logOutput.hpp"               // for LogOutput
 #include "output.hpp"                  // for Output, output
+#include "outputFileSettings.hpp"      // for OutputFileSettings
 #include "rstFileOutput.hpp"           // for RstFileOutput
 #include "testInputFileReader.hpp"     // for TestInputFileReader
 #include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
@@ -29,7 +30,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     InputFileParserOutput    parser(*_engine);
     std::vector<std::string> lineElements = {"outputfreq", "=", "1000"};
     parser.parseOutputFreq(lineElements, 0);
-    EXPECT_EQ(output::Output::getOutputFrequency(), 1000);
+    EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), 1000);
 
     lineElements = {"outputfreq", "=", "-1000"};
     EXPECT_THROW_MSG(parser.parseOutputFreq(lineElements, 0),
@@ -47,7 +48,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
     _fileName                             = "log.txt";
     std::vector<std::string> lineElements = {"logfilename", "=", _fileName};
     parser.parseLogFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getLogOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getLogFileName(), _fileName);
 }
 
 /**
@@ -60,7 +61,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
     _fileName                             = "info.txt";
     std::vector<std::string> lineElements = {"infoFilename", "=", "info.txt"};
     parser.parseInfoFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getInfoOutput().getFilename(), "info.txt");
+    EXPECT_EQ(settings::OutputFileSettings::getInfoFileName(), "info.txt");
 }
 
 /**
@@ -73,7 +74,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
     _fileName                             = "energy.txt";
     std::vector<std::string> lineElements = {"energyFilename", "=", _fileName};
     parser.parseEnergyFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getEnergyOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getEnergyFileName(), _fileName);
 }
 
 /**
@@ -86,7 +87,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
     _fileName                             = "trajectory.xyz";
     std::vector<std::string> lineElements = {"trajectoryFilename", "=", _fileName};
     parser.parseTrajectoryFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getXyzOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getTrajectoryFileName(), _fileName);
 }
 
 /**
@@ -99,7 +100,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
     _fileName                             = "velocity.xyz";
     std::vector<std::string> lineElements = {"velocityFilename", "=", _fileName};
     parser.parseVelocityFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getVelOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getVelocityFileName(), _fileName);
 }
 
 /**
@@ -112,7 +113,7 @@ TEST_F(TestInputFileReader, testForceFilename)
     _fileName                             = "force.xyz";
     std::vector<std::string> lineElements = {"forceFilename", "=", _fileName};
     parser.parseForceFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getForceOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getForceFileName(), _fileName);
 }
 
 /**
@@ -125,7 +126,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
     _fileName                             = "restart.xyz";
     std::vector<std::string> lineElements = {"restartFilename", "=", _fileName};
     parser.parseRestartFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getRstFileOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getRestartFileName(), _fileName);
 }
 
 /**
@@ -138,7 +139,7 @@ TEST_F(TestInputFileReader, testChargeFilename)
     _fileName                             = "charge.xyz";
     std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
-    EXPECT_EQ(_engine->getChargeOutput().getFilename(), _fileName);
+    EXPECT_EQ(settings::OutputFileSettings::getChargeFileName(), _fileName);
 }
 
 int main(int argc, char **argv)

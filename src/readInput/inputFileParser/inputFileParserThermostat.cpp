@@ -1,6 +1,7 @@
 #include "inputFileParserThermostat.hpp"
 
 #include "exceptions.hpp"           // for InputFileException, customException
+#include "stringUtilities.hpp"      // for toLowerCopy
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #include <cstddef>       // for size_t, std
@@ -51,16 +52,23 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
 
-    if (lineElements[2] == "none")
+    const auto thermostat = utilities::toLowerCopy(lineElements[2]);
+
+    if (thermostat == "none")
         settings::ThermostatSettings::setThermostatType("none");
-    else if (lineElements[2] == "berendsen")
+
+    else if (thermostat == "berendsen")
         settings::ThermostatSettings::setThermostatType("berendsen");
-    else if (lineElements[2] == "velocity_rescaling")
+
+    else if (thermostat == "velocity_rescaling")
         settings::ThermostatSettings::setThermostatType("velocity_rescaling");
-    else if (lineElements[2] == "langevin")
+
+    else if (thermostat == "langevin")
         settings::ThermostatSettings::setThermostatType("langevin");
-    else if (lineElements[2] == "nh-chain")
+
+    else if (thermostat == "nh-chain")
         settings::ThermostatSettings::setThermostatType("nh-chain");
+
     else
         throw customException::InputFileException(format("Invalid thermostat \"{}\" at line {} in input file. Possible options "
                                                          "are: none, berendsen, velocity_rescaling, langevin, nh-chain",

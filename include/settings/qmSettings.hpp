@@ -16,7 +16,10 @@ namespace settings
     {
         NONE,
         DFTBPLUS,
+        PYSCF
     };
+
+    std::string string(const QMMethod method);
 
     /**
      * @class QMSettings

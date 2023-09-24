@@ -30,7 +30,6 @@ namespace QM
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
-        void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     };
 }   // namespace QM
 

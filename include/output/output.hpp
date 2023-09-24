@@ -18,10 +18,9 @@ namespace output
     class Output
     {
       protected:
-        std::string          _fileName;
-        std::ofstream        _fp;
-        inline static size_t _outputFrequency = 1;
-        int                  _rank;
+        std::string   _fileName;
+        std::ofstream _fp;
+        int           _rank;
 
         void openFile();
 
@@ -31,14 +30,11 @@ namespace output
         void setFilename(const std::string_view &);
         void close() { _fp.close(); }
 
-        static void setOutputFrequency(const size_t);
-
         /********************************
          * standard getters and setters *
          ********************************/
 
-        std::string   getFilename() const { return _fileName; }
-        static size_t getOutputFrequency() { return _outputFrequency; }
+        std::string getFilename() const { return _fileName; }
     };
 
 }   // namespace output

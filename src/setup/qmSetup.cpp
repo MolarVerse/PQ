@@ -2,6 +2,7 @@
 
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
 #include "exceptions.hpp"       // for InputFileException
+#include "pyscfRunner.hpp"      // for PySCFRunner
 #include "qmSettings.hpp"       // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"       // for QMMDEngine
 
@@ -30,6 +31,10 @@ void QMSetup::setup()
 
     if (method == settings::QMMethod::DFTBPLUS)
         _engine.setQMRunner(QM::DFTBPlusRunner());
+
+    else if (method == settings::QMMethod::PYSCF)
+        _engine.setQMRunner(QM::PySCFRunner());
+
     else
         throw customException::InputFileException(
             "A qm based jobtype was requested but no external program via \"qm_prog\" provided");

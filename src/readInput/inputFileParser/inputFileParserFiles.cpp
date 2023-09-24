@@ -32,6 +32,7 @@ InputFileParserFiles::InputFileParserFiles(engine::Engine &engine) : InputFilePa
     addKeyword(std::string("topology_file"), bind_front(&InputFileParserFiles::parseTopologyFilename, this), false);
     addKeyword(std::string("parameter_file"), bind_front(&InputFileParserFiles::parseParameterFilename, this), false);
     addKeyword(std::string("start_file"), bind_front(&InputFileParserFiles::parseStartFilename, this), true);
+    addKeyword(std::string("rpmd_start_file"), bind_front(&InputFileParserFiles::parseRingPolymerStartFilename, this), false);
     addKeyword(std::string("moldescriptor_file"), bind_front(&InputFileParserFiles::parseMoldescriptorFilename, this), false);
     addKeyword(std::string("guff_path"), bind_front(&InputFileParserFiles::parseGuffPath, this), false);
     addKeyword(std::string("guff_file"), bind_front(&InputFileParserFiles::parseGuffDatFilename, this), false);
@@ -120,6 +121,25 @@ void InputFileParserFiles::parseStartFilename(const std::vector<std::string> &li
         throw customException::InputFileException("Cannot open start file - filename = " + filename);
 
     settings::FileSettings::setStartFileName(filename);
+}
+
+/**
+ * @brief parse ring polymer start file of simulation and set it in settings
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserFiles::parseRingPolymerStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto &filename = lineElements[2];
+
+    if (!utilities::fileExists(filename))
+        throw customException::InputFileException("Cannot open ring polymer start file - filename = " + filename);
+
+    settings::FileSettings::setRingPolymerStartFileName(filename);
+    settings::FileSettings::setIsRingPolymerStartFileNameSet();
 }
 
 /**

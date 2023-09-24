@@ -1,6 +1,6 @@
 #include "box.hpp"
 
-#include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
 #include <cmath>   // for cos, M_PI, cbrt, sqrt
 
