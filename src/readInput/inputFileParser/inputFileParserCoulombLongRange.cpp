@@ -53,7 +53,7 @@ void InputFileParserCoulombLongRange::parseCoulombLongRange(const std::vector<st
     else
         throw customException::InputFileException(format(
             R"(Invalid long-range type for coulomb correction "{}" at line {} in input file - possible options are "none", "wolf")",
-            type,
+            lineElements[2],
             lineNumber));
 }
 

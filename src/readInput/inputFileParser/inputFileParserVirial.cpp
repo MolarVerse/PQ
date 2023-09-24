@@ -51,5 +51,5 @@ void InputFileParserVirial::parseVirial(const std::vector<std::string> &lineElem
     }
     else
         throw customException::InputFileException(
-            format("Invalid virial setting \"{}\" at line {} in input file", virial, lineNumber));
+            format("Invalid virial setting \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

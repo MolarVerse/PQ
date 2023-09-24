@@ -73,5 +73,5 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     }
     else
         throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", jobtype));
+            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", lineElements[2]));
 }

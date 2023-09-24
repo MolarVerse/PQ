@@ -42,7 +42,7 @@ void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElemen
         settings::QMSettings::setQMMethod("pyscf");
     else
         throw customException::InputFileException(
-            std::format("Invalid qm_prog \"{}\" in input file - possible values are: dftbplus", method));
+            std::format("Invalid qm_prog \"{}\" in input file - possible values are: dftbplus", lineElements[2]));
 }
 
 /**

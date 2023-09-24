@@ -55,7 +55,7 @@ void InputFileParserCellList::parseCellListActivated(const std::vector<std::stri
     else
         throw customException::InputFileException(
             format(R"(Invalid cell-list keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
-                   cellListActivated,
+                   lineElements[2],
                    lineNumber));
 }
 

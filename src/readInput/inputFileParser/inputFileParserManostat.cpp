@@ -52,8 +52,10 @@ void InputFileParserManostat::parseManostat(const std::vector<std::string> &line
     else if (manostat == "berendsen")
         settings::ManostatSettings::setManostatType("berendsen");
     else
-        throw customException::InputFileException(std::format(
-            "Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none", manostat, lineNumber));
+        throw customException::InputFileException(
+            std::format("Invalid manostat \"{}\" at line {} in input file. Possible options are: berendsen and none",
+                        lineElements[2],
+                        lineNumber));
 }
 
 /**

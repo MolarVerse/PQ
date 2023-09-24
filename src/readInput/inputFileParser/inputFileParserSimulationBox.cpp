@@ -100,6 +100,6 @@ void InputFileParserSimulationBox::parseInitializeVelocities(const std::vector<s
     else
         throw customException::InputFileException(std::format(
             "Invalid value for initialize velocities - \"{}\" at line {} in input file. Possible options are: true, false",
-            initializeVelocities,
+            lineElements[2],
             lineNumber));
 }

@@ -44,5 +44,5 @@ void InputFileParserIntegrator::parseIntegrator(const std::vector<std::string> &
         _engine.makeIntegrator(integrator::VelocityVerlet());
     else
         throw customException::InputFileException(
-            format("Invalid integrator \"{}\" at line {} in input file", integrator, lineNumber));
+            format("Invalid integrator \"{}\" at line {} in input file", lineElements[2], lineNumber));
 }

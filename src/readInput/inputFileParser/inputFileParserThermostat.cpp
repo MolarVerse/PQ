@@ -72,7 +72,7 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
     else
         throw customException::InputFileException(format("Invalid thermostat \"{}\" at line {} in input file. Possible options "
                                                          "are: none, berendsen, velocity_rescaling, langevin, nh-chain",
-                                                         thermostat,
+                                                         lineElements[2],
                                                          lineNumber));
 }
 

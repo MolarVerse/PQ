@@ -51,7 +51,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     getline(file, line);
     EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   MOMENTUM                6.0e+00 amuA/fs  LOOPTIME                0.10000 s          |");
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
 }
@@ -106,7 +106,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     getline(file, line);
     EXPECT_EQ(line, "|   E(DIHEDRAL)            21.00000 kcal/mol E(IMPROPER)            22.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   MOMENTUM                6.0e+00 amuA/fs  LOOPTIME                0.10000 s          |");
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
 }
@@ -158,7 +158,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     getline(file, line);
     EXPECT_EQ(line, "|   VOLUME                 11.00000 A^3      DENSITY                12.00000 g/cm^3     |");
     getline(file, line);
-    EXPECT_EQ(line, "|   MOMENTUM                6.0e+00 amuA/fs  LOOPTIME                0.10000 s          |");
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
 }
@@ -211,7 +211,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)                0.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   MOMENTUM                6.0e+00 amuA/fs  LOOPTIME                0.10000 s          |");
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
 }

@@ -53,6 +53,6 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const std::vector<std::strin
     else
         throw customException::InputFileException(
             format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and guff",
-                   type,
+                   lineElements[2],
                    lineNumber));
 }

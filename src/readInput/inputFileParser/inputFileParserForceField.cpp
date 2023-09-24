@@ -64,6 +64,6 @@ void InputFileParserForceField::parseForceFieldType(const std::vector<std::strin
     else
         throw customException::InputFileException(
             format(R"(Invalid force-field keyword "{}" at line {} in input file - possible keywords are "on", "off" or "bonded")",
-                   forceFieldType,
+                   lineElements[2],
                    lineNumber));
 }
