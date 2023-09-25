@@ -68,7 +68,7 @@ void ThermostatSetup::setup()
     {
         const auto noseHooverChainLength       = settings::ThermostatSettings::getNoseHooverChainLength();
         const auto noseHooverCouplingFrequency = settings::ThermostatSettings::getNoseHooverCouplingFrequency() *
-                                                 constants::_WAVE_NUMBER_IN_PER_CM_TO_FREQUENCY_IN_HZ_;
+                                                 constants::_PER_CM_TO_HZ_;
 
         auto thermostat = thermostat::NoseHooverThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                            std::vector<double>(noseHooverChainLength + 1, 0.0),

@@ -100,7 +100,7 @@ namespace constants
     /**
      * @brief Conversion factors for frequencies
      */
-    static constexpr double _WAVE_NUMBER_IN_PER_CM_TO_FREQUENCY_IN_HZ_ = _SPEED_OF_LIGHT_IN_CM_PER_S_;
+    static constexpr double _PER_CM_TO_HZ_ = _SPEED_OF_LIGHT_IN_CM_PER_S_;
 
 }   // namespace constants
 
