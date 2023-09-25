@@ -9,30 +9,30 @@ namespace constants
     /**
      * @brief avogadro number in mol⁻¹
      */
-    static constexpr double _AVOGADRO_NUMBER_ = 6.022140857e23;
+    static constexpr double _AVOGADRO_NUMBER_ = 6.02214076e23;
 
     /**
      * @brief bohr radius in m
      */
-    static constexpr double _BOHR_RADIUS_IN_METER_ = 5.2917721067e-11;
+    static constexpr double _BOHR_RADIUS_ = 5.2917721067e-11;
 
     /**
      * @brief Planck constant in J s
      */
-    static constexpr double _PLANCK_CONSTANT_         = 6.626070040e-34;
+    static constexpr double _PLANCK_CONSTANT_         = 6.62607015e-34;
     static constexpr double _REDUCED_PLANCK_CONSTANT_ = _PLANCK_CONSTANT_ / (2.0 * M_PI);
 
     /**
      * @brief Boltzmann constant in J K⁻¹
      * @brief universal gas constant in J mol⁻¹ K⁻¹
      */
-    static constexpr double _BOLTZMANN_CONSTANT_     = 1.38064852e-23;
+    static constexpr double _BOLTZMANN_CONSTANT_     = 1.380649e-23;
     static constexpr double _UNIVERSAL_GAS_CONSTANT_ = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
 
     /**
      * @brief electron charge in C
      */
-    static constexpr double _ELECTRON_CHARGE_ = 1.6021766208e-19;
+    static constexpr double _ELECTRON_CHARGE_ = 1.602176634e-19;
 
     /**
      * @brief electron charge squared in C²
@@ -42,7 +42,7 @@ namespace constants
     /**
      * @brief electron mass in kg
      */
-    static constexpr double _ELECTRON_MASS_ = 9.10938356e-31;
+    static constexpr double _ELECTRON_MASS_ = 9.109389754e-31;
 
     /**
      * @brief permittivity of vacuum in F/m

@@ -29,7 +29,7 @@ namespace constants
     static constexpr double _ANGSTROM_TO_METER_ = 1.0e-10;
     static constexpr double _METER_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_METER_;
 
-    static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_IN_METER_;
+    static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_;
     static constexpr double _METER_TO_BOHR_RADIUS_ = 1.0 / _BOHR_RADIUS_TO_METER_;
 
     static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ = _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;

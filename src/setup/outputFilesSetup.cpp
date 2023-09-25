@@ -36,4 +36,7 @@ void OutputFilesSetup::setup()
     _engine.getRingPolymerVelOutput().setFilename(settings::OutputFileSettings::getRingPolymerVelocityFileName());
     _engine.getRingPolymerForceOutput().setFilename(settings::OutputFileSettings::getRingPolymerForceFileName());
     _engine.getRingPolymerChargeOutput().setFilename(settings::OutputFileSettings::getRingPolymerChargeFileName());
+
+    _engine.getLogOutput().writeHeader();
+    _engine.getStdoutOutput().writeHeader();
 }
