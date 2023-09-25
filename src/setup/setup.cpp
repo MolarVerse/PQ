@@ -42,6 +42,9 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     std::cout << "setup output files..." << '\n';
     setupOutputFiles(engine);
 
+    engine.getLogOutput().writeHeader();
+    engine.getStdoutOutput().writeHeader();
+
     readFiles(engine);
 
     std::cout << "setup engine..." << '\n';
