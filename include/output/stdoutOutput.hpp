@@ -18,6 +18,8 @@ namespace output
         using Output::Output;
 
         void writeHeader() const;
+        void writeEndedNormally() const;
+
         void writeDensityWarning() const;
         void writeInitialMomentum(const double momentum) const;
     };

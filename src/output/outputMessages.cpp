@@ -31,6 +31,24 @@ std::string output::header()
 }
 
 /**
+ * @brief construct ended normally message
+ *
+ * @return string
+ */
+std::string output::endedNormally()
+{
+    const std::string endedNormally_message = R"(
+*************************************************************************
+*                                                                       *
+*                      pimd-qmcf ended normally                         *
+*                                                                       *
+*************************************************************************
+)";
+
+    return endedNormally_message;
+}
+
+/**
  * @brief construct general initial momentum message
  *
  * @param momentum

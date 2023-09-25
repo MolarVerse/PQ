@@ -81,7 +81,7 @@
 #-----------------------------------------
    temp       = 298.15;
    thermostat = berendsen;
-#   manostat   = berendsen;
+   manostat   = berendsen;
    pressure   = 1.013;
    p_relaxation = 0.1;
    #cell-list = on;

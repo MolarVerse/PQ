@@ -33,9 +33,9 @@ namespace constraints
       public:
         BondConstraint(simulationBox::Molecule *molecule1,
                        simulationBox::Molecule *molecule2,
-                       size_t                   atomIndex1,
-                       size_t                   atomIndex2,
-                       double                   bondLength)
+                       const size_t             atomIndex1,
+                       const size_t             atomIndex2,
+                       const double             bondLength)
             : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2), _targetBondLength(bondLength){};
 
         void calculateConstraintBondRef(const simulationBox::SimulationBox &);

@@ -15,6 +15,12 @@ using namespace output;
 void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
 
 /**
+ * @brief write a message to the log file if the simulation ended normally
+ *
+ */
+void LogOutput::writeEndedNormally() { _fp << endedNormally() << '\n' << std::flush; }
+
+/**
  * @brief write a warning message to the log file if density and box dimensions are set
  *
  */

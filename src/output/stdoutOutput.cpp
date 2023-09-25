@@ -17,6 +17,12 @@ using namespace output;
 void StdoutOutput::writeHeader() const { std::cout << header() << '\n' << std::flush; }
 
 /**
+ * @brief write a message to the stdout if the simulation ended normally
+ *
+ */
+void StdoutOutput::writeEndedNormally() const { std::cout << endedNormally() << '\n' << std::flush; }
+
+/**
  * @brief write a warning message to the stdout if density and box dimensions are set
  *
  */

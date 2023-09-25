@@ -40,6 +40,9 @@ void Engine::run()
 
     std::cout << '\n' << '\n';
     std::cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
+
+    _engineOutput.getLogOutput().writeEndedNormally();
+    _engineOutput.getStdoutOutput().writeEndedNormally();
 }
 
 /**
