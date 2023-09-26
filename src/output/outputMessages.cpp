@@ -1,5 +1,7 @@
 #include "outputMessages.hpp"
 
+#include "systemInfo.hpp"   // for _AUTHOR_
+
 #include <format>    // for format
 #include <sstream>   // for stringstream
 #include <string>    // for string
@@ -11,7 +13,9 @@
  */
 std::string output::header()
 {
-    const std::string header_title = R"(
+    std::stringstream header_title;
+
+    header_title << R"(
 *************************************************************************
 *                                                                       *
 *                            _                                    ___   *
@@ -27,7 +31,11 @@ std::string output::header()
 *************************************************************************
 )";
 
-    return header_title;
+    header_title << '\n';
+    header_title << _OUTPUT_ << "Author: " << sysinfo::_AUTHOR_ << '\n';
+    header_title << _OUTPUT_ << "Email:  " << sysinfo::_EMAIL_ << '\n';
+
+    return header_title.str();
 }
 
 /**
@@ -56,5 +64,16 @@ std::string output::endedNormally()
  */
 std::string output::initialMomentumMessage(const double initialMomentum)
 {
-    return std::format("Initial momentum = {} Angstrom * amu / fs", initialMomentum);
+    return std::format("{}Initial momentum = {} Angstrom * amu / fs", _OUTPUT_, initialMomentum);
+}
+
+/**
+ * @brief construct elapsed time message
+ *
+ * @param elapsedTime
+ * @return string
+ */
+std::string output::elapsedTimeMessage(const double elapsedTime)
+{
+    return std::format("{}Elapsed time = {} s", _OUTPUT_, elapsedTime);
 }

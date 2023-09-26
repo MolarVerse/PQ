@@ -18,7 +18,7 @@ namespace output
         using Output::Output;
 
         void writeHeader() const;
-        void writeEndedNormally() const;
+        void writeEndedNormally(const double elapsedTime) const;
 
         void writeDensityWarning() const;
         void writeInitialMomentum(const double momentum) const;

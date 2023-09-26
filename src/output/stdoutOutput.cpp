@@ -20,7 +20,11 @@ void StdoutOutput::writeHeader() const { std::cout << header() << '\n' << std::f
  * @brief write a message to the stdout if the simulation ended normally
  *
  */
-void StdoutOutput::writeEndedNormally() const { std::cout << endedNormally() << '\n' << std::flush; }
+void StdoutOutput::writeEndedNormally(const double elapsedTime) const
+{
+    std::cout << elapsedTimeMessage(elapsedTime) << '\n';
+    std::cout << endedNormally() << '\n' << std::flush;
+}
 
 /**
  * @brief write a warning message to the stdout if density and box dimensions are set

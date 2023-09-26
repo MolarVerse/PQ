@@ -18,7 +18,11 @@ void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
  * @brief write a message to the log file if the simulation ended normally
  *
  */
-void LogOutput::writeEndedNormally() { _fp << endedNormally() << '\n' << std::flush; }
+void LogOutput::writeEndedNormally(const double elapsedTime)
+{
+    _fp << elapsedTimeMessage(elapsedTime) << '\n';
+    _fp << endedNormally() << '\n' << std::flush;
+}
 
 /**
  * @brief write a warning message to the log file if density and box dimensions are set
@@ -26,7 +30,7 @@ void LogOutput::writeEndedNormally() { _fp << endedNormally() << '\n' << std::fl
  */
 void LogOutput::writeDensityWarning()
 {
-    _fp << "WARNING: Density and box dimensions set. Density will be ignored." << '\n' << std::flush;
+    _fp << _WARNING_ << "Density and box dimensions set. Density will be ignored." << '\n' << std::flush;
 }
 
 /**

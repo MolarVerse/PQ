@@ -38,11 +38,10 @@ void Engine::run()
 
     _timings.endTimer();
 
-    std::cout << '\n' << '\n';
-    std::cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
+    const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
 
-    _engineOutput.getLogOutput().writeEndedNormally();
-    _engineOutput.getStdoutOutput().writeEndedNormally();
+    _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
+    _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
 
 /**
