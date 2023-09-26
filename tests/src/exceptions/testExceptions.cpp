@@ -115,6 +115,25 @@ TEST(TestExceptions, cellListException)
     EXPECT_THROW_MSG(throw customException::CellListException("test"), customException::CellListException, "test");
 }
 
+/**
+ * @brief tests throwing ring polymer restart file exception
+ *
+ */
+TEST(TestExceptions, ringPolymerRestartFileException)
+{
+    EXPECT_THROW_MSG(
+        throw customException::RingPolymerRestartFileException("test"), customException::RingPolymerRestartFileException, "test");
+}
+
+/**
+ * @brief tests throwing qm runner exception
+ *
+ */
+TEST(TestExceptions, qmRunnerException)
+{
+    EXPECT_THROW_MSG(throw customException::QMRunnerException("test"), customException::QMRunnerException, "test");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

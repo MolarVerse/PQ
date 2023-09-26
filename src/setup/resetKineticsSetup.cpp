@@ -3,7 +3,6 @@
 #include "engine.hpp"                  // for Engine
 #include "resetKinetics.hpp"           // for ResetMomentum, ResetTemperature, resetK...
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "thermostatSettings.hpp"      // for getTargetTemperature
 #include "timingsSettings.hpp"         // for TimingsSettings
 
 using namespace setup;

@@ -1,9 +1,16 @@
 #include "ringPolymerTrajectoryOutput.hpp"
 
+#include "molecule.hpp"              // for Molecule
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
+#include "vector3d.hpp"              // for Vec3D, operator<<
 
-#include <format>   // for format
+#include <algorithm>    // for __for_each_fn, for_each
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ostream>      // for basic_ostream, ofstream, operator<<
+#include <stddef.h>     // for size_t
+#include <string>       // for operator<<, char_traits
 
 using output::RingPolymerTrajectoryOutput;
 

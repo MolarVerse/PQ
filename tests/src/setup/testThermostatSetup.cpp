@@ -1,16 +1,18 @@
-#include "berendsenThermostat.hpp"   // for BerendsenThermostat
-#include "constants.hpp"             // for _BOLTZMANN_CONSTANT_, _FS_TO_S_, _KG_TO_GRAM_, _METER_SQUARED_TO_ANGSTROM_SQUARED_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "langevinThermostat.hpp"    // for LangevinThermostat
-#include "testSetup.hpp"             // for TestSetup
-#include "thermostat.hpp"            // for BerendsenThermostat, Thermostat
-#include "thermostatSettings.hpp"    // for ThermostatSettings
-#include "thermostatSetup.hpp"       // for ThermostatSetup, setupThermostat
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "berendsenThermostat.hpp"           // for BerendsenThermostat
+#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
+#include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for InputFileException, customException
+#include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "testSetup.hpp"                     // for TestSetup
+#include "thermostat.hpp"                    // for BerendsenThermostat, Thermostat
+#include "thermostatSettings.hpp"            // for ThermostatSettings
+#include "thermostatSetup.hpp"               // for ThermostatSetup, setupThermostat
+#include "timingsSettings.hpp"               // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cmath>           // for sqrt
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGo...
 #include <string>          // for allocator, basic_string
 

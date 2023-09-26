@@ -14,6 +14,7 @@
 
 #include <cstddef>   // for size_t
 #include <memory>    // for make_unique, unique_ptr
+#include <vector>    // for vector
 
 namespace physicalData
 {

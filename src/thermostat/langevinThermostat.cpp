@@ -1,12 +1,15 @@
 #include "langevinThermostat.hpp"
 
-#include "constants.hpp"         // for constants::_BOLTZMANN_CONSTANT_
-#include "physicalData.hpp"      // for physicalData::PhysicalData
-#include "simulationBox.hpp"     // for simulationBox::SimulationBox
-#include "timingsSettings.hpp"   // for settings::TimingsSettings::getTimeStep
+#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
+#include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "physicalData.hpp"                  // for PhysicalData
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "vector3d.hpp"                      // for operator*, Vec3D
 
-#include <algorithm>   // for std::ranges::for_each
-#include <cmath>       // for std::sqrt
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <functional>   // for identity
 
 using thermostat::LangevinThermostat;
 

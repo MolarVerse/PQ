@@ -1,9 +1,19 @@
 #include "ringPolymerRestartFileReader.hpp"
 
+#include "atom.hpp"                  // for Atom
 #include "exceptions.hpp"            // for RingPolymerRestartFileException
 #include "fileSettings.hpp"          // for FileSettings
+#include "ringPolymerEngine.hpp"     // for RingPolymerEngine
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "simulationBox.hpp"         // for SimulationBox
 #include "stringUtilities.hpp"       // for removeComments, splitString
+
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <fstream>       // IWYU pragma: keep
+#include <memory>        // for __shared_ptr_access, shared_ptr
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 using readInput::ringPolymer::RingPolymerRestartFileReader;
 
@@ -19,7 +29,7 @@ void RingPolymerRestartFileReader::read()
 
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
-    for (size_t i = 0; i < numberOfBeads; i++)
+    for (size_t i = 0; i < numberOfBeads; ++i)
     {
         for (auto &atom : _engine.getRingPolymerBeads()[i].getAtoms())
         {

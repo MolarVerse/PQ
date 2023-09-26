@@ -41,14 +41,3 @@ void StdoutOutput::writeDensityWarning() const
         std::cout << e.what() << '\n' << '\n' << std::flush;
     }
 }
-
-/**
- * @brief write initial momentum to stdout
- *
- * @param momentum
- */
-void StdoutOutput::writeInitialMomentum(const double momentum) const
-{
-    std::cout << '\n';
-    std::cout << initialMomentumMessage(momentum) << '\n' << std::flush;
-}

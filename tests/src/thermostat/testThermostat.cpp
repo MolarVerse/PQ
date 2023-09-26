@@ -1,12 +1,12 @@
 #include "testThermostat.hpp"
 
-#include "berendsenThermostat.hpp"   // for BerendsenThermostat
-#include "constants.hpp"             // for _TEMPERATURE_FACTOR_
-#include "physicalData.hpp"          // for PhysicalData
-#include "simulationBox.hpp"         // for SimulationBox
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "berendsenThermostat.hpp"                   // for BerendsenThermostat
+#include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "timingsSettings.hpp"                       // for TimingsSettings
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "gtest/gtest.h"   // for InitGoogleTest
 #include <cmath>           // for sqrt
 #include <memory>          // for allocator
 

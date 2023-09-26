@@ -18,7 +18,7 @@ namespace std
     template <typename T>
     T sum(const std::vector<T> &vector)
     {
-        return std::accumulate(vector.begin(), vector.end(), 0.0);
+        return std::accumulate(vector.begin(), vector.end(), T());
     }
 
     /**

@@ -1,6 +1,6 @@
-#include "constants.hpp"                 // for _COULOMB_PREFACTOR_
-#include "coulombPotential.hpp"          // for potential
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "coulombPotential.hpp"                      // for potential
+#include "coulombShiftedPotential.hpp"               // for CoulombShiftedPotential
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ

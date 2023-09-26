@@ -8,6 +8,21 @@
 
 using engine::QMMDEngine;
 
+/**
+ * @brief Takes one step in a QM MD simulation.
+ *
+ * @details The step is taken in the following order:
+ * - First step of the integrator
+ * - Apply thermostat half step
+ * - Run QM calculations
+ * - Apply thermostat on forces
+ * - Second step of the integrator
+ * - Apply thermostat
+ * - Calculate kinetic energy and momentum
+ * - Apply manostat
+ * - Reset temperature and momentum
+ *
+ */
 void QMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);

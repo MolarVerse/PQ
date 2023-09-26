@@ -2,10 +2,12 @@
 
 #define _OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
-#include <fstream>
-#include <string>
-#include <string_view>   // for string_view
+#include <fstream>              // for ofstream
+#include <gtest/gtest_prod.h>   // for FRIEND_TEST
+#include <string>               // for string
+#include <string_view>          // for string_view
+
+class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
 namespace output
 {
@@ -29,6 +31,8 @@ namespace output
 
         void setFilename(const std::string_view &);
         void close() { _fp.close(); }
+
+        FRIEND_TEST(::TestOutput, testSpecialSetFilename);
 
         /********************************
          * standard getters and setters *

@@ -1,18 +1,11 @@
-#include "energyOutput.hpp"            // for EnergyOutput
-#include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for InputFileException
-#include "infoOutput.hpp"              // for InfoOutput
 #include "inputFileParser.hpp"         // for readInput
 #include "inputFileParserOutput.hpp"   // for InputFileParserOutput
-#include "logOutput.hpp"               // for LogOutput
-#include "output.hpp"                  // for Output, output
 #include "outputFileSettings.hpp"      // for OutputFileSettings
-#include "rstFileOutput.hpp"           // for RstFileOutput
 #include "testInputFileReader.hpp"     // for TestInputFileReader
 #include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
-#include "trajectoryOutput.hpp"        // for TrajectoryOutput
 
-#include "gtest/gtest.h"   // for Message, TestPartResult, testing
+#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 #include <string>          // for string, allocator, basic_string
 #include <vector>          // for vector

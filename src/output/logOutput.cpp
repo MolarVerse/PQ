@@ -2,6 +2,7 @@
 
 #include "outputMessages.hpp"   // for initialMomentumMessage
 
+#include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
 
@@ -40,6 +41,5 @@ void LogOutput::writeDensityWarning()
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << '\n' << std::flush;
-    _fp << initialMomentumMessage(momentum) << '\n' << std::flush;
+    _fp << std::format("\n{}Initial momentum = {} Angstrom * amu / fs\n", _INFO_, momentum) << std::flush;
 }

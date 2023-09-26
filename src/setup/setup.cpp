@@ -1,29 +1,30 @@
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"
-#include "constraintsSetup.hpp"
-#include "engine.hpp"
-#include "forceFieldSetup.hpp"
-#include "guffDatReader.hpp"
-#include "inputFileReader.hpp"
-#include "intraNonBondedReader.hpp"
-#include "intraNonBondedSetup.hpp"
-#include "manostatSetup.hpp"
-#include "moldescriptorReader.hpp"
-#include "outputFilesSetup.hpp"
-#include "parameterFileReader.hpp"
-#include "potentialSetup.hpp"
-#include "qmSetup.hpp"
-#include "qmmdEngine.hpp"
-#include "resetKineticsSetup.hpp"
-#include "restartFileReader.hpp"
-#include "ringPolymerSetup.hpp"
-#include "settings.hpp"
-#include "simulationBoxSetup.hpp"
-#include "thermostatSetup.hpp"
-#include "topologyReader.hpp"
+#include "celllistSetup.hpp"          // for setupCellList
+#include "constraintsSetup.hpp"       // for setupConstraints
+#include "engine.hpp"                 // for Engine
+#include "forceFieldSetup.hpp"        // for setupForceField
+#include "guffDatReader.hpp"          // for readGuffDat, readInput
+#include "inputFileReader.hpp"        // for readInputFile
+#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "manostatSetup.hpp"          // for setupManostat
+#include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "outputFilesSetup.hpp"       // for setupOutputFiles
+#include "parameterFileReader.hpp"    // for readParameterFile
+#include "potentialSetup.hpp"         // for setupPotential
+#include "qmSetup.hpp"                // for setupQM
+#include "qmmdEngine.hpp"             // for QMMDEngine
+#include "resetKineticsSetup.hpp"     // for setupResetKinetics
+#include "restartFileReader.hpp"      // for readRestartFile
+#include "ringPolymerEngine.hpp"      // for RingPolymerEngine
+#include "ringPolymerSetup.hpp"       // for setupRingPolymer
+#include "settings.hpp"               // for Settings
+#include "simulationBoxSetup.hpp"     // for setupSimulationBox
+#include "thermostatSetup.hpp"        // for setupThermostat
+#include "topologyReader.hpp"         // for readTopologyFile
 
-#include <iostream>
+#include <iostream>   // for operator<<, basic_ostream, cout
 
 using namespace engine;
 using namespace readInput;

@@ -1,10 +1,11 @@
 #include "integrator.hpp"
 
-#include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for _FS_TO_S_, _V_VERLET_VELOCITY_FACTOR_
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
-#include "vector3d.hpp"          // for operator*, Vector3D
+#include "atom.hpp"                                  // for Atom
+#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _V_VERLET_VELOCITY_FACTOR_
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "vector3d.hpp"                              // for operator*, Vector3D
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <functional>   // for identity

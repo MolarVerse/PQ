@@ -6,6 +6,16 @@
 
 #include <random>   // for std::random_device, std::mt19937
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
 namespace thermostat
 {
 

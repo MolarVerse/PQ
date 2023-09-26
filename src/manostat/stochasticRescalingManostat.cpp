@@ -1,10 +1,17 @@
 #include "stochasticRescalingManostat.hpp"
 
-#include "constants.hpp"            // for Constants
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "constants/conversionFactors.hpp"           // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
+#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "exceptions.hpp"                            // for ExceptionType
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatSettings
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "vector3d.hpp"                              // for Vec3D, operator/
+
+#include <algorithm>    // for __for_each_fn
+#include <functional>   // for identity
+#include <math.h>       // for exp, pow, sqrt
 
 using manostat::StochasticRescalingManostat;
 

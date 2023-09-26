@@ -1,9 +1,10 @@
 #include "physicalData.hpp"
 
-#include "constants.hpp"       // for _FS_TO_S_, _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
-#include "simulationBox.hpp"   // for SimulationBox
+#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
+#include "simulationBox.hpp"                         // for SimulationBox
 
-#include <algorithm>   // for for_each
+#include <algorithm>   // for __for_each_fn
 #include <cstddef>     // for size_t
 
 using namespace physicalData;

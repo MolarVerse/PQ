@@ -1,19 +1,19 @@
 #include "testGuffDatReader.hpp"
 
-#include "buckinghamPair.hpp"        // for BuckinghamPair
-#include "constants.hpp"             // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for GuffDatException, UserInputException
-#include "forceFieldClass.hpp"       // for ForceField
-#include "guffPair.hpp"              // for GuffPair
-#include "lennardJonesPair.hpp"      // for LennardJonesPair
-#include "morsePair.hpp"             // for MorsePair
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "potentialSettings.hpp"     // for PotentialSettings, string
-#include "settings.hpp"              // for Settings
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "buckinghamPair.hpp"                        // for BuckinghamPair
+#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"                              // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"                                // for Engine
+#include "exceptions.hpp"                            // for GuffDatException, UserInputException
+#include "forceFieldClass.hpp"                       // for ForceField
+#include "guffPair.hpp"                              // for GuffPair
+#include "lennardJonesPair.hpp"                      // for LennardJonesPair
+#include "morsePair.hpp"                             // for MorsePair
+#include "nonCoulombPair.hpp"                        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"                   // for NonCoulombPotential
+#include "potentialSettings.hpp"                     // for PotentialSettings, string
+#include "settings.hpp"                              // for Settings
+#include "throwWithMessage.hpp"                      // for EXPECT_THROW_MSG
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -285,7 +285,7 @@ TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
                      customException::GuffDatException,
                      "Invalid coulomb coefficient guff file for molecule "
                      "types 1 and 1 and the 1. and the 1. atom type. The coulomb coefficient should "
-                     "be 83.01592825467395 but is 1");
+                     "be 83.01592828541929 but is 1");
 }
 
 TEST_F(TestGuffDatReader, checkPartialCharges)

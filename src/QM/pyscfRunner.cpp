@@ -1,11 +1,16 @@
 #include "pyscfRunner.hpp"
 
+#include "atom.hpp"              // for Atom
+#include "exceptions.hpp"        // for InputFileException
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
+#include "vector3d.hpp"          // for Vec3D
 
-#include <format>    // for format
-#include <fstream>   // for operator<<, basic_ostream, endl, ostream
+#include <format>     // for format
+#include <fstream>    // for ofstream, operator<<, basic_ostream
+#include <stdlib.h>   // for system, size_t
+#include <string>     // for allocator, string, operator+, operator<<
 
 using QM::PySCFRunner;
 

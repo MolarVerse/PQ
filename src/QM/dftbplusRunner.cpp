@@ -1,15 +1,12 @@
 #include "dftbplusRunner.hpp"
 
 #include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for constants
 #include "exceptions.hpp"        // for InputFileException
-#include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
 
-#include <algorithm>    // for __for_each_fn, for_each
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
 #include <format>       // for format

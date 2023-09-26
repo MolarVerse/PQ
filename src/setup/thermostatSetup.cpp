@@ -1,18 +1,22 @@
 #include "thermostatSetup.hpp"
 
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
-#include "constants.hpp"                     // for _PS_TO_FS_
+#include "constants/conversionFactors.hpp"   // for _PS_TO_FS_, _PER_CM_TO_HZ_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "langevinThermostat.hpp"            // for LangevinThermostat
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
-#include "thermostat.hpp"                    // for BerendsenThermostat, Thermostat, thermostat
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "thermostat.hpp"                    // for Thermostat
+#include "thermostatSettings.hpp"            // for ThermostatSettings, ThermostatType
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
-#include <format>   // for format
-#include <string>   // for operator==
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for identity
+#include <map>          // for map, operator==
+#include <string>       // for string
+#include <vector>       // for vector
 
 using namespace setup;
 
@@ -66,9 +70,9 @@ void ThermostatSetup::setup()
 
     else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
     {
-        const auto noseHooverChainLength       = settings::ThermostatSettings::getNoseHooverChainLength();
-        const auto noseHooverCouplingFrequency = settings::ThermostatSettings::getNoseHooverCouplingFrequency() *
-                                                 constants::_PER_CM_TO_HZ_;
+        const auto noseHooverChainLength = settings::ThermostatSettings::getNoseHooverChainLength();
+        const auto noseHooverCouplingFrequency =
+            settings::ThermostatSettings::getNoseHooverCouplingFrequency() * constants::_PER_CM_TO_HZ_;
 
         auto thermostat = thermostat::NoseHooverThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                            std::vector<double>(noseHooverChainLength + 1, 0.0),

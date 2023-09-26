@@ -2,9 +2,6 @@
 
 #include "physicalData.hpp"
 
-#include <cmath>    // for sqrt
-#include <vector>   // for vector
-
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration

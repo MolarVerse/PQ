@@ -2,7 +2,13 @@
 
 #define _RING_POLYMER_RESTART_FILE_READER_HPP_
 
-#include "ringPolymerEngine.hpp"
+#include <fstream>   // IWYU pragma: keep
+#include <string>    // for string
+
+namespace engine
+{
+    class RingPolymerEngine;   // forward declaration
+}
 
 namespace readInput::ringPolymer
 {

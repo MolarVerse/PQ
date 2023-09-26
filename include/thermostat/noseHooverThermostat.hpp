@@ -6,6 +6,16 @@
 
 #include <vector>   // for std::vector
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
 namespace thermostat
 {
     /**

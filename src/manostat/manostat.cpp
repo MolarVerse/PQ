@@ -1,14 +1,10 @@
 #include "manostat.hpp"
 
-#include "constants.hpp"         // for _PRESSURE_FACTOR_
-#include "exceptions.hpp"        // for ExceptionType
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for pow
-#include <functional>   // for identity, function
+#include <functional>   // for function
 
 using namespace manostat;
 

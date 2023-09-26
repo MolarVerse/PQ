@@ -1,11 +1,6 @@
-#include "exceptions.hpp"               // for RstFileException, customException
-#include "restartFileSection.hpp"       // for RstFileSection, readInput
-#include "testRestartFileSection.hpp"   // for TestNoseHooverSection
+#include "restartFileSection.hpp"   // for RstFileSection, readInput
 
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPart...
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
-#include <string>          // for string, allocator
-#include <vector>          // for vector
 
 using namespace readInput;
 

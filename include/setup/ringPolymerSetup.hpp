@@ -2,7 +2,10 @@
 
 #define _RING_POLYMER_SETUP_HPP_
 
-#include "ringPolymerEngine.hpp"
+namespace engine
+{
+    class RingPolymerEngine;   // forward declaration
+}
 
 namespace setup
 {

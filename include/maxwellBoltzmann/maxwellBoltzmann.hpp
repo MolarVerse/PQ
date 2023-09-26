@@ -2,9 +2,12 @@
 
 #define _MAXWELL_BOLTZMANN_HPP_
 
-#include "simulationBox.hpp"
-
 #include <random>
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
 
 namespace maxwellBoltzmann
 {

@@ -1,14 +1,26 @@
 #include "ringPolymerEngine.hpp"
 
-#include "constants.hpp"             // for _RPMD_PREFACTOR_
-#include "output.hpp"                // for Output
-#include "outputFileSettings.hpp"    // for OutputFileSettings
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "thermostatSettings.hpp"    // for ThermostatSettings
+#include "atom.hpp"                                  // for Atom
+#include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
+#include "engineOutput.hpp"                          // for EngineOutput
+#include "outputFileSettings.hpp"                    // for OutputFileSettings
+#include "physicalData.hpp"                          // for PhysicalData
+#include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
+#include "thermostatSettings.hpp"                    // for ThermostatSettings
+#include "timings.hpp"                               // for Timings
+#include "vector3d.hpp"                              // for Vector3D, normSquared
+
+#include <algorithm>    // for __for_each_fn
+#include <functional>   // for identity
+#include <stddef.h>     // for size_t
 
 using engine::Engine;
 using engine::RingPolymerEngine;
 
+/**
+ * @brief writes the ring polymer output files.
+ *
+ */
 void RingPolymerEngine::writeOutput()
 {
     Engine::writeOutput();
@@ -25,6 +37,10 @@ void RingPolymerEngine::writeOutput()
     }
 }
 
+/**
+ * @brief coupling step of ring polymers
+ *
+ */
 void RingPolymerEngine::coupleRingPolymerBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
@@ -58,6 +74,12 @@ void RingPolymerEngine::coupleRingPolymerBeads()
     _physicalData.setRingPolymerEnergy(ringPolymerEnergy);
 }
 
+/**
+ * @brief combining all beads into one simulation box
+ *
+ * @details coords, velocities and forces are averaged over all beads
+ *
+ */
 void RingPolymerEngine::combineBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();

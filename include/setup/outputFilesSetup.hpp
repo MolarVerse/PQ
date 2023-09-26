@@ -2,7 +2,10 @@
 
 #define _OUTPUT_FILES_SETUP_HPP_
 
-#include "engine.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}
 
 namespace setup
 {

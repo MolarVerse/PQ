@@ -1,9 +1,18 @@
 #include "ringPolymerSetup.hpp"
 
+#include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
-#include "ringPolymerRestartFileReader.hpp"   // for RingPolymerRestartFileReader
+#include "ringPolymerEngine.hpp"              // for RingPolymerEngine
+#include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
+#include "simulationBox.hpp"                  // for SimulationBox
+
+#include <algorithm>     // for __for_each_fn, for_each
+#include <functional>    // for identity
+#include <iostream>      // for operator<<, endl, basic_ostream, cout
+#include <stddef.h>      // for size_t
+#include <string_view>   // for string_view
 
 using setup::RingPolymerSetup;
 

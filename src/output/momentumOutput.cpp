@@ -1,14 +1,27 @@
 #include "momentumOutput.hpp"
 
 #include "physicalData.hpp"   // for PhysicalData
+#include "vector3d.hpp"       // for Vec3D, norm
 
 #include <format>    // for format
 #include <fstream>   // for basic_ostream, ofstream
+#include <string>    // for operator<<
 
 using output::MomentumOutput;
 
 /**
  * @brief Write the momentum output
+ *
+ * @details The momentum output is written in the following format:
+ * - step
+ * - norm of momentum
+ * - momentum x
+ * - momentum y
+ * - momentum z
+ * - norm of angular momentum
+ * - angular momentum x
+ * - angular momentum y
+ * - angular momentum z
  *
  * @param step
  * @param data

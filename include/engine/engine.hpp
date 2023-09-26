@@ -22,12 +22,16 @@
 
 namespace output
 {
-    class EnergyOutput;
-    class InfoOutput;
-    class LogOutput;
-    class RstFileOutput;
-    class StdoutOutput;
-    class TrajectoryOutput;
+    class EnergyOutput;                   // forward declaration
+    class InfoOutput;                     // forward declaration
+    class LogOutput;                      // forward declaration
+    class RstFileOutput;                  // forward declaration
+    class StdoutOutput;                   // forward declaration
+    class TrajectoryOutput;               // forward declaration
+    class MomentumOutput;                 // forward declaration
+    class RingPolymerRestartFileOutput;   // forward declaration
+    class RingPolymerTrajectoryOutput;    // forward declaration
+
 }   // namespace output
 
 namespace engine

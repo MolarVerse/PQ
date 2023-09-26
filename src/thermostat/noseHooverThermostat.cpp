@@ -1,11 +1,15 @@
 #include "noseHooverThermostat.hpp"
 
-#include "constants.hpp"         // for _FS_TO_S_
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "constants/conversionFactors.hpp"           // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "vector3d.hpp"                              // for operator*
 
-#include <algorithm>   // for for_each
+#include <algorithm>    // for __for_each_fn
+#include <functional>   // for identity
+#include <stddef.h>     // for size_t
 
 using thermostat::NoseHooverThermostat;
 
@@ -28,6 +32,14 @@ void NoseHooverThermostat::applyThermostatOnForces(simulationBox::SimulationBox 
     std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
 }
 
+/**
+ * @brief applies the Nose-Hoover thermostat on the velocities
+ *
+ * @details the Nose-Hoover thermostat is applied on the velocities of the atoms after velocity integration
+ *
+ * @param simBox simulation box
+ * @param physicalData physical data
+ */
 void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
     physicalData.calculateTemperature(simBox);

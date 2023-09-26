@@ -45,13 +45,15 @@ void InputFileParserManostat::parseManostat(const std::vector<std::string> &line
 {
     checkCommand(lineElements, lineNumber);
 
-    if (lineElements[2] == "none")
+    const auto manostat = utilities::toLowerCopy(lineElements[2]);
+
+    if (manostat == "none")
         settings::ManostatSettings::setManostatType("none");
 
-    else if (lineElements[2] == "berendsen")
+    else if (manostat == "berendsen")
         settings::ManostatSettings::setManostatType("berendsen");
 
-    else if (lineElements[2] == "stochastic_rescaling")
+    else if (manostat == "stochastic_rescaling")
         settings::ManostatSettings::setManostatType("stochastic_rescaling");
 
     else

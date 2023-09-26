@@ -1,6 +1,6 @@
-#include "constants.hpp"          // for _COULOMB_PREFACTOR_
-#include "coulombPotential.hpp"   // for potential
-#include "coulombWolf.hpp"        // for CoulombWolf
+#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "coulombPotential.hpp"                      // for potential
+#include "coulombWolf.hpp"                           // for CoulombWolf
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <cmath>           // for erfc, exp, sqrt, M_PI

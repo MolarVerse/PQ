@@ -2,14 +2,10 @@
 
 #define _RING_POLYMER_ENGINE_HPP_
 
-#include "engine.hpp"
+#include "engine.hpp"          // for Engine
+#include "simulationBox.hpp"   // for SimulationBox
 
-#include <vector>
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include <vector>   // for vector
 
 namespace engine
 {

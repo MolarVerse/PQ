@@ -2,13 +2,14 @@
 
 #define _TEST_ENERGY_OUTPUT_HPP_
 
-#include "energyOutput.hpp"   // for EnergyOutput
-#include "infoOutput.hpp"     // for InfoOutput
-#include "physicalData.hpp"   // for PhysicalDat
+#include "energyOutput.hpp"     // for EnergyOutput
+#include "infoOutput.hpp"       // for InfoOutput
+#include "momentumOutput.hpp"   // for MomentumOutput
+#include "physicalData.hpp"     // for PhysicalDat
 
+#include <cstdio>          // for remove
 #include <gtest/gtest.h>   // for Test
 #include <memory>          // for allocator
-#include <stdio.h>         // for remove
 
 /**
  * @class TestEnergyOutput
@@ -21,22 +22,26 @@ class TestEnergyOutput : public ::testing::Test
   protected:
     void SetUp() override
     {
-        _infoOutput   = new output::InfoOutput("default.info");
-        _energyOutput = new output::EnergyOutput("default.en");
-        _physicalData = new physicalData::PhysicalData();
+        _infoOutput     = new output::InfoOutput("default.info");
+        _energyOutput   = new output::EnergyOutput("default.en");
+        _momentumOutput = new output::MomentumOutput("default.mom");
+        _physicalData   = new physicalData::PhysicalData();
     }
 
     void TearDown() override
     {
         delete _infoOutput;
         delete _energyOutput;
+        delete _momentumOutput;
         delete _physicalData;
         ::remove("default.info");
         ::remove("default.en");
+        ::remove("default.mom");
     }
 
     output::InfoOutput         *_infoOutput;
     output::EnergyOutput       *_energyOutput;
+    output::MomentumOutput     *_momentumOutput;
     physicalData::PhysicalData *_physicalData;
 };
 

@@ -1,12 +1,12 @@
-#include "constants.hpp"                  // for _DEG_TO_RAD_
-#include "dihedralType.hpp"               // for DihedralType
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for ParameterFileException
-#include "forceFieldClass.hpp"            // for ForceField
-#include "improperDihedralSection.hpp"    // for ImproperDihedralSection
-#include "parameterFileSection.hpp"       // for parameterFile
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
+#include "dihedralType.hpp"                  // for DihedralType
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for ParameterFileException
+#include "forceFieldClass.hpp"               // for ForceField
+#include "improperDihedralSection.hpp"       // for ImproperDihedralSection
+#include "parameterFileSection.hpp"          // for parameterFile
+#include "testParameterFileSection.hpp"      // for TestParameterFileSection
+#include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)

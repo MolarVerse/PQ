@@ -1,9 +1,10 @@
 #include "testPhysicalData.hpp"
 
-#include "constants.hpp"   // for _KINETIC_ENERGY_FACTOR_, _FS_TO_S_, _TEMPER...
-#include "vector3d.hpp"    // for operator*, Vector3D, Vec3D, sum, norm
+#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
+#include "vector3d.hpp"                              // for operator*, Vector3D
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "gtest/gtest.h"   // for Message, TestPartResult, EXPECT_EQ, TEST_F, Test
 #include <memory>          // for allocator
 
 /**

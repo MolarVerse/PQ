@@ -1,7 +1,7 @@
 #include "testBox.hpp"
 
-#include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-#include "vector3d.hpp"    // for Vec3D, linearAlgebra
+#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "vector3d.hpp"                      // for Vec3D, linearAlgebra
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <memory>          // for allocator

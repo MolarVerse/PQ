@@ -6,6 +6,7 @@
 #include "settings.hpp"             // for Settings
 #include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for norm
 
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, ofstream

@@ -1,10 +1,15 @@
 #include "maxwellBoltzmann.hpp"
 
-#include "constants.hpp"            // for constants
-#include "resetKinetics.hpp"        // for ResetKineticsSettings
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
+#include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
+#include "constants/natureConstants.hpp"             // for _BOLTZMANN_CONSTANT_
+#include "resetKinetics.hpp"                         // for ResetKinetics
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatSettings
 
-#include <cmath>
+#include <algorithm>    // for __for_each_fn
+#include <cmath>        // for sqrt
+#include <functional>   // for identity
 
 using maxwellBoltzmann::MaxwellBoltzmann;
 

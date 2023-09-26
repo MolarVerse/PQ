@@ -6,6 +6,9 @@ set(source_files
     testInfoOutput.cpp
     testEnergyOutput.cpp
     testOutput.cpp
+    testMomentumOutput.cpp
+    testRingPolymerRestartFileOutput.cpp
+    testRingPolymerTrajectoryOutput.cpp
 )
 
 foreach(source_file ${source_files})

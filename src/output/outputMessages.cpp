@@ -57,17 +57,6 @@ std::string output::endedNormally()
 }
 
 /**
- * @brief construct general initial momentum message
- *
- * @param momentum
- * @return string
- */
-std::string output::initialMomentumMessage(const double initialMomentum)
-{
-    return std::format("{}Initial momentum = {} Angstrom * amu / fs", _OUTPUT_, initialMomentum);
-}
-
-/**
  * @brief construct elapsed time message
  *
  * @param elapsedTime
@@ -75,5 +64,5 @@ std::string output::initialMomentumMessage(const double initialMomentum)
  */
 std::string output::elapsedTimeMessage(const double elapsedTime)
 {
-    return std::format("{}Elapsed time = {} s", _OUTPUT_, elapsedTime);
+    return std::format("\n\n{}Elapsed time = {} s\n", _OUTPUT_, elapsedTime);
 }

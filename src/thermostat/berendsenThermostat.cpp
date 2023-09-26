@@ -1,9 +1,13 @@
 #include "berendsenThermostat.hpp"
 
-#include "molecule.hpp"
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
-#include "timingsSettings.hpp"
+#include "atom.hpp"              // for Atom
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
+
+#include <cmath>    // for sqrt
+#include <memory>   // for __shared_ptr_access, shared_ptr
+#include <vector>   // for vector
 
 using thermostat::BerendsenThermostat;
 

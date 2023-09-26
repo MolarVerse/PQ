@@ -1,7 +1,18 @@
 #include "outputFilesSetup.hpp"
 
-#include "engine.hpp"
-#include "outputFileSettings.hpp"
+#include "energyOutput.hpp"                   // for EnergyOutput
+#include "engine.hpp"                         // for Engine
+#include "infoOutput.hpp"                     // for InfoOutput
+#include "logOutput.hpp"                      // for LogOutput
+#include "momentumOutput.hpp"                 // for MomentumOutput
+#include "outputFileSettings.hpp"             // for OutputFileSettings
+#include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
+#include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
+#include "rstFileOutput.hpp"                  // for RstFileOutput
+#include "stdoutOutput.hpp"                   // for StdoutOutput
+#include "trajectoryOutput.hpp"               // for TrajectoryOutput
+
+#include <string>   // for string
 
 using setup::OutputFilesSetup;
 

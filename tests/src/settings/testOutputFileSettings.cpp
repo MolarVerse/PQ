@@ -1,6 +1,9 @@
-#include "outputFileSettings.hpp"
+#include "outputFileSettings.hpp"   // for OutputFileSettings
 
-#include <gtest/gtest.h>   // for Message, TestPartResult, InitGoogleTest, Test
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
+#include <memory>          // for allocator
+#include <stdint.h>        // for UINT64_MAX
 
 /**
  * @brief tests setting output frequency

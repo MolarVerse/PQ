@@ -1,10 +1,10 @@
 #include "angleSection.hpp"
 
-#include "angleType.hpp"         // for AngleType
-#include "constants.hpp"         // for _DEG_TO_RAD_
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for ParameterFileException
-#include "forceFieldClass.hpp"   // for ForceField
+#include "angleType.hpp"                     // for AngleType
+#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for ParameterFileException
+#include "forceFieldClass.hpp"               // for ForceField
 
 #include <format>   // for format
 

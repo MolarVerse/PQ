@@ -5,11 +5,6 @@
 #include "qmmdEngine.hpp"
 #include "ringPolymerEngine.hpp"
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
-
 namespace engine
 {
     /**

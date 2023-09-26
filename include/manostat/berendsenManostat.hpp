@@ -4,6 +4,16 @@
 
 #include "manostat.hpp"   // for Manostat
 
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
 namespace manostat
 {
     /**

@@ -1,11 +1,12 @@
 #include "resetKinetics.hpp"
 
-#include "constants.hpp"            // for _S_TO_FS_
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "staticMatrix3x3.hpp"      // for StaticMatrix3x3
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for Vector3D
+#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
+#include "physicalData.hpp"                  // for PhysicalData
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "staticMatrix3x3.hpp"               // for operator*, operator+=
+#include "staticMatrix3x3Class.hpp"          // for StaticMatrix3x3
+#include "thermostatSettings.hpp"            // for ThermostatSettings
+#include "vector3d.hpp"                      // for Vec3D, Vector3D, cross
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for sqrt
@@ -93,6 +94,15 @@ void ResetKinetics::resetMomentum(simulationBox::SimulationBox &simBox)
     _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 }
 
+/**
+ * @brief reset the angular momentum of the system
+ *
+ * @details subtract angular momentum correction from all velocities - correction is the total angular momentum divided by the
+ * total mass
+ *
+ * @param physicalData
+ * @param simBox
+ */
 void ResetKinetics::resetAngularMomentum(simulationBox::SimulationBox &simBox)
 {
     simBox.calculateCenterOfMass();

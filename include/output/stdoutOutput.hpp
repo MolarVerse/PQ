@@ -21,7 +21,6 @@ namespace output
         void writeEndedNormally(const double elapsedTime) const;
 
         void writeDensityWarning() const;
-        void writeInitialMomentum(const double momentum) const;
     };
 
 }   // namespace output

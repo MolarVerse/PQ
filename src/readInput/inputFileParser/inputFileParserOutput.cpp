@@ -1,17 +1,10 @@
 #include "inputFileParserOutput.hpp"
 
-#include "energyOutput.hpp"         // for EnergyOutput
-#include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for InputFileException
-#include "infoOutput.hpp"           // for InfoOutput
-#include "logOutput.hpp"            // for LogOutput
-#include "output.hpp"               // for Output, output
 #include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "rstFileOutput.hpp"        // for RstFileOutput
-#include "trajectoryOutput.hpp"     // for TrajectoryOutput
 
 #include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <functional>   // for bind_front, _Bind_front_t
 
 using namespace readInput;
 

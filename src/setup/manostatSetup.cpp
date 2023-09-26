@@ -1,7 +1,7 @@
 #include "manostatSetup.hpp"
 
 #include "berendsenManostat.hpp"             // for BerendsenManostat
-#include "constants.hpp"                     // for _PS_TO_FS_
+#include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException, customException
 #include "manostat.hpp"                      // for BerendsenManostat, Manostat, manostat

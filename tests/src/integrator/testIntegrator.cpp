@@ -1,10 +1,11 @@
 #include "testIntegrator.hpp"
 
-#include "constants.hpp"   // for _V_VERLET_VELOCITY_FACTOR_, _FS_TO_S_
+#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _V_VERLET_VELOCITY_FACTOR_
 
-#include "gtest/gtest.h"   // for CmpHelperFloatingPointEQ, Message
+#include "gtest/gtest.h"   // for CmpHelperFloatingPointEQ, Message, Test, TestPartResult, EXPECT_EQ, EXPECT_DOUBLE_EQ, EXPECT_TRUE, TestPartResultArray, InitGoogleTest, RUN_ALL_TESTS
 #include <string>          // for string
-#include <vector>          // for allocator, vector
+#include <vector>          // for vector
 
 /**
  * @brief tests function integrate velocities of velocity verlet integrator
