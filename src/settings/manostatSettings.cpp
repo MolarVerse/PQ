@@ -61,3 +61,44 @@ void ManostatSettings::setManostatType(const std::string_view &manostatType)
     else
         _manostatType = settings::ManostatType::NONE;
 }
+
+/**
+ * @brief return string of isotropy
+ *
+ * @param isotropy
+ */
+std::string settings::string(const settings::Isotropy &isotropy)
+{
+    switch (isotropy)
+    {
+    case settings::Isotropy::ISOTROPIC: return "isotropic";
+
+    case settings::Isotropy::SEMI_ISOTROPIC: return "semi_isotropic";
+
+    case settings::Isotropy::ANISOTROPIC: return "anisotropic";
+
+    default: return "isotropic";
+    }
+}
+
+/**
+ * @brief sets the isotropy to enum in settings
+ *
+ * @param isotropy
+ */
+void ManostatSettings::setIsotropy(const std::string_view &isotropy)
+{
+    const auto isotropyToLower = utilities::toLowerCopy(isotropy);
+
+    if (isotropyToLower == "isotropic")
+        _isotropy = settings::Isotropy::ISOTROPIC;
+
+    else if (isotropyToLower == "semi_isotropic")
+        _isotropy = settings::Isotropy::SEMI_ISOTROPIC;
+
+    else if (isotropyToLower == "anisotropic")
+        _isotropy = settings::Isotropy::ANISOTROPIC;
+
+    else
+        _isotropy = settings::Isotropy::ISOTROPIC;
+}

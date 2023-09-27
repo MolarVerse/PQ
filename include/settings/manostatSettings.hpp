@@ -59,6 +59,7 @@ namespace settings
     };
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);
+    [[nodiscard]] std::string string(const Isotropy &isotropy);
 
     /**
      * @class ManostatSettings
@@ -88,7 +89,7 @@ namespace settings
         static void setManostatType(const std::string_view &manostatType);
         static void setManostatType(const ManostatType &manostatType) { _manostatType = manostatType; }
 
-        static void setIsotropy(const std::string_view &isotropy){};   // TODO: implement
+        static void setIsotropy(const std::string_view &isotropy);
         static void setIsotropy(const Isotropy &isotropy) { _isotropy = isotropy; }
 
         /***************************
