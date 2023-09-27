@@ -72,7 +72,7 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
 }
 
 /**
- * @brief executes the qm script of the external program
+ * @brief TODO: not yet implemented
  *
  */
 void DFTBPlusRunner::execute()
