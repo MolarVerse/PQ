@@ -26,6 +26,9 @@
 
 #include "manostat.hpp"   // for Manostat
 
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -46,7 +49,7 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-      private:
+      protected:
         double _tau;
         double _compressibility;
 
@@ -61,6 +64,42 @@ namespace manostat
          ********************/
 
         [[nodiscard]] double getTau() const { return _tau; }
+    };
+
+    /**
+     * @class SemiIsotropicBerendsenManostat inherits from BerendsenManostat
+     *
+     * @link https://doi.org/10.1063/1.448118
+     *
+     */
+    class SemiIsotropicBerendsenManostat : public BerendsenManostat
+    {
+      private:
+        size_t              _2DAnisotropicAxis;
+        std::vector<size_t> _2DIsotropicAxes;
+
+      public:
+        SemiIsotropicBerendsenManostat(const double               targetPressure,
+                                       const double               tau,
+                                       const double               compressibility,
+                                       const size_t               anisotropicAxis,
+                                       const std::vector<size_t> &isotropicAxes)
+            : BerendsenManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
+              _2DIsotropicAxes(isotropicAxes){};
+
+        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
+    };
+
+    /**
+     * @class AnisotropicBerendsenManostat inherits from BerendsenManostat
+     *
+     * @link https://doi.org/10.1063/1.448118
+     *
+     */
+    class AnisotropicBerendsenManostat : public BerendsenManostat
+    {
+      public:
+        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
     };
 
 }   // namespace manostat

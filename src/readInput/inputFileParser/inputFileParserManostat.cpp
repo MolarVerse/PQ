@@ -166,22 +166,22 @@ void InputFileParserManostat::parseIsotropy(const std::vector<std::string> &line
     else if (isotropy == "xy" || isotropy == "yx")
     {
         settings::ManostatSettings::setIsotropy("semi_isotropic");
-        settings::ManostatSettings::setXYIsotropicIndices({0, 1});
-        settings::ManostatSettings::setAnisotropicIndex(2);
+        settings::ManostatSettings::set2DIsotropicAxes({0, 1});
+        settings::ManostatSettings::set2DAnisotropicAxis(2);
     }
 
     else if (isotropy == "xz" || isotropy == "zx")
     {
         settings::ManostatSettings::setIsotropy("semi_isotropic");
-        settings::ManostatSettings::setXYIsotropicIndices({0, 2});
-        settings::ManostatSettings::setAnisotropicIndex(1);
+        settings::ManostatSettings::set2DIsotropicAxes({0, 2});
+        settings::ManostatSettings::set2DAnisotropicAxis(1);
     }
 
     else if (isotropy == "yz" || isotropy == "zy")
     {
         settings::ManostatSettings::setIsotropy("semi_isotropic");
-        settings::ManostatSettings::setXYIsotropicIndices({1, 2});
-        settings::ManostatSettings::setAnisotropicIndex(0);
+        settings::ManostatSettings::set2DIsotropicAxes({1, 2});
+        settings::ManostatSettings::set2DAnisotropicAxis(0);
     }
 
     else if (isotropy == "anisotropic")
@@ -189,7 +189,7 @@ void InputFileParserManostat::parseIsotropy(const std::vector<std::string> &line
 
     else
         throw customException::InputFileException(std::format(
-            "Invalid isotropy \"{}\" at line {} in input file. Possible options are: isotropic, semi_isotropic and anisotropic",
+            "Invalid isotropy \"{}\" at line {} in input file. Possible options are: isotropic, xy, xz, yz and anisotropic",
             lineElements[2],
             lineNumber));
 }

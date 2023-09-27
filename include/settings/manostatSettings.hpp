@@ -79,8 +79,8 @@ namespace settings
         static inline double _tauManostat     = defaults::_BERENDSEN_MANOSTAT_RELAXATION_TIME_;   // 1.0 ps
         static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;        // 4.5e-5 1/bar
 
-        static inline std::vector<size_t> _xyIsotropicIndices;
-        static inline size_t              _anisotropicIndex;
+        static inline std::vector<size_t> _2DIsotropicAxes;
+        static inline size_t              _2DAnisotropicAxis;
 
       public:
         ManostatSettings()  = default;
@@ -100,21 +100,21 @@ namespace settings
         static void setTargetPressure(const double targetPressure) { _targetPressure = targetPressure; }
         static void setTauManostat(const double tauManostat) { _tauManostat = tauManostat; }
         static void setCompressibility(const double compressibility) { _compressibility = compressibility; }
-        static void setXYIsotropicIndices(const std::vector<size_t> &indices) { _xyIsotropicIndices = indices; }
-        static void setAnisotropicIndex(const std::vector<size_t> &indices) { _xyIsotropicIndices = indices; }
-        static void setAnisotropicIndex(const size_t anisotropicIndex) { _anisotropicIndex = anisotropicIndex; }
+        static void set2DIsotropicAxes(const std::vector<size_t> &indices) { _2DIsotropicAxes = indices; }
+        static void set2DAnisotropicAxis(const size_t index) { _2DAnisotropicAxis = index; }
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static ManostatType        getManostatType() { return _manostatType; }
-        [[nodiscard]] static bool                isPressureSet() { return _isPressureSet; }
-        [[nodiscard]] static double              getTargetPressure() { return _targetPressure; }
-        [[nodiscard]] static double              getTauManostat() { return _tauManostat; }
-        [[nodiscard]] static double              getCompressibility() { return _compressibility; }
-        [[nodiscard]] static std::vector<size_t> getXYIsotropicIndices() { return _xyIsotropicIndices; }
-        [[nodiscard]] static size_t              getAnisotropicIndex() { return _anisotropicIndex; }
+        [[nodiscard]] static ManostatType getManostatType() { return _manostatType; }
+        [[nodiscard]] static bool         isPressureSet() { return _isPressureSet; }
+        [[nodiscard]] static double       getTargetPressure() { return _targetPressure; }
+        [[nodiscard]] static double       getTauManostat() { return _tauManostat; }
+        [[nodiscard]] static double       getCompressibility() { return _compressibility; }
+
+        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes() { return _2DIsotropicAxes; }
+        [[nodiscard]] static size_t              get2DAnisotropicAxis() { return _2DAnisotropicAxis; }
     };
 
 }   // namespace settings
