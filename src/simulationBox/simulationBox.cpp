@@ -60,7 +60,7 @@ void SimulationBox::copy(const SimulationBox &toCopy)
     this->_qmAtoms.clear();
     for (size_t i = 0; i < toCopy._atoms.size(); ++i)
     {
-        auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
+        const auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
         this->_atoms.push_back(atom);
         this->_qmAtoms.push_back(atom);   // TODO: ATTENTION AT THE MOMENT ONLY VALID FOR ALL QM_CALCULATIONS
     }
