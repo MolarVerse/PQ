@@ -224,11 +224,8 @@ TEST_F(TestSimulationBox, moleculeTypeExists)
  */
 TEST_F(TestSimulationBox, findMoleculeTypeByString)
 {
-    const auto molecule1 = std::make_unique<simulationBox::MoleculeType>(_simulationBox->getMoleculeTypes()[0]);
-    const auto molecule2 = std::make_unique<simulationBox::MoleculeType>(_simulationBox->getMoleculeTypes()[1]);
-
-    molecule1->setName("mol1");
-    molecule2->setName("mol2");
+    _simulationBox->getMoleculeTypes()[0].setName("mol1");
+    _simulationBox->getMoleculeTypes()[1].setName("mol2");
 
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);

@@ -25,6 +25,7 @@ target_link_libraries(output
     physicalData
     simulationBox
     settings
+    gtest
 )
 
 install(TARGETS output
