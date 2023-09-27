@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TRAJECTORYOUTPUT_HPP_
+#ifndef _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
 
-#define _TEST_TRAJECTORYOUTPUT_HPP_
+#define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
 
 #include "atom.hpp"               // for Atom
 #include "molecule.hpp"           // for Molecule
@@ -53,8 +53,8 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto molecule1 = simulationBox::Molecule();
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<simulationBox::Atom>();
+        const auto atom2 = std::make_shared<simulationBox::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -104,4 +104,4 @@ class TestTrajectoryOutput : public ::testing::Test
     simulationBox::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_RSTFILEOUTPUT_HPP_
+#endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
