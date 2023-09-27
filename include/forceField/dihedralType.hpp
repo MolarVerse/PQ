@@ -47,7 +47,7 @@ namespace forceField
         double _phaseShift;
 
       public:
-        DihedralType(size_t id, double forceConstant, double frequency, double phaseShift)
+        DihedralType(const size_t id, const double forceConstant, const double frequency, const double phaseShift)
             : _id(id), _forceConstant(forceConstant), _periodicity(frequency), _phaseShift(phaseShift){};
 
         [[nodiscard]] bool operator==(const DihedralType &other) const;

@@ -45,7 +45,7 @@ namespace forceField
         double _forceConstant;
 
       public:
-        AngleType(size_t id, double equilibriumAngle, double springConstant)
+        AngleType(const size_t id, const double equilibriumAngle, const double springConstant)
             : _id(id), _equilibriumAngle(equilibriumAngle), _forceConstant(springConstant){};
 
         [[nodiscard]] bool operator==(const AngleType &other) const;

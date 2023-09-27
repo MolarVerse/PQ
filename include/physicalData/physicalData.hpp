@@ -136,7 +136,7 @@ namespace physicalData
         void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
         void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
 
-        void setRingPolymerEnergy(const std::vector<double> ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+        void setRingPolymerEnergy(const std::vector<double> &ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
 
         /********************
          * standard getters *

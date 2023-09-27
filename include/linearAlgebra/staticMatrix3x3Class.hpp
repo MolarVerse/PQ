@@ -80,7 +80,7 @@ namespace linearAlgebra
          * @param rhs
          * @return bool
          */
-        friend bool operator==(const StaticMatrix3x3 &lhs, const StaticMatrix3x3 &rhs) { return lhs._data == rhs._data; }
+        friend bool operator==(const StaticMatrix3x3 &lhs, const StaticMatrix3x3 &rhs) = default;
 
         /**
          * @brief unary operator- for StaticMatrix3x3

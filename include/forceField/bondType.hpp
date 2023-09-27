@@ -45,7 +45,7 @@ namespace forceField
         double _forceConstant;
 
       public:
-        BondType(size_t id, double equilibriumBondLength, double springConstant)
+        BondType(const size_t id, const double equilibriumBondLength, const double springConstant)
             : _id(id), _equilibriumBondLength(equilibriumBondLength), _forceConstant(springConstant){};
 
         [[nodiscard]] bool operator==(const BondType &other) const;

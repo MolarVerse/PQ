@@ -71,7 +71,7 @@ namespace simulationBox
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
 
-        void addAtom(std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
+        void addAtom(const std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
 
         // TODO: check if these are really necessary
 

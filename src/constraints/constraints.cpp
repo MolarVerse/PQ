@@ -68,7 +68,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 
         std::ranges::for_each(_bondConstraints, applyShakeForSingleBond);
 
-        converged = std::ranges::all_of(convergedVector, [](bool isConverged) { return isConverged; });
+        converged = std::ranges::all_of(convergedVector, [](const bool isConverged) { return isConverged; });
 
         ++iter;
     }

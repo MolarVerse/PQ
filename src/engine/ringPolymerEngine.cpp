@@ -33,8 +33,8 @@
 #include "vector3d.hpp"                              // for Vector3D, normSquared
 
 #include <algorithm>    // for __for_each_fn
+#include <cstddef>      // for size_t
 #include <functional>   // for identity
-#include <stddef.h>     // for size_t
 
 using engine::Engine;
 using engine::RingPolymerEngine;
@@ -66,6 +66,7 @@ void RingPolymerEngine::writeOutput()
 void RingPolymerEngine::coupleRingPolymerBeads()
 {
     const auto numberOfBeads = settings::RingPolymerSettings::getNumberOfBeads();
+    const auto numberOfAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
     const auto temperature   = settings::ThermostatSettings::getTargetTemperature();
     const auto rpmd_factor   = constants::_RPMD_PREFACTOR_ * numberOfBeads * numberOfBeads * temperature * temperature;
 
@@ -76,7 +77,7 @@ void RingPolymerEngine::coupleRingPolymerBeads()
         auto &bead1 = _ringPolymerBeads[i];
         auto &bead2 = _ringPolymerBeads[(i + 1) % numberOfBeads];
 
-        for (size_t j = 0, numberOfAtoms = bead1.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        for (size_t j = 0; j < numberOfAtoms; ++j)
         {
             auto &atom1 = bead1.getAtom(j);
             auto &atom2 = bead2.getAtom(j);
