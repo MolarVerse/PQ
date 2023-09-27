@@ -50,14 +50,16 @@ InputFileParserManostat::InputFileParserManostat(engine::Engine &engine) : Input
     addKeyword(std::string("pressure"), bind_front(&InputFileParserManostat::parsePressure, this), false);
     addKeyword(std::string("p_relaxation"), bind_front(&InputFileParserManostat::parseManostatRelaxationTime, this), false);
     addKeyword(std::string("compressibility"), bind_front(&InputFileParserManostat::parseCompressibility, this), false);
+    addKeyword(std::string("isotropy"), bind_front(&InputFileParserManostat::parseIsotropy, this), false);
 }
 
 /**
  * @brief Parse the manostat used in the simulation
  *
  * @details Possible options are:
- * 1) "none" - no manostat is used (default)
- * 2) "berendsen" - berendsen manostat is used
+ * 1) "none"                 - no manostat is used (default)
+ * 2) "berendsen"            - berendsen manostat is used
+ * 3) "stochastic_rescaling" - stochastic rescaling manostat is used
  *
  * @param lineElements
  *
@@ -138,4 +140,56 @@ void InputFileParserManostat::parseCompressibility(const std::vector<std::string
         throw customException::InputFileException("Compressibility cannot be negative");
 
     settings::ManostatSettings::setCompressibility(compressibility);
+}
+
+/**
+ * @brief Parse the isotropy of the manostat
+ *
+ * @details Possible options are:
+ * 1) "isotropic"                        - isotropic manostat is used (default)
+ * 2) "xy", "yx", "xz", "zx", "yz", "zy" - semi isotropic manostat is used
+ * 3) "anisotropic"                      - anisotropic manostat is used
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if isotropy is not isotropic, semi_isotropic or anisotropic
+ */
+void InputFileParserManostat::parseIsotropy(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto isotropy = utilities::toLowerCopy(lineElements[2]);
+
+    if (isotropy == "isotropic")
+        settings::ManostatSettings::setIsotropy("isotropic");
+
+    else if (isotropy == "xy" || isotropy == "yx")
+    {
+        settings::ManostatSettings::setIsotropy("semi_isotropic");
+        settings::ManostatSettings::setXYIsotropicIndices({0, 1});
+        settings::ManostatSettings::setAnisotropicIndex(2);
+    }
+
+    else if (isotropy == "xz" || isotropy == "zx")
+    {
+        settings::ManostatSettings::setIsotropy("semi_isotropic");
+        settings::ManostatSettings::setXYIsotropicIndices({0, 2});
+        settings::ManostatSettings::setAnisotropicIndex(1);
+    }
+
+    else if (isotropy == "yz" || isotropy == "zy")
+    {
+        settings::ManostatSettings::setIsotropy("semi_isotropic");
+        settings::ManostatSettings::setXYIsotropicIndices({1, 2});
+        settings::ManostatSettings::setAnisotropicIndex(0);
+    }
+
+    else if (isotropy == "anisotropic")
+        settings::ManostatSettings::setIsotropy("anisotropic");
+
+    else
+        throw customException::InputFileException(std::format(
+            "Invalid isotropy \"{}\" at line {} in input file. Possible options are: isotropic, semi_isotropic and anisotropic",
+            lineElements[2],
+            lineNumber));
 }

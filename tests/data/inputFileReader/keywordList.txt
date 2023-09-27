@@ -27,6 +27,7 @@ manostat                false
 pressure                false
 p_relaxation            false
 compressibility         false
+isotropy                false
 
 thermostat              false
 temp                    false

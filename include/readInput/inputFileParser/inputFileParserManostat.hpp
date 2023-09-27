@@ -52,6 +52,7 @@ namespace readInput
         void parsePressure(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseManostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseCompressibility(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseIsotropy(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace readInput
