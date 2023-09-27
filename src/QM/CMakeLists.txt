@@ -2,6 +2,7 @@ add_library(QM
     qmRunner.cpp
 
     dftbplusRunner.cpp
+    turbomoleRunner.cpp
     pyscfRunner.cpp
 )
 
