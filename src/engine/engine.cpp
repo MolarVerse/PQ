@@ -1,14 +1,34 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "engine.hpp"
 
-#include "constants.hpp"            // for _FS_TO_PS_
-#include "logOutput.hpp"            // for LogOutput
-#include "output.hpp"               // for Output
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "progressbar.hpp"          // for progressbar
-#include "stdoutOutput.hpp"         // for StdoutOutput
-#include "timingsSettings.hpp"      // for TimingsSettings
-
-#include <iostream>   // for operator<<, cout, ostream, basic_ostream
+#include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "logOutput.hpp"                     // for LogOutput
+#include "outputFileSettings.hpp"            // for OutputFileSettings
+#include "progressbar.hpp"                   // for progressbar
+#include "stdoutOutput.hpp"                  // for StdoutOutput
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "vector3d.hpp"                      // for norm
 
 using namespace engine;
 
@@ -23,7 +43,6 @@ void Engine::run()
     _physicalData.calculateKinetics(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
-    _engineOutput.getStdoutOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));
@@ -38,8 +57,10 @@ void Engine::run()
 
     _timings.endTimer();
 
-    std::cout << '\n' << '\n';
-    std::cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
+    const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
+
+    _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
+    _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
 
 /**

@@ -16,6 +16,7 @@ add_library(output
 target_include_directories(output
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/output
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(output
@@ -24,6 +25,7 @@ target_link_libraries(output
     physicalData
     simulationBox
     settings
+    gtest
 )
 
 install(TARGETS output

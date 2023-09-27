@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _CONVERSION_FACTORS_HPP_
 
 #define _CONVERSION_FACTORS_HPP_
@@ -29,7 +51,7 @@ namespace constants
     static constexpr double _ANGSTROM_TO_METER_ = 1.0e-10;
     static constexpr double _METER_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_METER_;
 
-    static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_IN_METER_;
+    static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_;
     static constexpr double _METER_TO_BOHR_RADIUS_ = 1.0 / _BOHR_RADIUS_TO_METER_;
 
     static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ = _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
@@ -100,7 +122,7 @@ namespace constants
     /**
      * @brief Conversion factors for frequencies
      */
-    static constexpr double _WAVE_NUMBER_IN_PER_CM_TO_FREQUENCY_IN_HZ_ = _SPEED_OF_LIGHT_IN_CM_PER_S_;
+    static constexpr double _PER_CM_TO_HZ_ = _SPEED_OF_LIGHT_IN_CM_PER_S_;
 
 }   // namespace constants
 

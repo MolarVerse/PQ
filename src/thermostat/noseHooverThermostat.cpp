@@ -1,11 +1,37 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "noseHooverThermostat.hpp"
 
-#include "constants.hpp"         // for _FS_TO_S_
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "constants/conversionFactors.hpp"           // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "vector3d.hpp"                              // for operator*
 
-#include <algorithm>   // for for_each
+#include <algorithm>    // for __for_each_fn
+#include <functional>   // for identity
+#include <stddef.h>     // for size_t
 
 using thermostat::NoseHooverThermostat;
 
@@ -28,6 +54,14 @@ void NoseHooverThermostat::applyThermostatOnForces(simulationBox::SimulationBox 
     std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
 }
 
+/**
+ * @brief applies the Nose-Hoover thermostat on the velocities
+ *
+ * @details the Nose-Hoover thermostat is applied on the velocities of the atoms after velocity integration
+ *
+ * @param simBox simulation box
+ * @param physicalData physical data
+ */
 void NoseHooverThermostat::applyThermostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
     physicalData.calculateTemperature(simBox);

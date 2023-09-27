@@ -1,12 +1,36 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "infoOutput.hpp"           // for InfoOutput
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for Vec3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_T...
+#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
 #include <iosfwd>          // for ifstream
 #include <string>          // for getline, allocator, string
 
@@ -210,6 +234,112 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     EXPECT_EQ(line, "|   E(QM)                   5.00000 kcal/mol N(QM ATOMS)             0.00000            |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)                0.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
+    getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+}
+
+/**
+ * @brief tests writing info file
+ *
+ * @details ring polymer is active
+ *
+ */
+TEST_F(TestEnergyOutput, writeInfo_ringPolymerActive)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+    _physicalData->setRingPolymerEnergy({1.0, 2.0});
+
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::activateMM();
+    settings::Settings::deactivateQM();
+    settings::Settings::activateRingPolymerMD();
+    settings::ManostatSettings::setManostatType("none");
+
+    _infoOutput->setFilename("default.info");
+    _infoOutput->write(100.0, 0.1, *_physicalData);
+    _infoOutput->close();
+
+    std::ifstream file("default.info");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+    getline(file, line);
+    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+    getline(file, line);
+    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(MEAN RPMD)            1.50000 kcal/mol E(MAX RPMD)             2.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
+    getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+}
+
+/**
+ * @brief tests writing info file
+ *
+ * @details nose hoover is active
+ *
+ */
+TEST_F(TestEnergyOutput, writeInfo_NoseHooverActive)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+    _physicalData->setNoseHooverMomentumEnergy(11.0);
+    _physicalData->setNoseHooverFrictionEnergy(12.0);
+
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::activateMM();
+    settings::Settings::deactivateQM();
+    settings::Settings::deactivateRingPolymerMD();
+    settings::ManostatSettings::setManostatType("none");
+    settings::ThermostatSettings::setThermostatType(settings::ThermostatType::NOSE_HOOVER);
+
+    _infoOutput->setFilename("default.info");
+    _infoOutput->write(100.0, 0.1, *_physicalData);
+    _infoOutput->close();
+
+    std::ifstream file("default.info");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+    getline(file, line);
+    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    getline(file, line);
+    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
+    getline(file, line);
+    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
+    getline(file, line);
+    EXPECT_EQ(line, "|   E(NH MOMENTUM)         11.00000 kcal/mol E(NH FRICTION)         12.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);

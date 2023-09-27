@@ -2,6 +2,7 @@ set(source_files
     testVector3d.cpp
     testMatrix.cpp
     testStaticMatrix3x3.cpp
+    testStlVector.cpp
 )
 
 foreach(source_file ${source_files})

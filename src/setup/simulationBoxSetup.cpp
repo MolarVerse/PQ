@@ -1,29 +1,50 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "simulationBoxSetup.hpp"
 
-#include "atom.hpp"                    // for Atom
-#include "atomMassMap.hpp"             // for atomMassMap
-#include "atomNumberMap.hpp"           // for atomNumberMap
-#include "constants.hpp"               // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
-#include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for MolDescriptorException, UserInputException, InputFileException
-#include "forceFieldSettings.hpp"      // for ForceFieldSettings
-#include "logOutput.hpp"               // for LogOutput
-#include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
-#include "molecule.hpp"                // for Molecule
-#include "physicalData.hpp"            // for PhysicalData
-#include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for getDensitySet, getBoxSet
-#include "stdoutOutput.hpp"            // for StdoutOutput
-#include "stringUtilities.hpp"         // for toLowerCopy
-#include "thermostatSettings.hpp"      // for ThermostatSettings
+#include "atom.hpp"                          // for Atom, simulationBox
+#include "atomMassMap.hpp"                   // for atomMassMap
+#include "atomNumberMap.hpp"                 // for atomNumberMap
+#include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for MolDescriptorException
+#include "forceFieldSettings.hpp"            // for ForceFieldSettings
+#include "logOutput.hpp"                     // for LogOutput
+#include "maxwellBoltzmann.hpp"              // for MaxwellBoltzmann
+#include "molecule.hpp"                      // for Molecule
+#include "physicalData.hpp"                  // for PhysicalData
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
+#include "stdoutOutput.hpp"                  // for StdoutOutput
+#include "stringUtilities.hpp"               // for toLowerCopy, firstLetterToUpperCaseCopy
 
-#include <algorithm>     // for ranges::for_each
+#include <algorithm>     // for __for_each_fn, for_each
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <functional>    // for identity
 #include <map>           // for map
 #include <numeric>       // for accumulate
-#include <string>        // for allocator, operator+, char_traits
+#include <string>        // for string, allocator, operator+
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
@@ -301,6 +322,11 @@ void SimulationBoxSetup::checkRcCutoff()
                         _engine.getSimulationBox().getMinimalBoxDimension()));
 }
 
+/**
+ * @brief Initialize the velocities of the simulation box
+ *
+ * @details If initializeVelocities is set, the velocities are initialized with a Maxwell-Boltzmann distribution.
+ */
 void SimulationBoxSetup::initVelocities()
 {
     if (settings::SimulationBoxSettings::getInitializeVelocities())

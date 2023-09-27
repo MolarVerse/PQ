@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "stdoutOutput.hpp"
 
 #include "exceptions.hpp"       // for UserInputExceptionWarning, customException
@@ -17,6 +39,16 @@ using namespace output;
 void StdoutOutput::writeHeader() const { std::cout << header() << '\n' << std::flush; }
 
 /**
+ * @brief write a message to the stdout if the simulation ended normally
+ *
+ */
+void StdoutOutput::writeEndedNormally(const double elapsedTime) const
+{
+    std::cout << elapsedTimeMessage(elapsedTime) << '\n';
+    std::cout << endedNormally() << '\n' << std::flush;
+}
+
+/**
  * @brief write a warning message to the stdout if density and box dimensions are set
  *
  */
@@ -30,15 +62,4 @@ void StdoutOutput::writeDensityWarning() const
     {
         std::cout << e.what() << '\n' << '\n' << std::flush;
     }
-}
-
-/**
- * @brief write initial momentum to stdout
- *
- * @param momentum
- */
-void StdoutOutput::writeInitialMomentum(const double momentum) const
-{
-    std::cout << '\n';
-    std::cout << initialMomentumMessage(momentum) << '\n' << std::flush;
 }

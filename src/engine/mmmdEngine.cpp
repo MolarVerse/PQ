@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "mmmdEngine.hpp"
 
 #include "celllist.hpp"          // for CellList
@@ -21,20 +43,21 @@ using namespace engine;
  * @brief Takes one step in the simulation.
  *
  * @details The step is taken in the following order:
- *  1.  First step of the integrator
- *  2.  Apply SHAKE
- *  3.  Update cell list
- *  4.1 Calculate forces
- *  4.2 Calculate intra non bonded forces
- *  5.  Calculate virial
- *  6.  Calculate constraint bond references
- *  7.  Second step of the integrator
- *  8.  calculate intra molecular virial correction
- *  9.  Apply RATTLE
- * 10.  Apply thermostat
- * 11.  Calculate kinetic energy and momentum
- * 12.  Apply manostat
- * 13.  Reset temperature and momentum
+ * - First step of the integrator
+ * - Apply SHAKE
+ * - Update cell list
+ * - Calculate forces
+ * - Calculate intra non bonded forces
+ * - Calculate virial
+ * - Calculate constraint bond references
+ * - calculate intra molecular virial correction
+ * - Apply thermostat on forces
+ * - Second step of the integrator
+ * - Apply RATTLE
+ * - Apply thermostat
+ * - Calculate kinetic energy and momentum
+ * - Apply manostat
+ * - Reset temperature and momentum
  *
  */
 void MMMDEngine::takeStep()

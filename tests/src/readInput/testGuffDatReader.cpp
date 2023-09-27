@@ -1,19 +1,41 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "testGuffDatReader.hpp"
 
-#include "buckinghamPair.hpp"        // for BuckinghamPair
-#include "constants.hpp"             // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for GuffDatException, UserInputException
-#include "forceFieldClass.hpp"       // for ForceField
-#include "guffPair.hpp"              // for GuffPair
-#include "lennardJonesPair.hpp"      // for LennardJonesPair
-#include "morsePair.hpp"             // for MorsePair
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "potentialSettings.hpp"     // for PotentialSettings, string
-#include "settings.hpp"              // for Settings
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "buckinghamPair.hpp"                        // for BuckinghamPair
+#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"                              // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"                                // for Engine
+#include "exceptions.hpp"                            // for GuffDatException, UserInputException
+#include "forceFieldClass.hpp"                       // for ForceField
+#include "guffPair.hpp"                              // for GuffPair
+#include "lennardJonesPair.hpp"                      // for LennardJonesPair
+#include "morsePair.hpp"                             // for MorsePair
+#include "nonCoulombPair.hpp"                        // for NonCoulombPair
+#include "nonCoulombPotential.hpp"                   // for NonCoulombPotential
+#include "potentialSettings.hpp"                     // for PotentialSettings, string
+#include "settings.hpp"                              // for Settings
+#include "throwWithMessage.hpp"                      // for EXPECT_THROW_MSG
 
 #include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -285,7 +307,7 @@ TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
                      customException::GuffDatException,
                      "Invalid coulomb coefficient guff file for molecule "
                      "types 1 and 1 and the 1. and the 1. atom type. The coulomb coefficient should "
-                     "be 83.01592825467395 but is 1");
+                     "be 83.01592828541929 but is 1");
 }
 
 TEST_F(TestGuffDatReader, checkPartialCharges)

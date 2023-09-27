@@ -1,12 +1,37 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "langevinThermostat.hpp"
 
-#include "constants.hpp"         // for constants::_BOLTZMANN_CONSTANT_
-#include "physicalData.hpp"      // for physicalData::PhysicalData
-#include "simulationBox.hpp"     // for simulationBox::SimulationBox
-#include "timingsSettings.hpp"   // for settings::TimingsSettings::getTimeStep
+#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
+#include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "physicalData.hpp"                  // for PhysicalData
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "vector3d.hpp"                      // for operator*, Vec3D
 
-#include <algorithm>   // for std::ranges::for_each
-#include <cmath>       // for std::sqrt
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for sqrt
+#include <functional>   // for identity
 
 using thermostat::LangevinThermostat;
 

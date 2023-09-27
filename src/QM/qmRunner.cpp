@@ -1,23 +1,39 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "qmRunner.hpp"
 
-#include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for constants
-#include "exceptions.hpp"        // for InputFileException
-#include "physicalData.hpp"      // for PhysicalData
-#include "qmSettings.hpp"        // for QMSettings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
+#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
+#include "exceptions.hpp"                    // for InputFileException
+#include "physicalData.hpp"                  // for PhysicalData
+#include "qmSettings.hpp"                    // for QMSettings
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "vector3d.hpp"                      // for Vec3D
 
 #include <algorithm>    // for __for_each_fn, for_each
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
 #include <string>       // for string
-#include <vector>       // for vector
 
 using QM::QMRunner;
 
