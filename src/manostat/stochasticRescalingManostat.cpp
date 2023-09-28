@@ -32,18 +32,35 @@
 #include "vector3d.hpp"                              // for Vec3D, operator/
 
 #include <algorithm>    // for __for_each_fn
+#include <cmath>        // for exp, pow, sqrt
 #include <functional>   // for identity
-#include <math.h>       // for exp, pow, sqrt
 
+using manostat::AnisotropicStochasticRescalingManostat;
+using manostat::SemiIsotropicStochasticRescalingManostat;
 using manostat::StochasticRescalingManostat;
 
 /**
- * @brief copy constructor
+ * @brief copy constructor for Stochastic Rescaling Manostat
  *
  * @param other
  */
 StochasticRescalingManostat::StochasticRescalingManostat(const StochasticRescalingManostat &other)
-    : Manostat(other), _tau(other._tau), _compressibility(other._compressibility){};
+    : Manostat(other), _tau(other._tau), _compressibility(other._compressibility), _dt(other._dt){};
+
+/**
+ * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling Manostat object
+ *
+ * @param targetPressure
+ * @param tau
+ * @param compressibility
+ */
+StochasticRescalingManostat::StochasticRescalingManostat(const double targetPressure,
+                                                         const double tau,
+                                                         const double compressibility)
+    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+{
+    _dt = settings::TimingsSettings::getTimeStep();
+}
 
 /**
  * @brief apply Stochastic Rescaling manostat for NPT ensemble
@@ -55,28 +72,85 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 {
     calculatePressure(simBox, physicalData);
 
-    const auto compressibilityFactor = _compressibility * settings::TimingsSettings::getTimeStep() / _tau;
+    const auto mu = calculateMu(simBox.getVolume());
 
-    const auto stochasticFactor =
-        ::sqrt(2.0 * constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature() *
-               compressibilityFactor / (simBox.getVolume()) * constants::_PRESSURE_FACTOR_) *
-        std::normal_distribution<double>(0.0, 1.0)(_generator);
-
-    const auto linearScalingFactor =
-        ::pow(exp(-compressibilityFactor * (_targetPressure - _pressure) + stochasticFactor), 1.0 / 3.0);
-
-    const auto scalingFactors = linearAlgebra::Vec3D(linearScalingFactor);
-
-    simBox.scaleBox(scalingFactors);
+    simBox.scaleBox(mu);
 
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scalePositions  = [&scalingFactors](auto &molecule) { molecule.scale(scalingFactors); };
-    auto scaleVelocities = [&scalingFactors](auto &atom) { atom->scaleVelocity(1.0 / scalingFactors); };
+    auto scalePositions  = [&mu](auto &molecule) { molecule.scale(mu); };
+    auto scaleVelocities = [&mu](auto &atom) { atom->scaleVelocity(1.0 / mu); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+}
+
+/**
+ * @brief calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)
+ *
+ * @param volume
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D StochasticRescalingManostat::calculateMu(const double volume)
+{
+    const auto compressibilityFactor = _compressibility * _dt / _tau;
+    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
+    const auto randomFactor = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    const auto stochasticFactor = ::sqrt(2.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
+
+    return linearAlgebra::Vec3D(::exp(-compressibilityFactor * (_targetPressure - _pressure) + stochasticFactor / 3.0));
+}
+
+/**
+ * @brief calculate mu as scaling factor for Stochastic Rescaling manostat (semi-isotropic)
+ *
+ * @param volume
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D SemiIsotropicStochasticRescalingManostat::calculateMu(const double volume)
+{
+    const auto compressibilityFactor = _compressibility * _dt / _tau;
+    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
+    const auto randomFactor = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    const auto stochasticFactor_xy =
+        ::sqrt(4.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
+    const auto stochasticFactor_z =
+        ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
+
+    const auto p_xy = (_pressureVector[_2DIsotropicAxes[0]] + _pressureVector[_2DIsotropicAxes[1]]) / 2.0;
+    const auto p_z  = _pressureVector[_2DAnisotropicAxis];
+
+    const auto mu_xy = ::exp(-compressibilityFactor * (_targetPressure - p_xy) / 3.0 + stochasticFactor_xy / 2.0);
+    const auto mu_z  = ::exp(-compressibilityFactor * (_targetPressure - p_z) / 3.0 + stochasticFactor_z);
+
+    linearAlgebra::Vec3D mu;
+
+    mu[_2DIsotropicAxes[0]] = mu_xy;
+    mu[_2DIsotropicAxes[1]] = mu_xy;
+    mu[_2DAnisotropicAxis]  = mu_z;
+
+    return mu;
+}
+
+/**
+ * @brief calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)
+ *
+ * @param volume
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume)
+{
+    const auto compressibilityFactor = _compressibility * _dt / _tau;
+    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
+    const auto randomFactor = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    const auto stochasticFactor =
+        ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
+
+    return exp(-compressibilityFactor * (_targetPressure - _pressureVector) / 3.0 + stochasticFactor);
 }

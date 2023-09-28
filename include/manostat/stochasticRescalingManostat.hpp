@@ -24,7 +24,7 @@
 
 #define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
 
-#include "manostat.hpp"   // for Manostat
+#include "berendsenManostat.hpp"   // for Manostat
 
 #include <random>   // for std::random_device, std::mt19937
 
@@ -48,26 +48,58 @@ namespace manostat
      */
     class StochasticRescalingManostat : public Manostat
     {
-      private:
+      protected:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
         double _tau;
         double _compressibility;
+        double _dt;
 
       public:
         StochasticRescalingManostat() = default;
-        StochasticRescalingManostat(const StochasticRescalingManostat &);
-        explicit StochasticRescalingManostat(const double targetPressure, const double tau, const double compressibility)
-            : Manostat(targetPressure), _tau(tau), _compressibility(compressibility){};
+        StochasticRescalingManostat(const StochasticRescalingManostat &other);
+        explicit StochasticRescalingManostat(const double targetPressure, const double tau, const double compressibility);
 
         void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
-        /********************
-         * standard getters *
-         ********************/
+        [[nodiscard]] virtual linearAlgebra::Vec3D calculateMu(const double volume);
+    };
 
-        [[nodiscard]] double getTau() const { return _tau; }
+    /**
+     * @class SemiIsotropicStochasticRescalingManostat inherits from Manostat
+     *
+     * @link https://doi.org/10.1063/5.0020514
+     *
+     */
+    class SemiIsotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    {
+      private:
+        size_t              _2DAnisotropicAxis;
+        std::vector<size_t> _2DIsotropicAxes;
+
+      public:
+        explicit SemiIsotropicStochasticRescalingManostat(const double               targetPressure,
+                                                          const double               tau,
+                                                          const double               compressibility,
+                                                          const size_t               anisotropicAxis,
+                                                          const std::vector<size_t> &isotropicAxes)
+            : StochasticRescalingManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
+              _2DIsotropicAxes(isotropicAxes){};
+
+        [[nodiscard]] linearAlgebra::Vec3D calculateMu(const double volume) override;
+    };
+
+    /**
+     * @class AnisotropicStochasticRescalingManostat inherits from Manostat
+     *
+     * @link https://doi.org/10.1063/5.0020514
+     *
+     */
+    class AnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    {
+      public:
+        [[nodiscard]] linearAlgebra::Vec3D calculateMu(const double volume) override;
     };
 
 }   // namespace manostat

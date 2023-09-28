@@ -52,12 +52,14 @@ namespace manostat
       protected:
         double _tau;
         double _compressibility;
+        double _dt;
 
       public:
-        explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
-            : Manostat(targetPressure), _tau(tau), _compressibility(compressibility){};
+        explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility);
 
         void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+
+        [[nodiscard]] virtual linearAlgebra::Vec3D calculateMu() const;
 
         /********************
          * standard getters *
@@ -87,7 +89,7 @@ namespace manostat
             : BerendsenManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
               _2DIsotropicAxes(isotropicAxes){};
 
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
+        [[nodiscard]] linearAlgebra::Vec3D calculateMu() const override;
     };
 
     /**
@@ -99,7 +101,7 @@ namespace manostat
     class AnisotropicBerendsenManostat : public BerendsenManostat
     {
       public:
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override{};
+        [[nodiscard]] linearAlgebra::Vec3D calculateMu() const override;
     };
 
 }   // namespace manostat

@@ -222,6 +222,18 @@ namespace linearAlgebra
         Vector3D<T> operator-(const T rhs) const { return Vector3D<T>(_x - rhs, _y - rhs, _z - rhs); }
 
         /**
+         * @brief - operator for a Vector3d object and a scalar
+         *
+         * @param const T
+         * @param const Vector3D<T>&
+         * @return Vector3D
+         */
+        friend Vector3D<T> operator-(const T lhs, const Vector3D<T> &rhs)
+        {
+            return Vector3D<T>(lhs - rhs._x, lhs - rhs._y, lhs - rhs._z);
+        }
+
+        /**
          * @brief * operator for two Vector3d objects
          *
          * @param const Vector3D<T>&
@@ -459,6 +471,15 @@ namespace linearAlgebra
          * @return Vector3D<T>
          */
         friend double angle(Vector3D<T> v1, Vector3D<T> v2) { return ::acos(cos(v1, v2)); }
+
+        /**
+         * @brief calculates the exponential of the vector (for each element)
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend Vector3D<T> exp(Vector3D<T> v) { return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z)); }
 
         /**
          * @brief ostream operator for vector3d

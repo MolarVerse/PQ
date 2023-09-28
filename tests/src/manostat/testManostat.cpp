@@ -69,10 +69,10 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 {
     _box->setCoulombRadiusCutOff(0.99);
     _box->setBoxDimensions({2.0, 2.0, 2.0});
-    auto boxOld = _box->getBoxDimensions();
+    const auto boxOld = _box->getBoxDimensions();
 
-    auto molecule = simulationBox::Molecule();
-    auto atom     = std::make_shared<simulationBox::Atom>();
+    auto       molecule = simulationBox::Molecule();
+    const auto atom     = std::make_shared<simulationBox::Atom>();
     atom->setPosition({1.0, 0.0, 0.0});
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
@@ -80,8 +80,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     _box->addMolecule(molecule);
 
-    _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
     settings::TimingsSettings::setTimeStep(0.5);
+    _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
 
     const auto scaleFactors =
         linearAlgebra::Vec3D(::pow(1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_), 1.0 / 3.0));
@@ -106,8 +106,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBox
     _box->setCoulombRadiusCutOff(10.0);
     _box->setBoxDimensions({2.0, 2.0, 2.0});
 
-    _manostat = new manostat::BerendsenManostat(3.0 * constants::_PRESSURE_FACTOR_, 0.1, 4.5);
     settings::TimingsSettings::setTimeStep(0.5);
+    _manostat = new manostat::BerendsenManostat(3.0 * constants::_PRESSURE_FACTOR_, 0.1, 4.5);
 
     EXPECT_THROW_MSG(_manostat->applyManostat(*_box, *_data),
                      customException::ManostatException,

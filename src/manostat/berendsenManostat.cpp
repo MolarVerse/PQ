@@ -29,10 +29,25 @@
 #include "vector3d.hpp"          // for Vec3D
 
 #include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for pow
+#include <cmath>        // for cbrt
 #include <functional>   // for identity
 
+using manostat::AnisotropicBerendsenManostat;
 using manostat::BerendsenManostat;
+using manostat::SemiIsotropicBerendsenManostat;
+
+/**
+ * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
+ *
+ * @param targetPressure
+ * @param tau
+ * @param compressibility
+ */
+BerendsenManostat::BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
+    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+{
+    _dt = settings::TimingsSettings::getTimeStep();
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -44,19 +59,61 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(simBox, physicalData);
 
-    const auto linearScalingFactor = ::pow(
-        1.0 - _compressibility * settings::TimingsSettings::getTimeStep() / _tau * (_targetPressure - _pressure), 1.0 / 3.0);
+    const auto mu = calculateMu();
 
-    const auto scalingFactors = linearAlgebra::Vec3D(linearScalingFactor);
-
-    simBox.scaleBox(scalingFactors);
+    simBox.scaleBox(mu);
 
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scaleMolecule = [&scalingFactors](auto &molecule) { molecule.scale(scalingFactors); };
+    auto scaleMolecule = [&mu](auto &molecule) { molecule.scale(mu); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
+}
+
+/**
+ * @brief calculate mu as scaling factor for Berendsen manostat (isotropic)
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D BerendsenManostat::calculateMu() const
+{
+    return linearAlgebra::Vec3D(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - mean(_pressureVector))));
+}
+
+/**
+ * @brief calculate mu as scaling factor for Berendsen manostat (semi-isotropic)
+ *
+ * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of the isotropic coupled axes and _2DAnisotropicAxis is
+ * the index of the anisotropic axis
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
+{
+    const auto p_xy = (_pressureVector[_2DIsotropicAxes[0]] + _pressureVector[_2DIsotropicAxes[1]]) / 2.0;
+    const auto p_z  = _pressureVector[_2DAnisotropicAxis];
+
+    const auto mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
+    const auto mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
+
+    linearAlgebra::Vec3D mu;
+
+    mu[_2DIsotropicAxes[0]] = mu_xy;
+    mu[_2DIsotropicAxes[1]] = mu_xy;
+    mu[_2DAnisotropicAxis]  = mu_z;
+
+    return mu;
+}
+
+/**
+ * @brief calculate mu as scaling factor for Berendsen manostat (anisotropic)
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D AnisotropicBerendsenManostat::calculateMu() const
+{
+    return linearAlgebra::Vec3D(1.0 - _compressibility * _dt / _tau * (_targetPressure - _pressureVector));
 }
