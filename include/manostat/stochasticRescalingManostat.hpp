@@ -99,6 +99,8 @@ namespace manostat
     class AnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
     {
       public:
+        using StochasticRescalingManostat::StochasticRescalingManostat;
+
         [[nodiscard]] linearAlgebra::Vec3D calculateMu(const double volume) override;
     };
 

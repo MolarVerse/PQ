@@ -108,6 +108,7 @@ namespace settings
          ***************************/
 
         [[nodiscard]] static ManostatType getManostatType() { return _manostatType; }
+        [[nodiscard]] static Isotropy     getIsotropy() { return _isotropy; }
         [[nodiscard]] static bool         isPressureSet() { return _isPressureSet; }
         [[nodiscard]] static double       getTargetPressure() { return _targetPressure; }
         [[nodiscard]] static double       getTauManostat() { return _tauManostat; }

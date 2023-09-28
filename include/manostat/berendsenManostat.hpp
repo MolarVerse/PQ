@@ -101,6 +101,8 @@ namespace manostat
     class AnisotropicBerendsenManostat : public BerendsenManostat
     {
       public:
+        using BerendsenManostat::BerendsenManostat;
+
         [[nodiscard]] linearAlgebra::Vec3D calculateMu() const override;
     };
 
