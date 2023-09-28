@@ -31,3 +31,5 @@ target_link_libraries(output
 install(TARGETS output
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+add_subdirectory(references)
