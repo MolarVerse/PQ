@@ -33,6 +33,7 @@ target_link_libraries(engine
     forceField
     intraNonBonded
     QM
+    references
 )
 
 install(TARGETS engine

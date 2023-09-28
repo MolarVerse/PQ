@@ -34,6 +34,7 @@ target_link_libraries(inputFileParser
     gtest
     forceField
     settings
+    references
 )
 
 install(TARGETS inputFileParser

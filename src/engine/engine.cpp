@@ -26,6 +26,7 @@
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
+#include "referencesOutput.hpp"              // for ReferencesOutput
 #include "stdoutOutput.hpp"                  // for StdoutOutput
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "vector3d.hpp"                      // for norm
@@ -58,6 +59,8 @@ void Engine::run()
     _timings.endTimer();
 
     const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
+
+    references::ReferencesOutput::writeReferencesFile();
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);

@@ -24,6 +24,33 @@
 
 #define _REFERENCES_OUTPUT_HPP_
 
-#include <iostream>
+#define REFERENCES_PATH_ _REFERENCES_PATH_
+
+#include <set>      // for set
+#include <string>   // for string
+
+namespace references
+{
+    /**
+     * @class ReferencesOutput
+     *
+     * @brief class to print references file
+     *
+     */
+    class ReferencesOutput
+    {
+      private:
+        static inline std::string _referenceFilesPath = REFERENCES_PATH_;
+
+        static inline std::set<std::string> _referenceFileNames = std::set<std::string>();
+        static inline std::set<std::string> _bibtexFileNames    = std::set<std::string>();
+
+      public:
+        static void writeReferencesFile();
+
+        static void addReferenceFile(const std::string &referenceFileName);
+    };
+
+}   // namespace references
 
 #endif   // _REFERENCES_OUTPUT_HPP_

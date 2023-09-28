@@ -21,3 +21,62 @@
 ******************************************************************************/
 
 #include "referencesOutput.hpp"
+
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+
+#include <algorithm>   // for for_each
+#include <fstream>     // for fstream
+#include <string>      // for string
+
+using references::ReferencesOutput;
+
+/**
+ * @brief writes the references file
+ *
+ * @param filename
+ */
+void ReferencesOutput::writeReferencesFile()
+{
+    const auto   filename = settings::OutputFileSettings::getReferenceFileName();
+    std::fstream fp(filename);
+
+    auto printReference = [&fp](const std::string &referenceFileName)
+    {
+        std::fstream referenceFile(_referenceFilesPath + referenceFileName);
+        std::string  line;
+        while (getline(referenceFile, line))
+            fp << line << '\n';
+
+        fp << "\n\n";
+        referenceFile.close();
+    };
+
+    fp << "################################################################################\n";
+    fp << "#                                                                              #\n";
+    fp << "#  This file contains all references to the used software and the used theory  #\n";
+    fp << "#                                                                              #\n";
+    fp << "################################################################################\n";
+
+    std::ranges::for_each(_referenceFileNames, printReference);
+
+    fp << "################################################################################\n";
+    fp << "#                                                                              #\n";
+    fp << "#                               BIBTEX ENTIRES                                 #\n";
+    fp << "#                                                                              #\n";
+    fp << "################################################################################\n";
+
+    std::ranges::for_each(_bibtexFileNames, printReference);
+
+    fp.close();
+}
+
+/**
+ * @brief adds a reference file to the list of reference files and bibtex files
+ *
+ * @param referenceFileName
+ */
+void ReferencesOutput::addReferenceFile(const std::string &referenceFileName)
+{
+    _referenceFileNames.insert(referenceFileName);
+    _bibtexFileNames.insert(referenceFileName + ".bib");
+}

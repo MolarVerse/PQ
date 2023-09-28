@@ -23,6 +23,8 @@
 #include "inputFileParserThermostat.hpp"
 
 #include "exceptions.hpp"           // for InputFileException, customException
+#include "references.hpp"           // for References
+#include "referencesOutput.hpp"     // for ReferencesOutput
 #include "stringUtilities.hpp"      // for toLowerCopy
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
@@ -80,16 +82,27 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
         settings::ThermostatSettings::setThermostatType("none");
 
     else if (thermostat == "berendsen")
+    {
         settings::ThermostatSettings::setThermostatType("berendsen");
+        references::ReferencesOutput::addReferenceFile(references::_BERENDSEN_FILE_);
+    }
 
     else if (thermostat == "velocity_rescaling")
+    {
         settings::ThermostatSettings::setThermostatType("velocity_rescaling");
+        references::ReferencesOutput::addReferenceFile(references::_VELOCITY_RESCALING_FILE_);
+    }
 
     else if (thermostat == "langevin")
+    {
         settings::ThermostatSettings::setThermostatType("langevin");
+    }
 
     else if (thermostat == "nh-chain")
+    {
         settings::ThermostatSettings::setThermostatType("nh-chain");
+        references::ReferencesOutput::addReferenceFile(references::_NOSE_HOOVER_CHAIN_FILE_);
+    }
 
     else
         throw customException::InputFileException(format("Invalid thermostat \"{}\" at line {} in input file. Possible options "

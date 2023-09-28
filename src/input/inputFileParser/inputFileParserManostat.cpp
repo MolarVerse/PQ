@@ -24,6 +24,8 @@
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "references.hpp"         // for ReferencesOutput
+#include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
 
 #include <cstddef>       // for size_t
@@ -75,7 +77,10 @@ void InputFileParserManostat::parseManostat(const std::vector<std::string> &line
         settings::ManostatSettings::setManostatType("none");
 
     else if (manostat == "berendsen")
+    {
         settings::ManostatSettings::setManostatType("berendsen");
+        references::ReferencesOutput::addReferenceFile(references::_BERENDSEN_FILE_);
+    }
 
     else if (manostat == "stochastic_rescaling")
         settings::ManostatSettings::setManostatType("stochastic_rescaling");
