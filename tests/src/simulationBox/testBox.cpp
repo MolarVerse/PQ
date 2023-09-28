@@ -32,21 +32,21 @@ using namespace simulationBox;
 
 TEST_F(TestBox, setBoxDimensions)
 {
-    linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     _box->setBoxDimensions(boxDimensions);
     EXPECT_EQ(_box->getBoxDimensions(), boxDimensions);
 }
 
 TEST_F(TestBox, setBoxAngles)
 {
-    linearAlgebra::Vec3D boxAngles = {10.0, 20.0, 30.0};
+    const linearAlgebra::Vec3D boxAngles = {10.0, 20.0, 30.0};
     _box->setBoxAngles(boxAngles);
     EXPECT_EQ(_box->getBoxAngles(), boxAngles);
 }
 
 TEST_F(TestBox, setDensity)
 {
-    double density = 1.0;
+    const double density = 1.0;
     _box->setDensity(density);
     EXPECT_EQ(_box->getDensity(), density);
 }

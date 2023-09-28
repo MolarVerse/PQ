@@ -10,16 +10,16 @@ AnalysisRunner &TrajToComInFileReader::read()
 {
     parseTomlFile();
 
-    auto xyzFiles = parseXYZFiles();
+    const auto xyzFiles = parseXYZFiles();
     _runner.setXyzFiles(xyzFiles);
 
-    auto atomIndices = parseAtomIndices();
+    const auto atomIndices = parseAtomIndices();
     _runner.setAtomIndices(atomIndices);
 
-    auto numberOfAtomsPerMolecule = parseNumberOfAtomsPerMolecule();
+    const auto numberOfAtomsPerMolecule = parseNumberOfAtomsPerMolecule();
     _runner.setNumberOfAtomsPerMolecule(numberOfAtomsPerMolecule);
 
-    auto outputXYZ = parseXYZOutputFile();
+    const auto outputXYZ = parseXYZOutputFile();
     _runner.setXyzOutFile(outputXYZ);
 
     return _runner;
