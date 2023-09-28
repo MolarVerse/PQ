@@ -69,7 +69,7 @@ void RingPolymerSetup::setup()
     if (settings::FileSettings::isRingPolymerStartFileNameSet())
     {
         std::cout << "read ring polymer restart file" << std::endl;
-        readInput::ringPolymer::readRingPolymerRestartFile(_engine);
+        input::ringPolymer::readRingPolymerRestartFile(_engine);
     }
     else
     {

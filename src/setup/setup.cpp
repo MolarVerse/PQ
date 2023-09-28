@@ -49,7 +49,7 @@
 #include <iostream>   // for operator<<, basic_ostream, cout
 
 using namespace engine;
-using namespace readInput;
+using namespace input;
 
 /**
  * @brief setup the engine
@@ -98,7 +98,7 @@ void setup::readFiles(Engine &engine)
     parameterFile::readParameterFile(engine);
 
     std::cout << "Reading intra non bonded file..." << '\n';
-    readInput::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBonded::readIntraNonBondedFile(engine);
 }
 
 /**

@@ -22,7 +22,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-    readInput
+    input
     topologyFileReader
     restartFileReader
     parameterFileReader
