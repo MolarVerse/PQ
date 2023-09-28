@@ -15,7 +15,7 @@ target_link_libraries(references
 
 target_compile_definitions(references
     PUBLIC
-    _REFERENCES_PATH_=\"${CMAKE_BINARY_DIR}/include/output/references/referenceFiles\"
+    _REFERENCES_PATH_=\"${CMAKE_BINARY_DIR}/src/output/references/referenceFiles\"
 )
 
 add_custom_command(TARGET references POST_BUILD

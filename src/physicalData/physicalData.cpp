@@ -34,6 +34,8 @@ using namespace physicalData;
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
+ * @Todo: check performs and usability of this function
+ *
  * @param simulationBox
  */
 void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
@@ -62,11 +64,13 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 
     std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
-    _momentum *= constants::_FS_TO_S_;
-
     _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
+
+    _angularMomentum = simulationBox.calculateAngularMomentum(_momentum) *= constants::_FS_TO_S_;
+
+    _momentum *= constants::_FS_TO_S_;
 }
 
 /**

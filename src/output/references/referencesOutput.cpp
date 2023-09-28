@@ -26,6 +26,7 @@
 
 #include <algorithm>   // for for_each
 #include <fstream>     // for fstream
+#include <iostream>    // for cout
 #include <string>      // for string
 
 using references::ReferencesOutput;
@@ -37,13 +38,16 @@ using references::ReferencesOutput;
  */
 void ReferencesOutput::writeReferencesFile()
 {
-    const auto   filename = settings::OutputFileSettings::getReferenceFileName();
-    std::fstream fp(filename);
+    const auto    filename = settings::OutputFileSettings::getReferenceFileName();
+    std::ofstream fp(filename);
+
+    std::cout << "Writing references file: " << filename << '\n';
+    std::cout << "path: " << _referenceFilesPath << '\n';
 
     auto printReference = [&fp](const std::string &referenceFileName)
     {
-        std::fstream referenceFile(_referenceFilesPath + referenceFileName);
-        std::string  line;
+        std::ifstream referenceFile(_referenceFilesPath + "/" + referenceFileName);
+        std::string   line;
         while (getline(referenceFile, line))
             fp << line << '\n';
 
@@ -56,14 +60,17 @@ void ReferencesOutput::writeReferencesFile()
     fp << "#  This file contains all references to the used software and the used theory  #\n";
     fp << "#                                                                              #\n";
     fp << "################################################################################\n";
+    fp << '\n';
 
     std::ranges::for_each(_referenceFileNames, printReference);
 
+    fp << '\n';
     fp << "################################################################################\n";
     fp << "#                                                                              #\n";
     fp << "#                               BIBTEX ENTIRES                                 #\n";
     fp << "#                                                                              #\n";
     fp << "################################################################################\n";
+    fp << '\n';
 
     std::ranges::for_each(_bibtexFileNames, printReference);
 

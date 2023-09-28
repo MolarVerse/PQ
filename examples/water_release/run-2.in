@@ -42,8 +42,8 @@
 # JOB
 #-----------------------------------------
    jobtype     = mm-md; timestep    = 0.5;
-   nstep       = 10;
-   freset_angular = 1;
+   nstep       = 2;
+   freset = 1;
    #nscale = 100;
    output_freq = 1;
 #   init_velocities = true;
