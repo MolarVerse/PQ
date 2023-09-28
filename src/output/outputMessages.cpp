@@ -67,13 +67,16 @@ std::string output::header()
  */
 std::string output::endedNormally()
 {
-    const std::string endedNormally_message = R"(
+    const std::string endedNormally_message = std::format(R"(
+{}For citation please refer to the ".ref" file.
+
 *************************************************************************
 *                                                                       *
 *                      pimd-qmcf ended normally                         *
 *                                                                       *
 *************************************************************************
-)";
+)",
+                                                          _INFO_);
 
     return endedNormally_message;
 }

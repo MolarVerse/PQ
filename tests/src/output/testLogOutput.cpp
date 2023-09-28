@@ -98,6 +98,10 @@ TEST_F(TestLogOutput, writeEndedNormally)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
+    EXPECT_EQ(line, "INFO:    For citation please refer to the \".ref\" file.");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
     EXPECT_EQ(line, R"(*************************************************************************)");
     getline(file, line);
     EXPECT_EQ(line, R"(*                                                                       *)");

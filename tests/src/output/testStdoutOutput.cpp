@@ -100,6 +100,10 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
+    EXPECT_EQ(line, "INFO:    For citation please refer to the \".ref\" file.");
+    getline(sstream, line);
+    EXPECT_EQ(line, "");
+    getline(sstream, line);
     EXPECT_EQ(line, R"(*************************************************************************)");
     getline(sstream, line);
     EXPECT_EQ(line, R"(*                                                                       *)");

@@ -65,6 +65,8 @@ namespace settings
 
         static void setOutputFrequency(const size_t outputFreq);
 
+        [[nodiscard]] static std::string getReferenceFileName();
+
         /***************************
          * standard setter methods *
          ***************************/

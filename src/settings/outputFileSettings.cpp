@@ -45,3 +45,13 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
     else
         _outputFrequency = outputFreq;
 }
+
+/**
+ * @brief returns the reference file name
+ *
+ * @details in order to avoid overwriting the reference file and not to set it in the input file - the reference file name is set
+ * to the log file name + ".ref"
+ *
+ * @param restartFileName
+ */
+std::string OutputFileSettings::getReferenceFileName() { return _logFileName + ".ref"; }
