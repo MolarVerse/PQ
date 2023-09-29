@@ -50,10 +50,6 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << "$periodic 3\n";   // note 3 is for 3D periodicity and hardcoded for now
-    coordsFile << "$cell angs\n";
-    coordsFile << box.getBoxDimensions() << " " << box.getBoxAngles() << "\n";
-
     coordsFile << "$coord\n";
     for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms(); i < numberOfAtoms; ++i)
     {
@@ -80,7 +76,7 @@ void DFTBPlusRunner::execute()
     const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
 
     if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format("DFTB+ script file \"{}\" does not exist.", scriptFileName));
+        throw customException::InputFileException(std::format("Turbomole script file \"{}\" does not exist.", scriptFileName));
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
