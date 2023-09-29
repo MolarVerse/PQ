@@ -43,7 +43,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     ASSERT_THROW_MSG(parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
                      customException::InputFileException,
-                     "Invalid qm_prog \"notAMethod\" in input file - possible values are: dftbplus")
+                     "Invalid qm_prog \"notAMethod\" in input file - possible values are: dftbplus, pyscf, turbomole")
 }
 
 TEST_F(TestInputFileReader, parseQMScript)
