@@ -83,7 +83,10 @@ void InputFileParserManostat::parseManostat(const std::vector<std::string> &line
     }
 
     else if (manostat == "stochastic_rescaling")
+    {
         settings::ManostatSettings::setManostatType("stochastic_rescaling");
+        references::ReferencesOutput::addReferenceFile(references::_STOCHASTIC_RESCALING_FILE_);
+    }
 
     else
         throw customException::InputFileException(

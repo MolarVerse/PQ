@@ -96,6 +96,7 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
     else if (thermostat == "langevin")
     {
         settings::ThermostatSettings::setThermostatType("langevin");
+        references::ReferencesOutput::addReferenceFile(references::_LANGEVIN_FILE_);
     }
 
     else if (thermostat == "nh-chain")
