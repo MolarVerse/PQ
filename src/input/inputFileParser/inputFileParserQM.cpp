@@ -60,11 +60,16 @@ void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElemen
 
     if ("dftbplus" == method)
         settings::QMSettings::setQMMethod("dftbplus");
+
     else if ("pyscf" == method)
         settings::QMSettings::setQMMethod("pyscf");
+
+    else if ("turbomole" == method)
+        settings::QMSettings::setQMMethod("turbomole");
+
     else
-        throw customException::InputFileException(
-            std::format("Invalid qm_prog \"{}\" in input file - possible values are: dftbplus", lineElements[2]));
+        throw customException::InputFileException(std::format(
+            "Invalid qm_prog \"{}\" in input file - possible values are: dftbplus, pyscf, turbomole", lineElements[2]));
 }
 
 /**

@@ -22,11 +22,12 @@
 
 #include "qmSetup.hpp"
 
-#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
-#include "exceptions.hpp"       // for InputFileException
-#include "pyscfRunner.hpp"      // for PySCFRunner
-#include "qmSettings.hpp"       // for QMMethod, QMSettings
-#include "qmmdEngine.hpp"       // for QMMDEngine
+#include "dftbplusRunner.hpp"    // for DFTBPlusRunner
+#include "exceptions.hpp"        // for InputFileException
+#include "pyscfRunner.hpp"       // for PySCFRunner
+#include "qmSettings.hpp"        // for QMMethod, QMSettings
+#include "qmmdEngine.hpp"        // for QMMDEngine
+#include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #include <string_view>   // for string_view
 
@@ -56,6 +57,9 @@ void QMSetup::setup()
 
     else if (method == settings::QMMethod::PYSCF)
         _engine.setQMRunner(QM::PySCFRunner());
+
+    else if (method == settings::QMMethod::TURBOMOLE)
+        _engine.setQMRunner(QM::TurbomoleRunner());
 
     else
         throw customException::InputFileException(
