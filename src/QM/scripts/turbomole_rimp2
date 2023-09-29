@@ -1,0 +1,415 @@
+#!/usr/bin/perl
+#
+#  qmcf_calc.turbomole_mp2
+#
+# + Interface between QMCFC and Turbomole
+# + initializes QM run: define
+# + modification of the control file to run rimp2 using 
+#     Turbomoles 'ricc2' module
+# + runs QM calculation: dscf, ricc2
+# + etracts data - energy, gradient, pointcharges
+#
+# + check if hotspot is changed ($changed=[0,1])
+#   if YES ($changed == 1)
+#     + remove old turbomole files
+#     + make tm_define.in from tm_define.template
+#     + check the pointcharge scheme ($pointcharges [0 mulliken, 1 loewdin, 2 nbo])
+#     + inset the charge
+#     + run define with tm_define.in 
+#     + insert point-charges from mm_pointcharges to control file
+#     + run dscf
+#     + check if DFT orbitals are employed for the guess
+#       if YES ($guess_mo == 1)
+#         + run define with tm_define.off
+#         + add keywords to control file
+#         + rerun dscf
+#       if NO  ($changed == 0)
+#         + remove '$pop' entry from control file
+#         + remove previous point-charges from the control file
+#         + insert new point-charges from mm_pointcharges to control file
+#         + run dscf
+# + add '$pop' entry from control file
+# + run ricc2
+# + extract forces and write energy and forces to qm_forces
+# + extract charges and write them to wm_charges
+# + summary and cleanup
+# + exit 
+#
+
+
+use strict;
+
+# subroutines
+use subs qw(insert_pointcharges);
+use subs qw(remove_pointcharges); 
+
+
+# script's name
+my $progname = $0;
+$progname =~ s{^.*/}{};
+
+# input data from the QMCFC programm
+my $charge             = $ARGV[0];             # charge of the qm region
+my $changed            = $ARGV[1];             # flag if define has to be run
+my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
+my $pointcharges       = $ARGV[3];             # pointcharge scheme
+my $nprocessors        = $ARGV[4];             # number of processors
+
+# various variables
+my $line;                                      # helper variable - gradient
+my $flag = undef;                              # helper variable - moloch
+my $start_flag         = "";                   # helper variable - moloch
+my $stop_flag          = "";                   # helper variable - moloch
+my $energy;                                    # QM energy
+my $control_contents   = "";                   # helper variable - control file modifications
+my $tm_out             = "";                   # output of define, dscf, and grad
+my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
+  '\s+iterations';		               # energy search string
+my $n_mm_pointcharges;                         # number of pointcharges variable                    
+
+# files and commands
+my $qm_coords            = "coord";              # coordinate file
+my $mm_pointcharges      = "mm_pointcharges";    # coordinates of pointcharges
+my $dscf_exe             = "dscf";               # tm modul for scf calculation
+my $ricc2_exe            = "ricc2";  	         # tm modul for RICC2 energy, gradients and charges
+my $define_template      = "tm_define.template"; # must exist before you start!
+my $control_file         = "control";            # tm control file
+my $energy_file          = "energy";             # tm output energy
+my $gradient_file        = "gradient";           # tm output gradients
+my $moloch_out           = "moloch.out";         # tm output population analysis   
+
+my $qm_forces            = "qm_forces";          # result file: energy plus forces of all qm atoms
+my $qm_charges           = "qm_charges";         # restul file: partial charges of all qm atoms
+                                   
+my $out_file             = "tm.out";	         # summary file
+my $out_file_prev        = "tm.out.prev";        # summary file - previous step
+my $qm_coords_prev       = "coord.prev";         # summary file - coordinates previous step
+my $mm_pointcharges_prev =  "mm_pointcharges.prev";
+
+#$n_mm_pointcharges = `wc -l mm_pointcharges`;
+$n_mm_pointcharges = 0;
+
+# check if molecules have been exchanged between QM and MM region
+if ($changed == 1)
+{
+    unlink "control";
+    unlink "basis";
+    unlink "mos";
+    unlink "alpha";    
+    unlink "beta"; 
+    unlink "tmp.input";      
+
+
+# create tm_define.in from tm_define.template  
+# and insert QM charge 
+    open (TM_DEFINE_TEMPLATE, "< tm_define.template") or
+         die "\n\n\t (-) $progname: Error opening file 'tm_define.template'\n";
+
+    open (TM_DEFINE_IN, "> tm_define.in") or
+         die "\n\n\t (-) $progname: Error opening file 'tm_define.in'\n";
+
+    while (<TM_DEFINE_TEMPLATE>) 
+    {
+       s{__CHARGE__}{$charge};
+       print TM_DEFINE_IN;
+    }
+
+   close (TM_DEFINE_TEMPLATE);
+   close (TM_DEFINE_IN);  
+
+
+# execute the define	
+   $tm_out = `define < tm_define.in 2>&1 | tee $out_file`;
+
+
+  open (CONTROL, "< $control_file") or
+     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  #while (<CONTROL>) 
+  #{
+  #   s{\$end}{\$denconv .1d-6\n\$ricc2\n  geoopt model=mp2\n\$tmpdir /ram/ricc2-tmp/\n\$end};
+  #   s{\$maxcor       60}{\$maxcor     450};
+  #   $control_contents .= $_;
+  #}
+  #close (CONTROL);
+
+  #open (CONTROL, "> $control_file") or
+  #       die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+  #print CONTROL $control_contents;
+  #close (CONTROL);
+
+  if ($n_mm_pointcharges != 0)
+  {     
+    # insert pointcharges in the control file	
+      insert_pointcharges; 
+  }
+    
+# run dscf step
+  $tm_out = `$dscf_exe $nprocessors 2>&1 | tee -a $out_file`;	 
+  exit 1 if ($tm_out !~ /$converged_string/);
+
+  if ($guess_mo == 1)
+  {	
+      # switch off dft and rerun dscf
+
+      open (TM_DEFINE_OFF, "< tm_define.off") or
+          die "\n\n\t (-) $progname: Error opening file 'tm_define.off'\n";
+      close (TM_DEFINE_OFF);
+
+      $tm_out = `define < tm_define.off 2>&1 | tee -a $out_file`;
+           
+      $tm_out = `$dscf_exe $nprocessors 2>&1 | tee -a $out_file`;	
+      exit 1 if ($tm_out !~ /$converged_string/);
+  }
+}
+else
+{ 
+   # no molecules was exchanged between QM and MM region
+   # no guess required - employing MOs of the previous step
+
+   # remove "$pop" from control file 
+   # no population analysis in the dscf run 
+   $control_contents   = "";
+
+  open (CONTROL, "< $control_file") or
+     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  while (<CONTROL>) 
+  {
+     s{\$pop\n}{};
+     $control_contents .= $_;
+  }
+  close (CONTROL);
+
+  open (CONTROL, "> $control_file") or
+         die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  print CONTROL $control_contents;
+   close (CONTORL);
+   
+  if ($n_mm_pointcharges != 0)
+  {  
+   # insert pointcharges in the control file	
+     insert_pointcharges; 
+  }
+   
+   # execute dscf
+    $tm_out = `$dscf_exe $nprocessors 2>&1 | tee $out_file`;	
+    exit 1 if ($tm_out !~ /$converged_string/);
+}
+
+ if ($n_mm_pointcharges != 0)
+ { 
+   # pointcharges are not included for the gradient calculation
+   # delete pointcharges	
+   remove_pointcharges;
+ }
+
+# insert "$pop" keyword to turn on
+# population analysis for the rimp2 run 
+
+$control_contents = "";
+
+open (CONTROL, "< $control_file") or
+   die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+while (<CONTROL>) 
+{
+   s{\$ricc2}{\$pop\n\$ricc2};
+   $control_contents .= $_;
+}
+close (CONTORL);
+
+open (CONTROL, "> $control_file") or
+   die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+print CONTROL $control_contents;
+close (CONTORL);
+
+unlink $gradient_file;
+
+# execute the ricc2
+$tm_out = `ricc2 2>&1 | tee -a $out_file`;
+exit 1 if ($tm_out !~ /all done/);
+
+# delete scratch directories
+#`rm -r /ram/ricc2-tmp*`;
+
+# extract the QM energy
+open (ENERGY, "< $energy_file") or
+  die "\n\n\t (-) $progname: Error opening file '$energy_file'\n";
+
+# get energy
+while (<ENERGY>) 
+   {
+     next if /\s*\$/;            # ignore control words
+     $line = $_;
+   }
+# QM energy is HF energy plus RIMP2 correction
+$energy = (split ' ', $line)[1] + (split ' ', $line)[4];
+close (ENERGY);
+
+
+open (FORCES, "> $qm_forces") or
+  die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+
+# write QM energy to qm_forces
+print FORCES "$energy\n";
+
+# extract gradient
+open (GRADIENT, "< $gradient_file") or
+  die "\n\n\t (-) $progname: Error opening file '$gradient_file'\n";
+
+while (<GRADIENT>) {
+  next if /^\s*\$grad/;
+  next if /^\s*cycle =/;
+  last if /^\s*\$end/;
+
+  # change exponential D into exponential E
+  y/D/E/;
+
+  my @gradient = split;
+
+ # write  gradient to qm_forces
+  if ($#gradient == 2) {
+    printf FORCES ("%20.14G  %20.14G  %20.14G\n",
+		   $gradient[0], $gradient[1], $gradient[2]);
+  }
+}
+
+close (FORCES);
+close (GRADIENT);
+
+
+# extract qm partial charges
+
+# initialize the correct flags
+
+open(OUT , "< $out_file") or
+   die "\n\n\t (-) $progname: Error opening file '$moloch_out'\n";
+     
+open(CHARGE, "> $qm_charges") or 
+   die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
+
+if ($pointcharges == 0)
+{
+  # mulliken
+    $start_flag = "atom      charge";
+    $stop_flag  = "from total density versus population analysis";
+
+
+  while (<OUT>) 
+  {
+    last if ($_ =~ m/$stop_flag/);
+    $flag = 1 if ($_ =~ m/$start_flag/);
+
+    if ($flag && m/\s+\d+(\S+)\s+(\S+)/) 
+    {
+       my $line = $_;
+       $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
+       my @item = split(/\s+/, $line);
+       printf CHARGE ("%s  %12.5f\n", @item);
+    }
+  }
+}
+elsif ($pointcharges == 1)
+{
+ die "\n\n\t (-) $progname: Error - Loewdin population analysis not implemented - exiting ...";
+}
+
+elsif ($pointcharges == 2)
+{
+  # nbo
+    $start_flag = "cartesian gradients written onto";
+    $stop_flag  = " Exporting ground state density";
+
+  while (<OUT>) 
+  {
+    last if ($_ =~ m/$stop_flag/);
+    $flag = 1 if ($_ =~ m/$start_flag/);
+
+    if ( $flag && m/^\s*\d+\s+(\s+)(\S+)/) 
+    {
+       my $line = $_;
+       $line =~ s/^\s*\d+\s+(\S+)\s+(\S+)/$1 $2/;
+       my @item = split(/\s+/, $line);
+       printf CHARGE ("%s  %12.5f\n", @item);
+
+     }
+  }
+}
+
+close(OUT);
+close(CHARGE);
+
+# create the "log-file" for the last run
+`mv $out_file  $out_file_prev`;
+`mv $qm_coords $qm_coords_prev`;
+#`mv $mm_pointcharges $mm_pointcharges_prev`;
+
+
+exit 0;
+
+#### SUBROUTINES ###
+
+# append point-charges keyword and values before the $end of the $control_file
+sub insert_pointcharges {
+  my $control_contents = "";
+
+  open (CONTROL, "< $control_file") or
+    die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  while (<CONTROL>) {
+    last if /^\s*\$end/;
+
+    $control_contents .= $_;
+  }
+  close (CONTROL);
+
+
+  open (CONTROL, "> $control_file") or
+    die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  open (PNT_CHARGE, "< $mm_pointcharges") or
+    die "\n\n\t (-) $progname: Error opening file '$mm_pointcharges'\n";
+
+  print CONTROL $control_contents;
+  print CONTROL "\$point_charges\n";
+
+  while (<PNT_CHARGE>) {
+    my @line = split;
+    printf CONTROL ("%14.8f %14.8f %14.8f %10.6f\n",
+                    $line[0], $line[1],$line[2], $line[3]);
+  }
+  close (PNT_CHARGE);
+
+  print CONTROL "\$end\n";
+
+  close (CONTROL);
+}
+
+# delete pointcharges in the $control_file
+sub remove_pointcharges {
+  my $contents = undef;
+  my $flag = undef;
+  open (CONTROL, "< $control_file") or
+        die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
+  while(<CONTROL>) {
+    $flag = 1 if(m/^\$point_charges/);
+    if ($flag) {
+      $flag = undef if ($_ =~ m/^\$/ && $_ !~ m/^\$point_charges/);
+    }
+    unless ($flag) {
+      $contents .= $_;
+    }
+  }
+  close (CONTROL);
+
+  open (CONTROL, "> $control_file") or 
+      die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+  print CONTROL $contents;
+  close (CONTROL);
+}
+
+

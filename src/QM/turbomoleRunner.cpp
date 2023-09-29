@@ -23,6 +23,7 @@
 #include "turbomoleRunner.hpp"
 
 #include "atom.hpp"              // for Atom
+#include "constants.hpp"         // for constants
 #include "exceptions.hpp"        // for InputFileException
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
@@ -45,9 +46,9 @@ using QM::TurbomoleRunner;
  *
  * @param box
  */
-void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
+void TurbomoleRunner::writeCoordsFile(simulationBox::SimulationBox &box)
 {
-    const std::string fileName = "coords";
+    const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
@@ -55,10 +56,11 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     {
         const auto &atom = box.getQMAtom(i);
 
-        coordsFile << std::format("\t{:16.12f}\t{:16.12f}\t{:16.12f}\t{}\n",
-                                  atom.getPosition()[0],
-                                  atom.getPosition()[1],
-                                  atom.getPosition()[2],
+        // turbomole does not support tabs in the coord file
+        coordsFile << std::format("   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
+                                  atom.getPosition()[0] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
+                                  atom.getPosition()[1] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
+                                  atom.getPosition()[2] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
                                   atom.getName());
     }
 
@@ -68,10 +70,10 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
 }
 
 /**
- * @brief TODO: not yet implemented
+ * @brief executes the external qm program
  *
  */
-void DFTBPlusRunner::execute()
+void TurbomoleRunner::execute()
 {
     const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
 

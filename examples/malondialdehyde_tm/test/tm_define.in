@@ -1,0 +1,54 @@
+
+
+a coord
+*
+no
+
+b all 6-31G**
+
+
+
+
+*
+eht
+y
+0
+y
+
+
+scf
+thi
+99999
+99999
+conv
+8
+iter
+100
+
+
+
+
+cc2
+freeze
+*
+cbas
+
+
+
+b all SVP
+
+
+
+*
+ricc2
+geoopt mp2
+*
+memory
+1000
+
+*
+
+
+*
+
+

@@ -38,7 +38,11 @@ std::string settings::string(const QMMethod method)
     switch (method)
     {
     case QMMethod::DFTBPLUS: return "DFTBPLUS";
+
     case QMMethod::PYSCF: return "PYSCF";
+
+    case QMMethod::TURBOMOLE: return "TURBOMOLE";
+
     default: return "none";
     }
 }
@@ -54,8 +58,13 @@ void QMSettings::setQMMethod(const std::string_view &method)
 
     if ("dftbplus" == method)
         _qmMethod = QMMethod::DFTBPLUS;
+
     else if ("pyscf" == method)
         _qmMethod = QMMethod::PYSCF;
+
+    else if ("turbomole" == method)
+        _qmMethod = QMMethod::TURBOMOLE;
+
     else
         _qmMethod = QMMethod::NONE;
 }

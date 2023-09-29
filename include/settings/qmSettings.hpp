@@ -38,7 +38,8 @@ namespace settings
     {
         NONE,
         DFTBPLUS,
-        PYSCF
+        PYSCF,
+        TURBOMOLE
     };
 
     std::string string(const QMMethod method);
