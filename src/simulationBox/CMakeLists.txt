@@ -1,5 +1,4 @@
 add_library(simulationBox
-    box.cpp
     simulationBox.cpp
     molecule.cpp
     moleculeType.cpp
@@ -17,6 +16,7 @@ target_include_directories(simulationBox
 target_link_libraries(simulationBox
     PUBLIC
     linearAlgebra
+    box
     exceptions
 )
 

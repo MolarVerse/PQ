@@ -1,7 +1,5 @@
 set(source_files
-    testMolecule.cpp
-    testSimulationBox.cpp
-    testCelllist.cpp
+    testBox.cpp
 )
 
 foreach(source_file ${source_files})
@@ -10,12 +8,11 @@ foreach(source_file ${source_files})
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
-        ${PROJECT_SOURCE_DIR}/tests/include/simulationBox
+        ${PROJECT_SOURCE_DIR}/tests/include/box
     )
     target_link_libraries(${test_name}
         PRIVATE
-        simulationBox
-        engine
+        box
         linearAlgebra
         gtest
         gtest_main
@@ -28,18 +25,17 @@ foreach(source_file ${source_files})
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
 
-    set_property(TEST ${test_name} PROPERTY LABELS simulationBox)
+    set_property(TEST ${test_name} PROPERTY LABELS box)
 endforeach()
 
 if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
-        NAME coverage_simulationBox
+        NAME coverage_box
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
-        # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/simulationBox
         EXECUTABLE "ctest"
-        EXECUTABLE_ARGS "-L;simulationBox"
+        EXECUTABLE_ARGS "-L;box"
         OUTPUT_PATH "coverage"
     )
 endif()

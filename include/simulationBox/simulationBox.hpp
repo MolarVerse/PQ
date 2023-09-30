@@ -127,8 +127,8 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
-        void addAtom(std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
-        void addQMAtom(std::shared_ptr<Atom> atom) { _qmAtoms.push_back(atom); }
+        void addAtom(const std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
+        void addQMAtom(const std::shared_ptr<Atom> atom) { _qmAtoms.push_back(atom); }
         void addMolecule(const Molecule &molecule) { _molecules.push_back(molecule); }
         void addMoleculeType(const MoleculeType &molecule) { _moleculeTypes.push_back(molecule); }
 
