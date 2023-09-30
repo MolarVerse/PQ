@@ -280,7 +280,6 @@ void SimulationBoxSetup::checkBoxSettings()
     {
         const auto boxDimensions = _engine.getSimulationBox().calculateBoxDimensionsFromDensity();
         _engine.getSimulationBox().setBoxDimensions(boxDimensions);
-        _engine.getSimulationBox().setBoxAngles({90.0, 90.0, 90.0});
         _engine.getSimulationBox().setVolume(_engine.getSimulationBox().calculateVolume());
     }
     else if (!settings::SimulationBoxSettings::getDensitySet())

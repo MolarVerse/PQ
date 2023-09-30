@@ -24,12 +24,14 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include "atom.hpp"           // for Atom
-#include "box.hpp"            // for Box
-#include "defaults.hpp"       // for _COULOMB_CUT_OFF_DEFAULT_
-#include "exceptions.hpp"     // for ExceptionType
-#include "molecule.hpp"       // for Molecule
-#include "moleculeType.hpp"   // for MoleculeType
+#include "atom.hpp"              // for Atom
+#include "box.hpp"               // for Box
+#include "defaults.hpp"          // for _COULOMB_CUT_OFF_DEFAULT_
+#include "exceptions.hpp"        // for ExceptionType
+#include "molecule.hpp"          // for Molecule
+#include "moleculeType.hpp"      // for MoleculeType
+#include "orthorhombicBox.hpp"   // for OrthorhombicBox
+#include "triclinicBox.hpp"      // for TriclinicBox
 
 #include <map>        // for map
 #include <optional>   // for optional
@@ -84,7 +86,7 @@ namespace simulationBox
 
         linearAlgebra::Vec3D _centerOfMass = linearAlgebra::Vec3D{0.0};
 
-        Box _box;
+        std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<std::shared_ptr<Atom>> _qmAtoms;
@@ -175,30 +177,35 @@ namespace simulationBox
         void setDensity(const double density) { _density = density; }
         void setCoulombRadiusCutOff(const double rcCutOff) { _coulombRadiusCutOff = rcCutOff; }
 
+        template <typename T>
+        void setBox(const T &box)
+        {
+            _box = std::make_shared<T>(box);
+        }
+
         /**********************************************
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(linearAlgebra::Vec3D &position) const { _box.applyPBC(position); }
-        void scaleBox(const linearAlgebra::Vec3D &scaleFactors) { _box.scaleBox(scaleFactors); }
+        void applyPBC(linearAlgebra::Vec3D &position) const { _box->applyPBC(position); }
+        void scaleBox(const linearAlgebra::Vec3D &scaleFactors) const { _box->scaleBox(scaleFactors); }
 
-        [[nodiscard]] double               calculateVolume() { return _box.calculateVolume(); }
-        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity()
+        [[nodiscard]] double               calculateVolume() const { return _box->calculateVolume(); }
+        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity() const
         {
-            return _box.calculateBoxDimensionsFromDensity(_totalMass, _density);
+            return dynamic_cast<OrthorhombicBox &>(*_box).calculateBoxDimensionsFromDensity(_totalMass, _density);
         }
 
-        [[nodiscard]] double getMinimalBoxDimension() const { return _box.getMinimalBoxDimension(); }
-        [[nodiscard]] bool   getBoxSizeHasChanged() const { return _box.getBoxSizeHasChanged(); }
+        [[nodiscard]] double getMinimalBoxDimension() const { return _box->getMinimalBoxDimension(); }
+        [[nodiscard]] bool   getBoxSizeHasChanged() const { return _box->getBoxSizeHasChanged(); }
 
-        [[nodiscard]] double               getVolume() const { return _box.getVolume(); }
-        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _box.getBoxDimensions(); }
-        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _box.getBoxAngles(); }
+        [[nodiscard]] double               getVolume() const { return _box->getVolume(); }
+        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _box->getBoxDimensions(); }
+        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _box->getBoxAngles(); }
 
-        void setVolume(const double volume) { _box.setVolume(volume); }
-        void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _box.setBoxDimensions(boxDimensions); }
-        void setBoxAngles(const linearAlgebra::Vec3D &boxAngles) { _box.setBoxAngles(boxAngles); }
-        void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _box.setBoxSizeHasChanged(boxSizeHasChanged); }
+        void setVolume(const double volume) const { _box->setVolume(volume); }
+        void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) const { _box->setBoxDimensions(boxDimensions); }
+        void setBoxSizeHasChanged(const bool boxSizeHasChanged) const { _box->setBoxSizeHasChanged(boxSizeHasChanged); }
     };
 
 }   // namespace simulationBox

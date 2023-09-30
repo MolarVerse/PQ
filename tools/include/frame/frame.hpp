@@ -28,9 +28,9 @@
 #include "molecule.hpp"   // for Molecule
 #include "vector3d.hpp"   // for Vec3D
 
-#include <stddef.h>   // for size_t
-#include <string>     // for string
-#include <vector>     // for vector
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 namespace frameTools
 {

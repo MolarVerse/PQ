@@ -52,9 +52,7 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         _simulationBox2 = new simulationBox::SimulationBox();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox1->setBoxAngles({90.0, 90.0, 90.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox2->setBoxAngles({90.0, 90.0, 90.0});
 
         auto molecule1_1 = simulationBox::Molecule();
         auto molecule1_2 = simulationBox::Molecule();

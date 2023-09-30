@@ -23,7 +23,8 @@
 #include "testBox.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-#include "vector3d.hpp"                      // for Vec3D, linearAlgebra
+#include "orthorhombicBox.hpp"               // for OrthorhombicBox
+#include "vector3d.hpp"                      // for Vec3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <memory>          // for allocator
@@ -37,13 +38,6 @@ TEST_F(TestBox, setBoxDimensions)
     EXPECT_EQ(_box->getBoxDimensions(), boxDimensions);
 }
 
-TEST_F(TestBox, setBoxAngles)
-{
-    const linearAlgebra::Vec3D boxAngles = {10.0, 20.0, 30.0};
-    _box->setBoxAngles(boxAngles);
-    EXPECT_EQ(_box->getBoxAngles(), boxAngles);
-}
-
 TEST_F(TestBox, calculateBoxDimensionsFromDensity)
 {
     const double               density       = 1.0 / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
@@ -55,6 +49,7 @@ TEST_F(TestBox, calculateBoxDimensionsFromDensity)
 TEST_F(TestBox, calculateVolume)
 {
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    _box                                     = new simulationBox::OrthorhombicBox();
     _box->setBoxDimensions(boxDimensions);
     EXPECT_EQ(_box->calculateVolume(), 6.0);
 }
@@ -73,6 +68,8 @@ TEST_F(TestBox, applyPeriodicBoundaryConditions)
 
 TEST_F(TestBox, scaleBox)
 {
+    _box = new simulationBox::OrthorhombicBox();
+
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     _box->setBoxDimensions(boxDimensions);
 

@@ -24,6 +24,7 @@
 
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for RstFileException
+#include "mathUtilities.hpp"           // for compare
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "vector3d.hpp"                // for Vec3D
@@ -62,16 +63,28 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
     if (std::ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
         throw customException::RstFileException("All box dimensions must be positive");
 
-    engine.getSimulationBox().setBoxDimensions(boxDimensions);
+    auto boxAngles = linearAlgebra::Vec3D{90.0, 90.0, 90.0};
 
     if (7 == lineElements.size())
     {
-        const auto boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
+        boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
 
         if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
             throw customException::RstFileException("Box angles must be positive and smaller than 90°");
+    }
 
-        engine.getSimulationBox().setBoxAngles(boxAngles);
+    if (!utilities::compare(boxAngles, linearAlgebra::Vec3D{90.0, 90.0, 90.0}, 1e-5))
+    {
+        auto box = simulationBox::TriclinicBox();
+        box.setBoxAngles(boxAngles);
+        box.setBoxDimensions(boxDimensions);
+        engine.getSimulationBox().setBox(box);
+    }
+    else
+    {
+        auto box = simulationBox::OrthorhombicBox();
+        box.setBoxDimensions(boxDimensions);
+        engine.getSimulationBox().setBox(box);
     }
 
     settings::SimulationBoxSettings::setBoxSet(true);

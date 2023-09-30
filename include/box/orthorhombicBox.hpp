@@ -20,22 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _REFERENCES_HPP_
+#ifndef _ORTHORHOMBIC_BOX_HPP_
 
-#define _REFERENCES_HPP_
+#define _ORTHORHOMBIC_BOX_HPP_
 
-namespace references
+#include "box.hpp"   // for Box
+
+namespace simulationBox
 {
-    static constexpr char _BERENDSEN_FILE_[] = "berendsen.ref";
+    /**
+     * @class OrthorhombicBox
+     *
+     * @brief This class represents the unit cell of an orthorhombic box
+     *
+     */
+    class OrthorhombicBox : public Box
+    {
+      public:
+        [[nodiscard]] double calculateVolume() override;
 
-    static constexpr char _VELOCITY_RESCALING_FILE_[] = "velocity_rescaling.ref";
+        void applyPBC(linearAlgebra::Vec3D &position) const override;
 
-    static constexpr char _NOSE_HOOVER_CHAIN_FILE_[] = "nose_hoover_chain.ref";
+        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity(const double totalMass, const double density);
+    };
 
-    static constexpr char _LANGEVIN_FILE_[] = "langevin.ref";
+}   // namespace simulationBox
 
-    static constexpr char _STOCHASTIC_RESCALING_FILE_[] = "stochastic_rescaling.ref";
-
-}   // namespace references
-
-#endif   // _REFERENCES_HPP_
+#endif   // _ORTHORHOMBIC_BOX_HPP_

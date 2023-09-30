@@ -49,7 +49,6 @@ class TestRstFileOutput : public ::testing::Test
         _simulationBox = new simulationBox::SimulationBox();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox->setBoxAngles({90.0, 90.0, 90.0});
 
         auto molecule1 = simulationBox::Molecule();
 

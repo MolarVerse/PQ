@@ -20,22 +20,42 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_BOX_H_
-
-#define _TEST_BOX_H_
-
 #include "orthorhombicBox.hpp"
 
-#include <gtest/gtest.h>
+#include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
-class TestBox : public ::testing::Test
+using simulationBox::OrthorhombicBox;
+
+/**
+ * @brief Calculate the volume of the box
+ *
+ * @return volume
+ */
+double OrthorhombicBox::calculateVolume()
 {
-  protected:
-    virtual void SetUp() { _box = new simulationBox::OrthorhombicBox(); }
+    _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
-    virtual void TearDown() { delete _box; }
+    return _volume;
+}
 
-    simulationBox::OrthorhombicBox *_box;
-};
+/**
+ * @brief applies the periodic boundary conditions
+ *
+ * @param position
+ */
+void OrthorhombicBox::applyPBC(linearAlgebra::Vec3D &position) const
+{
+    position -= _boxDimensions * round(position / _boxDimensions);
+}
 
-#endif   // _TEST_BOX_H_
+/**
+ * @brief Calculate the box dimensions from the density
+ *
+ * @return vector<double>
+ */
+linearAlgebra::Vec3D OrthorhombicBox::calculateBoxDimensionsFromDensity(const double totalMass, const double density)
+{
+    _volume = totalMass / (density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+
+    return linearAlgebra::Vec3D(::cbrt(_volume));
+}

@@ -447,6 +447,15 @@ namespace linearAlgebra
         }
 
         /**
+         * @brief calculates the cosine of the vector (for each element)
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend Vector3D<T> cos(Vector3D<T> v1) { return Vector3D<T>(cos(v1._x), cos(v1._y), cos(v1._z)); }
+
+        /**
          * @brief calculates the cosine of the angle between two vectors
          *
          * @param v1

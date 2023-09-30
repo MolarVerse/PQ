@@ -524,10 +524,25 @@ TEST(TestVector3d, crossProduct)
 /**
  * @brief tests cos for Vector3D
  *
+ */
+TEST(TestVector3D, cos)
+{
+    const auto vec1 = Vec3D(0.0, 90.0, 180.0);
+
+    auto result = cos(vec1 * M_PI / 180.0);
+
+    EXPECT_NEAR(result[0], 1.0, 1e-15);
+    EXPECT_NEAR(result[1], 0.0, 1e-15);
+    EXPECT_NEAR(result[2], -1.0, 1e-15);
+}
+
+/**
+ * @brief tests cos for two Vector3D objects
+ *
  * @details calculates the cosine of the angle between two vectors
  *
  */
-TEST(TestVector3d, cos)
+TEST(TestVector3d, cosBetweenVectors)
 {
     const auto vec1 = Vec3D(1.0, 2.0, 3.0);
     const auto vec2 = Vec3D(2.0, 3.0, 4.0);

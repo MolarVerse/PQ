@@ -47,11 +47,7 @@ class Engine
 
   public:
     Engine(const std::string_view &, const std::string_view &);
-    ~Engine()
-    {
-        for (auto inputFileReader : _inputFileReaders)
-            delete inputFileReader;
-    }
+    ~Engine() = default;
 
     void run();
     void addAnalysisRunnerKeys();

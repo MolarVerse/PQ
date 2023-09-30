@@ -24,51 +24,56 @@
 
 #define _BOX_HPP_
 
-#include "vector3d.hpp"
+#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
 {
     /**
      * @class Box
      *
-     * @brief This class stores all the information about the box.
-     *
-     * @TODO: think of a way to implement non orthogonal boxes - maybe inheritance?
+     * @brief This class represents the unit cell of a general triclinic box
      *
      */
     class Box
     {
-      private:
+      protected:
         linearAlgebra::Vec3D _boxDimensions;
-        linearAlgebra::Vec3D _boxAngles = {90.0, 90.0, 90.0};
 
         bool   _boxSizeHasChanged = false;
         double _volume;
 
       public:
-        double                             calculateVolume();
-        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity(const double totalMass, const double density);
+        virtual ~Box() = default;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const;
-        void scaleBox(const linearAlgebra::Vec3D &scalingFactors);
+        [[nodiscard]] virtual double calculateVolume()                              = 0;
+        virtual void                 applyPBC(linearAlgebra::Vec3D &position) const = 0;
+
+        void scaleBox(const linearAlgebra::Vec3D &scalingFactors);   // TODO:
+
+        /*****************************************************
+         * virtual methods that are overriden in triclinicBox *
+         ******************************************************/
+
+        [[nodiscard]] virtual linearAlgebra::Vec3D getBoxAngles() const { return linearAlgebra::Vec3D(90.0); }
+
+        virtual void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _boxDimensions = boxDimensions; }
 
         /********************
          * standard getters *
          ********************/
 
+        [[nodiscard]] bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+
+        [[nodiscard]] double getVolume() const { return _volume; }
         [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
 
         [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
-        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const { return _boxAngles; }
-        [[nodiscard]] double               getVolume() const { return _volume; }
-        [[nodiscard]] bool                 getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
         /********************
          * standard setters *
          ********************/
 
-        void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _boxDimensions = boxDimensions; }
-        void setBoxAngles(const linearAlgebra::Vec3D &boxAngles) { _boxAngles = boxAngles; }
         void setVolume(const double volume) { _volume = volume; }
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; }
     };

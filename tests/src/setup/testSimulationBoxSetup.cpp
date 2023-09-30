@@ -327,7 +327,7 @@ TEST_F(TestSetup, testSetTotalCharge)
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getTotalCharge(), -0.1);
 }
 
-TEST_F(TestSetup, testNoDensityNoBox)
+TEST_F(TestSetup, noDensityNoBox)
 {
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(false);
@@ -335,7 +335,7 @@ TEST_F(TestSetup, testNoDensityNoBox)
     ASSERT_THROW(simulationBoxSetup.checkBoxSettings(), customException::UserInputException);
 }
 
-TEST_F(TestSetup, testNoDensity)
+TEST_F(TestSetup, noDensity)
 {
     _engine->getSimulationBox().setTotalMass(6000);
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});

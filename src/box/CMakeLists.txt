@@ -1,5 +1,7 @@
 add_library(box
     box.cpp
+    orthorhombicBox.cpp
+    triclinicBox.cpp
 )
 
 target_include_directories(box
