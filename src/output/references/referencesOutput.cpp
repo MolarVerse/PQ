@@ -41,9 +41,6 @@ void ReferencesOutput::writeReferencesFile()
     const auto    filename = settings::OutputFileSettings::getReferenceFileName();
     std::ofstream fp(filename);
 
-    std::cout << "Writing references file: " << filename << '\n';
-    std::cout << "path: " << _referenceFilesPath << '\n';
-
     auto printReference = [&fp](const std::string &referenceFileName)
     {
         std::ifstream referenceFile(_referenceFilesPath + "/" + referenceFileName);

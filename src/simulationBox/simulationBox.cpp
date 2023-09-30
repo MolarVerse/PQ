@@ -44,17 +44,7 @@ using simulationBox::SimulationBox;
  */
 void SimulationBox::copy(const SimulationBox &toCopy)
 {
-    this->_waterType                        = toCopy._waterType;
-    this->_ammoniaType                      = toCopy._ammoniaType;
-    this->_degreesOfFreedom                 = toCopy._degreesOfFreedom;
-    this->_totalMass                        = toCopy._totalMass;
-    this->_coulombRadiusCutOff              = toCopy._coulombRadiusCutOff;
-    this->_box                              = toCopy._box;
-    this->_externalGlobalVdwTypes           = toCopy._externalGlobalVdwTypes;
-    this->_externalToInternalGlobalVDWTypes = toCopy._externalToInternalGlobalVDWTypes;
-
-    this->_molecules     = toCopy._molecules;
-    this->_moleculeTypes = toCopy._moleculeTypes;
+    *this = toCopy;
 
     this->_atoms.clear();
     this->_qmAtoms.clear();
@@ -300,8 +290,6 @@ void SimulationBox::calculateTotalMass()
     _totalMass = 0.0;
 
     std::ranges::for_each(_atoms, [this](const auto &atom) { _totalMass += atom->getMass(); });
-
-    _box.setTotalMass(_totalMass);
 }
 
 /**

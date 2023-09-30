@@ -44,20 +44,12 @@ TEST_F(TestBox, setBoxAngles)
     EXPECT_EQ(_box->getBoxAngles(), boxAngles);
 }
 
-TEST_F(TestBox, setDensity)
-{
-    const double density = 1.0;
-    _box->setDensity(density);
-    EXPECT_EQ(_box->getDensity(), density);
-}
-
 TEST_F(TestBox, calculateBoxDimensionsFromDensity)
 {
-    const double density = 1.0;
-    _box->setDensity(density / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
-    _box->setTotalMass(1.0);
+    const double               density       = 1.0 / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
+    const double               totalMass     = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(_box->calculateBoxDimensionsFromDensity(), boxDimensions);
+    EXPECT_EQ(_box->calculateBoxDimensionsFromDensity(totalMass, density), boxDimensions);
 }
 
 TEST_F(TestBox, calculateVolume)

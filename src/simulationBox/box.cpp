@@ -61,9 +61,9 @@ double Box::calculateVolume()
  *
  * @return vector<double>
  */
-linearAlgebra::Vec3D Box::calculateBoxDimensionsFromDensity()
+linearAlgebra::Vec3D Box::calculateBoxDimensionsFromDensity(const double totalMass, const double density)
 {
-    _volume = _totalMass / (_density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+    _volume = totalMass / (density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
 
     return linearAlgebra::Vec3D(::cbrt(_volume));
 }
