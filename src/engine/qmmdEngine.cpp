@@ -51,11 +51,17 @@ void QMMDEngine::takeStep()
 
     _integrator->firstStep(_simulationBox);
 
+    _constraints.applyShake(_simulationBox);
+
     _qmRunner->run(_simulationBox, _physicalData);
+
+    _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
     _integrator->secondStep(_simulationBox);
+
+    _constraints.applyRattle();
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 
