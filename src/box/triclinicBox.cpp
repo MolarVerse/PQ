@@ -72,3 +72,17 @@ void TriclinicBox::calculateBoxMatrix()
 
     _boxMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) - 2 * prod(cos(_boxAngles))) / sinGamma();
 }
+
+/**
+ * @brief applies the periodic boundary conditions
+ *
+ * @param position
+ */
+void TriclinicBox::applyPBC(linearAlgebra::Vec3D &position) const
+{
+    auto fractionalPosition = inverse(_boxMatrix) * position;
+
+    fractionalPosition -= round(fractionalPosition);
+
+    position = _boxMatrix * fractionalPosition;
+}

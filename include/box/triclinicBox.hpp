@@ -44,7 +44,7 @@ namespace simulationBox
       public:
         [[nodiscard]] double calculateVolume() override;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override{};
+        void applyPBC(linearAlgebra::Vec3D &position) const override;
 
         void calculateBoxMatrix();
 
