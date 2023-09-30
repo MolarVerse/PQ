@@ -44,7 +44,7 @@ inline void PotentialBruteForce::calculateForces(simulationBox::SimulationBox &s
                                                  physicalData::PhysicalData   &physicalData,
                                                  simulationBox::CellList &)
 {
-    const auto box = simBox.getBoxDimensions();
+    const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
@@ -67,7 +67,7 @@ inline void PotentialBruteForce::calculateForces(simulationBox::SimulationBox &s
                 for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j; ++atom2)
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(box, molecule1, molecule2, atom1, atom2);
+                        calculateSingleInteraction(*box, molecule1, molecule2, atom1, atom2);
 
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;

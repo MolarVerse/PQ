@@ -54,6 +54,7 @@ void TriclinicBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions)
 {
     _boxDimensions = boxDimensions;
 
+    calculateTransformationMatrix();
     calculateBoxMatrix();
 }
 
@@ -64,13 +65,29 @@ void TriclinicBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions)
 void TriclinicBox::calculateBoxMatrix()
 {
     _boxMatrix[0][0] = _boxDimensions[0];
-    _boxMatrix[0][1] = _boxDimensions[1] * cosGamma();
-    _boxMatrix[0][2] = _boxDimensions[2] * cosBeta();
+    _boxMatrix[0][1] = _boxDimensions[1] * _transformationMatrix[0][1];
+    _boxMatrix[0][2] = _boxDimensions[2] * _transformationMatrix[0][2];
 
-    _boxMatrix[1][1] = _boxDimensions[1] * sinGamma();
-    _boxMatrix[1][2] = (_boxDimensions[2] * (cosAlpha() - cosBeta() * cosGamma())) / sinGamma();
+    _boxMatrix[1][1] = _boxDimensions[1] * _transformationMatrix[1][1];
+    _boxMatrix[1][2] = _boxDimensions[2] * _transformationMatrix[1][2];
 
-    _boxMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) - 2 * prod(cos(_boxAngles))) / sinGamma();
+    _boxMatrix[2][2] = _boxDimensions[2] * _transformationMatrix[2][2];
+}
+
+/**
+ * @brief Calculate the rotation matrix
+ *
+ */
+void TriclinicBox::calculateTransformationMatrix()
+{
+    _transformationMatrix[0][0] = 1.0;
+    _transformationMatrix[0][1] = cosGamma();
+    _transformationMatrix[0][2] = cosBeta();
+
+    _transformationMatrix[1][1] = sinGamma();
+    _transformationMatrix[1][2] = (cosAlpha() - cosBeta() * cosGamma()) / sinGamma();
+
+    _transformationMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) - 2 * prod(cos(_boxAngles))) / sinGamma();
 }
 
 /**
@@ -85,4 +102,37 @@ void TriclinicBox::applyPBC(linearAlgebra::Vec3D &position) const
     fractionalPosition -= round(fractionalPosition);
 
     position = _boxMatrix * fractionalPosition;
+}
+
+/**
+ * @brief Calculate the shift vector
+ *
+ * @param shiftVector
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D TriclinicBox::calculateShiftVector(const linearAlgebra::Vec3D &shiftVector) const
+{
+    return _boxMatrix * round(inverse(_boxMatrix) * shiftVector);
+}
+
+/**
+ * @brief transform a position into the orthogonal space
+ *
+ * @param position
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &position) const
+{
+    return inverse(_transformationMatrix) * position;
+}
+
+/**
+ * @brief transform a position into the simulation space
+ *
+ * @param position
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const
+{
+    return _transformationMatrix * position;
 }

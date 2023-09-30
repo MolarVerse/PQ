@@ -41,6 +41,8 @@ namespace simulationBox
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
 
+        [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
+
         [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity(const double totalMass, const double density);
     };
 

@@ -22,7 +22,8 @@
 
 #include "molecule.hpp"
 
-#include "vector3d.hpp"
+#include "box.hpp"        // for Box
+#include "vector3d.hpp"   // for Vec3D
 
 #include <algorithm>    // for std::ranges::for_each
 #include <functional>   // for identity, equal_to
@@ -52,7 +53,7 @@ size_t Molecule::getNumberOfAtomTypes()
  *
  * @param box
  */
-void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
+void Molecule::calculateCenterOfMass(const Box &box)
 {
     _centerOfMass            = linearAlgebra::Vec3D();
     const auto positionAtom1 = _atoms[0]->getPosition();
@@ -72,7 +73,7 @@ void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
         const auto mass     = _atoms[i]->getMass();
         const auto position = _atoms[i]->getPosition();
 
-        _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));
+        _centerOfMass += mass * (position - box.calculateShiftVector(position - positionAtom1));
     }
 
     _centerOfMass /= getMolMass();

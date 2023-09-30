@@ -85,11 +85,11 @@ void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
 
     std::ranges::for_each(simBox.getAtoms(), integrate);
 
-    const auto box = simBox.getBoxDimensions();
+    const auto box = simBox.getBoxPtr();
 
     auto calculateCOM = [&box](auto &molecule)
     {
-        molecule.calculateCenterOfMass(box);
+        molecule.calculateCenterOfMass(*box);
         molecule.setAtomForcesToZero();
     };
 

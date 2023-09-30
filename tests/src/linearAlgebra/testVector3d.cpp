@@ -144,10 +144,10 @@ TEST(TestVector3d, assignmentOperator)
     vec5 = vec6;
     ASSERT_EQ(vec5, vec6);
 
-    Vec3D           vec7(0.0, 1.0, 2.0);
-    Vec3D           vec8(1.0, 2.0, 3.0);
-    Vector3D<Vec3D> vec9(vec7, vec7, vec7);
-    Vector3D<Vec3D> vec10(vec8, vec8, vec8);
+    const Vec3D           vec7(0.0, 1.0, 2.0);
+    const Vec3D           vec8(1.0, 2.0, 3.0);
+    Vector3D<Vec3D>       vec9(vec7, vec7, vec7);
+    const Vector3D<Vec3D> vec10(vec8, vec8, vec8);
 
     vec9 = vec10;
     ASSERT_EQ(vec9, vec10);

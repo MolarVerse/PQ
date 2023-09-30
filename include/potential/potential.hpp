@@ -40,6 +40,7 @@ namespace simulationBox
     class CellList;
     class Molecule;
     class SimulationBox;
+    class Box;
 }   // namespace simulationBox
 
 namespace potential
@@ -72,7 +73,7 @@ namespace potential
         virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const linearAlgebra::Vec3D &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
+            const simulationBox::Box &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
 
         template <typename T>
         void makeCoulombPotential(T p)

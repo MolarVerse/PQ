@@ -22,12 +22,16 @@
 
 #include "testMolecule.hpp"
 
+#include "orthorhombicBox.hpp"   // for OrthorhombicBox
+
 #include "gtest/gtest.h"   // for Message, TestPartResult
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
-    const linearAlgebra::Vec3D box          = {10.0, 10.0, 10.0};
-    const linearAlgebra::Vec3D centerOfMass = {1.0 / 3.0, 1.0 / 2.0, 0.0};
+    const linearAlgebra::Vec3D     boxDimensions = {10.0, 10.0, 10.0};
+    const linearAlgebra::Vec3D     centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions(boxDimensions);
 
     _molecule->calculateCenterOfMass(box);
     EXPECT_EQ(_molecule->getCenterOfMass(), centerOfMass);
@@ -40,7 +44,10 @@ TEST_F(TestMolecule, scaleAtoms)
     const linearAlgebra::Vec3D atomPosition2 = _molecule->getAtomPosition(1);
     const linearAlgebra::Vec3D atomPosition3 = _molecule->getAtomPosition(2);
 
-    _molecule->calculateCenterOfMass({10.0, 10.0, 10.0});
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    _molecule->calculateCenterOfMass(box);
 
     const auto                 centerOfMassBeforeScaling = _molecule->getCenterOfMass();
     const linearAlgebra::Vec3D shift                     = centerOfMassBeforeScaling * (scale - 1.0);

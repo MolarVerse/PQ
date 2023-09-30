@@ -59,7 +59,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = calculateMu();
+    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu());
 
     simBox.scaleBox(mu);
 

@@ -311,8 +311,7 @@ void SimulationBox::calculateCenterOfMass()
  */
 void SimulationBox::calculateCenterOfMassMolecules()
 {
-    std::ranges::for_each(_molecules,
-                          [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(box->getBoxDimensions()); });
+    std::ranges::for_each(_molecules, [&box = _box](Molecule &molecule) { molecule.calculateCenterOfMass(*box); });
 }
 
 /**

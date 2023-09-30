@@ -22,6 +22,7 @@
 
 #include "potential.hpp"
 
+#include "box.hpp"                   // for Box
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
@@ -41,11 +42,11 @@ using namespace potential;
  * @param atom2
  * @return std::pair<double, double>
  */
-std::pair<double, double> Potential::calculateSingleInteraction(const linearAlgebra::Vec3D &box,
-                                                                simulationBox::Molecule    &molecule1,
-                                                                simulationBox::Molecule    &molecule2,
-                                                                const size_t                atom1,
-                                                                const size_t                atom2) const
+std::pair<double, double> Potential::calculateSingleInteraction(const simulationBox::Box &box,
+                                                                simulationBox::Molecule  &molecule1,
+                                                                simulationBox::Molecule  &molecule2,
+                                                                const size_t              atom1,
+                                                                const size_t              atom2) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
@@ -55,12 +56,9 @@ std::pair<double, double> Potential::calculateSingleInteraction(const linearAlge
 
     auto dxyz = xyz_i - xyz_j;
 
-    const auto txyz = -box * round(dxyz / box);
+    const auto txyz = box.calculateShiftVector(dxyz);
 
-    // dxyz += txyz;
-    dxyz[0] += txyz[0];
-    dxyz[1] += txyz[1];
-    dxyz[2] += txyz[2];
+    dxyz += txyz;
 
     const double distanceSquared = normSquared(dxyz);
 

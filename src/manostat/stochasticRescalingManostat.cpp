@@ -72,7 +72,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = calculateMu(simBox.getVolume());
+    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu(simBox.getVolume()));
 
     simBox.scaleBox(mu);
 

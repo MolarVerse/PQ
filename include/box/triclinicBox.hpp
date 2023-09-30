@@ -40,13 +40,18 @@ namespace simulationBox
       private:
         linearAlgebra::Vec3D                   _boxAngles;
         linearAlgebra::StaticMatrix3x3<double> _boxMatrix;
+        linearAlgebra::StaticMatrix3x3<double> _transformationMatrix;
 
       public:
-        [[nodiscard]] double calculateVolume() override;
+        [[nodiscard]] double               calculateVolume() override;
+        [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
+        [[nodiscard]] linearAlgebra::Vec3D transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &position) const override;
+        [[nodiscard]] linearAlgebra::Vec3D transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
 
         void calculateBoxMatrix();
+        void calculateTransformationMatrix();
 
         void setBoxAngles(const linearAlgebra::Vec3D &boxAngles);
         void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) override;
@@ -59,6 +64,7 @@ namespace simulationBox
         [[nodiscard]] double sinGamma() const { return ::sin(_boxAngles[2]); }
 
         [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const override { return _boxAngles * constants::_DEG_TO_RAD_; }
+        [[nodiscard]] linearAlgebra::StaticMatrix3x3<double> getBoxMatrix() const override { return _boxMatrix; }
     };
 
 }   // namespace simulationBox

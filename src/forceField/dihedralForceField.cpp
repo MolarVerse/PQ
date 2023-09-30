@@ -61,8 +61,8 @@ void DihedralForceField::calculateEnergyAndForces(const simulationBox::Simulatio
     box.applyPBC(dPosition23);
     box.applyPBC(dPosition43);
 
-    auto crossPosition123 = cross(dPosition12, dPosition23);
-    auto crossPosition432 = cross(dPosition43, dPosition23);
+    const auto crossPosition123 = cross(dPosition12, dPosition23);
+    const auto crossPosition432 = cross(dPosition43, dPosition23);
 
     const auto distance123Squared = normSquared(crossPosition123);
     const auto distance432Squared = normSquared(crossPosition432);

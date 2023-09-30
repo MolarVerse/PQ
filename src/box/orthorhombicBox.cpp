@@ -49,6 +49,17 @@ void OrthorhombicBox::applyPBC(linearAlgebra::Vec3D &position) const
 }
 
 /**
+ * @brief Calculate the shift vector
+ *
+ * @param shiftVector
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D OrthorhombicBox::calculateShiftVector(const linearAlgebra::Vec3D &shiftVector) const
+{
+    return _boxDimensions * round(shiftVector / _boxDimensions);
+}
+
+/**
  * @brief Calculate the box dimensions from the density
  *
  * @return vector<double>

@@ -166,6 +166,11 @@ namespace simulationBox
             return _externalToInternalGlobalVDWTypes;
         }
 
+        [[nodiscard]] Box                 &getBox() { return *_box; }
+        [[nodiscard]] Box                 &getBox() const { return *_box; }
+        [[nodiscard]] std::shared_ptr<Box> getBoxPtr() { return _box; }
+        [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const { return _box; }
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -194,6 +199,10 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity() const
         {
             return dynamic_cast<OrthorhombicBox &>(*_box).calculateBoxDimensionsFromDensity(_totalMass, _density);
+        }
+        [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const
+        {
+            return _box->calculateShiftVector(position);
         }
 
         [[nodiscard]] double getMinimalBoxDimension() const { return _box->getMinimalBoxDimension(); }

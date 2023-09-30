@@ -37,9 +37,12 @@ using namespace manostat;
  */
 void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    const auto ekinVirial  = physicalData.getKineticEnergyVirialVector();
-    const auto forceVirial = physicalData.getVirial();
+    auto       ekinVirial  = physicalData.getKineticEnergyVirialVector();
+    auto       forceVirial = physicalData.getVirial();
     const auto volume      = box.getVolume();
+
+    ekinVirial  = box.getBox().transformIntoOrthogonalSpace(ekinVirial);
+    forceVirial = box.getBox().transformIntoOrthogonalSpace(forceVirial);
 
     _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
 

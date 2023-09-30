@@ -25,6 +25,7 @@
 #define _MOLECULE_HPP_
 
 #include "atom.hpp"
+#include "box.hpp"
 #include "vector3d.hpp"
 
 #include <algorithm>
@@ -66,7 +67,7 @@ namespace simulationBox
         explicit Molecule(const std::string_view name) : _name(name){};
         explicit Molecule(c_ul moltype) : _moltype(moltype){};
 
-        void calculateCenterOfMass(const linearAlgebra::Vec3D &);
+        void calculateCenterOfMass(const Box &);
         void scale(const linearAlgebra::Vec3D &);
 
         [[nodiscard]] size_t getNumberOfAtomTypes();

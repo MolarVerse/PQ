@@ -47,7 +47,7 @@ inline void PotentialCellList::calculateForces(simulationBox::SimulationBox &sim
                                                physicalData::PhysicalData   &physicalData,
                                                simulationBox::CellList      &cellList)
 {
-    const auto box = simBox.getBoxDimensions();
+    const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
@@ -69,7 +69,7 @@ inline void PotentialCellList::calculateForces(simulationBox::SimulationBox &sim
                     for (const size_t atom2 : cell1.getAtomIndices(mol2))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
+                            calculateSingleInteraction(*box, *molecule1, *molecule2, atom1, atom2);
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
@@ -102,7 +102,7 @@ inline void PotentialCellList::calculateForces(simulationBox::SimulationBox &sim
                         for (const auto atom2 : cell2->getAtomIndices(mol2))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
-                                calculateSingleInteraction(box, *molecule1, *molecule2, atom1, atom2);
+                                calculateSingleInteraction(*box, *molecule1, *molecule2, atom1, atom2);
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;

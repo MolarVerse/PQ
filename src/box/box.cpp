@@ -35,6 +35,6 @@ using namespace simulationBox;
  */
 void Box::scaleBox(const linearAlgebra::Vec3D &scalingFactors)
 {
-    _boxDimensions *= scalingFactors;
-    calculateVolume();
+    setBoxDimensions(_boxDimensions *= scalingFactors);
+    _volume = calculateVolume();
 }

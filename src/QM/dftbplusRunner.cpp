@@ -74,10 +74,12 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
                                   atom.getPosition()[2]);
     }
 
+    const auto boxMatrix = box.getBox().getBoxMatrix();
+
     coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", 0.0, 0.0, 0.0);
-    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", box.getBoxDimensions()[0], 0.0, 0.0);
-    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", 0.0, box.getBoxDimensions()[1], 0.0);
-    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", 0.0, 0.0, box.getBoxDimensions()[2]);
+    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", boxMatrix[0][0], boxMatrix[0][1], boxMatrix[0][2]);
+    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", boxMatrix[1][0], boxMatrix[1][1], boxMatrix[1][2]);
+    coordsFile << std::format("{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n", "", boxMatrix[2][0], boxMatrix[2][1], boxMatrix[2][2]);
 
     coordsFile.close();
 }
