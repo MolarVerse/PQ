@@ -182,9 +182,9 @@ void GuffDatReader::setupGuffMaps()
 
     for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
         for (size_t j = 0; j < numberOfMoleculeTypes; ++j)
-            for (size_t k = 0, numberOfAtomTypes1 = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
-                 k < numberOfAtomTypes1;
-                 ++k)
+        {
+            const auto numberOfAtomTypes1 = _engine.getSimulationBox().getMoleculeType(i).getNumberOfAtomTypes();
+            for (size_t k = 0; k < numberOfAtomTypes1; ++k)
             {
                 const size_t numberOfAtomTypes2 = _engine.getSimulationBox().getMoleculeType(j).getNumberOfAtomTypes();
 
@@ -195,6 +195,7 @@ void GuffDatReader::setupGuffMaps()
                 for (size_t l = 0; l < numberOfAtomTypes2; ++l)
                     _isGuffPairSet[i][j][k][l] = false;
             }
+        }
 }
 
 /**
@@ -329,7 +330,7 @@ void GuffDatReader::addLennardJonesPair(const size_t               molType1,
 {
     auto &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
 
-    auto lennardJonesPair                  = potential::LennardJonesPair(rncCutOff, coefficients[0], coefficients[2]);
+    const auto lennardJonesPair            = potential::LennardJonesPair(rncCutOff, coefficients[0], coefficients[2]);
     const auto [energyCutOff, forceCutOff] = lennardJonesPair.calculateEnergyAndForce(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
@@ -361,7 +362,7 @@ void GuffDatReader::addBuckinghamPair(const size_t               molType1,
 {
     auto &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
 
-    auto buckinghamPair = potential::BuckinghamPair(rncCutOff, coefficients[0], coefficients[1], coefficients[2]);
+    const auto buckinghamPair = potential::BuckinghamPair(rncCutOff, coefficients[0], coefficients[1], coefficients[2]);
     const auto [energyCutOff, forceCutOff] = buckinghamPair.calculateEnergyAndForce(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
@@ -395,7 +396,7 @@ void GuffDatReader::addMorsePair(const size_t               molType1,
 {
     auto &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
 
-    auto morsePair                         = potential::MorsePair(rncCutOff, coefficients[0], coefficients[1], coefficients[2]);
+    const auto morsePair                   = potential::MorsePair(rncCutOff, coefficients[0], coefficients[1], coefficients[2]);
     const auto [energyCutOff, forceCutOff] = morsePair.calculateEnergyAndForce(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
@@ -430,8 +431,8 @@ void GuffDatReader::addGuffPair(const size_t               molType1,
                                 const std::vector<double> &coefficients,
                                 const double               rncCutOff)
 {
-    auto &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
-    auto  guffPair       = potential::GuffPair(rncCutOff, coefficients);
+    auto      &guffNonCoulomb = dynamic_cast<potential::GuffNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
+    const auto guffPair       = potential::GuffPair(rncCutOff, coefficients);
     const auto [energyCutOff, forceCutOff] = guffPair.calculateEnergyAndForce(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
@@ -448,8 +449,7 @@ void GuffDatReader::addGuffPair(const size_t               molType1,
  * @details following steps are performed:
  * 1) check if all necessary guff pairs are set
  * 2) calculate the partial charges of the molecule types from the guff.dat coulomb coefficients
- * 3) resize the internal global vdw types // just for compatibility with force field
- * 4) check if the partial charges are in accordance with all guff.dat entries
+ * 3) check if the partial charges are in accordance with all guff.dat entries
  *
  */
 void GuffDatReader::postProcessSetup()
@@ -458,8 +458,6 @@ void GuffDatReader::postProcessSetup()
 
     calculatePartialCharges();
     _engine.getSimulationBox().setPartialChargesOfMoleculesFromMoleculeTypes();
-
-    _engine.getSimulationBox().resizeInternalGlobalVDWTypes();
 
     checkPartialCharges();
 }
@@ -476,17 +474,19 @@ void GuffDatReader::postProcessSetup()
  */
 void GuffDatReader::calculatePartialCharges()
 {
-    for (size_t i = 0, numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size(); i < numberOfMoleculeTypes;
-         ++i)
+    const auto numberOfMoleculeTypes = _engine.getSimulationBox().getMoleculeTypes().size();
+
+    for (size_t i = 0; i < numberOfMoleculeTypes; ++i)
     {
-        auto *moleculeType = &(_engine.getSimulationBox().findMoleculeType(i + 1));
+        auto      *moleculeType  = &(_engine.getSimulationBox().findMoleculeType(i + 1));
+        const auto numberOfAtoms = moleculeType->getNumberOfAtoms();
 
-        for (size_t j = 0, numberOfAtoms = moleculeType->getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        for (size_t j = 0; j < numberOfAtoms; ++j)
         {
-            auto atomType           = moleculeType->getAtomType(j);
-            auto coulombCoefficient = _guffCoulombCoefficients[i][i][atomType][atomType];
+            const auto atomType           = moleculeType->getAtomType(j);
+            const auto coulombCoefficient = _guffCoulombCoefficients[i][i][atomType][atomType];
 
-            auto partialCharge =
+            const auto partialCharge =
                 ::sqrt(coulombCoefficient / constants::_COULOMB_PREFACTOR_) * utilities::sign(moleculeType->getPartialCharge(j));
 
             moleculeType->setPartialCharge(j, partialCharge);

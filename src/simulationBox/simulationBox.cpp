@@ -205,13 +205,6 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
 }
 
 /**
- * @brief resize internal global vdw types of all molecules
- *
- * TODO: remove this one should be unnecessary
- */
-void SimulationBox::resizeInternalGlobalVDWTypes() {}
-
-/**
  * @brief make external to internal global vdw types map
  *
  * @details the function consists of multiple steps:
@@ -265,7 +258,6 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
     };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
-    // std::ranges::for_each(_moleculeTypes, setInternalGlobalVdwTypes); TODO: check if necessary
 }
 
 /**
@@ -407,4 +399,25 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
     uniqueQMAtomNames.erase(first, last);
 
     return uniqueQMAtomNames;
+}
+
+/**
+ * @brief calculate box dimensions from density
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D SimulationBox::calculateBoxDimensionsFromDensity() const
+{
+    return dynamic_cast<OrthorhombicBox &>(*_box).calculateBoxDimensionsFromDensity(_totalMass, _density);
+}
+
+/**
+ * @brief calculate shift vector
+ *
+ * @param position
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D SimulationBox::calculateShiftVector(const linearAlgebra::Vec3D &position) const
+{
+    return _box->calculateShiftVector(position);
 }

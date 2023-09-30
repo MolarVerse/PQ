@@ -55,23 +55,13 @@ size_t Molecule::getNumberOfAtomTypes()
  */
 void Molecule::calculateCenterOfMass(const Box &box)
 {
-    _centerOfMass            = linearAlgebra::Vec3D();
+    _centerOfMass            = {0.0, 0.0, 0.0};
     const auto positionAtom1 = _atoms[0]->getPosition();
 
-    // TODO: sonarlint until now not compatible with c++23
-    //  auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
-    //  {
-    //      auto const &[mass, position]  = pair;
-    //      _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
-    //  };
-    //  std::ranges::for_each(std::ranges::views::zip(_masses, _positions), f);
-
-    // TODO: change this loop to a range based for loop
-
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (const auto &atom : _atoms)
     {
-        const auto mass     = _atoms[i]->getMass();
-        const auto position = _atoms[i]->getPosition();
+        const auto mass     = atom->getMass();
+        const auto position = atom->getPosition();
 
         _centerOfMass += mass * (position - box.calculateShiftVector(position - positionAtom1));
     }
@@ -89,4 +79,69 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
     std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
+}
+
+/**
+ * @brief returns the external global vdw types of the atoms in the molecule
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> Molecule::getExternalGlobalVDWTypes() const
+{
+    std::vector<size_t> externalGlobalVDWTypes(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        externalGlobalVDWTypes[i] = _atoms[i]->getExternalGlobalVDWType();
+
+    return externalGlobalVDWTypes;
+}
+
+/**
+ * @brief returns the atom masses of the atoms in the molecule
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> Molecule::getAtomMasses() const
+{
+    std::vector<double> atomMasses(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        atomMasses[i] = _atoms[i]->getMass();
+
+    return atomMasses;
+}
+
+/**
+ * @brief returns the partial charges of the atoms in the molecule
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> Molecule::getPartialCharges() const
+{
+    std::vector<double> partialCharges(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        partialCharges[i] = _atoms[i]->getPartialCharge();
+
+    return partialCharges;
+}
+
+/**
+ * @brief sets the partial charges of the atoms in the molecule
+ *
+ * @param partialCharges
+ */
+void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
+{
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        _atoms[i]->setPartialCharge(partialCharges[i]);
+}
+
+/**
+ * @brief sets the forces of the atoms in the molecule to zero
+ *
+ */
+void Molecule::setAtomForcesToZero()
+{
+    std::ranges::for_each(_atoms, [](auto atom) { atom->setForceToZero(); });
 }

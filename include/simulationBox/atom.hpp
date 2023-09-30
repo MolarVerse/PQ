@@ -111,6 +111,8 @@ namespace simulationBox
         void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }
         void setForce(const linearAlgebra::Vec3D &force) { _force = force; }
         void setShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce = shiftForce; }
+
+        void setForceToZero() { _force = {0.0, 0.0, 0.0}; }
     };
 }   // namespace simulationBox
 
