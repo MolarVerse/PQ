@@ -43,6 +43,9 @@ namespace output
         void writeEndedNormally(const double elapsedTime) const;
 
         void writeDensityWarning() const;
+
+        void writeSetup(const std::string &setup) const;
+        void writeRead(const std::string &file) const;
     };
 
 }   // namespace output

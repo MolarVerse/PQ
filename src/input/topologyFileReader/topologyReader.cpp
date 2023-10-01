@@ -59,24 +59,6 @@ TopologyReader::TopologyReader(const std::string &filename, engine::Engine &engi
 }
 
 /**
- * @brief checks if reading topology file is needed
- *
- * @return true if shake is activated
- * @return true if force field is activated
- * @return false
- */
-bool TopologyReader::isNeeded() const
-{
-    if (_engine.getConstraints().isActive())
-        return true;
-
-    if (settings::ForceFieldSettings::isActive())
-        return true;
-
-    return false;
-}
-
-/**
  * @brief reads topology file
  *
  * @details reads topology file line by line and determines which section the line belongs to. Then the line is processed by the
@@ -91,9 +73,6 @@ void TopologyReader::read()
     std::string              line;
     std::vector<std::string> lineElements;
     int                      lineNumber = 1;
-
-    if (!isNeeded())
-        return;
 
     if (!settings::FileSettings::isTopologyFileNameSet())
         throw customException::InputFileException("Topology file needed for requested simulation setup");
@@ -145,6 +124,32 @@ TopologySection *TopologyReader::determineSection(const std::vector<std::string>
  */
 void input::topology::readTopologyFile(engine::Engine &engine)
 {
+    if (!isNeeded(engine))
+        return;
+
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getTopologyFileName());
+    engine.getLogOutput().writeRead(settings::FileSettings::getTopologyFileName());
+
     TopologyReader topologyReader(settings::FileSettings::getTopologyFileName(), engine);
     topologyReader.read();
+}
+
+/**
+ * @brief checks if reading topology file is needed
+ *
+ * @param engine
+ *
+ * @return true if shake is activated
+ * @return true if force field is activated
+ * @return false
+ */
+bool input::topology::isNeeded(engine::Engine &engine)
+{
+    if (engine.getConstraints().isActive())
+        return true;
+
+    if (settings::ForceFieldSettings::isActive())
+        return true;
+
+    return false;
 }

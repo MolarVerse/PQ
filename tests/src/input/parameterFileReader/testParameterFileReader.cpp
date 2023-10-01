@@ -31,12 +31,15 @@
 #include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
+#include "parameterFileReader.hpp"       // for ParameterFileReader
 #include "potential.hpp"                 // for Potential
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 #include "typesSection.hpp"              // for TypesSection
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertHelper, Test
 #include <vector>          // for vector
+
+using namespace input::parameterFile;
 
 /**
  * @brief tests isNeeded function
@@ -46,10 +49,10 @@
  */
 TEST_F(TestParameterFileReader, isNeeded)
 {
-    EXPECT_FALSE(_parameterFileReader->isNeeded());
+    EXPECT_FALSE(isNeeded());
 
     settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(_parameterFileReader->isNeeded());
+    EXPECT_TRUE(isNeeded());
 }
 
 /**

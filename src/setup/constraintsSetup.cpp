@@ -35,6 +35,12 @@ using namespace setup;
  */
 void setup::setupConstraints(engine::Engine &engine)
 {
+    if (!engine.isConstraintsActivated())
+        return;
+
+    engine.getStdoutOutput().writeSetup("constraints (e.g. SHAKE, RATTLE)");
+    engine.getLogOutput().writeSetup("constraints (e.g. SHAKE, RATTLE)");
+
     ConstraintsSetup constraintsSetup(engine);
     constraintsSetup.setup();
 }
@@ -46,9 +52,6 @@ void setup::setupConstraints(engine::Engine &engine)
  */
 void ConstraintsSetup::setup()
 {
-    if (!_engine.isConstraintsActivated())
-        return;
-
     setupTolerances();
     setupMaxIterations();
     setupRefBondLengths();

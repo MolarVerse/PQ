@@ -44,6 +44,8 @@ using setup::OutputFilesSetup;
  */
 void setup::setupOutputFiles(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("output files");
+
     OutputFilesSetup outputFilesSetup(engine);
     outputFilesSetup.setup();
 }

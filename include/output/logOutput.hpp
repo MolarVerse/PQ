@@ -44,6 +44,9 @@ namespace output
 
         void writeDensityWarning();
         void writeInitialMomentum(const double momentum);
+
+        void writeSetup(const std::string &setup);
+        void writeRead(const std::string &file);
     };
 
 }   // namespace output

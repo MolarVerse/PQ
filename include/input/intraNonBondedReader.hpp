@@ -32,7 +32,8 @@
 
 namespace input::intraNonBonded
 {
-    void readIntraNonBondedFile(engine::Engine &);
+    void               readIntraNonBondedFile(engine::Engine &);
+    [[nodiscard]] bool isNeeded(const engine::Engine &engine) { return engine.isIntraNonBondedActivated(); }
 
     /**
      * @class IntraNonBondedReader
@@ -56,7 +57,6 @@ namespace input::intraNonBonded
         void                 read();
         void                 processMolecule(const size_t moleculeType);
         void                 checkDuplicates() const;
-        [[nodiscard]] bool   isNeeded() const { return _engine.isIntraNonBondedActivated(); }
         [[nodiscard]] size_t findMoleculeType(const std::string &identifier) const;
 
         void setFileName(const std::string_view &fileName) { _fileName = fileName; }

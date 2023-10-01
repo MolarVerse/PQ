@@ -45,6 +45,9 @@ using setup::RingPolymerSetup;
  */
 void setup::setupRingPolymer(engine::RingPolymerEngine &engine)
 {
+    engine.getStdoutOutput().writeSetup("ring polymer MD (RPMD)");
+    engine.getLogOutput().writeSetup("ring polymer MD (RPMD)");
+
     RingPolymerSetup ringPolymerSetup(engine);
     ringPolymerSetup.setup();
 }

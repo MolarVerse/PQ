@@ -28,7 +28,7 @@
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
 
-using namespace output;
+using output::LogOutput;
 
 /**
  * @brief write header title
@@ -53,7 +53,9 @@ void LogOutput::writeEndedNormally(const double elapsedTime)
  */
 void LogOutput::writeDensityWarning()
 {
-    _fp << _WARNING_ << "Density and box dimensions set. Density will be ignored." << '\n' << std::flush;
+    _fp << _WARNING_ << "Density and box dimensions set. Density will be ignored."
+        << "\n\n"
+        << std::flush;
 }
 
 /**
@@ -65,3 +67,15 @@ void LogOutput::writeInitialMomentum(const double momentum)
 {
     _fp << std::format("\n{}Initial momentum = {} Angstrom * amu / fs\n", _INFO_, momentum) << std::flush;
 }
+
+/**
+ * @brief write a message to inform about the setup
+ *
+ */
+void LogOutput::writeSetup(const std::string &setup) { _fp << setupMessage(setup) << '\n' << std::flush; }
+
+/**
+ * @brief write a message to inform about starting to read a file
+ *
+ */
+void LogOutput::writeRead(const std::string &file) { _fp << readMessage(file) << '\n' << std::flush; }

@@ -36,6 +36,9 @@ using namespace setup;
  */
 void setup::setupResetKinetics(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("Reset Kinetics");
+    engine.getLogOutput().writeSetup("Reset Kinetics");
+
     ResetKineticsSetup resetKineticsSetup(engine);
     resetKineticsSetup.setup();
 }

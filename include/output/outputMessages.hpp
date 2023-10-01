@@ -35,4 +35,7 @@ namespace output
 
     std::string elapsedTimeMessage(const double elapsedTime);
 
+    std::string setupMessage(const std::string &setup);
+    std::string readMessage(const std::string &file);
+
 }   // namespace output

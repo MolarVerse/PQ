@@ -51,6 +51,9 @@ using namespace setup;
  */
 void setup::setupThermostat(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("thermostat");
+    engine.getLogOutput().writeSetup("thermostat");
+
     ThermostatSetup thermostatSetup(engine);
     thermostatSetup.setup();
 }

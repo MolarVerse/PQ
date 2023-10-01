@@ -58,6 +58,9 @@ using namespace simulationBox;
  */
 void setup::setupSimulationBox(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("simulation box");
+    engine.getLogOutput().writeSetup("simulation box");
+
     SimulationBoxSetup simulationBoxSetup(engine);
     simulationBoxSetup.setup();
 }

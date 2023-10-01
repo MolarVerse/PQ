@@ -59,22 +59,19 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
-    std::cout << "Reading input file..." << '\n';
     readInputFile(inputFileName, engine);
 
-    std::cout << "setup output files..." << '\n';
     setupOutputFiles(engine);
 
     readFiles(engine);
 
-    std::cout << "setup engine..." << '\n';
     setupEngine(engine);
 
     // needs setup of engine before reading guff.dat
-    std::cout << "Reading guff.dat..." << '\n';
     guffdat::readGuffDat(engine);
 
-    std::cout << "Setup complete!" << '\n';
+    engine.getStdoutOutput().writeSetup("FULL simulation complete!");
+    engine.getLogOutput().writeSetup("FULL simulation complete!");
 }
 
 /**
@@ -85,19 +82,14 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
  */
 void setup::readFiles(Engine &engine)
 {
-    std::cout << "Reading moldescriptor..." << '\n';
     molDescriptor::readMolDescriptor(engine);
 
-    std::cout << "Reading rst file..." << '\n';
     restartFile::readRestartFile(engine);
 
-    std::cout << "Reading topology file..." << '\n';
     topology::readTopologyFile(engine);
 
-    std::cout << "Reading parameter file..." << '\n';
     parameterFile::readParameterFile(engine);
 
-    std::cout << "Reading intra non bonded file..." << '\n';
     input::intraNonBonded::readIntraNonBondedFile(engine);
 }
 
@@ -109,44 +101,29 @@ void setup::readFiles(Engine &engine)
 void setup::setupEngine(Engine &engine)
 {
     if (settings::Settings::isQMActivated())
-    {
-        std::cout << "setup QM" << '\n';
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
-    }
 
-    std::cout << "setup reset kinetics" << '\n';
     setupResetKinetics(engine);
 
-    std::cout << "setup simulation box" << '\n';
     setupSimulationBox(engine);
 
-    std::cout << "setup cell list" << '\n';
     setupCellList(engine);
 
-    std::cout << "setup thermostat" << '\n';
     setupThermostat(engine);
 
-    std::cout << "setup manostat" << '\n';
     setupManostat(engine);
 
     if (settings::Settings::isMMActivated())
     {
-        std::cout << "setup potential" << '\n';
         setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
 
-        std::cout << "intra non bonded" << '\n';
         setupIntraNonBonded(engine);
 
-        std::cout << "setup force field" << '\n';
         setupForceField(engine);
     }
 
-    std::cout << "setup constraints" << '\n';
     setupConstraints(engine);
 
     if (settings::Settings::isRingPolymerMDActivated())
-    {
-        std::cout << "setup ring polymer" << '\n';
         setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
-    }
 }

@@ -22,6 +22,7 @@
 
 #include "inputFileReader.hpp"
 
+#include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParserCellList.hpp"           // for InputFileParserCellList
 #include "inputFileParserConstraints.hpp"        // for InputFileParserConstraints
@@ -48,11 +49,6 @@
 #include <map>         // for map, operator==
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
 
 using namespace input;
 
@@ -234,6 +230,8 @@ void input::readJobType(const std::string &fileName, std::unique_ptr<engine::Eng
  */
 void input::readInputFile(const std::string_view &fileName, engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeRead(std::string(fileName));
+
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();
     inputFileReader.postProcess();

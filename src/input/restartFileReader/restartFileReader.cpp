@@ -23,6 +23,7 @@
 #include "restartFileReader.hpp"
 
 #include "boxSection.hpp"          // for BoxSection
+#include "engine.hpp"              // for Engine
 #include "fileSettings.hpp"        // for FileSettings
 #include "noseHooverSection.hpp"   // for NoseHooverSection
 #include "stepCountSection.hpp"    // for StepCountSection
@@ -103,6 +104,9 @@ void RestartFileReader::read()
  */
 void input::restartFile::readRestartFile(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getStartFileName());
+    engine.getLogOutput().writeRead(settings::FileSettings::getStartFileName());
+
     RestartFileReader rstFileReader(settings::FileSettings::getStartFileName(), engine);
     rstFileReader.read();
 }

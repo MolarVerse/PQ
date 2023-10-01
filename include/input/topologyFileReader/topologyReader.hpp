@@ -39,7 +39,8 @@ namespace engine
 
 namespace input::topology
 {
-    void readTopologyFile(engine::Engine &);
+    void               readTopologyFile(engine::Engine &);
+    [[nodiscard]] bool isNeeded(engine::Engine &engine);
 
     /**
      * @class TopologyReader
@@ -60,7 +61,6 @@ namespace input::topology
         TopologyReader(const std::string &filename, engine::Engine &engine);
 
         void                           read();
-        [[nodiscard]] bool             isNeeded() const;
         [[nodiscard]] TopologySection *determineSection(const std::vector<std::string> &lineElements);
 
         void setFilename(const std::string_view &filename) { _fileName = filename; }

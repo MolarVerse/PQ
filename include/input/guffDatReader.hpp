@@ -38,11 +38,12 @@ namespace engine
 
 namespace input::guffdat
 {
-    void readGuffDat(engine::Engine &);
-
     using c_ul         = const size_t;
     using vector4d     = std::vector<std::vector<std::vector<std::vector<double>>>>;
     using vector4dBool = std::vector<std::vector<std::vector<std::vector<bool>>>>;
+
+    void               readGuffDat(engine::Engine &);
+    [[nodiscard]] bool isNeeded(engine::Engine &);
 
     /**
      * @class GuffDatReader
@@ -64,7 +65,6 @@ namespace input::guffdat
       public:
         explicit GuffDatReader(engine::Engine &engine);
 
-        bool isNeeded();
         void setupGuffMaps();
         void parseLine(const std::vector<std::string> &lineCommands);
         void read();

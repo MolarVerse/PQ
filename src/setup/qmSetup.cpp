@@ -40,6 +40,9 @@ using setup::QMSetup;
  */
 void setup::setupQM(engine::QMMDEngine &engine)
 {
+    engine.getStdoutOutput().writeSetup("QM runner");
+    engine.getLogOutput().writeSetup("QM runner");
+
     QMSetup qmSetup(engine);
     qmSetup.setup();
 }

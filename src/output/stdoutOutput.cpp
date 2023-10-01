@@ -25,11 +25,12 @@
 #include "exceptions.hpp"       // for UserInputExceptionWarning, customException
 #include "outputMessages.hpp"   // for initialMomentumMessage
 
+#include <format>        // for format
 #include <iostream>      // for operator<<, char_traits, basic_ostream, cout
 #include <string>        // for operator<<
 #include <string_view>   // for string_view
 
-using namespace output;
+using output::StdoutOutput;
 
 /**
  * @brief write header title
@@ -56,10 +57,24 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw customException::UserInputExceptionWarning("Density and box dimensions set. Density will be ignored.");
+        throw customException::UserInputExceptionWarning(
+            std::format("{}Density and box dimensions set. Density will be ignored.", _OUTPUT_));
     }
     catch (const customException::UserInputExceptionWarning &e)
     {
-        std::cout << e.what() << '\n' << '\n' << std::flush;
+        std::cout << _OUTPUT_ << e.what() << '\n' << '\n' << std::flush;
     }
 }
+
+/**
+ * @brief write a message to the stdout to inform about the setup
+ *
+ * @param momentum
+ */
+void StdoutOutput::writeSetup(const std::string &setup) const { std::cout << setupMessage(setup) << '\n' << std::flush; }
+
+/**
+ * @brief write a message to the stdout to inform about the start of reading a file
+ *
+ */
+void StdoutOutput::writeRead(const std::string &file) const { std::cout << readMessage(file) << '\n' << std::flush; }

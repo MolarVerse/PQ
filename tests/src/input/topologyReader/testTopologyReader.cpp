@@ -26,8 +26,11 @@
 #include "exceptions.hpp"           // for InputFileException, TopologyException
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "topologyReader.hpp"       // for TopologyReader
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+
+using namespace input::topology;
 
 /**
  * @brief tests isNeeded function
@@ -38,14 +41,14 @@
  */
 TEST_F(TestTopologyReader, isNeeded)
 {
-    EXPECT_FALSE(_topologyReader->isNeeded());
+    EXPECT_FALSE(isNeeded(*_engine));
 
     _engine->getConstraints().activate();
-    EXPECT_TRUE(_topologyReader->isNeeded());
+    EXPECT_TRUE(isNeeded(*_engine));
 
     _engine->getConstraints().deactivate();
     settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(_topologyReader->isNeeded());
+    EXPECT_TRUE(isNeeded(*_engine));
 }
 
 /**

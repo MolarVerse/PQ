@@ -35,6 +35,12 @@ using namespace setup;
  */
 void setup::setupCellList(engine::Engine &engine)
 {
+    if (engine.isCellListActivated())
+    {
+        engine.getStdoutOutput().writeSetup("cell list");
+        engine.getLogOutput().writeSetup("cell list");
+    }
+
     CellListSetup cellListSetup(engine);
     cellListSetup.setup();
 }

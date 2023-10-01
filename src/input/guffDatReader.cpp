@@ -65,24 +65,16 @@ using namespace input::guffdat;
  */
 void input::guffdat::readGuffDat(engine::Engine &engine)
 {
-    GuffDatReader guffDat(engine);
-
-    if (!guffDat.isNeeded())
+    if (!isNeeded(engine))
         return;
 
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getGuffDatFileName());
+    engine.getLogOutput().writeRead(settings::FileSettings::getGuffDatFileName());
+
+    GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();
     guffDat.read();
     guffDat.postProcessSetup();
-}
-
-/**
- * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
- *
- * @param engine
- */
-GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
-{
-    _fileName = settings::FileSettings::getGuffDatFileName();
 }
 
 /**
@@ -95,14 +87,24 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
  * @return true
  * @return false
  */
-bool GuffDatReader::isNeeded()
+bool input::guffdat::isNeeded(engine::Engine &engine)
 {
     if (!settings::Settings::isMMActivated())
         return false;
-    else if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    else if (engine.getForceFieldPtr()->isNonCoulombicActivated())
         return false;
     else
         return true;
+}
+
+/**
+ * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
+ *
+ * @param engine
+ */
+GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
+{
+    _fileName = settings::FileSettings::getGuffDatFileName();
 }
 
 /**

@@ -91,3 +91,19 @@ std::string output::elapsedTimeMessage(const double elapsedTime)
 {
     return std::format("\n\n{}Elapsed time = {} s\n", _OUTPUT_, elapsedTime);
 }
+
+/**
+ * @brief Message to inform about starting to setup
+ *
+ * @param setup
+ * @return std::string
+ */
+std::string output::setupMessage(const std::string &setup) { return std::format("{}Setup of {}\n", _INFO_, setup); }
+
+/**
+ * @brief Message to inform about reading a file
+ *
+ * @param file
+ * @return std::string
+ */
+std::string output::readMessage(const std::string &file) { return std::format("{}Reading \"{}\"\n", _INFO_, file); }

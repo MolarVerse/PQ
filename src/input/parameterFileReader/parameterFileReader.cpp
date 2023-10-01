@@ -25,6 +25,7 @@
 #include "angleSection.hpp"              // for AngleSection
 #include "bondSection.hpp"               // for BondSection
 #include "dihedralSection.hpp"           // for DihedralSection
+#include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for InputFileException, ParameterFileExce...
 #include "fileSettings.hpp"              // for FileSettings
 #include "forceFieldSettings.hpp"        // for ForceFieldSettings
@@ -55,20 +56,6 @@ ParameterFileReader::ParameterFileReader(const std::string &filename, engine::En
     _parameterFileSections.push_back(std::make_unique<DihedralSection>());
     _parameterFileSections.push_back(std::make_unique<ImproperDihedralSection>());
     _parameterFileSections.push_back(std::make_unique<NonCoulombicsSection>());
-}
-
-/**
- * @brief checks if reading topology file is needed
- *
- * @return true if force field is activated
- * @return false
- */
-bool ParameterFileReader::isNeeded() const
-{
-    if (settings::ForceFieldSettings::isActive())
-        return true;
-
-    return false;
 }
 
 /**
@@ -114,9 +101,6 @@ void ParameterFileReader::deleteSection(const ParameterFileSection *section)
  */
 void ParameterFileReader::read()
 {
-    if (!isNeeded())
-        return;
-
     if (!settings::FileSettings::isParameterFileNameSet())
         throw customException::InputFileException("Parameter file needed for requested simulation setup");
 
@@ -148,11 +132,30 @@ void ParameterFileReader::read()
 /**
  * @brief constructs a ParameterFileReader and reads parameter file
  *
- * @param filename
  * @param engine
  */
 void input::parameterFile::readParameterFile(engine::Engine &engine)
 {
+    if (!isNeeded())
+        return;
+
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getParameterFilename());
+    engine.getLogOutput().writeRead(settings::FileSettings::getParameterFilename());
+
     ParameterFileReader parameterFileReader(settings::FileSettings::getParameterFilename(), engine);
     parameterFileReader.read();
+}
+
+/**
+ * @brief checks if reading topology file is needed
+ *
+ * @return true if force field is activated
+ * @return false
+ */
+bool input::parameterFile::isNeeded()
+{
+    if (settings::ForceFieldSettings::isActive())
+        return true;
+
+    return false;
 }

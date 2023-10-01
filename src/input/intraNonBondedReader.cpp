@@ -49,8 +49,14 @@ using namespace input::intraNonBonded;
  *
  * @param engine
  */
-void input::intraNonBonded::readIntraNonBondedFile(engine::Engine& engine)
+void input::intraNonBonded::readIntraNonBondedFile(engine::Engine &engine)
 {
+    if (!isNeeded(engine))
+        return;
+
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getIntraNonBondedFileName());
+    engine.getLogOutput().writeRead(settings::FileSettings::getIntraNonBondedFileName());
+
     IntraNonBondedReader reader(settings::FileSettings::getIntraNonBondedFileName(), engine);
     reader.read();
 }
@@ -67,9 +73,6 @@ void input::intraNonBonded::readIntraNonBondedFile(engine::Engine& engine)
  */
 void IntraNonBondedReader::read()
 {
-    if (!isNeeded())
-        return;
-
     if (!settings::FileSettings::isIntraNonBondedFileNameSet())
         throw customException::IntraNonBondedException("Intra non bonded file needed for requested simulation setup");
 
@@ -77,7 +80,7 @@ void IntraNonBondedReader::read()
 
     while (getline(_fp, line))
     {
-        line = utilities::removeComments(line, "#");
+        line              = utilities::removeComments(line, "#");
         auto lineElements = utilities::splitString(line);
 
         if (lineElements.empty())
@@ -104,7 +107,7 @@ void IntraNonBondedReader::read()
  *
  * @throws customException::IntraNonBondedException if the molecule type is not found
  */
-[[nodiscard]] size_t IntraNonBondedReader::findMoleculeType(const std::string& identifier) const
+[[nodiscard]] size_t IntraNonBondedReader::findMoleculeType(const std::string &identifier) const
 {
     auto moleculeTypeFromString = _engine.getSimulationBox().findMoleculeTypeByString(identifier);
 
@@ -163,7 +166,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
 
     while (getline(_fp, line))
     {
-        line = utilities::removeComments(line, "#");
+        line                    = utilities::removeComments(line, "#");
         const auto lineElements = utilities::splitString(line);
 
         if (lineElements.empty())
@@ -183,20 +186,20 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
         if (referenceAtomIndex >= numberOfAtoms)
             throw customException::IntraNonBondedException(
                 format(R"(ERROR: reference atom index "{}" in line {} in file "{}" is out of range)",
-                    lineElements[0],
-                    _lineNumber,
-                    _fileName));
+                       lineElements[0],
+                       _lineNumber,
+                       _fileName));
 
-        auto addAtomIndexToReferenceAtom = [&atomIndices, referenceAtomIndex, numberOfAtoms, this](const auto& lineElement)
-            {
-                const auto atomIndex = (::abs(stoi(lineElement)) - 1) * utilities::sign(stoi(lineElement));
+        auto addAtomIndexToReferenceAtom = [&atomIndices, referenceAtomIndex, numberOfAtoms, this](const auto &lineElement)
+        {
+            const auto atomIndex = (::abs(stoi(lineElement)) - 1) * utilities::sign(stoi(lineElement));
 
-                if (::abs(atomIndex) >= int(numberOfAtoms))
-                    throw customException::IntraNonBondedException(format(
-                        R"(ERROR: atom index "{}" in line {} in file "{}" is out of range)", lineElement, _lineNumber, _fileName));
+            if (::abs(atomIndex) >= int(numberOfAtoms))
+                throw customException::IntraNonBondedException(format(
+                    R"(ERROR: atom index "{}" in line {} in file "{}" is out of range)", lineElement, _lineNumber, _fileName));
 
-                atomIndices[referenceAtomIndex].push_back(atomIndex);
-            };
+            atomIndices[referenceAtomIndex].push_back(atomIndex);
+        };
 
         std::ranges::for_each(lineElements | std::views::drop(1), addAtomIndexToReferenceAtom);
 
@@ -221,7 +224,7 @@ void IntraNonBondedReader::checkDuplicates() const
     const auto nonBondedContainers = _engine.getIntraNonBonded().getIntraNonBondedContainers();
 
     auto moleculeTypesView =
-        nonBondedContainers | std::views::transform([](const auto& container) { return container.getMolType(); });
+        nonBondedContainers | std::views::transform([](const auto &container) { return container.getMolType(); });
 
     std::vector<size_t> moleculeTypes(moleculeTypesView.begin(), moleculeTypesView.end());
     std::ranges::sort(moleculeTypes);

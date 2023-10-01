@@ -53,6 +53,9 @@ using namespace potential;
  */
 void setup::setupPotential(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("MM potential");
+    engine.getLogOutput().writeSetup("MM potential");
+
     PotentialSetup potentialSetup(engine);
     potentialSetup.setup();
 }

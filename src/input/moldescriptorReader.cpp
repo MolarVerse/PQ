@@ -56,11 +56,12 @@ MoldescriptorReader::MoldescriptorReader(engine::Engine &engine) : _engine(engin
  * @brief wrapper to construct MoldescriptorReader and read moldescriptor file
  *
  * @param engine
- *
- * @TODO: for pure QM-MD turn off reading
  */
 void input::molDescriptor::readMolDescriptor(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeRead(settings::FileSettings::getMolDescriptorFileName());
+    engine.getLogOutput().writeRead(settings::FileSettings::getMolDescriptorFileName());
+
     MoldescriptorReader reader(engine);
     reader.read();
 }

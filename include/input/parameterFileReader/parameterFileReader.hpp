@@ -39,7 +39,9 @@ namespace engine
 
 namespace input::parameterFile
 {
-    void readParameterFile(engine::Engine &);
+    using section_unique_ptr = std::unique_ptr<ParameterFileSection>;
+    void               readParameterFile(engine::Engine &);
+    [[nodiscard]] bool isNeeded();
 
     /**
      * @class ParameterReader
@@ -59,19 +61,19 @@ namespace input::parameterFile
       public:
         ParameterFileReader(const std::string &filename, engine::Engine &engine);
 
-        bool isNeeded() const;
         void read();
 
         [[nodiscard]] ParameterFileSection *determineSection(const std::vector<std::string> &lineElements);
         void                                deleteSection(const ParameterFileSection *section);
 
+        /**************************************
+         * standard getter and setter methods *
+         **************************************/
+
         void setFilename(const std::string_view &filename) { _fileName = filename; }
 
-        [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections()
-        {
-            return _parameterFileSections;
-        }
-        [[nodiscard]] const std::string &getFilename() const { return _fileName; }
+        [[nodiscard]] std::vector<section_unique_ptr> &getParameterFileSections() { return _parameterFileSections; }
+        [[nodiscard]] const std::string               &getFilename() const { return _fileName; }
     };
 
 }   // namespace input::parameterFile

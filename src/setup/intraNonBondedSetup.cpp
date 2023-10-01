@@ -38,9 +38,6 @@ using namespace setup;
  */
 void IntraNonBondedSetup::setup()
 {
-    if (!_engine.isIntraNonBondedActivated())
-        return;
-
     _engine.getIntraNonBonded().setNonCoulombPotential(_engine.getPotential().getNonCoulombPotentialSharedPtr());
     _engine.getIntraNonBonded().setCoulombPotential(_engine.getPotential().getCoulombPotentialSharedPtr());
 
@@ -54,6 +51,12 @@ void IntraNonBondedSetup::setup()
  */
 void setup::setupIntraNonBonded(engine::Engine &engine)
 {
+    if (!engine.isIntraNonBondedActivated())
+        return;
+
+    engine.getStdoutOutput().writeSetup("intra non-bonded interactions");
+    engine.getLogOutput().writeSetup("intra non-bonded interactions");
+
     IntraNonBondedSetup intraNonBondedSetup(engine);
     intraNonBondedSetup.setup();
 }
