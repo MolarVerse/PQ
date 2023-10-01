@@ -74,6 +74,13 @@ void StdoutOutput::writeDensityWarning() const
 void StdoutOutput::writeSetup(const std::string &setup) const { std::cout << setupMessage(setup) << '\n' << std::flush; }
 
 /**
+ * @brief write a message to the stdout to inform that the setup is completed
+ *
+ * @param momentum
+ */
+void StdoutOutput::writeSetupCompleted() const { std::cout << setupCompletedMessage() << '\n' << std::flush; }
+
+/**
  * @brief write a message to the stdout to inform about the start of reading a file
  *
  */

@@ -101,6 +101,18 @@ std::string output::elapsedTimeMessage(const double elapsedTime)
 std::string output::setupMessage(const std::string &setup) { return std::format("{}Setup of {}\n", _INFO_, setup); }
 
 /**
+ * @brief Message to inform about completed setup
+ *
+ * @return std::string
+ */
+std::string output::setupCompletedMessage()
+{
+    return R"(
+************************ STARTING SIMULATION ****************************
+)";
+}
+
+/**
  * @brief Message to inform about reading a file
  *
  * @param file

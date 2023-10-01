@@ -65,7 +65,8 @@ void LogOutput::writeDensityWarning()
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << std::format("\n{}Initial momentum = {:.5e} {}*amu/fs\n", _INFO_, momentum, _ANGSTROM_) << std::flush;
+    _fp << "\n" << std::flush;
+    _fp << std::format("{}Initial momentum = {:.5e} {}*amu/fs\n", _INFO_, momentum, _ANGSTROM_) << std::flush;
 }
 
 /**
@@ -79,6 +80,13 @@ void LogOutput::writeSetup(const std::string &setup) { _fp << setupMessage(setup
  *
  */
 void LogOutput::writeSetupInfo(const std::string &setupInfo) { _fp << _OUTPUT_ << setupInfo << '\n' << std::flush; }
+
+/**
+ * @brief write a message to the stdout to inform that the setup is completed
+ *
+ * @param momentum
+ */
+void LogOutput::writeSetupCompleted() { _fp << setupCompletedMessage() << '\n' << std::flush; }
 
 /**
  * @brief write a message to inform about starting to read a file

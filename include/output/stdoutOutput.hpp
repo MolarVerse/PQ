@@ -45,6 +45,7 @@ namespace output
         void writeDensityWarning() const;
 
         void writeSetup(const std::string &setup) const;
+        void writeSetupCompleted() const;
         void writeRead(const std::string &file) const;
     };
 

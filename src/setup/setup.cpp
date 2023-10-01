@@ -70,8 +70,8 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
 
-    engine.getStdoutOutput().writeSetup("FULL simulation complete!");
-    engine.getLogOutput().writeSetup("FULL simulation complete!");
+    engine.getStdoutOutput().writeSetupCompleted();
+    engine.getLogOutput().writeSetupCompleted();
 }
 
 /**
