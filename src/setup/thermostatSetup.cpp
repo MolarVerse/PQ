@@ -75,23 +75,47 @@ void ThermostatSetup::setup()
     const auto thermostatType = settings::ThermostatSettings::getThermostatType();
 
     if (thermostatType != settings::ThermostatType::NONE)
+    {
         if (!settings::ThermostatSettings::isTemperatureSet())
             throw customException::InputFileException(
                 std::format("Temperature not set for {} thermostat", settings::string(thermostatType)));
 
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("target temperature: {:14.5f} K", settings::ThermostatSettings::getTargetTemperature()));
+        _engine.getLogOutput().writeEmptyLine();
+    }
+
     if (thermostatType == settings::ThermostatType::BERENDSEN)
+    {
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                             settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
 
+        _engine.getLogOutput().writeSetupInfo("Berendsen thermostat:");
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("relaxation time: {:14.5f} ps", settings::ThermostatSettings::getRelaxationTime()));
+    }
+
     else if (thermostatType == settings::ThermostatType::VELOCITY_RESCALING)
+    {
         _engine.makeThermostat(
             thermostat::VelocityRescalingThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                     settings::ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_));
 
+        _engine.getLogOutput().writeSetupInfo("Velocity Rescaling thermostat:");
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("relaxation time: {:14.5f} ps", settings::ThermostatSettings::getRelaxationTime()));
+    }
+
     else if (thermostatType == settings::ThermostatType::LANGEVIN)
+    {
         _engine.makeThermostat(thermostat::LangevinThermostat(settings::ThermostatSettings::getTargetTemperature(),
                                                               settings::ThermostatSettings::getFriction()));
+
+        _engine.getLogOutput().writeSetupInfo("Langevin thermostat:");
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("friction: {:14.5f} ps^-1", settings::ThermostatSettings::getFriction()));
+    }
 
     else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
     {
@@ -119,7 +143,18 @@ void ThermostatSetup::setup()
         std::ranges::for_each(settings::ThermostatSettings::getZeta(), fillZeta);
 
         _engine.makeThermostat(thermostat);
+
+        _engine.getLogOutput().writeSetupInfo("Nose-Hoover chain thermostat:");
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("chain length:       {:8d}", settings::ThermostatSettings::getNoseHooverChainLength()));
+        _engine.getLogOutput().writeSetupInfo(
+            std::format("coupling frequency: {:14.5f} cm^-1", settings::ThermostatSettings::getNoseHooverCouplingFrequency()));
     }
     else
+    {
         _engine.makeThermostat(thermostat::Thermostat());
+        _engine.getLogOutput().writeSetupInfo("No thermostat.");
+    }
+
+    _engine.getLogOutput().writeEmptyLine();
 }
