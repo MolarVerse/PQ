@@ -68,7 +68,7 @@ void setup::resetKinetics::writeSetupInfo(engine::Engine &engine)
                                                      settings::ResetKineticsSettings::getNResetAngular(),
                                                      fResetAngular));
 
-    engine.getLogOutput().writeSetupInfo("\n");
+    engine.getLogOutput().writeEmptyLine();
 }
 
 /**

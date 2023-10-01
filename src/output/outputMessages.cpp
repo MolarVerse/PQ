@@ -89,7 +89,7 @@ std::string output::endedNormally()
  */
 std::string output::elapsedTimeMessage(const double elapsedTime)
 {
-    return std::format("\n\n{}Elapsed time = {} s\n", _OUTPUT_, elapsedTime);
+    return std::format("\n\n{}Elapsed time = {:.5f} s\n", _OUTPUT_, elapsedTime);
 }
 
 /**

@@ -39,6 +39,8 @@ namespace output
       public:
         using Output::Output;
 
+        void writeEmptyLine() { _fp << '\n' << std::flush; }
+
         void writeHeader();
         void writeEndedNormally(const double elapsedTime);
 

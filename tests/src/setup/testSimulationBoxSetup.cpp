@@ -40,22 +40,22 @@
 #include <string>          // for basic_string
 #include <vector>          // for vector
 
-using namespace setup;
+using setup::simulationBox::SimulationBoxSetup;
 
 TEST_F(TestSetup, setAtomNames)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const simulationBox::Molecule qmMolecule(0);
+    const ::simulationBox::Molecule qmMolecule(0);
 
-    simulationBox::MoleculeType moleculeType(1);
+    ::simulationBox::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addAtomName("zN");
     moleculeType.addAtomName("H");
@@ -79,18 +79,18 @@ TEST_F(TestSetup, setAtomNames)
 
 TEST_F(TestSetup, setAtomTypes)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const simulationBox::Molecule qmMolecule(0);
+    const ::simulationBox::Molecule qmMolecule(0);
 
-    simulationBox::MoleculeType moleculeType(1);
+    ::simulationBox::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addAtomType(0);
     moleculeType.addAtomType(1);
@@ -120,18 +120,18 @@ TEST_F(TestSetup, setAtomTypes)
 
 TEST_F(TestSetup, setExternalVDWTypes)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const simulationBox::Molecule qmMolecule(0);
+    const ::simulationBox::Molecule qmMolecule(0);
 
-    simulationBox::MoleculeType moleculeType(1);
+    ::simulationBox::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addExternalGlobalVDWType(0);
     moleculeType.addExternalGlobalVDWType(1);
@@ -155,18 +155,18 @@ TEST_F(TestSetup, setExternalVDWTypes)
 
 TEST_F(TestSetup, setPartialCharges)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const simulationBox::Molecule qmMolecule(0);
+    const ::simulationBox::Molecule qmMolecule(0);
 
-    simulationBox::MoleculeType moleculeType(1);
+    ::simulationBox::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addPartialCharge(0.0);
     moleculeType.addPartialCharge(1.0);
@@ -190,11 +190,11 @@ TEST_F(TestSetup, setPartialCharges)
 
 TEST_F(TestSetup, testSetAtomMasses)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -213,11 +213,11 @@ TEST_F(TestSetup, testSetAtomMasses)
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("L");
@@ -232,11 +232,11 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
 TEST_F(TestSetup, testSetAtomicNumbers)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -255,11 +255,11 @@ TEST_F(TestSetup, testSetAtomicNumbers)
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("L");
@@ -274,11 +274,11 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
 TEST_F(TestSetup, testSetMolMass)
 {
-    simulationBox::Molecule molecule1(1);
+    ::simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -286,10 +286,10 @@ TEST_F(TestSetup, testSetMolMass)
     molecule1.addAtom(atom2);
     molecule1.addAtom(atom3);
 
-    simulationBox::Molecule molecule2(2);
+    ::simulationBox::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
-    const auto atom4 = std::make_shared<simulationBox::Atom>();
-    const auto atom5 = std::make_shared<simulationBox::Atom>();
+    const auto atom4 = std::make_shared<::simulationBox::Atom>();
+    const auto atom5 = std::make_shared<::simulationBox::Atom>();
     atom4->setName("H");
     atom5->setName("H");
     molecule2.addAtom(atom4);
@@ -306,11 +306,11 @@ TEST_F(TestSetup, testSetMolMass)
 
 TEST_F(TestSetup, testSetTotalCharge)
 {
-    simulationBox::Molecule molecule(1);
+    ::simulationBox::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -397,11 +397,11 @@ TEST_F(TestSetup, testFullSetup)
 {
     settings::ForceFieldSettings::activate();
 
-    simulationBox::Molecule molecule1(1);
+    ::simulationBox::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom3 = std::make_shared<::simulationBox::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -411,10 +411,10 @@ TEST_F(TestSetup, testFullSetup)
 
     molecule1.setPartialCharges({0.1, 0.2, -0.4});
 
-    simulationBox::Molecule molecule2(2);
+    ::simulationBox::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
-    const auto atom4 = std::make_shared<simulationBox::Atom>();
-    const auto atom5 = std::make_shared<simulationBox::Atom>();
+    const auto atom4 = std::make_shared<::simulationBox::Atom>();
+    const auto atom5 = std::make_shared<::simulationBox::Atom>();
     atom4->setName("H");
     atom5->setName("H");
     molecule2.addAtom(atom4);
@@ -425,8 +425,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().getMolecules().push_back(molecule1);
     _engine->getSimulationBox().getMolecules().push_back(molecule2);
 
-    auto moleculeType1 = simulationBox::MoleculeType(1);
-    auto moleculeType2 = simulationBox::MoleculeType(2);
+    auto moleculeType1 = ::simulationBox::MoleculeType(1);
+    auto moleculeType2 = ::simulationBox::MoleculeType(2);
 
     moleculeType1.setNumberOfAtoms(3);
     moleculeType1.addAtomName("C");
@@ -465,7 +465,7 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     _engine->getSimulationBox().setCoulombRadiusCutOff(4.0);
 
-    EXPECT_NO_THROW(setupSimulationBox(*_engine));
+    EXPECT_NO_THROW(setup::simulationBox::setupSimulationBox(*_engine));
 }
 
 int main(int argc, char **argv)

@@ -28,6 +28,7 @@
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for MolDescriptorException
+#include "fileSettings.hpp"                  // for FileSettings
 #include "forceFieldSettings.hpp"            // for ForceFieldSettings
 #include "logOutput.hpp"                     // for LogOutput
 #include "maxwellBoltzmann.hpp"              // for MaxwellBoltzmann
@@ -48,21 +49,61 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-using namespace setup;
-using namespace simulationBox;
+using setup::simulationBox::SimulationBoxSetup;
 
 /**
  * @brief wrapper to create SetupSimulationBox object and call setup
  *
  * @param engine
  */
-void setup::setupSimulationBox(engine::Engine &engine)
+void setup::simulationBox::setupSimulationBox(engine::Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
 
     SimulationBoxSetup simulationBoxSetup(engine);
     simulationBoxSetup.setup();
+
+    writeSetupInfo(engine);
+}
+
+/**
+ * @brief write setup info to log file
+ *
+ * @param engine
+ */
+void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
+{
+    engine.getLogOutput().writeSetupInfo(std::format("number of atoms: {:8d}", engine.getSimulationBox().getNumberOfAtoms()));
+    engine.getLogOutput().writeSetupInfo(
+        std::format("total mass:      {:14.5f} g/mol", engine.getSimulationBox().getTotalMass()));
+    engine.getLogOutput().writeSetupInfo(std::format("total charge:    {:14.5f}", engine.getSimulationBox().getTotalCharge()));
+    engine.getLogOutput().writeEmptyLine();
+
+    engine.getLogOutput().writeSetupInfo(std::format("density:         {:14.5f} kg/L", engine.getSimulationBox().getDensity()));
+    engine.getLogOutput().writeSetupInfo(std::format("volume:          {:14.5f} A³", engine.getSimulationBox().getVolume()));
+    engine.getLogOutput().writeEmptyLine();
+
+    engine.getLogOutput().writeSetupInfo(std::format("box dimensions:  {:14.5f} A {:14.5f} A {:14.5f} A",
+                                                     engine.getSimulationBox().getBoxDimensions()[0],
+                                                     engine.getSimulationBox().getBoxDimensions()[1],
+                                                     engine.getSimulationBox().getBoxDimensions()[2]));
+    engine.getLogOutput().writeSetupInfo(std::format("box angles:      {:14.5f}°  {:14.5f}°  {:14.5f}°",
+                                                     engine.getSimulationBox().getBoxAngles()[0],
+                                                     engine.getSimulationBox().getBoxAngles()[1],
+                                                     engine.getSimulationBox().getBoxAngles()[2]));
+    engine.getLogOutput().writeEmptyLine();
+
+    engine.getLogOutput().writeSetupInfo(
+        std::format("coulomb cutoff:  {:14.5f} A", engine.getSimulationBox().getCoulombRadiusCutOff()));
+    engine.getLogOutput().writeEmptyLine();
+
+    if (settings::SimulationBoxSettings::getInitializeVelocities())
+        engine.getLogOutput().writeSetupInfo("velocities initialized with Maxwell-Boltzmann distribution");
+    else
+        engine.getLogOutput().writeSetupInfo(
+            std::format("velocities taken from start file \"{}\"", settings::FileSettings::getStartFileName()));
+    engine.getLogOutput().writeEmptyLine();
 }
 
 /**
@@ -195,7 +236,7 @@ void SimulationBoxSetup::setPartialCharges()
  */
 void SimulationBoxSetup::setAtomMasses()
 {
-    auto setAtomMasses = [](Molecule &molecule)
+    auto setAtomMasses = [](::simulationBox::Molecule &molecule)
     {
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -217,7 +258,7 @@ void SimulationBoxSetup::setAtomMasses()
  */
 void SimulationBoxSetup::setAtomicNumbers()
 {
-    auto setAtomicNumbers = [](Molecule &molecule)
+    auto setAtomicNumbers = [](::simulationBox::Molecule &molecule)
     {
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -255,7 +296,7 @@ void SimulationBoxSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    auto calculateMolecularCharge = [&totalCharge](const Molecule &molecule)
+    auto calculateMolecularCharge = [&totalCharge](const ::simulationBox::Molecule &molecule)
     {
         const auto &charges  = molecule.getPartialCharges();
         totalCharge         += std::accumulate(charges.begin(), charges.end(), 0.0);

@@ -105,7 +105,7 @@ void setup::setupEngine(Engine &engine)
 
     resetKinetics::setupResetKinetics(engine);
 
-    setupSimulationBox(engine);
+    simulationBox::setupSimulationBox(engine);
 
     setupCellList(engine);
 

@@ -29,9 +29,10 @@ namespace engine
     class Engine;
 }   // namespace engine
 
-namespace setup
+namespace setup::simulationBox
 {
     void setupSimulationBox(engine::Engine &);
+    void writeSetupInfo(engine::Engine &);
 
     /**
      * @class SetupSimulationBox
@@ -66,6 +67,6 @@ namespace setup
         void initVelocities();
     };
 
-}   // namespace setup
+}   // namespace setup::simulationBox
 
 #endif   // _SIMULATION_BOX_SETUP_HPP_
