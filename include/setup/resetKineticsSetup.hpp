@@ -29,9 +29,10 @@ namespace engine
     class Engine;   // forward declaration
 }
 
-namespace setup
+namespace setup::resetKinetics
 {
     void setupResetKinetics(engine::Engine &);
+    void writeSetupInfo(engine::Engine &);
 
     /**
      * @class ResetKineticsSetup
@@ -50,6 +51,6 @@ namespace setup
         void setup();
     };
 
-}   // namespace setup
+}   // namespace setup::resetKinetics
 
 #endif   // _RESET_KINETICS_SETUP_HPP_

@@ -69,10 +69,16 @@ void LogOutput::writeInitialMomentum(const double momentum)
 }
 
 /**
- * @brief write a message to inform about the setup
+ * @brief write a message to inform about the start of the setup
  *
  */
 void LogOutput::writeSetup(const std::string &setup) { _fp << setupMessage(setup) << '\n' << std::flush; }
+
+/**
+ * @brief write a message to inform about the setup
+ *
+ */
+void LogOutput::writeSetupInfo(const std::string &setupInfo) { _fp << _OUTPUT_ << setupInfo << '\n' << std::flush; }
 
 /**
  * @brief write a message to inform about starting to read a file

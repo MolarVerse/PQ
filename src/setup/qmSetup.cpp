@@ -45,6 +45,9 @@ void setup::setupQM(engine::QMMDEngine &engine)
 
     QMSetup qmSetup(engine);
     qmSetup.setup();
+
+    engine.getLogOutput().writeSetupInfo("QM runner: " + string(settings::QMSettings::getQMMethod()));
+    engine.getLogOutput().writeSetupInfo("QM script: " + settings::QMSettings::getQMScript());
 }
 
 /**

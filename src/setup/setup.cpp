@@ -103,7 +103,7 @@ void setup::setupEngine(Engine &engine)
     if (settings::Settings::isQMActivated())
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
 
-    setupResetKinetics(engine);
+    resetKinetics::setupResetKinetics(engine);
 
     setupSimulationBox(engine);
 

@@ -27,28 +27,56 @@
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "timingsSettings.hpp"         // for TimingsSettings
 
-using namespace setup;
+using setup::resetKinetics::ResetKineticsSetup;
 
 /**
  * @brief constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup
  *
  * @param engine
  */
-void setup::setupResetKinetics(engine::Engine &engine)
+void setup::resetKinetics::setupResetKinetics(engine::Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("Reset Kinetics");
     engine.getLogOutput().writeSetup("Reset Kinetics");
 
     ResetKineticsSetup resetKineticsSetup(engine);
     resetKineticsSetup.setup();
+
+    writeSetupInfo(engine);
+}
+
+/**
+ * @brief writes setup info to log file
+ *
+ * @param engine
+ */
+void setup::resetKinetics::writeSetupInfo(engine::Engine &engine)
+{
+
+    const int fScale = settings::ResetKineticsSettings::getFScale() == 0 ? -1 : settings::ResetKineticsSettings::getFScale();
+    const int fReset = settings::ResetKineticsSettings::getFReset() == 0 ? -1 : settings::ResetKineticsSettings::getFReset();
+    const int fResetAngular =
+        settings::ResetKineticsSettings::getFResetAngular() == 0 ? -1 : settings::ResetKineticsSettings::getFResetAngular();
+
+    engine.getLogOutput().writeSetupInfo(std::format(
+        "reset temperature:      first {:5d} steps, every {:5d} steps", settings::ResetKineticsSettings::getNScale(), fScale));
+
+    engine.getLogOutput().writeSetupInfo(std::format(
+        "reset momentum:         first {:5d} steps, every {:5d} steps", settings::ResetKineticsSettings::getNReset(), fReset));
+
+    engine.getLogOutput().writeSetupInfo(std::format("reset angular momentum: first {:5d} steps, every {:5d} steps",
+                                                     settings::ResetKineticsSettings::getNResetAngular(),
+                                                     fResetAngular));
+
+    engine.getLogOutput().writeSetupInfo("\n");
 }
 
 /**
  * @brief setup nscale, fscale, nreset, freset
  *
  * @details decides if temperature and momentum or only temperature is reset
- * It checks if either fscale or freset is set to 0 and sets it to the number of steps + 1, so that the reset is not performed.
- * nreset and freset are set to 0 if they are not set.
+ * It checks if either fscale or freset is set to 0 and sets it to the number of steps + 1, so that the reset is not
+ * performed. nreset and freset are set to 0 if they are not set.
  *
  */
 void ResetKineticsSetup::setup()
@@ -66,5 +94,5 @@ void ResetKineticsSetup::setup()
     fReset        = (0 == fReset) ? numberOfSteps + 1 : fReset;
     fResetAngular = (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
 
-    _engine.getResetKinetics() = resetKinetics::ResetKinetics(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular);
+    _engine.getResetKinetics() = ::resetKinetics::ResetKinetics(nScale, fScale, nReset, fReset, nResetAngular, fResetAngular);
 }

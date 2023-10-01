@@ -22,7 +22,8 @@
 
 #include "testStdoutOutput.hpp"
 
-#include "systemInfo.hpp"   // for _AUTHOR_, _EMAIL_
+#include "outputMessages.hpp"   // for _OUTPUT_
+#include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <format>          // for format
@@ -123,9 +124,12 @@ TEST_F(TestStdoutOutput, writeDensityWarning)
 {
     testing::internal::CaptureStdout();
     _stdoutOutput->writeDensityWarning();
-    std::string output = testing::internal::GetCapturedStdout();
+    const std::string output = testing::internal::GetCapturedStdout();
 
-    EXPECT_EQ(output, "\x1B[33mUserInputWarning\x1B[39m\nDensity and box dimensions set. Density will be ignored.\n\n");
+    EXPECT_EQ(output,
+              std::format("{}\x1B[33mUserInputWarning\x1B[39m\n{}Density and box dimensions set. Density will be ignored.\n\n",
+                          output::_OUTPUT_,
+                          output::_OUTPUT_));
 }
 
 int main(int argc, char **argv)

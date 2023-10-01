@@ -46,6 +46,7 @@ namespace output
         void writeInitialMomentum(const double momentum);
 
         void writeSetup(const std::string &setup);
+        void writeSetupInfo(const std::string &setupInfo);
         void writeRead(const std::string &file);
     };
 
