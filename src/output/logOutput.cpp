@@ -65,7 +65,7 @@ void LogOutput::writeDensityWarning()
  */
 void LogOutput::writeInitialMomentum(const double momentum)
 {
-    _fp << std::format("\n{}Initial momentum = {} Angstrom * amu / fs\n", _INFO_, momentum) << std::flush;
+    _fp << std::format("\n{}Initial momentum = {:.5e} {}*amu/fs\n", _INFO_, momentum, _ANGSTROM_) << std::flush;
 }
 
 /**

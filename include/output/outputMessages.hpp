@@ -24,9 +24,10 @@
 
 namespace output
 {
-    static constexpr char _WARNING_[] = "WARNING: ";
-    static constexpr char _INFO_[]    = "INFO:    ";
-    static constexpr char _OUTPUT_[]  = "         ";
+    static constexpr char _WARNING_[]  = "WARNING: ";
+    static constexpr char _INFO_[]     = "INFO:    ";
+    static constexpr char _OUTPUT_[]   = "         ";
+    static constexpr char _ANGSTROM_[] = "\u212b";
 
     std::string header();
     std::string endedNormally();

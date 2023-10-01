@@ -22,7 +22,8 @@
 
 #include "testLogOutput.hpp"
 
-#include "systemInfo.hpp"   // for _AUTHOR_, _EMAIL_
+#include "outputMessages.hpp"   // for _ANGSTROM_
+#include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <format>          // for format
@@ -92,7 +93,7 @@ TEST_F(TestLogOutput, writeEndedNormally)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         Elapsed time = 0.1 s");
+    EXPECT_EQ(line, "         Elapsed time = 0.10000 s");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -141,7 +142,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
     std::string   line;
     getline(file, line);
     getline(file, line);
-    EXPECT_EQ(line, "INFO:    Initial momentum = 0.1 Angstrom * amu / fs");
+    EXPECT_EQ(line, std::format("INFO:    Initial momentum = 1.00000e-01 {}*amu/fs", output::_ANGSTROM_));
 }
 
 int main(int argc, char **argv)

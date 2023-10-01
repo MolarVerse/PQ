@@ -95,7 +95,7 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
-    EXPECT_EQ(line, "         Elapsed time = 0.1 s");
+    EXPECT_EQ(line, "         Elapsed time = 0.10000 s");
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);

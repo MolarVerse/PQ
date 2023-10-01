@@ -33,6 +33,7 @@
 #include "logOutput.hpp"                     // for LogOutput
 #include "maxwellBoltzmann.hpp"              // for MaxwellBoltzmann
 #include "molecule.hpp"                      // for Molecule
+#include "outputMessages.hpp"                // for _ANGSTROM_
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
@@ -81,13 +82,17 @@ void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
     engine.getLogOutput().writeEmptyLine();
 
     engine.getLogOutput().writeSetupInfo(std::format("density:         {:14.5f} kg/L", engine.getSimulationBox().getDensity()));
-    engine.getLogOutput().writeSetupInfo(std::format("volume:          {:14.5f} A³", engine.getSimulationBox().getVolume()));
+    engine.getLogOutput().writeSetupInfo(
+        std::format("volume:          {:14.5f} {}³", engine.getSimulationBox().getVolume(), output::_ANGSTROM_));
     engine.getLogOutput().writeEmptyLine();
 
-    engine.getLogOutput().writeSetupInfo(std::format("box dimensions:  {:14.5f} A {:14.5f} A {:14.5f} A",
+    engine.getLogOutput().writeSetupInfo(std::format("box dimensions:  {:14.5f} {} {:14.5f} {} {:14.5f} {}",
                                                      engine.getSimulationBox().getBoxDimensions()[0],
+                                                     output::_ANGSTROM_,
                                                      engine.getSimulationBox().getBoxDimensions()[1],
-                                                     engine.getSimulationBox().getBoxDimensions()[2]));
+                                                     output::_ANGSTROM_,
+                                                     engine.getSimulationBox().getBoxDimensions()[2],
+                                                     output::_ANGSTROM_));
     engine.getLogOutput().writeSetupInfo(std::format("box angles:      {:14.5f}°  {:14.5f}°  {:14.5f}°",
                                                      engine.getSimulationBox().getBoxAngles()[0],
                                                      engine.getSimulationBox().getBoxAngles()[1],
@@ -95,7 +100,7 @@ void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
     engine.getLogOutput().writeEmptyLine();
 
     engine.getLogOutput().writeSetupInfo(
-        std::format("coulomb cutoff:  {:14.5f} A", engine.getSimulationBox().getCoulombRadiusCutOff()));
+        std::format("coulomb cutoff:  {:14.5f} {}", engine.getSimulationBox().getCoulombRadiusCutOff(), output::_ANGSTROM_));
     engine.getLogOutput().writeEmptyLine();
 
     if (settings::SimulationBoxSettings::getInitializeVelocities())
