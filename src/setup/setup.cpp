@@ -59,6 +59,8 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
+    engine.getStdoutOutput().writeHeader();
+
     readInputFile(inputFileName, engine);
 
     setupOutputFiles(engine);

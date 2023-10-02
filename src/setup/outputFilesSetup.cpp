@@ -73,5 +73,4 @@ void OutputFilesSetup::setup()
     _engine.getRingPolymerChargeOutput().setFilename(settings::OutputFileSettings::getRingPolymerChargeFileName());
 
     _engine.getLogOutput().writeHeader();
-    _engine.getStdoutOutput().writeHeader();
 }
