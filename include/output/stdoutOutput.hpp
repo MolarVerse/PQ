@@ -46,7 +46,7 @@ namespace output
 
         void writeSetup(const std::string &setup) const;
         void writeSetupCompleted() const;
-        void writeRead(const std::string &file) const;
+        void writeRead(const std::string &message, const std::string &file) const;
     };
 
 }   // namespace output

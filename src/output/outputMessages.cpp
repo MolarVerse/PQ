@@ -119,4 +119,7 @@ std::string output::setupCompletedMessage()
  * @param file
  * @return std::string
  */
-std::string output::readMessage(const std::string &file) { return std::format("{}Reading \"{}\"\n", _INFO_, file); }
+std::string output::readMessage(const std::string &message, const std::string &file)
+{
+    return std::format("{}Reading {} \"{}\"\n", _INFO_, message, file);
+}

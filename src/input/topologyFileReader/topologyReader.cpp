@@ -127,8 +127,8 @@ void input::topology::readTopologyFile(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getTopologyFileName());
-    engine.getLogOutput().writeRead(settings::FileSettings::getTopologyFileName());
+    engine.getStdoutOutput().writeRead("Topology File", settings::FileSettings::getTopologyFileName());
+    engine.getLogOutput().writeRead("Topology File", settings::FileSettings::getTopologyFileName());
 
     TopologyReader topologyReader(settings::FileSettings::getTopologyFileName(), engine);
     topologyReader.read();

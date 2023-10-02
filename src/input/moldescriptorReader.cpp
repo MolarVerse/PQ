@@ -59,8 +59,8 @@ MoldescriptorReader::MoldescriptorReader(engine::Engine &engine) : _engine(engin
  */
 void input::molDescriptor::readMolDescriptor(engine::Engine &engine)
 {
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getMolDescriptorFileName());
-    engine.getLogOutput().writeRead(settings::FileSettings::getMolDescriptorFileName());
+    engine.getStdoutOutput().writeRead("Moldescriptor File", settings::FileSettings::getMolDescriptorFileName());
+    engine.getLogOutput().writeRead("Moldescriptor File", settings::FileSettings::getMolDescriptorFileName());
 
     MoldescriptorReader reader(engine);
     reader.read();

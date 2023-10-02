@@ -54,8 +54,8 @@ void input::intraNonBonded::readIntraNonBondedFile(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getIntraNonBondedFileName());
-    engine.getLogOutput().writeRead(settings::FileSettings::getIntraNonBondedFileName());
+    engine.getStdoutOutput().writeRead("Intra Non-Bonded File", settings::FileSettings::getIntraNonBondedFileName());
+    engine.getLogOutput().writeRead("Intra Non-Bonded File", settings::FileSettings::getIntraNonBondedFileName());
 
     IntraNonBondedReader reader(settings::FileSettings::getIntraNonBondedFileName(), engine);
     reader.read();

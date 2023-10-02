@@ -104,8 +104,8 @@ void RestartFileReader::read()
  */
 void input::restartFile::readRestartFile(engine::Engine &engine)
 {
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getStartFileName());
-    engine.getLogOutput().writeRead(settings::FileSettings::getStartFileName());
+    engine.getStdoutOutput().writeRead("Start File", settings::FileSettings::getStartFileName());
+    engine.getLogOutput().writeRead("Start File", settings::FileSettings::getStartFileName());
 
     RestartFileReader rstFileReader(settings::FileSettings::getStartFileName(), engine);
     rstFileReader.read();

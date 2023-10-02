@@ -139,8 +139,8 @@ void input::parameterFile::readParameterFile(engine::Engine &engine)
     if (!isNeeded())
         return;
 
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getParameterFilename());
-    engine.getLogOutput().writeRead(settings::FileSettings::getParameterFilename());
+    engine.getStdoutOutput().writeRead("Parameter File", settings::FileSettings::getParameterFilename());
+    engine.getLogOutput().writeRead("Parameter File", settings::FileSettings::getParameterFilename());
 
     ParameterFileReader parameterFileReader(settings::FileSettings::getParameterFilename(), engine);
     parameterFileReader.read();

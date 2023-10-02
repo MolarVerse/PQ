@@ -92,4 +92,7 @@ void LogOutput::writeSetupCompleted() { _fp << setupCompletedMessage() << '\n' <
  * @brief write a message to inform about starting to read a file
  *
  */
-void LogOutput::writeRead(const std::string &file) { _fp << readMessage(file) << '\n' << std::flush; }
+void LogOutput::writeRead(const std::string &message, const std::string &file)
+{
+    _fp << readMessage(message, file) << '\n' << std::flush;
+}

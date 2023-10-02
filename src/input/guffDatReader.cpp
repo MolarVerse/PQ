@@ -68,8 +68,8 @@ void input::guffdat::readGuffDat(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(settings::FileSettings::getGuffDatFileName());
-    engine.getLogOutput().writeRead(settings::FileSettings::getGuffDatFileName());
+    engine.getStdoutOutput().writeRead("Guffdat File", settings::FileSettings::getGuffDatFileName());
+    engine.getLogOutput().writeRead("Guffdat File", settings::FileSettings::getGuffDatFileName());
 
     GuffDatReader guffDat(engine);
     guffDat.setupGuffMaps();

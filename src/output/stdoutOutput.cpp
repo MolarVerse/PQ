@@ -84,4 +84,7 @@ void StdoutOutput::writeSetupCompleted() const { std::cout << setupCompletedMess
  * @brief write a message to the stdout to inform about the start of reading a file
  *
  */
-void StdoutOutput::writeRead(const std::string &file) const { std::cout << readMessage(file) << '\n' << std::flush; }
+void StdoutOutput::writeRead(const std::string &message, const std::string &file) const
+{
+    std::cout << readMessage(message, file) << '\n' << std::flush;
+}

@@ -230,7 +230,7 @@ void input::readJobType(const std::string &fileName, std::unique_ptr<engine::Eng
  */
 void input::readInputFile(const std::string_view &fileName, engine::Engine &engine)
 {
-    engine.getStdoutOutput().writeRead(std::string(fileName));
+    engine.getStdoutOutput().writeRead("Input File", std::string(fileName));
 
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();
