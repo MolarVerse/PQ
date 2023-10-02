@@ -114,7 +114,7 @@ void ThermostatSetup::setup()
 
         _engine.getLogOutput().writeSetupInfo("Langevin thermostat:");
         _engine.getLogOutput().writeSetupInfo(
-            std::format("friction: {:14.5f} ps^-1", settings::ThermostatSettings::getFriction()));
+            std::format("friction: {:14.5f} ps⁻¹", settings::ThermostatSettings::getFriction()));
     }
 
     else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
@@ -148,7 +148,7 @@ void ThermostatSetup::setup()
         _engine.getLogOutput().writeSetupInfo(
             std::format("chain length:       {:8d}", settings::ThermostatSettings::getNoseHooverChainLength()));
         _engine.getLogOutput().writeSetupInfo(
-            std::format("coupling frequency: {:14.5f} cm^-1", settings::ThermostatSettings::getNoseHooverCouplingFrequency()));
+            std::format("coupling frequency: {:14.5f} cm⁻¹", settings::ThermostatSettings::getNoseHooverCouplingFrequency()));
     }
     else
     {
