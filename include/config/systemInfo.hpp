@@ -26,8 +26,9 @@
 
 namespace sysinfo
 {
-    static constexpr char _AUTHOR_[] = "Jakob Gamper";
-    static constexpr char _EMAIL_[]  = "97gamjak@gmail.com";
+    static constexpr char _AUTHOR_[]       = "Jakob Gamper";
+    static constexpr char _EMAIL_[]        = "97gamjak@gmail.com";
+    static constexpr char _COMPILE_DATE_[] = __DATE__ " " __TIME__;
 
 }   // namespace sysinfo
 
