@@ -6,9 +6,17 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(PIMD-QMCF VERSION 1.0
+project(PIMD-QMCF VERSION 0.1
     DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
     LANGUAGES CXX C)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
+        message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
+    endif()
+else()
+    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
+endif()
 
 # set if shared or static libraries
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
@@ -25,7 +33,6 @@ SET(CMAKE_INSTALL_RPATH
     "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
 )
 
-# SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/tools/lib)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
