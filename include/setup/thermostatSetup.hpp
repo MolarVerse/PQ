@@ -48,6 +48,12 @@ namespace setup
         explicit ThermostatSetup(engine::Engine &engine) : _engine(engine){};
 
         void setup();
+
+        void isTargetTemperatureSet() const;
+        void setupBerendsenThermostat();
+        void setupLangevinThermostat();
+        void setupNoseHooverThermostat();
+        void setupVelocityRescalingThermostat();
     };
 
 }   // namespace setup

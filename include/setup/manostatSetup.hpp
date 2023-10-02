@@ -48,6 +48,10 @@ namespace setup
         explicit ManostatSetup(engine::Engine &engine) : _engine(engine){};
 
         void setup();
+
+        void isPressureSet() const;
+        void setupBerendsenManostat();
+        void setupStochasticRescalingManostat();
     };
 
 }   // namespace setup
