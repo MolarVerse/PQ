@@ -69,8 +69,8 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
     {
         boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
 
-        if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
-            throw customException::RstFileException("Box angles must be positive and smaller than 90°");
+        if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 180.0; }))
+            throw customException::RstFileException("Box angles must be positive and smaller than 180°");
     }
 
     if (!utilities::compare(boxAngles, linearAlgebra::Vec3D{90.0, 90.0, 90.0}, 1e-5))

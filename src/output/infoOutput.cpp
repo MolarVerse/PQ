@@ -60,7 +60,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
 
     writeHeader();
 
-    writeLeft(simulationTime, "SIMULATION TIME", "ps");
+    writeLeft(simulationTime, "SIMULATION-TIME", "ps");
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");

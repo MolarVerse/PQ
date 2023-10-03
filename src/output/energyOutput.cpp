@@ -100,4 +100,6 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
 
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));
     _fp << std::format("{:12.5f}\n", loopTime);
+
+    _fp << std::flush;
 }

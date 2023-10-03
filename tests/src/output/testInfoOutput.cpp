@@ -67,7 +67,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
@@ -118,7 +118,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 94.00000 kcal/mol   |");
     getline(file, line);
@@ -172,7 +172,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
@@ -227,7 +227,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                  8.00000 kcal/mol   |");
     getline(file, line);
@@ -277,7 +277,7 @@ TEST_F(TestEnergyOutput, writeInfo_ringPolymerActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
@@ -331,7 +331,7 @@ TEST_F(TestEnergyOutput, writeInfo_NoseHooverActive)
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
+    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
