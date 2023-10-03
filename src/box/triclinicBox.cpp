@@ -40,7 +40,7 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
  */
 void TriclinicBox::setBoxAngles(const linearAlgebra::Vec3D &boxAngles)
 {
-    _boxAngles = boxAngles * constants::_RAD_TO_DEG_;
+    _boxAngles = boxAngles * constants::_DEG_TO_RAD_;
 
     calculateTransformationMatrix();
     calculateBoxMatrix();
