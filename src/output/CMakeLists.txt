@@ -8,11 +8,15 @@ add_library(output
     logOutput.cpp
     stdoutOutput.cpp
     rstFileOutput.cpp
+    ringPolymerRestartFileOutput.cpp
+    ringPolymerTrajectoryOutput.cpp
+    momentumOutput.cpp
 )
 
 target_include_directories(output
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/output
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(output
@@ -21,8 +25,11 @@ target_link_libraries(output
     physicalData
     simulationBox
     settings
+    gtest
 )
 
 install(TARGETS output
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+add_subdirectory(references)

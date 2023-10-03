@@ -1,5 +1,4 @@
 set(source_files
-    testBox.cpp
     testMolecule.cpp
     testSimulationBox.cpp
     testCelllist.cpp

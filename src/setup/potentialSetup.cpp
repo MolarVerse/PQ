@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "potentialSetup.hpp"
 
 #include "angleForceField.hpp"           // for potential
@@ -8,14 +30,13 @@
 #include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "nonCoulombPair.hpp"            // for NonCoulombPair
+#include "nonCoulombPair.hpp"            // IWYU pragma: keep for NonCoulombPair
 #include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, __sort_fn
-#include <cstddef>       // for size_t
 #include <functional>    // for identity
 #include <memory>        // for swap, shared_ptr, __shared_ptr_access
 #include <string>        // for operator==
@@ -32,6 +53,9 @@ using namespace potential;
  */
 void setup::setupPotential(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("MM potential");
+    engine.getLogOutput().writeSetup("MM potential");
+
     PotentialSetup potentialSetup(engine);
     potentialSetup.setup();
 }

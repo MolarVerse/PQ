@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "testSimulationBox.hpp"
 
 #include "exceptions.hpp"
@@ -105,6 +127,14 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
     simulationBox.addMolecule(molecule2);
     simulationBox.addMolecule(molecule1);
 
+    const auto moleculeType1 = simulationBox::MoleculeType(1);
+    const auto moleculeType2 = simulationBox::MoleculeType(2);
+    const auto moleculeType3 = simulationBox::MoleculeType(3);
+
+    simulationBox.addMoleculeType(moleculeType1);
+    simulationBox.addMoleculeType(moleculeType2);
+    simulationBox.addMoleculeType(moleculeType3);
+
     auto necessaryMoleculeTypes = simulationBox.findNecessaryMoleculeTypes();
     EXPECT_EQ(necessaryMoleculeTypes.size(), 3);
     EXPECT_EQ(necessaryMoleculeTypes[0].getMoltype(), 1);
@@ -149,8 +179,8 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
 {
 
     simulationBox::SimulationBox simulationBox;
-    simulationBox::Molecule      molecule1(1);
-    simulationBox::Molecule      molecule2(2);
+    simulationBox::MoleculeType  molecule1(1);
+    simulationBox::MoleculeType  molecule2(2);
 
     molecule1.addExternalGlobalVDWType(1);
     molecule1.addExternalGlobalVDWType(3);
@@ -194,11 +224,8 @@ TEST_F(TestSimulationBox, moleculeTypeExists)
  */
 TEST_F(TestSimulationBox, findMoleculeTypeByString)
 {
-    auto *molecule1 = &(_simulationBox->getMoleculeTypes()[0]);
-    auto *molecule2 = &(_simulationBox->getMoleculeTypes()[1]);
-
-    molecule1->setName("mol1");
-    molecule2->setName("mol2");
+    _simulationBox->getMoleculeTypes()[0].setName("mol1");
+    _simulationBox->getMoleculeTypes()[1].setName("mol2");
 
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);
@@ -212,15 +239,37 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
 TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
 {
     simulationBox::SimulationBox simulationBox;
-    simulationBox::Molecule      molecule1(1);
-    simulationBox::Molecule      molecule2(2);
+    simulationBox::MoleculeType  molecule1(1);
+    simulationBox::MoleculeType  molecule2(2);
 
     molecule1.setPartialCharges({0.1, 0.2, 0.3});
     molecule2.setPartialCharges({0.4, 0.5});
 
+    const auto atom1 = std::make_shared<simulationBox::Atom>();
+    const auto atom2 = std::make_shared<simulationBox::Atom>();
+    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom4 = std::make_shared<simulationBox::Atom>();
+    const auto atom5 = std::make_shared<simulationBox::Atom>();
+    const auto atom6 = std::make_shared<simulationBox::Atom>();
+    const auto atom7 = std::make_shared<simulationBox::Atom>();
+    const auto atom8 = std::make_shared<simulationBox::Atom>();
+
     simulationBox::Molecule molecule3(1);
     simulationBox::Molecule molecule4(2);
     simulationBox::Molecule molecule5(1);
+
+    molecule3.setNumberOfAtoms(3);
+    molecule4.setNumberOfAtoms(2);
+    molecule5.setNumberOfAtoms(3);
+
+    molecule3.addAtom(atom1);
+    molecule3.addAtom(atom2);
+    molecule3.addAtom(atom3);
+    molecule4.addAtom(atom4);
+    molecule4.addAtom(atom5);
+    molecule5.addAtom(atom6);
+    molecule5.addAtom(atom7);
+    molecule5.addAtom(atom8);
 
     simulationBox.addMoleculeType(molecule1);
     simulationBox.addMoleculeType(molecule2);
@@ -242,21 +291,14 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
  */
 TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound)
 {
-    simulationBox::SimulationBox simulationBox;
-    simulationBox::Molecule      molecule1(1);
+    simulationBox::SimulationBox  simulationBox;
+    const simulationBox::Molecule molecule1(1);
 
     simulationBox.addMolecule(molecule1);
 
     EXPECT_THROW_MSG(simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
                      customException::UserInputException,
                      "Molecule type 1 not found in molecule types");
-}
-
-TEST_F(TestSimulationBox, resizeInternalGlobalVDWTypes)
-{
-    _simulationBox->resizeInternalGlobalVDWTypes();
-    EXPECT_EQ(_simulationBox->getMolecule(0).getInternalGlobalVDWTypes().size(), 3);
-    EXPECT_EQ(_simulationBox->getMolecule(1).getInternalGlobalVDWTypes().size(), 2);
 }
 
 int main(int argc, char **argv)

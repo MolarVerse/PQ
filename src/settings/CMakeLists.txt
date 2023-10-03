@@ -9,12 +9,20 @@ add_library(settings
     resetKineticsSettings.cpp
     timingsSettings.cpp
     forceFieldSettings.cpp
+    qmSettings.cpp
+    ringPolymerSettings.cpp
+    outputFileSettings.cpp
 )
 
 target_include_directories(settings
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/settings
     ${PROJECT_SOURCE_DIR}/include/config
+)
+
+target_link_libraries(settings
+    PUBLIC
+    utilities
 )
 
 install(TARGETS settings

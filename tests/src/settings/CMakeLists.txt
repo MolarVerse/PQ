@@ -1,5 +1,7 @@
 set(source_files
     testPotentialSettings.cpp
+    testQMSettings.cpp
+    testOutputFileSettings.cpp
 )
 
 foreach(source_file ${source_files})

@@ -1,0 +1,71 @@
+# MIL-68(Al) all DFTB MD
+
+
+# MD Keywords
+
+    # Type of this run
+      jobtype = qmcf-md; dim = 3d;
+
+    # Number of steps to be performed and timestep in fs 
+      nstep = 2; timestep = 2;
+    # nscale=100;
+
+    # Output of coordinates and velocities enabled
+      write_traj = on;
+
+    # Output frequency of ALL data files
+      output_freq = 1;
+
+    # Coulombic cutoff 
+#      rcoulomb= 9.0; 
+
+    # Enabling reaction field and giving a proper dielectric constant
+#      long_range = none; longrange_nc = off;
+      
+    # Temperature algorithm (Berendsen), Relaxation time in ps 
+    # and target temperature in K
+     thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+#      thermostat = nh-chain; temp = 298.15; t_relaxation = 0.1; omega = 1000.0;
+
+    # Pressure coupling algorithm
+#      manostat = berendsen; p_relaxation = 1.0; pressure = 1.013;
+#      stress_tensor = on; 
+
+      integrator = v-verlet; 
+#water_intra = none;
+      
+#      guff_path = .; 
+ 
+# QMCF Keywords
+
+      NOSA = 616;  qm_center = 1;
+
+      rcore = 100.0; rsmoothing = 100.5; rlayer=101.0;
+      
+    # QM programm
+      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
+
+      virial = atomic;
+   
+#      qm_whitelist = 1-616; 
+
+#      force-field = on; nonbonded = guff;
+
+# Output files
+
+#      parameter_file = param.param;
+#      topology_file = shake_final.top;
+
+      start_file   = umcm-9-md-eq.rst;
+
+      output_file  = umcm-9-md-01.out; 
+      info_file    = umcm-9-md-01.info;
+      energy_file  = umcm-9-md-01.en; 
+      traj_file    = umcm-9-md-01.xyz;
+      vel_file     = umcm-9-md-01.vel;
+      charge_file  = umcm-9-md-01.chrg;
+      restart_file = umcm-9-md-01.rst;
+      force_file   = umcm-9-md-01.force;
+      
+# end of infile
+

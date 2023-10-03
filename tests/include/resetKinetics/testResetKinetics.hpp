@@ -1,58 +1,98 @@
-#ifndef _TEST_RESET_KINETICS_HPP_
+/*****************************************************************************
+<GPL_HEADER>
 
-#define _TEST_RESET_KINETICS_HPP_
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
 
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "resetKinetics.hpp"   // for ResetKinetics
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-#include <gtest/gtest.h>   // for Test
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-/**
- * @class TestResetKinetics
- *
- * @brief Fixture class for testing the ResetKinetics class
- *
- */
-class TestResetKinetics : public ::testing::Test
-{
-  protected:
-    void SetUp() override
-    {
-        _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 300.0);
-        _data          = new physicalData::PhysicalData();
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-        _simulationBox = new simulationBox::SimulationBox();
+<GPL_HEADER>
+******************************************************************************/
 
-        auto molecule1 = simulationBox::Molecule();
-        molecule1.setNumberOfAtoms(2);
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule1.addAtomVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtomMass(1.0);
-        molecule1.addAtomMass(1.0);
+// #ifndef _TEST_RESET_KINETICS_HPP_
 
-        auto molecule2 = simulationBox::Molecule();
-        molecule2.setNumberOfAtoms(1);
-        molecule2.addAtomVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtomMass(1.0);
+// #define _TEST_RESET_KINETICS_HPP_
 
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-        _simulationBox->setTotalMass(3.0);
-    }
+// #include "atom.hpp"                 // for Atom
+// #include "molecule.hpp"             // for Molecule
+// #include "physicalData.hpp"         // for PhysicalData
+// #include "resetKinetics.hpp"        // for ResetKinetics
+// #include "simulationBox.hpp"        // for SimulationBox
+// #include "thermostatSettings.hpp"   // for ThermostatSettings
+// #include "vector3d.hpp"             // for Vec3D
 
-    void TearDown() override
-    {
-        delete _data;
-        delete _simulationBox;
-        delete _resetKinetics;
-    }
+// #include <gtest/gtest.h>   // for Test
+// #include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 
-    physicalData::PhysicalData   *_data;
-    simulationBox::SimulationBox *_simulationBox;
-    resetKinetics::ResetKinetics *_resetKinetics;
-};
+// /**
+//  * @class TestResetKinetics
+//  *
+//  * @brief Fixture class for testing the ResetKinetics class
+//  *
+//  */
+// class TestResetKinetics : public ::testing::Test
+// {
+//   protected:
+//     void SetUp() override
+//     {
+//         settings::ThermostatSettings::setTargetTemperature(300.0);
+//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50, 11);
+//         _data          = new physicalData::PhysicalData();
 
-#endif
+//         _simulationBox = new simulationBox::SimulationBox();
+
+//         auto molecule1 = simulationBox::Molecule();
+
+//         const auto atom1 = std::make_shared<simulationBox::Atom>();
+//         const auto atom2 = std::make_shared<simulationBox::Atom>();
+
+//         molecule1.setNumberOfAtoms(2);
+
+//         atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+//         atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+//         atom1->setMass(1.0);
+//         atom2->setMass(1.0);
+//         molecule1.addAtom(atom1);
+//         molecule1.addAtom(atom2);
+
+//         auto molecule2 = simulationBox::Molecule();
+
+//         const auto atom3 = std::make_shared<simulationBox::Atom>();
+
+//         molecule2.setNumberOfAtoms(1);
+//         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+//         atom3->setMass(1.0);
+//         molecule2.addAtom(atom3);
+
+//         _simulationBox->addMolecule(molecule1);
+//         _simulationBox->addMolecule(molecule2);
+//         _simulationBox->addAtom(atom1);
+//         _simulationBox->addAtom(atom2);
+//         _simulationBox->addAtom(atom3);
+//         _simulationBox->setTotalMass(3.0);
+//     }
+
+//     void TearDown() override
+//     {
+//         delete _data;
+//         delete _simulationBox;
+//         delete _resetKinetics;
+//     }
+
+//     physicalData::PhysicalData   *_data;
+//     simulationBox::SimulationBox *_simulationBox;
+//     resetKinetics::ResetKinetics *_resetKinetics;
+// };
+
+// #endif

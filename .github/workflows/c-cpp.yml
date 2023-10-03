@@ -58,7 +58,7 @@ jobs:
       - name: Test Project
         run: |
           cd build
-          make coverage_xml
+          make test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -66,21 +66,3 @@ jobs:
           gcov: true
           gcov_executable: gcov-13
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      # - name: Generate and send a code coverage report to Coveralls
-      #   uses: threeal/gcovr-action@latest
-      #   with:
-      #     coveralls-send: true
-      #     github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
-
-      # - name: install cpp-coveralls
-      #   run: |
-      #     sudo apt-get install python3-pip
-      #     pip3 install --user cpp-coveralls
-      #   shell: bash
-
-      # - name: Generate and send a code coverage report to Coveralls
-      #   run: |
-      #     cd build
-      #     coveralls --gcov gcov-13 --exclude lib --exclude tests --exclude build --exclude _deps --gcov-options '\-lp'
-      #   shell: bash

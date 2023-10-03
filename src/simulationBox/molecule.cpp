@@ -1,6 +1,29 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "molecule.hpp"
 
-#include "vector3d.hpp"
+#include "box.hpp"        // for Box
+#include "vector3d.hpp"   // for Vec3D
 
 #include <algorithm>    // for std::ranges::for_each
 #include <functional>   // for identity, equal_to
@@ -16,7 +39,11 @@ using namespace simulationBox;
  */
 size_t Molecule::getNumberOfAtomTypes()
 {
-    return _externalAtomTypes.size() - std::ranges::size(std::ranges::unique(_externalAtomTypes));
+    std::vector<size_t> externalAtomTypes;
+
+    std::ranges::transform(_atoms, std::back_inserter(externalAtomTypes), [](auto atom) { return atom->getExternalAtomType(); });
+
+    return getNumberOfAtoms() - std::ranges::size(std::ranges::unique(externalAtomTypes));
 }
 
 /**
@@ -26,25 +53,17 @@ size_t Molecule::getNumberOfAtomTypes()
  *
  * @param box
  */
-void Molecule::calculateCenterOfMass(const linearAlgebra::Vec3D &box)
+void Molecule::calculateCenterOfMass(const Box &box)
 {
-    _centerOfMass            = linearAlgebra::Vec3D();
-    const auto positionAtom1 = getAtomPosition(0);
+    _centerOfMass            = {0.0, 0.0, 0.0};
+    const auto positionAtom1 = _atoms[0]->getPosition();
 
-    // TODO: sonarlint until now not compatible with c++23
-    //  auto f = [&_centerOfMass = _centerOfMass, &positionAtom1, &box = box](auto &&pair)
-    //  {
-    //      auto const &[mass, position]  = pair;
-    //      _centerOfMass                += mass * (position - box * round((position - positionAtom1) / box));
-    //  };
-    //  std::ranges::for_each(std::ranges::views::zip(_masses, _positions), f);
-
-    for (size_t i = 0; i < _numberOfAtoms; ++i)
+    for (const auto &atom : _atoms)
     {
-        const auto mass     = _masses[i];
-        const auto position = _positions[i];
+        const auto mass     = atom->getMass();
+        const auto position = atom->getPosition();
 
-        _centerOfMass += mass * (position - box * round((position - positionAtom1) / box));
+        _centerOfMass += mass * (position - box.calculateShiftVector(position - positionAtom1));
     }
 
     _centerOfMass /= getMolMass();
@@ -59,25 +78,70 @@ void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
 {
     const auto shift = _centerOfMass * (shiftFactors - 1.0);
 
-    std::ranges::for_each(_positions, [shift](auto &position) { position += shift; });
+    std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
 }
 
 /**
- * @brief scales the velocities of the molecule with a multiplicative factor
+ * @brief returns the external global vdw types of the atoms in the molecule
  *
- * @param scaleFactor
+ * @return std::vector<size_t>
  */
-void Molecule::scaleVelocities(const double scaleFactor)
+std::vector<size_t> Molecule::getExternalGlobalVDWTypes() const
 {
-    std::ranges::for_each(_velocities, [scaleFactor](auto &velocity) { velocity *= scaleFactor; });
+    std::vector<size_t> externalGlobalVDWTypes(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        externalGlobalVDWTypes[i] = _atoms[i]->getExternalGlobalVDWType();
+
+    return externalGlobalVDWTypes;
 }
 
 /**
- * @brief corrects the velocities of the molecule by a given shift vector
+ * @brief returns the atom masses of the atoms in the molecule
  *
- * @param correction
+ * @return std::vector<double>
  */
-void Molecule::correctVelocities(const linearAlgebra::Vec3D &correction)
+std::vector<double> Molecule::getAtomMasses() const
 {
-    std::ranges::for_each(_velocities, [correction](auto &velocity) { velocity -= correction; });
+    std::vector<double> atomMasses(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        atomMasses[i] = _atoms[i]->getMass();
+
+    return atomMasses;
+}
+
+/**
+ * @brief returns the partial charges of the atoms in the molecule
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> Molecule::getPartialCharges() const
+{
+    std::vector<double> partialCharges(getNumberOfAtoms());
+
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        partialCharges[i] = _atoms[i]->getPartialCharge();
+
+    return partialCharges;
+}
+
+/**
+ * @brief sets the partial charges of the atoms in the molecule
+ *
+ * @param partialCharges
+ */
+void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
+{
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        _atoms[i]->setPartialCharge(partialCharges[i]);
+}
+
+/**
+ * @brief sets the forces of the atoms in the molecule to zero
+ *
+ */
+void Molecule::setAtomForcesToZero()
+{
+    std::ranges::for_each(_atoms, [](auto atom) { atom->setForceToZero(); });
 }

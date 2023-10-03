@@ -1,11 +1,34 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _VEC3D_HPP_
 
 #define _VEC3D_HPP_
 
-#include <array>      // for array
-#include <cmath>      // for ceil, fabs, floor, rint, sqrt
-#include <cstddef>    // for size_t
-#include <iostream>   // for ostream
+#include <array>         // for array
+#include <cmath>         // for ceil, fabs, floor, rint, sqrt
+#include <cstddef>       // for size_t
+#include <iostream>      // for ostream
+#include <type_traits>   // for is_fundamental_v
 
 namespace linearAlgebra
 {
@@ -29,7 +52,7 @@ namespace linearAlgebra
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     class Vector3D
     {
       private:
@@ -199,6 +222,18 @@ namespace linearAlgebra
         Vector3D<T> operator-(const T rhs) const { return Vector3D<T>(_x - rhs, _y - rhs, _z - rhs); }
 
         /**
+         * @brief - operator for a Vector3d object and a scalar
+         *
+         * @param const T
+         * @param const Vector3D<T>&
+         * @return Vector3D
+         */
+        friend Vector3D<T> operator-(const T lhs, const Vector3D<T> &rhs)
+        {
+            return Vector3D<T>(lhs - rhs._x, lhs - rhs._y, lhs - rhs._z);
+        }
+
+        /**
          * @brief * operator for two Vector3d objects
          *
          * @param const Vector3D<T>&
@@ -257,7 +292,11 @@ namespace linearAlgebra
          *
          * @note returns true if all members of vector are less than t
          */
-        bool operator<(const T t) const { return _x < t && _y < t && _z < t; }
+        bool operator<(const T t) const
+        requires std::is_fundamental_v<T>
+        {
+            return _x < t && _y < t && _z < t;
+        }
 
         /**
          * @brief > operator for vector3d and scalar
@@ -267,7 +306,11 @@ namespace linearAlgebra
          *
          * @note returns true if all members of vector are greater than t
          */
-        bool operator>(const T t) const { return _x > t && _y > t && _z > t; }
+        bool operator>(const T t) const
+        requires std::is_fundamental_v<T>
+        {
+            return _x > t && _y > t && _z > t;
+        }
 
         /**
          * @brief fabs of all entries of vector
@@ -404,6 +447,15 @@ namespace linearAlgebra
         }
 
         /**
+         * @brief calculates the cosine of the vector (for each element)
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend Vector3D<T> cos(Vector3D<T> v1) { return Vector3D<T>(cos(v1._x), cos(v1._y), cos(v1._z)); }
+
+        /**
          * @brief calculates the cosine of the angle between two vectors
          *
          * @param v1
@@ -428,6 +480,15 @@ namespace linearAlgebra
          * @return Vector3D<T>
          */
         friend double angle(Vector3D<T> v1, Vector3D<T> v2) { return ::acos(cos(v1, v2)); }
+
+        /**
+         * @brief calculates the exponential of the vector (for each element)
+         *
+         * @param v1
+         * @param v2
+         * @return Vector3D<T>
+         */
+        friend Vector3D<T> exp(Vector3D<T> v) { return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z)); }
 
         /**
          * @brief ostream operator for vector3d

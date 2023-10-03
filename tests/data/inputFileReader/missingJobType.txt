@@ -1,0 +1,2 @@
+nstep = 5;
+nscale = 10;

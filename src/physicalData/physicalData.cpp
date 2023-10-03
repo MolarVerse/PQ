@@ -1,9 +1,32 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "physicalData.hpp"
 
-#include "constants.hpp"       // for _FS_TO_S_, _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
-#include "simulationBox.hpp"   // for SimulationBox
+#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
+#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
+#include "simulationBox.hpp"                         // for SimulationBox
 
-#include <algorithm>   // for for_each
+#include <algorithm>   // for __for_each_fn
 #include <cstddef>     // for size_t
 
 using namespace physicalData;
@@ -11,11 +34,13 @@ using namespace physicalData;
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
+ * @Todo: check performs and usability of this function
+ *
  * @param simulationBox
  */
-void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &simulationBox)
+void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
 {
-    _momentumVector               = linearAlgebra::Vec3D();
+    _momentum                     = linearAlgebra::Vec3D();
     _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
     _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
 
@@ -29,7 +54,7 @@ void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBo
 
             const auto momentum = velocities * molecule.getAtomMass(i);
 
-            _momentumVector            += momentum;
+            _momentum                  += momentum;
             _kineticEnergyAtomicVector += momentum * velocities;
             momentumSquared            += momentum * momentum;
         }
@@ -39,12 +64,13 @@ void PhysicalData::calculateKineticEnergyAndMomentum(simulationBox::SimulationBo
 
     std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
-    _momentumVector *= constants::_FS_TO_S_;
-    _momentum        = norm(_momentumVector);
-
     _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
     _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
+
+    _angularMomentum = simulationBox.calculateAngularMomentum(_momentum) *= constants::_FS_TO_S_;
+
+    _momentum *= constants::_FS_TO_S_;
 }
 
 /**
@@ -65,12 +91,28 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _improperEnergy += physicalData.getImproperEnergy();
 
     _temperature   += physicalData.getTemperature();
-    _momentum      += physicalData.getMomentum();
     _kineticEnergy += physicalData.getKineticEnergy();
     _volume        += physicalData.getVolume();
     _density       += physicalData.getDensity();
     _virial        += physicalData.getVirial();
     _pressure      += physicalData.getPressure();
+
+    _qmEnergy += physicalData.getQMEnergy();
+
+    _momentum        += physicalData.getMomentum();
+    _angularMomentum += physicalData.getAngularMomentum();
+
+    _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
+    _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
+
+    if (_ringPolymerEnergy.size() != physicalData.getRingPolymerEnergy().size())
+    {
+        _ringPolymerEnergy.clear();
+        _ringPolymerEnergy.resize(physicalData.getRingPolymerEnergy().size(), 0.0);
+    }
+
+    for (size_t i = 0; i < physicalData.getRingPolymerEnergy().size(); ++i)
+        _ringPolymerEnergy[i] += physicalData.getRingPolymerEnergy()[i];
 }
 
 /**
@@ -92,11 +134,20 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _improperEnergy /= outputFrequency;
 
     _temperature /= outputFrequency;
-    _momentum    /= outputFrequency;
     _volume      /= outputFrequency;
     _density     /= outputFrequency;
     _virial      /= outputFrequency;
     _pressure    /= outputFrequency;
+
+    _qmEnergy /= outputFrequency;
+
+    _momentum        /= outputFrequency;
+    _angularMomentum /= outputFrequency;
+
+    _noseHooverMomentumEnergy /= outputFrequency;
+    _noseHooverFrictionEnergy /= outputFrequency;
+
+    std::ranges::for_each(_ringPolymerEnergy, [outputFrequency](auto &energy) { energy /= outputFrequency; });
 }
 
 /**
@@ -117,11 +168,20 @@ void PhysicalData::reset()
     _improperEnergy = 0.0;
 
     _temperature = 0.0;
-    _momentum    = 0.0;
-    _virial      = {0.0, 0.0, 0.0};
-    _pressure    = 0.0;
     _volume      = 0.0;
     _density     = 0.0;
+    _pressure    = 0.0;
+    _virial      = {0.0, 0.0, 0.0};
+
+    _qmEnergy = 0.0;
+
+    _momentum        = {0.0, 0.0, 0.0};
+    _angularMomentum = {0.0, 0.0, 0.0};
+
+    _noseHooverMomentumEnergy = 0.0;
+    _noseHooverFrictionEnergy = 0.0;
+
+    std::ranges::for_each(_ringPolymerEnergy, [](auto &energy) { energy = 0.0; });
 }
 
 /**
@@ -131,22 +191,7 @@ void PhysicalData::reset()
  */
 void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulationBox)
 {
-    _temperature = 0.0;
-
-    auto temperatureOfMolecule = [this](auto &molecule)
-    {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
-        {
-            const auto velocities = molecule.getAtomVelocity(i);
-            const auto mass       = molecule.getAtomMass(i);
-
-            _temperature += mass * normSquared(velocities);
-        }
-    };
-
-    std::ranges::for_each(simulationBox.getMolecules(), temperatureOfMolecule);
-
-    _temperature *= constants::_TEMPERATURE_FACTOR_ / double(simulationBox.getDegreesOfFreedom());
+    _temperature = simulationBox.calculateTemperature();
 }
 
 /**
@@ -154,7 +199,7 @@ void PhysicalData::calculateTemperature(simulationBox::SimulationBox &simulation
  *
  * @return double
  */
-double PhysicalData::getPotentialEnergy() const
+double PhysicalData::getTotalEnergy() const
 {
     auto potentialEnergy = 0.0;
 
@@ -165,6 +210,10 @@ double PhysicalData::getPotentialEnergy() const
 
     potentialEnergy += _coulombEnergy;      // intra + inter
     potentialEnergy += _nonCoulombEnergy;   // intra + inter
+
+    potentialEnergy += _kineticEnergy;
+
+    potentialEnergy += _qmEnergy;
 
     return potentialEnergy;
 }

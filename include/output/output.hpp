@@ -1,11 +1,35 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _OUTPUT_HPP_
 
 #define _OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
-#include <fstream>
-#include <string>
-#include <string_view>   // for string_view
+#include <fstream>              // for ofstream
+#include <gtest/gtest_prod.h>   // for FRIEND_TEST
+#include <string>               // for string
+#include <string_view>          // for string_view
+
+class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
 namespace output
 {
@@ -18,10 +42,9 @@ namespace output
     class Output
     {
       protected:
-        std::string          _fileName;
-        std::ofstream        _fp;
-        inline static size_t _outputFrequency = 1;
-        int                  _rank;
+        std::string   _fileName;
+        std::ofstream _fp;
+        int           _rank;
 
         void openFile();
 
@@ -31,14 +54,13 @@ namespace output
         void setFilename(const std::string_view &);
         void close() { _fp.close(); }
 
-        static void setOutputFrequency(const size_t);
+        FRIEND_TEST(::TestOutput, testSpecialSetFilename);
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        std::string   getFilename() const { return _fileName; }
-        static size_t getOutputFrequency() { return _outputFrequency; }
+        std::string getFilename() const { return _fileName; }
     };
 
 }   // namespace output

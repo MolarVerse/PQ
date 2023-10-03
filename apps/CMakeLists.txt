@@ -15,6 +15,7 @@ endif()
 
 target_link_libraries(pimd_qmcf
   PUBLIC
+  input
   setup
   engine
 )

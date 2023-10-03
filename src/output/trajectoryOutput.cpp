@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "trajectoryOutput.hpp"
 
 #include "molecule.hpp"        // for Molecule
@@ -19,7 +41,7 @@ using namespace output;
  */
 void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << "\n\n";
+    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
 }
 
 /**
@@ -30,6 +52,7 @@ void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -52,6 +75,7 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -74,6 +98,7 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << std::format("# Total force = {:.5e} kcal/mol/Angstrom\n", simBox.calculateTotalForce());
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
@@ -96,6 +121,7 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
 {
     writeHeader(simBox);
+    _fp << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)

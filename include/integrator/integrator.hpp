@@ -1,15 +1,36 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _INTEGRATOR_HPP_
 
 #define _INTEGRATOR_HPP_
 
-#include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
 
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
+    class Atom;            // forward declaration
 }   // namespace simulationBox
 
 namespace integrator
@@ -33,8 +54,8 @@ namespace integrator
         virtual void firstStep(simulationBox::SimulationBox &)  = 0;
         virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-        void integrateVelocities(simulationBox::Molecule &, const size_t index) const;
-        void integratePositions(simulationBox::Molecule &, const size_t index, const simulationBox::SimulationBox &) const;
+        void integrateVelocities(simulationBox::Atom *) const;
+        void integratePositions(simulationBox::Atom *, const simulationBox::SimulationBox &) const;
 
         /********************************
          * standard getters and setters *

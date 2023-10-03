@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _EXCEPTIONS_HPP_
 
 #define _EXCEPTIONS_HPP_
@@ -29,7 +51,8 @@ namespace customException
         MANOSTATEXCEPTION,
         INTRANONBONDEDEXCEPTION,
         SHAKEEXCEPTION,
-        CELLLISTEXCEPTION
+        CELLLISTEXCEPTION,
+        RINGPOLYMERRESTARTFILEEXCEPTION
     };
 
     /**
@@ -197,12 +220,38 @@ namespace customException
         const char *what() const throw() override;
     };
 
-    /*
+    /**
      * @class CellListException inherits from CustomException
      *
      * @brief Exception for CellList errors
      */
     class CellListException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class RingPolymerRestartFileException inherits from CustomException
+     *
+     * @brief Exception for ring polymer restart file errors
+     */
+    class RingPolymerRestartFileException : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class QMRunnerException inherits from CustomException
+     *
+     * @brief Exception for QMRunner errors
+     */
+    class QMRunnerException : public CustomException
     {
       public:
         using CustomException::CustomException;

@@ -1,8 +1,34 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "infoOutput.hpp"
 
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
+#include "settings.hpp"             // for Settings
+#include "stlVector.hpp"            // for mean, max
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for norm
 
 #include <format>    // for format
 #include <ios>       // for ofstream
@@ -14,8 +40,13 @@ using namespace output;
 /**
  * @brief write info file
  *
- * @details Coulomb and Non-Coulomb energies contain the intra and inter energies. Bond, Angle, Dihedral and Improper energies are
- * only available if the force field is active.
+ * @details
+ * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
+ * - Bond, Angle, Dihedral and Improper energies are only available if the force field is active.
+ * - qm energy is only available if qm is active.
+ * - coulomb and non-coulomb energies are only available if mm is active.
+ * - volume and density are only available if manostat is active.
+ * - nose hoover momentum and friction energies are only available if nose hoover thermostat is active.
  *
  * @param simulationTime
  * @param loopTime
@@ -33,13 +64,28 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
-    writeRight(data.getPotentialEnergy(), "E(TOT)", "kcal/mol");
+    writeRight(data.getTotalEnergy(), "E(TOT)", "kcal/mol");
+
+    if (settings::Settings::isQMActivated())
+    {
+        writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
+        writeRight(0, "N(QM ATOMS)", " ");   // TODO: implement
+    }
+
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        writeLeft(mean(data.getRingPolymerEnergy()), "E(MEAN RPMD)", "kcal/mol");
+        writeRight(max(data.getRingPolymerEnergy()), "E(MAX RPMD)", "kcal/mol");
+    }
 
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
     writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
-    writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-    writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
+    if (settings::Settings::isMMActivated())
+    {
+        writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+        writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
+    }
 
     if (settings::ForceFieldSettings::isActive())
     {
@@ -49,13 +95,19 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
-    if (settings::ManostatSettings::getManostatType() != "none")
+    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
         writeRight(data.getDensity(), "DENSITY", "g/cm^3");
     }
 
-    writeLeftScientific(data.getMomentum(), "MOMENTUM", "amuA/fs");
+    if (settings::ThermostatSettings::getThermostatType() == settings::ThermostatType::NOSE_HOOVER)
+    {
+        writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH MOMENTUM)", "kcal/mol");
+        writeRight(data.getNoseHooverFrictionEnergy(), "E(NH FRICTION)", "kcal/mol");
+    }
+
+    writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
     writeRight(loopTime, "LOOPTIME", "s");
 
     _fp << std::format("{:-^89}", "") << "\n\n";

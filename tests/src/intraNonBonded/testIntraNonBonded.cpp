@@ -1,3 +1,26 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
@@ -100,17 +123,23 @@ TEST(TestIntraNonBonded, calculate)
 {
     auto molecule = simulationBox::Molecule(0);
     molecule.setNumberOfAtoms(2);
-    molecule.addAtomPosition({0.0, 0.0, 0.0});
-    molecule.addAtomPosition({0.0, 0.0, 11.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addAtomForce({0.0, 0.0, 0.0});
-    molecule.addInternalGlobalVDWType(0);
-    molecule.addInternalGlobalVDWType(1);
-    molecule.addAtomType(0);
-    molecule.addAtomType(1);
-    molecule.addPartialCharge(0.5);
-    molecule.addPartialCharge(-0.5);
-    molecule.resizeAtomShiftForces();
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition({0.0, 0.0, 0.0});
+    atom2->setPosition({0.0, 0.0, 11.0});
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setInternalGlobalVDWType(0);
+    atom2->setInternalGlobalVDWType(1);
+    atom1->setAtomType(0);
+    atom2->setAtomType(1);
+    atom1->setPartialCharge(0.5);
+    atom2->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);

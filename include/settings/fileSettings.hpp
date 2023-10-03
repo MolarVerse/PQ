@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _FILE_SETTINGS_HPP_
 
 #define _FILE_SETTINGS_HPP_
@@ -24,10 +46,12 @@ namespace settings
         static inline std::string _parameterFileName;
         static inline std::string _intraNonBondedFileName;
         static inline std::string _startFileName;
+        static inline std::string _ringPolymerStartFileName;
 
-        static bool inline _isTopologyFileNameSet       = false;
-        static bool inline _isParameterFileNameSet      = false;
-        static bool inline _isIntraNonBondedFileNameSet = false;
+        static bool inline _isTopologyFileNameSet         = false;
+        static bool inline _isParameterFileNameSet        = false;
+        static bool inline _isIntraNonBondedFileNameSet   = false;
+        static bool inline _isRingPolymerStartFileNameSet = false;
 
       public:
         FileSettings()  = default;
@@ -43,10 +67,12 @@ namespace settings
         [[nodiscard]] static std::string getParameterFilename() { return _parameterFileName; }
         [[nodiscard]] static std::string getIntraNonBondedFileName() { return _intraNonBondedFileName; }
         [[nodiscard]] static std::string getStartFileName() { return _startFileName; }
+        [[nodiscard]] static std::string getRingPolymerStartFileName() { return _ringPolymerStartFileName; }
 
         [[nodiscard]] static bool isTopologyFileNameSet() { return _isTopologyFileNameSet; }
         [[nodiscard]] static bool isParameterFileNameSet() { return _isParameterFileNameSet; }
         [[nodiscard]] static bool isIntraNonBondedFileNameSet() { return _isIntraNonBondedFileNameSet; }
+        [[nodiscard]] static bool isRingPolymerStartFileNameSet() { return _isRingPolymerStartFileNameSet; }
 
         /********************
          * standard setters *
@@ -58,14 +84,17 @@ namespace settings
         static void setParameterFileName(const std::string_view name) { FileSettings::_parameterFileName = name; }
         static void setIntraNonBondedFileName(const std::string_view name) { FileSettings::_intraNonBondedFileName = name; }
         static void setStartFileName(const std::string_view name) { FileSettings::_startFileName = name; }
+        static void setRingPolymerStartFileName(const std::string_view name) { FileSettings::_ringPolymerStartFileName = name; }
 
         static void setIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = true; }
         static void setIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = true; }
         static void setIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = true; }
+        static void setIsRingPolymerStartFileNameSet() { FileSettings::_isRingPolymerStartFileNameSet = true; }
 
         static void unsetIsTopologyFileNameSet() { FileSettings::_isTopologyFileNameSet = false; }
         static void unsetIsParameterFileNameSet() { FileSettings::_isParameterFileNameSet = false; }
         static void unsetIsIntraNonBondedFileNameSet() { FileSettings::_isIntraNonBondedFileNameSet = false; }
+        static void unsetIsRingPolymerStartFileNameSet() { FileSettings::_isRingPolymerStartFileNameSet = false; }
     };
 
 }   // namespace settings

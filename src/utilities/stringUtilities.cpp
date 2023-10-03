@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "stringUtilities.hpp"
 
 #include "exceptions.hpp"   // for InputFil...
@@ -88,6 +110,29 @@ std::vector<std::string> utilities::splitString(const std::string &line)
 std::string utilities::toLowerCopy(std::string myString)
 {
     std::ranges::for_each(myString, [](char &c) { c = char(::tolower(c)); });
+    return myString;
+}
+
+/**
+ * @brief returns a copy of a string all lower case
+ *
+ * @param myString
+ * @return string
+ */
+std::string utilities::toLowerCopy(const std::string_view myString) { return toLowerCopy(std::string(myString)); }
+
+/**
+ * @brief converts the first letter of a string to upper case and the rest to lower case
+ *
+ * @param myString
+ * @return std::string
+ */
+std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
+{
+    myString[0] = char(::toupper(myString[0]));
+
+    std::ranges::for_each(myString | std::views::drop(1), [](char &c) { c = char(::tolower(c)); });
+
     return myString;
 }
 

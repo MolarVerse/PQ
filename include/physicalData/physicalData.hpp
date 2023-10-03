@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _PHYSICAL_DATA_HPP_
 
 #define _PHYSICAL_DATA_HPP_
@@ -5,6 +27,7 @@
 #include "vector3d.hpp"   // for Vec3D
 
 #include <functional>   // for _Bind_front_t, bind_front, function
+#include <vector>       // for vector
 
 namespace simulationBox
 {
@@ -26,7 +49,6 @@ namespace physicalData
         double _density     = 0.0;
         double _temperature = 0.0;
         double _pressure    = 0.0;
-        double _momentum    = 0.0;
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -39,14 +61,22 @@ namespace physicalData
         double _dihedralEnergy = 0.0;
         double _improperEnergy = 0.0;
 
+        double _qmEnergy = 0.0;
+
+        double _noseHooverMomentumEnergy = 0.0;
+        double _noseHooverFrictionEnergy = 0.0;
+
         linearAlgebra::Vec3D _virial                       = {0.0, 0.0, 0.0};
-        linearAlgebra::Vec3D _momentumVector               = {0.0, 0.0, 0.0};
+        linearAlgebra::Vec3D _momentum                     = {0.0, 0.0, 0.0};
+        linearAlgebra::Vec3D _angularMomentum              = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyAtomicVector    = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D _kineticEnergyMolecularVector = {0.0, 0.0, 0.0};
 
+        std::vector<double> _ringPolymerEnergy;
+
       public:
         void calculateTemperature(simulationBox::SimulationBox &);
-        void calculateKineticEnergyAndMomentum(simulationBox::SimulationBox &);
+        void calculateKinetics(simulationBox::SimulationBox &);
         void changeKineticVirialToAtomic();
 
         std::function<linearAlgebra::Vec3D()> getKineticEnergyVirialVector =
@@ -59,7 +89,7 @@ namespace physicalData
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
 
-        [[nodiscard]] double getPotentialEnergy() const;
+        [[nodiscard]] double getTotalEnergy() const;
 
         /********************
          * standard adders  *
@@ -85,8 +115,8 @@ namespace physicalData
         void setPressure(const double pressure) { _pressure = pressure; }
         void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
 
-        void setMomentum(const double momentum) { _momentum = momentum; }
-        void setMomentumVector(const linearAlgebra::Vec3D &vec) { _momentumVector = vec; }
+        void setMomentum(const linearAlgebra::Vec3D &vec) { _momentum = vec; }
+        void setAngularMomentum(const linearAlgebra::Vec3D &vec) { _angularMomentum = vec; }
 
         void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
         void setKineticEnergyAtomicVector(const linearAlgebra::Vec3D &vec) { _kineticEnergyAtomicVector = vec; }
@@ -101,6 +131,13 @@ namespace physicalData
         void setDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy = dihedralEnergy; }
         void setImproperEnergy(const double improperEnergy) { _improperEnergy = improperEnergy; }
 
+        void setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
+
+        void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
+        void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
+
+        void setRingPolymerEnergy(const std::vector<double> &ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+
         /********************
          * standard getters *
          ********************/
@@ -109,7 +146,6 @@ namespace physicalData
         [[nodiscard]] double getDensity() const { return _density; }
         [[nodiscard]] double getTemperature() const { return _temperature; }
         [[nodiscard]] double getPressure() const { return _pressure; }
-        [[nodiscard]] double getMomentum() const { return _momentum; }
 
         [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
         [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
@@ -123,10 +159,18 @@ namespace physicalData
         [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }
         [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
 
+        [[nodiscard]] double getQMEnergy() const { return _qmEnergy; }
+
+        [[nodiscard]] double getNoseHooverMomentumEnergy() const { return _noseHooverMomentumEnergy; }
+        [[nodiscard]] double getNoseHooverFrictionEnergy() const { return _noseHooverFrictionEnergy; }
+
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicVector; }
         [[nodiscard]] linearAlgebra::Vec3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularVector; }
         [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
-        [[nodiscard]] linearAlgebra::Vec3D getMomentumVector() const { return _momentumVector; }
+        [[nodiscard]] linearAlgebra::Vec3D getMomentum() const { return _momentum; }
+        [[nodiscard]] linearAlgebra::Vec3D getAngularMomentum() const { return _angularMomentum; }
+
+        [[nodiscard]] std::vector<double> getRingPolymerEnergy() const { return _ringPolymerEnergy; }
     };
 
 }   // namespace physicalData

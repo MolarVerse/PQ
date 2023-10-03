@@ -1,0 +1,105 @@
+#==================================================================================
+#
+#          _/_/_/      _/_/      _/_/    _/_/_/  _/_/_/_/          _/_/_/_/_/
+#       _/      _/    _/_/_/  _/_/_/  _/        _/                  _/  _/
+#      _/      _/    _/  _/_/_/  _/  _/        _/_/_/              _/  _/
+#     _/   _/ _/    _/    _/    _/  _/        _/        _/_/_/    _/  _/
+#    _/      _/    _/          _/  _/        _/                  _/  _/
+#     _/_/_/  _/  _/          _/    _/_/_/  _/                _/_/_/_/_/
+#
+#
+#    Quantum - Mechanical - Charge - Field - Molecular - Dynamics
+#
+#    QMCFc
+#    Copyright (C)   2007-now    Thomas S. Hofer
+#
+#    QMCF2 (this)
+#    Copyright (C)   2016-now    Alexander K. H. Weiss
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/ >
+#
+#==================================================================================
+#
+# QMCF2 testset:       testset_02___mm_md_h2o
+#
+#==================================================================================
+
+# THIS IS A QMCFc TESTSET
+#-----------------------------------------
+#  keyword_set = qmcfc;
+
+# JOB
+#-----------------------------------------
+   jobtype     = mm-md; timestep    = 0.5;
+   nstep       = 100;
+   output_freq = 1;
+   #write_traj  = on;
+
+# SYSTEM RESTRAINTS
+#-----------------------------------------
+   density = 0.9523;
+
+# WATER POTENTIAL
+#-----------------------------------------
+  #water_intra = qspcfw;
+  #water_inter = qspcfw;
+
+# COULOMBICS
+#-----------------------------------------
+   rcoulomb   = 9.0;
+   long_range = none;
+   #longrange_nc = on;
+
+# NON-COULOMBICS
+#-----------------------------------------
+   #noncoulomb = lj;
+
+# INTEGRATOR
+#-----------------------------------------
+   integrator = v-verlet;
+
+# MOLDESCRIPTOR
+#-----------------------------------------
+  #moldescriptor_file = test.dat;
+  guff_path = .;
+
+# THERMOSTAT
+#-----------------------------------------
+   temp       = 298.15;
+   thermostat = nh-chain;
+   #manostat   = berendsen;
+   pressure   = 1.013;
+   p_relaxation = 0.1;
+   #nscale = 100;
+   #cell-list = on;
+   #cell-number = 10;
+#  friction   = 0.035;
+
+# VIRIAL
+# ----------------------------------------
+    virial = molecular;
+
+# FILES
+#-----------------------------------------
+   start_file   = testset_02___mm_md_h2o-1.rst; 
+
+   output_file  = testset_02___mm_md_h2o-2.out; 
+   info_file    = testset_02___mm_md_h2o-2.info;
+   energy_file  = testset_02___mm_md_h2o-2.en; 
+   traj_file    = testset_02___mm_md_h2o-2.xyz;
+   vel_file     = testset_02___mm_md_h2o-2.vel;
+   restart_file = testset_02___mm_md_h2o-2.rst;
+
+
+

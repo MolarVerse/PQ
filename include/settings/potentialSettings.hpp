@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #ifndef _POSITION_SETTINGS_HPP_
 
 #define _POSITION_SETTINGS_HPP_
@@ -26,7 +48,7 @@ namespace settings
         NONE
     };
 
-    std::string string(const NonCoulombType nonCoulombType);
+    [[nodiscard]] std::string string(const NonCoulombType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -38,7 +60,6 @@ namespace settings
     {
       private:
         static inline std::string    _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // shifted potential
-        static inline std::string    _nonCoulombTypeString = defaults::_NON_COULOMB_TYPE_DEFAULT_;          // guff
         static inline NonCoulombType _nonCoulombType       = NonCoulombType::GUFF;                          // LJ
 
         static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;   // default is 12.5
@@ -61,17 +82,16 @@ namespace settings
 
         static void setCoulombLongRangeType(const std::string_view &type) { _coulombLongRangeType = type; }
 
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff) { _coulombRadiusCutOff = coulombRadiusCutOff; }
-        static void setScale14Coulomb(double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
-        static void setScale14VanDerWaals(double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
-        static void setWolfParameter(double wolfParameter) { _wolfParameter = wolfParameter; }
+        static void setCoulombRadiusCutOff(const double coulombRadiusCutOff) { _coulombRadiusCutOff = coulombRadiusCutOff; }
+        static void setScale14Coulomb(const double scale14Coulomb) { _scale14Coulomb = scale14Coulomb; }
+        static void setScale14VanDerWaals(const double scale14VanDerWaals) { _scale14VanDerWaals = scale14VanDerWaals; }
+        static void setWolfParameter(const double wolfParameter) { _wolfParameter = wolfParameter; }
 
         /********************
          * standard getters *
          ********************/
 
         [[nodiscard]] static std::string    getCoulombLongRangeType() { return _coulombLongRangeType; }
-        [[nodiscard]] static std::string    getNonCoulombTypeString() { return _nonCoulombTypeString; }
         [[nodiscard]] static NonCoulombType getNonCoulombType() { return _nonCoulombType; }
 
         [[nodiscard]] static double getCoulombRadiusCutOff() { return _coulombRadiusCutOff; }

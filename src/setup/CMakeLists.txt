@@ -10,6 +10,9 @@ add_library(setup
     constraintsSetup.cpp
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
+    qmSetup.cpp
+    ringPolymerSetup.cpp
+    outputFilesSetup.cpp
 )
 
 target_include_directories(setup
@@ -19,10 +22,11 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-    readInput
+    input
     topologyFileReader
     restartFileReader
     parameterFileReader
+    ringPolymerRestartFileReader
 
     engine
     utilities
@@ -31,6 +35,7 @@ target_link_libraries(setup
     potential
     coulombPotential
     nonCoulombPotential
+    maxwellBoltzmann
 )
 
 install(TARGETS setup

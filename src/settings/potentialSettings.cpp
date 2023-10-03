@@ -1,7 +1,37 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "potentialSettings.hpp"
+
+#include "stringUtilities.hpp"
 
 using namespace settings;
 
+/**
+ * @brief return string of nonCoulombType
+ *
+ * @param nonCoulombType
+ * @return std::string
+ */
 std::string settings::string(const NonCoulombType nonCoulombType)
 {
     switch (nonCoulombType)
@@ -22,16 +52,17 @@ std::string settings::string(const NonCoulombType nonCoulombType)
  */
 void PotentialSettings::setNonCoulombType(const std::string_view &type)
 {
-    _nonCoulombTypeString = type;
-    if (type == "lj")
+    const auto typeToLower = utilities::toLowerCopy(type);
+
+    if (typeToLower == "lj")
         _nonCoulombType = NonCoulombType::LJ;
-    else if (type == "lj_9_12")
+    else if (typeToLower == "lj_9_12")
         _nonCoulombType = NonCoulombType::LJ_9_12;
-    else if (type == "buck")
+    else if (typeToLower == "buck")
         _nonCoulombType = NonCoulombType::BUCKINGHAM;
-    else if (type == "morse")
+    else if (typeToLower == "morse")
         _nonCoulombType = NonCoulombType::MORSE;
-    else if (type == "guff")
+    else if (typeToLower == "guff")
         _nonCoulombType = NonCoulombType::GUFF;
     else
         _nonCoulombType = NonCoulombType::NONE;

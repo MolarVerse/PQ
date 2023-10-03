@@ -1,0 +1,80 @@
+# MIL-68(Al) all DFTB MD
+
+
+# MD Keywords
+
+    # Type of this run
+      jobtype = qm-rpmd; #dim = 3d;
+
+    # Number of steps to be performed and timestep in fs 
+      nstep = 10000; timestep = 0.1;
+      nreset = 100;
+      freset = 10;
+
+   rpmd_n_replica = 10;
+
+    # Output of coordinates and velocities enabled
+#      write_traj = on;
+
+    # Output frequency of ALL data files
+      output_freq = 1;
+
+    # Coulombic cutoff 
+#      rcoulomb= 9.0; 
+
+    # Enabling reaction field and giving a proper dielectric constant
+#      long_range = none; longrange_nc = off;
+      
+    # Temperature algorithm (Berendsen), Relaxation time in ps 
+    # and target temperature in K
+     #thermostat = berendsen; temp = 297.714; t_relaxation = 0.1;
+     temp = 298.15;
+#      thermostat = nh-chain; temp = 298.15; t_relaxation = 0.1; omega = 1000.0;
+
+    # Pressure coupling algorithm
+#      manostat = berendsen; p_relaxation = 1.0; pressure = 1.013;
+#      stress_tensor = on; 
+
+      integrator = v-verlet; 
+#water_intra = none;
+      
+#      guff_path = .; 
+ 
+# QMCF Keywords
+
+#      NOSA = 616;  qm_center = 1;
+
+#      rcore = 100.0; rsmoothing = 100.5; rlayer=101.0;
+      
+    # QM programm
+      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
+
+      virial = atomic;
+   
+#      qm_whitelist = 1-616; 
+
+#      force-field = on; nonbonded = guff;
+
+# Output files
+
+#      parameter_file = param.param;
+#      topology_file = shake_final.top;
+
+      start_file   = MALONDIALDEHYDE-eq.rst;
+
+      output_file    = malondialdehyde-01.out; 
+      info_file      = malondialdehyde-01.info;
+      energy_file    = malondialdehyde-01.en; 
+      traj_file      = malondialdehyde-01.xyz;
+      vel_file       = malondialdehyde-01.vel;
+      charge_file    = malondialdehyde-01.chrg;
+      restart_file   = malondialdehyde-01.rst;
+      force_file     = malondialdehyde-01.force;
+      rpmd_restart_file = malondialdehyde-01.rpmd.rst;
+      rpmd_traj_file = malondialdehyde-01.rpmd.xyz;
+      rpmd_vel_file = malondialdehyde-01.rpmd.vel;
+      rpmd_force_file = malondialdehyde-01.rpmd.force;
+      rpmd_charge_file = malondialdehyde-01.rpmd.chrg;
+      
+# end of infile
+

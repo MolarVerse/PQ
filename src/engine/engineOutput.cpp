@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "engineOutput.hpp"
 
 namespace physicalData
@@ -20,6 +42,17 @@ using namespace engine;
 void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &physicalData)
 {
     _energyOutput->write(step, loopTime, physicalData);
+}
+
+/**
+ * @brief wrapper for momentum file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeMomentumFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _momentumOutput->write(step, physicalData);
 }
 
 /**
@@ -70,4 +103,55 @@ void EngineOutput::writeInfoFile(const double time, const double loopTime, const
 void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, const size_t step)
 {
     _rstFileOutput->write(simulationBox, step);
+}
+
+/**
+ * @brief wrapper for ring polymer restart file output function
+ *
+ * @param simulationBox
+ * @param step
+ */
+void EngineOutput::writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &beads, const size_t step)
+{
+    _ringPolymerRstFileOutput->write(beads, step);
+}
+
+/**
+ * @brief wrapper for ring polymer xyz file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerXyzOutput->writeXyz(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer velocity file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerVelOutput->writeVelocities(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer force file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerForceOutput->writeForces(beads);
+}
+
+/**
+ * @brief wrapper for ring polymer charge file output function
+ *
+ * @param beads
+ */
+void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &beads)
+{
+    _ringPolymerChargeOutput->writeCharges(beads);
 }

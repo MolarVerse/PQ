@@ -1,5 +1,28 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "testCelllist.hpp"
 
+#include "atom.hpp"               // for Atom
 #include "cell.hpp"               // for Cell
 #include "exceptions.hpp"         // for CellListException
 #include "molecule.hpp"           // for Molecule
@@ -8,6 +31,7 @@
 #include "vector3d.hpp"           // for Vec3Dul, Vec3D, Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include <memory>          // for make_shared, __shared_ptr_access
 #include <string>          // for allocator, basic_string
 #include <vector>          // for vector
 
@@ -129,8 +153,15 @@ TEST_F(TestCellList, updateCellList)
 
     auto molecule = simulationBox::Molecule();
     molecule.setNumberOfAtoms(2);
-    molecule.addAtomPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    molecule.addAtomPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));
+
+    const auto atom1 = std::make_shared<simulationBox::Atom>();
+    const auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    atom2->setPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
 
     _simulationBox->addMolecule(molecule);
 

@@ -1,13 +1,35 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "engine.hpp"
 
-#include "constants.hpp"         // for _FS_TO_PS_
-#include "logOutput.hpp"         // for LogOutput
-#include "output.hpp"            // for Output
-#include "progressbar.hpp"       // for progressbar
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for TimingsSettings
-
-#include <iostream>   // for operator<<, cout, ostream, basic_ostream
+#include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "logOutput.hpp"                     // for LogOutput
+#include "outputFileSettings.hpp"            // for OutputFileSettings
+#include "progressbar.hpp"                   // for progressbar
+#include "referencesOutput.hpp"              // for ReferencesOutput
+#include "stdoutOutput.hpp"                  // for StdoutOutput
+#include "timingsSettings.hpp"               // for TimingsSettings
+#include "vector3d.hpp"                      // for norm
 
 using namespace engine;
 
@@ -19,13 +41,9 @@ void Engine::run()
 {
     _timings.beginTimer();
 
-    _simulationBox.calculateDegreesOfFreedom();
-    _simulationBox.calculateCenterOfMassMolecules();
+    _physicalData.calculateKinetics(getSimulationBox());
 
-    _physicalData.calculateKineticEnergyAndMomentum(getSimulationBox());
-
-    _engineOutput.getLogOutput().writeInitialMomentum(_physicalData.getMomentum());
-    _engineOutput.getStdoutOutput().writeInitialMomentum(_physicalData.getMomentum());
+    _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps));
@@ -40,61 +58,12 @@ void Engine::run()
 
     _timings.endTimer();
 
-    std::cout << '\n' << '\n';
-    std::cout << "Total time: " << double(_timings.calculateElapsedTime()) * 1e-3 << "s" << '\n';
-}
+    const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
 
-/**
- * @brief Takes one step in the simulation.
- *
- * @details The step is taken in the following order:
- *  1.  First step of the integrator
- *  2.  Apply SHAKE
- *  3.  Update cell list
- *  4.1 Calculate forces
- *  4.2 Calculate intra non bonded forces
- *  5.  Calculate virial
- *  6.  Calculate constraint bond references
- *  7.  Second step of the integrator
- *  8.  calculate intra molecular virial correction
- *  9.  Apply RATTLE
- * 10.  Apply thermostat
- * 11.  Calculate kinetic energy and momentum
- * 12.  Apply manostat
- * 13.  Reset temperature and momentum
- *
- */
-void Engine::takeStep()
-{
-    _integrator->firstStep(_simulationBox);
+    references::ReferencesOutput::writeReferencesFile();
 
-    _constraints.applyShake(_simulationBox);
-
-    _cellList.updateCellList(_simulationBox);
-
-    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
-
-    _intraNonBonded.calculate(_simulationBox, _physicalData);
-
-    _virial->calculateVirial(_simulationBox, _physicalData);
-
-    _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
-
-    _constraints.calculateConstraintBondRefs(_simulationBox);
-
-    _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
-
-    _integrator->secondStep(_simulationBox);
-
-    _constraints.applyRattle();
-
-    _thermostat->applyThermostat(_simulationBox, _physicalData);
-
-    _physicalData.calculateKineticEnergyAndMomentum(_simulationBox);
-
-    _manostat->applyManostat(_simulationBox, _physicalData);
-
-    _resetKinetics->reset(_step, _physicalData, _simulationBox);
+    _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
+    _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
 
 /**
@@ -108,7 +77,7 @@ void Engine::writeOutput()
     _averagePhysicalData.updateAverages(_physicalData);
     _physicalData.reset();
 
-    const auto outputFrequency = output::Output::getOutputFrequency();
+    const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
 
     if (0 == _step % outputFrequency)
     {
@@ -121,38 +90,13 @@ void Engine::writeOutput()
         const auto loopTime       = _timings.calculateLoopTime(_step);
 
         _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
         _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
-
-        if (_step == settings::TimingsSettings::getNumberOfSteps())
-        {
-            std::cout << '\n' << '\n';
-
-            std::cout << "Coulomb energy: " << _averagePhysicalData.getCoulombEnergy() << '\n';
-            std::cout << "Non Coulomb energy: " << _averagePhysicalData.getNonCoulombEnergy() << '\n';
-            std::cout << "intra coulomb energy " << _averagePhysicalData.getIntraCoulombEnergy() << '\n';
-            std::cout << "intra non coulomb energy " << _averagePhysicalData.getIntraNonCoulombEnergy() << '\n';
-            std::cout << "bond energy " << _averagePhysicalData.getBondEnergy() << '\n';
-            std::cout << "angle energy " << _averagePhysicalData.getAngleEnergy() << '\n';
-            std::cout << "dihedral energy " << _averagePhysicalData.getDihedralEnergy() << '\n';
-            std::cout << "improper energy " << _averagePhysicalData.getImproperEnergy() << '\n';
-            std::cout << "Kinetic energy: " << _averagePhysicalData.getKineticEnergy() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Temperature: " << _averagePhysicalData.getTemperature() << '\n';
-            std::cout << "Momentum: " << _averagePhysicalData.getMomentum() << '\n';
-            std::cout << '\n';
-
-            std::cout << "Volume: " << _averagePhysicalData.getVolume() << '\n';
-            std::cout << "Density: " << _averagePhysicalData.getDensity() << '\n';
-            std::cout << "Pressure: " << _averagePhysicalData.getPressure() << '\n';
-
-            std::cout << '\n' << '\n';
-        }
 
         _averagePhysicalData = physicalData::PhysicalData();
     }

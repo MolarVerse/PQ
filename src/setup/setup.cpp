@@ -1,32 +1,55 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PIMD-QMCF
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"
-#include "constraintsSetup.hpp"
-#include "forceFieldSetup.hpp"
-#include "guffDatReader.hpp"
-#include "inputFileReader.hpp"
-#include "integratorSetup.hpp"
-#include "intraNonBondedReader.hpp"
-#include "intraNonBondedSetup.hpp"
-#include "manostatSetup.hpp"
-#include "moldescriptorReader.hpp"
-#include "parameterFileReader.hpp"
-#include "potentialSetup.hpp"
-#include "resetKineticsSetup.hpp"
-#include "restartFileReader.hpp"
-#include "simulationBoxSetup.hpp"
-#include "thermostatSetup.hpp"
-#include "topologyReader.hpp"
+#include "celllistSetup.hpp"          // for setupCellList
+#include "constraintsSetup.hpp"       // for setupConstraints
+#include "engine.hpp"                 // for Engine
+#include "forceFieldSetup.hpp"        // for setupForceField
+#include "guffDatReader.hpp"          // for readGuffDat, readInput
+#include "inputFileReader.hpp"        // for readInputFile
+#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "manostatSetup.hpp"          // for setupManostat
+#include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "outputFilesSetup.hpp"       // for setupOutputFiles
+#include "parameterFileReader.hpp"    // for readParameterFile
+#include "potentialSetup.hpp"         // for setupPotential
+#include "qmSetup.hpp"                // for setupQM
+#include "qmmdEngine.hpp"             // for QMMDEngine
+#include "resetKineticsSetup.hpp"     // for setupResetKinetics
+#include "restartFileReader.hpp"      // for readRestartFile
+#include "ringPolymerEngine.hpp"      // for RingPolymerEngine
+#include "ringPolymerSetup.hpp"       // for setupRingPolymer
+#include "settings.hpp"               // for Settings
+#include "simulationBoxSetup.hpp"     // for setupSimulationBox
+#include "thermostatSetup.hpp"        // for setupThermostat
+#include "topologyReader.hpp"         // for readTopologyFile
 
-#include <iostream>
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include <iostream>   // for operator<<, basic_ostream, cout
 
 using namespace engine;
-using namespace readInput;
+using namespace input;
 
 /**
  * @brief setup the engine
@@ -36,16 +59,21 @@ using namespace readInput;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
-    readFiles(inputFileName, engine);
+    engine.getStdoutOutput().writeHeader();
 
-    std::cout << "setup engine..." << '\n';
+    readInputFile(inputFileName, engine);
+
+    setupOutputFiles(engine);
+
+    readFiles(engine);
+
     setupEngine(engine);
 
     // needs setup of engine before reading guff.dat
-    std::cout << "Reading guff.dat..." << '\n';
     guffdat::readGuffDat(engine);
 
-    std::cout << "Setup complete!" << '\n';
+    engine.getStdoutOutput().writeSetupCompleted();
+    engine.getLogOutput().writeSetupCompleted();
 }
 
 /**
@@ -54,25 +82,17 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(const std::string &inputFileName, Engine &engine)
+void setup::readFiles(Engine &engine)
 {
-    std::cout << "Reading input file..." << '\n';
-    readInputFile(inputFileName, engine);
-
-    std::cout << "Reading moldescriptor..." << '\n';
     molDescriptor::readMolDescriptor(engine);
 
-    std::cout << "Reading rst file..." << '\n';
     restartFile::readRestartFile(engine);
 
-    std::cout << "Reading topology file..." << '\n';
     topology::readTopologyFile(engine);
 
-    std::cout << "Reading parameter file..." << '\n';
     parameterFile::readParameterFile(engine);
 
-    std::cout << "Reading intra non bonded file..." << '\n';
-    readInput::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBonded::readIntraNonBondedFile(engine);
 }
 
 /**
@@ -82,14 +102,30 @@ void setup::readFiles(const std::string &inputFileName, Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    setupSimulationBox(engine);
+    if (settings::Settings::isQMActivated())
+        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
+
+    resetKinetics::setupResetKinetics(engine);
+
+    simulationBox::setupSimulationBox(engine);
+
     setupCellList(engine);
+
     setupThermostat(engine);
+
     setupManostat(engine);
-    setupResetKinetics(engine);
-    setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+    if (settings::Settings::isMMActivated())
+    {
+        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+
+        setupIntraNonBonded(engine);
+
+        setupForceField(engine);
+    }
+
     setupConstraints(engine);
 
-    setupIntraNonBonded(engine);
-    setupForceField(engine);
+    if (settings::Settings::isRingPolymerMDActivated())
+        setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
 }
