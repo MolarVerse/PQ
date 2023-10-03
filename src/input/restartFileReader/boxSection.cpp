@@ -60,7 +60,7 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
 
     const auto boxDimensions = linearAlgebra::Vec3D{stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])};
 
-    if (std::ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
+    if (std::ranges::any_of(boxDimensions, [](const double dimension) { return dimension < 0.0; }))
         throw customException::RstFileException("All box dimensions must be positive");
 
     auto boxAngles = linearAlgebra::Vec3D{90.0, 90.0, 90.0};
@@ -69,7 +69,7 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
     {
         boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
 
-        if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 180.0; }))
+        if (std::ranges::any_of(boxAngles, [](const double angle) { return angle < 0.0 || angle > 180.0; }))
             throw customException::RstFileException("Box angles must be positive and smaller than 180°");
     }
 

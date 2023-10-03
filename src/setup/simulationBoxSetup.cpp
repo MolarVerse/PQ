@@ -164,8 +164,10 @@ void SimulationBoxSetup::setAtomNames()
         if (molecule.getMoltype() == 0)
             return;
 
-        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        const auto moleculeType  = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
             molecule.getAtom(i).setName(moleculeType.getAtomName(i));
     };
 

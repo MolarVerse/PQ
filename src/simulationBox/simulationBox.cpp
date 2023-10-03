@@ -375,7 +375,7 @@ void SimulationBox::checkCoulombRadiusCutOff(const customException::ExceptionTyp
 {
     if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
     {
-        const auto *message = "Coulomb radius cut off is larger than half of the minimal box dimension";
+        const std::string message = "Coulomb radius cut off is larger than half of the minimal box dimension";
         if (exceptionType == customException::ExceptionType::MANOSTATEXCEPTION)
             throw customException::ManostatException(message);
         else
