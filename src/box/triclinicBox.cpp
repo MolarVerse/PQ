@@ -87,7 +87,7 @@ void TriclinicBox::calculateTransformationMatrix()
     _transformationMatrix[1][1] = sinGamma();
     _transformationMatrix[1][2] = (cosAlpha() - cosBeta() * cosGamma()) / sinGamma();
 
-    _transformationMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) - 2 * prod(cos(_boxAngles))) / sinGamma();
+    _transformationMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) + 2 * prod(cos(_boxAngles))) / sinGamma();
 }
 
 /**

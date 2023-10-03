@@ -39,8 +39,8 @@ namespace simulationBox
     {
       private:
         linearAlgebra::Vec3D                   _boxAngles;
-        linearAlgebra::StaticMatrix3x3<double> _boxMatrix;
-        linearAlgebra::StaticMatrix3x3<double> _transformationMatrix;
+        linearAlgebra::StaticMatrix3x3<double> _boxMatrix{0.0};
+        linearAlgebra::StaticMatrix3x3<double> _transformationMatrix{0.0};
 
       public:
         [[nodiscard]] double               calculateVolume() override;
