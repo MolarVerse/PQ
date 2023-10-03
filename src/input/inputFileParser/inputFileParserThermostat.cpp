@@ -87,7 +87,7 @@ void InputFileParserThermostat::parseThermostat(const std::vector<std::string> &
         references::ReferencesOutput::addReferenceFile(references::_BERENDSEN_FILE_);
     }
 
-    else if (thermostat == "velocity_rescaling")
+    else if (thermostat == "velocity_rescaling" || thermostat == "rescale")
     {
         settings::ThermostatSettings::setThermostatType("velocity_rescaling");
         references::ReferencesOutput::addReferenceFile(references::_VELOCITY_RESCALING_FILE_);
