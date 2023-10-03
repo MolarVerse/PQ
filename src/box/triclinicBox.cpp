@@ -42,6 +42,7 @@ void TriclinicBox::setBoxAngles(const linearAlgebra::Vec3D &boxAngles)
 {
     _boxAngles = boxAngles * constants::_RAD_TO_DEG_;
 
+    calculateTransformationMatrix();
     calculateBoxMatrix();
 }
 
@@ -54,7 +55,6 @@ void TriclinicBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions)
 {
     _boxDimensions = boxDimensions;
 
-    calculateTransformationMatrix();
     calculateBoxMatrix();
 }
 
