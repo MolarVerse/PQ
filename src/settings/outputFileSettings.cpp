@@ -55,3 +55,14 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
  * @param restartFileName
  */
 std::string OutputFileSettings::getReferenceFileName() { return _logFileName + ".ref"; }
+
+/**
+ * @brief sets the file prefix for all output files
+ *
+ * @param restartFileName
+ */
+void OutputFileSettings::setFilePrefix(const std::string_view prefix)
+{
+    _filePrefixSet = true;
+    _filePrefix    = prefix;
+}

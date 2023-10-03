@@ -43,6 +43,9 @@ namespace settings
       private:
         static inline size_t _outputFrequency = 1;
 
+        static inline bool        _filePrefixSet = false;
+        static inline std::string _filePrefix;
+
         static inline std::string _restartFileName    = defaults::_RESTART_FILENAME_DEFAULT_;
         static inline std::string _energyFileName     = defaults::_ENERGY_FILENAME_DEFAULT_;
         static inline std::string _momentumFileName   = defaults::_MOMENTUM_FILENAME_DEFAULT_;
@@ -64,6 +67,7 @@ namespace settings
         ~OutputFileSettings() = default;
 
         static void setOutputFrequency(const size_t outputFreq);
+        static void setFilePrefix(const std::string_view prefix);
 
         [[nodiscard]] static std::string getReferenceFileName();
 
@@ -107,6 +111,9 @@ namespace settings
          ***************************/
 
         [[nodiscard]] static size_t getOutputFrequency() { return OutputFileSettings::_outputFrequency; }
+
+        [[nodiscard]] static bool        isFilePrefixSet() { return OutputFileSettings::_filePrefixSet; }
+        [[nodiscard]] static std::string getFilePrefix() { return OutputFileSettings::_filePrefix; }
 
         [[nodiscard]] static std::string getRestartFileName() { return OutputFileSettings::_restartFileName; }
         [[nodiscard]] static std::string getEnergyFileName() { return OutputFileSettings::_energyFileName; }
