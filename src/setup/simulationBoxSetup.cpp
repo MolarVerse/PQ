@@ -35,6 +35,7 @@
 #include "molecule.hpp"                      // for Molecule
 #include "outputMessages.hpp"                // for _ANGSTROM_
 #include "physicalData.hpp"                  // for PhysicalData
+#include "settings.hpp"                      // for Settings
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
 #include "stdoutOutput.hpp"                  // for StdoutOutput
@@ -142,7 +143,9 @@ void SimulationBoxSetup::setup()
     _engine.getSimulationBox().calculateTotalMass();
 
     checkBoxSettings();
-    checkRcCutoff();
+
+    if (!(settings::Settings::getJobtype() == settings::JobType::QM_MD))
+        checkRcCutoff();
 
     _engine.getSimulationBox().calculateDegreesOfFreedom();
     _engine.getSimulationBox().calculateCenterOfMassMolecules();
