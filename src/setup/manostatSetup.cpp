@@ -77,7 +77,7 @@ void ManostatSetup::setup()
     else
     {
         _engine.makeManostat(manostat::Manostat());
-        _engine.getLogOutput().writeSetupInfo("No manostat:");
+        _engine.getLogOutput().writeSetupInfo("No manostat selected");
     }
 
     _engine.getLogOutput().writeEmptyLine();
