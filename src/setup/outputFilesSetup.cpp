@@ -31,6 +31,7 @@
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
 #include "rstFileOutput.hpp"                  // for RstFileOutput
+#include "settings.hpp"                       // for Settings
 #include "stdoutOutput.hpp"                   // for StdoutOutput
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 
@@ -66,11 +67,14 @@ void OutputFilesSetup::setup()
     _engine.getChargeOutput().setFilename(settings::OutputFileSettings::getChargeFileName());
     _engine.getMomentumOutput().setFilename(settings::OutputFileSettings::getMomentumFileName());
 
-    _engine.getRingPolymerRstFileOutput().setFilename(settings::OutputFileSettings::getRingPolymerRestartFileName());
-    _engine.getRingPolymerXyzOutput().setFilename(settings::OutputFileSettings::getRingPolymerTrajectoryFileName());
-    _engine.getRingPolymerVelOutput().setFilename(settings::OutputFileSettings::getRingPolymerVelocityFileName());
-    _engine.getRingPolymerForceOutput().setFilename(settings::OutputFileSettings::getRingPolymerForceFileName());
-    _engine.getRingPolymerChargeOutput().setFilename(settings::OutputFileSettings::getRingPolymerChargeFileName());
+    if (settings::Settings::isRingPolymerMDActivated())
+    {
+        _engine.getRingPolymerRstFileOutput().setFilename(settings::OutputFileSettings::getRingPolymerRestartFileName());
+        _engine.getRingPolymerXyzOutput().setFilename(settings::OutputFileSettings::getRingPolymerTrajectoryFileName());
+        _engine.getRingPolymerVelOutput().setFilename(settings::OutputFileSettings::getRingPolymerVelocityFileName());
+        _engine.getRingPolymerForceOutput().setFilename(settings::OutputFileSettings::getRingPolymerForceFileName());
+        _engine.getRingPolymerChargeOutput().setFilename(settings::OutputFileSettings::getRingPolymerChargeFileName());
+    }
 
     _engine.getLogOutput().writeHeader();
 }
