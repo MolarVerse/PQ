@@ -102,7 +102,7 @@ void Constraints::applyRattle()
 
         std::ranges::for_each(_bondConstraints, applyRattleForSingleBond);
 
-        converged = std::ranges::all_of(convergedVector, [](bool isConverged) { return isConverged; });
+        converged = std::ranges::all_of(convergedVector, [](const bool isConverged) { return isConverged; });
 
         ++iter;
     }

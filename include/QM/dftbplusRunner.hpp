@@ -49,7 +49,7 @@ namespace QM
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
-        void readStressTensor(const simulationBox::Box &box, physicalData::PhysicalData &data) override;
+        void readStressTensor(simulationBox::Box &box, physicalData::PhysicalData &data) override;
     };
 }   // namespace QM
 

@@ -60,7 +60,7 @@ namespace QM
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
         virtual void execute()                                       = 0;
         virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void readStressTensor(const simulationBox::Box &, physicalData::PhysicalData &){};
+        virtual void readStressTensor(simulationBox::Box &, physicalData::PhysicalData &){};
     };
 }   // namespace QM
 

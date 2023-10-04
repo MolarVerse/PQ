@@ -111,7 +111,7 @@ void DFTBPlusRunner::execute()
  * @param box
  * @param data
  */
-void DFTBPlusRunner::readStressTensor(const simulationBox::Box &box, physicalData::PhysicalData &data)
+void DFTBPlusRunner::readStressTensor(simulationBox::Box &box, physicalData::PhysicalData &data)
 {
     if (settings::Settings::getJobtype() != settings::JobType::QM_MD)
         return;
