@@ -31,7 +31,9 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+    class Box;             // forward declaration
+
+}   // namespace simulationBox
 
 namespace physicalData
 {
@@ -58,6 +60,7 @@ namespace QM
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
         virtual void execute()                                       = 0;
         virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void readStressTensor(const simulationBox::Box &, physicalData::PhysicalData &){};
     };
 }   // namespace QM
 

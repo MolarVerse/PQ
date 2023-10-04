@@ -134,7 +134,14 @@ TEST(TestStaticMatrix3x3, inverse)
                        1e-8);
 }
 
-TEST(TestStaticMatrix3x3, diagonalMatrixofVec3D)
+TEST(TestStaticMatrix3x3, diagonalOfMatrix)
+{
+    const StaticMatrix3x3<double> mat{{1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}};
+
+    EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
+}
+
+TEST(TestStaticMatrix3x3, diagonalMatrixOfVec3D)
 {
     const Vec3D vec{1.0, 2.0, 3.0};
 

@@ -24,7 +24,9 @@
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
+#include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
+#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
@@ -101,4 +103,36 @@ void DFTBPlusRunner::execute()
     ::system(command.c_str());
 
     _isFirstExecution = false;
+}
+
+/**
+ * @brief reads the stress tensor and adds it to the physical data
+ *
+ * @param box
+ * @param data
+ */
+void DFTBPlusRunner::readStressTensor(const simulationBox::Box &box, physicalData::PhysicalData &data)
+{
+    if (settings::Settings::getJobtype() != settings::JobType::QM_MD)
+        return;
+
+    const std::string stressFileName = "stress_tensor";
+
+    std::ifstream stressFile(stressFileName);
+
+    if (!stressFile.is_open())
+        throw customException::QMRunnerException(
+            std::format("Cannot open {} stress tensor \"{}\"", string(settings::QMSettings::getQMMethod()), stressFileName));
+
+    linearAlgebra::StaticMatrix3x3<double> stressTensor;
+
+    stressFile >> stressTensor[0][0] >> stressTensor[0][1] >> stressTensor[0][2];
+    stressFile >> stressTensor[1][0] >> stressTensor[1][1] >> stressTensor[1][2];
+    stressFile >> stressTensor[2][0] >> stressTensor[2][1] >> stressTensor[2][2];
+
+    const auto virial = diagonal(stressTensor) * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ * box.getVolume();
+
+    data.addVirial(virial);
+
+    stressFile.close();
 }

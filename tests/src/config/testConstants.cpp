@@ -128,6 +128,14 @@ TEST(TestConstants, literToAngstromCubic)
                 1.0,
                 1e-9);
 }
+TEST(TestConstants, bohrRadiusCubicToAngstromCubic)
+{
+    EXPECT_NEAR(
+        constants::_BOHR_RADIUS_CUBIC_TO_ANGSTROM_CUBIC_ /
+            (constants::_BOHR_RADIUS_TO_ANGSTROM_ * constants::_BOHR_RADIUS_TO_ANGSTROM_ * constants::_BOHR_RADIUS_TO_ANGSTROM_),
+        1.0,
+        1e-9);
+}
 
 // for density units
 TEST(TestConstants, kgPerLiterToAmuPerAngstromCubic)
@@ -183,6 +191,16 @@ TEST(TestConstants, hartreePerBohrToKcalPerMolPerAngstrom)
 {
     EXPECT_NEAR(constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ /
                     (constants::_HARTREE_TO_KCAL_PER_MOL_ / constants::_BOHR_RADIUS_TO_ANGSTROM_),
+                1.0,
+                1e-9);
+}
+
+// for stress units
+TEST(TestConstants, hartreePerBohrCubicToKcalPerMolPerAngstromCubic)
+{
+    EXPECT_NEAR(constants::_HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ /
+                    (constants::_HARTREE_TO_KCAL_PER_MOL_ / constants::_BOHR_RADIUS_TO_ANGSTROM_ /
+                     constants::_BOHR_RADIUS_TO_ANGSTROM_ / constants::_BOHR_RADIUS_TO_ANGSTROM_),
                 1.0,
                 1e-9);
 }

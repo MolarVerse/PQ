@@ -70,6 +70,8 @@ namespace constants
     static constexpr double _METER_CUBIC_TO_ANGSTROM_CUBIC_ = 1.0 / _ANGSTROM_CUBIC_TO_METER_CUBIC_;
     static constexpr double _ANGSTROM_CUBIC_TO_LITER_       = _ANGSTROM_CUBIC_TO_METER_CUBIC_ * 1.0e3;
     static constexpr double _LITER_TO_ANGSTROM_CUBIC_       = 1.0 / _ANGSTROM_CUBIC_TO_LITER_;
+    static constexpr double _BOHR_RADIUS_CUBIC_TO_ANGSTROM_CUBIC_ =
+        _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for density units
@@ -98,6 +100,12 @@ namespace constants
      */
     static constexpr double _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ =
         _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_;
+
+    /**
+     * @brief Conversion factors for stress units
+     */
+    static constexpr double _HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ =
+        _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for time units

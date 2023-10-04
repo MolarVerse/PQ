@@ -257,6 +257,18 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief diagonal of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return Vector3D<T>
+     */
+    template <typename T>
+    Vector3D<T> diagonal(const StaticMatrix3x3<T> &mat)
+    {
+        return Vector3D<T>(mat[0][0], mat[1][1], mat[2][2]);
+    }
+
+    /**
      * @brief build diagonalMatrix from a Vector3D
      *
      * @param vec
