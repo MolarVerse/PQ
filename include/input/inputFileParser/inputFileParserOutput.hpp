@@ -49,6 +49,8 @@ namespace input
         explicit InputFileParserOutput(engine::Engine &);
 
         void parseOutputFreq(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseFilePrefix(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
         void parseLogFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);

@@ -96,12 +96,7 @@
 #-----------------------------------------
    start_file   = testset_02___mm_md_h2o-1.rst; 
 
-   output_file  = testset_02___mm_md_h2o-2.out; 
-   info_file    = testset_02___mm_md_h2o-2.info;
-   energy_file  = testset_02___mm_md_h2o-2.en; 
-   traj_file    = testset_02___mm_md_h2o-2.xyz;
-   vel_file     = testset_02___mm_md_h2o-2.vel;
-   restart_file = testset_02___mm_md_h2o-2.rst;
+   file_prefix  = testset_02___mm_md_h2o-2; 
 
 
 

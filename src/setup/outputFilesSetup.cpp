@@ -57,6 +57,15 @@ void setup::setupOutputFiles(engine::Engine &engine)
  */
 void OutputFilesSetup::setup()
 {
+    if (settings::OutputFileSettings::isFilePrefixSet())
+        settings::OutputFileSettings::replaceDefaultValues(settings::OutputFileSettings::getFilePrefix());
+    else
+    {
+        const auto prefix = settings::OutputFileSettings::determineMostCommonPrefix();
+        settings::OutputFileSettings::replaceDefaultValues(prefix);
+        std::cout << prefix << std::endl;
+    }
+
     _engine.getRstFileOutput().setFilename(settings::OutputFileSettings::getRestartFileName());
     _engine.getEnergyOutput().setFilename(settings::OutputFileSettings::getEnergyFileName());
     _engine.getXyzOutput().setFilename(settings::OutputFileSettings::getTrajectoryFileName());

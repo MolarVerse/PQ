@@ -49,6 +49,8 @@ using namespace input;
 InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(std::string("output_freq"), bind_front(&InputFileParserOutput::parseOutputFreq, this), false);
+    addKeyword(std::string("file_prefix"), bind_front(&InputFileParserOutput::parseFilePrefix, this), false);
+
     addKeyword(std::string("output_file"), bind_front(&InputFileParserOutput::parseLogFilename, this), false);
     addKeyword(std::string("info_file"), bind_front(&InputFileParserOutput::parseInfoFilename, this), false);
     addKeyword(std::string("energy_file"), bind_front(&InputFileParserOutput::parseEnergyFilename, this), false);
@@ -83,6 +85,19 @@ void InputFileParserOutput::parseOutputFreq(const std::vector<std::string> &line
             format("Output frequency cannot be negative - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
     settings::OutputFileSettings::setOutputFrequency(size_t(outputFrequency));
+}
+
+/**
+ * @brief parse file prefix of simulation and set it in output statically
+ *
+ * @details default value is default
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseFilePrefix(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setFilePrefix(lineElements[2]);
 }
 
 /**

@@ -22,7 +22,10 @@
 
 #include "outputFileSettings.hpp"
 
-#include <cstdint>   // for UINT64_MAX
+#include <algorithm>   // for for_each
+#include <cstdint>     // for UINT64_MAX
+#include <string>      // for string, allocator
+#include <vector>      // for vector
 
 using settings::OutputFileSettings;
 
@@ -77,7 +80,105 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
     if (defaults::_RESTART_FILENAME_DEFAULT_ == _restartFileName)
         _restartFileName = prefix + ".rst";
 
-
     if (defaults::_LOG_FILENAME_DEFAULT_ == _logFileName)
         _logFileName = prefix + ".log";
+
+    if (defaults::_TRAJECTORY_FILENAME_DEFAULT_ == _trajectoryFileName)
+        _trajectoryFileName = prefix + ".xyz";
+
+    if (defaults::_ENERGY_FILENAME_DEFAULT_ == _energyFileName)
+        _energyFileName = prefix + ".en";
+
+    if (defaults::_FORCE_FILENAME_DEFAULT_ == _forceFileName)
+        _forceFileName = prefix + ".force";
+
+    if (defaults::_VELOCITY_FILENAME_DEFAULT_ == _velocityFileName)
+        _velocityFileName = prefix + ".vel";
+
+    if (defaults::_CHARGE_FILENAME_DEFAULT_ == _chargeFileName)
+        _chargeFileName = prefix + ".chrg";
+
+    if (defaults::_INFO_FILENAME_DEFAULT_ == _infoFileName)
+        _infoFileName = prefix + ".info";
+
+    if (defaults::_MOMENTUM_FILENAME_DEFAULT_ == _momentumFileName)
+        _momentumFileName = prefix + ".mom";
+
+    /*****************************
+     * ring polymer output files *
+     *****************************/
+
+    if (defaults::_RING_POLYMER_RESTART_FILENAME_DEFAULT_ == _ringPolymerRestartFileName)
+        _ringPolymerRestartFileName = prefix + ".rpmd.rst";
+
+    if (defaults::_RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_ == _ringPolymerTrajectoryFileName)
+        _ringPolymerTrajectoryFileName = prefix + ".rpmd.xyz";
+
+    if (defaults::_RING_POLYMER_VELOCITY_FILENAME_DEFAULT_ == _ringPolymerVelocityFileName)
+        _ringPolymerVelocityFileName = prefix + ".rpmd.vel";
+
+    if (defaults::_RING_POLYMER_FORCE_FILENAME_DEFAULT_ == _ringPolymerForceFileName)
+        _ringPolymerForceFileName = prefix + ".rpmd.force";
+
+    if (defaults::_RING_POLYMER_CHARGE_FILENAME_DEFAULT_ == _ringPolymerChargeFileName)
+        _ringPolymerChargeFileName = prefix + ".rpmd.chrg";
+}
+
+/**
+ * @brief determines the most common prefix of all output files
+ *
+ * @return most common prefix
+ */
+std::string OutputFileSettings::determineMostCommonPrefix()
+{
+
+    std::vector<std::string> fileNames = {_restartFileName,
+                                          _logFileName,
+                                          _trajectoryFileName,
+                                          _energyFileName,
+                                          _forceFileName,
+                                          _velocityFileName,
+                                          _chargeFileName,
+                                          _infoFileName,
+                                          _momentumFileName,
+                                          _ringPolymerRestartFileName,
+                                          _ringPolymerTrajectoryFileName,
+                                          _ringPolymerVelocityFileName,
+                                          _ringPolymerForceFileName,
+                                          _ringPolymerChargeFileName};
+
+    auto removeEnding = [](std::string &fileName)
+    {
+        const auto pos = fileName.find_first_of('.');
+        if (pos != std::string::npos)
+            fileName.erase(pos);
+    };
+
+    std::ranges::for_each(fileNames, removeEnding);
+
+    auto uniqueFileNames = fileNames;
+
+    std::ranges::sort(uniqueFileNames);
+    const auto [first, last] = std::ranges::unique(uniqueFileNames);
+    uniqueFileNames.erase(first, last);
+
+    std::string mostCommonPrefix = "default";
+    int         count            = 0;
+
+    auto getHighestOccurrence = [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
+    {
+        if (fileName == "default")
+            return;
+
+        const int occurrence = std::ranges::count(fileNames, fileName);
+        if (occurrence > count)
+        {
+            mostCommonPrefix = fileName;
+            count            = occurrence;
+        }
+    };
+
+    std::ranges::for_each(uniqueFileNames, getHighestOccurrence);
+
+    return mostCommonPrefix;
 }

@@ -40,6 +40,7 @@ noncoulomb              false
 intra-nonBonded_file    false
 
 output_freq             false
+file_prefix             false
 output_file             false
 info_file               false
 energy_file             false

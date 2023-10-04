@@ -68,10 +68,11 @@ namespace settings
 
         static void setOutputFrequency(const size_t outputFreq);
         static void setFilePrefix(const std::string_view prefix);
+        static void replaceDefaultValues(const std::string &prefix);
+
+        [[nodiscard]] static std::string determineMostCommonPrefix();
 
         [[nodiscard]] static std::string getReferenceFileName();
-
-        static void replaceDefaultValues(const std::string &prefix);
 
         /***************************
          * standard setter methods *
