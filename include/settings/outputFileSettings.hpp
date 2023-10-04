@@ -71,6 +71,8 @@ namespace settings
 
         [[nodiscard]] static std::string getReferenceFileName();
 
+        static void replaceDefaultValues(const std::string &prefix);
+
         /***************************
          * standard setter methods *
          ***************************/

@@ -66,3 +66,18 @@ void OutputFileSettings::setFilePrefix(const std::string_view prefix)
     _filePrefixSet = true;
     _filePrefix    = prefix;
 }
+
+/**
+ * @brief replaces the default restart file name
+ *
+ * @param fileName
+ */
+void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
+{
+    if (defaults::_RESTART_FILENAME_DEFAULT_ == _restartFileName)
+        _restartFileName = prefix + ".rst";
+
+
+    if (defaults::_LOG_FILENAME_DEFAULT_ == _logFileName)
+        _logFileName = prefix + ".log";
+}
