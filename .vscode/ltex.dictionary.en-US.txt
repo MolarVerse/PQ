@@ -1,1 +1,4 @@
 generalUsage
+uint
+pathFile
+bool
