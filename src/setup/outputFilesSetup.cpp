@@ -63,7 +63,6 @@ void OutputFilesSetup::setup()
     {
         const auto prefix = settings::OutputFileSettings::determineMostCommonPrefix();
         settings::OutputFileSettings::replaceDefaultValues(prefix);
-        std::cout << prefix << std::endl;
     }
 
     _engine.getRstFileOutput().setFilename(settings::OutputFileSettings::getRestartFileName());
