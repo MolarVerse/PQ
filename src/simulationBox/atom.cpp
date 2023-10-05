@@ -21,3 +21,21 @@
 ******************************************************************************/
 
 #include "atom.hpp"
+
+#include "box.hpp"
+#include "vector3d.hpp"
+
+using simulationBox::Atom;
+
+/**
+ * @brief scales the velocities of the atom in orthogonal space
+ *
+ * @param scalingFactor
+ * @param box
+ */
+void Atom::scaleVelocityOrthogonalSpace(const linearAlgebra::Vec3D &scalingFactor, const simulationBox::Box &box)
+{
+    _velocity  = box.transformIntoOrthogonalSpace(_velocity);
+    _velocity *= scalingFactor;
+    _velocity  = box.transformIntoSimulationSpace(_velocity);
+}

@@ -72,13 +72,29 @@ void Molecule::calculateCenterOfMass(const Box &box)
 /**
  * @brief scales the positions of the molecule by shifting the center of mass
  *
+ * @details scaling has to be done in orthogonal space since pressure scaling is done in orthogonal space
+ *
  * @param shiftFactors
  */
-void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors)
+void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors, const Box &box)
 {
-    const auto shift = _centerOfMass * (shiftFactors - 1.0);
+    const auto centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
 
-    std::ranges::for_each(_atoms, [shift](auto atom) { atom->addPosition(shift); });
+    const auto shift = centerOfMass * (shiftFactors - 1.0);
+
+    auto scaleAtomPosition = [&box, shift](auto atom)
+    {
+        auto position = atom->getPosition();
+        position      = box.transformIntoOrthogonalSpace(position);
+
+        position += shift;
+
+        position = box.transformIntoSimulationSpace(position);
+
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, scaleAtomPosition);
 }
 
 /**

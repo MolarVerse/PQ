@@ -72,7 +72,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu(simBox.getVolume()));
+    const auto mu = calculateMu(simBox.getVolume());
 
     simBox.scaleBox(mu);
 
@@ -81,8 +81,8 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scalePositions  = [&mu](auto &molecule) { molecule.scale(mu); };
-    auto scaleVelocities = [&mu](auto &atom) { atom->scaleVelocity(1.0 / mu); };
+    auto scalePositions  = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &atom) { atom->scaleVelocityOrthogonalSpace(1 / mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);

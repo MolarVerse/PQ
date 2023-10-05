@@ -59,9 +59,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(simBox, physicalData);
 
-    auto mu = calculateMu();
-
-    mu = simBox.getBox().transformIntoSimulationSpace(mu - 1.0) + 1.0;
+    const auto mu = calculateMu();
 
     simBox.scaleBox(mu);
 
@@ -70,7 +68,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scaleMolecule = [&mu](auto &molecule) { molecule.scale(mu); };
+    auto scaleMolecule = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
 }
