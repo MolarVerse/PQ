@@ -32,7 +32,9 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+    class Box;             // forward declaration
+
+}   // namespace simulationBox
 
 namespace physicalData
 {
