@@ -43,7 +43,7 @@ In the following sections the types of the input values will be denoted via `{}`
 </div>
 
 ## Input Keys
-<span style="color:red">**Note**</span>: Some of the following keys are necessary in the input file and are therefore marked with a `*`.
+<span style="color:red">**Note**</span>: Some of the following keys are necessary in the input file and are therefore marked with a `*`. If there exists a default value for the possible values related to a key, they will be marked with `->` after the command.
 
 ### General Keys
 
@@ -67,11 +67,55 @@ With the `jobtype` keyword the user can choose out of different engines to perfo
 
 With the `timestep` keyword the time step in fs of one molecular dynamics loop can be set.
 
+### Output Files
+
 #### Output_Freq
 
-    output_freq = {uint}
+    output_freq = {uint} -> 1
 
 The `output_freq` keyword sets the frequency (*i.e.* every n-th step) of how often the application should write into the output files. For a complete dry run without any output files it is also possible to set it to `0`.
+
+*default value* = 1
+
+#### Output_File
+
+    output_file = {file} -> "default.out"
+
+The `output_file` keyword sets the name for the log file, in which all important information about the performed calculation can be found. 
+
+*default value* = "default.out"
+
+#### Info_File
+
+    info_file = {file} -> "default.info"
+
+The `info_file` keyword sets the name for the info file, in which the most important physical properties of the last written step can be found.
+
+*default value* = "default.info"
+
+#### Energy_File
+
+    energy_file = {file} -> "default.en"
+
+The `en_file` keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.
+
+*default value* = "default.en"
+
+#### Traj_File
+
+    traj_file = {file} -> "default.xyz"
+
+The `traj_file` keyword sets the name for the trajectory file of the atomic positions.
+
+*default value* = "default.xyz"
+
+#### Vel_File
+
+    vel_file = {file} -> "default.vel"
+
+The `vel_file` keyword sets the name for the trajectory file of the atomic velocities.
+
+*default value* = "default.vel"
 
 ### QM {#qmKeywords}
 

@@ -9,6 +9,7 @@
       <tab type="user" visible="yes" title="General Usage" url="@ref generalUsage" intro=""/>
       <tab type="user" visible="yes" title="The Input File" url="@ref inputFile" intro=""/>
       <tab type="user" visible="yes" title="Setup Files" url="@ref setupFiles" intro=""/>
+      <tab type="user" visible="yes" title="Output Files" url="@ref outputFiles" intro=""/>
     </tab>
 
     <tab type="usergroup" visible="yes" title="Reference Manual" intro="">
