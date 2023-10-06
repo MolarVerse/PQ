@@ -255,6 +255,35 @@ In order to setup certain calculations additional input files have to be used. T
 
     intra-nonbonded_file = {file}
 
+### Temperature Coupling Keys
+
+#### Temperature
+
+    temperature = {double} K
+
+>   With the `temperature` keyword the target temperature in `K` of the system can be set. 
+
+>   <span style="color:red"><b>Note</b></span>: This keyword is not restricted to the use of any temperature coupling method, as it is used *e.g.* also for the initialization of Boltzmann distributed velocities or the reset of the system temperature.
+
+#### Thermostat
+<!-- TODO: reference manual-->
+
+    thermostat = {string} -> "none"
+
+>   With the `thermostat` keyword the temperature coupling method can be chosen.
+
+> Possible values are:
+
+>   1) <b>none</b> (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
+
+>   2) <b>berendsen</b> - the berendsen weak coupling thermostat
+
+>   3) <b>velocity_rescaling</b> - the stochastic velocity rescaling thermostat
+
+>   4) <b>langevin</b> - temperature coupling <i>via</i> stochastic Langevin dynamics
+
+>   5) <b>nh-chain</b> - temperature coupling <i>via</i> Nose Hoover extended Lagrangian 
+
 ### Reset Kinetics Keys
 
 #### NScale
@@ -303,7 +332,7 @@ In order to setup certain calculations additional input files have to be used. T
 
 >   With the `nreset_angular` keyword the user can specify the first `n` steps in which the total angular box momentum is reset.
 
-> <span style="color:red">Attention</span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+> <span style="color:red"><b>Attention</b></span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
 
 > *default value* = 0 (*i.e.* never)
 
@@ -313,7 +342,7 @@ In order to setup certain calculations additional input files have to be used. T
 
 >   With the `freset_angular` keyword the user can specify the frequency `f` at which the total angular box momentum is reset.
 
-> <span style="color:red">Attention</span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+> <span style="color:red"><b>Attention</b></span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
 
 > *default value* = nstep + 1 (*i.e.* never)
 
