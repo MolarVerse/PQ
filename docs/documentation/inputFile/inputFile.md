@@ -211,6 +211,33 @@ All of the following output files presented in the RPMD Output Files section are
 
 >   *default value* = "default.rpmd.chrg"
 
+### Input File Keys {#inputFileKeys}
+
+In order to setup certain calculations additional input files have to be used. The names of these files have to be specified in the input file. For further information about these input files can be found in the [Setup Files]{#setupFiles} section.
+
+#### Moldesctiptor_File
+
+    moldescriptor_file = {file} -> "moldescriptor.dat"
+
+>   *default value* = "moldescriptor.dat"
+
+#### Guff_File
+
+    guff_file = {file} -> "guff.dat"
+
+>   *default value* = "guff.dat"
+
+#### Topology_File
+
+    topology_file = {file}
+
+#### Parameter_File
+
+    parameter_file = {file}
+
+#### Intra-NonBonded_File
+
+    intra-nonbonded_file = {file}
 
 ### QM Keys {#qmKeywords}
 

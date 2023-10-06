@@ -20,6 +20,7 @@ guff_path               false
 guff_file               false
 topology_file           false
 parameter_file          false
+intra-nonBonded_file    false
 
 integrator              false
 
@@ -37,7 +38,6 @@ nh-chain_length         false
 coupling_frequency      false
 
 noncoulomb              false
-intra-nonBonded_file    false
 
 output_freq             false
 file_prefix             false
