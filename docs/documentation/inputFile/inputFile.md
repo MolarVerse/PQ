@@ -67,6 +67,18 @@ In the following sections the types of the input values will be denoted via `{}`
 
 >   With the `timestep` keyword the time step in fs of one molecular dynamics loop can be set.
 
+#### Start_File
+
+    start_file* = {file}
+
+>   The `start_file` keyword sets the name of the start file for an MD simulation of any kind.
+
+#### RPMD_START_FILE
+
+    rpmd_start_file = {file}
+
+>   The `rpmd_start_file` keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.
+
 ### General Output Keys
 
 <span style="color:red"><b>Note</b></span>: The PIMD-QMCF application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named `default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first `.` character) and set it with the respective extension for all unspecified output files.
@@ -154,6 +166,51 @@ All of the following output files presented in the MD Output Files section are w
 >   The `charge_file` keyword sets the name for the trajectory file of the atomic partial charges.
 
 >   *default value* = "default.chrg"
+
+### RPMD Output File Keys
+
+All of the following output files presented in the RPMD Output Files section are wriiten during calculations using ring polymer MD related jobtypes. These files represents the trajectories of all individual beads.
+
+#### RPMD_Restart_File
+
+    rpmd_restart_file = {file} -> "default.rpmd.rst"
+
+>   The `rpmd_restart_file` keyword sets the name for the ring polymer restart file, which contains all necessary information to restart (*i.e.* continue) the calculation from its timestamp.
+
+>   *default value* = "default.rpmd.rst"
+
+#### RPMD_Traj_File
+
+    rpmd_traj_file = {file} -> "default.rpmd.xyz"
+
+>   The `rpmd_traj_file` keyword sets the name for the file containing positions of all atoms of each bead of the ring polymer trajectory.
+
+>   *default value* = "default.rpmd.xyz"
+
+#### RPMD_Vel_File
+
+    rpmd_vel_file = {file} -> "default.rpmd.vel"
+
+>   The `rpmd_vel_file` keyword sets the name for the file containing velocities of all atoms of each bead of the ring polymer trajectory.
+
+>   *default value* = "default.rpmd.vel"
+
+#### RPMD_Force_File
+
+    rpmd_force_file = {file} -> "default.rpmd.force"
+
+>   The `rpmd_force_file` keyword sets the name for the file containing forces of all atoms of each bead of the ring polymer trajectory.
+
+>   *default value* = "default.rpmd.force"
+
+#### RPMD_Charge_File
+
+    rpmd_charge_file = {file} -> "default.rpmd.chrg"
+
+>   The `rpmd_charge_file` keyword sets the name for the file containing partial charges of all atoms of each bead of the ring polymer trajectory.
+
+>   *default value* = "default.rpmd.chrg"
+
 
 ### QM Keys {#qmKeywords}
 
