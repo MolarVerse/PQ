@@ -255,6 +255,70 @@ In order to setup certain calculations additional input files have to be used. T
 
     intra-nonbonded_file = {file}
 
+### Reset Kinetics Keys
+
+#### NScale
+
+    nscale = {uint} -> 0
+
+>   With the `nscale` keyword the user can specify the first `n` steps in which the temperature is reset *via* a hard scaling approach to the target temperature.
+
+> <span style="color:red"><b>Note</b></span>: Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.
+
+> *default value* = 0 (*i.e.* never)
+
+#### FScale
+
+    fscale = {uint} -> nstep + 1
+
+>   With the `fscale` keyword the user can specify the frequency `f` at which the temperature is reset *via* a hard scaling approach to the target temperature.
+
+> <span style="color:red"><b>Note</b></span>: Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.
+
+> *default value* = nstep + 1 (*i.e.* never)
+
+> *special case* = 0 -> nstep + 1 
+
+#### NReset
+
+    nreset = {uint} -> 0
+
+>   With the `nreset` keyword the user can specify the first `n` steps in which the total box momentum is reset.
+
+> *default value* = 0 (*i.e.* never)
+
+#### FReset
+
+    freset = {uint} -> nstep + 1
+
+>   With the `freset` keyword the user can specify the frequency `f` at which the total box momentum is reset.
+
+> *default value* = nstep + 1 (*i.e.* never)
+
+> *special case* = 0 -> nstep + 1
+
+#### NReset_Angular
+
+    nreset_angular = {uint} -> 0
+
+>   With the `nreset_angular` keyword the user can specify the first `n` steps in which the total angular box momentum is reset.
+
+> <span style="color:red">Attention</span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+
+> *default value* = 0 (*i.e.* never)
+
+#### FReset_Angular
+
+    freset_angular = {uint} -> nstep + 1
+
+>   With the `freset_angular` keyword the user can specify the frequency `f` at which the total angular box momentum is reset.
+
+> <span style="color:red">Attention</span>: This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+
+> *default value* = nstep + 1 (*i.e.* never)
+
+> *special case* = 0 -> nstep + 1 
+
 ### Constraints Keys
 
 #### Shake
