@@ -65,7 +65,23 @@ In the following sections the types of the input values will be denoted via `{}`
 
     timestep* = {double} fs
 
->   With the `timestep` keyword the time step in fs of one molecular dynamics loop can be set.
+>   With the `timestep` keyword the time step in `fs` of one molecular dynamics loop can be set.
+
+#### NStep
+
+    nstep* = {uint+}
+
+>   This keyword sets the total amount of MD steps to be performed within the next simulation run.
+
+#### Integrator
+
+    integrator = {string} -> "v-verlet"
+
+>   With the `integrator` keyword the user can choose the integrator type which should be applied.
+
+>   Possible options are:
+
+>>      1) <b>v-verlet</b> (default) - represents the Velocity-Verlet integrator 
 
 #### Start_File
 
@@ -238,6 +254,54 @@ In order to setup certain calculations additional input files have to be used. T
 #### Intra-NonBonded_File
 
     intra-nonbonded_file = {file}
+
+### Constraints Keys
+
+#### Shake
+
+    shake = {string} -> "off"
+
+>   With the `shake` keyword it is possible to activate the SHAKE/RATTLE algorithm for bond constraints.
+
+>   Possible values are:
+
+>>      1) <b>off</b> (default) - no shake will be applied
+
+>>      2) <b>on</b> - shake for bond constraints defined in the [topology file](#topology_file) will be applied.
+
+#### Shake-Tolerance
+
+    shake-tolerance = {double} -> 1e-8
+
+>   With the `shake-tolerance` keyword the user can specify the tolerance, with which the bond-length of the shaked bonds should converge.
+
+> *default value* = 1e-8
+
+#### Shake-Iter
+
+    shake-iter = {uint+} -> 20
+
+>   With the `shake-iter` keyword the user can specify the maximum number of iteration until the convergence of the bond-lengths should be reached within the shake algorithm.
+
+> *default value* = 20
+
+#### Rattle-Tolerance
+
+
+    rattle-tolerance = {double} -> 1e4 s⁻¹kg⁻¹ 
+
+
+>   With the `rattle-tolerance` keyword the user can specify the tolerance in `s⁻¹kg⁻¹`, with which the velocities of the shaked bonds should converge.
+
+> *default value* = 20 s⁻¹kg⁻¹
+
+#### Rattle-Iter
+
+    rattle-iter = {uint+} -> 20
+
+>   With the `rattle-iter` keyword the user can specify the maximum number of iteration until the convergence of the velocities of the shaked bond-lengths should be reached within the rattle algorithm.
+
+> *default value* = 20
 
 ### QM Keys {#qmKeywords}
 
