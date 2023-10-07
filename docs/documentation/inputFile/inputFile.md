@@ -52,13 +52,13 @@ In the following sections the types of the input values will be denoted via `{}`
     
 >  <ins>Possible values are:</ins>
 
->>      1) <b>mm-md</b> - represents a full molecular mechanics molecular dynamics simulation either performed via the `Guff` formalism or the `Amber force field`
+>>    1) <b>mm-md</b> - represents a full molecular mechanics molecular dynamics simulation either performed via the `Guff` formalism or the `Amber force field`
 
 
->>      2) <b>qm-md</b> - represents a full quantum mechanics molecular dynamics simulation. For more information see the [QM](#qmKeywords) keywords section.
+>>    2) <b>qm-md</b> - represents a full quantum mechanics molecular dynamics simulation. For more information see the [QM](#qmKeywords) keywords section.
 
 
->>      3) <b>qm-rpmd</b> - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the [Ring Polymer MD](#ringPolymerMD) keywords section
+>>    3) <b>qm-rpmd</b> - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the [Ring Polymer MD](#ringPolymerMD) keywords section
 
 
 #### Timestep
@@ -81,7 +81,7 @@ In the following sections the types of the input values will be denoted via `{}`
 
 >   Possible options are:
 
->>      1) <b>v-verlet</b> (default) - represents the Velocity-Verlet integrator 
+>>   1) <b>v-verlet</b> (default) - represents the Velocity-Verlet integrator 
 
 #### Start_File
 
@@ -274,15 +274,96 @@ In order to setup certain calculations additional input files have to be used. T
 
 > Possible values are:
 
->   1) <b>none</b> (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
+>>   1) <b>none</b> (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
->   2) <b>berendsen</b> - the berendsen weak coupling thermostat
+>>   2) <b>berendsen</b> - the Berendsen weak coupling thermostat
 
->   3) <b>velocity_rescaling</b> - the stochastic velocity rescaling thermostat
+>>   3) <b>velocity_rescaling</b> - the stochastic velocity rescaling thermostat
 
->   4) <b>langevin</b> - temperature coupling <i>via</i> stochastic Langevin dynamics
+>>   4) <b>langevin</b> - temperature coupling <i>via</i> stochastic Langevin dynamics
 
->   5) <b>nh-chain</b> - temperature coupling <i>via</i> Nose Hoover extended Lagrangian 
+>>   5) <b>nh-chain</b> - temperature coupling <i>via</i> Nose Hoover extended Lagrangian 
+
+#### T_Relaxation
+
+This keyword is used in combination with the Berendsen and velocity rescaling thermostat.
+
+    t_relaxation = {double} ps -> 0.1 ps
+
+>   With the `t_relaxation` keyword the relaxation time in `ps` (*i.e.* &tau;) of the Berendsen or stochastic velocity rescaling thermostat is set.
+
+> *default value* = 0.1 ps
+
+#### Friction
+
+    friction = {double} ps⁻¹ -> 0.1 ps⁻¹
+
+>   With the `friction` keyword the friction in `ps⁻¹` applied in combination with the Langevin thermostat can be set.
+
+>   *default value* = 0.1 ps⁻¹
+
+#### NH-Chain_Length
+
+    nh-chain_length = {uint+} -> 3
+
+> With the `nh-chain_length` keyword the length of the chain for temperature control *via* an extended Nose-Hoover Lagrangian can be set.
+
+>   *default value* = 3
+
+#### Coupling_Frequency
+
+    coupling_frequency = {double} cm⁻¹ -> 1000 cm⁻¹
+
+>   With the `coupling_frequency` keyword the coupling frequency of the Nose-Hoover chain in `cm⁻¹` can be set.
+
+>   *default value* = 1000 cm⁻¹
+
+### Pressure Coupling Keys
+
+#### Pressure
+
+    pressure = {double} bar
+
+>   With the `pressure` keyword the target pressure in `bar` of the system can be set. 
+
+>   <span style="color:red"><b>Note</b></span>: This keyword is only used if a manostat for controlling the pressure is explicitly define.
+
+#### Manostat
+<!-- TODO: reference manual-->
+
+    manostat = {string} -> "none"
+
+>   With the `manostat` keyword the type of the pressure coupling can be chosen.
+
+>   Possible values are:
+
+>>   1) <b>none</b> (default) - no pressure coupling is applied (*i.e.* constant volume)
+
+>>   2) <b>berendsen</b> - Berendsen weak coupling manostat
+
+>>   3) <b>stochastic_rescaling</b> - stochastic cell rescaling manostat
+
+#### P_Relaxation
+
+This keyword is used in combination with the Berendsen and stochastic cell rescaling manostat.
+
+    p_relaxation = {double} ps -> 0.1 ps
+
+>   With the `p_relaxation` keyword the relaxation time in `ps` (*i.e.* &tau;) of the Berendsen or stochastic cell rescaling manostat is set.
+
+> *default value* = 0.1 ps
+
+#### Compressibility
+
+This keyword is used in combination with the Berendsen and stochastic cell rescaling manostat.
+
+    compressibility = {double} bar⁻¹ -> 4.591e-5 bar⁻¹
+
+>   With the `compressibility` keyword the user can specify the compressibility of the target system in `bar⁻¹` for the Berendsen and stochastic cell rescaling manostat.
+
+>   *default value* = 4.591e-5 bar⁻¹ (compressibility of water)
+
+#### Isotropy
 
 ### Reset Kinetics Keys
 
@@ -381,7 +462,7 @@ In order to setup certain calculations additional input files have to be used. T
 #### Rattle-Tolerance
 
 
-    rattle-tolerance = {double} -> 1e4 s⁻¹kg⁻¹ 
+    rattle-tolerance = {double} s⁻¹kg⁻¹ -> 1e4 s⁻¹kg⁻¹ 
 
 
 >   With the `rattle-tolerance` keyword the user can specify the tolerance in `s⁻¹kg⁻¹`, with which the velocities of the shaked bonds should converge.
