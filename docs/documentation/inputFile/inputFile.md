@@ -365,6 +365,22 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 
 #### Isotropy
 
+    isotropy = {string} -> "isotropic"
+
+>   With the `isotropy` keyword the isotropy of the pressure coupling for all manostat types is controlled.
+
+>   Possible values are:
+
+>>  1) <b>isotropic</b> (default) - all axes are scaled with the same scaling factor
+
+>>  2) <b>xy</b> - semi-isotropic settings, with axes `x` and `y` coupled isotropic
+
+>>  3) <b>xz</b> - semi-isotropic settings, with axes `x` and `z` coupled isotropic
+
+>>  4) <b>yz</b> - semi-isotropic settings, with axes `y` and `z` coupled isotropic
+
+>>  5) <b>anisotropic</b> - all axes are coupled in an anisotropic way
+
 ### Reset Kinetics Keys
 
 #### NScale
@@ -479,5 +495,36 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 
 ### QM Keys {#qmKeywords}
 
+#### QM_PROG
+
+    qm_prog = {string}
+
+>   With the `qm_prog` keyword the external QM engine for any kind of QM MD simulation is chosen.
+
+>   <span style="color:red"><b>Note</b></span>: This keyword is required for any kind of QM MD simulation!
+
+>   Possible values are:
+
+>>  1) <b>dftbplus</b>
+
+>>  2) <b>pyscf</b>
+
+>>  3) <b>turbomole</b>
+
+#### QM_SCRIPT
+
+    qm_script = {file}
+
+>   With the `qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under https://github.com/97gamjak/pimd_qmcf/tree/main/src/QM/scripts. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+
 ### Ring Polymer MD Keys {#ringPolymerMD}
 
+#### RPMD_n_replica
+
+    rpmd_n_replica = {unit+}
+
+>   With the `rpmd_n_replica` keyword the number of beads for a ring polymer MD simulation is controlled.
+
+>   <span style="color:red"><b>Note</b></span>: This keyword is required for any kind of ring polymer MD simulation!
+
+### Cell List Keys
