@@ -92,12 +92,12 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
-        _engine->getSimulationBox().setCoulombRadiusCutOff(12.5);
+        settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
 
         _engine->makePotential(potential::PotentialBruteForce());
         _engine->getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
         _engine->getPotential().makeCoulombPotential(
-            potential::CoulombShiftedPotential(_engine->getSimulationBox().getCoulombRadiusCutOff()));
+            potential::CoulombShiftedPotential(settings::PotentialSettings::getCoulombRadiusCutOff()));
 
         settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
         settings::PotentialSettings::setNonCoulombType("guff");
@@ -112,7 +112,7 @@ class TestGuffDatReader : public ::testing::Test
     }
 
     input::guffdat::GuffDatReader *_guffDatReader;
-    engine::Engine                    *_engine;
+    engine::Engine                *_engine;
 };
 
 #endif   // _TEST_GUFFDAT_READER_HPP_

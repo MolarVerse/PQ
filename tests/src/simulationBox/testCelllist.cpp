@@ -22,13 +22,14 @@
 
 #include "testCelllist.hpp"
 
-#include "atom.hpp"               // for Atom
-#include "cell.hpp"               // for Cell
-#include "exceptions.hpp"         // for CellListException
-#include "molecule.hpp"           // for Molecule
-#include "simulationBox.hpp"      // for SimulationBox
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-#include "vector3d.hpp"           // for Vec3Dul, Vec3D, Vector3D
+#include "atom.hpp"                // for Atom
+#include "cell.hpp"                // for Cell
+#include "exceptions.hpp"          // for CellListException
+#include "molecule.hpp"            // for Molecule
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"       // for SimulationBox
+#include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
+#include "vector3d.hpp"            // for Vec3Dul, Vec3D, Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include <memory>          // for make_shared, __shared_ptr_access
@@ -113,7 +114,7 @@ TEST_F(TestCellList, addNeighbouringCells)
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
-    _cellList->addNeighbouringCells(_simulationBox->getCoulombRadiusCutOff());
+    _cellList->addNeighbouringCells(settings::PotentialSettings::getCoulombRadiusCutOff());
 
     for (const auto &cell : _cellList->getCells())
     {
@@ -147,7 +148,7 @@ TEST_F(TestCellList, checkCoulombCutoff)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    _simulationBox->setCoulombRadiusCutOff(22.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(22.0);
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
     _cellList->activate();
 

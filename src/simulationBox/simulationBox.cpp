@@ -22,8 +22,9 @@
 
 #include "simulationBox.hpp"
 
-#include "constants.hpp"
-#include "exceptions.hpp"
+#include "constants.hpp"           // for _TEMPERATURE_FACTOR_
+#include "exceptions.hpp"          // for RstFileException, UserInputException
+#include "potentialSettings.hpp"   // for PotentialSettings
 
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
@@ -373,7 +374,7 @@ double SimulationBox::calculateTemperature()
  */
 void SimulationBox::checkCoulombRadiusCutOff(const customException::ExceptionType exceptionType) const
 {
-    if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
+    if (getMinimalBoxDimension() < 2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
     {
         const std::string message = "Coulomb radius cut off is larger than half of the minimal box dimension";
         if (exceptionType == customException::ExceptionType::MANOSTATEXCEPTION)

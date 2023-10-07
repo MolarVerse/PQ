@@ -18,6 +18,7 @@ target_link_libraries(simulationBox
     linearAlgebra
     box
     exceptions
+    settings
 )
 
 install(TARGETS simulationBox

@@ -48,6 +48,8 @@ namespace setup
         explicit QMSetup(engine::QMMDEngine &engine) : _engine(engine){};
 
         void setup();
+        void setupQMMethod();
+        void setupCoulombRadiusCutOff() const;
     };
 
 }   // namespace setup
