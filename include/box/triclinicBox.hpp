@@ -65,6 +65,7 @@ namespace simulationBox
 
         [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const override { return _boxAngles * constants::_RAD_TO_DEG_; }
         [[nodiscard]] linearAlgebra::StaticMatrix3x3<double> getBoxMatrix() const override { return _boxMatrix; }
+        [[nodiscard]] linearAlgebra::StaticMatrix3x3<double> getTransformationMatrix() const { return _transformationMatrix; }
     };
 
 }   // namespace simulationBox
