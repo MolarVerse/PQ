@@ -22,10 +22,11 @@
 
 #include "celllist.hpp"
 
-#include "cell.hpp"            // for Cell
-#include "exceptions.hpp"      // for CellListException
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
+#include "cell.hpp"                // for Cell
+#include "exceptions.hpp"          // for CellListException
+#include "molecule.hpp"            // for Molecule
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"       // for SimulationBox
 
 #include <algorithm>     // for ranges::for_each
 #include <functional>    // for identity
@@ -61,11 +62,11 @@ void CellList::setup(const SimulationBox &simulationBox)
 {
     determineCellSize(simulationBox.getBoxDimensions());
 
-    checkCoulombCutoff(simulationBox.getCoulombRadiusCutOff());
+    checkCoulombCutoff(settings::PotentialSettings::getCoulombRadiusCutOff());
 
     determineCellBoundaries(simulationBox.getBoxDimensions());
 
-    addNeighbouringCells(simulationBox.getCoulombRadiusCutOff());
+    addNeighbouringCells(settings::PotentialSettings::getCoulombRadiusCutOff());
 }
 
 /**

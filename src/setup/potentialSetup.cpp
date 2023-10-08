@@ -88,7 +88,7 @@ void PotentialSetup::setup()
  */
 void PotentialSetup::setupCoulomb()
 {
-    const auto coulombRadiusCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
+    const auto coulombRadiusCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
     auto       wolfParameter       = settings::PotentialSettings::getWolfParameter();
 
     if (settings::PotentialSettings::getCoulombLongRangeType() == "wolf")

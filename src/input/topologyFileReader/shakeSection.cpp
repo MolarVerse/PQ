@@ -49,10 +49,10 @@ using namespace input::topology;
  */
 void ShakeSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
 {
-    if (lineElements.size() != 4)
-        throw customException::TopologyException(
-            std::format("Wrong number of arguments in topology file shake section at line {} - number of elements has to be 4!",
-                        _lineNumber));
+    if (lineElements.size() != 4 && lineElements.size() != 3)
+        throw customException::TopologyException(std::format(
+            "Wrong number of arguments in topology file shake section at line {} - number of elements has to be 3 or 4!",
+            _lineNumber));
 
     auto atom1      = stoul(lineElements[0]);
     auto atom2      = stoul(lineElements[1]);

@@ -22,8 +22,9 @@
 
 #include "testSimulationBox.hpp"
 
-#include "exceptions.hpp"
-#include "throwWithMessage.hpp"
+#include "exceptions.hpp"          // for ManostatException, RstFileException
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "throwWithMessage.hpp"    // for throwWithMessage
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertionRe...
 #include <algorithm>       // for copy
@@ -147,7 +148,7 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    _simulationBox->setCoulombRadiusCutOff(1.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
     _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
 
     EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),

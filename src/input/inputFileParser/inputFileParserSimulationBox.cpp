@@ -70,7 +70,6 @@ void InputFileParserSimulationBox::parseCoulombRadius(const std::vector<std::str
         throw customException::InputFileException(
             format("Coulomb radius cutoff must be positive - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
-    _engine.getSimulationBox().setCoulombRadiusCutOff(cutOff);
     settings::PotentialSettings::setCoulombRadiusCutOff(cutOff);
 }
 

@@ -27,6 +27,7 @@
 #include "forceFieldSettings.hpp"            // for ForceFieldSettings
 #include "molecule.hpp"                      // for Molecule
 #include "moleculeType.hpp"                  // for MoleculeType
+#include "potentialSettings.hpp"             // for PotentialSettings
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
 #include "simulationBoxSetup.hpp"            // for SimulationBoxSetup, setupSimulationBox
@@ -378,12 +379,12 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 TEST_F(TestSetup, testCheckRcCutoff)
 {
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
-    _engine->getSimulationBox().setCoulombRadiusCutOff(14.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW(simulationBoxSetup.checkRcCutoff(), customException::InputFileException);
 
     SimulationBoxSetup simulationBox2Setup(*_engine);
-    _engine->getSimulationBox().setCoulombRadiusCutOff(4.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
@@ -463,7 +464,7 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setTotalMass(33.0);
     _engine->getSimulationBox().setDensity(12341243.1234);   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
-    _engine->getSimulationBox().setCoulombRadiusCutOff(4.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     EXPECT_NO_THROW(setup::simulationBox::setupSimulationBox(*_engine));
 }

@@ -59,7 +59,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu());
+    const auto mu = calculateMu();
 
     simBox.scaleBox(mu);
 
@@ -68,7 +68,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scaleMolecule = [&mu](auto &molecule) { molecule.scale(mu); };
+    auto scaleMolecule = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
 }
@@ -96,8 +96,8 @@ linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
     const auto p_xy = (_pressureVector[_2DIsotropicAxes[0]] + _pressureVector[_2DIsotropicAxes[1]]) / 2.0;
     const auto p_z  = _pressureVector[_2DAnisotropicAxis];
 
-    const auto mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
-    const auto mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
+    const double mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
+    const double mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
 
     linearAlgebra::Vec3D mu;
 

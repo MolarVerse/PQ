@@ -243,7 +243,7 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
     double rncCutOff = stod(lineCommands[4]);
 
     if (rncCutOff < 0.0)
-        rncCutOff = _engine.getSimulationBox().getCoulombRadiusCutOff();
+        rncCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
 
     const double        coulombCoefficient = stod(lineCommands[5]);
     std::vector<double> guffCoefficients;

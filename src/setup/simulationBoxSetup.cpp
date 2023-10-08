@@ -35,6 +35,7 @@
 #include "molecule.hpp"                      // for Molecule
 #include "outputMessages.hpp"                // for _ANGSTROM_
 #include "physicalData.hpp"                  // for PhysicalData
+#include "potentialSettings.hpp"             // for PotentialSettings
 #include "settings.hpp"                      // for Settings
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
@@ -101,7 +102,7 @@ void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
     engine.getLogOutput().writeEmptyLine();
 
     engine.getLogOutput().writeSetupInfo(
-        std::format("coulomb cutoff:  {:14.5f} {}", engine.getSimulationBox().getCoulombRadiusCutOff(), output::_ANGSTROM_));
+        std::format("coulomb cutoff:  {:14.5f} {}", settings::PotentialSettings::getCoulombRadiusCutOff(), output::_ANGSTROM_));
     engine.getLogOutput().writeEmptyLine();
 
     if (settings::SimulationBoxSettings::getInitializeVelocities())
@@ -144,8 +145,7 @@ void SimulationBoxSetup::setup()
 
     checkBoxSettings();
 
-    if (!(settings::Settings::getJobtype() == settings::JobType::QM_MD))
-        checkRcCutoff();
+    checkRcCutoff();
 
     _engine.getSimulationBox().calculateDegreesOfFreedom();
     _engine.getSimulationBox().calculateCenterOfMassMolecules();
@@ -369,7 +369,7 @@ void SimulationBoxSetup::checkBoxSettings()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    if (_engine.getSimulationBox().getCoulombRadiusCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
+    if (settings::PotentialSettings::getCoulombRadiusCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
         throw customException::InputFileException(
             std::format("Rc cutoff is larger than half of the minimal box dimension of {} Angstrom.",
                         _engine.getSimulationBox().getMinimalBoxDimension()));

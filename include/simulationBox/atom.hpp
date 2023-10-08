@@ -32,6 +32,8 @@
 
 namespace simulationBox
 {
+    class Box;   // forward declaration
+
     /**
      * @class Atom
      *
@@ -68,6 +70,7 @@ namespace simulationBox
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
+        void scaleVelocityOrthogonalSpace(const linearAlgebra::Vec3D &scaleFactor, const Box &box);
 
         /***************************
          * standard getter methods *
