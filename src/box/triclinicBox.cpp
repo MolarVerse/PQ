@@ -116,23 +116,45 @@ linearAlgebra::Vec3D TriclinicBox::calculateShiftVector(const linearAlgebra::Vec
 }
 
 /**
- * @brief transform a position into the orthogonal space
+ * @brief transform a vector into the orthogonal space
  *
- * @param position
+ * @param vec
  * @return linearAlgebra::Vec3D
  */
-linearAlgebra::Vec3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &position) const
+linearAlgebra::Vec3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &vec) const
 {
-    return inverse(_transformationMatrix) * position;
+    return inverse(_transformationMatrix) * vec;
 }
 
 /**
- * @brief transform a position into the simulation space
+ * @brief transform a matrix into the orthogonal space
  *
- * @param position
+ * @param mat
+ * @return linearAlgebra::tensor3D
+ */
+linearAlgebra::tensor3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::tensor3D &mat) const
+{
+    return inverse(_transformationMatrix) * mat;
+}
+
+/**
+ * @brief transform a vector into the simulation space
+ *
+ * @param vec
  * @return linearAlgebra::Vec3D
  */
-linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const
+linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::Vec3D &vec) const
 {
-    return _transformationMatrix * position;
+    return _transformationMatrix * vec;
+}
+
+/**
+ * @brief transform a matrix into the simulation space
+ *
+ * @param mat
+ * @return linearAlgebra::tensor3D
+ */
+linearAlgebra::tensor3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::tensor3D &mat) const
+{
+    return _transformationMatrix * mat;
 }
