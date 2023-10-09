@@ -41,12 +41,12 @@ using namespace physicalData;
 void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
 {
     _momentum                     = linearAlgebra::Vec3D();
-    _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
-    _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
+    _kineticEnergyAtomicTensor    = linearAlgebra::tensor3D();
+    _kineticEnergyMolecularTensor = linearAlgebra::tensor3D();
 
     auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
     {
-        auto momentumSquared = linearAlgebra::Vec3D();
+        auto momentumSquared = linearAlgebra::tensor3D();
 
         for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
         {
@@ -55,18 +55,18 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
             const auto momentum = velocities * molecule.getAtomMass(i);
 
             _momentum                  += momentum;
-            _kineticEnergyAtomicVector += momentum * velocities;
-            momentumSquared            += momentum * momentum;
+            _kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
+            momentumSquared            += tensorProduct(momentum, momentum);
         }
 
-        _kineticEnergyMolecularVector += momentumSquared / molecule.getMolMass();
+        _kineticEnergyMolecularTensor += momentumSquared / molecule.getMolMass();
     };
 
     std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
-    _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
+    _kineticEnergyAtomicTensor    *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyMolecularTensor *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergy                 = trace(_kineticEnergyAtomicTensor);
 
     _angularMomentum = simulationBox.calculateAngularMomentum(_momentum) *= constants::_FS_TO_S_;
 
@@ -171,7 +171,7 @@ void PhysicalData::reset()
     _volume      = 0.0;
     _density     = 0.0;
     _pressure    = 0.0;
-    _virial      = {0.0, 0.0, 0.0};
+    _virial      = {0.0};
 
     _qmEnergy = 0.0;
 

@@ -98,7 +98,7 @@ TEST(TestBondForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
 
     auto virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
-    EXPECT_THAT(physicalData.getVirial(),
+    EXPECT_THAT(diagonal(physicalData.getVirial()),
                 testing::ElementsAre(testing::DoubleNear(virial[0], 1e-6),
                                      testing::DoubleNear(virial[1], 1e-6),
                                      testing::DoubleNear(virial[2], 1e-6)));
@@ -124,7 +124,7 @@ TEST(TestBondForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -0.00072939421499545261, 1e-6);
 
     virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
-    EXPECT_THAT(physicalData.getVirial(),
+    EXPECT_THAT(diagonal(physicalData.getVirial()),
                 testing::ElementsAre(testing::DoubleNear(virial[0], 1e-6),
                                      testing::DoubleNear(virial[1], 1e-6),
                                      testing::DoubleNear(virial[2], 1e-6)));

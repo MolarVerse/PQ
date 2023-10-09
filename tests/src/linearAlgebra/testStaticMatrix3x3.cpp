@@ -103,7 +103,7 @@ TEST(TestStaticMatrix3x3, vectorProductToStaticMatrix3x3)
     const Vec3D lhs{1.0, 2.0, 3.0};
     const Vec3D rhs{4.0, 5.0, 6.0};
 
-    EXPECT_EQ(vectorProduct(lhs, rhs), StaticMatrix3x3<double>({4.0, 5.0, 6.0}, {8.0, 10.0, 12.0}, {12.0, 15.0, 18.0}));
+    EXPECT_EQ(tensorProduct(lhs, rhs), StaticMatrix3x3<double>({4.0, 5.0, 6.0}, {8.0, 10.0, 12.0}, {12.0, 15.0, 18.0}));
 }
 
 TEST(TestStaticMatrix3x3, outputStreamOperator)
@@ -151,6 +151,41 @@ TEST(TestStaticMatrix3x3, trace)
     const StaticMatrix3x3<double> mat{{1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}};
 
     EXPECT_EQ(trace(mat), 12.0);
+}
+
+TEST(TestStaticMatrix3x3, multiplyAssignmentOperator_scalar)
+{
+    StaticMatrix3x3<double> mat{{1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}};
+
+    mat *= 2.0;
+
+    EXPECT_EQ(mat, StaticMatrix3x3<double>({2.0, 4.0, 6.0}, {12.0, 8.0, 10.0}, {16.0, 18.0, 14.0}));
+}
+
+TEST(TestStaticMatrix3x3, divideAssignmentOperator_scalar)
+{
+    StaticMatrix3x3<double> mat{{2.0, 4.0, 6.0}, {12.0, 8.0, 10.0}, {16.0, 18.0, 14.0}};
+
+    mat /= 2.0;
+
+    EXPECT_EQ(mat, StaticMatrix3x3<double>({1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}));
+}
+
+TEST(TestStaticMatrix3x3, subtractionAssignmentOperator_matrices)
+{
+    StaticMatrix3x3<double>       lhs{{2.0, 4.0, 6.0}, {12.0, 8.0, 10.0}, {16.0, 18.0, 14.0}};
+    const StaticMatrix3x3<double> rhs{{1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}};
+
+    lhs -= rhs;
+
+    EXPECT_EQ(lhs, StaticMatrix3x3<double>({1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}));
+}
+
+TEST(TestStaticMatrix3x3, getDiagonalVectorFromMatrix)
+{
+    const StaticMatrix3x3<double> mat{{1.0, 2.0, 3.0}, {6.0, 4.0, 5.0}, {8.0, 9.0, 7.0}};
+
+    EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
 }
 
 int main(int argc, char **argv)

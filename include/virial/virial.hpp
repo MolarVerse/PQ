@@ -24,7 +24,7 @@
 
 #define _VIRIAL_HPP_
 
-#include "vector3d.hpp"   // for Vec3D
+#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
 
 #include <string>   // for string
 
@@ -57,7 +57,7 @@ namespace virial
       protected:
         std::string _virialType;
 
-        linearAlgebra::Vec3D _virial;
+        linearAlgebra::tensor3D _virial;
 
       public:
         virtual ~Virial() = default;
@@ -65,10 +65,10 @@ namespace virial
         virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
 
-        void setVirial(const linearAlgebra::Vec3D &virial) { _virial = virial; }
+        void setVirial(const linearAlgebra::tensor3D &virial) { _virial = virial; }
 
-        [[nodiscard]] linearAlgebra::Vec3D getVirial() const { return _virial; }
-        [[nodiscard]] std::string          getVirialType() const { return _virialType; }
+        [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
+        [[nodiscard]] std::string             getVirialType() const { return _virialType; }
     };
 
     /**

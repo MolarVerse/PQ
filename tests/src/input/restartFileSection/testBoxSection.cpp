@@ -23,6 +23,7 @@
 #include "engine.hpp"                   // for Engine
 #include "exceptions.hpp"               // for RstFileException, customException
 #include "restartFileSection.hpp"       // for RstFileSection, readInput
+#include "settings.hpp"                 // for Settings
 #include "simulationBox.hpp"            // for SimulationBox
 #include "simulationBoxSettings.hpp"    // for SimulationBoxSettings
 #include "testRestartFileSection.hpp"   // for TestBoxSection
@@ -52,6 +53,8 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};

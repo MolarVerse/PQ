@@ -40,7 +40,7 @@ using linearAlgebra::diagonalMatrix;
 using linearAlgebra::inverse;
 using linearAlgebra::StaticMatrix3x3;
 using linearAlgebra::trace;
-using linearAlgebra::vectorProduct;
+using linearAlgebra::tensorProduct;
 
 /**
  * @brief checks to reset angular momentum
@@ -137,7 +137,7 @@ void ResetKinetics::resetAngularMomentum(simulationBox::SimulationBox &simBox)
     auto addInertiaTensorOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
     {
         auto relativePosition  = atom->getPosition() - centerOfMass;
-        helperMatrix          += vectorProduct(relativePosition, relativePosition) * atom->getMass();
+        helperMatrix          += tensorProduct(relativePosition, relativePosition) * atom->getMass();
     };
 
     std::ranges::for_each(simBox.getAtoms(), addInertiaTensorOfAtom);

@@ -49,20 +49,6 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief operator+= for two StaticMatrix3x3's
-     *
-     * @param lhs
-     * @param rhs
-     */
-    template <typename T>
-    void operator+=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
-    {
-        lhs[0] += rhs[0];
-        lhs[1] += rhs[1];
-        lhs[2] += rhs[2];
-    }
-
-    /**
      * @brief transpose a StaticMatrix3x3
      *
      * @param mat
@@ -94,6 +80,34 @@ namespace linearAlgebra
         result += rhs;
 
         return result;
+    }
+
+    /**
+     * @brief operator+= for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator+=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        lhs[0] += rhs[0];
+        lhs[1] += rhs[1];
+        lhs[2] += rhs[2];
+    }
+
+    /**
+     * @brief operator-= for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        lhs[0] -= rhs[0];
+        lhs[1] -= rhs[1];
+        lhs[2] -= rhs[2];
     }
 
     /**
@@ -160,6 +174,20 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief operator*= for a StaticMatrix3x3 and a scalar
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator*=(StaticMatrix3x3<T> &lhs, const T t)
+    {
+        lhs[0] *= t;
+        lhs[1] *= t;
+        lhs[2] *= t;
+    }
+
+    /**
      * @brief operator/ for StaticMatrix3x3 and scalar
      *
      * @param StaticMatrix3x3<T> mat, T t
@@ -169,6 +197,20 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t)
     {
         return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
+    }
+
+    /**
+     * @brief operator/= for a StaticMatrix3x3 and a scalar
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator/=(StaticMatrix3x3<T> &lhs, const T t)
+    {
+        lhs[0] /= t;
+        lhs[1] /= t;
+        lhs[2] /= t;
     }
 
     /**
@@ -192,7 +234,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief vector product of two Vector3D's
+     * @brief tensor product of two Vector3D's
      *
      * @details it performs v1 * v2^T
      *
@@ -202,11 +244,11 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> vectorProduct(const Vector3D<T> &lhs, const Vector3D<T> &rhs)
+    StaticMatrix3x3<T> tensorProduct(const Vector3D<T> &lhs, const Vector3D<T> &rhs)
     {
 
-        StaticMatrix3x3<T> lhsMatrix;
-        StaticMatrix3x3<T> rhsMatrix;
+        StaticMatrix3x3<T> lhsMatrix{};
+        StaticMatrix3x3<T> rhsMatrix{};
 
         lhsMatrix[0] = lhs;
         rhsMatrix[0] = rhs;
@@ -254,6 +296,18 @@ namespace linearAlgebra
         result = transpose(result);
 
         return result / det(mat);
+    }
+
+    /**
+     * @brief get diagonal Vector from a StaticMatrix3x3
+     *
+     * @param mat
+     *
+     */
+    template <typename T>
+    Vector3D<T> diagonal(const StaticMatrix3x3<T> &mat)
+    {
+        return Vector3D<T>(mat[0][0], mat[1][1], mat[2][2]);
     }
 
     /**
