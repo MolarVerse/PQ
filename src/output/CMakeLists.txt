@@ -8,9 +8,11 @@ add_library(output
     logOutput.cpp
     stdoutOutput.cpp
     rstFileOutput.cpp
+    momentumOutput.cpp
+
     ringPolymerRestartFileOutput.cpp
     ringPolymerTrajectoryOutput.cpp
-    momentumOutput.cpp
+    ringPolymerEnergyOutput.cpp
 )
 
 target_include_directories(output
