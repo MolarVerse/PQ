@@ -59,8 +59,8 @@ namespace potential
  */
 TEST(TestForceField, findBondTypeById)
 {
-    auto forceField = forceField::ForceField();
-    auto bondType   = forceField::BondType(0, 1.0, 1.0);
+    auto       forceField = forceField::ForceField();
+    const auto bondType   = forceField::BondType(0, 1.0, 1.0);
 
     forceField.addBondType(bondType);
 
@@ -262,7 +262,7 @@ TEST(TestForceField, calculateBondedInteractions)
     EXPECT_NE(physicalData.getImproperEnergy(), 0.0);
     EXPECT_NE(physicalData.getCoulombEnergy(), 0.0);
     EXPECT_NE(physicalData.getNonCoulombEnergy(), 0.0);
-    EXPECT_NE(physicalData.getVirial(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_NE(physicalData.getVirial(), linearAlgebra::tensor3D(0.0));
 }
 
 /**

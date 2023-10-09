@@ -28,6 +28,10 @@
 
 namespace linearAlgebra
 {
+    template <typename T>
+    class StaticMatrix3x3;
+
+    using tensor3D = StaticMatrix3x3<double>;
 
     /**
      * @class StaticMatrix3x3
@@ -51,7 +55,7 @@ namespace linearAlgebra
         explicit StaticMatrix3x3(const Vector3D<T> &row1, const Vector3D<T> &row2, const Vector3D<T> &row3)
             : _data(row1, row2, row3){};
 
-        explicit StaticMatrix3x3(const T t)
+        StaticMatrix3x3(const T t)
         {
             _data[0] = Vector3D<T>(t);
             _data[1] = Vector3D<T>(t);

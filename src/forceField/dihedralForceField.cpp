@@ -119,7 +119,7 @@ void DihedralForceField::calculateEnergyAndForces(const simulationBox::Simulatio
             const auto forcexyz = forceMagnitude * dPosition14;
 
             if (!isImproperDihedral)
-                physicalData.addVirial(forcexyz * dPosition14);
+                physicalData.addVirial(tensorProduct(dPosition14, forcexyz));
 
             _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
             _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);

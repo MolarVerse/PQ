@@ -24,7 +24,7 @@
 
 #define _MANOSTAT_HPP_
 
-#include "vector3d.hpp"   // for Vec3D
+#include "staticMatrix3x3.hpp"   // for tensor3D
 
 namespace physicalData
 {
@@ -47,9 +47,9 @@ namespace manostat
     class Manostat
     {
       protected:
-        linearAlgebra::Vec3D _pressureVector = {0.0, 0.0, 0.0};
-        double               _pressure;
-        double               _targetPressure;   // no default value, must be set
+        linearAlgebra::tensor3D _pressureTensor = {0.0};
+        double                  _pressure;
+        double                  _targetPressure;   // no default value, must be set
 
       public:
         Manostat() = default;

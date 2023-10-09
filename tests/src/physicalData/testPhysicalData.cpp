@@ -24,6 +24,7 @@
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
+#include "staticMatrix3x3.hpp"                       // for tensorProduct, diagonalMatrix
 #include "vector3d.hpp"                              // for operator*, Vector3D
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, EXPECT_EQ, TEST_F, Test
@@ -97,8 +98,9 @@ TEST_F(TestPhysicalData, calculateKinetics)
         (mass_mol2_atom1 * mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1) / mass_mol2_atom1;
 
     EXPECT_EQ(_physicalData->getMomentum(), momentumVector * constants::_FS_TO_S_);
-    EXPECT_EQ(_physicalData->getKineticEnergyAtomicVector(), kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_);
-    EXPECT_EQ(_physicalData->getKineticEnergyMolecularVector(),
+    EXPECT_EQ(diagonal(_physicalData->getKineticEnergyAtomicVector()),
+              kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_);
+    EXPECT_EQ(diagonal(_physicalData->getKineticEnergyMolecularVector()),
               kineticEnergyMolecularVector * constants::_KINETIC_ENERGY_FACTOR_);
     EXPECT_EQ(_physicalData->getKineticEnergy(), sum(kineticEnergyAtomicVector) * constants::_KINETIC_ENERGY_FACTOR_);
 }
@@ -151,7 +153,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
-    _physicalData->setVirial(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0)));
     _physicalData->setQMEnergy(1.0);
 
     _physicalData->reset();
@@ -172,7 +174,7 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
-    EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
 }
 

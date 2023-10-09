@@ -125,7 +125,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
-        physicalData.getVirial(),
+        diagonal(physicalData.getVirial()),
         testing::ElementsAre(testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6)));
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
@@ -155,7 +155,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
-        physicalData.getVirial(),
+        diagonal(physicalData.getVirial()),
         testing::ElementsAre(testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6)));
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
@@ -184,9 +184,9 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
     EXPECT_NEAR(molecule.getAtomForce(3)[2], 2.0175473679686871, 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 4.1158570930777021, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -4.100545344959669e-05, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[0], 3.9441496913242622, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[1], 0.98603742283106555, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[2], 2.2185842013698975, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[0][0], 3.9441496913242622, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[1][1], 0.98603742283106555, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[2][2], 2.2185842013698975, 1e-6);
 }
 
 int main(int argc, char **argv)

@@ -107,7 +107,7 @@ void AngleForceField::calculateEnergyAndForces(const simulationBox::SimulationBo
 
             forcexyz = forceMagnitude * dPosition23;
 
-            physicalData.addVirial(forcexyz * dPosition23);
+            physicalData.addVirial(tensorProduct(dPosition23, forcexyz));
 
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
             _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);

@@ -25,6 +25,7 @@
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
+#include "settings.hpp"                // for Settings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "vector3d.hpp"                // for Vec3D
@@ -79,6 +80,12 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
         box.setBoxAngles(boxAngles);
         box.setBoxDimensions(boxDimensions);
         engine.getSimulationBox().setBox(box);
+
+        const auto jobType = settings::Settings::getJobtype();
+
+        // TODO: implement triclinic box for MM-MD
+        if (jobType != settings::JobType::QM_MD && jobType != settings::JobType::RING_POLYMER_QM_MD)
+            throw customException::InputFileException("Triclinic box is only supported for QM-MD and RP-QM-MD");
     }
     else
     {

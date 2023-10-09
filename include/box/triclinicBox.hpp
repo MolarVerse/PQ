@@ -46,7 +46,11 @@ namespace simulationBox
         [[nodiscard]] double               calculateVolume() override;
         [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
         [[nodiscard]] linearAlgebra::Vec3D transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &position) const override;
+        [[nodiscard]] linearAlgebra::tensor3D
+                                           transformIntoOrthogonalSpace(const linearAlgebra::tensor3D &position) const override;
         [[nodiscard]] linearAlgebra::Vec3D transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const override;
+        [[nodiscard]] linearAlgebra::tensor3D
+        transformIntoSimulationSpace(const linearAlgebra::tensor3D &position) const override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
 

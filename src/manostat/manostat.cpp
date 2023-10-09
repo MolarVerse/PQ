@@ -44,9 +44,9 @@ void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physic
     ekinVirial  = box.getBox().transformIntoOrthogonalSpace(ekinVirial);
     forceVirial = box.getBox().transformIntoOrthogonalSpace(forceVirial);
 
-    _pressureVector = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
+    _pressureTensor = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
 
-    _pressure = mean(_pressureVector);
+    _pressure = trace(_pressureTensor) / 3.0;
 
     physicalData.setPressure(_pressure);
 }

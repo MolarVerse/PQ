@@ -109,7 +109,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
-        physicalData.getVirial(),
+        diagonal(physicalData.getVirial()),
         testing::ElementsAre(testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6), testing::DoubleNear(0.0, 1e-6)));
 
     molecule.setAtomForce(0, {0.0, 0.0, 0.0});
@@ -133,9 +133,9 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
     EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.733418845847369, 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -0.016255999999999989, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[0], 0.0, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[1], -7.0737262359370403, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[2], -28.294904943748161, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[0][0], 0.0, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[1][1], -7.0737262359370403, 1e-6);
+    EXPECT_NEAR(physicalData.getVirial()[2][2], -28.294904943748161, 1e-6);
 }
 
 int main(int argc, char **argv)
