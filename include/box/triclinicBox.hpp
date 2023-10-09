@@ -42,6 +42,9 @@ namespace simulationBox
         linearAlgebra::StaticMatrix3x3<double> _boxMatrix{0.0};
         linearAlgebra::StaticMatrix3x3<double> _transformationMatrix{0.0};
 
+        void calculateBoxMatrix();
+        void calculateTransformationMatrix();
+
       public:
         [[nodiscard]] double               calculateVolume() override;
         [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
@@ -49,9 +52,6 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
-
-        void calculateBoxMatrix();
-        void calculateTransformationMatrix();
 
         void setBoxAngles(const linearAlgebra::Vec3D &boxAngles);
         void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) override;

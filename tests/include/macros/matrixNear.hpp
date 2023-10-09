@@ -37,4 +37,4 @@
 
 #define ASSERT_MATRIX_NEAR(matrix1, matrix2) EXPECT_MATRIX_NEAR(matrix1, matrix2)
 
-#endif   // _EXPECT_MATRIX_DOUBLE_EQ_HPP_
+#endif   // _EXPECT_MATRIX_NEAR_HPP_
