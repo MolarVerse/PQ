@@ -83,6 +83,18 @@ In the following sections the types of the input values will be denoted via `{}`
 
 >>   1) <b>v-verlet</b> (default) - represents the Velocity-Verlet integrator 
 
+#### Virial
+
+    virial = {string} -> "molecular"
+
+>   With the `virial` keyword the user can control if an intramolecular virial correction should be applied on the basis of molecular units definitions form the moldescriptor file.
+
+>   Possible options are:
+
+>>  1) <b>molecular</b> (default) - to the resulting virial from the force contributions an intramolecular correction will be applied.
+
+>>  2) <b>atomic</b> - no intramolecular correction to the resulting virial will be applied
+
 #### Start_File
 
     start_file* = {file}
