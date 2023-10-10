@@ -227,6 +227,14 @@ All of the following output files presented in the RPMD Output Files section are
 
 >   *default value* = "default.rpmd.chrg"
 
+#### RPMD_Energy_File
+
+    rpmd_energy_file = {file} -> "default.rpmd.en"
+
+>   The `rpmd_energy_file` keyword sets the name for the file containing relevant energy data for each ring polymer bead of the simulation.
+
+>   *default value* = "default.rpmd.en"
+
 ### Input File Keys {#inputFileKeys}
 
 In order to setup certain calculations additional input files have to be used. The names of these files have to be specified in the input file. For further information about these input files can be found in the [Setup Files]{#setupFiles} section.
