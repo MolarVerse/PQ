@@ -58,6 +58,13 @@ namespace output
 
 namespace engine
 {
+    using RPRestartFileOutput = output::RingPolymerRestartFileOutput;
+    using RPTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
+    using RPVelOutput         = output::RingPolymerTrajectoryOutput;
+    using RPForceOutput       = output::RingPolymerTrajectoryOutput;
+    using RPChargeOutput      = output::RingPolymerTrajectoryOutput;
+    using RPEnergyOutput      = output::RingPolymerEnergyOutput;
+
     /**
      * @class Engine
      *
@@ -148,45 +155,32 @@ namespace engine
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
         [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return _resetKinetics; }
 
+        [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+
         [[nodiscard]] virial::Virial         &getVirial() { return *_virial; }
         [[nodiscard]] integrator::Integrator &getIntegrator() { return *_integrator; }
         [[nodiscard]] potential::Potential   &getPotential() { return *_potential; }
         [[nodiscard]] thermostat::Thermostat &getThermostat() { return *_thermostat; }
         [[nodiscard]] manostat::Manostat     &getManostat() { return *_manostat; }
 
-        [[nodiscard]] EngineOutput                         &getEngineOutput() { return _engineOutput; }
-        [[nodiscard]] output::EnergyOutput                 &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-        [[nodiscard]] output::MomentumOutput               &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
-        [[nodiscard]] output::TrajectoryOutput             &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-        [[nodiscard]] output::TrajectoryOutput             &getVelOutput() { return _engineOutput.getVelOutput(); }
-        [[nodiscard]] output::TrajectoryOutput             &getForceOutput() { return _engineOutput.getForceOutput(); }
-        [[nodiscard]] output::TrajectoryOutput             &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-        [[nodiscard]] output::LogOutput                    &getLogOutput() { return _engineOutput.getLogOutput(); }
-        [[nodiscard]] output::StdoutOutput                 &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-        [[nodiscard]] output::RstFileOutput                &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-        [[nodiscard]] output::InfoOutput                   &getInfoOutput() { return _engineOutput.getInfoOutput(); }
-        [[nodiscard]] output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput()
-        {
-            return _engineOutput.getRingPolymerRstFileOutput();
-        }
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput()
-        {
-            return _engineOutput.getRingPolymerXyzOutput();
-        }
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput()
-        {
-            return _engineOutput.getRingPolymerVelOutput();
-        }
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput()
-        {
-            return _engineOutput.getRingPolymerForceOutput();
-        }
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput()
-        {
-            return _engineOutput.getRingPolymerChargeOutput();
-        }
+        [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+        [[nodiscard]] output::MomentumOutput   &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
+        [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
+        [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
+        [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
+        [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
+        [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
 
-        [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
+        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }
+        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerVelOutput() { return _engineOutput.getRingPolymerVelOutput(); }
+        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerForceOutput() { return _engineOutput.getRingPolymerForceOutput(); }
+        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerChargeOutput() { return _engineOutput.getRingPolymerChargeOutput(); }
+        [[nodiscard]] RPEnergyOutput      &getRingPolymerEnergyOutput() { return _engineOutput.getRingPolymerEnergyOutput(); }
     };
 
 }   // namespace engine

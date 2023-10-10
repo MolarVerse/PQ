@@ -69,7 +69,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     if (settings::Settings::isQMActivated())
     {
         writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
-        writeRight(0, "N(QM ATOMS)", " ");   // TODO: implement
+        writeRight(data.getNumberOfQMAtoms(), "N(QM ATOMS)", " ");
     }
 
     if (settings::Settings::isRingPolymerMDActivated())

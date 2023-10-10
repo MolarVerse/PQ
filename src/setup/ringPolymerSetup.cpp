@@ -31,9 +31,9 @@
 #include "simulationBox.hpp"                  // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, for_each
+#include <cstddef>       // for size_t
 #include <functional>    // for identity
 #include <iostream>      // for operator<<, endl, basic_ostream, cout
-#include <stddef.h>      // for size_t
 #include <string_view>   // for string_view
 
 using setup::RingPolymerSetup;
@@ -61,6 +61,29 @@ void RingPolymerSetup::setup()
     if (!settings::RingPolymerSettings::isNumberOfBeadsSet())
         throw customException::InputFileException("Number of beads not set for ring polymer simulation");
 
+    setupPhysicalData();
+
+    setupSimulationBox();
+
+    initializeBeads();
+}
+
+/**
+ * @brief setup physical data for ring polymer simulation
+ *
+ */
+void RingPolymerSetup::setupPhysicalData()
+{
+    _engine.getPhysicalData().resizeRingPolymerEnergy(settings::RingPolymerSettings::getNumberOfBeads());
+    _engine.getAveragePhysicalData().resizeRingPolymerEnergy(settings::RingPolymerSettings::getNumberOfBeads());
+}
+
+/**
+ * @brief setup simulation box for ring polymer simulation
+ *
+ */
+void RingPolymerSetup::setupSimulationBox()
+{
     for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
     {
         simulationBox::SimulationBox bead;
@@ -68,7 +91,16 @@ void RingPolymerSetup::setup()
 
         _engine.addRingPolymerBead(bead);
     }
+}
 
+/**
+ * @brief initialize beads for ring polymer simulation
+ *
+ * @details if no restart file is given, the velocities of the beads are initialized with maxwell boltzmann distribution
+ *
+ */
+void RingPolymerSetup::initializeBeads()
+{
     if (settings::FileSettings::isRingPolymerStartFileNameSet())
     {
         std::cout << "read ring polymer restart file" << std::endl;

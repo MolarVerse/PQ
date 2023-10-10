@@ -4,7 +4,7 @@
 # MD Keywords
 
     # Type of this run
-      jobtype = qm-md; #dim = 3d;
+      jobtype = qm-rpmd; #dim = 3d;
 
     # Number of steps to be performed and timestep in fs 
       nstep = 100000; timestep = 0.2;
@@ -46,6 +46,7 @@
       
     # QM programm
       qm_prog = turbomole; qm_script = turbomole_rimp2;
+      rpmd_n_replica = 10;
 
       virial = atomic;
    

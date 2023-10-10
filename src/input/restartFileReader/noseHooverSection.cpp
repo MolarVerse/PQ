@@ -43,7 +43,7 @@ using input::restartFile::NoseHooverSection;
  *
  * @throws customException::RstFileException if the number of arguments is not correct
  */
-void NoseHooverSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+void NoseHooverSection::process(std::vector<std::string> &lineElements, engine::Engine &)
 {
     if (4 != lineElements.size())
         throw customException::RstFileException(

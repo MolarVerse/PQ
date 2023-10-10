@@ -60,10 +60,12 @@ namespace input
         void parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
         void parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRPMDEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace input

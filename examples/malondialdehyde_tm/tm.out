@@ -1,0 +1,24 @@
+
+   OpenMP run-time library returned nthreads =  1
+
+ data group $actual step is not empty 
+ due to the abend of ricc2
+
+
+ this is only a subsequent error message
+ check reason for abend in the other output files ...
+
+ use the command  'actual -r'  to get rid of that 
+
+
+========================
+ internal module stack: 
+------------------------
+    dscf
+    turbo_setup
+========================
+
+  CONTRL dead = actual step 
+ dscf ended abnormally
+ dscf ended abnormally
+program stopped.

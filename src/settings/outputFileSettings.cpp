@@ -122,6 +122,9 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 
     if (defaults::_RING_POLYMER_CHARGE_FILENAME_DEFAULT_ == _ringPolymerChargeFileName)
         _ringPolymerChargeFileName = prefix + ".rpmd.chrg";
+
+    if (defaults::_RING_POLYMER_ENERGY_FILENAME_DEFAULT_ == _ringPolymerEnergyFileName)
+        _ringPolymerEnergyFileName = prefix + ".rpmd.en";
 }
 
 /**

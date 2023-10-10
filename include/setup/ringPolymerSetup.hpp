@@ -48,6 +48,9 @@ namespace setup
         explicit RingPolymerSetup(engine::RingPolymerEngine &engine) : _engine(engine){};
 
         void setup();
+        void setupPhysicalData();
+        void setupSimulationBox();
+        void initializeBeads();
     };
 
 }   // namespace setup

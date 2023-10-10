@@ -20,86 +20,38 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "energyOutput.hpp"
+#include "ringPolymerEnergyOutput.hpp"
 
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "manostatSettings.hpp"     // for ManostatSettings
-#include "physicalData.hpp"         // for PhysicalData
-#include "settings.hpp"             // for Settings
-#include "stlVector.hpp"            // for mean, max
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for norm
+#include "physicalData.hpp"   // for PhysicalData
+#include "stlVector.hpp"      // for sum
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, ofstream
-#include <string>    // for operator<<
+#include <algorithm>   // for for_each
+#include <format>      // for format
+#include <vector>      // for vector
 
 using namespace output;
 
 /**
- * @brief Write the energy output
+ * @brief write the energy output of each ring polymer
  *
  * @details
- * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
- * - Bond, Angle, Dihedral and Improper energies are only available if the force field is active.
- * - qm energy is only available if qm is active.
- * - coulomb and non-coulomb energies are only available if mm is active.
- * - volume and density are only available if manostat is active.
- * - nose hoover momentum and friction energies are only available if nose hoover thermostat is active.
+ * 1) step
+ * 2) sum of all ring polymer spring energies
+ * 3) ... 2+n) ring polymer spring energies
  *
  * @param step
+ * @param loopTime
  * @param data
  */
-void EnergyOutput::write(const size_t step, const double loopTime, const physicalData::PhysicalData &data)
+void RingPolymerEnergyOutput::write(const size_t step, const physicalData::PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.12f}\t", data.getTemperature());
-    _fp << std::format("{:20.12f}\t", data.getPressure());
-    _fp << std::format("{:20.12f}\t", data.getTotalEnergy());
 
-    if (settings::Settings::isQMActivated())
-    {
-        _fp << std::format("{:20.12f}\t", data.getQMEnergy());
-        _fp << std::format("{:20.12f}\t", 0.0);   // TODO: implement
-    }
+    _fp << std::format("{:20.12f}\t", sum(data.getRingPolymerEnergy()));
 
-    if (settings::Settings::isRingPolymerMDActivated())
-    {
-        _fp << std::format("{:20.12f}\t", mean(data.getRingPolymerEnergy()));
-        _fp << std::format("{:20.12f}\t", max(data.getRingPolymerEnergy()));
-    }
+    std::ranges::for_each(data.getRingPolymerEnergy(), [&](const double &energy) { _fp << std::format("{:20.12f}\t", energy); });
 
-    _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
-    _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
-
-    if (settings::Settings::isMMActivated())
-    {
-        _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
-        _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
-    }
-
-    if (settings::ForceFieldSettings::isActive())
-    {
-        _fp << std::format("{:20.12f}\t", data.getBondEnergy());
-        _fp << std::format("{:20.12f}\t", data.getAngleEnergy());
-        _fp << std::format("{:20.12f}\t", data.getDihedralEnergy());
-        _fp << std::format("{:20.12f}\t", data.getImproperEnergy());
-    }
-
-    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
-    {
-        _fp << std::format("{:20.12f}\t", data.getVolume());
-        _fp << std::format("{:20.12f}\t", data.getDensity());
-    }
-
-    if (settings::ThermostatSettings::getThermostatType() == settings::ThermostatType::NOSE_HOOVER)
-    {
-        _fp << std::format("{:20.12f}\t", data.getNoseHooverMomentumEnergy());
-        _fp << std::format("{:20.12f}\t", data.getNoseHooverFrictionEnergy());
-    }
-
-    _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));
-    _fp << std::format("{:12.5f}\n", loopTime);
+    _fp << '\n' << std::flush;
 
     _fp << std::flush;
 }

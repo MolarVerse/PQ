@@ -46,9 +46,10 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 
     auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
     {
-        auto momentumSquared = linearAlgebra::tensor3D();
+        const auto numberOfAtoms   = molecule.getNumberOfAtoms();
+        auto       momentumSquared = linearAlgebra::tensor3D();
 
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
 
@@ -80,6 +81,8 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
  */
 void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
+    _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
+
     _coulombEnergy         += physicalData.getCoulombEnergy();
     _nonCoulombEnergy      += physicalData.getNonCoulombEnergy();
     _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
@@ -105,14 +108,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
 
-    if (_ringPolymerEnergy.size() != physicalData.getRingPolymerEnergy().size())
-    {
-        _ringPolymerEnergy.clear();
-        _ringPolymerEnergy.resize(physicalData.getRingPolymerEnergy().size(), 0.0);
-    }
-
     for (size_t i = 0; i < physicalData.getRingPolymerEnergy().size(); ++i)
-        _ringPolymerEnergy[i] += physicalData.getRingPolymerEnergy()[i];
+        _ringPolymerEnergy.at(i) += physicalData.getRingPolymerEnergy()[i];
 }
 
 /**
@@ -122,6 +119,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
  */
 void PhysicalData::makeAverages(const double outputFrequency)
 {
+    _numberOfQMAtoms /= outputFrequency;
+
     _kineticEnergy         /= outputFrequency;
     _coulombEnergy         /= outputFrequency;
     _nonCoulombEnergy      /= outputFrequency;
@@ -156,6 +155,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
  */
 void PhysicalData::reset()
 {
+    _numberOfQMAtoms = 0.0;
+
     _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;
     _nonCoulombEnergy      = 0.0;

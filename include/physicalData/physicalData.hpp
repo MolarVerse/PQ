@@ -46,6 +46,8 @@ namespace physicalData
     class PhysicalData
     {
       private:
+        double _numberOfQMAtoms = 0.0;
+
         double _volume      = 0.0;
         double _density     = 0.0;
         double _temperature = 0.0;
@@ -93,6 +95,8 @@ namespace physicalData
 
         [[nodiscard]] double getTotalEnergy() const;
 
+        void resizeRingPolymerEnergy(const size_t size) { _ringPolymerEnergy.resize(size); }
+
         /********************
          * standard adders  *
          ********************/
@@ -110,6 +114,8 @@ namespace physicalData
         /********************
          * standard setters *
          ********************/
+
+        void setNumberOfQMAtoms(const double nQMAtoms) { _numberOfQMAtoms = nQMAtoms; }
 
         void setVolume(const double volume) { _volume = volume; }
         void setDensity(const double density) { _density = density; }
@@ -143,6 +149,8 @@ namespace physicalData
         /********************
          * standard getters *
          ********************/
+
+        [[nodiscard]] double getNumberOfQMAtoms() const { return _numberOfQMAtoms; }
 
         [[nodiscard]] double getVolume() const { return _volume; }
         [[nodiscard]] double getDensity() const { return _density; }
