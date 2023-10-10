@@ -296,6 +296,18 @@ rcoulomb = {double} &Aring; -> 12.5 &Aring;
 
 >   *default value* = 12.5 &Aring; (for MM-MD type simulations)
 
+#### Init_Velocities
+
+    init_velocities = {bool} -> false
+
+>   To initialize the velocities of the system according to the target temperature with a Boltzmann distribution the user has to set the `init_velocities` to true.
+
+>   Possible values are:
+
+>>  1) <b>false</b> (default) - velocities are taken from start file
+
+>>  2) <b>true</b> - velocities are initialized according to a Boltzmann distribution at the target temperature.
+
 ### Temperature Coupling Keys
 
 #### Temperature
@@ -569,3 +581,23 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 >   <span style="color:red"><b>Note</b></span>: This keyword is required for any kind of ring polymer MD simulation!
 
 ### Cell List Keys
+
+#### Cell-List
+
+    cell-list = {string} -> "off"
+
+>   With the `cell-list` the user can activate a cell-list approach to calculate the pair-interactions in MM-MD simulations (no effect in pure QM-MD type simulations).
+
+>   Possible options are:
+
+>>  1) <b>off</b> (default) - brute force routine
+
+>>  2) <b>on</b> - cell list approach is applied
+
+#### Cell-Number
+
+    cell-number = {uint+} -> 7
+
+>   With the `cell-number` keyword the user can set the number of cells in each direction in which the simulation box will be split up (*e.g.* cell-number = 7 -> total cells = 7x7x7)
+
+>   *default value* = 7
