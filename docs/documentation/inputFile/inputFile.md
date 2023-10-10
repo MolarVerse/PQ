@@ -275,6 +275,16 @@ In order to setup certain calculations additional input files have to be used. T
 
     intra-nonbonded_file = {file}
 
+### Simulation Box Keys
+
+#### Density
+
+    density = {double}
+
+>   With the `density` keyword the box dimension of the system can be inferred from the total mass of the simulation box.
+
+>   <span style="color:red"><b>Note</b></span>: This keyword implies that the simulation box has cubic shape. Furthermore, the `density` keyword will be ignored if in the start file of a simulation any box information is given.
+
 ### Temperature Coupling Keys
 
 #### Temperature
