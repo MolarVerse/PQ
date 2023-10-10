@@ -101,7 +101,7 @@ In the following sections the types of the input values will be denoted via `{}`
 
 >   The `start_file` keyword sets the name of the start file for an MD simulation of any kind.
 
-#### RPMD_START_FILE
+#### RPMD_Start_File
 
     rpmd_start_file = {file}
 
@@ -279,11 +279,22 @@ In order to setup certain calculations additional input files have to be used. T
 
 #### Density
 
-    density = {double}
+    density = {double} kgL⁻¹
 
 >   With the `density` keyword the box dimension of the system can be inferred from the total mass of the simulation box.
 
 >   <span style="color:red"><b>Note</b></span>: This keyword implies that the simulation box has cubic shape. Furthermore, the `density` keyword will be ignored if in the start file of a simulation any box information is given.
+
+#### RCoulomb
+
+<pre class="fragment">
+rcoulomb = {double} &Aring; -> 12.5 &Aring;
+</pre>
+
+
+>   With the `rcoulomb` keyword the radial cut-off in &Aring; of Coulomb interactions for MM-MD type simulations can be set. If pure QM-MD type simulations are applied this keyword will be ignored and the value will be set to 0 &Aring;.
+
+>   *default value* = 12.5 &Aring; (for MM-MD type simulations)
 
 ### Temperature Coupling Keys
 
