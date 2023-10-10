@@ -13,6 +13,7 @@ target_include_directories(frameTools
 target_link_libraries(frameTools
     PUBLIC
     linearAlgebra
+    utilities
 )
 
 install(TARGETS frameTools
