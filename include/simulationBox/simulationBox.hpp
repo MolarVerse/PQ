@@ -106,6 +106,8 @@ namespace simulationBox
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
 
+        void initPositions(const double displacement);
+
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] double               calculateTotalForce();
         [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();

@@ -29,6 +29,7 @@
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <numeric>     // for accumulate
+#include <random>      // for random_device, mt19937
 
 using simulationBox::Molecule;
 using simulationBox::MoleculeType;
@@ -421,4 +422,24 @@ linearAlgebra::Vec3D SimulationBox::calculateBoxDimensionsFromDensity() const
 linearAlgebra::Vec3D SimulationBox::calculateShiftVector(const linearAlgebra::Vec3D &position) const
 {
     return _box->calculateShiftVector(position);
+}
+
+/**
+ * @brief initialize positions of all atoms
+ *
+ */
+void SimulationBox::initPositions(const double displacement)
+{
+    std::random_device               randomDevice;
+    std::mt19937                     randomGenerator(randomDevice());
+    std::uniform_real_distribution<> uniformDistribution(-displacement, displacement);
+
+    auto displacePositions = [&uniformDistribution, &randomGenerator](auto &atom)
+    {
+        atom->setPosition(atom->getPosition() + linearAlgebra::Vec3D{uniformDistribution(randomGenerator),
+                                                                     uniformDistribution(randomGenerator),
+                                                                     uniformDistribution(randomGenerator)});
+    };
+
+    std::ranges::for_each(_atoms, displacePositions);
 }
