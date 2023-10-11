@@ -103,8 +103,11 @@ namespace simulationBox
         void calculateTotalMass();
         void calculateCenterOfMass();
         void calculateCenterOfMassMolecules();
+        void calculateDensity();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
+
+        void initPositions(const double displacement);
 
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] double               calculateTotalForce();
@@ -186,7 +189,11 @@ namespace simulationBox
          **********************************************/
 
         void applyPBC(linearAlgebra::Vec3D &position) const { _box->applyPBC(position); }
-        void scaleBox(const linearAlgebra::Vec3D &scaleFactors) const { _box->scaleBox(scaleFactors); }
+        void scaleBox(const linearAlgebra::Vec3D &scaleFactors)
+        {
+            _box->scaleBox(scaleFactors);
+            calculateDensity();
+        }
 
         [[nodiscard]] double calculateVolume() const { return _box->calculateVolume(); }
         [[nodiscard]] double getMinimalBoxDimension() const { return _box->getMinimalBoxDimension(); }
