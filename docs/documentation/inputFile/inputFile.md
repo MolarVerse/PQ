@@ -546,6 +546,59 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 
 > *default value* = 20
 
+### MM Keys {#mmKeywords}
+
+#### NonCoulomb
+
+    noncoulomb = {string} -> "guff"
+
+>   With the `noncoulomb` keyword the user can specify which kind of [GUFF formalism](#guffdatFile) should be used for parsing the guff.dat input file. <span style="color:red"><b>Note</b></span>: This keyword is only considered if an MM-MD type simulation is requested and the force field is not turned on.
+
+>   Possible options are:
+
+>>  1) <b>guff</b> (default) - full GUFF formalism
+
+>>  2) <b>lj</b> - Lennard Jones quick routine
+
+>>  3) <b>buck</b> - Buckingham quick routine
+
+>>  4) <b>morse</b> - Morse quick routine
+
+#### ForceField
+
+    forcefield = {string} -> "off"
+
+>   With the `forcefield` keyword the user can switch from the GUFF formalism to force field type simulation (For details see Reference Manual).
+
+>   Possible options are:
+
+>>  1) <b>off</b> (default) - GUFF formalism is applied
+
+>>  2) <b>on</b> - full force field definition is applied
+
+>>  3) <b>bonded</b> - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
+
+### Long Range Correction
+
+#### Long_Range
+
+    long_range = {string} -> "none"
+
+>   With the `long_range` correction keyword the user can specify the type of <b>Coulombic<B> long range correction, which should be applied during the Simulation.
+
+>   Possible options are:
+
+>>  1) <b>none</b> (default) - no long range correction
+
+>>  2) <b>wolf</b> - Wolf summation
+
+#### Wolf_Param
+
+<!-- TODO: add unit and description-->
+    wolf_param = {double} -> 0.25 
+
+>   *default value* = 0.25
+
 ### QM Keys {#qmKeywords}
 
 #### QM_PROG
