@@ -434,11 +434,15 @@ void SimulationBox::initPositions(const double displacement)
     std::mt19937                     randomGenerator(randomDevice());
     std::uniform_real_distribution<> uniformDistribution(-displacement, displacement);
 
-    auto displacePositions = [&uniformDistribution, &randomGenerator](auto &atom)
+    auto displacePositions = [&uniformDistribution, &randomGenerator, this](auto &atom)
     {
-        atom->setPosition(atom->getPosition() + linearAlgebra::Vec3D{uniformDistribution(randomGenerator),
-                                                                     uniformDistribution(randomGenerator),
-                                                                     uniformDistribution(randomGenerator)});
+        auto position = atom->getPosition() + linearAlgebra::Vec3D{uniformDistribution(randomGenerator),
+                                                                   uniformDistribution(randomGenerator),
+                                                                   uniformDistribution(randomGenerator)};
+
+        applyPBC(position);
+
+        atom->setPosition(position);
     };
 
     std::ranges::for_each(_atoms, displacePositions);
