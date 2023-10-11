@@ -61,6 +61,8 @@ namespace settings
         Settings()  = default;
         ~Settings() = default;
 
+        [[nodiscard]] static bool isQMOnly();
+
         static void setJobtype(const std::string_view jobtype);
         static void setJobtype(const JobType jobtype) { _jobtype = jobtype; }
 
