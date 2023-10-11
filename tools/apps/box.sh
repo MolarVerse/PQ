@@ -27,9 +27,21 @@ while read -r line; do
     else
         echo "Box" $line_number $x $y $z
         echo ""
-        echo "X" $((-x / 2)) 0 0
-        echo "X" $((+x / 2)) 0 0
-        echo "X" $(echo "-0.5 * s($gamma * $pi / 180) * $y" | bc -l) $(echo "0.5 * c($gamma * $pi / 180) * $y" | bc -l) 0
+        xx=$(echo "$x" | bc -l)
+        xy=$(echo "c($gamma * $pi / 180) * $y" | bc -l)
+        xz=$(echo "c($beta * $pi / 180) * $z" | bc -l)
+        yy=$(echo "$y*s($gamma * $pi / 180)" | bc -l)
+        yz=$(echo "(c($alpha * $pi / 180) - c($beta * $pi / 180) * c($gamma * $pi / 180)) * $z / s($gamma * $pi / 180)" | bc -l)
+        zz=$(echo "sqrt($z*$z - $xz*$xz - $yz*$yz)" | bc -l)
+
+        echo "X" $(echo " 0.5 * $xx + 0.5 * $xy + 0.5 * $xz" | bc -l) $(echo " 0.5 * $yy + 0.5 * $yz" | bc -l) $(echo " 0.5 * $zz" | bc -l)
+        echo "X" $(echo " 0.5 * $xx + 0.5 * $xy - 0.5 * $xz" | bc -l) $(echo " 0.5 * $yy - 0.5 * $yz" | bc -l) $(echo "-0.5 * $zz" | bc -l)
+        echo "X" $(echo " 0.5 * $xx - 0.5 * $xy + 0.5 * $xz" | bc -l) $(echo "-0.5 * $yy + 0.5 * $yz" | bc -l) $(echo " 0.5 * $zz" | bc -l)
+        echo "X" $(echo " 0.5 * $xx - 0.5 * $xy - 0.5 * $xz" | bc -l) $(echo "-0.5 * $yy - 0.5 * $yz" | bc -l) $(echo "-0.5 * $zz" | bc -l)
+        echo "X" $(echo "-0.5 * $xx + 0.5 * $xy + 0.5 * $xz" | bc -l) $(echo " 0.5 * $yy + 0.5 * $yz" | bc -l) $(echo " 0.5 * $zz" | bc -l)
+        echo "X" $(echo "-0.5 * $xx + 0.5 * $xy - 0.5 * $xz" | bc -l) $(echo " 0.5 * $yy - 0.5 * $yz" | bc -l) $(echo "-0.5 * $zz" | bc -l)
+        echo "X" $(echo "-0.5 * $xx - 0.5 * $xy + 0.5 * $xz" | bc -l) $(echo "-0.5 * $yy + 0.5 * $yz" | bc -l) $(echo " 0.5 * $zz" | bc -l)
+        echo "X" $(echo "-0.5 * $xx - 0.5 * $xy - 0.5 * $xz" | bc -l) $(echo "-0.5 * $yy - 0.5 * $yz" | bc -l) $(echo "-0.5 * $zz" | bc -l)
 
     fi
     line_number=$((line_number + 1))
