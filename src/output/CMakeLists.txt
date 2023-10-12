@@ -21,6 +21,13 @@ target_include_directories(output
     ${PROJECT_SOURCE_DIR}/include/config
 )
 
+if(BUILD_WITH_MPI)
+    target_link_libraries(output
+        PUBLIC
+        MPI::MPI_CXX
+    )
+endif()
+
 target_link_libraries(output
     PUBLIC
     utilities

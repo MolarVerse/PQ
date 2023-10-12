@@ -5,7 +5,7 @@
  Copyright (C) 2020 TURBOMOLE GmbH, Karlsruhe
 
 
-    2023-10-10 10:20:21.832 
+    2023-10-13 00:49:07.985 
 
 
 
@@ -33,18 +33,18 @@
               +--------------------------------------------------+
 
                     atomic coordinates            atom    charge  isotop
-         -8.30880928   -4.19187583    0.69484607    c      6.000     0
-         -7.85861342   -2.50500372   -0.33345869    h      1.000     0
-        -10.06828943   -4.10917663    3.01136767    c      6.000     0
-        -11.41200666   -2.60712106    3.20971894    h      1.000     0
-         -9.90193014   -6.19886780    5.03640391    c      6.000     0
-        -10.22765215   -5.73306983    6.97722414    h      1.000     0
-         -9.31635257   -8.73368284    4.32998948    o      8.000     0
-         -7.23771103   -6.54996465   -0.10628143    o      8.000     0
-         -7.76272072   -7.87204606    1.01706784    h      1.000     0
+         -8.30441622   -4.19566011    0.69745035    c      6.000     0
+         -7.88185849   -2.50865409   -0.30373986    h      1.000     0
+        -10.06990183   -4.11436508    3.00917882    c      6.000     0
+        -11.41527976   -2.61894270    3.20718380    h      1.000     0
+         -9.90225176   -6.19039241    5.04195405    c      6.000     0
+        -10.21824643   -5.73198186    6.98112974    h      1.000     0
+         -9.31778883   -8.73413158    4.32730956    o      8.000     0
+         -7.23767491   -6.54886386   -0.11001728    o      8.000     0
+         -7.75268542   -7.86208598    1.01673235    h      1.000     0
  
-       center of nuclear mass  :   -8.90979612   -6.07176308    2.54693808
-       center of nuclear charge:   -8.93072829   -5.99963006    2.55568217
+       center of nuclear mass  :   -8.90979610   -6.07176309    2.54693813
+       center of nuclear charge:   -8.93082102   -5.99968773    2.55608272
 
               +--------------------------------------------------+
               |               basis set information              |
@@ -90,7 +90,7 @@
 
 
           ------------------------
-          nuclear repulsion energy  :   151.657799878    
+          nuclear repulsion energy  :   151.726960166    
           ------------------------
 
 
@@ -137,111 +137,103 @@
  
                                               current damping :  0.300
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   1  -265.51660212809    -663.31253479     246.13813278    0.000D+00 0.351D-11
-          max. resid. norm for Fia-block=  3.833D-03 for orbital     11a         
-          max. resid. fock norm         =  2.025D-02 for orbital     90a         
-          Delta Eig. =     0.4496308229 eV 
+   1  -265.51450347524    -663.39540289     246.15393924    0.000D+00 0.351D-11
+          max. resid. norm for Fia-block=  2.988D-03 for orbital      6a         
+          max. resid. fock norm         =  1.337D-02 for orbital     90a         
+          Delta Eig. =     0.3760213454 eV 
  
                                               current damping :  0.250
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   2  -265.51668533521    -663.29644914     246.12196392    0.154D-03 0.222D-11
-          Norm of current diis error: 0.84034E-02
-          max. resid. norm for Fia-block=  1.490D-03 for orbital     11a         
-          max. resid. fock norm         =  5.194D-03 for orbital     90a         
-          Delta Eig. =     0.1357226174 eV 
+   2  -265.51455294770    -663.41130043     246.16978732    0.130D-03 0.222D-11
+          Norm of current diis error: 0.59974E-02
+          max. resid. norm for Fia-block=  1.188D-03 for orbital      6a         
+          max. resid. fock norm         =  3.793D-03 for orbital     89a         
+          Delta Eig. =     0.1159775384 eV 
  
                                               current damping :  0.100
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   3  -265.51670286226    -663.29333917     246.11883643    0.792D-04 0.170D-11
-          Norm of current diis error: 0.32729E-02
-          max. resid. norm for Fia-block=  6.664D-04 for orbital     11a         
-          max. resid. fock norm         =  9.482D-04 for orbital     87a         
-          Delta Eig. =     0.0308849183 eV 
- 
-                                              current damping :  0.100
- ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   4  -265.51670604114    -663.29283307     246.11832715    0.384D-04 0.149D-11
-          Norm of current diis error: 0.11021E-02
-          max. resid. norm for Fia-block=  2.069D-04 for orbital     18a         
-          max. resid. fock norm         =  2.161D-04 for orbital     18a         
-          Delta Eig. =     0.0092899557 eV 
- 
-                                              current damping :  0.100
- ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   5  -265.51670646074    -663.29207113     246.11756479    0.137D-04 0.139D-11
-          Norm of current diis error: 0.51301E-03
-          max. resid. norm for Fia-block=  1.296D-04 for orbital     18a         
-          max. resid. fock norm         =  1.337D-04 for orbital     18a         
- mo-orthogonalization: Cholesky decomposition
-          Delta Eig. =     0.0035465284 eV 
+   3  -265.51456060713    -663.41635946     246.17483868    0.534D-04 0.179D-11
+          Norm of current diis error: 0.26510E-02
+          max. resid. norm for Fia-block=  4.360D-04 for orbital     11a         
+          max. resid. fock norm         =  7.379D-04 for orbital     90a         
+          Delta Eig. =     0.0394503022 eV 
  
                                               current damping :  0.150
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   6  -265.51670659807    -663.29225653     246.11775006    0.739D-05 0.132D-11
-          Norm of current diis error: 0.26494E-03
-          max. resid. norm for Fia-block=  1.107D-04 for orbital     18a         
-          max. resid. fock norm         =  1.151D-04 for orbital     18a         
-          Delta Eig. =     0.0013923024 eV 
- 
-                                              current damping :  0.100
- ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   7  -265.51670664621    -663.29236359     246.11785707    0.524D-05 0.123D-11
-          Norm of current diis error: 0.15452E-03
-          max. resid. norm for Fia-block=  7.257D-05 for orbital     18a         
-          max. resid. fock norm         =  7.603D-05 for orbital     18a         
-          Delta Eig. =     0.0016119860 eV 
- 
-                                              current damping :  0.150
- ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   8  -265.51670666519    -663.29225526     246.11774872    0.360D-05 0.116D-11
-          Norm of current diis error: 0.89530E-04
-          max. resid. norm for Fia-block=  4.648D-05 for orbital     18a         
-          max. resid. fock norm         =  4.878D-05 for orbital     18a         
-          Delta Eig. =     0.0009574681 eV 
+   4  -265.51456213049    -663.41591283     246.17439053    0.278D-04 0.162D-11
+          Norm of current diis error: 0.95362E-03
+          max. resid. norm for Fia-block=  1.357D-04 for orbital     18a         
+          max. resid. fock norm         =  1.702D-04 for orbital     18a         
+          Delta Eig. =     0.0140333947 eV 
  
                                               current damping :  0.200
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-   9  -265.51670667116    -663.29236648     246.11785993    0.207D-05 0.110D-11
-          Norm of current diis error: 0.45293E-04
-          max. resid. norm for Fia-block=  2.844D-05 for orbital     18a         
-          max. resid. fock norm         =  2.987D-05 for orbital     18a         
-          Delta Eig. =     0.0003676711 eV 
+   5  -265.51456232048    -663.41740797     246.17588549    0.927D-05 0.152D-11
+          Norm of current diis error: 0.33896E-03
+          max. resid. norm for Fia-block=  5.340D-05 for orbital     18a         
+          max. resid. fock norm         =  6.162D-05 for orbital     18a         
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0030117591 eV 
  
                                               current damping :  0.250
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-  10  -265.51670667303    -663.29233678     246.11783022    0.122D-05 0.106D-11
-          Norm of current diis error: 0.21539E-04
-          max. resid. norm for Fia-block=  1.537D-05 for orbital     18a         
-          max. resid. fock norm         =  1.611D-05 for orbital     18a         
- mo-orthogonalization: Cholesky decomposition
-          Delta Eig. =     0.0000584428 eV 
+   6  -265.51456237094    -663.41710182     246.17557928    0.412D-05 0.144D-11
+          Norm of current diis error: 0.15823E-03
+          max. resid. norm for Fia-block=  3.563D-05 for orbital     18a         
+          max. resid. fock norm         =  3.776D-05 for orbital     18a         
+          Delta Eig. =     0.0010609539 eV 
  
                                               current damping :  0.300
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-  11  -265.51670667349    -663.29234438     246.11783783    0.613D-06 0.102D-11
-          Norm of current diis error: 0.10308E-04
-          max. resid. norm for Fia-block=  7.183D-06 for orbital     18a         
-          max. resid. fock norm         =  7.559D-06 for orbital     18a         
-          Delta Eig. =     0.0000186629 eV 
+   7  -265.51456238205    -663.41719081     246.17566826    0.233D-05 0.135D-11
+          Norm of current diis error: 0.90188E-04
+          max. resid. norm for Fia-block=  2.894D-05 for orbital     18a         
+          max. resid. fock norm         =  3.001D-05 for orbital     18a         
+          Delta Eig. =     0.0003547279 eV 
+ 
+                                              current damping :  0.350
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   8  -265.51456238682    -663.41718645     246.17566389    0.165D-05 0.125D-11
+          Norm of current diis error: 0.50274E-04
+          max. resid. norm for Fia-block=  2.011D-05 for orbital     18a         
+          max. resid. fock norm         =  2.088D-05 for orbital     18a         
+          Delta Eig. =     0.0001463211 eV 
+ 
+                                              current damping :  0.200
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+   9  -265.51456238860    -663.41718311     246.17566056    0.105D-05 0.115D-11
+          Norm of current diis error: 0.27693E-04
+          max. resid. norm for Fia-block=  1.308D-05 for orbital     18a         
+          max. resid. fock norm         =  1.360D-05 for orbital     18a         
+          Delta Eig. =     0.0000707562 eV 
+ 
+                                              current damping :  0.100
+ ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
+  10  -265.51456238923    -663.41717442     246.17565187    0.732D-06 0.106D-11
+          Norm of current diis error: 0.13489E-04
+          max. resid. norm for Fia-block=  6.764D-06 for orbital     18a         
+          max. resid. fock norm         =  7.184D-06 for orbital     18a         
+ mo-orthogonalization: Cholesky decomposition
+          Delta Eig. =     0.0001439770 eV 
 
  ENERGY & DENSITY CONVERGED !
 
  
-                                              current damping :  0.350
+                                              current damping :  0.150
  ITERATION  ENERGY          1e-ENERGY        2e-ENERGY     RMS[dD(SAO)]   TOL
-  12  -265.51670667364    -663.29234382     246.11783726    0.279D-06 0.100D-11
-          max. resid. norm for Fia-block=  1.210D-06 for orbital     18a         
-          max. resid. fock norm         =  1.280D-06 for orbital     18a         
+  11  -265.51456238937    -663.41717727     246.17565472    0.394D-06 0.100D-11
+          max. resid. norm for Fia-block=  1.452D-06 for orbital     18a         
+          max. resid. fock norm         =  1.610D-06 for orbital     18a         
 
- convergence criteria satisfied after    12 iterations
+ convergence criteria satisfied after    11 iterations
 
 
                   ------------------------------------------ 
-                 |  total energy      =   -265.51670667364  |
+                 |  total energy      =   -265.51456238937  |
                   ------------------------------------------ 
-                 :  kinetic energy    =    263.88904626724  :
-                 :  potential energy  =   -529.40575294087  :
-                 :  virial theorem    =      1.99386983807  :
+                 :  kinetic energy    =    263.91815496193  :
+                 :  potential energy  =   -529.43271735131  :
+                 :  virial theorem    =      1.99398749578  :
                  :  wavefunction norm =      1.00000000000  :
                   .......................................... 
 
@@ -249,13 +241,13 @@
  orbitals $scfmo  will be written to file mos
 
     irrep                 15a         16a         17a         18a         19a   
- eigenvalues H         -0.56460    -0.54061    -0.46202    -0.43186    -0.33768
-            eV         -15.3636    -14.7109    -12.5724    -11.7516     -9.1888
+ eigenvalues H         -0.56401    -0.54056    -0.46026    -0.43136    -0.33742
+            eV         -15.3477    -14.7095    -12.5245    -11.7379     -9.1819
  occupation              2.0000      2.0000      2.0000      2.0000      2.0000
 
     irrep                 20a         21a         22a         23a         24a   
- eigenvalues H          0.05171     0.15348     0.24489     0.26394     0.27728
-            eV           1.4072      4.1765      6.6638      7.1822      7.5452
+ eigenvalues H          0.05108     0.15287     0.24632     0.26446     0.27769
+            eV           1.3899      4.1599      6.7027      7.1963      7.5563
  
  
  
@@ -276,44 +268,44 @@
  ------------------------------------------------------------------------------
                        dipole moment  
  ------------------------------------------------------------------------------
-   x    -339.367675     339.083143      -0.284532
-   y    -227.985942     229.691748       1.705805
-   z      97.115923     -97.008901       0.107021
+   x    -339.371199     339.094355      -0.276844
+   y    -227.988134     229.706405       1.718271
+   z      97.131144     -97.021980       0.109164
  
-   | dipole moment | =     1.7327 a.u. =     4.4040 debye 
+   | dipole moment | =     1.7439 a.u. =     4.4324 debye 
  
  ------------------------------------------------------------------------------
                      quadrupole moment
  ------------------------------------------------------------------------------
-  xx    3081.017397   -3098.211013     -17.193616
-  yy    1498.642052   -1541.463724     -42.821672
-  zz     419.709475    -439.489920     -19.780445
-  xy    2024.861032   -2039.052658     -14.191626
-  xz    -945.605148     943.109528      -2.495620
-  yz    -631.546764     635.737886       4.191123
+  xx    3081.115061   -3098.422583     -17.307523
+  yy    1498.316728   -1541.316413     -42.999685
+  zz     419.827266    -439.579971     -19.752705
+  xy    2024.878140   -2039.249382     -14.371241
+  xz    -945.756184     943.265875      -2.490310
+  yz    -631.358015     635.601664       4.243649
  
-     1/3  trace=     -26.598578
-     anisotropy=      35.676059
+     1/3  trace=     -26.686638
+     anisotropy=      35.992672
  
  ==============================================================================
  
 HOMO-LUMO Separation
- HOMO         :   -0.33767923 H =     -9.18872 eV
- LUMO         :    0.05171145 H =     +1.40714 eV
- HOMO-LUMO gap:    0.38939068 H =    +10.59587 eV
+ HOMO         :   -0.33742495 H =     -9.18181 eV
+ LUMO         :    0.05107810 H =     +1.38991 eV
+ HOMO-LUMO gap:    0.38850305 H =    +10.57171 eV
  
  ==============================================================================
 
 
     ------------------------------------------------------------------------
-         total  cpu-time :   2.24 seconds
-         total wall-time :   2.25 seconds
+         total  cpu-time :   1.98 seconds
+         total wall-time :   1.99 seconds
     ------------------------------------------------------------------------
 
    ****  dscf : all done  ****
 
 
-    2023-10-10 10:20:24.082 
+    2023-10-13 00:49:09.966 
 
  dscf ended normally
 
@@ -323,7 +315,7 @@ HOMO-LUMO Separation
  Copyright (C) 2020 TURBOMOLE GmbH, Karlsruhe
 
 
-    2023-10-10 10:20:24.094 
+    2023-10-13 00:49:09.979 
 
 
 
@@ -346,18 +338,18 @@ HOMO-LUMO Separation
               +--------------------------------------------------+
 
                     atomic coordinates            atom    charge  isotop
-         -8.30880928   -4.19187583    0.69484607    c      6.000     0
-         -7.85861342   -2.50500372   -0.33345869    h      1.000     0
-        -10.06828943   -4.10917663    3.01136767    c      6.000     0
-        -11.41200666   -2.60712106    3.20971894    h      1.000     0
-         -9.90193014   -6.19886780    5.03640391    c      6.000     0
-        -10.22765215   -5.73306983    6.97722414    h      1.000     0
-         -9.31635257   -8.73368284    4.32998948    o      8.000     0
-         -7.23771103   -6.54996465   -0.10628143    o      8.000     0
-         -7.76272072   -7.87204606    1.01706784    h      1.000     0
+         -8.30441622   -4.19566011    0.69745035    c      6.000     0
+         -7.88185849   -2.50865409   -0.30373986    h      1.000     0
+        -10.06990183   -4.11436508    3.00917882    c      6.000     0
+        -11.41527976   -2.61894270    3.20718380    h      1.000     0
+         -9.90225176   -6.19039241    5.04195405    c      6.000     0
+        -10.21824643   -5.73198186    6.98112974    h      1.000     0
+         -9.31778883   -8.73413158    4.32730956    o      8.000     0
+         -7.23767491   -6.54886386   -0.11001728    o      8.000     0
+         -7.75268542   -7.86208598    1.01673235    h      1.000     0
  
-       center of nuclear mass  :   -8.90979612   -6.07176308    2.54693808
-       center of nuclear charge:   -8.93072829   -5.99963006    2.55568217
+       center of nuclear mass  :   -8.90979610   -6.07176309    2.54693813
+       center of nuclear charge:   -8.93082102   -5.99968773    2.55608272
 
               +--------------------------------------------------+
               |               basis set information              |
@@ -469,11 +461,11 @@ HOMO-LUMO Separation
               +--------------------------------------------+
               |   irrep   index      energy     occ/vir    |
               +--------------------------------------------+
-              |   a         1      -20.6166     occupied   |
-              |   a         2      -20.5570     occupied   |
-              |   a         3      -11.3932     occupied   |
-              |   a         4      -11.3759     occupied   |
-              |   a         5      -11.2781     occupied   |
+              |   a         1      -20.6174     occupied   |
+              |   a         2      -20.5560     occupied   |
+              |   a         3      -11.3926     occupied   |
+              |   a         4      -11.3755     occupied   |
+              |   a         5      -11.2777     occupied   |
               +--------------------------------------------+
 
 
@@ -515,8 +507,8 @@ HOMO-LUMO Separation
 
    =========================================================================
 
-     Energy of reference wave function is  -265.5167066736000
-     Maximum orbital residual is           0.1280491513257E-05
+     Energy of reference wave function is  -265.5145623894000
+     Maximum orbital residual is           0.1609782862830E-05
 
 
      Number of symmetry-nonredundant auxiliary basis functions:      296
@@ -551,13 +543,13 @@ HOMO-LUMO Separation
    ------------------------------------------------------
          1             0.00            0.00    L0     R0  
    ------------------------------------------------------
-     time in cc_1den       cpu:  0.11 sec    wall:  0.11 sec    ratio:  1.0
+     time in cc_1den       cpu:  0.12 sec    wall:  0.12 sec    ratio:  1.0
 
  reading orbital data $scfmo  from file mos
  orbital characterization : scfconv=8
 
-   EMP2            :     -266.299342408134
-   EMP2 from traces:     -266.299342408134
+   EMP2            :     -266.297279885346
+   EMP2 from traces:     -266.297279885346
    Delta           :        0.000000000000
 
    --------------------------------------------------------------------------
@@ -582,16 +574,17 @@ HOMO-LUMO Separation
 
     Iter  #Vectors  time (min)    max. residual 
     --------------------------------------------
-      1       1         0.00     0.59E+00  (  1)
-      2       1         0.00     0.25E+00  (  1)
+      1       1         0.00     0.60E+00  (  1)
+      2       1         0.00     0.26E+00  (  1)
       3       1         0.00     0.14E+00  (  1)
-      4       1         0.00     0.58E-01  (  1)
-      5       1         0.00     0.25E-01  (  1)
-      6       1         0.00     0.99E-02  (  1)
+      4       1         0.00     0.59E-01  (  1)
+      5       1         0.00     0.26E-01  (  1)
+      6       1         0.00     0.10E-01  (  1)
+      7       1         0.00     0.33E-02  (  1)
     --------------------------------------------
-    converged in  6 iterations
+    converged in  7 iterations
 
-         Total time          0.01 minutes
+         Total time          0.02 minutes
 
 
  ===========================================
@@ -615,17 +608,16 @@ HOMO-LUMO Separation
 
     Iter  #Vectors  time (min)    max. residual 
     --------------------------------------------
-      1       1         0.00     0.97E-02  (  1)
-      2       1         0.00     0.38E-02  (  1)
-      3       1         0.00     0.19E-02  (  1)
-      4       1         0.00     0.85E-03  (  1)
-      5       1         0.00     0.37E-03  (  1)
-      6       1         0.00     0.18E-03  (  1)
-      7       1         0.00     0.62E-04  (  1)
+      1       1         0.00     0.34E-02  (  1)
+      2       1         0.00     0.11E-02  (  1)
+      3       1         0.00     0.56E-03  (  1)
+      4       1         0.00     0.26E-03  (  1)
+      5       1         0.00     0.11E-03  (  1)
+      6       1         0.00     0.55E-04  (  1)
     --------------------------------------------
-    converged in  7 iterations
+    converged in  6 iterations
 
-         Total time          0.03 minutes
+         Total time          0.02 minutes
 
 
  ===========================================
@@ -644,12 +636,12 @@ HOMO-LUMO Separation
      +---------------+----------------------------------------------------+
      | a             |                                                    |
      |     1 -     5 |     2.0000    2.0000    2.0000    2.0000    2.0000 |
-     |     6 -    10 |     1.9867    1.9855    1.9807    1.9760    1.9736 |
-     |    11 -    15 |     1.9695    1.9649    1.9625    1.9612    1.9555 |
-     |    16 -    20 |     1.9488    1.9418    1.9275    1.9151    0.0849 |
-     |    21 -    25 |     0.0606    0.0467    0.0370    0.0338    0.0290 |
-     |    26 -    30 |     0.0240    0.0168    0.0152    0.0148    0.0137 |
-     |    31 -    35 |     0.0125    0.0123    0.0105    0.0089    0.0083 |
+     |     6 -    10 |     1.9867    1.9855    1.9808    1.9761    1.9737 |
+     |    11 -    15 |     1.9696    1.9650    1.9625    1.9612    1.9556 |
+     |    16 -    20 |     1.9489    1.9413    1.9272    1.9149    0.0853 |
+     |    21 -    25 |     0.0607    0.0472    0.0368    0.0336    0.0290 |
+     |    26 -    30 |     0.0239    0.0168    0.0151    0.0148    0.0135 |
+     |    31 -    35 |     0.0124    0.0122    0.0105    0.0089    0.0083 |
      |    36 -    40 |     0.0081    0.0072    0.0070    0.0065    0.0064 |
      |    41 -    45 |     0.0060    0.0057    0.0055    0.0049    0.0047 |
      |    46 -    50 |     0.0046    0.0045    0.0042    0.0039    0.0038 |
@@ -660,10 +652,10 @@ HOMO-LUMO Separation
       natural orbitals with occ <   0.10E-02 are not shown
 
       Maximum change in occupation number:
-        occupied         :    -4.25 % (   19 a    )
-        virtual          :     4.24 % (   20 a    )
+        occupied         :    -4.26 % (   19 a    )
+        virtual          :     4.26 % (   20 a    )
  
- WARNING: unphysical eigenvalue of NO    90a           : occ=  -0.0037004
+ WARNING: unphysical eigenvalue of NO    90a           : occ=  -0.0041473
 
      +--------------------------------------------------------------------+
      | MP2 relaxed   natural orbital occupation numbers                   |
@@ -672,24 +664,24 @@ HOMO-LUMO Separation
      +---------------+----------------------------------------------------+
      | a             |                                                    |
      |     1 -     5 |     2.0000    2.0000    2.0000    2.0000    2.0000 |
-     |     6 -    10 |     1.9869    1.9857    1.9809    1.9766    1.9744 |
-     |    11 -    15 |     1.9733    1.9706    1.9653    1.9634    1.9566 |
-     |    16 -    20 |     1.9555    1.9491    1.9446    1.9318    0.0560 |
-     |    21 -    25 |     0.0507    0.0422    0.0362    0.0327    0.0279 |
-     |    26 -    30 |     0.0233    0.0167    0.0151    0.0146    0.0135 |
-     |    31 -    35 |     0.0120    0.0120    0.0104    0.0083    0.0081 |
-     |    36 -    40 |     0.0071    0.0069    0.0064    0.0059    0.0058 |
-     |    41 -    45 |     0.0056    0.0054    0.0050    0.0048    0.0047 |
+     |     6 -    10 |     1.9869    1.9857    1.9810    1.9767    1.9746 |
+     |    11 -    15 |     1.9736    1.9707    1.9654    1.9635    1.9567 |
+     |    16 -    20 |     1.9561    1.9493    1.9443    1.9320    0.0553 |
+     |    21 -    25 |     0.0508    0.0424    0.0361    0.0326    0.0279 |
+     |    26 -    30 |     0.0232    0.0166    0.0150    0.0146    0.0133 |
+     |    31 -    35 |     0.0120    0.0119    0.0104    0.0083    0.0081 |
+     |    36 -    40 |     0.0071    0.0069    0.0064    0.0059    0.0057 |
+     |    41 -    45 |     0.0056    0.0054    0.0050    0.0049    0.0047 |
      |    46 -    50 |     0.0045    0.0043    0.0039    0.0027    0.0027 |
-     |    51 -    55 |     0.0026    0.0025    0.0024    0.0021    0.0020 |
+     |    51 -    55 |     0.0026    0.0025    0.0024    0.0022    0.0020 |
      |    56 -    60 |     0.0019    0.0018    0.0016    0.0015    0.0014 |
      |    61 -    65 |     0.0013    0.0012    0.0012    0.0011    0.0010 |
      +---------------+----------------------------------------------------+
       natural orbitals with occ <   0.10E-02 are not shown
 
       Maximum change in occupation number:
-        occupied         :    -3.41 % (   19 a    )
-        virtual          :     2.80 % (   20 a    )
+        occupied         :    -3.40 % (   19 a    )
+        virtual          :     2.77 % (   20 a    )
 
 
  **************************************************************
@@ -701,16 +693,16 @@ HOMO-LUMO Separation
 
         ------------------------------------------------
             Method          :  MP2     
-            Total Energy    :   -266.2993424081
+            Total Energy    :   -266.2972798853
         ------------------------------------------------
 
 
         ------------------------------------------------
                       moments of inertia 
-              219.056    422.849    632.239  in a.u.
+              218.976    422.790    631.893  in a.u.
 
                    rotational constants 
-              0.27481    0.14237    0.09522  in cm**(-1)
+              0.27491    0.14239    0.09527  in cm**(-1)
         ------------------------------------------------
 
 
@@ -721,32 +713,32 @@ HOMO-LUMO Separation
  | OPERATOR         | EXPECTAT. VALUE  | ELECTRONIC CONT. | NUCLEAR CONTRIB. |
  +==================+==================+==================+==================+
  |                  |                  |                  |                  |
- | xdiplen  (unrel) |     -0.27654278  |    339.09113207  |   -339.36767485  | 
- | xdiplen  (relax) |     -0.32468967  |    339.04298519  |   -339.36767485  | 
+ | xdiplen  (unrel) |     -0.26921270  |    339.10198621  |   -339.37119891  | 
+ | xdiplen  (relax) |     -0.31960292  |    339.05159599  |   -339.37119891  | 
  |                  |                  |                  |                  |
- | ydiplen  (unrel) |      1.59890102  |    229.58484321  |   -227.98594219  | 
- | ydiplen  (relax) |      1.14463459  |    229.13057678  |   -227.98594219  | 
+ | ydiplen  (unrel) |      1.61036057  |    229.59849432  |   -227.98813375  | 
+ | ydiplen  (relax) |      1.14973105  |    229.13786480  |   -227.98813375  | 
  |                  |                  |                  |                  |
- | zdiplen  (unrel) |      0.10430187  |    -97.01162070  |     97.11592257  | 
- | zdiplen  (relax) |      0.23880379  |    -96.87711878  |     97.11592257  | 
+ | zdiplen  (unrel) |      0.10608108  |    -97.02506246  |     97.13114354  | 
+ | zdiplen  (relax) |      0.24163660  |    -96.88950693  |     97.13114354  | 
  |                  |                  |                  |                  |
- | xxqudlen (unrel) |    -17.38974290  |  -3098.40713964  |   3081.01739675  | 
- | xxqudlen (relax) |    -16.52211438  |  -3097.53951113  |   3081.01739675  | 
+ | xxqudlen (unrel) |    -17.49824762  |  -3098.61330823  |   3081.11506061  | 
+ | xxqudlen (relax) |    -16.59636534  |  -3097.71142595  |   3081.11506061  | 
  |                  |                  |                  |                  |
- | xyqudlen (unrel) |    -13.28471242  |  -2038.14574424  |   2024.86103182  | 
- | xyqudlen (relax) |     -9.08579358  |  -2033.94682539  |   2024.86103182  | 
+ | xyqudlen (unrel) |    -13.45263556  |  -2038.33077566  |   2024.87814010  | 
+ | xyqudlen (relax) |     -9.18176792  |  -2034.05990802  |   2024.87814010  | 
  |                  |                  |                  |                  |
- | xzqudlen (unrel) |     -2.38249089  |    943.22265674  |   -945.60514763  | 
- | xzqudlen (relax) |     -3.41226112  |    942.19288651  |   -945.60514763  | 
+ | xzqudlen (unrel) |     -2.37401493  |    943.38216951  |   -945.75618444  | 
+ | xzqudlen (relax) |     -3.41668377  |    942.33950067  |   -945.75618444  | 
  |                  |                  |                  |                  |
- | yyqudlen (unrel) |    -41.42661730  |  -1540.06866888  |   1498.64205159  | 
- | yyqudlen (relax) |    -35.09903072  |  -1533.74108231  |   1498.64205159  | 
+ | yyqudlen (unrel) |    -41.58943960  |  -1539.90616806  |   1498.31672846  | 
+ | yyqudlen (relax) |    -35.16925648  |  -1533.48598493  |   1498.31672846  | 
  |                  |                  |                  |                  |
- | yzqudlen (unrel) |      3.90264918  |    635.44941277  |   -631.54676359  | 
- | yzqudlen (relax) |      1.98195885  |    633.52872244  |   -631.54676359  | 
+ | yzqudlen (unrel) |      3.95284412  |    635.31085909  |   -631.35801497  | 
+ | yzqudlen (relax) |      2.00002649  |    633.35804146  |   -631.35801497  | 
  |                  |                  |                  |                  |
- | zzqudlen (unrel) |    -20.01017424  |   -439.71964961  |    419.70947537  | 
- | zzqudlen (relax) |    -20.14889619  |   -439.85837156  |    419.70947537  | 
+ | zzqudlen (unrel) |    -19.98645299  |   -439.81371917  |    419.82726618  | 
+ | zzqudlen (relax) |    -20.12736762  |   -439.95463379  |    419.82726618  | 
  |                  |                  |                  |                  |
  +===========================================================================+
 
@@ -758,11 +750,11 @@ HOMO-LUMO Separation
      dipole moment:
      --------------
 
-     x     -0.32468967
-     y      1.14463459
-     z      0.23880379
+     x     -0.31960292
+     y      1.14973105
+     z      0.24163660
 
-     | dipole moment | =      1.21352337 a.u. =      3.08446872 debye
+     | dipole moment | =      1.21754498 a.u. =      3.09469062 debye
 
 
      traceless quadrupole tensor:
@@ -770,20 +762,20 @@ HOMO-LUMO Separation
 
                x              y              z
 
-     x    11.10184908   -13.62869037    -5.11839167
-     y                  -16.76352543     2.97293827
-     z                                   5.66167636
+     x    11.05194671   -13.77265188    -5.12502565
+     y                  -16.80739000     3.00003973
+     z                                   5.75544329
 
 
      principal axes of tensor: 
 
-      x' = (   0.8465891,  -0.3536966,  -0.3977256 )
-      y' = (   0.3732002,   0.9272584,  -0.0302241 )
-      z' = (   0.3794845,  -0.1228439,   0.9170065 )
+      x' = (   0.8449722,  -0.3557516,  -0.3993280 )
+      y' = (   0.3756946,   0.9262510,  -0.0302101 )
+      z' = (   0.3806253,  -0.1244987,   0.9163102 )
 
-     < Q(x'x') > =     19.20039013 a.u.
-     < Q(y'y') > =    -22.34566363 a.u.
-     < Q(z'z') > =      3.14527350 a.u.
+     < Q(x'x') > =     19.27258324 a.u.
+     < Q(y'y') > =    -22.49153271 a.u.
+     < Q(z'z') > =      3.21894947 a.u.
 
 
      second moment of electron density:
@@ -791,24 +783,24 @@ HOMO-LUMO Separation
 
                x              y              z
 
-     x  3097.53951113  2033.94682539  -942.19288651
-     y                 1533.74108231  -633.52872244
-     z                                 439.85837156
+     x  3097.71142595  2034.05990802  -942.33950067
+     y                 1533.48598493  -633.35804146
+     z                                 439.95463379
 
 
      principal axes of tensor: 
 
-      x' = (   0.7979070,   0.5473571,  -0.2524771 )
-      y' = (  -0.5798262,   0.5824639,  -0.5696818 )
-      z' = (  -0.1647606,   0.6009459,   0.7821240 )
+      x' = (   0.7979320,   0.5473196,  -0.2524793 )
+      y' = (  -0.5804560,   0.5848951,  -0.5665409 )
+      z' = (  -0.1624050,   0.5986142,   0.7844015 )
 
-     < x'x'> =   4790.94159412 a.u.
-     < y'y'> =    128.63116273 a.u.
-     < z'z'> =    151.56620814 a.u.
+     < x'x'> =   4791.09143586 a.u.
+     < y'y'> =    128.34676103 a.u.
+     < z'z'> =    151.71384778 a.u.
 
-     Isotropic second moment:     alpha =   1690.37965500 a.u.
+     Isotropic second moment:     alpha =   1690.38401489 a.u.
 
-     Anisotropy of second moment:  beta =   3635.71743621 a.u.
+     Anisotropy of second moment:  beta =   3635.71766868 a.u.
  
 
     --------------------------------------------------------------------------
@@ -821,11 +813,11 @@ HOMO-LUMO Separation
      dipole moment:
      --------------
 
-     x     -0.27654278
-     y      1.59890102
-     z      0.10430187
+     x     -0.26921270
+     y      1.61036057
+     z      0.10608108
 
-     | dipole moment | =      1.62598870 a.u. =      4.13285102 debye
+     | dipole moment | =      1.63615092 a.u. =      4.15868081 debye
 
 
      traceless quadrupole tensor:
@@ -833,20 +825,20 @@ HOMO-LUMO Separation
 
                x              y              z
 
-     x    13.32865287   -19.92706863    -3.57373633
-     y                  -22.72665873     5.85397377
-     z                                   9.39800586
+     x    13.28969868   -20.17895334    -3.56102240
+     y                  -22.84708930     5.92926618
+     z                                   9.55739062
 
 
      principal axes of tensor: 
 
-      x' = (   0.8427118,  -0.4013957,  -0.3587734 )
-      y' = (   0.3947158,   0.9138497,  -0.0952793 )
-      z' = (   0.3661097,  -0.0613205,   0.9285491 )
+      x' = (   0.8409303,  -0.4035479,  -0.3605348 )
+      y' = (   0.3970319,   0.9128071,  -0.0956500 )
+      z' = (   0.3676980,  -0.0627088,   0.9278285 )
 
-     < Q(x'x') > =     24.34167209 a.u.
-     < Q(y'y') > =    -31.94402936 a.u.
-     < Q(z'z') > =      7.60235727 a.u.
+     < Q(x'x') > =     24.49995707 a.u.
+     < Q(y'y') > =    -32.24537704 a.u.
+     < Q(z'z') > =      7.74541997 a.u.
 
 
      second moment of electron density:
@@ -854,24 +846,24 @@ HOMO-LUMO Separation
 
                x              y              z
 
-     x  3098.40713964  2038.14574424  -943.22265674
-     y                 1540.06866888  -635.44941277
-     z                                 439.71964961
+     x  3098.61330823  2038.33077566  -943.38216951
+     y                 1539.90616806  -635.31085909
+     z                                 439.81371917
 
 
      principal axes of tensor: 
 
-      x' = (   0.7973971,   0.5480949,  -0.2524872 )
-      y' = (  -0.5754767,   0.5647440,  -0.5915156 )
-      z' = (  -0.1816160,   0.6169734,   0.7657411 )
+      x' = (   0.7974156,   0.5480675,  -0.2524885 )
+      y' = (  -0.5762367,   0.5674219,  -0.5882038 )
+      z' = (  -0.1791079,   0.6145360,   0.7682876 )
 
-     < x'x'> =   4797.99805773 a.u.
-     < y'y'> =    128.76188386 a.u.
-     < z'z'> =    151.43551654 a.u.
+     < x'x'> =   4798.27395178 a.u.
+     < y'y'> =    128.48937737 a.u.
+     < z'z'> =    151.56986631 a.u.
 
-     Isotropic second moment:     alpha =   1692.73181938 a.u.
+     Isotropic second moment:     alpha =   1692.77773182 a.u.
 
-     Anisotropy of second moment:  beta =   3641.44604840 a.u.
+     Anisotropy of second moment:  beta =   3641.55945825 a.u.
  
 
                   ------------------------------
@@ -883,22 +875,22 @@ HOMO-LUMO Separation
           ------------------------------------------------
 
   ATOM      1 c           2 h           3 c           4 h           5 c 
-dE/dx  0.6434829D-01 -0.1910098D-02 -0.7794254D-01 -0.6251415D-02 -0.2394650D-01
-dE/dy  0.7773335D-01  0.2176040D-02  0.4886532D-01 -0.1418232D-01  0.1065214D+00
-dE/dz -0.9165311D-01  0.1233321D-01  0.5168905D-01 -0.6917692D-02  0.1107313D+00
+dE/dx  0.6806290D-01 -0.4547538D-02 -0.7890344D-01 -0.5441980D-02 -0.2468442D-01
+dE/dy  0.8277302D-01 -0.4008704D-02  0.4966548D-01 -0.1576462D-01  0.1098948D+00
+dE/dz -0.9605915D-01  0.1759662D-01  0.5040831D-01 -0.6735661D-02  0.1138261D+00
 
   ATOM      6 h           7 o           8 o           9 h 
-dE/dx  0.3399469D-02  0.2541948D-01  0.2565652D-02  0.1431767D-01
-dE/dy  0.1527829D-02 -0.1468175D+00 -0.8351491D-01  0.7690847D-02
-dE/dz -0.1306016D-01 -0.4325984D-01  0.1103968D-02 -0.2096674D-01
+dE/dx  0.3717059D-02  0.2551599D-01  0.8432632D-03  0.1543817D-01
+dE/dy  0.9665783D-03 -0.1482464D+00 -0.8630100D-01  0.1102089D-01
+dE/dz -0.1470974D-01 -0.4440407D-01  0.3490561D-02 -0.2341292D-01
  
- resulting FORCE  (fx,fy,fz) = (-.106D-09,0.123D-09,0.656D-10)
- resulting MOMENT (mx,my,mz) = (0.172D-05,-.422D-05,-.274D-05)
+ resulting FORCE  (fx,fy,fz) = (-.125D-09,0.176D-09,0.844D-10)
+ resulting MOMENT (mx,my,mz) = (0.764D-07,0.499D-07,-.179D-05)
 
 
  **********************************************************************
-  |maximum component of gradient| : 0.14681751      (atom  7 o )       
-   gradient norm                  : 0.29375500    
+  |maximum component of gradient| : 0.14824643      (atom  7 o )       
+   gradient norm                  : 0.30241825    
  **********************************************************************
 
    ***  orbital-relaxed dipole moment written to <control>  ***
@@ -925,21 +917,21 @@ dE/dz -0.1306016D-01 -0.4325984D-01  0.1103968D-02 -0.2096674D-01
  atomic populations from total density:
  
  atom      charge    n(s)      n(p)      n(d)      n(f)      n(g)
-     1c      0.18499   3.16886   2.57907   0.06709
-     2h      0.16733   0.81726   0.01542
-     3c     -0.23838   3.23746   2.95675   0.04418
-     4h      0.14401   0.84013   0.01586
-     5c      0.20045   3.19114   2.53777   0.07064
-     6h      0.14691   0.83801   0.01508
-     7o     -0.44092   3.94516   4.45536   0.04040
-     8o     -0.52824   3.83359   4.65003   0.04462
-     9h      0.36386   0.59277   0.04337
+     1c      0.18509   3.16533   2.58215   0.06742
+     2h      0.16736   0.81699   0.01565
+     3c     -0.23708   3.23640   2.95637   0.04430
+     4h      0.14376   0.84034   0.01590
+     5c      0.19717   3.19231   2.54047   0.07005
+     6h      0.14779   0.83707   0.01514
+     7o     -0.44076   3.94618   4.45442   0.04016
+     8o     -0.52602   3.83210   4.64917   0.04475
+     9h      0.36268   0.59360   0.04372
  
  moments (from total density versus population analysis)
  <charge> =            -0.000000           -0.000000
- <x   >   =            -0.324690           -0.476233
- <y   >   =             1.144635            1.771207
- <z   >   =             0.238804            0.368733
+ <x   >   =            -0.319603           -0.470214
+ <y   >   =             1.149731            1.777844
+ <z   >   =             0.241637            0.371109
  
  
  ==============================================================================
@@ -948,13 +940,13 @@ dE/dz -0.1306016D-01 -0.4325984D-01  0.1103968D-02 -0.2096674D-01
 
 
     ------------------------------------------------------------------------
-         total  cpu-time :   3.56 seconds
-         total wall-time :   3.57 seconds
+         total  cpu-time :   3.57 seconds
+         total wall-time :   3.58 seconds
     ------------------------------------------------------------------------
 
    ****  ricc2 : all done  ****
 
 
-    2023-10-10 10:20:27.661 
+    2023-10-13 00:49:13.553 
 
  ricc2 ended normally

@@ -24,7 +24,8 @@
 
 #include "exceptions.hpp"   // for InputFileException, customException
 
-#include <fstream>   // for ifstream, ofstream, std
+#include <filesystem>   // for create_directory
+#include <fstream>      // for ifstream, ofstream, std
 
 #ifdef WITH_MPI
 #include <mpi.h>
