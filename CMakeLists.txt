@@ -61,7 +61,11 @@ include(benchmarking)
 
 add_subdirectory(src)
 add_subdirectory(apps)
-add_subdirectory(tools)
-add_subdirectory(docs)
+
+if(${CMAKE_BUILD_TOOLS})
+    add_subdirectory(tools)
+endif()
+
+add_subdirectory(docs EXCLUDE_FROM_ALL)
 
 include(iwyu)
