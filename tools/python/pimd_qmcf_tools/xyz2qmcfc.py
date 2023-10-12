@@ -1,8 +1,13 @@
 import numpy as np
 import sys
 
+from .common import print_header
+
 
 def print_help():
+
+    print_header()
+
     print("Usage: python xyz2qmcfc.py [options] file1 file2 ...")
     print("Options with arbitrary position:")
     print("  -h, --help    Show this help message")
