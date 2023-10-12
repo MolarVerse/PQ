@@ -8,7 +8,6 @@ build*
 _build*
 .build*
 
-bin/
 install/
 
 examples/**/testset*
