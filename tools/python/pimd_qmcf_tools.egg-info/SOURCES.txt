@@ -1,4 +1,6 @@
 setup.py
+bin/traj2box
+bin/traj2qmcfc
 pimd_qmcf_tools/__init__.py
 pimd_qmcf_tools/common.py
 pimd_qmcf_tools/traj2box.py
