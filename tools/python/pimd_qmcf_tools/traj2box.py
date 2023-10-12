@@ -2,6 +2,7 @@ import math
 import sys
 import numpy as np
 import re
+from math import pi
 
 from .common import print_header
 
@@ -16,7 +17,7 @@ def print_help():
     print("  --vmd         Output in VMD format")
 
 
-def main():
+def combine_input_files():
     combined_files = ""
     vmd_flag = False
 
@@ -38,6 +39,52 @@ def main():
     combined_files = "\n".join(
         filter(lambda x: re.match("^[0-9]", x), combined_files.split("\n")))
 
+    return combined_files, vmd_flag
+
+
+def setup_box_matrix(x, y, z, alpha, beta, gamma):
+
+    matrix = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+
+    matrix[0][0] = x
+    matrix[0][1] = y * math.cos(gamma * pi / 180)
+    matrix[0][2] = z * math.cos(beta * pi / 180)
+    matrix[1][1] = y * math.sin(gamma * pi / 180)
+    matrix[1][2] = z * (math.cos(alpha * pi / 180) - math.cos(beta * pi / 180)
+                        * math.cos(gamma * pi / 180)) / math.sin(gamma * pi / 180)
+    matrix[2][2] = z * math.sqrt(1 - math.cos(beta * pi / 180)**2 - (math.cos(alpha * pi / 180) - math.cos(
+        beta * pi / 180) * math.cos(gamma * pi / 180))**2 / math.sin(gamma * pi / 180)**2)
+
+    return matrix
+
+
+def print_vmd_box(line_number, x, y, z, alpha, beta, gamma):
+    print("8")
+    print(f"Box {line_number} {x} {y} {z}")
+
+    matrix = setup_box_matrix(x, y, z, alpha, beta, gamma)
+
+    vec = matrix @ np.array([0.5, 0.5, 0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([0.5, 0.5, -0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([0.5, -0.5, 0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([0.5, -0.5, -0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([-0.5, 0.5, 0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([-0.5, 0.5, -0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([-0.5, -0.5, 0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+    vec = matrix @ np.array([-0.5, -0.5, -0.5])
+    print(f"X {vec[0]} {vec[1]} {vec[2]}")
+
+
+def main():
+    combined_files, vmd_flag = combine_input_files()
+
     line_number = 1
     pi = math.pi
 
@@ -46,27 +93,6 @@ def main():
         if not vmd_flag:
             print(line_number, x, y, z)
         else:
-            print("8")
-            print(f"Box {line_number} {x} {y} {z}")
-
-            matrix = np.array([[x, y * math.cos(gamma * pi / 180), z*math.cos(beta * pi / 180)], [0, y * math.sin(gamma * pi / 180), z * (math.cos(alpha * pi / 180) - math.cos(beta * pi / 180) * math.cos(gamma * pi / 180)) /
-                                                                                                  math.sin(gamma * pi / 180)], [0, 0, z * math.sqrt(1 - math.cos(beta * pi / 180)**2 - (math.cos(alpha * pi / 180) - math.cos(beta * pi / 180) * math.cos(gamma * pi / 180))**2 / math.sin(gamma * pi / 180)**2)]])
-
-            vec = matrix @ np.array([0.5, 0.5, 0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([0.5, 0.5, -0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([0.5, -0.5, 0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([0.5, -0.5, -0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([-0.5, 0.5, 0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([-0.5, 0.5, -0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([-0.5, -0.5, 0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
-            vec = matrix @ np.array([-0.5, -0.5, -0.5])
-            print(f"X {vec[0]} {vec[1]} {vec[2]}")
+            print_vmd_box(line_number, x, y, z, alpha, beta, gamma)
 
         line_number += 1
