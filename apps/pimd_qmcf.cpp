@@ -23,6 +23,7 @@
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine
 #include "inputFileReader.hpp"   // for readJobType
+#include "mpi.hpp"               // for MPI
 #include "setup.hpp"             // for setupSimulation
 
 #include <cstdlib>      // for EXIT_SUCCESS
@@ -34,7 +35,7 @@
 #include <vector>       // for vector
 
 #ifdef WITH_MPI
-#include <mpi.h>
+    #include <mpi.h>
 #endif
 
 static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
@@ -64,10 +65,9 @@ static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
 int main(int argc, char *argv[])
 {
 #ifdef WITH_MPI
-    MPI_Init(&argc, &argv);
-    int size;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    mpi::MPI::init(&argc, &argv);
 #endif
+
     try
     {
         auto arguments = std::vector<std::string>(argv, argv + argc);
@@ -76,18 +76,14 @@ int main(int argc, char *argv[])
     catch (const std::exception &e)
     {
         std::cout << "Exception: " << e.what() << '\n' << std::flush;
+
 #ifdef WITH_MPI
-        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+        ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
 
 #ifdef WITH_MPI
-    for (int i = 1; i < size; i++)
-    {
-        auto path = "procId_pimd-qmcf_" + std::to_string(i);
-        std::filesystem::remove_all(path);
-    }
-    MPI_Finalize();
+    mpi::MPI::finalize();
 #endif
 
     return EXIT_SUCCESS;

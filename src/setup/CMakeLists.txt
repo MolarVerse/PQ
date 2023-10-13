@@ -22,7 +22,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-    input
+    pimd_qmcf_input
     topologyFileReader
     restartFileReader
     parameterFileReader

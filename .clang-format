@@ -26,6 +26,7 @@ BreakBeforeBraces: Allman
 BreakBeforeConceptDeclarations: Always
 AlwaysBreakTemplateDeclarations: Yes  
 IndentRequiresClause: false
+IndentPPDirectives: BeforeHash
 
 BinPackArguments: false
 BinPackParameters: false
