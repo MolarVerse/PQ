@@ -36,6 +36,7 @@ target_link_libraries(setup
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
+    pimd_qmcf_mpi
 )
 
 install(TARGETS setup

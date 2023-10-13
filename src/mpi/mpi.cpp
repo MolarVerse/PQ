@@ -19,16 +19,16 @@ void MPI::init(int *argc, char ***argv)
     ::MPI_Init(argc, argv);
     ::MPI_Comm_rank(MPI_COMM_WORLD, &_rank);
     ::MPI_Comm_size(MPI_COMM_WORLD, &_processId);
+
+    redirectOutput();
 }
 
 void MPI::redirectOutput()
 {
     if (_rank != 0)
     {
-        const std::ofstream sink("/dev/null");
-
-        std::cout.rdbuf(sink.rdbuf());
-        std::cerr.rdbuf(sink.rdbuf());
+        std::cout.rdbuf(nullptr);
+        std::cerr.rdbuf(nullptr);
     }
 }
 

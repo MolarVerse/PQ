@@ -109,6 +109,12 @@ namespace simulationBox
 
         void initPositions(const double displacement);
 
+#ifdef WITH_MPI
+        std::vector<double> flattenVelocities();
+
+        void deFlattenVelocities(const std::vector<double> &velocities);
+#endif
+
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] double               calculateTotalForce();
         [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();

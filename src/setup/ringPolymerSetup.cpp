@@ -25,6 +25,7 @@
 #include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
+#include "mpi.hpp"                            // for MPI
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
 #include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
@@ -34,6 +35,7 @@
 #include <cstddef>       // for size_t
 #include <functional>    // for identity
 #include <iostream>      // for operator<<, endl, basic_ostream, cout
+#include <mpi.h>         // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 #include <string_view>   // for string_view
 
 using setup::RingPolymerSetup;
@@ -101,19 +103,36 @@ void RingPolymerSetup::setupSimulationBox()
  */
 void RingPolymerSetup::initializeBeads()
 {
+#ifdef WITH_MPI
+    auto initVelocities = [](auto &bead)
+    {
+        if (mpi::MPI::getRank() == 0)
+        {
+            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+            maxwellBoltzmann.initializeVelocities(bead);
+        }
+
+        auto velocities = bead.flattenVelocities();
+
+        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+        bead.deFlattenVelocities(velocities);
+
+        mpi::MPI::print(bead.getAtom(0).getVelocity());
+    };
+#else
+    auto initVelocities = [](auto &bead)
+    {
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann.initializeVelocities(bead);
+    };
+#endif
+
     if (settings::FileSettings::isRingPolymerStartFileNameSet())
     {
         std::cout << "read ring polymer restart file" << std::endl;
         input::ringPolymer::readRingPolymerRestartFile(_engine);
     }
     else
-    {
-        auto initVelocities = [](auto &bead)
-        {
-            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-            maxwellBoltzmann.initializeVelocities(bead);
-        };
-
         std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
-    }
 }
