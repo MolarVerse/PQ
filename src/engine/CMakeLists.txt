@@ -20,6 +20,7 @@ if(BUILD_WITH_MPI)
     target_link_libraries(engine
         PRIVATE
         MPI::MPI_C
+        pimd_qmcf_mpi
     )
 endif()
 
@@ -41,7 +42,6 @@ target_link_libraries(engine
     intraNonBonded
     QM
     references
-    pimd_qmcf_mpi
 )
 
 install(TARGETS engine

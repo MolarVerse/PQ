@@ -1,3 +1,5 @@
+#ifdef WITH_MPI
+
 #ifndef _PIMD_QMCF_MPI_HPP_
 
 #define _PIMD_QMCF_MPI_HPP_
@@ -61,3 +63,5 @@ namespace mpi
 }   // namespace mpi
 
 #endif   // _PIMD_QMCF_MPI_HPP_
+
+#endif   // WITH_MPI

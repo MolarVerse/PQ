@@ -1,3 +1,5 @@
+#ifdef WITH_MPI
+
 #include "simulationBox.hpp"
 
 #include <algorithm>   // for for_each
@@ -95,3 +97,5 @@ void SimulationBox::deFlattenForces(const std::vector<double> &forces)
 
     std::ranges::for_each(_atoms, setForces);
 }
+
+#endif   // WITH_MPI

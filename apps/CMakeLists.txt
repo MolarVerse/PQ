@@ -11,13 +11,13 @@ target_link_libraries(pimd_qmcf
   pimd_qmcf_input
   setup
   engine
-  pimd_qmcf_mpi
 )
 
 if(BUILD_WITH_MPI)
   target_link_libraries(pimd_qmcf
     PRIVATE
     MPI::MPI_C
+    pimd_qmcf_mpi
   )
 endif()
 

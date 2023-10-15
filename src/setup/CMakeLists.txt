@@ -36,8 +36,15 @@ target_link_libraries(setup
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
-    pimd_qmcf_mpi
 )
+
+if(BUILD_WITH_MPI)
+    target_link_libraries(setup
+        PRIVATE
+        MPI::MPI_C
+        pimd_qmcf_mpi
+    )
+endif()
 
 install(TARGETS setup
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/

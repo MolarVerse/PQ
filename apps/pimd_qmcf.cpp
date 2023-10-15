@@ -23,7 +23,6 @@
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine
 #include "inputFileReader.hpp"   // for readJobType
-#include "mpi.hpp"               // for MPI
 #include "setup.hpp"             // for setupSimulation
 
 #include <cstdlib>      // for EXIT_SUCCESS
@@ -35,7 +34,9 @@
 #include <vector>       // for vector
 
 #ifdef WITH_MPI
-    #include <mpi.h>
+#include "mpi.hpp"   // for MPI
+
+#include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
 #endif
 
 static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
