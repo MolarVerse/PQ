@@ -25,7 +25,6 @@
 #include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
-#include "mpi.hpp"                            // for MPI
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
 #include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
@@ -35,8 +34,13 @@
 #include <cstddef>       // for size_t
 #include <functional>    // for identity
 #include <iostream>      // for operator<<, endl, basic_ostream, cout
-#include <mpi.h>         // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 #include <string_view>   // for string_view
+
+#ifdef WITH_MPI
+#include "mpi.hpp"   // for MPI
+
+#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#endif
 
 using setup::RingPolymerSetup;
 
@@ -103,10 +107,21 @@ void RingPolymerSetup::setupSimulationBox()
  */
 void RingPolymerSetup::initializeBeads()
 {
+    if (settings::FileSettings::isRingPolymerStartFileNameSet())
+    {
+        std::cout << "read ring polymer restart file" << std::endl;
+        input::ringPolymer::readRingPolymerRestartFile(_engine);
+    }
+    else
+        initializeVelocitiesOfBeads();
+}
+
 #ifdef WITH_MPI
+void RingPolymerSetup::initializeVelocitiesOfBeads()
+{
     auto initVelocities = [](auto &bead)
     {
-        if (mpi::MPI::getRank() == 0)
+        if (mpi::MPI::isRoot())
         {
             maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
             maxwellBoltzmann.initializeVelocities(bead);
@@ -117,22 +132,19 @@ void RingPolymerSetup::initializeBeads()
         ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         bead.deFlattenVelocities(velocities);
-
-        mpi::MPI::print(bead.getAtom(0).getVelocity());
     };
+
+    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
+}
 #else
+void RingPolymerSetup::initializeVelocitiesOfBeads()
+{
     auto initVelocities = [](auto &bead)
     {
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(bead);
     };
-#endif
 
-    if (settings::FileSettings::isRingPolymerStartFileNameSet())
-    {
-        std::cout << "read ring polymer restart file" << std::endl;
-        input::ringPolymer::readRingPolymerRestartFile(_engine);
-    }
-    else
-        std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
+    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
 }
+#endif

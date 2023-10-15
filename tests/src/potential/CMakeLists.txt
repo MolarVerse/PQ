@@ -11,7 +11,7 @@ foreach(source_file ${source_files})
     )
     target_link_libraries(${test_name}
         PRIVATE
-        input
+        pimd_qmcf_input
         potential
         gtest
         gtest_main

@@ -1,6 +1,6 @@
-#ifndef _PIIMD_QMCF_MPI_HPP_
+#ifndef _PIMD_QMCF_MPI_HPP_
 
-#define _PIIMD_QMCF_MPI_HPP_
+#define _PIMD_QMCF_MPI_HPP_
 
 #include <cstddef>    // for size_t
 #include <fstream>    // for ofstream
@@ -18,8 +18,9 @@ namespace mpi
     {
       private:
         static inline int _rank = 0;
-        static inline int _processId;
+        static inline int _size;
 
+        static void setupMPIDirectories();
         static void redirectOutput();
 
       public:
@@ -30,17 +31,16 @@ namespace mpi
          * template methods *
          ********************/
 
+        /**
+         * @brief prints to stderr for all ranks
+         *
+         * @tparam T
+         * @param t
+         */
         template <typename T>
         static void print(T t)
         {
-            if (_rank != 0)
-            {
-                std::cout << t << std::endl;
-            }
-            else
-            {
-                std::cout << "RANK: " << _rank << "   " << t << std::endl;
-            }
+            std::cerr << "RANK: " << _rank << "   " << t << std::endl;
         }
 
         /***************************
@@ -48,15 +48,16 @@ namespace mpi
          ***************************/
 
         static void setRank(const int &rank) { MPI::_rank = rank; }
-        static void setProcessId(const int &processId) { MPI::_processId = processId; }
+        static void setSize(const int &size) { MPI::_size = size; }
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static int getRank() { return _rank; }
-        [[nodiscard]] static int getProcessId() { return _processId; }
+        [[nodiscard]] static bool isRoot() { return _rank == 0; }
+        [[nodiscard]] static int  getRank() { return _rank; }
+        [[nodiscard]] static int  getSize() { return _size; }
     };
 }   // namespace mpi
 
-#endif   // _PIIMD_QMCF_MPI_HPP_
+#endif   // _PIMD_QMCF_MPI_HPP_

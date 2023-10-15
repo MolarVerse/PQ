@@ -51,6 +51,7 @@ namespace setup
         void setupPhysicalData();
         void setupSimulationBox();
         void initializeBeads();
+        void initializeVelocitiesOfBeads();
     };
 
 }   // namespace setup

@@ -111,8 +111,10 @@ namespace simulationBox
 
 #ifdef WITH_MPI
         std::vector<double> flattenVelocities();
+        std::vector<double> flattenForces();
 
         void deFlattenVelocities(const std::vector<double> &velocities);
+        void deFlattenForces(const std::vector<double> &forces);
 #endif
 
         [[nodiscard]] double               calculateTemperature();

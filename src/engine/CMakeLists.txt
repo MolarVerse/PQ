@@ -16,6 +16,13 @@ target_include_directories(engine
     ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )
 
+if(BUILD_WITH_MPI)
+    target_link_libraries(engine
+        PRIVATE
+        MPI::MPI_C
+    )
+endif()
+
 target_link_libraries(engine
     PUBLIC
     constraints
@@ -34,6 +41,7 @@ target_link_libraries(engine
     intraNonBonded
     QM
     references
+    pimd_qmcf_mpi
 )
 
 install(TARGETS engine
