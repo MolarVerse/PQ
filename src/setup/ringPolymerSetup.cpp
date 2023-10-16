@@ -36,6 +36,12 @@
 #include <iostream>      // for operator<<, endl, basic_ostream, cout
 #include <string_view>   // for string_view
 
+#ifdef WITH_MPI
+#include "mpi.hpp"   // for MPI
+
+#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#endif
+
 using setup::RingPolymerSetup;
 
 /**
@@ -107,13 +113,38 @@ void RingPolymerSetup::initializeBeads()
         input::ringPolymer::readRingPolymerRestartFile(_engine);
     }
     else
+        initializeVelocitiesOfBeads();
+}
+
+#ifdef WITH_MPI
+void RingPolymerSetup::initializeVelocitiesOfBeads()
+{
+    auto initVelocities = [](auto &bead)
     {
-        auto initVelocities = [](auto &bead)
+        if (mpi::MPI::isRoot())
         {
             maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
             maxwellBoltzmann.initializeVelocities(bead);
-        };
+        }
 
-        std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
-    }
+        auto velocities = bead.flattenVelocities();
+
+        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+        bead.deFlattenVelocities(velocities);
+    };
+
+    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
 }
+#else
+void RingPolymerSetup::initializeVelocitiesOfBeads()
+{
+    auto initVelocities = [](auto &bead)
+    {
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann.initializeVelocities(bead);
+    };
+
+    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
+}
+#endif

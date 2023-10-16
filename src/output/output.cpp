@@ -24,11 +24,8 @@
 
 #include "exceptions.hpp"   // for InputFileException, customException
 
-#include <fstream>   // for ifstream, ofstream, std
-
-#ifdef WITH_MPI
-#include <mpi.h>
-#endif
+#include <filesystem>   // for create_directory
+#include <fstream>      // for ifstream, ofstream, std
 
 using namespace std;
 using namespace customException;
@@ -44,26 +41,7 @@ using namespace output;
  */
 void Output::setFilename(const string_view &filename)
 {
-#ifdef WITH_MPI
-    int rank;
-    int procId;
-    MPI_Comm_rank(MPI_COMM_WORLD, &procId);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank == 0)
-    {
-        _fileName = filename;
-    }
-    else
-    {
-        const auto baseFilename = "procId_pimd-qmcf_";
-        filesystem::create_directory(baseFilename + to_string(procId));
-        _fileName = filename;
-        _fileName = baseFilename + to_string(procId) + "/" + _fileName;
-    }
-#else
-
     _fileName = filename;
-#endif
 
     if (_fileName.empty())
         throw InputFileException("Filename cannot be empty");

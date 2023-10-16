@@ -33,6 +33,12 @@
 #include <functional>   // for identity
 #include <memory>       // for unique_ptr
 
+#ifdef WITH_MPI
+#include "mpi.hpp"   // for MPI
+
+#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#endif
+
 using engine::RingPolymerQMMDEngine;
 
 /**
@@ -53,16 +59,16 @@ using engine::RingPolymerQMMDEngine;
  */
 void RingPolymerQMMDEngine::takeStep()
 {
-    auto beforeRingPolymerCoupling = [this](auto &bead)
+    auto beforeQMCalculation = [this](auto &bead)
     {
         _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
         _integrator->firstStep(bead);
-
-        _qmRunner->run(bead, _physicalData);
     };
 
-    std::ranges::for_each(_ringPolymerBeads, beforeRingPolymerCoupling);
+    std::ranges::for_each(_ringPolymerBeads, beforeQMCalculation);
+
+    qmCalculation();
 
     coupleRingPolymerBeads();
 
@@ -85,3 +91,30 @@ void RingPolymerQMMDEngine::takeStep()
 
     combineBeads();
 }
+
+#ifdef WITH_MPI
+void RingPolymerQMMDEngine::qmCalculation()
+{
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
+            _qmRunner->run(_ringPolymerBeads[size_t(i)], _physicalData);
+    }
+
+    ::MPI_Barrier(MPI_COMM_WORLD);
+
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        auto forces = _ringPolymerBeads[size_t(i)].flattenForces();
+
+        ::MPI_Bcast(forces.data(), forces.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+
+        _ringPolymerBeads[size_t(i)].deFlattenForces(forces);
+    }
+}
+#else
+void RingPolymerQMMDEngine::qmCalculation()
+{
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _qmRunner->run(bead, _physicalData); });
+}
+#endif

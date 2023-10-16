@@ -18,7 +18,7 @@
 
          Testing:     Josef M. Gallmetzer
 
-         Compile date:Oct 10 2023 00:26:38
+         Compile date:Oct 13 2023 10:19:20
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -67,4 +67,4 @@ INFO:    Setup of ring polymer MD (RPMD)
 ************************ STARTING SIMULATION ****************************
 
 
-INFO:    Initial momentum = 5.97860e-17 Å*amu/fs
+INFO:    Initial momentum = 1.20399e-16 Å*amu/fs

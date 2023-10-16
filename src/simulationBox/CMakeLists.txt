@@ -1,5 +1,7 @@
 add_library(simulationBox
     simulationBox.cpp
+    simulationBox_MPI.cpp
+
     molecule.cpp
     moleculeType.cpp
     celllist.cpp

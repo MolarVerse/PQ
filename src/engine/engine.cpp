@@ -46,7 +46,7 @@ void Engine::run()
     _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
-    progressbar bar(static_cast<int>(numberOfSteps));
+    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
 
     for (; _step <= numberOfSteps; ++_step)
     {

@@ -59,6 +59,7 @@ $denconv     0.10000000E-06
 $freeze
  implicit core=    5 virt=    0
 $cbas    file=auxbasis
+$pop
 $ricc2
   mp2
   geoopt model=mp2       state=(x)
@@ -66,13 +67,13 @@ $rundimensions
    natoms=9
    nbf(CAO)=95
    nbf(AO)=90
-$actual step      ricc2
-$last SCF energy change = 0.18771734E-02
+$last step     ricc2
+$last SCF energy change = -.85891100E-03
 $charge from dscf
          -0.000 (not to be modified here)
-$dipole from dscf
-  x    -0.28088935743148    y     1.72724751787143    z     0.10666983289131    a.u.
-   | dipole | =    4.4561880937  debye
-$last MP2 energy change= -.38183840E-03
-$orbital_max_rnorm 0.91980439524306E-06
+$dipole from ricc2
+  x    -0.31342333139935    y     1.15006854453091    z     0.23725673385098    a.u.
+   | dipole | =    3.0892467823  debye
+$last MP2 energy change= -.70065223E-04
+$orbital_max_rnorm 0.17866746787212E-05
 $end
