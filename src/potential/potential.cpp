@@ -56,7 +56,7 @@ std::pair<double, double> Potential::calculateSingleInteraction(const simulation
 
     auto dxyz = xyz_i - xyz_j;
 
-    const auto txyz = box.calculateShiftVector(dxyz);
+    const auto txyz = -box.calculateShiftVector(dxyz);
 
     dxyz += txyz;
 
