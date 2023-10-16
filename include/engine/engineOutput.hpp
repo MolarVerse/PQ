@@ -28,6 +28,7 @@
 #include "infoOutput.hpp"                     // for InfoOutput
 #include "logOutput.hpp"                      // for LogOutput
 #include "momentumOutput.hpp"                 // for MomentumOutput
+#include "ringPolymerEnergyOutput.hpp"        // for RingPolymerEnergyOutput
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
 #include "rstFileOutput.hpp"                  // for RstFileOutput
@@ -80,6 +81,8 @@ namespace engine
             std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.force");
         std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerChargeOutput =
             std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.chg");
+        std::unique_ptr<output::RingPolymerEnergyOutput> _ringPolymerEnergyOutput =
+            std::make_unique<output::RingPolymerEnergyOutput>("default.rpmd.en");
 
       public:
         void writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
@@ -96,6 +99,7 @@ namespace engine
         void writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &);
+        void writeRingPolymerEnergyFile(const size_t, const physicalData::PhysicalData &);
 
         output::EnergyOutput                 &getEnergyOutput() { return *_energyOutput; }
         output::MomentumOutput               &getMomentumOutput() { return *_momentumOutput; }
@@ -112,6 +116,7 @@ namespace engine
         output::RingPolymerTrajectoryOutput  &getRingPolymerVelOutput() { return *_ringPolymerVelOutput; }
         output::RingPolymerTrajectoryOutput  &getRingPolymerForceOutput() { return *_ringPolymerForceOutput; }
         output::RingPolymerTrajectoryOutput  &getRingPolymerChargeOutput() { return *_ringPolymerChargeOutput; }
+        output::RingPolymerEnergyOutput      &getRingPolymerEnergyOutput() { return *_ringPolymerEnergyOutput; }
     };
 
 }   // namespace engine

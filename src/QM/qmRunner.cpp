@@ -40,13 +40,14 @@ using QM::QMRunner;
 /**
  * @brief run the qm engine
  *
- * @param box
+ * @param simBox
  */
-void QMRunner::run(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
-    writeCoordsFile(box);
+    writeCoordsFile(simBox);
     execute();
-    readForceFile(box, physicalData);
+    readForceFile(simBox, physicalData);
+    readStressTensor(simBox.getBox(), physicalData);
 }
 
 /**
@@ -57,7 +58,7 @@ void QMRunner::run(simulationBox::SimulationBox &box, physicalData::PhysicalData
  */
 void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
-    const auto forceFileName = "qm_forces";
+    const std::string forceFileName = "qm_forces";
 
     std::ifstream forceFile(forceFileName);
 

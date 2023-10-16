@@ -155,3 +155,14 @@ void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::Simulat
 {
     _ringPolymerChargeOutput->writeCharges(beads);
 }
+
+/**
+ * @brief wrapper for ring polymer energy file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeRingPolymerEnergyFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _ringPolymerEnergyOutput->write(step, physicalData);
+}

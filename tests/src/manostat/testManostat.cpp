@@ -28,6 +28,7 @@
 #include "exceptions.hpp"                            // for ManostatException
 #include "mathUtilities.hpp"                         // for compare
 #include "molecule.hpp"                              // for Molecule
+#include "potentialSettings.hpp"                     // for PotentialSettings
 #include "throwWithMessage.hpp"                      // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for Vector3D, Vec3D
@@ -67,7 +68,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
-    _box->setCoulombRadiusCutOff(0.99);
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.99);
     _box->setBoxDimensions({2.0, 2.0, 2.0});
     const auto boxOld = _box->getBoxDimensions();
 
@@ -103,7 +104,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBoxDimension)
 {
-    _box->setCoulombRadiusCutOff(10.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
     _box->setBoxDimensions({2.0, 2.0, 2.0});
 
     settings::TimingsSettings::setTimeStep(0.5);

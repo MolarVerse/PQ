@@ -29,7 +29,9 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+    class Box;             // forward declaration
+
+}   // namespace simulationBox
 
 namespace QM
 {
@@ -47,6 +49,7 @@ namespace QM
       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
+        void readStressTensor(simulationBox::Box &box, physicalData::PhysicalData &data) override;
     };
 }   // namespace QM
 

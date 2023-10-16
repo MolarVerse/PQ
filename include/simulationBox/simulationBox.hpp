@@ -78,10 +78,9 @@ namespace simulationBox
 
         size_t _degreesOfFreedom = 0;
 
-        double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
-        double _totalMass           = 0.0;
-        double _totalCharge         = 0.0;
-        double _density             = 0.0;
+        double _totalMass   = 0.0;
+        double _totalCharge = 0.0;
+        double _density     = 0.0;
 
         linearAlgebra::Vec3D _centerOfMass = {0.0, 0.0, 0.0};
         std::shared_ptr<Box> _box          = std::make_shared<OrthorhombicBox>();
@@ -104,8 +103,19 @@ namespace simulationBox
         void calculateTotalMass();
         void calculateCenterOfMass();
         void calculateCenterOfMassMolecules();
+        void calculateDensity();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
+
+        void initPositions(const double displacement);
+
+#ifdef WITH_MPI
+        std::vector<double> flattenVelocities();
+        std::vector<double> flattenForces();
+
+        void deFlattenVelocities(const std::vector<double> &velocities);
+        void deFlattenForces(const std::vector<double> &forces);
+#endif
 
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] double               calculateTotalForce();
@@ -145,7 +155,6 @@ namespace simulationBox
         [[nodiscard]] size_t                getNumberOfQMAtoms() const { return _qmAtoms.size(); }
         [[nodiscard]] double                getTotalMass() const { return _totalMass; }
         [[nodiscard]] double                getTotalCharge() const { return _totalCharge; }
-        [[nodiscard]] double                getCoulombRadiusCutOff() const { return _coulombRadiusCutOff; }
         [[nodiscard]] double                getDensity() const { return _density; }
         [[nodiscard]] linearAlgebra::Vec3D &getCenterOfMass() { return _centerOfMass; }
 
@@ -176,7 +185,6 @@ namespace simulationBox
         void setTotalMass(const double totalMass) { _totalMass = totalMass; }
         void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
         void setDensity(const double density) { _density = density; }
-        void setCoulombRadiusCutOff(const double rcCutOff) { _coulombRadiusCutOff = rcCutOff; }
 
         template <typename T>
         void setBox(const T &box)
@@ -189,7 +197,11 @@ namespace simulationBox
          **********************************************/
 
         void applyPBC(linearAlgebra::Vec3D &position) const { _box->applyPBC(position); }
-        void scaleBox(const linearAlgebra::Vec3D &scaleFactors) const { _box->scaleBox(scaleFactors); }
+        void scaleBox(const linearAlgebra::Vec3D &scaleFactors)
+        {
+            _box->scaleBox(scaleFactors);
+            calculateDensity();
+        }
 
         [[nodiscard]] double calculateVolume() const { return _box->calculateVolume(); }
         [[nodiscard]] double getMinimalBoxDimension() const { return _box->getMinimalBoxDimension(); }

@@ -92,7 +92,7 @@ void ThermostatSetup::setup()
     else
     {
         _engine.makeThermostat(thermostat::Thermostat());
-        _engine.getLogOutput().writeSetupInfo("No thermostat.");
+        _engine.getLogOutput().writeSetupInfo("No thermostat selected");
     }
 
     _engine.getLogOutput().writeEmptyLine();

@@ -62,7 +62,7 @@ namespace settings
         static inline std::string    _coulombLongRangeType = defaults::_COULOMB_LONG_RANGE_TYPE_DEFAULT_;   // shifted potential
         static inline NonCoulombType _nonCoulombType       = NonCoulombType::GUFF;                          // LJ
 
-        static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;   // default is 12.5
+        static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;   // default is 12.5 Angstrom
 
         static inline double _scale14Coulomb     = defaults::_SCALE_14_COULOMB_DEFAULT_;         // default is 1.0
         static inline double _scale14VanDerWaals = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;   // default is 1.0

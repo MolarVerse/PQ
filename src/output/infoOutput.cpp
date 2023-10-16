@@ -60,7 +60,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
 
     writeHeader();
 
-    writeLeft(simulationTime, "SIMULATION TIME", "ps");
+    writeLeft(simulationTime, "SIMULATION-TIME", "ps");
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
@@ -69,7 +69,7 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     if (settings::Settings::isQMActivated())
     {
         writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
-        writeRight(0, "N(QM ATOMS)", " ");   // TODO: implement
+        writeRight(data.getNumberOfQMAtoms(), "N(QM ATOMS)", " ");
     }
 
     if (settings::Settings::isRingPolymerMDActivated())

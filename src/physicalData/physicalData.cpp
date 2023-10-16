@@ -41,32 +41,33 @@ using namespace physicalData;
 void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox)
 {
     _momentum                     = linearAlgebra::Vec3D();
-    _kineticEnergyAtomicVector    = linearAlgebra::Vec3D();
-    _kineticEnergyMolecularVector = linearAlgebra::Vec3D();
+    _kineticEnergyAtomicTensor    = linearAlgebra::tensor3D();
+    _kineticEnergyMolecularTensor = linearAlgebra::tensor3D();
 
     auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
     {
-        auto momentumSquared = linearAlgebra::Vec3D();
+        const auto numberOfAtoms   = molecule.getNumberOfAtoms();
+        auto       momentumSquared = linearAlgebra::tensor3D();
 
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0; i < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
 
             const auto momentum = velocities * molecule.getAtomMass(i);
 
             _momentum                  += momentum;
-            _kineticEnergyAtomicVector += momentum * velocities;
-            momentumSquared            += momentum * momentum;
+            _kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
+            momentumSquared            += tensorProduct(momentum, momentum);
         }
 
-        _kineticEnergyMolecularVector += momentumSquared / molecule.getMolMass();
+        _kineticEnergyMolecularTensor += momentumSquared / molecule.getMolMass();
     };
 
     std::ranges::for_each(simulationBox.getMolecules(), kineticEnergyAndMomentumOfMolecule);
 
-    _kineticEnergyAtomicVector    *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergyMolecularVector *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergy                 = sum(_kineticEnergyAtomicVector);
+    _kineticEnergyAtomicTensor    *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergyMolecularTensor *= constants::_KINETIC_ENERGY_FACTOR_;
+    _kineticEnergy                 = trace(_kineticEnergyAtomicTensor);
 
     _angularMomentum = simulationBox.calculateAngularMomentum(_momentum) *= constants::_FS_TO_S_;
 
@@ -80,6 +81,8 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
  */
 void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
+    _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
+
     _coulombEnergy         += physicalData.getCoulombEnergy();
     _nonCoulombEnergy      += physicalData.getNonCoulombEnergy();
     _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
@@ -105,14 +108,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
 
-    if (_ringPolymerEnergy.size() != physicalData.getRingPolymerEnergy().size())
-    {
-        _ringPolymerEnergy.clear();
-        _ringPolymerEnergy.resize(physicalData.getRingPolymerEnergy().size(), 0.0);
-    }
-
     for (size_t i = 0; i < physicalData.getRingPolymerEnergy().size(); ++i)
-        _ringPolymerEnergy[i] += physicalData.getRingPolymerEnergy()[i];
+        _ringPolymerEnergy.at(i) += physicalData.getRingPolymerEnergy()[i];
 }
 
 /**
@@ -122,6 +119,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
  */
 void PhysicalData::makeAverages(const double outputFrequency)
 {
+    _numberOfQMAtoms /= outputFrequency;
+
     _kineticEnergy         /= outputFrequency;
     _coulombEnergy         /= outputFrequency;
     _nonCoulombEnergy      /= outputFrequency;
@@ -156,6 +155,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
  */
 void PhysicalData::reset()
 {
+    _numberOfQMAtoms = 0.0;
+
     _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;
     _nonCoulombEnergy      = 0.0;
@@ -171,7 +172,7 @@ void PhysicalData::reset()
     _volume      = 0.0;
     _density     = 0.0;
     _pressure    = 0.0;
-    _virial      = {0.0, 0.0, 0.0};
+    _virial      = {0.0};
 
     _qmEnergy = 0.0;
 

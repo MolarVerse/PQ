@@ -52,7 +52,7 @@ TEST_F(TestMolecule, scaleAtoms)
     const auto                 centerOfMassBeforeScaling = _molecule->getCenterOfMass();
     const linearAlgebra::Vec3D shift                     = centerOfMassBeforeScaling * (scale - 1.0);
 
-    _molecule->scale(scale);
+    _molecule->scale(scale, box);
 
     EXPECT_EQ(_molecule->getAtomPosition(0), atomPosition1 + shift);
     EXPECT_EQ(_molecule->getAtomPosition(1), atomPosition2 + shift);

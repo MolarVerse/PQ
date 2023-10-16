@@ -43,6 +43,9 @@ namespace settings
       private:
         static inline size_t _outputFrequency = 1;
 
+        static inline bool        _filePrefixSet = false;
+        static inline std::string _filePrefix;
+
         static inline std::string _restartFileName    = defaults::_RESTART_FILENAME_DEFAULT_;
         static inline std::string _energyFileName     = defaults::_ENERGY_FILENAME_DEFAULT_;
         static inline std::string _momentumFileName   = defaults::_MOMENTUM_FILENAME_DEFAULT_;
@@ -58,12 +61,17 @@ namespace settings
         static inline std::string _ringPolymerVelocityFileName   = defaults::_RING_POLYMER_VELOCITY_FILENAME_DEFAULT_;
         static inline std::string _ringPolymerForceFileName      = defaults::_RING_POLYMER_FORCE_FILENAME_DEFAULT_;
         static inline std::string _ringPolymerChargeFileName     = defaults::_RING_POLYMER_CHARGE_FILENAME_DEFAULT_;
+        static inline std::string _ringPolymerEnergyFileName     = defaults::_RING_POLYMER_ENERGY_FILENAME_DEFAULT_;
 
       public:
         OutputFileSettings()  = default;
         ~OutputFileSettings() = default;
 
         static void setOutputFrequency(const size_t outputFreq);
+        static void setFilePrefix(const std::string_view prefix);
+        static void replaceDefaultValues(const std::string &prefix);
+
+        [[nodiscard]] static std::string determineMostCommonPrefix();
 
         [[nodiscard]] static std::string getReferenceFileName();
 
@@ -71,67 +79,48 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setRestartFileName(const std::string_view name) { OutputFileSettings::_restartFileName = name; }
-        static void setEnergyFileName(const std::string_view name) { OutputFileSettings::_energyFileName = name; }
-        static void setMomentumFileName(const std::string_view name) { OutputFileSettings::_momentumFileName = name; }
-        static void setTrajectoryFileName(const std::string_view name) { OutputFileSettings::_trajectoryFileName = name; }
-        static void setVelocityFileName(const std::string_view name) { OutputFileSettings::_velocityFileName = name; }
-        static void setForceFileName(const std::string_view name) { OutputFileSettings::_forceFileName = name; }
-        static void setChargeFileName(const std::string_view name) { OutputFileSettings::_chargeFileName = name; }
-        static void setLogFileName(const std::string_view name) { OutputFileSettings::_logFileName = name; }
-        static void setInfoFileName(const std::string_view name) { OutputFileSettings::_infoFileName = name; }
+        static void setRestartFileName(const std::string_view name) { _restartFileName = name; }
+        static void setEnergyFileName(const std::string_view name) { _energyFileName = name; }
+        static void setMomentumFileName(const std::string_view name) { _momentumFileName = name; }
+        static void setTrajectoryFileName(const std::string_view name) { _trajectoryFileName = name; }
+        static void setVelocityFileName(const std::string_view name) { _velocityFileName = name; }
+        static void setForceFileName(const std::string_view name) { _forceFileName = name; }
+        static void setChargeFileName(const std::string_view name) { _chargeFileName = name; }
+        static void setLogFileName(const std::string_view name) { _logFileName = name; }
+        static void setInfoFileName(const std::string_view name) { _infoFileName = name; }
 
-        static void setRingPolymerRestartFileName(const std::string_view name)
-        {
-            OutputFileSettings::_ringPolymerRestartFileName = name;
-        }
-        static void setRingPolymerTrajectoryFileName(const std::string_view name)
-        {
-            OutputFileSettings::_ringPolymerTrajectoryFileName = name;
-        }
-        static void setRingPolymerVelocityFileName(const std::string_view name)
-        {
-            OutputFileSettings::_ringPolymerVelocityFileName = name;
-        }
-        static void setRingPolymerForceFileName(const std::string_view name)
-        {
-            OutputFileSettings::_ringPolymerForceFileName = name;
-        }
-        static void setRingPolymerChargeFileName(const std::string_view name)
-        {
-            OutputFileSettings::_ringPolymerChargeFileName = name;
-        }
+        static void setRingPolymerRestartFileName(const std::string_view name) { _ringPolymerRestartFileName = name; }
+        static void setRingPolymerTrajectoryFileName(const std::string_view name) { _ringPolymerTrajectoryFileName = name; }
+        static void setRingPolymerVelocityFileName(const std::string_view name) { _ringPolymerVelocityFileName = name; }
+        static void setRingPolymerForceFileName(const std::string_view name) { _ringPolymerForceFileName = name; }
+        static void setRingPolymerChargeFileName(const std::string_view name) { _ringPolymerChargeFileName = name; }
+        static void setRingPolymerEnergyFileName(const std::string_view name) { _ringPolymerEnergyFileName = name; }
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static size_t getOutputFrequency() { return OutputFileSettings::_outputFrequency; }
+        [[nodiscard]] static size_t getOutputFrequency() { return _outputFrequency; }
 
-        [[nodiscard]] static std::string getRestartFileName() { return OutputFileSettings::_restartFileName; }
-        [[nodiscard]] static std::string getEnergyFileName() { return OutputFileSettings::_energyFileName; }
-        [[nodiscard]] static std::string getMomentumFileName() { return OutputFileSettings::_momentumFileName; }
-        [[nodiscard]] static std::string getTrajectoryFileName() { return OutputFileSettings::_trajectoryFileName; }
-        [[nodiscard]] static std::string getVelocityFileName() { return OutputFileSettings::_velocityFileName; }
-        [[nodiscard]] static std::string getForceFileName() { return OutputFileSettings::_forceFileName; }
-        [[nodiscard]] static std::string getChargeFileName() { return OutputFileSettings::_chargeFileName; }
-        [[nodiscard]] static std::string getLogFileName() { return OutputFileSettings::_logFileName; }
-        [[nodiscard]] static std::string getInfoFileName() { return OutputFileSettings::_infoFileName; }
+        [[nodiscard]] static bool        isFilePrefixSet() { return _filePrefixSet; }
+        [[nodiscard]] static std::string getFilePrefix() { return _filePrefix; }
 
-        [[nodiscard]] static std::string getRingPolymerRestartFileName()
-        {
-            return OutputFileSettings::_ringPolymerRestartFileName;
-        }
-        [[nodiscard]] static std::string getRingPolymerTrajectoryFileName()
-        {
-            return OutputFileSettings::_ringPolymerTrajectoryFileName;
-        }
-        [[nodiscard]] static std::string getRingPolymerVelocityFileName()
-        {
-            return OutputFileSettings::_ringPolymerVelocityFileName;
-        }
-        [[nodiscard]] static std::string getRingPolymerForceFileName() { return OutputFileSettings::_ringPolymerForceFileName; }
-        [[nodiscard]] static std::string getRingPolymerChargeFileName() { return OutputFileSettings::_ringPolymerChargeFileName; }
+        [[nodiscard]] static std::string getRestartFileName() { return _restartFileName; }
+        [[nodiscard]] static std::string getEnergyFileName() { return _energyFileName; }
+        [[nodiscard]] static std::string getMomentumFileName() { return _momentumFileName; }
+        [[nodiscard]] static std::string getTrajectoryFileName() { return _trajectoryFileName; }
+        [[nodiscard]] static std::string getVelocityFileName() { return _velocityFileName; }
+        [[nodiscard]] static std::string getForceFileName() { return _forceFileName; }
+        [[nodiscard]] static std::string getChargeFileName() { return _chargeFileName; }
+        [[nodiscard]] static std::string getLogFileName() { return _logFileName; }
+        [[nodiscard]] static std::string getInfoFileName() { return _infoFileName; }
+
+        [[nodiscard]] static std::string getRingPolymerRestartFileName() { return _ringPolymerRestartFileName; }
+        [[nodiscard]] static std::string getRingPolymerTrajectoryFileName() { return _ringPolymerTrajectoryFileName; }
+        [[nodiscard]] static std::string getRingPolymerVelocityFileName() { return _ringPolymerVelocityFileName; }
+        [[nodiscard]] static std::string getRingPolymerForceFileName() { return _ringPolymerForceFileName; }
+        [[nodiscard]] static std::string getRingPolymerChargeFileName() { return _ringPolymerChargeFileName; }
+        [[nodiscard]] static std::string getRingPolymerEnergyFileName() { return _ringPolymerEnergyFileName; }
     };
 
 }   // namespace settings

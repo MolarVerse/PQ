@@ -72,7 +72,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu(simBox.getVolume()));
+    const auto mu = calculateMu(simBox.getVolume());
 
     simBox.scaleBox(mu);
 
@@ -81,8 +81,8 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scalePositions  = [&mu](auto &molecule) { molecule.scale(mu); };
-    auto scaleVelocities = [&mu](auto &atom) { atom->scaleVelocity(1.0 / mu); };
+    auto scalePositions  = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &atom) { atom->scaleVelocityOrthogonalSpace(1 / mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
@@ -122,8 +122,11 @@ linearAlgebra::Vec3D SemiIsotropicStochasticRescalingManostat::calculateMu(const
     const auto stochasticFactor_z =
         ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
 
-    const auto p_xy = (_pressureVector[_2DIsotropicAxes[0]] + _pressureVector[_2DIsotropicAxes[1]]) / 2.0;
-    const auto p_z  = _pressureVector[_2DAnisotropicAxis];
+    const auto p_xyz = diagonal(_pressureTensor);
+    const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
+    const auto p_y   = p_xyz[_2DIsotropicAxes[1]];
+    const auto p_xy  = (p_x + p_y) / 2.0;
+    const auto p_z   = p_xyz[_2DAnisotropicAxis];
 
     const auto mu_xy = ::exp(-compressibilityFactor * (_targetPressure - p_xy) / 3.0 + stochasticFactor_xy / 2.0);
     const auto mu_z  = ::exp(-compressibilityFactor * (_targetPressure - p_z) / 3.0 + stochasticFactor_z);
@@ -152,5 +155,5 @@ linearAlgebra::Vec3D AnisotropicStochasticRescalingManostat::calculateMu(const d
     const auto stochasticFactor =
         ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
 
-    return exp(-compressibilityFactor * (_targetPressure - _pressureVector) / 3.0 + stochasticFactor);
+    return exp(-compressibilityFactor * (_targetPressure - diagonal(_pressureTensor)) / 3.0 + stochasticFactor);
 }

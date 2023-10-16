@@ -70,4 +70,6 @@ void QMMDEngine::takeStep()
     _manostat->applyManostat(_simulationBox, _physicalData);
 
     _resetKinetics.reset(_step, _physicalData, _simulationBox);
+
+    _physicalData.setNumberOfQMAtoms(_simulationBox.getNumberOfQMAtoms());
 }

@@ -65,7 +65,6 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
     InputFileParserSimulationBox   parser(*_engine);
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parser.parseCoulombRadius(lineElements, 0);
-    EXPECT_EQ(_engine->getSimulationBox().getCoulombRadiusCutOff(), 1.0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};

@@ -66,7 +66,15 @@ namespace simulationBox
         {
             return position;
         }
+        [[nodiscard]] virtual linearAlgebra::tensor3D transformIntoOrthogonalSpace(const linearAlgebra::tensor3D &position) const
+        {
+            return position;
+        }
         [[nodiscard]] virtual linearAlgebra::Vec3D transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const
+        {
+            return position;
+        }
+        [[nodiscard]] virtual linearAlgebra::tensor3D transformIntoSimulationSpace(const linearAlgebra::tensor3D &position) const
         {
             return position;
         }

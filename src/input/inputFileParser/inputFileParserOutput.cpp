@@ -49,6 +49,8 @@ using namespace input;
 InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(std::string("output_freq"), bind_front(&InputFileParserOutput::parseOutputFreq, this), false);
+    addKeyword(std::string("file_prefix"), bind_front(&InputFileParserOutput::parseFilePrefix, this), false);
+
     addKeyword(std::string("output_file"), bind_front(&InputFileParserOutput::parseLogFilename, this), false);
     addKeyword(std::string("info_file"), bind_front(&InputFileParserOutput::parseInfoFilename, this), false);
     addKeyword(std::string("energy_file"), bind_front(&InputFileParserOutput::parseEnergyFilename, this), false);
@@ -57,11 +59,13 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
     addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
     addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+
     addKeyword(std::string("rpmd_restart_file"), bind_front(&InputFileParserOutput::parseRPMDRestartFilename, this), false);
     addKeyword(std::string("rpmd_traj_file"), bind_front(&InputFileParserOutput::parseRPMDTrajectoryFilename, this), false);
     addKeyword(std::string("rpmd_vel_file"), bind_front(&InputFileParserOutput::parseRPMDVelocityFilename, this), false);
     addKeyword(std::string("rpmd_force_file"), bind_front(&InputFileParserOutput::parseRPMDForceFilename, this), false);
     addKeyword(std::string("rpmd_charge_file"), bind_front(&InputFileParserOutput::parseRPMDChargeFilename, this), false);
+    addKeyword(std::string("rpmd_energy_file"), bind_front(&InputFileParserOutput::parseRPMDEnergyFilename, this), false);
 }
 
 /**
@@ -83,6 +87,19 @@ void InputFileParserOutput::parseOutputFreq(const std::vector<std::string> &line
             format("Output frequency cannot be negative - \"{}\" at line {} in input file", lineElements[2], lineNumber));
 
     settings::OutputFileSettings::setOutputFrequency(size_t(outputFrequency));
+}
+
+/**
+ * @brief parse file prefix of simulation and set it in output statically
+ *
+ * @details default value is default
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseFilePrefix(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setFilePrefix(lineElements[2]);
 }
 
 /**
@@ -252,4 +269,17 @@ void InputFileParserOutput::parseRPMDChargeFilename(const std::vector<std::strin
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setRingPolymerChargeFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse RPMD energy filename of simulation and add it to output
+ *
+ * @details default value is default.rpmd.en
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseRPMDEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setRingPolymerEnergyFileName(lineElements[2]);
 }

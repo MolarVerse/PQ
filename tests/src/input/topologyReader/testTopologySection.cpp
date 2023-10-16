@@ -89,7 +89,7 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
     std::ofstream outputStream(_topologyFileName.c_str());
 
     outputStream << "shake\n";
-    outputStream << "1 2 1.0\n";
+    outputStream << "1 2\n";
     outputStream << "end" << '\n' << std::flush;
 
     outputStream.close();

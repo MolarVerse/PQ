@@ -159,8 +159,10 @@ void InputFileReader::read()
             continue;
         }
 
-        auto processInputCommand = [this](const auto &command)
+        auto processInputCommand = [this](auto &command)
         {
+            processEqualSign(command, _lineNumber);
+
             const auto lineElements = utilities::splitString(command);
             if (!lineElements.empty())
                 process(lineElements);
@@ -201,8 +203,10 @@ void input::readJobType(const std::string &fileName, std::unique_ptr<engine::Eng
             continue;
         }
 
-        auto processInputCommand = [lineNumber, &jobtypeFound, &engine](const auto &command)
+        auto processInputCommand = [lineNumber, &jobtypeFound, &engine](auto &command)
         {
+            processEqualSign(command, lineNumber);
+
             const auto lineElements = utilities::splitString(command);
             if (!lineElements.empty() && "jobtype" == lineElements[0])
             {
@@ -257,4 +261,25 @@ void InputFileReader::postProcess()
     };
 
     std::ranges::for_each(_keywordCountMap, checkKeyWordCount);
+}
+
+/**
+ * @brief process equal sign
+ *
+ * @details replaces equal sign with " = " to make sure that the equal sign is always surrounded by spaces
+ *
+ * @param command
+ * @param lineNumber
+ *
+ * @throw InputFileException if equal sign is missing
+ */
+void input::processEqualSign(std::string &command, const size_t lineNumber)
+{
+    const auto equalSignPos = command.find('=');
+    if (equalSignPos != std::string::npos)
+        command.replace(equalSignPos, 1, " = ");
+
+    else
+        throw customException::InputFileException(
+            std::format("Missing equal sign in command \"{}\" in line {}", command, lineNumber));
 }

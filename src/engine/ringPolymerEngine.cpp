@@ -30,6 +30,7 @@
 #include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
 #include "timings.hpp"                               // for Timings
+#include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for Vector3D, normSquared
 
 #include <algorithm>    // for __for_each_fn
@@ -45,17 +46,40 @@ using engine::RingPolymerEngine;
  */
 void RingPolymerEngine::writeOutput()
 {
-    Engine::writeOutput();
+    _averagePhysicalData.updateAverages(_physicalData);
+    _physicalData.reset();
 
-    if (0 == _step % settings::OutputFileSettings::getOutputFrequency())
+    const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
+
+    if (0 == _step % outputFrequency)
     {
-        const auto step0 = _timings.getStepCount();
+        _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
+
+        const auto dt             = settings::TimingsSettings::getTimeStep();
+        const auto step0          = _timings.getStepCount();
+        const auto effectiveStep  = _step + step0;
+        const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
+        const auto loopTime       = _timings.calculateLoopTime(_step);
+
+        _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
+        _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
+        _engineOutput.writeXyzFile(_simulationBox);
+        _engineOutput.writeVelFile(_simulationBox);
+        _engineOutput.writeForceFile(_simulationBox);
+        _engineOutput.writeChargeFile(_simulationBox);
+        _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
         _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, step0 + _step);
         _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
         _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads);
         _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads);
         _engineOutput.writeRingPolymerChargeFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerEnergyFile(step0 + _step, _averagePhysicalData);
+
+        _averagePhysicalData = physicalData::PhysicalData();
+
+        _averagePhysicalData.resizeRingPolymerEnergy(settings::RingPolymerSettings::getNumberOfBeads());
     }
 }
 

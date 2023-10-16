@@ -59,7 +59,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 {
     calculatePressure(simBox, physicalData);
 
-    const auto mu = simBox.getBox().transformIntoSimulationSpace(calculateMu());
+    const auto mu = calculateMu();
 
     simBox.scaleBox(mu);
 
@@ -68,7 +68,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
-    auto scaleMolecule = [&mu](auto &molecule) { molecule.scale(mu); };
+    auto scaleMolecule = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
 }
@@ -80,7 +80,7 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
  */
 linearAlgebra::Vec3D BerendsenManostat::calculateMu() const
 {
-    return linearAlgebra::Vec3D(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - mean(_pressureVector))));
+    return linearAlgebra::Vec3D(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - trace(_pressureTensor) / 3.0)));
 }
 
 /**
@@ -93,11 +93,14 @@ linearAlgebra::Vec3D BerendsenManostat::calculateMu() const
  */
 linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
 {
-    const auto p_xy = (_pressureVector[_2DIsotropicAxes[0]] + _pressureVector[_2DIsotropicAxes[1]]) / 2.0;
-    const auto p_z  = _pressureVector[_2DAnisotropicAxis];
+    const auto p_xyz = diagonal(_pressureTensor);
+    const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
+    const auto p_y   = p_xyz[_2DIsotropicAxes[1]];
+    const auto p_xy  = (p_x + p_y) / 2.0;
+    const auto p_z   = p_xyz[_2DAnisotropicAxis];
 
-    const auto mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
-    const auto mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
+    const double mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
+    const double mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
 
     linearAlgebra::Vec3D mu;
 
@@ -115,5 +118,5 @@ linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
  */
 linearAlgebra::Vec3D AnisotropicBerendsenManostat::calculateMu() const
 {
-    return linearAlgebra::Vec3D(1.0 - _compressibility * _dt / _tau * (_targetPressure - _pressureVector));
+    return linearAlgebra::Vec3D(1.0 - _compressibility * _dt / _tau * (_targetPressure - diagonal(_pressureTensor)));
 }

@@ -52,15 +52,20 @@ set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 include(mpi)
-include(doxygen)
+
+# include(doxygen)
 include(testing)
 
 add_subdirectory(tests)
 include(benchmarking)
 
-# add_subdirectory(benchmarks)
 add_subdirectory(src)
 add_subdirectory(apps)
-add_subdirectory(tools)
+
+if(${CMAKE_BUILD_TOOLS})
+    add_subdirectory(tools)
+endif()
+
+add_subdirectory(docs EXCLUDE_FROM_ALL)
 
 include(iwyu)

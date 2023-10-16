@@ -25,6 +25,7 @@
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
+#include "settings.hpp"                // for Settings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "vector3d.hpp"                // for Vec3D
@@ -60,7 +61,7 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
 
     const auto boxDimensions = linearAlgebra::Vec3D{stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])};
 
-    if (std::ranges::any_of(boxDimensions, [](double dimension) { return dimension < 0.0; }))
+    if (std::ranges::any_of(boxDimensions, [](const double dimension) { return dimension < 0.0; }))
         throw customException::RstFileException("All box dimensions must be positive");
 
     auto boxAngles = linearAlgebra::Vec3D{90.0, 90.0, 90.0};
@@ -69,8 +70,8 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
     {
         boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
 
-        if (std::ranges::any_of(boxAngles, [](double angle) { return angle < 0.0 || angle > 90.0; }))
-            throw customException::RstFileException("Box angles must be positive and smaller than 90°");
+        if (std::ranges::any_of(boxAngles, [](const double angle) { return angle < 0.0 || angle > 180.0; }))
+            throw customException::RstFileException("Box angles must be positive and smaller than 180°");
     }
 
     if (!utilities::compare(boxAngles, linearAlgebra::Vec3D{90.0, 90.0, 90.0}, 1e-5))
@@ -79,6 +80,12 @@ void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine 
         box.setBoxAngles(boxAngles);
         box.setBoxDimensions(boxDimensions);
         engine.getSimulationBox().setBox(box);
+
+        const auto jobType = settings::Settings::getJobtype();
+
+        // TODO: implement triclinic box for MM-MD
+        if (jobType != settings::JobType::QM_MD && jobType != settings::JobType::RING_POLYMER_QM_MD)
+            throw customException::InputFileException("Triclinic box is only supported for QM-MD and RP-QM-MD");
     }
     else
     {

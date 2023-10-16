@@ -24,8 +24,9 @@
 
 #define _TEST_CELL_LIST_HPP_
 
-#include "celllist.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
+#include "celllist.hpp"            // for CellList
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"       // for SimulationBox
 
 #include <gtest/gtest.h>
 
@@ -41,7 +42,7 @@ class TestCellList : public ::testing::Test
 
         _simulationBox = new simulationBox::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox->setCoulombRadiusCutOff(1.5);
+        settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 
     virtual void TearDown()

@@ -46,3 +46,16 @@ void Settings::setJobtype(const std::string_view jobtype)
     else
         _jobtype = settings::JobType::NONE;
 }
+
+/**
+ * @brief Returns true if the jobtype does no use any MM type simulations
+ */
+bool Settings::isQMOnly()
+{
+    if (_jobtype == settings::JobType::QM_MD)
+        return true;
+    else if (_jobtype == settings::JobType::RING_POLYMER_QM_MD)
+        return true;
+    else
+        return false;
+}

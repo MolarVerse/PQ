@@ -24,20 +24,16 @@
 
 #include "exceptions.hpp"   // for InputFil...
 
-#include <algorithm>                                          // for __for_each_fn
-#include <boost/algorithm/string/classification.hpp>          // for is_any_of
-#include <boost/algorithm/string/detail/classification.hpp>   // for is_any_ofF
-#include <boost/algorithm/string/split.hpp>                   // for split
-#include <boost/iterator/iterator_facade.hpp>                 // for operator!=
-#include <boost/type_index/type_index_facade.hpp>             // for operator==
-#include <cctype>                                             // for isspace
-#include <format>                                             // for format
-#include <fstream>                                            // IWYU pragma: keep for basic_istream, ifstream
-#include <functional>                                         // for identity
-#include <ranges>                                             // for begin, end, operator|, views::split, views::transform
-#include <sstream>                                            // IWYU pragma: keep for basic_stringstream
-#include <string>                                             // for string
-#include <vector>                                             // for vector
+#include <algorithm>     // for __for_each_fn
+#include <cctype>        // for isspace
+#include <format>        // for format
+#include <fstream>       // IWYU pragma: keep for basic_istream, ifstream
+#include <functional>    // for identity
+#include <ranges>        // for begin, end, operator|, views::split, views::transform
+#include <sstream>       // IWYU pragma: keep for basic_stringstream
+#include <string>        // for string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
 /**
  * @brief Removes comments from a line
@@ -76,8 +72,14 @@ std::vector<std::string> utilities::getLineCommands(const std::string &line, con
             throw customException::InputFileException(std::format("Missing semicolon in input file at line {}", lineNumber));
     }
 
+    using std::operator""sv;
+    constexpr auto delim{";"sv};
+    auto           splitView = line | std::views::split(delim) |
+                     std::views::transform([](auto &&view) { return std::string(view.begin(), view.end()); });
+
     std::vector<std::string> lineCommands;
-    boost::split(lineCommands, line, boost::is_any_of(";"));
+    for (auto it : splitView)
+        lineCommands.emplace_back(it);
 
     return std::vector<std::string>(lineCommands.begin(), lineCommands.end() - 1);
 }

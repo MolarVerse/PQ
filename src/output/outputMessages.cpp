@@ -56,7 +56,12 @@ std::string output::header()
     header_title << '\n';
     header_title << _OUTPUT_ << "Author:      " << sysinfo::_AUTHOR_ << '\n';
     header_title << _OUTPUT_ << "Email:       " << sysinfo::_EMAIL_ << '\n';
-    header_title << _OUTPUT_ << "Compiled on: " << sysinfo::_COMPILE_DATE_ << '\n';
+
+    header_title << '\n';
+    header_title << _OUTPUT_ << "Testing:     " << sysinfo::_JOSEF_ << '\n';
+
+    header_title << '\n';
+    header_title << _OUTPUT_ << "Compile date:" << sysinfo::_COMPILE_DATE_ << '\n';
 
     return header_title.str();
 }

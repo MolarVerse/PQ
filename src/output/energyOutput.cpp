@@ -60,7 +60,7 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
     if (settings::Settings::isQMActivated())
     {
         _fp << std::format("{:20.12f}\t", data.getQMEnergy());
-        _fp << std::format("{:20.12f}\t", 0.0);   // TODO: implement
+        _fp << std::format("{:20.12f}\t", data.getNumberOfQMAtoms());
     }
 
     if (settings::Settings::isRingPolymerMDActivated())
@@ -100,4 +100,6 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
 
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));
     _fp << std::format("{:12.5f}\n", loopTime);
+
+    _fp << std::flush;
 }

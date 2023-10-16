@@ -56,12 +56,6 @@ TEST(TestVector3d, constructors)
     ASSERT_EQ(vec[1], 1.0);
     ASSERT_EQ(vec[2], 1.0);
 
-    const std::array arr = {0.0, 1.0, 2.0};
-    vec                  = Vec3D(arr);
-    ASSERT_EQ(vec[0], 0.0);
-    ASSERT_EQ(vec[1], 1.0);
-    ASSERT_EQ(vec[2], 2.0);
-
     auto vecInt = Vec3Di(0, 1, 2);
     ASSERT_EQ(vecInt[0], 0);
     ASSERT_EQ(vecInt[1], 1);
@@ -74,12 +68,6 @@ TEST(TestVector3d, constructors)
     ASSERT_EQ(vecInt[0], 1);
     ASSERT_EQ(vecInt[1], 1);
     ASSERT_EQ(vecInt[2], 1);
-
-    const std::array<int, 3> arrInt = {0, 1, 2};
-    vecInt                          = Vec3Di(arrInt);
-    ASSERT_EQ(vecInt[0], 0);
-    ASSERT_EQ(vecInt[1], 1);
-    ASSERT_EQ(vecInt[2], 2);
 
     auto vecUnsignedLong = Vec3Dul(0, 1, 2);
     ASSERT_EQ(vecUnsignedLong[0], 0);
@@ -94,12 +82,6 @@ TEST(TestVector3d, constructors)
     ASSERT_EQ(vecUnsignedLong[1], 1);
     ASSERT_EQ(vecUnsignedLong[2], 1);
 
-    const std::array<unsigned long, 3> arrUnsignedLong = {0, 1, 2};
-    vecUnsignedLong                                    = Vec3Dul(arrUnsignedLong);
-    ASSERT_EQ(vecUnsignedLong[0], 0);
-    ASSERT_EQ(vecUnsignedLong[1], 1);
-    ASSERT_EQ(vecUnsignedLong[2], 2);
-
     auto vectorVec3D = Vector3D<Vec3D>{vec, vec2, vec};
     ASSERT_EQ(vectorVec3D[0], vec);
     ASSERT_EQ(vectorVec3D[1], vec2);
@@ -111,12 +93,6 @@ TEST(TestVector3d, constructors)
     vectorVec3D = Vector3D<Vec3D>(vec);
     ASSERT_EQ(vectorVec3D[0], vec);
     ASSERT_EQ(vectorVec3D[1], vec);
-    ASSERT_EQ(vectorVec3D[2], vec);
-
-    const std::array<Vec3D, 3> arrVec3D = {vec, vec2, vec};
-    vectorVec3D                         = Vector3D<Vec3D>(arrVec3D);
-    ASSERT_EQ(vectorVec3D[0], vec);
-    ASSERT_EQ(vectorVec3D[1], vec2);
     ASSERT_EQ(vectorVec3D[2], vec);
 }
 

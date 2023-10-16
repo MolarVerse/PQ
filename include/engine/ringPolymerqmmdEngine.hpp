@@ -39,6 +39,8 @@ namespace engine
     {
       public:
         void takeStep() override;
+
+        void qmCalculation();
     };
 }   // namespace engine
 

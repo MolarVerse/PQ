@@ -47,6 +47,7 @@ namespace input
 {
     void readInputFile(const std::string_view &fileName, engine::Engine &);
     void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
+    void processEqualSign(std::string &command, const size_t lineNumber);
 
     using ParseFunc = std::function<void(const std::vector<std::string> &lineElements, const size_t lineNumber)>;
 

@@ -35,6 +35,8 @@
 #include "molecule.hpp"                      // for Molecule
 #include "outputMessages.hpp"                // for _ANGSTROM_
 #include "physicalData.hpp"                  // for PhysicalData
+#include "potentialSettings.hpp"             // for PotentialSettings
+#include "settings.hpp"                      // for Settings
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
 #include "stdoutOutput.hpp"                  // for StdoutOutput
@@ -100,7 +102,7 @@ void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
     engine.getLogOutput().writeEmptyLine();
 
     engine.getLogOutput().writeSetupInfo(
-        std::format("coulomb cutoff:  {:14.5f} {}", engine.getSimulationBox().getCoulombRadiusCutOff(), output::_ANGSTROM_));
+        std::format("coulomb cutoff:  {:14.5f} {}", settings::PotentialSettings::getCoulombRadiusCutOff(), output::_ANGSTROM_));
     engine.getLogOutput().writeEmptyLine();
 
     if (settings::SimulationBoxSettings::getInitializeVelocities())
@@ -142,6 +144,7 @@ void SimulationBoxSetup::setup()
     _engine.getSimulationBox().calculateTotalMass();
 
     checkBoxSettings();
+
     checkRcCutoff();
 
     _engine.getSimulationBox().calculateDegreesOfFreedom();
@@ -161,8 +164,10 @@ void SimulationBoxSetup::setAtomNames()
         if (molecule.getMoltype() == 0)
             return;
 
-        auto moleculeType = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        const auto moleculeType  = _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
             molecule.getAtom(i).setName(moleculeType.getAtomName(i));
     };
 
@@ -364,7 +369,7 @@ void SimulationBoxSetup::checkBoxSettings()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    if (_engine.getSimulationBox().getCoulombRadiusCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
+    if (settings::PotentialSettings::getCoulombRadiusCutOff() > _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
         throw customException::InputFileException(
             std::format("Rc cutoff is larger than half of the minimal box dimension of {} Angstrom.",
                         _engine.getSimulationBox().getMinimalBoxDimension()));

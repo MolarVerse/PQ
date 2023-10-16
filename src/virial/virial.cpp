@@ -42,7 +42,7 @@ using namespace virial;
  */
 void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
 {
-    _virial = {0.0, 0.0, 0.0};
+    _virial = {0.0};
 
     for (auto &molecule : simulationBox.getMolecules())
     {
@@ -54,7 +54,8 @@ void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physic
             const auto shiftForcexyz = molecule.getAtomShiftForce(i);
             const auto xyz           = molecule.getAtomPosition(i);
 
-            _virial += forcexyz * xyz + shiftForcexyz;
+            // TODO: check if correct with shiftForcexyz
+            _virial += tensorProduct(xyz, forcexyz) + diagonalMatrix(shiftForcexyz);
 
             molecule.setAtomShiftForce(i, {0.0, 0.0, 0.0});
         }
@@ -90,7 +91,7 @@ void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBo
 void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBox &simulationBox,
                                                      physicalData::PhysicalData   &physicalData)
 {
-    _virial = {0.0, 0.0, 0.0};
+    _virial = {0.0};
 
     for (const auto &molecule : simulationBox.getMolecules())
     {
@@ -106,7 +107,7 @@ void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBo
 
             simulationBox.applyPBC(dxyz);
 
-            _virial -= forcexyz * dxyz;
+            _virial -= tensorProduct(dxyz, forcexyz);
         }
     }
 

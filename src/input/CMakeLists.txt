@@ -1,5 +1,5 @@
 
-add_library(input
+add_library(pimd_qmcf_input
     guffDatReader.cpp
     inputFileReader.cpp
     intraNonBondedReader.cpp
@@ -7,18 +7,18 @@ add_library(input
     commandLineArgs.cpp
 )
 
-target_include_directories(input
+target_include_directories(pimd_qmcf_input
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/input
 )
 
-target_link_libraries(input
+target_link_libraries(pimd_qmcf_input
     PUBLIC
     engine
     inputFileParser
 )
 
-install(TARGETS input
+install(TARGETS pimd_qmcf_input
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
 

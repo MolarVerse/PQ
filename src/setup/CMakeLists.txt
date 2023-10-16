@@ -22,7 +22,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-    input
+    pimd_qmcf_input
     topologyFileReader
     restartFileReader
     parameterFileReader
@@ -37,6 +37,14 @@ target_link_libraries(setup
     nonCoulombPotential
     maxwellBoltzmann
 )
+
+if(BUILD_WITH_MPI)
+    target_link_libraries(setup
+        PRIVATE
+        MPI::MPI_C
+        pimd_qmcf_mpi
+    )
+endif()
 
 install(TARGETS setup
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/

@@ -153,7 +153,7 @@ TEST_F(TestGuffDatReader, parseLine)
     auto       &potential = dynamic_cast<potential::GuffNonCoulomb &>(_engine->getPotential().getNonCoulombPotential());
     const auto &pair      = dynamic_cast<potential::LennardJonesPair &>(*potential.getNonCoulombPair({1, 2, 1, 0}).get());
 
-    EXPECT_EQ(pair, potential::LennardJonesPair(_engine->getSimulationBox().getCoulombRadiusCutOff(), 2.0, 3.0));
+    EXPECT_EQ(pair, potential::LennardJonesPair(settings::PotentialSettings::getCoulombRadiusCutOff(), 2.0, 3.0));
 }
 
 TEST_F(TestGuffDatReader, addLennardJonesPair)

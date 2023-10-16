@@ -27,6 +27,7 @@
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
+#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
@@ -146,7 +147,7 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
                                   simulationBox::SimulationBox &simBox,
                                   simulationBox::Molecule      &molecule) const
 {
-    auto atom = std::make_shared<simulationBox::Atom>();
+    const auto atom = std::make_shared<simulationBox::Atom>();
 
     atom->setAtomTypeName(lineElements[0]);
 
@@ -156,6 +157,9 @@ void AtomSection::processAtomLine(std::vector<std::string>     &lineElements,
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
+
+    if (settings::Settings::isQMOnly())
+        simBox.addQMAtom(atom);
 }
 
 /**

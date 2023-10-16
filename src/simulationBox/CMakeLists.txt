@@ -1,5 +1,7 @@
 add_library(simulationBox
     simulationBox.cpp
+    simulationBox_MPI.cpp
+
     molecule.cpp
     moleculeType.cpp
     celllist.cpp
@@ -18,6 +20,7 @@ target_link_libraries(simulationBox
     linearAlgebra
     box
     exceptions
+    settings
 )
 
 install(TARGETS simulationBox

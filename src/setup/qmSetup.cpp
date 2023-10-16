@@ -22,12 +22,14 @@
 
 #include "qmSetup.hpp"
 
-#include "dftbplusRunner.hpp"    // for DFTBPlusRunner
-#include "exceptions.hpp"        // for InputFileException
-#include "pyscfRunner.hpp"       // for PySCFRunner
-#include "qmSettings.hpp"        // for QMMethod, QMSettings
-#include "qmmdEngine.hpp"        // for QMMDEngine
-#include "turbomoleRunner.hpp"   // for TurbomoleRunner
+#include "dftbplusRunner.hpp"      // for DFTBPlusRunner
+#include "exceptions.hpp"          // for InputFileException
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "pyscfRunner.hpp"         // for PySCFRunner
+#include "qmSettings.hpp"          // for QMMethod, QMSettings
+#include "qmmdEngine.hpp"          // for QMMDEngine
+#include "settings.hpp"            // for Settings
+#include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
 #include <string_view>   // for string_view
 
@@ -51,11 +53,23 @@ void setup::setupQM(engine::QMMDEngine &engine)
 }
 
 /**
- * @brief setup the "QM" of the system
+ * @brief setup QM-MD for all subtypes
  *
  */
 void QMSetup::setup()
 {
+
+    setupQMMethod();
+    setupCoulombRadiusCutOff();
+}
+
+/**
+ * @brief setup the "QM" method of the system
+ *
+ */
+void QMSetup::setupQMMethod()
+{
+
     const auto method = settings::QMSettings::getQMMethod();
 
     if (method == settings::QMMethod::DFTBPLUS)
@@ -70,4 +84,16 @@ void QMSetup::setup()
     else
         throw customException::InputFileException(
             "A qm based jobtype was requested but no external program via \"qm_prog\" provided");
+}
+
+/**
+ * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
+ *
+ */
+void QMSetup::setupCoulombRadiusCutOff() const
+{
+    const auto jobType = settings::Settings::getJobtype();
+
+    if (jobType == settings::JobType::QM_MD || jobType == settings::JobType::RING_POLYMER_QM_MD)
+        settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
 }

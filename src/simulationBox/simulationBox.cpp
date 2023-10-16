@@ -22,12 +22,14 @@
 
 #include "simulationBox.hpp"
 
-#include "constants.hpp"
-#include "exceptions.hpp"
+#include "constants.hpp"           // for _TEMPERATURE_FACTOR_
+#include "exceptions.hpp"          // for RstFileException, UserInputException
+#include "potentialSettings.hpp"   // for PotentialSettings
 
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <numeric>     // for accumulate
+#include <random>      // for random_device, mt19937
 
 using simulationBox::Molecule;
 using simulationBox::MoleculeType;
@@ -373,9 +375,9 @@ double SimulationBox::calculateTemperature()
  */
 void SimulationBox::checkCoulombRadiusCutOff(const customException::ExceptionType exceptionType) const
 {
-    if (getMinimalBoxDimension() < 2.0 * _coulombRadiusCutOff)
+    if (getMinimalBoxDimension() < 2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
     {
-        const auto *message = "Coulomb radius cut off is larger than half of the minimal box dimension";
+        const std::string message = "Coulomb radius cut off is larger than half of the minimal box dimension";
         if (exceptionType == customException::ExceptionType::MANOSTATEXCEPTION)
             throw customException::ManostatException(message);
         else
@@ -402,6 +404,15 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
 }
 
 /**
+ * @brief calculate density of simulationBox
+ *
+ */
+void SimulationBox::calculateDensity()
+{
+    _density = _totalMass / _box->calculateVolume() * constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+}
+
+/**
  * @brief calculate box dimensions from density
  *
  * @return linearAlgebra::Vec3D
@@ -420,4 +431,28 @@ linearAlgebra::Vec3D SimulationBox::calculateBoxDimensionsFromDensity() const
 linearAlgebra::Vec3D SimulationBox::calculateShiftVector(const linearAlgebra::Vec3D &position) const
 {
     return _box->calculateShiftVector(position);
+}
+
+/**
+ * @brief initialize positions of all atoms
+ *
+ */
+void SimulationBox::initPositions(const double displacement)
+{
+    std::random_device               randomDevice;
+    std::mt19937                     randomGenerator(randomDevice());
+    std::uniform_real_distribution<> uniformDistribution(-displacement, displacement);
+
+    auto displacePositions = [&uniformDistribution, &randomGenerator, this](auto &atom)
+    {
+        auto position = atom->getPosition() + linearAlgebra::Vec3D{uniformDistribution(randomGenerator),
+                                                                   uniformDistribution(randomGenerator),
+                                                                   uniformDistribution(randomGenerator)};
+
+        applyPBC(position);
+
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, displacePositions);
 }
