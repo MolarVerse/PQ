@@ -20,22 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_BOX_H_
+#ifndef _EXPECT_VECTOR_NEAR_HPP_
 
-#define _TEST_BOX_H_
+#define _EXPECT_VECTOR_NEAR_HPP_
 
-#include "orthorhombicBox.hpp"
+#define EXPECT_VECTOR_NEAR(vector1, vector2, value)                                                                              \
+    EXPECT_NEAR(vector1[0], vector2[0], value);                                                                                  \
+    EXPECT_NEAR(vector1[1], vector2[1], value);                                                                                  \
+    EXPECT_NEAR(vector1[2], vector2[2], value);
 
-#include <gtest/gtest.h>
+#define ASSERT_VECTOR_NEAR(vector1, vector2) EXPECT_VECTOR_NEAR(vector1, vector2)
 
-class TestBox : public ::testing::Test
-{
-  protected:
-    virtual void SetUp() { _box = new simulationBox::OrthorhombicBox(); }
-
-    virtual void TearDown() { delete _box; }
-
-    simulationBox::OrthorhombicBox *_box;
-};
-
-#endif   // _TEST_BOX_H_
+#endif   // _EXPECT_VECTOR_NEAR_HPP_

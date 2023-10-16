@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "testBox.hpp"
-
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
 #include "vector3d.hpp"                      // for Vec3D
@@ -31,61 +29,77 @@
 
 using namespace simulationBox;
 
-TEST_F(TestBox, setBoxDimensions)
+TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
+    auto                       box           = OrthorhombicBox();
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    _box->setBoxDimensions(boxDimensions);
-    EXPECT_EQ(_box->getBoxDimensions(), boxDimensions);
+    box.setBoxDimensions(boxDimensions);
+    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
 }
 
-TEST_F(TestBox, calculateBoxDimensionsFromDensity)
+TEST(TestOrthoRhombicBox, calculateBoxDimensionsFromDensity)
 {
+    auto                       box           = OrthorhombicBox();
     const double               density       = 1.0 / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
     const double               totalMass     = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(_box->calculateBoxDimensionsFromDensity(totalMass, density), boxDimensions);
+    EXPECT_EQ(box.calculateBoxDimensionsFromDensity(totalMass, density), boxDimensions);
 }
 
-TEST_F(TestBox, calculateVolume)
+TEST(TestOrthoRhombicBox, calculateVolume)
 {
+    auto                       box           = OrthorhombicBox();
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    _box                                     = new simulationBox::OrthorhombicBox();
-    _box->setBoxDimensions(boxDimensions);
-    EXPECT_EQ(_box->calculateVolume(), 6.0);
+    box.setBoxDimensions(boxDimensions);
+    EXPECT_EQ(box.calculateVolume(), 6.0);
 }
 
-TEST_F(TestBox, applyPeriodicBoundaryConditions)
+TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
+    auto                       box           = OrthorhombicBox();
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    _box->setBoxDimensions(boxDimensions);
+    box.setBoxDimensions(boxDimensions);
 
     linearAlgebra::Vec3D position = {0.5, 1.5, 2.5};
-    _box->applyPBC(position);
+    box.applyPBC(position);
 
     const linearAlgebra::Vec3D expectedPosition = {0.5, -0.5, -0.5};
     EXPECT_EQ(position, expectedPosition);
 }
 
-TEST_F(TestBox, scaleBox)
+TEST(TestOrthoRhombicBox, scaleBox)
 {
-    _box = new simulationBox::OrthorhombicBox();
+    auto box = OrthorhombicBox();
 
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    _box->setBoxDimensions(boxDimensions);
+    box.setBoxDimensions(boxDimensions);
 
     const linearAlgebra::Vec3D scaleFactors = {2.0, 2.0, 2.0};
-    _box->scaleBox(scaleFactors);
+    box.scaleBox(scaleFactors);
 
     const linearAlgebra::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
-    EXPECT_EQ(_box->getBoxDimensions(), expectedBoxDimensions);
+    EXPECT_EQ(box.getBoxDimensions(), expectedBoxDimensions);
 }
 
-TEST_F(TestBox, getMinimalBoxDimension)
+TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
+    auto                       box           = OrthorhombicBox();
     const linearAlgebra::Vec3D boxDimensions = {2.0, 1.0, 3.0};
-    _box->setBoxDimensions(boxDimensions);
+    box.setBoxDimensions(boxDimensions);
 
-    EXPECT_EQ(_box->getMinimalBoxDimension(), 1.0);
+    EXPECT_EQ(box.getMinimalBoxDimension(), 1.0);
+}
+
+TEST(TestOrthoRhombicBox, calculateShiftVector)
+{
+    auto box = OrthorhombicBox();
+
+    box.setBoxDimensions({1.0, 1.0, 1.0});
+    const linearAlgebra::Vec3D vector{0.2, 1.2, -0.8};
+
+    EXPECT_EQ(box.calculateShiftVector(vector)[0], 0.0);
+    EXPECT_EQ(box.calculateShiftVector(vector)[1], 1.0);
+    EXPECT_EQ(box.calculateShiftVector(vector)[2], -1.0);
 }
 
 int main(int argc, char **argv)

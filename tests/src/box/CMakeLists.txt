@@ -1,5 +1,6 @@
 set(source_files
-    testBox.cpp
+    testOrthorhombicBox.cpp
+    testTriclinicBox.cpp
 )
 
 foreach(source_file ${source_files})
