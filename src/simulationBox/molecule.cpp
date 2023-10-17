@@ -67,6 +67,8 @@ void Molecule::calculateCenterOfMass(const Box &box)
     }
 
     _centerOfMass /= getMolMass();
+
+    _centerOfMass -= box.calculateShiftVector(_centerOfMass);
 }
 
 /**
