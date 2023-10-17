@@ -51,9 +51,9 @@ jobs:
       - name: build doxygen
         run: |
           cd build
-          && make docs
-          && cd docs/html
-          && touch .nojekyll
+          make docs
+          cd docs/html
+          touch .nojekyll
 
       # Deployment job
       - name: deploy
