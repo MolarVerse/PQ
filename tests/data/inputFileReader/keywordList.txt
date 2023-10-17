@@ -21,6 +21,7 @@ guff_file               false
 topology_file           false
 parameter_file          false
 intra-nonBonded_file    false
+dim                     false
 
 integrator              false
 
