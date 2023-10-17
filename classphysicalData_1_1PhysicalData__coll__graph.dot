@@ -1,0 +1,9 @@
+digraph "physicalData::PhysicalData"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{physicalData::PhysicalData\n||+ calculateTemperature()\l+ calculateKinetics()\l+ changeKineticVirialToAtomic()\l+ updateAverages()\l+ makeAverages()\l+ reset()\l+ addIntraCoulombEnergy()\l+ addIntraNonCoulombEnergy()\l+ getTotalEnergy()\l+ resizeRingPolymerEnergy()\land 54 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="PhysicalData is a class for output data storage."];
+  Node2 -> Node1 [color="grey25",fontsize="10",style="solid",label=" +getKineticEnergyVirialVector" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node2 [label="{StaticMatrix3x3\< double \>)\>\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

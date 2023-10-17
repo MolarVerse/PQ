@@ -1,0 +1,24 @@
+digraph "simulationBox::SimulationBox::calculateAngularMomentum"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="simulationBox::Simulation\lBox::calculateAngularMomentum",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="calculate angular momentum of simulationBox"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="resetKinetics::ResetKinetics\l::resetAngularMomentum",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresetKinetics_1_1ResetKinetics.html#a561473679f9c7fe1db86706319ee0b11",tooltip="reset the angular momentum of the system"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="resetKinetics::ResetKinetics\l::reset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresetKinetics_1_1ResetKinetics.html#a8aa3edd2e77cbbf734575d486e309e80",tooltip="checks to reset angular momentum"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="engine::MMMDEngine\l::takeStep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1MMMDEngine.html#ad19f3e919c2ce95d8ee0486b0eb2805b",tooltip="Takes one step in the simulation."];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="engine::QMMDEngine\l::takeStep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1QMMDEngine.html#aa8c0e7286309e6837dcff608d222b2c6",tooltip="Takes one step in a QM MD simulation."];
+  Node3 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="engine::RingPolymerQMMDEngine\l::takeStep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1RingPolymerQMMDEngine.html#a30b52ffc97929a27201761c29616c9c0",tooltip="Takes one step in a ring polymer QM MD simulation."];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="resetKinetics::ResetKinetics\l::resetMomentum",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresetKinetics_1_1ResetKinetics.html#afca1b280ad97f2c4c44c2c601e343745",tooltip="reset the momentum of the system"];
+  Node7 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="resetKinetics::ResetKinetics\l::resetTemperature",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classresetKinetics_1_1ResetKinetics.html#a4097841c8f4b543b1309638b9a2419a5",tooltip="reset the temperature of the system - hard scaling"];
+  Node8 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

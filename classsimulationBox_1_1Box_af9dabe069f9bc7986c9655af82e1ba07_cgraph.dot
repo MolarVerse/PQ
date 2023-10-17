@@ -1,0 +1,12 @@
+digraph "simulationBox::Box::scaleBox"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="simulationBox::Box\l::scaleBox",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="scales the cell dimensions and recalculates the volume"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="simulationBox::Box\l::calculateVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1Box.html#a54d30c2640cdb24189cb3ba18024bf48",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="simulationBox::Box\l::setBoxDimensions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1Box.html#a400f949ca8509cb65a1777742174cc1b",tooltip=" "];
+}

@@ -1,0 +1,23 @@
+digraph "input::InputFileParserGeneral::parseJobTypeForEngine"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::InputFileParserGeneral\l::parseJobTypeForEngine",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="parse jobtype of simulation and set it in settings and reset engine unique_ptr"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="settings::Settings\l::activateMM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#a48c8d2d321d4ac8deb14a6e52d4e1724",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::Settings\l::activateQM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#a84ccd2771ae4666c2a710ef7ae550f05",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::Settings\l::activateRingPolymerMD",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#a7ebe38792236495622ca9159c12b7af4",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="input::checkCommand",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a81877d6bfa9b46cdca1b280c6d1b30fb",tooltip="check if command array has exactly 3 elements"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="input::checkEqualSign",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a586caa23c32d86459177222a3b5d53fe",tooltip="check if parameter is \"=\""];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="settings::Settings\l::setJobtype",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#adeb5a368025305295dc34254025acbe8",tooltip="sets the jobtype to enum in settings"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="utilities::toLowerCopy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a00b80743096ddd313ba418b9a7730698",tooltip="returns a copy of a string all lower case"];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

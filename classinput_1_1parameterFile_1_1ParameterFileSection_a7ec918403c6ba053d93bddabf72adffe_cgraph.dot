@@ -1,0 +1,25 @@
+digraph "input::parameterFile::ParameterFileSection::process"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::parameterFile\l::ParameterFileSection\l::process",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="reads a general parameter file section"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::parameterFile\l::ParameterFileSection\l::endedNormally",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a157241d3ff7191b5fd6e83af5bfae57b",tooltip="check if section ended normally"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::parameterFile\l::ParameterFileSection\l::keyword",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileSection.html#ab5a903c20182ea9b944a512791539512",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="input::parameterFile\l::ParameterFileSection\l::processHeader",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a0c2656dbced429d20f69a3dfb52a07f3",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="input::parameterFile\l::ParameterFileSection\l::processSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileSection.html#aa965ca62f3d3204f3cb52ddf2c2f8c9b",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="utilities::removeComments",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c",tooltip="Removes comments from a line."];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="utilities::splitString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#ab4b979e912d61a56489383f2757613b0",tooltip="Splits a string into a vector of strings at every whitespace."];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="settings::string",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesettings.html#a25810432631a237804b3241be4305787",tooltip="return string of manostatType"];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="utilities::toLowerCopy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a00b80743096ddd313ba418b9a7730698",tooltip="returns a copy of a string all lower case"];
+}

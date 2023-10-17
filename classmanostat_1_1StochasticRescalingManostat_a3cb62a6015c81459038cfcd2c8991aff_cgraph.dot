@@ -1,0 +1,40 @@
+digraph "manostat::StochasticRescalingManostat::applyManostat"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="manostat::StochasticRescaling\lManostat::applyManostat",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="apply Stochastic Rescaling manostat for NPT ensemble"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="manostat::StochasticRescaling\lManostat::calculateMu",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmanostat_1_1StochasticRescalingManostat.html#a764f54b73470e5a65d39a2e58420c71c",tooltip="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::ThermostatSettings\l::getTargetTemperature",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1ThermostatSettings.html#af42d97851263a47d70ccd20e62744be3",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="manostat::Manostat\l::calculatePressure",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmanostat_1_1Manostat.html#aea517bcbe17626a4d23c31d1fa66cd75",tooltip="calculate the pressure of the system"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="simulationBox::Simulation\lBox::getBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a9d5d3f5b66da816b3c0a6429dc8d7406",tooltip=" "];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="simulationBox::Simulation\lBox::getVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ad9ab2889ba5538d18afa410e56dc62d4",tooltip=" "];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="simulationBox::Box\l::transformIntoOrthogonalSpace",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1Box.html#adaa41e07c86600e55c4febef172d0f44",tooltip=" "];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="simulationBox::Simulation\lBox::checkCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a19a9ca4264cdec4c6c6a219f35db5f0a",tooltip="checks if the coulomb radius cut off is smaller than half of the minimal box dimension"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="settings::PotentialSettings\l::getCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1PotentialSettings.html#a3e94ca180413e8eff4ecfa5a2fa10774",tooltip=" "];
+  Node8 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="simulationBox::Simulation\lBox::getMinimalBoxDimension",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a6f491ceae26debeb2ddf8babde5999cb",tooltip=" "];
+  Node8 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="settings::string",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesettings.html#a25810432631a237804b3241be4305787",tooltip="return string of manostatType"];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="simulationBox::Simulation\lBox::getAtoms",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#aa80269754e2fc5761e610c7a8bf99b23",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="simulationBox::Simulation\lBox::getDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a233fe365b0a4dbbc00e776f6ccb2c825",tooltip=" "];
+  Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="simulationBox::Simulation\lBox::getMolecules",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a0b92c377f319701c1c1afa4408ac59c8",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="simulationBox::Simulation\lBox::scaleBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#aecba2b29c41248b047bdebd3f1670cf6",tooltip=" "];
+  Node15 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="simulationBox::Simulation\lBox::calculateDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#af0fc4f22d05f7dabd056b910ae46c1bc",tooltip="calculate density of simulationBox"];
+}

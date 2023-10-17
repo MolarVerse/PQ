@@ -1,0 +1,7 @@
+digraph "simulationBox::Molecule"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{simulationBox::Molecule\n||+ Molecule()\l+ Molecule()\l+ Molecule()\l+ calculateCenterOfMass()\l+ scale()\l+ getNumberOfAtomTypes()\l+ getExternalGlobalVDWTypes()\l+ getAtomMasses()\l+ getPartialCharges()\l+ setPartialCharges()\land 35 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="containing all information about a molecule"];
+}

@@ -1,0 +1,25 @@
+digraph "settings::QMSettings::getQMMethod"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::QMSettings\l::getQMMethod",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="QM::QMRunner::readForceFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classQM_1_1QMRunner.html#abe5e85a912acb28a5e411070299b0367",tooltip="reads the force file (including qm energy) and sets the forces of the atoms"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="QM::QMRunner::run",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classQM_1_1QMRunner.html#a03cec3e7150de9fcb3f603359481f95b",tooltip="run the qm engine"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="QM::DFTBPlusRunner\l::readStressTensor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classQM_1_1DFTBPlusRunner.html#ac67cb82b9f8bd9161dc1281d41d27b71",tooltip="reads the stress tensor and adds it to the physical data"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupQM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aeb7718c0af5497ac17ca90b04986fdb1",tooltip="wrapper to build QMSetup object and call setup"];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="setup::QMSetup::setupQMMethod",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#a3acfc66ca56f31c457eb299a43273940",tooltip="setup the \"QM\" method of the system"];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="setup::QMSetup::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#abb13e7a124c013ebac0d9cc8e6145c0a",tooltip="setup QM-MD for all subtypes"];
+  Node9 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

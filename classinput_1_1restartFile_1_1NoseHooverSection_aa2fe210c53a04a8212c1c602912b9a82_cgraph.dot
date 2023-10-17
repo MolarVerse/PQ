@@ -1,0 +1,12 @@
+digraph "input::restartFile::NoseHooverSection::process"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::restartFile\l::NoseHooverSection\l::process",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="checks the number of arguments in the line"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="settings::ThermostatSettings\l::addChi",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1ThermostatSettings.html#ad1656b0c392ad5dc6faaec08a37adb30",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::ThermostatSettings\l::addZeta",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1ThermostatSettings.html#a78f69b53edd5560e1af64caa9317fbb9",tooltip=" "];
+}

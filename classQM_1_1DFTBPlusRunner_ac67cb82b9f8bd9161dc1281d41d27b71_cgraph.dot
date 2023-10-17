@@ -1,0 +1,18 @@
+digraph "QM::DFTBPlusRunner::readStressTensor"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="QM::DFTBPlusRunner\l::readStressTensor",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="reads the stress tensor and adds it to the physical data"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="physicalData::PhysicalData\l::addVirial",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classphysicalData_1_1PhysicalData.html#a23dd3d178b2d7d8f3bd2d63e2e65f1c4",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::Settings\l::getJobtype",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#a674058da14cff349a943b3f424cd8c10",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::QMSettings\l::getQMMethod",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1QMSettings.html#ab6fd191d2de1d4623318437adc847d7d",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="simulationBox::Box\l::getVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1Box.html#abf8e6455a4fe08b0d71f321aa220b601",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="settings::string",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesettings.html#a25810432631a237804b3241be4305787",tooltip="return string of manostatType"];
+}

@@ -1,0 +1,18 @@
+digraph "output::TrajectoryOutput::writeCharges"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="output::TrajectoryOutput\l::writeCharges",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Write charges file."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="simulationBox::Simulation\lBox::getMolecules",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a0b92c377f319701c1c1afa4408ac59c8",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="output::TrajectoryOutput\l::writeHeader",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1TrajectoryOutput.html#a927e0f3d1a379fd8f36452e41646ea70",tooltip="Write the header of a trajectory files."];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="simulationBox::Simulation\lBox::getBoxAngles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a2e5c680e4aff88d0364f2762fefbac05",tooltip=" "];
+  Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="simulationBox::Simulation\lBox::getBoxDimensions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a54060084fb172e0111befd5c371ff896",tooltip=" "];
+  Node3 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="simulationBox::Simulation\lBox::getNumberOfAtoms",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ae74d8f122b61d9ea6f6209cd24109d3d",tooltip=" "];
+}

@@ -1,0 +1,27 @@
+digraph "output::Output"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{output::Output\n|# _fileName\l# _fp\l# _rank\l|+ Output()\l+ setFilename()\l+ close()\l+ FRIEND_TEST()\l+ getFilename()\l# openFile()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Base class for output files."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node2 [label="{output::EnergyOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1EnergyOutput.html",tooltip="Output file for energy, temperature and pressure."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node3 [label="{output::InfoOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1InfoOutput.html",tooltip="Output file for info file."];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node4 [label="{output::LogOutput\n||+ writeEmptyLine()\l+ writeHeader()\l+ writeEndedNormally()\l+ writeDensityWarning()\l+ writeInitialMomentum()\l+ writeSetup()\l+ writeSetupInfo()\l+ writeSetupCompleted()\l+ writeRead()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1LogOutput.html",tooltip="Output file for log file."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node5 [label="{output::MomentumOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1MomentumOutput.html",tooltip="Output file for momentum and angular momentum vectors."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node6 [label="{output::RingPolymerEnergy\lOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1RingPolymerEnergyOutput.html",tooltip="Output file for spring energies."];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node7 [label="{output::RingPolymerRestart\lFileOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1RingPolymerRestartFileOutput.html",tooltip="Output file for restart file."];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node8 [label="{output::RingPolymerTrajectory\lOutput\n||+ writeHeader()\l+ writeXyz()\l+ writeVelocities()\l+ writeForces()\l+ writeCharges()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1RingPolymerTrajectoryOutput.html",tooltip="Output for xyz, vel, force, charges files for all ring polymer beads."];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node9 [label="{output::RstFileOutput\n||+ write()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1RstFileOutput.html",tooltip="Output file for restart file."];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node10 [label="{output::StdoutOutput\n||+ writeHeader()\l+ writeEndedNormally()\l+ writeDensityWarning()\l+ writeSetup()\l+ writeSetupCompleted()\l+ writeRead()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1StdoutOutput.html",tooltip="Output file for stdout."];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node11 [label="{output::TrajectoryOutput\n||+ writeHeader()\l+ writeXyz()\l+ writeVelocities()\l+ writeForces()\l+ writeCharges()\l+ Output()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1TrajectoryOutput.html",tooltip="Output for xyz, vel, force, charges files."];
+}

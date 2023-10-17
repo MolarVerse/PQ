@@ -1,0 +1,31 @@
+digraph "input::parameterFile::readParameterFile"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::parameterFile\l::readParameterFile",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="constructs a ParameterFileReader and reads parameter file"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="settings::FileSettings\l::getParameterFilename",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1FileSettings.html#a64095b70b628b54462ab2d9e86ad74ef",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::parameterFile\l::isNeeded",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput_1_1parameterFile.html#a3ff23245dca7ac014a9a1074b0a28909",tooltip="checks if reading topology file is needed"];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::ForceFieldSettings\l::isActive",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1ForceFieldSettings.html#a46f47b50b6f43e332b26c4866f1896af",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="input::parameterFile\l::ParameterFileReader::read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileReader.html#aff7c54c352f5459a749531a0d3404937",tooltip="reads parameter file"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="input::parameterFile\l::ParameterFileReader\l::deleteSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileReader.html#af721a4c3e39cd7126ce9277a37bd09b5",tooltip="deletes section from _parameterFileSections"];
+  Node5 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="input::parameterFile\l::ParameterFileReader\l::determineSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1parameterFile_1_1ParameterFileReader.html#afa4031e95537e1b11fb9cbb6928883a5",tooltip="determines which section of the parameter file the header line belongs to"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="utilities::toLowerCopy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a00b80743096ddd313ba418b9a7730698",tooltip="returns a copy of a string all lower case"];
+  Node5 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="settings::FileSettings\l::isParameterFileNameSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1FileSettings.html#a4ba38bcfba3e7776c83ea7bd81b90c24",tooltip=" "];
+  Node5 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="utilities::removeComments",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c",tooltip="Removes comments from a line."];
+  Node5 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="utilities::splitString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#ab4b979e912d61a56489383f2757613b0",tooltip="Splits a string into a vector of strings at every whitespace."];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="settings::string",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesettings.html#a25810432631a237804b3241be4305787",tooltip="return string of manostatType"];
+  Node5 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

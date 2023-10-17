@@ -1,0 +1,7 @@
+digraph "input::guffdat::GuffDatReader"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{input::guffdat::GuffDatReader\n||+ GuffDatReader()\l+ setupGuffMaps()\l+ parseLine()\l+ read()\l+ postProcessSetup()\l+ calculatePartialCharges()\l+ checkPartialCharges()\l+ checkNecessaryGuffPairs()\l+ addNonCoulombPair()\l+ addLennardJonesPair()\land 8 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="reads the guff.dat file"];
+}

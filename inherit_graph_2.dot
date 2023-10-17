@@ -1,0 +1,22 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="connectivity::Connectivity\lElement",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1ConnectivityElement.html",tooltip="Represents a connectivity element between n atoms."];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="connectivity::Angle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1Angle.html",tooltip="Represents an angle between three atoms."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="forceField::AngleForceField",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1AngleForceField.html",tooltip=" "];
+  Node0 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="connectivity::Bond",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1Bond.html",tooltip="Represents a bond between two atoms."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="constraints::BondConstraint",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconstraints_1_1BondConstraint.html",tooltip="constraint object for single bond length"];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="forceField::BondForceField",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1BondForceField.html",tooltip="force field object for single angle"];
+  Node0 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="connectivity::Dihedral",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1Dihedral.html",tooltip="dihedral object containing all dihedral information"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="forceField::DihedralForce\lField",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1DihedralForceField.html",tooltip="Represents a dihedral between four atoms."];
+}

@@ -1,0 +1,7 @@
+digraph "settings::ResetKineticsSettings"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{settings::ResetKineticsSettings\n||+ ResetKineticsSettings()\l+ ~ResetKineticsSettings()\l+ setNScale()\l+ setFScale()\l+ setNReset()\l+ setFReset()\l+ setNResetAngular()\l+ setFResetAngular()\l+ getNScale()\l+ getFScale()\l+ getNReset()\l+ getFReset()\l+ getNResetAngular()\l+ getFResetAngular()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="static class to store settings of reset kinetics"];
+}

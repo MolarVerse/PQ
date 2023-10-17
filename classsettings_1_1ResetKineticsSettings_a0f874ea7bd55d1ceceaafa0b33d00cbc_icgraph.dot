@@ -1,0 +1,12 @@
+digraph "settings::ResetKineticsSettings::setNResetAngular"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::ResetKineticsSettings\l::setNResetAngular",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::InputFileParserReset\lKinetics::parseNResetAngular",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParserResetKinetics.html#a7cbed258f82c0de2561244d50cebb2c6",tooltip="parse nreset_angular and set it in settings"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::InputFileParserReset\lKinetics::InputFileParserResetKinetics",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParserResetKinetics.html#acaa7c3558b342afc28cde8fbeac88ed0",tooltip="Construct a new Input File Parser Reset Kinetics:: Input File Parser Reset Kinetics object."];
+}

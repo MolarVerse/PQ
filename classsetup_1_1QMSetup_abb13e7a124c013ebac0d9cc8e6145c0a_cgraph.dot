@@ -1,0 +1,20 @@
+digraph "setup::QMSetup::setup"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setup::QMSetup::setup",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="setup QM-MD for all subtypes"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="setup::QMSetup::setupCoulomb\lRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#ac08423a5563ba63347096cc7849d094c",tooltip="set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::Settings\l::getJobtype",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1Settings.html#a674058da14cff349a943b3f424cd8c10",tooltip=" "];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::PotentialSettings\l::setCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1PotentialSettings.html#a069d7448d04479a23be9ab98680f7288",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::QMSetup::setupQMMethod",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#a3acfc66ca56f31c457eb299a43273940",tooltip="setup the \"QM\" method of the system"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="settings::QMSettings\l::getQMMethod",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1QMSettings.html#ab6fd191d2de1d4623318437adc847d7d",tooltip=" "];
+  Node5 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="engine::QMMDEngine\l::setQMRunner",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1QMMDEngine.html#a27d69e39ea8c4786ebf6635c2a0d0fcd",tooltip=" "];
+}

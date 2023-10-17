@@ -1,0 +1,54 @@
+digraph "setup::simulationBox::SimulationBoxSetup::checkBoxSettings"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setup::simulationBox\l::SimulationBoxSetup\l::checkBoxSettings",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Checks if the box dimensions and density are set and calculates the missing values."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="simulationBox::Simulation\lBox::calculateBoxDimensionsFrom\lDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ad75fea80a79a918c4bfc37b03064a1ab",tooltip="calculate box dimensions from density"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="simulationBox::Orthorhombic\lBox::calculateBoxDimensionsFrom\lDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1OrthorhombicBox.html#af7ea4d3bd339f2434f7010862e8d7849",tooltip="Calculate the box dimensions from the density."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="simulationBox::Simulation\lBox::calculateVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a24ff43129b633f814bebf7ab5569a02e",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="settings::SimulationBoxSettings\l::getBoxSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1SimulationBoxSettings.html#a1cea77134ffcf4777978fbea4a9419ac",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="simulationBox::Simulation\lBox::getDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a233fe365b0a4dbbc00e776f6ccb2c825",tooltip=" "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="settings::SimulationBoxSettings\l::getDensitySet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1SimulationBoxSettings.html#aadcb4fdd11d209cf4e23e02675646d9d",tooltip=" "];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="engine::Engine::getLogOutput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#a3950b4630f1ee3f6e2b1715476d50344",tooltip=" "];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="engine::EngineOutput\l::getLogOutput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1EngineOutput.html#abfb9cb9e98a2ec40256b37ee976f7b23",tooltip=" "];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="engine::Engine::getPhysicalData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#a353a05a46d69bd73ed41c2767cee1f20",tooltip=" "];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="engine::Engine::getSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#ace473cd47266e64aee716132e724bfbc",tooltip=" "];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="engine::Engine::getStdout\lOutput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#a12f73e9b2a4ba9d18ce9edc69dd8a511",tooltip=" "];
+  Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="engine::EngineOutput\l::getStdoutOutput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1EngineOutput.html#af00ce57b7f859424f846435e0a6cea8f",tooltip=" "];
+  Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="simulationBox::Simulation\lBox::getTotalMass",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a2a1667453c83755b6a4d2fc05333fb36",tooltip=" "];
+  Node1 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="simulationBox::Simulation\lBox::getVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ad9ab2889ba5538d18afa410e56dc62d4",tooltip=" "];
+  Node1 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="simulationBox::Simulation\lBox::setBoxDimensions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a3b0ecd557d9e2d04990bcbe6b25841d3",tooltip=" "];
+  Node1 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="physicalData::PhysicalData\l::setDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classphysicalData_1_1PhysicalData.html#ae7541a239b6d4c50e99adcf141f36d2c",tooltip=" "];
+  Node1 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="simulationBox::Simulation\lBox::setDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ab2e30e765bfc50e404b136133a0e8f9e",tooltip=" "];
+  Node1 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="physicalData::PhysicalData\l::setVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classphysicalData_1_1PhysicalData.html#a52b7534465a29737346667b216ba5203",tooltip=" "];
+  Node1 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="simulationBox::Simulation\lBox::setVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a720eb6857340ebf772d2b4a47527c94a",tooltip=" "];
+  Node1 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="output::LogOutput::\lwriteDensityWarning",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1LogOutput.html#ae836c60db31ff62862f37020ad5faf67",tooltip="write a warning message to the log file if density and box dimensions are set"];
+  Node1 -> Node22 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="output::StdoutOutput\l::writeDensityWarning",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1StdoutOutput.html#aab5a693a9127a674f3160c399587d8d9",tooltip="write a warning message to the stdout if density and box dimensions are set"];
+  Node22 -> Node23 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node23 [label="customException::UserInput\lExceptionWarning::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1UserInputExceptionWarning.html#a4d0df15fcaecebcdbdae45833839d1fe",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node23 -> Node24 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node24 [label="customException::CustomException\l::colorfulOutput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1CustomException.html#a62f6656d4e73b02064bc3fd4e60a7f28",tooltip="Prints the exception type in color."];
+}

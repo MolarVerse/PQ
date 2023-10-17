@@ -1,0 +1,22 @@
+digraph "settings::ResetKineticsSettings::getNResetAngular"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::ResetKineticsSettings\l::getNResetAngular",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="setup::resetKinetics\l::ResetKineticsSetup\l::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1resetKinetics_1_1ResetKineticsSetup.html#a3bb562a70f4fef68374a6c51a79f74fc",tooltip="setup nscale, fscale, nreset, freset"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="setup::resetKinetics\l::setupResetKinetics",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1resetKinetics.html#a4e37ce7b1a0c895f78daf6d344aa6175",tooltip="constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="setup::resetKinetics\l::writeSetupInfo",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1resetKinetics.html#ad817bb5569a72b211644ccd7ec391131",tooltip="writes setup info to log file"];
+  Node6 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="setup::simulationBox\l::setupSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1simulationBox.html#a2cb3fb489992e090325f4af5c42917c2",tooltip="wrapper to create SetupSimulationBox object and call setup"];
+  Node7 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

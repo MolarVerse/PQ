@@ -1,0 +1,18 @@
+digraph "simulationBox::SimulationBox::calculateBoxDimensionsFromDensity"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="simulationBox::Simulation\lBox::calculateBoxDimensionsFrom\lDensity",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="calculate box dimensions from density"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="setup::simulationBox\l::SimulationBoxSetup\l::checkBoxSettings",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#aa0ed0d8c0c1301ff4f2ae65a548e02a5",tooltip="Checks if the box dimensions and density are set and calculates the missing values."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="setup::simulationBox\l::SimulationBoxSetup\l::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#a948550ca78296bf6fb5694bdaf95afdf",tooltip="setup simulation box"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::simulationBox\l::setupSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1simulationBox.html#a2cb3fb489992e090325f4af5c42917c2",tooltip="wrapper to create SetupSimulationBox object and call setup"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+}

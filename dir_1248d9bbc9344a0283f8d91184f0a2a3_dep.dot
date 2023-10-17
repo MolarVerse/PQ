@@ -1,0 +1,11 @@
+digraph "/home/runner/work/pimd_qmcf/pimd_qmcf/include/potential/coulomb" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_89d3cbd7fe0c3823d19211737510853e {
+    graph [ bgcolor="#ddddee", pencolor="black", label="potential" fontname="Helvetica", fontsize="10", URL="dir_89d3cbd7fe0c3823d19211737510853e.html"]
+  dir_1248d9bbc9344a0283f8d91184f0a2a3 [shape=box, label="coulomb", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_1248d9bbc9344a0283f8d91184f0a2a3.html"];
+  }
+  dir_ea664ba48352c10e82f679d554c07e1e [shape=box label="config" fillcolor="white" style="filled" color="red" URL="dir_ea664ba48352c10e82f679d554c07e1e.html"];
+  dir_1248d9bbc9344a0283f8d91184f0a2a3->dir_ea664ba48352c10e82f679d554c07e1e [headlabel="1", labeldistance=1.5 headhref="dir_000028_000005.html"];
+}

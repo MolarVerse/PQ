@@ -1,0 +1,13 @@
+digraph "potential::LennardJonesPair::operator=="
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="potential::LennardJonesPair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="operator overload for the comparison of two LennardJonesPair objects"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="utilities::compare",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a75a5e0be584b7582c071ad017aec32a1",tooltip="compares two numbers with a tolerance"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="potential::NonCoulombPair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1NonCoulombPair.html#a5983a72cc7bdd75d2448b81b327e6e6b",tooltip="operator overload for the comparison of two NonCoulombPair objects"];
+  Node3 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

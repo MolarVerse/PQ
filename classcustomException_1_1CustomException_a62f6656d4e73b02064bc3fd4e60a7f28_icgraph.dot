@@ -1,0 +1,50 @@
+digraph "customException::CustomException::colorfulOutput"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="customException::CustomException\l::colorfulOutput",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Prints the exception type in color."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="customException::InputFile\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1InputFileException.html#a5310768437ed662b059ab247f5e119d8",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="customException::RstFile\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1RstFileException.html#a29c31d6d437dded092a37afd10ac9c57",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="input::restartFile\l::AtomSection::process",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1AtomSection.html#a0d180073936cc36ac97a0d6281cd88b0",tooltip="processes the atom section of the rst file"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="customException::UserInput\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1UserInputException.html#a418e6bb877edc8383f31a22b62e8c874",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="customException::MolDescriptor\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1MolDescriptorException.html#a42bcef454c46232c8dc72810082d736a",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="customException::UserInput\lExceptionWarning::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1UserInputExceptionWarning.html#a4d0df15fcaecebcdbdae45833839d1fe",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="output::StdoutOutput\l::writeDensityWarning",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1StdoutOutput.html#aab5a693a9127a674f3160c399587d8d9",tooltip="write a warning message to the stdout if density and box dimensions are set"];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="setup::simulationBox\l::SimulationBoxSetup\l::checkBoxSettings",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#aa0ed0d8c0c1301ff4f2ae65a548e02a5",tooltip="Checks if the box dimensions and density are set and calculates the missing values."];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="setup::simulationBox\l::SimulationBoxSetup\l::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#a948550ca78296bf6fb5694bdaf95afdf",tooltip="setup simulation box"];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="setup::simulationBox\l::setupSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1simulationBox.html#a2cb3fb489992e090325f4af5c42917c2",tooltip="wrapper to create SetupSimulationBox object and call setup"];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+  Node1 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="customException::GuffDat\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1GuffDatException.html#a66a8c70bac9ae09350f49ee9f318abd3",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="customException::Topology\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1TopologyException.html#a3bcbcc932ce104ea7fd913fe3c53193b",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="customException::Parameter\lFileException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ParameterFileException.html#ab86c681258b751c14470505ce68fdc3a",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="customException::Manostat\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ManostatException.html#ae6f253baa0a8ec527a14c226e571fd12",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="customException::IntraNon\lBondedException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1IntraNonBondedException.html#a7fdd5f8486f09f5d3bc8e7cc5b495af7",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="customException::ShakeException\l::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ShakeException.html#a2656d210f05ea59fe4857202940c6ee7",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node20 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="customException::CellList\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1CellListException.html#a129ffe5dd5423b9f020d5a15733ebc12",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="customException::RingPolymer\lRestartFileException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1RingPolymerRestartFileException.html#af9f9260b32625b92968477db855c29be",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+  Node1 -> Node22 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="customException::QMRunner\lException::what",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1QMRunnerException.html#aa5c2f0316acfff2d496533d16c0337db",tooltip="Construct a new Custom Exception:: Custom Exception object."];
+}

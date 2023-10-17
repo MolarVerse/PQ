@@ -1,0 +1,16 @@
+digraph "settings::FileSettings::isTopologyFileNameSet"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::FileSettings\l::isTopologyFileNameSet",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::topology::Topology\lReader::read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1topology_1_1TopologyReader.html#a67481ebbc3fe9bf545e5d5394fa187be",tooltip="reads topology file"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::topology::readTopologyFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput_1_1topology.html#a3005eb45cc52d9434274f392fa67c3a9",tooltip="wrapper to construct a TopologyReader and reads topology file"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::readFiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a18b2d98c1451bfb2c3cfee4f5434f086",tooltip="reads all the files needed for the simulation"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+}

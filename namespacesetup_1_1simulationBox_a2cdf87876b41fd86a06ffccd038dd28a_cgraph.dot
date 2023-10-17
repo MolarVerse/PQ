@@ -1,0 +1,14 @@
+digraph "setup::simulationBox::writeSetupInfo"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setup::simulationBox\l::writeSetupInfo",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="write setup info to log file"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="settings::PotentialSettings\l::getCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1PotentialSettings.html#a3e94ca180413e8eff4ecfa5a2fa10774",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::SimulationBoxSettings\l::getInitializeVelocities",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1SimulationBoxSettings.html#a1965edbfdf3886c3d14e2b218ca91802",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::FileSettings\l::getStartFileName",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1FileSettings.html#abf17a1599c6df6efbc4960041110a9a7",tooltip=" "];
+}

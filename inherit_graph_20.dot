@@ -1,0 +1,16 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="input::restartFile\l::RestartFileSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1RestartFileSection.html",tooltip="Base class for all sections of a .rst file."];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="input::restartFile\l::AtomSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1AtomSection.html",tooltip="Reads the atom section of a .rst file."];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::restartFile\l::BoxSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1BoxSection.html",tooltip="Reads the box section of a .rst file."];
+  Node0 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::restartFile\l::NoseHooverSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1NoseHooverSection.html",tooltip="Reads the Nose-Hoover section of a .rst file TODO: This section is not yet implemented."];
+  Node0 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="input::restartFile\l::StepCountSection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1StepCountSection.html",tooltip="Reads the step count section of a .rst file."];
+}

@@ -1,0 +1,38 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node33 [label="std::exception",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node33 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node0 [label="customException::CustomException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1CustomException.html",tooltip="Custom exception base class."];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="customException::CellList\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1CellListException.html",tooltip="Exception for CellList errors."];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="customException::GuffDat\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1GuffDatException.html",tooltip="Exception for guff.dat errors."];
+  Node0 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="customException::InputFile\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1InputFileException.html",tooltip="Exception for input file errors."];
+  Node0 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="customException::IntraNon\lBondedException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1IntraNonBondedException.html",tooltip="Exception for intra non bonded errors."];
+  Node0 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="customException::Manostat\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ManostatException.html",tooltip="Exception for manostat errors."];
+  Node0 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="customException::MolDescriptor\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1MolDescriptorException.html",tooltip="Exception for MolDescriptor errors."];
+  Node0 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="customException::Parameter\lFileException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ParameterFileException.html",tooltip="Exception for parameter file errors."];
+  Node0 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="customException::QMRunner\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1QMRunnerException.html",tooltip="Exception for QMRunner errors."];
+  Node0 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="customException::RingPolymer\lRestartFileException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1RingPolymerRestartFileException.html",tooltip="Exception for ring polymer restart file errors."];
+  Node0 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="customException::RstFile\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1RstFileException.html",tooltip="Exception for restart file errors."];
+  Node0 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="customException::ShakeException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1ShakeException.html",tooltip="Exception for SHAKE errors."];
+  Node0 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="customException::Topology\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1TopologyException.html",tooltip="Exception for topology file errors."];
+  Node0 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="customException::UserInput\lException",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1UserInputException.html",tooltip="Exception for user input errors (CLI)"];
+  Node0 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="customException::UserInput\lExceptionWarning",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcustomException_1_1UserInputExceptionWarning.html",tooltip="Exception for user input warnings."];
+}

@@ -1,0 +1,37 @@
+digraph "setup::setupForceField"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setup::setupForceField",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="wrapper to construct ForceFieldSetup object and setup the force field"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="settings::ForceFieldSettings\l::isActive",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1ForceFieldSettings.html#a46f47b50b6f43e332b26c4866f1896af",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="setup::ForceFieldSetup\l::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1ForceFieldSetup.html#a0358c011534d4c93067e197065439988",tooltip="setup force field"];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="potential::Potential\l::getCoulombPotentialSharedPtr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1Potential.html#a947551fbefa09d164e373adfa7f53549",tooltip=" "];
+  Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="engine::Engine::getForce\lField",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#a23110e74d751e0e4d7c2217ebbf365dc",tooltip=" "];
+  Node3 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="potential::Potential\l::getNonCoulombPotentialSharedPtr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1Potential.html#a293013d841e276a9cdad64dd8bcd3845",tooltip=" "];
+  Node3 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="engine::Engine::getPotential",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#a9fcb82f7f798da8ec1f3c2b6ec2356a6",tooltip=" "];
+  Node3 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="forceField::ForceField\l::setCoulombPotential",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1ForceField.html#ab7afbd9fd4f147c905ffbf8c8a7df0a5",tooltip=" "];
+  Node3 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="forceField::ForceField\l::setNonCoulombPotential",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1ForceField.html#af1bc1a1dbdf7c94c41731f719c7895d5",tooltip=" "];
+  Node3 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="setup::ForceFieldSetup\l::setupAngles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1ForceFieldSetup.html#ab1a0944c4ce627ebe954479dfca30354",tooltip="setup all angles for force field"];
+  Node10 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="engine::Engine::getForce\lFieldPtr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#ad78edd77c97a4dadddbf7c93a64678b8",tooltip=" "];
+  Node3 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="setup::ForceFieldSetup\l::setupBonds",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1ForceFieldSetup.html#a2cc770996601fba3062181d758c54bc5",tooltip="setup all bonds for force field"];
+  Node12 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="setup::ForceFieldSetup\l::setupDihedrals",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1ForceFieldSetup.html#a6749aea92dc00d770c7e24f9448a4df5",tooltip="setup all dihedrals for force field"];
+  Node13 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="setup::ForceFieldSetup\l::setupImproperDihedrals",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1ForceFieldSetup.html#ab1c407945f02797894da5ac54e8b0642",tooltip="setup all improper dihedrals for force field"];
+  Node14 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

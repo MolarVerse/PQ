@@ -1,0 +1,11 @@
+digraph "potential::GuffNonCoulomb"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{potential::GuffNonCoulomb\n||+ resizeGuff()\l+ resizeGuff()\l+ resizeGuff()\l+ resizeGuff()\l+ setGuffNonCoulombicPair()\l+ getNonCoulombPair()\l+ getNonCoulombPairs()\l+ getMolType1()\l+ getMolType2()\l+ getAtomType1()\l+ getAtomType2()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="inherits NonCoulombPotential"];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node2 [label="{potential::NonCoulombPotential\n||+ ~NonCoulombPotential()\l+ getNonCoulombPair()\l+ getMixingRule()\l+ setMixingRule()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1NonCoulombPotential.html",tooltip="NonCoulombPotential is a base class for guff as well as force field non coulomb potentials."];
+  Node3 -> Node2 [color="grey25",fontsize="10",style="solid",label=" #_mixingRule" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node3 [label="{MixingRule\n||}",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

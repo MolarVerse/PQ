@@ -1,0 +1,14 @@
+digraph "physicalData::PhysicalData::getRingPolymerEnergy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="physicalData::PhysicalData\l::getRingPolymerEnergy",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="output::InfoOutput\l::write",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1InfoOutput.html#ab71d35dfe2edd77dadb667634023e831",tooltip="write info file"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="output::EnergyOutput\l::write",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1EnergyOutput.html#acb814606245152a99331c429e62da1b1",tooltip="Write the energy output."];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="output::RingPolymerEnergy\lOutput::write",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classoutput_1_1RingPolymerEnergyOutput.html#ac786e9480ee98d10da11c90c21706565",tooltip="write the energy output of each ring polymer"];
+}

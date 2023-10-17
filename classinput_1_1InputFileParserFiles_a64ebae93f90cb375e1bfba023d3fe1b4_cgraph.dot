@@ -1,0 +1,16 @@
+digraph "input::InputFileParserFiles::parseGuffDatFilename"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::InputFileParserFiles\l::parseGuffDatFilename",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="parse guff dat file of simulation and set it in settings"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::checkCommand",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a81877d6bfa9b46cdca1b280c6d1b30fb",tooltip="check if command array has exactly 3 elements"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::checkEqualSign",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a586caa23c32d86459177222a3b5d53fe",tooltip="check if parameter is \"=\""];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="utilities::fileExists",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a5f99dc774ed5126fa493cdb1c7163308",tooltip="checks if a file exists and can be opened"];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="settings::FileSettings\l::setGuffDatFileName",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1FileSettings.html#aa9cb3e2ce46992e479c0147c1ff395df",tooltip=" "];
+}

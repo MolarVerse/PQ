@@ -1,0 +1,22 @@
+digraph "settings::Settings::getJobtype"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::Settings\l::getJobtype",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::restartFile\l::BoxSection::process",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1BoxSection.html#a295a42f81a3bf4df52b13a0b429e83c3",tooltip="processes the box section of the rst file"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="QM::DFTBPlusRunner\l::readStressTensor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classQM_1_1DFTBPlusRunner.html#ac67cb82b9f8bd9161dc1281d41d27b71",tooltip="reads the stress tensor and adds it to the physical data"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::QMSetup::setupCoulomb\lRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#ac08423a5563ba63347096cc7849d094c",tooltip="set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::QMSetup::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1QMSetup.html#abb13e7a124c013ebac0d9cc8e6145c0a",tooltip="setup QM-MD for all subtypes"];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="setup::setupQM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aeb7718c0af5497ac17ca90b04986fdb1",tooltip="wrapper to build QMSetup object and call setup"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+}

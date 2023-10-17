@@ -1,0 +1,13 @@
+digraph "connectivity::Bond"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{connectivity::Bond\n||+ Bond()\l+ getMolecule1()\l+ getMolecule2()\l+ getAtomIndex1()\l+ getAtomIndex2()\l+ ConnectivityElement()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Represents a bond between two atoms."];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node2 [label="{connectivity::Connectivity\lElement\n|# _molecules\l# _atomIndices\l|+ ConnectivityElement()\l+ getMolecules()\l+ getAtomIndices()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1ConnectivityElement.html",tooltip="Represents a connectivity element between n atoms."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node3 [label="{constraints::BondConstraint\n||+ BondConstraint()\l+ calculateConstraintBondRef()\l+ calculateDistanceDelta()\l+ calculateVelocityDelta()\l+ applyShake()\l+ applyRattle()\l+ setShakeDistanceRef()\l+ getTargetBondLength()\l+ getShakeDistanceRef()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconstraints_1_1BondConstraint.html",tooltip="constraint object for single bond length"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node4 [label="{forceField::BondForceField\n||+ BondForceField()\l+ calculateEnergyAndForces()\l+ setIsLinker()\l+ setEquilibriumBondLength()\l+ setForceConstant()\l+ getType()\l+ isLinker()\l+ getEquilibriumBondLength()\l+ getForceConstant()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1BondForceField.html",tooltip="force field object for single angle"];
+}

@@ -1,0 +1,7 @@
+digraph "simulationBox::MoleculeType"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{simulationBox::MoleculeType\n||+ MoleculeType()\l+ MoleculeType()\l+ MoleculeType()\l+ getNumberOfAtomTypes()\l+ addAtomName()\l+ addExternalAtomType()\l+ addPartialCharge()\l+ addExternalGlobalVDWType()\l+ addExternalToInternalAtom\lTypeElement()\l+ addAtomType()\land 20 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="containing all information about a molecule type"];
+}

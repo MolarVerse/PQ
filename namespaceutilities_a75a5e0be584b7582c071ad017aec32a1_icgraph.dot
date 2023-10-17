@@ -1,0 +1,49 @@
+digraph "utilities::compare"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="utilities::compare",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="compares two numbers with a tolerance"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::guffdat::GuffDatReader\l::checkPartialCharges",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1guffdat_1_1GuffDatReader.html#aa9b1ba560d8f6213e4ec5a26f5ec09ff",tooltip="checks if the partial charges are in accordance with all guff.dat entries."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::guffdat::GuffDatReader\l::postProcessSetup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1guffdat_1_1GuffDatReader.html#ab2ac6ace8cbf4e2f00e150dd3f91911e",tooltip="post process guff.dat reading"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="input::guffdat::readGuffDat",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput_1_1guffdat.html#af8b225a9b29e9cacbb064b1d6c37a5b0",tooltip="Construct a new Guff Dat Reader:: Guff Dat Reader object."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="forceField::AngleType\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1AngleType.html#aba31522764b15e1c6446943cf2c9c72b",tooltip="operator overload for the comparison of two AngleType objects"];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="forceField::BondType\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1BondType.html#a13a57c7a1962ae0e8ce58f5e316f72ea",tooltip="operator overload for the comparison of two BondType objects"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="potential::BuckinghamPair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1BuckinghamPair.html#a8af2a87c9312c10f97b8e892c8141c21",tooltip="operator overload for the comparison of two BuckinghamPair objects"];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="forceField::DihedralType\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1DihedralType.html#a977e00c517197ef5a8457b6acd5bbb5f",tooltip="operator overload for the comparison of two DihedralType objects"];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="potential::LennardJonesPair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1LennardJonesPair.html#a262306696941ba5ddc9f63b8af94a496",tooltip="operator overload for the comparison of two LennardJonesPair objects"];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="potential::MorsePair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1MorsePair.html#a24b125eaeeec0c0215090db8b0e3eb16",tooltip="operator overload for the comparison of two MorsePair objects"];
+  Node1 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="potential::NonCoulombPair\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1NonCoulombPair.html#a5983a72cc7bdd75d2448b81b327e6e6b",tooltip="operator overload for the comparison of two NonCoulombPair objects"];
+  Node12 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="input::restartFile\l::BoxSection::process",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1restartFile_1_1BoxSection.html#a295a42f81a3bf4df52b13a0b429e83c3",tooltip="processes the box section of the rst file"];
+  Node1 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="utilities::sign",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a387a711deae04717582833d4d8873f30",tooltip="calculates the sign of a number"];
+  Node14 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="input::guffdat::GuffDatReader\l::calculatePartialCharges",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1guffdat_1_1GuffDatReader.html#a6547e2a5797da71d51added4b13feea0",tooltip="calculates the partial charges of the molecule types from the guff.dat coulomb coefficients"];
+  Node15 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="input::intraNonBonded\l::IntraNonBondedReader\l::processMolecule",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1intraNonBonded_1_1IntraNonBondedReader.html#a627e2157a50197b72348831db0116104",tooltip="processes the intra nonBonded interactions for a given molecule type"];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="input::intraNonBonded\l::IntraNonBondedReader::read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1intraNonBonded_1_1IntraNonBondedReader.html#a9f307dc8ee85268768e8ce1144999e1b",tooltip="reads the intra non bonded interactions from the intraNonBonded file"];
+  Node17 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="input::intraNonBonded\l::readIntraNonBondedFile",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput_1_1intraNonBonded.html#a24f14abe71e7a243eea7e7a1d7b05b6f",tooltip="construct IntraNonBondedReader object and read the file"];
+  Node18 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="setup::readFiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a18b2d98c1451bfb2c3cfee4f5434f086",tooltip="reads all the files needed for the simulation"];
+  Node19 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

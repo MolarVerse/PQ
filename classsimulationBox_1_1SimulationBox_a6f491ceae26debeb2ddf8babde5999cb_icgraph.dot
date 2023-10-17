@@ -1,0 +1,22 @@
+digraph "simulationBox::SimulationBox::getMinimalBoxDimension"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="simulationBox::Simulation\lBox::getMinimalBoxDimension",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="simulationBox::Simulation\lBox::checkCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#a19a9ca4264cdec4c6c6a219f35db5f0a",tooltip="checks if the coulomb radius cut off is smaller than half of the minimal box dimension"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="manostat::StochasticRescaling\lManostat::applyManostat",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmanostat_1_1StochasticRescalingManostat.html#a3cb62a6015c81459038cfcd2c8991aff",tooltip="apply Stochastic Rescaling manostat for NPT ensemble"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::simulationBox\l::SimulationBoxSetup\l::checkRcCutoff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#a2c13e1f811150f3a454a98cea1c6005a",tooltip="Checks if the cutoff radius is larger than half of the minimal box dimension."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::simulationBox\l::SimulationBoxSetup\l::setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsetup_1_1simulationBox_1_1SimulationBoxSetup.html#a948550ca78296bf6fb5694bdaf95afdf",tooltip="setup simulation box"];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="setup::simulationBox\l::setupSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup_1_1simulationBox.html#a2cb3fb489992e090325f4af5c42917c2",tooltip="wrapper to create SetupSimulationBox object and call setup"];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="setup::setupEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#aa83171046bbca205b3db6e0cd2dbc4e1",tooltip="setup the engine"];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+}

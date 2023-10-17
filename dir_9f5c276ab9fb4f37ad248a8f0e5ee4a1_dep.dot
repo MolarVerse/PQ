@@ -1,0 +1,22 @@
+digraph "/home/runner/work/pimd_qmcf/pimd_qmcf/include/input" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_d44c64559bbebec7f509842c48db8b23 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="include" fontname="Helvetica", fontsize="10", URL="dir_d44c64559bbebec7f509842c48db8b23.html"]
+  dir_a7f531b1c37460085cedd304cb8df01d [shape=box label="engine" URL="dir_a7f531b1c37460085cedd304cb8df01d.html"];
+  dir_ea664ba48352c10e82f679d554c07e1e [shape=box label="config" fillcolor="white" style="filled" color="red" URL="dir_ea664ba48352c10e82f679d554c07e1e.html"];
+  subgraph clusterdir_9f5c276ab9fb4f37ad248a8f0e5ee4a1 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_9f5c276ab9fb4f37ad248a8f0e5ee4a1.html"];
+    dir_9f5c276ab9fb4f37ad248a8f0e5ee4a1 [shape=plaintext label="input"];
+  dir_a41a0f05d0b6283fed3736f91a4bcc08 [shape=box label="inputFileParser" fillcolor="white" style="filled" URL="dir_a41a0f05d0b6283fed3736f91a4bcc08.html"];
+  dir_79e0a21e8e84e9e5234b6e6d900e19f6 [shape=box label="parameterFileReader" fillcolor="white" style="filled" URL="dir_79e0a21e8e84e9e5234b6e6d900e19f6.html"];
+  dir_e87069703ef746e21c029754d955936d [shape=box label="restartFileReader" fillcolor="white" style="filled" URL="dir_e87069703ef746e21c029754d955936d.html"];
+  dir_f6d822296c2d07f94e36bcc2076883e5 [shape=box label="ringPolymerRestartFileReader" fillcolor="white" style="filled" URL="dir_f6d822296c2d07f94e36bcc2076883e5.html"];
+  dir_b44debc6456e13b986aaab8aa2a2da48 [shape=box label="topologyFileReader" fillcolor="white" style="filled" URL="dir_b44debc6456e13b986aaab8aa2a2da48.html"];
+  }
+  }
+  dir_9f5c276ab9fb4f37ad248a8f0e5ee4a1->dir_a41a0f05d0b6283fed3736f91a4bcc08 [headlabel="1", labeldistance=1.5 headhref="dir_000012_000013.html"];
+  dir_9f5c276ab9fb4f37ad248a8f0e5ee4a1->dir_a7f531b1c37460085cedd304cb8df01d [headlabel="1", labeldistance=1.5 headhref="dir_000012_000009.html"];
+  dir_9f5c276ab9fb4f37ad248a8f0e5ee4a1->dir_ea664ba48352c10e82f679d554c07e1e [headlabel="2", labeldistance=1.5 headhref="dir_000012_000005.html"];
+}

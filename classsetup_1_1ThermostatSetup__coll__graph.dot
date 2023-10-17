@@ -1,0 +1,7 @@
+digraph "setup::ThermostatSetup"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{setup::ThermostatSetup\n||+ ThermostatSetup()\l+ setup()\l+ isTargetTemperatureSet()\l+ setupBerendsenThermostat()\l+ setupLangevinThermostat()\l+ setupNoseHooverThermostat()\l+ setupVelocityRescalingThermostat()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="this class setups up the thermostat for the simulation"];
+}

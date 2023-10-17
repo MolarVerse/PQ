@@ -1,0 +1,11 @@
+digraph "connectivity::Angle"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{connectivity::Angle\n||+ ConnectivityElement()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Represents an angle between three atoms."];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node2 [label="{connectivity::Connectivity\lElement\n|# _molecules\l# _atomIndices\l|+ ConnectivityElement()\l+ getMolecules()\l+ getAtomIndices()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classconnectivity_1_1ConnectivityElement.html",tooltip="Represents a connectivity element between n atoms."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node3 [label="{forceField::AngleForceField\n||+ AngleForceField()\l+ calculateEnergyAndForces()\l+ setIsLinker()\l+ setEquilibriumAngle()\l+ setForceConstant()\l+ getType()\l+ isLinker()\l+ getEquilibriumAngle()\l+ getForceConstant()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classforceField_1_1AngleForceField.html",tooltip=" "];
+}

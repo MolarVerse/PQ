@@ -1,0 +1,37 @@
+digraph "input::InputFileParserSimulationBox::InputFileParserSimulationBox"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="input::InputFileParserSimulation\lBox::InputFileParserSimulationBox",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Construct a new Input File Parser Simulation Box:: Input File Parser Simulation Box object."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::InputFileParser\l::addKeyword",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParser.html#ab851322dfd41fcd59d75931012a5fcce",tooltip="add keyword to different keyword maps"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="utilities::toLowerCopy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutilities.html#a00b80743096ddd313ba418b9a7730698",tooltip="returns a copy of a string all lower case"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="input::InputFileParserSimulation\lBox::parseCoulombRadius",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParserSimulationBox.html#a5ece2334c21248b2f01e7bbff74b38c3",tooltip="parses the coulomb cutoff radius"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="input::checkCommand",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a81877d6bfa9b46cdca1b280c6d1b30fb",tooltip="check if command array has exactly 3 elements"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="input::checkEqualSign",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput.html#a586caa23c32d86459177222a3b5d53fe",tooltip="check if parameter is \"=\""];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="settings::PotentialSettings\l::setCoulombRadiusCutOff",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1PotentialSettings.html#a069d7448d04479a23be9ab98680f7288",tooltip=" "];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="input::InputFileParserSimulation\lBox::parseDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParserSimulationBox.html#a9331213ce2870f964c5b67256424edce",tooltip="parse density of simulation and set it in simulation box"];
+  Node8 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="engine::Engine::getSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#ace473cd47266e64aee716132e724bfbc",tooltip=" "];
+  Node8 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="simulationBox::Simulation\lBox::setDensity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ab2e30e765bfc50e404b136133a0e8f9e",tooltip=" "];
+  Node8 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="settings::SimulationBoxSettings\l::setDensitySet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1SimulationBoxSettings.html#a2dd5fb02976d822d56aae5620199039a",tooltip=" "];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="input::InputFileParserSimulation\lBox::parseInitializeVelocities",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1InputFileParserSimulationBox.html#a63ad7fa7fff46e07ad4be298cf021c8d",tooltip="parse if velocities should be initialized with maxwell boltzmann distribution"];
+  Node12 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="settings::SimulationBoxSettings\l::setInitializeVelocities",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1SimulationBoxSettings.html#af21be9ed0f5d4df9d2eec03f7ae32fda",tooltip=" "];
+  Node12 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="settings::string",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesettings.html#a25810432631a237804b3241be4305787",tooltip="return string of manostatType"];
+}

@@ -1,0 +1,17 @@
+digraph "/home/runner/work/pimd_qmcf/pimd_qmcf/src/potential" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_68267d1309a1af8e8297ef4c3efbcdba {
+    graph [ bgcolor="#ddddee", pencolor="black", label="src" fontname="Helvetica", fontsize="10", URL="dir_68267d1309a1af8e8297ef4c3efbcdba.html"]
+  subgraph clusterdir_469511d0e94cf1d94db96de2a5eb203f {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_469511d0e94cf1d94db96de2a5eb203f.html"];
+    dir_469511d0e94cf1d94db96de2a5eb203f [shape=plaintext label="potential"];
+  dir_bf7e9df9cdb8f2747d60c096a4dadcc6 [shape=box label="coulomb" fillcolor="white" style="filled" URL="dir_bf7e9df9cdb8f2747d60c096a4dadcc6.html"];
+  dir_25efc2f1b3aee2ce2e25b75200f911b8 [shape=box label="nonCoulomb" fillcolor="white" style="filled" URL="dir_25efc2f1b3aee2ce2e25b75200f911b8.html"];
+  }
+  }
+  dir_d44c64559bbebec7f509842c48db8b23 [shape=box label="include" fillcolor="white" style="filled" color="red" URL="dir_d44c64559bbebec7f509842c48db8b23.html"];
+  dir_bf7e9df9cdb8f2747d60c096a4dadcc6->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="5", labeldistance=1.5 headhref="dir_000062_000003.html"];
+  dir_25efc2f1b3aee2ce2e25b75200f911b8->dir_d44c64559bbebec7f509842c48db8b23 [headlabel="14", labeldistance=1.5 headhref="dir_000063_000003.html"];
+}

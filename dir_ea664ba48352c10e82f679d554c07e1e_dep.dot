@@ -1,0 +1,14 @@
+digraph "/home/runner/work/pimd_qmcf/pimd_qmcf/include/config" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_d44c64559bbebec7f509842c48db8b23 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="include" fontname="Helvetica", fontsize="10", URL="dir_d44c64559bbebec7f509842c48db8b23.html"]
+  subgraph clusterdir_ea664ba48352c10e82f679d554c07e1e {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_ea664ba48352c10e82f679d554c07e1e.html"];
+    dir_ea664ba48352c10e82f679d554c07e1e [shape=plaintext label="config"];
+  dir_7769128eec5ce42b266c596b4b31560f [shape=box label="constants" fillcolor="white" style="filled" URL="dir_7769128eec5ce42b266c596b4b31560f.html"];
+  }
+  }
+  dir_ea664ba48352c10e82f679d554c07e1e->dir_7769128eec5ce42b266c596b4b31560f [headlabel="3", labeldistance=1.5 headhref="dir_000005_000006.html"];
+}

@@ -1,0 +1,7 @@
+digraph "intraNonBonded::IntraNonBondedMap"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{intraNonBonded::IntraNon\lBondedMap\n||+ IntraNonBondedMap()\l+ calculate()\l+ calculateSingleInteraction()\l+ getIntraNonBondedType()\l+ getMolecule()\l+ getAtomIndices()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="defines a map for a single molecule to its intra non bonded interactions"];
+}

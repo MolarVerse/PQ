@@ -1,0 +1,12 @@
+digraph "thermostat::NoseHooverThermostat::applyThermostat"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="thermostat::NoseHooverThermostat\l::applyThermostat",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="applies the Nose-Hoover thermostat on the velocities"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="simulationBox::Simulation\lBox::getDegreesOfFreedom",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#ab1453d380fb1218dfa4fa4672c20ace6",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="settings::TimingsSettings\l::getTimeStep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1TimingsSettings.html#ad1e01977b94d5b5d90d2b2f4ea8e2532",tooltip=" "];
+}

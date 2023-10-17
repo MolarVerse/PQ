@@ -1,0 +1,7 @@
+digraph "forceField::ForceField"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{forceField::ForceField\n||+ calculateBondedInteractions()\l+ calculateBondInteractions()\l+ calculateAngleInteractions()\l+ calculateDihedralInteractions()\l+ calculateImproperDihedral\lInteractions()\l+ findBondTypeById()\l+ findAngleTypeById()\l+ findDihedralTypeById()\l+ findImproperDihedralType\lById()\l+ activateNonCoulombic()\land 24 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="force field object containing all force field information"];
+}

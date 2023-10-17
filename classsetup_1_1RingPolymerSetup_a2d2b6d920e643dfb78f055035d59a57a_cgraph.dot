@@ -1,0 +1,16 @@
+digraph "setup::RingPolymerSetup::setupSimulationBox"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="setup::RingPolymerSetup\l::setupSimulationBox",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="setup simulation box for ring polymer simulation"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="engine::RingPolymerEngine\l::addRingPolymerBead",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1RingPolymerEngine.html#a4c7cf6f3c53a768dd8f7989e607d9912",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="simulationBox::Simulation\lBox::copy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsimulationBox_1_1SimulationBox.html#afb8665d44758d8b668cb97eaa30d3772",tooltip="copy simulationBox object this"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="settings::RingPolymerSettings\l::getNumberOfBeads",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsettings_1_1RingPolymerSettings.html#a533e679cc70a74bb935fde57ed96982a",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="engine::Engine::getSimulationBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classengine_1_1Engine.html#ace473cd47266e64aee716132e724bfbc",tooltip=" "];
+}

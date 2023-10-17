@@ -1,0 +1,16 @@
+digraph "settings::FileSettings::getMolDescriptorFileName"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="settings::FileSettings\l::getMolDescriptorFileName",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="input::molDescriptor\l::MoldescriptorReader\l::MoldescriptorReader",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#abb552042b0e146db10175efcb21f5b60",tooltip="constructor"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="input::molDescriptor\l::readMolDescriptor",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceinput_1_1molDescriptor.html#af472d8d9ef486fcbfcbfa6418d02fdd4",tooltip="wrapper to construct MoldescriptorReader and read moldescriptor file"];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="setup::readFiles",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a18b2d98c1451bfb2c3cfee4f5434f086",tooltip="reads all the files needed for the simulation"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="setup::setupSimulation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesetup.html#a1c000cdfa46aed7d8018017635915ae1",tooltip="setup the engine"];
+}
