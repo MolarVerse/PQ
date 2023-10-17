@@ -107,6 +107,20 @@ In the following sections the types of the input values will be denoted via `{}`
 
 >   The `rpmd_start_file` keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.
 
+#### Dim
+
+    dim = {uint+} -> 3
+
+>   With the `dim` keyword the dimensionality of the system can be set. At the moment PIMD-QMCF supports only 3d systems.
+
+>   Possible options are:
+
+>>  1) <b>3</b> (default) - sets the dimensionality to 3
+
+>>  2) <b>3d</b> - same as 3
+
+>   *default value* = 3
+
 ### General Output Keys
 
 <span style="color:red"><b>Note</b></span>: The PIMD-QMCF application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named `default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first `.` character) and set it with the respective extension for all unspecified output files.
