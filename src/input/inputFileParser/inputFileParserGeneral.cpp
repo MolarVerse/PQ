@@ -47,7 +47,7 @@ using namespace input;
 InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(std::string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
-    addKeyword(std::string("dim"), bind_front(&InputFileParserGeneral::parseDimensionality, this), true);
+    addKeyword(std::string("dim"), bind_front(&InputFileParserGeneral::parseDimensionality, this), false);
 }
 
 /**
