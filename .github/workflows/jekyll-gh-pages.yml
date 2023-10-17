@@ -50,7 +50,7 @@ jobs:
 
       - name: build doxygen
         run: |
-          && cd build
+          cd build
           && make docs
           && cd docs/html
           && touch .nojekyll
