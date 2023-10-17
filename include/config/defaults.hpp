@@ -76,6 +76,8 @@ namespace defaults
     static constexpr double _BERENDSEN_MANOSTAT_RELAXATION_TIME_ = 1.0;        // in ps
     static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_      = 4.591e-5;   // default value for berendsen manostat
 
+    static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
+
 }   // namespace defaults
 
 #endif   // _DEFAULTS_HPP_
