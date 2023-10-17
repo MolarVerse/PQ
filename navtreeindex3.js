@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classlinearAlgebra_1_1Vector3D.html#a9ea3733c72112a0747212bd2bd808f70":[2,1,0,9,2,37],
 "classlinearAlgebra_1_1Vector3D.html#aa82df6ecf8bb9d4be4a896ed153a588a":[2,1,0,9,2,4],
 "classlinearAlgebra_1_1Vector3D.html#aa84b07106dbce901ebf19509f66ca138":[2,1,0,9,2,2],
 "classlinearAlgebra_1_1Vector3D.html#ab02f34575a97aca366f83aa13468f652":[2,1,0,9,2,34],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classpotential_1_1GuffNonCoulomb.html#acfbfda7a8fd516d7521fdf2e158ee94b":[2,1,0,14,5,7],
 "classpotential_1_1GuffNonCoulomb.html#af0300c7b120002b8a9392ab3b3b43987":[2,1,0,14,5,9],
 "classpotential_1_1GuffPair.html":[2,1,0,14,6],
-"classpotential_1_1GuffPair.html#a106471b65841c6e47063e2a06230454b":[2,1,0,14,6,1],
-"classpotential_1_1GuffPair.html#a66987ef23b8a278a302ad67fdf0e6747":[2,1,0,14,6,3]
+"classpotential_1_1GuffPair.html#a106471b65841c6e47063e2a06230454b":[2,1,0,14,6,1]
 };

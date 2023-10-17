@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"classthermostat_1_1NoseHooverThermostat.html#af5cbc26de143c18c84d016075d619ba7":[2,1,0,21,2,5],
 "classthermostat_1_1Thermostat.html":[2,1,0,21,3],
 "classthermostat_1_1Thermostat.html#a14a525d5eefac18f1c8de381b975b8d6":[2,1,0,21,3,1],
 "classthermostat_1_1Thermostat.html#a3009068ec7c8894a06248e49dec4a9a8":[2,1,0,21,3,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "functions_func_s.html":[2,1,3,1,16],
 "functions_func_t.html":[2,1,3,1,17],
 "functions_func_u.html":[2,1,3,1,18],
-"functions_func_v.html":[2,1,3,1,19],
-"functions_func_w.html":[2,1,3,1,20]
+"functions_func_v.html":[2,1,3,1,19]
 };

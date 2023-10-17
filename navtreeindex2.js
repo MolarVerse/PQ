@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classinput_1_1guffdat_1_1GuffDatReader.html":[2,1,0,6,0,0],
 "classinput_1_1guffdat_1_1GuffDatReader.html#a05691b60e12415f7a50f9e606363b8ce":[2,1,0,6,0,0,16],
 "classinput_1_1guffdat_1_1GuffDatReader.html#a1f1709235a0b4dfd239885d5d5794dc9":[2,1,0,6,0,0,13],
 "classinput_1_1guffdat_1_1GuffDatReader.html#a340490265f6d14a479324e0a9cd16534":[2,1,0,6,0,0,15],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classlinearAlgebra_1_1Vector3D.html#a95bbdff302032ee4ced719fe79ca51bf":[2,1,0,9,2,36],
 "classlinearAlgebra_1_1Vector3D.html#a9a0c092b8f47fa1d4c49a7668434bd0b":[2,1,0,9,2,47],
 "classlinearAlgebra_1_1Vector3D.html#a9a0dd9417b7da556c6f5f80efde0c7b1":[2,1,0,9,2,22],
-"classlinearAlgebra_1_1Vector3D.html#a9c32a333f5fb34f898676016f376dcb5":[2,1,0,9,2,20],
-"classlinearAlgebra_1_1Vector3D.html#a9ea3733c72112a0747212bd2bd808f70":[2,1,0,9,2,37]
+"classlinearAlgebra_1_1Vector3D.html#a9c32a333f5fb34f898676016f376dcb5":[2,1,0,9,2,20]
 };

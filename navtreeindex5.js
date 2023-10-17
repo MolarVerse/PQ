@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classsimulationBox_1_1Box.html#ab3adf8c0333e729525ea74185a673288":[2,1,0,20,0,4],
 "classsimulationBox_1_1Box.html#abf8e6455a4fe08b0d71f321aa220b601":[2,1,0,20,0,9],
 "classsimulationBox_1_1Box.html#ac011ded30f642dd12cf5e1d0e6960ec0":[2,1,0,20,0,14],
 "classsimulationBox_1_1Box.html#acbcac8b7f6023704fd7563e47a8a841b":[2,1,0,20,0,19],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classthermostat_1_1NoseHooverThermostat.html#abb9a5bfedb8edfd9897bd319e8804d6d":[2,1,0,21,2,10],
 "classthermostat_1_1NoseHooverThermostat.html#ac2def8ffd3fd78b6e99a056634f03e67":[2,1,0,21,2,1],
 "classthermostat_1_1NoseHooverThermostat.html#addcfb7b60261cd4681d5c9cbc6e84a27":[2,1,0,21,2,7],
-"classthermostat_1_1NoseHooverThermostat.html#ae70a6422b886b9c3d374c9771aaccd3f":[2,1,0,21,2,4],
-"classthermostat_1_1NoseHooverThermostat.html#af5cbc26de143c18c84d016075d619ba7":[2,1,0,21,2,5]
+"classthermostat_1_1NoseHooverThermostat.html#ae70a6422b886b9c3d374c9771aaccd3f":[2,1,0,21,2,4]
 };
