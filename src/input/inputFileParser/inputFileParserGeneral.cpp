@@ -30,6 +30,7 @@
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
 
+#include <algorithm>    // for ranges::remove
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
@@ -46,6 +47,7 @@ using namespace input;
 InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(std::string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
+    addKeyword(std::string("dim"), bind_front(&InputFileParserGeneral::parseDimensionality, this), false);
 }
 
 /**
@@ -96,4 +98,32 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
     else
         throw customException::InputFileException(
             format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", lineElements[2]));
+}
+
+/**
+ * @brief parse dimensionality of simulation
+ *
+ * @details Possible options are:
+ * 1) 3
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throw customException::InputFileException if dimensionality is not recognised
+ */
+void InputFileParserGeneral::parseDimensionality(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    auto dimensionalityString = utilities::toLowerCopy(lineElements[2]);
+
+    std::erase(dimensionalityString, 'd');
+
+    const auto dimensionality = std::stoi(dimensionalityString);
+
+    if (dimensionality == 3)
+        settings::Settings::setDimensionality(size_t(dimensionality));
+    else
+        throw customException::InputFileException(
+            format("Invalid dimensionality \"{}\" in input file - possible values are: 3, 3d", lineElements[2]));
 }

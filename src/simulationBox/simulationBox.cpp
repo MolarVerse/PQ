@@ -25,6 +25,7 @@
 #include "constants.hpp"           // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"          // for RstFileException, UserInputException
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"            // for Settings
 
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
@@ -265,14 +266,13 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 /**
  * @brief calculate degrees of freedom
  *
- * @TODO: at the moment only implemented for 3D periodic systems
- *
  */
 void SimulationBox::calculateDegreesOfFreedom()
 {
     auto accumulateFunc = [](const size_t sum, const Molecule &molecule) { return sum + molecule.getDegreesOfFreedom(); };
 
-    _degreesOfFreedom = accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc) - 3;
+    _degreesOfFreedom =
+        accumulate(_molecules.begin(), _molecules.end(), 0UL, accumulateFunc) - settings::Settings::getDimensionality();
 }
 
 /**
