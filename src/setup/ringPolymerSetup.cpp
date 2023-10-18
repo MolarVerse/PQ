@@ -39,8 +39,6 @@
 
 #ifdef WITH_MPI
 #include "mpi.hpp"   // for MPI
-
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 #endif
 
 using setup::RingPolymerSetup;
@@ -129,27 +127,10 @@ void RingPolymerSetup::initializeBeads()
         initializeVelocitiesOfBeads();
 }
 
-#ifdef WITH_MPI
-void RingPolymerSetup::initializeVelocitiesOfBeads()
-{
-    auto initVelocities = [](auto &bead)
-    {
-        if (mpi::MPI::isRoot())
-        {
-            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-            maxwellBoltzmann.initializeVelocities(bead);
-        }
-
-        auto velocities = bead.flattenVelocities();
-
-        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-        bead.deFlattenVelocities(velocities);
-    };
-
-    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
-}
-#else
+/**
+ * @brief initialize velocities of beads with maxwell boltzmann distribution
+ *
+ */
 void RingPolymerSetup::initializeVelocitiesOfBeads()
 {
     auto initVelocities = [](auto &bead)
@@ -160,4 +141,3 @@ void RingPolymerSetup::initializeVelocitiesOfBeads()
 
     std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
 }
-#endif

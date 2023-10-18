@@ -41,7 +41,6 @@ target_link_libraries(setup
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
-        MPI::MPI_C
         pimd_qmcf_mpi
     )
 endif()
