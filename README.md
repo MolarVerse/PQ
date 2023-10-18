@@ -16,6 +16,12 @@ Create a build directory and navigate into this directory. Within this directory
 
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
+Optionally it is also possible to enable MPI for Ring Polymer MD
+
+    cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
+
+For compilation then type:
+
     make -j<#procs>
 
 ## Singularity

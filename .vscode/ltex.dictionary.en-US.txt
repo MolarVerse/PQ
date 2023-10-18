@@ -4,3 +4,5 @@ pathFile
 bool
 Berendsen
 manostat
+virial
+moldescriptor

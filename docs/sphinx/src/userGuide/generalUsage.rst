@@ -1,6 +1,11 @@
-# General Usage {#generalUsage}
+.. _generalUsage:
+
+General Usage
+=============
 
 The PIMD-QMCF applications is based on a single input file execution. A fully prepared setup is completely defined by an input file `pimd-qmcf.in` and can be executed in the following form:
+
+.. code-block:: bash
 
     pimd_qmcf pimd-qmcf.in
 
