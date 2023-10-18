@@ -417,7 +417,9 @@ Intra-NonBonded_File
 
     intra-nonbonded_file = {file}
 
-### Simulation Box Keys
+*******************
+Simulation Box Keys
+*******************
 
 Density
 =======
