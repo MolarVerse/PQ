@@ -126,6 +126,5 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    if (settings::Settings::isRingPolymerMDActivated())
-        setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
+    setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
 }

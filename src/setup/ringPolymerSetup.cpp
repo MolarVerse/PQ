@@ -28,6 +28,7 @@
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
 #include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
+#include "settings.hpp"                       // for Settings
 #include "simulationBox.hpp"                  // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, for_each
@@ -51,6 +52,18 @@ using setup::RingPolymerSetup;
  */
 void setup::setupRingPolymer(engine::RingPolymerEngine &engine)
 {
+    if (!settings::Settings::isRingPolymerMDActivated())
+    {
+
+#ifdef WITH_MPI
+        if (mpi::MPI::getSize() > 1)
+            throw customException::MPIException(
+                "MPI parallelization with more than one process is not supported for non-ring polymer MD");
+#endif
+
+        return;
+    }
+
     engine.getStdoutOutput().writeSetup("ring polymer MD (RPMD)");
     engine.getLogOutput().writeSetup("ring polymer MD (RPMD)");
 
