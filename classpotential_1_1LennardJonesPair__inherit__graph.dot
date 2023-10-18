@@ -1,9 +1,0 @@
-digraph "potential::LennardJonesPair"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{potential::LennardJonesPair\n||+ LennardJonesPair()\l+ LennardJonesPair()\l+ LennardJonesPair()\l+ operator==()\l+ calculateEnergyAndForce()\l+ getC6()\l+ getC12()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="inherits from NonCoulombPair and represents a pair of Lennard-Jones types"];
-  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
-  Node2 [label="{potential::NonCoulombPair\n|# _vanDerWaalsType1\l# _vanDerWaalsType2\l# _internalType1\l# _internalType2\l# _radialCutOff\l# _energyCutOff\l# _forceCutOff\l|+ NonCoulombPair()\l+ NonCoulombPair()\l+ NonCoulombPair()\l+ ~NonCoulombPair()\l+ operator==()\l+ calculateEnergyAndForce()\l+ setInternalType1()\l+ setInternalType2()\l+ setEnergyCutOff()\l+ setForceCutOff()\land 7 more...\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpotential_1_1NonCoulombPair.html",tooltip="base class representing a pair of non-coulombic types"];
-}

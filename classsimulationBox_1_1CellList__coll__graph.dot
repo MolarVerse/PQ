@@ -1,7 +1,0 @@
-digraph "simulationBox::CellList"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{simulationBox::CellList\n||+ setup()\l+ updateCellList()\l+ determineCellSize()\l+ determineCellBoundaries()\l+ checkCoulombCutoff()\l+ addNeighbouringCells()\l+ addNeighbouringCellPointers()\l+ addMoleculesToCells()\l+ getCellIndex()\l+ getCellIndexOfAtom()\land 12 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="CellList is a class for cell list."];
-}

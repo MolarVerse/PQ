@@ -1,7 +1,0 @@
-digraph "settings::ManostatSettings"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{settings::ManostatSettings\n||+ ManostatSettings()\l+ ~ManostatSettings()\l+ setManostatType()\l+ setManostatType()\l+ setIsotropy()\l+ setIsotropy()\l+ setPressureSet()\l+ setTargetPressure()\l+ setTauManostat()\l+ setCompressibility()\l+ set2DIsotropicAxes()\l+ set2DAnisotropicAxis()\land 8 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="static class to store settings of the manostat"];
-}

@@ -1,7 +1,0 @@
-digraph "constraints::Constraints"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{constraints::Constraints\n||+ calculateConstraintBondRefs()\l+ applyShake()\l+ applyRattle()\l+ activate()\l+ deactivate()\l+ isActive()\l+ addBondConstraint()\l+ getBondConstraints()\l+ getShakeMaxIter()\l+ getRattleMaxIter()\land 6 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="class containing all constraints"];
-}

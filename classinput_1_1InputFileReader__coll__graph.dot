@@ -1,7 +1,0 @@
-digraph "input::InputFileReader"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{input::InputFileReader\n||+ InputFileReader()\l+ read()\l+ addKeywords()\l+ process()\l+ postProcess()\l+ setFilename()\l+ setKeywordCount()\l+ getKeywordCount()\l+ getKeywordRequired()\l+ getKeywordCountMap()\l+ getKeywordRequiredMap()\l+ getKeywordFuncMap()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="reads input file and sets settings"];
-}

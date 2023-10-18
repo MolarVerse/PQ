@@ -1,9 +1,0 @@
-digraph "virial::VirialAtomic"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{virial::VirialAtomic\n||+ VirialAtomic()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Class for virial calculation of atomic systems."];
-  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
-  Node2 [label="{virial::Virial\n|# _virialType\l# _virial\l|+ ~Virial()\l+ calculateVirial()\l+ intraMolecularVirialCorrection()\l+ setVirial()\l+ getVirial()\l+ getVirialType()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classvirial_1_1Virial.html",tooltip="Base class for virial calculation."];
-}

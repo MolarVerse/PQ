@@ -1,7 +1,0 @@
-digraph "simulationBox::Cell"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{simulationBox::Cell\n||+ clearMolecules()\l+ clearAtomIndices()\l+ addMolecule()\l+ addMolecule()\l+ addNeighbourCell()\l+ addAtomIndices()\l+ getNumberOfMolecules()\l+ getNumberOfNeighbourCells()\l+ getLowerBoundary()\l+ getUpperBoundary()\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Cell is a class for a single cell in the cellList."];
-}
