@@ -34,6 +34,7 @@ jobs:
           && pip3 install sphinx-rtd-theme
           && pip3 install breathe
           && pip3 install sphinx-sitemap
+          && pip3 install m2r
 
       - name: build doxygen
         run: |
