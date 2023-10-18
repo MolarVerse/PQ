@@ -29,6 +29,7 @@
 #include <cstddef>       // for size_t
 #include <iostream>      // for ostream
 #include <type_traits>   // for is_fundamental_v
+#include <vector>        // for vector
 
 namespace linearAlgebra
 {
@@ -500,6 +501,15 @@ namespace linearAlgebra
         {
             return os << v._x << " " << v._y << " " << v._z;
         }
+
+        /**
+         * @brief converts vector3d to std::vector
+         *
+         * @param v
+         *
+         * @return std::vector<T>
+         */
+        std::vector<T> toStdVector() { return {_x, _y, _z}; }
     };
 
 }   // namespace linearAlgebra
