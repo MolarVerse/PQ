@@ -26,7 +26,7 @@ For compilation then type:
 
 ## Singularity
 
-The `scripts` directory contains a file called `pimd_qmcf.def`, which is a definition file for a singularity container. First build this container as follows
+The `scripts` directory contains a file called `pimd_qmcf.def`, which is a definition file for a singularity container. First build this container as following
 
     singularity build --fakeroot <name of container>.sif pimd_qmcf2.def
 
