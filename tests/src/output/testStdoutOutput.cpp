@@ -73,9 +73,9 @@ TEST_F(TestStdoutOutput, writeHeader)
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
-    EXPECT_EQ(line, std::format("         Author:      {}", sysinfo::_AUTHOR_));
+    EXPECT_EQ(line, std::format("         Author:        {}", sysinfo::_AUTHOR_));
     getline(sstream, line);
-    EXPECT_EQ(line, std::format("         Email:       {}", sysinfo::_EMAIL_));
+    EXPECT_EQ(line, std::format("         Email:         {}", sysinfo::_EMAIL_));
 }
 
 /**

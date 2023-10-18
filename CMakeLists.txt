@@ -6,7 +6,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(PIMD-QMCF VERSION 0.1
+project(PIMD-QMCF
     DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
     LANGUAGES CXX C)
 
@@ -33,8 +33,6 @@ SET(CMAKE_INSTALL_RPATH
     "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
 )
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
-
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("Release build.")
     set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -Ofast -ffast-math -flto -march=native -mtune=native -g")
@@ -46,6 +44,11 @@ else()
     set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/.cmake)
+
+include(getGitVersion)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_COMPILE_VERSION_=\\\"${GIT_VERSION}\\\"")
+
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -53,7 +56,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 include(mpi)
 
-# include(doxygen)
+include(doxygen)
 include(testing)
 
 add_subdirectory(tests)

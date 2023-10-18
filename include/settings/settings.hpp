@@ -24,6 +24,8 @@
 
 #define _SETTINGS_HPP_
 
+#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+
 #include <string_view>   // for string_view
 
 namespace settings
@@ -57,6 +59,8 @@ namespace settings
         static inline bool _isQMActivated            = false;
         static inline bool _isRingPolymerMDActivated = false;
 
+        static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
+
       public:
         Settings()  = default;
         ~Settings() = default;
@@ -80,6 +84,8 @@ namespace settings
 
         [[nodiscard]] static JobType getJobtype() { return _jobtype; }
 
+        [[nodiscard]] static size_t getDimensionality() { return _dimensionality; }
+
         [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
         [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
         [[nodiscard]] static bool isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
@@ -91,6 +97,7 @@ namespace settings
         static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
         static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD) { _isRingPolymerMDActivated = isRingPolymerMD; }
+        static void setDimensionality(const size_t dimensionality) { _dimensionality = dimensionality; }
     };
 
 }   // namespace settings

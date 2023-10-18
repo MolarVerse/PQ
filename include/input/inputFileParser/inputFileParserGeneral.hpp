@@ -50,6 +50,7 @@ namespace input
         explicit InputFileParserGeneral(engine::Engine &);
 
         void parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseDimensionality(const std::vector<std::string> &lineElements, const size_t lineNumber);
 
         void parseJobTypeForEngine(const std::vector<std::string> &, const size_t, std::unique_ptr<engine::Engine> &);
     };
