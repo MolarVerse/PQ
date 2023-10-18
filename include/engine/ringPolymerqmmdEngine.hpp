@@ -41,6 +41,9 @@ namespace engine
         void takeStep() override;
 
         void qmCalculation();
+        void applyThermostatHalfStep();
+        void applyThermostat();
+        void applyManostat();
     };
 }   // namespace engine
 

@@ -30,8 +30,8 @@
 #include "vector3d.hpp"                              // for operator*
 
 #include <algorithm>    // for __for_each_fn
+#include <cstddef>      // for size_t
 #include <functional>   // for identity
-#include <stddef.h>     // for size_t
 
 using thermostat::NoseHooverThermostat;
 

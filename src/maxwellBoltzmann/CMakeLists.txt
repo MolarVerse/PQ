@@ -7,6 +7,14 @@ target_include_directories(maxwellBoltzmann
     ${PROJECT_SOURCE_DIR}/include/maxwellBoltzmann
 )
 
+if(BUILD_WITH_MPI)
+    target_link_libraries(maxwellBoltzmann
+        PRIVATE
+        MPI::MPI_CXX
+        pimd_qmcf_mpi
+    )
+endif()
+
 target_link_libraries(maxwellBoltzmann
     PUBLIC
     simulationBox

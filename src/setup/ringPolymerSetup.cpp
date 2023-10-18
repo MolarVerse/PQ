@@ -28,6 +28,7 @@
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
 #include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
+#include "settings.hpp"                       // for Settings
 #include "simulationBox.hpp"                  // for SimulationBox
 
 #include <algorithm>     // for __for_each_fn, for_each
@@ -38,8 +39,6 @@
 
 #ifdef WITH_MPI
 #include "mpi.hpp"   // for MPI
-
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 #endif
 
 using setup::RingPolymerSetup;
@@ -51,6 +50,18 @@ using setup::RingPolymerSetup;
  */
 void setup::setupRingPolymer(engine::RingPolymerEngine &engine)
 {
+    if (!settings::Settings::isRingPolymerMDActivated())
+    {
+
+#ifdef WITH_MPI
+        if (mpi::MPI::getSize() > 1)
+            throw customException::MPIException(
+                "MPI parallelization with more than one process is not supported for non-ring polymer MD");
+#endif
+
+        return;
+    }
+
     engine.getStdoutOutput().writeSetup("ring polymer MD (RPMD)");
     engine.getLogOutput().writeSetup("ring polymer MD (RPMD)");
 
@@ -116,27 +127,10 @@ void RingPolymerSetup::initializeBeads()
         initializeVelocitiesOfBeads();
 }
 
-#ifdef WITH_MPI
-void RingPolymerSetup::initializeVelocitiesOfBeads()
-{
-    auto initVelocities = [](auto &bead)
-    {
-        if (mpi::MPI::isRoot())
-        {
-            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-            maxwellBoltzmann.initializeVelocities(bead);
-        }
-
-        auto velocities = bead.flattenVelocities();
-
-        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-        bead.deFlattenVelocities(velocities);
-    };
-
-    std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
-}
-#else
+/**
+ * @brief initialize velocities of beads with maxwell boltzmann distribution
+ *
+ */
 void RingPolymerSetup::initializeVelocitiesOfBeads()
 {
     auto initVelocities = [](auto &bead)
@@ -147,4 +141,3 @@ void RingPolymerSetup::initializeVelocitiesOfBeads()
 
     std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
 }
-#endif

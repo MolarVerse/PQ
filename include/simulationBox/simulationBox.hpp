@@ -110,9 +110,11 @@ namespace simulationBox
         void initPositions(const double displacement);
 
 #ifdef WITH_MPI
+        std::vector<double> flattenPositions();
         std::vector<double> flattenVelocities();
         std::vector<double> flattenForces();
 
+        void deFlattenPositions(const std::vector<double> &positions);
         void deFlattenVelocities(const std::vector<double> &velocities);
         void deFlattenForces(const std::vector<double> &forces);
 #endif

@@ -28,6 +28,7 @@
 #include "qmRunner.hpp"        // for QMRunner
 #include "resetKinetics.hpp"   // for ResetKinetics
 #include "thermostat.hpp"      // for Thermostat
+#include "vector3d.hpp"        // for Vec3D
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <functional>   // for identity
@@ -59,39 +60,40 @@ using engine::RingPolymerQMMDEngine;
  */
 void RingPolymerQMMDEngine::takeStep()
 {
-    auto beforeQMCalculation = [this](auto &bead)
-    {
-        _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
-        _integrator->firstStep(bead);
-    };
+    applyThermostatHalfStep();
 
-    std::ranges::for_each(_ringPolymerBeads, beforeQMCalculation);
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _integrator->firstStep(bead); });
 
     qmCalculation();
 
     coupleRingPolymerBeads();
 
-    auto afterRingPolymerCoupling = [this](auto &bead)
-    {
-        _thermostat->applyThermostatOnForces(bead);
+    std::ranges::for_each(_ringPolymerBeads,
+                          [this](auto &bead)
+                          {
+                              _thermostat->applyThermostatOnForces(bead);
 
-        _integrator->secondStep(bead);
+                              _integrator->secondStep(bead);
+                          });
 
-        _thermostat->applyThermostat(bead, _physicalData);
+    applyThermostat();
 
-        _physicalData.calculateKinetics(bead);
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _physicalData.calculateKinetics(bead); });
 
-        _manostat->applyManostat(bead, _physicalData);
+    applyManostat();
 
-        _resetKinetics.reset(_step, _physicalData, bead);
-    };
-
-    std::ranges::for_each(_ringPolymerBeads, afterRingPolymerCoupling);
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _resetKinetics.reset(_step, _physicalData, bead); });
 
     combineBeads();
 }
 
+/**
+ * @brief qm calculation
+ *
+ * @details if mpi is activated, each process runs the qm calculation for a single bead or (portion of beads)
+ *
+ */
 #ifdef WITH_MPI
 void RingPolymerQMMDEngine::qmCalculation()
 {
@@ -116,5 +118,110 @@ void RingPolymerQMMDEngine::qmCalculation()
 void RingPolymerQMMDEngine::qmCalculation()
 {
     std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _qmRunner->run(bead, _physicalData); });
+}
+#endif
+
+/**
+ * @brief apply thermostat for half step
+ *
+ * @details if mpi is activated, each process runs the thermostat for a single bead or (portion of beads)
+ *
+ */
+#ifdef WITH_MPI
+void RingPolymerQMMDEngine::applyThermostatHalfStep()
+{
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
+            _thermostat->applyThermostatHalfStep(_ringPolymerBeads[size_t(i)], _physicalData);
+    }
+
+    ::MPI_Barrier(MPI_COMM_WORLD);
+
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        auto velocities = _ringPolymerBeads[size_t(i)].flattenVelocities();
+
+        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+
+        _ringPolymerBeads[size_t(i)].deFlattenVelocities(velocities);
+    }
+}
+#else
+void RingPolymerQMMDEngine::applyThermostatHalfStep()
+{
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _thermostat->applyThermostatHalfStep(bead, _physicalData); });
+}
+#endif
+
+/**
+ * @brief apply thermostat
+ *
+ * @details if mpi is activated, each process runs the thermostat for a single bead or (portion of beads)
+ *
+ */
+#ifdef WITH_MPI
+void RingPolymerQMMDEngine::applyThermostat()
+{
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
+            _thermostat->applyThermostat(_ringPolymerBeads[size_t(i)], _physicalData);
+    }
+
+    ::MPI_Barrier(MPI_COMM_WORLD);
+
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        auto velocities = _ringPolymerBeads[size_t(i)].flattenVelocities();
+
+        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+
+        _ringPolymerBeads[size_t(i)].deFlattenVelocities(velocities);
+    }
+}
+#else
+void RingPolymerQMMDEngine::applyThermostat()
+{
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _thermostat->applyThermostat(bead, _physicalData); });
+}
+#endif
+
+/**
+ * @brief apply manostat
+ *
+ * @details if mpi is activated, each process runs the manostat for a single bead or (portion of beads)
+ *
+ */
+#ifdef WITH_MPI
+void RingPolymerQMMDEngine::applyManostat()
+{
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
+            _manostat->applyManostat(_ringPolymerBeads[size_t(i)], _physicalData);
+    }
+
+    ::MPI_Barrier(MPI_COMM_WORLD);
+
+    for (int i = 0; i < _ringPolymerBeads.size(); ++i)
+    {
+        auto positions     = _ringPolymerBeads[size_t(i)].flattenPositions();
+        auto velocities    = _ringPolymerBeads[size_t(i)].flattenVelocities();
+        auto boxDimensions = _ringPolymerBeads[size_t(i)].getBox().getBoxDimensions().toStdVector();
+
+        ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+        ::MPI_Bcast(positions.data(), positions.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+        ::MPI_Bcast(boxDimensions.data(), boxDimensions.size(), MPI_DOUBLE, i % mpi::MPI::getSize(), MPI_COMM_WORLD);
+
+        _ringPolymerBeads[size_t(i)].deFlattenVelocities(velocities);
+        _ringPolymerBeads[size_t(i)].deFlattenPositions(positions);
+        _ringPolymerBeads[size_t(i)].getBox().setBoxDimensions({boxDimensions[0], boxDimensions[1], boxDimensions[2]});
+    }
+}
+#else
+void RingPolymerQMMDEngine::applyManostat()
+{
+    std::ranges::for_each(_ringPolymerBeads, [this](auto &bead) { _manostat->applyManostat(bead, _physicalData); });
 }
 #endif
