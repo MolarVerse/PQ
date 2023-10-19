@@ -265,12 +265,7 @@ PhysicalData physicalData::mean(std::vector<PhysicalData> &physicalDataVector)
 {
     PhysicalData meanData;
 
-    std::ranges::for_each(physicalDataVector,
-                          [&meanData](auto &physicalData)
-                          {
-                              std::cout << physicalData.getTemperature() << std::endl;
-                              meanData.updateAverages(physicalData);
-                          });
+    std::ranges::for_each(physicalDataVector, [&meanData](auto &physicalData) { meanData.updateAverages(physicalData); });
 
     meanData.makeAverages(physicalDataVector.size());
 

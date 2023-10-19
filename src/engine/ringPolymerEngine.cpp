@@ -73,9 +73,6 @@ void RingPolymerEngine::writeOutput()
 
         _averagePhysicalData = mean(_averageRingPolymerBeadsPhysicalData);
 
-        std::cout << _averageRingPolymerBeadsPhysicalData[0].getTemperature() << std::endl;
-        std::cout << _averagePhysicalData.getTemperature() << std::endl;
-
         const auto dt             = settings::TimingsSettings::getTimeStep();
         const auto step0          = _timings.getStepCount();
         const auto effectiveStep  = _step + step0;
