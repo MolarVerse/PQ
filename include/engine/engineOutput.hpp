@@ -99,7 +99,7 @@ namespace engine
         void writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &);
-        void writeRingPolymerEnergyFile(const size_t, const physicalData::PhysicalData &);
+        void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
         output::EnergyOutput                 &getEnergyOutput() { return *_energyOutput; }
         output::MomentumOutput               &getMomentumOutput() { return *_momentumOutput; }

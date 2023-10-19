@@ -181,43 +181,6 @@ TEST_F(TestEnergyOutput, qmActive)
 /**
  * @brief tests writing energy output file
  *
- * @details ring polymer is active
- *
- */
-TEST_F(TestEnergyOutput, ringPolymerActive)
-{
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
-    _physicalData->setKineticEnergy(3.0);
-    _physicalData->setCoulombEnergy(4.0);
-    _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
-    _physicalData->setIntraCoulombEnergy(9.0);
-    _physicalData->setIntraNonCoulombEnergy(10.0);
-    _physicalData->setRingPolymerEnergy({1.0, 2.0});
-
-    settings::ForceFieldSettings::deactivate();
-    settings::Settings::activateMM();
-    settings::Settings::deactivateQM();
-    settings::Settings::activateRingPolymerMD();
-    settings::ManostatSettings::setManostatType("none");
-
-    _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, 0.1, *_physicalData);
-    _energyOutput->close();
-
-    std::ifstream file("default.en");
-    std::string   line;
-    std::getline(file, line);
-    EXPECT_EQ(line,
-              "       100\t      1.000000000000\t      2.000000000000\t     12.000000000000\t      1.500000000000\t      "
-              "2.000000000000\t      3.000000000000\t     19.000000000000\t      4.000000000000\t      5.000000000000\t         "
-              "1.03923e+01\t     0.10000");
-}
-
-/**
- * @brief tests writing energy output file
- *
  * @details nose hoover is active
  *
  */

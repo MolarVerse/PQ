@@ -108,8 +108,7 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
 
-    for (size_t i = 0; i < physicalData.getRingPolymerEnergy().size(); ++i)
-        _ringPolymerEnergy.at(i) += physicalData.getRingPolymerEnergy()[i];
+    _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
 }
 
 /**
@@ -146,7 +145,7 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _noseHooverMomentumEnergy /= outputFrequency;
     _noseHooverFrictionEnergy /= outputFrequency;
 
-    std::ranges::for_each(_ringPolymerEnergy, [outputFrequency](auto &energy) { energy /= outputFrequency; });
+    _ringPolymerEnergy /= outputFrequency;
 }
 
 /**
@@ -182,7 +181,7 @@ void PhysicalData::reset()
     _noseHooverMomentumEnergy = 0.0;
     _noseHooverFrictionEnergy = 0.0;
 
-    std::ranges::for_each(_ringPolymerEnergy, [](auto &energy) { energy = 0.0; });
+    _ringPolymerEnergy = 0.0;
 }
 
 /**
@@ -254,4 +253,26 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
 void PhysicalData::changeKineticVirialToAtomic()
 {
     getKineticEnergyVirialVector = std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
+}
+
+/**
+ * @brief calculate the mean of a vector of physicalData
+ *
+ * @param physicalDataVector
+ * @return PhysicalData
+ */
+PhysicalData physicalData::mean(std::vector<PhysicalData> &physicalDataVector)
+{
+    PhysicalData meanData;
+
+    std::ranges::for_each(physicalDataVector,
+                          [&meanData](auto &physicalData)
+                          {
+                              std::cout << physicalData.getTemperature() << std::endl;
+                              meanData.updateAverages(physicalData);
+                          });
+
+    meanData.makeAverages(physicalDataVector.size());
+
+    return meanData;
 }

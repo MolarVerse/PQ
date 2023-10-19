@@ -37,6 +37,10 @@ namespace simulationBox
 
 namespace physicalData
 {
+    class PhysicalData;   // forward declaration
+
+    PhysicalData mean(std::vector<PhysicalData> &physicalDataVector);
+
     /**
      * @class PhysicalData
      *
@@ -76,7 +80,7 @@ namespace physicalData
 
         linearAlgebra::tensor3D _virial = {0.0};
 
-        std::vector<double> _ringPolymerEnergy;
+        double _ringPolymerEnergy = 0.0;
 
       public:
         void calculateTemperature(simulationBox::SimulationBox &);
@@ -95,8 +99,6 @@ namespace physicalData
 
         [[nodiscard]] double getTotalEnergy() const;
 
-        void resizeRingPolymerEnergy(const size_t size) { _ringPolymerEnergy.resize(size); }
-
         /********************
          * standard adders  *
          ********************/
@@ -110,6 +112,8 @@ namespace physicalData
         void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
         void addDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy += dihedralEnergy; }
         void addImproperEnergy(const double improperEnergy) { _improperEnergy += improperEnergy; }
+
+        void addRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy += ringPolymerEnergy; }
 
         /********************
          * standard setters *
@@ -144,7 +148,7 @@ namespace physicalData
         void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
         void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
 
-        void setRingPolymerEnergy(const std::vector<double> &ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+        void setRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
 
         /********************
          * standard getters *
@@ -174,13 +178,13 @@ namespace physicalData
         [[nodiscard]] double getNoseHooverMomentumEnergy() const { return _noseHooverMomentumEnergy; }
         [[nodiscard]] double getNoseHooverFrictionEnergy() const { return _noseHooverFrictionEnergy; }
 
+        [[nodiscard]] double getRingPolymerEnergy() const { return _ringPolymerEnergy; }
+
         [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicTensor; }
         [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularTensor; }
         [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
         [[nodiscard]] linearAlgebra::Vec3D    getMomentum() const { return _momentum; }
         [[nodiscard]] linearAlgebra::Vec3D    getAngularMomentum() const { return _angularMomentum; }
-
-        [[nodiscard]] std::vector<double> getRingPolymerEnergy() const { return _ringPolymerEnergy; }
     };
 
 }   // namespace physicalData

@@ -25,6 +25,7 @@
 #define _RING_POLYMER_ENGINE_HPP_
 
 #include "engine.hpp"          // for Engine
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
 #include <vector>   // for vector
@@ -41,13 +42,26 @@ namespace engine
     {
       protected:
         std::vector<simulationBox::SimulationBox> _ringPolymerBeads;
+        std::vector<physicalData::PhysicalData>   _ringPolymerBeadsPhysicalData;
+        std::vector<physicalData::PhysicalData>   _averageRingPolymerBeadsPhysicalData;
 
       public:
         void writeOutput() override;
 
-        void addRingPolymerBead(const simulationBox::SimulationBox &bead) { _ringPolymerBeads.push_back(bead); }
+        void resizeRingPolymerBeadPhysicalData(const size_t numberOfBeads);
+
         void coupleRingPolymerBeads();
         void combineBeads();
+
+        /************************
+         * standard add methods *
+         ************************/
+
+        void addRingPolymerBead(const simulationBox::SimulationBox &bead) { _ringPolymerBeads.push_back(bead); }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] std::vector<simulationBox::SimulationBox> &getRingPolymerBeads() { return _ringPolymerBeads; }
     };
