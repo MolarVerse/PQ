@@ -1,0 +1,3 @@
+set(CMAKE_BUILD_TYPE "RelWithDebug" CACHE STRING "Build type" FORCE)
+set(CMAKE_BUILD_TYPES "Debug;RelWithDebug;Release")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_BUILD_TYPES})

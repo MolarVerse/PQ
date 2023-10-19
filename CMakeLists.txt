@@ -10,6 +10,8 @@ project(PIMD-QMCF
     DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
     LANGUAGES CXX C)
 
+include(config.cmake)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
         message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
@@ -20,10 +22,6 @@ endif()
 
 # set if shared or static libraries
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE RelWithDebug)
-endif()
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
@@ -40,7 +38,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("Debug build.")
     set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 else()
-    message("Release build.")
+    message("Release with Degub build.")
     set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 endif()
 
