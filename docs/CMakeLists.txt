@@ -1,5 +1,3 @@
-option(BUILD_DOC "Build documentation" ON)
-
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
