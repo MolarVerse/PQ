@@ -62,6 +62,18 @@ namespace linearAlgebra
             _data[2] = Vector3D<T>(t);
         }
 
+        StaticMatrix3x3(const std::vector<T> &vector)
+        {
+            if (vector.size() != 9)
+            {
+                throw std::runtime_error("vector size must be 9");
+            }
+
+            _data[0] = Vector3D<T>(vector[0], vector[1], vector[2]);
+            _data[1] = Vector3D<T>(vector[3], vector[4], vector[5]);
+            _data[2] = Vector3D<T>(vector[6], vector[7], vector[8]);
+        }
+
         /**
          * @brief index operator
          *
@@ -92,6 +104,26 @@ namespace linearAlgebra
          * @return StaticMatrix3x3
          */
         StaticMatrix3x3 operator-() { return StaticMatrix3x3(-_data[0], -_data[1], -_data[2]); }
+
+        /**
+         * @brief operator+ for two StaticMatrix3x3's
+         *
+         * @param rhs
+         * @return StaticMatrix3x3
+         */
+        std::vector<T> toStdVector() const
+        {
+            std::vector<T> result;
+            result.reserve(9);
+            for (const auto &row : _data)
+            {
+                for (const auto &element : row)
+                {
+                    result.push_back(element);
+                }
+            }
+            return result;
+        }
     };
 }   // namespace linearAlgebra
 

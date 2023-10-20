@@ -19,8 +19,15 @@ using mpi::MPI;
 void MPI::init(int *argc, char ***argv)
 {
     ::MPI_Init(argc, argv);
-    ::MPI_Comm_rank(MPI_COMM_WORLD, &_rank);
-    ::MPI_Comm_size(MPI_COMM_WORLD, &_size);
+
+    int rank;
+    int size;
+
+    ::MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    ::MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    _rank = size_t(rank);
+    _size = size_t(size);
 
     setupMPIDirectories();
 
@@ -64,7 +71,7 @@ void MPI::redirectOutput()
  */
 void MPI::finalize()
 {
-    for (int i = 1; i < _size; ++i)
+    for (size_t i = 1; i < _size; ++i)
     {
         const auto path = std::format("procId_pimd-qmcf_{}", i);
         std::filesystem::remove_all(path);

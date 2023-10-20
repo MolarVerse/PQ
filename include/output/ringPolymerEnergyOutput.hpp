@@ -27,6 +27,7 @@
 #include "output.hpp"   // for Output
 
 #include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 namespace physicalData
 {
@@ -46,7 +47,9 @@ namespace output
       public:
         using Output::Output;
 
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void   write(const size_t step, const std::vector<physicalData::PhysicalData> &);
+        double sumOfRingPolymerEnergies(const std::vector<physicalData::PhysicalData> &);
+        double maxRingPolymerEnergy(const std::vector<physicalData::PhysicalData> &);
     };
 
 }   // namespace output

@@ -243,58 +243,6 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
 /**
  * @brief tests writing info file
  *
- * @details ring polymer is active
- *
- */
-TEST_F(TestEnergyOutput, writeInfo_ringPolymerActive)
-{
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
-    _physicalData->setKineticEnergy(3.0);
-    _physicalData->setCoulombEnergy(4.0);
-    _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linearAlgebra::Vec3D(6.0));
-    _physicalData->setIntraCoulombEnergy(9.0);
-    _physicalData->setIntraNonCoulombEnergy(10.0);
-    _physicalData->setRingPolymerEnergy({1.0, 2.0});
-
-    settings::ForceFieldSettings::deactivate();
-    settings::Settings::activateMM();
-    settings::Settings::deactivateQM();
-    settings::Settings::activateRingPolymerMD();
-    settings::ManostatSettings::setManostatType("none");
-
-    _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, 0.1, *_physicalData);
-    _infoOutput->close();
-
-    std::ifstream file("default.info");
-    std::string   line;
-    std::getline(file, line);
-    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
-    getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
-    getline(file, line);
-    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
-    getline(file, line);
-    EXPECT_EQ(line, "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             1.00000 K          |");
-    getline(file, line);
-    EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
-    getline(file, line);
-    EXPECT_EQ(line, "|   E(MEAN RPMD)            1.50000 kcal/mol E(MAX RPMD)             2.00000 kcal/mol   |");
-    getline(file, line);
-    EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
-    getline(file, line);
-    EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
-    getline(file, line);
-    EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
-    getline(file, line);
-    EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
-}
-
-/**
- * @brief tests writing info file
- *
  * @details nose hoover is active
  *
  */

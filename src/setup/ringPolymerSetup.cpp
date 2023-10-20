@@ -91,8 +91,7 @@ void RingPolymerSetup::setup()
  */
 void RingPolymerSetup::setupPhysicalData()
 {
-    _engine.getPhysicalData().resizeRingPolymerEnergy(settings::RingPolymerSettings::getNumberOfBeads());
-    _engine.getAveragePhysicalData().resizeRingPolymerEnergy(settings::RingPolymerSettings::getNumberOfBeads());
+    _engine.resizeRingPolymerBeadPhysicalData(settings::RingPolymerSettings::getNumberOfBeads());
 }
 
 /**
