@@ -7,6 +7,18 @@ Developer Guide
 This section includes information for developers who want to contribute to the project. It includes information about the project structure, how to run the tests, and how to build the documentation. It also includes information about the project's coding style and how to contribute to the project.
 
 *****************
+Project Structure
+*****************
+
+*****
+Tests
+*****
+
+*************
+Documentation
+*************
+
+*****************
 How to Contribute
 *****************
 
