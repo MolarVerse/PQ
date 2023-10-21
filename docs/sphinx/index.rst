@@ -12,7 +12,10 @@ Welcome to PIMD-QMCF's documentation!
     
     src/userGuide/userGuide
     src/installation/installation
+    src/developerGuide/developerGuide
 
 * :ref:`userGuide`
 
 * :ref:`installation`
+
+* :ref:`developerGuide`
