@@ -126,5 +126,5 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    setupRingPolymer(dynamic_cast<engine::RingPolymerEngine &>(engine));
+    setupRingPolymer(engine);
 }

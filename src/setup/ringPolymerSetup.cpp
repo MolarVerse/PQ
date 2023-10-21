@@ -48,7 +48,7 @@ using setup::RingPolymerSetup;
  *
  * @param engine
  */
-void setup::setupRingPolymer(engine::RingPolymerEngine &engine)
+void setup::setupRingPolymer(engine::Engine &engine)
 {
     if (!settings::Settings::isRingPolymerMDActivated())
     {
@@ -65,7 +65,7 @@ void setup::setupRingPolymer(engine::RingPolymerEngine &engine)
     engine.getStdoutOutput().writeSetup("ring polymer MD (RPMD)");
     engine.getLogOutput().writeSetup("ring polymer MD (RPMD)");
 
-    RingPolymerSetup ringPolymerSetup(engine);
+    RingPolymerSetup ringPolymerSetup(dynamic_cast<engine::RingPolymerEngine &>(engine));
     ringPolymerSetup.setup();
 }
 
