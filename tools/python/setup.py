@@ -27,9 +27,10 @@ from setuptools import setup, find_packages
 setup(
     name='pimd_qmcf_tools',
     version='0.1.0',
-    packages=find_packages(include=['pimd_qmcf_tools']),
+    packages=find_packages(include=['pimd_qmcf_tools', 'pimd_qmcf_tools.enalyzer']),
     scripts=[
         "bin/traj2box",
-        "bin/traj2qmcfc"
+        "bin/traj2qmcfc",
+        "bin/enalyzer",
     ]
 )

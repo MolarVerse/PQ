@@ -1,0 +1,11 @@
+#! /usr/bin/env python3
+
+import sys
+import pimd_qmcf_tools.enalyzer.enalyzer as enalyzer
+from pimd_qmcf_tools.common import ToolError
+
+try:
+    enalyzer.main()
+except ToolError as e:
+    sys.stderr.write('ScriptError: ' + str(e) + '\n')
+    sys.exit(1)
