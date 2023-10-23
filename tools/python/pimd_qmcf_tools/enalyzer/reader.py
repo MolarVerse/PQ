@@ -61,4 +61,4 @@ def read_en_info(energy_filenames, info_filename):
     data = pd.concat(data, axis=1)
     data.columns = column_names
 
-    return data
+    return data, column_names

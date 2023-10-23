@@ -31,7 +31,7 @@ import signal
 import sys
 
 # Add the path to the read_en module and feature module
-from pimd_qmcf_tools.enalyzer.reader import read_info, read_en
+from pimd_qmcf_tools.enalyzer.reader import read_en, read_info
 from pimd_qmcf_tools.enalyzer.feature import get_feature
 from pimd_qmcf_tools.enalyzer.liveplot import liveplot
 
@@ -54,8 +54,6 @@ def gui(en_filenames, info_filename):
 
     # Read all en files
     data = read_en(en_filenames)
-
-    # Read info file
     info_list = read_info(info_filename)
 
     # check if same number of columns are present in .en file as in .info suggested
@@ -69,94 +67,28 @@ def gui(en_filenames, info_filename):
     selected = IntVar()
 
     for (j, text) in enumerate(info_list):
-        radio = Radiobutton(root, text=text, value=j, indicator=0, variable=selected,
-                            background="#d4d700", font='sans 14')
-        radio.grid(column=j % 2, row=int(j/2),
-                   ipadx=10, ipady=5, sticky=W+E+N+S)
+        radio = Radiobutton(root, text=text, value=j, indicator=0, variable=selected)
+        radio.grid(column=j % 2, row=int(j/2))
 
     # Call select features
     select_features()
 
-    # Open matplotlib window
-    def graph():
-        for (i, dataframe) in enumerate(data):
-            
-            list_features = get_features()
-
-            # Checks if time step is given and converts to ps
-            if not (list_features[0] == ""):
-                timeStepValue = float(list_features[0])
-                x = dataframe.get(0).apply(lambda x: x * timeStepValue / 1000)
-            else:
-                x = dataframe.get(0)
-            
-            y = dataframe.get(selected.get())
-            label = str(info_list[selected.get()]) + \
-                " (" + str(en_filenames[i]) + ")"
-            plt.plot(x, y, label=label)
-
-            kernelSize = 100
-            if runningAverageKernel.get() != "":
-                kernelSize = int(runningAverageKernel.get())
-
-            if any(list_features):
-                for (i, value) in enumerate(list_features):
-                    if (value == 1):
-                        (f, label) = get_feature(i, value, y, kernelSize)
-                        plt.plot(x, f, label=label)
-
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15),
-                   ncol=2, fancybox=True, shadow=True)
-        
-        # Checks if time step is given
-        if not (list_features[0] == ""):
-            plt.xlabel("Simulation Time in ps")
-        else:
-            plt.xlabel("Frame")
-
-        plt.show()
+    def graph_wrapper():
+        graph(data=data, info_list=info_list, en_filenames=en_filenames, selected=selected)
 
     def liveplot_wrapper():
         liveplot(en_filenames=en_filenames, selected=selected)
 
-    button = Button(root, text="Graph It!", command=graph,
-                    background="#007f5f", font='sans 16 bold')
-    button.grid(column=3, row=j , ipadx=15, ipady=15)
+    button = Button(root, text="Graph It!", command=graph_wrapper)
+    button.grid(column=3, row=j)
 
-    button_lp = Button(root, text="Live Plot!", command=liveplot_wrapper,
-                    background="#007f5f", font='sans 16 bold')
-    button_lp.grid(column=4, row = j, ipadx=15, ipady=15)
+    button_lp = Button(root, text="Live Plot!", command=liveplot_wrapper)
+    button_lp.grid(column=4, row = j)
 
-    def statistics_window():
-        mean = []
-        std_dev = []
-        total_datasets = []
-        for (i, dataframe) in enumerate(data):
-            y = dataframe.get(selected.get())
-            mean.append(np.mean(y))
-            std_dev.append(np.std(y))
-            total_datasets.append(y)
+    def statistics_window_wrapper():
+        statistics_window(data=data, en_filenames=en_filenames, selected=selected)
 
-        newWindow = Toplevel(root)
-        newWindow.title("Statistical informations")
-        T = Text(root)
-
-        # calculate means and standard deviations
-        for (i, average) in enumerate(mean):
-            message = "Mean of "+str(en_filenames[i])+" = "+str(
-                round(average, 3))+", Standard deviation = "+str(round(std_dev[i], 3))
-            Label(newWindow, text=message, font='sans 12 ').pack()
-
-        total_datasets = np.concatenate(total_datasets)
-        total_mean = np.mean(total_datasets)
-        total_std_dev = np.std(total_datasets)
-        conclusion_message = "Mean over all datasets= " + \
-            str(round(total_mean, 3))+", Standard deviation = " + \
-            str(round(total_std_dev, 3))
-        Label(newWindow, text=conclusion_message, font='sans 12 bold').pack()
-
-    Button(root, text="Click to open statistical informations", command=statistics_window,
-           background="#80b918", font='sans 14').grid(columnspan=2, row=int((j+1)/2), ipadx=10, ipady=5, sticky=W+E+N+S)
+    Button(root, text="Click to open statistical informations", command=statistics_window_wrapper).grid(row=int((j+1)/2))
 
     root.mainloop()
 
@@ -173,42 +105,98 @@ def select_features():
 
     rowCounter = -1
 
-    Label(root, text="Time Axis:", font='sans 16 bold',
-        background="white").grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2)
+    Label(root, text="Time Axis:").grid(row=(rowCounter := rowCounter+1), column=3)
 
     timeStep = StringVar()
-    Label(root, text="Time step (fs):", background='white', font='sans 14').grid(
-        row=(rowCounter := rowCounter+1), column=3, ipadx=5, ipady=5, sticky=W+E+N+S)
-    Entry(root, textvariable=timeStep, font='sans 14').grid(
-        row=rowCounter, column=4, ipadx=5, sticky=W+E+N+S)
+    Label(root, text="Time step (fs):").grid(row=(rowCounter := rowCounter+1), column=3)
+    Entry(root, textvariable=timeStep).grid(row=rowCounter, column=4)
 
-    Label(root, text="Analysis Tools:", font='sans 16 bold',
-          background="white").grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2)
+    Label(root, text="Analysis Tools:").grid(row=(rowCounter := rowCounter+1), column=3)
 
     runningAverageKernel = StringVar()
-    Label(root, text="Window Size:", background='white', font='sans 14').grid(
-        row=(rowCounter := rowCounter+1), column=3, ipadx=5, ipady=5, sticky=W+E+N+S)
-    Entry(root, textvariable=runningAverageKernel, font='sans 14').grid(
-        row=rowCounter, column=4, ipadx=5, sticky=W+E+N+S)
+    Label(root, text="Window Size:").grid(row=(rowCounter := rowCounter+1), column=3)
+    Entry(root, textvariable=runningAverageKernel).grid(row=rowCounter, column=4)
 
     runningAverage = IntVar()
-    Checkbutton(root, text="Running Average", indicator=0, variable=runningAverage,
-                background="#55a630", font='sans 14').grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2, ipadx=5, ipady=5, sticky=W+E+N+S)
+    Checkbutton(root, text="Running Average", indicator=0, variable=runningAverage).grid(row=(rowCounter := rowCounter+1), column=3)
 
     overallMean = IntVar()
-    Checkbutton(root, text="Overall Mean", indicator=0, variable=overallMean,
-                background="#55a630", font='sans 14').grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2, ipadx=5, ipady=5, sticky=W+E+N+S)
+    Checkbutton(root, text="Overall Mean", indicator=0, variable=overallMean).grid(row=(rowCounter := rowCounter+1), column=3)
 
     integrate = IntVar()
-    Checkbutton(root, text="Integratation", indicator=0, variable=integrate,
-                background="#55a630", font='sans 14').grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2, ipadx=5, ipady=5, sticky=W+E+N+S)
+    Checkbutton(root, text="Integratation", indicator=0, variable=integrate).grid(row=(rowCounter := rowCounter+1), column=3)
 
     integratationAverage = IntVar()
-    Checkbutton(root, text="Integratation Average", indicator=0, variable=integratationAverage,
-                background="#55a630", font='sans 14').grid(row=(rowCounter := rowCounter+1), column=3, columnspan=2, ipadx=5, ipady=5, sticky=W+E+N+S)
+    Checkbutton(root, text="Integratation Average", indicator=0, variable=integratationAverage).grid(row=(rowCounter := rowCounter+1), column=3)
 
     return None
 
 
 def get_features():
     return [timeStep.get(), runningAverage.get(), overallMean.get(), integrate.get(), integratationAverage.get()]
+
+    # Open matplotlib window
+def graph(data, info_list, en_filenames, selected):
+    for (i, dataframe) in enumerate(data):
+        
+        list_features = get_features()
+
+        # Checks if time step is given and converts to ps
+        if not (list_features[0] == ""):
+            timeStepValue = float(list_features[0])
+            x = dataframe.get(0).apply(lambda x: x * timeStepValue / 1000)
+        else:
+            x = dataframe.get(0)
+        
+        y = dataframe.get(selected.get())
+        label = str(info_list[selected.get()]) + \
+            " (" + str(en_filenames[i]) + ")"
+        plt.plot(x, y, label=label)
+
+        kernelSize = 100
+        if runningAverageKernel.get() != "":
+            kernelSize = int(runningAverageKernel.get())
+
+        if any(list_features):
+            for (i, value) in enumerate(list_features):
+                if (value == 1):
+                    (f, label) = get_feature(i, value, y, kernelSize)
+                    plt.plot(x, f, label=label)
+
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, fancybox=True, shadow=True)
+    
+    # Checks if time step is given
+    if not (list_features[0] == ""):
+        plt.xlabel("Simulation Time in ps")
+    else:
+        plt.xlabel("Frame")
+
+    plt.show()
+
+def statistics_window(data, en_filenames, selected):
+    mean = []
+    std_dev = []
+    total_datasets = []
+    for (i, dataframe) in enumerate(data):
+        y = dataframe.get(selected.get())
+        mean.append(np.mean(y))
+        std_dev.append(np.std(y))
+        total_datasets.append(y)
+
+    newWindow = Toplevel(root)
+    newWindow.title("Statistical informations")
+    T = Text(root)
+
+    # calculate means and standard deviations
+    for (i, average) in enumerate(mean):
+        message = "Mean of "+str(en_filenames[i])+" = "+str(
+            round(average, 3))+", Standard deviation = "+str(round(std_dev[i], 3))
+        Label(newWindow, text=message).pack()
+
+    total_datasets = np.concatenate(total_datasets)
+    total_mean = np.mean(total_datasets)
+    total_std_dev = np.std(total_datasets)
+    conclusion_message = "Mean over all datasets= " + \
+        str(round(total_mean, 3))+", Standard deviation = " + \
+        str(round(total_std_dev, 3))
+    Label(newWindow, text=conclusion_message).pack()
