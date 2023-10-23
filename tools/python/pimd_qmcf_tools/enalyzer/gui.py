@@ -88,7 +88,7 @@ def gui(en_filenames, info_filename):
     def statistics_window_wrapper():
         statistics_window(data=data, en_filenames=en_filenames, selected=selected)
 
-    Button(root, text="Click to open statistical informations", command=statistics_window_wrapper).grid(row=int((j+1)/2))
+    Button(root, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
 
     root.mainloop()
 
@@ -96,77 +96,85 @@ def gui(en_filenames, info_filename):
 
 
 def select_features():
-    global timeStep
-    global runningAverage
-    global runningAverageKernel
-    global overallMean
+    global time_step
+    global running_average
+    global running_average_kernel
+    global overall_mean
     global integrate
-    global integratationAverage
+    global integration_average
 
-    rowCounter = -1
+    row_counter = -1
 
-    Label(root, text="Time Axis:").grid(row=(rowCounter := rowCounter+1), column=3)
+    row_counter = row_counter+1
+    Label(root, text="Time Axis:").grid(row = row_counter, column=3)
 
-    timeStep = StringVar()
-    Label(root, text="Time step (fs):").grid(row=(rowCounter := rowCounter+1), column=3)
-    Entry(root, textvariable=timeStep).grid(row=rowCounter, column=4)
+    time_step = StringVar()
+    row_counter = row_counter+1
+    Label(root, text="Time step (fs):").grid(row = row_counter, column=3)
+    Entry(root, textvariable=time_step).grid(row=row_counter, column=4)
 
-    Label(root, text="Analysis Tools:").grid(row=(rowCounter := rowCounter+1), column=3)
+    row_counter = row_counter+1
+    Label(root, text="Analysis Tools:").grid(row=row_counter, column=3)
 
-    runningAverageKernel = StringVar()
-    Label(root, text="Window Size:").grid(row=(rowCounter := rowCounter+1), column=3)
-    Entry(root, textvariable=runningAverageKernel).grid(row=rowCounter, column=4)
+    running_average_kernel = StringVar()
+    row_counter = row_counter+1
+    Label(root, text="Window Size:").grid(row=row_counter, column=3)
+    Entry(root, textvariable=running_average_kernel).grid(row=row_counter, column=4)
 
-    runningAverage = IntVar()
-    Checkbutton(root, text="Running Average", indicator=0, variable=runningAverage).grid(row=(rowCounter := rowCounter+1), column=3)
+    running_average = IntVar()
+    row_counter = row_counter+1
+    Checkbutton(root, text="Running Average", indicator=0, variable=running_average).grid(row=row_counter, column=3)
 
-    overallMean = IntVar()
-    Checkbutton(root, text="Overall Mean", indicator=0, variable=overallMean).grid(row=(rowCounter := rowCounter+1), column=3)
+    overall_mean = IntVar()
+    row_counter = row_counter+1
+    Checkbutton(root, text="Overall Mean", indicator=0, variable=overall_mean).grid(row=row_counter, column=3)
 
     integrate = IntVar()
-    Checkbutton(root, text="Integratation", indicator=0, variable=integrate).grid(row=(rowCounter := rowCounter+1), column=3)
+    row_counter = row_counter+1
+    Checkbutton(root, text="Integratation", indicator=0, variable=integrate).grid(row=row_counter, column=3)
 
-    integratationAverage = IntVar()
-    Checkbutton(root, text="Integratation Average", indicator=0, variable=integratationAverage).grid(row=(rowCounter := rowCounter+1), column=3)
+    integration_average = IntVar()
+    row_counter = row_counter+1
+    Checkbutton(root, text="Integratation Average", indicator=0, variable=integration_average).grid(row=row_counter, column=3)
 
     return None
 
 
 def get_features():
-    return [timeStep.get(), runningAverage.get(), overallMean.get(), integrate.get(), integratationAverage.get()]
+    return [time_step.get(), running_average.get(), overall_mean.get(), integrate.get(), integration_average.get()]
 
     # Open matplotlib window
 def graph(data, info_list, en_filenames, selected):
-    for (i, dataframe) in enumerate(data):
+    for (i, data_frame) in enumerate(data):
         
         list_features = get_features()
 
         # Checks if time step is given and converts to ps
-        if not (list_features[0] == ""):
-            timeStepValue = float(list_features[0])
-            x = dataframe.get(0).apply(lambda x: x * timeStepValue / 1000)
+        if list_features[0] != "":
+            time_step_value = float(list_features[0])
+            x = data_frame.get(0).apply(lambda x, time=time_step_value: x * time / 1000)
         else:
-            x = dataframe.get(0)
+            x = data_frame.get(0)
         
-        y = dataframe.get(selected.get())
+        y = data_frame.get(selected.get())
         label = str(info_list[selected.get()]) + \
             " (" + str(en_filenames[i]) + ")"
         plt.plot(x, y, label=label)
 
-        kernelSize = 100
-        if runningAverageKernel.get() != "":
-            kernelSize = int(runningAverageKernel.get())
+        kernel_size = 100
+        if running_average_kernel.get() != "":
+            kernel_size = int(running_average_kernel.get())
 
         if any(list_features):
             for (i, value) in enumerate(list_features):
                 if (value == 1):
-                    (f, label) = get_feature(i, value, y, kernelSize)
+                    (f, label) = get_feature(i, value, y, kernel_size)
                     plt.plot(x, f, label=label)
 
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, fancybox=True, shadow=True)
     
     # Checks if time step is given
-    if not (list_features[0] == ""):
+    if list_features[0] != "":
         plt.xlabel("Simulation Time in ps")
     else:
         plt.xlabel("Frame")
@@ -177,21 +185,21 @@ def statistics_window(data, en_filenames, selected):
     mean = []
     std_dev = []
     total_datasets = []
-    for (i, dataframe) in enumerate(data):
-        y = dataframe.get(selected.get())
+    for (i, data_frame) in enumerate(data):
+        y = data_frame.get(selected.get())
         mean.append(np.mean(y))
         std_dev.append(np.std(y))
         total_datasets.append(y)
 
-    newWindow = Toplevel(root)
-    newWindow.title("Statistical informations")
-    T = Text(root)
+    new_window = Toplevel(root)
+    new_window.title("Statistical information")
+    Text(root)
 
     # calculate means and standard deviations
     for (i, average) in enumerate(mean):
         message = "Mean of "+str(en_filenames[i])+" = "+str(
             round(average, 3))+", Standard deviation = "+str(round(std_dev[i], 3))
-        Label(newWindow, text=message).pack()
+        Label(new_window, text=message).pack()
 
     total_datasets = np.concatenate(total_datasets)
     total_mean = np.mean(total_datasets)
@@ -199,4 +207,4 @@ def statistics_window(data, en_filenames, selected):
     conclusion_message = "Mean over all datasets= " + \
         str(round(total_mean, 3))+", Standard deviation = " + \
         str(round(total_std_dev, 3))
-    Label(newWindow, text=conclusion_message).pack()
+    Label(new_window, text=conclusion_message).pack()
