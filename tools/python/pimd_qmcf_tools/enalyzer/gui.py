@@ -24,7 +24,6 @@
 
 import os
 from tkinter import *
-import tkinter as tk
 import numpy as np
 import matplotlib.pyplot as plt
 import signal
@@ -38,19 +37,18 @@ from pimd_qmcf_tools.enalyzer.liveplot import liveplot
 # Signal handler for closing the gui window
 def signal_handler(sig, frame):
     print('You pressed Ctrl+C!')
-    root.destroy()
+    window.destroy()
     sys.exit(0)
 
 # Register signal handler with SIGINT signal
 signal.signal(signal.SIGINT, signal_handler)
 
 # Create the root window
-root = Tk()
+window = Tk()
 
 def gui(en_filenames, info_filename):
 
-    root.config(bg="white")
-    root.title('Energy File Analyzer - PIMD-QMCF')
+    window.title('Energy File Analyzer - PIMD-QMCF')
 
     # Read all en files
     data = read_en(en_filenames)
@@ -67,7 +65,7 @@ def gui(en_filenames, info_filename):
     selected = IntVar()
 
     for (j, text) in enumerate(info_list):
-        radio = Radiobutton(root, text=text, value=j, indicator=0, variable=selected)
+        radio = Radiobutton(window, text=text, value=j, indicator=0, variable=selected)
         radio.grid(column=j % 2, row=int(j/2))
 
     # Call select features
@@ -79,18 +77,18 @@ def gui(en_filenames, info_filename):
     def liveplot_wrapper():
         liveplot(en_filenames=en_filenames, selected=selected)
 
-    button = Button(root, text="Graph It!", command=graph_wrapper)
+    button = Button(window, text="Graph It!", command=graph_wrapper)
     button.grid(column=3, row=j)
 
-    button_lp = Button(root, text="Live Plot!", command=liveplot_wrapper)
+    button_lp = Button(window, text="Live Plot!", command=liveplot_wrapper)
     button_lp.grid(column=4, row = j)
 
     def statistics_window_wrapper():
         statistics_window(data=data, en_filenames=en_filenames, selected=selected)
 
-    Button(root, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
+    Button(window, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
 
-    root.mainloop()
+    window.mainloop()
 
     return None
 
@@ -106,36 +104,36 @@ def select_features():
     row_counter = -1
 
     row_counter = row_counter+1
-    Label(root, text="Time Axis:").grid(row = row_counter, column=3)
+    Label(window, text="Time Axis:").grid(row = row_counter, column=3)
 
     time_step = StringVar()
     row_counter = row_counter+1
-    Label(root, text="Time step (fs):").grid(row = row_counter, column=3)
-    Entry(root, textvariable=time_step).grid(row=row_counter, column=4)
+    Label(window, text="Time step (fs):").grid(row = row_counter, column=3)
+    Entry(window, textvariable=time_step).grid(row=row_counter, column=4)
 
     row_counter = row_counter+1
-    Label(root, text="Analysis Tools:").grid(row=row_counter, column=3)
+    Label(window, text="Analysis Tools:").grid(row=row_counter, column=3)
 
     running_average_kernel = StringVar()
     row_counter = row_counter+1
-    Label(root, text="Window Size:").grid(row=row_counter, column=3)
-    Entry(root, textvariable=running_average_kernel).grid(row=row_counter, column=4)
+    Label(window, text="Window Size:").grid(row=row_counter, column=3)
+    Entry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
 
     running_average = IntVar()
     row_counter = row_counter+1
-    Checkbutton(root, text="Running Average", indicator=0, variable=running_average).grid(row=row_counter, column=3)
+    Checkbutton(window, text="Running Average", indicator=0, variable=running_average).grid(row=row_counter, column=3)
 
     overall_mean = IntVar()
     row_counter = row_counter+1
-    Checkbutton(root, text="Overall Mean", indicator=0, variable=overall_mean).grid(row=row_counter, column=3)
+    Checkbutton(window, text="Overall Mean", indicator=0, variable=overall_mean).grid(row=row_counter, column=3)
 
     integrate = IntVar()
     row_counter = row_counter+1
-    Checkbutton(root, text="Integratation", indicator=0, variable=integrate).grid(row=row_counter, column=3)
+    Checkbutton(window, text="Integratation", indicator=0, variable=integrate).grid(row=row_counter, column=3)
 
     integration_average = IntVar()
     row_counter = row_counter+1
-    Checkbutton(root, text="Integratation Average", indicator=0, variable=integration_average).grid(row=row_counter, column=3)
+    Checkbutton(window, text="Integratation Average", indicator=0, variable=integration_average).grid(row=row_counter, column=3)
 
     return None
 
@@ -191,9 +189,9 @@ def statistics_window(data, en_filenames, selected):
         std_dev.append(np.std(y))
         total_datasets.append(y)
 
-    new_window = Toplevel(root)
+    new_window = Toplevel(window)
     new_window.title("Statistical information")
-    Text(root)
+    Text(window)
 
     # calculate means and standard deviations
     for (i, average) in enumerate(mean):
