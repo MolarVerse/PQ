@@ -90,7 +90,7 @@ if(BUILD_WITH_DOC)
     add_subdirectory(docs EXCLUDE_FROM_ALL)
 endif()
 
-if(CMAKE_BUILD_TOOLS)
+if(BUILD_TOOLS)
     add_subdirectory(tools)
 endif()
 
