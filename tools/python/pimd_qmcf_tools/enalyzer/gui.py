@@ -24,6 +24,7 @@
 
 import os
 from tkinter import *
+from customtkinter import *
 import numpy as np
 import matplotlib.pyplot as plt
 import signal
@@ -31,20 +32,11 @@ import sys
 
 # Add the path to the read_en module and feature module
 from pimd_qmcf_tools.enalyzer.reader import read_en, read_info
-from pimd_qmcf_tools.enalyzer.feature import get_feature
-from pimd_qmcf_tools.enalyzer.liveplot import liveplot
-
-# Signal handler for closing the gui window
-def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
-    window.destroy()
-    sys.exit(0)
-
-# Register signal handler with SIGINT signal
-signal.signal(signal.SIGINT, signal_handler)
+from pimd_qmcf_tools.enalyzer.plot import live_graph, graph
 
 # Create the root window
-window = Tk()
+window = CTk()
+window._set_appearance_mode("light")
 
 def gui(en_filenames, info_filename):
 
@@ -65,28 +57,29 @@ def gui(en_filenames, info_filename):
     selected = IntVar()
 
     for (j, text) in enumerate(info_list):
-        radio = Radiobutton(window, text=text, value=j, indicator=0, variable=selected)
+        radio = CTkRadioButton(window, text=text, value=j, variable=selected)
         radio.grid(column=j % 2, row=int(j/2))
 
     # Call select features
-    select_features()
+    list_features_select = select_features()
 
     def graph_wrapper():
-        graph(data=data, info_list=info_list, en_filenames=en_filenames, selected=selected)
+        list_features = get_features(list_features_select)
+        graph(data=data, info_list=info_list, en_filenames=en_filenames, selected=selected, list_features=list_features)
 
-    def liveplot_wrapper():
-        liveplot(en_filenames=en_filenames, selected=selected)
+    def live_graph_wrapper():
+        live_graph(en_filenames=en_filenames, selected=selected)
 
-    button = Button(window, text="Graph It!", command=graph_wrapper)
+    button = CTkButton(window, text="Graph It!", command=graph_wrapper)
     button.grid(column=3, row=j)
 
-    button_lp = Button(window, text="Live Plot!", command=liveplot_wrapper)
+    button_lp = CTkButton(window, text="Live Graph!", command=live_graph_wrapper)
     button_lp.grid(column=4, row = j)
 
     def statistics_window_wrapper():
         statistics_window(data=data, en_filenames=en_filenames, selected=selected)
 
-    Button(window, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
+    CTkButton(window, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
 
     window.mainloop()
 
@@ -94,30 +87,23 @@ def gui(en_filenames, info_filename):
 
 
 def select_features():
-    global time_step
-    global running_average
-    global running_average_kernel
-    global overall_mean
-    global integrate
-    global integration_average
-
     row_counter = -1
 
     row_counter = row_counter+1
-    Label(window, text="Time Axis:").grid(row = row_counter, column=3)
+    CTkLabel(window, text="Time Axis:").grid(row = row_counter, column=3)
 
     time_step = StringVar()
     row_counter = row_counter+1
-    Label(window, text="Time step (fs):").grid(row = row_counter, column=3)
-    Entry(window, textvariable=time_step).grid(row=row_counter, column=4)
+    CTkLabel(window, text="Time step (fs):").grid(row = row_counter, column=3)
+    CTkEntry(window, textvariable=time_step).grid(row=row_counter, column=4)
 
     row_counter = row_counter+1
-    Label(window, text="Analysis Tools:").grid(row=row_counter, column=3)
+    CTkLabel(window, text="Analysis Tools:").grid(row=row_counter, column=3)
 
     running_average_kernel = StringVar()
     row_counter = row_counter+1
-    Label(window, text="Window Size:").grid(row=row_counter, column=3)
-    Entry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
+    CTkLabel(window, text="Window Size:").grid(row=row_counter, column=3)
+    CTkEntry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
 
     running_average = IntVar()
     row_counter = row_counter+1
@@ -135,49 +121,17 @@ def select_features():
     row_counter = row_counter+1
     Checkbutton(window, text="Integratation Average", indicator=0, variable=integration_average).grid(row=row_counter, column=3)
 
-    return None
+    return [time_step, running_average_kernel, running_average, overall_mean, integrate, integration_average]
 
 
-def get_features():
-    return [time_step.get(), running_average.get(), overall_mean.get(), integrate.get(), integration_average.get()]
+def get_features(list_features_select):
+    time_step = list_features_select[0]
+    running_average_kernel = list_features_select[1]
+    running_average = list_features_select[2]
+    overall_mean = list_features_select[3]
+    integrate = list_features_select[4]
 
-    # Open matplotlib window
-def graph(data, info_list, en_filenames, selected):
-    for (i, data_frame) in enumerate(data):
-        
-        list_features = get_features()
-
-        # Checks if time step is given and converts to ps
-        if list_features[0] != "":
-            time_step_value = float(list_features[0])
-            x = data_frame.get(0).apply(lambda x, time=time_step_value: x * time / 1000)
-        else:
-            x = data_frame.get(0)
-        
-        y = data_frame.get(selected.get())
-        label = str(info_list[selected.get()]) + \
-            " (" + str(en_filenames[i]) + ")"
-        plt.plot(x, y, label=label)
-
-        kernel_size = 100
-        if running_average_kernel.get() != "":
-            kernel_size = int(running_average_kernel.get())
-
-        if any(list_features):
-            for (i, value) in enumerate(list_features):
-                if (value == 1):
-                    (f, label) = get_feature(i, value, y, kernel_size)
-                    plt.plot(x, f, label=label)
-
-    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, fancybox=True, shadow=True)
-    
-    # Checks if time step is given
-    if list_features[0] != "":
-        plt.xlabel("Simulation Time in ps")
-    else:
-        plt.xlabel("Frame")
-
-    plt.show()
+    return [time_step.get(), running_average_kernel.get(), running_average.get(), overall_mean.get(), integrate.get()]
 
 def statistics_window(data, en_filenames, selected):
     mean = []

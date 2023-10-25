@@ -1,3 +1,4 @@
+
 """
 *****************************************************************************
 <GPL_HEADER>
@@ -28,6 +29,7 @@ import time
 import os
 
 from pimd_qmcf_tools.enalyzer.reader import read_en
+from pimd_qmcf_tools.enalyzer.feature import get_feature
 
 # Define a function to read the data from the file and update the plot
 def update_plot(en_filenames, selected):
@@ -50,7 +52,7 @@ def update_plot(en_filenames, selected):
 
     return looptime
 
-def liveplot(en_filenames, selected):
+def live_graph(en_filenames, selected):
     # Set the filename to monitor
 
     # Initialize the plot
@@ -81,3 +83,40 @@ def liveplot(en_filenames, selected):
             time.sleep(looptime)
     except KeyboardInterrupt:
         pass
+
+# Open matplotlib window
+def graph(data, info_list, en_filenames, selected, list_features):
+    for (i, data_frame) in enumerate(data):
+        
+        # Checks if time step is given and converts to ps
+        if list_features[0] != "":
+            time_step_value = float(list_features[0])
+            x = data_frame.get(0).apply(lambda x, time=time_step_value: x * time / 1000)
+        else:
+            x = data_frame.get(0)
+        
+        y = data_frame.get(selected.get())
+        label = str(info_list[selected.get()]) + \
+            " (" + str(en_filenames[i]) + ")"
+        plt.plot(x, y, label=label)
+
+        kernel_size = 100
+        running_average_kernel = list_features[1]
+        if running_average_kernel != "":
+            kernel_size = int(running_average_kernel)
+
+        if any(list_features):
+            for (i, value) in enumerate(list_features):
+                if (value == 1):
+                    (f, label) = get_feature(i, value, y, kernel_size)
+                    plt.plot(x, f, label=label)
+
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2, fancybox=True, shadow=True)
+    
+    # Checks if time step is given
+    if list_features[0] != "":
+        plt.xlabel("Simulation Time in ps")
+    else:
+        plt.xlabel("Frame")
+
+    plt.show()

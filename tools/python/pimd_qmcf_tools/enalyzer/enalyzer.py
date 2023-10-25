@@ -24,18 +24,9 @@
 
 import os
 import sys
-import signal
 
 # Add the path to the gui module
 from pimd_qmcf_tools.enalyzer.gui import gui
-
-# signal handler for SIGINT
-def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
-    sys.exit(0)
-
-# Register signal handler with SIGINT signal
-signal.signal(signal.SIGINT, signal_handler)
 
 def main():
     # create list of energy files and set info-exists checker to False
