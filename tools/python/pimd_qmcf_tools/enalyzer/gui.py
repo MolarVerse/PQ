@@ -21,25 +21,24 @@
 <GPL_HEADER>
 *****************************************************************************
 """
-
-import os
-from tkinter import *
-from customtkinter import *
+from tkinter import IntVar, StringVar, Text
+import customtkinter as ctk
 import numpy as np
-import matplotlib.pyplot as plt
-import signal
-import sys
 
 # Add the path to the read_en module and feature module
 from pimd_qmcf_tools.enalyzer.reader import read_en, read_info
 from pimd_qmcf_tools.enalyzer.plot import live_graph, graph
 
-# Create the root window
-window = CTk()
-window._set_appearance_mode("light")
-
 def gui(en_filenames, info_filename):
 
+    # Set the appearance of the window
+    ctk.set_appearance_mode("System")  # Modes: system (default), light, dark
+    ctk.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+
+    # Create the root window
+    window = ctk.CTk()
+
+    # Set the title of the window
     window.title('Energy File Analyzer - PIMD-QMCF')
 
     # Read all en files
@@ -57,71 +56,72 @@ def gui(en_filenames, info_filename):
     selected = IntVar()
 
     for (j, text) in enumerate(info_list):
-        radio = CTkRadioButton(window, text=text, value=j, variable=selected)
-        radio.grid(column=j % 2, row=int(j/2))
+        radio = ctk.CTkRadioButton(window, text=text, value=j, variable=selected)
+        radio.grid(column=j % 2, row=int(j/2), sticky="W", padx=10, pady=5)
 
     # Call select features
-    list_features_select = select_features()
+    list_features_select, row_counter = select_features(window)
 
     def graph_wrapper():
         list_features = get_features(list_features_select)
         graph(data=data, info_list=info_list, en_filenames=en_filenames, selected=selected, list_features=list_features)
 
+    button = ctk.CTkButton(window, text="Graph It!", command=graph_wrapper)
+    button.grid(column=3, row=row_counter+1, columnspan=2, padx=10, pady=5)
+
     def live_graph_wrapper():
         live_graph(en_filenames=en_filenames, selected=selected)
 
-    button = CTkButton(window, text="Graph It!", command=graph_wrapper)
-    button.grid(column=3, row=j)
-
-    button_lp = CTkButton(window, text="Live Graph!", command=live_graph_wrapper)
-    button_lp.grid(column=4, row = j)
+    button_lp = ctk.CTkButton(window, text="Live Graph!", command=live_graph_wrapper)
+    button_lp.grid(column=3, row = row_counter+2, columnspan=2, padx=20, pady=5)
 
     def statistics_window_wrapper():
-        statistics_window(data=data, en_filenames=en_filenames, selected=selected)
+        statistics_window(window=window, data=data, en_filenames=en_filenames, selected=selected)
 
-    CTkButton(window, text="Click to open statistical information", command=statistics_window_wrapper).grid(row=int((j+1)/2))
+    button_stat = ctk.CTkButton(window, text="Click to open statistical information", command=statistics_window_wrapper)
+    button_stat.grid(row=int((j+1)/2), columnspan=2, padx=20, pady=5)
 
     window.mainloop()
 
     return None
 
 
-def select_features():
+def select_features(window):
     row_counter = -1
 
     row_counter = row_counter+1
-    CTkLabel(window, text="Time Axis:").grid(row = row_counter, column=3)
+    ctk.CTkLabel(window, text="Time Axis:").grid(row = row_counter, column=3, columnspan=2, pady=5)
 
     time_step = StringVar()
     row_counter = row_counter+1
-    CTkLabel(window, text="Time step (fs):").grid(row = row_counter, column=3)
-    CTkEntry(window, textvariable=time_step).grid(row=row_counter, column=4)
+    ctk.CTkLabel(window, text="Time step (fs):").grid(row = row_counter, column=3)
+    ctk.CTkEntry(window, textvariable=time_step).grid(row=row_counter, column=4)
 
     row_counter = row_counter+1
-    CTkLabel(window, text="Analysis Tools:").grid(row=row_counter, column=3)
+    ctk.CTkLabel(window, text="Analysis Tools:").grid(row=row_counter, column=3, columnspan=2, pady=5)
 
     running_average_kernel = StringVar()
     row_counter = row_counter+1
-    CTkLabel(window, text="Window Size:").grid(row=row_counter, column=3)
-    CTkEntry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
+    ctk.CTkLabel(window, text="Window Size:").grid(row=row_counter, column=3)
+    ctk.CTkEntry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
 
     running_average = IntVar()
     row_counter = row_counter+1
-    Checkbutton(window, text="Running Average", indicator=0, variable=running_average).grid(row=row_counter, column=3)
+    ctk.CTkCheckBox(window, text="Running Average", variable=running_average).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
     overall_mean = IntVar()
     row_counter = row_counter+1
-    Checkbutton(window, text="Overall Mean", indicator=0, variable=overall_mean).grid(row=row_counter, column=3)
+    ctk.CTkCheckBox(window, text="Overall Mean", variable=overall_mean).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
     integrate = IntVar()
     row_counter = row_counter+1
-    Checkbutton(window, text="Integratation", indicator=0, variable=integrate).grid(row=row_counter, column=3)
+    ctk.CTkCheckBox(window, text="Integratation", variable=integrate).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
     integration_average = IntVar()
     row_counter = row_counter+1
-    Checkbutton(window, text="Integratation Average", indicator=0, variable=integration_average).grid(row=row_counter, column=3)
+    ctk.CTkCheckBox(window, text="Integratation Average", variable=integration_average).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
-    return [time_step, running_average_kernel, running_average, overall_mean, integrate, integration_average]
+    return [time_step, running_average_kernel, running_average, overall_mean, integrate, integration_average], row_counter
 
 
 def get_features(list_features_select):
@@ -133,7 +133,7 @@ def get_features(list_features_select):
 
     return [time_step.get(), running_average_kernel.get(), running_average.get(), overall_mean.get(), integrate.get()]
 
-def statistics_window(data, en_filenames, selected):
+def statistics_window(window, data, en_filenames, selected):
     mean = []
     std_dev = []
     total_datasets = []
@@ -143,7 +143,7 @@ def statistics_window(data, en_filenames, selected):
         std_dev.append(np.std(y))
         total_datasets.append(y)
 
-    new_window = Toplevel(window)
+    new_window = ctk.CTkToplevel(window)
     new_window.title("Statistical information")
     Text(window)
 
@@ -151,12 +151,12 @@ def statistics_window(data, en_filenames, selected):
     for (i, average) in enumerate(mean):
         message = "Mean of "+str(en_filenames[i])+" = "+str(
             round(average, 3))+", Standard deviation = "+str(round(std_dev[i], 3))
-        Label(new_window, text=message).pack()
+        ctk.CTkLabel(new_window, text=message).pack(fill=ctk.BOTH)
 
     total_datasets = np.concatenate(total_datasets)
     total_mean = np.mean(total_datasets)
     total_std_dev = np.std(total_datasets)
-    conclusion_message = "Mean over all datasets= " + \
+    conclusion_message = "Mean over all datasets = " + \
         str(round(total_mean, 3))+", Standard deviation = " + \
         str(round(total_std_dev, 3))
-    Label(new_window, text=conclusion_message).pack()
+    ctk.CTkLabel(new_window, text=conclusion_message).pack(fill=ctk.BOTH)
