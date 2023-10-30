@@ -3,7 +3,7 @@
 <GPL_HEADER>
 
     PIMD-QMCF
-    Copyright (C) 2023-now  Jakob Gamper
+    Copyright (C) 2023-now  Jakob Gamper, Josef M. Gallmetzer
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,13 +28,25 @@ import sys
 # Add the path to the gui module
 from pimd_qmcf_tools.enalyzer.gui import gui
 
+# Main function
 def main():
+
+    # Check if there are any command line arguments
+    if len(sys.argv) < 2:
+        print("No arguments given!")
+        exit(1) 
+
     # create list of energy files and set info-exists checker to False
     en_filenames = []
     check_info_exists = False
 
     # Read all command line argument vectors
     for file in sys.argv[1:]:
+
+        # Check if file ends in *.en or *.info
+        if os.path.splitext(file)[-1] != ".en" and os.path.splitext(file)[-1] != ".info":
+            print("File: " + file + " is not a .en or .info file!")
+            exit(1)
 
         # Check if file ends in *.info and if a info-file was already selected
         if os.path.splitext(file)[-1] == ".info" and not check_info_exists:

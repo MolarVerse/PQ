@@ -4,7 +4,7 @@
 <GPL_HEADER>
 
     PIMD-QMCF
-    Copyright (C) 2023-now  Jakob Gamper
+    Copyright (C) 2023-now  Jakob Gamper, Josef M. Gallmetzer
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
