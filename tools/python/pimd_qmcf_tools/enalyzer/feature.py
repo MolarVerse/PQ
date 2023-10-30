@@ -31,8 +31,6 @@ def get_feature(i, value, data, kernelSize):
     elif i == 2 and value == 1:
         return (overallAverage(data), "Overall Average")
     elif i == 3 and value == 1:
-        return (integrate(data), "Integratation")
-    elif i == 4 and value == 1:
         return (integrationAverage(data), "Integratation Average")
     else:
         # raise Exception("Feature not yet implemented")
@@ -42,7 +40,6 @@ def get_feature(i, value, data, kernelSize):
 # Features:
 #    -running average
 #    -overall average
-#    -integralation
 #    -integralation average over the number of datapoints
 def runningAverage(data, kernelSize):
     return data.rolling(kernelSize).mean()
@@ -51,16 +48,6 @@ def runningAverage(data, kernelSize):
 def overallAverage(data):
     average = data.mean()
     return np.repeat(average, len(data))
-
-
-def integrate(data):
-    list = []
-    sum = 0
-    for (i, y) in enumerate(data):
-        sum += y
-        list.append(sum)
-    return np.array(list)
-
 
 def integrationAverage(data):
     list = []

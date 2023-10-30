@@ -113,15 +113,11 @@ def select_features(window):
     row_counter = row_counter+1
     ctk.CTkCheckBox(window, text="Overall Mean", variable=overall_mean).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
-    integrate = IntVar()
-    row_counter = row_counter+1
-    ctk.CTkCheckBox(window, text="Integratation", variable=integrate).grid(row=row_counter, column=3, columnspan=2, sticky="W")
-
     integration_average = IntVar()
     row_counter = row_counter+1
     ctk.CTkCheckBox(window, text="Integratation Average", variable=integration_average).grid(row=row_counter, column=3, columnspan=2, sticky="W")
 
-    return [time_step, running_average_kernel, running_average, overall_mean, integrate, integration_average], row_counter
+    return [time_step, running_average_kernel, running_average, overall_mean, integration_average], row_counter
 
 
 def get_features(list_features_select):
@@ -129,9 +125,9 @@ def get_features(list_features_select):
     running_average_kernel = list_features_select[1]
     running_average = list_features_select[2]
     overall_mean = list_features_select[3]
-    integrate = list_features_select[4]
+    integration_average = list_features_select[4]
 
-    return [time_step.get(), running_average_kernel.get(), running_average.get(), overall_mean.get(), integrate.get()]
+    return [time_step.get(), running_average_kernel.get(), running_average.get(), overall_mean.get(), integration_average.get()]
 
 def statistics_window(window, data, en_filenames, selected):
     mean = []
