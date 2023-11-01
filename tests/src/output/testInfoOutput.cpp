@@ -231,7 +231,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                  8.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   E(QM)                   5.00000 kcal/mol N(QM ATOMS)             0.00000            |");
+    EXPECT_EQ(line, "|   E(QM)                   5.00000 kcal/mol N(QM-ATOMS)             0.00000 -          |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)                0.00000 kcal/mol   |");
     getline(file, line);
@@ -281,7 +281,7 @@ TEST_F(TestEnergyOutput, writeInfo_ringPolymerActive)
     getline(file, line);
     EXPECT_EQ(line, "|   PRESSURE                2.00000 bar      E(TOT)                 12.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   E(MEAN RPMD)            1.50000 kcal/mol E(MAX RPMD)             2.00000 kcal/mol   |");
+    EXPECT_EQ(line, "|   E(MEAN-RPMD)            1.50000 kcal/mol E(MAX-RPMD)             2.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               19.00000 kcal/mol   |");
     getline(file, line);
@@ -339,7 +339,7 @@ TEST_F(TestEnergyOutput, writeInfo_NoseHooverActive)
     getline(file, line);
     EXPECT_EQ(line, "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             5.00000 kcal/mol   |");
     getline(file, line);
-    EXPECT_EQ(line, "|   E(NH MOMENTUM)         11.00000 kcal/mol E(NH FRICTION)         12.00000 kcal/mol   |");
+    EXPECT_EQ(line, "|   E(NH-MOMENTUM)         11.00000 kcal/mol E(NH-FRICTION)         12.00000 kcal/mol   |");
     getline(file, line);
     EXPECT_EQ(line, "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                0.10000 s          |");
     getline(file, line);

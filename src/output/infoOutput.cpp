@@ -69,13 +69,13 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     if (settings::Settings::isQMActivated())
     {
         writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
-        writeRight(data.getNumberOfQMAtoms(), "N(QM ATOMS)", " ");
+        writeRight(data.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
     }
 
     if (settings::Settings::isRingPolymerMDActivated())
     {
-        writeLeft(mean(data.getRingPolymerEnergy()), "E(MEAN RPMD)", "kcal/mol");
-        writeRight(max(data.getRingPolymerEnergy()), "E(MAX RPMD)", "kcal/mol");
+        writeLeft(mean(data.getRingPolymerEnergy()), "E(MEAN-RPMD)", "kcal/mol");
+        writeRight(max(data.getRingPolymerEnergy()), "E(MAX-RPMD)", "kcal/mol");
     }
 
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
@@ -103,8 +103,8 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
 
     if (settings::ThermostatSettings::getThermostatType() == settings::ThermostatType::NOSE_HOOVER)
     {
-        writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH MOMENTUM)", "kcal/mol");
-        writeRight(data.getNoseHooverFrictionEnergy(), "E(NH FRICTION)", "kcal/mol");
+        writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH-MOMENTUM)", "kcal/mol");
+        writeRight(data.getNoseHooverFrictionEnergy(), "E(NH-FRICTION)", "kcal/mol");
     }
 
     writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
