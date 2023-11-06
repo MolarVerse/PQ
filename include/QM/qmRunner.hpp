@@ -25,6 +25,7 @@
 #define _QM_RUNNER_HPP_
 
 #define SCRIPT_PATH_ _SCRIPT_PATH_
+#define SINGULARITY_ _SINGULARITY_
 
 #include <string>
 
@@ -51,7 +52,8 @@ namespace QM
     class QMRunner
     {
       protected:
-        const std::string _scriptPath = SCRIPT_PATH_;
+        std::string       _scriptPath  = SCRIPT_PATH_;
+        const std::string _singularity = SINGULARITY_;
 
       public:
         virtual ~QMRunner() = default;
@@ -61,6 +63,15 @@ namespace QM
         virtual void execute()                                       = 0;
         virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void readStressTensor(simulationBox::Box &, physicalData::PhysicalData &){};
+
+        /*******************************
+         * standard getter and setters *
+         *******************************/
+
+        [[nodiscard]] const std::string &getScriptPath() const { return _scriptPath; }
+        [[nodiscard]] const std::string &getSingularity() const { return _singularity; }
+
+        void setScriptPath(const std::string_view &scriptPath) { _scriptPath = scriptPath; }
     };
 }   // namespace QM
 

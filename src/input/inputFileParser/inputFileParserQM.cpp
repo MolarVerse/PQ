@@ -44,7 +44,7 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(e
 {
     addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
     addKeyword(std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
-    addKeyword(std::string("singularity_qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
+    addKeyword(std::string("singularity_qm_script"), bind_front(&InputFileParserQM::parseQMSingularityScript, this), false);
 }
 
 /**

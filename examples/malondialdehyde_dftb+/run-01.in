@@ -44,7 +44,7 @@
 #      rcore = 100.0; rsmoothing = 100.5; rlayer=101.0;
       
     # QM programm
-      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
+      qm_prog = dftbplus; singularity_qm_script = /home/jag/projects/pimd_qmcf/src/QM/scripts/dftbplus_periodic_stress;
 
       virial = atomic;
    

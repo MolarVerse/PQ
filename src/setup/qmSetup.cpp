@@ -29,6 +29,7 @@
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
 #include "settings.hpp"            // for Settings
+#include "stringUtilities.hpp"     // for toLowerCopy
 #include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
 #include <string_view>   // for string_view
@@ -60,6 +61,7 @@ void QMSetup::setup()
 {
 
     setupQMMethod();
+    setupQMScript();
     setupCoulombRadiusCutOff();
 }
 
@@ -84,6 +86,36 @@ void QMSetup::setupQMMethod()
     else
         throw customException::InputFileException(
             "A qm based jobtype was requested but no external program via \"qm_prog\" provided");
+}
+
+/**
+ * @brief checks if a singularity build is used and sets the qm_script accordingly
+ *
+ * @details if a singularity build is used the qm_script is set to the singularity_qm_script
+ * and the script path is set to the empty string to avoid errors. This is necessary because
+ * the script can not be accessed from inside the container. Therefore the user has to provide
+ * the script somewhere else and give the full or relative path to it. For more information please
+ * refer to the documentation.
+ *
+ */
+void QMSetup::setupQMScript()
+{
+    if (utilities::toLowerCopy(_engine.getQMRunner()->getSingularity()) == "on")
+    {
+        if (settings::QMSettings::getQMSingularityScript().empty() || !settings::QMSettings::getQMScript().empty())
+            throw customException::QMRunnerException(
+                "No qm singularity script provided\nYou are using a singularity build of PIMD-QMCF.\nTherefore the general "
+                "setting with \"qm_script\" is not applicable.\nPlease use \"singularity_qm_script\" instead.\nFor singularity "
+                "builds the script can not be accessed from inside the container.\nTherefore you have to provide the script "
+                "somewhere else and give the full/relative path to it.\nFor more information please refer to the "
+                "documentation.");
+        else
+        {
+            _engine.getQMRunner()->setScriptPath("");   // setting script path to empty string to avoid errors
+            settings::QMSettings::setQMScript(
+                settings::QMSettings::getQMSingularityScript());   // overwriting qm_script with singularity_qm_script
+        }
+    }
 }
 
 /**
