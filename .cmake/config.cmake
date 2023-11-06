@@ -44,3 +44,8 @@ option(BUILD_WITH_DOCS "Build documentation" ON)
 # BUILD WITH BENCHMARKING
 # ***********************
 option(BUILD_WITH_BENCHMARKING "Build benchmarking" OFF)
+
+# **********************
+# BUILD WITH SINGULARITY
+# **********************
+option(BUILD_WITH_SINGULARITY "Build with Singularity" OFF)

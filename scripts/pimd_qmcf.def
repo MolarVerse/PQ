@@ -20,7 +20,7 @@ From: ubuntu:22.04
     cd pimd_qmcf
     mkdir build
     cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON
     make -j6
 
 %runscript
