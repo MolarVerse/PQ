@@ -104,10 +104,9 @@ def graph(data, info_list, en_filenames, selected, list_features):
         if running_average_kernel != "":
             kernel_size = int(running_average_kernel)
 
-        list_features = list_features[1:]
-
-        if any(list_features):
-            for (i, value) in enumerate(list_features):
+        features = list_features[1:]
+        if any(features):
+            for (i, value) in enumerate(features):
                 if (value == 1):
                     (f, label) = get_feature(i, value, y, kernel_size)
                     plt.plot(x, f, label=label)
