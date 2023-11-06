@@ -25,34 +25,33 @@
 import numpy as np
 
 # Function that selects called feature and returns tuple of datapoints and name of feature
-def get_feature(i, value, data, kernelSize):
+def get_feature(i, value, data, kernel_size):
     if i == 1 and value == 1:
-        return (runningAverage(data, kernelSize), "Running Average" + " (" + str(kernelSize) + ")")
+        return (running_average(data, kernel_size), "Running Average" + " (" + str(kernel_size) + ")")
     elif i == 2 and value == 1:
-        return (overallAverage(data), "Overall Average")
+        return (overall_average(data), "Overall Average")
     elif i == 3 and value == 1:
-        return (integrationAverage(data), "Integratation Average")
+        return (integration_average(data), "Integratation Average")
     else:
-        # raise Exception("Feature not yet implemented")
         return None
 
 
 # Features:
 #    -running average
 #    -overall average
-#    -integralation average over the number of datapoints
-def runningAverage(data, kernelSize):
-    return data.rolling(kernelSize).mean()
+#    -integration average over the number of datapoints
+def running_average(data, kernel_size):
+    return data.rolling(kernel_size).mean()
 
 
-def overallAverage(data):
+def overall_average(data):
     average = data.mean()
     return np.repeat(average, len(data))
 
-def integrationAverage(data):
-    list = []
-    sum = 0
+def integration_average(data):
+    _list = []
+    _sum = 0
     for (i, y) in enumerate(data):
-        sum += y
-        list.append(sum / (i+1))
-    return np.array(list)
+        _sum += y
+        _list.append(_sum / (i+1))
+    return np.array(_list)

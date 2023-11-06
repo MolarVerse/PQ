@@ -78,3 +78,9 @@ def main():
 
     # Opens the gui window
     gui(en_filenames=en_filenames, info_filename=info_filename)
+
+    return None
+
+# Call the main function
+if __name__ == "__main__":
+    main()

@@ -90,19 +90,19 @@ def select_features(window):
     row_counter = -1
 
     row_counter = row_counter+1
-    ctk.CTkLabel(window, text="Time Axis:").grid(row = row_counter, column=3, columnspan=2, pady=5)
+    ctk.CTkLabel(window, text="Time Axis: ").grid(row = row_counter, column=3, columnspan=2, pady=5)
 
     time_step = StringVar()
     row_counter = row_counter+1
-    ctk.CTkLabel(window, text="Time step (fs):").grid(row = row_counter, column=3)
+    ctk.CTkLabel(window, text="Time step (fs): ").grid(row = row_counter, column=3)
     ctk.CTkEntry(window, textvariable=time_step).grid(row=row_counter, column=4)
 
     row_counter = row_counter+1
-    ctk.CTkLabel(window, text="Analysis Tools:").grid(row=row_counter, column=3, columnspan=2, pady=5)
+    ctk.CTkLabel(window, text="Analysis Tools: ").grid(row=row_counter, column=3, columnspan=2, pady=5)
 
     running_average_kernel = StringVar()
     row_counter = row_counter+1
-    ctk.CTkLabel(window, text="Window Size:").grid(row=row_counter, column=3)
+    ctk.CTkLabel(window, text="Window Size: ").grid(row=row_counter, column=3)
     ctk.CTkEntry(window, textvariable=running_average_kernel).grid(row=row_counter, column=4)
 
     running_average = IntVar()
