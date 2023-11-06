@@ -44,6 +44,7 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(e
 {
     addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
     addKeyword(std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
+    addKeyword(std::string("singularity_qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
 }
 
 /**
@@ -83,4 +84,21 @@ void InputFileParserQM::parseQMScript(const std::vector<std::string> &lineElemen
     checkCommand(lineElements, lineNumber);
 
     settings::QMSettings::setQMScript(lineElements[2]);
+}
+
+/**
+ * @brief parse external QM script name
+ *
+ * @details this keyword is used for singularity builds to ensure that the user knows
+ * what he is doing. With a singularity build the script has to be accessed from outside of
+ * the container and therefore the general keyword qm_script is not applicable.
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQM::parseQMSingularityScript(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    settings::QMSettings::setQMSingularityScript(lineElements[2]);
 }
