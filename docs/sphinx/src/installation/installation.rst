@@ -26,6 +26,8 @@ For compilation then type:
 
     make -j<#procs>
 
+.. _singularity:
+
 ***********
 Singularity
 ***********

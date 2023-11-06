@@ -913,6 +913,21 @@ QM_SCRIPT
 
 With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/97gamjak/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
+SINGULARITY_QM_SCRIPT
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    singularity_qm_script = {file}
+
+.. attention::
+   This keyword is only considered if a singularity build of PIMD-QMCF is used. This keyword fully substitutes the :ref:`qm_script` keyword. Here additional attention is required, since executing PIMD-QMCF from a singularity build means that the user has to provide  the full or relative path to the executable outside of the container. This is due to the fact that the executable ran from within the singularity container is not able to access scripts inside the container.
+
+
+
+With the :code:`singularity_qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/97gamjak/pimd_qmcf/src/QM/scripts>`_. This keyword is necessary if a singularity build of PIMD-QMCF is used. All provided singularity definition files under `<https://github.com/97gamjak/pimd_qmcf/scripts/>`_ are compiled with the singularity build option is on. For further information why this keyword is introduced see the :ref:`singularity` section.
+
 .. _ringPolymerMDKeys:
 
 ********************

@@ -24,4 +24,4 @@ From: ubuntu:22.04
     make -j6
 
 %runscript
-    pimd_qmcf/build/apps/pimd_qmcf
+    pimd_qmcf/build/apps/pimd_qmcf "$@"
