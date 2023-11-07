@@ -101,7 +101,7 @@ def graph(data, info_list, en_filenames, selected, list_features):
             x = data_frame.get(0)
         
         y = data_frame.get(selected_value)
-        label = str(info_list[selected_value]) + \
+        label = str(info_list[selected_value - 1]) + \
             " (" + str(en_filenames[i]) + ")"
         plt.plot(x, y, label=label)
 
