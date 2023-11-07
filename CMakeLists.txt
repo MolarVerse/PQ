@@ -79,7 +79,10 @@ if(BUILD_WITH_MPI)
     include(mpi)
 endif()
 
-include(testing)
+# include(testing)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+add_subdirectory(googletest EXCLUDE_FROM_ALL)
+enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(tests)

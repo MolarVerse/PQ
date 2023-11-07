@@ -45,6 +45,14 @@
 using namespace input::intraNonBonded;
 
 /**
+ * @brief checks if the intra non bonded interactions are needed
+ *
+ * @param engine
+ * @return bool
+ */
+[[nodiscard]] bool input::intraNonBonded::isNeeded(const engine::Engine &engine) { return engine.isIntraNonBondedActivated(); }
+
+/**
  * @brief construct IntraNonBondedReader object and read the file
  *
  * @param engine

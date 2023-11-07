@@ -43,7 +43,7 @@
 class TestIntraNonBondedReader : public ::testing::Test
 {
   protected:
-    engine::Engine                                  *_engine;
+    engine::Engine                              *_engine;
     input::intraNonBonded::IntraNonBondedReader *_intraNonBondedReader;
 
     void SetUp() override

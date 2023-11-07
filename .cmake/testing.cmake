@@ -15,6 +15,9 @@ if(NOT ${GTest_FOUND})
     # For Windows: Prevent overriding the parent project's compiler/linker settings
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(gtest)
+else()
+    MESSAGE(STATUS "aaa ${gtest_SOURCE_DIR}")
+    include_directories(${GTEST_SOURCE_DIR}/include ${GMOCK_SOURCE_DIR}/include ${GTEST_SOURCE_DIR} ${GMOCK_SOURCE_DIR})
 endif()
 
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")

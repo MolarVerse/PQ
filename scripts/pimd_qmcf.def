@@ -25,10 +25,11 @@ From: ubuntu:22.04
     git checkout feature/singularity
     mkdir build
     cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF
     make -j6
 
 %runscript
+    export PATH=$PATH:$MYPATH
     /pimd_qmcf/build/apps/pimd_qmcf "$@"
 
     
