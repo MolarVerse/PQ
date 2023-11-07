@@ -32,7 +32,7 @@ The `scripts` directory contains a file called `pimd_qmcf.def`, which is a defin
 
 In order to run the application which is build within the container just execute
 
-    singularity run --no-home <name of container>.sif <input file>
+    singularity run --env MYPATH=$PATH <name of container>.sif <input file>
 
 
 

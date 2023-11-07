@@ -13,15 +13,22 @@ From: ubuntu:22.04
     apt-get update
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
+    apt-get -y install locales
+    locale-gen en_US.UTF-8
+    locale-gen de_AT.UTF-8
+
     apt-get -y install libboost-all-dev
 
     apt-get -y install git
     git clone https://github.com/97gamjak/pimd_qmcf.git
     cd pimd_qmcf
+    git checkout feature/singularity
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON
     make -j6
 
 %runscript
-    pimd_qmcf/build/apps/pimd_qmcf "$@"
+    /pimd_qmcf/build/apps/pimd_qmcf "$@"
+
+    
