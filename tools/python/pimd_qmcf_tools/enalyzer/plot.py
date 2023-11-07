@@ -32,6 +32,9 @@ from pimd_qmcf_tools.enalyzer.feature import get_feature
 
 # Define a function to read the data from the file and update the plot
 def update_plot(en_filenames, selected):
+
+    # set selected value
+    selected_value = selected.get() + 1 # +1 because of time column
     
     # Read the data from the file
     data = read_en(en_filenames)
@@ -42,7 +45,7 @@ def update_plot(en_filenames, selected):
 
     for df in data:
         x = df.get(0)
-        y = df.get(selected.get())
+        y = df.get(selected_value)
 
         plt.plot(x, y)
     
@@ -85,6 +88,9 @@ def live_graph(en_filenames, selected):
 
 # Open matplotlib window
 def graph(data, info_list, en_filenames, selected, list_features):
+
+    selected_value = selected.get() + 1 # +1 because of time column
+
     for (i, data_frame) in enumerate(data):
         
         # Checks if time step is given and converts to ps
@@ -94,8 +100,8 @@ def graph(data, info_list, en_filenames, selected, list_features):
         else:
             x = data_frame.get(0)
         
-        y = data_frame.get(selected.get())
-        label = str(info_list[selected.get()]) + \
+        y = data_frame.get(selected_value)
+        label = str(info_list[selected_value]) + \
             " (" + str(en_filenames[i]) + ")"
         plt.plot(x, y, label=label)
 

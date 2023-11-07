@@ -52,9 +52,10 @@ def gui(en_filenames, info_filename):
                   en_filenames[i]+" energy file! (Unequal number of columns)")
             exit(1)
 
+    # Strip simulation-time from info_list
+    info_list = info_list[1:]
     # Draw RadioButtons from info list
     selected = IntVar()
-
     for (j, text) in enumerate(info_list):
         radio = ctk.CTkRadioButton(window, text=text, value=j, variable=selected)
         radio.grid(column=j % 2, row=int(j/2), sticky="W", padx=10, pady=5)
@@ -79,7 +80,7 @@ def gui(en_filenames, info_filename):
         statistics_window(window=window, data=data, en_filenames=en_filenames, selected=selected)
 
     button_stat = ctk.CTkButton(window, text="Click to open statistical information", command=statistics_window_wrapper)
-    button_stat.grid(row=int((j+1)/2), columnspan=2, padx=20, pady=5)
+    button_stat.grid(row=int((j+2)/2), columnspan=2, padx=20, pady=5)
 
     window.mainloop()
 
