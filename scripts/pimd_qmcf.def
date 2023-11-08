@@ -17,8 +17,6 @@ From: ubuntu:22.04
     locale-gen en_US.UTF-8
     locale-gen de_AT.UTF-8
 
-    apt-get -y install libboost-all-dev
-
     apt-get -y install git
     git clone https://github.com/97gamjak/pimd_qmcf.git
     cd pimd_qmcf

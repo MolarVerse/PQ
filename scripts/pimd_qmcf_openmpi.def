@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post -c /bin/bash
+    apt-get update
+    apt-get -y install cmake
+
+    apt-get -y install software-properties-common
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+    apt-get update
+    apt-get -y install gcc-13
+    apt-get -y install g++-13
+    apt-get update
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
+
+    apt-get -y install locales
+    locale-gen en_US.UTF-8
+    locale-gen de_AT.UTF-8
+
+    apt-get -y install wget
+
+    apt-get -y install bzip2
+
+    echo "Installing Open MPI"
+    export OMPI_DIR=/opt/ompi
+
+    #####################################
+    # __VERSION__ has to be substituted #
+    #####################################
+
+    export OMPI_VERSION=__VERSION__ #put here your desired openmpi version
+    export OMPI_SHORT_VERSION=$([[ $OMPI_VERSION =~ [0-9]+\.[0-9]+ ]] && echo $BASH_REMATCH)
+    
+
+
+    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v$OMPI_SHORT_VERSION/openmpi-$OMPI_VERSION.tar.bz2"
+    mkdir -p /tmp/ompi
+    mkdir -p /opt
+    # Download
+    cd /tmp/ompi && wget -O openmpi-$OMPI_VERSION.tar.bz2 $OMPI_URL && tar -xjf openmpi-$OMPI_VERSION.tar.bz2
+    # Compile and install
+    cd /tmp/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR && make install
+    # Set env variables so we can compile our application
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+    export MANPATH=$OMPI_DIR/share/man:$MANPATH
+    ldconfig
+
+    cd
+
+    apt-get -y install git
+    git clone https://github.com/97gamjak/pimd_qmcf.git
+    cd pimd_qmcf
+    git checkout feature/singularity
+    mkdir build
+    cd build
+    MPI_INCLUDE_PATH="$OMPI_DIR/lib" cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_WITH_MPI=ON
+    make -j6
+
+%environment
+    export OMPI_DIR=/opt/ompi
+    export SINGULARITY_OMPI_DIR=$OMPI_DIR
+    export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+    export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+%runscript
+    export PATH=$PATH:$MYPATH
+    /pimd_qmcf/build/apps/pimd_qmcf "$@"
+
+    
