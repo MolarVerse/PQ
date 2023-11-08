@@ -1,10 +1,6 @@
-enable_testing()
-option(INSTALL_GMOCK "install Googletest's GMock?" OFF)
-option(INSTALL_GTEST "install Googletest's GTest?" OFF)
+find_package(GIT)
 
-find_package(GIT QUIET)
-
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+if(Git_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     # Update submodules as needed
     option(GIT_SUBMODULE "Check submodules during build" ON)
 
@@ -24,6 +20,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 enable_testing()
+option(INSTALL_GMOCK "install Googletest's GMock?" OFF)
+option(INSTALL_GTEST "install Googletest's GTest?" OFF)
 
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
