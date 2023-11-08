@@ -20,7 +20,7 @@ From: ubuntu:22.04
     apt-get -y install libboost-all-dev
 
     apt-get -y install git
-    git clone https://github.com/97gamjak/pimd_qmcf.git
+    git clone --recursive https://github.com/97gamjak/pimd_qmcf.git
     cd pimd_qmcf
     git checkout feature/singularity
     mkdir build
