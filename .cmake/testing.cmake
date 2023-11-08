@@ -22,6 +22,9 @@ endif()
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
+enable_testing()
+
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
 if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
