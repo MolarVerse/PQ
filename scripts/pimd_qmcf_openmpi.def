@@ -56,7 +56,6 @@ From: ubuntu:latest
     apt-get -y install git
     git clone https://github.com/pimd-qmcf/pimd_qmcf.git
     cd pimd_qmcf
-    git checkout feature/singularity
     mkdir build
     cd build
     MPI_INCLUDE_PATH="$OMPI_DIR/lib" cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_WITH_MPI=ON

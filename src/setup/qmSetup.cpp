@@ -98,9 +98,12 @@ void QMSetup::setupQMMethod()
  * refer to the documentation.
  *
  */
-void QMSetup::setupQMScript()
+void QMSetup::setupQMScript() const
 {
-    if (utilities::toLowerCopy(_engine.getQMRunner()->getSingularity()) == "on")
+    const bool singularity = utilities::toLowerCopy(_engine.getQMRunner()->getSingularity()) == "on";
+    const bool staticBuild = utilities::toLowerCopy(_engine.getQMRunner()->getStaticBuild()) == "on";
+
+    if (singularity || staticBuild)
     {
         if (settings::QMSettings::getQMSingularityScript().empty() || !settings::QMSettings::getQMScript().empty())
             throw customException::QMRunnerException(

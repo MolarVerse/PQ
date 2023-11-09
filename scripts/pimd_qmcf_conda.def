@@ -42,7 +42,6 @@ From: ubuntu:latest
 
     git clone https://github.com/pimd-qmcf/pimd_qmcf.git
     cd pimd_qmcf
-    git checkout feature/singularity
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF

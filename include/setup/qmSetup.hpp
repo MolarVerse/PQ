@@ -49,7 +49,7 @@ namespace setup
 
         void setup();
         void setupQMMethod();
-        void setupQMScript();
+        void setupQMScript() const;
         void setupCoulombRadiusCutOff() const;
     };
 

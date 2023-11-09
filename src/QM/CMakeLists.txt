@@ -24,6 +24,7 @@ target_compile_definitions(QM
     PUBLIC
     _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
     _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
+    _STATIC_BUILD_=\"${BUILD_SHARED_LIBS}\"
 )
 
 add_custom_command(TARGET QM POST_BUILD
