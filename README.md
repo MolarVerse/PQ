@@ -1,8 +1,8 @@
 # PIMD-QMCF
 
-[![C/C++ CI](https://github.com/97gamjak/pimd_qmcf/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/97gamjak/pimd_qmcf/actions/workflows/c-cpp.yml)
-[![codecov](https://codecov.io/gh/97gamjak/pimd_qmcf/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/97gamjak/pimd_qmcf)
-[![Docs](https://github.com/97gamjak/pimd_qmcf/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://97gamjak.github.io/pimd_qmcf/)
+[![C/C++ CI](https://github.com/pimd-qmcf/pimd_qmcf/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/pimd-qmcf/pimd_qmcf/actions/workflows/c-cpp.yml)
+[![codecov](https://codecov.io/gh/pimd-qmcf/pimd_qmcf/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/pimd-qmcf/pimd_qmcf)
+[![Docs](https://github.com/pimd-qmcf/pimd_qmcf/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://pimd-qmcf.github.io/pimd_qmcf/)
 
 ## How to Use
 

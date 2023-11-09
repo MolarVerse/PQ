@@ -911,7 +911,7 @@ QM_SCRIPT
 
     qm_script = {file}
 
-With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/97gamjak/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 SINGULARITY_QM_SCRIPT
 =====================
@@ -926,7 +926,7 @@ SINGULARITY_QM_SCRIPT
 
 
 
-With the :code:`singularity_qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/97gamjak/pimd_qmcf/src/QM/scripts>`_. This keyword is necessary if a singularity build of PIMD-QMCF is used. All provided singularity definition files under `<https://github.com/97gamjak/pimd_qmcf/scripts/>`_ are compiled with the singularity build option is on. For further information why this keyword is introduced see the :ref:`singularity` section.
+With the :code:`singularity_qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/src/QM/scripts>`_. This keyword is necessary if a singularity build of PIMD-QMCF is used. All provided singularity definition files under `<https://github.com/pimd-qmcf/pimd_qmcf/scripts/>`_ are compiled with the singularity build option is on. For further information why this keyword is introduced see the :ref:`singularity` section.
 
 .. _ringPolymerMDKeys:
 
