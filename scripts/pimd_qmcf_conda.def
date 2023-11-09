@@ -45,3 +45,7 @@ From: ubuntu:latest
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF
     make -j6
+
+%runscript
+    export PATH=$PATH:$MYPATH
+    /data/pimd_qmcf/build/apps/pimd_qmcf "$@"
