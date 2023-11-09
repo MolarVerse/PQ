@@ -1,5 +1,9 @@
 Bootstrap: docker
-From: ubuntu:22.04
+From: ubuntu:latest
+
+%setup
+    mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/data
 
 %post -c /bin/bash
     apt-get update
@@ -22,7 +26,7 @@ From: ubuntu:22.04
     apt-get -y install bzip2
 
     echo "Installing Open MPI"
-    export OMPI_DIR=/opt/ompi
+    export OMPI_DIR=/data/ompi
 
     #####################################
     # __VERSION__ has to be substituted #
@@ -35,7 +39,7 @@ From: ubuntu:22.04
 
     export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v$OMPI_SHORT_VERSION/openmpi-$OMPI_VERSION.tar.bz2"
     mkdir -p /tmp/ompi
-    mkdir -p /opt
+    mkdir -p /data
     # Download
     cd /tmp/ompi && wget -O openmpi-$OMPI_VERSION.tar.bz2 $OMPI_URL && tar -xjf openmpi-$OMPI_VERSION.tar.bz2
     # Compile and install
@@ -46,7 +50,7 @@ From: ubuntu:22.04
     export MANPATH=$OMPI_DIR/share/man:$MANPATH
     ldconfig
 
-    cd /opt/
+    cd /data/
 
     apt-get -y install git
     git clone https://github.com/97gamjak/pimd_qmcf.git
@@ -58,13 +62,13 @@ From: ubuntu:22.04
     make -j6
 
 %environment
-    export OMPI_DIR=/opt/ompi
+    export OMPI_DIR=/data/ompi
     export SINGULARITY_OMPI_DIR=$OMPI_DIR
     export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
     export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
 
 %runscript
     export PATH=$PATH:$MYPATH
-    /opt/pimd_qmcf/build/apps/pimd_qmcf "$@"
+    /data/pimd_qmcf/build/apps/pimd_qmcf "$@"
 
     

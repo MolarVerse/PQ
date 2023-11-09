@@ -1,5 +1,9 @@
 Bootstrap: docker
-From: ubuntu:22.04
+From: ubuntu:latest
+
+%setup
+    mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/data
 
 %post
     apt-get update
@@ -17,6 +21,8 @@ From: ubuntu:22.04
     locale-gen en_US.UTF-8
     locale-gen de_AT.UTF-8
 
+    cd /data/
+
     apt-get -y install git
     git clone https://github.com/97gamjak/pimd_qmcf.git
     cd pimd_qmcf
@@ -28,6 +34,6 @@ From: ubuntu:22.04
 
 %runscript
     export PATH=$PATH:$MYPATH
-    /pimd_qmcf/build/apps/pimd_qmcf "$@"
+    /data/pimd_qmcf/build/apps/pimd_qmcf "$@"
 
     
