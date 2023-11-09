@@ -44,7 +44,7 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(e
 {
     addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
     addKeyword(std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
-    addKeyword(std::string("singularity_qm_script"), bind_front(&InputFileParserQM::parseQMSingularityScript, this), false);
+    addKeyword(std::string("qm_script_full_path"), bind_front(&InputFileParserQM::parseQMScriptFullPath, this), false);
 }
 
 /**
@@ -96,9 +96,9 @@ void InputFileParserQM::parseQMScript(const std::vector<std::string> &lineElemen
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMSingularityScript(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserQM::parseQMScriptFullPath(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
 
-    settings::QMSettings::setQMSingularityScript(lineElements[2]);
+    settings::QMSettings::setQMScriptFullPath(lineElements[2]);
 }

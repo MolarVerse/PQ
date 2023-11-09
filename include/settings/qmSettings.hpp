@@ -53,20 +53,20 @@ namespace settings
     class QMSettings
     {
       private:
-        static inline QMMethod    _qmMethod            = QMMethod::NONE;
-        static inline std::string _qmScript            = "";
-        static inline std::string _qmSingularityScript = "";
+        static inline QMMethod    _qmMethod         = QMMethod::NONE;
+        static inline std::string _qmScript         = "";
+        static inline std::string _qmScriptFullPath = "";
 
       public:
         static void setQMMethod(const std::string_view &method);
 
         static void setQMMethod(const QMMethod method) { _qmMethod = method; }
         static void setQMScript(const std::string_view &script) { _qmScript = script; }
-        static void setQMSingularityScript(const std::string_view &script) { _qmSingularityScript = script; }
+        static void setQMScriptFullPath(const std::string_view &script) { _qmScriptFullPath = script; }
 
         [[nodiscard]] static QMMethod    getQMMethod() { return _qmMethod; }
         [[nodiscard]] static std::string getQMScript() { return _qmScript; }
-        [[nodiscard]] static std::string getQMSingularityScript() { return _qmSingularityScript; }
+        [[nodiscard]] static std::string getQMScriptFullPath() { return _qmScriptFullPath; }
     };
 }   // namespace settings
 

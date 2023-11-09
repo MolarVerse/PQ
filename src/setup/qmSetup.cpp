@@ -105,7 +105,7 @@ void QMSetup::setupQMScript() const
 
     if (singularity || staticBuild)
     {
-        if (settings::QMSettings::getQMSingularityScript().empty() || !settings::QMSettings::getQMScript().empty())
+        if (settings::QMSettings::getQMScriptFullPath().empty() || !settings::QMSettings::getQMScript().empty())
             throw customException::QMRunnerException(
                 "No qm singularity script provided\nYou are using a singularity build of PIMD-QMCF.\nTherefore the general "
                 "setting with \"qm_script\" is not applicable.\nPlease use \"singularity_qm_script\" instead.\nFor singularity "
@@ -116,7 +116,7 @@ void QMSetup::setupQMScript() const
         {
             _engine.getQMRunner()->setScriptPath("");   // setting script path to empty string to avoid errors
             settings::QMSettings::setQMScript(
-                settings::QMSettings::getQMSingularityScript());   // overwriting qm_script with singularity_qm_script
+                settings::QMSettings::getQMScriptFullPath());   // overwriting qm_script with singularity_qm_script
         }
     }
 }
