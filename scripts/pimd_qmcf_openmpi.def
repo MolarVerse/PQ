@@ -3,6 +3,7 @@ From: ubuntu:latest
 
 %setup
     mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/gpfs/gpfs1/scratch
     mkdir $SINGULARITY_ROOTFS/data
 
 %post -c /bin/bash

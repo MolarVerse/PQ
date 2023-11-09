@@ -3,6 +3,7 @@ From: ubuntu:latest
 
 %setup
     mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/gpfs/gpfs1/scratch
     mkdir $SINGULARITY_ROOTFS/data
 
 %post
@@ -32,6 +33,7 @@ From: ubuntu:latest
     conda install -y -c conda-forge gcc
     conda install -y -c conda-forge gxx
     conda install -y -c anaconda cmake
+    conda install -y -c anaconda libopenblas
 
     export CC=/data/conda/bin/gcc
     export CXX=/data/conda/bin/g++
