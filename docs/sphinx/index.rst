@@ -11,5 +11,11 @@ Welcome to PIMD-QMCF's documentation!
     :maxdepth: 1
     
     src/userGuide/userGuide
+    src/installation/installation
+    src/developerGuide/developerGuide
 
-:ref:`userGuide`
+* :ref:`userGuide`
+
+* :ref:`installation`
+
+* :ref:`developerGuide`

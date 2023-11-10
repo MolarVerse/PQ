@@ -43,15 +43,48 @@ using namespace output;
  * @param loopTime
  * @param data
  */
-void RingPolymerEnergyOutput::write(const size_t step, const physicalData::PhysicalData &data)
+void RingPolymerEnergyOutput::write(const size_t step, const std::vector<physicalData::PhysicalData> &dataVector)
 {
     _fp << std::format("{:10d}\t", step);
 
-    _fp << std::format("{:20.12f}\t", sum(data.getRingPolymerEnergy()));
+    _fp << std::format("{:20.12f}\t", sumOfRingPolymerEnergies(dataVector));
 
-    std::ranges::for_each(data.getRingPolymerEnergy(), [&](const double &energy) { _fp << std::format("{:20.12f}\t", energy); });
+    _fp << std::format("{:20.12f}\t", maxRingPolymerEnergy(dataVector));
+
+    _fp << std::format("{:20.12f}\t", sumOfRingPolymerEnergies(dataVector) / dataVector.size());
+
+    std::ranges::for_each(dataVector, [&](const auto &data) { _fp << std::format("{:20.12f}\t", data.getRingPolymerEnergy()); });
 
     _fp << '\n' << std::flush;
 
     _fp << std::flush;
+}
+
+/**
+ * @brief sum of all ring polymer spring energies
+ *
+ * @param dataVector
+ *
+ * @return sum of all ring polymer spring energies
+ */
+double RingPolymerEnergyOutput::sumOfRingPolymerEnergies(const std::vector<physicalData::PhysicalData> &dataVector)
+{
+    return std::accumulate(dataVector.begin(),
+                           dataVector.end(),
+                           0.0,
+                           [](const auto &sum, const auto &data) { return sum + data.getRingPolymerEnergy(); });
+}
+
+/**
+ * @brief maximum ring polymer spring energy
+ *
+ * @param dataVector
+ *
+ * @return maximum ring polymer spring energy
+ */
+double RingPolymerEnergyOutput::maxRingPolymerEnergy(const std::vector<physicalData::PhysicalData> &dataVector)
+{
+    return std::ranges::max_element(
+               dataVector, [](const auto &a, const auto &b) { return a.getRingPolymerEnergy() < b.getRingPolymerEnergy(); })
+        ->getRingPolymerEnergy();
 }

@@ -33,6 +33,12 @@
 #include <cmath>        // for sqrt
 #include <functional>   // for identity
 
+#ifdef WITH_MPI
+#include "mpi.hpp"   // for MPI
+
+#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#endif
+
 using maxwellBoltzmann::MaxwellBoltzmann;
 
 /**
@@ -57,7 +63,18 @@ void MaxwellBoltzmann::initializeVelocities(simulationBox::SimulationBox &simBox
         atom->setVelocity({distribution(_generator), distribution(_generator), distribution(_generator)});
     };
 
+#ifdef WITH_MPI
+    if (mpi::MPI::isRoot())
+        std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+
+    auto velocities = simBox.flattenVelocities();
+
+    ::MPI_Bcast(velocities.data(), velocities.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    simBox.deFlattenVelocities(velocities);
+#else
     std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+#endif
 
     auto resetKinetics = resetKinetics::ResetKinetics();
     resetKinetics.setMomentum(simBox.calculateMomentum());

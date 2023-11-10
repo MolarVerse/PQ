@@ -72,12 +72,6 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
         writeRight(data.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
     }
 
-    if (settings::Settings::isRingPolymerMDActivated())
-    {
-        writeLeft(mean(data.getRingPolymerEnergy()), "E(MEAN-RPMD)", "kcal/mol");
-        writeRight(max(data.getRingPolymerEnergy()), "E(MAX-RPMD)", "kcal/mol");
-    }
-
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
     writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 

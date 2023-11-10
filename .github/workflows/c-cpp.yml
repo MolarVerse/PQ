@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   pull_request:
-    branches: [main, dev]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -13,26 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Cache boost
-        uses: actions/cache@v1.0.3
-        id: cache-boost
-        with:
-          path: ~/boost
-          key: libboost-all-dev
-
-      - name: Install boost
-        env:
-          CACHE_HIT: ${{steps.cache-boost.outputs.cache-hit}}
-        run: |
-          if [[ "$CACHE_HIT" == 'nevertrue' ]]; then
-            sudo cp --force --recursive ~/boost/* /
-          else
-            sudo apt-get update && sudo apt-get install -yq libboost-all-dev
-            mkdir -p ~/boost
-            for dep in libboost-all-dev; do
-              dpkg -L $dep | while IFS= read -r f; do if test -f $f; then echo $f; fi; done | xargs cp --parents --target-directory ~/boost/
-            done
-          fi
 
       - name: install gcc13
         run: |

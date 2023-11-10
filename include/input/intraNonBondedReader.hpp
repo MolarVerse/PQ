@@ -33,7 +33,7 @@
 namespace input::intraNonBonded
 {
     void               readIntraNonBondedFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded(const engine::Engine &engine) { return engine.isIntraNonBondedActivated(); }
+    [[nodiscard]] bool isNeeded(const engine::Engine &engine);
 
     /**
      * @class IntraNonBondedReader

@@ -49,6 +49,7 @@ highlight_language = 'c++'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+html_style = 'css/custom.css'
 html_theme_options = {
     'canonical_url': '',
     'analytics_id': '',  # Provided by Google in your dashboard
@@ -65,7 +66,8 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
-# html_logo = ''
+
+html_logo = 'logo/PQ.png'
 # github_url = ''
 # html_baseurl = ''
 

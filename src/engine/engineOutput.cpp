@@ -162,7 +162,7 @@ void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::Simulat
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeRingPolymerEnergyFile(const size_t step, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeRingPolymerEnergyFile(const size_t step, const std::vector<physicalData::PhysicalData> &dataVector)
 {
-    _ringPolymerEnergyOutput->write(step, physicalData);
+    _ringPolymerEnergyOutput->write(step, dataVector);
 }

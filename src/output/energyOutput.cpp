@@ -63,12 +63,6 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
         _fp << std::format("{:20.12f}\t", data.getNumberOfQMAtoms());
     }
 
-    if (settings::Settings::isRingPolymerMDActivated())
-    {
-        _fp << std::format("{:20.12f}\t", mean(data.getRingPolymerEnergy()));
-        _fp << std::format("{:20.12f}\t", max(data.getRingPolymerEnergy()));
-    }
-
     _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
     _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
 

@@ -24,7 +24,7 @@ Hamiltonian = DFTB {
   }
   DampXH = Yes
   DampXHExponent = 4.0
-  ReadInitialCharges = Yes
+  ReadInitialCharges = No
   
   # Sampling of the Briullouin zone according to 
   # the Monkhorst-Pack scheme

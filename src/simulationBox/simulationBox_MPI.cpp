@@ -7,6 +7,29 @@
 using simulationBox::SimulationBox;
 
 /**
+ * @brief flattens positions of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::flattenPositions()
+{
+    std::vector<double> positions;
+
+    auto addPositions = [&positions](auto &atom)
+    {
+        const auto position = atom->getPosition();
+
+        positions.push_back(position[0]);
+        positions.push_back(position[1]);
+        positions.push_back(position[2]);
+    };
+
+    std::ranges::for_each(_atoms, addPositions);
+
+    return positions;
+}
+
+/**
  * @brief flattens velocities of each atom into a single vector of doubles
  *
  * @return std::vector<double>
@@ -50,6 +73,29 @@ std::vector<double> SimulationBox::flattenForces()
     std::ranges::for_each(_atoms, addForces);
 
     return forces;
+}
+
+/**
+ * @brief de-flattens positions of each atom from a single vector of doubles
+ *
+ * @param positions
+ */
+void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
+{
+    size_t index = 0;
+
+    auto setPositions = [&positions, &index](auto &atom)
+    {
+        linearAlgebra::Vec3D position;
+
+        position[0] = positions[index++];
+        position[1] = positions[index++];
+        position[2] = positions[index++];
+
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, setPositions);
 }
 
 /**

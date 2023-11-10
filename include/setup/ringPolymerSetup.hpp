@@ -27,11 +27,12 @@
 namespace engine
 {
     class RingPolymerEngine;   // forward declaration
-}
+    class Engine;              // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupRingPolymer(engine::RingPolymerEngine &);
+    void setupRingPolymer(engine::Engine &);
 
     /**
      * @class RingPolymerSetup

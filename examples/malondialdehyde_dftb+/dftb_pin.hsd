@@ -1,15 +1,15 @@
 Geometry = GenFormat {
 9  S
 C  H  O
-1     1  -4.405824391742  -2.216741747225   0.394599103971
-2     2  -4.204903372398  -1.354703632901  -0.233673577294
-3     1  -5.306697615129  -2.177807585563   1.564473564344
-4     2  -6.012133879177  -1.299819221753   1.759464336754
-5     1  -5.223308752200  -3.339656757883   2.642612081802
-6     2  -5.543416940904  -3.068490658656   3.696183788129
-7     3  -4.939140906980  -4.584584259332   2.315851877130
-8     3  -3.834238568957  -3.457842951297  -0.068301097430
-9     2  -4.088390392629  -4.172264041535   0.627118017389
+1     1  -4.393811279873  -2.220309524015   0.366320610579
+2     2  -4.170947146392  -1.316446669968  -0.161267412307
+3     1  -5.327603455360  -2.177146179399   1.591120218364
+4     2  -6.039726217492  -1.380664256777   1.699150362067
+5     1  -5.239785918923  -3.277723420602   2.667183620310
+6     2  -5.411792777140  -3.036146816057   3.700960442573
+7     3  -4.931054841231  -4.622652172332   2.291732884197
+8     3  -3.830990680174  -3.463808290598  -0.057332806404
+9     2  -4.103976588034  -4.166434332287   0.545643636307
 0.000000000000   0.000000000000   0.000000000000
 100.000000000000   0.000000000000   0.000000000000
 0.000000000000 100.000000000000   0.000000000000
@@ -34,7 +34,7 @@ Hamiltonian = DFTB {
     threebody = No
     hhrepulsion = No
   }
-  ReadInitialCharges = Yes
+  ReadInitialCharges = No
   KPointsAndWeights = {
 0.0 0.0 0.0 1.0
   }
@@ -64,7 +64,7 @@ Hamiltonian = DFTB {
   PolynomialRepulsive = {}
   ShellResolvedSCC = No
   OldSKInterpolation = No
-  RangeSeparated = None {}
+  InitialCharges = {}
   EwaldParameter = 0.0000000000000000
   EwaldTolerance = 1.0000000000000001E-009
   ConvergentSCCOnly = Yes
@@ -99,9 +99,11 @@ Options = {
   MinimiseMemoryUsage = No
   ShowFoldedCoords = No
   TimingVerbosity = 1
-  ReadChargesAsText = No
+  WriteCharges = Yes
   WriteChargesAsText = No
-  SkipChargeTest = No
+  BinaryAccessTypes = {
+ "stream"
+  }
 }
 Analysis = {
   MullikenAnalysis = Yes
@@ -113,7 +115,7 @@ Analysis = {
   AtomResolvedEnergies = No
 }
 ParserOptions = {
-  ParserVersion = 12
+  ParserVersion = 13
   WriteHSDInput = Yes
   StopAfterParsing = No
   IgnoreUnprocessedNodes = No
