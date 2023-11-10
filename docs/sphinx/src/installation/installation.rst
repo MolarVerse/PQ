@@ -32,7 +32,7 @@ For compilation then type:
 Singularity
 ***********
 
-Singularity is a containerization tool that allows to run applications in a container. This is especially useful for running applications on HPC systems where the user does not have root access. Singularity is available on most HPC systems. The PIMD-QMCF software package provides three (hopefully) useful singularity definition files, which can be found in the `<https://github.com/pimd-qmcf/pimd_qmcf>`_. 
+Singularity is a containerization tool that allows to run applications in a container. This is especially useful for running applications on HPC systems where the user does not have root access. Singularity is available on most HPC systems. The PIMD-QMCF software package provides three (hopefully) useful singularity definition files, which can be found in the `<https://github.com/MolarVerse/pimd_qmcf>`_. 
 
 The file :code:`pimd_qmcf.def` represents a definition file to build a singularity container based on a fully sequential build of the latest release of PIMD-QMCF. The file :code:`pimd_qmcf_openmpi.def` is an extension of the previously mentioned definition file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI application are highly restricted regarding the applied MPI version, before building the container the __VERSION__ in the definition file has to be substituted with the desired OpenMPI version. Therefore, a small and simple bash script :code:`inferOpenMpiVersion.sh` is provided, which automatically substitutes the __VERSION__ with the desired OpenMPI version when given as command line argument or if no CLI argument is given it tries to infer the needed OpenMPI variable from the environment variable :code:`$PATH`.
 

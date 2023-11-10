@@ -911,7 +911,7 @@ QM_SCRIPT
 
     qm_script = {file}
 
-With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_SCRIPT_FULL_PATH
 =====================
@@ -926,7 +926,7 @@ QM_SCRIPT_FULL_PATH
 
 
 
-With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _ringPolymerMDKeys:
 
