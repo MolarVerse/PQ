@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; PIMD-QMCF [] documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Developer Guide" href="../developerGuide/developerGuide.html" />
+    <link rel="prev" title="Setup Files" href="../userGuide/setupFiles.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PIMD-QMCF
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#building-from-source">Building from Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#singularity">Singularity</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PIMD-QMCF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/installation/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<span id="userg-installation"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<section id="building-from-source">
+<h2>Building from Source<a class="headerlink" href="#building-from-source" title="Permalink to this headline"></a></h2>
+<p>Create a build directory and navigate into this directory. Within this directory configure cmake:</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>cmake ../ -DCMAKE_BUILD_TYPE=Release</p>
+</div>
+<p>Optionally it is also possible to enable MPI for Ring Polymer MD</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On</p>
+</div>
+<p>For compilation then type:</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>make -j&lt;#procs&gt;</p>
+</div>
+</section>
+<section id="singularity">
+<span id="id1"></span><h2>Singularity<a class="headerlink" href="#singularity" title="Permalink to this headline"></a></h2>
+<p>Singularity is a containerization tool that allows to run applications in a container. This is especially useful for running applications on HPC systems where the user does not have root access. Singularity is available on most HPC systems. The PIMD-QMCF software package provides three (hopefully) useful singularity definition files, which can be found in the <a class="reference external" href="https://github.com/pimd-qmcf/pimd_qmcf">https://github.com/pimd-qmcf/pimd_qmcf</a>.</p>
+<p>The file <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf.def</span></code> represents a definition file to build a singularity container based on a fully sequential build of the latest release of PIMD-QMCF. The file <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf_openmpi.def</span></code> is an extension of the previously mentioned definition file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI application are highly restricted regarding the applied MPI version, before building the container the __VERSION__ in the definition file has to be substituted with the desired OpenMPI version. Therefore, a small and simple bash script <code class="code docutils literal notranslate"><span class="pre">inferOpenMpiVersion.sh</span></code> is provided, which automatically substitutes the __VERSION__ with the desired OpenMPI version when given as command line argument or if no CLI argument is given it tries to infer the needed OpenMPI variable from the environment variable <code class="code docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
+<p>In order to build both containers from the singularity file the following command can be used:</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>singularity build –fakeroot &lt;name_of_container&gt;.sif &lt;name_of_definiton_file&gt;.def</p>
+</div>
+<p>In order to execute the program <em>via</em> the singularity container two possible commands are shown below:</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>singularity exec –env MYPATH=$PATH &lt;name_of_container&gt;.sif /data/pimd_qmcf/build/apps/pimd_qmcf &lt;name_of_input_file&gt;</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>singularity run –env MYPATH=$PATH &lt;name_of_container&gt;.sif &lt;name_of_input_file&gt;</p>
+</div>
+<p>Depending on the directory structure of the host system it might be necessary to bind/mound the directory containing the input file to the container. This can be achieved by adding <code class="code docutils literal notranslate"><span class="pre">--bind</span> <span class="pre">$PWD</span></code> to the singularity command.</p>
+<p>The third definiton file is only experimental at the moment as it is used in combination with a miniconda environment in the container. This should make it possible in future releases to build the singularity container based on an environment.yml file. This definiton file is called <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf_conda.def</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../userGuide/setupFiles.html" class="btn btn-neutral float-left" title="Setup Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../developerGuide/developerGuide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

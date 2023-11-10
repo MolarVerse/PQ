@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Input File &mdash; PIMD-QMCF [] documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
@@ -34,6 +34,7 @@
           
           <a href="../../index.html" class="icon icon-home">
             PIMD-QMCF
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -148,6 +149,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#qm-keys">QM Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#qm-prog">QM_PROG</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-script">QM_SCRIPT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-script-full-path">QM_SCRIPT_FULL_PATH</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ring-polymer-md-keys">Ring Polymer MD Keys</a><ul>
@@ -165,6 +167,8 @@
 <li class="toctree-l2"><a class="reference internal" href="setupFiles.html">Setup Files</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
 </ul>
 
         </div>
@@ -945,7 +949,19 @@
 <p class="admonition-title">Key</p>
 <p>qm_script = {file}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under <a class="reference external" href="https://github.com/97gamjak/pimd_qmcf/tree/main/src/QM/scripts">https://github.com/97gamjak/pimd_qmcf/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under <a class="reference external" href="https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts">https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
+</section>
+<section id="qm-script-full-path">
+<h3>QM_SCRIPT_FULL_PATH<a class="headerlink" href="#qm-script-full-path" title="Permalink to this headline"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_script_full_path = {pathFile}</p>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This keyword can not be used in conjunction with the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PIMD-QMCF. For further details regarding the compilation/installation please refer to the <a class="reference internal" href="../installation/installation.html#userg-installation"><span class="std std-ref">Installation</span></a> section.</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script_full_path</span></code> keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under <a class="reference external" href="https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts">https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
 </section>
 </section>
 <section id="ring-polymer-md-keys">
@@ -954,7 +970,7 @@
 <h3>RPMD_n_replica<a class="headerlink" href="#rpmd-n-replica" title="Permalink to this headline"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>rpmd_n_replica = {unit+}</p>
+<p>rpmd_n_replica = {uint+}</p>
 </div>
 <p>With the <code class="code docutils literal notranslate"><span class="pre">rpmd_n_replica</span></code> keyword the number of beads for a ring polymer MD simulation is controlled.</p>
 <div class="admonition note">
