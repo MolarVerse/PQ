@@ -3,7 +3,7 @@
 <GPL_HEADER>
 
     PIMD-QMCF
-    Copyright (C) 2023-now  Jakob Gamper
+    Copyright (C) 2023-now  Jakob Gamper, Josef M. Gallmetzer
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,17 +21,3 @@
 <GPL_HEADER>
 *****************************************************************************
 """
-
-from setuptools import setup, find_packages
-
-setup(
-    name='pimd_qmcf_tools',
-    version='0.1.0',
-    packages=find_packages(include=['pimd_qmcf_tools', 'pimd_qmcf_tools.enalyzer']),
-    install_requires=['customtkinter', 'numpy', 'matplotlib', 'pandas'],
-    scripts=[
-        "bin/traj2box",
-        "bin/traj2qmcfc",
-        "bin/enalyzer",
-    ]
-)
