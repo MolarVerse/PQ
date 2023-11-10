@@ -1,0 +1,20 @@
+#! /usr/bin/env python3
+
+import sys
+import signal
+import pimd_qmcf_tools.enalyzer.enalyzer as enalyzer
+from pimd_qmcf_tools.common import ToolError
+
+# signal handler for SIGINT
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    sys.exit(0)
+
+# Register signal handler with SIGINT signal
+signal.signal(signal.SIGINT, signal_handler)
+
+try:
+    enalyzer.main()
+except ToolError as e:
+    sys.stderr.write('ScriptError: ' + str(e) + '\n')
+    sys.exit(1)

@@ -123,6 +123,7 @@
         "COUL",
         "coulombic",
         "Coulombics",
+        "datapoints",
         "dxyz",
         "ekin",
         "forcexyz",
