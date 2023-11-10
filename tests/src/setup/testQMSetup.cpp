@@ -38,6 +38,7 @@ TEST(TestQMSetup, setup)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())), typeid(QM::DFTBPlusRunner));
@@ -52,6 +53,7 @@ TEST(TestQMSetup, setup)
 TEST(TestQMSetup, setupQMFull)
 {
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMScript("test");
 
     engine::QMMDEngine engine;
     EXPECT_NO_THROW(setup::setupQM(engine));

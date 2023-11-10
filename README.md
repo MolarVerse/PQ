@@ -26,13 +26,7 @@ For compilation then type:
 
 ## Singularity
 
-The `scripts` directory contains a file called `pimd_qmcf.def`, which is a definition file for a singularity container. First build this container as following
-
-    singularity build --fakeroot <name of container>.sif pimd_qmcf.def
-
-In order to run the application which is build within the container just execute
-
-    singularity run --env MYPATH=$PATH <name of container>.sif <input file>
+There are several singularity definition files shipped with this software package. For further information please refer to the [documentation page](https://pimd-qmcf.github.io/pimd_qmcf/).
 
 
 
