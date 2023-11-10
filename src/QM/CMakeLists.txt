@@ -20,11 +20,17 @@ target_link_libraries(QM
     physicalData
 )
 
+if(BUILD_SHARED_LIBS)
+    set(BUILD_STATIC "OFF")
+else()
+    set(BUILD_STATIC "ON")
+endif()
+
 target_compile_definitions(QM
     PUBLIC
     _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
     _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
-    _STATIC_BUILD_=\"${BUILD_SHARED_LIBS}\"
+    _STATIC_BUILD_=\"${BUILD_STATIC}\"
 )
 
 add_custom_command(TARGET QM POST_BUILD
