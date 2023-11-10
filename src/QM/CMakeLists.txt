@@ -20,7 +20,11 @@ target_link_libraries(QM
     physicalData
 )
 
-set(BUILD_STATIC NOT BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
+    set(BUILD_STATIC "OFF")
+else()
+    set(BUILD_STATIC "ON")
+endif()
 
 target_compile_definitions(QM
     PUBLIC
