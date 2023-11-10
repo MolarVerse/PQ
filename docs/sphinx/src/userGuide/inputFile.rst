@@ -913,20 +913,20 @@ QM_SCRIPT
 
 With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
-SINGULARITY_QM_SCRIPT
+QM_SCRIPT_FULL_PATH
 =====================
 
 .. admonition:: Key
     :class: tip
 
-    singularity_qm_script = {file}
+    qm_script_full_path = {pathFile}
 
 .. attention::
-   This keyword is only considered if a singularity build of PIMD-QMCF is used. This keyword fully substitutes the :ref:`qm_script` keyword. Here additional attention is required, since executing PIMD-QMCF from a singularity build means that the user has to provide  the full or relative path to the executable outside of the container. This is due to the fact that the executable ran from within the singularity container is not able to access scripts inside the container.
+   This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PIMD-QMCF. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
 
 
-With the :code:`singularity_qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/src/QM/scripts>`_. This keyword is necessary if a singularity build of PIMD-QMCF is used. All provided singularity definition files under `<https://github.com/pimd-qmcf/pimd_qmcf/scripts/>`_ are compiled with the singularity build option is on. For further information why this keyword is introduced see the :ref:`singularity` section.
+With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/pimd-qmcf/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _ringPolymerMDKeys:
 
@@ -940,7 +940,7 @@ RPMD_n_replica
 .. admonition:: Key
     :class: tip
 
-    rpmd_n_replica = {unit+}
+    rpmd_n_replica = {uint+}
 
 With the :code:`rpmd_n_replica` keyword the number of beads for a ring polymer MD simulation is controlled.
 
