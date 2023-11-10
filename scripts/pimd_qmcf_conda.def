@@ -40,7 +40,7 @@ From: ubuntu:latest
 
     cd /data/
 
-    git clone https://github.com/pimd-qmcf/pimd_qmcf.git
+    git clone https://github.com/MolarVerse/pimd_qmcf.git
     cd pimd_qmcf
     mkdir build
     cd build
