@@ -132,12 +132,12 @@ please refer to the documentation.
     }
     else if (settings::QMSettings::getQMScript().empty() && settings::QMSettings::getQMScriptFullPath().empty())
         throw customException::InputFileException("No qm_script provided. Please provide a qm_script in the input file.");
-    else if (settings::QMSettings::getQMScriptFullPath().empty())
+    else if (!settings::QMSettings::getQMScriptFullPath().empty() && settings::QMSettings::getQMScript().empty())
     {
         _engine.getQMRunner()->setScriptPath("");   // setting script path to empty string to avoid errors
         settings::QMSettings::setQMScript(settings::QMSettings::getQMScriptFullPath());   // overwriting qm_script with full path
     }
-    else if (!settings::QMSettings::getQMScriptFullPath().empty())
+    else if (!settings::QMSettings::getQMScriptFullPath().empty() && !settings::QMSettings::getQMScript().empty())
         throw customException::InputFileException(
             R"(
 You have set both "qm_script" and "qm_script_full_path" in the input file. They are mutually exclusive.
