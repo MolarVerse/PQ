@@ -97,6 +97,22 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief operator- for two StaticMatrix3x3's
+     *
+     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator-(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result -= rhs;
+
+        return result;
+    }
+
+    /**
      * @brief operator-= for two StaticMatrix3x3's
      *
      * @param lhs
@@ -197,6 +213,18 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t)
     {
         return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
+    }
+
+    /**
+     * @brief operator/ for scalar and StaticMatrix3x3
+     *
+     * @param StaticMatrix3x3<T> mat, T t
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator/(const T t, const StaticMatrix3x3<T> &mat)
+    {
+        return StaticMatrix3x3<T>(t / mat[0], t / mat[1], t / mat[2]);
     }
 
     /**
@@ -354,6 +382,17 @@ namespace linearAlgebra
     T trace(const StaticMatrix3x3<T> &mat)
     {
         return mat[0][0] + mat[1][1] + mat[2][2];
+    }
+
+    /**
+     * @brief Kronecker delta
+     *
+     * @TODO: use concepts here
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> kroneckerDeltaMatrix()
+    {
+        return StaticMatrix3x3<T>(Vec3D{T(1), 0.0, 0.0}, Vec3D{0.0, T(1), 0.0}, Vec3D{0.0, 0.0, T(1)});
     }
 
 }   // namespace linearAlgebra

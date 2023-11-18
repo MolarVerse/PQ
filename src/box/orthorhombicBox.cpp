@@ -70,3 +70,14 @@ linearAlgebra::Vec3D OrthorhombicBox::calculateBoxDimensionsFromDensity(const do
 
     return linearAlgebra::Vec3D(::cbrt(_volume));
 }
+
+/**
+ * @brief scales the cell dimensions and recalculates the volume
+ *
+ * @param scalingFactors
+ */
+void OrthorhombicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+{
+    setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
+    _volume = calculateVolume();
+}

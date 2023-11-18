@@ -27,6 +27,7 @@
 #include "exceptions.hpp"                            // for ExceptionType
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
+#include "staticMatrix3x3.hpp"                       // for diagonal, diagonalMatrix
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for Vec3D, operator/
@@ -38,6 +39,8 @@
 using manostat::AnisotropicStochasticRescalingManostat;
 using manostat::SemiIsotropicStochasticRescalingManostat;
 using manostat::StochasticRescalingManostat;
+
+using namespace linearAlgebra;
 
 /**
  * @brief copy constructor for Stochastic Rescaling Manostat
@@ -82,7 +85,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
     simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
 
     auto scalePositions  = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
-    auto scaleVelocities = [&mu, &simBox](auto &atom) { atom->scaleVelocityOrthogonalSpace(1 / mu, simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &atom) { atom->scaleVelocityOrthogonalSpace(1.0 / mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
@@ -94,7 +97,7 @@ void StochasticRescalingManostat::applyManostat(simulationBox::SimulationBox &si
  * @param volume
  * @return linearAlgebra::Vec3D
  */
-linearAlgebra::Vec3D StochasticRescalingManostat::calculateMu(const double volume)
+linearAlgebra::tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
@@ -102,7 +105,7 @@ linearAlgebra::Vec3D StochasticRescalingManostat::calculateMu(const double volum
 
     const auto stochasticFactor = ::sqrt(2.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
 
-    return linearAlgebra::Vec3D(::exp(-compressibilityFactor * (_targetPressure - _pressure) + stochasticFactor / 3.0));
+    return diagonalMatrix(::exp(-compressibilityFactor * (_targetPressure - _pressure) + stochasticFactor / 3.0));
 }
 
 /**
@@ -111,7 +114,7 @@ linearAlgebra::Vec3D StochasticRescalingManostat::calculateMu(const double volum
  * @param volume
  * @return linearAlgebra::Vec3D
  */
-linearAlgebra::Vec3D SemiIsotropicStochasticRescalingManostat::calculateMu(const double volume)
+linearAlgebra::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(const double volume)
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
@@ -137,7 +140,7 @@ linearAlgebra::Vec3D SemiIsotropicStochasticRescalingManostat::calculateMu(const
     mu[_2DIsotropicAxes[1]] = mu_xy;
     mu[_2DAnisotropicAxis]  = mu_z;
 
-    return mu;
+    return diagonalMatrix(mu);
 }
 
 /**
@@ -146,7 +149,7 @@ linearAlgebra::Vec3D SemiIsotropicStochasticRescalingManostat::calculateMu(const
  * @param volume
  * @return linearAlgebra::Vec3D
  */
-linearAlgebra::Vec3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume)
+linearAlgebra::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume)
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
@@ -155,5 +158,5 @@ linearAlgebra::Vec3D AnisotropicStochasticRescalingManostat::calculateMu(const d
     const auto stochasticFactor =
         ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
 
-    return exp(-compressibilityFactor * (_targetPressure - diagonal(_pressureTensor)) / 3.0 + stochasticFactor);
+    return diagonalMatrix(exp(-compressibilityFactor * (_targetPressure - diagonal(_pressureTensor)) / 3.0 + stochasticFactor));
 }

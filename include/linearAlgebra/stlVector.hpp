@@ -24,8 +24,6 @@
 
 #define _STL_VECTOR_HPP_
 
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-
 #include <algorithm>   // for max_element
 #include <numeric>     // for accumulate
 #include <vector>      // for vector

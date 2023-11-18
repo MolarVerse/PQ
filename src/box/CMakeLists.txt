@@ -14,6 +14,7 @@ target_link_libraries(box
     PUBLIC
     linearAlgebra
     exceptions
+    settings
 )
 
 install(TARGETS box

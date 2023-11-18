@@ -23,6 +23,7 @@
 #include "testMolecule.hpp"
 
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
+#include "staticMatrix3x3.hpp"   // for diagonalMatrix
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 
@@ -39,10 +40,10 @@ TEST_F(TestMolecule, calculateCenterOfMass)
 
 TEST_F(TestMolecule, scaleAtoms)
 {
-    const linearAlgebra::Vec3D scale         = {1.0, 2.0, 3.0};
-    const linearAlgebra::Vec3D atomPosition1 = _molecule->getAtomPosition(0);
-    const linearAlgebra::Vec3D atomPosition2 = _molecule->getAtomPosition(1);
-    const linearAlgebra::Vec3D atomPosition3 = _molecule->getAtomPosition(2);
+    const linearAlgebra::tensor3D scale         = diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
+    const linearAlgebra::Vec3D    atomPosition1 = _molecule->getAtomPosition(0);
+    const linearAlgebra::Vec3D    atomPosition2 = _molecule->getAtomPosition(1);
+    const linearAlgebra::Vec3D    atomPosition3 = _molecule->getAtomPosition(2);
 
     simulationBox::OrthorhombicBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
@@ -50,7 +51,7 @@ TEST_F(TestMolecule, scaleAtoms)
     _molecule->calculateCenterOfMass(box);
 
     const auto                 centerOfMassBeforeScaling = _molecule->getCenterOfMass();
-    const linearAlgebra::Vec3D shift                     = centerOfMassBeforeScaling * (scale - 1.0);
+    const linearAlgebra::Vec3D shift                     = centerOfMassBeforeScaling * (diagonal(scale) - 1.0);
 
     _molecule->scale(scale, box);
 

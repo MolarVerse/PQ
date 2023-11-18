@@ -199,9 +199,9 @@ namespace simulationBox
          **********************************************/
 
         void applyPBC(linearAlgebra::Vec3D &position) const { _box->applyPBC(position); }
-        void scaleBox(const linearAlgebra::Vec3D &scaleFactors)
+        void scaleBox(const linearAlgebra::tensor3D &scalingTensor)
         {
-            _box->scaleBox(scaleFactors);
+            _box->scaleBox(scalingTensor);
             calculateDensity();
         }
 

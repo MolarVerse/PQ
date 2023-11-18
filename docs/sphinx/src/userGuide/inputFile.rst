@@ -639,6 +639,8 @@ Possible options are:
 
    5) **anisotropic** - all axes are coupled in an anisotropic way
 
+   6) **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
+
 *******************
 Reset Kinetics Keys
 *******************
