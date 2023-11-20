@@ -83,6 +83,22 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const T &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result = lhs + StaticMatrix3x3<T>(rhs);
+
+        return result;
+    }
+
+    /**
      * @brief operator+= for two StaticMatrix3x3's
      *
      * @param lhs
@@ -393,6 +409,22 @@ namespace linearAlgebra
     [[nodiscard]] StaticMatrix3x3<T> kroneckerDeltaMatrix()
     {
         return StaticMatrix3x3<T>(Vec3D{T(1), 0.0, 0.0}, Vec3D{0.0, T(1), 0.0}, Vec3D{0.0, 0.0, T(1)});
+    }
+
+    /**
+     * @brief exponential of a StaticMatrix3x3
+     *
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> exp(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = StaticMatrix3x3<T>(0.0);
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = i + 1; j < 3; ++j)
+                result[i][j] = ::exp(mat[i][j]);
+
+        return result;
     }
 
 }   // namespace linearAlgebra

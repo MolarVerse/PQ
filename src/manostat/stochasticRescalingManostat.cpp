@@ -37,6 +37,7 @@
 #include <functional>   // for identity
 
 using manostat::AnisotropicStochasticRescalingManostat;
+using manostat::FullAnisotropicStochasticRescalingManostat;
 using manostat::SemiIsotropicStochasticRescalingManostat;
 using manostat::StochasticRescalingManostat;
 
@@ -159,4 +160,22 @@ linearAlgebra::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(cons
         ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
 
     return diagonalMatrix(exp(-compressibilityFactor * (_targetPressure - diagonal(_pressureTensor)) / 3.0 + stochasticFactor));
+}
+
+/**
+ * @brief calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)
+ *
+ * @param volume
+ * @return linearAlgebra::tensor3D
+ */
+linearAlgebra::tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(const double volume)
+{
+    const auto compressibilityFactor = _compressibility * _dt / _tau;
+    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ * settings::ThermostatSettings::getTargetTemperature();
+    const auto randomFactor = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    const auto stochasticFactor =
+        ::sqrt(2.0 / 3.0 * kT * compressibilityFactor / volume * constants::_PRESSURE_FACTOR_) * randomFactor;
+
+    return exp(-compressibilityFactor * (diagonalMatrix(_targetPressure) - _pressureTensor) / 3.0 + stochasticFactor);
 }

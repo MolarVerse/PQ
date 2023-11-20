@@ -193,6 +193,16 @@ void ManostatSetup::setupStochasticRescalingManostat()
         _engine.getLogOutput().writeSetupInfo("isotropy:               anisotropic");
     }
 
+    else if (isotropy == settings::Isotropy::FULL_ANISOTROPIC)
+    {
+        _engine.makeManostat(
+            manostat::AnisotropicStochasticRescalingManostat(settings::ManostatSettings::getTargetPressure(),
+                                                             settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
+                                                             settings::ManostatSettings::getCompressibility()));
+
+        _engine.getLogOutput().writeSetupInfo("isotropy:               full_anisotropic");
+    }
+
     else
     {
         _engine.makeManostat(

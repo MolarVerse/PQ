@@ -104,6 +104,20 @@ namespace manostat
         [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
     };
 
+    /**
+     * @class FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     *
+     * @link https://doi.org/10.1063/5.0020514
+     *
+     */
+    class FullAnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    {
+      public:
+        using StochasticRescalingManostat::StochasticRescalingManostat;
+
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
+    };
+
 }   // namespace manostat
 
 #endif   // _STOCHASTIC_RESCALING_MANOSTAT_HPP_
