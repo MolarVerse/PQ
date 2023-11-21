@@ -162,6 +162,14 @@ linearAlgebra::tensor3D TriclinicBox::transformIntoSimulationSpace(const linearA
     return _transformationMatrix * mat;
 }
 
+/**
+ * @brief scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume
+ *
+ * @details it first calculates the new box matrix, then the new box dimensions and angles. By setting the box dimensions and
+ * angles the transformation matrix and volume are recalculated
+ *
+ * @param scalingTensor
+ */
 void TriclinicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
 {
     if (settings ::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
@@ -179,6 +187,12 @@ void TriclinicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
     _volume = calculateVolume();
 }
 
+/**
+ * @brief determine box dimensions and angles from box matrix
+ *
+ * @param boxMatrix
+ * @return std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
+ */
 std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
 simulationBox::calculateBoxDimensionsAndAnglesFromBoxMatrix(const linearAlgebra::tensor3D &boxMatrix)
 {

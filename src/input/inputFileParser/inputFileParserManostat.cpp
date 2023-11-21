@@ -199,8 +199,9 @@ void InputFileParserManostat::parseIsotropy(const std::vector<std::string> &line
         settings::ManostatSettings::setIsotropy("full_anisotropic");
 
     else
-        throw customException::InputFileException(std::format(
-            "Invalid isotropy \"{}\" at line {} in input file. Possible options are: isotropic, xy, xz, yz and anisotropic",
-            lineElements[2],
-            lineNumber));
+        throw customException::InputFileException(
+            std::format("Invalid isotropy \"{}\" at line {} in input file. Possible options are: isotropic, xy, xz, yz, "
+                        "anisotropic and full_anisotropic",
+                        lineElements[2],
+                        lineNumber));
 }
