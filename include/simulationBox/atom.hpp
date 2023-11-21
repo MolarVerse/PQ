@@ -24,7 +24,8 @@
 
 #define _ATOM_HPP_
 
-#include "vector3d.hpp"   // for Vec3D
+#include "staticMatrix3x3.hpp"   // for tensor3D
+#include "vector3d.hpp"          // for Vec3D
 
 #include <cstddef>       // for size_t
 #include <string>        // for string
@@ -70,7 +71,7 @@ namespace simulationBox
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
-        void scaleVelocityOrthogonalSpace(const linearAlgebra::Vec3D &scaleFactor, const Box &box);
+        void scaleVelocityOrthogonalSpace(const linearAlgebra::tensor3D &scaleFactor, const Box &box);
 
         /***************************
          * standard getter methods *

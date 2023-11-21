@@ -22,7 +22,8 @@
 
 #include "triclinicBox.hpp"
 
-#include "constants.hpp"   // for constants
+#include "constants.hpp"          // for constants
+#include "manostatSettings.hpp"   // for ManostatSettings
 
 using simulationBox::TriclinicBox;
 
@@ -35,6 +36,8 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
 
 /**
  * @brief set box angles and recalculate the box matrix
+ *
+ * @details convert the angles from degrees to radians, calculate the transformation matrix and the box matrix
  *
  * @param boxAngles
  */
@@ -157,4 +160,55 @@ linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlge
 linearAlgebra::tensor3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::tensor3D &mat) const
 {
     return _transformationMatrix * mat;
+}
+
+/**
+ * @brief scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume
+ *
+ * @details it first calculates the new box matrix, then the new box dimensions and angles. By setting the box dimensions and
+ * angles the transformation matrix and volume are recalculated
+ *
+ * @param scalingTensor
+ */
+void TriclinicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+{
+    if (settings ::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+        setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
+    else
+    {
+        const auto boxMatrix = scalingTensor * _boxMatrix;
+
+        const auto &[boxDimensions, boxAngles] = calculateBoxDimensionsAndAnglesFromBoxMatrix(boxMatrix);
+
+        setBoxDimensions(boxDimensions);
+        setBoxAngles(boxAngles);
+    }
+
+    _volume = calculateVolume();
+}
+
+/**
+ * @brief determine box dimensions and angles from box matrix
+ *
+ * @param boxMatrix
+ * @return std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
+ */
+std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
+simulationBox::calculateBoxDimensionsAndAnglesFromBoxMatrix(const linearAlgebra::tensor3D &boxMatrix)
+{
+    const auto box_x = boxMatrix[0][0];
+    const auto box_y = ::sqrt(boxMatrix[1][1] * boxMatrix[1][1] + boxMatrix[0][1] * boxMatrix[0][1]);
+    const auto box_z =
+        ::sqrt(boxMatrix[2][2] * boxMatrix[2][2] + boxMatrix[1][2] * boxMatrix[1][2] + boxMatrix[0][2] * boxMatrix[0][2]);
+
+    const auto cos_alpha = (boxMatrix[0][1] * boxMatrix[0][2] + boxMatrix[1][1] * boxMatrix[1][2]) / (box_y * box_z);
+    const auto cos_beta  = boxMatrix[0][2] / box_z;
+    const auto cos_gamma = boxMatrix[0][1] / box_y;
+
+    const auto alpha = ::acos(cos_alpha);
+    const auto beta  = ::acos(cos_beta);
+    const auto gamma = ::acos(cos_gamma);
+
+    return std::make_pair(linearAlgebra::Vec3D{box_x, box_y, box_z},
+                          linearAlgebra::Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_);
 }

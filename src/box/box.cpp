@@ -21,20 +21,3 @@
 ******************************************************************************/
 
 #include "box.hpp"
-
-#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-
-#include <cmath>   // for cos, M_PI, cbrt, sqrt
-
-using namespace simulationBox;
-
-/**
- * @brief scales the cell dimensions and recalculates the volume
- *
- * @param scalingFactors
- */
-void Box::scaleBox(const linearAlgebra::Vec3D &scalingFactors)
-{
-    setBoxDimensions(_boxDimensions *= scalingFactors);
-    _volume = calculateVolume();
-}

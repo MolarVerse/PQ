@@ -55,7 +55,8 @@ namespace settings
     {
         ISOTROPIC,
         SEMI_ISOTROPIC,
-        ANISOTROPIC
+        ANISOTROPIC,
+        FULL_ANISOTROPIC
     };
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);

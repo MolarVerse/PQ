@@ -63,7 +63,7 @@ namespace manostat
 
         void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
-        [[nodiscard]] virtual linearAlgebra::Vec3D calculateMu(const double volume);
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double volume);
     };
 
     /**
@@ -87,7 +87,7 @@ namespace manostat
             : StochasticRescalingManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
               _2DIsotropicAxes(isotropicAxes){};
 
-        [[nodiscard]] linearAlgebra::Vec3D calculateMu(const double volume) override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
     };
 
     /**
@@ -101,7 +101,21 @@ namespace manostat
       public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
-        [[nodiscard]] linearAlgebra::Vec3D calculateMu(const double volume) override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
+    };
+
+    /**
+     * @class FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     *
+     * @link https://doi.org/10.1063/5.0020514
+     *
+     */
+    class FullAnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    {
+      public:
+        using StochasticRescalingManostat::StochasticRescalingManostat;
+
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
     };
 
 }   // namespace manostat
