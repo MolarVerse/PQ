@@ -10,9 +10,12 @@ Welcome to PIMD-QMCF's documentation!
     :hidden:
     :maxdepth: 1
     
+    src/featureList/featureList
     src/userGuide/userGuide
     src/installation/installation
     src/developerGuide/developerGuide
+
+* :ref:`featureList`
 
 * :ref:`userGuide`
 
