@@ -55,6 +55,10 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
  *
  * @param box
  * @param physicalData
+ *
+ * @throw customException::QMRunnerException
+ *  - if the force file cannot be opened
+ *  - if the force file is empty
  */
 void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
 {
@@ -65,6 +69,10 @@ void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::Ph
     if (!forceFile.is_open())
         throw customException::QMRunnerException(
             std::format("Cannot open {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
+
+    if (forceFile.peek() == std::ifstream::traits_type::eof())
+        throw customException::QMRunnerException(
+            std::format("Empty {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
 
     double energy = 0.0;
 
