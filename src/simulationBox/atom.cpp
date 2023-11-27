@@ -37,13 +37,10 @@ using simulationBox::Atom;
 void Atom::scaleVelocityOrthogonalSpace(const linearAlgebra::tensor3D &scalingTensor, const simulationBox::Box &box)
 {
     if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
-    {
         _velocity = box.transformIntoOrthogonalSpace(_velocity);
 
-        _velocity = diagonal(scalingTensor) * _velocity;
+    _velocity = scalingTensor * _velocity;
 
+    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
         _velocity = box.transformIntoSimulationSpace(_velocity);
-    }
-    else
-        _velocity = scalingTensor * _velocity;
 }
