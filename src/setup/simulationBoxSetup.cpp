@@ -77,10 +77,12 @@ void setup::simulationBox::setupSimulationBox(engine::Engine &engine)
  */
 void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
 {
-    engine.getLogOutput().writeSetupInfo(std::format("number of atoms: {:8d}", engine.getSimulationBox().getNumberOfAtoms()));
+    engine.getLogOutput().writeSetupInfo(std::format("number of atoms:   {:8d}", engine.getSimulationBox().getNumberOfAtoms()));
     engine.getLogOutput().writeSetupInfo(
-        std::format("total mass:      {:14.5f} g/mol", engine.getSimulationBox().getTotalMass()));
-    engine.getLogOutput().writeSetupInfo(std::format("total charge:    {:14.5f}", engine.getSimulationBox().getTotalCharge()));
+        std::format("total mass:        {:14.5f} g/mol", engine.getSimulationBox().getTotalMass()));
+    engine.getLogOutput().writeSetupInfo(std::format("total charge:      {:14.5f}", engine.getSimulationBox().getTotalCharge()));
+    engine.getLogOutput().writeSetupInfo(
+        std::format("unconstrained DOF: {:8d}", engine.getSimulationBox().getDegreesOfFreedom()));
     engine.getLogOutput().writeEmptyLine();
 
     engine.getLogOutput().writeSetupInfo(std::format("density:         {:14.5f} kg/L", engine.getSimulationBox().getDensity()));

@@ -187,6 +187,7 @@ namespace simulationBox
         void setTotalMass(const double totalMass) { _totalMass = totalMass; }
         void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
         void setDensity(const double density) { _density = density; }
+        void setDegreesOfFreedom(const size_t degreesOfFreedom) { _degreesOfFreedom = degreesOfFreedom; }
 
         template <typename T>
         void setBox(const T &box)

@@ -52,6 +52,7 @@ namespace setup
         void setupTolerances();
         void setupMaxIterations();
         void setupRefBondLengths();
+        void setupDegreesOfFreedom();
     };
 
 }   // namespace setup

@@ -86,6 +86,7 @@ namespace constraints
          ***************************/
 
         [[nodiscard]] const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
+        [[nodiscard]] size_t                             getNumberOfBondConstraints() const { return _bondConstraints.size(); }
 
         [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
         [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }
