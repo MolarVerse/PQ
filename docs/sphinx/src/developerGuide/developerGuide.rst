@@ -31,7 +31,7 @@ For any contributor willing to contribute to the project, it is important to und
     
         .. code:: bash
 
-            $ git clone https://github.com/MolarVerse/pimd_qmcf.git
+            $ git clone https://github.com/MolarVerse/PQ.git
 
     #. Initialize git flow with the following settings (if not specified default settings are used)
 

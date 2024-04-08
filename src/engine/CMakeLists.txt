@@ -20,7 +20,7 @@ if(BUILD_WITH_MPI)
     target_link_libraries(engine
         PRIVATE
         MPI::MPI_C
-        pimd_qmcf_mpi
+        PQ_mpi
     )
 endif()
 

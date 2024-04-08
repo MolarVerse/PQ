@@ -2,8 +2,8 @@
 
 import sys
 import signal
-import pimd_qmcf_tools.enalyzer.enalyzer as enalyzer
-from pimd_qmcf_tools.common import ToolError
+import PQ_tools.enalyzer.enalyzer as enalyzer
+from PQ_tools.common import ToolError
 
 # signal handler for SIGINT
 def signal_handler(sig, frame):

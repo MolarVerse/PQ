@@ -22,7 +22,7 @@ target_include_directories(setup
 
 target_link_libraries(setup
     PUBLIC
-    pimd_qmcf_input
+    PQ_input
     topologyFileReader
     restartFileReader
     parameterFileReader
@@ -41,7 +41,7 @@ target_link_libraries(setup
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
-        pimd_qmcf_mpi
+        PQ_mpi
     )
 endif()
 

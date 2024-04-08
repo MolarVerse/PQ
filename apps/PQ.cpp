@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
 #endif
 
-static int pimdQmcf(int argc, const std::vector<std::string> &arguments)
+static int PQ(int argc, const std::vector<std::string> &arguments)
 {
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     try
     {
         auto arguments = std::vector<std::string>(argv, argv + argc);
-        ::pimdQmcf(argc, arguments);
+        ::PQ(argc, arguments);
     }
     catch (const std::exception &e)
     {

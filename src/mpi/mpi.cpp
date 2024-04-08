@@ -41,7 +41,7 @@ void MPI::setupMPIDirectories()
     if (_rank == 0)
         return;
 
-    const std::filesystem::path path = std::format("procId_pimd-qmcf_{}", _rank);
+    const std::filesystem::path path = std::format("procId_PQ_{}", _rank);
 
     std::filesystem::remove_all(path.c_str());
     std::filesystem::create_directory(path);
@@ -73,7 +73,7 @@ void MPI::finalize()
 {
     for (size_t i = 1; i < _size; ++i)
     {
-        const auto path = std::format("procId_pimd-qmcf_{}", i);
+        const auto path = std::format("procId_PQ_{}", i);
         std::filesystem::remove_all(path);
     }
 

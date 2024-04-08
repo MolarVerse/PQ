@@ -13,7 +13,7 @@ endif()
 # ***********************
 # project initializeation
 # ***********************
-project(PIMD-QMCF
+project(PQ
     DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
     LANGUAGES CXX C)
 

@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'PIMD-QMCF'
+project = 'PQ'
 copyright = '2023, Jakob Gamper'
 author = 'Jakob Gamper'
 release = '[]'

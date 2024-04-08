@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ void CommandLineArgs::detectFlags()
             throw customException::UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
 
     if (_argc < 2)
-        throw customException::UserInputException("No input file specified. Usage: pimd_qmcf <input_file>");
+        throw customException::UserInputException("No input file specified. Usage: PQ <input_file>");
 
     _inputFileName = _argv[1];
 }

@@ -11,7 +11,7 @@ if(BUILD_WITH_MPI)
     target_link_libraries(maxwellBoltzmann
         PRIVATE
         MPI::MPI_CXX
-        pimd_qmcf_mpi
+        PQ_mpi
     )
 endif()
 

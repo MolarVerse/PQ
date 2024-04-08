@@ -1,14 +1,14 @@
-# PIMD-QMCF
+# PQ
 
-[![C/C++ CI](https://github.com/MolarVerse/pimd_qmcf/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/MolarVerse/pimd_qmcf/actions/workflows/c-cpp.yml)
-[![codecov](https://codecov.io/gh/MolarVerse/pimd_qmcf/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/pimd_qmcf)
-[![Docs](https://github.com/MolarVerse/pimd_qmcf/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/pimd_qmcf/)
+[![C/C++ CI](https://github.com/MolarVerse/pq/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/MolarVerse/pq/actions/workflows/c-cpp.yml)
+[![codecov](https://codecov.io/gh/MolarVerse/pq/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/pq)
+[![Docs](https://github.com/MolarVerse/pq/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/pq/)
 
 ## How to Use
 
-To perform calculations using the PIMD-QMCF program just execute the executable `pimd_qmcf` with a given input file
+To perform calculations using the PQ program just execute the executable `pq` with a given input file
 
-    <path to executable>/pimd_qmcf <input file>
+    <path to executable>/pq <input file>
 
 ## Building from Source
 
@@ -26,7 +26,7 @@ For compilation then type:
 
 ## Singularity
 
-There are several singularity definition files shipped with this software package. For further information please refer to the [documentation page](https://MolarVerse.github.io/pimd_qmcf/).
+There are several singularity definition files shipped with this software package. For further information please refer to the [documentation page](https://MolarVerse.github.io/pq/).
 
 
 

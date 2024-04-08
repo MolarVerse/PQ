@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -109,7 +109,7 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
     getline(sstream, line);
     EXPECT_EQ(line, R"(*                                                                       *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                      pimd-qmcf ended normally                         *)");
+    EXPECT_EQ(line, R"(*                      PQ ended normally                         *)");
     getline(sstream, line);
     EXPECT_EQ(line, R"(*                                                                       *)");
     getline(sstream, line);

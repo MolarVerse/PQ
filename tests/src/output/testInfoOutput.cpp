@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -63,7 +63,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
     std::getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    EXPECT_EQ(line, "|                                  PQ info file                                  |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
@@ -114,7 +114,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
     std::getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    EXPECT_EQ(line, "|                                  PQ info file                                  |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
@@ -168,7 +168,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
     std::getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    EXPECT_EQ(line, "|                                  PQ info file                                  |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
@@ -223,7 +223,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
     std::getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    EXPECT_EQ(line, "|                                  PQ info file                                  |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
@@ -275,7 +275,7 @@ TEST_F(TestEnergyOutput, writeInfo_NoseHooverActive)
     std::getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);
-    EXPECT_EQ(line, "|                                  PIMD-QMCF info file                                  |");
+    EXPECT_EQ(line, "|                                  PQ info file                                  |");
     getline(file, line);
     EXPECT_EQ(line, "-----------------------------------------------------------------------------------------");
     getline(file, line);

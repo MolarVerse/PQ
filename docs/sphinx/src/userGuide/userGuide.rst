@@ -4,7 +4,7 @@
 User Guide
 ##########
 
-This page explains into detail on how to setup and use the PIMD-QMCF application. Please read the following sections:
+This page explains into detail on how to setup and use the PQ application. Please read the following sections:
 
 .. toctree::
     :maxdepth: 1
