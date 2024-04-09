@@ -79,6 +79,10 @@ if(BUILD_WITH_MPI)
     include(mpi)
 endif()
 
+if(BUILD_WITH_KOKKOS)
+    include(kokkos)
+endif()
+
 include(testing)
 
 add_subdirectory(src)

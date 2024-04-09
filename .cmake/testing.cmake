@@ -25,7 +25,7 @@ option(INSTALL_GTEST "install Googletest's GTest?" OFF)
 
 list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 
-if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
+if(NOT ${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease" AND ${BUILD_WITH_GCOVR})
     include(gcovr)
 
     include(CodeCoverage)

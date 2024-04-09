@@ -197,5 +197,6 @@
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "",
+    "workbench.colorTheme": "Visual Studio Dark - C++"
 }
