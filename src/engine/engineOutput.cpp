@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -103,6 +103,28 @@ void EngineOutput::writeInfoFile(const double time, const double loopTime, const
 void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, const size_t step)
 {
     _rstFileOutput->write(simulationBox, step);
+}
+
+/**
+ * @brief wrapper for virial file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeVirialFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _virialOutput->write(step, physicalData);
+}
+
+/**
+ * @brief wrapper for stress file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeStressFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _stressOutput->write(step, physicalData);
 }
 
 /**

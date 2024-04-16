@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -68,7 +68,7 @@ TEST(TestCommandLineArgs, detectFlags_missing_input_file)
 
     EXPECT_THROW_MSG(commandLineArgs.detectFlags(),
                      customException::UserInputException,
-                     "No input file specified. Usage: pimd_qmcf <input_file>");
+                     "No input file specified. Usage: PQ <input_file>");
 }
 
 int main(int argc, char **argv)

@@ -6,7 +6,7 @@ add_test(NAME ${TEST_NAME}
     COMMAND
     Pytest::Pytest
     ${CMAKE_CURRENT_SOURCE_DIR}/testsets/test_${TEST_NAME}.py
-    --executable ${CMAKE_BINARY_DIR}/apps/pimd_qmcf
+    --executable ${CMAKE_BINARY_DIR}/apps/PQ
     --name ${TEST_NAME}
     WORKING_DIRECTORY
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -74,6 +74,8 @@ void OutputFilesSetup::setup()
     _engine.getForceOutput().setFilename(settings::OutputFileSettings::getForceFileName());
     _engine.getChargeOutput().setFilename(settings::OutputFileSettings::getChargeFileName());
     _engine.getMomentumOutput().setFilename(settings::OutputFileSettings::getMomentumFileName());
+    _engine.getVirialOutput().setFilename(settings::OutputFileSettings::getVirialFileName());
+    _engine.getStressOutput().setFilename(settings::OutputFileSettings::getStressFileName());
 
     if (settings::Settings::isRingPolymerMDActivated())
     {

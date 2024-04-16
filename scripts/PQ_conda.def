@@ -40,8 +40,8 @@ From: ubuntu:latest
 
     cd /data/
 
-    git clone https://github.com/MolarVerse/pimd_qmcf.git
-    cd pimd_qmcf
+    git clone https://github.com/MolarVerse/PQ.git
+    cd PQ
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_SINGULARITY=ON -DBUILD_SHARED_LIBS=OFF
@@ -49,4 +49,4 @@ From: ubuntu:latest
 
 %runscript
     export PATH=$PATH:$MYPATH
-    /data/pimd_qmcf/build/apps/pimd_qmcf "$@"
+    /data/PQ/build/apps/PQ "$@"

@@ -3,7 +3,7 @@
 *****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper, Josef M. Gallmetzer
 
     This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 import time
 import os
 
-from pimd_qmcf_tools.enalyzer.reader import read_en
-from pimd_qmcf_tools.enalyzer.feature import get_feature
+from PQ_tools.enalyzer.reader import read_en
+from PQ_tools.enalyzer.feature import get_feature
 
 # Define a function to read the data from the file and update the plot
 def update_plot(en_filenames, selected):

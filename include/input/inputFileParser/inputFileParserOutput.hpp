@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -59,8 +59,11 @@ namespace input
         void parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
 
+        void parseVirialFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseStressFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
+        void parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);

@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -51,6 +51,8 @@ namespace output
     class StdoutOutput;                   // forward declaration
     class TrajectoryOutput;               // forward declaration
     class MomentumOutput;                 // forward declaration
+    class VirialOutput;                   // forward declaration
+    class StressOutput;                   // forward declaration
     class RingPolymerRestartFileOutput;   // forward declaration
     class RingPolymerTrajectoryOutput;    // forward declaration
 
@@ -174,6 +176,9 @@ namespace engine
         [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
         [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
         [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+
+        [[nodiscard]] output::VirialOutput &getVirialOutput() { return _engineOutput.getVirialOutput(); }
+        [[nodiscard]] output::StressOutput &getStressOutput() { return _engineOutput.getStressOutput(); }
 
         [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
         [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }

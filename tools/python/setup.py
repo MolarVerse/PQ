@@ -2,7 +2,7 @@
 *****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pimd_qmcf_tools',
+    name='PQ_tools',
     version='0.1.0',
-    packages=find_packages(include=['pimd_qmcf_tools', 'pimd_qmcf_tools.enalyzer']),
+    packages=find_packages(include=['PQ_tools', 'PQ_tools.enalyzer']),
     install_requires=['customtkinter', 'numpy', 'matplotlib', 'pandas'],
     scripts=[
         "bin/traj2box",

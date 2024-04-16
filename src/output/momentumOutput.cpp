@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -59,4 +59,6 @@ void MomentumOutput::write(const size_t step, const physicalData::PhysicalData &
     _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[0]);
     _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[1]);
     _fp << std::format("{:20.5e}\n", data.getAngularMomentum()[2]);
+
+    _fp << std::flush;
 }

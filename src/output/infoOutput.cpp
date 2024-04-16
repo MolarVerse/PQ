@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -117,7 +117,7 @@ void InfoOutput::writeHeader()
 {
     _fp << std::format("{:-^89}", "") << '\n';
 
-    _fp << '|' << std::format("{:^87}", "PIMD-QMCF info file") << '|' << '\n';
+    _fp << '|' << std::format("{:^87}", "PQ info file") << '|' << '\n';
 
     _fp << std::format("{:-^89}", "") << '\n';
 }

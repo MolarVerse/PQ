@@ -189,7 +189,6 @@
         "Virial",
         "Waals"
     ],
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "clang-diagnostic-error"
     ],
@@ -197,5 +196,7 @@
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "",
+    "workbench.colorTheme": "Visual Studio Dark - C++",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
 }

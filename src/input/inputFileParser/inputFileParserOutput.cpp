@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,14 @@ using namespace input;
  * 7) force_file <string>
  * 8) restart_file <string>
  * 9) charge_file <string>
+ * 10) virial_file <string>
+ * 11) stress_file <string>
+ * 12) rpmd_restart_file <string>
+ * 13) rpmd_traj_file <string>
+ * 14) rpmd_vel_file <string>
+ * 15) rpmd_force_file <string>
+ * 16) rpmd_charge_file <string>
+ * 17) rpmd_energy_file <string>
  *
  * @param engine
  */
@@ -59,6 +67,9 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
     addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
     addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+
+    addKeyword(std::string("virial_file"), bind_front(&InputFileParserOutput::parseVirialFilename, this), false);
+    addKeyword(std::string("stress_file"), bind_front(&InputFileParserOutput::parseStressFilename, this), false);
 
     addKeyword(std::string("rpmd_restart_file"), bind_front(&InputFileParserOutput::parseRPMDRestartFilename, this), false);
     addKeyword(std::string("rpmd_traj_file"), bind_front(&InputFileParserOutput::parseRPMDTrajectoryFilename, this), false);
@@ -204,6 +215,32 @@ void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setChargeFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse virial filename of simulation and add it to output
+ *
+ * @details default value is default.vir
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseVirialFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setVirialFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse stress filename of simulation and add it to output
+ *
+ * @details default value is default.stress
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseStressFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setStressFileName(lineElements[2]);
 }
 
 /**

@@ -19,7 +19,7 @@ foreach(executable ${EXECUTABLES})
     target_link_libraries(${executable}
         PUBLIC
         engineTools
-        pimd_qmcf_input
+        PQ_input
     )
 
     target_compile_options(${executable}

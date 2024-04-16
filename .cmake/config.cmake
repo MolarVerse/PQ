@@ -20,6 +20,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
 endif()
 
+# *****************
+# BUILD WITH KOKKOS
+# *****************
+option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
+
 # **************
 # BUILD WITH MPI
 # **************
@@ -34,6 +39,11 @@ option(BUILD_TOOLS "Build tools" OFF)
 # BUILD WITH IWYU
 # ***************
 option(BUILD_WITH_IWYU "Build with include-what-you-use" OFF)
+
+# ****************
+# BUILD WITH GCOVR
+# ****************
+option(BUILD_WITH_GCOVR "Build with gcovr" OFF)
 
 # ***************
 # BUILD WITH DOCS

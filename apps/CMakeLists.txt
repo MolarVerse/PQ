@@ -1,26 +1,26 @@
-add_executable(pimd_qmcf
-  pimd_qmcf.cpp
+add_executable(PQ
+  PQ.cpp
 )
 
-target_include_directories(pimd_qmcf
+target_include_directories(PQ
   PUBLIC ${CODE_INCLUDE_DIR}
 )
 
-target_link_libraries(pimd_qmcf
+target_link_libraries(PQ
   PUBLIC
-  pimd_qmcf_input
+  PQ_input
   setup
   engine
 )
 
 if(BUILD_WITH_MPI)
-  target_link_libraries(pimd_qmcf
+  target_link_libraries(PQ
     PRIVATE
     MPI::MPI_C
-    pimd_qmcf_mpi
+    PQ_mpi
   )
 endif()
 
-install(TARGETS pimd_qmcf
+install(TARGETS PQ
   DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )

@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,8 @@ namespace physicalData
         linearAlgebra::tensor3D _kineticEnergyAtomicTensor    = {0.0};
         linearAlgebra::tensor3D _kineticEnergyMolecularTensor = {0.0};
 
-        linearAlgebra::tensor3D _virial = {0.0};
+        linearAlgebra::tensor3D _virial       = {0.0};
+        linearAlgebra::tensor3D _stressTensor = {0.0};
 
         double _ringPolymerEnergy = 0.0;
 
@@ -125,7 +126,9 @@ namespace physicalData
         void setDensity(const double density) { _density = density; }
         void setTemperature(const double temperature) { _temperature = temperature; }
         void setPressure(const double pressure) { _pressure = pressure; }
+
         void setVirial(const linearAlgebra::tensor3D &virial) { _virial = virial; }
+        void setStressTensor(const linearAlgebra::tensor3D &stressTensor) { _stressTensor = stressTensor; }
 
         void setMomentum(const linearAlgebra::Vec3D &vec) { _momentum = vec; }
         void setAngularMomentum(const linearAlgebra::Vec3D &vec) { _angularMomentum = vec; }
@@ -133,6 +136,7 @@ namespace physicalData
         void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
         void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyAtomicTensor = vec; }
         void setKineticEnergyMolecularVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyMolecularTensor = vec; }
+
         void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
         void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
         void setIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy = intraCoulombEnergy; }
@@ -183,6 +187,7 @@ namespace physicalData
         [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicTensor; }
         [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularTensor; }
         [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
+        [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const { return _stressTensor; }
         [[nodiscard]] linearAlgebra::Vec3D    getMomentum() const { return _momentum; }
         [[nodiscard]] linearAlgebra::Vec3D    getAngularMomentum() const { return _angularMomentum; }
     };

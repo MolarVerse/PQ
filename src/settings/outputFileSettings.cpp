@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -104,6 +104,12 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
     if (defaults::_MOMENTUM_FILENAME_DEFAULT_ == _momentumFileName)
         _momentumFileName = prefix + ".mom";
 
+    if (defaults::_VIRIAL_FILENAME_DEFAULT_ == _virialFileName)
+        _virialFileName = prefix + ".vir";
+
+    if (defaults::_STRESS_FILENAME_DEFAULT_ == _stressFileName)
+        _stressFileName = prefix + ".stress";
+
     /*****************************
      * ring polymer output files *
      *****************************/
@@ -144,6 +150,8 @@ std::string OutputFileSettings::determineMostCommonPrefix()
                                           _chargeFileName,
                                           _infoFileName,
                                           _momentumFileName,
+                                          _virialFileName,
+                                          _stressFileName,
                                           _ringPolymerRestartFileName,
                                           _ringPolymerTrajectoryFileName,
                                           _ringPolymerVelocityFileName,
