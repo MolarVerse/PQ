@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developer Guide &mdash; PIMD-QMCF [] documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <title>Developer Guide &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=98a1f6db" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -31,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            PIMD-QMCF
+            PQ
               <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -43,6 +46,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a><ul>
@@ -60,7 +64,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">PIMD-QMCF</a>
+          <a href="../../index.html">PQ</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -79,51 +83,51 @@
            <div itemprop="articleBody">
              
   <section id="developer-guide">
-<span id="developerguide"></span><h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Permalink to this headline"></a></h1>
+<span id="developerguide"></span><h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading"></a></h1>
 <p>This section includes information for developers who want to contribute to the project. It includes information about the project structure, how to run the tests, and how to build the documentation. It also includes information about the project’s coding style and how to contribute to the project.</p>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline"></a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
 </section>
 <section id="tests">
-<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline"></a></h2>
+<h2>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
 </section>
 <section id="how-to-contribute">
-<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline"></a></h2>
+<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
 <p>For any contributor willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> branching model. In order to contribute to the project please follow the following steps:</p>
 <blockquote>
 <div><ol class="arabic">
 <li><p>Fork the project on Github. (not necessary if you are a member of the project)</p></li>
 <li><p>Clone your fork locally:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/MolarVerse/pimd_qmcf.git
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MolarVerse/PQ.git
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Initialize git flow with the following settings (if not specified default settings are used)</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>master<span class="o">]</span> main
-<span class="o">[</span>develop<span class="o">]</span> dev
-<span class="o">[</span>version tag prefix<span class="o">]</span> v
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>master<span class="o">]</span><span class="w"> </span>main
+<span class="o">[</span>develop<span class="o">]</span><span class="w"> </span>dev
+<span class="o">[</span>version<span class="w"> </span>tag<span class="w"> </span>prefix<span class="o">]</span><span class="w"> </span>v
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Create a feature branch for your contribution:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git flow feature start &lt;feature_branch_name&gt;
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>flow<span class="w"> </span>feature<span class="w"> </span>start<span class="w"> </span>&lt;feature_branch_name&gt;
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p>Commit your changes to your feature branch and publish your feature branch:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git add &lt;files&gt;
-$ git commit -m <span class="s2">&quot;commit message&quot;</span>
-$ git flow feature publish &lt;feature_branch_name&gt;
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>&lt;files&gt;
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;commit message&quot;</span>
+$<span class="w"> </span>git<span class="w"> </span>flow<span class="w"> </span>feature<span class="w"> </span>publish<span class="w"> </span>&lt;feature_branch_name&gt;
 </pre></div>
 </div>
 </div></blockquote>

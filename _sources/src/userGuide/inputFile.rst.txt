@@ -164,9 +164,9 @@ General Output Keys
 ===================
 
 .. Note::
-    The PIMD-QMCF application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named :code:`default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first :code:`.` character) and set it with the respective extension for all unspecified output files.
+    The PQ application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named :code:`default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first :code:`.` character) and set it with the respective extension for all unspecified output files.
 
-    This feature enables easier post-processing of data and also easier deletion of all output files as PIMD-QMCF does not overwrite any existing output files and will throw an error.
+    This feature enables easier post-processing of data and also easier deletion of all output files as PQ does not overwrite any existing output files and will throw an error.
 
 Output_Freq
 ===========
@@ -639,6 +639,8 @@ Possible options are:
 
    5) **anisotropic** - all axes are coupled in an anisotropic way
 
+   6) **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
+
 *******************
 Reset Kinetics Keys
 *******************
@@ -911,7 +913,7 @@ QM_SCRIPT
 
     qm_script = {file}
 
-With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_SCRIPT_FULL_PATH
 =====================
@@ -922,11 +924,11 @@ QM_SCRIPT_FULL_PATH
     qm_script_full_path = {pathFile}
 
 .. attention::
-   This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PIMD-QMCF. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
+   This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
 
 
-With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/pimd_qmcf/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _ringPolymerMDKeys:
 

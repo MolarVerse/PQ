@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; PIMD-QMCF [] documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <title>Installation &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=98a1f6db" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -32,7 +35,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            PIMD-QMCF
+            PQ
               <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
@@ -44,6 +47,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#building-from-source">Building from Source</a></li>
@@ -59,7 +63,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">PIMD-QMCF</a>
+          <a href="../../index.html">PQ</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -78,9 +82,9 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<span id="userg-installation"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<span id="userg-installation"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
 <section id="building-from-source">
-<h2>Building from Source<a class="headerlink" href="#building-from-source" title="Permalink to this headline"></a></h2>
+<h2>Building from Source<a class="headerlink" href="#building-from-source" title="Link to this heading"></a></h2>
 <p>Create a build directory and navigate into this directory. Within this directory configure cmake:</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -98,9 +102,9 @@
 </div>
 </section>
 <section id="singularity">
-<span id="id1"></span><h2>Singularity<a class="headerlink" href="#singularity" title="Permalink to this headline"></a></h2>
-<p>Singularity is a containerization tool that allows to run applications in a container. This is especially useful for running applications on HPC systems where the user does not have root access. Singularity is available on most HPC systems. The PIMD-QMCF software package provides three (hopefully) useful singularity definition files, which can be found in the <a class="reference external" href="https://github.com/MolarVerse/pimd_qmcf">https://github.com/MolarVerse/pimd_qmcf</a>.</p>
-<p>The file <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf.def</span></code> represents a definition file to build a singularity container based on a fully sequential build of the latest release of PIMD-QMCF. The file <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf_openmpi.def</span></code> is an extension of the previously mentioned definition file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI application are highly restricted regarding the applied MPI version, before building the container the __VERSION__ in the definition file has to be substituted with the desired OpenMPI version. Therefore, a small and simple bash script <code class="code docutils literal notranslate"><span class="pre">inferOpenMpiVersion.sh</span></code> is provided, which automatically substitutes the __VERSION__ with the desired OpenMPI version when given as command line argument or if no CLI argument is given it tries to infer the needed OpenMPI variable from the environment variable <code class="code docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
+<span id="id1"></span><h2>Singularity<a class="headerlink" href="#singularity" title="Link to this heading"></a></h2>
+<p>Singularity is a containerization tool that allows to run applications in a container. This is especially useful for running applications on HPC systems where the user does not have root access. Singularity is available on most HPC systems. The PQ software package provides three (hopefully) useful singularity definition files, which can be found in the <a class="reference external" href="https://github.com/MolarVerse/PQ">https://github.com/MolarVerse/PQ</a>.</p>
+<p>The file <code class="code docutils literal notranslate"><span class="pre">PQ.def</span></code> represents a definition file to build a singularity container based on a fully sequential build of the latest release of PQ. The file <code class="code docutils literal notranslate"><span class="pre">PQ_openmpi.def</span></code> is an extension of the previously mentioned definition file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI application are highly restricted regarding the applied MPI version, before building the container the __VERSION__ in the definition file has to be substituted with the desired OpenMPI version. Therefore, a small and simple bash script <code class="code docutils literal notranslate"><span class="pre">inferOpenMpiVersion.sh</span></code> is provided, which automatically substitutes the __VERSION__ with the desired OpenMPI version when given as command line argument or if no CLI argument is given it tries to infer the needed OpenMPI variable from the environment variable <code class="code docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
 <p>In order to build both containers from the singularity file the following command can be used:</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -109,14 +113,14 @@
 <p>In order to execute the program <em>via</em> the singularity container two possible commands are shown below:</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>singularity exec –env MYPATH=$PATH &lt;name_of_container&gt;.sif /data/pimd_qmcf/build/apps/pimd_qmcf &lt;name_of_input_file&gt;</p>
+<p>singularity exec –env MYPATH=$PATH &lt;name_of_container&gt;.sif /data/PQ/build/apps/PQ &lt;name_of_input_file&gt;</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>singularity run –env MYPATH=$PATH &lt;name_of_container&gt;.sif &lt;name_of_input_file&gt;</p>
 </div>
 <p>Depending on the directory structure of the host system it might be necessary to bind/mound the directory containing the input file to the container. This can be achieved by adding <code class="code docutils literal notranslate"><span class="pre">--bind</span> <span class="pre">$PWD</span></code> to the singularity command.</p>
-<p>The third definiton file is only experimental at the moment as it is used in combination with a miniconda environment in the container. This should make it possible in future releases to build the singularity container based on an environment.yml file. This definiton file is called <code class="code docutils literal notranslate"><span class="pre">pimd_qmcf_conda.def</span></code>.</p>
+<p>The third definiton file is only experimental at the moment as it is used in combination with a miniconda environment in the container. This should make it possible in future releases to build the singularity container based on an environment.yml file. This definiton file is called <code class="code docutils literal notranslate"><span class="pre">PQ_conda.def</span></code>.</p>
 </section>
 </section>
 

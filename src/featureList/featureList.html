@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature List &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=98a1f6db" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="User Guide" href="../userGuide/userGuide.html" />
+    <link rel="prev" title="Welcome to PQ’s documentation!" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PQ
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Feature List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#runners">Runners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecular-mechanics-mm">Molecular Mechanics (MM)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#evaluation-scheme">Evaluation Scheme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#long-range-corrections">Long Range Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-moltypes">Special Moltypes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quantum-mechanics">Quantum Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics">Molecular Dynamics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#integrators">Integrators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermostats">Thermostats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manostats">Manostats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#isotropicity">Isotropicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constraints">Constraints</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mpi">MPI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PQ</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Feature List</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/featureList/featureList.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="feature-list">
+<span id="featurelist"></span><h1>Feature List<a class="headerlink" href="#feature-list" title="Link to this heading"></a></h1>
+<p>This is a hopefully up to date list of the features implemented in the current release version of the code.</p>
+<p>If the features are marked in red, they are not yet implemented but are planned for the future. There exist
+three main categories of not yet implemented features:</p>
+<ol class="arabic simple">
+<li><p>Features that are planned but not yet implemented (Planned)</p></li>
+<li><p>Features that have a high priority but are not yet implemented (Coming Soon)</p></li>
+<li><p>Features that are in the pipeline but are not yet implemented (In development)</p></li>
+</ol>
+<section id="runners">
+<h2>Runners<a class="headerlink" href="#runners" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Molecular Mechanics (MM)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p><span class="red">Ring Polymer Molecular Dynamcis (RPMD) - Coming Soon</span></p></li>
+<li><p><span class="red">Geometry Optimisation (OPT) - In development</span></p></li>
+<li><p><span class="red">Guffcheck - Coming soon</span></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Quantum Mechanics (QM)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p>Ring Polymer Molecular Dynamcis (RPMD)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><span class="red">Hybrid QM/MM - Planned</span></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p>Ring Polymer Molecular Dynamcis (RPMD)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="molecular-mechanics-mm">
+<h2>Molecular Mechanics (MM)<a class="headerlink" href="#molecular-mechanics-mm" title="Link to this heading"></a></h2>
+<p>At the moment the program supports two different types of force fields
+with some further specializations or extensions:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p>Guff (General Unified Force Field)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>full Guff equation</p></li>
+<li><p>Lennard Jones quick routine</p></li>
+<li><p>Buckingham quick routine</p></li>
+<li><p>Morse quick routine</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>AMBER type force fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>standard AMBER force field with (Lennard Jones non-bonded interactions)</p></li>
+<li><p>Buckingham non-bonded interactions</p></li>
+<li><p>Morse non-bonded interactions</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<section id="evaluation-scheme">
+<h3>Evaluation Scheme<a class="headerlink" href="#evaluation-scheme" title="Link to this heading"></a></h3>
+<p>The evaluation of the forces can be performed <em>via</em> the following schemes</p>
+<ol class="arabic simple">
+<li><p>Brute Force Evaluation</p></li>
+<li><p>Cell List Evaluation</p></li>
+<li><p><span class="red">Verlet List with Cell List Evaluation - Coming Soon</span></p></li>
+</ol>
+</section>
+<section id="long-range-corrections">
+<h3>Long Range Corrections<a class="headerlink" href="#long-range-corrections" title="Link to this heading"></a></h3>
+<p>Following long range corrections are implemented:</p>
+<ol class="arabic simple">
+<li><p><span class="red">Ewald Summation - Planned</span></p></li>
+<li><p>Wolf Summation</p></li>
+<li><p><span class="red">Reaction Field - Coming Soon</span></p></li>
+<li><p><span class="red">Range separation for non Coulombic interactions - Planned</span></p></li>
+</ol>
+</section>
+<section id="special-moltypes">
+<h3>Special Moltypes<a class="headerlink" href="#special-moltypes" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><span class="red">Water - Coming Soon</span></p></li>
+</ol>
+</section>
+</section>
+<section id="quantum-mechanics">
+<h2>Quantum Mechanics<a class="headerlink" href="#quantum-mechanics" title="Link to this heading"></a></h2>
+<p>At the moment the evaluation of quantum mechanical forces is implemented
+for the following QM-engines:</p>
+<ol class="arabic simple">
+<li><p>DFTB+</p></li>
+<li><p>Turbomole</p></li>
+<li><p>PySCF</p></li>
+</ol>
+</section>
+<section id="molecular-dynamics">
+<h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Link to this heading"></a></h2>
+<section id="integrators">
+<h3>Integrators<a class="headerlink" href="#integrators" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Velocity Verlet</p></li>
+</ol>
+</section>
+<section id="thermostats">
+<h3>Thermostats<a class="headerlink" href="#thermostats" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Langevin Thermostat</p></li>
+<li><p>Berendsen Thermostat</p></li>
+<li><p>Velocity Rescaling Thermostat</p></li>
+<li><p>Nose-Hoover Thermostat</p></li>
+</ol>
+</section>
+<section id="manostats">
+<h3>Manostats<a class="headerlink" href="#manostats" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Berendsen Manostat</p></li>
+<li><p>Stochastic Rescaling Manostat</p></li>
+</ol>
+</section>
+<section id="isotropicity">
+<h3>Isotropicity<a class="headerlink" href="#isotropicity" title="Link to this heading"></a></h3>
+<p>All calculation schemes of any MD runner can be performed with triclinic cells</p>
+<ol class="arabic simple">
+<li><p>Isotropic</p></li>
+<li><p>Semi-Isotropic</p></li>
+<li><p>Anisotropic (only cell lengths)</p></li>
+<li><p>Full Anisotropic (cell lengths and angles)</p></li>
+</ol>
+</section>
+<section id="constraints">
+<h3>Constraints<a class="headerlink" href="#constraints" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Shake/Rattle</p></li>
+<li><p><span class="red">Lincs - Planned</span></p></li>
+<li><p><span class="red">M-Shake - Planned</span></p></li>
+</ol>
+</section>
+</section>
+<section id="mpi">
+<h2>MPI<a class="headerlink" href="#mpi" title="Link to this heading"></a></h2>
+<p>At the moment only Ring Polymer Molecular Dynamics (RPMD) is implemented in parallel.
+Meaning that each ring polymer can be calculated on a different rank, but the calculation of
+the forces is still performed on a single rank. The only exceptions are the QM-engines, which
+are called as external programs and can be run in parallel.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Welcome to PQ’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../userGuide/userGuide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
