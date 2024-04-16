@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -187,6 +187,7 @@ namespace simulationBox
         void setTotalMass(const double totalMass) { _totalMass = totalMass; }
         void setTotalCharge(const double totalCharge) { _totalCharge = totalCharge; }
         void setDensity(const double density) { _density = density; }
+        void setDegreesOfFreedom(const size_t degreesOfFreedom) { _degreesOfFreedom = degreesOfFreedom; }
 
         template <typename T>
         void setBox(const T &box)
@@ -199,9 +200,9 @@ namespace simulationBox
          **********************************************/
 
         void applyPBC(linearAlgebra::Vec3D &position) const { _box->applyPBC(position); }
-        void scaleBox(const linearAlgebra::Vec3D &scaleFactors)
+        void scaleBox(const linearAlgebra::tensor3D &scalingTensor)
         {
-            _box->scaleBox(scaleFactors);
+            _box->scaleBox(scalingTensor);
             calculateDensity();
         }
 

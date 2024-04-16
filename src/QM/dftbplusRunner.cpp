@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -132,6 +132,7 @@ void DFTBPlusRunner::readStressTensor(simulationBox::Box &box, physicalData::Phy
 
     const auto virial = stressTensor * constants::_HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ * box.getVolume();
 
+    data.setStressTensor(stressTensor);
     data.addVirial(virial);
 
     stressFile.close();

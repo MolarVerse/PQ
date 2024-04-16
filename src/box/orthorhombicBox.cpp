@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -69,4 +69,15 @@ linearAlgebra::Vec3D OrthorhombicBox::calculateBoxDimensionsFromDensity(const do
     _volume = totalMass / (density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
 
     return linearAlgebra::Vec3D(::cbrt(_volume));
+}
+
+/**
+ * @brief scales the cell dimensions and recalculates the volume
+ *
+ * @param scalingFactors
+ */
+void OrthorhombicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+{
+    setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
+    _volume = calculateVolume();
 }

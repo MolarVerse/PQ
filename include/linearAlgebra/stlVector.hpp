@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,6 @@
 #ifndef _STL_VECTOR_HPP_
 
 #define _STL_VECTOR_HPP_
-
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
 
 #include <algorithm>   // for max_element
 #include <numeric>     // for accumulate

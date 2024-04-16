@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -74,7 +74,7 @@ TEST(TestOrthoRhombicBox, scaleBox)
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
-    const linearAlgebra::Vec3D scaleFactors = {2.0, 2.0, 2.0};
+    const linearAlgebra::tensor3D scaleFactors = diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
     const linearAlgebra::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};

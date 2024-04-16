@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -45,31 +45,33 @@ TEST_F(TestStdoutOutput, writeHeader)
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*************************************************************************)");
+    EXPECT_EQ(line, R"(************************************************************************)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                                                                       *)");
+    EXPECT_EQ(line, R"(*                                                                      *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                            _                                    ___   *)");
+    EXPECT_EQ(line, R"(*                                                                      *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*          _                ( )                                 /'___)  *)");
+    EXPECT_EQ(line, R"(*                      88888888ba     ,ad8888ba,                       *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*   _ _   (_)  ___ ___     _| | ______   _ _   ___ ___     ___ | (__    *)");
+    EXPECT_EQ(line, R"(*                      88      "8b   d8"'    `"8b                      *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*  ( '_`\ | |/' _ ` _ `\ /'_` |(______)/'_` )/' _ ` _ `\ /'___)| ,__)   *)");
+    EXPECT_EQ(line, R"(*                      88      ,8P  d8'        `8b                     *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*  | (_) )| || ( ) ( ) |( (_| |       ( (_) || ( ) ( ) |( (___ | |      *)");
+    EXPECT_EQ(line, R"(*                      88aaaaaa8P'  88          88                     *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*  | ,__/'(_)(_) (_) (_)`\__,_)       `\__, |(_) (_) (_)`\____)(_)      *)");
+    EXPECT_EQ(line, R"(*                      88""""""'    88          88                     *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*  | |                                    | |                           *)");
+    EXPECT_EQ(line, R"(*                      88           Y8,    "88,,8P                     *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*  (_)                                    (_)                           *)");
+    EXPECT_EQ(line, R"(*                      88            Y8a.    Y88P                      *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                                                                       *)");
+    EXPECT_EQ(line, R"(*                      88             `"Y8888Y"Y8a                     *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                                                                       *)");
+    EXPECT_EQ(line, R"(*                                                                      *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*************************************************************************)");
+    EXPECT_EQ(line, R"(*                                                                      *)");
+    getline(sstream, line);
+    EXPECT_EQ(line, R"(************************************************************************)");
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
@@ -109,7 +111,7 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
     getline(sstream, line);
     EXPECT_EQ(line, R"(*                                                                       *)");
     getline(sstream, line);
-    EXPECT_EQ(line, R"(*                      pimd-qmcf ended normally                         *)");
+    EXPECT_EQ(line, R"(*                          PQ ended normally                            *)");
     getline(sstream, line);
     EXPECT_EQ(line, R"(*                                                                       *)");
     getline(sstream, line);

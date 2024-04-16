@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,9 @@
 
 #include "molecule.hpp"
 
-#include "box.hpp"        // for Box
-#include "vector3d.hpp"   // for Vec3D
+#include "box.hpp"                // for Box
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "vector3d.hpp"           // for Vec3D
 
 #include <algorithm>    // for std::ranges::for_each
 #include <functional>   // for identity, equal_to
@@ -78,26 +79,51 @@ void Molecule::calculateCenterOfMass(const Box &box)
  *
  * @param shiftFactors
  */
-void Molecule::scale(const linearAlgebra::Vec3D &shiftFactors, const Box &box)
+void Molecule::scale(const linearAlgebra::tensor3D &shiftTensor, const Box &box)
 {
-    const auto centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
+    auto centerOfMass = _centerOfMass;
 
-    const auto shift = centerOfMass * (shiftFactors - 1.0);
+    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+        centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
+
+    const auto shift = shiftTensor * centerOfMass - centerOfMass;
 
     auto scaleAtomPosition = [&box, shift](auto atom)
     {
         auto position = atom->getPosition();
-        position      = box.transformIntoOrthogonalSpace(position);
+        if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+            position = box.transformIntoOrthogonalSpace(position);
 
         position += shift;
 
-        position = box.transformIntoSimulationSpace(position);
+        if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+            position = box.transformIntoSimulationSpace(position);
 
         atom->setPosition(position);
     };
 
     std::ranges::for_each(_atoms, scaleAtomPosition);
 }
+// void Molecule::scale(const linearAlgebra::tensor3D &shiftFactors, const Box &box)
+// {
+//     const auto centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
+
+//     const auto shift = centerOfMass * (shiftFactors - 1.0);
+
+//     auto scaleAtomPosition = [&box, shift](auto atom)
+//     {
+//         auto position = atom->getPosition();
+//         position      = box.transformIntoOrthogonalSpace(position);
+
+//         position += shift;
+
+//         position = box.transformIntoSimulationSpace(position);
+
+//         atom->setPosition(position);
+//     };
+
+//     std::ranges::for_each(_atoms, scaleAtomPosition);
+// }
 
 /**
  * @brief returns the external global vdw types of the atoms in the molecule

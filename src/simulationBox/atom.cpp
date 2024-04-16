@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,9 @@
 
 #include "atom.hpp"
 
-#include "box.hpp"
-#include "vector3d.hpp"
+#include "box.hpp"                // for Box
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "vector3d.hpp"           // for Vec3D
 
 using simulationBox::Atom;
 
@@ -33,9 +34,13 @@ using simulationBox::Atom;
  * @param scalingFactor
  * @param box
  */
-void Atom::scaleVelocityOrthogonalSpace(const linearAlgebra::Vec3D &scalingFactor, const simulationBox::Box &box)
+void Atom::scaleVelocityOrthogonalSpace(const linearAlgebra::tensor3D &scalingTensor, const simulationBox::Box &box)
 {
-    _velocity  = box.transformIntoOrthogonalSpace(_velocity);
-    _velocity *= scalingFactor;
-    _velocity  = box.transformIntoSimulationSpace(_velocity);
+    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+        _velocity = box.transformIntoOrthogonalSpace(_velocity);
+
+    _velocity = scalingTensor * _velocity;
+
+    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+        _velocity = box.transformIntoSimulationSpace(_velocity);
 }

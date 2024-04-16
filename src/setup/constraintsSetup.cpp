@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -55,6 +55,7 @@ void ConstraintsSetup::setup()
     setupTolerances();
     setupMaxIterations();
     setupRefBondLengths();
+    setupDegreesOfFreedom();
 }
 
 /**
@@ -82,3 +83,18 @@ void ConstraintsSetup::setupMaxIterations()
  *
  */
 void ConstraintsSetup::setupRefBondLengths() { _engine.getConstraints().calculateConstraintBondRefs(_engine.getSimulationBox()); }
+
+/**
+ * @brief corrects the number of degrees of freedom for the constraints
+ *
+ */
+void ConstraintsSetup::setupDegreesOfFreedom()
+{
+    _engine.getSimulationBox().setDegreesOfFreedom(_engine.getSimulationBox().getDegreesOfFreedom() -
+                                                   _engine.getConstraints().getNumberOfBondConstraints());
+
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("constraint DOF:   {:8d}", _engine.getConstraints().getNumberOfBondConstraints()));
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("simulation DOF:   {:8d}", _engine.getSimulationBox().getDegreesOfFreedom()));
+}

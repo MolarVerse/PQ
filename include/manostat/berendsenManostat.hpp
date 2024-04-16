@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ namespace manostat
 
         void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
 
-        [[nodiscard]] virtual linearAlgebra::Vec3D calculateMu() const;
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
 
         /********************
          * standard getters *
@@ -91,7 +91,7 @@ namespace manostat
             : BerendsenManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
               _2DIsotropicAxes(isotropicAxes){};
 
-        [[nodiscard]] linearAlgebra::Vec3D calculateMu() const override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
     };
 
     /**
@@ -105,7 +105,23 @@ namespace manostat
       public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::Vec3D calculateMu() const override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+    };
+
+    /**
+     * @class FullAnisotropicBerendsenManostat inherits from BerendsenManostat
+     *
+     * @link https://doi.org/10.1063/1.448118
+     *
+     * @details Full anisotropic means that also the angles between the axes are scaled not only the lengths
+     *
+     */
+    class FullAnisotropicBerendsenManostat : public BerendsenManostat
+    {
+      public:
+        using BerendsenManostat::BerendsenManostat;
+
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
     };
 
 }   // namespace manostat

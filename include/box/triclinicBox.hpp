@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,9 @@
 
 namespace simulationBox
 {
+    std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
+    calculateBoxDimensionsAndAnglesFromBoxMatrix(const linearAlgebra::tensor3D &boxMatrix);
+
     /**
      * @class TriclinicBox
      *
@@ -38,9 +41,9 @@ namespace simulationBox
     class TriclinicBox : public Box
     {
       private:
-        linearAlgebra::Vec3D                   _boxAngles;
-        linearAlgebra::StaticMatrix3x3<double> _boxMatrix{0.0};
-        linearAlgebra::StaticMatrix3x3<double> _transformationMatrix{0.0};
+        linearAlgebra::Vec3D    _boxAngles;
+        linearAlgebra::tensor3D _boxMatrix{0.0};
+        linearAlgebra::tensor3D _transformationMatrix{0.0};
 
         void calculateBoxMatrix();
         void calculateTransformationMatrix();
@@ -56,6 +59,7 @@ namespace simulationBox
         transformIntoSimulationSpace(const linearAlgebra::tensor3D &position) const override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
+        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
 
         void setBoxAngles(const linearAlgebra::Vec3D &boxAngles);
         void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) override;
@@ -67,9 +71,9 @@ namespace simulationBox
         [[nodiscard]] double sinBeta() const { return ::sin(_boxAngles[1]); }
         [[nodiscard]] double sinGamma() const { return ::sin(_boxAngles[2]); }
 
-        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const override { return _boxAngles * constants::_RAD_TO_DEG_; }
-        [[nodiscard]] linearAlgebra::StaticMatrix3x3<double> getBoxMatrix() const override { return _boxMatrix; }
-        [[nodiscard]] linearAlgebra::StaticMatrix3x3<double> getTransformationMatrix() const { return _transformationMatrix; }
+        [[nodiscard]] linearAlgebra::Vec3D    getBoxAngles() const override { return _boxAngles * constants::_RAD_TO_DEG_; }
+        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix() const override { return _boxMatrix; }
+        [[nodiscard]] linearAlgebra::tensor3D getTransformationMatrix() const { return _transformationMatrix; }
     };
 
 }   // namespace simulationBox

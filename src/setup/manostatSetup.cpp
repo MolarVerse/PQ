@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -134,6 +134,16 @@ void ManostatSetup::setupBerendsenManostat()
         _engine.getLogOutput().writeSetupInfo("isotropy:               anisotropic");
     }
 
+    else if (isotropy == settings::Isotropy::FULL_ANISOTROPIC)
+    {
+        _engine.makeManostat(
+            manostat::FullAnisotropicBerendsenManostat(settings::ManostatSettings::getTargetPressure(),
+                                                       settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
+                                                       settings::ManostatSettings::getCompressibility()));
+
+        _engine.getLogOutput().writeSetupInfo("isotropy:               full_anisotropic");
+    }
+
     else
     {
         _engine.makeManostat(manostat::BerendsenManostat(settings::ManostatSettings::getTargetPressure(),
@@ -181,6 +191,16 @@ void ManostatSetup::setupStochasticRescalingManostat()
                                                              settings::ManostatSettings::getCompressibility()));
 
         _engine.getLogOutput().writeSetupInfo("isotropy:               anisotropic");
+    }
+
+    else if (isotropy == settings::Isotropy::FULL_ANISOTROPIC)
+    {
+        _engine.makeManostat(
+            manostat::AnisotropicStochasticRescalingManostat(settings::ManostatSettings::getTargetPressure(),
+                                                             settings::ManostatSettings::getTauManostat() * constants::_PS_TO_FS_,
+                                                             settings::ManostatSettings::getCompressibility()));
+
+        _engine.getLogOutput().writeSetupInfo("isotropy:               full_anisotropic");
     }
 
     else

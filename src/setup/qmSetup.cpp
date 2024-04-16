@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -108,11 +108,11 @@ void QMSetup::setupQMScript() const
         if (settings::QMSettings::getQMScriptFullPath().empty())
             throw customException::QMRunnerException(
                 R"(
-You are using at least one of these settings: i) singularity build or/and ii) static build of PIMD -
-QMCF. Therefore the general setting with "qm_script" to set only the name of the executable is not
+You are using at least one of these settings: i) singularity build or/and ii) static build of PQ.
+Therefore the general setting with "qm_script" to set only the name of the executable is not
 applicable. Please use "qm_script_full_path" instead and provide the full path to the executable. For
 singularity builds the script can not be accessed from inside the container. In case of a static build
-the binary may be shipped without the source code and again PIMD-QMCF might therefore not be able to 
+the binary may be shipped without the source code and again PQ might therefore not be able to 
 locate the executable qm script. Therefore you have to provide the script somewhere else and give the
 full/relative path to it. For more information please refer to the documentation.
 )");

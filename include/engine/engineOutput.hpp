@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,9 @@
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
 #include "rstFileOutput.hpp"                  // for RstFileOutput
 #include "stdoutOutput.hpp"                   // for StdoutOutput
+#include "stressOutput.hpp"                   // for StressOutput
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
+#include "virialOutput.hpp"                   // for VirialOutput
 
 #include <cstddef>   // for size_t
 #include <memory>    // for make_unique, unique_ptr
@@ -71,6 +73,9 @@ namespace engine
         std::unique_ptr<output::RstFileOutput>    _rstFileOutput  = std::make_unique<output::RstFileOutput>("default.rst");
         std::unique_ptr<output::InfoOutput>       _infoOutput     = std::make_unique<output::InfoOutput>("default.info");
 
+        std::unique_ptr<output::VirialOutput> _virialOutput = std::make_unique<output::VirialOutput>("default.vir");
+        std::unique_ptr<output::StressOutput> _stressOutput = std::make_unique<output::StressOutput>("default.stress");
+
         std::unique_ptr<output::RingPolymerRestartFileOutput> _ringPolymerRstFileOutput =
             std::make_unique<output::RingPolymerRestartFileOutput>("default.rpmd.rst");
         std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerXyzOutput =
@@ -94,6 +99,9 @@ namespace engine
         void writeInfoFile(const double simulationTime, const double loopTime, const physicalData::PhysicalData &);
         void writeRstFile(simulationBox::SimulationBox &, const size_t);
 
+        void writeVirialFile(const size_t, const physicalData::PhysicalData &);
+        void writeStressFile(const size_t, const physicalData::PhysicalData &);
+
         void writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &, const size_t);
         void writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &);
@@ -101,16 +109,20 @@ namespace engine
         void writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &);
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
-        output::EnergyOutput                 &getEnergyOutput() { return *_energyOutput; }
-        output::MomentumOutput               &getMomentumOutput() { return *_momentumOutput; }
-        output::TrajectoryOutput             &getXyzOutput() { return *_xyzOutput; }
-        output::TrajectoryOutput             &getVelOutput() { return *_velOutput; }
-        output::TrajectoryOutput             &getForceOutput() { return *_forceOutput; }
-        output::TrajectoryOutput             &getChargeOutput() { return *_chargeOutput; }
-        output::LogOutput                    &getLogOutput() { return *_logOutput; }
-        output::StdoutOutput                 &getStdoutOutput() { return *_stdoutOutput; }
-        output::RstFileOutput                &getRstFileOutput() { return *_rstFileOutput; }
-        output::InfoOutput                   &getInfoOutput() { return *_infoOutput; }
+        output::EnergyOutput     &getEnergyOutput() { return *_energyOutput; }
+        output::MomentumOutput   &getMomentumOutput() { return *_momentumOutput; }
+        output::TrajectoryOutput &getXyzOutput() { return *_xyzOutput; }
+        output::TrajectoryOutput &getVelOutput() { return *_velOutput; }
+        output::TrajectoryOutput &getForceOutput() { return *_forceOutput; }
+        output::TrajectoryOutput &getChargeOutput() { return *_chargeOutput; }
+        output::LogOutput        &getLogOutput() { return *_logOutput; }
+        output::StdoutOutput     &getStdoutOutput() { return *_stdoutOutput; }
+        output::RstFileOutput    &getRstFileOutput() { return *_rstFileOutput; }
+        output::InfoOutput       &getInfoOutput() { return *_infoOutput; }
+
+        output::VirialOutput &getVirialOutput() { return *_virialOutput; }
+        output::StressOutput &getStressOutput() { return *_stressOutput; }
+
         output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput() { return *_ringPolymerRstFileOutput; }
         output::RingPolymerTrajectoryOutput  &getRingPolymerXyzOutput() { return *_ringPolymerXyzOutput; }
         output::RingPolymerTrajectoryOutput  &getRingPolymerVelOutput() { return *_ringPolymerVelOutput; }

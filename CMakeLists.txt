@@ -13,7 +13,7 @@ endif()
 # ***********************
 # project initializeation
 # ***********************
-project(PIMD-QMCF
+project(PQ
     DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
     LANGUAGES CXX C)
 
@@ -77,6 +77,10 @@ set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 if(BUILD_WITH_MPI)
     include(mpi)
+endif()
+
+if(BUILD_WITH_KOKKOS)
+    include(kokkos)
 endif()
 
 include(testing)

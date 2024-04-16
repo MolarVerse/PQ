@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -46,11 +46,10 @@ namespace simulationBox
       public:
         virtual ~Box() = default;
 
-        void scaleBox(const linearAlgebra::Vec3D &scalingFactors);
-
         [[nodiscard]] virtual double               calculateVolume()                                                = 0;
         [[nodiscard]] virtual linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const = 0;
         virtual void                               applyPBC(linearAlgebra::Vec3D &position) const                   = 0;
+        virtual void                               scaleBox(const linearAlgebra::tensor3D &scalingFactors)          = 0;
 
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *

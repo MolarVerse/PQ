@@ -10,6 +10,9 @@ add_library(output
     rstFileOutput.cpp
     momentumOutput.cpp
 
+    virialOutput.cpp
+    stressOutput.cpp
+
     ringPolymerRestartFileOutput.cpp
     ringPolymerTrajectoryOutput.cpp
     ringPolymerEnergyOutput.cpp

@@ -17,7 +17,7 @@ foreach(source_file ${source_files})
     )
     target_link_libraries(${test_name}
         PRIVATE
-        pimd_qmcf_input
+        PQ_input
         restartFileReader
         potential
         engine
@@ -35,7 +35,7 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS input)
 endforeach()
 
-if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
+if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
         NAME coverage_input

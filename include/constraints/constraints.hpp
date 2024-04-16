@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -86,6 +86,7 @@ namespace constraints
          ***************************/
 
         [[nodiscard]] const std::vector<BondConstraint> &getBondConstraints() const { return _bondConstraints; }
+        [[nodiscard]] size_t                             getNumberOfBondConstraints() const { return _bondConstraints.size(); }
 
         [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
         [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }

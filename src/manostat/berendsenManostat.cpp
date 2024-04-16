@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include "exceptions.hpp"        // for ExceptionType
 #include "physicalData.hpp"      // for PhysicalData
 #include "simulationBox.hpp"     // for SimulationBox
+#include "staticMatrix3x3.hpp"   // for diagonal, diagonalMatrix, trace
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for Vec3D
 
@@ -34,7 +35,10 @@
 
 using manostat::AnisotropicBerendsenManostat;
 using manostat::BerendsenManostat;
+using manostat::FullAnisotropicBerendsenManostat;
 using manostat::SemiIsotropicBerendsenManostat;
+
+using namespace linearAlgebra;
 
 /**
  * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
@@ -76,11 +80,11 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
 /**
  * @brief calculate mu as scaling factor for Berendsen manostat (isotropic)
  *
- * @return linearAlgebra::Vec3D
+ * @return tensor3D
  */
-linearAlgebra::Vec3D BerendsenManostat::calculateMu() const
+tensor3D BerendsenManostat::calculateMu() const
 {
-    return linearAlgebra::Vec3D(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - trace(_pressureTensor) / 3.0)));
+    return diagonalMatrix(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - trace(_pressureTensor) / 3.0)));
 }
 
 /**
@@ -89,9 +93,9 @@ linearAlgebra::Vec3D BerendsenManostat::calculateMu() const
  * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of the isotropic coupled axes and _2DAnisotropicAxis is
  * the index of the anisotropic axis
  *
- * @return linearAlgebra::Vec3D
+ * @return tensor3D
  */
-linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
+tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
 {
     const auto p_xyz = diagonal(_pressureTensor);
     const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
@@ -108,15 +112,36 @@ linearAlgebra::Vec3D SemiIsotropicBerendsenManostat::calculateMu() const
     mu[_2DIsotropicAxes[1]] = mu_xy;
     mu[_2DAnisotropicAxis]  = mu_z;
 
-    return mu;
+    return diagonalMatrix(mu);
 }
 
 /**
  * @brief calculate mu as scaling factor for Berendsen manostat (anisotropic)
  *
- * @return linearAlgebra::Vec3D
+ * @return tensor3D
  */
-linearAlgebra::Vec3D AnisotropicBerendsenManostat::calculateMu() const
+tensor3D AnisotropicBerendsenManostat::calculateMu() const
 {
-    return linearAlgebra::Vec3D(1.0 - _compressibility * _dt / _tau * (_targetPressure - diagonal(_pressureTensor)));
+    return diagonalMatrix(1.0 - _compressibility * _dt / _tau * (_targetPressure - diagonal(_pressureTensor)));
+}
+
+/**
+ * @brief calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)
+ *
+ * @return tensor3D
+ */
+tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
+{
+    auto mu =
+        kroneckerDeltaMatrix<double>() - _compressibility * _dt / _tau * (diagonalMatrix(_targetPressure) - _pressureTensor);
+
+    mu[0][1] += mu[1][0];
+    mu[0][2] += mu[2][0];
+    mu[1][2] += mu[2][1];
+
+    mu[1][0] = 0.0;
+    mu[2][0] = 0.0;
+    mu[2][1] = 0.0;
+
+    return mu;
 }

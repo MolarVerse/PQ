@@ -1,8 +1,8 @@
 #ifdef WITH_MPI
 
-#ifndef _PIMD_QMCF_MPI_HPP_
+#ifndef _PQ_MPI_HPP_
 
-#define _PIMD_QMCF_MPI_HPP_
+#define _PQ_MPI_HPP_
 
 #include <cstddef>    // for size_t
 #include <fstream>    // for ofstream
@@ -62,6 +62,6 @@ namespace mpi
     };
 }   // namespace mpi
 
-#endif   // _PIMD_QMCF_MPI_HPP_
+#endif   // _PQ_MPI_HPP_
 
 #endif   // WITH_MPI

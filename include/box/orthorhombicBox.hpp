@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,8 @@ namespace simulationBox
         [[nodiscard]] double calculateVolume() override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
+
+        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
 
         [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
 

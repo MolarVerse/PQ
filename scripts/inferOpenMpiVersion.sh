@@ -13,4 +13,4 @@ fi
 
 OMPI_VERSION=$([[ $OMPI_VERSION_STRING =~ [0-9]+\.[0-9]+\.[0-9]+ ]] && echo $BASH_REMATCH)
 
-sed 's/OMPI_VERSION=__VERSION__/OMPI_VERSION='$OMPI_VERSION'/g' pimd_qmcf_openmpi.def
+sed 's/OMPI_VERSION=__VERSION__/OMPI_VERSION='$OMPI_VERSION'/g' PQ_openmpi.def

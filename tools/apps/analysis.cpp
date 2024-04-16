@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ string getExecutableName()
 
 int main(int argc, char **argv)
 {
-    // like in main.cpp of pimd_qmcf not best way TODO:
+    // like in main.cpp of PQ not best way TODO:
     vector<string> arguments(argv, argv + argc);
     auto           commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();

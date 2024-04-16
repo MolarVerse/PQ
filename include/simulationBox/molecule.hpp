@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ namespace simulationBox
         explicit Molecule(c_ul moltype) : _moltype(moltype){};
 
         void calculateCenterOfMass(const Box &);
-        void scale(const linearAlgebra::Vec3D &, const Box &);
+        void scale(const linearAlgebra::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;

@@ -2,7 +2,7 @@
 *****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper, Josef M. Gallmetzer
 
     This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,8 @@ import customtkinter as ctk
 import numpy as np
 
 # Add the path to the read_en module and feature module
-from pimd_qmcf_tools.enalyzer.reader import read_en, read_info
-from pimd_qmcf_tools.enalyzer.plot import live_graph, graph
+from PQ_tools.enalyzer.reader import read_en, read_info
+from PQ_tools.enalyzer.plot import live_graph, graph
 
 def gui(en_filenames, info_filename):
 
@@ -39,7 +39,7 @@ def gui(en_filenames, info_filename):
     window = ctk.CTk()
 
     # Set the title of the window
-    window.title('Energy File Analyzer - PIMD-QMCF')
+    window.title('Energy File Analyzer - PQ')
 
     # Read all en files
     data = read_en(en_filenames)

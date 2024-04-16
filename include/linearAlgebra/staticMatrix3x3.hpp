@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -83,6 +83,22 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const T &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result = lhs + StaticMatrix3x3<T>(rhs);
+
+        return result;
+    }
+
+    /**
      * @brief operator+= for two StaticMatrix3x3's
      *
      * @param lhs
@@ -94,6 +110,22 @@ namespace linearAlgebra
         lhs[0] += rhs[0];
         lhs[1] += rhs[1];
         lhs[2] += rhs[2];
+    }
+
+    /**
+     * @brief operator- for two StaticMatrix3x3's
+     *
+     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator-(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result -= rhs;
+
+        return result;
     }
 
     /**
@@ -197,6 +229,18 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t)
     {
         return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
+    }
+
+    /**
+     * @brief operator/ for scalar and StaticMatrix3x3
+     *
+     * @param StaticMatrix3x3<T> mat, T t
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator/(const T t, const StaticMatrix3x3<T> &mat)
+    {
+        return StaticMatrix3x3<T>(t / mat[0], t / mat[1], t / mat[2]);
     }
 
     /**
@@ -354,6 +398,33 @@ namespace linearAlgebra
     T trace(const StaticMatrix3x3<T> &mat)
     {
         return mat[0][0] + mat[1][1] + mat[2][2];
+    }
+
+    /**
+     * @brief Kronecker delta
+     *
+     * @TODO: use concepts here
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> kroneckerDeltaMatrix()
+    {
+        return StaticMatrix3x3<T>(Vec3D{T(1), 0.0, 0.0}, Vec3D{0.0, T(1), 0.0}, Vec3D{0.0, 0.0, T(1)});
+    }
+
+    /**
+     * @brief exponential of a StaticMatrix3x3
+     *
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> exp(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = StaticMatrix3x3<T>(0.0);
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = i + 1; j < 3; ++j)
+                result[i][j] = ::exp(mat[i][j]);
+
+        return result;
     }
 
 }   // namespace linearAlgebra

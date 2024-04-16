@@ -1,7 +1,7 @@
 /*****************************************************************************
 <GPL_HEADER>
 
-    PIMD-QMCF
+    PQ
     Copyright (C) 2023-now  Jakob Gamper
 
     This program is free software: you can redistribute it and/or modify
@@ -77,6 +77,8 @@ std::string settings::string(const settings::Isotropy &isotropy)
 
     case settings::Isotropy::ANISOTROPIC: return "anisotropic";
 
+    case settings::Isotropy::FULL_ANISOTROPIC: return "full_anisotropic";
+
     default: return "isotropic";
     }
 }
@@ -98,6 +100,9 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 
     else if (isotropyToLower == "anisotropic")
         _isotropy = settings::Isotropy::ANISOTROPIC;
+
+    else if (isotropyToLower == "full_anisotropic")
+        _isotropy = settings::Isotropy::FULL_ANISOTROPIC;
 
     else
         _isotropy = settings::Isotropy::ISOTROPIC;
