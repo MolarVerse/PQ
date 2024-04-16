@@ -106,6 +106,28 @@ void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, con
 }
 
 /**
+ * @brief wrapper for virial file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeVirialFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _virialOutput->write(step, physicalData);
+}
+
+/**
+ * @brief wrapper for stress file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeStressFile(const size_t step, const physicalData::PhysicalData &physicalData)
+{
+    _stressOutput->write(step, physicalData);
+}
+
+/**
  * @brief wrapper for ring polymer restart file output function
  *
  * @param simulationBox

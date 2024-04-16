@@ -20,45 +20,46 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "momentumOutput.hpp"
+#include "stressOutput.hpp"
 
 #include "physicalData.hpp"   // for PhysicalData
-#include "vector3d.hpp"       // for Vec3D, norm
 
 #include <format>    // for format
 #include <fstream>   // for basic_ostream, ofstream
 #include <string>    // for operator<<
 
-using output::MomentumOutput;
+using output::StressOutput;
 
 /**
- * @brief Write the momentum output
+ * @brief Write the stress output
  *
- * @details The momentum output is written in the following format:
+ * @details The stress output is written in the following format:
  * - step
- * - norm of momentum
- * - momentum x
- * - momentum y
- * - momentum z
- * - norm of angular momentum
- * - angular momentum x
- * - angular momentum y
- * - angular momentum z
+ * - s_xx
+ * - s_xy
+ * - s_xz
+ * - s_yx
+ * - s_yy
+ * - s_yz
+ * - s_zx
+ * - s_zy
+ * - s_zz
  *
  * @param step
  * @param data
  */
-void MomentumOutput::write(const size_t step, const physicalData::PhysicalData &data)
+void StressOutput::write(const size_t step, const physicalData::PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));
-    _fp << std::format("{:20.5e}\t", data.getMomentum()[0]);
-    _fp << std::format("{:20.5e}\t", data.getMomentum()[1]);
-    _fp << std::format("{:20.5e}\t", data.getMomentum()[2]);
-    _fp << std::format("{:20.5e}\t", norm(data.getAngularMomentum()));
-    _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[0]);
-    _fp << std::format("{:20.5e}\t", data.getAngularMomentum()[1]);
-    _fp << std::format("{:20.5e}\n", data.getAngularMomentum()[2]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[0][0]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[0][1]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[0][2]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[1][0]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[1][1]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[1][2]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[2][0]);
+    _fp << std::format("{:20.5e}\t", data.getVirial()[2][1]);
+    _fp << std::format("{:20.5e}\n", data.getVirial()[2][2]);
 
     _fp << std::flush;
 }

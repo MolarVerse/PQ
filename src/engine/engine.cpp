@@ -75,7 +75,6 @@ void Engine::run()
 void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
-    _physicalData.reset();
 
     const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
 
@@ -98,6 +97,11 @@ void Engine::writeOutput()
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
+        _engineOutput.writeVirialFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
+        _engineOutput.writeStressFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
+
         _averagePhysicalData = physicalData::PhysicalData();
     }
+
+    _physicalData.reset();
 }

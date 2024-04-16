@@ -27,7 +27,7 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS physicalData)
 endforeach()
 
-if(${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
+if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
         NAME coverage_physicalData
