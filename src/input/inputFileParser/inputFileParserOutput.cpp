@@ -67,6 +67,7 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
     addKeyword(std::string("restart_file"), bind_front(&InputFileParserOutput::parseRestartFilename, this), false);
     addKeyword(std::string("charge_file"), bind_front(&InputFileParserOutput::parseChargeFilename, this), false);
+    addKeyword(std::string("momentum_file"), bind_front(&InputFileParserOutput::parseMomentumFilename, this), false);
 
     addKeyword(std::string("virial_file"), bind_front(&InputFileParserOutput::parseVirialFilename, this), false);
     addKeyword(std::string("stress_file"), bind_front(&InputFileParserOutput::parseStressFilename, this), false);
@@ -215,6 +216,19 @@ void InputFileParserOutput::parseChargeFilename(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setChargeFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse momentum filename of simulation and add it to output
+ *
+ * @details default value is default.mom
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseMomentumFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setMomentumFileName(lineElements[2]);
 }
 
 /**

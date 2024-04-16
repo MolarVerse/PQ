@@ -59,6 +59,7 @@ namespace input
         void parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseMomentumFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
 
         void parseVirialFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseStressFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);

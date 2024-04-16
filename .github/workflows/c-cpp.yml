@@ -27,7 +27,7 @@ jobs:
         shell: bash
 
       - name: Create build directory and run CMake
-        run: cmake -S . -B build -G "Unix Makefiles"
+        run: cmake -S . -B build -G "Unix Makefiles" -DBUILD_WITH_GCOVR=ON
         env:
           CC: gcc-13
           CXX: g++-13
