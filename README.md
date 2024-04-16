@@ -1,8 +1,8 @@
 # PQ
 
-[![C/C++ CI](https://github.com/MolarVerse/pq/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/MolarVerse/pq/actions/workflows/c-cpp.yml)
-[![codecov](https://codecov.io/gh/MolarVerse/pq/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/pq)
-[![Docs](https://github.com/MolarVerse/pq/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/pq/)
+[![C/C++ CI](https://github.com/MolarVerse/PQ/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/MolarVerse/PQ/actions/workflows/c-cpp.yml)
+[![codecov](https://codecov.io/gh/MolarVerse/PQ/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/PQ)
+[![Docs](https://github.com/MolarVerse/PQ/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/PQ/)
 
 ## How to Use
 
