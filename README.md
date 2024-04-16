@@ -6,9 +6,9 @@
 
 ## How to Use
 
-To perform calculations using the PQ program just execute the executable `pq` with a given input file
+To perform calculations using the PQ program just execute the executable `PQ` with a given input file
 
-    <path to executable>/pq <input file>
+    <path to executable>/PQ <input file>
 
 ## Building from Source
 
