@@ -225,9 +225,21 @@ Energy_File
 
     energy_file = {file} -> "default.en"
 
->   The :code:`energy_file` keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.
+The :code:`energy_file` keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.
 
 .. centered:: *default value* = "default.en"
+
+Instant_Energy_File
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    instant_energy_file = {file} -> "default.instant_en"
+
+The :code:`instant_energy_file` keyword sets the name for the instant energy file, in which the energy of the system at each step can be found.
+
+.. centered:: *default value* = "default.instant_en"
 
 Rst_File
 ========

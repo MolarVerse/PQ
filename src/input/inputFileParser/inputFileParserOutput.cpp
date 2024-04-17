@@ -38,19 +38,21 @@ using namespace input;
  * 2) output_file <string>
  * 3) info_file <string>
  * 4) energy_file <string>
- * 5) traj_file <string>
- * 6) vel_file <string>
- * 7) force_file <string>
- * 8) restart_file <string>
- * 9) charge_file <string>
- * 10) virial_file <string>
- * 11) stress_file <string>
- * 12) rpmd_restart_file <string>
- * 13) rpmd_traj_file <string>
- * 14) rpmd_vel_file <string>
- * 15) rpmd_force_file <string>
- * 16) rpmd_charge_file <string>
- * 17) rpmd_energy_file <string>
+ * 5) instant_energy_file <string>
+ * 6) traj_file <string>
+ * 7) vel_file <string>
+ * 8) force_file <string>
+ * 9) restart_file <string>
+ * 10) charge_file <string>
+ * 11) momentum_file <string>
+ * 12) virial_file <string>
+ * 13) stress_file <string>
+ * 14) rpmd_restart_file <string>
+ * 15) rpmd_traj_file <string>
+ * 16) rpmd_vel_file <string>
+ * 17) rpmd_force_file <string>
+ * 18) rpmd_charge_file <string>
+ * 19) rpmd_energy_file <string>
  *
  * @param engine
  */
@@ -62,6 +64,7 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
     addKeyword(std::string("output_file"), bind_front(&InputFileParserOutput::parseLogFilename, this), false);
     addKeyword(std::string("info_file"), bind_front(&InputFileParserOutput::parseInfoFilename, this), false);
     addKeyword(std::string("energy_file"), bind_front(&InputFileParserOutput::parseEnergyFilename, this), false);
+    addKeyword(std::string("instant_energy_file"), bind_front(&InputFileParserOutput::parseInstantEnergyFilename, this), false);
     addKeyword(std::string("traj_file"), bind_front(&InputFileParserOutput::parseTrajectoryFilename, this), false);
     addKeyword(std::string("vel_file"), bind_front(&InputFileParserOutput::parseVelocityFilename, this), false);
     addKeyword(std::string("force_file"), bind_front(&InputFileParserOutput::parseForceFilename, this), false);
@@ -151,6 +154,19 @@ void InputFileParserOutput::parseEnergyFilename(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setEnergyFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse instant energy filename of simulation and add it to output
+ *
+ * @details default value is default.inen
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseInstantEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setInstantEnergyFileName(lineElements[2]);
 }
 
 /**

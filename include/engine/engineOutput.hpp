@@ -62,16 +62,17 @@ namespace engine
     class EngineOutput
     {
       private:
-        std::unique_ptr<output::EnergyOutput>     _energyOutput   = std::make_unique<output::EnergyOutput>("default.en");
-        std::unique_ptr<output::MomentumOutput>   _momentumOutput = std::make_unique<output::MomentumOutput>("default.mom");
-        std::unique_ptr<output::TrajectoryOutput> _xyzOutput      = std::make_unique<output::TrajectoryOutput>("default.xyz");
-        std::unique_ptr<output::TrajectoryOutput> _velOutput      = std::make_unique<output::TrajectoryOutput>("default.vel");
-        std::unique_ptr<output::TrajectoryOutput> _forceOutput    = std::make_unique<output::TrajectoryOutput>("default.force");
-        std::unique_ptr<output::TrajectoryOutput> _chargeOutput   = std::make_unique<output::TrajectoryOutput>("default.chg");
-        std::unique_ptr<output::LogOutput>        _logOutput      = std::make_unique<output::LogOutput>("default.log");
-        std::unique_ptr<output::StdoutOutput>     _stdoutOutput   = std::make_unique<output::StdoutOutput>("stdout");
-        std::unique_ptr<output::RstFileOutput>    _rstFileOutput  = std::make_unique<output::RstFileOutput>("default.rst");
-        std::unique_ptr<output::InfoOutput>       _infoOutput     = std::make_unique<output::InfoOutput>("default.info");
+        std::unique_ptr<output::EnergyOutput> _energyOutput        = std::make_unique<output::EnergyOutput>("default.en");
+        std::unique_ptr<output::EnergyOutput> _instantEnergyOutput = std::make_unique<output::EnergyOutput>("default.instant_en");
+        std::unique_ptr<output::MomentumOutput>   _momentumOutput  = std::make_unique<output::MomentumOutput>("default.mom");
+        std::unique_ptr<output::TrajectoryOutput> _xyzOutput       = std::make_unique<output::TrajectoryOutput>("default.xyz");
+        std::unique_ptr<output::TrajectoryOutput> _velOutput       = std::make_unique<output::TrajectoryOutput>("default.vel");
+        std::unique_ptr<output::TrajectoryOutput> _forceOutput     = std::make_unique<output::TrajectoryOutput>("default.force");
+        std::unique_ptr<output::TrajectoryOutput> _chargeOutput    = std::make_unique<output::TrajectoryOutput>("default.chg");
+        std::unique_ptr<output::LogOutput>        _logOutput       = std::make_unique<output::LogOutput>("default.log");
+        std::unique_ptr<output::StdoutOutput>     _stdoutOutput    = std::make_unique<output::StdoutOutput>("stdout");
+        std::unique_ptr<output::RstFileOutput>    _rstFileOutput   = std::make_unique<output::RstFileOutput>("default.rst");
+        std::unique_ptr<output::InfoOutput>       _infoOutput      = std::make_unique<output::InfoOutput>("default.info");
 
         std::unique_ptr<output::VirialOutput> _virialOutput = std::make_unique<output::VirialOutput>("default.vir");
         std::unique_ptr<output::StressOutput> _stressOutput = std::make_unique<output::StressOutput>("default.stress");
@@ -91,6 +92,7 @@ namespace engine
 
       public:
         void writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
+        void writeInstantEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
         void writeMomentumFile(const size_t step, const physicalData::PhysicalData &);
         void writeXyzFile(simulationBox::SimulationBox &);
         void writeVelFile(simulationBox::SimulationBox &);
@@ -110,6 +112,7 @@ namespace engine
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
         output::EnergyOutput     &getEnergyOutput() { return *_energyOutput; }
+        output::EnergyOutput     &getInstantEnergyOutput() { return *_instantEnergyOutput; }
         output::MomentumOutput   &getMomentumOutput() { return *_momentumOutput; }
         output::TrajectoryOutput &getXyzOutput() { return *_xyzOutput; }
         output::TrajectoryOutput &getVelOutput() { return *_velOutput; }

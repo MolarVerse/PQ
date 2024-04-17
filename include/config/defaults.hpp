@@ -38,6 +38,7 @@ namespace defaults
 
     static constexpr char _RESTART_FILENAME_DEFAULT_[]                 = "default.rst";
     static constexpr char _ENERGY_FILENAME_DEFAULT_[]                  = "default.en";
+    static constexpr char _INSTANT_ENERGY_FILENAME_DEFAULT_[]          = "default.instant_en";
     static constexpr char _MOMENTUM_FILENAME_DEFAULT_[]                = "default.mom";
     static constexpr char _TRAJECTORY_FILENAME_DEFAULT_[]              = "default.xyz";
     static constexpr char _VELOCITY_FILENAME_DEFAULT_[]                = "default.vel";

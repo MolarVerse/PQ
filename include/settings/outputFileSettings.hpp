@@ -46,15 +46,16 @@ namespace settings
         static inline bool        _filePrefixSet = false;
         static inline std::string _filePrefix;
 
-        static inline std::string _restartFileName    = defaults::_RESTART_FILENAME_DEFAULT_;
-        static inline std::string _energyFileName     = defaults::_ENERGY_FILENAME_DEFAULT_;
-        static inline std::string _momentumFileName   = defaults::_MOMENTUM_FILENAME_DEFAULT_;
-        static inline std::string _trajectoryFileName = defaults::_TRAJECTORY_FILENAME_DEFAULT_;
-        static inline std::string _velocityFileName   = defaults::_VELOCITY_FILENAME_DEFAULT_;
-        static inline std::string _forceFileName      = defaults::_FORCE_FILENAME_DEFAULT_;
-        static inline std::string _chargeFileName     = defaults::_CHARGE_FILENAME_DEFAULT_;
-        static inline std::string _logFileName        = defaults::_LOG_FILENAME_DEFAULT_;
-        static inline std::string _infoFileName       = defaults::_INFO_FILENAME_DEFAULT_;
+        static inline std::string _restartFileName       = defaults::_RESTART_FILENAME_DEFAULT_;
+        static inline std::string _energyFileName        = defaults::_ENERGY_FILENAME_DEFAULT_;
+        static inline std::string _instantEnergyFileName = defaults::_INSTANT_ENERGY_FILENAME_DEFAULT_;
+        static inline std::string _momentumFileName      = defaults::_MOMENTUM_FILENAME_DEFAULT_;
+        static inline std::string _trajectoryFileName    = defaults::_TRAJECTORY_FILENAME_DEFAULT_;
+        static inline std::string _velocityFileName      = defaults::_VELOCITY_FILENAME_DEFAULT_;
+        static inline std::string _forceFileName         = defaults::_FORCE_FILENAME_DEFAULT_;
+        static inline std::string _chargeFileName        = defaults::_CHARGE_FILENAME_DEFAULT_;
+        static inline std::string _logFileName           = defaults::_LOG_FILENAME_DEFAULT_;
+        static inline std::string _infoFileName          = defaults::_INFO_FILENAME_DEFAULT_;
 
         static inline std::string _virialFileName = defaults::_VIRIAL_FILENAME_DEFAULT_;
         static inline std::string _stressFileName = defaults::_STRESS_FILENAME_DEFAULT_;
@@ -84,6 +85,7 @@ namespace settings
 
         static void setRestartFileName(const std::string_view name) { _restartFileName = name; }
         static void setEnergyFileName(const std::string_view name) { _energyFileName = name; }
+        static void setInstantEnergyFileName(const std::string_view name) { _instantEnergyFileName = name; }
         static void setMomentumFileName(const std::string_view name) { _momentumFileName = name; }
         static void setTrajectoryFileName(const std::string_view name) { _trajectoryFileName = name; }
         static void setVelocityFileName(const std::string_view name) { _velocityFileName = name; }
@@ -112,6 +114,7 @@ namespace settings
 
         [[nodiscard]] static std::string getRestartFileName() { return _restartFileName; }
         [[nodiscard]] static std::string getEnergyFileName() { return _energyFileName; }
+        [[nodiscard]] static std::string getInstantEnergyFileName() { return _instantEnergyFileName; }
         [[nodiscard]] static std::string getMomentumFileName() { return _momentumFileName; }
         [[nodiscard]] static std::string getTrajectoryFileName() { return _trajectoryFileName; }
         [[nodiscard]] static std::string getVelocityFileName() { return _velocityFileName; }

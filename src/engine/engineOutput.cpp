@@ -45,6 +45,19 @@ void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, con
 }
 
 /**
+ * @brief wrapper for instant energy file output function
+ *
+ * @param step
+ * @param physicalData
+ */
+void EngineOutput::writeInstantEnergyFile(const size_t                      step,
+                                          const double                      loopTime,
+                                          const physicalData::PhysicalData &physicalData)
+{
+    _instantEnergyOutput->write(step, loopTime, physicalData);
+}
+
+/**
  * @brief wrapper for momentum file output function
  *
  * @param step
