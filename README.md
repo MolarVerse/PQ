@@ -26,7 +26,7 @@ For compilation then type:
 
 ## Singularity
 
-There are several singularity definition files shipped with this software package. For further information please refer to the [documentation page](https://MolarVerse.github.io/pq/).
+There are several singularity definition files shipped with this software package. For further information please refer to the [documentation page](https://MolarVerse.github.io/PQ/).
 
 
 
