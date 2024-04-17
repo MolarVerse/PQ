@@ -289,6 +289,42 @@ The :code:`charge_file` keyword sets the name for the trajectory file of the ato
 
 .. centered:: *default value* = "default.chrg"
 
+Momentum_File
+=============
+
+.. admonition:: Key
+   :class: tip
+
+    momentum_file = {file} -> "default.mom"
+
+The :code:`momentum_file` keyword sets the name for output file containing the total linear momentum of the system, the individual box momenta in each direction as well as the corresponding angular momenta.
+
+.. centered:: *default value* = "default.mom"
+
+Virial_File
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    virial_file = {file} -> "default.vir"
+
+The :code:`virial_file` keyword sets the name for the output file containing the virial tensor of the system.
+
+.. centered:: *default value* = "default.vir"
+
+Stress_File
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    stress_file = {file} -> "default.stress"
+
+The :code:`stress_file` keyword sets the name for the output file containing the stress tensor of the system.
+
+.. centered:: *default value* = "default.stress"
+
 *********************
 RPMD Output File Keys
 *********************

@@ -81,6 +81,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#vel-file">Vel_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#force-file">Force_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#charge-file">Charge_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#momentum-file">Momentum_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virial-file">Virial_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stress-file">Stress_File</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#rpmd-output-file-keys">RPMD Output File Keys</a><ul>
@@ -451,6 +454,35 @@
 <p>The <code class="code docutils literal notranslate"><span class="pre">charge_file</span></code> keyword sets the name for the trajectory file of the atomic partial charges.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.chrg”</strong></p></section>
+<section id="momentum-file">
+<h3>Momentum_File<a class="headerlink" href="#momentum-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<blockquote>
+<div><p>momentum_file = {file} -&gt; “default.mom”</p>
+</div></blockquote>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">momentum_file</span></code> keyword sets the name for output file containing the total linear momentum of the system, the individual box momenta in each direction as well as the corresponding angular momenta.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.mom”</strong></p></section>
+<section id="virial-file">
+<h3>Virial_File<a class="headerlink" href="#virial-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>virial_file = {file} -&gt; “default.vir”</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">virial_file</span></code> keyword sets the name for the output file containing the virial tensor of the system.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.vir”</strong></p></section>
+<section id="stress-file">
+<h3>Stress_File<a class="headerlink" href="#stress-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>stress_file = {file} -&gt; “default.stress”</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">stress_file</span></code> keyword sets the name for the output file containing the stress tensor of the system.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.stress”</strong></p></section>
 </section>
 <section id="rpmd-output-file-keys">
 <h2>RPMD Output File Keys<a class="headerlink" href="#rpmd-output-file-keys" title="Link to this heading"></a></h2>
