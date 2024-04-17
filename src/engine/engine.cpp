@@ -89,6 +89,7 @@ void Engine::writeOutput()
         const auto loopTime       = _timings.calculateLoopTime(_step);
 
         _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeInstantEnergyFile(effectiveStep, loopTime, _physicalData);
         _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
         _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);

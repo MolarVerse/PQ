@@ -89,6 +89,9 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
     if (defaults::_ENERGY_FILENAME_DEFAULT_ == _energyFileName)
         _energyFileName = prefix + ".en";
 
+    if (defaults::_INSTANT_ENERGY_FILENAME_DEFAULT_ == _instantEnergyFileName)
+        _instantEnergyFileName = prefix + ".instant_en";
+
     if (defaults::_FORCE_FILENAME_DEFAULT_ == _forceFileName)
         _forceFileName = prefix + ".force";
 
@@ -145,6 +148,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
                                           _logFileName,
                                           _trajectoryFileName,
                                           _energyFileName,
+                                          _instantEnergyFileName,
                                           _forceFileName,
                                           _velocityFileName,
                                           _chargeFileName,
