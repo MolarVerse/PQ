@@ -132,7 +132,7 @@ void DFTBPlusRunner::readStressTensor(simulationBox::Box &box, physicalData::Phy
 
     const auto virial = stressTensor * constants::_HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ * box.getVolume();
 
-    data.setStressTensor(stressTensor);
+    data.setStressTensor(stressTensor * constants::_HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_);
     data.addVirial(virial);
 
     stressFile.close();
