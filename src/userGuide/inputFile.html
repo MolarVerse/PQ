@@ -76,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#md-output-file-keys">MD Output File Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#info-file">Info_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#energy-file">Energy_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#instant-energy-file">Instant_Energy_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rst-file">Rst_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#traj-file">Traj_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#vel-file">Vel_File</a></li>
@@ -406,9 +407,18 @@
 <p class="admonition-title">Key</p>
 <p>energy_file = {file} -&gt; “default.en”</p>
 </div>
-<p>&gt;   The <code class="code docutils literal notranslate"><span class="pre">energy_file</span></code> keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">energy_file</span></code> keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.en”</strong></p></section>
+<section id="instant-energy-file">
+<h3>Instant_Energy_File<a class="headerlink" href="#instant-energy-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>instant_energy_file = {file} -&gt; “default.instant_en”</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">instant_energy_file</span></code> keyword sets the name for the instant energy file, in which the energy of the system at each step can be found.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.instant_en”</strong></p></section>
 <section id="rst-file">
 <h3>Rst_File<a class="headerlink" href="#rst-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
