@@ -45,6 +45,7 @@ file_prefix             false
 output_file             false
 info_file               false
 energy_file             false
+instant_energy_file     false
 traj_file               false
 vel_file                false
 restart_file            false

@@ -167,6 +167,7 @@ namespace engine
 
         [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
         [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput() { return _engineOutput.getInstantEnergyOutput(); }
         [[nodiscard]] output::MomentumOutput   &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
         [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
         [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }

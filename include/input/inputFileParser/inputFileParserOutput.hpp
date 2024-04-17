@@ -54,6 +54,7 @@ namespace input
         void parseLogFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseInstantEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);

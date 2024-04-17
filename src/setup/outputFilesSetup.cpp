@@ -67,6 +67,7 @@ void OutputFilesSetup::setup()
 
     _engine.getRstFileOutput().setFilename(settings::OutputFileSettings::getRestartFileName());
     _engine.getEnergyOutput().setFilename(settings::OutputFileSettings::getEnergyFileName());
+    _engine.getInstantEnergyOutput().setFilename(settings::OutputFileSettings::getInstantEnergyFileName());
     _engine.getXyzOutput().setFilename(settings::OutputFileSettings::getTrajectoryFileName());
     _engine.getLogOutput().setFilename(settings::OutputFileSettings::getLogFileName());
     _engine.getInfoOutput().setFilename(settings::OutputFileSettings::getInfoFileName());
