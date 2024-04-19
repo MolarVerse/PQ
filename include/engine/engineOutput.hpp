@@ -24,6 +24,7 @@
 
 #define _ENGINE_OUTPUT_HPP_
 
+#include "boxOutput.hpp"                      // for BoxFileOutput
 #include "energyOutput.hpp"                   // for EnergyOutput
 #include "infoOutput.hpp"                     // for InfoOutput
 #include "logOutput.hpp"                      // for LogOutput
@@ -74,8 +75,9 @@ namespace engine
         std::unique_ptr<output::RstFileOutput>    _rstFileOutput   = std::make_unique<output::RstFileOutput>("default.rst");
         std::unique_ptr<output::InfoOutput>       _infoOutput      = std::make_unique<output::InfoOutput>("default.info");
 
-        std::unique_ptr<output::VirialOutput> _virialOutput = std::make_unique<output::VirialOutput>("default.vir");
-        std::unique_ptr<output::StressOutput> _stressOutput = std::make_unique<output::StressOutput>("default.stress");
+        std::unique_ptr<output::VirialOutput>  _virialOutput  = std::make_unique<output::VirialOutput>("default.vir");
+        std::unique_ptr<output::StressOutput>  _stressOutput  = std::make_unique<output::StressOutput>("default.stress");
+        std::unique_ptr<output::BoxFileOutput> _boxFileOutput = std::make_unique<output::BoxFileOutput>("default.box");
 
         std::unique_ptr<output::RingPolymerRestartFileOutput> _ringPolymerRstFileOutput =
             std::make_unique<output::RingPolymerRestartFileOutput>("default.rpmd.rst");
@@ -103,6 +105,7 @@ namespace engine
 
         void writeVirialFile(const size_t, const physicalData::PhysicalData &);
         void writeStressFile(const size_t, const physicalData::PhysicalData &);
+        void writeBoxFile(const size_t, const simulationBox::Box &);
 
         void writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &, const size_t);
         void writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &);
@@ -123,8 +126,9 @@ namespace engine
         output::RstFileOutput    &getRstFileOutput() { return *_rstFileOutput; }
         output::InfoOutput       &getInfoOutput() { return *_infoOutput; }
 
-        output::VirialOutput &getVirialOutput() { return *_virialOutput; }
-        output::StressOutput &getStressOutput() { return *_stressOutput; }
+        output::VirialOutput  &getVirialOutput() { return *_virialOutput; }
+        output::StressOutput  &getStressOutput() { return *_stressOutput; }
+        output::BoxFileOutput &getBoxFileOutput() { return *_boxFileOutput; }
 
         output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput() { return *_ringPolymerRstFileOutput; }
         output::RingPolymerTrajectoryOutput  &getRingPolymerXyzOutput() { return *_ringPolymerXyzOutput; }

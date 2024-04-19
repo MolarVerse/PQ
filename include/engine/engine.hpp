@@ -53,6 +53,7 @@ namespace output
     class MomentumOutput;                 // forward declaration
     class VirialOutput;                   // forward declaration
     class StressOutput;                   // forward declaration
+    class BoxFileOutput;                  // forward declaration
     class RingPolymerRestartFileOutput;   // forward declaration
     class RingPolymerTrajectoryOutput;    // forward declaration
 
@@ -178,8 +179,9 @@ namespace engine
         [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
         [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
 
-        [[nodiscard]] output::VirialOutput &getVirialOutput() { return _engineOutput.getVirialOutput(); }
-        [[nodiscard]] output::StressOutput &getStressOutput() { return _engineOutput.getStressOutput(); }
+        [[nodiscard]] output::VirialOutput  &getVirialOutput() { return _engineOutput.getVirialOutput(); }
+        [[nodiscard]] output::StressOutput  &getStressOutput() { return _engineOutput.getStressOutput(); }
+        [[nodiscard]] output::BoxFileOutput &getBoxFileOutput() { return _engineOutput.getBoxFileOutput(); }
 
         [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
         [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }

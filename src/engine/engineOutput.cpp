@@ -141,6 +141,16 @@ void EngineOutput::writeStressFile(const size_t step, const physicalData::Physic
 }
 
 /**
+ * @brief wrapper for box file output function
+ *
+ * @param simulationBox
+ */
+void EngineOutput::writeBoxFile(const size_t step, const simulationBox::Box &simulationBox)
+{
+    _boxFileOutput->write(step, simulationBox);
+}
+
+/**
  * @brief wrapper for ring polymer restart file output function
  *
  * @param simulationBox

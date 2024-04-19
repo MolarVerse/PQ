@@ -100,6 +100,7 @@ void Engine::writeOutput()
 
         _engineOutput.writeVirialFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
         _engineOutput.writeStressFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
+        _engineOutput.writeBoxFile(effectiveStep, _simulationBox.getBox());
 
         _averagePhysicalData = physicalData::PhysicalData();
     }

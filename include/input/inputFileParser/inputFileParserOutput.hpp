@@ -64,6 +64,7 @@ namespace input
 
         void parseVirialFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseStressFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseBoxFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
 
         void parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);

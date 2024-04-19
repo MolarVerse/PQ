@@ -113,6 +113,9 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
     if (defaults::_STRESS_FILENAME_DEFAULT_ == _stressFileName)
         _stressFileName = prefix + ".stress";
 
+    if (defaults::_BOX_FILENAME_DEFAULT_ == _boxFileName)
+        _boxFileName = prefix + ".box";
+
     /*****************************
      * ring polymer output files *
      *****************************/
@@ -156,6 +159,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
                                           _momentumFileName,
                                           _virialFileName,
                                           _stressFileName,
+                                          _boxFileName,
                                           _ringPolymerRestartFileName,
                                           _ringPolymerTrajectoryFileName,
                                           _ringPolymerVelocityFileName,
