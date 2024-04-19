@@ -337,6 +337,18 @@ The :code:`stress_file` keyword sets the name for the output file containing the
 
 .. centered:: *default value* = "default.stress"
 
+Box_File
+========
+
+.. admonition:: Key
+    :class: tip
+
+    box_file = {file} -> "default.box"
+
+The :code:`box_file` keyword sets the name for the output file containing the lattice parameters a, b, c, :math:`\alpha`, :math:`\beta`, :math:`\gamma`.
+
+.. centered:: *default value* = "default.box"
+
 *********************
 RPMD Output File Keys
 *********************
