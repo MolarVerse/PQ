@@ -59,6 +59,7 @@ namespace settings
 
         static inline std::string _virialFileName = defaults::_VIRIAL_FILENAME_DEFAULT_;
         static inline std::string _stressFileName = defaults::_STRESS_FILENAME_DEFAULT_;
+        static inline std::string _boxFileName    = defaults::_BOX_FILENAME_DEFAULT_;
 
         static inline std::string _ringPolymerRestartFileName    = defaults::_RING_POLYMER_RESTART_FILENAME_DEFAULT_;
         static inline std::string _ringPolymerTrajectoryFileName = defaults::_RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_;
@@ -95,6 +96,7 @@ namespace settings
         static void setInfoFileName(const std::string_view name) { _infoFileName = name; }
         static void setVirialFileName(const std::string_view name) { _virialFileName = name; }
         static void setStressFileName(const std::string_view name) { _stressFileName = name; }
+        static void setBoxFileName(const std::string_view name) { _boxFileName = name; }
 
         static void setRingPolymerRestartFileName(const std::string_view name) { _ringPolymerRestartFileName = name; }
         static void setRingPolymerTrajectoryFileName(const std::string_view name) { _ringPolymerTrajectoryFileName = name; }
@@ -124,6 +126,7 @@ namespace settings
         [[nodiscard]] static std::string getInfoFileName() { return _infoFileName; }
         [[nodiscard]] static std::string getVirialFileName() { return _virialFileName; }
         [[nodiscard]] static std::string getStressFileName() { return _stressFileName; }
+        [[nodiscard]] static std::string getBoxFileName() { return _boxFileName; }
 
         [[nodiscard]] static std::string getRingPolymerRestartFileName() { return _ringPolymerRestartFileName; }
         [[nodiscard]] static std::string getRingPolymerTrajectoryFileName() { return _ringPolymerTrajectoryFileName; }

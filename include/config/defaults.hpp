@@ -48,6 +48,7 @@ namespace defaults
     static constexpr char _INFO_FILENAME_DEFAULT_[]                    = "default.info";
     static constexpr char _VIRIAL_FILENAME_DEFAULT_[]                  = "default.vir";
     static constexpr char _STRESS_FILENAME_DEFAULT_[]                  = "default.stress";
+    static constexpr char _BOX_FILENAME_DEFAULT_[]                     = "default.box";
     static constexpr char _RING_POLYMER_RESTART_FILENAME_DEFAULT_[]    = "default.rpmd.rst";
     static constexpr char _RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_[] = "default.rpmd.xyz";
     static constexpr char _RING_POLYMER_VELOCITY_FILENAME_DEFAULT_[]   = "default.rpmd.vel";

@@ -54,6 +54,7 @@ force_file              false
 virial_file             false
 stress_file             false
 momentum_file           false
+box_file                false
 
 rpmd_restart_file       false
 rpmd_traj_file          false

@@ -47,12 +47,13 @@ using namespace input;
  * 11) momentum_file <string>
  * 12) virial_file <string>
  * 13) stress_file <string>
- * 14) rpmd_restart_file <string>
- * 15) rpmd_traj_file <string>
- * 16) rpmd_vel_file <string>
- * 17) rpmd_force_file <string>
- * 18) rpmd_charge_file <string>
- * 19) rpmd_energy_file <string>
+ * 14) box_file <string>
+ * 15) rpmd_restart_file <string>
+ * 16) rpmd_traj_file <string>
+ * 17) rpmd_vel_file <string>
+ * 18) rpmd_force_file <string>
+ * 19) rpmd_charge_file <string>
+ * 20) rpmd_energy_file <string>
  *
  * @param engine
  */
@@ -74,6 +75,7 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine) : InputFile
 
     addKeyword(std::string("virial_file"), bind_front(&InputFileParserOutput::parseVirialFilename, this), false);
     addKeyword(std::string("stress_file"), bind_front(&InputFileParserOutput::parseStressFilename, this), false);
+    addKeyword(std::string("box_file"), bind_front(&InputFileParserOutput::parseBoxFilename, this), false);
 
     addKeyword(std::string("rpmd_restart_file"), bind_front(&InputFileParserOutput::parseRPMDRestartFilename, this), false);
     addKeyword(std::string("rpmd_traj_file"), bind_front(&InputFileParserOutput::parseRPMDTrajectoryFilename, this), false);
@@ -271,6 +273,19 @@ void InputFileParserOutput::parseStressFilename(const std::vector<std::string> &
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setStressFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse box filename of simulation and add it to output
+ *
+ * @details default value is default.box
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseBoxFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setBoxFileName(lineElements[2]);
 }
 
 /**

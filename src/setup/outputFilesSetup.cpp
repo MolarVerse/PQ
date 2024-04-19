@@ -22,6 +22,7 @@
 
 #include "outputFilesSetup.hpp"
 
+#include "boxOutput.hpp"                      // for BoxFileOutput
 #include "energyOutput.hpp"                   // for EnergyOutput
 #include "engine.hpp"                         // for Engine
 #include "infoOutput.hpp"                     // for InfoOutput
@@ -77,6 +78,7 @@ void OutputFilesSetup::setup()
     _engine.getMomentumOutput().setFilename(settings::OutputFileSettings::getMomentumFileName());
     _engine.getVirialOutput().setFilename(settings::OutputFileSettings::getVirialFileName());
     _engine.getStressOutput().setFilename(settings::OutputFileSettings::getStressFileName());
+    _engine.getBoxFileOutput().setFilename(settings::OutputFileSettings::getBoxFileName());
 
     if (settings::Settings::isRingPolymerMDActivated())
     {

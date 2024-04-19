@@ -12,6 +12,7 @@ add_library(output
 
     virialOutput.cpp
     stressOutput.cpp
+    boxOutput.cpp
 
     ringPolymerRestartFileOutput.cpp
     ringPolymerTrajectoryOutput.cpp
