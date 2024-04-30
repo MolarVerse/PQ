@@ -37,6 +37,7 @@
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
+#include "qmmmmdEngine.hpp"           // for QMMMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
 #include "ringPolymerEngine.hpp"      // for RingPolymerEngine
@@ -102,7 +103,10 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::isQMActivated())
+    if (settings::Settings::isQMMMActivated())
+        setupQM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+
+    if (settings::Settings::isQMOnlyActivated())
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
 
     resetKinetics::setupResetKinetics(engine);

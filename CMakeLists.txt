@@ -43,7 +43,7 @@ endif()
 # set install rpath
 # *****************
 SET(CMAKE_INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
+    "${CMAKE_INSTALL_PREFIX}/lib/;"
 )
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
@@ -94,8 +94,8 @@ if(BUILD_WITH_DOC)
     add_subdirectory(docs EXCLUDE_FROM_ALL)
 endif()
 
-if(BUILD_TOOLS)
-    add_subdirectory(tools)
+if(BUILD_WITH_PYTHON_BINDINGS)
+    include(python_bindings)
 endif()
 
 if(BUILD_WITH_IWYU)
