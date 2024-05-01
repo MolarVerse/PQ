@@ -11,6 +11,7 @@ add_library(setup
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
     qmSetup.cpp
+    qmmmSetup.cpp
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
 )
@@ -36,6 +37,8 @@ target_link_libraries(setup
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
+
+    pq_python
 )
 
 if(BUILD_WITH_MPI)

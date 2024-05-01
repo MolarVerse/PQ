@@ -1,8 +1,8 @@
 # options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-BasedOnStyle: LLVM
+BasedOnStyle: google
 
 IndentWidth: 4
-ColumnLimit: 130
+ColumnLimit: 100
 SpaceAfterCStyleCast: true
 UseTab: Never
 SpacesBeforeTrailingComments: 3
@@ -13,6 +13,7 @@ AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: Never
+AllowAllParametersOfDeclarationOnNextLine: false
 
 AlignTrailingComments: true
 AlignConsecutiveMacros: Consecutive
@@ -20,6 +21,7 @@ AlignConsecutiveAssignments:
   Enabled: true
   AlignCompound: true
 AlignConsecutiveDeclarations: true
+AlignAfterOpenBracket: BlockIndent
 
 BreakBeforeBraces: Allman
 
@@ -36,3 +38,6 @@ IncludeBlocks: Regroup
 
 # use \n instead of \r\n
 UseCRLF: false
+
+PenaltyReturnTypeOnItsOwnLine: 100000000
+

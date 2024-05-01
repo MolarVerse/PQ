@@ -20,35 +20,37 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETTINGS_HPP_
+#ifndef _INPUT_FILE_PARSER_QMMM_HPP_
 
-#define _QMMM_SETTINGS_HPP_
+#define _INPUT_FILE_PARSER_QMMM_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
-namespace settings
+#include "inputFileParser.hpp"   // for InputFileParser
+
+namespace engine
+{
+    class Engine;   // Forward declaration
+}
+
+namespace input
 {
     /**
-     * @class QMMMSettings
+     * @class InputFileParserQMMM inherits from InputFileParser
      *
-     * @brief stores all information about the external qmmm runner
+     * @brief Parses the general commands in the input file
      *
      */
-    class QMMMSettings
+    class InputFileParserQMMM : public InputFileParser
     {
-       private:
-        static inline std::string _qmCenterString = "";
-
        public:
-        static void setQMCenterString(const std::string_view qmCenterString)
-        {
-            _qmCenterString = qmCenterString;
-        }
+        explicit InputFileParserQMMM(engine::Engine &);
 
-        static std::string getQMCenterString() { return _qmCenterString; }
+        void parseQMCenter(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
-}   // namespace settings
 
-#endif   // _QMMM_SETTINGS_HPP_
+}   // namespace input
+
+#endif   // _INPUT_FILE_PARSER_QMMM_HPP_

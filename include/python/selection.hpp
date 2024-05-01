@@ -20,35 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETTINGS_HPP_
+#include <string>
+#include <vector>
 
-#define _QMMM_SETTINGS_HPP_
-
-#include <cstddef>       // for size_t
-#include <string>        // for string
-#include <string_view>   // for string_view
-
-namespace settings
+namespace pq_python
 {
-    /**
-     * @class QMMMSettings
-     *
-     * @brief stores all information about the external qmmm runner
-     *
-     */
-    class QMMMSettings
-    {
-       private:
-        static inline std::string _qmCenterString = "";
-
-       public:
-        static void setQMCenterString(const std::string_view qmCenterString)
-        {
-            _qmCenterString = qmCenterString;
-        }
-
-        static std::string getQMCenterString() { return _qmCenterString; }
-    };
-}   // namespace settings
-
-#endif   // _QMMM_SETTINGS_HPP_
+    std::vector<int> select(
+        const std::string &selection,
+        const std::string &restartFileName,
+        const std::string &moldescriptorFileName
+    );
+}   // namespace pq_python

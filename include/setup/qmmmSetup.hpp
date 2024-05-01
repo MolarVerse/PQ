@@ -20,35 +20,37 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETTINGS_HPP_
+#ifndef _QMMM_SETUP_HPP_
 
-#define _QMMM_SETTINGS_HPP_
+#define _QMMM_SETUP_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for string
-#include <string_view>   // for string_view
-
-namespace settings
+namespace engine
 {
+    class QMMMMDEngine;   // forward declaration
+}
+
+namespace setup
+{
+    void setupQMMM(engine::QMMMMDEngine &);
+
     /**
-     * @class QMMMSettings
+     * @class QMSetup
      *
-     * @brief stores all information about the external qmmm runner
+     * @brief Setup QM
      *
      */
-    class QMMMSettings
+    class QMMMSetup
     {
        private:
-        static inline std::string _qmCenterString = "";
+        engine::QMMMMDEngine &_engine;
 
        public:
-        static void setQMCenterString(const std::string_view qmCenterString)
-        {
-            _qmCenterString = qmCenterString;
-        }
+        explicit QMMMSetup(engine::QMMMMDEngine &engine) : _engine(engine){};
 
-        static std::string getQMCenterString() { return _qmCenterString; }
+        void setup();
+        void setupQMCenter();
     };
-}   // namespace settings
 
-#endif   // _QMMM_SETTINGS_HPP_
+}   // namespace setup
+
+#endif   // _QMMM_SETUP_HPP_
