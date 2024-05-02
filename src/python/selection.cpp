@@ -30,7 +30,7 @@ std::vector<int> pq_python::select(
     if (pModule == nullptr)
     {
         PyErr_Print();
-        fprintf(stderr, "Failed to load \"%s\"\n", moduleString);
+        fprintf(stderr, "Failed to load \"%s\"\n", moduleString.c_str());
     }
     pDict = ::PyModule_GetDict(pModule);
 

@@ -46,7 +46,7 @@ if(BUILD_WITH_MPI)
     )
 endif()
 
-if(WITH_PYTHON_BINDINGS)
+if(BUILD_WITH_PYTHON_BINDINGS)
     add_definitions(-DPYTHON_ENABLED)
 
     target_link_libraries(setup

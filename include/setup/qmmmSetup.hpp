@@ -55,6 +55,10 @@ namespace setup
         void             setupQMOnlyList();
         void             setupMMOnlyList();
         std::vector<int> parseSelection(const std::string &selection, const std::string &key);
+        std::vector<int> parseSelectionNoPython(
+            const std::string &selection,
+            const std::string &key
+        );
     };
 
 }   // namespace setup
