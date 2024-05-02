@@ -15,8 +15,17 @@ if(PQANALYSIS_INSTALLED EQUAL 1)
         COMMAND ${Python_EXECUTABLE} -m pip install git+https://github.com/MolarVerse/PQAnalysis.git@dev
         RESULT_VARIABLE PIP_INSTALL_RESULT
     )
+else()
+    execute_process(
 
-    if(NOT PIP_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Failed to install the PQAnalysis python package")
-    endif()
+        # TODO: as soon as next release is out, change this to <pip install pqanalysis>
+        COMMAND ${Python_EXECUTABLE} -m pip install update git+https://github.com/MolarVerse/PQAnalysis.git@dev
+        RESULT_VARIABLE PIP_INSTALL_RESULT
+    )
+endif()
+
+if(NOT PIP_INSTALL_RESULT EQUAL 0)
+    message(FATAL_ERROR "Failed to install the PQAnalysis python package")
+else()
+    message(STATUS "Successfully installed the PQAnalysis python package")
 endif()
