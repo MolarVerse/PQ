@@ -53,6 +53,7 @@ namespace simulationBox
         size_t _atomType;
 
         bool _isQMOnly = false;
+        bool _isMMOnly = false;
 
         int    _atomicNumber;
         double _mass;
@@ -92,6 +93,7 @@ namespace simulationBox
         [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
         [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
+        [[nodiscard]] bool isMMOnly() const { return _isMMOnly; }
 
         [[nodiscard]] int    getAtomicNumber() const { return _atomicNumber; }
         [[nodiscard]] double getMass() const { return _mass; }
@@ -128,6 +130,7 @@ namespace simulationBox
         }
 
         void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
+        void setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
 
         void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
         void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }

@@ -61,16 +61,23 @@ void setup::setupQMMM(engine::QMMMMDEngine &engine)
 void QMMMSetup::setup()
 {
     setupQMCenter();
+    setupQMOnlyList();
+    setupMMOnlyList();
     throw customException::UserInputException("Not implemented");
 }
 
 /**
  * @brief setup QM center
  *
+ * @details This function determines the indices of the atoms that should be treated as the QM
+ * center. The QM center is the region of the system that is treated with QM methods. All
+ * atomIndices that are part of the QM center are added to the QM center list in the simulation box.
+ *
  */
 void QMMMSetup::setupQMCenter()
 {
     const auto qmCenter = parseSelection(settings::QMMMSettings::getQMCenterString(), "qm_center");
+    _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
 }
 
 /**
@@ -81,6 +88,7 @@ void QMMMSetup::setupQMOnlyList()
 {
     const auto qmOnlyList =
         parseSelection(settings::QMMMSettings::getQMOnlyListString(), "qm_only_list");
+    _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
 }
 
 /**
@@ -91,6 +99,7 @@ void QMMMSetup::setupMMOnlyList()
 {
     const auto mmOnlyList =
         parseSelection(settings::QMMMSettings::getMMOnlyListString(), "mm_only_list");
+    _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
 }
 
 /**

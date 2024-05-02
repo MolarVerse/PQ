@@ -90,6 +90,81 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 }
 
 /**
+ * @brief adds all atomIndices to _qmCenterAtoms vector
+ *
+ * @param atomIndices
+ *
+ * @throw UserInputException if atom index out of range
+ */
+void SimulationBox::addQMCenterAtoms(const std::vector<int> &atomIndices)
+{
+    for (const auto index : atomIndices)
+    {
+        if (index < 0 || (size_t) index >= _atoms.size())
+            throw customException::UserInputException(
+                std::format("QM center atom index {} out of range", index)
+            );
+
+        _qmCenterAtoms.push_back(_atoms[(size_t) index]);
+    }
+}
+
+/**
+ * @brief assigns isQMOnly to all atoms which are in the atomIndices vector
+ *
+ * @details If an atom is not already in the _qmAtoms vector it is added to it
+ *
+ * @param atomIndices
+ *
+ * @throw UserInputException if atom index out of range
+ */
+void SimulationBox::setupQMOnlyAtoms(const std::vector<int> &atomIndices)
+{
+    for (const auto index : atomIndices)
+    {
+        if (index < 0 || (size_t) index >= _atoms.size())
+            throw customException::UserInputException(
+                std::format("QM only atom index {} out of range", index)
+            );
+
+        _atoms[(size_t) index]->setQMOnly(true);
+
+        if (std::ranges::find(_qmAtoms.begin(), _qmAtoms.end(), _atoms[(size_t) index]) ==
+            _qmAtoms.end())
+            _qmAtoms.push_back(_atoms[(size_t) index]);
+    }
+}
+
+/**
+ * @brief assigns isMMOnly to all atoms which are in the atomIndices vector
+ *
+ * @param atomIndices
+ *
+ * @throw UserInputException if atom index out of range
+ * @throw UserInputException if atom is already in QM only list
+ */
+void SimulationBox::setupMMOnlyAtoms(const std::vector<int> &atomIndices)
+{
+    for (const auto index : atomIndices)
+    {
+        if (index < 0 || (size_t) index >= _atoms.size())
+            throw customException::UserInputException(
+                std::format("MM only atom index {} out of range", index)
+            );
+
+        _atoms[(size_t) index]->setMMOnly(true);
+
+        if (std::ranges::find(_qmAtoms.begin(), _qmAtoms.end(), _atoms[(size_t) index]) !=
+            _qmAtoms.end())
+            throw customException::UserInputException(std::format(
+                "Ambiguous atom index {} - atom is already in QM only list - cannot be in MM only "
+                "list",
+                index
+            ));
+    }
+}
+
+/**
  * @brief find moleculeType by moleculeType if (size_t)
  *
  * @param moleculeType
