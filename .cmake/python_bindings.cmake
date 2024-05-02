@@ -19,6 +19,4 @@ if(PQANALYSIS_INSTALLED EQUAL 1)
     endif()
 endif()
 
-find_package(Python 3.12 REQUIRED COMPONENTS Interpreter NumPy)
-
 add_definitions(-DWITH_PYTHON_BINDINGS)

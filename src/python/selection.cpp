@@ -1,8 +1,6 @@
 #include "selection.hpp"
 
 #include <Python.h>
-#include <numpy/arrayobject.h>
-#include <numpy/ndarrayobject.h>
 
 #include <fstream>
 #include <iostream>
@@ -36,7 +34,7 @@ std::vector<int> pq_python::select(
     }
     pDict = ::PyModule_GetDict(pModule);
 
-    pFunc = ::PyDict_GetItemString(pDict, "select_from_restart_file");
+    pFunc = ::PyDict_GetItemString(pDict, "select_from_restart_file_as_list");
 
     if (PyCallable_Check(pFunc))
         PyObject_CallObject(pFunc, NULL);
@@ -59,36 +57,43 @@ std::vector<int> pq_python::select(
         ::PyTuple_SetItem(pArgs, 2, pValue);
     }
 
-    // print length of pArgs
-    printf("Length of pArgs: %ld\n", ::PyTuple_Size(pArgs));
+    if (pFunc == NULL)
+        ::fprintf(stderr, "pFunc is NULL\n");
+
+    if (pArgs == NULL)
+        ::fprintf(stderr, "pArgs is NULL\n");
+
+    if (!PyCallable_Check(pFunc))
+        ::fprintf(stderr, "pFunc is not a callable object\n");
+
+    if (!PyTuple_Check(pArgs))
+        ::fprintf(stderr, "pArgs is not a tuple object\n");
 
     pValue = ::PyObject_CallObject(pFunc, pArgs);
 
-    if (pValue == nullptr)
+    if (pValue == NULL)
     {
-        PyErr_Print();
-        fprintf(stderr, "Call failed\n");
+        ::PyErr_Print();
+        ::fprintf(stderr, "Call failed\n");
     }
 
-    auto *numpy_array = reinterpret_cast<PyArrayObject *>(pValue);
-    // check if numpy_array is NULL
-    if (numpy_array == nullptr)
+    // convert pValue from python list to C++ vector of int result
+    std::vector<int> result;
+    if (pValue != nullptr)
     {
-        PyErr_Print();
-        fprintf(stderr, "Failed to load numpy array\n");
+        PyObject *pIter = ::PyObject_GetIter(pValue);
+        PyObject *pItem;
+
+        while ((pItem = ::PyIter_Next(pIter)))
+        {
+            result.push_back(::PyLong_AsLong(pItem));
+            ::Py_DECREF(pItem);
+        }
+
+        ::Py_DECREF(pIter);
     }
-    npy_intp size = PyArray_SIZE(numpy_array);
-    printf("Result of call: %ld\n", ::PyLong_AsLong(pValue));
-
-    // Get pointer to numpy array data
-    int *data = static_cast<int *>(PyArray_DATA(numpy_array));
-    printf("Result of call: %ld\n", ::PyLong_AsLong(pValue));
-
-    // Initialize std::vector with numpy array data
-    std::vector<int> result(data, data + size);
-    printf("Result of call: %ld\n", ::PyLong_AsLong(pValue));
-
-    // Now you can use vec...
+    else
+        ::PyErr_Print();
 
     Py_DECREF(pValue);
     Py_DECREF(pArgs);
