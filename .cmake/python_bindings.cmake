@@ -18,5 +18,3 @@ if(PQANALYSIS_INSTALLED EQUAL 1)
         message(FATAL_ERROR "Failed to install the PQAnalysis python package")
     endif()
 endif()
-
-add_definitions(-DWITH_PYTHON_BINDINGS)

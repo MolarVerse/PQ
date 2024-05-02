@@ -23,6 +23,7 @@
 #include "qmmmSetup.hpp"
 
 #include <cstddef>       // for size_t
+#include <format>        // for format
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -32,7 +33,10 @@
 #include "fileSettings.hpp"   // for FileSettings
 #include "qmmmSettings.hpp"   // for QMMMSettings
 #include "qmmmmdEngine.hpp"   // for QMMMEngine
-#include "selection.hpp"      // for select
+
+#ifdef PYTHON_ENABLED
+#include "selection.hpp"   // for select
+#endif
 
 using setup::QMMMSetup;
 
@@ -62,12 +66,43 @@ void QMMMSetup::setupQMCenter()
     std::string moldescriptorFileName = settings::FileSettings::getMolDescriptorFileName();
     std::string qmCenterString        = settings::QMMMSettings::getQMCenterString();
 
-#ifdef WITH_PYTHON_BINDINGS
+#ifdef PYTHON_ENABLED
     std::vector<int> qmCenter =
         pq_python::select(qmCenterString, restartFileName, moldescriptorFileName);
 #else
-    throw customException::InputFileException(
-        "Python is not enabled, cannot use QM center selection"
-    );
+    // check if string contains any characters that are not digits or commas
+    if (qmCenterString.find_first_not_of("0123456789,") != std::string::npos)
+    {
+        throw customException::InputFileException(std::format(
+            "The qm_center string {} contains characters that are not digits or commas. The "
+            "current build of PQ was compiled without Python bindings, so the qm_center string "
+            "must be a comma-separated list of integers, representing the atom indices in the "
+            "restart file that should be treated as the QM center."
+            "In order to use the full selection parser power of the PQAnalysis Python package, "
+            "the PQ build must be compiled with Python bindings.",
+            qmCenterString
+        ));
+    }
+
+    // parse the qm_center string
+    std::vector<int> qmCenter;
+    size_t           pos = 0;
+    while (pos < qmCenterString.size())
+    {
+        size_t nextPos = qmCenterString.find(',', pos);
+        if (nextPos == std::string::npos)
+        {
+            nextPos = qmCenterString.size();
+        }
+        std::string_view atomIndexString(qmCenterString.c_str() + pos, nextPos - pos);
+        qmCenter.push_back(std::stoi(std::string(atomIndexString)));
+        pos = nextPos + 1;
+    }
+
+    for (int i : qmCenter)
+    {
+        printf("%d\n", i);
+    }
+
 #endif
 }

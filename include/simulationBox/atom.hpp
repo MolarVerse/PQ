@@ -24,12 +24,12 @@
 
 #define _ATOM_HPP_
 
-#include "staticMatrix3x3.hpp"   // for tensor3D
-#include "vector3d.hpp"          // for Vec3D
-
 #include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
+
+#include "staticMatrix3x3.hpp"   // for tensor3D
+#include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
 {
@@ -42,7 +42,7 @@ namespace simulationBox
      */
     class Atom
     {
-      private:
+       private:
         std::string _name;
         std::string _atomTypeName;
 
@@ -51,6 +51,8 @@ namespace simulationBox
 
         size_t _externalAtomType;
         size_t _atomType;
+
+        bool _isQMOnly = false;
 
         int    _atomicNumber;
         double _mass;
@@ -61,7 +63,7 @@ namespace simulationBox
         linearAlgebra::Vec3D _force;
         linearAlgebra::Vec3D _shiftForce;
 
-      public:
+       public:
         Atom() = default;
 
         void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
@@ -71,7 +73,10 @@ namespace simulationBox
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
-        void scaleVelocityOrthogonalSpace(const linearAlgebra::tensor3D &scaleFactor, const Box &box);
+        void scaleVelocityOrthogonalSpace(
+            const linearAlgebra::tensor3D &scaleFactor,
+            const Box                     &box
+        );
 
         /***************************
          * standard getter methods *
@@ -85,6 +90,8 @@ namespace simulationBox
 
         [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
         [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+
+        [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
 
         [[nodiscard]] int    getAtomicNumber() const { return _atomicNumber; }
         [[nodiscard]] double getMass() const { return _mass; }
@@ -107,9 +114,20 @@ namespace simulationBox
         void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
 
         void setAtomType(const size_t atomType) { _atomType = atomType; }
-        void setExternalAtomType(const size_t externalAtomType) { _externalAtomType = externalAtomType; }
-        void setExternalGlobalVDWType(const size_t externalGlobalVDWType) { _externalGlobalVDWType = externalGlobalVDWType; }
-        void setInternalGlobalVDWType(const size_t internalGlobalVDWType) { _internalGlobalVDWType = internalGlobalVDWType; }
+        void setExternalAtomType(const size_t externalAtomType)
+        {
+            _externalAtomType = externalAtomType;
+        }
+        void setExternalGlobalVDWType(const size_t externalGlobalVDWType)
+        {
+            _externalGlobalVDWType = externalGlobalVDWType;
+        }
+        void setInternalGlobalVDWType(const size_t internalGlobalVDWType)
+        {
+            _internalGlobalVDWType = internalGlobalVDWType;
+        }
+
+        void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
 
         void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
         void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }

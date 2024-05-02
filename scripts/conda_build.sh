@@ -5,11 +5,11 @@ if [ $# -ne 1 ]; then
 fi
 
 conda create -n $1 python=3.12 -y -q 1>/dev/null
-source activate pq_env
+source activate $1
 
 # Install dependencies
-pip install cmake -q 1>/dev/null
-pip install PQAnalysis -q 1>/dev/null
+python -m pip install cmake -q 1>/dev/null
+python -m pip install PQAnalysis -q 1>/dev/null
 
 rm -rf PQ
 

@@ -1,3 +1,5 @@
+find_package(Git QUIET)
+
 if(Git_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     # Update submodules as needed
     option(GIT_SUBMODULE "Check submodules during build" ON)

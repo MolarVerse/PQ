@@ -22,7 +22,10 @@ add_subdirectory(exceptions)
 add_subdirectory(QM)
 add_subdirectory(maxwellBoltzmann)
 add_subdirectory(box)
-add_subdirectory(python)
+
+if(WITH_PYTHON_BINDINGS)
+    add_subdirectory(python)
+endif()
 
 if(BUILD_WITH_MPI)
     add_subdirectory(mpi)

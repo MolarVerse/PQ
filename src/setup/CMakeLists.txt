@@ -37,14 +37,21 @@ target_link_libraries(setup
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
-
-    pq_python
 )
 
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
         PQ_mpi
+    )
+endif()
+
+if(WITH_PYTHON_BINDINGS)
+    add_definitions(-DPYTHON_ENABLED)
+
+    target_link_libraries(setup
+        PUBLIC
+        pq_python
     )
 endif()
 
