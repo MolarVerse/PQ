@@ -53,6 +53,10 @@ InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) :
     addKeyword(std::string("shake-iter"), bind_front(&InputFileParserConstraints::parseShakeIteration, this), false);
     addKeyword(std::string("rattle-iter"), bind_front(&InputFileParserConstraints::parseRattleIteration, this), false);
     addKeyword(std::string("rattle-tolerance"), bind_front(&InputFileParserConstraints::parseRattleTolerance, this), false);
+
+    addKeyword(std::string("distance-constraints"),
+               bind_front(&InputFileParserConstraints::parseDistanceConstraintActivated, this),
+               false);
 }
 
 /**
@@ -70,9 +74,9 @@ void InputFileParserConstraints::parseShakeActivated(const std::vector<std::stri
 {
     checkCommand(lineElements, lineNumber);
     if (lineElements[2] == "on")
-        _engine.getConstraints().activate();
+        _engine.getConstraints().activateShake();
     else if (lineElements[2] == "off")
-        _engine.getConstraints().deactivate();
+        _engine.getConstraints().deactivateShake();
     else
     {
         auto message = format(R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
@@ -164,4 +168,33 @@ void InputFileParserConstraints::parseRattleIteration(const std::vector<std::str
         throw customException::InputFileException("Maximum rattle iterations must be positive");
 
     settings::ConstraintSettings::setRattleMaxIter(size_t(iteration));
+}
+
+/**
+ * @brief parsing if distance constraint is activated
+ *
+ * @details Possible options are:
+ * 1) "on"  - distance constraint is activated
+ * 2) "off" - distance constraint is deactivated (default)
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if keyword is not valid - currently only on and off are supported
+ */
+void InputFileParserConstraints::parseDistanceConstraintActivated(const std::vector<std::string> &lineElements,
+                                                                  const size_t                    lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+    if (lineElements[2] == "on")
+        _engine.getConstraints().activateDistanceConstraints();
+    else if (lineElements[2] == "off")
+        _engine.getConstraints().deactivateDistanceConstraints();
+    else
+    {
+        auto message =
+            format(R"(Invalid distance-constraint keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+                   lineElements[2],
+                   lineNumber);
+        throw customException::InputFileException(message);
+    }
 }

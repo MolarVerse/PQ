@@ -96,7 +96,7 @@ class TestConstraints : public ::testing::Test
         _constraints->addBondConstraint(bondConstraint1);
         _constraints->addBondConstraint(bondConstraint2);
 
-        _constraints->activate();
+        _constraints->activateShake();
     }
 
     virtual void TearDown()

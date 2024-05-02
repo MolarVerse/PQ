@@ -51,7 +51,7 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
-    if (!_activated)
+    if (!_shakeActivated)
         return;
 
     std::vector<bool> convergedVector;
@@ -85,7 +85,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
  */
 void Constraints::applyRattle()
 {
-    if (!_activated)
+    if (!_shakeActivated)
         return;
 
     std::vector<bool> convergedVector;

@@ -22,11 +22,11 @@
 
 #include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
 
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "constraints.hpp"      // for Constraints
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for TopologyException
-#include "simulationBox.hpp"    // for SimulationBox
+#include "constraints.hpp"          // for Constraints
+#include "distanceConstraint.hpp"   // for DistanceConstraint
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for TopologyException
+#include "simulationBox.hpp"        // for SimulationBox
 
 #include <format>   // for format
 
@@ -71,9 +71,10 @@ void DistanceConstraintsSection::processSection(std::vector<std::string> &lineEl
     const auto [molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
     const auto [molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
 
-    // auto bondConstraint = constraints::BondConstraint(molecule1, molecule2, atomIndex1, atomIndex2, bondLength);
+    auto distanceConstraint = constraints::DistanceConstraint(
+        molecule1, molecule2, atomIndex1, atomIndex2, lowerDistance, upperDistance, springConstant, dSpringConstantDt);
 
-    // engine.getConstraints().addBondConstraint(bondConstraint);
+    engine.getConstraints().addDistanceConstraint(distanceConstraint);
 
     throw customException::TopologyException("Not implemented yet!");
 }

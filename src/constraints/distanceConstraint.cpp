@@ -22,7 +22,24 @@
 
 #include "distanceConstraint.hpp"
 
+#include "simulationBox.hpp"
+
 #include <cmath>
 #include <vector>
 
 using namespace constraints;
+
+/**
+ * @brief calculates the reference distance of all distance constraints
+ *
+ * @param simulationBox
+ *
+ */
+void DistanceConstraint::applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox)
+{
+    const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+    const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+
+    auto dPos = pos1 - pos2;
+    simulationBox.applyPBC(dPos);
+}

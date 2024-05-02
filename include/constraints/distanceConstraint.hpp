@@ -54,6 +54,9 @@ namespace constraints
         double _springConstant;
         double _dSpringConstantDt;
 
+        double               _energy = 0.0;
+        linearAlgebra::Vec3D _force1 = {0.0};
+
       public:
         DistanceConstraint(simulationBox::Molecule *molecule1,
                            simulationBox::Molecule *molecule2,
@@ -65,6 +68,8 @@ namespace constraints
                            const double             dSpringConstantDt)
             : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2), _lowerDistance(lowerDistance),
               _upperDistance(upperDistance), _springConstant(springConstant), _dSpringConstantDt(dSpringConstantDt){};
+
+        void applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox);
     };
 
 }   // namespace constraints

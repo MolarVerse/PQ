@@ -53,6 +53,8 @@ namespace input
         void parseShakeIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRattleTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseRattleIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
+        void parseDistanceConstraintActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace input
