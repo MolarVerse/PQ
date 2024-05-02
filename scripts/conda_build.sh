@@ -4,24 +4,75 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
+# print nice message to the user
+echo "#################################################"
+echo "#       Building PQAnalysis conda package       #"
+echo "#################################################"
+echo ""
+
+echo "(!) creating conda environment $1 with python 3.12"
+echo ""
 conda create -n $1 python=3.12 -y -q 1>/dev/null
+
+echo "(!) activating conda environment $1"
+echo ""
 source activate $1
 
 # Install dependencies
+echo "(!) installing dependencies"
+echo ""
 python -m pip install cmake -q 1>/dev/null
-python -m pip install PQAnalysis -q 1>/dev/null
 
 rm -rf PQ
 
-git clone https://github.com/MolarVerse/PQ.git 1>/dev/null
+# check if gcc version is at least 13
+gcc_version=$(gcc --version | grep ^gcc | sed 's/^.* //g')
+if [ $(echo "$gcc_version >= 13" | bc) -eq 0 ]; then
+  echo "Error: gcc version must be at least 13"
+  exit 1
+fi
+
+# Clone and build PQ
+echo "(!) cloning PQ from github"
+echo ""
+git clone https://github.com/MolarVerse/PQ.git -q 1>/dev/null
 cd PQ
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX 1>/dev/null
-make 1>/dev/null
-make install 1>/dev/null
+# Build PQ
+echo "(!) building PQ"
+echo ""
+#write cmake to /dev/null stderr and stdout and check if it is successful
+cmake_success=$(cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX 2>&1 >/dev/null)
+if [ $? -ne 0 ]; then
+  echo "Error: cmake failed"
+  echo $cmake_success
+  exit 1
+fi
+#write make to /dev/null stderr and stdout and check if it is successful
+make_success=$(make 2>&1 >/dev/null)
+if [ $? -ne 0 ]; then
+  echo "Error: make failed"
+  echo $make_success
+  exit 1
+fi
+#write make install to /dev/null stderr and stdout and check if it is successful
+make_install_success=$(make install 2>&1 >/dev/null)
+if [ $? -ne 0 ]; then
+  echo "Error: make install failed"
+  echo $make_install_success
+  exit 1
+fi
 cd ..
 cd ..
 
-# Deactivate environment
-source deactivate 1>/dev/null
+echo "#################################################"
+echo "#          conda env setup finished             #"
+echo "#################################################"
+echo "#                                               #"
+echo "#  To activate the environment run:             #"
+echo "#  source activate $1                           #"
+echo "#                                               #"
+echo "#  To deactivate the environment run:           #"
+echo "#  source deactivate                            #"
+echo "#################################################"
