@@ -88,3 +88,5 @@ rpmd_n_replica          false
 qm_center               false
 qm_only_list            false
 mm_only_list            false
+qm_charges              false
+qm_core_radius

@@ -71,7 +71,22 @@ echo "#          conda env setup finished             #"
 echo "#################################################"
 echo "#                                               #"
 echo "#  To activate the environment run:             #"
-echo "#  source activate $1                           #"
+
+#adjust length of whitespaces after $1 before #
+# calculate length of $1
+length=$(echo -n $1 | wc -c)
+# calculate length of "source activate "
+length2=$(echo -n "source activate " | wc -c)
+# calculate total length of string
+total_length=$(echo -n "#################################################" | wc -c)
+# calculate number of whitespaces
+whitespaces=$((total_length - length - length2 - 2))
+# if whitespaces is negative set it to 1
+if [ $whitespaces -lt 1 ]; then
+  whitespaces=1
+fi
+
+echo "#  source activate $1$(printf '%*s' $whitespaces) #"
 echo "#                                               #"
 echo "#  To deactivate the environment run:           #"
 echo "#  source deactivate                            #"

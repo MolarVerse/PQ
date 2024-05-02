@@ -55,6 +55,10 @@ namespace input
             const std::vector<std::string> &lineElements,
             const size_t                    lineNumber
         );
+        void parseQMCoreRadius(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
     };
 
 }   // namespace input

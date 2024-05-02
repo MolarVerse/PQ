@@ -42,7 +42,10 @@ namespace settings
         static inline std::string _qmCenterString   = "";
         static inline std::string _qmOnlyListString = "";
         static inline std::string _mmOnlyListString = "";
-        static inline bool        _useQMCharges     = false;
+
+        static inline bool _useQMCharges = false;
+
+        static inline double _qmCoreRadius = 0.0;
 
        public:
         /********************
@@ -65,6 +68,8 @@ namespace settings
 
         static void setUseQMCharges(const bool useQMCharges) { _useQMCharges = useQMCharges; }
 
+        static void setQMCoreRadius(const double qmCoreRadius) { _qmCoreRadius = qmCoreRadius; }
+
         /********************
          * standard getters *
          ********************/
@@ -73,6 +78,7 @@ namespace settings
         [[nodiscard]] static std::string getQMOnlyListString() { return _qmOnlyListString; }
         [[nodiscard]] static std::string getMMOnlyListString() { return _mmOnlyListString; }
         [[nodiscard]] static bool        getUseQMCharges() { return _useQMCharges; }
+        [[nodiscard]] static double      getQMCoreRadius() { return _qmCoreRadius; }
     };
 }   // namespace settings
 

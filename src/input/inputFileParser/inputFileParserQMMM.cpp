@@ -54,6 +54,11 @@ InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine) : InputFilePars
     addKeyword(
         std::string("qm_charges"), bind_front(&InputFileParserQMMM::parseUseQMCharges, this), false
     );
+    addKeyword(
+        std::string("qm_core_radius"),
+        bind_front(&InputFileParserQMMM::parseQMCoreRadius, this),
+        false
+    );
 }
 
 /**
@@ -115,6 +120,8 @@ void InputFileParserQMMM::parseUseQMCharges(
     const size_t                    lineNumber
 )
 {
+    checkCommand(lineElements, lineNumber);
+
     auto use_qm_charges = utilities::toLowerCopy(lineElements[2]);
 
     if ("qm" == use_qm_charges)
@@ -127,4 +134,29 @@ void InputFileParserQMMM::parseUseQMCharges(
         throw customException::InputFileException(std::format(
             "Invalid qm_charges \"{}\" in input file - possible values are: qm, mm", lineElements[2]
         ));
+}
+
+/**
+ * @brief parse QM core radius
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQMMM::parseQMCoreRadius(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto qmCoreRadius = std::stod(lineElements[2]);
+
+    if (qmCoreRadius < 0.0)
+        throw customException::InputFileException(std::format(
+            "Invalid {} {} in input file - must be a positive number",
+            lineElements[0],
+            lineElements[2]
+        ));
+
+    settings::QMMMSettings::setQMCoreRadius(qmCoreRadius);
 }
