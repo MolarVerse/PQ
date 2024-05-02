@@ -24,6 +24,9 @@
 
 #define _QMMM_SETUP_HPP_
 
+#include <string>   // for string
+#include <vector>   // for vector
+
 namespace engine
 {
     class QMMMMDEngine;   // forward declaration
@@ -47,8 +50,11 @@ namespace setup
        public:
         explicit QMMMSetup(engine::QMMMMDEngine &engine) : _engine(engine){};
 
-        void setup();
-        void setupQMCenter();
+        void             setup();
+        void             setupQMCenter();
+        void             setupQMOnlyList();
+        void             setupMMOnlyList();
+        std::vector<int> parseSelection(const std::string &selection, const std::string &key);
     };
 
 }   // namespace setup

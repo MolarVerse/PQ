@@ -49,6 +49,8 @@ namespace input
         explicit InputFileParserQMMM(engine::Engine &);
 
         void parseQMCenter(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseQMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseMMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace input

@@ -86,3 +86,5 @@ qm_script_full_path     false
 rpmd_n_replica          false
 
 qm_center               false
+qm_only_list            false
+mm_only_list            false

@@ -45,6 +45,12 @@ InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine) : InputFilePars
     addKeyword(
         std::string("qm_center"), bind_front(&InputFileParserQMMM::parseQMCenter, this), false
     );
+    addKeyword(
+        std::string("qm_only_list"), bind_front(&InputFileParserQMMM::parseQMOnlyList, this), false
+    );
+    addKeyword(
+        std::string("mm_only_list"), bind_front(&InputFileParserQMMM::parseMMOnlyList, this), false
+    );
 }
 
 /**
@@ -53,7 +59,7 @@ InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine) : InputFilePars
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQMMM::parseQMCenter(
+void InputFileParserQMMM::parseQMCenter(   // const not applicable here
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -61,4 +67,36 @@ void InputFileParserQMMM::parseQMCenter(
     checkCommand(lineElements, lineNumber);
 
     settings::QMMMSettings::setQMCenterString(lineElements[2]);
+}
+
+/**
+ * @brief parse list of atoms which should be treated with QM only
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQMMM::parseQMOnlyList(   // const not applicable here
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    settings::QMMMSettings::setMMOnlyListString(lineElements[2]);
+}
+
+/**
+ * @brief parse list of atoms which should be treated with MM only
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQMMM::parseMMOnlyList(   // const not applicable here
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    settings::QMMMSettings::setMMOnlyListString(lineElements[2]);
 }

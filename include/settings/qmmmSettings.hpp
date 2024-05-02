@@ -39,15 +39,29 @@ namespace settings
     class QMMMSettings
     {
        private:
-        static inline std::string _qmCenterString = "";
+        static inline std::string _qmCenterString   = "";
+        static inline std::string _qmOnlyListString = "";
+        static inline std::string _mmOnlyListString = "";
 
        public:
-        static void setQMCenterString(const std::string_view qmCenterString)
+        static void setQMCenterString(const std::string_view qmCenter)
         {
-            _qmCenterString = qmCenterString;
+            _qmCenterString = qmCenter;
+        }
+
+        static void setQMOnlyListString(const std::string_view qmOnlyList)
+        {
+            _qmOnlyListString = qmOnlyList;
+        }
+
+        static void setMMOnlyListString(const std::string_view mmOnlyList)
+        {
+            _mmOnlyListString = mmOnlyList;
         }
 
         static std::string getQMCenterString() { return _qmCenterString; }
+        static std::string getQMOnlyListString() { return _qmOnlyListString; }
+        static std::string getMMOnlyListString() { return _mmOnlyListString; }
     };
 }   // namespace settings
 

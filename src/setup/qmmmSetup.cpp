@@ -58,51 +58,105 @@ void setup::setupQMMM(engine::QMMMMDEngine &engine)
  * @brief setup QMMM-MD
  *
  */
-void QMMMSetup::setup() { setupQMCenter(); }
+void QMMMSetup::setup()
+{
+    setupQMCenter();
+    throw customException::UserInputException("Not implemented");
+}
 
+/**
+ * @brief setup QM center
+ *
+ */
 void QMMMSetup::setupQMCenter()
+{
+    const auto qmCenter = parseSelection(settings::QMMMSettings::getQMCenterString(), "qm_center");
+}
+
+/**
+ * @brief setup QM only list
+ *
+ */
+void QMMMSetup::setupQMOnlyList()
+{
+    const auto qmOnlyList =
+        parseSelection(settings::QMMMSettings::getQMOnlyListString(), "qm_only_list");
+}
+
+/**
+ * @brief setup MM only list
+ *
+ */
+void QMMMSetup::setupMMOnlyList()
+{
+    const auto mmOnlyList =
+        parseSelection(settings::QMMMSettings::getMMOnlyListString(), "mm_only_list");
+}
+
+/**
+ * @brief parse selection string
+ *
+ * @details This function parses a string that contains a selection of atoms. The selection can be
+ * a list of atom indices or a selection string that is understood by the PQAnalysis Python package.
+ * In order to use the full selection parser power of the PQAnalysis Python package, the PQ build
+ * must be compiled with Python bindings. If the PQ build is compiled without Python bindings, the
+ * selection string must be a comma-separated list of integers, representing the atom indices in the
+ * restart file that should be treated as the selection. If the selection is empty, the function
+ * returns a vector with a single element, 0.
+ *
+ * @param selection The selection string
+ * @param key The key of the selection string
+ *
+ * @return std::vector<int> The selection vector
+ *
+ * @throws customException::InputFileException if the selection string contains characters that are
+ * not digits or commas and the PQ build is compiled without Python bindings.
+ */
+std::vector<int> QMMMSetup::parseSelection(const std::string &selection, const std::string &key)
 {
     std::string restartFileName       = settings::FileSettings::getStartFileName();
     std::string moldescriptorFileName = settings::FileSettings::getMolDescriptorFileName();
-    std::string qmCenterString        = settings::QMMMSettings::getQMCenterString();
+
+    if (selection.empty())
+        return {0};
 
 #ifdef PYTHON_ENABLED
-    std::vector<int> qmCenter =
-        pq_python::select(qmCenterString, restartFileName, moldescriptorFileName);
+    std::vector<int> selectionVector =
+        pq_python::select(selection, restartFileName, moldescriptorFileName);
 #else
     // check if string contains any characters that are not digits or commas
-    if (qmCenterString.find_first_not_of("0123456789,") != std::string::npos)
+    if (selection.find_first_not_of("0123456789,") != std::string::npos)
     {
         throw customException::InputFileException(std::format(
-            "The qm_center string {} contains characters that are not digits or commas. The "
-            "current build of PQ was compiled without Python bindings, so the qm_center string "
+            "The value of key {} - {} contains characters that are not digits or commas. The "
+            "current build of PQ was compiled without Python bindings, so the {} string "
             "must be a comma-separated list of integers, representing the atom indices in the "
-            "restart file that should be treated as the QM center."
+            "restart file that should be treated as the {}."
             "In order to use the full selection parser power of the PQAnalysis Python package, "
             "the PQ build must be compiled with Python bindings.",
-            qmCenterString
+            key,
+            selection,
+            key,
+            key
         ));
     }
 
     // parse the qm_center string
-    std::vector<int> qmCenter;
+    std::vector<int> selectionVector;
     size_t           pos = 0;
-    while (pos < qmCenterString.size())
+    while (pos < selection.size())
     {
-        size_t nextPos = qmCenterString.find(',', pos);
+        size_t nextPos = selection.find(',', pos);
         if (nextPos == std::string::npos)
         {
-            nextPos = qmCenterString.size();
+            nextPos = selection.size();
         }
-        std::string_view atomIndexString(qmCenterString.c_str() + pos, nextPos - pos);
-        qmCenter.push_back(std::stoi(std::string(atomIndexString)));
+        std::string_view atomIndexString(selection.c_str() + pos, nextPos - pos);
+        selectionVector.push_back(std::stoi(std::string(atomIndexString)));
         pos = nextPos + 1;
     }
 
-    for (int i : qmCenter)
-    {
-        printf("%d\n", i);
-    }
-
 #endif
+
+    return selectionVector;
 }
