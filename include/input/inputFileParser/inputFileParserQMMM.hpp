@@ -51,6 +51,10 @@ namespace input
         void parseQMCenter(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseQMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseMMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseUseQMCharges(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
     };
 
 }   // namespace input

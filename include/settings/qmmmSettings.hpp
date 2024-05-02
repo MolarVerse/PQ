@@ -42,8 +42,12 @@ namespace settings
         static inline std::string _qmCenterString   = "";
         static inline std::string _qmOnlyListString = "";
         static inline std::string _mmOnlyListString = "";
+        static inline bool        _useQMCharges     = false;
 
        public:
+        /********************
+         * standard setters *
+         ********************/
         static void setQMCenterString(const std::string_view qmCenter)
         {
             _qmCenterString = qmCenter;
@@ -59,9 +63,16 @@ namespace settings
             _mmOnlyListString = mmOnlyList;
         }
 
-        static std::string getQMCenterString() { return _qmCenterString; }
-        static std::string getQMOnlyListString() { return _qmOnlyListString; }
-        static std::string getMMOnlyListString() { return _mmOnlyListString; }
+        static void setUseQMCharges(const bool useQMCharges) { _useQMCharges = useQMCharges; }
+
+        /********************
+         * standard getters *
+         ********************/
+
+        [[nodiscard]] static std::string getQMCenterString() { return _qmCenterString; }
+        [[nodiscard]] static std::string getQMOnlyListString() { return _qmOnlyListString; }
+        [[nodiscard]] static std::string getMMOnlyListString() { return _mmOnlyListString; }
+        [[nodiscard]] static bool        getUseQMCharges() { return _useQMCharges; }
     };
 }   // namespace settings
 
