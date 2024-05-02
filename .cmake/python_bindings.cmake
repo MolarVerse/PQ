@@ -1,4 +1,9 @@
-find_package(Python 3.12 REQUIRED COMPONENTS Interpreter Development)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
+
+# check if python version is at least 3.12
+if(Python_VERSION VERSION_LESS 3.12)
+    message(FATAL_ERROR "Python version 3.12 or higher is required")
+endif()
 
 # check if pqanalysis is already installed if yes then skip the installation
 execute_process(

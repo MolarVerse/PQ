@@ -1,6 +1,6 @@
 #check if one command line argument is provided else throw an error
 if [ $# -ne 1 ]; then
-  echo "Usage: $0 <path to conda>"
+  echo "Usage: $0 <name of env>"
   exit 1
 fi
 
