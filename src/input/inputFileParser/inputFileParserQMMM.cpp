@@ -59,6 +59,16 @@ InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine) : InputFilePars
         bind_front(&InputFileParserQMMM::parseQMCoreRadius, this),
         false
     );
+    addKeyword(
+        std::string("qmmm_layer_radius"),
+        bind_front(&InputFileParserQMMM::parseQMCoreRadius, this),
+        false
+    );
+    addKeyword(
+        std::string("qmmm_smoothing_radius"),
+        bind_front(&InputFileParserQMMM::parseQMCoreRadius, this),
+        false
+    );
 }
 
 /**
@@ -134,6 +144,8 @@ void InputFileParserQMMM::parseUseQMCharges(
         throw customException::InputFileException(std::format(
             "Invalid qm_charges \"{}\" in input file - possible values are: qm, mm", lineElements[2]
         ));
+
+    throw customException::UserInputException("Not implemented");
 }
 
 /**
@@ -159,4 +171,60 @@ void InputFileParserQMMM::parseQMCoreRadius(
         ));
 
     settings::QMMMSettings::setQMCoreRadius(qmCoreRadius);
+
+    throw customException::UserInputException("Not implemented");
+}
+
+/**
+ * @brief parse QMMM layer radius
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQMMM::parseQMMMLayerRadius(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto qmmmLayerRadius = std::stod(lineElements[2]);
+
+    if (qmmmLayerRadius < 0.0)
+        throw customException::InputFileException(std::format(
+            "Invalid {} {} in input file - must be a positive number",
+            lineElements[0],
+            lineElements[2]
+        ));
+
+    settings::QMMMSettings::setQMMMLayerRadius(qmmmLayerRadius);
+
+    throw customException::UserInputException("Not implemented");
+}
+
+/**
+ * @brief parse QMMM smoothing radius
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQMMM::parseQMMMSmoothingRadius(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto qmmmSmoothingRadius = std::stod(lineElements[2]);
+
+    if (qmmmSmoothingRadius < 0.0)
+        throw customException::InputFileException(std::format(
+            "Invalid {} {} in input file - must be a positive number",
+            lineElements[0],
+            lineElements[2]
+        ));
+
+    settings::QMMMSettings::setQMMMSmoothingRadius(qmmmSmoothingRadius);
+
+    throw customException::UserInputException("Not implemented");
 }

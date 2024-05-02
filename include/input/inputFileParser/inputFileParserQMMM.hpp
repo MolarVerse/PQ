@@ -51,11 +51,23 @@ namespace input
         void parseQMCenter(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseQMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseMMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
+
         void parseUseQMCharges(
             const std::vector<std::string> &lineElements,
             const size_t                    lineNumber
         );
+
         void parseQMCoreRadius(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+
+        void parseQMMMLayerRadius(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+
+        void parseQMMMSmoothingRadius(
             const std::vector<std::string> &lineElements,
             const size_t                    lineNumber
         );

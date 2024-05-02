@@ -45,7 +45,9 @@ namespace settings
 
         static inline bool _useQMCharges = false;
 
-        static inline double _qmCoreRadius = 0.0;
+        static inline double _qmCoreRadius        = 0.0;
+        static inline double _qmmmLayerRadius     = 0.0;
+        static inline double _qmmmSmoothingRadius = 0.0;
 
        public:
         /********************
@@ -69,6 +71,14 @@ namespace settings
         static void setUseQMCharges(const bool useQMCharges) { _useQMCharges = useQMCharges; }
 
         static void setQMCoreRadius(const double qmCoreRadius) { _qmCoreRadius = qmCoreRadius; }
+        static void setQMMMLayerRadius(const double qmmmLayerRadius)
+        {
+            _qmmmLayerRadius = qmmmLayerRadius;
+        }
+        static void setQMMMSmoothingRadius(const double qmmmSmoothingRadius)
+        {
+            _qmmmSmoothingRadius = qmmmSmoothingRadius;
+        }
 
         /********************
          * standard getters *
@@ -77,8 +87,12 @@ namespace settings
         [[nodiscard]] static std::string getQMCenterString() { return _qmCenterString; }
         [[nodiscard]] static std::string getQMOnlyListString() { return _qmOnlyListString; }
         [[nodiscard]] static std::string getMMOnlyListString() { return _mmOnlyListString; }
-        [[nodiscard]] static bool        getUseQMCharges() { return _useQMCharges; }
-        [[nodiscard]] static double      getQMCoreRadius() { return _qmCoreRadius; }
+
+        [[nodiscard]] static bool getUseQMCharges() { return _useQMCharges; }
+
+        [[nodiscard]] static double getQMCoreRadius() { return _qmCoreRadius; }
+        [[nodiscard]] static double getQMMMLayerRadius() { return _qmmmLayerRadius; }
+        [[nodiscard]] static double getQMMMSmoothingRadius() { return _qmmmSmoothingRadius; }
     };
 }   // namespace settings
 
