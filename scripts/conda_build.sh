@@ -80,10 +80,10 @@ length2=$(echo -n "source activate " | wc -c)
 # calculate total length of string
 total_length=$(echo -n "#################################################" | wc -c)
 # calculate number of whitespaces
-whitespaces=$((total_length - length - length2 - 2))
+whitespaces=$((total_length - length - length2 - 5))
 # if whitespaces is negative set it to 1
 if [ $whitespaces -lt 1 ]; then
-  whitespaces=1
+  whitespaces=0
 fi
 
 echo "#  source activate $1$(printf '%*s' $whitespaces) #"
