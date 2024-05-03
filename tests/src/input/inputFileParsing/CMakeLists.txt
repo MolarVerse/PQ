@@ -17,6 +17,7 @@ set(source_files
     testParserNonCoulomb.cpp
     testParserFiles.cpp
     testParserQM.cpp
+    testParserRingPolymer.cpp
 )
 
 foreach(source_file ${source_files})

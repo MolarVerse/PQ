@@ -42,6 +42,10 @@ if(${BUILD_WITH_GCOVR})
         include/engine/*
     )
 
+    set(GCOVR_ADDITIONAL_ARGS
+        "--exclude-throw-branches"
+    )
+
     setup_target_for_coverage_gcovr_html(
         NAME coverage
         EXECUTABLE ctest
@@ -55,7 +59,11 @@ if(${BUILD_WITH_GCOVR})
     )
 
     setup_target_for_coverage_lcov(
-        NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS " --no-external " EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)
+        NAME coverage_lcov
+        EXECUTABLE ctest
+        LCOV_ARGS " --no-external "
+        EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*
+    )
 endif()
 
 # add_subdirectory(tests)

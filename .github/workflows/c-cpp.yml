@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [main]
+    branches: ['*']
   pull_request:
-    branches: [main]
+    branches: ['*']
   workflow_dispatch:
 
 jobs:
@@ -38,11 +38,9 @@ jobs:
       - name: Test Project
         run: |
           cd build
-          make test
+          make coverage_xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          gcov: true
-          gcov_executable: gcov-13
           token: ${{ secrets.CODECOV_TOKEN }}
