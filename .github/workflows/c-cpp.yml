@@ -28,6 +28,16 @@ jobs:
           sudo apt-get install gcovr
         shell: bash
 
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: install coverage
+        run: |
+          python -m pip install coverage
+        shell: bash
+
       - name: Create build directory and run CMake
         run: cmake -S . -B build -G "Unix Makefiles" -DBUILD_WITH_GCOVR=ON
         env:
