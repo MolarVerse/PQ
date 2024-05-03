@@ -23,11 +23,6 @@ jobs:
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
         shell: bash
 
-      - name: install gcovr
-        run: |
-          sudo apt-get install gcovr
-        shell: bash
-
       - name: setup python
         uses: actions/setup-python@v2
         with:
@@ -39,12 +34,6 @@ jobs:
           python -m pip install gcovr
         shell: bash
 
-      - name: Create build directory and run CMake
-        run: cmake -S . -B build -G "Unix Makefiles" -DBUILD_WITH_GCOVR=ON
-        env:
-          CC: gcc-13
-          CXX: g++-13
-
       - name: Build and Test Project
         run: |
           mkdir build
@@ -52,6 +41,9 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
           make -j20
           make coverage_xml
+        env:
+          CC: gcc-13
+          CXX: g++-13
 
 
       - name: Upload coverage to Codecov
