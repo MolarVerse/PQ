@@ -45,6 +45,9 @@ if(${BUILD_WITH_GCOVR})
 
     set(GCOVR_ADDITIONAL_ARGS
         "--exclude-throw-branches"
+        "--exclude-function-lines"
+        "--exclude-noncode-lines"
+        "--gcov-ignore-errors=no_working_dir_found"
     )
 
     setup_target_for_coverage_gcovr_html(
