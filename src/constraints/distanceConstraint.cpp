@@ -33,13 +33,42 @@ using namespace constraints;
  * @brief calculates the reference distance of all distance constraints
  *
  * @param simulationBox
+ * @param dt
  *
  */
-void DistanceConstraint::applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox)
+void DistanceConstraint::applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox, const double dt)
 {
+    _lowerEnergy = 0.0;
+    _upperEnergy = 0.0;
+    _force       = {0.0};
+
+    if (dt < 0.0)
+        return;
+
     const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
 
-    auto dPos = pos1 - pos2;
+    auto dPos = pos2 - pos1;
     simulationBox.applyPBC(dPos);
+
+    const auto distance       = norm(dPos);
+    const auto force_constant = _springConstant + _dSpringConstantDt * dt;
+
+    if (distance < _lowerDistance)
+    {
+        const auto delta = _lowerDistance - distance;
+        _lowerEnergy     = 0.5 * force_constant * delta * delta;
+        _force           = -force_constant * delta * dPos / distance;
+    }
+    else if (distance > _upperDistance)
+    {
+        const auto delta = distance - _upperDistance;
+        _upperEnergy     = 0.5 * force_constant * delta * delta;
+        _force           = +force_constant * delta * dPos / distance;
+    }
+    else
+        return;
+
+    _molecules[0]->addAtomForce(_atomIndices[0], _force);
+    _molecules[1]->addAtomForce(_atomIndices[1], -_force);
 }

@@ -73,10 +73,17 @@ InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) :
 void InputFileParserConstraints::parseShakeActivated(const std::vector<std::string> &lineElements, const size_t lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+
     if (lineElements[2] == "on")
+    {
         _engine.getConstraints().activateShake();
+        settings::ConstraintSettings::activateShake();
+    }
     else if (lineElements[2] == "off")
+    {
         _engine.getConstraints().deactivateShake();
+        settings::ConstraintSettings::deactivateShake();
+    }
     else
     {
         auto message = format(R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
@@ -185,10 +192,17 @@ void InputFileParserConstraints::parseDistanceConstraintActivated(const std::vec
                                                                   const size_t                    lineNumber)
 {
     checkCommand(lineElements, lineNumber);
+
     if (lineElements[2] == "on")
+    {
         _engine.getConstraints().activateDistanceConstraints();
+        settings::ConstraintSettings::activateDistanceConstraints();
+    }
     else if (lineElements[2] == "off")
+    {
         _engine.getConstraints().deactivateDistanceConstraints();
+        settings::ConstraintSettings::deactivateDistanceConstraints();
+    }
     else
     {
         auto message =

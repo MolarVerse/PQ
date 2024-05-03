@@ -22,6 +22,7 @@
 
 #include "energyOutput.hpp"
 
+#include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
@@ -90,6 +91,12 @@ void EnergyOutput::write(const size_t step, const double loopTime, const physica
     {
         _fp << std::format("{:20.12f}\t", data.getNoseHooverMomentumEnergy());
         _fp << std::format("{:20.12f}\t", data.getNoseHooverFrictionEnergy());
+    }
+
+    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    {
+        _fp << std::format("{:20.12f}\t", data.getLowerDistanceConstraints());
+        _fp << std::format("{:20.12f}\t", data.getUpperDistanceConstraints());
     }
 
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));

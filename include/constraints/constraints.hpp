@@ -24,9 +24,10 @@
 
 #define _CONSTRAINTS_HPP_
 
-#include "bondConstraint.hpp"
-#include "defaults.hpp"
-#include "distanceConstraint.hpp"
+#include "bondConstraint.hpp"       // for BondConstraint
+#include "defaults.hpp"             // for defaults
+#include "distanceConstraint.hpp"   // for DistanceConstraint
+#include "physicalData.hpp"         // for PhysicalData
 
 #include <cstddef>
 #include <vector>
@@ -60,6 +61,7 @@ namespace constraints
 
         double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
         double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
+        double _startTime       = 0.0;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
@@ -69,7 +71,9 @@ namespace constraints
 
         void applyShake(const simulationBox::SimulationBox &simulationBox);
         void applyRattle();
-        void applyDistanceConstraints(const simulationBox::SimulationBox &simulationBox);
+        void applyDistanceConstraints(const simulationBox::SimulationBox &simulationBox,
+                                      physicalData::PhysicalData         &data,
+                                      const double                        dt);
 
         /*****************************
          * standard activate methods *
@@ -116,6 +120,8 @@ namespace constraints
         void setRattleMaxIter(const size_t rattleMaxIter) { _rattleMaxIter = rattleMaxIter; }
         void setShakeTolerance(const double shakeTolerance) { _shakeTolerance = shakeTolerance; }
         void setRattleTolerance(const double rattleTolerance) { _rattleTolerance = rattleTolerance; }
+
+        void setStartTime(const double startTime) { _startTime = startTime; }
     };
 
 }   // namespace constraints

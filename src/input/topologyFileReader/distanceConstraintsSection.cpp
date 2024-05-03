@@ -75,8 +75,6 @@ void DistanceConstraintsSection::processSection(std::vector<std::string> &lineEl
         molecule1, molecule2, atomIndex1, atomIndex2, lowerDistance, upperDistance, springConstant, dSpringConstantDt);
 
     engine.getConstraints().addDistanceConstraint(distanceConstraint);
-
-    throw customException::TopologyException("Not implemented yet!");
 }
 
 /**

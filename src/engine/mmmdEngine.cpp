@@ -78,6 +78,8 @@ void MMMDEngine::takeStep()
 
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
+    _constraints.applyDistanceConstraints(_simulationBox, _physicalData, _timings.calculateTotalSimulationTime(_step));
+
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);

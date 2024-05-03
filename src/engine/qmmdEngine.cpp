@@ -22,11 +22,12 @@
 
 #include "qmmdEngine.hpp"
 
-#include "integrator.hpp"      // for Integrator
-#include "manostat.hpp"        // for Manostat
-#include "physicalData.hpp"    // for PhysicalData
-#include "resetKinetics.hpp"   // for ResetKinetics
-#include "thermostat.hpp"      // for Thermostat
+#include "integrator.hpp"        // for Integrator
+#include "manostat.hpp"          // for Manostat
+#include "physicalData.hpp"      // for PhysicalData
+#include "resetKinetics.hpp"     // for ResetKinetics
+#include "thermostat.hpp"        // for Thermostat
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 using engine::QMMDEngine;
 
@@ -54,6 +55,8 @@ void QMMDEngine::takeStep()
     _constraints.applyShake(_simulationBox);
 
     _qmRunner->run(_simulationBox, _physicalData);
+
+    _constraints.applyDistanceConstraints(_simulationBox, _physicalData, _timings.calculateTotalSimulationTime(_step));
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
