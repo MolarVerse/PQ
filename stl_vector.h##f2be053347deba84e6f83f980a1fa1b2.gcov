@@ -1,0 +1,3619 @@
+        -:    0:Source:/home/jag/software/gcc-13.1.0/install/include/c++/13.1.0/bits/stl_vector.h
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:// Vector implementation -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2001-2023 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/*
+        -:   26: *
+        -:   27: * Copyright (c) 1994
+        -:   28: * Hewlett-Packard Company
+        -:   29: *
+        -:   30: * Permission to use, copy, modify, distribute and sell this software
+        -:   31: * and its documentation for any purpose is hereby granted without fee,
+        -:   32: * provided that the above copyright notice appear in all copies and
+        -:   33: * that both that copyright notice and this permission notice appear
+        -:   34: * in supporting documentation.  Hewlett-Packard Company makes no
+        -:   35: * representations about the suitability of this software for any
+        -:   36: * purpose.  It is provided "as is" without express or implied warranty.
+        -:   37: *
+        -:   38: *
+        -:   39: * Copyright (c) 1996
+        -:   40: * Silicon Graphics Computer Systems, Inc.
+        -:   41: *
+        -:   42: * Permission to use, copy, modify, distribute and sell this software
+        -:   43: * and its documentation for any purpose is hereby granted without fee,
+        -:   44: * provided that the above copyright notice appear in all copies and
+        -:   45: * that both that copyright notice and this permission notice appear
+        -:   46: * in supporting documentation.  Silicon Graphics makes no
+        -:   47: * representations about the suitability of this  software for any
+        -:   48: * purpose.  It is provided "as is" without express or implied warranty.
+        -:   49: */
+        -:   50:
+        -:   51:/** @file bits/stl_vector.h
+        -:   52: *  This is an internal header file, included by other library headers.
+        -:   53: *  Do not attempt to use it directly. @headername{vector}
+        -:   54: */
+        -:   55:
+        -:   56:#ifndef _STL_VECTOR_H
+        -:   57:#define _STL_VECTOR_H 1
+        -:   58:
+        -:   59:#include <bits/stl_iterator_base_funcs.h>
+        -:   60:#include <bits/functexcept.h>
+        -:   61:#include <bits/concept_check.h>
+        -:   62:#if __cplusplus >= 201103L
+        -:   63:#include <initializer_list>
+        -:   64:#endif
+        -:   65:#if __cplusplus >= 202002L
+        -:   66:# include <compare>
+        -:   67:#define __cpp_lib_constexpr_vector 201907L
+        -:   68:#endif
+        -:   69:
+        -:   70:#include <debug/assertions.h>
+        -:   71:
+        -:   72:#if _GLIBCXX_SANITIZE_STD_ALLOCATOR && _GLIBCXX_SANITIZE_VECTOR
+        -:   73:extern "C" void
+        -:   74:__sanitizer_annotate_contiguous_container(const void*, const void*,
+        -:   75:					  const void*, const void*);
+        -:   76:#endif
+        -:   77:
+        -:   78:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   79:{
+        -:   80:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   81:_GLIBCXX_BEGIN_NAMESPACE_CONTAINER
+        -:   82:
+        -:   83:  /// See bits/stl_deque.h's _Deque_base for an explanation.
+        -:   84:  template<typename _Tp, typename _Alloc>
+        -:   85:    struct _Vector_base
+        -:   86:    {
+        -:   87:      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+        -:   88:	rebind<_Tp>::other _Tp_alloc_type;
+        -:   89:      typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>::pointer
+        -:   90:       	pointer;
+        -:   91:
+        -:   92:      struct _Vector_impl_data
+        -:   93:      {
+        -:   94:	pointer _M_start;
+        -:   95:	pointer _M_finish;
+        -:   96:	pointer _M_end_of_storage;
+        -:   97:
+        -:   98:	_GLIBCXX20_CONSTEXPR
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_impl_data::_Vector_impl_data():
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_impl_data::_Vector_impl_data() called 0 returned 0% blocks executed 0%
+    #####:   99:	_Vector_impl_data() _GLIBCXX_NOEXCEPT
+    #####:  100:	: _M_start(), _M_finish(), _M_end_of_storage()
+    #####:  101:	{ }
+------------------
+        -:  102:
+        -:  103:#if __cplusplus >= 201103L
+        -:  104:	_GLIBCXX20_CONSTEXPR
+        -:  105:	_Vector_impl_data(_Vector_impl_data&& __x) noexcept
+        -:  106:	: _M_start(__x._M_start), _M_finish(__x._M_finish),
+        -:  107:	  _M_end_of_storage(__x._M_end_of_storage)
+        -:  108:	{ __x._M_start = __x._M_finish = __x._M_end_of_storage = pointer(); }
+        -:  109:#endif
+        -:  110:
+        -:  111:	_GLIBCXX20_CONSTEXPR
+        -:  112:	void
+        -:  113:	_M_copy_data(_Vector_impl_data const& __x) _GLIBCXX_NOEXCEPT
+        -:  114:	{
+        -:  115:	  _M_start = __x._M_start;
+        -:  116:	  _M_finish = __x._M_finish;
+        -:  117:	  _M_end_of_storage = __x._M_end_of_storage;
+        -:  118:	}
+        -:  119:
+        -:  120:	_GLIBCXX20_CONSTEXPR
+        -:  121:	void
+        -:  122:	_M_swap_data(_Vector_impl_data& __x) _GLIBCXX_NOEXCEPT
+        -:  123:	{
+        -:  124:	  // Do not use std::swap(_M_start, __x._M_start), etc as it loses
+        -:  125:	  // information used by TBAA.
+        -:  126:	  _Vector_impl_data __tmp;
+        -:  127:	  __tmp._M_copy_data(*this);
+        -:  128:	  _M_copy_data(__x);
+        -:  129:	  __x._M_copy_data(__tmp);
+        -:  130:	}
+        -:  131:      };
+        -:  132:
+        -:  133:      struct _Vector_impl
+        -:  134:	: public _Tp_alloc_type, public _Vector_impl_data
+        -:  135:      {
+        -:  136:	_GLIBCXX20_CONSTEXPR
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    #####:  140:	{ }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_impl::_Vector_impl():
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_impl::_Vector_impl() called 0 returned 0% blocks executed 0%
+    #####:  137:	_Vector_impl() _GLIBCXX_NOEXCEPT_IF(
+    %%%%%:  137-block  0
+        -:  138:	    is_nothrow_default_constructible<_Tp_alloc_type>::value)
+    #####:  139:	: _Tp_alloc_type()
+    %%%%%:  139-block  0
+call    0 never executed
+    #####:  140:	{ }
+------------------
+        -:  141:
+        -:  142:	_GLIBCXX20_CONSTEXPR
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_impl::_Vector_impl(std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&) called 0 returned 0% blocks executed 0%
+    #####:  143:	_Vector_impl(_Tp_alloc_type const& __a) _GLIBCXX_NOEXCEPT
+    %%%%%:  143-block  0
+    #####:  144:	: _Tp_alloc_type(__a)
+    %%%%%:  144-block  0
+call    0 never executed
+    #####:  145:	{ }
+        -:  146:
+        -:  147:#if __cplusplus >= 201103L
+        -:  148:	// Not defaulted, to enforce noexcept(true) even when
+        -:  149:	// !is_nothrow_move_constructible<_Tp_alloc_type>.
+        -:  150:	_GLIBCXX20_CONSTEXPR
+        -:  151:	_Vector_impl(_Vector_impl&& __x) noexcept
+        -:  152:	: _Tp_alloc_type(std::move(__x)), _Vector_impl_data(std::move(__x))
+        -:  153:	{ }
+        -:  154:
+        -:  155:	_GLIBCXX20_CONSTEXPR
+        -:  156:	_Vector_impl(_Tp_alloc_type&& __a) noexcept
+        -:  157:	: _Tp_alloc_type(std::move(__a))
+        -:  158:	{ }
+        -:  159:
+        -:  160:	_GLIBCXX20_CONSTEXPR
+        -:  161:	_Vector_impl(_Tp_alloc_type&& __a, _Vector_impl&& __rv) noexcept
+        -:  162:	: _Tp_alloc_type(std::move(__a)), _Vector_impl_data(std::move(__rv))
+        -:  163:	{ }
+        -:  164:#endif
+        -:  165:
+        -:  166:#if _GLIBCXX_SANITIZE_STD_ALLOCATOR && _GLIBCXX_SANITIZE_VECTOR
+        -:  167:	template<typename = _Tp_alloc_type>
+        -:  168:	  struct _Asan
+        -:  169:	  {
+        -:  170:	    typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>
+        -:  171:	      ::size_type size_type;
+        -:  172:
+        -:  173:	    static _GLIBCXX20_CONSTEXPR void
+        -:  174:	    _S_shrink(_Vector_impl&, size_type) { }
+        -:  175:	    static _GLIBCXX20_CONSTEXPR void
+        -:  176:	    _S_on_dealloc(_Vector_impl&) { }
+        -:  177:
+        -:  178:	    typedef _Vector_impl& _Reinit;
+        -:  179:
+        -:  180:	    struct _Grow
+        -:  181:	    {
+        -:  182:	      _GLIBCXX20_CONSTEXPR _Grow(_Vector_impl&, size_type) { }
+        -:  183:	      _GLIBCXX20_CONSTEXPR void _M_grew(size_type) { }
+        -:  184:	    };
+        -:  185:	  };
+        -:  186:
+        -:  187:	// Enable ASan annotations for memory obtained from std::allocator.
+        -:  188:	template<typename _Up>
+        -:  189:	  struct _Asan<allocator<_Up> >
+        -:  190:	  {
+        -:  191:	    typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>
+        -:  192:	      ::size_type size_type;
+        -:  193:
+        -:  194:	    // Adjust ASan annotation for [_M_start, _M_end_of_storage) to
+        -:  195:	    // mark end of valid region as __curr instead of __prev.
+        -:  196:	    static _GLIBCXX20_CONSTEXPR void
+        -:  197:	    _S_adjust(_Vector_impl& __impl, pointer __prev, pointer __curr)
+        -:  198:	    {
+        -:  199:#if __cpp_lib_is_constant_evaluated
+        -:  200:	      if (std::is_constant_evaluated())
+        -:  201:		return;
+        -:  202:#endif
+        -:  203:	      __sanitizer_annotate_contiguous_container(__impl._M_start,
+        -:  204:		  __impl._M_end_of_storage, __prev, __curr);
+        -:  205:	    }
+        -:  206:
+        -:  207:	    static _GLIBCXX20_CONSTEXPR void
+        -:  208:	    _S_grow(_Vector_impl& __impl, size_type __n)
+        -:  209:	    { _S_adjust(__impl, __impl._M_finish, __impl._M_finish + __n); }
+        -:  210:
+        -:  211:	    static _GLIBCXX20_CONSTEXPR void
+        -:  212:	    _S_shrink(_Vector_impl& __impl, size_type __n)
+        -:  213:	    { _S_adjust(__impl, __impl._M_finish + __n, __impl._M_finish); }
+        -:  214:
+        -:  215:	    static _GLIBCXX20_CONSTEXPR void
+        -:  216:	    _S_on_dealloc(_Vector_impl& __impl)
+        -:  217:	    {
+        -:  218:	      if (__impl._M_start)
+        -:  219:		_S_adjust(__impl, __impl._M_finish, __impl._M_end_of_storage);
+        -:  220:	    }
+        -:  221:
+        -:  222:	    // Used on reallocation to tell ASan unused capacity is invalid.
+        -:  223:	    struct _Reinit
+        -:  224:	    {
+        -:  225:	      explicit _GLIBCXX20_CONSTEXPR
+        -:  226:	      _Reinit(_Vector_impl& __impl) : _M_impl(__impl)
+        -:  227:	      {
+        -:  228:		// Mark unused capacity as valid again before deallocating it.
+        -:  229:		_S_on_dealloc(_M_impl);
+        -:  230:	      }
+        -:  231:
+        -:  232:	      _GLIBCXX20_CONSTEXPR
+        -:  233:	      ~_Reinit()
+        -:  234:	      {
+        -:  235:		// Mark unused capacity as invalid after reallocation.
+        -:  236:		if (_M_impl._M_start)
+        -:  237:		  _S_adjust(_M_impl, _M_impl._M_end_of_storage,
+        -:  238:			    _M_impl._M_finish);
+        -:  239:	      }
+        -:  240:
+        -:  241:	      _Vector_impl& _M_impl;
+        -:  242:
+        -:  243:#if __cplusplus >= 201103L
+        -:  244:	      _Reinit(const _Reinit&) = delete;
+        -:  245:	      _Reinit& operator=(const _Reinit&) = delete;
+        -:  246:#endif
+        -:  247:	    };
+        -:  248:
+        -:  249:	    // Tell ASan when unused capacity is initialized to be valid.
+        -:  250:	    struct _Grow
+        -:  251:	    {
+        -:  252:	      _GLIBCXX20_CONSTEXPR
+        -:  253:	      _Grow(_Vector_impl& __impl, size_type __n)
+        -:  254:	      : _M_impl(__impl), _M_n(__n)
+        -:  255:	      { _S_grow(_M_impl, __n); }
+        -:  256:
+        -:  257:	      _GLIBCXX20_CONSTEXPR
+        -:  258:	      ~_Grow() { if (_M_n) _S_shrink(_M_impl, _M_n); }
+        -:  259:
+        -:  260:	      _GLIBCXX20_CONSTEXPR
+        -:  261:	      void _M_grew(size_type __n) { _M_n -= __n; }
+        -:  262:
+        -:  263:#if __cplusplus >= 201103L
+        -:  264:	      _Grow(const _Grow&) = delete;
+        -:  265:	      _Grow& operator=(const _Grow&) = delete;
+        -:  266:#endif
+        -:  267:	    private:
+        -:  268:	      _Vector_impl& _M_impl;
+        -:  269:	      size_type _M_n;
+        -:  270:	    };
+        -:  271:	  };
+        -:  272:
+        -:  273:#define _GLIBCXX_ASAN_ANNOTATE_REINIT \
+        -:  274:  typename _Base::_Vector_impl::template _Asan<>::_Reinit const \
+        -:  275:	__attribute__((__unused__)) __reinit_guard(this->_M_impl)
+        -:  276:#define _GLIBCXX_ASAN_ANNOTATE_GROW(n) \
+        -:  277:  typename _Base::_Vector_impl::template _Asan<>::_Grow \
+        -:  278:	__attribute__((__unused__)) __grow_guard(this->_M_impl, (n))
+        -:  279:#define _GLIBCXX_ASAN_ANNOTATE_GREW(n) __grow_guard._M_grew(n)
+        -:  280:#define _GLIBCXX_ASAN_ANNOTATE_SHRINK(n) \
+        -:  281:  _Base::_Vector_impl::template _Asan<>::_S_shrink(this->_M_impl, n)
+        -:  282:#define _GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC \
+        -:  283:  _Base::_Vector_impl::template _Asan<>::_S_on_dealloc(this->_M_impl)
+        -:  284:#else // ! (_GLIBCXX_SANITIZE_STD_ALLOCATOR && _GLIBCXX_SANITIZE_VECTOR)
+        -:  285:#define _GLIBCXX_ASAN_ANNOTATE_REINIT
+        -:  286:#define _GLIBCXX_ASAN_ANNOTATE_GROW(n)
+        -:  287:#define _GLIBCXX_ASAN_ANNOTATE_GREW(n)
+        -:  288:#define _GLIBCXX_ASAN_ANNOTATE_SHRINK(n)
+        -:  289:#define _GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC
+        -:  290:#endif // _GLIBCXX_SANITIZE_STD_ALLOCATOR && _GLIBCXX_SANITIZE_VECTOR
+        -:  291:      };
+        -:  292:
+        -:  293:    public:
+        -:  294:      typedef _Alloc allocator_type;
+        -:  295:
+        -:  296:      _GLIBCXX20_CONSTEXPR
+        -:  297:      _Tp_alloc_type&
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_M_get_Tp_allocator():
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_get_Tp_allocator():
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_M_get_Tp_allocator():
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::_M_get_Tp_allocator():
+function std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::_M_get_Tp_allocator():
+function std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_M_get_Tp_allocator():
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_get_Tp_allocator():
+function std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_M_get_Tp_allocator():
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_M_get_Tp_allocator():
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_M_get_Tp_allocator():
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<double, std::allocator<double> >::_M_get_Tp_allocator():
+function std::_Vector_base<double, std::allocator<double> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator():
+function std::_Vector_base<int, std::allocator<int> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_M_get_Tp_allocator():
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_M_get_Tp_allocator():
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_M_get_Tp_allocator():
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::_M_get_Tp_allocator():
+function std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::_M_get_Tp_allocator():
+function std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::_M_get_Tp_allocator() called 0 returned 0% blocks executed 0%
+    #####:  298:      _M_get_Tp_allocator() _GLIBCXX_NOEXCEPT
+    #####:  299:      { return this->_M_impl; }
+    %%%%%:  299-block  0
+------------------
+        -:  300:
+        -:  301:      _GLIBCXX20_CONSTEXPR
+        -:  302:      const _Tp_alloc_type&
+        -:  303:      _M_get_Tp_allocator() const _GLIBCXX_NOEXCEPT
+        -:  304:      { return this->_M_impl; }
+        -:  305:
+        -:  306:      _GLIBCXX20_CONSTEXPR
+        -:  307:      allocator_type
+        -:  308:      get_allocator() const _GLIBCXX_NOEXCEPT
+        -:  309:      { return allocator_type(_M_get_Tp_allocator()); }
+        -:  310:
+        -:  311:#if __cplusplus >= 201103L
+    #####:  312:      _Vector_base() = default;
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_base():
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_base():
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_base():
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_base():
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_base():
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_base():
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_base():
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_base():
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_base():
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_base():
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_base():
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_base():
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_base():
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_base():
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  312:      _Vector_base() = default;
+    %%%%%:  312-block  0
+call    0 never executed
+------------------
+        -:  313:#else
+        -:  314:      _Vector_base() { }
+        -:  315:#endif
+        -:  316:
+        -:  317:      _GLIBCXX20_CONSTEXPR
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_Vector_base(std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&) called 0 returned 0% blocks executed 0%
+    #####:  318:      _Vector_base(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+    #####:  319:      : _M_impl(__a) { }
+    %%%%%:  319-block  0
+call    0 never executed
+        -:  320:
+        -:  321:      // Kept for ABI compatibility.
+        -:  322:#if !_GLIBCXX_INLINE_VERSION
+        -:  323:      _GLIBCXX20_CONSTEXPR
+        -:  324:      _Vector_base(size_t __n)
+        -:  325:      : _M_impl()
+        -:  326:      { _M_create_storage(__n); }
+        -:  327:#endif
+        -:  328:
+        -:  329:      _GLIBCXX20_CONSTEXPR
+        -:  330:      _Vector_base(size_t __n, const allocator_type& __a)
+        -:  331:      : _M_impl(__a)
+        -:  332:      { _M_create_storage(__n); }
+        -:  333:
+        -:  334:#if __cplusplus >= 201103L
+        -:  335:      _Vector_base(_Vector_base&&) = default;
+        -:  336:
+        -:  337:      // Kept for ABI compatibility.
+        -:  338:# if !_GLIBCXX_INLINE_VERSION
+        -:  339:      _GLIBCXX20_CONSTEXPR
+        -:  340:      _Vector_base(_Tp_alloc_type&& __a) noexcept
+        -:  341:      : _M_impl(std::move(__a)) { }
+        -:  342:
+        -:  343:      _GLIBCXX20_CONSTEXPR
+        -:  344:      _Vector_base(_Vector_base&& __x, const allocator_type& __a)
+        -:  345:      : _M_impl(__a)
+        -:  346:      {
+        -:  347:	if (__x.get_allocator() == __a)
+        -:  348:	  this->_M_impl._M_swap_data(__x._M_impl);
+        -:  349:	else
+        -:  350:	  {
+        -:  351:	    size_t __n = __x._M_impl._M_finish - __x._M_impl._M_start;
+        -:  352:	    _M_create_storage(__n);
+        -:  353:	  }
+        -:  354:      }
+        -:  355:# endif
+        -:  356:
+        -:  357:      _GLIBCXX20_CONSTEXPR
+        -:  358:      _Vector_base(const allocator_type& __a, _Vector_base&& __x)
+        -:  359:      : _M_impl(_Tp_alloc_type(__a), std::move(__x._M_impl))
+        -:  360:      { }
+        -:  361:#endif
+        -:  362:
+        -:  363:      _GLIBCXX20_CONSTEXPR
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    #####:  368:      }
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::~_Vector_base():
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::~_Vector_base():
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::~_Vector_base():
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~_Vector_base():
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<double, std::allocator<double> >::~_Vector_base():
+function std::_Vector_base<double, std::allocator<double> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::~_Vector_base():
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::~_Vector_base():
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::~_Vector_base():
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::~_Vector_base():
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::~_Vector_base():
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::~_Vector_base():
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<int, std::allocator<int> >::~_Vector_base():
+function std::_Vector_base<int, std::allocator<int> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::~_Vector_base():
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::~_Vector_base():
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::~_Vector_base():
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::~_Vector_base():
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::~_Vector_base():
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::~_Vector_base():
+function std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::~_Vector_base():
+function std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::~_Vector_base():
+function std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::~_Vector_base():
+function std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::~_Vector_base():
+function std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::~_Vector_base() called 0 returned 0% blocks executed 0%
+    #####:  364:      ~_Vector_base() _GLIBCXX_NOEXCEPT
+        -:  365:      {
+    #####:  366:	_M_deallocate(_M_impl._M_start,
+    #####:  367:		      _M_impl._M_end_of_storage - _M_impl._M_start);
+    %%%%%:  367-block  0
+call    0 never executed
+    #####:  368:      }
+call    0 never executed
+------------------
+        -:  369:
+        -:  370:    public:
+        -:  371:      _Vector_impl _M_impl;
+        -:  372:
+        -:  373:      _GLIBCXX20_CONSTEXPR
+        -:  374:      pointer
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_allocate(unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  375:      _M_allocate(size_t __n)
+        -:  376:      {
+        -:  377:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  378:	return __n != 0 ? _Tr::allocate(_M_impl, __n) : pointer();
+    %%%%%:  378-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  378-block  1
+call    2 never executed
+    %%%%%:  378-block  2
+    %%%%%:  378-block  3
+    %%%%%:  378-block  4
+        -:  379:      }
+        -:  380:
+        -:  381:      _GLIBCXX20_CONSTEXPR
+        -:  382:      void
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_M_deallocate(forceField::DihedralForceField*, unsigned long):
+function std::_Vector_base<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::_M_deallocate(forceField::DihedralForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_M_deallocate(unsigned long*, unsigned long):
+function std::_Vector_base<unsigned long, std::allocator<unsigned long> >::_M_deallocate(unsigned long*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_M_deallocate(std::shared_ptr<simulationBox::Atom>*, unsigned long):
+function std::_Vector_base<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::_M_deallocate(std::shared_ptr<simulationBox::Atom>*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned long):
+function std::_Vector_base<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<double, std::allocator<double> >::_M_deallocate(double*, unsigned long):
+function std::_Vector_base<double, std::allocator<double> >::_M_deallocate(double*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_M_deallocate(simulationBox::Cell*, unsigned long):
+function std::_Vector_base<simulationBox::Cell, std::allocator<simulationBox::Cell> >::_M_deallocate(simulationBox::Cell*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_M_deallocate(simulationBox::Molecule*, unsigned long):
+function std::_Vector_base<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::_M_deallocate(simulationBox::Molecule*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_M_deallocate(simulationBox::MoleculeType*, unsigned long):
+function std::_Vector_base<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::_M_deallocate(simulationBox::MoleculeType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_M_deallocate(constraints::BondConstraint*, unsigned long):
+function std::_Vector_base<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::_M_deallocate(constraints::BondConstraint*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_M_deallocate(forceField::BondForceField*, unsigned long):
+function std::_Vector_base<forceField::BondForceField, std::allocator<forceField::BondForceField> >::_M_deallocate(forceField::BondForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_M_deallocate(forceField::AngleForceField*, unsigned long):
+function std::_Vector_base<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::_M_deallocate(forceField::AngleForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<int, std::allocator<int> >::_M_deallocate(int*, unsigned long):
+function std::_Vector_base<int, std::allocator<int> >::_M_deallocate(int*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_M_deallocate(forceField::BondType*, unsigned long):
+function std::_Vector_base<forceField::BondType, std::allocator<forceField::BondType> >::_M_deallocate(forceField::BondType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_M_deallocate(forceField::AngleType*, unsigned long):
+function std::_Vector_base<forceField::AngleType, std::allocator<forceField::AngleType> >::_M_deallocate(forceField::AngleType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_M_deallocate(forceField::DihedralType*, unsigned long):
+function std::_Vector_base<forceField::DihedralType, std::allocator<forceField::DihedralType> >::_M_deallocate(forceField::DihedralType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_M_deallocate(intraNonBonded::IntraNonBondedMap*, unsigned long):
+function std::_Vector_base<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::_M_deallocate(intraNonBonded::IntraNonBondedMap*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_M_deallocate(intraNonBonded::IntraNonBondedContainer*, unsigned long):
+function std::_Vector_base<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::_M_deallocate(intraNonBonded::IntraNonBondedContainer*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::_M_deallocate(simulationBox::Molecule**, unsigned long):
+function std::_Vector_base<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::_M_deallocate(simulationBox::Molecule**, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::_M_deallocate(simulationBox::Cell**, unsigned long):
+function std::_Vector_base<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::_M_deallocate(simulationBox::Cell**, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::_M_deallocate(std::vector<unsigned long, std::allocator<unsigned long> >*, unsigned long):
+function std::_Vector_base<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::_M_deallocate(std::vector<unsigned long, std::allocator<unsigned long> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_deallocate(std::vector<int, std::allocator<int> >*, unsigned long):
+function std::_Vector_base<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_deallocate(std::vector<int, std::allocator<int> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::_M_deallocate(std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >*, unsigned long):
+function std::_Vector_base<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::_M_deallocate(std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  383:      _M_deallocate(pointer __p, size_t __n)
+        -:  384:      {
+        -:  385:	typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+    #####:  386:	if (__p)
+    %%%%%:  386-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  387:	  _Tr::deallocate(_M_impl, __p, __n);
+    %%%%%:  387-block  0
+call    0 never executed
+    #####:  388:      }
+------------------
+        -:  389:
+        -:  390:    protected:
+        -:  391:      _GLIBCXX20_CONSTEXPR
+        -:  392:      void
+        -:  393:      _M_create_storage(size_t __n)
+        -:  394:      {
+        -:  395:	this->_M_impl._M_start = this->_M_allocate(__n);
+        -:  396:	this->_M_impl._M_finish = this->_M_impl._M_start;
+        -:  397:	this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
+        -:  398:      }
+        -:  399:    };
+        -:  400:
+        -:  401:  /**
+        -:  402:   *  @brief A standard container which offers fixed time access to
+        -:  403:   *  individual elements in any order.
+        -:  404:   *
+        -:  405:   *  @ingroup sequences
+        -:  406:   *
+        -:  407:   *  @tparam _Tp  Type of element.
+        -:  408:   *  @tparam _Alloc  Allocator type, defaults to allocator<_Tp>.
+        -:  409:   *
+        -:  410:   *  Meets the requirements of a <a href="tables.html#65">container</a>, a
+        -:  411:   *  <a href="tables.html#66">reversible container</a>, and a
+        -:  412:   *  <a href="tables.html#67">sequence</a>, including the
+        -:  413:   *  <a href="tables.html#68">optional sequence requirements</a> with the
+        -:  414:   *  %exception of @c push_front and @c pop_front.
+        -:  415:   *
+        -:  416:   *  In some terminology a %vector can be described as a dynamic
+        -:  417:   *  C-style array, it offers fast and efficient access to individual
+        -:  418:   *  elements in any order and saves the user from worrying about
+        -:  419:   *  memory and size allocation.  Subscripting ( @c [] ) access is
+        -:  420:   *  also provided as with C-style arrays.
+        -:  421:  */
+        -:  422:  template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+        -:  423:    class vector : protected _Vector_base<_Tp, _Alloc>
+        -:  424:    {
+        -:  425:#ifdef _GLIBCXX_CONCEPT_CHECKS
+        -:  426:      // Concept requirements.
+        -:  427:      typedef typename _Alloc::value_type		_Alloc_value_type;
+        -:  428:# if __cplusplus < 201103L
+        -:  429:      __glibcxx_class_requires(_Tp, _SGIAssignableConcept)
+        -:  430:# endif
+        -:  431:      __glibcxx_class_requires2(_Tp, _Alloc_value_type, _SameTypeConcept)
+        -:  432:#endif
+        -:  433:
+        -:  434:#if __cplusplus >= 201103L
+        -:  435:      static_assert(is_same<typename remove_cv<_Tp>::type, _Tp>::value,
+        -:  436:	  "std::vector must have a non-const, non-volatile value_type");
+        -:  437:# if __cplusplus > 201703L || defined __STRICT_ANSI__
+        -:  438:      static_assert(is_same<typename _Alloc::value_type, _Tp>::value,
+        -:  439:	  "std::vector must have the same value_type as its allocator");
+        -:  440:# endif
+        -:  441:#endif
+        -:  442:
+        -:  443:      typedef _Vector_base<_Tp, _Alloc>			_Base;
+        -:  444:      typedef typename _Base::_Tp_alloc_type		_Tp_alloc_type;
+        -:  445:      typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type>	_Alloc_traits;
+        -:  446:
+        -:  447:    public:
+        -:  448:      typedef _Tp					value_type;
+        -:  449:      typedef typename _Base::pointer			pointer;
+        -:  450:      typedef typename _Alloc_traits::const_pointer	const_pointer;
+        -:  451:      typedef typename _Alloc_traits::reference		reference;
+        -:  452:      typedef typename _Alloc_traits::const_reference	const_reference;
+        -:  453:      typedef __gnu_cxx::__normal_iterator<pointer, vector> iterator;
+        -:  454:      typedef __gnu_cxx::__normal_iterator<const_pointer, vector>
+        -:  455:      const_iterator;
+        -:  456:      typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
+        -:  457:      typedef std::reverse_iterator<iterator>		reverse_iterator;
+        -:  458:      typedef size_t					size_type;
+        -:  459:      typedef ptrdiff_t					difference_type;
+        -:  460:      typedef _Alloc					allocator_type;
+        -:  461:
+        -:  462:    private:
+        -:  463:#if __cplusplus >= 201103L
+        -:  464:      static constexpr bool
+        -:  465:      _S_nothrow_relocate(true_type)
+        -:  466:      {
+        -:  467:	return noexcept(std::__relocate_a(std::declval<pointer>(),
+        -:  468:					  std::declval<pointer>(),
+        -:  469:					  std::declval<pointer>(),
+        -:  470:					  std::declval<_Tp_alloc_type&>()));
+        -:  471:      }
+        -:  472:
+        -:  473:      static constexpr bool
+        -:  474:      _S_nothrow_relocate(false_type)
+        -:  475:      { return false; }
+        -:  476:
+        -:  477:      static constexpr bool
+        -:  478:      _S_use_relocate()
+        -:  479:      {
+        -:  480:	// Instantiating std::__relocate_a might cause an error outside the
+        -:  481:	// immediate context (in __relocate_object_a's noexcept-specifier),
+        -:  482:	// so only do it if we know the type can be move-inserted into *this.
+        -:  483:	return _S_nothrow_relocate(__is_move_insertable<_Tp_alloc_type>{});
+        -:  484:      }
+        -:  485:
+        -:  486:      static pointer
+        -:  487:      _S_do_relocate(pointer __first, pointer __last, pointer __result,
+        -:  488:		     _Tp_alloc_type& __alloc, true_type) noexcept
+        -:  489:      {
+        -:  490:	return std::__relocate_a(__first, __last, __result, __alloc);
+        -:  491:      }
+        -:  492:
+        -:  493:      static pointer
+        -:  494:      _S_do_relocate(pointer, pointer, pointer __result,
+        -:  495:		     _Tp_alloc_type&, false_type) noexcept
+        -:  496:      { return __result; }
+        -:  497:
+        -:  498:      static _GLIBCXX20_CONSTEXPR pointer
+        -:  499:      _S_relocate(pointer __first, pointer __last, pointer __result,
+        -:  500:		  _Tp_alloc_type& __alloc) noexcept
+        -:  501:      {
+        -:  502:#if __cpp_if_constexpr
+        -:  503:	// All callers have already checked _S_use_relocate() so just do it.
+        -:  504:	return std::__relocate_a(__first, __last, __result, __alloc);
+        -:  505:#else
+        -:  506:	using __do_it = __bool_constant<_S_use_relocate()>;
+        -:  507:	return _S_do_relocate(__first, __last, __result, __alloc, __do_it{});
+        -:  508:#endif
+        -:  509:      }
+        -:  510:#endif // C++11
+        -:  511:
+        -:  512:    protected:
+        -:  513:      using _Base::_M_allocate;
+        -:  514:      using _Base::_M_deallocate;
+        -:  515:      using _Base::_M_impl;
+        -:  516:      using _Base::_M_get_Tp_allocator;
+        -:  517:
+        -:  518:    public:
+        -:  519:      // [23.2.4.1] construct/copy/destroy
+        -:  520:      // (assign() and get_allocator() are also listed in this section)
+        -:  521:
+        -:  522:      /**
+        -:  523:       *  @brief  Creates a %vector with no elements.
+        -:  524:       */
+        -:  525:#if __cplusplus >= 201103L
+    #####:  526:      vector() = default;
+------------------
+std::vector<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::vector():
+function std::vector<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::vector():
+function std::vector<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::DihedralType, std::allocator<forceField::DihedralType> >::vector():
+function std::vector<forceField::DihedralType, std::allocator<forceField::DihedralType> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::AngleType, std::allocator<forceField::AngleType> >::vector():
+function std::vector<forceField::AngleType, std::allocator<forceField::AngleType> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::BondType, std::allocator<forceField::BondType> >::vector():
+function std::vector<forceField::BondType, std::allocator<forceField::BondType> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::vector():
+function std::vector<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::vector():
+function std::vector<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<forceField::BondForceField, std::allocator<forceField::BondForceField> >::vector():
+function std::vector<forceField::BondForceField, std::allocator<forceField::BondForceField> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::vector():
+function std::vector<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::vector():
+function std::vector<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::vector():
+function std::vector<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::Cell, std::allocator<simulationBox::Cell> >::vector():
+function std::vector<simulationBox::Cell, std::allocator<simulationBox::Cell> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::vector():
+function std::vector<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+std::vector<unsigned long, std::allocator<unsigned long> >::vector():
+function std::vector<unsigned long, std::allocator<unsigned long> >::vector() called 0 returned 0% blocks executed 0%
+    #####:  526:      vector() = default;
+    %%%%%:  526-block  0
+call    0 never executed
+------------------
+        -:  527:#else
+        -:  528:      vector() { }
+        -:  529:#endif
+        -:  530:
+        -:  531:      /**
+        -:  532:       *  @brief  Creates a %vector with no elements.
+        -:  533:       *  @param  __a  An allocator object.
+        -:  534:       */
+        -:  535:      explicit
+        -:  536:      _GLIBCXX20_CONSTEXPR
+        -:  537:      vector(const allocator_type& __a) _GLIBCXX_NOEXCEPT
+        -:  538:      : _Base(__a) { }
+        -:  539:
+        -:  540:#if __cplusplus >= 201103L
+        -:  541:      /**
+        -:  542:       *  @brief  Creates a %vector with default constructed elements.
+        -:  543:       *  @param  __n  The number of elements to initially create.
+        -:  544:       *  @param  __a  An allocator.
+        -:  545:       *
+        -:  546:       *  This constructor fills the %vector with @a __n default
+        -:  547:       *  constructed elements.
+        -:  548:       */
+        -:  549:      explicit
+        -:  550:      _GLIBCXX20_CONSTEXPR
+        -:  551:      vector(size_type __n, const allocator_type& __a = allocator_type())
+        -:  552:      : _Base(_S_check_init_len(__n, __a), __a)
+        -:  553:      { _M_default_initialize(__n); }
+        -:  554:
+        -:  555:      /**
+        -:  556:       *  @brief  Creates a %vector with copies of an exemplar element.
+        -:  557:       *  @param  __n  The number of elements to initially create.
+        -:  558:       *  @param  __value  An element to copy.
+        -:  559:       *  @param  __a  An allocator.
+        -:  560:       *
+        -:  561:       *  This constructor fills the %vector with @a __n copies of @a __value.
+        -:  562:       */
+        -:  563:      _GLIBCXX20_CONSTEXPR
+        -:  564:      vector(size_type __n, const value_type& __value,
+        -:  565:	     const allocator_type& __a = allocator_type())
+        -:  566:      : _Base(_S_check_init_len(__n, __a), __a)
+        -:  567:      { _M_fill_initialize(__n, __value); }
+        -:  568:#else
+        -:  569:      /**
+        -:  570:       *  @brief  Creates a %vector with copies of an exemplar element.
+        -:  571:       *  @param  __n  The number of elements to initially create.
+        -:  572:       *  @param  __value  An element to copy.
+        -:  573:       *  @param  __a  An allocator.
+        -:  574:       *
+        -:  575:       *  This constructor fills the %vector with @a __n copies of @a __value.
+        -:  576:       */
+        -:  577:      explicit
+        -:  578:      vector(size_type __n, const value_type& __value = value_type(),
+        -:  579:	     const allocator_type& __a = allocator_type())
+        -:  580:      : _Base(_S_check_init_len(__n, __a), __a)
+        -:  581:      { _M_fill_initialize(__n, __value); }
+        -:  582:#endif
+        -:  583:
+        -:  584:      /**
+        -:  585:       *  @brief  %Vector copy constructor.
+        -:  586:       *  @param  __x  A %vector of identical element and allocator types.
+        -:  587:       *
+        -:  588:       *  All the elements of @a __x are copied, but any unused capacity in
+        -:  589:       *  @a __x  will not be copied
+        -:  590:       *  (i.e. capacity() == size() in the new %vector).
+        -:  591:       *
+        -:  592:       *  The newly-created %vector uses a copy of the allocator object used
+        -:  593:       *  by @a __x (unless the allocator traits dictate a different object).
+        -:  594:       */
+        -:  595:      _GLIBCXX20_CONSTEXPR
+        -:  596:      vector(const vector& __x)
+        -:  597:      : _Base(__x.size(),
+        -:  598:	_Alloc_traits::_S_select_on_copy(__x._M_get_Tp_allocator()))
+        -:  599:      {
+        -:  600:	this->_M_impl._M_finish =
+        -:  601:	  std::__uninitialized_copy_a(__x.begin(), __x.end(),
+        -:  602:				      this->_M_impl._M_start,
+        -:  603:				      _M_get_Tp_allocator());
+        -:  604:      }
+        -:  605:
+        -:  606:#if __cplusplus >= 201103L
+        -:  607:      /**
+        -:  608:       *  @brief  %Vector move constructor.
+        -:  609:       *
+        -:  610:       *  The newly-created %vector contains the exact contents of the
+        -:  611:       *  moved instance.
+        -:  612:       *  The contents of the moved instance are a valid, but unspecified
+        -:  613:       *  %vector.
+        -:  614:       */
+        -:  615:      vector(vector&&) noexcept = default;
+        -:  616:
+        -:  617:      /// Copy constructor with alternative allocator
+        -:  618:      _GLIBCXX20_CONSTEXPR
+        -:  619:      vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
+        -:  620:      : _Base(__x.size(), __a)
+        -:  621:      {
+        -:  622:	this->_M_impl._M_finish =
+        -:  623:	  std::__uninitialized_copy_a(__x.begin(), __x.end(),
+        -:  624:				      this->_M_impl._M_start,
+        -:  625:				      _M_get_Tp_allocator());
+        -:  626:      }
+        -:  627:
+        -:  628:    private:
+        -:  629:      _GLIBCXX20_CONSTEXPR
+        -:  630:      vector(vector&& __rv, const allocator_type& __m, true_type) noexcept
+        -:  631:      : _Base(__m, std::move(__rv))
+        -:  632:      { }
+        -:  633:
+        -:  634:      _GLIBCXX20_CONSTEXPR
+        -:  635:      vector(vector&& __rv, const allocator_type& __m, false_type)
+        -:  636:      : _Base(__m)
+        -:  637:      {
+        -:  638:	if (__rv.get_allocator() == __m)
+        -:  639:	  this->_M_impl._M_swap_data(__rv._M_impl);
+        -:  640:	else if (!__rv.empty())
+        -:  641:	  {
+        -:  642:	    this->_M_create_storage(__rv.size());
+        -:  643:	    this->_M_impl._M_finish =
+        -:  644:	      std::__uninitialized_move_a(__rv.begin(), __rv.end(),
+        -:  645:					  this->_M_impl._M_start,
+        -:  646:					  _M_get_Tp_allocator());
+        -:  647:	    __rv.clear();
+        -:  648:	  }
+        -:  649:      }
+        -:  650:
+        -:  651:    public:
+        -:  652:      /// Move constructor with alternative allocator
+        -:  653:      _GLIBCXX20_CONSTEXPR
+        -:  654:      vector(vector&& __rv, const __type_identity_t<allocator_type>& __m)
+        -:  655:      noexcept( noexcept(
+        -:  656:	vector(std::declval<vector&&>(), std::declval<const allocator_type&>(),
+        -:  657:	       std::declval<typename _Alloc_traits::is_always_equal>())) )
+        -:  658:      : vector(std::move(__rv), __m, typename _Alloc_traits::is_always_equal{})
+        -:  659:      { }
+        -:  660:
+        -:  661:      /**
+        -:  662:       *  @brief  Builds a %vector from an initializer list.
+        -:  663:       *  @param  __l  An initializer_list.
+        -:  664:       *  @param  __a  An allocator.
+        -:  665:       *
+        -:  666:       *  Create a %vector consisting of copies of the elements in the
+        -:  667:       *  initializer_list @a __l.
+        -:  668:       *
+        -:  669:       *  This will call the element type's copy constructor N times
+        -:  670:       *  (where N is @a __l.size()) and do no memory reallocation.
+        -:  671:       */
+        -:  672:      _GLIBCXX20_CONSTEXPR
+        -:  673:      vector(initializer_list<value_type> __l,
+        -:  674:	     const allocator_type& __a = allocator_type())
+        -:  675:      : _Base(__a)
+        -:  676:      {
+        -:  677:	_M_range_initialize(__l.begin(), __l.end(),
+        -:  678:			    random_access_iterator_tag());
+        -:  679:      }
+        -:  680:#endif
+        -:  681:
+        -:  682:      /**
+        -:  683:       *  @brief  Builds a %vector from a range.
+        -:  684:       *  @param  __first  An input iterator.
+        -:  685:       *  @param  __last  An input iterator.
+        -:  686:       *  @param  __a  An allocator.
+        -:  687:       *
+        -:  688:       *  Create a %vector consisting of copies of the elements from
+        -:  689:       *  [first,last).
+        -:  690:       *
+        -:  691:       *  If the iterators are forward, bidirectional, or
+        -:  692:       *  random-access, then this will call the elements' copy
+        -:  693:       *  constructor N times (where N is distance(first,last)) and do
+        -:  694:       *  no memory reallocation.  But if only input iterators are
+        -:  695:       *  used, then this will do at most 2N calls to the copy
+        -:  696:       *  constructor, and logN memory reallocations.
+        -:  697:       */
+        -:  698:#if __cplusplus >= 201103L
+        -:  699:      template<typename _InputIterator,
+        -:  700:	       typename = std::_RequireInputIter<_InputIterator>>
+        -:  701:	_GLIBCXX20_CONSTEXPR
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::vector<char const* const*, void>(char const* const*, char const* const*, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&) called 0 returned 0% blocks executed 0%
+    #####:  702:	vector(_InputIterator __first, _InputIterator __last,
+        -:  703:	       const allocator_type& __a = allocator_type())
+    #####:  704:	: _Base(__a)
+    %%%%%:  704-block  0
+call    0 never executed
+        -:  705:	{
+    #####:  706:	  _M_range_initialize(__first, __last,
+    #####:  707:			      std::__iterator_category(__first));
+    %%%%%:  707-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    $$$$$:  707-block  1
+    #####:  708:	}
+    %%%%%:  708-block  0
+    $$$$$:  708-block  1
+call    0 never executed
+        -:  709:#else
+        -:  710:      template<typename _InputIterator>
+        -:  711:	vector(_InputIterator __first, _InputIterator __last,
+        -:  712:	       const allocator_type& __a = allocator_type())
+        -:  713:	: _Base(__a)
+        -:  714:	{
+        -:  715:	  // Check whether it's an integral type.  If so, it's not an iterator.
+        -:  716:	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+        -:  717:	  _M_initialize_dispatch(__first, __last, _Integral());
+        -:  718:	}
+        -:  719:#endif
+        -:  720:
+        -:  721:      /**
+        -:  722:       *  The dtor only erases the elements, and note that if the
+        -:  723:       *  elements themselves are pointers, the pointed-to memory is
+        -:  724:       *  not touched in any way.  Managing the pointer is the user's
+        -:  725:       *  responsibility.
+        -:  726:       */
+        -:  727:      _GLIBCXX20_CONSTEXPR
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+    #####:  731:		      _M_get_Tp_allocator());
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+------------------
+std::vector<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::~vector():
+function std::vector<simulationBox::Molecule, std::allocator<simulationBox::Molecule> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<unsigned long, std::allocator<unsigned long> >::~vector():
+function std::vector<unsigned long, std::allocator<unsigned long> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::~vector():
+function std::vector<simulationBox::Molecule*, std::allocator<simulationBox::Molecule*> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::~vector():
+function std::vector<simulationBox::Cell*, std::allocator<simulationBox::Cell*> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::Cell, std::allocator<simulationBox::Cell> >::~vector():
+function std::vector<simulationBox::Cell, std::allocator<simulationBox::Cell> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::~vector():
+function std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::~vector():
+function std::vector<intraNonBonded::IntraNonBondedContainer, std::allocator<intraNonBonded::IntraNonBondedContainer> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::~vector():
+function std::vector<intraNonBonded::IntraNonBondedMap, std::allocator<intraNonBonded::IntraNonBondedMap> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::~vector():
+function std::vector<std::shared_ptr<simulationBox::Atom>, std::allocator<std::shared_ptr<simulationBox::Atom> > >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector():
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<double, std::allocator<double> >::~vector():
+function std::vector<double, std::allocator<double> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<int, std::allocator<int> >::~vector():
+function std::vector<int, std::allocator<int> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::~vector():
+function std::vector<simulationBox::MoleculeType, std::allocator<simulationBox::MoleculeType> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::~vector():
+function std::vector<constraints::BondConstraint, std::allocator<constraints::BondConstraint> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::BondForceField, std::allocator<forceField::BondForceField> >::~vector():
+function std::vector<forceField::BondForceField, std::allocator<forceField::BondForceField> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::~vector():
+function std::vector<forceField::AngleForceField, std::allocator<forceField::AngleForceField> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::~vector():
+function std::vector<forceField::DihedralForceField, std::allocator<forceField::DihedralForceField> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::BondType, std::allocator<forceField::BondType> >::~vector():
+function std::vector<forceField::BondType, std::allocator<forceField::BondType> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::AngleType, std::allocator<forceField::AngleType> >::~vector():
+function std::vector<forceField::AngleType, std::allocator<forceField::AngleType> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<forceField::DihedralType, std::allocator<forceField::DihedralType> >::~vector():
+function std::vector<forceField::DihedralType, std::allocator<forceField::DihedralType> >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::~vector():
+function std::vector<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >, std::allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > > >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+std::vector<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::~vector():
+function std::vector<std::vector<unsigned long, std::allocator<unsigned long> >, std::allocator<std::vector<unsigned long, std::allocator<unsigned long> > > >::~vector() called 0 returned 0% blocks executed 0%
+    #####:  728:      ~vector() _GLIBCXX_NOEXCEPT
+        -:  729:      {
+    #####:  730:	std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+call    0 never executed
+    #####:  731:		      _M_get_Tp_allocator());
+    %%%%%:  731-block  0
+call    0 never executed
+        -:  732:	_GLIBCXX_ASAN_ANNOTATE_BEFORE_DEALLOC;
+    #####:  733:      }
+    %%%%%:  733-block  0
+call    0 never executed
+------------------
+        -:  734:
+        -:  735:      /**
+        -:  736:       *  @brief  %Vector assignment operator.
+        -:  737:       *  @param  __x  A %vector of identical element and allocator types.
+        -:  738:       *
+        -:  739:       *  All the elements of @a __x are copied, but any unused capacity in
+        -:  740:       *  @a __x will not be copied.
+        -:  741:       *
+        -:  742:       *  Whether the allocator is copied depends on the allocator traits.
+        -:  743:       */
+        -:  744:      _GLIBCXX20_CONSTEXPR
+        -:  745:      vector&
+        -:  746:      operator=(const vector& __x);
+        -:  747:
+        -:  748:#if __cplusplus >= 201103L
+        -:  749:      /**
+        -:  750:       *  @brief  %Vector move assignment operator.
+        -:  751:       *  @param  __x  A %vector of identical element and allocator types.
+        -:  752:       *
+        -:  753:       *  The contents of @a __x are moved into this %vector (without copying,
+        -:  754:       *  if the allocators permit it).
+        -:  755:       *  Afterwards @a __x is a valid, but unspecified %vector.
+        -:  756:       *
+        -:  757:       *  Whether the allocator is moved depends on the allocator traits.
+        -:  758:       */
+        -:  759:      _GLIBCXX20_CONSTEXPR
+        -:  760:      vector&
+        -:  761:      operator=(vector&& __x) noexcept(_Alloc_traits::_S_nothrow_move())
+        -:  762:      {
+        -:  763:	constexpr bool __move_storage =
+        -:  764:	  _Alloc_traits::_S_propagate_on_move_assign()
+        -:  765:	  || _Alloc_traits::_S_always_equal();
+        -:  766:	_M_move_assign(std::move(__x), __bool_constant<__move_storage>());
+        -:  767:	return *this;
+        -:  768:      }
+        -:  769:
+        -:  770:      /**
+        -:  771:       *  @brief  %Vector list assignment operator.
+        -:  772:       *  @param  __l  An initializer_list.
+        -:  773:       *
+        -:  774:       *  This function fills a %vector with copies of the elements in the
+        -:  775:       *  initializer list @a __l.
+        -:  776:       *
+        -:  777:       *  Note that the assignment completely changes the %vector and
+        -:  778:       *  that the resulting %vector's size is the same as the number
+        -:  779:       *  of elements assigned.
+        -:  780:       */
+        -:  781:      _GLIBCXX20_CONSTEXPR
+        -:  782:      vector&
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::initializer_list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >) called 0 returned 0% blocks executed 0%
+    #####:  783:      operator=(initializer_list<value_type> __l)
+        -:  784:      {
+    #####:  785:	this->_M_assign_aux(__l.begin(), __l.end(),
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    #####:  786:			    random_access_iterator_tag());
+    %%%%%:  786-block  0
+call    0 never executed
+    #####:  787:	return *this;
+    %%%%%:  787-block  0
+    %%%%%:  787-block  1
+        -:  788:      }
+        -:  789:#endif
+        -:  790:
+        -:  791:      /**
+        -:  792:       *  @brief  Assigns a given value to a %vector.
+        -:  793:       *  @param  __n  Number of elements to be assigned.
+        -:  794:       *  @param  __val  Value to be assigned.
+        -:  795:       *
+        -:  796:       *  This function fills a %vector with @a __n copies of the given
+        -:  797:       *  value.  Note that the assignment completely changes the
+        -:  798:       *  %vector and that the resulting %vector's size is the same as
+        -:  799:       *  the number of elements assigned.
+        -:  800:       */
+        -:  801:      _GLIBCXX20_CONSTEXPR
+        -:  802:      void
+        -:  803:      assign(size_type __n, const value_type& __val)
+        -:  804:      { _M_fill_assign(__n, __val); }
+        -:  805:
+        -:  806:      /**
+        -:  807:       *  @brief  Assigns a range to a %vector.
+        -:  808:       *  @param  __first  An input iterator.
+        -:  809:       *  @param  __last   An input iterator.
+        -:  810:       *
+        -:  811:       *  This function fills a %vector with copies of the elements in the
+        -:  812:       *  range [__first,__last).
+        -:  813:       *
+        -:  814:       *  Note that the assignment completely changes the %vector and
+        -:  815:       *  that the resulting %vector's size is the same as the number
+        -:  816:       *  of elements assigned.
+        -:  817:       */
+        -:  818:#if __cplusplus >= 201103L
+        -:  819:      template<typename _InputIterator,
+        -:  820:	       typename = std::_RequireInputIter<_InputIterator>>
+        -:  821:	_GLIBCXX20_CONSTEXPR
+        -:  822:	void
+        -:  823:	assign(_InputIterator __first, _InputIterator __last)
+        -:  824:	{ _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
+        -:  825:#else
+        -:  826:      template<typename _InputIterator>
+        -:  827:	void
+        -:  828:	assign(_InputIterator __first, _InputIterator __last)
+        -:  829:	{
+        -:  830:	  // Check whether it's an integral type.  If so, it's not an iterator.
+        -:  831:	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+        -:  832:	  _M_assign_dispatch(__first, __last, _Integral());
+        -:  833:	}
+        -:  834:#endif
+        -:  835:
+        -:  836:#if __cplusplus >= 201103L
+        -:  837:      /**
+        -:  838:       *  @brief  Assigns an initializer list to a %vector.
+        -:  839:       *  @param  __l  An initializer_list.
+        -:  840:       *
+        -:  841:       *  This function fills a %vector with copies of the elements in the
+        -:  842:       *  initializer list @a __l.
+        -:  843:       *
+        -:  844:       *  Note that the assignment completely changes the %vector and
+        -:  845:       *  that the resulting %vector's size is the same as the number
+        -:  846:       *  of elements assigned.
+        -:  847:       */
+        -:  848:      _GLIBCXX20_CONSTEXPR
+        -:  849:      void
+        -:  850:      assign(initializer_list<value_type> __l)
+        -:  851:      {
+        -:  852:	this->_M_assign_aux(__l.begin(), __l.end(),
+        -:  853:			    random_access_iterator_tag());
+        -:  854:      }
+        -:  855:#endif
+        -:  856:
+        -:  857:      /// Get a copy of the memory allocation object.
+        -:  858:      using _Base::get_allocator;
+        -:  859:
+        -:  860:      // iterators
+        -:  861:      /**
+        -:  862:       *  Returns a read/write iterator that points to the first
+        -:  863:       *  element in the %vector.  Iteration is done in ordinary
+        -:  864:       *  element order.
+        -:  865:       */
+        -:  866:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  867:      iterator
+        -:  868:      begin() _GLIBCXX_NOEXCEPT
+        -:  869:      { return iterator(this->_M_impl._M_start); }
+        -:  870:
+        -:  871:      /**
+        -:  872:       *  Returns a read-only (constant) iterator that points to the
+        -:  873:       *  first element in the %vector.  Iteration is done in ordinary
+        -:  874:       *  element order.
+        -:  875:       */
+        -:  876:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  877:      const_iterator
+        -:  878:      begin() const _GLIBCXX_NOEXCEPT
+        -:  879:      { return const_iterator(this->_M_impl._M_start); }
+        -:  880:
+        -:  881:      /**
+        -:  882:       *  Returns a read/write iterator that points one past the last
+        -:  883:       *  element in the %vector.  Iteration is done in ordinary
+        -:  884:       *  element order.
+        -:  885:       */
+        -:  886:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  887:      iterator
+        -:  888:      end() _GLIBCXX_NOEXCEPT
+        -:  889:      { return iterator(this->_M_impl._M_finish); }
+        -:  890:
+        -:  891:      /**
+        -:  892:       *  Returns a read-only (constant) iterator that points one past
+        -:  893:       *  the last element in the %vector.  Iteration is done in
+        -:  894:       *  ordinary element order.
+        -:  895:       */
+        -:  896:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  897:      const_iterator
+        -:  898:      end() const _GLIBCXX_NOEXCEPT
+        -:  899:      { return const_iterator(this->_M_impl._M_finish); }
+        -:  900:
+        -:  901:      /**
+        -:  902:       *  Returns a read/write reverse iterator that points to the
+        -:  903:       *  last element in the %vector.  Iteration is done in reverse
+        -:  904:       *  element order.
+        -:  905:       */
+        -:  906:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  907:      reverse_iterator
+        -:  908:      rbegin() _GLIBCXX_NOEXCEPT
+        -:  909:      { return reverse_iterator(end()); }
+        -:  910:
+        -:  911:      /**
+        -:  912:       *  Returns a read-only (constant) reverse iterator that points
+        -:  913:       *  to the last element in the %vector.  Iteration is done in
+        -:  914:       *  reverse element order.
+        -:  915:       */
+        -:  916:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  917:      const_reverse_iterator
+        -:  918:      rbegin() const _GLIBCXX_NOEXCEPT
+        -:  919:      { return const_reverse_iterator(end()); }
+        -:  920:
+        -:  921:      /**
+        -:  922:       *  Returns a read/write reverse iterator that points to one
+        -:  923:       *  before the first element in the %vector.  Iteration is done
+        -:  924:       *  in reverse element order.
+        -:  925:       */
+        -:  926:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  927:      reverse_iterator
+        -:  928:      rend() _GLIBCXX_NOEXCEPT
+        -:  929:      { return reverse_iterator(begin()); }
+        -:  930:
+        -:  931:      /**
+        -:  932:       *  Returns a read-only (constant) reverse iterator that points
+        -:  933:       *  to one before the first element in the %vector.  Iteration
+        -:  934:       *  is done in reverse element order.
+        -:  935:       */
+        -:  936:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  937:      const_reverse_iterator
+        -:  938:      rend() const _GLIBCXX_NOEXCEPT
+        -:  939:      { return const_reverse_iterator(begin()); }
+        -:  940:
+        -:  941:#if __cplusplus >= 201103L
+        -:  942:      /**
+        -:  943:       *  Returns a read-only (constant) iterator that points to the
+        -:  944:       *  first element in the %vector.  Iteration is done in ordinary
+        -:  945:       *  element order.
+        -:  946:       */
+        -:  947:      [[__nodiscard__]] _GLIBCXX20_CONSTEXPR
+        -:  948:      const_iterator
+        -:  949:      cbegin() const noexcept
+        -:  950:      { return const_iterator(this->_M_impl._M_start); }
+        -:  951:
+        -:  952:      /**
+        -:  953:       *  Returns a read-only (constant) iterator that points one past
+        -:  954:       *  the last element in the %vector.  Iteration is done in
+        -:  955:       *  ordinary element order.
+        -:  956:       */
+        -:  957:      [[__nodiscard__]] _GLIBCXX20_CONSTEXPR
+        -:  958:      const_iterator
+        -:  959:      cend() const noexcept
+        -:  960:      { return const_iterator(this->_M_impl._M_finish); }
+        -:  961:
+        -:  962:      /**
+        -:  963:       *  Returns a read-only (constant) reverse iterator that points
+        -:  964:       *  to the last element in the %vector.  Iteration is done in
+        -:  965:       *  reverse element order.
+        -:  966:       */
+        -:  967:      [[__nodiscard__]] _GLIBCXX20_CONSTEXPR
+        -:  968:      const_reverse_iterator
+        -:  969:      crbegin() const noexcept
+        -:  970:      { return const_reverse_iterator(end()); }
+        -:  971:
+        -:  972:      /**
+        -:  973:       *  Returns a read-only (constant) reverse iterator that points
+        -:  974:       *  to one before the first element in the %vector.  Iteration
+        -:  975:       *  is done in reverse element order.
+        -:  976:       */
+        -:  977:      [[__nodiscard__]] _GLIBCXX20_CONSTEXPR
+        -:  978:      const_reverse_iterator
+        -:  979:      crend() const noexcept
+        -:  980:      { return const_reverse_iterator(begin()); }
+        -:  981:#endif
+        -:  982:
+        -:  983:      // [23.2.4.2] capacity
+        -:  984:      /**  Returns the number of elements in the %vector.  */
+        -:  985:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  986:      size_type
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::size() const called 0 returned 0% blocks executed 0%
+    #####:  987:      size() const _GLIBCXX_NOEXCEPT
+    #####:  988:      { return size_type(this->_M_impl._M_finish - this->_M_impl._M_start); }
+    %%%%%:  988-block  0
+        -:  989:
+        -:  990:      /**  Returns the size() of the largest possible %vector.  */
+        -:  991:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -:  992:      size_type
+        -:  993:      max_size() const _GLIBCXX_NOEXCEPT
+        -:  994:      { return _S_max_size(_M_get_Tp_allocator()); }
+        -:  995:
+        -:  996:#if __cplusplus >= 201103L
+        -:  997:      /**
+        -:  998:       *  @brief  Resizes the %vector to the specified number of elements.
+        -:  999:       *  @param  __new_size  Number of elements the %vector should contain.
+        -: 1000:       *
+        -: 1001:       *  This function will %resize the %vector to the specified
+        -: 1002:       *  number of elements.  If the number is smaller than the
+        -: 1003:       *  %vector's current size the %vector is truncated, otherwise
+        -: 1004:       *  default constructed elements are appended.
+        -: 1005:       */
+        -: 1006:      _GLIBCXX20_CONSTEXPR
+        -: 1007:      void
+        -: 1008:      resize(size_type __new_size)
+        -: 1009:      {
+        -: 1010:	if (__new_size > size())
+        -: 1011:	  _M_default_append(__new_size - size());
+        -: 1012:	else if (__new_size < size())
+        -: 1013:	  _M_erase_at_end(this->_M_impl._M_start + __new_size);
+        -: 1014:      }
+        -: 1015:
+        -: 1016:      /**
+        -: 1017:       *  @brief  Resizes the %vector to the specified number of elements.
+        -: 1018:       *  @param  __new_size  Number of elements the %vector should contain.
+        -: 1019:       *  @param  __x  Data with which new elements should be populated.
+        -: 1020:       *
+        -: 1021:       *  This function will %resize the %vector to the specified
+        -: 1022:       *  number of elements.  If the number is smaller than the
+        -: 1023:       *  %vector's current size the %vector is truncated, otherwise
+        -: 1024:       *  the %vector is extended and new elements are populated with
+        -: 1025:       *  given data.
+        -: 1026:       */
+        -: 1027:      _GLIBCXX20_CONSTEXPR
+        -: 1028:      void
+        -: 1029:      resize(size_type __new_size, const value_type& __x)
+        -: 1030:      {
+        -: 1031:	if (__new_size > size())
+        -: 1032:	  _M_fill_insert(end(), __new_size - size(), __x);
+        -: 1033:	else if (__new_size < size())
+        -: 1034:	  _M_erase_at_end(this->_M_impl._M_start + __new_size);
+        -: 1035:      }
+        -: 1036:#else
+        -: 1037:      /**
+        -: 1038:       *  @brief  Resizes the %vector to the specified number of elements.
+        -: 1039:       *  @param  __new_size  Number of elements the %vector should contain.
+        -: 1040:       *  @param  __x  Data with which new elements should be populated.
+        -: 1041:       *
+        -: 1042:       *  This function will %resize the %vector to the specified
+        -: 1043:       *  number of elements.  If the number is smaller than the
+        -: 1044:       *  %vector's current size the %vector is truncated, otherwise
+        -: 1045:       *  the %vector is extended and new elements are populated with
+        -: 1046:       *  given data.
+        -: 1047:       */
+        -: 1048:      _GLIBCXX20_CONSTEXPR
+        -: 1049:      void
+        -: 1050:      resize(size_type __new_size, value_type __x = value_type())
+        -: 1051:      {
+        -: 1052:	if (__new_size > size())
+        -: 1053:	  _M_fill_insert(end(), __new_size - size(), __x);
+        -: 1054:	else if (__new_size < size())
+        -: 1055:	  _M_erase_at_end(this->_M_impl._M_start + __new_size);
+        -: 1056:      }
+        -: 1057:#endif
+        -: 1058:
+        -: 1059:#if __cplusplus >= 201103L
+        -: 1060:      /**  A non-binding request to reduce capacity() to size().  */
+        -: 1061:      _GLIBCXX20_CONSTEXPR
+        -: 1062:      void
+        -: 1063:      shrink_to_fit()
+        -: 1064:      { _M_shrink_to_fit(); }
+        -: 1065:#endif
+        -: 1066:
+        -: 1067:      /**
+        -: 1068:       *  Returns the total number of elements that the %vector can
+        -: 1069:       *  hold before needing to allocate more memory.
+        -: 1070:       */
+        -: 1071:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1072:      size_type
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::capacity() const called 0 returned 0% blocks executed 0%
+    #####: 1073:      capacity() const _GLIBCXX_NOEXCEPT
+    #####: 1074:      { return size_type(this->_M_impl._M_end_of_storage
+    #####: 1075:			 - this->_M_impl._M_start); }
+    %%%%%: 1075-block  0
+        -: 1076:
+        -: 1077:      /**
+        -: 1078:       *  Returns true if the %vector is empty.  (Thus begin() would
+        -: 1079:       *  equal end().)
+        -: 1080:       */
+        -: 1081:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1082:      bool
+        -: 1083:      empty() const _GLIBCXX_NOEXCEPT
+        -: 1084:      { return begin() == end(); }
+        -: 1085:
+        -: 1086:      /**
+        -: 1087:       *  @brief  Attempt to preallocate enough memory for specified number of
+        -: 1088:       *          elements.
+        -: 1089:       *  @param  __n  Number of elements required.
+        -: 1090:       *  @throw  std::length_error  If @a n exceeds @c max_size().
+        -: 1091:       *
+        -: 1092:       *  This function attempts to reserve enough memory for the
+        -: 1093:       *  %vector to hold the specified number of elements.  If the
+        -: 1094:       *  number requested is more than max_size(), length_error is
+        -: 1095:       *  thrown.
+        -: 1096:       *
+        -: 1097:       *  The advantage of this function is that if optimal code is a
+        -: 1098:       *  necessity and the user can determine the number of elements
+        -: 1099:       *  that will be required, the user can reserve the memory in
+        -: 1100:       *  %advance, and thus prevent a possible reallocation of memory
+        -: 1101:       *  and copying of %vector data.
+        -: 1102:       */
+        -: 1103:      _GLIBCXX20_CONSTEXPR
+        -: 1104:      void
+        -: 1105:      reserve(size_type __n);
+        -: 1106:
+        -: 1107:      // element access
+        -: 1108:      /**
+        -: 1109:       *  @brief  Subscript access to the data contained in the %vector.
+        -: 1110:       *  @param __n The index of the element for which data should be
+        -: 1111:       *  accessed.
+        -: 1112:       *  @return  Read/write reference to data.
+        -: 1113:       *
+        -: 1114:       *  This operator allows for easy, array-style, data access.
+        -: 1115:       *  Note that data access with this operator is unchecked and
+        -: 1116:       *  out_of_range lookups are not defined. (For checked lookups
+        -: 1117:       *  see at().)
+        -: 1118:       */
+        -: 1119:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1120:      reference
+        -: 1121:      operator[](size_type __n) _GLIBCXX_NOEXCEPT
+        -: 1122:      {
+        -: 1123:	__glibcxx_requires_subscript(__n);
+        -: 1124:	return *(this->_M_impl._M_start + __n);
+        -: 1125:      }
+        -: 1126:
+        -: 1127:      /**
+        -: 1128:       *  @brief  Subscript access to the data contained in the %vector.
+        -: 1129:       *  @param __n The index of the element for which data should be
+        -: 1130:       *  accessed.
+        -: 1131:       *  @return  Read-only (constant) reference to data.
+        -: 1132:       *
+        -: 1133:       *  This operator allows for easy, array-style, data access.
+        -: 1134:       *  Note that data access with this operator is unchecked and
+        -: 1135:       *  out_of_range lookups are not defined. (For checked lookups
+        -: 1136:       *  see at().)
+        -: 1137:       */
+        -: 1138:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1139:      const_reference
+        -: 1140:      operator[](size_type __n) const _GLIBCXX_NOEXCEPT
+        -: 1141:      {
+        -: 1142:	__glibcxx_requires_subscript(__n);
+        -: 1143:	return *(this->_M_impl._M_start + __n);
+        -: 1144:      }
+        -: 1145:
+        -: 1146:    protected:
+        -: 1147:      /// Safety check used only from at().
+        -: 1148:      _GLIBCXX20_CONSTEXPR
+        -: 1149:      void
+        -: 1150:      _M_range_check(size_type __n) const
+        -: 1151:      {
+        -: 1152:	if (__n >= this->size())
+        -: 1153:	  __throw_out_of_range_fmt(__N("vector::_M_range_check: __n "
+        -: 1154:				       "(which is %zu) >= this->size() "
+        -: 1155:				       "(which is %zu)"),
+        -: 1156:				   __n, this->size());
+        -: 1157:      }
+        -: 1158:
+        -: 1159:    public:
+        -: 1160:      /**
+        -: 1161:       *  @brief  Provides access to the data contained in the %vector.
+        -: 1162:       *  @param __n The index of the element for which data should be
+        -: 1163:       *  accessed.
+        -: 1164:       *  @return  Read/write reference to data.
+        -: 1165:       *  @throw  std::out_of_range  If @a __n is an invalid index.
+        -: 1166:       *
+        -: 1167:       *  This function provides for safer data access.  The parameter
+        -: 1168:       *  is first checked that it is in the range of the vector.  The
+        -: 1169:       *  function throws out_of_range if the check fails.
+        -: 1170:       */
+        -: 1171:      _GLIBCXX20_CONSTEXPR
+        -: 1172:      reference
+        -: 1173:      at(size_type __n)
+        -: 1174:      {
+        -: 1175:	_M_range_check(__n);
+        -: 1176:	return (*this)[__n];
+        -: 1177:      }
+        -: 1178:
+        -: 1179:      /**
+        -: 1180:       *  @brief  Provides access to the data contained in the %vector.
+        -: 1181:       *  @param __n The index of the element for which data should be
+        -: 1182:       *  accessed.
+        -: 1183:       *  @return  Read-only (constant) reference to data.
+        -: 1184:       *  @throw  std::out_of_range  If @a __n is an invalid index.
+        -: 1185:       *
+        -: 1186:       *  This function provides for safer data access.  The parameter
+        -: 1187:       *  is first checked that it is in the range of the vector.  The
+        -: 1188:       *  function throws out_of_range if the check fails.
+        -: 1189:       */
+        -: 1190:      _GLIBCXX20_CONSTEXPR
+        -: 1191:      const_reference
+        -: 1192:      at(size_type __n) const
+        -: 1193:      {
+        -: 1194:	_M_range_check(__n);
+        -: 1195:	return (*this)[__n];
+        -: 1196:      }
+        -: 1197:
+        -: 1198:      /**
+        -: 1199:       *  Returns a read/write reference to the data at the first
+        -: 1200:       *  element of the %vector.
+        -: 1201:       */
+        -: 1202:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1203:      reference
+        -: 1204:      front() _GLIBCXX_NOEXCEPT
+        -: 1205:      {
+        -: 1206:	__glibcxx_requires_nonempty();
+        -: 1207:	return *begin();
+        -: 1208:      }
+        -: 1209:
+        -: 1210:      /**
+        -: 1211:       *  Returns a read-only (constant) reference to the data at the first
+        -: 1212:       *  element of the %vector.
+        -: 1213:       */
+        -: 1214:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1215:      const_reference
+        -: 1216:      front() const _GLIBCXX_NOEXCEPT
+        -: 1217:      {
+        -: 1218:	__glibcxx_requires_nonempty();
+        -: 1219:	return *begin();
+        -: 1220:      }
+        -: 1221:
+        -: 1222:      /**
+        -: 1223:       *  Returns a read/write reference to the data at the last
+        -: 1224:       *  element of the %vector.
+        -: 1225:       */
+        -: 1226:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1227:      reference
+        -: 1228:      back() _GLIBCXX_NOEXCEPT
+        -: 1229:      {
+        -: 1230:	__glibcxx_requires_nonempty();
+        -: 1231:	return *(end() - 1);
+        -: 1232:      }
+        -: 1233:
+        -: 1234:      /**
+        -: 1235:       *  Returns a read-only (constant) reference to the data at the
+        -: 1236:       *  last element of the %vector.
+        -: 1237:       */
+        -: 1238:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1239:      const_reference
+        -: 1240:      back() const _GLIBCXX_NOEXCEPT
+        -: 1241:      {
+        -: 1242:	__glibcxx_requires_nonempty();
+        -: 1243:	return *(end() - 1);
+        -: 1244:      }
+        -: 1245:
+        -: 1246:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1247:      // DR 464. Suggestion for new member functions in standard containers.
+        -: 1248:      // data access
+        -: 1249:      /**
+        -: 1250:       *   Returns a pointer such that [data(), data() + size()) is a valid
+        -: 1251:       *   range.  For a non-empty %vector, data() == &front().
+        -: 1252:       */
+        -: 1253:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1254:      _Tp*
+        -: 1255:      data() _GLIBCXX_NOEXCEPT
+        -: 1256:      { return _M_data_ptr(this->_M_impl._M_start); }
+        -: 1257:
+        -: 1258:      _GLIBCXX_NODISCARD _GLIBCXX20_CONSTEXPR
+        -: 1259:      const _Tp*
+        -: 1260:      data() const _GLIBCXX_NOEXCEPT
+        -: 1261:      { return _M_data_ptr(this->_M_impl._M_start); }
+        -: 1262:
+        -: 1263:      // [23.2.4.3] modifiers
+        -: 1264:      /**
+        -: 1265:       *  @brief  Add data to the end of the %vector.
+        -: 1266:       *  @param  __x  Data to be added.
+        -: 1267:       *
+        -: 1268:       *  This is a typical stack operation.  The function creates an
+        -: 1269:       *  element at the end of the %vector and assigns the given data
+        -: 1270:       *  to it.  Due to the nature of a %vector this operation can be
+        -: 1271:       *  done in constant time if the %vector has preallocated space
+        -: 1272:       *  available.
+        -: 1273:       */
+        -: 1274:      _GLIBCXX20_CONSTEXPR
+        -: 1275:      void
+        -: 1276:      push_back(const value_type& __x)
+        -: 1277:      {
+        -: 1278:	if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+        -: 1279:	  {
+        -: 1280:	    _GLIBCXX_ASAN_ANNOTATE_GROW(1);
+        -: 1281:	    _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+        -: 1282:				     __x);
+        -: 1283:	    ++this->_M_impl._M_finish;
+        -: 1284:	    _GLIBCXX_ASAN_ANNOTATE_GREW(1);
+        -: 1285:	  }
+        -: 1286:	else
+        -: 1287:	  _M_realloc_insert(end(), __x);
+        -: 1288:      }
+        -: 1289:
+        -: 1290:#if __cplusplus >= 201103L
+        -: 1291:      _GLIBCXX20_CONSTEXPR
+        -: 1292:      void
+        -: 1293:      push_back(value_type&& __x)
+        -: 1294:      { emplace_back(std::move(__x)); }
+        -: 1295:
+        -: 1296:      template<typename... _Args>
+        -: 1297:#if __cplusplus > 201402L
+        -: 1298:	_GLIBCXX20_CONSTEXPR
+        -: 1299:	reference
+        -: 1300:#else
+        -: 1301:	void
+        -: 1302:#endif
+        -: 1303:	emplace_back(_Args&&... __args);
+        -: 1304:#endif
+        -: 1305:
+        -: 1306:      /**
+        -: 1307:       *  @brief  Removes last element.
+        -: 1308:       *
+        -: 1309:       *  This is a typical stack operation. It shrinks the %vector by one.
+        -: 1310:       *
+        -: 1311:       *  Note that no data is returned, and if the last element's
+        -: 1312:       *  data is needed, it should be retrieved before pop_back() is
+        -: 1313:       *  called.
+        -: 1314:       */
+        -: 1315:      _GLIBCXX20_CONSTEXPR
+        -: 1316:      void
+        -: 1317:      pop_back() _GLIBCXX_NOEXCEPT
+        -: 1318:      {
+        -: 1319:	__glibcxx_requires_nonempty();
+        -: 1320:	--this->_M_impl._M_finish;
+        -: 1321:	_Alloc_traits::destroy(this->_M_impl, this->_M_impl._M_finish);
+        -: 1322:	_GLIBCXX_ASAN_ANNOTATE_SHRINK(1);
+        -: 1323:      }
+        -: 1324:
+        -: 1325:#if __cplusplus >= 201103L
+        -: 1326:      /**
+        -: 1327:       *  @brief  Inserts an object in %vector before specified iterator.
+        -: 1328:       *  @param  __position  A const_iterator into the %vector.
+        -: 1329:       *  @param  __args  Arguments.
+        -: 1330:       *  @return  An iterator that points to the inserted data.
+        -: 1331:       *
+        -: 1332:       *  This function will insert an object of type T constructed
+        -: 1333:       *  with T(std::forward<Args>(args)...) before the specified location.
+        -: 1334:       *  Note that this kind of operation could be expensive for a %vector
+        -: 1335:       *  and if it is frequently used the user should consider using
+        -: 1336:       *  std::list.
+        -: 1337:       */
+        -: 1338:      template<typename... _Args>
+        -: 1339:	_GLIBCXX20_CONSTEXPR
+        -: 1340:	iterator
+        -: 1341:	emplace(const_iterator __position, _Args&&... __args)
+        -: 1342:	{ return _M_emplace_aux(__position, std::forward<_Args>(__args)...); }
+        -: 1343:
+        -: 1344:      /**
+        -: 1345:       *  @brief  Inserts given value into %vector before specified iterator.
+        -: 1346:       *  @param  __position  A const_iterator into the %vector.
+        -: 1347:       *  @param  __x  Data to be inserted.
+        -: 1348:       *  @return  An iterator that points to the inserted data.
+        -: 1349:       *
+        -: 1350:       *  This function will insert a copy of the given value before
+        -: 1351:       *  the specified location.  Note that this kind of operation
+        -: 1352:       *  could be expensive for a %vector and if it is frequently
+        -: 1353:       *  used the user should consider using std::list.
+        -: 1354:       */
+        -: 1355:      _GLIBCXX20_CONSTEXPR
+        -: 1356:      iterator
+        -: 1357:      insert(const_iterator __position, const value_type& __x);
+        -: 1358:#else
+        -: 1359:      /**
+        -: 1360:       *  @brief  Inserts given value into %vector before specified iterator.
+        -: 1361:       *  @param  __position  An iterator into the %vector.
+        -: 1362:       *  @param  __x  Data to be inserted.
+        -: 1363:       *  @return  An iterator that points to the inserted data.
+        -: 1364:       *
+        -: 1365:       *  This function will insert a copy of the given value before
+        -: 1366:       *  the specified location.  Note that this kind of operation
+        -: 1367:       *  could be expensive for a %vector and if it is frequently
+        -: 1368:       *  used the user should consider using std::list.
+        -: 1369:       */
+        -: 1370:      iterator
+        -: 1371:      insert(iterator __position, const value_type& __x);
+        -: 1372:#endif
+        -: 1373:
+        -: 1374:#if __cplusplus >= 201103L
+        -: 1375:      /**
+        -: 1376:       *  @brief  Inserts given rvalue into %vector before specified iterator.
+        -: 1377:       *  @param  __position  A const_iterator into the %vector.
+        -: 1378:       *  @param  __x  Data to be inserted.
+        -: 1379:       *  @return  An iterator that points to the inserted data.
+        -: 1380:       *
+        -: 1381:       *  This function will insert a copy of the given rvalue before
+        -: 1382:       *  the specified location.  Note that this kind of operation
+        -: 1383:       *  could be expensive for a %vector and if it is frequently
+        -: 1384:       *  used the user should consider using std::list.
+        -: 1385:       */
+        -: 1386:      _GLIBCXX20_CONSTEXPR
+        -: 1387:      iterator
+        -: 1388:      insert(const_iterator __position, value_type&& __x)
+        -: 1389:      { return _M_insert_rval(__position, std::move(__x)); }
+        -: 1390:
+        -: 1391:      /**
+        -: 1392:       *  @brief  Inserts an initializer_list into the %vector.
+        -: 1393:       *  @param  __position  An iterator into the %vector.
+        -: 1394:       *  @param  __l  An initializer_list.
+        -: 1395:       *
+        -: 1396:       *  This function will insert copies of the data in the
+        -: 1397:       *  initializer_list @a l into the %vector before the location
+        -: 1398:       *  specified by @a position.
+        -: 1399:       *
+        -: 1400:       *  Note that this kind of operation could be expensive for a
+        -: 1401:       *  %vector and if it is frequently used the user should
+        -: 1402:       *  consider using std::list.
+        -: 1403:       */
+        -: 1404:      _GLIBCXX20_CONSTEXPR
+        -: 1405:      iterator
+        -: 1406:      insert(const_iterator __position, initializer_list<value_type> __l)
+        -: 1407:      {
+        -: 1408:	auto __offset = __position - cbegin();
+        -: 1409:	_M_range_insert(begin() + __offset, __l.begin(), __l.end(),
+        -: 1410:			std::random_access_iterator_tag());
+        -: 1411:	return begin() + __offset;
+        -: 1412:      }
+        -: 1413:#endif
+        -: 1414:
+        -: 1415:#if __cplusplus >= 201103L
+        -: 1416:      /**
+        -: 1417:       *  @brief  Inserts a number of copies of given data into the %vector.
+        -: 1418:       *  @param  __position  A const_iterator into the %vector.
+        -: 1419:       *  @param  __n  Number of elements to be inserted.
+        -: 1420:       *  @param  __x  Data to be inserted.
+        -: 1421:       *  @return  An iterator that points to the inserted data.
+        -: 1422:       *
+        -: 1423:       *  This function will insert a specified number of copies of
+        -: 1424:       *  the given data before the location specified by @a position.
+        -: 1425:       *
+        -: 1426:       *  Note that this kind of operation could be expensive for a
+        -: 1427:       *  %vector and if it is frequently used the user should
+        -: 1428:       *  consider using std::list.
+        -: 1429:       */
+        -: 1430:      _GLIBCXX20_CONSTEXPR
+        -: 1431:      iterator
+        -: 1432:      insert(const_iterator __position, size_type __n, const value_type& __x)
+        -: 1433:      {
+        -: 1434:	difference_type __offset = __position - cbegin();
+        -: 1435:	_M_fill_insert(begin() + __offset, __n, __x);
+        -: 1436:	return begin() + __offset;
+        -: 1437:      }
+        -: 1438:#else
+        -: 1439:      /**
+        -: 1440:       *  @brief  Inserts a number of copies of given data into the %vector.
+        -: 1441:       *  @param  __position  An iterator into the %vector.
+        -: 1442:       *  @param  __n  Number of elements to be inserted.
+        -: 1443:       *  @param  __x  Data to be inserted.
+        -: 1444:       *
+        -: 1445:       *  This function will insert a specified number of copies of
+        -: 1446:       *  the given data before the location specified by @a position.
+        -: 1447:       *
+        -: 1448:       *  Note that this kind of operation could be expensive for a
+        -: 1449:       *  %vector and if it is frequently used the user should
+        -: 1450:       *  consider using std::list.
+        -: 1451:       */
+        -: 1452:      void
+        -: 1453:      insert(iterator __position, size_type __n, const value_type& __x)
+        -: 1454:      { _M_fill_insert(__position, __n, __x); }
+        -: 1455:#endif
+        -: 1456:
+        -: 1457:#if __cplusplus >= 201103L
+        -: 1458:      /**
+        -: 1459:       *  @brief  Inserts a range into the %vector.
+        -: 1460:       *  @param  __position  A const_iterator into the %vector.
+        -: 1461:       *  @param  __first  An input iterator.
+        -: 1462:       *  @param  __last   An input iterator.
+        -: 1463:       *  @return  An iterator that points to the inserted data.
+        -: 1464:       *
+        -: 1465:       *  This function will insert copies of the data in the range
+        -: 1466:       *  [__first,__last) into the %vector before the location specified
+        -: 1467:       *  by @a pos.
+        -: 1468:       *
+        -: 1469:       *  Note that this kind of operation could be expensive for a
+        -: 1470:       *  %vector and if it is frequently used the user should
+        -: 1471:       *  consider using std::list.
+        -: 1472:       */
+        -: 1473:      template<typename _InputIterator,
+        -: 1474:	       typename = std::_RequireInputIter<_InputIterator>>
+        -: 1475:	_GLIBCXX20_CONSTEXPR
+        -: 1476:	iterator
+        -: 1477:	insert(const_iterator __position, _InputIterator __first,
+        -: 1478:	       _InputIterator __last)
+        -: 1479:	{
+        -: 1480:	  difference_type __offset = __position - cbegin();
+        -: 1481:	  _M_range_insert(begin() + __offset, __first, __last,
+        -: 1482:			  std::__iterator_category(__first));
+        -: 1483:	  return begin() + __offset;
+        -: 1484:	}
+        -: 1485:#else
+        -: 1486:      /**
+        -: 1487:       *  @brief  Inserts a range into the %vector.
+        -: 1488:       *  @param  __position  An iterator into the %vector.
+        -: 1489:       *  @param  __first  An input iterator.
+        -: 1490:       *  @param  __last   An input iterator.
+        -: 1491:       *
+        -: 1492:       *  This function will insert copies of the data in the range
+        -: 1493:       *  [__first,__last) into the %vector before the location specified
+        -: 1494:       *  by @a pos.
+        -: 1495:       *
+        -: 1496:       *  Note that this kind of operation could be expensive for a
+        -: 1497:       *  %vector and if it is frequently used the user should
+        -: 1498:       *  consider using std::list.
+        -: 1499:       */
+        -: 1500:      template<typename _InputIterator>
+        -: 1501:	void
+        -: 1502:	insert(iterator __position, _InputIterator __first,
+        -: 1503:	       _InputIterator __last)
+        -: 1504:	{
+        -: 1505:	  // Check whether it's an integral type.  If so, it's not an iterator.
+        -: 1506:	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+        -: 1507:	  _M_insert_dispatch(__position, __first, __last, _Integral());
+        -: 1508:	}
+        -: 1509:#endif
+        -: 1510:
+        -: 1511:      /**
+        -: 1512:       *  @brief  Remove element at given position.
+        -: 1513:       *  @param  __position  Iterator pointing to element to be erased.
+        -: 1514:       *  @return  An iterator pointing to the next element (or end()).
+        -: 1515:       *
+        -: 1516:       *  This function will erase the element at the given position and thus
+        -: 1517:       *  shorten the %vector by one.
+        -: 1518:       *
+        -: 1519:       *  Note This operation could be expensive and if it is
+        -: 1520:       *  frequently used the user should consider using std::list.
+        -: 1521:       *  The user is also cautioned that this function only erases
+        -: 1522:       *  the element, and that if the element is itself a pointer,
+        -: 1523:       *  the pointed-to memory is not touched in any way.  Managing
+        -: 1524:       *  the pointer is the user's responsibility.
+        -: 1525:       */
+        -: 1526:      _GLIBCXX20_CONSTEXPR
+        -: 1527:      iterator
+        -: 1528:#if __cplusplus >= 201103L
+        -: 1529:      erase(const_iterator __position)
+        -: 1530:      { return _M_erase(begin() + (__position - cbegin())); }
+        -: 1531:#else
+        -: 1532:      erase(iterator __position)
+        -: 1533:      { return _M_erase(__position); }
+        -: 1534:#endif
+        -: 1535:
+        -: 1536:      /**
+        -: 1537:       *  @brief  Remove a range of elements.
+        -: 1538:       *  @param  __first  Iterator pointing to the first element to be erased.
+        -: 1539:       *  @param  __last  Iterator pointing to one past the last element to be
+        -: 1540:       *                  erased.
+        -: 1541:       *  @return  An iterator pointing to the element pointed to by @a __last
+        -: 1542:       *           prior to erasing (or end()).
+        -: 1543:       *
+        -: 1544:       *  This function will erase the elements in the range
+        -: 1545:       *  [__first,__last) and shorten the %vector accordingly.
+        -: 1546:       *
+        -: 1547:       *  Note This operation could be expensive and if it is
+        -: 1548:       *  frequently used the user should consider using std::list.
+        -: 1549:       *  The user is also cautioned that this function only erases
+        -: 1550:       *  the elements, and that if the elements themselves are
+        -: 1551:       *  pointers, the pointed-to memory is not touched in any way.
+        -: 1552:       *  Managing the pointer is the user's responsibility.
+        -: 1553:       */
+        -: 1554:      _GLIBCXX20_CONSTEXPR
+        -: 1555:      iterator
+        -: 1556:#if __cplusplus >= 201103L
+        -: 1557:      erase(const_iterator __first, const_iterator __last)
+        -: 1558:      {
+        -: 1559:	const auto __beg = begin();
+        -: 1560:	const auto __cbeg = cbegin();
+        -: 1561:	return _M_erase(__beg + (__first - __cbeg), __beg + (__last - __cbeg));
+        -: 1562:      }
+        -: 1563:#else
+        -: 1564:      erase(iterator __first, iterator __last)
+        -: 1565:      { return _M_erase(__first, __last); }
+        -: 1566:#endif
+        -: 1567:
+        -: 1568:      /**
+        -: 1569:       *  @brief  Swaps data with another %vector.
+        -: 1570:       *  @param  __x  A %vector of the same element and allocator types.
+        -: 1571:       *
+        -: 1572:       *  This exchanges the elements between two vectors in constant time.
+        -: 1573:       *  (Three pointers, so it should be quite fast.)
+        -: 1574:       *  Note that the global std::swap() function is specialized such that
+        -: 1575:       *  std::swap(v1,v2) will feed to this function.
+        -: 1576:       *
+        -: 1577:       *  Whether the allocators are swapped depends on the allocator traits.
+        -: 1578:       */
+        -: 1579:      _GLIBCXX20_CONSTEXPR
+        -: 1580:      void
+        -: 1581:      swap(vector& __x) _GLIBCXX_NOEXCEPT
+        -: 1582:      {
+        -: 1583:#if __cplusplus >= 201103L
+        -: 1584:	__glibcxx_assert(_Alloc_traits::propagate_on_container_swap::value
+        -: 1585:			 || _M_get_Tp_allocator() == __x._M_get_Tp_allocator());
+        -: 1586:#endif
+        -: 1587:	this->_M_impl._M_swap_data(__x._M_impl);
+        -: 1588:	_Alloc_traits::_S_on_swap(_M_get_Tp_allocator(),
+        -: 1589:				  __x._M_get_Tp_allocator());
+        -: 1590:      }
+        -: 1591:
+        -: 1592:      /**
+        -: 1593:       *  Erases all the elements.  Note that this function only erases the
+        -: 1594:       *  elements, and that if the elements themselves are pointers, the
+        -: 1595:       *  pointed-to memory is not touched in any way.  Managing the pointer is
+        -: 1596:       *  the user's responsibility.
+        -: 1597:       */
+        -: 1598:      _GLIBCXX20_CONSTEXPR
+        -: 1599:      void
+        -: 1600:      clear() _GLIBCXX_NOEXCEPT
+        -: 1601:      { _M_erase_at_end(this->_M_impl._M_start); }
+        -: 1602:
+        -: 1603:    protected:
+        -: 1604:      /**
+        -: 1605:       *  Memory expansion handler.  Uses the member allocation function to
+        -: 1606:       *  obtain @a n bytes of memory, and then copies [first,last) into it.
+        -: 1607:       */
+        -: 1608:      template<typename _ForwardIterator>
+        -: 1609:	_GLIBCXX20_CONSTEXPR
+        -: 1610:	pointer
+function std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >* std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_allocate_and_copy<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*>(unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*) called 0 returned 0% blocks executed 0%
+    #####: 1611:	_M_allocate_and_copy(size_type __n,
+        -: 1612:			     _ForwardIterator __first, _ForwardIterator __last)
+        -: 1613:	{
+    #####: 1614:	  pointer __result = this->_M_allocate(__n);
+    %%%%%: 1614-block  0
+call    0 never executed
+        -: 1615:	  __try
+        -: 1616:	    {
+    #####: 1617:	      std::__uninitialized_copy_a(__first, __last, __result,
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####: 1618:					  _M_get_Tp_allocator());
+call    0 never executed
+    #####: 1619:	      return __result;
+    %%%%%: 1619-block  0
+    %%%%%: 1619-block  1
+        -: 1620:	    }
+    =====: 1621:	  __catch(...)
+    $$$$$: 1621-block  0
+    $$$$$: 1621-block  1
+call    0 never executed
+    $$$$$: 1621-block  2
+call    1 never executed
+        -: 1622:	    {
+    =====: 1623:	      _M_deallocate(__result, __n);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    =====: 1624:	      __throw_exception_again;
+    $$$$$: 1624-block  0
+call    0 never executed
+        -: 1625:	    }
+        -: 1626:	}
+        -: 1627:
+        -: 1628:
+        -: 1629:      // Internal constructor functions follow.
+        -: 1630:
+        -: 1631:      // Called by the range constructor to implement [23.1.1]/9
+        -: 1632:
+        -: 1633:#if __cplusplus < 201103L
+        -: 1634:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1635:      // 438. Ambiguity in the "do the right thing" clause
+        -: 1636:      template<typename _Integer>
+        -: 1637:	void
+        -: 1638:	_M_initialize_dispatch(_Integer __n, _Integer __value, __true_type)
+        -: 1639:	{
+        -: 1640:	  this->_M_impl._M_start = _M_allocate(_S_check_init_len(
+        -: 1641:		static_cast<size_type>(__n), _M_get_Tp_allocator()));
+        -: 1642:	  this->_M_impl._M_end_of_storage =
+        -: 1643:	    this->_M_impl._M_start + static_cast<size_type>(__n);
+        -: 1644:	  _M_fill_initialize(static_cast<size_type>(__n), __value);
+        -: 1645:	}
+        -: 1646:
+        -: 1647:      // Called by the range constructor to implement [23.1.1]/9
+        -: 1648:      template<typename _InputIterator>
+        -: 1649:	void
+        -: 1650:	_M_initialize_dispatch(_InputIterator __first, _InputIterator __last,
+        -: 1651:			       __false_type)
+        -: 1652:	{
+        -: 1653:	  _M_range_initialize(__first, __last,
+        -: 1654:			      std::__iterator_category(__first));
+        -: 1655:	}
+        -: 1656:#endif
+        -: 1657:
+        -: 1658:      // Called by the second initialize_dispatch above
+        -: 1659:      template<typename _InputIterator>
+        -: 1660:	_GLIBCXX20_CONSTEXPR
+        -: 1661:	void
+        -: 1662:	_M_range_initialize(_InputIterator __first, _InputIterator __last,
+        -: 1663:			    std::input_iterator_tag)
+        -: 1664:	{
+        -: 1665:	  __try {
+        -: 1666:	    for (; __first != __last; ++__first)
+        -: 1667:#if __cplusplus >= 201103L
+        -: 1668:	      emplace_back(*__first);
+        -: 1669:#else
+        -: 1670:	      push_back(*__first);
+        -: 1671:#endif
+        -: 1672:	  } __catch(...) {
+        -: 1673:	    clear();
+        -: 1674:	    __throw_exception_again;
+        -: 1675:	  }
+        -: 1676:	}
+        -: 1677:
+        -: 1678:      // Called by the second initialize_dispatch above
+        -: 1679:      template<typename _ForwardIterator>
+        -: 1680:	_GLIBCXX20_CONSTEXPR
+        -: 1681:	void
+function void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_range_initialize<char const* const*>(char const* const*, char const* const*, std::forward_iterator_tag) called 0 returned 0% blocks executed 0%
+    #####: 1682:	_M_range_initialize(_ForwardIterator __first, _ForwardIterator __last,
+    %%%%%: 1682-block  0
+        -: 1683:			    std::forward_iterator_tag)
+        -: 1684:	{
+    #####: 1685:	  const size_type __n = std::distance(__first, __last);
+        -: 1686:	  this->_M_impl._M_start
+    #####: 1687:	    = this->_M_allocate(_S_check_init_len(__n, _M_get_Tp_allocator()));
+    %%%%%: 1687-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####: 1688:	  this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
+    #####: 1689:	  this->_M_impl._M_finish =
+    #####: 1690:	    std::__uninitialized_copy_a(__first, __last,
+call    0 never executed
+        -: 1691:					this->_M_impl._M_start,
+    #####: 1692:					_M_get_Tp_allocator());
+call    0 never executed
+    #####: 1693:	}
+        -: 1694:
+        -: 1695:      // Called by the first initialize_dispatch above and by the
+        -: 1696:      // vector(n,value,a) constructor.
+        -: 1697:      _GLIBCXX20_CONSTEXPR
+        -: 1698:      void
+        -: 1699:      _M_fill_initialize(size_type __n, const value_type& __value)
+        -: 1700:      {
+        -: 1701:	this->_M_impl._M_finish =
+        -: 1702:	  std::__uninitialized_fill_n_a(this->_M_impl._M_start, __n, __value,
+        -: 1703:					_M_get_Tp_allocator());
+        -: 1704:      }
+        -: 1705:
+        -: 1706:#if __cplusplus >= 201103L
+        -: 1707:      // Called by the vector(n) constructor.
+        -: 1708:      _GLIBCXX20_CONSTEXPR
+        -: 1709:      void
+        -: 1710:      _M_default_initialize(size_type __n)
+        -: 1711:      {
+        -: 1712:	this->_M_impl._M_finish =
+        -: 1713:	  std::__uninitialized_default_n_a(this->_M_impl._M_start, __n,
+        -: 1714:					   _M_get_Tp_allocator());
+        -: 1715:      }
+        -: 1716:#endif
+        -: 1717:
+        -: 1718:      // Internal assign functions follow.  The *_aux functions do the actual
+        -: 1719:      // assignment work for the range versions.
+        -: 1720:
+        -: 1721:      // Called by the range assign to implement [23.1.1]/9
+        -: 1722:
+        -: 1723:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1724:      // 438. Ambiguity in the "do the right thing" clause
+        -: 1725:      template<typename _Integer>
+        -: 1726:	_GLIBCXX20_CONSTEXPR
+        -: 1727:	void
+        -: 1728:	_M_assign_dispatch(_Integer __n, _Integer __val, __true_type)
+        -: 1729:	{ _M_fill_assign(__n, __val); }
+        -: 1730:
+        -: 1731:      // Called by the range assign to implement [23.1.1]/9
+        -: 1732:      template<typename _InputIterator>
+        -: 1733:	_GLIBCXX20_CONSTEXPR
+        -: 1734:	void
+        -: 1735:	_M_assign_dispatch(_InputIterator __first, _InputIterator __last,
+        -: 1736:			   __false_type)
+        -: 1737:	{ _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
+        -: 1738:
+        -: 1739:      // Called by the second assign_dispatch above
+        -: 1740:      template<typename _InputIterator>
+        -: 1741:	_GLIBCXX20_CONSTEXPR
+        -: 1742:	void
+        -: 1743:	_M_assign_aux(_InputIterator __first, _InputIterator __last,
+        -: 1744:		      std::input_iterator_tag);
+        -: 1745:
+        -: 1746:      // Called by the second assign_dispatch above
+        -: 1747:      template<typename _ForwardIterator>
+        -: 1748:	_GLIBCXX20_CONSTEXPR
+        -: 1749:	void
+        -: 1750:	_M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
+        -: 1751:		      std::forward_iterator_tag);
+        -: 1752:
+        -: 1753:      // Called by assign(n,t), and the range assign when it turns out
+        -: 1754:      // to be the same thing.
+        -: 1755:      _GLIBCXX20_CONSTEXPR
+        -: 1756:      void
+        -: 1757:      _M_fill_assign(size_type __n, const value_type& __val);
+        -: 1758:
+        -: 1759:      // Internal insert functions follow.
+        -: 1760:
+        -: 1761:      // Called by the range insert to implement [23.1.1]/9
+        -: 1762:
+        -: 1763:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1764:      // 438. Ambiguity in the "do the right thing" clause
+        -: 1765:      template<typename _Integer>
+        -: 1766:	_GLIBCXX20_CONSTEXPR
+        -: 1767:	void
+        -: 1768:	_M_insert_dispatch(iterator __pos, _Integer __n, _Integer __val,
+        -: 1769:			   __true_type)
+        -: 1770:	{ _M_fill_insert(__pos, __n, __val); }
+        -: 1771:
+        -: 1772:      // Called by the range insert to implement [23.1.1]/9
+        -: 1773:      template<typename _InputIterator>
+        -: 1774:	_GLIBCXX20_CONSTEXPR
+        -: 1775:	void
+        -: 1776:	_M_insert_dispatch(iterator __pos, _InputIterator __first,
+        -: 1777:			   _InputIterator __last, __false_type)
+        -: 1778:	{
+        -: 1779:	  _M_range_insert(__pos, __first, __last,
+        -: 1780:			  std::__iterator_category(__first));
+        -: 1781:	}
+        -: 1782:
+        -: 1783:      // Called by the second insert_dispatch above
+        -: 1784:      template<typename _InputIterator>
+        -: 1785:	_GLIBCXX20_CONSTEXPR
+        -: 1786:	void
+        -: 1787:	_M_range_insert(iterator __pos, _InputIterator __first,
+        -: 1788:			_InputIterator __last, std::input_iterator_tag);
+        -: 1789:
+        -: 1790:      // Called by the second insert_dispatch above
+        -: 1791:      template<typename _ForwardIterator>
+        -: 1792:	_GLIBCXX20_CONSTEXPR
+        -: 1793:	void
+        -: 1794:	_M_range_insert(iterator __pos, _ForwardIterator __first,
+        -: 1795:			_ForwardIterator __last, std::forward_iterator_tag);
+        -: 1796:
+        -: 1797:      // Called by insert(p,n,x), and the range insert when it turns out to be
+        -: 1798:      // the same thing.
+        -: 1799:      _GLIBCXX20_CONSTEXPR
+        -: 1800:      void
+        -: 1801:      _M_fill_insert(iterator __pos, size_type __n, const value_type& __x);
+        -: 1802:
+        -: 1803:#if __cplusplus >= 201103L
+        -: 1804:      // Called by resize(n).
+        -: 1805:      _GLIBCXX20_CONSTEXPR
+        -: 1806:      void
+        -: 1807:      _M_default_append(size_type __n);
+        -: 1808:
+        -: 1809:      _GLIBCXX20_CONSTEXPR
+        -: 1810:      bool
+        -: 1811:      _M_shrink_to_fit();
+        -: 1812:#endif
+        -: 1813:
+        -: 1814:#if __cplusplus < 201103L
+        -: 1815:      // Called by insert(p,x)
+        -: 1816:      void
+        -: 1817:      _M_insert_aux(iterator __position, const value_type& __x);
+        -: 1818:
+        -: 1819:      void
+        -: 1820:      _M_realloc_insert(iterator __position, const value_type& __x);
+        -: 1821:#else
+        -: 1822:      // A value_type object constructed with _Alloc_traits::construct()
+        -: 1823:      // and destroyed with _Alloc_traits::destroy().
+        -: 1824:      struct _Temporary_value
+        -: 1825:      {
+        -: 1826:	template<typename... _Args>
+        -: 1827:	  _GLIBCXX20_CONSTEXPR explicit
+        -: 1828:	  _Temporary_value(vector* __vec, _Args&&... __args) : _M_this(__vec)
+        -: 1829:	  {
+        -: 1830:	    _Alloc_traits::construct(_M_this->_M_impl, _M_ptr(),
+        -: 1831:				     std::forward<_Args>(__args)...);
+        -: 1832:	  }
+        -: 1833:
+        -: 1834:	_GLIBCXX20_CONSTEXPR
+        -: 1835:	~_Temporary_value()
+        -: 1836:	{ _Alloc_traits::destroy(_M_this->_M_impl, _M_ptr()); }
+        -: 1837:
+        -: 1838:	_GLIBCXX20_CONSTEXPR value_type&
+        -: 1839:	_M_val() noexcept { return _M_storage._M_val; }
+        -: 1840:
+        -: 1841:      private:
+        -: 1842:	_GLIBCXX20_CONSTEXPR _Tp*
+        -: 1843:	_M_ptr() noexcept { return std::__addressof(_M_storage._M_val); }
+        -: 1844:
+        -: 1845:	union _Storage
+        -: 1846:	{
+        -: 1847:	  constexpr _Storage() : _M_byte() { }
+        -: 1848:	  _GLIBCXX20_CONSTEXPR ~_Storage() { }
+        -: 1849:	  _Storage& operator=(const _Storage&) = delete;
+        -: 1850:	  unsigned char _M_byte;
+        -: 1851:	  _Tp _M_val;
+        -: 1852:	};
+        -: 1853:
+        -: 1854:	vector*  _M_this;
+        -: 1855:	_Storage _M_storage;
+        -: 1856:      };
+        -: 1857:
+        -: 1858:      // Called by insert(p,x) and other functions when insertion needs to
+        -: 1859:      // reallocate or move existing elements. _Arg is either _Tp& or _Tp.
+        -: 1860:      template<typename _Arg>
+        -: 1861:	_GLIBCXX20_CONSTEXPR
+        -: 1862:	void
+        -: 1863:	_M_insert_aux(iterator __position, _Arg&& __arg);
+        -: 1864:
+        -: 1865:      template<typename... _Args>
+        -: 1866:	_GLIBCXX20_CONSTEXPR
+        -: 1867:	void
+        -: 1868:	_M_realloc_insert(iterator __position, _Args&&... __args);
+        -: 1869:
+        -: 1870:      // Either move-construct at the end, or forward to _M_insert_aux.
+        -: 1871:      _GLIBCXX20_CONSTEXPR
+        -: 1872:      iterator
+        -: 1873:      _M_insert_rval(const_iterator __position, value_type&& __v);
+        -: 1874:
+        -: 1875:      // Try to emplace at the end, otherwise forward to _M_insert_aux.
+        -: 1876:      template<typename... _Args>
+        -: 1877:	_GLIBCXX20_CONSTEXPR
+        -: 1878:	iterator
+        -: 1879:	_M_emplace_aux(const_iterator __position, _Args&&... __args);
+        -: 1880:
+        -: 1881:      // Emplacing an rvalue of the correct type can use _M_insert_rval.
+        -: 1882:      _GLIBCXX20_CONSTEXPR
+        -: 1883:      iterator
+        -: 1884:      _M_emplace_aux(const_iterator __position, value_type&& __v)
+        -: 1885:      { return _M_insert_rval(__position, std::move(__v)); }
+        -: 1886:#endif
+        -: 1887:
+        -: 1888:      // Called by _M_fill_insert, _M_insert_aux etc.
+        -: 1889:      _GLIBCXX20_CONSTEXPR
+        -: 1890:      size_type
+        -: 1891:      _M_check_len(size_type __n, const char* __s) const
+        -: 1892:      {
+        -: 1893:	if (max_size() - size() < __n)
+        -: 1894:	  __throw_length_error(__N(__s));
+        -: 1895:
+        -: 1896:	const size_type __len = size() + (std::max)(size(), __n);
+        -: 1897:	return (__len < size() || __len > max_size()) ? max_size() : __len;
+        -: 1898:      }
+        -: 1899:
+        -: 1900:      // Called by constructors to check initial size.
+        -: 1901:      static _GLIBCXX20_CONSTEXPR size_type
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_S_check_init_len(unsigned long, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&) called 0 returned 0% blocks executed 0%
+    #####: 1902:      _S_check_init_len(size_type __n, const allocator_type& __a)
+    %%%%%: 1902-block  0
+        -: 1903:      {
+    #####: 1904:	if (__n > _S_max_size(_Tp_alloc_type(__a)))
+    %%%%%: 1904-block  0
+call    0 never executed
+    %%%%%: 1904-block  1
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####: 1905:	  __throw_length_error(
+    %%%%%: 1905-block  0
+call    0 never executed
+        -: 1906:	      __N("cannot create std::vector larger than max_size()"));
+    #####: 1907:	return __n;
+    %%%%%: 1907-block  0
+        -: 1908:      }
+        -: 1909:
+        -: 1910:      static _GLIBCXX20_CONSTEXPR size_type
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_S_max_size(std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > const&) called 0 returned 0% blocks executed 0%
+    #####: 1911:      _S_max_size(const _Tp_alloc_type& __a) _GLIBCXX_NOEXCEPT
+        -: 1912:      {
+        -: 1913:	// std::distance(begin(), end()) cannot be greater than PTRDIFF_MAX,
+        -: 1914:	// and realistically we can't store more than PTRDIFF_MAX/sizeof(T)
+        -: 1915:	// (even if std::allocator_traits::max_size says we can).
+    #####: 1916:	const size_t __diffmax
+    %%%%%: 1916-block  0
+        -: 1917:	  = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
+    #####: 1918:	const size_t __allocmax = _Alloc_traits::max_size(__a);
+    #####: 1919:	return (std::min)(__diffmax, __allocmax);
+    %%%%%: 1919-block  0
+call    0 never executed
+        -: 1920:      }
+        -: 1921:
+        -: 1922:      // Internal erase functions follow.
+        -: 1923:
+        -: 1924:      // Called by erase(q1,q2), clear(), resize(), _M_fill_assign,
+        -: 1925:      // _M_assign_aux.
+        -: 1926:      _GLIBCXX20_CONSTEXPR
+        -: 1927:      void
+function std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_erase_at_end(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) called 0 returned 0% blocks executed 0%
+    #####: 1928:      _M_erase_at_end(pointer __pos) _GLIBCXX_NOEXCEPT
+        -: 1929:      {
+    #####: 1930:	if (size_type __n = this->_M_impl._M_finish - __pos)
+    %%%%%: 1930-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -: 1931:	  {
+    #####: 1932:	    std::_Destroy(__pos, this->_M_impl._M_finish,
+call    0 never executed
+    #####: 1933:			  _M_get_Tp_allocator());
+    %%%%%: 1933-block  0
+call    0 never executed
+    #####: 1934:	    this->_M_impl._M_finish = __pos;
+    %%%%%: 1934-block  0
+        -: 1935:	    _GLIBCXX_ASAN_ANNOTATE_SHRINK(__n);
+        -: 1936:	  }
+    #####: 1937:      }
+        -: 1938:
+        -: 1939:      _GLIBCXX20_CONSTEXPR
+        -: 1940:      iterator
+        -: 1941:      _M_erase(iterator __position);
+        -: 1942:
+        -: 1943:      _GLIBCXX20_CONSTEXPR
+        -: 1944:      iterator
+        -: 1945:      _M_erase(iterator __first, iterator __last);
+        -: 1946:
+        -: 1947:#if __cplusplus >= 201103L
+        -: 1948:    private:
+        -: 1949:      // Constant-time move assignment when source object's memory can be
+        -: 1950:      // moved, either because the source's allocator will move too
+        -: 1951:      // or because the allocators are equal.
+        -: 1952:      _GLIBCXX20_CONSTEXPR
+        -: 1953:      void
+        -: 1954:      _M_move_assign(vector&& __x, true_type) noexcept
+        -: 1955:      {
+        -: 1956:	vector __tmp(get_allocator());
+        -: 1957:	this->_M_impl._M_swap_data(__x._M_impl);
+        -: 1958:	__tmp._M_impl._M_swap_data(__x._M_impl);
+        -: 1959:	std::__alloc_on_move(_M_get_Tp_allocator(), __x._M_get_Tp_allocator());
+        -: 1960:      }
+        -: 1961:
+        -: 1962:      // Do move assignment when it might not be possible to move source
+        -: 1963:      // object's memory, resulting in a linear-time operation.
+        -: 1964:      _GLIBCXX20_CONSTEXPR
+        -: 1965:      void
+        -: 1966:      _M_move_assign(vector&& __x, false_type)
+        -: 1967:      {
+        -: 1968:	if (__x._M_get_Tp_allocator() == this->_M_get_Tp_allocator())
+        -: 1969:	  _M_move_assign(std::move(__x), true_type());
+        -: 1970:	else
+        -: 1971:	  {
+        -: 1972:	    // The rvalue's allocator cannot be moved and is not equal,
+        -: 1973:	    // so we need to individually move each element.
+        -: 1974:	    this->_M_assign_aux(std::make_move_iterator(__x.begin()),
+        -: 1975:			        std::make_move_iterator(__x.end()),
+        -: 1976:				std::random_access_iterator_tag());
+        -: 1977:	    __x.clear();
+        -: 1978:	  }
+        -: 1979:      }
+        -: 1980:#endif
+        -: 1981:
+        -: 1982:      template<typename _Up>
+        -: 1983:	_GLIBCXX20_CONSTEXPR
+        -: 1984:	_Up*
+        -: 1985:	_M_data_ptr(_Up* __ptr) const _GLIBCXX_NOEXCEPT
+        -: 1986:	{ return __ptr; }
+        -: 1987:
+        -: 1988:#if __cplusplus >= 201103L
+        -: 1989:      template<typename _Ptr>
+        -: 1990:	_GLIBCXX20_CONSTEXPR
+        -: 1991:	typename std::pointer_traits<_Ptr>::element_type*
+        -: 1992:	_M_data_ptr(_Ptr __ptr) const
+        -: 1993:	{ return empty() ? nullptr : std::__to_address(__ptr); }
+        -: 1994:#else
+        -: 1995:      template<typename _Up>
+        -: 1996:	_Up*
+        -: 1997:	_M_data_ptr(_Up* __ptr) _GLIBCXX_NOEXCEPT
+        -: 1998:	{ return __ptr; }
+        -: 1999:
+        -: 2000:      template<typename _Ptr>
+        -: 2001:	value_type*
+        -: 2002:	_M_data_ptr(_Ptr __ptr)
+        -: 2003:	{ return empty() ? (value_type*)0 : __ptr.operator->(); }
+        -: 2004:
+        -: 2005:      template<typename _Ptr>
+        -: 2006:	const value_type*
+        -: 2007:	_M_data_ptr(_Ptr __ptr) const
+        -: 2008:	{ return empty() ? (const value_type*)0 : __ptr.operator->(); }
+        -: 2009:#endif
+        -: 2010:    };
+        -: 2011:
+        -: 2012:#if __cpp_deduction_guides >= 201606
+        -: 2013:  template<typename _InputIterator, typename _ValT
+        -: 2014:	     = typename iterator_traits<_InputIterator>::value_type,
+        -: 2015:	   typename _Allocator = allocator<_ValT>,
+        -: 2016:	   typename = _RequireInputIter<_InputIterator>,
+        -: 2017:	   typename = _RequireAllocator<_Allocator>>
+        -: 2018:    vector(_InputIterator, _InputIterator, _Allocator = _Allocator())
+        -: 2019:      -> vector<_ValT, _Allocator>;
+        -: 2020:#endif
+        -: 2021:
+        -: 2022:  /**
+        -: 2023:   *  @brief  Vector equality comparison.
+        -: 2024:   *  @param  __x  A %vector.
+        -: 2025:   *  @param  __y  A %vector of the same type as @a __x.
+        -: 2026:   *  @return  True iff the size and elements of the vectors are equal.
+        -: 2027:   *
+        -: 2028:   *  This is an equivalence relation.  It is linear in the size of the
+        -: 2029:   *  vectors.  Vectors are considered equivalent if their sizes are equal,
+        -: 2030:   *  and if corresponding elements compare equal.
+        -: 2031:  */
+        -: 2032:  template<typename _Tp, typename _Alloc>
+        -: 2033:    _GLIBCXX20_CONSTEXPR
+        -: 2034:    inline bool
+        -: 2035:    operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2036:    { return (__x.size() == __y.size()
+        -: 2037:	      && std::equal(__x.begin(), __x.end(), __y.begin())); }
+        -: 2038:
+        -: 2039:#if __cpp_lib_three_way_comparison
+        -: 2040:  /**
+        -: 2041:   *  @brief  Vector ordering relation.
+        -: 2042:   *  @param  __x  A `vector`.
+        -: 2043:   *  @param  __y  A `vector` of the same type as `__x`.
+        -: 2044:   *  @return  A value indicating whether `__x` is less than, equal to,
+        -: 2045:   *           greater than, or incomparable with `__y`.
+        -: 2046:   *
+        -: 2047:   *  See `std::lexicographical_compare_three_way()` for how the determination
+        -: 2048:   *  is made. This operator is used to synthesize relational operators like
+        -: 2049:   *  `<` and `>=` etc.
+        -: 2050:  */
+        -: 2051:  template<typename _Tp, typename _Alloc>
+        -: 2052:    _GLIBCXX20_CONSTEXPR
+        -: 2053:    inline __detail::__synth3way_t<_Tp>
+        -: 2054:    operator<=>(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2055:    {
+        -: 2056:      return std::lexicographical_compare_three_way(__x.begin(), __x.end(),
+        -: 2057:						    __y.begin(), __y.end(),
+        -: 2058:						    __detail::__synth3way);
+        -: 2059:    }
+        -: 2060:#else
+        -: 2061:  /**
+        -: 2062:   *  @brief  Vector ordering relation.
+        -: 2063:   *  @param  __x  A %vector.
+        -: 2064:   *  @param  __y  A %vector of the same type as @a __x.
+        -: 2065:   *  @return  True iff @a __x is lexicographically less than @a __y.
+        -: 2066:   *
+        -: 2067:   *  This is a total ordering relation.  It is linear in the size of the
+        -: 2068:   *  vectors.  The elements must be comparable with @c <.
+        -: 2069:   *
+        -: 2070:   *  See std::lexicographical_compare() for how the determination is made.
+        -: 2071:  */
+        -: 2072:  template<typename _Tp, typename _Alloc>
+        -: 2073:    inline bool
+        -: 2074:    operator<(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2075:    { return std::lexicographical_compare(__x.begin(), __x.end(),
+        -: 2076:					  __y.begin(), __y.end()); }
+        -: 2077:
+        -: 2078:  /// Based on operator==
+        -: 2079:  template<typename _Tp, typename _Alloc>
+        -: 2080:    inline bool
+        -: 2081:    operator!=(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2082:    { return !(__x == __y); }
+        -: 2083:
+        -: 2084:  /// Based on operator<
+        -: 2085:  template<typename _Tp, typename _Alloc>
+        -: 2086:    inline bool
+        -: 2087:    operator>(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2088:    { return __y < __x; }
+        -: 2089:
+        -: 2090:  /// Based on operator<
+        -: 2091:  template<typename _Tp, typename _Alloc>
+        -: 2092:    inline bool
+        -: 2093:    operator<=(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2094:    { return !(__y < __x); }
+        -: 2095:
+        -: 2096:  /// Based on operator<
+        -: 2097:  template<typename _Tp, typename _Alloc>
+        -: 2098:    inline bool
+        -: 2099:    operator>=(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        -: 2100:    { return !(__x < __y); }
+        -: 2101:#endif // three-way comparison
+        -: 2102:
+        -: 2103:  /// See std::vector::swap().
+        -: 2104:  template<typename _Tp, typename _Alloc>
+        -: 2105:    _GLIBCXX20_CONSTEXPR
+        -: 2106:    inline void
+        -: 2107:    swap(vector<_Tp, _Alloc>& __x, vector<_Tp, _Alloc>& __y)
+        -: 2108:    _GLIBCXX_NOEXCEPT_IF(noexcept(__x.swap(__y)))
+        -: 2109:    { __x.swap(__y); }
+        -: 2110:
+        -: 2111:_GLIBCXX_END_NAMESPACE_CONTAINER
+        -: 2112:
+        -: 2113:#if __cplusplus >= 201703L
+        -: 2114:  namespace __detail::__variant
+        -: 2115:  {
+        -: 2116:    template<typename> struct _Never_valueless_alt; // see <variant>
+        -: 2117:
+        -: 2118:    // Provide the strong exception-safety guarantee when emplacing a
+        -: 2119:    // vector into a variant, but only if move assignment cannot throw.
+        -: 2120:    template<typename _Tp, typename _Alloc>
+        -: 2121:      struct _Never_valueless_alt<_GLIBCXX_STD_C::vector<_Tp, _Alloc>>
+        -: 2122:      : std::is_nothrow_move_assignable<_GLIBCXX_STD_C::vector<_Tp, _Alloc>>
+        -: 2123:      { };
+        -: 2124:  }  // namespace __detail::__variant
+        -: 2125:#endif // C++17
+        -: 2126:
+        -: 2127:_GLIBCXX_END_NAMESPACE_VERSION
+        -: 2128:} // namespace std
+        -: 2129:
+        -: 2130:#endif /* _STL_VECTOR_H */

@@ -45,13 +45,14 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Build Project
-        run: cmake --build build --target all -- -j20
-
-      - name: Test Project
+      - name: Build and Test Project
         run: |
+          mkdir build
           cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
+          make -j20
           make coverage_xml
+
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

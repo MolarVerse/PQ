@@ -1,0 +1,138 @@
+        -:    0:Source:/home/jag/projects/pq/include/settings/manostatSettings.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _MANOSTAT_SETTINGS_HPP_
+        -:   24:
+        -:   25:#define _MANOSTAT_SETTINGS_HPP_
+        -:   26:
+        -:   27:#include "defaults.hpp"
+        -:   28:
+        -:   29:#include <string>        // for string
+        -:   30:#include <string_view>   // for string_view
+        -:   31:#include <vector>        // for vector
+        -:   32:
+        -:   33:namespace settings
+        -:   34:{
+        -:   35:    /**
+        -:   36:     * @enum ManostatType
+        -:   37:     *
+        -:   38:     * @brief enum class to store the type of the manostat
+        -:   39:     *
+        -:   40:     */
+        -:   41:    enum class ManostatType
+        -:   42:    {
+        -:   43:        NONE,
+        -:   44:        BERENDSEN,
+        -:   45:        STOCHASTIC_RESCALING
+        -:   46:    };
+        -:   47:
+        -:   48:    /**
+        -:   49:     * @enum Isotropy
+        -:   50:     *
+        -:   51:     * @brief enum class to store the isotropy of the manostat
+        -:   52:     *
+        -:   53:     */
+        -:   54:    enum class Isotropy
+        -:   55:    {
+        -:   56:        ISOTROPIC,
+        -:   57:        SEMI_ISOTROPIC,
+        -:   58:        ANISOTROPIC,
+        -:   59:        FULL_ANISOTROPIC
+        -:   60:    };
+        -:   61:
+        -:   62:    [[nodiscard]] std::string string(const ManostatType &manostatType);
+        -:   63:    [[nodiscard]] std::string string(const Isotropy &isotropy);
+        -:   64:
+        -:   65:    /**
+        -:   66:     * @class ManostatSettings
+        -:   67:     *
+        -:   68:     * @brief static class to store settings of the manostat
+        -:   69:     *
+        -:   70:     */
+        -:   71:    class ManostatSettings
+        -:   72:    {
+        -:   73:      private:
+        -:   74:        static inline ManostatType _manostatType = ManostatType::NONE;
+        -:   75:        static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
+        -:   76:
+        -:   77:        static inline bool _isPressureSet = false;
+        -:   78:
+        -:   79:        static inline double _targetPressure;   // no default value - has to be set by user
+        -:   80:        static inline double _tauManostat     = defaults::_BERENDSEN_MANOSTAT_RELAXATION_TIME_;   // 1.0 ps
+        -:   81:        static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;        // 4.5e-5 1/bar
+        -:   82:
+        -:   83:        static inline std::vector<size_t> _2DIsotropicAxes;
+        -:   84:        static inline size_t              _2DAnisotropicAxis;
+        -:   85:
+        -:   86:      public:
+        -:   87:        ManostatSettings()  = default;
+        -:   88:        ~ManostatSettings() = default;
+        -:   89:
+        -:   90:        static void setManostatType(const std::string_view &manostatType);
+        -:   91:        static void setManostatType(const ManostatType &manostatType) { _manostatType = manostatType; }
+        -:   92:
+        -:   93:        static void setIsotropy(const std::string_view &isotropy);
+        -:   94:        static void setIsotropy(const Isotropy &isotropy) { _isotropy = isotropy; }
+        -:   95:
+        -:   96:        /***************************
+        -:   97:         * standard setter methods *
+        -:   98:         ***************************/
+        -:   99:
+        -:  100:        static void setPressureSet(const bool pressureSet) { _isPressureSet = pressureSet; }
+        -:  101:        static void setTargetPressure(const double targetPressure) { _targetPressure = targetPressure; }
+        -:  102:        static void setTauManostat(const double tauManostat) { _tauManostat = tauManostat; }
+        -:  103:        static void setCompressibility(const double compressibility) { _compressibility = compressibility; }
+        -:  104:        static void set2DIsotropicAxes(const std::vector<size_t> &indices) { _2DIsotropicAxes = indices; }
+        -:  105:        static void set2DAnisotropicAxis(const size_t index) { _2DAnisotropicAxis = index; }
+        -:  106:
+        -:  107:        /***************************
+        -:  108:         * standard getter methods *
+        -:  109:         ***************************/
+        -:  110:
+function settings::ManostatSettings::getManostatType() called 0 returned 0% blocks executed 0%
+    #####:  111:        [[nodiscard]] static ManostatType getManostatType() { return _manostatType; }
+    %%%%%:  111-block  0
+        -:  112:        [[nodiscard]] static Isotropy     getIsotropy() { return _isotropy; }
+function settings::ManostatSettings::isPressureSet() called 0 returned 0% blocks executed 0%
+    #####:  113:        [[nodiscard]] static bool         isPressureSet() { return _isPressureSet; }
+    %%%%%:  113-block  0
+function settings::ManostatSettings::getTargetPressure() called 0 returned 0% blocks executed 0%
+    #####:  114:        [[nodiscard]] static double       getTargetPressure() { return _targetPressure; }
+    %%%%%:  114-block  0
+function settings::ManostatSettings::getTauManostat() called 0 returned 0% blocks executed 0%
+    #####:  115:        [[nodiscard]] static double       getTauManostat() { return _tauManostat; }
+    %%%%%:  115-block  0
+function settings::ManostatSettings::getCompressibility() called 0 returned 0% blocks executed 0%
+    #####:  116:        [[nodiscard]] static double       getCompressibility() { return _compressibility; }
+    %%%%%:  116-block  0
+        -:  117:
+        -:  118:        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes() { return _2DIsotropicAxes; }
+        -:  119:        [[nodiscard]] static size_t              get2DAnisotropicAxis() { return _2DAnisotropicAxis; }
+        -:  120:    };
+        -:  121:
+        -:  122:}   // namespace settings
+        -:  123:
+        -:  124:#endif   // _MANOSTAT_SETTINGS_HPP_

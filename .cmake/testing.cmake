@@ -31,6 +31,7 @@ if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     set(EXCLUDE_FOR_GCOVR
         "\.build"
+        .build
         tests
         build/_deps # don't know why build
         apps

@@ -1,0 +1,161 @@
+        -:    0:Source:/home/jag/projects/pq/include/linearAlgebra/staticMatrix3x3Class.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _STATIC_MATRIX_CLASS_3X3_HPP_
+        -:   24:
+        -:   25:#define _STATIC_MATRIX_CLASS_3X3_HPP_
+        -:   26:
+        -:   27:#include "vector3d.hpp"
+        -:   28:
+        -:   29:namespace linearAlgebra
+        -:   30:{
+        -:   31:    template <typename T>
+        -:   32:    class StaticMatrix3x3;
+        -:   33:
+        -:   34:    using tensor3D = StaticMatrix3x3<double>;
+        -:   35:
+        -:   36:    /**
+        -:   37:     * @class StaticMatrix3x3
+        -:   38:     *
+        -:   39:     * @brief template Matrix class with 3 rows and 3 columns
+        -:   40:     *
+        -:   41:     * @tparam T
+        -:   42:     */
+        -:   43:    template <typename T>
+        -:   44:    class StaticMatrix3x3
+        -:   45:    {
+        -:   46:      private:
+        -:   47:        Vector3D<Vector3D<T>> _data;
+        -:   48:
+        -:   49:      public:
+        -:   50:        StaticMatrix3x3() = default;
+        -:   51:
+        -:   52:        explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data) : _data(data) {}
+        -:   53:        explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data) : _data(std::move(data)) {}
+        -:   54:
+        -:   55:        explicit StaticMatrix3x3(const Vector3D<T> &row1, const Vector3D<T> &row2, const Vector3D<T> &row3)
+        -:   56:            : _data(row1, row2, row3){};
+        -:   57:
+function linearAlgebra::StaticMatrix3x3<double>::StaticMatrix3x3(double) called 0 returned 0% blocks executed 0%
+    #####:   58:        StaticMatrix3x3(const T t)
+        -:   59:        {
+    #####:   60:            _data[0] = Vector3D<T>(t);
+    %%%%%:   60-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    $$$$$:   60-block  1
+call    5 never executed
+    #####:   61:            _data[1] = Vector3D<T>(t);
+    %%%%%:   61-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    $$$$$:   61-block  1
+call    5 never executed
+    #####:   62:            _data[2] = Vector3D<T>(t);
+    %%%%%:   62-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:   63:        }
+    %%%%%:   63-block  0
+        -:   64:
+        -:   65:        StaticMatrix3x3(const std::vector<T> &vector)
+        -:   66:        {
+        -:   67:            if (vector.size() != 9)
+        -:   68:            {
+        -:   69:                throw std::runtime_error("vector size must be 9");
+        -:   70:            }
+        -:   71:
+        -:   72:            _data[0] = Vector3D<T>(vector[0], vector[1], vector[2]);
+        -:   73:            _data[1] = Vector3D<T>(vector[3], vector[4], vector[5]);
+        -:   74:            _data[2] = Vector3D<T>(vector[6], vector[7], vector[8]);
+        -:   75:        }
+        -:   76:
+        -:   77:        /**
+        -:   78:         * @brief index operator
+        -:   79:         *
+        -:   80:         * @param const size_t index
+        -:   81:         * @return std::vector<T> &
+        -:   82:         */
+function linearAlgebra::StaticMatrix3x3<double>::operator[](unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   83:        Vector3D<T> &operator[](const size_t index) { return _data[index]; }
+    %%%%%:   83-block  0
+call    0 never executed
+        -:   84:
+        -:   85:        /**
+        -:   86:         * @brief index operator
+        -:   87:         *
+        -:   88:         * @param const size_t index
+        -:   89:         * @return const std::vector<T> &
+        -:   90:         */
+        -:   91:        const Vector3D<T> &operator[](const size_t index) const { return _data[index]; }
+        -:   92:
+        -:   93:        /**
+        -:   94:         * @brief operator== for two StaticMatrix3x3's
+        -:   95:         *
+        -:   96:         * @param rhs
+        -:   97:         * @return bool
+        -:   98:         */
+        -:   99:        friend bool operator==(const StaticMatrix3x3 &lhs, const StaticMatrix3x3 &rhs) = default;
+        -:  100:
+        -:  101:        /**
+        -:  102:         * @brief unary operator- for StaticMatrix3x3
+        -:  103:         *
+        -:  104:         * @return StaticMatrix3x3
+        -:  105:         */
+        -:  106:        StaticMatrix3x3 operator-() { return StaticMatrix3x3(-_data[0], -_data[1], -_data[2]); }
+        -:  107:
+        -:  108:        /**
+        -:  109:         * @brief operator+ for two StaticMatrix3x3's
+        -:  110:         *
+        -:  111:         * @param rhs
+        -:  112:         * @return StaticMatrix3x3
+        -:  113:         */
+        -:  114:        std::vector<T> toStdVector() const
+        -:  115:        {
+        -:  116:            std::vector<T> result;
+        -:  117:            result.reserve(9);
+        -:  118:            for (const auto &row : _data)
+        -:  119:            {
+        -:  120:                for (const auto &element : row)
+        -:  121:                {
+        -:  122:                    result.push_back(element);
+        -:  123:                }
+        -:  124:            }
+        -:  125:            return result;
+        -:  126:        }
+        -:  127:    };
+        -:  128:}   // namespace linearAlgebra
+        -:  129:
+        -:  130:#endif   // _STATIC_MATRIX_CLASS_3X3_HPP_

@@ -1,0 +1,280 @@
+        -:    0:Source:/home/jag/projects/pq/include/engine/engine.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _ENGINE_HPP_
+        -:   24:
+        -:   25:#define _ENGINE_HPP_
+        -:   26:
+        -:   27:#include "celllist.hpp"
+        -:   28:#include "constraints.hpp"
+        -:   29:#include "engineOutput.hpp"
+        -:   30:#include "forceFieldClass.hpp"
+        -:   31:#include "integrator.hpp"
+        -:   32:#include "intraNonBonded.hpp"
+        -:   33:#include "manostat.hpp"
+        -:   34:#include "physicalData.hpp"
+        -:   35:#include "potential.hpp"
+        -:   36:#include "resetKinetics.hpp"
+        -:   37:#include "simulationBox.hpp"
+        -:   38:#include "thermostat.hpp"
+        -:   39:#include "timings.hpp"
+        -:   40:#include "virial.hpp"
+        -:   41:
+        -:   42:#include <cstddef>   // for size_t
+        -:   43:#include <memory>
+        -:   44:
+        -:   45:namespace output
+        -:   46:{
+        -:   47:    class EnergyOutput;                   // forward declaration
+        -:   48:    class InfoOutput;                     // forward declaration
+        -:   49:    class LogOutput;                      // forward declaration
+        -:   50:    class RstFileOutput;                  // forward declaration
+        -:   51:    class StdoutOutput;                   // forward declaration
+        -:   52:    class TrajectoryOutput;               // forward declaration
+        -:   53:    class MomentumOutput;                 // forward declaration
+        -:   54:    class VirialOutput;                   // forward declaration
+        -:   55:    class StressOutput;                   // forward declaration
+        -:   56:    class BoxFileOutput;                  // forward declaration
+        -:   57:    class RingPolymerRestartFileOutput;   // forward declaration
+        -:   58:    class RingPolymerTrajectoryOutput;    // forward declaration
+        -:   59:
+        -:   60:}   // namespace output
+        -:   61:
+        -:   62:namespace engine
+        -:   63:{
+        -:   64:    using RPRestartFileOutput = output::RingPolymerRestartFileOutput;
+        -:   65:    using RPTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
+        -:   66:    using RPVelOutput         = output::RingPolymerTrajectoryOutput;
+        -:   67:    using RPForceOutput       = output::RingPolymerTrajectoryOutput;
+        -:   68:    using RPChargeOutput      = output::RingPolymerTrajectoryOutput;
+        -:   69:    using RPEnergyOutput      = output::RingPolymerEnergyOutput;
+        -:   70:
+        -:   71:    /**
+        -:   72:     * @class Engine
+        -:   73:     *
+        -:   74:     * @brief Contains all the information needed to run the simulation
+        -:   75:     *
+        -:   76:     */
+        -:   77:    class Engine
+        -:   78:    {
+        -:   79:      protected:
+        -:   80:        size_t _step = 1;
+        -:   81:
+        -:   82:        EngineOutput                   _engineOutput;
+        -:   83:        timings::Timings               _timings;
+        -:   84:        simulationBox::CellList        _cellList;
+        -:   85:        simulationBox::SimulationBox   _simulationBox;
+        -:   86:        physicalData::PhysicalData     _physicalData;
+        -:   87:        physicalData::PhysicalData     _averagePhysicalData;
+        -:   88:        constraints::Constraints       _constraints;
+        -:   89:        forceField::ForceField         _forceField;
+        -:   90:        intraNonBonded::IntraNonBonded _intraNonBonded;
+        -:   91:        resetKinetics::ResetKinetics   _resetKinetics;
+        -:   92:
+        -:   93:        std::unique_ptr<integrator::Integrator> _integrator = std::make_unique<integrator::VelocityVerlet>();
+        -:   94:        std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
+        -:   95:        std::unique_ptr<manostat::Manostat>     _manostat   = std::make_unique<manostat::Manostat>();
+        -:   96:        std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();
+        -:   97:        std::unique_ptr<potential::Potential>   _potential  = std::make_unique<potential::PotentialBruteForce>();
+        -:   98:
+        -:   99:      public:
+function engine::Engine::Engine() called 0 returned 0% blocks executed 0%
+    #####:  100:        Engine()          = default;
+    %%%%%:  100-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  100-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  100-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:  100-block  3
+call   10 never executed
+branch 11 never executed (fallthrough)
+branch 12 never executed (throw)
+    %%%%%:  100-block  4
+call   13 never executed
+branch 14 never executed (fallthrough)
+branch 15 never executed (throw)
+    %%%%%:  100-block  5
+call   16 never executed
+call   17 never executed
+call   18 never executed
+call   19 never executed
+call   20 never executed
+branch 21 never executed (fallthrough)
+branch 22 never executed (throw)
+    %%%%%:  100-block  6
+call   23 never executed
+call   24 never executed
+call   25 never executed
+branch 26 never executed (fallthrough)
+branch 27 never executed (throw)
+    %%%%%:  100-block  7
+call   28 never executed
+branch 29 never executed (fallthrough)
+branch 30 never executed (throw)
+    %%%%%:  100-block  8
+call   31 never executed
+branch 32 never executed (fallthrough)
+branch 33 never executed (throw)
+    %%%%%:  100-block  9
+call   34 never executed
+call   35 never executed
+call   36 never executed
+branch 37 never executed (fallthrough)
+branch 38 never executed (throw)
+    %%%%%:  100-block 10
+call   39 never executed
+call   40 never executed
+    $$$$$:  100-block 11
+    $$$$$:  100-block 12
+    $$$$$:  100-block 13
+    $$$$$:  100-block 14
+call   41 never executed
+    $$$$$:  100-block 15
+call   42 never executed
+    $$$$$:  100-block 16
+call   43 never executed
+    $$$$$:  100-block 17
+call   44 never executed
+    $$$$$:  100-block 18
+call   45 never executed
+    $$$$$:  100-block 19
+call   46 never executed
+    $$$$$:  100-block 20
+call   47 never executed
+    $$$$$:  100-block 21
+call   48 never executed
+    $$$$$:  100-block 22
+call   49 never executed
+    $$$$$:  100-block 23
+call   50 never executed
+    $$$$$:  100-block 24
+call   51 never executed
+    $$$$$:  100-block 25
+call   52 never executed
+        -:  101:        virtual ~Engine() = default;
+        -:  102:
+        -:  103:        virtual void run();
+        -:  104:        virtual void takeStep(){};
+        -:  105:        virtual void writeOutput();
+        -:  106:
+        -:  107:        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
+        -:  108:        [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
+        -:  109:        [[nodiscard]] bool isCellListActivated() const { return _cellList.isActive(); }
+        -:  110:        [[nodiscard]] bool isConstraintsActivated() const { return _constraints.isActive(); }
+        -:  111:        [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded.isActive(); }
+        -:  112:
+        -:  113:        /************************************
+        -:  114:         *                                  *
+        -:  115:         * standard make unique_ptr methods *
+        -:  116:         *                                  *
+        -:  117:         ************************************/
+        -:  118:
+        -:  119:        template <typename T>
+        -:  120:        void makeIntegrator(T integrator)
+        -:  121:        {
+        -:  122:            _integrator = std::make_unique<T>(integrator);
+        -:  123:        }
+        -:  124:        template <typename T>
+        -:  125:        void makePotential(T)
+        -:  126:        {
+        -:  127:            _potential = std::make_unique<T>();
+        -:  128:        }
+        -:  129:        template <typename T>
+        -:  130:        void makeThermostat(T thermostat)
+        -:  131:        {
+        -:  132:            _thermostat = std::make_unique<T>(thermostat);
+        -:  133:        }
+        -:  134:        template <typename T>
+        -:  135:        void makeManostat(T manostat)
+        -:  136:        {
+        -:  137:            _manostat = std::make_unique<T>(manostat);
+        -:  138:        }
+        -:  139:        template <typename T>
+        -:  140:        void makeVirial(T virial)
+        -:  141:        {
+        -:  142:            _virial = std::make_unique<T>(virial);
+        -:  143:        }
+        -:  144:
+        -:  145:        /***************************
+        -:  146:         *                         *
+        -:  147:         * standard getter methods *
+        -:  148:         *                         *
+        -:  149:         ***************************/
+        -:  150:
+        -:  151:        [[nodiscard]] timings::Timings               &getTimings() { return _timings; }
+        -:  152:        [[nodiscard]] simulationBox::CellList        &getCellList() { return _cellList; }
+        -:  153:        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox() { return _simulationBox; }
+        -:  154:        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData() { return _physicalData; }
+        -:  155:        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData() { return _averagePhysicalData; }
+        -:  156:        [[nodiscard]] constraints::Constraints       &getConstraints() { return _constraints; }
+        -:  157:        [[nodiscard]] forceField::ForceField         &getForceField() { return _forceField; }
+        -:  158:        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
+        -:  159:        [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return _resetKinetics; }
+        -:  160:
+        -:  161:        [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+        -:  162:
+        -:  163:        [[nodiscard]] virial::Virial         &getVirial() { return *_virial; }
+        -:  164:        [[nodiscard]] integrator::Integrator &getIntegrator() { return *_integrator; }
+        -:  165:        [[nodiscard]] potential::Potential   &getPotential() { return *_potential; }
+        -:  166:        [[nodiscard]] thermostat::Thermostat &getThermostat() { return *_thermostat; }
+        -:  167:        [[nodiscard]] manostat::Manostat     &getManostat() { return *_manostat; }
+        -:  168:
+        -:  169:        [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
+        -:  170:        [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
+        -:  171:        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput() { return _engineOutput.getInstantEnergyOutput(); }
+        -:  172:        [[nodiscard]] output::MomentumOutput   &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
+        -:  173:        [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
+        -:  174:        [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
+        -:  175:        [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
+        -:  176:        [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
+        -:  177:        [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
+        -:  178:        [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
+        -:  179:        [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
+        -:  180:        [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        -:  181:
+        -:  182:        [[nodiscard]] output::VirialOutput  &getVirialOutput() { return _engineOutput.getVirialOutput(); }
+        -:  183:        [[nodiscard]] output::StressOutput  &getStressOutput() { return _engineOutput.getStressOutput(); }
+        -:  184:        [[nodiscard]] output::BoxFileOutput &getBoxFileOutput() { return _engineOutput.getBoxFileOutput(); }
+        -:  185:
+        -:  186:        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
+        -:  187:        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }
+        -:  188:        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerVelOutput() { return _engineOutput.getRingPolymerVelOutput(); }
+        -:  189:        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerForceOutput() { return _engineOutput.getRingPolymerForceOutput(); }
+        -:  190:        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerChargeOutput() { return _engineOutput.getRingPolymerChargeOutput(); }
+        -:  191:        [[nodiscard]] RPEnergyOutput      &getRingPolymerEnergyOutput() { return _engineOutput.getRingPolymerEnergyOutput(); }
+        -:  192:    };
+        -:  193:
+        -:  194:}   // namespace engine
+        -:  195:
+        -:  196:#endif   // _ENGINE_HPP_

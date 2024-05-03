@@ -1,0 +1,3467 @@
+        -:    0:Source:/home/jag/software/gcc-13.1.0/install/include/c++/13.1.0/bits/unique_ptr.h
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:// unique_ptr implementation -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2008-2023 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/** @file bits/unique_ptr.h
+        -:   26: *  This is an internal header file, included by other library headers.
+        -:   27: *  Do not attempt to use it directly. @headername{memory}
+        -:   28: */
+        -:   29:
+        -:   30:#ifndef _UNIQUE_PTR_H
+        -:   31:#define _UNIQUE_PTR_H 1
+        -:   32:
+        -:   33:#include <bits/c++config.h>
+        -:   34:#include <debug/assertions.h>
+        -:   35:#include <type_traits>
+        -:   36:#include <tuple>
+        -:   37:#include <bits/stl_function.h>
+        -:   38:#include <bits/functional_hash.h>
+        -:   39:#if __cplusplus >= 202002L
+        -:   40:# include <compare>
+        -:   41:# if _GLIBCXX_HOSTED
+        -:   42:#  include <ostream>
+        -:   43:# endif
+        -:   44:#endif
+        -:   45:
+        -:   46:/* Duplicate definition with ptr_traits.h.  */
+        -:   47:#if __cplusplus > 202002L && defined(__cpp_constexpr_dynamic_alloc)
+        -:   48:# define __cpp_lib_constexpr_memory 202202L
+        -:   49:#elif __cplusplus > 201703L
+        -:   50:# define __cpp_lib_constexpr_memory 201811L
+        -:   51:#endif
+        -:   52:
+        -:   53:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   54:{
+        -:   55:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   56:
+        -:   57:  /**
+        -:   58:   * @addtogroup pointer_abstractions
+        -:   59:   * @{
+        -:   60:   */
+        -:   61:
+        -:   62:#if _GLIBCXX_USE_DEPRECATED
+        -:   63:#pragma GCC diagnostic push
+        -:   64:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        -:   65:  template<typename> class auto_ptr;
+        -:   66:#pragma GCC diagnostic pop
+        -:   67:#endif
+        -:   68:
+        -:   69:  /** Primary template of default_delete, used by unique_ptr for single objects
+        -:   70:   *
+        -:   71:   * @headerfile memory
+        -:   72:   * @since C++11
+        -:   73:   */
+        -:   74:  template<typename _Tp>
+        -:   75:    struct default_delete
+        -:   76:    {
+        -:   77:      /// Default constructor
+        -:   78:      constexpr default_delete() noexcept = default;
+        -:   79:
+        -:   80:      /** @brief Converting constructor.
+        -:   81:       *
+        -:   82:       * Allows conversion from a deleter for objects of another type, `_Up`,
+        -:   83:       * only if `_Up*` is convertible to `_Tp*`.
+        -:   84:       */
+        -:   85:      template<typename _Up,
+        -:   86:	       typename = _Require<is_convertible<_Up*, _Tp*>>>
+        -:   87:	_GLIBCXX23_CONSTEXPR
+    #####:   88:        default_delete(const default_delete<_Up>&) noexcept { }
+------------------
+std::default_delete<potential::Potential>::default_delete<potential::PotentialBruteForce, void>(std::default_delete<potential::PotentialBruteForce> const&):
+function std::default_delete<potential::Potential>::default_delete<potential::PotentialBruteForce, void>(std::default_delete<potential::PotentialBruteForce> const&) called 0 returned 0% blocks executed 0%
+    #####:   88:        default_delete(const default_delete<_Up>&) noexcept { }
+------------------
+std::default_delete<virial::Virial>::default_delete<virial::VirialMolecular, void>(std::default_delete<virial::VirialMolecular> const&):
+function std::default_delete<virial::Virial>::default_delete<virial::VirialMolecular, void>(std::default_delete<virial::VirialMolecular> const&) called 0 returned 0% blocks executed 0%
+    #####:   88:        default_delete(const default_delete<_Up>&) noexcept { }
+------------------
+std::default_delete<integrator::Integrator>::default_delete<integrator::VelocityVerlet, void>(std::default_delete<integrator::VelocityVerlet> const&):
+function std::default_delete<integrator::Integrator>::default_delete<integrator::VelocityVerlet, void>(std::default_delete<integrator::VelocityVerlet> const&) called 0 returned 0% blocks executed 0%
+    #####:   88:        default_delete(const default_delete<_Up>&) noexcept { }
+------------------
+        -:   89:
+        -:   90:      /// Calls `delete __ptr`
+        -:   91:      _GLIBCXX23_CONSTEXPR
+        -:   92:      void
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    #####:  100:      }
+------------------
+std::default_delete<output::RingPolymerTrajectoryOutput>::operator()(output::RingPolymerTrajectoryOutput*) const:
+function std::default_delete<output::RingPolymerTrajectoryOutput>::operator()(output::RingPolymerTrajectoryOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::EnergyOutput>::operator()(output::EnergyOutput*) const:
+function std::default_delete<output::EnergyOutput>::operator()(output::EnergyOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::MomentumOutput>::operator()(output::MomentumOutput*) const:
+function std::default_delete<output::MomentumOutput>::operator()(output::MomentumOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::TrajectoryOutput>::operator()(output::TrajectoryOutput*) const:
+function std::default_delete<output::TrajectoryOutput>::operator()(output::TrajectoryOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::LogOutput>::operator()(output::LogOutput*) const:
+function std::default_delete<output::LogOutput>::operator()(output::LogOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::StdoutOutput>::operator()(output::StdoutOutput*) const:
+function std::default_delete<output::StdoutOutput>::operator()(output::StdoutOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::RstFileOutput>::operator()(output::RstFileOutput*) const:
+function std::default_delete<output::RstFileOutput>::operator()(output::RstFileOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::InfoOutput>::operator()(output::InfoOutput*) const:
+function std::default_delete<output::InfoOutput>::operator()(output::InfoOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::VirialOutput>::operator()(output::VirialOutput*) const:
+function std::default_delete<output::VirialOutput>::operator()(output::VirialOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::StressOutput>::operator()(output::StressOutput*) const:
+function std::default_delete<output::StressOutput>::operator()(output::StressOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::BoxFileOutput>::operator()(output::BoxFileOutput*) const:
+function std::default_delete<output::BoxFileOutput>::operator()(output::BoxFileOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::RingPolymerRestartFileOutput>::operator()(output::RingPolymerRestartFileOutput*) const:
+function std::default_delete<output::RingPolymerRestartFileOutput>::operator()(output::RingPolymerRestartFileOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<input::InputFileParser>::operator()(input::InputFileParser*) const:
+function std::default_delete<input::InputFileParser>::operator()(input::InputFileParser*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<output::RingPolymerEnergyOutput>::operator()(output::RingPolymerEnergyOutput*) const:
+function std::default_delete<output::RingPolymerEnergyOutput>::operator()(output::RingPolymerEnergyOutput*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+std::default_delete<integrator::VelocityVerlet>::operator()(integrator::VelocityVerlet*) const:
+function std::default_delete<integrator::VelocityVerlet>::operator()(integrator::VelocityVerlet*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<integrator::Integrator>::operator()(integrator::Integrator*) const:
+function std::default_delete<integrator::Integrator>::operator()(integrator::Integrator*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<thermostat::Thermostat>::operator()(thermostat::Thermostat*) const:
+function std::default_delete<thermostat::Thermostat>::operator()(thermostat::Thermostat*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<manostat::Manostat>::operator()(manostat::Manostat*) const:
+function std::default_delete<manostat::Manostat>::operator()(manostat::Manostat*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<virial::VirialMolecular>::operator()(virial::VirialMolecular*) const:
+function std::default_delete<virial::VirialMolecular>::operator()(virial::VirialMolecular*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<virial::Virial>::operator()(virial::Virial*) const:
+function std::default_delete<virial::Virial>::operator()(virial::Virial*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<potential::PotentialBruteForce>::operator()(potential::PotentialBruteForce*) const:
+function std::default_delete<potential::PotentialBruteForce>::operator()(potential::PotentialBruteForce*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > >::operator()(std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >*) const:
+function std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > >::operator()(std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+    #####:  100:      }
+------------------
+std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) const:
+function std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) const called 0 returned 0% blocks executed 0%
+    #####:   93:      operator()(_Tp* __ptr) const
+        -:   94:      {
+        -:   95:	static_assert(!is_void<_Tp>::value,
+        -:   96:		      "can't delete pointer to incomplete type");
+        -:   97:	static_assert(sizeof(_Tp)>0,
+        -:   98:		      "can't delete pointer to incomplete type");
+    #####:   99:	delete __ptr;
+    %%%%%:   99-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   99-block  1
+call    2 never executed
+call    3 never executed
+    #####:  100:      }
+------------------
+        -:  101:    };
+        -:  102:
+        -:  103:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  104:  // DR 740 - omit specialization for array objects with a compile time length
+        -:  105:
+        -:  106:  /** Specialization of default_delete for arrays, used by `unique_ptr<T[]>`
+        -:  107:   *
+        -:  108:   * @headerfile memory
+        -:  109:   * @since C++11
+        -:  110:   */
+        -:  111:  template<typename _Tp>
+        -:  112:    struct default_delete<_Tp[]>
+        -:  113:    {
+        -:  114:    public:
+        -:  115:      /// Default constructor
+        -:  116:      constexpr default_delete() noexcept = default;
+        -:  117:
+        -:  118:      /** @brief Converting constructor.
+        -:  119:       *
+        -:  120:       * Allows conversion from a deleter for arrays of another type, such as
+        -:  121:       * a const-qualified version of `_Tp`.
+        -:  122:       *
+        -:  123:       * Conversions from types derived from `_Tp` are not allowed because
+        -:  124:       * it is undefined to `delete[]` an array of derived types through a
+        -:  125:       * pointer to the base type.
+        -:  126:       */
+        -:  127:      template<typename _Up,
+        -:  128:	       typename = _Require<is_convertible<_Up(*)[], _Tp(*)[]>>>
+        -:  129:	_GLIBCXX23_CONSTEXPR
+        -:  130:        default_delete(const default_delete<_Up[]>&) noexcept { }
+        -:  131:
+        -:  132:      /// Calls `delete[] __ptr`
+        -:  133:      template<typename _Up>
+        -:  134:	_GLIBCXX23_CONSTEXPR
+        -:  135:	typename enable_if<is_convertible<_Up(*)[], _Tp(*)[]>::value>::type
+        -:  136:	operator()(_Up* __ptr) const
+        -:  137:	{
+        -:  138:	  static_assert(sizeof(_Tp)>0,
+        -:  139:			"can't delete pointer to incomplete type");
+        -:  140:	  delete [] __ptr;
+        -:  141:	}
+        -:  142:    };
+        -:  143:
+        -:  144:  /// @cond undocumented
+        -:  145:
+        -:  146:  // Manages the pointer and deleter of a unique_ptr
+        -:  147:  template <typename _Tp, typename _Dp>
+        -:  148:    class __uniq_ptr_impl
+        -:  149:    {
+        -:  150:      template <typename _Up, typename _Ep, typename = void>
+        -:  151:	struct _Ptr
+        -:  152:	{
+        -:  153:	  using type = _Up*;
+        -:  154:	};
+        -:  155:
+        -:  156:      template <typename _Up, typename _Ep>
+        -:  157:	struct
+        -:  158:	_Ptr<_Up, _Ep, __void_t<typename remove_reference<_Ep>::type::pointer>>
+        -:  159:	{
+        -:  160:	  using type = typename remove_reference<_Ep>::type::pointer;
+        -:  161:	};
+        -:  162:
+        -:  163:    public:
+        -:  164:      using _DeleterConstraint = enable_if<
+        -:  165:        __and_<__not_<is_pointer<_Dp>>,
+        -:  166:	       is_default_constructible<_Dp>>::value>;
+        -:  167:
+        -:  168:      using pointer = typename _Ptr<_Tp, _Dp>::type;
+        -:  169:
+        -:  170:      static_assert( !is_rvalue_reference<_Dp>::value,
+        -:  171:		     "unique_ptr's deleter type must be a function object type"
+        -:  172:		     " or an lvalue reference type" );
+        -:  173:
+        -:  174:      __uniq_ptr_impl() = default;
+        -:  175:      _GLIBCXX23_CONSTEXPR
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+------------------
+std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::__uniq_ptr_impl(output::StressOutput*):
+function std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::__uniq_ptr_impl(output::StressOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::__uniq_ptr_impl(output::EnergyOutput*):
+function std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::__uniq_ptr_impl(output::EnergyOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::__uniq_ptr_impl(output::MomentumOutput*):
+function std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::__uniq_ptr_impl(output::MomentumOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::__uniq_ptr_impl(output::TrajectoryOutput*):
+function std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::__uniq_ptr_impl(output::TrajectoryOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::__uniq_ptr_impl(output::LogOutput*):
+function std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::__uniq_ptr_impl(output::LogOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::__uniq_ptr_impl(output::StdoutOutput*):
+function std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::__uniq_ptr_impl(output::StdoutOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::__uniq_ptr_impl(output::RstFileOutput*):
+function std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::__uniq_ptr_impl(output::RstFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::__uniq_ptr_impl(output::InfoOutput*):
+function std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::__uniq_ptr_impl(output::InfoOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::__uniq_ptr_impl(output::VirialOutput*):
+function std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::__uniq_ptr_impl(output::VirialOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::__uniq_ptr_impl(potential::PotentialBruteForce*):
+function std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::__uniq_ptr_impl(potential::PotentialBruteForce*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::__uniq_ptr_impl(output::BoxFileOutput*):
+function std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::__uniq_ptr_impl(output::BoxFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::__uniq_ptr_impl(output::RingPolymerRestartFileOutput*):
+function std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::__uniq_ptr_impl(output::RingPolymerRestartFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::__uniq_ptr_impl(output::RingPolymerTrajectoryOutput*):
+function std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::__uniq_ptr_impl(output::RingPolymerTrajectoryOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::__uniq_ptr_impl(output::RingPolymerEnergyOutput*):
+function std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::__uniq_ptr_impl(output::RingPolymerEnergyOutput*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::__uniq_ptr_impl(integrator::VelocityVerlet*):
+function std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::__uniq_ptr_impl(integrator::VelocityVerlet*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::__uniq_ptr_impl(thermostat::Thermostat*):
+function std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::__uniq_ptr_impl(thermostat::Thermostat*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::__uniq_ptr_impl(manostat::Manostat*):
+function std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::__uniq_ptr_impl(manostat::Manostat*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::__uniq_ptr_impl(virial::VirialMolecular*):
+function std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::__uniq_ptr_impl(virial::VirialMolecular*) called 0 returned 0% blocks executed 0%
+    #####:  176:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+    %%%%%:  176-block  0
+call    0 never executed
+call    1 never executed
+------------------
+        -:  177:
+        -:  178:      template<typename _Del>
+        -:  179:	_GLIBCXX23_CONSTEXPR
+    #####:  180:	__uniq_ptr_impl(pointer __p, _Del&& __d)
+    #####:  181:	: _M_t(__p, std::forward<_Del>(__d)) { }
+------------------
+std::__uniq_ptr_impl<potential::Potential, std::default_delete<potential::Potential> >::__uniq_ptr_impl<std::default_delete<potential::PotentialBruteForce> >(potential::Potential*, std::default_delete<potential::PotentialBruteForce>&&):
+function std::__uniq_ptr_impl<potential::Potential, std::default_delete<potential::Potential> >::__uniq_ptr_impl<std::default_delete<potential::PotentialBruteForce> >(potential::Potential*, std::default_delete<potential::PotentialBruteForce>&&) called 0 returned 0% blocks executed 0%
+    #####:  180:	__uniq_ptr_impl(pointer __p, _Del&& __d)
+    #####:  181:	: _M_t(__p, std::forward<_Del>(__d)) { }
+    %%%%%:  181-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::__uniq_ptr_impl<std::default_delete<virial::VirialMolecular> >(virial::Virial*, std::default_delete<virial::VirialMolecular>&&):
+function std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::__uniq_ptr_impl<std::default_delete<virial::VirialMolecular> >(virial::Virial*, std::default_delete<virial::VirialMolecular>&&) called 0 returned 0% blocks executed 0%
+    #####:  180:	__uniq_ptr_impl(pointer __p, _Del&& __d)
+    #####:  181:	: _M_t(__p, std::forward<_Del>(__d)) { }
+    %%%%%:  181-block  0
+call    0 never executed
+call    1 never executed
+------------------
+std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::__uniq_ptr_impl<std::default_delete<integrator::VelocityVerlet> >(integrator::Integrator*, std::default_delete<integrator::VelocityVerlet>&&):
+function std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::__uniq_ptr_impl<std::default_delete<integrator::VelocityVerlet> >(integrator::Integrator*, std::default_delete<integrator::VelocityVerlet>&&) called 0 returned 0% blocks executed 0%
+    #####:  180:	__uniq_ptr_impl(pointer __p, _Del&& __d)
+    #####:  181:	: _M_t(__p, std::forward<_Del>(__d)) { }
+    %%%%%:  181-block  0
+call    0 never executed
+call    1 never executed
+------------------
+        -:  182:
+        -:  183:      _GLIBCXX23_CONSTEXPR
+        -:  184:      __uniq_ptr_impl(__uniq_ptr_impl&& __u) noexcept
+        -:  185:      : _M_t(std::move(__u._M_t))
+        -:  186:      { __u._M_ptr() = nullptr; }
+        -:  187:
+        -:  188:      _GLIBCXX23_CONSTEXPR
+        -:  189:      __uniq_ptr_impl& operator=(__uniq_ptr_impl&& __u) noexcept
+        -:  190:      {
+        -:  191:	reset(__u.release());
+        -:  192:	_M_deleter() = std::forward<_Dp>(__u._M_deleter());
+        -:  193:	return *this;
+        -:  194:      }
+        -:  195:
+        -:  196:      _GLIBCXX23_CONSTEXPR
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+------------------
+std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<input::InputFileParser, std::default_delete<input::InputFileParser> >::_M_ptr():
+function std::__uniq_ptr_impl<input::InputFileParser, std::default_delete<input::InputFileParser> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::_M_ptr():
+function std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::_M_ptr():
+function std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::_M_ptr():
+function std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::_M_ptr():
+function std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::_M_ptr():
+function std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::_M_ptr():
+function std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::_M_ptr():
+function std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::_M_ptr():
+function std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr():
+function std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr():
+function std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() called 0 returned 0% blocks executed 0%
+    #####:  197:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  197-block  0
+call    0 never executed
+------------------
+        -:  198:      _GLIBCXX23_CONSTEXPR
+    #####:  199:      pointer    _M_ptr() const noexcept { return std::get<0>(_M_t); }
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() const:
+function std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() const called 0 returned 0% blocks executed 0%
+    #####:  199:      pointer    _M_ptr() const noexcept { return std::get<0>(_M_t); }
+    %%%%%:  199-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() const:
+function std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_ptr() const called 0 returned 0% blocks executed 0%
+    #####:  199:      pointer    _M_ptr() const noexcept { return std::get<0>(_M_t); }
+    %%%%%:  199-block  0
+call    0 never executed
+------------------
+        -:  200:      _GLIBCXX23_CONSTEXPR
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+------------------
+std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_deleter():
+function std::__uniq_ptr_impl<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::LogOutput, std::default_delete<output::LogOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::InfoOutput, std::default_delete<output::InfoOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::VirialOutput, std::default_delete<output::VirialOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::StressOutput, std::default_delete<output::StressOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<input::InputFileParser, std::default_delete<input::InputFileParser> >::_M_deleter():
+function std::__uniq_ptr_impl<input::InputFileParser, std::default_delete<input::InputFileParser> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::_M_deleter():
+function std::__uniq_ptr_impl<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::_M_deleter():
+function std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::_M_deleter():
+function std::__uniq_ptr_impl<integrator::Integrator, std::default_delete<integrator::Integrator> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::_M_deleter():
+function std::__uniq_ptr_impl<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::_M_deleter():
+function std::__uniq_ptr_impl<manostat::Manostat, std::default_delete<manostat::Manostat> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::_M_deleter():
+function std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::_M_deleter():
+function std::__uniq_ptr_impl<virial::Virial, std::default_delete<virial::Virial> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::_M_deleter():
+function std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_deleter():
+function std::__uniq_ptr_impl<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::_M_deleter() called 0 returned 0% blocks executed 0%
+    #####:  201:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  201-block  0
+call    0 never executed
+------------------
+        -:  202:      _GLIBCXX23_CONSTEXPR
+        -:  203:      const _Dp& _M_deleter() const noexcept { return std::get<1>(_M_t); }
+        -:  204:
+        -:  205:      _GLIBCXX23_CONSTEXPR
+        -:  206:      void reset(pointer __p) noexcept
+        -:  207:      {
+        -:  208:	const pointer __old_p = _M_ptr();
+        -:  209:	_M_ptr() = __p;
+        -:  210:	if (__old_p)
+        -:  211:	  _M_deleter()(__old_p);
+        -:  212:      }
+        -:  213:
+        -:  214:      _GLIBCXX23_CONSTEXPR
+    #####:  215:      pointer release() noexcept
+        -:  216:      {
+    #####:  217:	pointer __p = _M_ptr();
+    #####:  218:	_M_ptr() = nullptr;
+    #####:  219:	return __p;
+        -:  220:      }
+------------------
+std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::release():
+function std::__uniq_ptr_impl<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::release() called 0 returned 0% blocks executed 0%
+    #####:  215:      pointer release() noexcept
+        -:  216:      {
+    #####:  217:	pointer __p = _M_ptr();
+    %%%%%:  217-block  0
+call    0 never executed
+    #####:  218:	_M_ptr() = nullptr;
+call    0 never executed
+    #####:  219:	return __p;
+        -:  220:      }
+------------------
+std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::release():
+function std::__uniq_ptr_impl<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::release() called 0 returned 0% blocks executed 0%
+    #####:  215:      pointer release() noexcept
+        -:  216:      {
+    #####:  217:	pointer __p = _M_ptr();
+    %%%%%:  217-block  0
+call    0 never executed
+    #####:  218:	_M_ptr() = nullptr;
+call    0 never executed
+    #####:  219:	return __p;
+        -:  220:      }
+------------------
+std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::release():
+function std::__uniq_ptr_impl<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::release() called 0 returned 0% blocks executed 0%
+    #####:  215:      pointer release() noexcept
+        -:  216:      {
+    #####:  217:	pointer __p = _M_ptr();
+    %%%%%:  217-block  0
+call    0 never executed
+    #####:  218:	_M_ptr() = nullptr;
+call    0 never executed
+    #####:  219:	return __p;
+        -:  220:      }
+------------------
+        -:  221:
+        -:  222:      _GLIBCXX23_CONSTEXPR
+        -:  223:      void
+        -:  224:      swap(__uniq_ptr_impl& __rhs) noexcept
+        -:  225:      {
+        -:  226:	using std::swap;
+        -:  227:	swap(this->_M_ptr(), __rhs._M_ptr());
+        -:  228:	swap(this->_M_deleter(), __rhs._M_deleter());
+        -:  229:      }
+        -:  230:
+        -:  231:    private:
+        -:  232:      tuple<pointer, _Dp> _M_t;
+        -:  233:    };
+        -:  234:
+        -:  235:  // Defines move construction + assignment as either defaulted or deleted.
+        -:  236:  template <typename _Tp, typename _Dp,
+        -:  237:	    bool = is_move_constructible<_Dp>::value,
+        -:  238:	    bool = is_move_assignable<_Dp>::value>
+        -:  239:    struct __uniq_ptr_data : __uniq_ptr_impl<_Tp, _Dp>
+        -:  240:    {
+        -:  241:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  242:      __uniq_ptr_data(__uniq_ptr_data&&) = default;
+        -:  243:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = default;
+        -:  244:    };
+        -:  245:
+        -:  246:  template <typename _Tp, typename _Dp>
+        -:  247:    struct __uniq_ptr_data<_Tp, _Dp, true, false> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  248:    {
+        -:  249:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  250:      __uniq_ptr_data(__uniq_ptr_data&&) = default;
+        -:  251:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = delete;
+        -:  252:    };
+        -:  253:
+        -:  254:  template <typename _Tp, typename _Dp>
+        -:  255:    struct __uniq_ptr_data<_Tp, _Dp, false, true> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  256:    {
+        -:  257:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  258:      __uniq_ptr_data(__uniq_ptr_data&&) = delete;
+        -:  259:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = default;
+        -:  260:    };
+        -:  261:
+        -:  262:  template <typename _Tp, typename _Dp>
+        -:  263:    struct __uniq_ptr_data<_Tp, _Dp, false, false> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  264:    {
+        -:  265:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  266:      __uniq_ptr_data(__uniq_ptr_data&&) = delete;
+        -:  267:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = delete;
+        -:  268:    };
+        -:  269:  /// @endcond
+        -:  270:
+        -:  271:  // 20.7.1.2 unique_ptr for single objects.
+        -:  272:
+        -:  273:  /// A move-only smart pointer that manages unique ownership of a resource.
+        -:  274:  /// @headerfile memory
+        -:  275:  /// @since C++11
+        -:  276:  template <typename _Tp, typename _Dp = default_delete<_Tp>>
+        -:  277:    class unique_ptr
+        -:  278:    {
+        -:  279:      template <typename _Up>
+        -:  280:	using _DeleterConstraint =
+        -:  281:	  typename __uniq_ptr_impl<_Tp, _Up>::_DeleterConstraint::type;
+        -:  282:
+        -:  283:      __uniq_ptr_data<_Tp, _Dp> _M_t;
+        -:  284:
+        -:  285:    public:
+        -:  286:      using pointer	  = typename __uniq_ptr_impl<_Tp, _Dp>::pointer;
+        -:  287:      using element_type  = _Tp;
+        -:  288:      using deleter_type  = _Dp;
+        -:  289:
+        -:  290:    private:
+        -:  291:      // helper template for detecting a safe conversion from another
+        -:  292:      // unique_ptr
+        -:  293:      template<typename _Up, typename _Ep>
+        -:  294:	using __safe_conversion_up = __and_<
+        -:  295:	  is_convertible<typename unique_ptr<_Up, _Ep>::pointer, pointer>,
+        -:  296:	  __not_<is_array<_Up>>
+        -:  297:        >;
+        -:  298:
+        -:  299:    public:
+        -:  300:      // Constructors.
+        -:  301:
+        -:  302:      /// Default constructor, creates a unique_ptr that owns nothing.
+        -:  303:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  304:	constexpr unique_ptr() noexcept
+        -:  305:	: _M_t()
+        -:  306:	{ }
+        -:  307:
+        -:  308:      /** Takes ownership of a pointer.
+        -:  309:       *
+        -:  310:       * @param __p  A pointer to an object of @c element_type
+        -:  311:       *
+        -:  312:       * The deleter will be value-initialized.
+        -:  313:       */
+        -:  314:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  315:	_GLIBCXX23_CONSTEXPR
+        -:  316:	explicit
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::unique_ptr<std::default_delete<output::StressOutput>, void>(output::StressOutput*):
+function std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::unique_ptr<std::default_delete<output::StressOutput>, void>(output::StressOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::unique_ptr<std::default_delete<output::EnergyOutput>, void>(output::EnergyOutput*):
+function std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::unique_ptr<std::default_delete<output::EnergyOutput>, void>(output::EnergyOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::unique_ptr<std::default_delete<output::MomentumOutput>, void>(output::MomentumOutput*):
+function std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::unique_ptr<std::default_delete<output::MomentumOutput>, void>(output::MomentumOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::unique_ptr<std::default_delete<output::TrajectoryOutput>, void>(output::TrajectoryOutput*):
+function std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::unique_ptr<std::default_delete<output::TrajectoryOutput>, void>(output::TrajectoryOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::unique_ptr<std::default_delete<output::LogOutput>, void>(output::LogOutput*):
+function std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::unique_ptr<std::default_delete<output::LogOutput>, void>(output::LogOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::unique_ptr<std::default_delete<output::StdoutOutput>, void>(output::StdoutOutput*):
+function std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::unique_ptr<std::default_delete<output::StdoutOutput>, void>(output::StdoutOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::unique_ptr<std::default_delete<output::RstFileOutput>, void>(output::RstFileOutput*):
+function std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::unique_ptr<std::default_delete<output::RstFileOutput>, void>(output::RstFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::unique_ptr<std::default_delete<output::InfoOutput>, void>(output::InfoOutput*):
+function std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::unique_ptr<std::default_delete<output::InfoOutput>, void>(output::InfoOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::unique_ptr<std::default_delete<output::VirialOutput>, void>(output::VirialOutput*):
+function std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::unique_ptr<std::default_delete<output::VirialOutput>, void>(output::VirialOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::unique_ptr<std::default_delete<potential::PotentialBruteForce>, void>(potential::PotentialBruteForce*):
+function std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::unique_ptr<std::default_delete<potential::PotentialBruteForce>, void>(potential::PotentialBruteForce*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::unique_ptr<std::default_delete<output::BoxFileOutput>, void>(output::BoxFileOutput*):
+function std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::unique_ptr<std::default_delete<output::BoxFileOutput>, void>(output::BoxFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::unique_ptr<std::default_delete<output::RingPolymerRestartFileOutput>, void>(output::RingPolymerRestartFileOutput*):
+function std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::unique_ptr<std::default_delete<output::RingPolymerRestartFileOutput>, void>(output::RingPolymerRestartFileOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::unique_ptr<std::default_delete<output::RingPolymerTrajectoryOutput>, void>(output::RingPolymerTrajectoryOutput*):
+function std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::unique_ptr<std::default_delete<output::RingPolymerTrajectoryOutput>, void>(output::RingPolymerTrajectoryOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::unique_ptr<std::default_delete<output::RingPolymerEnergyOutput>, void>(output::RingPolymerEnergyOutput*):
+function std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::unique_ptr<std::default_delete<output::RingPolymerEnergyOutput>, void>(output::RingPolymerEnergyOutput*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::unique_ptr<std::default_delete<integrator::VelocityVerlet>, void>(integrator::VelocityVerlet*):
+function std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::unique_ptr<std::default_delete<integrator::VelocityVerlet>, void>(integrator::VelocityVerlet*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::unique_ptr<std::default_delete<thermostat::Thermostat>, void>(thermostat::Thermostat*):
+function std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::unique_ptr<std::default_delete<thermostat::Thermostat>, void>(thermostat::Thermostat*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::unique_ptr<std::default_delete<manostat::Manostat>, void>(manostat::Manostat*):
+function std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::unique_ptr<std::default_delete<manostat::Manostat>, void>(manostat::Manostat*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::unique_ptr<std::default_delete<virial::VirialMolecular>, void>(virial::VirialMolecular*):
+function std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::unique_ptr<std::default_delete<virial::VirialMolecular>, void>(virial::VirialMolecular*) called 0 returned 0% blocks executed 0%
+    #####:  317:	unique_ptr(pointer __p) noexcept
+    #####:  318:	: _M_t(__p)
+    %%%%%:  318-block  0
+call    0 never executed
+    #####:  319:        { }
+------------------
+        -:  320:
+        -:  321:      /** Takes ownership of a pointer.
+        -:  322:       *
+        -:  323:       * @param __p  A pointer to an object of @c element_type
+        -:  324:       * @param __d  A reference to a deleter.
+        -:  325:       *
+        -:  326:       * The deleter will be initialized with @p __d
+        -:  327:       */
+        -:  328:      template<typename _Del = deleter_type,
+        -:  329:	       typename = _Require<is_copy_constructible<_Del>>>
+        -:  330:	_GLIBCXX23_CONSTEXPR
+        -:  331:	unique_ptr(pointer __p, const deleter_type& __d) noexcept
+        -:  332:	: _M_t(__p, __d) { }
+        -:  333:
+        -:  334:      /** Takes ownership of a pointer.
+        -:  335:       *
+        -:  336:       * @param __p  A pointer to an object of @c element_type
+        -:  337:       * @param __d  An rvalue reference to a (non-reference) deleter.
+        -:  338:       *
+        -:  339:       * The deleter will be initialized with @p std::move(__d)
+        -:  340:       */
+        -:  341:      template<typename _Del = deleter_type,
+        -:  342:	       typename = _Require<is_move_constructible<_Del>>>
+        -:  343:	_GLIBCXX23_CONSTEXPR
+        -:  344:	unique_ptr(pointer __p,
+        -:  345:		   __enable_if_t<!is_lvalue_reference<_Del>::value,
+        -:  346:				 _Del&&> __d) noexcept
+        -:  347:	: _M_t(__p, std::move(__d))
+        -:  348:	{ }
+        -:  349:
+        -:  350:      template<typename _Del = deleter_type,
+        -:  351:	       typename _DelUnref = typename remove_reference<_Del>::type>
+        -:  352:	_GLIBCXX23_CONSTEXPR
+        -:  353:	unique_ptr(pointer,
+        -:  354:		   __enable_if_t<is_lvalue_reference<_Del>::value,
+        -:  355:				 _DelUnref&&>) = delete;
+        -:  356:
+        -:  357:      /// Creates a unique_ptr that owns nothing.
+        -:  358:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  359:	constexpr unique_ptr(nullptr_t) noexcept
+        -:  360:	: _M_t()
+        -:  361:	{ }
+        -:  362:
+        -:  363:      // Move constructors.
+        -:  364:
+        -:  365:      /// Move constructor.
+        -:  366:      unique_ptr(unique_ptr&&) = default;
+        -:  367:
+        -:  368:      /** @brief Converting constructor from another type
+        -:  369:       *
+        -:  370:       * Requires that the pointer owned by @p __u is convertible to the
+        -:  371:       * type of pointer owned by this object, @p __u does not own an array,
+        -:  372:       * and @p __u has a compatible deleter type.
+        -:  373:       */
+        -:  374:      template<typename _Up, typename _Ep, typename = _Require<
+        -:  375:               __safe_conversion_up<_Up, _Ep>,
+        -:  376:	       __conditional_t<is_reference<_Dp>::value,
+        -:  377:			       is_same<_Ep, _Dp>,
+        -:  378:			       is_convertible<_Ep, _Dp>>>>
+        -:  379:	_GLIBCXX23_CONSTEXPR
+    #####:  380:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+    #####:  381:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+    #####:  382:	{ }
+------------------
+std::unique_ptr<potential::Potential, std::default_delete<potential::Potential> >::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce>, void>(std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >&&):
+function std::unique_ptr<potential::Potential, std::default_delete<potential::Potential> >::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce>, void>(std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >&&) called 0 returned 0% blocks executed 0%
+    #####:  380:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+    #####:  381:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+    %%%%%:  381-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    #####:  382:	{ }
+------------------
+std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular>, void>(std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >&&):
+function std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular>, void>(std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >&&) called 0 returned 0% blocks executed 0%
+    #####:  380:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+    #####:  381:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+    %%%%%:  381-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    #####:  382:	{ }
+------------------
+std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet>, void>(std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >&&):
+function std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet>, void>(std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >&&) called 0 returned 0% blocks executed 0%
+    #####:  380:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+    #####:  381:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+    %%%%%:  381-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    #####:  382:	{ }
+------------------
+        -:  383:
+        -:  384:#if _GLIBCXX_USE_DEPRECATED
+        -:  385:#pragma GCC diagnostic push
+        -:  386:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        -:  387:      /// Converting constructor from @c auto_ptr
+        -:  388:      template<typename _Up, typename = _Require<
+        -:  389:	       is_convertible<_Up*, _Tp*>, is_same<_Dp, default_delete<_Tp>>>>
+        -:  390:	unique_ptr(auto_ptr<_Up>&& __u) noexcept;
+        -:  391:#pragma GCC diagnostic pop
+        -:  392:#endif
+        -:  393:
+        -:  394:      /// Destructor, invokes the deleter if the stored pointer is not null.
+        -:  395:#if __cplusplus > 202002L && __cpp_constexpr_dynamic_alloc
+        -:  396:      constexpr
+        -:  397:#endif
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    #####:  403:	if (__ptr != nullptr)
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::~unique_ptr():
+function std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::~unique_ptr():
+function std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::~unique_ptr():
+function std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::~unique_ptr():
+function std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::~unique_ptr():
+function std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::~unique_ptr():
+function std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::~unique_ptr():
+function std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::~unique_ptr():
+function std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::~unique_ptr():
+function std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::~unique_ptr():
+function std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::~unique_ptr():
+function std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::~unique_ptr():
+function std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >::~unique_ptr():
+function std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::~unique_ptr():
+function std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::~unique_ptr():
+function std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::~unique_ptr():
+function std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::~unique_ptr():
+function std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::~unique_ptr():
+function std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::~unique_ptr():
+function std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::~unique_ptr():
+function std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::~unique_ptr():
+function std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::~unique_ptr():
+function std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~unique_ptr():
+function std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::~unique_ptr() called 0 returned 0% blocks executed 0%
+    #####:  398:      ~unique_ptr() noexcept
+        -:  399:      {
+        -:  400:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  401:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  402:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  402-block  0
+call    0 never executed
+    #####:  403:	if (__ptr != nullptr)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  get_deleter()(std::move(__ptr));
+    %%%%%:  404-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    #####:  405:	__ptr = pointer();
+    #####:  406:      }
+------------------
+        -:  407:
+        -:  408:      // Assignment.
+        -:  409:
+        -:  410:      /** @brief Move assignment operator.
+        -:  411:       *
+        -:  412:       * Invokes the deleter if this object owns a pointer.
+        -:  413:       */
+        -:  414:      unique_ptr& operator=(unique_ptr&&) = default;
+        -:  415:
+        -:  416:      /** @brief Assignment from another type.
+        -:  417:       *
+        -:  418:       * @param __u  The object to transfer ownership from, which owns a
+        -:  419:       *             convertible pointer to a non-array object.
+        -:  420:       *
+        -:  421:       * Invokes the deleter if this object owns a pointer.
+        -:  422:       */
+        -:  423:      template<typename _Up, typename _Ep>
+        -:  424:	_GLIBCXX23_CONSTEXPR
+        -:  425:        typename enable_if< __and_<
+        -:  426:          __safe_conversion_up<_Up, _Ep>,
+        -:  427:          is_assignable<deleter_type&, _Ep&&>
+        -:  428:          >::value,
+        -:  429:          unique_ptr&>::type
+        -:  430:	operator=(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  431:	{
+        -:  432:	  reset(__u.release());
+        -:  433:	  get_deleter() = std::forward<_Ep>(__u.get_deleter());
+        -:  434:	  return *this;
+        -:  435:	}
+        -:  436:
+        -:  437:      /// Reset the %unique_ptr to empty, invoking the deleter if necessary.
+        -:  438:      _GLIBCXX23_CONSTEXPR
+        -:  439:      unique_ptr&
+        -:  440:      operator=(nullptr_t) noexcept
+        -:  441:      {
+        -:  442:	reset();
+        -:  443:	return *this;
+        -:  444:      }
+        -:  445:
+        -:  446:      // Observers.
+        -:  447:
+        -:  448:      /// Dereference the stored pointer.
+        -:  449:      _GLIBCXX23_CONSTEXPR
+        -:  450:      typename add_lvalue_reference<element_type>::type
+function std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::operator*() const called 0 returned 0% blocks executed 0%
+    #####:  451:      operator*() const noexcept(noexcept(*std::declval<pointer>()))
+        -:  452:      {
+    #####:  453:	__glibcxx_assert(get() != pointer());
+    %%%%%:  453-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  453-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:  453-block  2
+    %%%%%:  453-block  3
+    %%%%%:  453-block  4
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  453-block  5
+call    8 never executed
+    #####:  454:	return *get();
+    %%%%%:  454-block  0
+call    0 never executed
+        -:  455:      }
+        -:  456:
+        -:  457:      /// Return the stored pointer.
+        -:  458:      _GLIBCXX23_CONSTEXPR
+        -:  459:      pointer
+function std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator->() const called 0 returned 0% blocks executed 0%
+    #####:  460:      operator->() const noexcept
+        -:  461:      {
+        -:  462:	_GLIBCXX_DEBUG_PEDASSERT(get() != pointer());
+    #####:  463:	return get();
+    %%%%%:  463-block  0
+call    0 never executed
+        -:  464:      }
+        -:  465:
+        -:  466:      /// Return the stored pointer.
+        -:  467:      _GLIBCXX23_CONSTEXPR
+        -:  468:      pointer
+    #####:  469:      get() const noexcept
+    #####:  470:      { return _M_t._M_ptr(); }
+------------------
+std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::get() const:
+function std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::get() const called 0 returned 0% blocks executed 0%
+    #####:  469:      get() const noexcept
+    #####:  470:      { return _M_t._M_ptr(); }
+    %%%%%:  470-block  0
+call    0 never executed
+------------------
+std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::get() const:
+function std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::get() const called 0 returned 0% blocks executed 0%
+    #####:  469:      get() const noexcept
+    #####:  470:      { return _M_t._M_ptr(); }
+    %%%%%:  470-block  0
+call    0 never executed
+------------------
+        -:  471:
+        -:  472:      /// Return a reference to the stored deleter.
+        -:  473:      _GLIBCXX23_CONSTEXPR
+        -:  474:      deleter_type&
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+------------------
+std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::get_deleter():
+function std::unique_ptr<output::RingPolymerTrajectoryOutput, std::default_delete<output::RingPolymerTrajectoryOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::get_deleter():
+function std::unique_ptr<output::EnergyOutput, std::default_delete<output::EnergyOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::get_deleter():
+function std::unique_ptr<output::MomentumOutput, std::default_delete<output::MomentumOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::get_deleter():
+function std::unique_ptr<output::TrajectoryOutput, std::default_delete<output::TrajectoryOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::get_deleter():
+function std::unique_ptr<output::LogOutput, std::default_delete<output::LogOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::get_deleter():
+function std::unique_ptr<output::StdoutOutput, std::default_delete<output::StdoutOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::get_deleter():
+function std::unique_ptr<output::RstFileOutput, std::default_delete<output::RstFileOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::get_deleter():
+function std::unique_ptr<output::InfoOutput, std::default_delete<output::InfoOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::get_deleter():
+function std::unique_ptr<output::VirialOutput, std::default_delete<output::VirialOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::get_deleter():
+function std::unique_ptr<output::StressOutput, std::default_delete<output::StressOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::get_deleter():
+function std::unique_ptr<output::BoxFileOutput, std::default_delete<output::BoxFileOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::get_deleter():
+function std::unique_ptr<output::RingPolymerRestartFileOutput, std::default_delete<output::RingPolymerRestartFileOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >::get_deleter():
+function std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::get_deleter():
+function std::unique_ptr<output::RingPolymerEnergyOutput, std::default_delete<output::RingPolymerEnergyOutput> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::get_deleter():
+function std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::get_deleter():
+function std::unique_ptr<integrator::Integrator, std::default_delete<integrator::Integrator> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::get_deleter():
+function std::unique_ptr<thermostat::Thermostat, std::default_delete<thermostat::Thermostat> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::get_deleter():
+function std::unique_ptr<manostat::Manostat, std::default_delete<manostat::Manostat> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::get_deleter():
+function std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::get_deleter():
+function std::unique_ptr<virial::Virial, std::default_delete<virial::Virial> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::get_deleter():
+function std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::get_deleter():
+function std::unique_ptr<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_stringstream<char, std::char_traits<char>, std::allocator<char> > > >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::get_deleter():
+function std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::get_deleter() called 0 returned 0% blocks executed 0%
+    #####:  475:      get_deleter() noexcept
+    #####:  476:      { return _M_t._M_deleter(); }
+    %%%%%:  476-block  0
+call    0 never executed
+------------------
+        -:  477:
+        -:  478:      /// Return a reference to the stored deleter.
+        -:  479:      _GLIBCXX23_CONSTEXPR
+        -:  480:      const deleter_type&
+        -:  481:      get_deleter() const noexcept
+        -:  482:      { return _M_t._M_deleter(); }
+        -:  483:
+        -:  484:      /// Return @c true if the stored pointer is not null.
+        -:  485:      _GLIBCXX23_CONSTEXPR
+function std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator bool() const called 0 returned 0% blocks executed 0%
+    #####:  486:      explicit operator bool() const noexcept
+    #####:  487:      { return get() == pointer() ? false : true; }
+    %%%%%:  487-block  0
+call    0 never executed
+        -:  488:
+        -:  489:      // Modifiers.
+        -:  490:
+        -:  491:      /// Release ownership of any stored pointer.
+        -:  492:      _GLIBCXX23_CONSTEXPR
+        -:  493:      pointer
+    #####:  494:      release() noexcept
+    #####:  495:      { return _M_t.release(); }
+------------------
+std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::release():
+function std::unique_ptr<potential::PotentialBruteForce, std::default_delete<potential::PotentialBruteForce> >::release() called 0 returned 0% blocks executed 0%
+    #####:  494:      release() noexcept
+    #####:  495:      { return _M_t.release(); }
+    %%%%%:  495-block  0
+call    0 never executed
+------------------
+std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::release():
+function std::unique_ptr<virial::VirialMolecular, std::default_delete<virial::VirialMolecular> >::release() called 0 returned 0% blocks executed 0%
+    #####:  494:      release() noexcept
+    #####:  495:      { return _M_t.release(); }
+    %%%%%:  495-block  0
+call    0 never executed
+------------------
+std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::release():
+function std::unique_ptr<integrator::VelocityVerlet, std::default_delete<integrator::VelocityVerlet> >::release() called 0 returned 0% blocks executed 0%
+    #####:  494:      release() noexcept
+    #####:  495:      { return _M_t.release(); }
+    %%%%%:  495-block  0
+call    0 never executed
+------------------
+        -:  496:
+        -:  497:      /** @brief Replace the stored pointer.
+        -:  498:       *
+        -:  499:       * @param __p  The new pointer to store.
+        -:  500:       *
+        -:  501:       * The deleter will be invoked if a pointer is already owned.
+        -:  502:       */
+        -:  503:      _GLIBCXX23_CONSTEXPR
+        -:  504:      void
+        -:  505:      reset(pointer __p = pointer()) noexcept
+        -:  506:      {
+        -:  507:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  508:		      "unique_ptr's deleter must be invocable with a pointer");
+        -:  509:	_M_t.reset(std::move(__p));
+        -:  510:      }
+        -:  511:
+        -:  512:      /// Exchange the pointer and deleter with another object.
+        -:  513:      _GLIBCXX23_CONSTEXPR
+        -:  514:      void
+        -:  515:      swap(unique_ptr& __u) noexcept
+        -:  516:      {
+        -:  517:	static_assert(__is_swappable<_Dp>::value, "deleter must be swappable");
+        -:  518:	_M_t.swap(__u._M_t);
+        -:  519:      }
+        -:  520:
+        -:  521:      // Disable copy from lvalue.
+        -:  522:      unique_ptr(const unique_ptr&) = delete;
+        -:  523:      unique_ptr& operator=(const unique_ptr&) = delete;
+        -:  524:  };
+        -:  525:
+        -:  526:  // 20.7.1.3 unique_ptr for array objects with a runtime length
+        -:  527:  // [unique.ptr.runtime]
+        -:  528:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  529:  // DR 740 - omit specialization for array objects with a compile time length
+        -:  530:
+        -:  531:  /// A move-only smart pointer that manages unique ownership of an array.
+        -:  532:  /// @headerfile memory
+        -:  533:  /// @since C++11
+        -:  534:  template<typename _Tp, typename _Dp>
+        -:  535:    class unique_ptr<_Tp[], _Dp>
+        -:  536:    {
+        -:  537:      template <typename _Up>
+        -:  538:      using _DeleterConstraint =
+        -:  539:	typename __uniq_ptr_impl<_Tp, _Up>::_DeleterConstraint::type;
+        -:  540:
+        -:  541:      __uniq_ptr_data<_Tp, _Dp> _M_t;
+        -:  542:
+        -:  543:      // like is_base_of<_Tp, _Up> but false if unqualified types are the same
+        -:  544:      template<typename _Up>
+        -:  545:	using __is_derived_Tp
+        -:  546:	  = __and_< is_base_of<_Tp, _Up>,
+        -:  547:		    __not_<is_same<__remove_cv_t<_Tp>, __remove_cv_t<_Up>>> >;
+        -:  548:
+        -:  549:    public:
+        -:  550:      using pointer	  = typename __uniq_ptr_impl<_Tp, _Dp>::pointer;
+        -:  551:      using element_type  = _Tp;
+        -:  552:      using deleter_type  = _Dp;
+        -:  553:
+        -:  554:      // helper template for detecting a safe conversion from another
+        -:  555:      // unique_ptr
+        -:  556:      template<typename _Up, typename _Ep,
+        -:  557:               typename _UPtr = unique_ptr<_Up, _Ep>,
+        -:  558:	       typename _UP_pointer = typename _UPtr::pointer,
+        -:  559:	       typename _UP_element_type = typename _UPtr::element_type>
+        -:  560:	using __safe_conversion_up = __and_<
+        -:  561:          is_array<_Up>,
+        -:  562:          is_same<pointer, element_type*>,
+        -:  563:          is_same<_UP_pointer, _UP_element_type*>,
+        -:  564:          is_convertible<_UP_element_type(*)[], element_type(*)[]>
+        -:  565:        >;
+        -:  566:
+        -:  567:      // helper template for detecting a safe conversion from a raw pointer
+        -:  568:      template<typename _Up>
+        -:  569:        using __safe_conversion_raw = __and_<
+        -:  570:          __or_<__or_<is_same<_Up, pointer>,
+        -:  571:                      is_same<_Up, nullptr_t>>,
+        -:  572:                __and_<is_pointer<_Up>,
+        -:  573:                       is_same<pointer, element_type*>,
+        -:  574:                       is_convertible<
+        -:  575:                         typename remove_pointer<_Up>::type(*)[],
+        -:  576:                         element_type(*)[]>
+        -:  577:                >
+        -:  578:          >
+        -:  579:        >;
+        -:  580:
+        -:  581:      // Constructors.
+        -:  582:
+        -:  583:      /// Default constructor, creates a unique_ptr that owns nothing.
+        -:  584:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  585:	constexpr unique_ptr() noexcept
+        -:  586:	: _M_t()
+        -:  587:	{ }
+        -:  588:
+        -:  589:      /** Takes ownership of a pointer.
+        -:  590:       *
+        -:  591:       * @param __p  A pointer to an array of a type safely convertible
+        -:  592:       * to an array of @c element_type
+        -:  593:       *
+        -:  594:       * The deleter will be value-initialized.
+        -:  595:       */
+        -:  596:      template<typename _Up,
+        -:  597:	       typename _Vp = _Dp,
+        -:  598:	       typename = _DeleterConstraint<_Vp>,
+        -:  599:	       typename = typename enable_if<
+        -:  600:                 __safe_conversion_raw<_Up>::value, bool>::type>
+        -:  601:	_GLIBCXX23_CONSTEXPR
+        -:  602:	explicit
+        -:  603:	unique_ptr(_Up __p) noexcept
+        -:  604:	: _M_t(__p)
+        -:  605:        { }
+        -:  606:
+        -:  607:      /** Takes ownership of a pointer.
+        -:  608:       *
+        -:  609:       * @param __p  A pointer to an array of a type safely convertible
+        -:  610:       * to an array of @c element_type
+        -:  611:       * @param __d  A reference to a deleter.
+        -:  612:       *
+        -:  613:       * The deleter will be initialized with @p __d
+        -:  614:       */
+        -:  615:      template<typename _Up, typename _Del = deleter_type,
+        -:  616:	       typename = _Require<__safe_conversion_raw<_Up>,
+        -:  617:				   is_copy_constructible<_Del>>>
+        -:  618:	_GLIBCXX23_CONSTEXPR
+        -:  619:	unique_ptr(_Up __p, const deleter_type& __d) noexcept
+        -:  620:	: _M_t(__p, __d) { }
+        -:  621:
+        -:  622:      /** Takes ownership of a pointer.
+        -:  623:       *
+        -:  624:       * @param __p  A pointer to an array of a type safely convertible
+        -:  625:       * to an array of @c element_type
+        -:  626:       * @param __d  A reference to a deleter.
+        -:  627:       *
+        -:  628:       * The deleter will be initialized with @p std::move(__d)
+        -:  629:       */
+        -:  630:      template<typename _Up, typename _Del = deleter_type,
+        -:  631:	       typename = _Require<__safe_conversion_raw<_Up>,
+        -:  632:				   is_move_constructible<_Del>>>
+        -:  633:	_GLIBCXX23_CONSTEXPR
+        -:  634:	unique_ptr(_Up __p,
+        -:  635:		   __enable_if_t<!is_lvalue_reference<_Del>::value,
+        -:  636:				 _Del&&> __d) noexcept
+        -:  637:	: _M_t(std::move(__p), std::move(__d))
+        -:  638:	{ }
+        -:  639:
+        -:  640:      template<typename _Up, typename _Del = deleter_type,
+        -:  641:	       typename _DelUnref = typename remove_reference<_Del>::type,
+        -:  642:	       typename = _Require<__safe_conversion_raw<_Up>>>
+        -:  643:	unique_ptr(_Up,
+        -:  644:		   __enable_if_t<is_lvalue_reference<_Del>::value,
+        -:  645:				 _DelUnref&&>) = delete;
+        -:  646:
+        -:  647:      /// Move constructor.
+        -:  648:      unique_ptr(unique_ptr&&) = default;
+        -:  649:
+        -:  650:      /// Creates a unique_ptr that owns nothing.
+        -:  651:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  652:	constexpr unique_ptr(nullptr_t) noexcept
+        -:  653:	: _M_t()
+        -:  654:        { }
+        -:  655:
+        -:  656:      template<typename _Up, typename _Ep, typename = _Require<
+        -:  657:	       __safe_conversion_up<_Up, _Ep>,
+        -:  658:	       __conditional_t<is_reference<_Dp>::value,
+        -:  659:			       is_same<_Ep, _Dp>,
+        -:  660:			       is_convertible<_Ep, _Dp>>>>
+        -:  661:	_GLIBCXX23_CONSTEXPR
+        -:  662:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  663:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+        -:  664:	{ }
+        -:  665:
+        -:  666:      /// Destructor, invokes the deleter if the stored pointer is not null.
+        -:  667:#if __cplusplus > 202002L && __cpp_constexpr_dynamic_alloc
+        -:  668:      constexpr
+        -:  669:#endif
+        -:  670:      ~unique_ptr()
+        -:  671:      {
+        -:  672:	auto& __ptr = _M_t._M_ptr();
+        -:  673:	if (__ptr != nullptr)
+        -:  674:	  get_deleter()(__ptr);
+        -:  675:	__ptr = pointer();
+        -:  676:      }
+        -:  677:
+        -:  678:      // Assignment.
+        -:  679:
+        -:  680:      /** @brief Move assignment operator.
+        -:  681:       *
+        -:  682:       * Invokes the deleter if this object owns a pointer.
+        -:  683:       */
+        -:  684:      unique_ptr&
+        -:  685:      operator=(unique_ptr&&) = default;
+        -:  686:
+        -:  687:      /** @brief Assignment from another type.
+        -:  688:       *
+        -:  689:       * @param __u  The object to transfer ownership from, which owns a
+        -:  690:       *             convertible pointer to an array object.
+        -:  691:       *
+        -:  692:       * Invokes the deleter if this object owns a pointer.
+        -:  693:       */
+        -:  694:      template<typename _Up, typename _Ep>
+        -:  695:	_GLIBCXX23_CONSTEXPR
+        -:  696:	typename
+        -:  697:	enable_if<__and_<__safe_conversion_up<_Up, _Ep>,
+        -:  698:                         is_assignable<deleter_type&, _Ep&&>
+        -:  699:                  >::value,
+        -:  700:                  unique_ptr&>::type
+        -:  701:	operator=(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  702:	{
+        -:  703:	  reset(__u.release());
+        -:  704:	  get_deleter() = std::forward<_Ep>(__u.get_deleter());
+        -:  705:	  return *this;
+        -:  706:	}
+        -:  707:
+        -:  708:      /// Reset the %unique_ptr to empty, invoking the deleter if necessary.
+        -:  709:      _GLIBCXX23_CONSTEXPR
+        -:  710:      unique_ptr&
+        -:  711:      operator=(nullptr_t) noexcept
+        -:  712:      {
+        -:  713:	reset();
+        -:  714:	return *this;
+        -:  715:      }
+        -:  716:
+        -:  717:      // Observers.
+        -:  718:
+        -:  719:      /// Access an element of owned array.
+        -:  720:      _GLIBCXX23_CONSTEXPR
+        -:  721:      typename std::add_lvalue_reference<element_type>::type
+        -:  722:      operator[](size_t __i) const
+        -:  723:      {
+        -:  724:	__glibcxx_assert(get() != pointer());
+        -:  725:	return get()[__i];
+        -:  726:      }
+        -:  727:
+        -:  728:      /// Return the stored pointer.
+        -:  729:      _GLIBCXX23_CONSTEXPR
+        -:  730:      pointer
+        -:  731:      get() const noexcept
+        -:  732:      { return _M_t._M_ptr(); }
+        -:  733:
+        -:  734:      /// Return a reference to the stored deleter.
+        -:  735:      _GLIBCXX23_CONSTEXPR
+        -:  736:      deleter_type&
+        -:  737:      get_deleter() noexcept
+        -:  738:      { return _M_t._M_deleter(); }
+        -:  739:
+        -:  740:      /// Return a reference to the stored deleter.
+        -:  741:      _GLIBCXX23_CONSTEXPR
+        -:  742:      const deleter_type&
+        -:  743:      get_deleter() const noexcept
+        -:  744:      { return _M_t._M_deleter(); }
+        -:  745:
+        -:  746:      /// Return @c true if the stored pointer is not null.
+        -:  747:      _GLIBCXX23_CONSTEXPR
+        -:  748:      explicit operator bool() const noexcept
+        -:  749:      { return get() == pointer() ? false : true; }
+        -:  750:
+        -:  751:      // Modifiers.
+        -:  752:
+        -:  753:      /// Release ownership of any stored pointer.
+        -:  754:      _GLIBCXX23_CONSTEXPR
+        -:  755:      pointer
+        -:  756:      release() noexcept
+        -:  757:      { return _M_t.release(); }
+        -:  758:
+        -:  759:      /** @brief Replace the stored pointer.
+        -:  760:       *
+        -:  761:       * @param __p  The new pointer to store.
+        -:  762:       *
+        -:  763:       * The deleter will be invoked if a pointer is already owned.
+        -:  764:       */
+        -:  765:      template <typename _Up,
+        -:  766:                typename = _Require<
+        -:  767:                  __or_<is_same<_Up, pointer>,
+        -:  768:                        __and_<is_same<pointer, element_type*>,
+        -:  769:                               is_pointer<_Up>,
+        -:  770:                               is_convertible<
+        -:  771:                                 typename remove_pointer<_Up>::type(*)[],
+        -:  772:                                 element_type(*)[]
+        -:  773:                               >
+        -:  774:                        >
+        -:  775:                  >
+        -:  776:               >>
+        -:  777:      _GLIBCXX23_CONSTEXPR
+        -:  778:      void
+        -:  779:      reset(_Up __p) noexcept
+        -:  780:      { _M_t.reset(std::move(__p)); }
+        -:  781:
+        -:  782:      _GLIBCXX23_CONSTEXPR
+        -:  783:      void reset(nullptr_t = nullptr) noexcept
+        -:  784:      { reset(pointer()); }
+        -:  785:
+        -:  786:      /// Exchange the pointer and deleter with another object.
+        -:  787:      _GLIBCXX23_CONSTEXPR
+        -:  788:      void
+        -:  789:      swap(unique_ptr& __u) noexcept
+        -:  790:      {
+        -:  791:	static_assert(__is_swappable<_Dp>::value, "deleter must be swappable");
+        -:  792:	_M_t.swap(__u._M_t);
+        -:  793:      }
+        -:  794:
+        -:  795:      // Disable copy from lvalue.
+        -:  796:      unique_ptr(const unique_ptr&) = delete;
+        -:  797:      unique_ptr& operator=(const unique_ptr&) = delete;
+        -:  798:    };
+        -:  799:
+        -:  800:  /// @{
+        -:  801:  /// @relates unique_ptr
+        -:  802:
+        -:  803:  /// Swap overload for unique_ptr
+        -:  804:  template<typename _Tp, typename _Dp>
+        -:  805:    inline
+        -:  806:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  807:    // Constrained free swap overload, see p0185r1
+        -:  808:    _GLIBCXX23_CONSTEXPR
+        -:  809:    typename enable_if<__is_swappable<_Dp>::value>::type
+        -:  810:#else
+        -:  811:    void
+        -:  812:#endif
+        -:  813:    swap(unique_ptr<_Tp, _Dp>& __x,
+        -:  814:	 unique_ptr<_Tp, _Dp>& __y) noexcept
+        -:  815:    { __x.swap(__y); }
+        -:  816:
+        -:  817:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  818:  template<typename _Tp, typename _Dp>
+        -:  819:    typename enable_if<!__is_swappable<_Dp>::value>::type
+        -:  820:    swap(unique_ptr<_Tp, _Dp>&,
+        -:  821:	 unique_ptr<_Tp, _Dp>&) = delete;
+        -:  822:#endif
+        -:  823:
+        -:  824:  /// Equality operator for unique_ptr objects, compares the owned pointers
+        -:  825:  template<typename _Tp, typename _Dp,
+        -:  826:	   typename _Up, typename _Ep>
+        -:  827:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  828:    inline bool
+        -:  829:    operator==(const unique_ptr<_Tp, _Dp>& __x,
+        -:  830:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  831:    { return __x.get() == __y.get(); }
+        -:  832:
+        -:  833:  /// unique_ptr comparison with nullptr
+        -:  834:  template<typename _Tp, typename _Dp>
+        -:  835:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  836:    inline bool
+function bool std::operator==<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::unique_ptr<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::default_delete<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, decltype(nullptr)) called 0 returned 0% blocks executed 0%
+    #####:  837:    operator==(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+    #####:  838:    { return !__x; }
+    %%%%%:  838-block  0
+call    0 never executed
+        -:  839:
+        -:  840:#ifndef __cpp_lib_three_way_comparison
+        -:  841:  /// unique_ptr comparison with nullptr
+        -:  842:  template<typename _Tp, typename _Dp>
+        -:  843:    _GLIBCXX_NODISCARD
+        -:  844:    inline bool
+        -:  845:    operator==(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+        -:  846:    { return !__x; }
+        -:  847:
+        -:  848:  /// Inequality operator for unique_ptr objects, compares the owned pointers
+        -:  849:  template<typename _Tp, typename _Dp,
+        -:  850:	   typename _Up, typename _Ep>
+        -:  851:    _GLIBCXX_NODISCARD
+        -:  852:    inline bool
+        -:  853:    operator!=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  854:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  855:    { return __x.get() != __y.get(); }
+        -:  856:
+        -:  857:  /// unique_ptr comparison with nullptr
+        -:  858:  template<typename _Tp, typename _Dp>
+        -:  859:    _GLIBCXX_NODISCARD
+        -:  860:    inline bool
+        -:  861:    operator!=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+        -:  862:    { return (bool)__x; }
+        -:  863:
+        -:  864:  /// unique_ptr comparison with nullptr
+        -:  865:  template<typename _Tp, typename _Dp>
+        -:  866:    _GLIBCXX_NODISCARD
+        -:  867:    inline bool
+        -:  868:    operator!=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+        -:  869:    { return (bool)__x; }
+        -:  870:#endif // three way comparison
+        -:  871:
+        -:  872:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  873:  template<typename _Tp, typename _Dp,
+        -:  874:	   typename _Up, typename _Ep>
+        -:  875:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  876:    inline bool
+        -:  877:    operator<(const unique_ptr<_Tp, _Dp>& __x,
+        -:  878:	      const unique_ptr<_Up, _Ep>& __y)
+        -:  879:    {
+        -:  880:      typedef typename
+        -:  881:	std::common_type<typename unique_ptr<_Tp, _Dp>::pointer,
+        -:  882:	                 typename unique_ptr<_Up, _Ep>::pointer>::type _CT;
+        -:  883:      return std::less<_CT>()(__x.get(), __y.get());
+        -:  884:    }
+        -:  885:
+        -:  886:  /// unique_ptr comparison with nullptr
+        -:  887:  template<typename _Tp, typename _Dp>
+        -:  888:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  889:    inline bool
+        -:  890:    operator<(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  891:    {
+        -:  892:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(__x.get(),
+        -:  893:								 nullptr);
+        -:  894:    }
+        -:  895:
+        -:  896:  /// unique_ptr comparison with nullptr
+        -:  897:  template<typename _Tp, typename _Dp>
+        -:  898:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  899:    inline bool
+        -:  900:    operator<(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  901:    {
+        -:  902:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(nullptr,
+        -:  903:								 __x.get());
+        -:  904:    }
+        -:  905:
+        -:  906:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  907:  template<typename _Tp, typename _Dp,
+        -:  908:	   typename _Up, typename _Ep>
+        -:  909:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  910:    inline bool
+        -:  911:    operator<=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  912:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  913:    { return !(__y < __x); }
+        -:  914:
+        -:  915:  /// unique_ptr comparison with nullptr
+        -:  916:  template<typename _Tp, typename _Dp>
+        -:  917:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  918:    inline bool
+        -:  919:    operator<=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  920:    { return !(nullptr < __x); }
+        -:  921:
+        -:  922:  /// unique_ptr comparison with nullptr
+        -:  923:  template<typename _Tp, typename _Dp>
+        -:  924:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  925:    inline bool
+        -:  926:    operator<=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  927:    { return !(__x < nullptr); }
+        -:  928:
+        -:  929:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  930:  template<typename _Tp, typename _Dp,
+        -:  931:	   typename _Up, typename _Ep>
+        -:  932:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  933:    inline bool
+        -:  934:    operator>(const unique_ptr<_Tp, _Dp>& __x,
+        -:  935:	      const unique_ptr<_Up, _Ep>& __y)
+        -:  936:    { return (__y < __x); }
+        -:  937:
+        -:  938:  /// unique_ptr comparison with nullptr
+        -:  939:  template<typename _Tp, typename _Dp>
+        -:  940:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  941:    inline bool
+        -:  942:    operator>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  943:    {
+        -:  944:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(nullptr,
+        -:  945:								 __x.get());
+        -:  946:    }
+        -:  947:
+        -:  948:  /// unique_ptr comparison with nullptr
+        -:  949:  template<typename _Tp, typename _Dp>
+        -:  950:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  951:    inline bool
+        -:  952:    operator>(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  953:    {
+        -:  954:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(__x.get(),
+        -:  955:								 nullptr);
+        -:  956:    }
+        -:  957:
+        -:  958:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  959:  template<typename _Tp, typename _Dp,
+        -:  960:	   typename _Up, typename _Ep>
+        -:  961:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  962:    inline bool
+        -:  963:    operator>=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  964:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  965:    { return !(__x < __y); }
+        -:  966:
+        -:  967:  /// unique_ptr comparison with nullptr
+        -:  968:  template<typename _Tp, typename _Dp>
+        -:  969:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  970:    inline bool
+        -:  971:    operator>=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  972:    { return !(__x < nullptr); }
+        -:  973:
+        -:  974:  /// unique_ptr comparison with nullptr
+        -:  975:  template<typename _Tp, typename _Dp>
+        -:  976:    _GLIBCXX_NODISCARD inline bool
+        -:  977:    operator>=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  978:    { return !(nullptr < __x); }
+        -:  979:
+        -:  980:#ifdef __cpp_lib_three_way_comparison
+        -:  981:  template<typename _Tp, typename _Dp, typename _Up, typename _Ep>
+        -:  982:    requires three_way_comparable_with<typename unique_ptr<_Tp, _Dp>::pointer,
+        -:  983:				       typename unique_ptr<_Up, _Ep>::pointer>
+        -:  984:    _GLIBCXX23_CONSTEXPR
+        -:  985:    inline
+        -:  986:    compare_three_way_result_t<typename unique_ptr<_Tp, _Dp>::pointer,
+        -:  987:			       typename unique_ptr<_Up, _Ep>::pointer>
+        -:  988:    operator<=>(const unique_ptr<_Tp, _Dp>& __x,
+        -:  989:		const unique_ptr<_Up, _Ep>& __y)
+        -:  990:    { return compare_three_way()(__x.get(), __y.get()); }
+        -:  991:
+        -:  992:  template<typename _Tp, typename _Dp>
+        -:  993:    requires three_way_comparable<typename unique_ptr<_Tp, _Dp>::pointer>
+        -:  994:    _GLIBCXX23_CONSTEXPR
+        -:  995:    inline
+        -:  996:    compare_three_way_result_t<typename unique_ptr<_Tp, _Dp>::pointer>
+        -:  997:    operator<=>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  998:    {
+        -:  999:      using pointer = typename unique_ptr<_Tp, _Dp>::pointer;
+        -: 1000:      return compare_three_way()(__x.get(), static_cast<pointer>(nullptr));
+        -: 1001:    }
+        -: 1002:#endif
+        -: 1003:  /// @} relates unique_ptr
+        -: 1004:
+        -: 1005:  /// @cond undocumented
+        -: 1006:  template<typename _Up, typename _Ptr = typename _Up::pointer,
+        -: 1007:	   bool = __poison_hash<_Ptr>::__enable_hash_call>
+        -: 1008:    struct __uniq_ptr_hash
+        -: 1009:#if ! _GLIBCXX_INLINE_VERSION
+        -: 1010:    : private __poison_hash<_Ptr>
+        -: 1011:#endif
+        -: 1012:    {
+        -: 1013:      size_t
+        -: 1014:      operator()(const _Up& __u) const
+        -: 1015:      noexcept(noexcept(std::declval<hash<_Ptr>>()(std::declval<_Ptr>())))
+        -: 1016:      { return hash<_Ptr>()(__u.get()); }
+        -: 1017:    };
+        -: 1018:
+        -: 1019:  template<typename _Up, typename _Ptr>
+        -: 1020:    struct __uniq_ptr_hash<_Up, _Ptr, false>
+        -: 1021:    : private __poison_hash<_Ptr>
+        -: 1022:    { };
+        -: 1023:  /// @endcond
+        -: 1024:
+        -: 1025:  /// std::hash specialization for unique_ptr.
+        -: 1026:  template<typename _Tp, typename _Dp>
+        -: 1027:    struct hash<unique_ptr<_Tp, _Dp>>
+        -: 1028:    : public __hash_base<size_t, unique_ptr<_Tp, _Dp>>,
+        -: 1029:      public __uniq_ptr_hash<unique_ptr<_Tp, _Dp>>
+        -: 1030:    { };
+        -: 1031:
+        -: 1032:#if __cplusplus >= 201402L && _GLIBCXX_HOSTED
+        -: 1033:#define __cpp_lib_make_unique 201304L
+        -: 1034:
+        -: 1035:  /// @cond undocumented
+        -: 1036:namespace __detail
+        -: 1037:{
+        -: 1038:  template<typename _Tp>
+        -: 1039:    struct _MakeUniq
+        -: 1040:    { typedef unique_ptr<_Tp> __single_object; };
+        -: 1041:
+        -: 1042:  template<typename _Tp>
+        -: 1043:    struct _MakeUniq<_Tp[]>
+        -: 1044:    { typedef unique_ptr<_Tp[]> __array; };
+        -: 1045:
+        -: 1046:  template<typename _Tp, size_t _Bound>
+        -: 1047:    struct _MakeUniq<_Tp[_Bound]>
+        -: 1048:    { struct __invalid_type { }; };
+        -: 1049:
+        -: 1050:  template<typename _Tp>
+        -: 1051:    using __unique_ptr_t = typename _MakeUniq<_Tp>::__single_object;
+        -: 1052:  template<typename _Tp>
+        -: 1053:    using __unique_ptr_array_t = typename _MakeUniq<_Tp>::__array;
+        -: 1054:  template<typename _Tp>
+        -: 1055:    using __invalid_make_unique_t = typename _MakeUniq<_Tp>::__invalid_type;
+        -: 1056:}
+        -: 1057:  /// @endcond
+        -: 1058:
+        -: 1059:  /** Create an object owned by a `unique_ptr`.
+        -: 1060:   *  @tparam _Tp A non-array object type.
+        -: 1061:   *  @param __args Constructor arguments for the new object.
+        -: 1062:   *  @returns A `unique_ptr<_Tp>` that owns the new object.
+        -: 1063:   *  @since C++14
+        -: 1064:   *  @relates unique_ptr
+        -: 1065:   */
+        -: 1066:  template<typename _Tp, typename... _Args>
+        -: 1067:    _GLIBCXX23_CONSTEXPR
+        -: 1068:    inline __detail::__unique_ptr_t<_Tp>
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+------------------
+std::__detail::_MakeUniq<output::StressOutput>::__single_object std::make_unique<output::StressOutput, char const (&) [15]>(char const (&) [15]):
+function std::__detail::_MakeUniq<output::StressOutput>::__single_object std::make_unique<output::StressOutput, char const (&) [15]>(char const (&) [15]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::EnergyOutput>::__single_object std::make_unique<output::EnergyOutput, char const (&) [11]>(char const (&) [11]):
+function std::__detail::_MakeUniq<output::EnergyOutput>::__single_object std::make_unique<output::EnergyOutput, char const (&) [11]>(char const (&) [11]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::EnergyOutput>::__single_object std::make_unique<output::EnergyOutput, char const (&) [19]>(char const (&) [19]):
+function std::__detail::_MakeUniq<output::EnergyOutput>::__single_object std::make_unique<output::EnergyOutput, char const (&) [19]>(char const (&) [19]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::MomentumOutput>::__single_object std::make_unique<output::MomentumOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::MomentumOutput>::__single_object std::make_unique<output::MomentumOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::TrajectoryOutput>::__single_object std::make_unique<output::TrajectoryOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::TrajectoryOutput>::__single_object std::make_unique<output::TrajectoryOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::TrajectoryOutput>::__single_object std::make_unique<output::TrajectoryOutput, char const (&) [14]>(char const (&) [14]):
+function std::__detail::_MakeUniq<output::TrajectoryOutput>::__single_object std::make_unique<output::TrajectoryOutput, char const (&) [14]>(char const (&) [14]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::LogOutput>::__single_object std::make_unique<output::LogOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::LogOutput>::__single_object std::make_unique<output::LogOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::StdoutOutput>::__single_object std::make_unique<output::StdoutOutput, char const (&) [7]>(char const (&) [7]):
+function std::__detail::_MakeUniq<output::StdoutOutput>::__single_object std::make_unique<output::StdoutOutput, char const (&) [7]>(char const (&) [7]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::RstFileOutput>::__single_object std::make_unique<output::RstFileOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::RstFileOutput>::__single_object std::make_unique<output::RstFileOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::InfoOutput>::__single_object std::make_unique<output::InfoOutput, char const (&) [13]>(char const (&) [13]):
+function std::__detail::_MakeUniq<output::InfoOutput>::__single_object std::make_unique<output::InfoOutput, char const (&) [13]>(char const (&) [13]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::VirialOutput>::__single_object std::make_unique<output::VirialOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::VirialOutput>::__single_object std::make_unique<output::VirialOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<potential::PotentialBruteForce>::__single_object std::make_unique<potential::PotentialBruteForce>():
+function std::__detail::_MakeUniq<potential::PotentialBruteForce>::__single_object std::make_unique<potential::PotentialBruteForce>() called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+------------------
+std::__detail::_MakeUniq<output::BoxFileOutput>::__single_object std::make_unique<output::BoxFileOutput, char const (&) [12]>(char const (&) [12]):
+function std::__detail::_MakeUniq<output::BoxFileOutput>::__single_object std::make_unique<output::BoxFileOutput, char const (&) [12]>(char const (&) [12]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::RingPolymerRestartFileOutput>::__single_object std::make_unique<output::RingPolymerRestartFileOutput, char const (&) [17]>(char const (&) [17]):
+function std::__detail::_MakeUniq<output::RingPolymerRestartFileOutput>::__single_object std::make_unique<output::RingPolymerRestartFileOutput, char const (&) [17]>(char const (&) [17]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::RingPolymerTrajectoryOutput>::__single_object std::make_unique<output::RingPolymerTrajectoryOutput, char const (&) [17]>(char const (&) [17]):
+function std::__detail::_MakeUniq<output::RingPolymerTrajectoryOutput>::__single_object std::make_unique<output::RingPolymerTrajectoryOutput, char const (&) [17]>(char const (&) [17]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::RingPolymerTrajectoryOutput>::__single_object std::make_unique<output::RingPolymerTrajectoryOutput, char const (&) [19]>(char const (&) [19]):
+function std::__detail::_MakeUniq<output::RingPolymerTrajectoryOutput>::__single_object std::make_unique<output::RingPolymerTrajectoryOutput, char const (&) [19]>(char const (&) [19]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<output::RingPolymerEnergyOutput>::__single_object std::make_unique<output::RingPolymerEnergyOutput, char const (&) [16]>(char const (&) [16]):
+function std::__detail::_MakeUniq<output::RingPolymerEnergyOutput>::__single_object std::make_unique<output::RingPolymerEnergyOutput, char const (&) [16]>(char const (&) [16]) called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+    %%%%%: 1070-block  1
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%: 1070-block  2
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%: 1070-block  3
+call    8 never executed
+call    9 never executed
+    %%%%%: 1070-block  4
+    %%%%%: 1070-block  5
+    $$$$$: 1070-block  6
+call   10 never executed
+    $$$$$: 1070-block  7
+    $$$$$: 1070-block  8
+    $$$$$: 1070-block  9
+branch 11 never executed (fallthrough)
+branch 12 never executed
+    $$$$$: 1070-block 10
+call   13 never executed
+------------------
+std::__detail::_MakeUniq<integrator::VelocityVerlet>::__single_object std::make_unique<integrator::VelocityVerlet>():
+function std::__detail::_MakeUniq<integrator::VelocityVerlet>::__single_object std::make_unique<integrator::VelocityVerlet>() called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%: 1070-block  1
+call    4 never executed
+    $$$$$: 1070-block  2
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    $$$$$: 1070-block  3
+call    7 never executed
+------------------
+std::__detail::_MakeUniq<thermostat::Thermostat>::__single_object std::make_unique<thermostat::Thermostat>():
+function std::__detail::_MakeUniq<thermostat::Thermostat>::__single_object std::make_unique<thermostat::Thermostat>() called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+------------------
+std::__detail::_MakeUniq<manostat::Manostat>::__single_object std::make_unique<manostat::Manostat>():
+function std::__detail::_MakeUniq<manostat::Manostat>::__single_object std::make_unique<manostat::Manostat>() called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%: 1070-block  1
+call    4 never executed
+    $$$$$: 1070-block  2
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    $$$$$: 1070-block  3
+call    7 never executed
+------------------
+std::__detail::_MakeUniq<virial::VirialMolecular>::__single_object std::make_unique<virial::VirialMolecular>():
+function std::__detail::_MakeUniq<virial::VirialMolecular>::__single_object std::make_unique<virial::VirialMolecular>() called 0 returned 0% blocks executed 0%
+    #####: 1069:    make_unique(_Args&&... __args)
+    #####: 1070:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+    %%%%%: 1070-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%: 1070-block  1
+call    4 never executed
+    $$$$$: 1070-block  2
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    $$$$$: 1070-block  3
+call    7 never executed
+------------------
+        -: 1071:
+        -: 1072:  /** Create an array owned by a `unique_ptr`.
+        -: 1073:   *  @tparam _Tp An array type of unknown bound, such as `U[]`.
+        -: 1074:   *  @param __num The number of elements of type `U` in the new array.
+        -: 1075:   *  @returns A `unique_ptr<U[]>` that owns the new array.
+        -: 1076:   *  @since C++14
+        -: 1077:   *  @relates unique_ptr
+        -: 1078:   *
+        -: 1079:   *  The array elements are value-initialized.
+        -: 1080:   */
+        -: 1081:  template<typename _Tp>
+        -: 1082:    _GLIBCXX23_CONSTEXPR
+        -: 1083:    inline __detail::__unique_ptr_array_t<_Tp>
+        -: 1084:    make_unique(size_t __num)
+        -: 1085:    { return unique_ptr<_Tp>(new remove_extent_t<_Tp>[__num]()); }
+        -: 1086:
+        -: 1087:  /** Disable std::make_unique for arrays of known bound.
+        -: 1088:   *  @tparam _Tp An array type of known bound, such as `U[N]`.
+        -: 1089:   *  @since C++14
+        -: 1090:   *  @relates unique_ptr
+        -: 1091:   */
+        -: 1092:  template<typename _Tp, typename... _Args>
+        -: 1093:    __detail::__invalid_make_unique_t<_Tp>
+        -: 1094:    make_unique(_Args&&...) = delete;
+        -: 1095:
+        -: 1096:#if __cplusplus > 201703L
+        -: 1097:  /** Create a default-initialied object owned by a `unique_ptr`.
+        -: 1098:   *  @tparam _Tp A non-array object type.
+        -: 1099:   *  @returns A `unique_ptr<_Tp>` that owns the new object.
+        -: 1100:   *  @since C++20
+        -: 1101:   *  @relates unique_ptr
+        -: 1102:   */
+        -: 1103:  template<typename _Tp>
+        -: 1104:    _GLIBCXX23_CONSTEXPR
+        -: 1105:    inline __detail::__unique_ptr_t<_Tp>
+        -: 1106:    make_unique_for_overwrite()
+        -: 1107:    { return unique_ptr<_Tp>(new _Tp); }
+        -: 1108:
+        -: 1109:  /** Create a default-initialized array owned by a `unique_ptr`.
+        -: 1110:   *  @tparam _Tp An array type of unknown bound, such as `U[]`.
+        -: 1111:   *  @param __num The number of elements of type `U` in the new array.
+        -: 1112:   *  @returns A `unique_ptr<U[]>` that owns the new array.
+        -: 1113:   *  @since C++20
+        -: 1114:   *  @relates unique_ptr
+        -: 1115:   */
+        -: 1116:  template<typename _Tp>
+        -: 1117:    _GLIBCXX23_CONSTEXPR
+        -: 1118:    inline __detail::__unique_ptr_array_t<_Tp>
+        -: 1119:    make_unique_for_overwrite(size_t __num)
+        -: 1120:    { return unique_ptr<_Tp>(new remove_extent_t<_Tp>[__num]); }
+        -: 1121:
+        -: 1122:  /** Disable std::make_unique_for_overwrite for arrays of known bound.
+        -: 1123:   *  @tparam _Tp An array type of known bound, such as `U[N]`.
+        -: 1124:   *  @since C++20
+        -: 1125:   *  @relates unique_ptr
+        -: 1126:   */
+        -: 1127:  template<typename _Tp, typename... _Args>
+        -: 1128:    __detail::__invalid_make_unique_t<_Tp>
+        -: 1129:    make_unique_for_overwrite(_Args&&...) = delete;
+        -: 1130:#endif // C++20
+        -: 1131:
+        -: 1132:#endif // C++14 && HOSTED
+        -: 1133:
+        -: 1134:#if __cplusplus > 201703L && __cpp_concepts && _GLIBCXX_HOSTED
+        -: 1135:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1136:  // 2948. unique_ptr does not define operator<< for stream output
+        -: 1137:  /// Stream output operator for unique_ptr
+        -: 1138:  /// @relates unique_ptr
+        -: 1139:  /// @since C++20
+        -: 1140:  template<typename _CharT, typename _Traits, typename _Tp, typename _Dp>
+        -: 1141:    inline basic_ostream<_CharT, _Traits>&
+        -: 1142:    operator<<(basic_ostream<_CharT, _Traits>& __os,
+        -: 1143:	       const unique_ptr<_Tp, _Dp>& __p)
+        -: 1144:    requires requires { __os << __p.get(); }
+        -: 1145:    {
+        -: 1146:      __os << __p.get();
+        -: 1147:      return __os;
+        -: 1148:    }
+        -: 1149:#endif // C++20 && HOSTED
+        -: 1150:
+        -: 1151:  /// @} group pointer_abstractions
+        -: 1152:
+        -: 1153:#if __cplusplus >= 201703L
+        -: 1154:  namespace __detail::__variant
+        -: 1155:  {
+        -: 1156:    template<typename> struct _Never_valueless_alt; // see <variant>
+        -: 1157:
+        -: 1158:    // Provide the strong exception-safety guarantee when emplacing a
+        -: 1159:    // unique_ptr into a variant.
+        -: 1160:    template<typename _Tp, typename _Del>
+        -: 1161:      struct _Never_valueless_alt<std::unique_ptr<_Tp, _Del>>
+        -: 1162:      : std::true_type
+        -: 1163:      { };
+        -: 1164:  }  // namespace __detail::__variant
+        -: 1165:#endif // C++17
+        -: 1166:
+        -: 1167:_GLIBCXX_END_NAMESPACE_VERSION
+        -: 1168:} // namespace
+        -: 1169:
+        -: 1170:#endif /* _UNIQUE_PTR_H */

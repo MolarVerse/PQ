@@ -1,0 +1,1262 @@
+        -:    0:Source:/home/jag/projects/pq/tests/src/input/inputFileParsing/testParserManostat.cpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Source is newer than graph
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+        -:   24:
+        -:   25:#include <string>   // for string, allocator, basic_string
+        -:   26:#include <vector>   // for vector
+        -:   27:
+        -:   28:#include "exceptions.hpp"                // for InputFileException
+        -:   29:#include "gtest/gtest.h"                 // for Message, TestPartResult, testing
+        -:   30:#include "inputFileParser.hpp"           // for readInput
+        -:   31:#include "inputFileParserManostat.hpp"   // for InputFileParserManostat
+        -:   32:#include "manostatSettings.hpp"          // for ManostatSettings
+        -:   33:#include "testInputFileReader.hpp"       // for TestInputFileReader
+        -:   34:#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+        -:   35:
+        -:   36:using namespace input;
+        -:   37:
+        -:   38:/**
+        -:   39: * @brief tests parsing the "pressure" command
+        -:   40: *
+    #####:   41: */
+        -:   42:TEST_F(TestInputFileReader, ParsePressure)
+    #####:   43:{
+        -:   44:    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), false);
+    #####:   45:
+    #####:   46:    InputFileParserManostat  parser(*_engine);
+    #####:   47:    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
+        -:   48:    parser.parsePressure(lineElements, 0);
+    #####:   49:
+    #####:   50:    EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
+    #####:   51:    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), true);
+------------------
+TestInputFileReader_ParsePressure_Test::TestInputFileReader_ParsePressure_Test():
+function TestInputFileReader_ParsePressure_Test::TestInputFileReader_ParsePressure_Test() called 0 returned 0% blocks executed 0%
+    #####:   41: */
+    %%%%%:   41-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParsePressure_Test::~TestInputFileReader_ParsePressure_Test():
+function TestInputFileReader_ParsePressure_Test::~TestInputFileReader_ParsePressure_Test() called 0 returned 0% blocks executed 0%
+    #####:   41: */
+    %%%%%:   41-block  0
+call    0 never executed
+call    1 never executed
+------------------
+TestInputFileReader_ParsePressure_Test::~TestInputFileReader_ParsePressure_Test():
+function TestInputFileReader_ParsePressure_Test::~TestInputFileReader_ParsePressure_Test() called 0 returned 0% blocks executed 0%
+    #####:   41: */
+    %%%%%:   41-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParsePressure_Test::TestBody():
+function TestInputFileReader_ParsePressure_Test::TestBody() called 0 returned 0% blocks executed 0%
+    #####:   41: */
+        -:   42:TEST_F(TestInputFileReader, ParsePressure)
+    #####:   43:{
+    %%%%%:   43-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   43-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   43-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   43-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   43-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   43-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:   43-block  6
+call   19 never executed
+    $$$$$:   43-block  7
+    $$$$$:   43-block  8
+    $$$$$:   43-block  9
+call   20 never executed
+    $$$$$:   43-block 10
+    $$$$$:   43-block 11
+call   21 never executed
+    $$$$$:   43-block 12
+    $$$$$:   43-block 13
+call   22 never executed
+        -:   44:    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), false);
+    #####:   45:
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+call    3 never executed
+    $$$$$:   45-block  0
+call    4 never executed
+    #####:   46:    InputFileParserManostat  parser(*_engine);
+    %%%%%:   46-block  0
+    %%%%%:   46-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+call    3 never executed
+    $$$$$:   46-block  2
+    $$$$$:   46-block  3
+    $$$$$:   46-block  4
+call    4 never executed
+    #####:   47:    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
+    %%%%%:   47-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:   48:    parser.parsePressure(lineElements, 0);
+    #####:   49:
+    %%%%%:   49-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   49-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   49-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   49-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   49-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   49-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:   49-block  6
+call   19 never executed
+    $$$$$:   49-block  7
+    $$$$$:   49-block  8
+    $$$$$:   49-block  9
+call   20 never executed
+    $$$$$:   49-block 10
+    $$$$$:   49-block 11
+call   21 never executed
+    $$$$$:   49-block 12
+    $$$$$:   49-block 13
+call   22 never executed
+    #####:   50:    EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   50-block  0
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   50-block  1
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   50-block  2
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   50-block  3
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   50-block  4
+call   17 never executed
+call   18 never executed
+    %%%%%:   50-block  5
+call   19 never executed
+    $$$$$:   50-block  6
+    $$$$$:   50-block  7
+    $$$$$:   50-block  8
+call   20 never executed
+    $$$$$:   50-block  9
+    $$$$$:   50-block 10
+call   21 never executed
+    $$$$$:   50-block 11
+    $$$$$:   50-block 12
+call   22 never executed
+    #####:   51:    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), true);
+------------------
+        -:   52:}
+        -:   53:
+        -:   54:/**
+        -:   55: * @brief tests parsing the "p_relaxation" command
+        -:   56: *
+        -:   57: * @details if the relaxation time of the manostat is negative it throws
+        -:   58: * inputFileException
+    #####:   59: *
+        -:   60: */
+    #####:   61:TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
+    #####:   62:{
+    #####:   63:    InputFileParserManostat  parser(*_engine);
+    #####:   64:    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
+        -:   65:    parser.parseManostatRelaxationTime(lineElements, 0);
+    #####:   66:    EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
+    #####:   67:
+        -:   68:    lineElements = {"p_relaxation", "=", "-100.0"};
+        -:   69:    EXPECT_THROW_MSG(
+    #####:   70:        parser.parseManostatRelaxationTime(lineElements, 0),
+------------------
+TestInputFileReader_ParseRelaxationTimeManostat_Test::TestInputFileReader_ParseRelaxationTimeManostat_Test():
+function TestInputFileReader_ParseRelaxationTimeManostat_Test::TestInputFileReader_ParseRelaxationTimeManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   59: *
+    %%%%%:   59-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseRelaxationTimeManostat_Test::~TestInputFileReader_ParseRelaxationTimeManostat_Test():
+function TestInputFileReader_ParseRelaxationTimeManostat_Test::~TestInputFileReader_ParseRelaxationTimeManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   59: *
+    %%%%%:   59-block  0
+call    0 never executed
+call    1 never executed
+------------------
+TestInputFileReader_ParseRelaxationTimeManostat_Test::~TestInputFileReader_ParseRelaxationTimeManostat_Test():
+function TestInputFileReader_ParseRelaxationTimeManostat_Test::~TestInputFileReader_ParseRelaxationTimeManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   59: *
+    %%%%%:   59-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseRelaxationTimeManostat_Test::TestBody():
+function TestInputFileReader_ParseRelaxationTimeManostat_Test::TestBody() called 0 returned 0% blocks executed 0%
+    #####:   59: *
+        -:   60: */
+    #####:   61:TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
+    %%%%%:   61-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   62:{
+    %%%%%:   62-block  0
+    %%%%%:   62-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    $$$$$:   62-block  2
+    $$$$$:   62-block  3
+    #####:   63:    InputFileParserManostat  parser(*_engine);
+    %%%%%:   63-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   64:    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
+    %%%%%:   64-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   64-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   64-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   64-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   64-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   64-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:   64-block  6
+call   19 never executed
+    $$$$$:   64-block  7
+    $$$$$:   64-block  8
+    $$$$$:   64-block  9
+call   20 never executed
+    $$$$$:   64-block 10
+    $$$$$:   64-block 11
+call   21 never executed
+    $$$$$:   64-block 12
+    $$$$$:   64-block 13
+call   22 never executed
+        -:   65:    parser.parseManostatRelaxationTime(lineElements, 0);
+    #####:   66:    EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
+    %%%%%:   66-block  0
+    %%%%%:   66-block  1
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   66-block  2
+call    2 never executed
+    $$$$$:   66-block  3
+    $$$$$:   66-block  4
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    $$$$$:   66-block  5
+call    5 never executed
+    $$$$$:   66-block  6
+    #####:   67:
+    %%%%%:   67-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   67-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   67-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:   67-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:   67-block  4
+call   12 never executed
+call   13 never executed
+    $$$$$:   67-block  5
+call   14 never executed
+    $$$$$:   67-block  6
+    $$$$$:   67-block  7
+call   15 never executed
+    $$$$$:   67-block  8
+    $$$$$:   67-block  9
+branch 16 never executed
+branch 17 never executed
+    $$$$$:   67-block 10
+call   18 never executed
+call   19 never executed
+    $$$$$:   67-block 11
+call   20 never executed
+branch 21 never executed (fallthrough)
+branch 22 never executed (throw)
+    $$$$$:   67-block 12
+call   23 never executed
+branch 24 never executed (fallthrough)
+branch 25 never executed (throw)
+    $$$$$:   67-block 13
+call   26 never executed
+    $$$$$:   67-block 14
+call   27 never executed
+branch 28 never executed (fallthrough)
+branch 29 never executed
+    $$$$$:   67-block 15
+call   30 never executed
+branch 31 never executed (fallthrough)
+branch 32 never executed (throw)
+    $$$$$:   67-block 16
+call   33 never executed
+call   34 never executed
+branch 35 never executed (fallthrough)
+branch 36 never executed (throw)
+    $$$$$:   67-block 17
+call   37 never executed
+branch 38 never executed (fallthrough)
+branch 39 never executed (throw)
+    $$$$$:   67-block 18
+call   40 never executed
+call   41 never executed
+    $$$$$:   67-block 19
+call   42 never executed
+call   43 never executed
+branch 44 never executed (fallthrough)
+branch 45 never executed (throw)
+    $$$$$:   67-block 20
+call   46 never executed
+call   47 never executed
+branch 48 never executed (fallthrough)
+branch 49 never executed (throw)
+    $$$$$:   67-block 21
+call   50 never executed
+branch 51 never executed (fallthrough)
+branch 52 never executed (throw)
+    $$$$$:   67-block 22
+call   53 never executed
+branch 54 never executed (fallthrough)
+branch 55 never executed (throw)
+    $$$$$:   67-block 23
+call   56 never executed
+branch 57 never executed (fallthrough)
+branch 58 never executed (throw)
+    $$$$$:   67-block 24
+call   59 never executed
+call   60 never executed
+    $$$$$:   67-block 25
+call   61 never executed
+branch 62 never executed (fallthrough)
+branch 63 never executed (throw)
+    $$$$$:   67-block 26
+call   64 never executed
+    $$$$$:   67-block 27
+    $$$$$:   67-block 28
+    $$$$$:   67-block 29
+call   65 never executed
+    $$$$$:   67-block 30
+    $$$$$:   67-block 31
+call   66 never executed
+    $$$$$:   67-block 32
+    $$$$$:   67-block 33
+call   67 never executed
+    $$$$$:   67-block 34
+call   68 never executed
+    $$$$$:   67-block 35
+call   69 never executed
+    $$$$$:   67-block 36
+    $$$$$:   67-block 37
+call   70 never executed
+    $$$$$:   67-block 38
+    $$$$$:   67-block 39
+call   71 never executed
+        -:   68:    lineElements = {"p_relaxation", "=", "-100.0"};
+        -:   69:    EXPECT_THROW_MSG(
+    #####:   70:        parser.parseManostatRelaxationTime(lineElements, 0),
+    %%%%%:   70-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   70-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   70-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:   70-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:   70-block  4
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed (throw)
+    $$$$$:   70-block  5
+    %%%%%:   70-block  6
+call   15 never executed
+branch 16 never executed (fallthrough)
+branch 17 never executed
+    %%%%%:   70-block  7
+    %%%%%:   70-block  8
+call   18 never executed
+branch 19 never executed (fallthrough)
+branch 20 never executed
+    $$$$$:   70-block  9
+    $$$$$:   70-block 10
+branch 21 never executed (fallthrough)
+branch 22 never executed
+    $$$$$:   70-block 11
+    $$$$$:   70-block 12
+branch 23 never executed (fallthrough)
+branch 24 never executed
+    $$$$$:   70-block 13
+call   25 never executed
+    $$$$$:   70-block 14
+call   26 never executed
+    $$$$$:   70-block 15
+call   27 never executed
+------------------
+        -:   71:        customException::InputFileException,
+        -:   72:        "Relaxation time of manostat cannot be negative"
+        -:   73:    );
+        -:   74:}
+        -:   75:
+        -:   76:/**
+        -:   77: * @brief tests parsing the "manostat" command
+    #####:   78: *
+        -:   79: * @details if the manostat is not valid it throws inputFileException - valid
+    #####:   80: * options are "none" and "berendsen"
+    #####:   81: *
+    #####:   82: */
+    #####:   83:TEST_F(TestInputFileReader, ParseManostat)
+        -:   84:{
+    #####:   85:    InputFileParserManostat  parser(*_engine);
+    #####:   86:    std::vector<std::string> lineElements = {"manostat", "=", "none"};
+    #####:   87:    parser.parseManostat(lineElements, 0);
+        -:   88:    EXPECT_EQ(
+    #####:   89:        settings::ManostatSettings::getManostatType(),
+    #####:   90:        settings::ManostatType::NONE
+        -:   91:    );
+        -:   92:
+    #####:   93:    lineElements = {"manostat", "=", "berendsen"};
+------------------
+TestInputFileReader_ParseManostat_Test::TestInputFileReader_ParseManostat_Test():
+function TestInputFileReader_ParseManostat_Test::TestInputFileReader_ParseManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   78: *
+    %%%%%:   78-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseManostat_Test::~TestInputFileReader_ParseManostat_Test():
+function TestInputFileReader_ParseManostat_Test::~TestInputFileReader_ParseManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   78: *
+    %%%%%:   78-block  0
+call    0 never executed
+call    1 never executed
+------------------
+TestInputFileReader_ParseManostat_Test::~TestInputFileReader_ParseManostat_Test():
+function TestInputFileReader_ParseManostat_Test::~TestInputFileReader_ParseManostat_Test() called 0 returned 0% blocks executed 0%
+    #####:   78: *
+    %%%%%:   78-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseManostat_Test::TestBody():
+function TestInputFileReader_ParseManostat_Test::TestBody() called 0 returned 0% blocks executed 0%
+    #####:   78: *
+        -:   79: * @details if the manostat is not valid it throws inputFileException - valid
+    #####:   80: * options are "none" and "berendsen"
+    %%%%%:   80-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   81: *
+    %%%%%:   81-block  0
+    %%%%%:   81-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    $$$$$:   81-block  2
+    $$$$$:   81-block  3
+    #####:   82: */
+    %%%%%:   82-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   83:TEST_F(TestInputFileReader, ParseManostat)
+    %%%%%:   83-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   83-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   83-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   83-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   83-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   83-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:   83-block  6
+call   19 never executed
+    $$$$$:   83-block  7
+    $$$$$:   83-block  8
+    $$$$$:   83-block  9
+call   20 never executed
+    $$$$$:   83-block 10
+    $$$$$:   83-block 11
+call   21 never executed
+    $$$$$:   83-block 12
+    $$$$$:   83-block 13
+call   22 never executed
+        -:   84:{
+    #####:   85:    InputFileParserManostat  parser(*_engine);
+    %%%%%:   85-block  0
+    %%%%%:   85-block  1
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   85-block  2
+call    2 never executed
+    $$$$$:   85-block  3
+    $$$$$:   85-block  4
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    $$$$$:   85-block  5
+call    5 never executed
+    $$$$$:   85-block  6
+    #####:   86:    std::vector<std::string> lineElements = {"manostat", "=", "none"};
+    #####:   87:    parser.parseManostat(lineElements, 0);
+    %%%%%:   87-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   87-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:   87-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   87-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:   87-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:   87-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:   87-block  6
+call   19 never executed
+    $$$$$:   87-block  7
+    $$$$$:   87-block  8
+    $$$$$:   87-block  9
+call   20 never executed
+    $$$$$:   87-block 10
+    $$$$$:   87-block 11
+call   21 never executed
+    $$$$$:   87-block 12
+    $$$$$:   87-block 13
+call   22 never executed
+        -:   88:    EXPECT_EQ(
+    #####:   89:        settings::ManostatSettings::getManostatType(),
+    %%%%%:   89-block  0
+    %%%%%:   89-block  1
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   89-block  2
+call    2 never executed
+    $$$$$:   89-block  3
+    $$$$$:   89-block  4
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    $$$$$:   89-block  5
+call    5 never executed
+    $$$$$:   89-block  6
+    #####:   90:        settings::ManostatType::NONE
+    %%%%%:   90-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   90-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   90-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:   90-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:   90-block  4
+call   12 never executed
+call   13 never executed
+    $$$$$:   90-block  5
+call   14 never executed
+    $$$$$:   90-block  6
+    $$$$$:   90-block  7
+call   15 never executed
+    $$$$$:   90-block  8
+    $$$$$:   90-block  9
+branch 16 never executed
+branch 17 never executed
+    $$$$$:   90-block 10
+call   18 never executed
+call   19 never executed
+    $$$$$:   90-block 11
+call   20 never executed
+branch 21 never executed (fallthrough)
+branch 22 never executed (throw)
+    $$$$$:   90-block 12
+call   23 never executed
+branch 24 never executed (fallthrough)
+branch 25 never executed (throw)
+    $$$$$:   90-block 13
+call   26 never executed
+    $$$$$:   90-block 14
+call   27 never executed
+branch 28 never executed (fallthrough)
+branch 29 never executed
+    $$$$$:   90-block 15
+call   30 never executed
+branch 31 never executed (fallthrough)
+branch 32 never executed (throw)
+    $$$$$:   90-block 16
+call   33 never executed
+call   34 never executed
+branch 35 never executed (fallthrough)
+branch 36 never executed (throw)
+    $$$$$:   90-block 17
+call   37 never executed
+branch 38 never executed (fallthrough)
+branch 39 never executed (throw)
+    $$$$$:   90-block 18
+call   40 never executed
+call   41 never executed
+    $$$$$:   90-block 19
+call   42 never executed
+call   43 never executed
+branch 44 never executed (fallthrough)
+branch 45 never executed (throw)
+    $$$$$:   90-block 20
+call   46 never executed
+call   47 never executed
+branch 48 never executed (fallthrough)
+branch 49 never executed (throw)
+    $$$$$:   90-block 21
+call   50 never executed
+branch 51 never executed (fallthrough)
+branch 52 never executed (throw)
+    $$$$$:   90-block 22
+call   53 never executed
+branch 54 never executed (fallthrough)
+branch 55 never executed (throw)
+    $$$$$:   90-block 23
+call   56 never executed
+branch 57 never executed (fallthrough)
+branch 58 never executed (throw)
+    $$$$$:   90-block 24
+call   59 never executed
+call   60 never executed
+    $$$$$:   90-block 25
+call   61 never executed
+branch 62 never executed (fallthrough)
+branch 63 never executed (throw)
+    $$$$$:   90-block 26
+call   64 never executed
+    $$$$$:   90-block 27
+    $$$$$:   90-block 28
+    $$$$$:   90-block 29
+call   65 never executed
+    $$$$$:   90-block 30
+    $$$$$:   90-block 31
+call   66 never executed
+    $$$$$:   90-block 32
+    $$$$$:   90-block 33
+call   67 never executed
+    $$$$$:   90-block 34
+call   68 never executed
+    $$$$$:   90-block 35
+call   69 never executed
+    $$$$$:   90-block 36
+    $$$$$:   90-block 37
+call   70 never executed
+    $$$$$:   90-block 38
+    $$$$$:   90-block 39
+call   71 never executed
+        -:   91:    );
+        -:   92:
+    #####:   93:    lineElements = {"manostat", "=", "berendsen"};
+    %%%%%:   93-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   93-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   93-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:   93-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:   93-block  4
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed (throw)
+    %%%%%:   93-block  5
+call   15 never executed
+branch 16 never executed (fallthrough)
+branch 17 never executed (throw)
+    %%%%%:   93-block  6
+call   18 never executed
+branch 19 never executed (fallthrough)
+branch 20 never executed (throw)
+    %%%%%:   93-block  7
+call   21 never executed
+branch 22 never executed (fallthrough)
+branch 23 never executed (throw)
+    %%%%%:   93-block  8
+call   24 never executed
+branch 25 never executed (fallthrough)
+branch 26 never executed (throw)
+    %%%%%:   93-block  9
+call   27 never executed
+branch 28 never executed (fallthrough)
+branch 29 never executed (throw)
+    $$$$$:   93-block 10
+    %%%%%:   93-block 11
+call   30 never executed
+branch 31 never executed (fallthrough)
+branch 32 never executed
+    %%%%%:   93-block 12
+    %%%%%:   93-block 13
+call   33 never executed
+branch 34 never executed (fallthrough)
+branch 35 never executed
+    $$$$$:   93-block 14
+    $$$$$:   93-block 15
+branch 36 never executed (fallthrough)
+branch 37 never executed
+    $$$$$:   93-block 16
+    $$$$$:   93-block 17
+branch 38 never executed (fallthrough)
+branch 39 never executed
+    $$$$$:   93-block 18
+call   40 never executed
+    $$$$$:   93-block 19
+    $$$$$:   93-block 20
+branch 41 never executed (fallthrough)
+branch 42 never executed
+    $$$$$:   93-block 21
+    $$$$$:   93-block 22
+branch 43 never executed (fallthrough)
+branch 44 never executed
+    $$$$$:   93-block 23
+call   45 never executed
+    $$$$$:   93-block 24
+call   46 never executed
+    $$$$$:   93-block 25
+call   47 never executed
+------------------
+        -:   94:    parser.parseManostat(lineElements, 0);
+        -:   95:    EXPECT_EQ(
+        -:   96:        settings::ManostatSettings::getManostatType(),
+        -:   97:        settings::ManostatType::BERENDSEN
+        -:   98:    );
+        -:   99:
+        -:  100:    lineElements = {"manostat", "=", "stochastic_rescaling"};
+    #####:  101:    parser.parseManostat(lineElements, 0);
+        -:  102:    EXPECT_EQ(
+    #####:  103:        settings::ManostatSettings::getManostatType(),
+    #####:  104:        settings::ManostatType::STOCHASTIC_RESCALING
+    #####:  105:    );
+    #####:  106:
+        -:  107:    lineElements = {"manostat", "=", "notValid"};
+    #####:  108:    EXPECT_THROW_MSG(
+    #####:  109:        parser.parseManostat(lineElements, 0),
+        -:  110:        customException::InputFileException,
+    #####:  111:        "Invalid manostat \"notValid\" at line 0 in input file. Possible "
+------------------
+TestInputFileReader_ParseCompressibility_Test::TestInputFileReader_ParseCompressibility_Test():
+function TestInputFileReader_ParseCompressibility_Test::TestInputFileReader_ParseCompressibility_Test() called 0 returned 0% blocks executed 0%
+    #####:  101:    parser.parseManostat(lineElements, 0);
+    %%%%%:  101-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseCompressibility_Test::~TestInputFileReader_ParseCompressibility_Test():
+function TestInputFileReader_ParseCompressibility_Test::~TestInputFileReader_ParseCompressibility_Test() called 0 returned 0% blocks executed 0%
+    #####:  101:    parser.parseManostat(lineElements, 0);
+    %%%%%:  101-block  0
+call    0 never executed
+call    1 never executed
+------------------
+TestInputFileReader_ParseCompressibility_Test::~TestInputFileReader_ParseCompressibility_Test():
+function TestInputFileReader_ParseCompressibility_Test::~TestInputFileReader_ParseCompressibility_Test() called 0 returned 0% blocks executed 0%
+    #####:  101:    parser.parseManostat(lineElements, 0);
+    %%%%%:  101-block  0
+call    0 never executed
+------------------
+TestInputFileReader_ParseCompressibility_Test::TestBody():
+function TestInputFileReader_ParseCompressibility_Test::TestBody() called 0 returned 0% blocks executed 0%
+    #####:  101:    parser.parseManostat(lineElements, 0);
+        -:  102:    EXPECT_EQ(
+    #####:  103:        settings::ManostatSettings::getManostatType(),
+    %%%%%:  103-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  104:        settings::ManostatType::STOCHASTIC_RESCALING
+    %%%%%:  104-block  0
+    %%%%%:  104-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    $$$$$:  104-block  2
+    $$$$$:  104-block  3
+    #####:  105:    );
+    %%%%%:  105-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  106:
+    %%%%%:  106-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  106-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed
+    %%%%%:  106-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:  106-block  3
+call   10 never executed
+call   11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed (throw)
+    %%%%%:  106-block  4
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:  106-block  5
+call   17 never executed
+call   18 never executed
+    %%%%%:  106-block  6
+call   19 never executed
+    $$$$$:  106-block  7
+    $$$$$:  106-block  8
+    $$$$$:  106-block  9
+call   20 never executed
+    $$$$$:  106-block 10
+    $$$$$:  106-block 11
+call   21 never executed
+    $$$$$:  106-block 12
+    $$$$$:  106-block 13
+call   22 never executed
+        -:  107:    lineElements = {"manostat", "=", "notValid"};
+    #####:  108:    EXPECT_THROW_MSG(
+    %%%%%:  108-block  0
+    %%%%%:  108-block  1
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  108-block  2
+call    2 never executed
+    $$$$$:  108-block  3
+    $$$$$:  108-block  4
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    $$$$$:  108-block  5
+call    5 never executed
+    $$$$$:  108-block  6
+    #####:  109:        parser.parseManostat(lineElements, 0),
+    %%%%%:  109-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  109-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  109-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  109-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  109-block  4
+call   12 never executed
+call   13 never executed
+    $$$$$:  109-block  5
+call   14 never executed
+    $$$$$:  109-block  6
+    $$$$$:  109-block  7
+call   15 never executed
+    $$$$$:  109-block  8
+    $$$$$:  109-block  9
+branch 16 never executed
+branch 17 never executed
+    $$$$$:  109-block 10
+call   18 never executed
+call   19 never executed
+    $$$$$:  109-block 11
+call   20 never executed
+branch 21 never executed (fallthrough)
+branch 22 never executed (throw)
+    $$$$$:  109-block 12
+call   23 never executed
+branch 24 never executed (fallthrough)
+branch 25 never executed (throw)
+    $$$$$:  109-block 13
+call   26 never executed
+    $$$$$:  109-block 14
+call   27 never executed
+branch 28 never executed (fallthrough)
+branch 29 never executed
+    $$$$$:  109-block 15
+call   30 never executed
+branch 31 never executed (fallthrough)
+branch 32 never executed (throw)
+    $$$$$:  109-block 16
+call   33 never executed
+call   34 never executed
+branch 35 never executed (fallthrough)
+branch 36 never executed (throw)
+    $$$$$:  109-block 17
+call   37 never executed
+branch 38 never executed (fallthrough)
+branch 39 never executed (throw)
+    $$$$$:  109-block 18
+call   40 never executed
+call   41 never executed
+    $$$$$:  109-block 19
+call   42 never executed
+call   43 never executed
+branch 44 never executed (fallthrough)
+branch 45 never executed (throw)
+    $$$$$:  109-block 20
+call   46 never executed
+call   47 never executed
+branch 48 never executed (fallthrough)
+branch 49 never executed (throw)
+    $$$$$:  109-block 21
+call   50 never executed
+branch 51 never executed (fallthrough)
+branch 52 never executed (throw)
+    $$$$$:  109-block 22
+call   53 never executed
+branch 54 never executed (fallthrough)
+branch 55 never executed (throw)
+    $$$$$:  109-block 23
+call   56 never executed
+branch 57 never executed (fallthrough)
+branch 58 never executed (throw)
+    $$$$$:  109-block 24
+call   59 never executed
+call   60 never executed
+    $$$$$:  109-block 25
+call   61 never executed
+branch 62 never executed (fallthrough)
+branch 63 never executed (throw)
+    $$$$$:  109-block 26
+call   64 never executed
+    $$$$$:  109-block 27
+    $$$$$:  109-block 28
+    $$$$$:  109-block 29
+call   65 never executed
+    $$$$$:  109-block 30
+    $$$$$:  109-block 31
+call   66 never executed
+    $$$$$:  109-block 32
+    $$$$$:  109-block 33
+call   67 never executed
+    $$$$$:  109-block 34
+call   68 never executed
+    $$$$$:  109-block 35
+call   69 never executed
+    $$$$$:  109-block 36
+    $$$$$:  109-block 37
+call   70 never executed
+    $$$$$:  109-block 38
+    $$$$$:  109-block 39
+call   71 never executed
+        -:  110:        customException::InputFileException,
+    #####:  111:        "Invalid manostat \"notValid\" at line 0 in input file. Possible "
+    %%%%%:  111-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  111-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  111-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  111-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  111-block  4
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed (throw)
+    $$$$$:  111-block  5
+    %%%%%:  111-block  6
+call   15 never executed
+branch 16 never executed (fallthrough)
+branch 17 never executed
+    %%%%%:  111-block  7
+    %%%%%:  111-block  8
+call   18 never executed
+branch 19 never executed (fallthrough)
+branch 20 never executed
+    $$$$$:  111-block  9
+    $$$$$:  111-block 10
+branch 21 never executed (fallthrough)
+branch 22 never executed
+    $$$$$:  111-block 11
+    $$$$$:  111-block 12
+branch 23 never executed (fallthrough)
+branch 24 never executed
+    $$$$$:  111-block 13
+call   25 never executed
+    $$$$$:  111-block 14
+call   26 never executed
+    $$$$$:  111-block 15
+call   27 never executed
+------------------
+        -:  112:        "options are: berendsen and none"
+function main called 0 returned 0% blocks executed 0%
+    #####:  113:    );
+        -:  114:}
+    #####:  115:
+    %%%%%:  115-block  0
+call    0 never executed
+    #####:  116:/**
+call    0 never executed
+        -:  117: * @brief tests parsing the "compressibility" command
+        -:  118: *
+        -:  119: * @details if the compressibility is negative it throws inputFileException
+        -:  120: *
+        -:  121: */
+        -:  122:TEST_F(TestInputFileReader, ParseCompressibility)
+        -:  123:{
+        -:  124:    InputFileParserManostat  parser(*_engine);
+        -:  125:    std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
+        -:  126:    parser.parseCompressibility(lineElements, 0);
+        -:  127:    EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
+        -:  128:
+        -:  129:    lineElements = {"compressibility", "=", "-0.1"};
+        -:  130:    EXPECT_THROW_MSG(
+        -:  131:        parser.parseCompressibility(lineElements, 0),
+        -:  132:        customException::InputFileException,
+        -:  133:        "Compressibility cannot be negative"
+        -:  134:    );
+        -:  135:}
+        -:  136:
+        -:  137:/**
+        -:  138: * @brief tests parsing the "isotropy" command
+        -:  139: *
+        -:  140: */
+        -:  141:TEST_F(TestInputFileReader, ParseIsotropy)
+        -:  142:{
+        -:  143:    InputFileParserManostat  parser(*_engine);
+        -:  144:    std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
+        -:  145:    parser.parseIsotropy(lineElements, 0);
+        -:  146:    EXPECT_EQ(
+        -:  147:        settings::ManostatSettings::getIsotropy(),
+        -:  148:        settings::Isotropy::ISOTROPIC
+        -:  149:    );
+        -:  150:
+        -:  151:    lineElements = {"isotropy", "=", "anisotropic"};
+        -:  152:    parser.parseIsotropy(lineElements, 0);
+        -:  153:    EXPECT_EQ(
+        -:  154:        settings::ManostatSettings::getIsotropy(),
+        -:  155:        settings::Isotropy::ANISOTROPIC
+        -:  156:    );
+        -:  157:
+        -:  158:    lineElements = {"isotropy", "=", "full_anisotropic"};
+        -:  159:    parser.parseIsotropy(lineElements, 0);
+        -:  160:    EXPECT_EQ(
+        -:  161:        settings::ManostatSettings::getIsotropy(),
+        -:  162:        settings::Isotropy::FULL_ANISOTROPIC
+        -:  163:    );
+        -:  164:
+        -:  165:    lineElements = {"isotropy", "=", "xz"};
+        -:  166:    parser.parseIsotropy(lineElements, 0);
+        -:  167:    EXPECT_EQ(
+        -:  168:        settings::ManostatSettings::getIsotropy(),
+        -:  169:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  170:    );
+        -:  171:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+        -:  172:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+        -:  173:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+        -:  174:
+        -:  175:    lineElements = {"isotropy", "=", "zx"};
+        -:  176:    parser.parseIsotropy(lineElements, 0);
+        -:  177:    EXPECT_EQ(
+        -:  178:        settings::ManostatSettings::getIsotropy(),
+        -:  179:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  180:    );
+        -:  181:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+        -:  182:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+        -:  183:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+        -:  184:
+        -:  185:    lineElements = {"isotropy", "=", "yz"};
+        -:  186:    parser.parseIsotropy(lineElements, 0);
+        -:  187:    EXPECT_EQ(
+        -:  188:        settings::ManostatSettings::getIsotropy(),
+        -:  189:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  190:    );
+        -:  191:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
+        -:  192:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+        -:  193:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+        -:  194:
+        -:  195:    lineElements = {"isotropy", "=", "zy"};
+        -:  196:    parser.parseIsotropy(lineElements, 0);
+        -:  197:    EXPECT_EQ(
+        -:  198:        settings::ManostatSettings::getIsotropy(),
+        -:  199:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  200:    );
+        -:  201:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
+        -:  202:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+        -:  203:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+        -:  204:
+        -:  205:    lineElements = {"isotropy", "=", "xy"};
+        -:  206:    parser.parseIsotropy(lineElements, 0);
+        -:  207:    EXPECT_EQ(
+        -:  208:        settings::ManostatSettings::getIsotropy(),
+        -:  209:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  210:    );
+        -:  211:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+        -:  212:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
+        -:  213:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+        -:  214:
+        -:  215:    lineElements = {"isotropy", "=", "yx"};
+        -:  216:    parser.parseIsotropy(lineElements, 0);
+        -:  217:    EXPECT_EQ(
+        -:  218:        settings::ManostatSettings::getIsotropy(),
+        -:  219:        settings::Isotropy::SEMI_ISOTROPIC
+        -:  220:    );
+        -:  221:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+        -:  222:    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
+        -:  223:    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+        -:  224:
+        -:  225:    lineElements = {"isotropy", "=", "notValid"};
+        -:  226:    EXPECT_THROW_MSG(
+        -:  227:        parser.parseIsotropy(lineElements, 0),
+        -:  228:        customException::InputFileException,
+        -:  229:        "Invalid isotropy \"notValid\" at line 0 in input file. Possible "
+        -:  230:        "options are: isotropic, xy, xz, yz, anisotropic and full_anisotropic"
+        -:  231:    );
+        -:  232:}
+        -:  233:
+        -:  234:int main(int argc, char **argv)
+        -:  235:{
+        -:  236:    testing::InitGoogleTest(&argc, argv);
+        -:  237:    return ::RUN_ALL_TESTS();
+        -:  238:}

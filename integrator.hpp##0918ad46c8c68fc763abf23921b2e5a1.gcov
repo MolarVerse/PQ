@@ -1,0 +1,102 @@
+        -:    0:Source:/home/jag/projects/pq/include/integrator/integrator.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _INTEGRATOR_HPP_
+        -:   24:
+        -:   25:#define _INTEGRATOR_HPP_
+        -:   26:
+        -:   27:#include <string>        // for string
+        -:   28:#include <string_view>   // for string_view
+        -:   29:
+        -:   30:namespace simulationBox
+        -:   31:{
+        -:   32:    class SimulationBox;   // forward declaration
+        -:   33:    class Atom;            // forward declaration
+        -:   34:}   // namespace simulationBox
+        -:   35:
+        -:   36:namespace integrator
+        -:   37:{
+        -:   38:    /**
+        -:   39:     * @class Integrator
+        -:   40:     *
+        -:   41:     * @brief Integrator is a base class for all integrators
+        -:   42:     *
+        -:   43:     */
+        -:   44:    class Integrator
+        -:   45:    {
+        -:   46:      protected:
+        -:   47:        std::string _integratorType;
+        -:   48:
+        -:   49:      public:
+        -:   50:        Integrator() = default;
+function integrator::Integrator::Integrator(std::basic_string_view<char, std::char_traits<char> >) called 0 returned 0% blocks executed 0%
+    #####:   51:        explicit Integrator(const std::string_view integratorType) : _integratorType(integratorType){};
+    %%%%%:   51-block  0
+    %%%%%:   51-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   51-block  2
+        -:   52:        virtual ~Integrator() = default;
+        -:   53:
+        -:   54:        virtual void firstStep(simulationBox::SimulationBox &)  = 0;
+        -:   55:        virtual void secondStep(simulationBox::SimulationBox &) = 0;
+        -:   56:
+        -:   57:        void integrateVelocities(simulationBox::Atom *) const;
+        -:   58:        void integratePositions(simulationBox::Atom *, const simulationBox::SimulationBox &) const;
+        -:   59:
+        -:   60:        /********************************
+        -:   61:         * standard getters and setters *
+        -:   62:         ********************************/
+        -:   63:
+        -:   64:        [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
+        -:   65:    };
+        -:   66:
+        -:   67:    /**
+        -:   68:     * @class VelocityVerlet inherits Integrator
+        -:   69:     *
+        -:   70:     * @brief VelocityVerlet is a class for velocity verlet integrator
+        -:   71:     *
+        -:   72:     */
+        -:   73:    class VelocityVerlet : public Integrator
+        -:   74:    {
+        -:   75:      public:
+function integrator::VelocityVerlet::VelocityVerlet() called 0 returned 0% blocks executed 0%
+    #####:   76:        explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
+    %%%%%:   76-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   76-block  1
+        -:   77:
+        -:   78:        void firstStep(simulationBox::SimulationBox &) override;
+        -:   79:        void secondStep(simulationBox::SimulationBox &) override;
+        -:   80:    };
+        -:   81:
+        -:   82:}   // namespace integrator
+        -:   83:
+        -:   84:#endif   // _INTEGRATOR_HPP_

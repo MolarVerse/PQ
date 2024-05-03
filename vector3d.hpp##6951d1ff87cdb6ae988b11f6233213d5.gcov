@@ -1,0 +1,566 @@
+        -:    0:Source:/home/jag/projects/pq/include/linearAlgebra/vector3d.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _VEC3D_HPP_
+        -:   24:
+        -:   25:#define _VEC3D_HPP_
+        -:   26:
+        -:   27:#include <array>         // for array
+        -:   28:#include <cmath>         // for ceil, fabs, floor, rint, sqrt
+        -:   29:#include <cstddef>       // for size_t
+        -:   30:#include <iostream>      // for ostream
+        -:   31:#include <type_traits>   // for is_fundamental_v
+        -:   32:#include <vector>        // for vector
+        -:   33:
+        -:   34:namespace linearAlgebra
+        -:   35:{
+        -:   36:    template <typename T>
+        -:   37:    using iterator = typename std::array<T, 3>::iterator;
+        -:   38:
+        -:   39:    template <typename T>
+        -:   40:    using const_iterator = typename std::array<T, 3>::const_iterator;
+        -:   41:
+        -:   42:    template <class T>
+        -:   43:    class Vector3D;   // forward declaration
+        -:   44:
+        -:   45:    using Vec3D   = Vector3D<double>;
+        -:   46:    using Vec3Di  = Vector3D<int>;
+        -:   47:    using Vec3Dul = Vector3D<size_t>;
+        -:   48:
+        -:   49:    /**
+        -:   50:     * @brief Vector3D class
+        -:   51:     *
+        -:   52:     * @note this class is a template class for all xyz objects
+        -:   53:     *
+        -:   54:     * @tparam T
+        -:   55:     */
+        -:   56:    template <typename T>
+        -:   57:    class Vector3D
+        -:   58:    {
+        -:   59:      private:
+        -:   60:        union
+        -:   61:        {
+        -:   62:            std::array<T, 3> _xyz;
+        -:   63:            struct
+        -:   64:            {
+        -:   65:                T _x;
+        -:   66:                T _y;
+        -:   67:                T _z;
+        -:   68:            };
+        -:   69:        };
+        -:   70:
+        -:   71:      public:
+        -:   72:        ~Vector3D() = default;
+        -:   73:
+        -:   74:        Vector3D() = default;
+    #####:   75:        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
+------------------
+linearAlgebra::Vector3D<unsigned long>::Vector3D(unsigned long, unsigned long, unsigned long):
+function linearAlgebra::Vector3D<unsigned long>::Vector3D(unsigned long, unsigned long, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   75:        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
+------------------
+linearAlgebra::Vector3D<double>::Vector3D(double, double, double):
+function linearAlgebra::Vector3D<double>::Vector3D(double, double, double) called 0 returned 0% blocks executed 0%
+    #####:   75:        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
+------------------
+    #####:   76:        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
+------------------
+linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> >::Vector3D(linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> > const&):
+function linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> >::Vector3D(linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> > const&) called 0 returned 0% blocks executed 0%
+    #####:   76:        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
+    %%%%%:   76-block  0
+call    0 never executed
+------------------
+linearAlgebra::Vector3D<double>::Vector3D(linearAlgebra::Vector3D<double> const&):
+function linearAlgebra::Vector3D<double>::Vector3D(linearAlgebra::Vector3D<double> const&) called 0 returned 0% blocks executed 0%
+    #####:   76:        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
+------------------
+    #####:   77:        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
+------------------
+linearAlgebra::Vector3D<double>::Vector3D(double):
+function linearAlgebra::Vector3D<double>::Vector3D(double) called 0 returned 0% blocks executed 0%
+    #####:   77:        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
+------------------
+linearAlgebra::Vector3D<unsigned long>::Vector3D(unsigned long):
+function linearAlgebra::Vector3D<unsigned long>::Vector3D(unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   77:        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
+------------------
+        -:   78:
+        -:   79:        using value_type = T;
+        -:   80:
+        -:   81:        /**
+        -:   82:         * @brief index operator
+        -:   83:         *
+        -:   84:         * @param const size_t index
+        -:   85:         * @return T&
+        -:   86:         */
+    #####:   87:        T &operator[](const size_t index) { return _xyz[index]; }
+------------------
+linearAlgebra::Vector3D<double>::operator[](unsigned long):
+function linearAlgebra::Vector3D<double>::operator[](unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   87:        T &operator[](const size_t index) { return _xyz[index]; }
+    %%%%%:   87-block  0
+call    0 never executed
+------------------
+linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> >::operator[](unsigned long):
+function linearAlgebra::Vector3D<linearAlgebra::Vector3D<double> >::operator[](unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   87:        T &operator[](const size_t index) { return _xyz[index]; }
+    %%%%%:   87-block  0
+call    0 never executed
+------------------
+        -:   88:
+        -:   89:        /**
+        -:   90:         * @brief const index operator
+        -:   91:         *
+        -:   92:         * @param const size_t index
+        -:   93:         * @return const T&
+        -:   94:         */
+function linearAlgebra::Vector3D<double>::operator[](unsigned long) const called 0 returned 0% blocks executed 0%
+    #####:   95:        const T &operator[](const size_t index) const { return _xyz[index]; }
+    %%%%%:   95-block  0
+call    0 never executed
+        -:   96:
+        -:   97:        /**
+        -:   98:         * @brief Construct a new Vector 3D object
+        -:   99:         *
+        -:  100:         * @param Vector3D<T>&
+        -:  101:         * @return Vector3D&
+        -:  102:         */
+        -:  103:        Vector3D &operator=(Vector3D<T> &);
+        -:  104:
+        -:  105:        /**
+        -:  106:         * @brief Construct a new Vector 3D object
+        -:  107:         *
+        -:  108:         * @param const Vector3D<T>&
+        -:  109:         * @return Vector3D&
+        -:  110:         */
+        -:  111:        Vector3D &operator=(const Vector3D<T> &);
+        -:  112:
+        -:  113:        /**
+        -:  114:         * @brief operator ==
+        -:  115:         *
+        -:  116:         * @param const Vector3D<T> rhs
+        -:  117:         * @return bool
+        -:  118:         */
+        -:  119:        bool operator==(const Vector3D<T> &rhs) const { return _x == rhs[0] && _y == rhs[1] && _z == rhs[2]; }
+        -:  120:
+        -:  121:        /**
+        -:  122:         * @brief += operator for two Vector3d objects
+        -:  123:         *
+        -:  124:         * @param const Vector3D<T>&
+        -:  125:         * @note void to be a lot faster than with return this*
+        -:  126:         */
+        -:  127:        void operator+=(const Vector3D<T> &);
+        -:  128:
+        -:  129:        /**
+        -:  130:         * @brief += operator for a Vector3d object and a scalar
+        -:  131:         *
+        -:  132:         * @param const T
+        -:  133:         * @return Vector3D&
+        -:  134:         */
+        -:  135:        Vector3D &operator+=(const T);
+        -:  136:
+        -:  137:        /**
+        -:  138:         * @brief -= operator for two Vector3d objects
+        -:  139:         *
+        -:  140:         * @param const Vector3D<T>&
+        -:  141:         * @return Vector3D&
+        -:  142:         */
+        -:  143:        Vector3D &operator-=(const Vector3D<T> &);
+        -:  144:
+        -:  145:        /**
+        -:  146:         * @brief -= operator for a Vector3d object and a scalar
+        -:  147:         *
+        -:  148:         * @param const T
+        -:  149:         * @return Vector3D&
+        -:  150:         */
+        -:  151:        Vector3D &operator-=(const T);
+        -:  152:
+        -:  153:        /**
+        -:  154:         * @brief *= operator for two Vector3d objects
+        -:  155:         *
+        -:  156:         * @param const Vector3D<T>&
+        -:  157:         * @return Vector3D&
+        -:  158:         */
+        -:  159:        Vector3D &operator*=(const Vector3D<T> &);
+        -:  160:
+        -:  161:        /**
+        -:  162:         * @brief *= operator for a Vector3d object and a scalar
+        -:  163:         *
+        -:  164:         * @param const T
+        -:  165:         * @return Vector3D&
+        -:  166:         */
+        -:  167:        Vector3D &operator*=(const T);
+        -:  168:
+        -:  169:        /**
+        -:  170:         * @brief /= operator for two Vector3d objects
+        -:  171:         *
+        -:  172:         * @param const Vector3D<T>&
+        -:  173:         * @return Vector3D&
+        -:  174:         */
+        -:  175:        Vector3D &operator/=(const Vector3D<T> &);
+        -:  176:
+        -:  177:        /**
+        -:  178:         * @brief /= operator for a Vector3d object and a scalar
+        -:  179:         *
+        -:  180:         * @param const T
+        -:  181:         * @return Vector3D&
+        -:  182:         */
+        -:  183:        Vector3D &operator/=(const T);
+        -:  184:
+        -:  185:        /**
+        -:  186:         * @brief + operator for two Vector3d objects
+        -:  187:         *
+        -:  188:         * @param const Vector3D<T>&
+        -:  189:         * @return Vector3D
+        -:  190:         */
+        -:  191:        Vector3D<T> operator+(const Vector3D<T> &rhs) const { return Vector3D<T>(_x + rhs._x, _y + rhs._y, _z + rhs._z); }
+        -:  192:
+        -:  193:        /**
+        -:  194:         * @brief + operator for a Vector3d object and a scalar
+        -:  195:         *
+        -:  196:         * @param const T
+        -:  197:         * @return Vector3D
+        -:  198:         */
+        -:  199:        Vector3D<T> operator+(const T rhs) const { return Vector3D<T>(_x + rhs, _y + rhs, _z + rhs); }
+        -:  200:
+        -:  201:        /**
+        -:  202:         * @brief unary - operator for Vector3d
+        -:  203:         *
+        -:  204:         * @return Vector3D<T>
+        -:  205:         */
+        -:  206:        Vector3D operator-() const { return Vector3D<T>(-_x, -_y, -_z); }
+        -:  207:
+        -:  208:        /**
+        -:  209:         * @brief - operator for two Vector3d objects
+        -:  210:         *
+        -:  211:         * @param const Vector3D<T>&
+        -:  212:         * @return Vector3D
+        -:  213:         */
+        -:  214:        Vector3D<T> operator-(const Vector3D<T> &rhs) const { return {_x - rhs._x, _y - rhs._y, _z - rhs._z}; }
+        -:  215:
+        -:  216:        /**
+        -:  217:         * @brief - operator for a Vector3d object and a scalar
+        -:  218:         *
+        -:  219:         * @param const T
+        -:  220:         * @return Vector3D
+        -:  221:         */
+        -:  222:        Vector3D<T> operator-(const T rhs) const { return Vector3D<T>(_x - rhs, _y - rhs, _z - rhs); }
+        -:  223:
+        -:  224:        /**
+        -:  225:         * @brief - operator for a Vector3d object and a scalar
+        -:  226:         *
+        -:  227:         * @param const T
+        -:  228:         * @param const Vector3D<T>&
+        -:  229:         * @return Vector3D
+        -:  230:         */
+        -:  231:        friend Vector3D<T> operator-(const T lhs, const Vector3D<T> &rhs)
+        -:  232:        {
+        -:  233:            return Vector3D<T>(lhs - rhs._x, lhs - rhs._y, lhs - rhs._z);
+        -:  234:        }
+        -:  235:
+        -:  236:        /**
+        -:  237:         * @brief * operator for two Vector3d objects
+        -:  238:         *
+        -:  239:         * @param const Vector3D<T>&
+        -:  240:         * @return Vector3D
+        -:  241:         */
+        -:  242:        Vector3D<T> operator*(const T rhs) const { return Vector3D<T>(_x * rhs, _y * rhs, _z * rhs); }
+        -:  243:
+        -:  244:        /**
+        -:  245:         * @brief * operator for two Vector3d objects
+        -:  246:         *
+        -:  247:         * @param const Vector3D<T>&
+        -:  248:         * @return Vector3D
+        -:  249:         */
+        -:  250:        Vector3D<T> operator*(const Vector3D<T> &rhs) const { return {_x * rhs._x, _y * rhs._y, _z * rhs._z}; }
+        -:  251:
+        -:  252:        /**
+        -:  253:         * @brief * operator for a Vector3d object and a scalar
+        -:  254:         *
+        -:  255:         * @param const T
+        -:  256:         * @return Vector3D
+        -:  257:         */
+        -:  258:        friend Vector3D<T> operator*(const T lhs, const Vector3D<T> &rhs) { return rhs * lhs; }
+        -:  259:
+        -:  260:        /**
+        -:  261:         * @brief / operator for two Vector3d objects
+        -:  262:         *
+        -:  263:         * @param const Vector3D<T>&
+        -:  264:         * @return Vector3D
+        -:  265:         */
+        -:  266:        Vector3D<T> operator/(const T rhs) const { return Vector3D<T>(_x / rhs, _y / rhs, _z / rhs); }
+        -:  267:
+        -:  268:        /**
+        -:  269:         * @brief / operator for two Vector3d objects
+        -:  270:         *
+        -:  271:         * @param const Vector3D<T>&
+        -:  272:         * @return Vector3D
+        -:  273:         */
+        -:  274:        Vector3D<T> operator/(const Vector3D<T> &rhs) const { return Vector3D<T>(_x / rhs._x, _y / rhs._y, _z / rhs._z); }
+        -:  275:
+        -:  276:        /**
+        -:  277:         * @brief / operator for a Vector3d object and a scalar
+        -:  278:         *
+        -:  279:         * @param const T
+        -:  280:         * @return Vector3D
+        -:  281:         */
+        -:  282:        friend Vector3D<T> operator/(const T rhs, const Vector3D<T> &lhs)
+        -:  283:        {
+        -:  284:            return Vector3D<T>(rhs / lhs._x, rhs / lhs._y, rhs / lhs._z);
+        -:  285:        }
+        -:  286:
+        -:  287:        /**
+        -:  288:         * @brief < operator for vector3d and scalar
+        -:  289:         *
+        -:  290:         * @param const T t
+        -:  291:         * @return bool
+        -:  292:         *
+        -:  293:         * @note returns true if all members of vector are less than t
+        -:  294:         */
+        -:  295:        bool operator<(const T t) const
+        -:  296:        requires std::is_fundamental_v<T>
+        -:  297:        {
+        -:  298:            return _x < t && _y < t && _z < t;
+        -:  299:        }
+        -:  300:
+        -:  301:        /**
+        -:  302:         * @brief > operator for vector3d and scalar
+        -:  303:         *
+        -:  304:         * @param const T t
+        -:  305:         * @return bool
+        -:  306:         *
+        -:  307:         * @note returns true if all members of vector are greater than t
+        -:  308:         */
+        -:  309:        bool operator>(const T t) const
+        -:  310:        requires std::is_fundamental_v<T>
+        -:  311:        {
+        -:  312:            return _x > t && _y > t && _z > t;
+        -:  313:        }
+        -:  314:
+        -:  315:        /**
+        -:  316:         * @brief fabs of all entries of vector
+        -:  317:         *
+        -:  318:         * @param const Vector3D<T>&
+        -:  319:         * @return Vector3D
+        -:  320:         */
+        -:  321:        friend Vector3D fabs(const Vector3D &v) { return Vector3D<T>(fabs(v._x), fabs(v._y), fabs(v._z)); }
+        -:  322:
+        -:  323:        /**
+        -:  324:         * @brief begin iterator for vector3d
+        -:  325:         *
+        -:  326:         * @return constexpr const_iterator<T>
+        -:  327:         */
+        -:  328:        constexpr const_iterator<T> begin() const noexcept { return _xyz.begin(); }
+        -:  329:
+        -:  330:        /**
+        -:  331:         * @brief end iterator for vector3d
+        -:  332:         *
+        -:  333:         * @return constexpr const_iterator<T>
+        -:  334:         */
+        -:  335:        constexpr const_iterator<T> end() const noexcept { return _xyz.end(); }
+        -:  336:
+        -:  337:        /**
+        -:  338:         * @brief static cast of all vector members
+        -:  339:         *
+        -:  340:         * @tparam U
+        -:  341:         * @return Vector3D<U>
+        -:  342:         */
+        -:  343:        template <class U>
+        -:  344:        explicit operator Vector3D<U>() const
+        -:  345:        {
+        -:  346:            return Vector3D<U>(static_cast<U>(_x), static_cast<U>(_y), static_cast<U>(_z));
+        -:  347:        }
+        -:  348:
+        -:  349:        /**
+        -:  350:         * @brief round all entries of vector
+        -:  351:         *
+        -:  352:         * @param v
+        -:  353:         * @return Vector3D<T>
+        -:  354:         */
+        -:  355:        friend Vector3D<T> round(const Vector3D<T> &v) { return {rint(v[0]), rint(v[1]), rint(v[2])}; }
+        -:  356:
+        -:  357:        /**
+        -:  358:         * @brief ceil all entries of vector
+        -:  359:         *
+        -:  360:         * @param v
+        -:  361:         * @return Vector3D<T>
+        -:  362:         */
+        -:  363:        friend Vector3D<T> ceil(Vector3D<T> v) { return Vector3D<T>(ceil(v._x), ceil(v._y), ceil(v._z)); }
+        -:  364:
+        -:  365:        /**
+        -:  366:         * @brief floor all entries of vector
+        -:  367:         *
+        -:  368:         * @param v
+        -:  369:         * @return Vector3D<T>
+        -:  370:         */
+        -:  371:        friend Vector3D<T> floor(Vector3D<T> v) { return Vector3D<T>(floor(v._x), floor(v._y), floor(v._z)); }
+        -:  372:
+        -:  373:        /**
+        -:  374:         * @brief norm of vector
+        -:  375:         *
+        -:  376:         * @param v
+        -:  377:         * @return T
+        -:  378:         */
+        -:  379:        friend T norm(Vector3D<T> v) { return sqrt(v._x * v._x + v._y * v._y + v._z * v._z); }
+        -:  380:
+        -:  381:        /**
+        -:  382:         * @brief norm squared of vector
+        -:  383:         *
+        -:  384:         * @param v
+        -:  385:         * @return T
+        -:  386:         */
+        -:  387:        friend T normSquared(Vector3D<T> v) { return v._x * v._x + v._y * v._y + v._z * v._z; }
+        -:  388:
+        -:  389:        /**
+        -:  390:         * @brief minimum of vector
+        -:  391:         *
+        -:  392:         * @param v
+        -:  393:         * @return T
+        -:  394:         */
+        -:  395:        friend T minimum(Vector3D<T> v) { return std::min(v._x, std::min(v._y, v._z)); }
+        -:  396:
+        -:  397:        /**
+        -:  398:         * @brief maximum of vector
+        -:  399:         *
+        -:  400:         * @param v
+        -:  401:         * @return T
+        -:  402:         */
+        -:  403:        friend T maximum(Vector3D<T> v) { return std::max(v._x, std::max(v._y, v._z)); }
+        -:  404:
+        -:  405:        /**
+        -:  406:         * @brief sum of vector
+        -:  407:         *
+        -:  408:         * @param v
+        -:  409:         * @return T
+        -:  410:         */
+        -:  411:        friend T sum(Vector3D<T> v) { return v._x + v._y + v._z; }
+        -:  412:
+        -:  413:        /**
+        -:  414:         * @brief product of vector
+        -:  415:         *
+        -:  416:         * @param v
+        -:  417:         * @return T
+        -:  418:         */
+        -:  419:        friend T prod(Vector3D<T> v) { return v._x * v._y * v._z; }
+        -:  420:
+        -:  421:        /**
+        -:  422:         * @brief mean of vector
+        -:  423:         *
+        -:  424:         * @param v
+        -:  425:         * @return T
+        -:  426:         */
+        -:  427:        friend T mean(Vector3D<T> v) { return sum(v) / 3; }
+        -:  428:
+        -:  429:        /**
+        -:  430:         * @brief scalar_product of two vectors
+        -:  431:         *
+        -:  432:         * @param v1
+        -:  433:         * @param v2
+        -:  434:         */
+        -:  435:        friend T dot(Vector3D<T> v1, Vector3D<T> v2) { return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z; }
+        -:  436:
+        -:  437:        /**
+        -:  438:         * @brief cross product of two vectors
+        -:  439:         *
+        -:  440:         * @param v1
+        -:  441:         * @param v2
+        -:  442:         * @return Vector3D<T>
+        -:  443:         */
+        -:  444:        friend Vector3D<T> cross(Vector3D<T> v1, Vector3D<T> v2)
+        -:  445:        {
+        -:  446:            return Vector3D<T>(v1._y * v2._z - v1._z * v2._y, v1._z * v2._x - v1._x * v2._z, v1._x * v2._y - v1._y * v2._x);
+        -:  447:        }
+        -:  448:
+        -:  449:        /**
+        -:  450:         * @brief calculates the cosine of the vector (for each element)
+        -:  451:         *
+        -:  452:         * @param v1
+        -:  453:         * @param v2
+        -:  454:         * @return Vector3D<T>
+        -:  455:         */
+        -:  456:        friend Vector3D<T> cos(Vector3D<T> v1) { return Vector3D<T>(cos(v1._x), cos(v1._y), cos(v1._z)); }
+        -:  457:
+        -:  458:        /**
+        -:  459:         * @brief calculates the cosine of the angle between two vectors
+        -:  460:         *
+        -:  461:         * @param v1
+        -:  462:         * @param v2
+        -:  463:         * @return Vector3D<T>
+        -:  464:         */
+        -:  465:        friend double cos(Vector3D<T> v1, Vector3D<T> v2)
+        -:  466:        {
+        -:  467:            auto cosine = dot(v1, v2) / (norm(v1) * norm(v2));
+        -:  468:
+        -:  469:            cosine = cosine > 1.0 ? 1.0 : cosine;
+        -:  470:            cosine = cosine < -1.0 ? -1.0 : cosine;
+        -:  471:
+        -:  472:            return cosine;
+        -:  473:        }
+        -:  474:
+        -:  475:        /**
+        -:  476:         * @brief calculates the angle between two vectors
+        -:  477:         *
+        -:  478:         * @param v1
+        -:  479:         * @param v2
+        -:  480:         * @return Vector3D<T>
+        -:  481:         */
+        -:  482:        friend double angle(Vector3D<T> v1, Vector3D<T> v2) { return ::acos(cos(v1, v2)); }
+        -:  483:
+        -:  484:        /**
+        -:  485:         * @brief calculates the exponential of the vector (for each element)
+        -:  486:         *
+        -:  487:         * @param v1
+        -:  488:         * @param v2
+        -:  489:         * @return Vector3D<T>
+        -:  490:         */
+        -:  491:        friend Vector3D<T> exp(Vector3D<T> v) { return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z)); }
+        -:  492:
+        -:  493:        /**
+        -:  494:         * @brief ostream operator for vector3d
+        -:  495:         *
+        -:  496:         * @param os
+        -:  497:         * @param v
+        -:  498:         * @return std::ostream&
+        -:  499:         */
+        -:  500:        friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v)
+        -:  501:        {
+        -:  502:            return os << v._x << " " << v._y << " " << v._z;
+        -:  503:        }
+        -:  504:
+        -:  505:        /**
+        -:  506:         * @brief converts vector3d to std::vector
+        -:  507:         *
+        -:  508:         * @param v
+        -:  509:         *
+        -:  510:         * @return std::vector<T>
+        -:  511:         */
+        -:  512:        std::vector<T> toStdVector() { return {_x, _y, _z}; }
+        -:  513:    };
+        -:  514:
+        -:  515:}   // namespace linearAlgebra
+        -:  516:
+        -:  517:#endif   // _VEC3D_HPP_

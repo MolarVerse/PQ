@@ -1,0 +1,220 @@
+        -:    0:Source:/home/jag/projects/pq/include/physicalData/physicalData.hpp
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Source is newer than graph
+        -:    1:/*****************************************************************************
+        -:    2:<GPL_HEADER>
+        -:    3:
+        -:    4:    PQ
+        -:    5:    Copyright (C) 2023-now  Jakob Gamper
+        -:    6:
+        -:    7:    This program is free software: you can redistribute it and/or modify
+        -:    8:    it under the terms of the GNU General Public License as published by
+        -:    9:    the Free Software Foundation, either version 3 of the License, or
+        -:   10:    (at your option) any later version.
+        -:   11:
+        -:   12:    This program is distributed in the hope that it will be useful,
+        -:   13:    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:    GNU General Public License for more details.
+        -:   16:
+        -:   17:    You should have received a copy of the GNU General Public License
+        -:   18:    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        -:   19:
+        -:   20:<GPL_HEADER>
+        -:   21:******************************************************************************/
+        -:   22:
+        -:   23:#ifndef _PHYSICAL_DATA_HPP_
+        -:   24:
+        -:   25:#define _PHYSICAL_DATA_HPP_
+        -:   26:
+        -:   27:#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+        -:   28:#include "vector3d.hpp"          // for Vec3D
+        -:   29:
+        -:   30:#include <functional>   // for _Bind_front_t, bind_front, function
+        -:   31:#include <vector>       // for vector
+        -:   32:
+        -:   33:namespace simulationBox
+        -:   34:{
+        -:   35:    class SimulationBox;   // forward declaration
+        -:   36:}
+        -:   37:
+        -:   38:namespace physicalData
+        -:   39:{
+        -:   40:    class PhysicalData;   // forward declaration
+        -:   41:
+        -:   42:    PhysicalData mean(std::vector<PhysicalData> &physicalDataVector);
+        -:   43:
+        -:   44:    /**
+        -:   45:     * @class PhysicalData
+        -:   46:     *
+        -:   47:     * @brief PhysicalData is a class for output data storage
+        -:   48:     *
+        -:   49:     */
+        -:   50:    class PhysicalData
+        -:   51:    {
+        -:   52:      private:
+        -:   53:        double _numberOfQMAtoms = 0.0;
+        -:   54:
+        -:   55:        double _volume      = 0.0;
+        -:   56:        double _density     = 0.0;
+        -:   57:        double _temperature = 0.0;
+        -:   58:        double _pressure    = 0.0;
+        -:   59:
+        -:   60:        double _kineticEnergy         = 0.0;
+        -:   61:        double _coulombEnergy         = 0.0;
+        -:   62:        double _nonCoulombEnergy      = 0.0;
+        -:   63:        double _intraCoulombEnergy    = 0.0;
+        -:   64:        double _intraNonCoulombEnergy = 0.0;
+        -:   65:
+        -:   66:        double _bondEnergy     = 0.0;
+        -:   67:        double _angleEnergy    = 0.0;
+        -:   68:        double _dihedralEnergy = 0.0;
+        -:   69:        double _improperEnergy = 0.0;
+        -:   70:
+        -:   71:        double _qmEnergy = 0.0;
+        -:   72:
+        -:   73:        double _noseHooverMomentumEnergy = 0.0;
+        -:   74:        double _noseHooverFrictionEnergy = 0.0;
+        -:   75:
+        -:   76:        double _lowerDistanceConstraints = 0.0;
+        -:   77:        double _upperDistanceConstraints = 0.0;
+        -:   78:
+        -:   79:        linearAlgebra::Vec3D    _momentum                     = {0.0, 0.0, 0.0};
+        -:   80:        linearAlgebra::Vec3D    _angularMomentum              = {0.0, 0.0, 0.0};
+        -:   81:        linearAlgebra::tensor3D _kineticEnergyAtomicTensor    = {0.0};
+        -:   82:        linearAlgebra::tensor3D _kineticEnergyMolecularTensor = {0.0};
+        -:   83:
+        -:   84:        linearAlgebra::tensor3D _virial       = {0.0};
+        -:   85:        linearAlgebra::tensor3D _stressTensor = {0.0};
+        -:   86:
+        -:   87:        double _ringPolymerEnergy = 0.0;
+        -:   88:
+        -:   89:      public:
+        -:   90:        void calculateTemperature(simulationBox::SimulationBox &);
+        -:   91:        void calculateKinetics(simulationBox::SimulationBox &);
+        -:   92:        void changeKineticVirialToAtomic();
+        -:   93:
+        -:   94:        std::function<linearAlgebra::StaticMatrix3x3<double>()> getKineticEnergyVirialVector =
+        -:   95:            std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
+        -:   96:
+        -:   97:        void updateAverages(const PhysicalData &);
+        -:   98:        void makeAverages(const double);
+        -:   99:        void reset();
+        -:  100:
+        -:  101:        void addIntraCoulombEnergy(const double intraCoulombEnergy);
+        -:  102:        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
+        -:  103:
+        -:  104:        [[nodiscard]] double getTotalEnergy() const;
+        -:  105:
+        -:  106:        /********************
+        -:  107:         * standard adders  *
+        -:  108:         ********************/
+        -:  109:
+        -:  110:        void addVirial(const linearAlgebra::tensor3D &virial) { _virial += virial; }
+        -:  111:
+        -:  112:        void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }
+        -:  113:        void addNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy += nonCoulombEnergy; }
+        -:  114:
+        -:  115:        void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
+        -:  116:        void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
+        -:  117:        void addDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy += dihedralEnergy; }
+        -:  118:        void addImproperEnergy(const double improperEnergy) { _improperEnergy += improperEnergy; }
+        -:  119:
+        -:  120:        void addRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy += ringPolymerEnergy; }
+        -:  121:
+        -:  122:        /********************
+        -:  123:         * standard setters *
+        -:  124:         ********************/
+        -:  125:
+        -:  126:        void setNumberOfQMAtoms(const double nQMAtoms) { _numberOfQMAtoms = nQMAtoms; }
+        -:  127:
+        -:  128:        void setVolume(const double volume) { _volume = volume; }
+        -:  129:        void setDensity(const double density) { _density = density; }
+        -:  130:        void setTemperature(const double temperature) { _temperature = temperature; }
+        -:  131:        void setPressure(const double pressure) { _pressure = pressure; }
+        -:  132:
+        -:  133:        void setVirial(const linearAlgebra::tensor3D &virial) { _virial = virial; }
+        -:  134:        void setStressTensor(const linearAlgebra::tensor3D &stressTensor) { _stressTensor = stressTensor; }
+        -:  135:
+        -:  136:        void setMomentum(const linearAlgebra::Vec3D &vec) { _momentum = vec; }
+        -:  137:        void setAngularMomentum(const linearAlgebra::Vec3D &vec) { _angularMomentum = vec; }
+        -:  138:
+        -:  139:        void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
+        -:  140:        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyAtomicTensor = vec; }
+        -:  141:        void setKineticEnergyMolecularVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyMolecularTensor = vec; }
+        -:  142:
+        -:  143:        void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
+        -:  144:        void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
+        -:  145:        void setIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy = intraCoulombEnergy; }
+        -:  146:        void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy = intraNonCoulombEnergy; }
+        -:  147:
+        -:  148:        void setBondEnergy(const double bondEnergy) { _bondEnergy = bondEnergy; }
+        -:  149:        void setAngleEnergy(const double angleEnergy) { _angleEnergy = angleEnergy; }
+        -:  150:        void setDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy = dihedralEnergy; }
+        -:  151:        void setImproperEnergy(const double improperEnergy) { _improperEnergy = improperEnergy; }
+        -:  152:
+        -:  153:        void setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
+        -:  154:
+        -:  155:        void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
+        -:  156:        void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
+        -:  157:
+        -:  158:        void setLowerDistanceConstraints(const double lowerDistanceConstraints)
+        -:  159:        {
+        -:  160:            _lowerDistanceConstraints = lowerDistanceConstraints;
+        -:  161:        }
+        -:  162:        void setUpperDistanceConstraints(const double upperDistanceConstraints)
+        -:  163:        {
+        -:  164:            _upperDistanceConstraints = upperDistanceConstraints;
+        -:  165:        }
+        -:  166:
+        -:  167:        void setRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+        -:  168:
+        -:  169:        /********************
+        -:  170:         * standard getters *
+        -:  171:         ********************/
+        -:  172:
+        -:  173:        [[nodiscard]] double getNumberOfQMAtoms() const { return _numberOfQMAtoms; }
+        -:  174:
+        -:  175:        [[nodiscard]] double getVolume() const { return _volume; }
+        -:  176:        [[nodiscard]] double getDensity() const { return _density; }
+        -:  177:        [[nodiscard]] double getTemperature() const { return _temperature; }
+        -:  178:        [[nodiscard]] double getPressure() const { return _pressure; }
+        -:  179:
+        -:  180:        [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
+        -:  181:        [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
+        -:  182:        [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }
+        -:  183:        [[nodiscard]] double getIntraCoulombEnergy() const { return _intraCoulombEnergy; }
+        -:  184:        [[nodiscard]] double getIntraNonCoulombEnergy() const { return _intraNonCoulombEnergy; }
+        -:  185:        [[nodiscard]] double getIntraEnergy() const { return _intraCoulombEnergy + _intraNonCoulombEnergy; }
+        -:  186:
+        -:  187:        [[nodiscard]] double getBondEnergy() const { return _bondEnergy; }
+function physicalData::PhysicalData::getKineticEnergyMolecularVector() const called 0 returned 0% blocks executed 0%
+    #####:  188:        [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
+    %%%%%:  188-block  0
+call    0 never executed
+        -:  189:        [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }
+        -:  190:        [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
+        -:  191:
+        -:  192:        [[nodiscard]] double getQMEnergy() const { return _qmEnergy; }
+        -:  193:
+        -:  194:        [[nodiscard]] double getNoseHooverMomentumEnergy() const { return _noseHooverMomentumEnergy; }
+        -:  195:        [[nodiscard]] double getNoseHooverFrictionEnergy() const { return _noseHooverFrictionEnergy; }
+        -:  196:
+        -:  197:        [[nodiscard]] double getLowerDistanceConstraints() const { return _lowerDistanceConstraints; }
+        -:  198:        [[nodiscard]] double getUpperDistanceConstraints() const { return _upperDistanceConstraints; }
+        -:  199:
+        -:  200:        [[nodiscard]] double getRingPolymerEnergy() const { return _ringPolymerEnergy; }
+        -:  201:
+        -:  202:        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicTensor; }
+        -:  203:        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularTensor; }
+        -:  204:        [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
+        -:  205:        [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const { return _stressTensor; }
+        -:  206:        [[nodiscard]] linearAlgebra::Vec3D    getMomentum() const { return _momentum; }
+        -:  207:        [[nodiscard]] linearAlgebra::Vec3D    getAngularMomentum() const { return _angularMomentum; }
+        -:  208:    };
+        -:  209:
+        -:  210:}   // namespace physicalData
+        -:  211:
+        -:  212:#endif   // _PHYSICAL_DATA_HPP_

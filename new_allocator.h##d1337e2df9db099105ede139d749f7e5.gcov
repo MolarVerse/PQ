@@ -1,0 +1,1091 @@
+        -:    0:Source:/home/jag/software/gcc-13.1.0/install/include/c++/13.1.0/bits/new_allocator.h
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:// Allocator that wraps operator new -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2001-2023 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/** @file bits/new_allocator.h
+        -:   26: *  This is an internal header file, included by other library headers.
+        -:   27: *  Do not attempt to use it directly. @headername{memory}
+        -:   28: */
+        -:   29:
+        -:   30:#ifndef _STD_NEW_ALLOCATOR_H
+        -:   31:#define _STD_NEW_ALLOCATOR_H 1
+        -:   32:
+        -:   33:#include <bits/c++config.h>
+        -:   34:#include <new>
+        -:   35:#include <bits/functexcept.h>
+        -:   36:#include <bits/move.h>
+        -:   37:#if __cplusplus >= 201103L
+        -:   38:#include <type_traits>
+        -:   39:#endif
+        -:   40:
+        -:   41:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   42:{
+        -:   43:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   44:
+        -:   45:  /**
+        -:   46:   * @brief  An allocator that uses global `new`, as per C++03 [20.4.1].
+        -:   47:   * @ingroup allocators
+        -:   48:   *
+        -:   49:   * This is precisely the allocator defined in the C++ Standard.
+        -:   50:   *   - all allocation calls `operator new`
+        -:   51:   *   - all deallocation calls `operator delete`
+        -:   52:   *
+        -:   53:   * This is the default base-class implementation of `std::allocator`,
+        -:   54:   * and is also the base-class of the `__gnu_cxx::new_allocator` extension.
+        -:   55:   * You should use either `std::allocator` or `__gnu_cxx::new_allocator`
+        -:   56:   * instead of using this directly.
+        -:   57:   *
+        -:   58:   * @tparam  _Tp  Type of allocated object.
+        -:   59:   *
+        -:   60:   * @headerfile memory
+        -:   61:   */
+        -:   62:  template<typename _Tp>
+        -:   63:    class __new_allocator
+        -:   64:    {
+        -:   65:    public:
+        -:   66:      typedef _Tp        value_type;
+        -:   67:      typedef std::size_t     size_type;
+        -:   68:      typedef std::ptrdiff_t  difference_type;
+        -:   69:#if __cplusplus <= 201703L
+        -:   70:      typedef _Tp*       pointer;
+        -:   71:      typedef const _Tp* const_pointer;
+        -:   72:      typedef _Tp&       reference;
+        -:   73:      typedef const _Tp& const_reference;
+        -:   74:
+        -:   75:      template<typename _Tp1>
+        -:   76:	struct rebind
+        -:   77:	{ typedef __new_allocator<_Tp1> other; };
+        -:   78:#endif
+        -:   79:
+        -:   80:#if __cplusplus >= 201103L
+        -:   81:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:   82:      // 2103. propagate_on_container_move_assignment
+        -:   83:      typedef std::true_type propagate_on_container_move_assignment;
+        -:   84:#endif
+        -:   85:
+        -:   86:      __attribute__((__always_inline__))
+        -:   87:      _GLIBCXX20_CONSTEXPR
+    #####:   88:      __new_allocator() _GLIBCXX_USE_NOEXCEPT { }
+    %%%%%:   88-block  0
+    %%%%%:   88-block  1
+    %%%%%:   88-block  2
+    %%%%%:   88-block  3
+    %%%%%:   88-block  4
+    %%%%%:   88-block  5
+    %%%%%:   88-block  6
+    %%%%%:   88-block  7
+    %%%%%:   88-block  8
+    %%%%%:   88-block  9
+    %%%%%:   88-block 10
+    %%%%%:   88-block 11
+    %%%%%:   88-block 12
+    %%%%%:   88-block 13
+    %%%%%:   88-block 14
+    %%%%%:   88-block 15
+    %%%%%:   88-block 16
+    %%%%%:   88-block 17
+    %%%%%:   88-block 18
+    %%%%%:   88-block 19
+    %%%%%:   88-block 20
+    %%%%%:   88-block 21
+    %%%%%:   88-block 22
+        -:   89:
+        -:   90:      __attribute__((__always_inline__))
+        -:   91:      _GLIBCXX20_CONSTEXPR
+    #####:   92:      __new_allocator(const __new_allocator&) _GLIBCXX_USE_NOEXCEPT { }
+    %%%%%:   92-block  0
+    %%%%%:   92-block  1
+    %%%%%:   92-block  2
+        -:   93:
+        -:   94:      template<typename _Tp1>
+        -:   95:	__attribute__((__always_inline__))
+        -:   96:	_GLIBCXX20_CONSTEXPR
+        -:   97:	__new_allocator(const __new_allocator<_Tp1>&) _GLIBCXX_USE_NOEXCEPT { }
+        -:   98:
+        -:   99:#if __cplusplus <= 201703L
+        -:  100:      ~__new_allocator() _GLIBCXX_USE_NOEXCEPT { }
+        -:  101:
+        -:  102:      pointer
+        -:  103:      address(reference __x) const _GLIBCXX_NOEXCEPT
+        -:  104:      { return std::__addressof(__x); }
+        -:  105:
+        -:  106:      const_pointer
+        -:  107:      address(const_reference __x) const _GLIBCXX_NOEXCEPT
+        -:  108:      { return std::__addressof(__x); }
+        -:  109:#endif
+        -:  110:
+        -:  111:#if __has_builtin(__builtin_operator_new) >= 201802L
+        -:  112:# define _GLIBCXX_OPERATOR_NEW __builtin_operator_new
+        -:  113:# define _GLIBCXX_OPERATOR_DELETE __builtin_operator_delete
+        -:  114:#else
+        -:  115:# define _GLIBCXX_OPERATOR_NEW ::operator new
+        -:  116:# define _GLIBCXX_OPERATOR_DELETE ::operator delete
+        -:  117:#endif
+        -:  118:
+        -:  119:      // NB: __n is permitted to be 0.  The C++ standard says nothing
+        -:  120:      // about what the return value is when __n == 0.
+        -:  121:      _GLIBCXX_NODISCARD _Tp*
+    #####:  122:      allocate(size_type __n, const void* = static_cast<const void*>(0))
+        -:  123:      {
+        -:  124:#if __cplusplus >= 201103L
+        -:  125:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  126:	// 3308. std::allocator<void>().allocate(n)
+        -:  127:	static_assert(sizeof(_Tp) != 0, "cannot allocate incomplete types");
+        -:  128:#endif
+        -:  129:
+    #####:  130:	if (__builtin_expect(__n > this->_M_max_size(), false))
+        -:  131:	  {
+        -:  132:	    // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  133:	    // 3190. allocator::allocate sometimes returns too little storage
+    #####:  134:	    if (__n > (std::size_t(-1) / sizeof(_Tp)))
+    #####:  135:	      std::__throw_bad_array_new_length();
+    #####:  136:	    std::__throw_bad_alloc();
+        -:  137:	  }
+        -:  138:
+        -:  139:#if __cpp_aligned_new
+        -:  140:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  141:	  {
+        -:  142:	    std::align_val_t __al = std::align_val_t(alignof(_Tp));
+        -:  143:	    return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp),
+        -:  144:							   __al));
+        -:  145:	  }
+        -:  146:#endif
+    #####:  147:	return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp)));
+        -:  148:      }
+------------------
+std::__new_allocator<std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2> >::allocate(unsigned long, void const*):
+function std::__new_allocator<std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2> >::allocate(unsigned long, void const*) called 0 returned 0% blocks executed 0%
+    #####:  122:      allocate(size_type __n, const void* = static_cast<const void*>(0))
+        -:  123:      {
+        -:  124:#if __cplusplus >= 201103L
+        -:  125:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  126:	// 3308. std::allocator<void>().allocate(n)
+        -:  127:	static_assert(sizeof(_Tp) != 0, "cannot allocate incomplete types");
+        -:  128:#endif
+        -:  129:
+    #####:  130:	if (__builtin_expect(__n > this->_M_max_size(), false))
+    %%%%%:  130-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  131:	  {
+        -:  132:	    // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  133:	    // 3190. allocator::allocate sometimes returns too little storage
+    #####:  134:	    if (__n > (std::size_t(-1) / sizeof(_Tp)))
+    %%%%%:  134-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  135:	      std::__throw_bad_array_new_length();
+    %%%%%:  135-block  0
+call    0 never executed
+    #####:  136:	    std::__throw_bad_alloc();
+    %%%%%:  136-block  0
+call    0 never executed
+        -:  137:	  }
+        -:  138:
+        -:  139:#if __cpp_aligned_new
+        -:  140:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  141:	  {
+        -:  142:	    std::align_val_t __al = std::align_val_t(alignof(_Tp));
+        -:  143:	    return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp),
+        -:  144:							   __al));
+        -:  145:	  }
+        -:  146:#endif
+    #####:  147:	return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp)));
+    %%%%%:  147-block  0
+call    0 never executed
+        -:  148:      }
+------------------
+std::__new_allocator<char>::allocate(unsigned long, void const*):
+function std::__new_allocator<char>::allocate(unsigned long, void const*) called 0 returned 0% blocks executed 0%
+    #####:  122:      allocate(size_type __n, const void* = static_cast<const void*>(0))
+        -:  123:      {
+        -:  124:#if __cplusplus >= 201103L
+        -:  125:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  126:	// 3308. std::allocator<void>().allocate(n)
+        -:  127:	static_assert(sizeof(_Tp) != 0, "cannot allocate incomplete types");
+        -:  128:#endif
+        -:  129:
+    #####:  130:	if (__builtin_expect(__n > this->_M_max_size(), false))
+    %%%%%:  130-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  131:	  {
+        -:  132:	    // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  133:	    // 3190. allocator::allocate sometimes returns too little storage
+        -:  134:	    if (__n > (std::size_t(-1) / sizeof(_Tp)))
+        -:  135:	      std::__throw_bad_array_new_length();
+    #####:  136:	    std::__throw_bad_alloc();
+    %%%%%:  136-block  0
+call    0 never executed
+        -:  137:	  }
+        -:  138:
+        -:  139:#if __cpp_aligned_new
+        -:  140:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  141:	  {
+        -:  142:	    std::align_val_t __al = std::align_val_t(alignof(_Tp));
+        -:  143:	    return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp),
+        -:  144:							   __al));
+        -:  145:	  }
+        -:  146:#endif
+    #####:  147:	return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp)));
+    %%%%%:  147-block  0
+call    0 never executed
+        -:  148:      }
+------------------
+std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::allocate(unsigned long, void const*):
+function std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::allocate(unsigned long, void const*) called 0 returned 0% blocks executed 0%
+    #####:  122:      allocate(size_type __n, const void* = static_cast<const void*>(0))
+        -:  123:      {
+        -:  124:#if __cplusplus >= 201103L
+        -:  125:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  126:	// 3308. std::allocator<void>().allocate(n)
+        -:  127:	static_assert(sizeof(_Tp) != 0, "cannot allocate incomplete types");
+        -:  128:#endif
+        -:  129:
+    #####:  130:	if (__builtin_expect(__n > this->_M_max_size(), false))
+    %%%%%:  130-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  131:	  {
+        -:  132:	    // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  133:	    // 3190. allocator::allocate sometimes returns too little storage
+    #####:  134:	    if (__n > (std::size_t(-1) / sizeof(_Tp)))
+    %%%%%:  134-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  135:	      std::__throw_bad_array_new_length();
+    %%%%%:  135-block  0
+call    0 never executed
+    #####:  136:	    std::__throw_bad_alloc();
+    %%%%%:  136-block  0
+call    0 never executed
+        -:  137:	  }
+        -:  138:
+        -:  139:#if __cpp_aligned_new
+        -:  140:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  141:	  {
+        -:  142:	    std::align_val_t __al = std::align_val_t(alignof(_Tp));
+        -:  143:	    return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp),
+        -:  144:							   __al));
+        -:  145:	  }
+        -:  146:#endif
+    #####:  147:	return static_cast<_Tp*>(_GLIBCXX_OPERATOR_NEW(__n * sizeof(_Tp)));
+    %%%%%:  147-block  0
+call    0 never executed
+        -:  148:      }
+------------------
+        -:  149:
+        -:  150:      // __p is not permitted to be a null pointer.
+        -:  151:      void
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::DihedralType>::deallocate(forceField::DihedralType*, unsigned long):
+function std::__new_allocator<forceField::DihedralType>::deallocate(forceField::DihedralType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<unsigned long>::deallocate(unsigned long*, unsigned long):
+function std::__new_allocator<unsigned long>::deallocate(unsigned long*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::shared_ptr<simulationBox::Atom> >::deallocate(std::shared_ptr<simulationBox::Atom>*, unsigned long):
+function std::__new_allocator<std::shared_ptr<simulationBox::Atom> >::deallocate(std::shared_ptr<simulationBox::Atom>*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned long):
+function std::__new_allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >::deallocate(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<double>::deallocate(double*, unsigned long):
+function std::__new_allocator<double>::deallocate(double*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<char>::deallocate(char*, unsigned long):
+function std::__new_allocator<char>::deallocate(char*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<simulationBox::Cell>::deallocate(simulationBox::Cell*, unsigned long):
+function std::__new_allocator<simulationBox::Cell>::deallocate(simulationBox::Cell*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<simulationBox::Molecule>::deallocate(simulationBox::Molecule*, unsigned long):
+function std::__new_allocator<simulationBox::Molecule>::deallocate(simulationBox::Molecule*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<simulationBox::MoleculeType>::deallocate(simulationBox::MoleculeType*, unsigned long):
+function std::__new_allocator<simulationBox::MoleculeType>::deallocate(simulationBox::MoleculeType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<constraints::BondConstraint>::deallocate(constraints::BondConstraint*, unsigned long):
+function std::__new_allocator<constraints::BondConstraint>::deallocate(constraints::BondConstraint*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::BondForceField>::deallocate(forceField::BondForceField*, unsigned long):
+function std::__new_allocator<forceField::BondForceField>::deallocate(forceField::BondForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::AngleForceField>::deallocate(forceField::AngleForceField*, unsigned long):
+function std::__new_allocator<forceField::AngleForceField>::deallocate(forceField::AngleForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::DihedralForceField>::deallocate(forceField::DihedralForceField*, unsigned long):
+function std::__new_allocator<forceField::DihedralForceField>::deallocate(forceField::DihedralForceField*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::BondType>::deallocate(forceField::BondType*, unsigned long):
+function std::__new_allocator<forceField::BondType>::deallocate(forceField::BondType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<forceField::AngleType>::deallocate(forceField::AngleType*, unsigned long):
+function std::__new_allocator<forceField::AngleType>::deallocate(forceField::AngleType*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<int>::deallocate(int*, unsigned long):
+function std::__new_allocator<int>::deallocate(int*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<intraNonBonded::IntraNonBondedMap>::deallocate(intraNonBonded::IntraNonBondedMap*, unsigned long):
+function std::__new_allocator<intraNonBonded::IntraNonBondedMap>::deallocate(intraNonBonded::IntraNonBondedMap*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<intraNonBonded::IntraNonBondedContainer>::deallocate(intraNonBonded::IntraNonBondedContainer*, unsigned long):
+function std::__new_allocator<intraNonBonded::IntraNonBondedContainer>::deallocate(intraNonBonded::IntraNonBondedContainer*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<simulationBox::Molecule*>::deallocate(simulationBox::Molecule**, unsigned long):
+function std::__new_allocator<simulationBox::Molecule*>::deallocate(simulationBox::Molecule**, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<simulationBox::Cell*>::deallocate(simulationBox::Cell**, unsigned long):
+function std::__new_allocator<simulationBox::Cell*>::deallocate(simulationBox::Cell**, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::vector<unsigned long, std::allocator<unsigned long> > >::deallocate(std::vector<unsigned long, std::allocator<unsigned long> >*, unsigned long):
+function std::__new_allocator<std::vector<unsigned long, std::allocator<unsigned long> > >::deallocate(std::vector<unsigned long, std::allocator<unsigned long> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::vector<int, std::allocator<int> > >::deallocate(std::vector<int, std::allocator<int> >*, unsigned long):
+function std::__new_allocator<std::vector<int, std::allocator<int> > >::deallocate(std::vector<int, std::allocator<int> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > >::deallocate(std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >*, unsigned long):
+function std::__new_allocator<std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> > >::deallocate(std::unique_ptr<input::InputFileParser, std::default_delete<input::InputFileParser> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::function<void (std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, unsigned long)> > > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::function<void (std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, unsigned long)> > >*, unsigned long):
+function std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::function<void (std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, unsigned long)> > > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::function<void (std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, unsigned long)> > >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, bool> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, bool> >*, unsigned long):
+function std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, bool> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, bool> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int> >*, unsigned long):
+function std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Rb_tree_node<std::pair<unsigned long const, unsigned long> > >::deallocate(std::_Rb_tree_node<std::pair<unsigned long const, unsigned long> >*, unsigned long):
+function std::__new_allocator<std::_Rb_tree_node<std::pair<unsigned long const, unsigned long> > >::deallocate(std::_Rb_tree_node<std::pair<unsigned long const, unsigned long> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long> >*, unsigned long):
+function std::__new_allocator<std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long> > >::deallocate(std::_Rb_tree_node<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long> >*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+std::__new_allocator<std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2> >::deallocate(std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>*, unsigned long):
+function std::__new_allocator<std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2> >::deallocate(std::_Sp_counted_ptr_inplace<simulationBox::OrthorhombicBox, std::allocator<void>, (__gnu_cxx::_Lock_policy)2>*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  152:      deallocate(_Tp* __p, size_type __n __attribute__ ((__unused__)))
+    %%%%%:  152-block  0
+        -:  153:      {
+        -:  154:#if __cpp_sized_deallocation
+        -:  155:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p), (n) * sizeof(_Tp)
+        -:  156:#else
+        -:  157:# define _GLIBCXX_SIZED_DEALLOC(p, n) (p)
+        -:  158:#endif
+        -:  159:
+        -:  160:#if __cpp_aligned_new
+        -:  161:	if (alignof(_Tp) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+        -:  162:	  {
+        -:  163:	    _GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n),
+        -:  164:				     std::align_val_t(alignof(_Tp)));
+        -:  165:	    return;
+        -:  166:	  }
+        -:  167:#endif
+    #####:  168:	_GLIBCXX_OPERATOR_DELETE(_GLIBCXX_SIZED_DEALLOC(__p, __n));
+    %%%%%:  168-block  0
+call    0 never executed
+        -:  169:      }
+------------------
+        -:  170:
+        -:  171:#undef _GLIBCXX_SIZED_DEALLOC
+        -:  172:#undef _GLIBCXX_OPERATOR_DELETE
+        -:  173:#undef _GLIBCXX_OPERATOR_NEW
+        -:  174:
+        -:  175:#if __cplusplus <= 201703L
+        -:  176:      __attribute__((__always_inline__))
+        -:  177:      size_type
+        -:  178:      max_size() const _GLIBCXX_USE_NOEXCEPT
+        -:  179:      { return _M_max_size(); }
+        -:  180:
+        -:  181:#if __cplusplus >= 201103L
+        -:  182:      template<typename _Up, typename... _Args>
+        -:  183:	__attribute__((__always_inline__))
+        -:  184:	void
+        -:  185:	construct(_Up* __p, _Args&&... __args)
+        -:  186:	noexcept(std::is_nothrow_constructible<_Up, _Args...>::value)
+        -:  187:	{ ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        -:  188:
+        -:  189:      template<typename _Up>
+        -:  190:	__attribute__((__always_inline__))
+        -:  191:	void
+        -:  192:	destroy(_Up* __p)
+        -:  193:	noexcept(std::is_nothrow_destructible<_Up>::value)
+        -:  194:	{ __p->~_Up(); }
+        -:  195:#else
+        -:  196:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  197:      // 402. wrong new expression in [some_] allocator::construct
+        -:  198:      __attribute__((__always_inline__))
+        -:  199:      void
+        -:  200:      construct(pointer __p, const _Tp& __val)
+        -:  201:      { ::new((void *)__p) _Tp(__val); }
+        -:  202:
+        -:  203:      __attribute__((__always_inline__))
+        -:  204:      void
+        -:  205:      destroy(pointer __p) { __p->~_Tp(); }
+        -:  206:#endif
+        -:  207:#endif // ! C++20
+        -:  208:
+        -:  209:      template<typename _Up>
+        -:  210:	friend __attribute__((__always_inline__)) _GLIBCXX20_CONSTEXPR bool
+        -:  211:	operator==(const __new_allocator&, const __new_allocator<_Up>&)
+        -:  212:	_GLIBCXX_NOTHROW
+        -:  213:	{ return true; }
+        -:  214:
+        -:  215:#if __cpp_impl_three_way_comparison < 201907L
+        -:  216:      template<typename _Up>
+        -:  217:	friend __attribute__((__always_inline__)) _GLIBCXX20_CONSTEXPR bool
+        -:  218:	operator!=(const __new_allocator&, const __new_allocator<_Up>&)
+        -:  219:	_GLIBCXX_NOTHROW
+        -:  220:	{ return false; }
+        -:  221:#endif
+        -:  222:
+        -:  223:    private:
+        -:  224:      __attribute__((__always_inline__))
+        -:  225:      _GLIBCXX_CONSTEXPR size_type
+        -:  226:      _M_max_size() const _GLIBCXX_USE_NOEXCEPT
+        -:  227:      {
+        -:  228:#if __PTRDIFF_MAX__ < __SIZE_MAX__
+    #####:  229:	return std::size_t(__PTRDIFF_MAX__) / sizeof(_Tp);
+    %%%%%:  229-block  0
+    %%%%%:  229-block  1
+    %%%%%:  229-block  2
+        -:  230:#else
+        -:  231:	return std::size_t(-1) / sizeof(_Tp);
+        -:  232:#endif
+        -:  233:      }
+        -:  234:    };
+        -:  235:
+        -:  236:_GLIBCXX_END_NAMESPACE_VERSION
+        -:  237:} // namespace
+        -:  238:
+        -:  239:#endif

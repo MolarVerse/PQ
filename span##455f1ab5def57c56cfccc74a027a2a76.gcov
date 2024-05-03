@@ -1,0 +1,584 @@
+        -:    0:Source:/home/jag/software/gcc-13.1.0/install/include/c++/13.1.0/span
+        -:    0:Graph:.build/src/input/topologyFileReader/CMakeFiles/topologyFileReader.dir/bondSection.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:// Components for manipulating non-owning sequences of objects -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2019-2023 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/** @file span
+        -:   26: *  This is a Standard C++ Library header.
+        -:   27: */
+        -:   28:
+        -:   29://
+        -:   30:// P0122 span library
+        -:   31:// Contributed by ThePhD
+        -:   32://
+        -:   33:
+        -:   34:#ifndef _GLIBCXX_SPAN
+        -:   35:#define _GLIBCXX_SPAN 1
+        -:   36:
+        -:   37:#pragma GCC system_header
+        -:   38:
+        -:   39:#if __cplusplus > 201703L
+        -:   40:
+        -:   41:#include <array>
+        -:   42:#include <cstddef>
+        -:   43:#include <bits/stl_iterator.h>
+        -:   44:#include <bits/ranges_base.h>
+        -:   45:
+        -:   46:#if __cpp_lib_concepts
+        -:   47:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   48:{
+        -:   49:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   50:
+        -:   51:#define __cpp_lib_span 202002L
+        -:   52:
+        -:   53:  inline constexpr size_t dynamic_extent = static_cast<size_t>(-1);
+        -:   54:
+        -:   55:  template<typename _Type, size_t _Extent>
+        -:   56:    class span;
+        -:   57:
+        -:   58:  namespace __detail
+        -:   59:  {
+        -:   60:    template<typename _Tp>
+        -:   61:      inline constexpr bool __is_span = false;
+        -:   62:
+        -:   63:    template<typename _Tp, size_t _Num>
+        -:   64:      inline constexpr bool __is_span<span<_Tp, _Num>> = true;
+        -:   65:
+        -:   66:    template<typename _Tp>
+        -:   67:      inline constexpr bool __is_std_array = false;
+        -:   68:
+        -:   69:    template<typename _Tp, size_t _Num>
+        -:   70:      inline constexpr bool __is_std_array<std::array<_Tp, _Num>> = true;
+        -:   71:
+        -:   72:    template<size_t _Extent>
+        -:   73:      class __extent_storage
+        -:   74:      {
+        -:   75:      public:
+        -:   76:	constexpr
+        -:   77:	__extent_storage(size_t) noexcept
+        -:   78:	{ }
+        -:   79:
+        -:   80:	static constexpr size_t
+        -:   81:	_M_extent() noexcept
+        -:   82:	{ return _Extent; }
+        -:   83:      };
+        -:   84:
+        -:   85:    template<>
+        -:   86:      class __extent_storage<dynamic_extent>
+        -:   87:      {
+        -:   88:      public:
+        -:   89:	constexpr
+function std::__detail::__extent_storage<18446744073709551615ul>::__extent_storage(unsigned long) called 0 returned 0% blocks executed 0%
+    #####:   90:	__extent_storage(size_t __extent) noexcept
+    #####:   91:	: _M_extent_value(__extent)
+    #####:   92:	{ }
+        -:   93:
+        -:   94:	constexpr size_t
+function std::__detail::__extent_storage<18446744073709551615ul>::_M_extent() const called 0 returned 0% blocks executed 0%
+    #####:   95:	_M_extent() const noexcept
+    #####:   96:	{ return this->_M_extent_value; }
+    %%%%%:   96-block  0
+        -:   97:
+        -:   98:      private:
+        -:   99:	size_t _M_extent_value;
+        -:  100:      };
+        -:  101:  } // namespace __detail
+        -:  102:
+        -:  103:  template<typename _Type, size_t _Extent = dynamic_extent>
+        -:  104:    class span
+        -:  105:    {
+        -:  106:      template<size_t _Offset, size_t _Count>
+        -:  107:	static constexpr size_t
+        -:  108:	_S_subspan_extent()
+        -:  109:	{
+        -:  110:	  if constexpr (_Count != dynamic_extent)
+        -:  111:	    return _Count;
+        -:  112:	  else if constexpr (extent != dynamic_extent)
+        -:  113:	    return _Extent - _Offset;
+        -:  114:	  else
+        -:  115:	    return dynamic_extent;
+        -:  116:	}
+        -:  117:
+        -:  118:      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  119:      // 3255. span's array constructor is too strict
+        -:  120:      template<typename _Tp, size_t _ArrayExtent>
+        -:  121:	requires (_Extent == dynamic_extent || _ArrayExtent == _Extent)
+        -:  122:	using __is_compatible_array = __is_array_convertible<_Type, _Tp>;
+        -:  123:
+        -:  124:      template<typename _Ref>
+        -:  125:	using __is_compatible_ref
+        -:  126:	  = __is_array_convertible<_Type, remove_reference_t<_Ref>>;
+        -:  127:
+        -:  128:    public:
+        -:  129:      // member types
+        -:  130:      using element_type           = _Type;
+        -:  131:      using value_type             = remove_cv_t<_Type>;
+        -:  132:      using size_type              = size_t;
+        -:  133:      using difference_type        = ptrdiff_t;
+        -:  134:      using pointer                = _Type*;
+        -:  135:      using const_pointer          = const _Type*;
+        -:  136:      using reference              = element_type&;
+        -:  137:      using const_reference        = const element_type&;
+        -:  138:      using iterator = __gnu_cxx::__normal_iterator<pointer, span>;
+        -:  139:      using reverse_iterator       = std::reverse_iterator<iterator>;
+        -:  140:#if __cplusplus > 202002L
+        -:  141:      using const_iterator         = std::const_iterator<iterator>;
+        -:  142:      using const_reverse_iterator = std::const_iterator<reverse_iterator>;
+        -:  143:#endif
+        -:  144:
+        -:  145:      // member constants
+        -:  146:      static constexpr size_t extent = _Extent;
+        -:  147:
+        -:  148:      // constructors, copy and assignment
+        -:  149:
+        -:  150:      constexpr
+        -:  151:      span() noexcept
+        -:  152:      requires (_Extent == dynamic_extent || _Extent == 0)
+        -:  153:      : _M_ptr(nullptr), _M_extent(0)
+        -:  154:      { }
+        -:  155:
+        -:  156:      template<contiguous_iterator _It>
+        -:  157:	requires __is_compatible_ref<iter_reference_t<_It>>::value
+        -:  158:	constexpr explicit(extent != dynamic_extent)
+function std::span<char, 18446744073709551615ul>::span<char*>(char*, unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  159:	span(_It __first, size_type __count)
+        -:  160:	noexcept
+    #####:  161:	: _M_ptr(std::to_address(__first)), _M_extent(__count)
+    %%%%%:  161-block  0
+call    0 never executed
+call    1 never executed
+        -:  162:	{
+        -:  163:	  if constexpr (_Extent != dynamic_extent)
+        -:  164:	    {
+        -:  165:	      __glibcxx_assert(__count == _Extent);
+        -:  166:	    }
+        -:  167:	  __glibcxx_requires_valid_range(__first, __first + __count);
+    #####:  168:	}
+        -:  169:
+        -:  170:      template<contiguous_iterator _It, sized_sentinel_for<_It> _End>
+        -:  171:	requires __is_compatible_ref<iter_reference_t<_It>>::value
+        -:  172:	  && (!is_convertible_v<_End, size_type>)
+        -:  173:	constexpr explicit(extent != dynamic_extent)
+        -:  174:	span(_It __first, _End __last)
+        -:  175:	noexcept(noexcept(__last - __first))
+        -:  176:	: _M_ptr(std::to_address(__first)),
+        -:  177:	  _M_extent(static_cast<size_type>(__last - __first))
+        -:  178:	{
+        -:  179:	  if constexpr (_Extent != dynamic_extent)
+        -:  180:	    {
+        -:  181:	      __glibcxx_assert((__last - __first) == _Extent);
+        -:  182:	    }
+        -:  183:	  __glibcxx_requires_valid_range(__first, __last);
+        -:  184:	}
+        -:  185:
+        -:  186:      template<size_t _ArrayExtent>
+        -:  187:	requires (_Extent == dynamic_extent || _ArrayExtent == _Extent)
+        -:  188:	constexpr
+function std::span<char, 18446744073709551615ul>::span<256ul>(char (&) [256ul]) called 0 returned 0% blocks executed 0%
+    #####:  189:	span(type_identity_t<element_type> (&__arr)[_ArrayExtent]) noexcept
+    #####:  190:	: span(static_cast<pointer>(__arr), _ArrayExtent)
+    %%%%%:  190-block  0
+call    0 never executed
+    #####:  191:	{ }
+        -:  192:
+        -:  193:      template<typename _Tp, size_t _ArrayExtent>
+        -:  194:	requires __is_compatible_array<_Tp, _ArrayExtent>::value
+        -:  195:	constexpr
+        -:  196:	span(array<_Tp, _ArrayExtent>& __arr) noexcept
+        -:  197:	: span(static_cast<pointer>(__arr.data()), _ArrayExtent)
+        -:  198:	{ }
+        -:  199:
+        -:  200:      template<typename _Tp, size_t _ArrayExtent>
+        -:  201:	requires __is_compatible_array<const _Tp, _ArrayExtent>::value
+        -:  202:	constexpr
+        -:  203:	span(const array<_Tp, _ArrayExtent>& __arr) noexcept
+        -:  204:	: span(static_cast<pointer>(__arr.data()), _ArrayExtent)
+        -:  205:	{ }
+        -:  206:
+        -:  207:      template<typename _Range>
+        -:  208:	requires (!__detail::__is_span<remove_cvref_t<_Range>>)
+        -:  209:	  && (!__detail::__is_std_array<remove_cvref_t<_Range>>)
+        -:  210:	  && (!is_array_v<remove_cvref_t<_Range>>)
+        -:  211:	  && ranges::contiguous_range<_Range> && ranges::sized_range<_Range>
+        -:  212:	  && (ranges::borrowed_range<_Range> || is_const_v<element_type>)
+        -:  213:	  && __is_compatible_ref<ranges::range_reference_t<_Range>>::value
+        -:  214:	constexpr explicit(extent != dynamic_extent)
+        -:  215:	span(_Range&& __range)
+        -:  216:	noexcept(noexcept(ranges::data(__range))
+        -:  217:		  && noexcept(ranges::size(__range)))
+        -:  218:	: span(ranges::data(__range), ranges::size(__range))
+        -:  219:	{
+        -:  220:	  if constexpr (extent != dynamic_extent)
+        -:  221:	    {
+        -:  222:	      __glibcxx_assert(ranges::size(__range) == extent);
+        -:  223:	    }
+        -:  224:	}
+        -:  225:
+        -:  226:      constexpr
+        -:  227:      span(const span&) noexcept = default;
+        -:  228:
+        -:  229:      template<typename _OType, size_t _OExtent>
+        -:  230:	requires (_Extent == dynamic_extent || _OExtent == dynamic_extent
+        -:  231:		  || _Extent == _OExtent)
+        -:  232:	  && (__is_array_convertible<_Type, _OType>::value)
+        -:  233:	constexpr
+        -:  234:	explicit(extent != dynamic_extent && _OExtent == dynamic_extent)
+        -:  235:	span(const span<_OType, _OExtent>& __s) noexcept
+        -:  236:	: _M_extent(__s.size()), _M_ptr(__s.data())
+        -:  237:	{
+        -:  238:	  if constexpr (extent != dynamic_extent)
+        -:  239:	    {
+        -:  240:	      __glibcxx_assert(__s.size() == extent);
+        -:  241:	    }
+        -:  242:	}
+        -:  243:
+        -:  244:      ~span() noexcept = default;
+        -:  245:
+        -:  246:      constexpr span&
+        -:  247:      operator=(const span&) noexcept = default;
+        -:  248:
+        -:  249:      // observers
+        -:  250:
+        -:  251:      constexpr size_type
+function std::span<char, 18446744073709551615ul>::size() const called 0 returned 0% blocks executed 0%
+    #####:  252:      size() const noexcept
+    #####:  253:      { return this->_M_extent._M_extent(); }
+    %%%%%:  253-block  0
+call    0 never executed
+        -:  254:
+        -:  255:      constexpr size_type
+        -:  256:      size_bytes() const noexcept
+        -:  257:      { return this->_M_extent._M_extent() * sizeof(element_type); }
+        -:  258:
+        -:  259:      [[nodiscard]] constexpr bool
+        -:  260:      empty() const noexcept
+        -:  261:      { return size() == 0; }
+        -:  262:
+        -:  263:      // element access
+        -:  264:
+        -:  265:      constexpr reference
+        -:  266:      front() const noexcept
+        -:  267:      {
+        -:  268:	__glibcxx_assert(!empty());
+        -:  269:	return *this->_M_ptr;
+        -:  270:      }
+        -:  271:
+        -:  272:      constexpr reference
+        -:  273:      back() const noexcept
+        -:  274:      {
+        -:  275:	__glibcxx_assert(!empty());
+        -:  276:	return *(this->_M_ptr + (size() - 1));
+        -:  277:      }
+        -:  278:
+        -:  279:      constexpr reference
+        -:  280:      operator[](size_type __idx) const noexcept
+        -:  281:      {
+        -:  282:	__glibcxx_assert(__idx < size());
+        -:  283:	return *(this->_M_ptr + __idx);
+        -:  284:      }
+        -:  285:
+        -:  286:      constexpr pointer
+function std::span<char, 18446744073709551615ul>::data() const called 0 returned 0% blocks executed 0%
+    #####:  287:      data() const noexcept
+    #####:  288:      { return this->_M_ptr; }
+    %%%%%:  288-block  0
+        -:  289:
+        -:  290:      // iterator support
+        -:  291:
+        -:  292:      constexpr iterator
+function std::span<char, 18446744073709551615ul>::begin() const called 0 returned 0% blocks executed 0%
+    #####:  293:      begin() const noexcept
+    #####:  294:      { return iterator(this->_M_ptr); }
+    %%%%%:  294-block  0
+call    0 never executed
+    %%%%%:  294-block  1
+        -:  295:
+        -:  296:      constexpr iterator
+function std::span<char, 18446744073709551615ul>::end() const called 0 returned 0% blocks executed 0%
+    #####:  297:      end() const noexcept
+    #####:  298:      { return iterator(this->_M_ptr + this->size()); }
+    %%%%%:  298-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  298-block  1
+        -:  299:
+        -:  300:      constexpr reverse_iterator
+        -:  301:      rbegin() const noexcept
+        -:  302:      { return reverse_iterator(this->end()); }
+        -:  303:
+        -:  304:      constexpr reverse_iterator
+        -:  305:      rend() const noexcept
+        -:  306:      { return reverse_iterator(this->begin()); }
+        -:  307:
+        -:  308:#if __cplusplus > 202002L
+        -:  309:      constexpr const_iterator
+        -:  310:      cbegin() const noexcept
+        -:  311:      { return begin(); }
+        -:  312:
+        -:  313:      constexpr const_iterator
+        -:  314:      cend() const noexcept
+        -:  315:      { return end(); }
+        -:  316:
+        -:  317:      constexpr const_reverse_iterator
+        -:  318:      crbegin() const noexcept
+        -:  319:      { return rbegin(); }
+        -:  320:
+        -:  321:      constexpr const_reverse_iterator
+        -:  322:      crend() const noexcept
+        -:  323:      { return rend(); }
+        -:  324:#endif
+        -:  325:
+        -:  326:      // subviews
+        -:  327:
+        -:  328:      template<size_t _Count>
+        -:  329:	constexpr span<element_type, _Count>
+        -:  330:	first() const noexcept
+        -:  331:	{
+        -:  332:	  if constexpr (_Extent == dynamic_extent)
+        -:  333:	    __glibcxx_assert(_Count <= size());
+        -:  334:	  else
+        -:  335:	    static_assert(_Count <= extent);
+        -:  336:	  using _Sp = span<element_type, _Count>;
+        -:  337:	  return _Sp{ this->data(), _Count };
+        -:  338:	}
+        -:  339:
+        -:  340:      constexpr span<element_type, dynamic_extent>
+function std::span<char, 18446744073709551615ul>::first(unsigned long) const called 0 returned 0% blocks executed 0%
+    #####:  341:      first(size_type __count) const noexcept
+        -:  342:      {
+    #####:  343:	__glibcxx_assert(__count <= size());
+    %%%%%:  343-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  343-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:  343-block  2
+    %%%%%:  343-block  3
+    %%%%%:  343-block  4
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  343-block  5
+call    8 never executed
+    #####:  344:	return { this->data(), __count };
+    %%%%%:  344-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  344-block  1
+        -:  345:      }
+        -:  346:
+        -:  347:      template<size_t _Count>
+        -:  348:	constexpr span<element_type, _Count>
+        -:  349:	last() const noexcept
+        -:  350:	{
+        -:  351:	  if constexpr (_Extent == dynamic_extent)
+        -:  352:	    __glibcxx_assert(_Count <= size());
+        -:  353:	  else
+        -:  354:	    static_assert(_Count <= extent);
+        -:  355:	  using _Sp = span<element_type, _Count>;
+        -:  356:	  return _Sp{ this->data() + (this->size() - _Count), _Count };
+        -:  357:	}
+        -:  358:
+        -:  359:      constexpr span<element_type, dynamic_extent>
+        -:  360:      last(size_type __count) const noexcept
+        -:  361:      {
+        -:  362:	__glibcxx_assert(__count <= size());
+        -:  363:	return { this->data() + (this->size() - __count), __count };
+        -:  364:      }
+        -:  365:
+        -:  366:      template<size_t _Offset, size_t _Count = dynamic_extent>
+        -:  367:	constexpr auto
+        -:  368:	subspan() const noexcept
+        -:  369:	-> span<element_type, _S_subspan_extent<_Offset, _Count>()>
+        -:  370:	{
+        -:  371:	  if constexpr (_Extent == dynamic_extent)
+        -:  372:	    {
+        -:  373:	      __glibcxx_assert(_Offset <= size());
+        -:  374:	    }
+        -:  375:	  else
+        -:  376:	    static_assert(_Offset <= extent);
+        -:  377:
+        -:  378:	  using _Sp = span<element_type, _S_subspan_extent<_Offset, _Count>()>;
+        -:  379:
+        -:  380:	  if constexpr (_Count == dynamic_extent)
+        -:  381:	    return _Sp{ this->data() + _Offset, this->size() - _Offset };
+        -:  382:	  else
+        -:  383:	    {
+        -:  384:	      if constexpr (_Extent == dynamic_extent)
+        -:  385:		{
+        -:  386:		  __glibcxx_assert(_Count <= size());
+        -:  387:		  __glibcxx_assert(_Count <= (size() - _Offset));
+        -:  388:		}
+        -:  389:	      else
+        -:  390:		{
+        -:  391:		  static_assert(_Count <= extent);
+        -:  392:		  static_assert(_Count <= (extent - _Offset));
+        -:  393:		}
+        -:  394:	      return _Sp{ this->data() + _Offset, _Count };
+        -:  395:	    }
+        -:  396:	}
+        -:  397:
+        -:  398:      constexpr span<element_type, dynamic_extent>
+function std::span<char, 18446744073709551615ul>::subspan(unsigned long, unsigned long) const called 0 returned 0% blocks executed 0%
+    #####:  399:      subspan(size_type __offset, size_type __count = dynamic_extent) const
+        -:  400:      noexcept
+        -:  401:      {
+    #####:  402:	__glibcxx_assert(__offset <= size());
+    %%%%%:  402-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  402-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:  402-block  2
+    %%%%%:  402-block  3
+    %%%%%:  402-block  4
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  402-block  5
+call    8 never executed
+    #####:  403:	if (__count == dynamic_extent)
+    %%%%%:  403-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  404:	  __count = this->size() - __offset;
+    %%%%%:  404-block  0
+call    0 never executed
+        -:  405:	else
+        -:  406:	  {
+    #####:  407:	    __glibcxx_assert(__count <= size());
+    %%%%%:  407-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  407-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:  407-block  2
+    %%%%%:  407-block  3
+    %%%%%:  407-block  4
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  407-block  5
+call    8 never executed
+    #####:  408:	    __glibcxx_assert(__offset + __count <= size());
+    %%%%%:  408-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  408-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:  408-block  2
+    %%%%%:  408-block  3
+    %%%%%:  408-block  4
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  408-block  5
+call    8 never executed
+        -:  409:	  }
+    #####:  410:	return {this->data() + __offset, __count};
+    %%%%%:  410-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  410-block  1
+        -:  411:      }
+        -:  412:
+        -:  413:    private:
+        -:  414:      pointer _M_ptr;
+        -:  415:      [[no_unique_address]] __detail::__extent_storage<extent> _M_extent;
+        -:  416:    };
+        -:  417:
+        -:  418:  // deduction guides
+        -:  419:
+        -:  420:  template<typename _Type, size_t _ArrayExtent>
+        -:  421:    span(_Type(&)[_ArrayExtent]) -> span<_Type, _ArrayExtent>;
+        -:  422:
+        -:  423:  template<typename _Type, size_t _ArrayExtent>
+        -:  424:    span(array<_Type, _ArrayExtent>&) -> span<_Type, _ArrayExtent>;
+        -:  425:
+        -:  426:  template<typename _Type, size_t _ArrayExtent>
+        -:  427:    span(const array<_Type, _ArrayExtent>&)
+        -:  428:      -> span<const _Type, _ArrayExtent>;
+        -:  429:
+        -:  430:  template<contiguous_iterator _Iter, typename _End>
+        -:  431:    span(_Iter, _End)
+        -:  432:      -> span<remove_reference_t<iter_reference_t<_Iter>>>;
+        -:  433:
+        -:  434:  template<ranges::contiguous_range _Range>
+        -:  435:    span(_Range &&)
+        -:  436:      -> span<remove_reference_t<ranges::range_reference_t<_Range&>>>;
+        -:  437:
+        -:  438:  template<typename _Type, size_t _Extent>
+        -:  439:    inline
+        -:  440:    span<const byte, _Extent == dynamic_extent
+        -:  441:	? dynamic_extent : _Extent * sizeof(_Type)>
+        -:  442:    as_bytes(span<_Type, _Extent> __sp) noexcept
+        -:  443:    {
+        -:  444:      auto data = reinterpret_cast<const byte*>(__sp.data());
+        -:  445:      auto size = __sp.size_bytes();
+        -:  446:      constexpr auto extent = _Extent == dynamic_extent
+        -:  447:	? dynamic_extent : _Extent * sizeof(_Type);
+        -:  448:      return span<const byte, extent>{data, size};
+        -:  449:    }
+        -:  450:
+        -:  451:  template<typename _Type, size_t _Extent>
+        -:  452:    requires (!is_const_v<_Type>)
+        -:  453:    inline
+        -:  454:    span<byte, _Extent == dynamic_extent
+        -:  455:       ? dynamic_extent : _Extent * sizeof(_Type)>
+        -:  456:    as_writable_bytes(span<_Type, _Extent> __sp) noexcept
+        -:  457:    {
+        -:  458:      auto data = reinterpret_cast<byte*>(__sp.data());
+        -:  459:      auto size = __sp.size_bytes();
+        -:  460:      constexpr auto extent = _Extent == dynamic_extent
+        -:  461:	? dynamic_extent : _Extent * sizeof(_Type);
+        -:  462:      return span<byte, extent>{data, size};
+        -:  463:    }
+        -:  464:
+        -:  465:  namespace ranges
+        -:  466:  {
+        -:  467:    // Opt-in to borrowed_range concept
+        -:  468:    template<typename _ElementType, size_t _Extent>
+        -:  469:      inline constexpr bool
+        -:  470:	enable_borrowed_range<span<_ElementType, _Extent>> = true;
+        -:  471:
+        -:  472:    // Opt-in to view concept
+        -:  473:    template<typename _ElementType, size_t _Extent>
+        -:  474:      inline constexpr bool
+        -:  475:	enable_view<span<_ElementType, _Extent>> = true;
+        -:  476:  }
+        -:  477:_GLIBCXX_END_NAMESPACE_VERSION
+        -:  478:} // namespace std
+        -:  479:#endif // concepts
+        -:  480:#endif // C++20
+        -:  481:#endif // _GLIBCXX_SPAN

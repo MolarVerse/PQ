@@ -1,0 +1,514 @@
+        -:    0:Source:/home/jag/software/gcc-13.1.0/install/include/c++/13.1.0/array
+        -:    0:Graph:.build/tests/src/input/inputFileParsing/CMakeFiles/testParserManostat.dir/testParserManostat.cpp.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    1:// <array> -*- C++ -*-
+        -:    2:
+        -:    3:// Copyright (C) 2007-2023 Free Software Foundation, Inc.
+        -:    4://
+        -:    5:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    6:// software; you can redistribute it and/or modify it under the
+        -:    7:// terms of the GNU General Public License as published by the
+        -:    8:// Free Software Foundation; either version 3, or (at your option)
+        -:    9:// any later version.
+        -:   10:
+        -:   11:// This library is distributed in the hope that it will be useful,
+        -:   12:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   13:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   14:// GNU General Public License for more details.
+        -:   15:
+        -:   16:// Under Section 7 of GPL version 3, you are granted additional
+        -:   17:// permissions described in the GCC Runtime Library Exception, version
+        -:   18:// 3.1, as published by the Free Software Foundation.
+        -:   19:
+        -:   20:// You should have received a copy of the GNU General Public License and
+        -:   21:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   22:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   23:// <http://www.gnu.org/licenses/>.
+        -:   24:
+        -:   25:/** @file include/array
+        -:   26: *  This is a Standard C++ Library header.
+        -:   27: */
+        -:   28:
+        -:   29:#ifndef _GLIBCXX_ARRAY
+        -:   30:#define _GLIBCXX_ARRAY 1
+        -:   31:
+        -:   32:#pragma GCC system_header
+        -:   33:
+        -:   34:#if __cplusplus < 201103L
+        -:   35:# include <bits/c++0x_warning.h>
+        -:   36:#else
+        -:   37:
+        -:   38:#include <compare>
+        -:   39:#include <initializer_list>
+        -:   40:
+        -:   41:#include <type_traits>
+        -:   42:#include <bits/functexcept.h>
+        -:   43:#include <bits/stl_algobase.h>
+        -:   44:#include <bits/range_access.h> // std::begin, std::end etc.
+        -:   45:#include <bits/utility.h>      // std::index_sequence, std::tuple_size
+        -:   46:#include <debug/assertions.h>
+        -:   47:
+        -:   48:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   49:{
+        -:   50:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   51:
+        -:   52:  template<typename _Tp, size_t _Nm>
+        -:   53:    struct __array_traits
+        -:   54:    {
+        -:   55:      using _Type = _Tp[_Nm];
+        -:   56:      using _Is_swappable = __is_swappable<_Tp>;
+        -:   57:      using _Is_nothrow_swappable = __is_nothrow_swappable<_Tp>;
+        -:   58:    };
+        -:   59:
+        -:   60: template<typename _Tp>
+        -:   61:   struct __array_traits<_Tp, 0>
+        -:   62:   {
+        -:   63:     // Empty type used instead of _Tp[0] for std::array<_Tp, 0>.
+        -:   64:     struct _Type
+        -:   65:     {
+        -:   66:       // Indexing is undefined.
+        -:   67:       __attribute__((__always_inline__,__noreturn__))
+        -:   68:       _Tp& operator[](size_t) const noexcept { __builtin_trap(); }
+        -:   69:
+        -:   70:       // Conversion to a pointer produces a null pointer.
+        -:   71:       __attribute__((__always_inline__))
+        -:   72:       constexpr operator _Tp*() const noexcept { return nullptr; }
+        -:   73:     };
+        -:   74:
+        -:   75:     using _Is_swappable = true_type;
+        -:   76:     using _Is_nothrow_swappable = true_type;
+        -:   77:   };
+        -:   78:
+        -:   79:  /**
+        -:   80:   *  @brief A standard container for storing a fixed size sequence of elements.
+        -:   81:   *
+        -:   82:   *  @ingroup sequences
+        -:   83:   *
+        -:   84:   *  Meets the requirements of a <a href="tables.html#65">container</a>, a
+        -:   85:   *  <a href="tables.html#66">reversible container</a>, and a
+        -:   86:   *  <a href="tables.html#67">sequence</a>.
+        -:   87:   *
+        -:   88:   *  Sets support random access iterators.
+        -:   89:   *
+        -:   90:   *  @tparam  Tp  Type of element. Required to be a complete type.
+        -:   91:   *  @tparam  Nm  Number of elements.
+        -:   92:  */
+        -:   93:  template<typename _Tp, std::size_t _Nm>
+        -:   94:    struct array
+        -:   95:    {
+        -:   96:      typedef _Tp 	    			      value_type;
+        -:   97:      typedef value_type*			      pointer;
+        -:   98:      typedef const value_type*                       const_pointer;
+        -:   99:      typedef value_type&                   	      reference;
+        -:  100:      typedef const value_type&             	      const_reference;
+        -:  101:      typedef value_type*          		      iterator;
+        -:  102:      typedef const value_type*			      const_iterator;
+        -:  103:      typedef std::size_t                    	      size_type;
+        -:  104:      typedef std::ptrdiff_t                   	      difference_type;
+        -:  105:      typedef std::reverse_iterator<iterator>	      reverse_iterator;
+        -:  106:      typedef std::reverse_iterator<const_iterator>   const_reverse_iterator;
+        -:  107:
+        -:  108:      // Support for zero-sized arrays mandatory.
+        -:  109:      typename __array_traits<_Tp, _Nm>::_Type        _M_elems;
+        -:  110:
+        -:  111:      // No explicit construct/copy/destroy for aggregate type.
+        -:  112:
+        -:  113:      // DR 776.
+        -:  114:      _GLIBCXX20_CONSTEXPR void
+        -:  115:      fill(const value_type& __u)
+        -:  116:      { std::fill_n(begin(), size(), __u); }
+        -:  117:
+        -:  118:      _GLIBCXX20_CONSTEXPR void
+        -:  119:      swap(array& __other)
+        -:  120:      noexcept(__array_traits<_Tp, _Nm>::_Is_nothrow_swappable::value)
+        -:  121:      { std::swap_ranges(begin(), end(), __other.begin()); }
+        -:  122:
+        -:  123:      // Iterators.
+        -:  124:      [[__gnu__::__const__, __nodiscard__]]
+        -:  125:      _GLIBCXX17_CONSTEXPR iterator
+        -:  126:      begin() noexcept
+        -:  127:      { return iterator(data()); }
+        -:  128:
+        -:  129:      [[__nodiscard__]]
+        -:  130:      _GLIBCXX17_CONSTEXPR const_iterator
+        -:  131:      begin() const noexcept
+        -:  132:      { return const_iterator(data()); }
+        -:  133:
+        -:  134:      [[__gnu__::__const__, __nodiscard__]]
+        -:  135:      _GLIBCXX17_CONSTEXPR iterator
+        -:  136:      end() noexcept
+        -:  137:      { return iterator(data() + _Nm); }
+        -:  138:
+        -:  139:      [[__nodiscard__]]
+        -:  140:      _GLIBCXX17_CONSTEXPR const_iterator
+        -:  141:      end() const noexcept
+        -:  142:      { return const_iterator(data() + _Nm); }
+        -:  143:
+        -:  144:      [[__gnu__::__const__, __nodiscard__]]
+        -:  145:      _GLIBCXX17_CONSTEXPR reverse_iterator
+        -:  146:      rbegin() noexcept
+        -:  147:      { return reverse_iterator(end()); }
+        -:  148:
+        -:  149:      [[__nodiscard__]]
+        -:  150:      _GLIBCXX17_CONSTEXPR const_reverse_iterator
+        -:  151:      rbegin() const noexcept
+        -:  152:      { return const_reverse_iterator(end()); }
+        -:  153:
+        -:  154:      [[__gnu__::__const__, __nodiscard__]]
+        -:  155:      _GLIBCXX17_CONSTEXPR reverse_iterator
+        -:  156:      rend() noexcept
+        -:  157:      { return reverse_iterator(begin()); }
+        -:  158:
+        -:  159:      [[__nodiscard__]]
+        -:  160:      _GLIBCXX17_CONSTEXPR const_reverse_iterator
+        -:  161:      rend() const noexcept
+        -:  162:      { return const_reverse_iterator(begin()); }
+        -:  163:
+        -:  164:      [[__nodiscard__]]
+        -:  165:      _GLIBCXX17_CONSTEXPR const_iterator
+        -:  166:      cbegin() const noexcept
+        -:  167:      { return const_iterator(data()); }
+        -:  168:
+        -:  169:      [[__nodiscard__]]
+        -:  170:      _GLIBCXX17_CONSTEXPR const_iterator
+        -:  171:      cend() const noexcept
+        -:  172:      { return const_iterator(data() + _Nm); }
+        -:  173:
+        -:  174:      [[__nodiscard__]]
+        -:  175:      _GLIBCXX17_CONSTEXPR const_reverse_iterator
+        -:  176:      crbegin() const noexcept
+        -:  177:      { return const_reverse_iterator(end()); }
+        -:  178:
+        -:  179:      [[__nodiscard__]]
+        -:  180:      _GLIBCXX17_CONSTEXPR const_reverse_iterator
+        -:  181:      crend() const noexcept
+        -:  182:      { return const_reverse_iterator(begin()); }
+        -:  183:
+        -:  184:      // Capacity.
+        -:  185:      [[__nodiscard__, __gnu__::__const__, __gnu__::__always_inline__]]
+        -:  186:      constexpr size_type
+        -:  187:      size() const noexcept { return _Nm; }
+        -:  188:
+        -:  189:      [[__nodiscard__, __gnu__::__const__, __gnu__::__always_inline__]]
+        -:  190:      constexpr size_type
+        -:  191:      max_size() const noexcept { return _Nm; }
+        -:  192:
+        -:  193:      [[__nodiscard__, __gnu__::__const__, __gnu__::__always_inline__]]
+        -:  194:      constexpr bool
+        -:  195:      empty() const noexcept { return size() == 0; }
+        -:  196:
+        -:  197:      // Element access.
+        -:  198:      [[__nodiscard__]]
+        -:  199:      _GLIBCXX17_CONSTEXPR reference
+    #####:  200:      operator[](size_type __n) noexcept
+        -:  201:      {
+        -:  202:	__glibcxx_requires_subscript(__n);
+    #####:  203:	return _M_elems[__n];
+        -:  204:      }
+------------------
+std::array<double, 3ul>::operator[](unsigned long):
+function std::array<double, 3ul>::operator[](unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  200:      operator[](size_type __n) noexcept
+        -:  201:      {
+        -:  202:	__glibcxx_requires_subscript(__n);
+    #####:  203:	return _M_elems[__n];
+    %%%%%:  203-block  0
+        -:  204:      }
+------------------
+std::array<linearAlgebra::Vector3D<double>, 3ul>::operator[](unsigned long):
+function std::array<linearAlgebra::Vector3D<double>, 3ul>::operator[](unsigned long) called 0 returned 0% blocks executed 0%
+    #####:  200:      operator[](size_type __n) noexcept
+        -:  201:      {
+        -:  202:	__glibcxx_requires_subscript(__n);
+    #####:  203:	return _M_elems[__n];
+    %%%%%:  203-block  0
+        -:  204:      }
+------------------
+        -:  205:
+        -:  206:      [[__nodiscard__]]
+        -:  207:      constexpr const_reference
+function std::array<double, 3ul>::operator[](unsigned long) const called 0 returned 0% blocks executed 0%
+    #####:  208:      operator[](size_type __n) const noexcept
+        -:  209:      {
+        -:  210:#if __cplusplus >= 201402L
+        -:  211:	__glibcxx_requires_subscript(__n);
+        -:  212:#endif
+    #####:  213:	return _M_elems[__n];
+    %%%%%:  213-block  0
+        -:  214:      }
+        -:  215:
+        -:  216:      _GLIBCXX17_CONSTEXPR reference
+        -:  217:      at(size_type __n)
+        -:  218:      {
+        -:  219:	if (__n >= _Nm)
+        -:  220:	  std::__throw_out_of_range_fmt(__N("array::at: __n (which is %zu) "
+        -:  221:					    ">= _Nm (which is %zu)"),
+        -:  222:					__n, _Nm);
+        -:  223:	return _M_elems[__n];
+        -:  224:      }
+        -:  225:
+        -:  226:      constexpr const_reference
+        -:  227:      at(size_type __n) const
+        -:  228:      {
+        -:  229:	// Result of conditional expression must be an lvalue so use
+        -:  230:	// boolean ? lvalue : (throw-expr, lvalue)
+        -:  231:	return __n < _Nm ? _M_elems[__n]
+        -:  232:	  : (std::__throw_out_of_range_fmt(__N("array::at: __n (which is %zu) "
+        -:  233:					       ">= _Nm (which is %zu)"),
+        -:  234:					   __n, _Nm),
+        -:  235:	     _M_elems[__n]);
+        -:  236:      }
+        -:  237:
+        -:  238:      [[__nodiscard__]]
+        -:  239:      _GLIBCXX17_CONSTEXPR reference
+        -:  240:      front() noexcept
+        -:  241:      {
+        -:  242:	__glibcxx_requires_nonempty();
+        -:  243:	return _M_elems[0];
+        -:  244:      }
+        -:  245:
+        -:  246:      [[__nodiscard__]]
+        -:  247:      constexpr const_reference
+        -:  248:      front() const noexcept
+        -:  249:      {
+        -:  250:#if __cplusplus >= 201402L
+        -:  251:	__glibcxx_requires_nonempty();
+        -:  252:#endif
+        -:  253:	return _M_elems[0];
+        -:  254:      }
+        -:  255:
+        -:  256:      [[__nodiscard__]]
+        -:  257:      _GLIBCXX17_CONSTEXPR reference
+        -:  258:      back() noexcept
+        -:  259:      {
+        -:  260:	__glibcxx_requires_nonempty();
+        -:  261:	return _M_elems[_Nm - 1];
+        -:  262:      }
+        -:  263:
+        -:  264:      [[__nodiscard__]]
+        -:  265:      constexpr const_reference
+        -:  266:      back() const noexcept
+        -:  267:      {
+        -:  268:#if __cplusplus >= 201402L
+        -:  269:	__glibcxx_requires_nonempty();
+        -:  270:#endif
+        -:  271:	return _M_elems[_Nm - 1];
+        -:  272:      }
+        -:  273:
+        -:  274:      [[__nodiscard__, __gnu__::__const__, __gnu__::__always_inline__]]
+        -:  275:      _GLIBCXX17_CONSTEXPR pointer
+        -:  276:      data() noexcept
+        -:  277:      { return _M_elems; }
+        -:  278:
+        -:  279:      [[__nodiscard__]]
+        -:  280:      _GLIBCXX17_CONSTEXPR const_pointer
+        -:  281:      data() const noexcept
+        -:  282:      { return _M_elems; }
+        -:  283:    };
+        -:  284:
+        -:  285:#if __cpp_deduction_guides >= 201606
+        -:  286:  template<typename _Tp, typename... _Up>
+        -:  287:    array(_Tp, _Up...)
+        -:  288:      -> array<enable_if_t<(is_same_v<_Tp, _Up> && ...), _Tp>,
+        -:  289:	       1 + sizeof...(_Up)>;
+        -:  290:#endif
+        -:  291:
+        -:  292:  // Array comparisons.
+        -:  293:  template<typename _Tp, std::size_t _Nm>
+        -:  294:    [[__nodiscard__]]
+        -:  295:    _GLIBCXX20_CONSTEXPR
+        -:  296:    inline bool
+        -:  297:    operator==(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        -:  298:    { return std::equal(__one.begin(), __one.end(), __two.begin()); }
+        -:  299:
+        -:  300:#if __cpp_lib_three_way_comparison && __cpp_lib_concepts
+        -:  301:  template<typename _Tp, size_t _Nm>
+        -:  302:    [[nodiscard]]
+        -:  303:    constexpr __detail::__synth3way_t<_Tp>
+        -:  304:    operator<=>(const array<_Tp, _Nm>& __a, const array<_Tp, _Nm>& __b)
+        -:  305:    {
+        -:  306:      if constexpr (_Nm && __is_memcmp_ordered<_Tp>::__value)
+        -:  307:	if (!std::__is_constant_evaluated())
+        -:  308:	  {
+        -:  309:	    constexpr size_t __n = _Nm * sizeof(_Tp);
+        -:  310:	    return __builtin_memcmp(__a.data(), __b.data(), __n) <=> 0;
+        -:  311:	  }
+        -:  312:
+        -:  313:      for (size_t __i = 0; __i < _Nm; ++__i)
+        -:  314:	{
+        -:  315:	  auto __c = __detail::__synth3way(__a[__i], __b[__i]);
+        -:  316:	  if (__c != 0)
+        -:  317:	    return __c;
+        -:  318:	}
+        -:  319:      return strong_ordering::equal;
+        -:  320:    }
+        -:  321:#else
+        -:  322:  template<typename _Tp, std::size_t _Nm>
+        -:  323:    [[__nodiscard__]]
+        -:  324:    _GLIBCXX20_CONSTEXPR
+        -:  325:    inline bool
+        -:  326:    operator!=(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        -:  327:    { return !(__one == __two); }
+        -:  328:
+        -:  329:  template<typename _Tp, std::size_t _Nm>
+        -:  330:    [[__nodiscard__]]
+        -:  331:    _GLIBCXX20_CONSTEXPR
+        -:  332:    inline bool
+        -:  333:    operator<(const array<_Tp, _Nm>& __a, const array<_Tp, _Nm>& __b)
+        -:  334:    {
+        -:  335:      return std::lexicographical_compare(__a.begin(), __a.end(),
+        -:  336:					  __b.begin(), __b.end());
+        -:  337:    }
+        -:  338:
+        -:  339:  template<typename _Tp, std::size_t _Nm>
+        -:  340:    [[__nodiscard__]]
+        -:  341:    _GLIBCXX20_CONSTEXPR
+        -:  342:    inline bool
+        -:  343:    operator>(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        -:  344:    { return __two < __one; }
+        -:  345:
+        -:  346:  template<typename _Tp, std::size_t _Nm>
+        -:  347:    [[__nodiscard__]]
+        -:  348:    _GLIBCXX20_CONSTEXPR
+        -:  349:    inline bool
+        -:  350:    operator<=(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        -:  351:    { return !(__one > __two); }
+        -:  352:
+        -:  353:  template<typename _Tp, std::size_t _Nm>
+        -:  354:    [[__nodiscard__]]
+        -:  355:    _GLIBCXX20_CONSTEXPR
+        -:  356:    inline bool
+        -:  357:    operator>=(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        -:  358:    { return !(__one < __two); }
+        -:  359:#endif // three_way_comparison && concepts
+        -:  360:
+        -:  361:  // Specialized algorithms.
+        -:  362:  template<typename _Tp, std::size_t _Nm>
+        -:  363:    _GLIBCXX20_CONSTEXPR
+        -:  364:    inline
+        -:  365:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  366:    // Constrained free swap overload, see p0185r1
+        -:  367:    __enable_if_t<__array_traits<_Tp, _Nm>::_Is_swappable::value>
+        -:  368:#else
+        -:  369:    void
+        -:  370:#endif
+        -:  371:    swap(array<_Tp, _Nm>& __one, array<_Tp, _Nm>& __two)
+        -:  372:    noexcept(noexcept(__one.swap(__two)))
+        -:  373:    { __one.swap(__two); }
+        -:  374:
+        -:  375:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  376:  template<typename _Tp, std::size_t _Nm>
+        -:  377:    __enable_if_t<!__array_traits<_Tp, _Nm>::_Is_swappable::value>
+        -:  378:    swap(array<_Tp, _Nm>&, array<_Tp, _Nm>&) = delete;
+        -:  379:#endif
+        -:  380:
+        -:  381:  template<std::size_t _Int, typename _Tp, std::size_t _Nm>
+        -:  382:    [[__nodiscard__]]
+        -:  383:    constexpr _Tp&
+        -:  384:    get(array<_Tp, _Nm>& __arr) noexcept
+        -:  385:    {
+        -:  386:      static_assert(_Int < _Nm, "array index is within bounds");
+        -:  387:      return __arr._M_elems[_Int];
+        -:  388:    }
+        -:  389:
+        -:  390:  template<std::size_t _Int, typename _Tp, std::size_t _Nm>
+        -:  391:    [[__nodiscard__]]
+        -:  392:    constexpr _Tp&&
+        -:  393:    get(array<_Tp, _Nm>&& __arr) noexcept
+        -:  394:    {
+        -:  395:      static_assert(_Int < _Nm, "array index is within bounds");
+        -:  396:      return std::move(std::get<_Int>(__arr));
+        -:  397:    }
+        -:  398:
+        -:  399:  template<std::size_t _Int, typename _Tp, std::size_t _Nm>
+        -:  400:    [[__nodiscard__]]
+        -:  401:    constexpr const _Tp&
+        -:  402:    get(const array<_Tp, _Nm>& __arr) noexcept
+        -:  403:    {
+        -:  404:      static_assert(_Int < _Nm, "array index is within bounds");
+        -:  405:      return __arr._M_elems[_Int];
+        -:  406:    }
+        -:  407:
+        -:  408:  template<std::size_t _Int, typename _Tp, std::size_t _Nm>
+        -:  409:    [[__nodiscard__]]
+        -:  410:    constexpr const _Tp&&
+        -:  411:    get(const array<_Tp, _Nm>&& __arr) noexcept
+        -:  412:    {
+        -:  413:      static_assert(_Int < _Nm, "array index is within bounds");
+        -:  414:      return std::move(std::get<_Int>(__arr));
+        -:  415:    }
+        -:  416:
+        -:  417:#if __cplusplus > 201703L
+        -:  418:#define __cpp_lib_to_array 201907L
+        -:  419:
+        -:  420:  template<bool _Move = false, typename _Tp, size_t... _Idx>
+        -:  421:    constexpr array<remove_cv_t<_Tp>, sizeof...(_Idx)>
+        -:  422:    __to_array(_Tp (&__a)[sizeof...(_Idx)], index_sequence<_Idx...>)
+        -:  423:    {
+        -:  424:      if constexpr (_Move)
+        -:  425:	return {{std::move(__a[_Idx])...}};
+        -:  426:      else
+        -:  427:	return {{__a[_Idx]...}};
+        -:  428:    }
+        -:  429:
+        -:  430:  template<typename _Tp, size_t _Nm>
+        -:  431:    [[nodiscard]]
+        -:  432:    constexpr array<remove_cv_t<_Tp>, _Nm>
+        -:  433:    to_array(_Tp (&__a)[_Nm])
+        -:  434:    noexcept(is_nothrow_constructible_v<_Tp, _Tp&>)
+        -:  435:    {
+        -:  436:      static_assert(!is_array_v<_Tp>);
+        -:  437:      static_assert(is_constructible_v<_Tp, _Tp&>);
+        -:  438:      if constexpr (is_constructible_v<_Tp, _Tp&>)
+        -:  439:	return __to_array(__a, make_index_sequence<_Nm>{});
+        -:  440:      __builtin_unreachable(); // FIXME: see PR c++/91388
+        -:  441:    }
+        -:  442:
+        -:  443:  template<typename _Tp, size_t _Nm>
+        -:  444:    [[nodiscard]]
+        -:  445:    constexpr array<remove_cv_t<_Tp>, _Nm>
+        -:  446:    to_array(_Tp (&&__a)[_Nm])
+        -:  447:    noexcept(is_nothrow_move_constructible_v<_Tp>)
+        -:  448:    {
+        -:  449:      static_assert(!is_array_v<_Tp>);
+        -:  450:      static_assert(is_move_constructible_v<_Tp>);
+        -:  451:      if constexpr (is_move_constructible_v<_Tp>)
+        -:  452:	return __to_array<1>(__a, make_index_sequence<_Nm>{});
+        -:  453:      __builtin_unreachable(); // FIXME: see PR c++/91388
+        -:  454:    }
+        -:  455:#endif // C++20
+        -:  456:
+        -:  457:  // Tuple interface to class template array.
+        -:  458:
+        -:  459:  /// Partial specialization for std::array
+        -:  460:  template<typename _Tp, size_t _Nm>
+        -:  461:    struct tuple_size<array<_Tp, _Nm>>
+        -:  462:    : public integral_constant<size_t, _Nm> { };
+        -:  463:
+        -:  464:  /// Partial specialization for std::array
+        -:  465:  template<size_t _Ind, typename _Tp, size_t _Nm>
+        -:  466:    struct tuple_element<_Ind, array<_Tp, _Nm>>
+        -:  467:    {
+        -:  468:      static_assert(_Ind < _Nm, "array index is in range");
+        -:  469:      using type = _Tp;
+        -:  470:    };
+        -:  471:
+        -:  472:#if __cplusplus >= 201703L
+        -:  473:  template<typename _Tp, size_t _Nm>
+        -:  474:    inline constexpr size_t tuple_size_v<array<_Tp, _Nm>> = _Nm;
+        -:  475:
+        -:  476:  template<typename _Tp, size_t _Nm>
+        -:  477:    inline constexpr size_t tuple_size_v<const array<_Tp, _Nm>> = _Nm;
+        -:  478:#endif
+        -:  479:
+        -:  480:  template<typename _Tp, size_t _Nm>
+        -:  481:    struct __is_tuple_like_impl<array<_Tp, _Nm>> : true_type
+        -:  482:    { };
+        -:  483:
+        -:  484:_GLIBCXX_END_NAMESPACE_VERSION
+        -:  485:} // namespace std
+        -:  486:
+        -:  487:#endif // C++11
+        -:  488:
+        -:  489:#endif // _GLIBCXX_ARRAY
