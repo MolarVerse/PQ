@@ -50,6 +50,6 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true # optional (default = false)
-          files: build/coverage_xml.xml
+          files: ${{ github.workspace }}/build/coverage_xml.xml
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
