@@ -2,9 +2,11 @@ name: C/C++ CI
 
 on:
   push:
-    branches: ['*']
+    branches:
+      - '*'
   pull_request:
-    branches: ['*']
+    branches:
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -41,6 +43,9 @@ jobs:
           make coverage_xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true # optional (default = false)
+          files: build/coverage_xml.xml
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
