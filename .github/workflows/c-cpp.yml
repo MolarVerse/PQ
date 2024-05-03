@@ -36,6 +36,7 @@ jobs:
       - name: install coverage
         run: |
           python -m pip install coverage
+          python -m pip install gcovr
         shell: bash
 
       - name: Create build directory and run CMake
