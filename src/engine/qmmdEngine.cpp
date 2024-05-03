@@ -56,7 +56,11 @@ void QMMDEngine::takeStep()
 
     _qmRunner->run(_simulationBox, _physicalData);
 
-    _constraints.applyDistanceConstraints(_simulationBox, _physicalData, _timings.calculateTotalSimulationTime(_step));
+    _constraints.applyDistanceConstraints(
+        _simulationBox,
+        _physicalData,
+        _timings.calculateTotalSimulationTime(_step)
+    );
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
