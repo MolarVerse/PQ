@@ -22,13 +22,13 @@
 
 #include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
 
+#include <format>   // for format
+
 #include "constraints.hpp"          // for Constraints
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for TopologyException
 #include "simulationBox.hpp"        // for SimulationBox
-
-#include <format>   // for format
 
 using namespace input::topology;
 
@@ -46,15 +46,25 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is not 4
- * @throws customException::TopologyException if atom indices are the same (=same atoms)
+ * @throws customException::TopologyException if number of elements in line is
+ * not 4
+ * @throws customException::TopologyException if atom indices are the same
+ * (=same atoms)
+ * @throws customException::TopologyException if lower distance is greater than
+ * upper distance
  */
-void DistanceConstraintsSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
+void DistanceConstraintsSection::processSection(
+    std::vector<std::string> &lineElements,
+    engine::Engine           &engine
+)
 {
     if (lineElements.size() != 6)
-        throw customException::TopologyException(std::format("Wrong number of arguments in topology file \"Distance "
-                                                             "Constraints\" section at line {} - number of elements has to be 6!",
-                                                             _lineNumber));
+        throw customException::TopologyException(std::format(
+            "Wrong number of arguments in topology file \"Distance "
+            "Constraints\" section at line {} - number of elements has to be "
+            "6!",
+            _lineNumber
+        ));
 
     auto atom1             = stoul(lineElements[0]);
     auto atom2             = stoul(lineElements[1]);
@@ -64,15 +74,35 @@ void DistanceConstraintsSection::processSection(std::vector<std::string> &lineEl
     auto dSpringConstantDt = stod(lineElements[5]);
 
     if (atom1 == atom2)
-        throw customException::TopologyException(std::format("Topology file \"Distance "
-                                                             "Constraints\" at line {} - atoms cannot be the same!",
-                                                             _lineNumber));
+        throw customException::TopologyException(std::format(
+            "Topology file \"Distance "
+            "Constraints\" at line {} - atoms cannot be the same!",
+            _lineNumber
+        ));
 
-    const auto [molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    if (lowerDistance > upperDistance)
+        throw customException::TopologyException(std::format(
+            "Topology file \"Distance "
+            "Constraints\" at line {} - lower distance cannot be greater "
+            "than upper distance!",
+            _lineNumber
+        ));
+
+    const auto [molecule1, atomIndex1] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
 
     auto distanceConstraint = constraints::DistanceConstraint(
-        molecule1, molecule2, atomIndex1, atomIndex2, lowerDistance, upperDistance, springConstant, dSpringConstantDt);
+        molecule1,
+        molecule2,
+        atomIndex1,
+        atomIndex2,
+        lowerDistance,
+        upperDistance,
+        springConstant,
+        dSpringConstantDt
+    );
 
     engine.getConstraints().addDistanceConstraint(distanceConstraint);
 }
@@ -88,5 +118,8 @@ void DistanceConstraintsSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
         throw customException::TopologyException(std::format(
-            "Topology file error in \"Distance Constraints\" section at line {} - no end of section found!", _lineNumber));
+            "Topology file error in \"Distance Constraints\" section at line "
+            "{} - no end of section found!",
+            _lineNumber
+        ));
 }

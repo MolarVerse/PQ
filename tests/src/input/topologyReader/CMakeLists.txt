@@ -6,6 +6,7 @@ set(source_files
     testAngleSection.cpp
     testDihedralSection.cpp
     testImproperDihedralSection.cpp
+    testDistanceConstraintsSection.cpp
 )
 
 foreach(source_file ${source_files})

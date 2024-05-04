@@ -24,10 +24,10 @@
 
 #define _DISTANCE_CONSTRAINT_HPP_
 
+#include <cstddef>
+
 #include "bond.hpp"
 #include "vector3d.hpp"
-
-#include <cstddef>
 
 namespace simulationBox
 {
@@ -48,7 +48,7 @@ namespace constraints
      */
     class DistanceConstraint : public connectivity::Bond
     {
-      private:
+       private:
         double _lowerDistance;
         double _upperDistance;
         double _springConstant;
@@ -58,19 +58,39 @@ namespace constraints
         double               _upperEnergy = 0.0;
         linearAlgebra::Vec3D _force       = {0.0};
 
-      public:
-        DistanceConstraint(simulationBox::Molecule *molecule1,
-                           simulationBox::Molecule *molecule2,
-                           const size_t             atomIndex1,
-                           const size_t             atomIndex2,
-                           const double             lowerDistance,
-                           const double             upperDistance,
-                           const double             springConstant,
-                           const double             dSpringConstantDt)
-            : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2), _lowerDistance(lowerDistance),
-              _upperDistance(upperDistance), _springConstant(springConstant), _dSpringConstantDt(dSpringConstantDt){};
+       public:
+        DistanceConstraint(
+            simulationBox::Molecule *molecule1,
+            simulationBox::Molecule *molecule2,
+            const size_t             atomIndex1,
+            const size_t             atomIndex2,
+            const double             lowerDistance,
+            const double             upperDistance,
+            const double             springConstant,
+            const double             dSpringConstantDt
+        )
+            : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
+              _lowerDistance(lowerDistance),
+              _upperDistance(upperDistance),
+              _springConstant(springConstant),
+              _dSpringConstantDt(dSpringConstantDt){};
 
-        void applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox, const double dt);
+        void applyDistanceConstraint(
+            const simulationBox::SimulationBox &simulationBox,
+            const double                        dt
+        );
+
+        [[nodiscard]] double getLowerDistance() const { return _lowerDistance; }
+        [[nodiscard]] double getUpperDistance() const { return _upperDistance; }
+
+        [[nodiscard]] double getSpringConstant() const
+        {
+            return _springConstant;
+        }
+        [[nodiscard]] double getDSpringConstantDt() const
+        {
+            return _dSpringConstantDt;
+        }
 
         [[nodiscard]] double getLowerEnergy() const { return _lowerEnergy; }
         [[nodiscard]] double getUpperEnergy() const { return _upperEnergy; }
