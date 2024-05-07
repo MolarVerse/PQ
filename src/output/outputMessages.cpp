@@ -60,6 +60,9 @@ std::string output::header()
 
     header_title << '\n';
     header_title << _OUTPUT_ << "Testing:       " << sysinfo::_JOSEF_ << '\n';
+    header_title << _OUTPUT_ << "               " << sysinfo::_ARMIN_ << '\n';
+    header_title << _OUTPUT_ << "               " << sysinfo::_STEFAN_ << '\n';
+    header_title << _OUTPUT_ << "               " << sysinfo::_BENJAMIN_ << '\n';
 
     header_title << '\n';
     header_title << _OUTPUT_ << "Version:       " << sysinfo::_VERSION_ << '\n';
