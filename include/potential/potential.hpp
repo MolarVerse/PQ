@@ -26,9 +26,11 @@
 
 #include "vector3d.hpp"   // for Vec3D
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
-#include <utility>   // for pair
+#include <Kokkos_Core.hpp>   // for Kokkos::parallel_for, Kokkos::RangePolicy
+
+#include <cstddef>           // for size_t
+#include <memory>            // for shared_ptr, __shared_ptr_access, make_shared
+#include <utility>           // for pair
 
 namespace physicalData
 {
@@ -108,6 +110,18 @@ namespace potential
      *
      */
     class PotentialBruteForce : public Potential
+    {
+      public:
+        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
+    };
+
+    /**
+     * @class PotentialKokkos
+     *
+     * @brief Kokkos implementation of the potential
+     *
+     */
+    class PotentialKokkos : public Potential
     {
       public:
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
