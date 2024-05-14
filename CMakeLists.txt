@@ -14,7 +14,7 @@ endif()
 # project initializeation
 # ***********************
 project(PQ
-    DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
+    DESCRIPTION "MolarVerse - PQ"
     LANGUAGES CXX C)
 
 # **************************
