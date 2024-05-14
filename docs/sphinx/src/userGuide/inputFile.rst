@@ -976,7 +976,7 @@ QM_SCRIPT
 With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_SCRIPT_FULL_PATH
-=====================
+===================
 
 .. admonition:: Key
     :class: tip
@@ -989,6 +989,16 @@ QM_SCRIPT_FULL_PATH
 
 
 With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+
+QM_LOOP_TIME_LIMIT
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    qm_loop_time_limit = {double} s -> -1 s
+
+With the :code:`qm_loop_time_limit` keyword the user can specify the loop time limit in :code:`s` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
 
 .. _ringPolymerMDKeys:
 

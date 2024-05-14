@@ -30,12 +30,29 @@
 #include "vector3d.hpp"                      // for Vec3D
 
 #include <algorithm>    // for __for_each_fn, for_each
+#include <chrono>       // for seconds
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
 #include <string>       // for string
+#include <thread>       // for sleep_for
 
 using QM::QMRunner;
+
+void QMRunner::throwAfterTimeout() const
+{
+    const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
+
+    if (qmLoopTimeLimit <= 0)
+        return;
+
+    const auto timeout = int(::ceil(qmLoopTimeLimit));
+
+    std::this_thread::sleep_for(std::chrono::seconds(timeout));
+
+    // Throw an exception after the timeout
+    throw customException::QMRunnerException("QM calculation timeout");
+}
 
 /**
  * @brief run the qm engine
@@ -45,7 +62,13 @@ using QM::QMRunner;
 void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
     writeCoordsFile(simBox);
+
+    std::jthread timeoutThread(&QM::QMRunner::throwAfterTimeout, this);
+
     execute();
+
+    timeoutThread.request_stop();
+
     readForceFile(simBox, physicalData);
     readStressTensor(simBox.getBox(), physicalData);
 }
