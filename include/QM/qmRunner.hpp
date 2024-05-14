@@ -60,11 +60,12 @@ namespace QM
       public:
         virtual ~QMRunner() = default;
 
+        void         throwAfterTimeout() const;
         void         run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
         virtual void execute()                                       = 0;
         virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void readStressTensor(simulationBox::Box &, physicalData::PhysicalData &){};
+        virtual void readStressTensor(simulationBox::Box &, physicalData::PhysicalData &) {};
 
         /*******************************
          * standard getter and setters *
