@@ -82,6 +82,8 @@ namespace defaults
 
     static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
 
+    static constexpr double _QM_LOOP_TIME_LIMIT_DEFAULT_ = -1.0;   // in s
+
 }   // namespace defaults
 
 #endif   // _DEFAULTS_HPP_

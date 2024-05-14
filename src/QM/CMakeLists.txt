@@ -18,6 +18,7 @@ target_link_libraries(QM
     settings
     utilities
     physicalData
+    exceptions
 )
 
 if(BUILD_SHARED_LIBS)

@@ -204,3 +204,14 @@ const char *MPIException::what() const throw()
     colorfulOutput(Color::FG_RED, "MPIError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *QMRunTimeExceeded::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "QMRunTimeExceeded");
+    return _message.c_str();
+}
