@@ -159,6 +159,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#qm-prog">QM_PROG</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-script">QM_SCRIPT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-script-full-path">QM_SCRIPT_FULL_PATH</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-loop-time-limit">QM_LOOP_TIME_LIMIT</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ring-polymer-md-keys">Ring Polymer MD Keys</a><ul>
@@ -1015,6 +1016,14 @@
 <p>This keyword can not be used in conjunction with the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the <a class="reference internal" href="../installation/installation.html#userg-installation"><span class="std std-ref">Installation</span></a> section.</p>
 </div>
 <p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script_full_path</span></code> keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under <a class="reference external" href="https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts">https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
+</section>
+<section id="qm-loop-time-limit">
+<h3>QM_LOOP_TIME_LIMIT<a class="headerlink" href="#qm-loop-time-limit" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_loop_time_limit = {double} s -&gt; -1 s</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="code docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.</p>
 </section>
 </section>
 <section id="ring-polymer-md-keys">
