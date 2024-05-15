@@ -37,29 +37,34 @@ Types of Input Values
 
 In the following sections the types of the input values will be denoted via :code:`{}`, where :code:`{[]}` represents a list of types:
 
-+------------+-------------------------------+
-|    Type    |          Description          |
-+============+===============================+
-|   {int}    |            integer            |
-+------------+-------------------------------+
-|  {uint+}   |       positive integers       |
-+------------+-------------------------------+
-|   {uint}   | positive integers including 0 |
-+------------+-------------------------------+
-|  {double}  |    floating point numbers     |
-+------------+-------------------------------+
-|  {string}  |              \-               |
-+------------+-------------------------------+
-|   {file}   |              \-               |
-+------------+-------------------------------+
-|   {path}   |              \-               |
-+------------+-------------------------------+
-| {pathFile} |     equal to {path/file}      |
-+------------+-------------------------------+
-|   {bool}   |          true/false           |
-+------------+-------------------------------+
++-------------+-------------------------------+
+|    Type     |          Description          |
++=============+===============================+
+|   {int}     |            integer            |
++-------------+-------------------------------+
+|  {uint+}    |       positive integers       |
++-------------+-------------------------------+
+|   {uint}    | positive integers including 0 |
++-------------+-------------------------------+
+|  {double}   |    floating point numbers     |
++-------------+-------------------------------+
+|  {string}   |              \-               |
++-------------+-------------------------------+
+|   {file}    |              \-               |
++-------------+-------------------------------+
+|   {path}    |              \-               |
++-------------+-------------------------------+
+| {pathFile}  |     equal to {path/file}      |
++-------------+-------------------------------+
+|   {bool}    |          true/false           |
++-------------+-------------------------------+
+| {selection} |          selection            |
++-------------+-------------------------------+
 
+.. _selectionType:
 
+.. Note::
+    The :code:`{selection}` type is used to select a specific atom or group of atoms. If the PQ software package was build including :code:`python3.12` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like :code:`{0, 1, 2}`. If a range of atom indices should be selected the user can use the following syntax :code:`{0-5, 10-15}` or :code:`{0..5, 10-15}` or :code:`{0..5, 10..15}`, where all would be equivalent to :code:`{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}`.
 
 Input Keys
 ==========
@@ -1015,6 +1020,13 @@ QM/MM Keys
 
 QM_Center
 =========
+
+.. admonition:: Key
+    :class: tip
+
+    qm_center = {selection} -> 0
+
+With the :code:`qm_center` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section.
 
 QM_Only_List
 ============
