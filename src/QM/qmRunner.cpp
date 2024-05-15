@@ -34,8 +34,10 @@
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
+#include <functional>   // for bind
 #include <string>       // for string
 #include <thread>       // for sleep_for
+#include <vector>       // for vector
 
 using QM::QMRunner;
 
@@ -69,7 +71,7 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
 {
     writeCoordsFile(simBox);
 
-    std::jthread timeoutThread([this]() { this->throwAfterTimeout(); });
+    std::jthread timeoutThread(std::bind(&QM::QMRunner::throwAfterTimeout, this));
 
     execute();
 
