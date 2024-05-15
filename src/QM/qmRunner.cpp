@@ -69,7 +69,7 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
 {
     writeCoordsFile(simBox);
 
-    std::jthread timeoutThread(&QM::QMRunner::throwAfterTimeout, this);
+    std::jthread timeoutThread([this]() { this->throwAfterTimeout(); });
 
     execute();
 
