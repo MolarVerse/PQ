@@ -50,12 +50,12 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 
     const auto timeout = int(::ceil(qmLoopTimeLimit));
 
-    for (int i = 0; i < timeout; ++i)
+    for (int i = 0; i < timeout * 1000; ++i)
     {
         if (stopToken.stop_requested())
             return;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     // Throw an exception after the timeout
