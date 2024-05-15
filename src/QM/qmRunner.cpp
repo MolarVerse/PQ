@@ -41,7 +41,7 @@
 
 using QM::QMRunner;
 
-void QMRunner::throwAfterTimeout(std::stop_token stopToken) const
+void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 {
     const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
 
@@ -71,7 +71,7 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
 {
     writeCoordsFile(simBox);
 
-    std::jthread timeoutThread(std::bind(&QM::QMRunner::throwAfterTimeout, this));
+    std::jthread timeoutThread{[this](const std::stop_token stopToken) { throwAfterTimeout(stopToken); }};
 
     execute();
 
