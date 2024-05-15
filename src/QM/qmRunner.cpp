@@ -39,7 +39,7 @@
 
 using QM::QMRunner;
 
-void QMRunner::throwAfterTimeout() const
+void QMRunner::throwAfterTimeout(std::stop_token stopToken) const
 {
     const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
 
@@ -48,7 +48,13 @@ void QMRunner::throwAfterTimeout() const
 
     const auto timeout = int(::ceil(qmLoopTimeLimit));
 
-    std::this_thread::sleep_for(std::chrono::seconds(timeout));
+    for (int i = 0; i < timeout; ++i)
+    {
+        if (stopToken.stop_requested())
+            return;
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
     // Throw an exception after the timeout
     throw customException::QMRunnerException("QM calculation timeout");
