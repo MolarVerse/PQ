@@ -1026,25 +1026,67 @@ QM_Center
 
     qm_center = {selection} -> 0
 
-With the :code:`qm_center` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section.
+With the :code:`qm_center` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The :code:`qm_center` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
 QM_Only_List
 ============
 
+.. admonition:: Key
+    :class: tip
+
+    qm_only_list = {selection}
+
+With the :code:`qm_only_list` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+
 MM_Only_List
 ============
+
+.. admonition:: Key
+    :class: tip
+
+    mm_only_list = {selection}
+
+With the :code:`mm_only_list` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
 
 QM_Charges
 ==========
 
+.. admonition:: Key
+    :class: tip
+
+    qm_charges = {string} -> "off"
+
+With the :code:`qm_charges` keyword the user can specify the charge model for the QM atoms. If the :code:`qm_charges` keyword is set to :code:`off` the charges of the QM atoms are taken from the MM model applied. If the :code:`qm_charges` keyword is set to :code:`on` the charges of the QM atoms are taken from the QM calculation.
+
 QM_Core_Radius
 ==============
+
+.. admonition:: Key
+    :class: tip
+
+    qm_core_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+
+With the :code:`qm_core_radius` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
 
 QMMM_Layer_Radius
 =================
 
+.. admonition:: Key
+    :class: tip
+
+    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+
+With the :code:`qmmm_layer_radius` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+
 QMMM_Smoothing_Radius
 =====================
+
+.. admonition:: Key
+    :class: tip
+
+    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+
+With the :code:`qmmm_smoothing_radius` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
 
 **************
 Cell List Keys
