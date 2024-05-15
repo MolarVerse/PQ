@@ -34,12 +34,14 @@
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
+#include <functional>   // for bind
 #include <string>       // for string
 #include <thread>       // for sleep_for
+#include <vector>       // for vector
 
 using QM::QMRunner;
 
-void QMRunner::throwAfterTimeout() const
+void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 {
     const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
 
@@ -48,7 +50,13 @@ void QMRunner::throwAfterTimeout() const
 
     const auto timeout = int(::ceil(qmLoopTimeLimit));
 
-    std::this_thread::sleep_for(std::chrono::seconds(timeout));
+    for (int i = 0; i < timeout * 1000; ++i)
+    {
+        if (stopToken.stop_requested())
+            return;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 
     // Throw an exception after the timeout
     throw customException::QMRunnerException("QM calculation timeout");
@@ -63,7 +71,7 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
 {
     writeCoordsFile(simBox);
 
-    std::jthread timeoutThread(&QM::QMRunner::throwAfterTimeout, this);
+    std::jthread timeoutThread{[this](const std::stop_token stopToken) { throwAfterTimeout(stopToken); }};
 
     execute();
 
