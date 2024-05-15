@@ -28,6 +28,7 @@
 #define SINGULARITY_  _SINGULARITY_
 #define STATIC_BUILD_ _STATIC_BUILD_
 
+#include <stop_token>
 #include <string>
 
 namespace simulationBox
@@ -60,7 +61,7 @@ namespace QM
       public:
         virtual ~QMRunner() = default;
 
-        void         throwAfterTimeout() const;
+        void         throwAfterTimeout(std::stop_token stopToken) const;
         void         run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
         virtual void execute()                                       = 0;
