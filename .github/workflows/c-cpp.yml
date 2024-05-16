@@ -39,6 +39,12 @@ jobs:
           apt install -y cmake
         shell: bash
 
+      - name: install gcov-13
+        run: |
+          apt update -y
+          apt install -y gcov-13
+        shell: bash
+
       - name: Build and Test Project
         run: |
           source venv/bin/activate
