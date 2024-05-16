@@ -109,8 +109,11 @@ void ThermostatSetup::setup()
 void ThermostatSetup::isTargetTemperatureSet() const
 {
     auto targetTempDefined = ThermostatSettings::isTemperatureSet();
-    auto startTempDefined  = ThermostatSettings::isStartTemperatureSet();
     auto endTempDefined    = ThermostatSettings::isEndTemperatureSet();
+
+    /************************************************************
+     * Check if exactly one of target or end temperature is set *
+     ************************************************************/
 
     if (!targetTempDefined && !endTempDefined)
         throw customException::InputFileException(std::format(
@@ -118,26 +121,30 @@ void ThermostatSetup::isTargetTemperatureSet() const
             string(ThermostatSettings::getThermostatType())
         ));
 
-    if (!startTempDefined)
-    {
-    }
-    // if (!ThermostatSettings::isEndTemperatureSet())
-    // {
-    //     _engine.getLogOutput().writeSetupInfo(std::format(
-    //         "target temperature: {:14.5f} K",
-    //         ThermostatSettings::getTargetTemperature()
-    //     ));
-    //     ThermostatSettings::setTargetTemperature(
-    //         ThermostatSettings::getEndTemperature()
-    //     );
-    // }
-    else
-    {
-        _engine.getLogOutput().writeSetupInfo(std::format(
-            "start temperature:  {:14.5f} K",
-            ThermostatSettings::getStartTemperature()
+    if (targetTempDefined && endTempDefined)
+        throw customException::InputFileException(std::format(
+            "Both target and end temperature set for {} thermostat. They are "
+            "mutually exclusive as they are treated as synonyms",
+            string(ThermostatSettings::getThermostatType())
         ));
-    }
+
+    /**************************************************
+     * Block to unify the target and end temperature. *
+     **************************************************/
+
+    if (endTempDefined)
+        ThermostatSettings::setTargetTemperature(
+            ThermostatSettings::getEndTemperature()
+        );
+
+    if (targetTempDefined)
+        ThermostatSettings::setEndTemperature(
+            ThermostatSettings::getTargetTemperature()
+        );
+
+    /******************************************
+     * Writing Target Temperature to Log File *
+     ******************************************/
 
     _engine.getLogOutput().writeSetupInfo(std::format(
         "target temperature: {:14.5f} K",
@@ -256,5 +263,21 @@ void ThermostatSetup::setupNoseHooverThermostat()
     _engine.getLogOutput().writeSetupInfo(std::format(
         "coupling frequency: {:14.5f} cm⁻¹",
         ThermostatSettings::getNoseHooverCouplingFrequency()
+    ));
+}
+
+void ThermostatSetup::setupTemperatureRamp()
+{
+    /*************************************************************************
+     * If the start temperature is defined, the temperature ramp is enabled. *
+     *************************************************************************/
+
+    if (!ThermostatSettings::isStartTemperatureSet())
+        return;
+
+    _engine.getLogOutput().writeSetupInfo("Temperature Ramp enabled:");
+    _engine.getLogOutput().writeSetupInfo(std::format(
+        "start temperature:  {:14.5f} K",
+        ThermostatSettings::getStartTemperature()
     ));
 }

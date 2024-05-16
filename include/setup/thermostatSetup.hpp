@@ -41,15 +41,16 @@ namespace setup
      */
     class ThermostatSetup
     {
-      private:
+       private:
         engine::Engine &_engine;
 
-      public:
+       public:
         explicit ThermostatSetup(engine::Engine &engine) : _engine(engine){};
 
         void setup();
 
         void isTargetTemperatureSet() const;
+        void setupTemperatureRamp();
         void setupBerendsenThermostat();
         void setupLangevinThermostat();
         void setupNoseHooverThermostat();
