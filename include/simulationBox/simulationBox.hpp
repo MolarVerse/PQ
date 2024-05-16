@@ -109,7 +109,7 @@ namespace simulationBox
 
         void initPositions(const double displacement);
 
-#ifdef WITH_MPI
+#if defined WITH_MPI || defined WITH_KOKKOS
         std::vector<double> flattenPositions();
         std::vector<double> flattenVelocities();
         std::vector<double> flattenForces();

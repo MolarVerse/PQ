@@ -1,4 +1,4 @@
-#ifdef WITH_MPI
+#if defined WITH_MPI || defined WITH_KOKKOS
 
 #include "simulationBox.hpp"
 
