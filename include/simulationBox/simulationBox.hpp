@@ -110,9 +110,14 @@ namespace simulationBox
         void initPositions(const double displacement);
 
 #if defined WITH_MPI || defined WITH_KOKKOS
-        std::vector<double> flattenPositions();
-        std::vector<double> flattenVelocities();
-        std::vector<double> flattenForces();
+        [[nodiscard]] std::vector<size_t> flattenAtomTypes();
+        [[nodiscard]] std::vector<size_t> flattenMolTypes();
+        [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
+
+        [[nodiscard]] std::vector<double> flattenPositions();
+        [[nodiscard]] std::vector<double> flattenVelocities();
+        [[nodiscard]] std::vector<double> flattenForces();
+        [[nodiscard]] std::vector<double> flattenPartialCharges();
 
         void deFlattenPositions(const std::vector<double> &positions);
         void deFlattenVelocities(const std::vector<double> &velocities);

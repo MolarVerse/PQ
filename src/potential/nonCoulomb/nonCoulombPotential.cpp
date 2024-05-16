@@ -21,3 +21,18 @@
 ******************************************************************************/
 
 #include "nonCoulombPotential.hpp"
+
+#include "exceptions.hpp"   // for Exception
+
+#include <any>      // for any
+#include <vector>   // for vector
+
+using namespace potential;
+
+#ifdef WITH_KOKKOS
+std::vector<std::any> NonCoulombPotential::flattenNonCoulombPairs() const
+{
+    customException::UserInputException(
+        "This seems to be strange please contact the developers via the issue tracker on GitHub.");
+}
+#endif

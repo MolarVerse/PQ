@@ -7,6 +7,59 @@
 using simulationBox::SimulationBox;
 
 /**
+ * @brief flattens atom types of each atom into a single vector of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenAtomTypes()
+{
+    std::vector<size_t> atomTypes;
+
+    auto addAtomTypes = [&atomTypes](auto &atom) { atomTypes.push_back(atom->getAtomType()); };
+
+    std::ranges::for_each(_atoms, addAtomTypes);
+
+    return atomTypes;
+}
+
+/**
+ * @brief flattens mol types of each molecule of each atom into a single vector of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenMolTypes()
+{
+    std::vector<size_t> molTypes;
+
+    auto addMolTypes = [&molTypes](auto &molecule)
+    {
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molTypes.push_back(molecule.getMoltype());
+    };
+
+    std::ranges::for_each(_molecules, addMolTypes);
+
+    return molTypes;
+}
+
+/**
+ * @brief flattens internal global VDW types of each atom into a single vector of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
+{
+    std::vector<size_t> internalGlobalVDWTypes;
+
+    auto addInternalGlobalVDWTypes = [&internalGlobalVDWTypes](auto &atom)
+    { internalGlobalVDWTypes.push_back(atom->getInternalGlobalVDWType()); };
+
+    std::ranges::for_each(_atoms, addInternalGlobalVDWTypes);
+
+    return internalGlobalVDWTypes;
+}
+
+/**
  * @brief flattens positions of each atom into a single vector of doubles
  *
  * @return std::vector<double>
@@ -73,6 +126,22 @@ std::vector<double> SimulationBox::flattenForces()
     std::ranges::for_each(_atoms, addForces);
 
     return forces;
+}
+
+/**
+ * @brief flattens partial charges of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::flattenPartialCharges()
+{
+    std::vector<double> partialCharges;
+
+    auto addPartialCharges = [&partialCharges](auto &atom) { partialCharges.push_back(atom->getPartialCharge()); };
+
+    std::ranges::for_each(_atoms, addPartialCharges);
+
+    return partialCharges;
 }
 
 /**

@@ -5,14 +5,9 @@ add_library(potential
     potentialKokkos.cpp
 )
 
-add_dependencies(potential
-    kokkos
-)
-
 target_include_directories(potential
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/potential
-    ${Kokkos_INCLUDE_DIRS_RET}
 )
 
 target_link_libraries(potential
@@ -21,9 +16,25 @@ target_link_libraries(potential
     simulationBox
     coulombPotential
     nonCoulombPotential
-    kokkos
-    Kokkos::kokkoskernels
 )
+
+if(BUILD_WITH_KOKKOS)
+    add_dependencies(potential
+        kokkos
+    )
+
+    target_include_directories(potential
+        PUBLIC
+        ${Kokkos_INCLUDE_DIRS_RET}
+    )
+
+    target_link_libraries(potential
+        PUBLIC
+        kokkos
+        kokkos::kokkoskernels
+    )
+endif()
+
 install(TARGETS potential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

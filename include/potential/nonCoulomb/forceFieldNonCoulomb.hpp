@@ -67,6 +67,10 @@ namespace potential
         [[nodiscard]] std::optional<shared_pair> findNonCoulombicPairByInternalTypes(size_t, size_t) const;
         [[nodiscard]] shared_pair                getNonCoulombPair(const std::vector<size_t> &indices) override;
 
+#ifdef WITH_KOKKOS
+        [[nodiscard]] std::vector<std::any> flattenNonCoulombPairs() const override;
+#endif
+
         [[nodiscard]] size_t              getGlobalVdwType1(const std::vector<size_t> &indices) const { return indices[4]; }
         [[nodiscard]] size_t              getGlobalVdwType2(const std::vector<size_t> &indices) const { return indices[5]; }
         [[nodiscard]] vec_shared_pair    &getNonCoulombPairsVector() { return _nonCoulombPairsVector; }

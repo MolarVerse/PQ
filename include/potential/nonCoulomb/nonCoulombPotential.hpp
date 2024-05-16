@@ -24,6 +24,7 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
+#include <any>       // for any
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr
 #include <vector>    // for vector
@@ -55,6 +56,10 @@ namespace potential
         [[nodiscard]] MixingRule                              getMixingRule() const { return _mixingRule; }
 
         void setMixingRule(const MixingRule mixingRule) { _mixingRule = mixingRule; }
+
+#ifdef WITH_KOKKOS
+        virtual std::vector<std::any> flattenNonCoulombPairs() const;
+#endif
     };
 
 }   // namespace potential
