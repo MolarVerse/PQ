@@ -42,7 +42,7 @@ jobs:
       - name: install gcov-13
         run: |
           apt update -y
-          apt install -y gcov-13
+          apt install -y gcov
         shell: bash
 
       - name: Build and Test Project
