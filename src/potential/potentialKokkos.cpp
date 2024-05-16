@@ -47,40 +47,62 @@ inline void PotentialKokkos::calculateForces(simulationBox::SimulationBox &simBo
 {
     Kokkos::initialize();
     {
-        const auto box = simBox.getBoxPtr();
-
+        // set total coulombic and non-coulombic energy
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;
 
-        // inter molecular forces
-        const size_t numberOfMolecules = simBox.getNumberOfMolecules();
+        // get number of atoms
+        const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
-        for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
+        // create Kokkos Views for positions and forces
+        Kokkos::View<double*, Kokkos::HostSpace> positions("positions", 3 * numberOfAtoms);
+        Kokkos::View<double*, Kokkos::HostSpace> forces("forces", 3 * numberOfAtoms);
+
+        // flatten positions
+        auto flattenedPositions = simBox.flattenPositions();
+        auto flattenedForces    = simBox.flattenForces();
+
+        // copy flattened positions and forces to Kokkos View
+        for (size_t i = 0; i < 3 * numberOfAtoms; ++i)
         {
-            auto        &molecule1                 = simBox.getMolecule(mol1);
-            const size_t numberOfAtomsInMolecule_i = molecule1.getNumberOfAtoms();
-
-            for (size_t mol2 = 0; mol2 < mol1; ++mol2)
-            {
-                auto        &molecule2                 = simBox.getMolecule(mol2);
-                const size_t numberOfAtomsInMolecule_j = molecule2.getNumberOfAtoms();
-
-                for (size_t atom1 = 0; atom1 < numberOfAtomsInMolecule_i; ++atom1)
-                {
-                    for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j; ++atom2)
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction(*box, molecule1, molecule2, atom1, atom2);
-
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-                }
-            }
+            positions(i) = flattenedPositions[i];
+            forces(i)    = flattenedForces[i];
         }
 
+        // create Kokkos View on device
+        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> positionsDevice("positionsDevice", 3 * numberOfAtoms);
+        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> forcesDevice("forcesDevice", 3 * numberOfAtoms);
+
+        // copy positions and forces to device
+        Kokkos::deep_copy(positionsDevice, positions);
+        Kokkos::deep_copy(forcesDevice, forces);
+
+        Kokkos::parallel_reduce(numberOfAtoms, KOKKOS_LAMBDA(const size_t i, double &coulombEnergy, double &nonCoulombEnergy)
+        {
+            // calculate forces
+            forcesDevice(i) = 0.0;
+
+            // calculate coulombic energy
+            coulombEnergy += 0.0;
+            nonCoulombEnergy += 0.0;
+        }, totalCoulombEnergy, totalNonCoulombEnergy);
+
+        // copy forces back to host
+        Kokkos::deep_copy(forces, forcesDevice);
+
+        // copy forces back to simulation box
+        for (size_t i = 0; i < 3 * numberOfAtoms; ++i)
+        {
+            flattenedForces[i] = forces(i);
+        }
+
+        // unflatten forces
+        simBox.deFlattenForces(flattenedForces);
+
+        // set total coulombic and non-coulombic energy
         physicalData.setCoulombEnergy(totalCoulombEnergy);
         physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+
 
     }   // end of Kokkos scope
     Kokkos::finalize();
