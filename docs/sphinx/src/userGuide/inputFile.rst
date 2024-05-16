@@ -865,6 +865,16 @@ With the :code:`rattle-iter` keyword the user can specify the maximum number of 
 
 .. centered:: *default value* = 20
 
+Distance-Constraints
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    distance-constraints = {string} -> "off"
+
+With the :code:`distance-constraints` keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the :ref:`topologyFile`.
+
 *******
 MM Keys
 *******
