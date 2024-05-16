@@ -36,6 +36,7 @@ jobs:
 
       - name: Build and Test Project
         run: |
+          python -m pip install gcovr
           git config --global --add safe.directory '*'
           mkdir build
           cd build
