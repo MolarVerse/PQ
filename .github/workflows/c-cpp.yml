@@ -24,17 +24,13 @@ jobs:
 
       - name: install coverage
         run: |
-          python -m venv venv
-          source venv/bin/activate
           python -m pip install coverage
           python -m pip install gcovr
-          deactivate
         shell: bash
 
       - name: install cmake
         run: |
-          apt update -y
-          apt install -y cmake
+          pip install cmake
         shell: bash
 
       - name: Build and Test Project
