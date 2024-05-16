@@ -1,88 +1,92 @@
-cell-list               false
-cell-number             false
+cell-list                   false
+cell-number                 false
 
-shake                   false
-shake-tolerance         false
-shake-iter              false
-rattle-iter             false
-rattle-tolerance        false
-distance-constraints    false
+shake                       false
+shake-tolerance             false
+shake-iter                  false
+rattle-iter                 false
+rattle-tolerance            false
+distance-constraints        false
 
-long_range              false
-wolf_param              false
+long_range                  false
+wolf_param                  false
 
-force-field             false
+force-field                 false
 
-jobtype                 true       
-start_file              true
-rpmd_start_file         false
-moldescriptor_file      false
-guff_path               false
-guff_file               false
-topology_file           false
-parameter_file          false
-intra-nonBonded_file    false
-dim                     false
+jobtype                     true       
+start_file                  true
+rpmd_start_file             false
+moldescriptor_file          false
+guff_path                   false
+guff_file                   false
+topology_file               false
+parameter_file              false
+intra-nonBonded_file        false
+dim                         false
 
-integrator              false
+integrator                  false
 
-manostat                false
-pressure                false
-p_relaxation            false
-compressibility         false
-isotropy                false
+manostat                    false
+pressure                    false
+p_relaxation                false
+compressibility             false
+isotropy                    false
 
-thermostat              false
-temp                    false
-t_relaxation            false
-friction                false
-nh-chain_length         false
-coupling_frequency      false
+thermostat                  false
+temp                        false
+stat_temp                   false
+end_temp                    false
+temperature_ramp_steps      false
+temperature_ramp_frequency  false
+t_relaxation                false
+friction                    false
+nh-chain_length             false
+coupling_frequency          false
 
-noncoulomb              false
+noncoulomb                  false
 
-output_freq             false
-file_prefix             false
-output_file             false
-info_file               false
-energy_file             false
-instant_energy_file     false
-traj_file               false
-vel_file                false
-restart_file            false
-charge_file             false
-force_file              false
-virial_file             false
-stress_file             false
-momentum_file           false
-box_file                false
+output_freq                 false
+file_prefix                 false
+output_file                 false
+info_file                   false
+energy_file                 false
+instant_energy_file         false
+traj_file                   false
+vel_file                    false
+restart_file                false
+charge_file                 false
+force_file                  false
+virial_file                 false
+stress_file                 false
+momentum_file               false
+box_file                    false
 
-rpmd_restart_file       false
-rpmd_traj_file          false
-rpmd_vel_file           false
-rpmd_force_file         false
-rpmd_charge_file        false
-rpmd_energy_file        false
+rpmd_restart_file           false
+rpmd_traj_file              false
+rpmd_vel_file               false
+rpmd_force_file             false
+rpmd_charge_file            false
+rpmd_energy_file            false
 
-nscale                  false
-fscale                  false
-nreset                  false
-freset                  false
-nreset_angular          false
-freset_angular          false
+nscale                      false
+fscale                      false
+nreset                      false
+freset                      false
+nreset_angular              false
+freset_angular              false
 
-rcoulomb                false
-density                 false
-init_velocities         false
+rcoulomb                    false
+density                     false
+init_velocities             false
 
-timestep                true
-nstep                   true
+timestep                    true
+nstep                       true
 
-virial                  false
+virial                      false
 
-qm_prog                 false
-qm_script               false
-qm_script_full_path     false
-qm_loop_time_limit      false
+qm_prog                     false
+qm_script                   false
+qm_script_full_path         false
+qm_loop_time_limit          false
 
-rpmd_n_replica          false
+rpmd_n_replica              false
