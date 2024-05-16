@@ -35,14 +35,14 @@ jobs:
 
       - name: install cmake
         run: |
-          apt update -y
-          apt install -y cmake
+          apt-get update -y
+          apt-get install -y cmake
         shell: bash
 
       - name: install gcov-13
         run: |
-          apt update -y
-          apt install -y gcov
+          apt-get update -y
+          apt-get install -y gcov
         shell: bash
 
       - name: Build and Test Project
