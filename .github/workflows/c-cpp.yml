@@ -37,12 +37,18 @@ jobs:
 
       - name: Build and Test Project
         run: |
+          python -m venv venv  # Create a virtual environment
+          source venv/bin/activate  # Activate the virtual environment
+
           git config --global --add safe.directory '*'
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
           make -j20
           make coverage_xml
+
+          deactivate  # Deactivate the virtual environment
+        shell: bash
         env:
           CC: gcc
           CXX: g++
