@@ -22,7 +22,8 @@
 
 #include "thermostat.hpp"
 
-#include "physicalData.hpp"
+#include "physicalData.hpp"         // for physicalData::PhysicalData
+#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
 
 namespace simulationBox
 {
@@ -53,9 +54,13 @@ void Thermostat::applyThermostat(
  */
 void Thermostat::applyTemperatureRamping()
 {
-    if (_rampingStepsLeft > 0 && _rampingStepsLeft % _rampingFrequency == 0)
+    if (_rampingStepsLeft > 0 &&
+        (_rampingStepsLeft - 1) % _rampingFrequency == 0)
     {
         setTargetTemperature(_targetTemperature + _temperatureIncrease);
+        settings::ThermostatSettings::setActualTargetTemperature(
+            _targetTemperature
+        );
     }
 
     if (_rampingStepsLeft > 0)

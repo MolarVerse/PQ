@@ -72,6 +72,7 @@ namespace settings
         static inline size_t _temperatureRampFrequency = 1;
 
         static inline double _targetTemperature;
+        static inline double _actualTargetTemperature;   // for reset kinetics
         static inline double _startTemperature;
         static inline double _endTemperature;
 
@@ -90,14 +91,17 @@ namespace settings
         ~ThermostatSettings() = default;
 
         static void setThermostatType(const std::string_view &thermostatType);
-        static void setThermostatType(const ThermostatType &thermostatType)
-        {
-            _thermostatType = thermostatType;
-        }
 
         /***************************
          * standard setter methods *
          ***************************/
+
+        // ThermostatType setters
+
+        static void setThermostatType(const ThermostatType &thermostatType)
+        {
+            _thermostatType = thermostatType;
+        }
 
         // size_t setters
 
@@ -139,6 +143,14 @@ namespace settings
         {
             _targetTemperature = targetTemperature;
             setTemperatureSet(true);
+            setActualTargetTemperature(targetTemperature);
+        }
+
+        static void setActualTargetTemperature(
+            const double actualTargetTemperature
+        )
+        {
+            _actualTargetTemperature = actualTargetTemperature;
         }
 
         static void setStartTemperature(const double startTemperature)
@@ -225,6 +237,11 @@ namespace settings
         [[nodiscard]] static double getTargetTemperature()
         {
             return _targetTemperature;
+        }
+
+        [[nodiscard]] static double getActualTargetTemperature()
+        {
+            return _actualTargetTemperature;
         }
 
         [[nodiscard]] static double getStartTemperature()

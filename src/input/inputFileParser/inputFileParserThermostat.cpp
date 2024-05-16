@@ -61,12 +61,12 @@ InputFileParserThermostat::InputFileParserThermostat(engine::Engine &engine)
     );
     addKeyword(
         std::string("start_temp"),
-        bind_front(&InputFileParserThermostat::parseTemperature, this),
+        bind_front(&InputFileParserThermostat::parseStartTemperature, this),
         false
     );
     addKeyword(
         std::string("end_temp"),
-        bind_front(&InputFileParserThermostat::parseTemperature, this),
+        bind_front(&InputFileParserThermostat::parseEndTemperature, this),
         false
     );
     addKeyword(

@@ -101,6 +101,9 @@ TEST_F(TestThermostat, applyTemperatureRamping)
     _thermostat->setTargetTemperature(300.0);
 
     _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+
+    _thermostat->applyTemperatureRamping();
     EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
 
     _thermostat->applyTemperatureRamping();

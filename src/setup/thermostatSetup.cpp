@@ -297,6 +297,10 @@ void ThermostatSetup::setupTemperatureRamp()
         ThermostatSettings::getStartTemperature()
     );
 
+    ThermostatSettings::setActualTargetTemperature(
+        ThermostatSettings::getStartTemperature()
+    );
+
     auto steps = ThermostatSettings::getTemperatureRampSteps();
 
     /*************************************************************
