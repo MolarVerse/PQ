@@ -58,6 +58,7 @@ namespace thermostat
 
         double _temperatureIncrease = 0.0;
         size_t _rampingStepsLeft    = 0;
+        size_t _rampingFrequency    = 0;
 
        public:
         Thermostat() = default;
@@ -94,6 +95,37 @@ namespace thermostat
         void setTemperatureRampingSteps(const size_t steps)
         {
             _rampingStepsLeft = steps;
+        }
+
+        void setTemperatureRampingFrequency(const size_t frequency)
+        {
+            _rampingFrequency = frequency;
+        }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] double getTemperature() const { return _temperature; }
+
+        [[nodiscard]] double getTargetTemperature() const
+        {
+            return _targetTemperature;
+        }
+
+        [[nodiscard]] double getTemperatureIncrease() const
+        {
+            return _temperatureIncrease;
+        }
+
+        [[nodiscard]] size_t getRampingStepsLeft() const
+        {
+            return _rampingStepsLeft;
+        }
+
+        [[nodiscard]] size_t getRampingFrequency() const
+        {
+            return _rampingFrequency;
         }
     };
 

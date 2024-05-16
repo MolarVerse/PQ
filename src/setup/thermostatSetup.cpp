@@ -322,8 +322,8 @@ void ThermostatSetup::setupTemperatureRamp()
 
     if (frequency > steps)
         throw customException::InputFileException(std::format(
-            "Temperature ramp frequency {} is larger than the number of steps "
-            "{}",
+            "Temperature ramp frequency {} is larger than the number of "
+            "ramping steps {}",
             frequency,
             steps
         ));
@@ -331,9 +331,10 @@ void ThermostatSetup::setupTemperatureRamp()
     const auto temperatureIncrease =
         (ThermostatSettings::getTargetTemperature() -
          ThermostatSettings::getStartTemperature()) /
-        double(steps);
+        double(steps) * frequency;
 
     _engine.getThermostat().setTemperatureIncrease(temperatureIncrease);
+    _engine.getThermostat().setTemperatureRampingFrequency(frequency);
 
     /****************************************************
      * Writing Temperature Ramp Information to Log File *

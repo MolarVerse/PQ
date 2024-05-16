@@ -53,9 +53,13 @@ void Thermostat::applyThermostat(
  */
 void Thermostat::applyTemperatureRamping()
 {
-    if (_rampingStepsLeft > 0)
+    if (_rampingStepsLeft > 0 && _rampingStepsLeft % _rampingFrequency == 0)
     {
         setTargetTemperature(_targetTemperature + _temperatureIncrease);
+    }
+
+    if (_rampingStepsLeft > 0)
+    {
         --_rampingStepsLeft;
     }
 }

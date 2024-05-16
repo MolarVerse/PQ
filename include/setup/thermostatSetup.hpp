@@ -55,6 +55,8 @@ namespace setup
         void setupLangevinThermostat();
         void setupNoseHooverThermostat();
         void setupVelocityRescalingThermostat();
+
+        [[nodiscard]] engine::Engine &getEngine() const { return _engine; }
     };
 
 }   // namespace setup
