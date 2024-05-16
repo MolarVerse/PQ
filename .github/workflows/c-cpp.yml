@@ -30,7 +30,7 @@ jobs:
 
       - name: install cmake
         run: |
-          pip install cmake
+          pythom -m pip install cmake
         shell: bash
 
       - name: Build and Test Project
