@@ -70,12 +70,12 @@ InputFileParserThermostat::InputFileParserThermostat(engine::Engine &engine)
         false
     );
     addKeyword(
-        std::string("temperature_ramp_steps"),
+        std::string("temp_ramp_steps"),
         bind_front(&InputFileParserThermostat::parseTemperatureRampSteps, this),
         false
     );
     addKeyword(
-        std::string("temperature_ramp_frequency"),
+        std::string("temp_ramp_frequency"),
         bind_front(
             &InputFileParserThermostat::parseTemperatureRampFrequency,
             this

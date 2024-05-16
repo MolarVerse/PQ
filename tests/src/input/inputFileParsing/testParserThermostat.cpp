@@ -207,7 +207,7 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
 }
 
 /**
- * @brief tests parsing the "temperature_ramp_steps" command
+ * @brief tests parsing the "temp_ramp_steps" command
  *
  * @details if the number of steps is negative it throws inputFileException
  *
@@ -215,15 +215,11 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
     InputFileParserThermostat parser(*_engine);
-    std::vector<std::string>  lineElements = {
-        "temperature_ramp_steps",
-        "=",
-        "10"
-    };
+    std::vector<std::string>  lineElements = {"temp_ramp_steps", "=", "10"};
     parser.parseTemperatureRampSteps(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
 
-    lineElements = {"temperature_ramp_steps", "=", "-10"};
+    lineElements = {"temp_ramp_steps", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampSteps(lineElements, 0),
         customException::InputFileException,
@@ -232,7 +228,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 }
 
 /**
- * @brief tests parsing the "temperature_ramp_frequency" command
+ * @brief tests parsing the "temp_ramp_frequency" command
  *
  * @details if the frequency is negative it throws inputFileException
  *
@@ -240,15 +236,11 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
     InputFileParserThermostat parser(*_engine);
-    std::vector<std::string>  lineElements = {
-        "temperature_ramp_frequency",
-        "=",
-        "10"
-    };
+    std::vector<std::string>  lineElements = {"temp_ramp_frequency", "=", "10"};
     parser.parseTemperatureRampFrequency(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
 
-    lineElements = {"temperature_ramp_frequency", "=", "-10"};
+    lineElements = {"temp_ramp_frequency", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampFrequency(lineElements, 0),
         customException::InputFileException,

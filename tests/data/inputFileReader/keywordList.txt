@@ -36,8 +36,8 @@ thermostat                  false
 temp                        false
 stat_temp                   false
 end_temp                    false
-temperature_ramp_steps      false
-temperature_ramp_frequency  false
+temp_ramp_steps             false
+temp_ramp_frequency         false
 t_relaxation                false
 friction                    false
 nh-chain_length             false
