@@ -53,6 +53,8 @@ namespace timings
         Time _end;
 
       public:
+        [[nodiscard]] double calculateTotalSimulationTime(const size_t step) const;
+
         void beginTimer() { _start = std::chrono::high_resolution_clock::now(); }
         void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
 

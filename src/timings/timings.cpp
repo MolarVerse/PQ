@@ -21,3 +21,18 @@
 ******************************************************************************/
 
 #include "timings.hpp"
+
+#include "timingsSettings.hpp"
+
+using namespace timings;
+
+/**
+ * @brief calculates the total simulation time in fs
+ *
+ */
+double Timings::calculateTotalSimulationTime(const size_t step) const
+{
+    const auto totalSteps = step + _stepCount;
+
+    return totalSteps * settings::TimingsSettings::getTimeStep();
+}

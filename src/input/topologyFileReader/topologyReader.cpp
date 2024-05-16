@@ -22,17 +22,18 @@
 
 #include "topologyReader.hpp"
 
-#include "angleSection.hpp"              // for AngleSection
-#include "bondSection.hpp"               // for BondSection
-#include "constraints.hpp"               // for Constraints
-#include "dihedralSection.hpp"           // for DihedralSection
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for InputFileException, TopologyException
-#include "fileSettings.hpp"              // for FileSettings
-#include "forceFieldSettings.hpp"        // for ForceFieldSettings
-#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "shakeSection.hpp"              // for ShakeSection
-#include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
+#include "angleSection.hpp"                 // for AngleSection
+#include "bondSection.hpp"                  // for BondSection
+#include "constraints.hpp"                  // for Constraints
+#include "dihedralSection.hpp"              // for DihedralSection
+#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
+#include "engine.hpp"                       // for Engine
+#include "exceptions.hpp"                   // for InputFileException, TopologyException
+#include "fileSettings.hpp"                 // for FileSettings
+#include "forceFieldSettings.hpp"           // for ForceFieldSettings
+#include "improperDihedralSection.hpp"      // for ImproperDihedralSection
+#include "shakeSection.hpp"                 // for ShakeSection
+#include "stringUtilities.hpp"              // for removeComments, splitString, toLowerCopy
 
 #include <string>   // for string, basic_string, operator==, operator!=
 #include <vector>   // for vector
@@ -56,6 +57,7 @@ TopologyReader::TopologyReader(const std::string &filename, engine::Engine &engi
     _topologySections.push_back(std::make_unique<AngleSection>());
     _topologySections.push_back(std::make_unique<DihedralSection>());
     _topologySections.push_back(std::make_unique<ImproperDihedralSection>());
+    _topologySections.push_back(std::make_unique<DistanceConstraintsSection>());
 }
 
 /**

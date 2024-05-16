@@ -22,6 +22,8 @@
 
 #include "mmmdEngine.hpp"
 
+#include <memory>   // for unique_ptr
+
 #include "celllist.hpp"          // for CellList
 #include "constraints.hpp"       // for Constraints
 #include "engineOutput.hpp"      // for engine
@@ -34,8 +36,6 @@
 #include "resetKinetics.hpp"     // for ResetKinetics
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
-
-#include <memory>   // for unique_ptr
 
 using namespace engine;
 
@@ -78,6 +78,12 @@ void MMMDEngine::takeStep()
 
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
+    _constraints.applyDistanceConstraints(
+        _simulationBox,
+        _physicalData,
+        _timings.calculateTotalSimulationTime(_step)
+    );
+
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
@@ -95,4 +101,6 @@ void MMMDEngine::takeStep()
     _manostat->applyManostat(_simulationBox, _physicalData);
 
     _resetKinetics.reset(_step, _physicalData, _simulationBox);
+
+    _thermostat->applyTemperatureRamping();
 }

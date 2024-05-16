@@ -24,16 +24,24 @@
 
 #define _TEST_SETUP_H_
 
-#include "engine.hpp"
-
 #include <gtest/gtest.h>
+
+#include "engine.hpp"
+#include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override { _engine = new engine::Engine(); }
 
     engine::Engine *_engine;
+
+    void TearDown() override
+    {
+        settings::ThermostatSettings::setEndTemperatureSet(false);
+        settings::ThermostatSettings::setStartTemperatureSet(false);
+        settings::ThermostatSettings::setTemperatureSet(false);
+    }
 };
 
 #endif

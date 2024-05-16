@@ -51,7 +51,7 @@ void Constraints::calculateConstraintBondRefs(const simulationBox::SimulationBox
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
-    if (!_activated)
+    if (!_shakeActivated)
         return;
 
     std::vector<bool> convergedVector;
@@ -85,7 +85,7 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
  */
 void Constraints::applyRattle()
 {
-    if (!_activated)
+    if (!_shakeActivated)
         return;
 
     std::vector<bool> convergedVector;
@@ -110,4 +110,39 @@ void Constraints::applyRattle()
     if (!converged)
         throw customException::ShakeException(
             std::format("Rattle algorithm did not converge for {} bonds.", std::ranges::count(convergedVector, false)));
+}
+
+/**
+ * @brief applies the distance constraints to all distance constraints
+ *
+ * @param simulationBox
+ * @param time
+ *
+ */
+void Constraints::applyDistanceConstraints(const simulationBox::SimulationBox &simulationBox,
+                                           physicalData::PhysicalData         &data,
+                                           const double                        time)
+{
+    if (!_distanceConstraintsActivated)
+        return;
+
+    auto effective_time = time - _startTime;
+
+    effective_time = effective_time > 0.0 ? effective_time : -1.0;
+
+    std::ranges::for_each(_distanceConstraints,
+                          [&simulationBox, effective_time](auto &distanceConstraint)
+                          { distanceConstraint.applyDistanceConstraint(simulationBox, effective_time); });
+
+    auto lowerEnergy = 0.0;
+    auto upperEnergy = 0.0;
+
+    std::ranges::for_each(_distanceConstraints,
+                          [&lowerEnergy](const auto &distanceConstraint) { lowerEnergy += distanceConstraint.getLowerEnergy(); });
+
+    std::ranges::for_each(_distanceConstraints,
+                          [&upperEnergy](const auto &distanceConstraint) { upperEnergy += distanceConstraint.getUpperEnergy(); });
+
+    data.setLowerDistanceConstraints(lowerEnergy);
+    data.setUpperDistanceConstraints(upperEnergy);
 }

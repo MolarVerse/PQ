@@ -20,45 +20,35 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_SETUP_HPP_
+#ifndef _DISTANCE_CONSTRAINTS_SECTION_HPP_
 
-#define _THERMOSTAT_SETUP_HPP_
+#define _DISTANCE_CONSTRAINTS_SECTION_HPP_
+
+#include "topologySection.hpp"   // for TopologySection
+
+#include <string>   // for allocator, string
+#include <vector>   // for vector
 
 namespace engine
 {
     class Engine;   // forward declaration
 }
 
-namespace setup
+namespace input::topology
 {
-    void setupThermostat(engine::Engine &);
-
     /**
-     * @class ThermostatSetup
+     * @class DistanceConstraintsSection
      *
-     * @brief this class setups up the thermostat for the simulation
+     * @brief reads the distance constraints section of the topology file
      *
      */
-    class ThermostatSetup
+    class DistanceConstraintsSection : public TopologySection
     {
-       private:
-        engine::Engine &_engine;
-
-       public:
-        explicit ThermostatSetup(engine::Engine &engine) : _engine(engine){};
-
-        void setup();
-
-        void isTargetTemperatureSet() const;
-        void setupTemperatureRamp();
-        void setupBerendsenThermostat();
-        void setupLangevinThermostat();
-        void setupNoseHooverThermostat();
-        void setupVelocityRescalingThermostat();
-
-        [[nodiscard]] engine::Engine &getEngine() const { return _engine; }
+      public:
+        [[nodiscard]] std::string keyword() override { return "dist_constraints"; }
+        void                      processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
+        void                      endedNormally(bool) const override;
     };
+}   // namespace input::topology
 
-}   // namespace setup
-
-#endif   // _THERMOSTAT_SETUP_HPP_
+#endif   // _DISTANCE_CONSTRAINTS_SECTION_HPP_

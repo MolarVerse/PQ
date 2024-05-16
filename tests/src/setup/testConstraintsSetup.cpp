@@ -41,7 +41,7 @@ TEST_F(TestSetup, setupConstraintTolerances)
     settings::ConstraintSettings::setShakeTolerance(1e-6);
     settings::ConstraintSettings::setRattleTolerance(1e-6);
 
-    _engine->getConstraints().activate();
+    _engine->getConstraints().activateShake();
 
     ConstraintsSetup constraintsSetup(*_engine);
     constraintsSetup.setup();
@@ -59,7 +59,7 @@ TEST_F(TestSetup, setupConstraintMaxIter)
     settings::ConstraintSettings::setShakeMaxIter(100);
     settings::ConstraintSettings::setRattleMaxIter(100);
 
-    _engine->getConstraints().activate();
+    _engine->getConstraints().activateShake();
 
     ConstraintsSetup constraintsSetup(*_engine);
     constraintsSetup.setup();
@@ -76,11 +76,11 @@ TEST_F(TestSetup, setupConstraints)
 {
     settings::ConstraintSettings::setShakeTolerance(999.0);
 
-    _engine->getConstraints().deactivate();
+    _engine->getConstraints().deactivateShake();
     EXPECT_NO_THROW(setupConstraints(*_engine));
     const auto shakeToleranceDeactivated = _engine->getConstraints().getShakeTolerance();
 
-    _engine->getConstraints().activate();
+    _engine->getConstraints().activateShake();
     EXPECT_NO_THROW(setupConstraints(*_engine));
     const auto shakeToleranceActivated = _engine->getConstraints().getShakeTolerance();
 

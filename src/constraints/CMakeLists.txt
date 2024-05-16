@@ -1,6 +1,7 @@
 add_library(constraints
     constraints.cpp
     bondConstraint.cpp
+    distanceConstraint.cpp
 )
 
 target_include_directories(constraints
@@ -14,6 +15,7 @@ target_link_libraries(constraints
     simulationBox
     linearAlgebra
     settings
+    physicalData
 )
 
 install(TARGETS constraints

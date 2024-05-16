@@ -14,7 +14,7 @@ endif()
 # project initializeation
 # ***********************
 project(PQ
-    DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
+    DESCRIPTION "MolarVerse - PQ"
     LANGUAGES CXX C)
 
 # **************************
@@ -63,7 +63,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 else()
     message("\n   Release with Debug build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 endif()
 
 # add git version as flag

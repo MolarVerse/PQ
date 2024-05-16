@@ -20,4 +20,6 @@ examples/**/perf*
 **/*.charge
 **/*.mom
 
+*.gcov
+
 googletest
