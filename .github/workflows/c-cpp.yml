@@ -19,8 +19,7 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
+          sudo apt install gcc g++
         shell: bash
 
       - name: setup python
