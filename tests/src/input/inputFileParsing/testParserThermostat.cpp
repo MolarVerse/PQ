@@ -120,6 +120,13 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatType::VELOCITY_RESCALING
     );
 
+    lineElements = {"thermostat", "=", "rescale"};
+    parser.parseThermostat(lineElements, 0);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::VELOCITY_RESCALING
+    );
+
     lineElements = {"thermostat", "=", "nh-chain"};
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(
@@ -196,6 +203,90 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
         parser.parseThermostatCouplingFrequency(lineElements, 0),
         customException::InputFileException,
         "Coupling frequency of thermostat cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "temp_ramp_steps" command
+ *
+ * @details if the number of steps is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"temp_ramp_steps", "=", "10"};
+    parser.parseTemperatureRampSteps(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
+
+    lineElements = {"temp_ramp_steps", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseTemperatureRampSteps(lineElements, 0),
+        customException::InputFileException,
+        "Temperature ramp steps cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "temp_ramp_frequency" command
+ *
+ * @details if the frequency is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"temp_ramp_frequency", "=", "10"};
+    parser.parseTemperatureRampFrequency(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
+
+    lineElements = {"temp_ramp_frequency", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseTemperatureRampFrequency(lineElements, 0),
+        customException::InputFileException,
+        "Temperature ramp frequency cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "start_temperature" command
+ *
+ * @details if the start temperature is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseStartTemperature)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"start_temperature", "=", "10"};
+    parser.parseStartTemperature(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
+
+    lineElements = {"start_temperature", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseStartTemperature(lineElements, 0),
+        customException::InputFileException,
+        "Start temperature cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "end_temperature" command
+ *
+ * @details if the end temperature is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseEndTemperature)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"end_temperature", "=", "10"};
+    parser.parseEndTemperature(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
+
+    lineElements = {"end_temperature", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseEndTemperature(lineElements, 0),
+        customException::InputFileException,
+        "End temperature cannot be negative"
     );
 }
 

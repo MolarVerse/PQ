@@ -78,5 +78,7 @@ void QMMDEngine::takeStep()
 
     _resetKinetics.reset(_step, _physicalData, _simulationBox);
 
+    _thermostat->applyTemperatureRamping();
+
     _physicalData.setNumberOfQMAtoms(_simulationBox.getNumberOfQMAtoms());
 }
