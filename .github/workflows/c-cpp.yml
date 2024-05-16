@@ -11,56 +11,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container: gcc:13
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v3
 
+      - name: install gcc13
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
+        shell: bash
+
       - name: setup python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v2
         with:
           python-version: '3.12'
 
       - name: install coverage
         run: |
-          python -m venv venv
-          source venv/bin/activate
-
           python -m pip install coverage
           python -m pip install gcovr
-
-          deactivate
-        shell: bash
-
-      - name: install cmake
-        run: |
-          apt-get update -y
-          apt-get install -y cmake
-        shell: bash
-
-      - name: install gcov-13
-        run: |
-          apt-get update -y
-          apt-get install -y gcovr
         shell: bash
 
       - name: Build and Test Project
         run: |
-          source venv/bin/activate
-
-          git config --global --add safe.directory '*'
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
           make -j20
           make coverage_xml
-
-          deactivate
-        shell: bash
         env:
-          CC: gcc
-          CXX: g++
+          CC: gcc-13
+          CXX: g++-13
 
 
       - name: Upload coverage to Codecov
