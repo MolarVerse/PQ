@@ -12,15 +12,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: gcc:13
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: install gcc13
-        run: |
-          sudo apt update
-          sudo apt install gcc g++
-        shell: bash
 
       - name: setup python
         uses: actions/setup-python@v2
