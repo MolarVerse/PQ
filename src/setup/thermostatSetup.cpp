@@ -38,6 +38,7 @@
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
 #include "thermostat.hpp"                    // for Thermostat
 #include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
+#include "timingsSettings.hpp"      // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 using namespace setup;
@@ -98,12 +99,15 @@ void ThermostatSetup::setup()
     }
 
     _engine.getLogOutput().writeEmptyLine();
+
+    setupTemperatureRamp();
 }
 
 /**
  * @brief check if target temperature is set
  *
- * @throws InputFileException if no temperature was set for the thermostat
+ * @throws InputFileException if neither target nor end temperature is set
+ * @throws InputFileException if both target and end temperature are set
  *
  */
 void ThermostatSetup::isTargetTemperatureSet() const
@@ -266,6 +270,16 @@ void ThermostatSetup::setupNoseHooverThermostat()
     ));
 }
 
+/**
+ * @brief setup temperature ramp
+ *
+ * @details if the start temperature is defined, the temperature ramp is enabled
+ *
+ * @throws InputFileException if the number of steps is smaller than the number
+ * @throws InputFileException if the temperature ramp frequency is larger than
+ * the number of steps
+ *
+ */
 void ThermostatSetup::setupTemperatureRamp()
 {
     /*************************************************************************
@@ -275,9 +289,74 @@ void ThermostatSetup::setupTemperatureRamp()
     if (!ThermostatSettings::isStartTemperatureSet())
         return;
 
+    /*************************************************************
+     * resetting the target temperature to the start temperature *
+     *************************************************************/
+
+    _engine.getThermostat().setTargetTemperature(
+        ThermostatSettings::getStartTemperature()
+    );
+
+    auto steps = ThermostatSettings::getTemperatureRampSteps();
+
+    /*************************************************************
+     * If steps is 0, set the steps to the total number of steps *
+     *************************************************************/
+
+    if (steps == 0)
+    {
+        steps = TimingsSettings::getNumberOfSteps();
+        ThermostatSettings::setTemperatureRampSteps(steps);
+    }
+    else if (steps > TimingsSettings::getNumberOfSteps())
+        throw customException::InputFileException(std::format(
+            "Number of total simulation steps {} is smaller than the number of "
+            "temperature ramping steps {}",
+            TimingsSettings::getNumberOfSteps(),
+            steps
+        ));
+
+    _engine.getThermostat().setTemperatureRampingSteps(steps);
+
+    const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
+
+    if (frequency > steps)
+        throw customException::InputFileException(std::format(
+            "Temperature ramp frequency {} is larger than the number of steps "
+            "{}",
+            frequency,
+            steps
+        ));
+
+    const auto temperatureIncrease =
+        (ThermostatSettings::getTargetTemperature() -
+         ThermostatSettings::getStartTemperature()) /
+        double(steps);
+
+    _engine.getThermostat().setTemperatureIncrease(temperatureIncrease);
+
+    /****************************************************
+     * Writing Temperature Ramp Information to Log File *
+     ****************************************************/
+
+    _engine.getLogOutput().writeEmptyLine();
     _engine.getLogOutput().writeSetupInfo("Temperature Ramp enabled:");
     _engine.getLogOutput().writeSetupInfo(std::format(
         "start temperature:  {:14.5f} K",
         ThermostatSettings::getStartTemperature()
     ));
+    _engine.getLogOutput().writeSetupInfo(std::format(
+        "end temperature:    {:14.5f} K",
+        ThermostatSettings::getTargetTemperature()
+    ));
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("ramping steps:      {:8d}", steps)
+    );
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("ramping frequency:  {:8d}", frequency)
+    );
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("temperature increase: {:10.5f} K", temperatureIncrease)
+    );
+    _engine.getLogOutput().writeEmptyLine();
 }

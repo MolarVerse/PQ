@@ -39,7 +39,23 @@ using thermostat::Thermostat;
  * @param simulationBox
  * @param physicalData
  */
-void Thermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
+void Thermostat::applyThermostat(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
     physicalData.calculateTemperature(simulationBox);
+}
+
+/**
+ * @brief Apply temperature ramping
+ *
+ */
+void Thermostat::applyTemperatureRamping()
+{
+    if (_rampingStepsLeft > 0)
+    {
+        setTargetTemperature(_targetTemperature + _temperatureIncrease);
+        --_rampingStepsLeft;
+    }
 }
