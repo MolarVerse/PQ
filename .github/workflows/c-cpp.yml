@@ -41,8 +41,8 @@ jobs:
           make -j20
           make coverage_xml
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc
+          CXX: g++
 
 
       - name: Upload coverage to Codecov
