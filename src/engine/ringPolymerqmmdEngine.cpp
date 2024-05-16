@@ -68,6 +68,8 @@ void RingPolymerQMMDEngine::takeStep()
 
     qmCalculation();
 
+    _constraints.applyDistanceConstraints(_simulationBox, _physicalData, _timings.calculateTotalSimulationTime(_step));
+
     coupleRingPolymerBeads();
 
     std::ranges::for_each(_ringPolymerBeads,

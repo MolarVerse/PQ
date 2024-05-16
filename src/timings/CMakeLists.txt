@@ -8,6 +8,11 @@ target_include_directories(timings
     ${PROJECT_SOURCE_DIR}/include/timings
 )
 
+target_link_libraries(timings
+    PUBLIC
+    settings
+)
+
 install(TARGETS timings
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

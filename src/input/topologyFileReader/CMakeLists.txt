@@ -7,6 +7,7 @@ add_library(topologyFileReader
     angleSection.cpp
     dihedralSection.cpp
     improperDihedralSection.cpp
+    distanceConstraintsSection.cpp
 )
 
 target_include_directories(topologyFileReader

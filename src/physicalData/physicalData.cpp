@@ -108,6 +108,9 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
     _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
 
+    _lowerDistanceConstraints += physicalData.getLowerDistanceConstraints();
+    _upperDistanceConstraints += physicalData.getUpperDistanceConstraints();
+
     _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
 }
 
@@ -145,6 +148,9 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _noseHooverMomentumEnergy /= outputFrequency;
     _noseHooverFrictionEnergy /= outputFrequency;
 
+    _lowerDistanceConstraints /= outputFrequency;
+    _upperDistanceConstraints /= outputFrequency;
+
     _ringPolymerEnergy /= outputFrequency;
 }
 
@@ -180,6 +186,9 @@ void PhysicalData::reset()
 
     _noseHooverMomentumEnergy = 0.0;
     _noseHooverFrictionEnergy = 0.0;
+
+    _lowerDistanceConstraints = 0.0;
+    _upperDistanceConstraints = 0.0;
 
     _ringPolymerEnergy = 0.0;
 }

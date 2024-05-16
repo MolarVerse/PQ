@@ -2,9 +2,11 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '*'
   pull_request:
-    branches: [main]
+    branches:
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -21,28 +23,34 @@ jobs:
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
         shell: bash
 
-      - name: install gcovr
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: install coverage
         run: |
-          sudo apt-get install gcovr
+          python -m pip install coverage
+          python -m pip install gcovr
         shell: bash
 
-      - name: Create build directory and run CMake
-        run: cmake -S . -B build -G "Unix Makefiles" -DBUILD_WITH_GCOVR=ON
+      - name: Build and Test Project
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
+          make -j20
+          make coverage_xml
         env:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Build Project
-        run: cmake --build build --target all -- -j20
-
-      - name: Test Project
-        run: |
-          cd build
-          make test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
+          fail_ci_if_error: true # optional (default = false)
           gcov: true
           gcov_executable: gcov-13
-          token: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

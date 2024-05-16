@@ -22,37 +22,66 @@
 
 #include "inputFileParserConstraints.hpp"
 
-#include "constraintSettings.hpp"   // for ConstraintSettings
-#include "constraints.hpp"          // for Constraints
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for InputFileException
-
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
+#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "constraints.hpp"          // for Constraints
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Constraints:: Input File Parser Constraints object
+ * @brief Construct a new Input File Parser Constraints:: Input File Parser
+ * Constraints object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) shake <on/off>
- * 2) shake-tolerance <double>
- * 3) shake-iter <size_t>
- * 4) rattle-iter <size_t>
- * 5) rattle-tolerance <double>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) shake <on/off> 2)
+ * shake-tolerance <double> 3) shake-iter <size_t> 4) rattle-iter <size_t> 5)
+ * rattle-tolerance <double>
  *
  * @param engine
  */
-InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("shake"), bind_front(&InputFileParserConstraints::parseShakeActivated, this), false);
-    addKeyword(std::string("shake-tolerance"), bind_front(&InputFileParserConstraints::parseShakeTolerance, this), false);
-    addKeyword(std::string("shake-iter"), bind_front(&InputFileParserConstraints::parseShakeIteration, this), false);
-    addKeyword(std::string("rattle-iter"), bind_front(&InputFileParserConstraints::parseRattleIteration, this), false);
-    addKeyword(std::string("rattle-tolerance"), bind_front(&InputFileParserConstraints::parseRattleTolerance, this), false);
+    addKeyword(
+        std::string("shake"),
+        bind_front(&InputFileParserConstraints::parseShakeActivated, this),
+        false
+    );
+    addKeyword(
+        std::string("shake-tolerance"),
+        bind_front(&InputFileParserConstraints::parseShakeTolerance, this),
+        false
+    );
+    addKeyword(
+        std::string("shake-iter"),
+        bind_front(&InputFileParserConstraints::parseShakeIteration, this),
+        false
+    );
+    addKeyword(
+        std::string("rattle-iter"),
+        bind_front(&InputFileParserConstraints::parseRattleIteration, this),
+        false
+    );
+    addKeyword(
+        std::string("rattle-tolerance"),
+        bind_front(&InputFileParserConstraints::parseRattleTolerance, this),
+        false
+    );
+
+    addKeyword(
+        std::string("distance-constraints"),
+        bind_front(
+            &InputFileParserConstraints::parseDistanceConstraintActivated,
+            this
+        ),
+        false
+    );
 }
 
 /**
@@ -64,20 +93,33 @@ InputFileParserConstraints::InputFileParserConstraints(engine::Engine &engine) :
  *
  * @param lineElements
  *
- * @throws customException::InputFileException if keyword is not valid - currently only on and off are supported
+ * @throws customException::InputFileException if keyword is not valid -
+ * currently only on and off are supported
  */
-void InputFileParserConstraints::parseShakeActivated(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserConstraints::parseShakeActivated(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
+
     if (lineElements[2] == "on")
-        _engine.getConstraints().activate();
+    {
+        _engine.getConstraints().activateShake();
+        settings::ConstraintSettings::activateShake();
+    }
     else if (lineElements[2] == "off")
-        _engine.getConstraints().deactivate();
+    {
+        _engine.getConstraints().deactivateShake();
+        settings::ConstraintSettings::deactivateShake();
+    }
     else
     {
-        auto message = format(R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
-                              lineElements[2],
-                              lineNumber);
+        auto message = format(
+            R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+            lineElements[2],
+            lineNumber
+        );
         throw customException::InputFileException(message);
     }
 }
@@ -91,14 +133,19 @@ void InputFileParserConstraints::parseShakeActivated(const std::vector<std::stri
  *
  * @throw customException::InputFileException if tolerance is negative
  */
-void InputFileParserConstraints::parseShakeTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserConstraints::parseShakeTolerance(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto tolerance = stod(lineElements[2]);
 
     if (tolerance < 0.0)
-        throw customException::InputFileException("Shake tolerance must be positive");
+        throw customException::InputFileException(
+            "Shake tolerance must be positive"
+        );
 
     settings::ConstraintSettings::setShakeTolerance(tolerance);
 }
@@ -112,14 +159,19 @@ void InputFileParserConstraints::parseShakeTolerance(const std::vector<std::stri
  *
  * @throw customException::InputFileException if iteration is negative
  */
-void InputFileParserConstraints::parseShakeIteration(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserConstraints::parseShakeIteration(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto iteration = stoi(lineElements[2]);
 
     if (iteration < 0)
-        throw customException::InputFileException("Maximum shake iterations must be positive");
+        throw customException::InputFileException(
+            "Maximum shake iterations must be positive"
+        );
 
     settings::ConstraintSettings::setShakeMaxIter(size_t(iteration));
 }
@@ -133,14 +185,19 @@ void InputFileParserConstraints::parseShakeIteration(const std::vector<std::stri
  *
  * @throw customException::InputFileException if tolerance is negative
  */
-void InputFileParserConstraints::parseRattleTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserConstraints::parseRattleTolerance(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto tolerance = stod(lineElements[2]);
 
     if (tolerance < 0.0)
-        throw customException::InputFileException("Rattle tolerance must be positive");
+        throw customException::InputFileException(
+            "Rattle tolerance must be positive"
+        );
 
     settings::ConstraintSettings::setRattleTolerance(tolerance);
 }
@@ -154,14 +211,60 @@ void InputFileParserConstraints::parseRattleTolerance(const std::vector<std::str
  *
  * @throw customException::InputFileException if iteration is negative
  */
-void InputFileParserConstraints::parseRattleIteration(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserConstraints::parseRattleIteration(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto iteration = stoi(lineElements[2]);
 
     if (iteration < 0)
-        throw customException::InputFileException("Maximum rattle iterations must be positive");
+        throw customException::InputFileException(
+            "Maximum rattle iterations must be positive"
+        );
 
     settings::ConstraintSettings::setRattleMaxIter(size_t(iteration));
+}
+
+/**
+ * @brief parsing if distance constraint is activated
+ *
+ * @details Possible options are:
+ * 1) "on"  - distance constraint is activated
+ * 2) "off" - distance constraint is deactivated (default)
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if keyword is not valid -
+ * currently only on and off are supported
+ */
+void InputFileParserConstraints::parseDistanceConstraintActivated(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    if (lineElements[2] == "on")
+    {
+        _engine.getConstraints().activateDistanceConstraints();
+        settings::ConstraintSettings::activateDistanceConstraints();
+    }
+    else if (lineElements[2] == "off")
+    {
+        _engine.getConstraints().deactivateDistanceConstraints();
+        settings::ConstraintSettings::deactivateDistanceConstraints();
+    }
+    else
+    {
+        auto message = format(
+            R"(Invalid {} keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+            lineElements[0],
+            lineElements[2],
+            lineNumber
+        );
+        throw customException::InputFileException(message);
+    }
 }

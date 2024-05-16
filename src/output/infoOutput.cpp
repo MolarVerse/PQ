@@ -22,6 +22,7 @@
 
 #include "infoOutput.hpp"
 
+#include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
@@ -99,6 +100,12 @@ void InfoOutput::write(const double simulationTime, const double loopTime, const
     {
         writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH-MOMENTUM)", "kcal/mol");
         writeRight(data.getNoseHooverFrictionEnergy(), "E(NH-FRICTION)", "kcal/mol");
+    }
+
+    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    {
+        writeLeft(data.getLowerDistanceConstraints(), "LOWER-DIST-CONSTR", "kcal/mol");
+        writeRight(data.getUpperDistanceConstraints(), "UPPER-DIST-CONSTR", "kcal/mol");
     }
 
     writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");

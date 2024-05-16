@@ -6,6 +6,7 @@ shake-tolerance         false
 shake-iter              false
 rattle-iter             false
 rattle-tolerance        false
+distance-constraints    false
 
 long_range              false
 wolf_param              false

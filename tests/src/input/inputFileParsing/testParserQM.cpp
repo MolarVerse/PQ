@@ -20,16 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
+
+#include <string>   // for string, allocator
+
 #include "exceptions.hpp"            // for InputFileException, customException
+#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "inputFileParser.hpp"       // for readInput
 #include "inputFileParserQM.hpp"     // for InputFileParserQM
 #include "qmSettings.hpp"            // for QMSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
-#include <string>          // for string, allocator
 
 using namespace input;
 
@@ -39,11 +40,26 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     auto parser = InputFileParserQM(*_engine);
     parser.parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), settings::QMMethod::DFTBPLUS);
+    EXPECT_EQ(
+        settings::QMSettings::getQMMethod(),
+        settings::QMMethod::DFTBPLUS
+    );
 
-    ASSERT_THROW_MSG(parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
-                     customException::InputFileException,
-                     "Invalid qm_prog \"notAMethod\" in input file - possible values are: dftbplus, pyscf, turbomole")
+    parser.parseQMMethod({"qm_prog", "=", "pyscf"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), settings::QMMethod::PYSCF);
+
+    parser.parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
+    EXPECT_EQ(
+        settings::QMSettings::getQMMethod(),
+        settings::QMMethod::TURBOMOLE
+    );
+
+    ASSERT_THROW_MSG(
+        parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
+        customException::InputFileException,
+        "Invalid qm_prog \"notAMethod\" in input file - possible values are: "
+        "dftbplus, pyscf, turbomole"
+    )
 }
 
 TEST_F(TestInputFileReader, parseQMScript)
@@ -51,6 +67,19 @@ TEST_F(TestInputFileReader, parseQMScript)
     auto parser = InputFileParserQM(*_engine);
     parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
+}
+
+TEST_F(TestInputFileReader, parseQMScriptFullPath)
+{
+    auto parser = InputFileParserQM(*_engine);
+    parser.parseQMScriptFullPath(
+        {"qm_script_full_path", "=", "/path/to/script.sh"},
+        0
+    );
+    EXPECT_EQ(
+        settings::QMSettings::getQMScriptFullPath(),
+        "/path/to/script.sh"
+    );
 }
 
 int main(int argc, char **argv)

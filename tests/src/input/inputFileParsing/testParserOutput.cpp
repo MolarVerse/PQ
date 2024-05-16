@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
 #include "exceptions.hpp"              // for InputFileException
+#include "gtest/gtest.h"               // for Message, TestPartResult
 #include "inputFileParser.hpp"         // for readInput
 #include "inputFileParserOutput.hpp"   // for InputFileParserOutput
 #include "outputFileSettings.hpp"      // for OutputFileSettings
 #include "testInputFileReader.hpp"     // for TestInputFileReader
 #include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
@@ -48,9 +49,28 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), 1000);
 
     lineElements = {"outputfreq", "=", "-1000"};
-    EXPECT_THROW_MSG(parser.parseOutputFreq(lineElements, 0),
-                     customException::InputFileException,
-                     "Output frequency cannot be negative - \"-1000\" at line 0 in input file");
+    EXPECT_THROW_MSG(
+        parser.parseOutputFreq(lineElements, 0),
+        customException::InputFileException,
+        "Output frequency cannot be negative - \"-1000\" at line 0 in input "
+        "file"
+    );
+}
+
+/**
+ * @brief tests parsing the "file_prefix" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseFilePrefix)
+{
+    InputFileParserOutput          parser(*_engine);
+    const std::vector<std::string> lineElements = {
+        "file_prefix",
+        "=",
+        "prefix"
+    };
+    parser.parseFilePrefix(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getFilePrefix(), "prefix");
 }
 
 /**
@@ -93,6 +113,26 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
 }
 
 /**
+ * @brief tests parsing the "instant_energy_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "instant_energy.txt";
+    const std::vector<std::string> lineElements = {
+        "instantEnergyFilename",
+        "=",
+        _fileName
+    };
+    parser.parseInstantEnergyFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getInstantEnergyFileName(),
+        _fileName
+    );
+}
+
+/**
  * @brief tests parsing the "traj_file" command
  *
  */
@@ -100,7 +140,11 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
     InputFileParserOutput parser(*_engine);
     _fileName                             = "trajectory.xyz";
-    std::vector<std::string> lineElements = {"trajectoryFilename", "=", _fileName};
+    std::vector<std::string> lineElements = {
+        "trajectoryFilename",
+        "=",
+        _fileName
+    };
     parser.parseTrajectoryFilename(lineElements, 0);
     EXPECT_EQ(settings::OutputFileSettings::getTrajectoryFileName(), _fileName);
 }
@@ -113,7 +157,11 @@ TEST_F(TestInputFileReader, testVelocityFilename)
 {
     InputFileParserOutput parser(*_engine);
     _fileName                             = "velocity.xyz";
-    std::vector<std::string> lineElements = {"velocityFilename", "=", _fileName};
+    std::vector<std::string> lineElements = {
+        "velocityFilename",
+        "=",
+        _fileName
+    };
     parser.parseVelocityFilename(lineElements, 0);
     EXPECT_EQ(settings::OutputFileSettings::getVelocityFileName(), _fileName);
 }
@@ -155,6 +203,190 @@ TEST_F(TestInputFileReader, testChargeFilename)
     std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
     EXPECT_EQ(settings::OutputFileSettings::getChargeFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "momentum_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testMomentumFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "momentum.xyz";
+    const std::vector<std::string> lineElements = {
+        "momentumFilename",
+        "=",
+        _fileName
+    };
+    parser.parseMomentumFilename(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getMomentumFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "virial_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testVirialFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "viri.xyz";
+    const std::vector<std::string> lineElements = {
+        "viriFilename",
+        "=",
+        _fileName
+    };
+    parser.parseVirialFilename(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getVirialFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "stress_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testStressFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "stress.xyz";
+    const std::vector<std::string> lineElements = {
+        "stress_file",
+        "=",
+        _fileName
+    };
+    parser.parseStressFilename(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getStressFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "box_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testBoxFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "box.xyz";
+    const std::vector<std::string> lineElements = {"box_file", "=", _fileName};
+    parser.parseBoxFilename(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getBoxFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "rpmd_traj_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_traj.xyz";
+    const std::vector<std::string> lineElements = {
+        "rpmd_traj_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDTrajectoryFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerTrajectoryFileName(),
+        _fileName
+    );
+}
+
+/**
+ * @brief tests parsing the "rpmd_restart_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDRestartFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_traj.xyz";
+    const std::vector<std::string> lineElements = {
+        "rpmd_restart_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDRestartFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerRestartFileName(),
+        _fileName
+    );
+}
+
+/**
+ * @brief tests parsing the "rpmd_energy_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDEnergyFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_energy.txt";
+    const std::vector<std::string> lineElements = {
+        "rpmd_energy_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDEnergyFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerEnergyFileName(),
+        _fileName
+    );
+}
+
+/**
+ * @brief tests parsing the "rpmd_force_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDForceFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_force.xyz";
+    const std::vector<std::string> lineElements = {
+        "rpmd_force_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDForceFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerForceFileName(),
+        _fileName
+    );
+}
+
+/**
+ * @brief tests parsing the "rpmd_charge_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDChargeFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_charge.xyz";
+    const std::vector<std::string> lineElements = {
+        "rpmd_charge_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDChargeFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerChargeFileName(),
+        _fileName
+    );
+}
+
+/**
+ * @brief tests parsing the "rpmd_velocity_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testRPMDVelocityFilename)
+{
+    InputFileParserOutput parser(*_engine);
+    _fileName                                   = "rpmd_velocity.xyz";
+    const std::vector<std::string> lineElements = {
+        "rpmd_velocity_file",
+        "=",
+        _fileName
+    };
+    parser.parseRPMDVelocityFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::OutputFileSettings::getRingPolymerVelocityFileName(),
+        _fileName
+    );
 }
 
 int main(int argc, char **argv)
