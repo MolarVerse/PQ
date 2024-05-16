@@ -113,6 +113,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#temperature-coupling-keys">Temperature Coupling Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#temperature">Temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#start-temperature">Start_Temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#end-temperature">End_Temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-steps">Temperature_Ramp_Steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-frequency">Temperature_Ramp_Frequency</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#thermostat">Thermostat</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#t-relaxation">T_Relaxation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#friction">Friction</a></li>
@@ -143,6 +147,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#shake-iter">Shake-Iter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rattle-tolerance">Rattle-Tolerance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rattle-iter">Rattle-Iter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distance-constraints">Distance-Constraints</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#mm-keys">MM Keys</a><ul>
@@ -649,14 +654,48 @@
 <h3>Temperature<a class="headerlink" href="#temperature" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>temperature = {double} K</p>
+<p>temp = {double} K</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">temperature</span></code> keyword the target temperature in <code class="code docutils literal notranslate"><span class="pre">K</span></code> of the system can be set.</p>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword the target temperature in <code class="code docutils literal notranslate"><span class="pre">K</span></code> of the system can be set.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This keyword is not restricted to the use of any temperature coupling method, as it is used <em>e.g.</em> also for the initialization of Boltzmann distributed velocities or the reset of the system temperature.</p>
 </div>
 </section>
+<section id="start-temperature">
+<h3>Start_Temperature<a class="headerlink" href="#start-temperature" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>start_temp = {double} K</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> keyword the initial temperature in <code class="code docutils literal notranslate"><span class="pre">K</span></code> of the system can be set. If a value is given the PQ application will perform a temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value.</p>
+</section>
+<section id="end-temperature">
+<h3>End_Temperature<a class="headerlink" href="#end-temperature" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>end_temp = {double} K</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">end_temp</span></code> keyword is a synonym for the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword and can be used to set the target temperature of the system. It cannot be used in combination with the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword.</p>
+</section>
+<section id="temperature-ramp-steps">
+<h3>Temperature_Ramp_Steps<a class="headerlink" href="#temperature-ramp-steps" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>temp_ramp_steps = {uint+}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">temp_ramp_steps</span></code> keyword the user can specify the number of steps for the temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.</p>
+<p class="centered">
+<strong><em>default value</em> = full simulation time</strong></p></section>
+<section id="temperature-ramp-frequency">
+<h3>Temperature_Ramp_Frequency<a class="headerlink" href="#temperature-ramp-frequency" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>temp_ramp_freq = {uint+} -&gt; 1</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">temp_ramp_freq</span></code> keyword the user can specify the frequency of the temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.</p>
+<p class="centered">
+<strong><em>default value</em> = 1 step</strong></p></section>
 <section id="thermostat">
 <h3>Thermostat<a class="headerlink" href="#thermostat" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -912,6 +951,14 @@
 <p>With the <code class="code docutils literal notranslate"><span class="pre">rattle-iter</span></code> keyword the user can specify the maximum number of iteration until the convergence of the velocities of the shaked bond-lengths should be reached within the rattle algorithm.</p>
 <p class="centered">
 <strong><em>default value</em> = 20</strong></p></section>
+<section id="distance-constraints">
+<h3>Distance-Constraints<a class="headerlink" href="#distance-constraints" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>distance-constraints = {string} -&gt; “off”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">distance-constraints</span></code> keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a>.</p>
+</section>
 </section>
 <section id="mm-keys">
 <h2>MM Keys<a class="headerlink" href="#mm-keys" title="Link to this heading"></a></h2>

@@ -533,12 +533,56 @@ Temperature
 .. admonition:: Key
     :class: tip
 
-    temperature = {double} K
+    temp = {double} K
 
-With the :code:`temperature` keyword the target temperature in :code:`K` of the system can be set. 
+With the :code:`temp` keyword the target temperature in :code:`K` of the system can be set. 
 
 .. Note::
     This keyword is not restricted to the use of any temperature coupling method, as it is used *e.g.* also for the initialization of Boltzmann distributed velocities or the reset of the system temperature.
+
+Start_Temperature
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    start_temp = {double} K
+
+With the :code:`start_temp` keyword the initial temperature in :code:`K` of the system can be set. If a value is given the PQ application will perform a temperature ramping from the :code:`start_temp` to the :code:`temp` value.
+
+End_Temperature
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    end_temp = {double} K
+
+The :code:`end_temp` keyword is a synonym for the :code:`temp` keyword and can be used to set the target temperature of the system. It cannot be used in combination with the :code:`temp` keyword.
+
+Temperature_Ramp_Steps
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    temp_ramp_steps = {uint+}
+
+With the :code:`temp_ramp_steps` keyword the user can specify the number of steps for the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.
+
+.. centered:: *default value* = full simulation time
+
+Temperature_Ramp_Frequency
+==========================
+
+.. admonition:: Key
+    :class: tip
+
+    temp_ramp_freq = {uint+} -> 1
+
+With the :code:`temp_ramp_freq` keyword the user can specify the frequency of the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
+
+.. centered:: *default value* = 1 step
 
 Thermostat
 ==========
@@ -864,6 +908,16 @@ Rattle-Iter
 With the :code:`rattle-iter` keyword the user can specify the maximum number of iteration until the convergence of the velocities of the shaked bond-lengths should be reached within the rattle algorithm.
 
 .. centered:: *default value* = 20
+
+Distance-Constraints
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    distance-constraints = {string} -> "off"
+
+With the :code:`distance-constraints` keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the :ref:`topologyFile`.
 
 *******
 MM Keys
