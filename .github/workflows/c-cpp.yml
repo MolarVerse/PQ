@@ -30,11 +30,13 @@ jobs:
 
       - name: install cmake
         run: |
-          apt update
+          apt update -y
           apt install -y cmake
+        shell: bash
 
       - name: Build and Test Project
         run: |
+          git config --global --add safe.directory '*'
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
