@@ -144,7 +144,7 @@ namespace potential
      * @brief Kokkos implementation of the potential
      *
      */
-    class KokkosPotential : public Potential
+    class KokkosPotential
     {
        public:
         void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &, KokkosCoulombWolf &);

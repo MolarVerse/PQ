@@ -111,7 +111,6 @@ inline void KokkosPotential::calculateForces(
                 auto normSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
-                // TODO: txyz
                 auto distance = Kokkos::sqrt(normSquared);
 
                 if (distance > CoulombPotential::getCoulombRadiusCutOff())
