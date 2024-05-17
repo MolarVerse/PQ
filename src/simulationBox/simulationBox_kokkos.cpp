@@ -22,11 +22,103 @@
 
 #include "simulationBox_kokkos.hpp"
 
-using namespace Kokkos::simulationBox;
+#include "simulationBox.hpp"   // for SimulationBox
 
-SimulationBox::SimulationBox(size_t numAtoms)
-    : _positions("positions", numAtoms),
-      _velocities("velocities", numAtoms),
-      _forces("forces", numAtoms)
+using namespace simulationBox;
+
+/**
+ * @brief constructor
+ */
+KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
+    : _atomTypes("atomTypes", numAtoms),
+      _molTypes("molTypes", numAtoms),
+      _internalGlobalVDWTypes("internalGlobalVDWTypes", numAtoms),
+      _positions("positions", numAtoms),
+      _forces("forces", numAtoms),
+      _partialCharges("partialCharges", numAtoms)
 {
+}
+
+/**
+ * @brief transfer atom types from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferAtomTypesFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _atomTypes.d_view(i) = simBox.getAtom(i).getAtomType();
+    }
+}
+
+/**
+ * @brief transfer molecule types from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferMolTypesFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    auto atom_counter = 0;
+
+    for (size_t i = 0; i < simBox.getNumberOfMolecules(); ++i)
+    {
+        auto molecule = simBox.getMolecule(i);
+
+        for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
+        {
+            _molTypes.d_view(atom_counter) = molecule.getMoltype();
+            atom_counter++;
+        }
+    }
+}
+
+/**
+ * @brief transfer internal global VDW types from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferInternalGlobalVDWTypesFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _internalGlobalVDWTypes.d_view(i) =
+            simBox.getAtom(i).getInternalGlobalVDWType();
+    }
+}
+
+/**
+ * @brief transfer positions from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferPositionsFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _positions.d_view(i, 0) = simBox.getAtom(i).getPosition()[0];
+        _positions.d_view(i, 1) = simBox.getAtom(i).getPosition()[1];
+        _positions.d_view(i, 2) = simBox.getAtom(i).getPosition()[2];
+    }
+}
+
+/**
+ * @brief initialize forces
+ */
+void KokkosSimulationBox::initializeForces()
+{
+    for (size_t i = 0; i < _forces.extent(0); ++i)
+    {
+        _forces.d_view(i, 0) = 0.0;
+        _forces.d_view(i, 1) = 0.0;
+        _forces.d_view(i, 2) = 0.0;
+    }
 }

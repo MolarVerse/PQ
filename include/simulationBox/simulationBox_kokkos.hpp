@@ -26,22 +26,43 @@
 
 #include <Kokkos_DualView.hpp>
 
+#include "simulationBox.hpp"   // for SimulationBox
+
 /**
- * @namespace Kokkos::simulationBox
+ * @namespace simulationBox
  */
-namespace Kokkos::simulationBox
+namespace simulationBox
 {
-    class SimulationBox
+    /**
+     * @class Kokkos SimulationBox
+     *
+     * @brief containing all information about the simulation box
+     */
+    class KokkosSimulationBox
     {
        private:
-        Kokkos::DualView<double*> _positions;
-        Kokkos::DualView<double*> _velocities;
-        Kokkos::DualView<double*> _forces;
+        Kokkos::DualView<size_t*> _atomTypes;
+        Kokkos::DualView<size_t*> _molTypes;
+        Kokkos::DualView<size_t*> _internalGlobalVDWTypes;
+
+        Kokkos::DualView<double* [3]> _positions;
+        Kokkos::DualView<double* [3]> _forces;
+        Kokkos::DualView<double*>     _partialCharges;
 
        public:
-        SimulationBox(size_t numAtoms);
-        ~SimulationBox();
+        KokkosSimulationBox(size_t numAtoms);
+        ~KokkosSimulationBox() = default;
+
+        void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
+        void transferMolTypesFromSimulationBox(SimulationBox& simBox);
+        void transferInternalGlobalVDWTypesFromSimulationBox(
+            SimulationBox& simBox
+        );
+
+        void transferPositionsFromSimulationBox(SimulationBox& simBox);
+
+        void initializeForces();
     };
-}   // namespace Kokkos::simulationBox
+}   // namespace simulationBox
 
 #endif   // _KOKKOS_SIMULATION_BOX_HPP_
