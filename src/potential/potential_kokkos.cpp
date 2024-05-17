@@ -22,12 +22,12 @@
 
 #include <cstddef>   // for size_t
 
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for PhysicalData
+#include "coulombPotential.hpp"      // for CoulombPotential
+#include "lennardJones_kokkos.hpp"   // for LennardJones implementation with Kokkos
+#include "molecule.hpp"              // for Molecule
+#include "physicalData.hpp"          // for PhysicalData
 #include "potential.hpp"
 #include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
-#include "lennardJones_kokkos.hpp"    // for LennardJones implementation with Kokkos
 
 namespace simulationBox
 {
@@ -45,8 +45,13 @@ using namespace potential;
  * @param simBox
  * @param physicalData
  */
-inline void KokkosPotential::
-    calculateForces(simulationBox::SimulationBox &simBox, simulationBox::KokkosSimulationBox &kokkosSimBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &, KokkosLennardJones &ljPotential)
+inline void KokkosPotential::calculateForces(
+    simulationBox::SimulationBox       &simBox,
+    simulationBox::KokkosSimulationBox &kokkosSimBox,
+    physicalData::PhysicalData         &physicalData,
+    simulationBox::CellList &,
+    KokkosLennardJones &ljPotential
+)
 {
     // set total coulombic and non-coulombic energy
     double totalCoulombEnergy    = 0.0;
@@ -94,6 +99,8 @@ inline void KokkosPotential::
 
                 auto normSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+
+                // TODO: txyz
                 auto distance = Kokkos::sqrt(normSquared);
 
                 if (distance < CoulombPotential::getCoulombRadiusCutOff())
@@ -103,26 +110,28 @@ inline void KokkosPotential::
 
                 const auto partialCharge_j = partialCharges(j);
 
-                const auto vdWType_j       = internalGlobalVDWTypes(j);
-                const auto nRCCutOff       = ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
+                const auto vdWType_j = internalGlobalVDWTypes(j);
+                const auto nRCCutOff =
+                    ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
 
                 if (distance < nRCCutOff)
                 {
                     continue;
                 }
 
-                auto [coulombicEnergy, nonCoulombicEnergy] = KokkosLennardJones::calculatePairEnergy(
-                    distance,
-                    dxyz,
-                    force_i,
-                    partialCharge_i,
-                    vdWType_i,
-                    partialCharge_j,
-                    vdWType_j
-                );
+                auto nonCoulombicEnergy =
+                    KokkosLennardJones::calculatePairEnergy(
+                        distance,
+                        dxyz,
+                        force_i,
+                        vdWType_i,
+                        vdWType_j
+                    );
 
                 coulombEnergy    += coulombicEnergy;
                 nonCoulombEnergy += nonCoulombicEnergy;
+
+                // TODO: shiftforces
             }
         },
         totalCoulombEnergy,
@@ -130,7 +139,7 @@ inline void KokkosPotential::
     );
 
     // half energy because of double counting
-    totalCoulombEnergy *= 0.5;
+    totalCoulombEnergy    *= 0.5;
     totalNonCoulombEnergy *= 0.5;
 
     // set total coulombic and non-coulombic energy

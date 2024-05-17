@@ -148,15 +148,6 @@ namespace potential
     {
        public:
         void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &);
-        Kokkos::pair<double, double> calculatePairEnergy(
-            const double distance,
-            const double dxyz[3],
-            double      *force_i,
-            const double partialCharge_i,
-            const size_t vdWType_i,
-            const double partialCharge_j,
-            const size_t vdWType_j
-        );
     };
 
     /**

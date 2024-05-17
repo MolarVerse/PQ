@@ -69,15 +69,27 @@ namespace simulationBox
         void transferForcesToSimulationBox(SimulationBox& simBox);
 
         // getters
-        [[nodiscard]] Kokkos::DualView<size_t*>& getAtomTypes() { return _atomTypes; }
-        [[nodiscard]] Kokkos::DualView<size_t*>& getMolTypes() { return _molTypes; }
+        [[nodiscard]] Kokkos::DualView<size_t*>& getAtomTypes()
+        {
+            return _atomTypes;
+        }
+        [[nodiscard]] Kokkos::DualView<size_t*>& getMolTypes()
+        {
+            return _molTypes;
+        }
         [[nodiscard]] Kokkos::DualView<size_t*>& getInternalGlobalVDWTypes()
         {
             return _internalGlobalVDWTypes;
         }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getPositions() { return _positions; }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getForces() { return _forces; }
-        [[nodiscard]] Kokkos::DualView<double*>&     getPartialCharges()
+        [[nodiscard]] Kokkos::DualView<double* [3]>& getPositions()
+        {
+            return _positions;
+        }
+        [[nodiscard]] Kokkos::DualView<double* [3]>& getForces()
+        {
+            return _forces;
+        }
+        [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges()
         {
             return _partialCharges;
         }

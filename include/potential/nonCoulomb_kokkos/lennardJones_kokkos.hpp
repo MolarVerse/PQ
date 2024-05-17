@@ -68,15 +68,18 @@ namespace potential
         [[nodiscard]] Kokkos::DualView<double **> &getC6() { return _c6; }
         [[nodiscard]] Kokkos::DualView<double **> &getC12() { return _c12; }
 
-        [[nodiscard]] double getRadialCutoff(const size_t i, const size_t j) const
+        [[nodiscard]] double getRadialCutoff(const size_t i, const size_t j)
+            const
         {
             return _radialCutoffs.d_view(i, j);
         }
-        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j) const
+        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j)
+            const
         {
             return _energyCutoffs.d_view(i, j);
         }
-        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j) const
+        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j)
+            const
         {
             return _forceCutoffs.d_view(i, j);
         }
@@ -90,20 +93,17 @@ namespace potential
         }
 
         KOKKOS_INLINE_FUNCTION
-        static Kokkos::pair<double, double> calculatePairEnergy(
+        static double calculatePairEnergy(
             const double distance,
             const double dxyz[3],
             double      *force_i,
-            const double partialCharge_i,
             const size_t vdWType_i,
-            const double partialCharge_j,
             const size_t vdWType_j
         )
         {
-            auto coulombicEnergy    = 0.0;
             auto nonCoulombicEnergy = 0.0;
 
-            return Kokkos::make_pair(coulombicEnergy, nonCoulombicEnergy);
+            return nonCoulombicEnergy;
         }
     };
 }   // namespace potential

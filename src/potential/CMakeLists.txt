@@ -44,4 +44,5 @@ add_subdirectory(nonCoulomb)
 
 if(BUILD_WITH_KOKKOS)
     add_subdirectory(nonCoulomb_kokkos)
+    add_subdirectory(coulomb_kokkos)
 endif()
