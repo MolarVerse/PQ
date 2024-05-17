@@ -20,7 +20,35 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LENNARD_JONES_PAIR_HPP_
+#ifndef _KOKKOS_LENNARD_JONES_PAIR_HPP_
 
-#define _LENNARD_JONES_PAIR_HPP_
-#endif   // _LENNARD_JONES_PAIR_HPP_
+#define _KOKKOS_LENNARD_JONES_PAIR_HPP_
+
+#include <Kokkos_DualView.hpp>
+
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+
+namespace potential
+{
+    using matrix_shared_pair =
+        linearAlgebra::Matrix<std::shared_ptr<LennardJonesPair>>;
+
+    class KokkosLennardJones
+    {
+       private:
+        Kokkos::DualView<double**> _radialCutoffs;
+        Kokkos::DualView<double**> _energyCutoffs;
+        Kokkos::DualView<double**> _forceCutoffs;
+        Kokkos::DualView<double**> _c6;
+        Kokkos::DualView<double**> _c12;
+
+       public:
+        KokkosLennardJones(size_t numAtomTypes);
+        ~KokkosLennardJones() = default;
+
+        void transferFromNonCoulombPairMatrix(matrix_shared_pair& pairMatrix);
+    };
+}   // namespace potential
+
+#endif   // _KOKKOS_LENNARD_JONES_PAIR_HPP_
