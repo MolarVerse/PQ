@@ -50,7 +50,7 @@ void KokkosSimulationBox::transferAtomTypesFromSimulationBox(
 {
     for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
-        _atomTypes.d_view(i) = simBox.getAtom(i).getAtomType();
+        _atomTypes.h_view(i) = simBox.getAtom(i).getAtomType();
     }
 }
 
@@ -71,7 +71,7 @@ void KokkosSimulationBox::transferMolTypesFromSimulationBox(
 
         for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
         {
-            _molTypes.d_view(atom_counter) = molecule.getMoltype();
+            _molTypes.h_view(atom_counter) = molecule.getMoltype();
             atom_counter++;
         }
     }
@@ -88,7 +88,7 @@ void KokkosSimulationBox::transferInternalGlobalVDWTypesFromSimulationBox(
 {
     for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
-        _internalGlobalVDWTypes.d_view(i) =
+        _internalGlobalVDWTypes.h_view(i) =
             simBox.getAtom(i).getInternalGlobalVDWType();
     }
 }
@@ -104,9 +104,9 @@ void KokkosSimulationBox::transferPositionsFromSimulationBox(
 {
     for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
-        _positions.d_view(i, 0) = simBox.getAtom(i).getPosition()[0];
-        _positions.d_view(i, 1) = simBox.getAtom(i).getPosition()[1];
-        _positions.d_view(i, 2) = simBox.getAtom(i).getPosition()[2];
+        _positions.h_view(i, 0) = simBox.getAtom(i).getPosition()[0];
+        _positions.h_view(i, 1) = simBox.getAtom(i).getPosition()[1];
+        _positions.h_view(i, 2) = simBox.getAtom(i).getPosition()[2];
     }
 }
 
@@ -117,8 +117,8 @@ void KokkosSimulationBox::initializeForces()
 {
     for (size_t i = 0; i < _forces.extent(0); ++i)
     {
-        _forces.d_view(i, 0) = 0.0;
-        _forces.d_view(i, 1) = 0.0;
-        _forces.d_view(i, 2) = 0.0;
+        _forces.h_view(i, 0) = 0.0;
+        _forces.h_view(i, 1) = 0.0;
+        _forces.h_view(i, 2) = 0.0;
     }
 }
