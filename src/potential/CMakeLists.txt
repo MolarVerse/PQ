@@ -40,3 +40,7 @@ install(TARGETS potential
 
 add_subdirectory(coulomb)
 add_subdirectory(nonCoulomb)
+
+if(BUILD_WITH_KOKKOS)
+    add_subdirectory(nonCoulomb_kokkos)
+endif()
