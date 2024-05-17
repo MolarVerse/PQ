@@ -30,6 +30,7 @@ if(BUILD_WITH_KOKKOS)
     target_link_libraries(potential
         PUBLIC
         nonCoulombPotential_kokkos
+        coulombPotential_kokkos
         Kokkos::kokkos
         Kokkos::kokkoskernels
     )

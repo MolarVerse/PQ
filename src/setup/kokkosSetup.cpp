@@ -22,6 +22,8 @@
 
 #include "kokkosSetup.hpp"
 
+#include "constants/conversionFactors.hpp"
+#include "coulombWolf.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
@@ -55,6 +57,15 @@ void KokkosSetup::setup()
         customException::UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of non "
             "Coulomb potential - falling back to serial execution"
+        );
+        return;
+    }
+
+    if (settings::PotentialSettings::getCoulombLongRangeType() != "wolf")
+    {
+        customException::UserInputExceptionWarning(
+            "Kokkos installation is not enabled for the current type of "
+            "Coulomb long range potential - falling back to serial execution"
         );
         return;
     }
@@ -94,5 +105,18 @@ void KokkosSetup::setup()
 
     kokkosLennardJones.transferFromNonCoulombPairMatrix(
         forceFieldNonCoulomb.getNonCoulombPairsMatrix()
+    );
+
+    auto wolfPotential = dynamic_cast<potential::CoulombWolf &>(
+        _engine.getPotential().getCoulombPotential()
+    );
+
+    _engine.initKokkosCoulombWolf(
+        wolfPotential.getCoulombRadiusCutOff(),
+        wolfPotential.getKappa(),
+        wolfPotential.getWolfParameter1(),
+        wolfPotential.getWolfParameter2(),
+        wolfPotential.getWolfParameter3(),
+        constants::_COULOMB_PREFACTOR_
     );
 }

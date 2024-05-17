@@ -43,6 +43,7 @@
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
+#include "coulombWolf_kokkos.hpp"
 #include "lennardJones_kokkos.hpp"
 #include "simulationBox_kokkos.hpp"
 #endif
@@ -98,6 +99,7 @@ namespace engine
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
         potential::KokkosLennardJones      _kokkosLennardJones;
+        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
 #endif
 
         std::unique_ptr<integrator::Integrator> _integrator =
@@ -326,6 +328,10 @@ namespace engine
         {
             return _kokkosLennardJones;
         }
+        [[nodiscard]] potential::KokkosCoulombWolf &getKokkosCoulombWolf()
+        {
+            return _kokkosCoulombWolf;
+        }
 
         void initKokkosSimulationBox(const size_t numAtoms)
         {
@@ -334,6 +340,24 @@ namespace engine
         void initKokkosLennardJones(const size_t numAtomTypes)
         {
             _kokkosLennardJones = potential::KokkosLennardJones(numAtomTypes);
+        }
+        void initKokkosCoulombWolf(
+            const double coulombRadiusCutOff,
+            const double kappa,
+            const double wolfParameter1,
+            const double wolfParameter2,
+            const double wolfParameter3,
+            const double prefactor
+        )
+        {
+            _kokkosCoulombWolf = potential::KokkosCoulombWolf(
+                coulombRadiusCutOff,
+                kappa,
+                wolfParameter1,
+                wolfParameter2,
+                wolfParameter3,
+                prefactor
+            );
         }
 #endif
     };

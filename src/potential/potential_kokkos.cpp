@@ -22,7 +22,8 @@
 
 #include <cstddef>   // for size_t
 
-#include "coulombPotential.hpp"      // for CoulombPotential
+#include "coulombPotential.hpp"     // for CoulombPotential
+#include "coulombWolf_kokkos.hpp"   // for CoulombWolf implementation with Kokkos
 #include "lennardJones_kokkos.hpp"   // for LennardJones implementation with Kokkos
 #include "molecule.hpp"              // for Molecule
 #include "physicalData.hpp"          // for PhysicalData
@@ -50,7 +51,8 @@ inline void KokkosPotential::calculateForces(
     simulationBox::KokkosSimulationBox &kokkosSimBox,
     physicalData::PhysicalData         &physicalData,
     simulationBox::CellList &,
-    KokkosLennardJones &ljPotential
+    KokkosLennardJones &ljPotential,
+    KokkosCoulombWolf  &coulombWolf
 )
 {
     // set total coulombic and non-coulombic energy
@@ -110,6 +112,14 @@ inline void KokkosPotential::calculateForces(
 
                 const auto partialCharge_j = partialCharges(j);
 
+                const auto coulombicEnergy = coulombWolf.calculate(
+                    distance,
+                    partialCharge_i,
+                    partialCharge_j,
+                    dxyz,
+                    force_i
+                );
+
                 const auto vdWType_j = internalGlobalVDWTypes(j);
                 const auto nRCCutOff =
                     ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
@@ -119,14 +129,13 @@ inline void KokkosPotential::calculateForces(
                     continue;
                 }
 
-                auto nonCoulombicEnergy =
-                    KokkosLennardJones::calculatePairEnergy(
-                        distance,
-                        dxyz,
-                        force_i,
-                        vdWType_i,
-                        vdWType_j
-                    );
+                auto nonCoulombicEnergy = ljPotential.calculate(
+                    distance,
+                    dxyz,
+                    force_i,
+                    vdWType_i,
+                    vdWType_j
+                );
 
                 coulombEnergy    += coulombicEnergy;
                 nonCoulombEnergy += nonCoulombicEnergy;
@@ -141,6 +150,9 @@ inline void KokkosPotential::calculateForces(
     // half energy because of double counting
     totalCoulombEnergy    *= 0.5;
     totalNonCoulombEnergy *= 0.5;
+
+    kokkosSimBox.transferForcesToSimulationBox(simBox);
+    kokkosSimBox.transferShiftForcesToSimulationBox(simBox);
 
     // set total coulombic and non-coulombic energy
     physicalData.setCoulombEnergy(totalCoulombEnergy);

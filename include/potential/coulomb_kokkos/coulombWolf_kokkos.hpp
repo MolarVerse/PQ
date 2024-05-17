@@ -49,7 +49,7 @@ namespace potential
         Kokkos::DualView<double> _prefactor;
 
        public:
-        explicit KokkosCoulombWolf(
+        KokkosCoulombWolf(
             const double coulombRadiusCutOff,
             const double kappa,
             const double wolfParameter1,
@@ -58,7 +58,16 @@ namespace potential
             const double prefactor
         );
 
-        [[nodiscard]] double calculate(const double, const double);
+        KokkosCoulombWolf()  = default;
+        ~KokkosCoulombWolf() = default;
+
+        [[nodiscard]] double calculate(
+            const double distance,
+            const double charge_i,
+            const double charge_j,
+            const double dxyz[3],
+            double      *force
+        ) const;
 
         [[nodiscard]] double getCoulombRadiusCutOff() const
         {

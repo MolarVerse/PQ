@@ -29,7 +29,6 @@
 #include <memory>            // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>           // for pair
 
-
 #include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
@@ -50,7 +49,8 @@ namespace potential
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-    class KokkosLennardJones;   // forward declaration
+    class KokkosLennardJones;    // forward declaration
+    class KokkosCoulombWolf;     // forward declaration
 
     /**
      * @class Potential
@@ -147,7 +147,7 @@ namespace potential
     class KokkosPotential : public Potential
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &);
+        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &, KokkosCoulombWolf &);
     };
 
     /**
