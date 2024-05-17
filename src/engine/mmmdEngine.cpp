@@ -22,6 +22,8 @@
 
 #include "mmmdEngine.hpp"
 
+#include <memory>   // for unique_ptr
+
 #include "celllist.hpp"          // for CellList
 #include "constraints.hpp"       // for Constraints
 #include "engineOutput.hpp"      // for engine
@@ -35,7 +37,9 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
 
-#include <memory>   // for unique_ptr
+#ifdef WITH_KOKKOS
+#include "potential_kokkos.hpp"   // for KokkosPotential
+#endif
 
 using namespace engine;
 
@@ -70,7 +74,17 @@ void MMMDEngine::takeStep()
 
     _cellList.updateCellList(_simulationBox);
 
+#ifdef WITH_KOKKOS
+    _kokkosPotential.calculateForces(
+        _simulationBox,
+        _kokkosSimulationBox,
+        _physicalData,
+        _kokkosLennardJones,
+        _kokkosCoulombWolf
+    );
+#else
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+#endif
 
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 

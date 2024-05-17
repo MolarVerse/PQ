@@ -18,4 +18,6 @@ if(NOT KokkosKernels_FOUND)
     FetchContent_MakeAvailable(kokkos-kernels)
 endif()
 
+set(KOKKOS_CXX_STANDARD 20)
+
 add_definitions(-DWITH_KOKKOS)

@@ -81,19 +81,26 @@ KokkosCoulombWolf::KokkosCoulombWolf(
     double      *force
 ) const
 {
-    const auto coulombPrefactor = charge_i * charge_j * _prefactor.d_view();
+    const auto prefactor      = _prefactor.d_view();
+    const auto kappa          = _kappa.d_view();
+    const auto wolfParameter1 = _wolfParameter1.d_view();
+    const auto wolfParameter2 = _wolfParameter2.d_view();
+    const auto wolfParameter3 = _wolfParameter3.d_view();
+    const auto rcCutOff       = _coulombRadiusCutOff.d_view();
 
-    const auto kappaDistance = _kappa.d_view() * distance;
-    const auto erfcFactor    = Kokkos::erfc(kappaDistance);
+    const auto coulombPrefactor = charge_i * charge_j * prefactor;
 
-    auto energy = erfcFactor / distance - _wolfParameter1.d_view();
-    energy +=
-        _wolfParameter3.d_view() * (distance - _coulombRadiusCutOff.d_view());
+    const auto kappaDistance        = kappa * distance;
+    const auto kappaDistanceSquared = kappaDistance * kappaDistance;
+    const auto erfcFactor           = Kokkos::erfc(kappaDistance);
+
+    auto energy  = erfcFactor / distance - wolfParameter1;
+    energy      += wolfParameter3 * (distance - rcCutOff);
 
     auto scalarForce  = erfcFactor / (distance * distance);
-    scalarForce      += _wolfParameter2.d_view() *
-                   Kokkos::exp(-kappaDistance * kappaDistance) / distance;
-    scalarForce -= _wolfParameter3.d_view();
+    scalarForce      -= wolfParameter3;
+    scalarForce +=
+        wolfParameter2 * Kokkos::exp(-kappaDistanceSquared) / distance;
 
     scalarForce *= coulombPrefactor;
     scalarForce /= distance;

@@ -40,14 +40,13 @@ using namespace potential;
  * @param simBox
  * @param physicalData
  */
-KOKKOS_INLINE_FUNCTION
-void KokkosPotential::calculateForces(
+inline void KokkosPotential::calculateForces(
     simulationBox::SimulationBox       &simBox,
     simulationBox::KokkosSimulationBox &kokkosSimBox,
     physicalData::PhysicalData         &physicalData,
     KokkosLennardJones                 &ljPotential,
     KokkosCoulombWolf                  &coulombWolf
-)
+) const
 {
     // set total coulombic and non-coulombic energy
     double totalCoulombEnergy    = 0.0;

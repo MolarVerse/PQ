@@ -45,6 +45,7 @@
 #ifdef WITH_KOKKOS
 #include "coulombWolf_kokkos.hpp"
 #include "lennardJones_kokkos.hpp"
+#include "potential_kokkos.hpp"
 #include "simulationBox_kokkos.hpp"
 #endif
 
@@ -100,6 +101,8 @@ namespace engine
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
         potential::KokkosLennardJones      _kokkosLennardJones;
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
+        potential::KokkosPotential         _kokkosPotential =
+            potential::KokkosPotential();
 #endif
 
         std::unique_ptr<integrator::Integrator> _integrator =

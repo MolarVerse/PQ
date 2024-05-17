@@ -1,7 +1,18 @@
-add_library(potential
+set(potential_source_files
     potential.cpp
     potentialBruteForce.cpp
     potentialCellList.cpp
+)
+
+if(BUILD_WITH_KOKKOS)
+    set(potential_source_files
+        ${potential_source_files}
+        potential_kokkos.cpp
+    )
+endif()
+
+add_library(potential
+    ${potential_source_files}
 )
 
 target_include_directories(potential
@@ -28,7 +39,6 @@ if(BUILD_WITH_KOKKOS)
 
     target_link_libraries(potential
         PUBLIC
-        potential_kokkos.cpp
         nonCoulombPotential_kokkos
         coulombPotential_kokkos
         Kokkos::kokkos

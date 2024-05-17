@@ -130,6 +130,7 @@ namespace potential
     class PotentialBruteForce : public Potential
     {
        public:
+        ~PotentialBruteForce() override;
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
     };
@@ -143,6 +144,7 @@ namespace potential
     class PotentialCellList : public Potential
     {
        public:
+        ~PotentialCellList() override;
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
     };

@@ -49,7 +49,8 @@ namespace potential
     class KokkosPotential
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, KokkosLennardJones &, KokkosCoulombWolf &);
+        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, KokkosLennardJones &, KokkosCoulombWolf &)
+            const;
     };
 
 }   // namespace potential

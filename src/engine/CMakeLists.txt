@@ -48,6 +48,7 @@ if(BUILD_WITH_KOKKOS)
     target_link_libraries(engine
         PUBLIC
         nonCoulombPotential_kokkos
+        coulombPotential_kokkos
     )
 endif()
 
