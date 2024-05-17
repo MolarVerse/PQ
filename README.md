@@ -4,6 +4,11 @@
 [![codecov](https://codecov.io/gh/MolarVerse/PQ/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/PQ)
 [![Docs](https://github.com/MolarVerse/PQ/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/PQ/)
 
+## Prerequisite
+
+- CMake >= 3.12
+- GCC   >= 13.0 
+
 ## How to Use
 
 To perform calculations using the PQ program just execute the executable `PQ` with a given input file
@@ -12,7 +17,12 @@ To perform calculations using the PQ program just execute the executable `PQ` wi
 
 ## Building from Source
 
-Create a build directory and navigate into this directory. Within this directory configure cmake:
+Create a build directory and navigate into this directory.
+
+    mkdir build
+    cd build
+
+Within this directory configure cmake:
 
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
