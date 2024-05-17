@@ -2,7 +2,7 @@ add_library(potential
     potential.cpp
     potentialBruteForce.cpp
     potentialCellList.cpp
-    potentialKokkos.cpp
+    potential_kokkos.cpp
 )
 
 target_include_directories(potential
@@ -29,6 +29,7 @@ if(BUILD_WITH_KOKKOS)
 
     target_link_libraries(potential
         PUBLIC
+        nonCoulombPotential_kokkos
         Kokkos::kokkos
         Kokkos::kokkoskernels
     )

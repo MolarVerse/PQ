@@ -29,6 +29,7 @@
 #include <memory>            // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>           // for pair
 
+
 #include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
@@ -49,6 +50,7 @@ namespace potential
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
+    class KokkosLennardJones;   // forward declaration
 
     /**
      * @class Potential
@@ -137,15 +139,15 @@ namespace potential
     };
 
     /**
-     * @class PotentialKokkos
+     * @class KokkosPotential
      *
      * @brief Kokkos implementation of the potential
      *
      */
-    class PotentialKokkos : public Potential
+    class KokkosPotential : public Potential
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &);
+        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &);
         Kokkos::pair<double, double> calculatePairEnergy(
             const double distance,
             const double dxyz[3],

@@ -27,6 +27,7 @@
 #include "physicalData.hpp"       // for PhysicalData
 #include "potential.hpp"
 #include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
+#include "lennardJones_kokkos.hpp"    // for LennardJones implementation with Kokkos
 
 namespace simulationBox
 {
@@ -44,8 +45,8 @@ using namespace potential;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialKokkos::
-    calculateForces(simulationBox::SimulationBox &simBox, simulationBox::KokkosSimulationBox &kokkosSimBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
+inline void KokkosPotential::
+    calculateForces(simulationBox::SimulationBox &simBox, simulationBox::KokkosSimulationBox &kokkosSimBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &, KokkosLennardJones &ljPotential)
 {
     // set total coulombic and non-coulombic energy
     double totalCoulombEnergy    = 0.0;
@@ -101,18 +102,24 @@ inline void PotentialKokkos::
                 }
 
                 const auto partialCharge_j = partialCharges(j);
-                const auto vdWType_j       = internalGlobalVDWTypes(j);
 
-                auto [coulombicEnergy, nonCoulombicEnergy] =
-                    PotentialKokkos::calculatePairEnergy(
-                        distance,
-                        dxyz,
-                        force_i,
-                        partialCharge_i,
-                        vdWType_i,
-                        partialCharge_j,
-                        vdWType_j
-                    );
+                const auto vdWType_j       = internalGlobalVDWTypes(j);
+                const auto nRCCutOff       = ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
+
+                if (distance < nRCCutOff)
+                {
+                    continue;
+                }
+
+                auto [coulombicEnergy, nonCoulombicEnergy] = KokkosLennardJones::calculatePairEnergy(
+                    distance,
+                    dxyz,
+                    force_i,
+                    partialCharge_i,
+                    vdWType_i,
+                    partialCharge_j,
+                    vdWType_j
+                );
 
                 coulombEnergy    += coulombicEnergy;
                 nonCoulombEnergy += nonCoulombicEnergy;
@@ -122,29 +129,11 @@ inline void PotentialKokkos::
         totalNonCoulombEnergy
     );
 
+    // half energy because of double counting
+    totalCoulombEnergy *= 0.5;
+    totalNonCoulombEnergy *= 0.5;
+
     // set total coulombic and non-coulombic energy
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
-}
-
-/**
- * @brief calculates pair energy for two atoms
- *
- * @return Kokkos::pair<double, double>
- */
-KOKKOS_INLINE_FUNCTION
-Kokkos::pair<double, double> PotentialKokkos::calculatePairEnergy(
-    const double distance,
-    const double dxyz[3],
-    double      *force_i,
-    const double partialCharge_i,
-    const size_t vdWType_i,
-    const double partialCharge_j,
-    const size_t vdWType_j
-)
-{
-    auto coulombicEnergy    = 0.0;
-    auto nonCoulombicEnergy = 0.0;
-
-    return Kokkos::make_pair(coulombicEnergy, nonCoulombicEnergy);
 }

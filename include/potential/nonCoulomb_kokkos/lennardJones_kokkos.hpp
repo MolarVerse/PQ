@@ -40,11 +40,11 @@ namespace potential
     class KokkosLennardJones
     {
        private:
-        Kokkos::DualView<double**> _radialCutoffs;
-        Kokkos::DualView<double**> _energyCutoffs;
-        Kokkos::DualView<double**> _forceCutoffs;
-        Kokkos::DualView<double**> _c6;
-        Kokkos::DualView<double**> _c12;
+        Kokkos::DualView<double **> _radialCutoffs;
+        Kokkos::DualView<double **> _energyCutoffs;
+        Kokkos::DualView<double **> _forceCutoffs;
+        Kokkos::DualView<double **> _c6;
+        Kokkos::DualView<double **> _c12;
 
        public:
         KokkosLennardJones(size_t numAtomTypes);
@@ -52,7 +52,59 @@ namespace potential
         KokkosLennardJones()  = default;
         ~KokkosLennardJones() = default;
 
-        void transferFromNonCoulombPairMatrix(matrix_shared_pair& pairMatrix);
+        void transferFromNonCoulombPairMatrix(matrix_shared_pair &pairMatrix);
+        [[nodiscard]] Kokkos::DualView<double **> &getRadialCutoffs()
+        {
+            return _radialCutoffs;
+        }
+        [[nodiscard]] Kokkos::DualView<double **> &getEnergyCutoffs()
+        {
+            return _energyCutoffs;
+        }
+        [[nodiscard]] Kokkos::DualView<double **> &getForceCutoffs()
+        {
+            return _forceCutoffs;
+        }
+        [[nodiscard]] Kokkos::DualView<double **> &getC6() { return _c6; }
+        [[nodiscard]] Kokkos::DualView<double **> &getC12() { return _c12; }
+
+        [[nodiscard]] double getRadialCutoff(const size_t i, const size_t j) const
+        {
+            return _radialCutoffs.d_view(i, j);
+        }
+        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j) const
+        {
+            return _energyCutoffs.d_view(i, j);
+        }
+        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j) const
+        {
+            return _forceCutoffs.d_view(i, j);
+        }
+        [[nodiscard]] double getC6(const size_t i, const size_t j) const
+        {
+            return _c6.d_view(i, j);
+        }
+        [[nodiscard]] double getC12(const size_t i, const size_t j) const
+        {
+            return _c12.d_view(i, j);
+        }
+
+        KOKKOS_INLINE_FUNCTION
+        static Kokkos::pair<double, double> calculatePairEnergy(
+            const double distance,
+            const double dxyz[3],
+            double      *force_i,
+            const double partialCharge_i,
+            const size_t vdWType_i,
+            const double partialCharge_j,
+            const size_t vdWType_j
+        )
+        {
+            auto coulombicEnergy    = 0.0;
+            auto nonCoulombicEnergy = 0.0;
+
+            return Kokkos::make_pair(coulombicEnergy, nonCoulombicEnergy);
+        }
     };
 }   // namespace potential
 
