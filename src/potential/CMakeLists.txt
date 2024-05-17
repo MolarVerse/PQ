@@ -19,10 +19,9 @@ target_link_libraries(potential
 )
 
 if(BUILD_WITH_KOKKOS)
-    add_dependencies(potential
-        kokkos
-    )
-
+    # add_dependencies(potential
+    # kokkos
+    # )
     target_include_directories(potential
         PUBLIC
         ${Kokkos_INCLUDE_DIRS_RET}
@@ -30,8 +29,8 @@ if(BUILD_WITH_KOKKOS)
 
     target_link_libraries(potential
         PUBLIC
-        kokkos
-        kokkos::kokkoskernels
+        Kokkos::kokkos
+        Kokkos::kokkoskernels
     )
 endif()
 
