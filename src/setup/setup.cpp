@@ -22,6 +22,8 @@
 
 #include "setup.hpp"
 
+#include <iostream>   // for operator<<, basic_ostream, cout
+
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
@@ -46,7 +48,9 @@
 #include "thermostatSetup.hpp"        // for setupThermostat
 #include "topologyReader.hpp"         // for readTopologyFile
 
-#include <iostream>   // for operator<<, basic_ostream, cout
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 using namespace engine;
 using namespace input;
@@ -71,6 +75,10 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
+
+#ifdef WITH_KOKKOS
+    setupKokkos(engine);
+#endif
 
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
@@ -117,7 +125,8 @@ void setup::setupEngine(Engine &engine)
 
     if (settings::Settings::isMMActivated())
     {
-        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+        setupPotential(engine
+        );   // has to be after simulationBox setup due to coulomb radius cutoff
 
         setupIntraNonBonded(engine);
 

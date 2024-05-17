@@ -26,14 +26,17 @@
 
 #include <Kokkos_DualView.hpp>
 
-#include "lennardJonesPair.hpp"
-#include "matrix.hpp"
+#include "forceFieldNonCoulomb.hpp"   // for matrix_shared_pair
+#include "lennardJonesPair.hpp"       // for LennardJonesPair
+#include "matrix.hpp"                 // for matrix
 
 namespace potential
 {
-    using matrix_shared_pair =
-        linearAlgebra::Matrix<std::shared_ptr<LennardJonesPair>>;
-
+    /**
+     * @class KokkosLennardJones
+     *
+     * @brief containing all information about the Lennard-Jones potential
+     */
     class KokkosLennardJones
     {
        private:
@@ -45,6 +48,8 @@ namespace potential
 
        public:
         KokkosLennardJones(size_t numAtomTypes);
+
+        KokkosLennardJones()  = default;
         ~KokkosLennardJones() = default;
 
         void transferFromNonCoulombPairMatrix(matrix_shared_pair& pairMatrix);

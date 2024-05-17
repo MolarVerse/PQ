@@ -35,6 +35,15 @@ using namespace setup;
 /**
  * @brief setup Kokkos
  */
+void setup::setupKokkos(engine::Engine &engine)
+{
+    KokkosSetup kokkosSetup(engine);
+    kokkosSetup.setup();
+}
+
+/**
+ * @brief setup Kokkos
+ */
 void KokkosSetup::setup()
 {
     if (!settings::Settings::isMMActivated())
@@ -51,8 +60,7 @@ void KokkosSetup::setup()
     }
 
     settings::Settings::activateKokkos();
-
-    // Kokkos::initialize();
+    Kokkos::initialize();
 
     auto numAtoms = _engine.getSimulationBox().getNumberOfAtoms();
 

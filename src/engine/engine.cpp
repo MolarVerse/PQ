@@ -27,6 +27,7 @@
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
 #include "referencesOutput.hpp"              // for ReferencesOutput
+#include "settings.hpp"                      // for Settings
 #include "stdoutOutput.hpp"                  // for StdoutOutput
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "vector3d.hpp"                      // for norm
@@ -66,6 +67,9 @@ void Engine::run()
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
+
+    if (settings::Settings::useKokkos())
+        Kokkos::finalize();
 }
 
 /**

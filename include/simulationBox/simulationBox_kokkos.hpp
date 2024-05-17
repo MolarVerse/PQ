@@ -51,6 +51,8 @@ namespace simulationBox
 
        public:
         KokkosSimulationBox(size_t numAtoms);
+
+        KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
