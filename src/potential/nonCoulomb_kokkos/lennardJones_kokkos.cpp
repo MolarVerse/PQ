@@ -42,7 +42,7 @@ KokkosLennardJones::KokkosLennardJones(size_t numAtomTypes)
  * @param pairMatrix non Coulomb pair matrix
  */
 void KokkosLennardJones::transferFromNonCoulombPairMatrix(
-    matrix_shared_pair& pairMatrix
+    matrix_shared_pair &pairMatrix
 )
 {
     for (size_t i = 0; i < pairMatrix.rows(); ++i)
@@ -53,8 +53,12 @@ void KokkosLennardJones::transferFromNonCoulombPairMatrix(
             _energyCutoffs.h_view(i, j) = pairMatrix[i][j]->getEnergyCutOff();
             _forceCutoffs.h_view(i, j)  = pairMatrix[i][j]->getForceCutOff();
 
-            _c6.h_view(i, j)  = pairMatrix[i][j]->getC6();
-            _c12.h_view(i, j) = pairMatrix[i][j]->getC12();
+            _c6.h_view(i, j) =
+                dynamic_cast<LennardJonesPair *>(pairMatrix[i][j].get())
+                    ->getC6();
+            _c12.h_view(i, j) =
+                dynamic_cast<LennardJonesPair *>(pairMatrix[i][j].get())
+                    ->getC6();
         }
     }
 

@@ -22,6 +22,8 @@
 
 #include <cstddef>   // for size_t
 
+#include <cstddef>   // for size_t
+
 #include "molecule.hpp"       // for Molecule
 #include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
@@ -38,6 +40,8 @@ using namespace potential;
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for brute force
  * routine using Kokkos parallelization.
+ * @brief calculates forces, coulombic and non-coulombic energy for brute force
+ * routine using Kokkos parallelization.
  *
  * @param simBox
  * @param physicalData
@@ -45,14 +49,14 @@ using namespace potential;
 inline void PotentialKokkos::
     calculateForces(simulationBox::SimulationBox &simBox, simulationBox::KokkosSimulationBox &kokkosSimBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
 {
-    Kokkos::initialize();
-    {
-        // set total coulombic and non-coulombic energy
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+    // Kokkos::initialize();
+    // {
+    //     // set total coulombic and non-coulombic energy
+    //     double totalCoulombEnergy    = 0.0;
+    //     double totalNonCoulombEnergy = 0.0;
 
-        // get number of atoms
-        const size_t numberOfAtoms = simBox.getNumberOfAtoms();
+    //     // get number of atoms
+    //     const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
         kokkosSimBox.initializeForces();
         kokkosSimBox.transferPositionsFromSimulationBox(simBox);

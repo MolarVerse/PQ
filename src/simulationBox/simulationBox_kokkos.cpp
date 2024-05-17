@@ -122,6 +122,23 @@ void KokkosSimulationBox::transferPositionsFromSimulationBox(
 }
 
 /**
+ * @brief transfer partial charges from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferPartialChargesFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _partialCharges.h_view(i) = simBox.getAtom(i).getPartialCharge();
+    }
+
+    Kokkos::deep_copy(_partialCharges.d_view, _partialCharges.h_view);
+}
+
+/**
  * @brief initialize forces
  */
 void KokkosSimulationBox::initializeForces()

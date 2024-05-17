@@ -20,4 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "nonCoulombPotential.hpp"
+#ifndef _KOKKOS_SETUP_HPP_
+
+#define _KOKKOS_SETUP_HPP_
+
+namespace engine
+{
+    class Engine;   // forward declaration
+
+}
+
+namespace setup
+{
+    void setupKokkos(engine::Engine &);
+
+    /**
+     * @class KokkosSetup
+     *
+     * @brief setup Kokkos
+     */
+    class KokkosSetup
+    {
+       private:
+        engine::Engine &_engine;
+
+       public:
+        explicit KokkosSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
+}   // namespace setup
+
+#endif   // _KOKKOS_SETUP_HPP_

@@ -326,25 +326,3 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
     else
         return std::nullopt;
 }
-
-#ifdef WITH_KOKKOS
-
-/**
- * @brief flattens the non-coulombic pairs into a vector of std::any
- *
- * @return std::vector<std::any>
- */
-std::vector<std::any> ForceFieldNonCoulomb::flattenNonCoulombPairs() const
-{
-    // TODO:
-    //  std::vector<std::any> nonCoulombPairs;
-
-    // auto addNonCoulombPairs = [&nonCoulombPairs](auto &pair) {
-    // nonCoulombPairs.push_back(pair); };
-
-    // std::ranges::for_each(_nonCoulombPairsVector, addNonCoulombPairs);
-
-    // return nonCoulombPairs;
-}
-
-#endif

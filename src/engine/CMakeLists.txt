@@ -44,6 +44,13 @@ target_link_libraries(engine
     references
 )
 
+if(BUILD_WITH_KOKKOS)
+    target_link_libraries(engine
+        PUBLIC
+        nonCoulombPotential_kokkos
+    )
+endif()
+
 install(TARGETS engine
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

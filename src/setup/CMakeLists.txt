@@ -1,4 +1,4 @@
-add_library(setup
+set(setup_source_files
     setup.cpp
     simulationBoxSetup.cpp
     celllistSetup.cpp
@@ -13,6 +13,17 @@ add_library(setup
     qmSetup.cpp
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
+)
+
+if(BUILD_WITH_KOKKOS)
+    set(setup_source_files
+        ${setup_source_files}
+        kokkosSetup.cpp
+    )
+endif()
+
+add_library(setup
+    ${setup_source_files}
 )
 
 target_include_directories(setup
