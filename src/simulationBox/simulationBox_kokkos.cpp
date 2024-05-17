@@ -52,6 +52,8 @@ void KokkosSimulationBox::transferAtomTypesFromSimulationBox(
     {
         _atomTypes.h_view(i) = simBox.getAtom(i).getAtomType();
     }
+
+    Kokkos::deep_copy(_atomTypes.d_view, _atomTypes.h_view);
 }
 
 /**
@@ -75,6 +77,8 @@ void KokkosSimulationBox::transferMolTypesFromSimulationBox(
             atom_counter++;
         }
     }
+
+    Kokkos::deep_copy(_molTypes.d_view, _molTypes.h_view);
 }
 
 /**
@@ -91,6 +95,11 @@ void KokkosSimulationBox::transferInternalGlobalVDWTypesFromSimulationBox(
         _internalGlobalVDWTypes.h_view(i) =
             simBox.getAtom(i).getInternalGlobalVDWType();
     }
+
+    Kokkos::deep_copy(
+        _internalGlobalVDWTypes.d_view,
+        _internalGlobalVDWTypes.h_view
+    );
 }
 
 /**
@@ -108,6 +117,8 @@ void KokkosSimulationBox::transferPositionsFromSimulationBox(
         _positions.h_view(i, 1) = simBox.getAtom(i).getPosition()[1];
         _positions.h_view(i, 2) = simBox.getAtom(i).getPosition()[2];
     }
+
+    Kokkos::deep_copy(_positions.d_view, _positions.h_view);
 }
 
 /**
@@ -121,4 +132,6 @@ void KokkosSimulationBox::initializeForces()
         _forces.h_view(i, 1) = 0.0;
         _forces.h_view(i, 2) = 0.0;
     }
+
+    Kokkos::deep_copy(_forces.d_view, _forces.h_view);
 }
