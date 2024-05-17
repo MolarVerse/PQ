@@ -48,6 +48,7 @@ namespace simulationBox
 
         Kokkos::DualView<double* [3]> _positions;
         Kokkos::DualView<double* [3]> _forces;
+        Kokkos::DualView<double* [3]> _shiftForces;
         Kokkos::DualView<double*>     _partialCharges;
 
        public:
@@ -66,7 +67,9 @@ namespace simulationBox
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
 
         void initializeForces();
+        void initializeShiftForces();
         void transferForcesToSimulationBox(SimulationBox& simBox);
+        void transferShiftForcesToSimulationBox(SimulationBox& simBox);
 
         // getters
         [[nodiscard]] Kokkos::DualView<size_t*>& getAtomTypes()

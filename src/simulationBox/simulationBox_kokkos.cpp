@@ -154,24 +154,52 @@ void KokkosSimulationBox::initializeForces()
 }
 
 /**
+ * @brief initialize shift forces
+ */
+void KokkosSimulationBox::initializeShiftForces()
+{
+    for (size_t i = 0; i < _shiftForces.extent(0); ++i)
+    {
+        _shiftForces.h_view(i, 0) = 0.0;
+        _shiftForces.h_view(i, 1) = 0.0;
+        _shiftForces.h_view(i, 2) = 0.0;
+    }
+
+    Kokkos::deep_copy(_shiftForces.d_view, _shiftForces.h_view);
+}
+
+/**
  * @brief transfer forces to simulation box
-*/
-void KokkosSimulationBox::transferForcesToSimulationBox(
-    SimulationBox& simBox
-)
+ */
+void KokkosSimulationBox::transferForcesToSimulationBox(SimulationBox& simBox)
 {
     // copy forces back to host
     Kokkos::deep_copy(_forces.h_view, _forces.d_view);
 
-
     for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
         simBox.getAtom(i).addForce(
-            {
-                _forces.h_view(i, 0),
-                _forces.h_view(i, 1),
-                _forces.h_view(i, 2)
-            }
+            {_forces.h_view(i, 0), _forces.h_view(i, 1), _forces.h_view(i, 2)}
+        );
+    }
+}
+
+/**
+ * @brief transfer shift forces to simulation box
+ */
+void KokkosSimulationBox::transferShiftForcesToSimulationBox(
+    SimulationBox& simBox
+)
+{
+    // copy forces back to host
+    Kokkos::deep_copy(_shiftForces.h_view, _shiftForces.d_view);
+
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        simBox.getAtom(i).addShiftForce(
+            {_shiftForces.h_view(i, 0),
+             _shiftForces.h_view(i, 1),
+             _shiftForces.h_view(i, 2)}
         );
     }
 }
