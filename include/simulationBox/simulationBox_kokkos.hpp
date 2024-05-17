@@ -60,6 +60,7 @@ namespace simulationBox
         );
 
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
+        void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
 
         void initializeForces();
     };

@@ -43,7 +43,9 @@ void Engine::run()
 
     _physicalData.calculateKinetics(getSimulationBox());
 
-    _engineOutput.getLogOutput().writeInitialMomentum(norm(_physicalData.getMomentum()));
+    _engineOutput.getLogOutput().writeInitialMomentum(
+        norm(_physicalData.getMomentum())
+    );
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
@@ -69,37 +71,49 @@ void Engine::run()
 /**
  * @brief Writes output files.
  *
- * @details output files are written if the step is a multiple of the output frequency.
+ * @details output files are written if the step is a multiple of the output
+ * frequency.
  *
  */
 void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
 
-    const auto outputFrequency = settings::OutputFileSettings::getOutputFrequency();
+    const auto outputFrequency =
+        settings::OutputFileSettings::getOutputFrequency();
 
     if (0 == _step % outputFrequency)
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
 
-        const auto dt             = settings::TimingsSettings::getTimeStep();
-        const auto step0          = _timings.getStepCount();
-        const auto effectiveStep  = _step + step0;
-        const auto simulationTime = static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
-        const auto loopTime       = _timings.calculateLoopTime(_step);
+        const auto dt            = settings::TimingsSettings::getTimeStep();
+        const auto step0         = _timings.getStepCount();
+        const auto effectiveStep = _step + step0;
+        const auto simulationTime =
+            static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
+        const auto loopTime = _timings.calculateLoopTime(_step);
 
-        _engineOutput.writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effectiveStep, loopTime, _physicalData);
+        _engineOutput
+            .writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
+        _engineOutput
+            .writeInstantEnergyFile(effectiveStep, loopTime, _physicalData);
         _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
+        _engineOutput
+            .writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
         _engineOutput.writeChargeFile(_simulationBox);
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
-        _engineOutput.writeVirialFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
-        _engineOutput.writeStressFile(effectiveStep, _physicalData);   // use physicalData instead of averagePhysicalData
+        _engineOutput.writeVirialFile(
+            effectiveStep,
+            _physicalData
+        );   // use physicalData instead of averagePhysicalData
+        _engineOutput.writeStressFile(
+            effectiveStep,
+            _physicalData
+        );   // use physicalData instead of averagePhysicalData
         _engineOutput.writeBoxFile(effectiveStep, _simulationBox.getBox());
 
         _averagePhysicalData = physicalData::PhysicalData();

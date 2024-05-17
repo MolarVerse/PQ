@@ -24,6 +24,9 @@
 
 #define _ENGINE_HPP_
 
+#include <cstddef>   // for size_t
+#include <memory>
+
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
@@ -39,8 +42,10 @@
 #include "timings.hpp"
 #include "virial.hpp"
 
-#include <cstddef>   // for size_t
-#include <memory>
+#ifdef WITH_KOKKOS
+#include "lennardJones_kokkos.hpp"
+#include "simulationBox_kokkos.hpp"
+#endif
 
 namespace output
 {
@@ -76,7 +81,7 @@ namespace engine
      */
     class Engine
     {
-      protected:
+       protected:
         size_t _step = 1;
 
         EngineOutput                   _engineOutput;
@@ -90,25 +95,50 @@ namespace engine
         intraNonBonded::IntraNonBonded _intraNonBonded;
         resetKinetics::ResetKinetics   _resetKinetics;
 
-        std::unique_ptr<integrator::Integrator> _integrator = std::make_unique<integrator::VelocityVerlet>();
-        std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
-        std::unique_ptr<manostat::Manostat>     _manostat   = std::make_unique<manostat::Manostat>();
-        std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();
-        std::unique_ptr<potential::Potential>   _potential  = std::make_unique<potential::PotentialBruteForce>();
+#ifdef WITH_KOKKOS
+        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
+        potential::KokkosLennardJones      _kokkosLennardJones;
+#endif
 
-      public:
+        std::unique_ptr<integrator::Integrator> _integrator =
+            std::make_unique<integrator::VelocityVerlet>();
+        std::unique_ptr<thermostat::Thermostat> _thermostat =
+            std::make_unique<thermostat::Thermostat>();
+        std::unique_ptr<manostat::Manostat> _manostat =
+            std::make_unique<manostat::Manostat>();
+        std::unique_ptr<virial::Virial> _virial =
+            std::make_unique<virial::VirialMolecular>();
+        std::unique_ptr<potential::Potential> _potential =
+            std::make_unique<potential::PotentialBruteForce>();
+
+       public:
         Engine()          = default;
         virtual ~Engine() = default;
 
         virtual void run();
-        virtual void takeStep(){};
+        virtual void takeStep() {};
         virtual void writeOutput();
 
-        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
-        [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
-        [[nodiscard]] bool isCellListActivated() const { return _cellList.isActive(); }
-        [[nodiscard]] bool isConstraintsActivated() const { return _constraints.isActive(); }
-        [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded.isActive(); }
+        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const
+        {
+            return _forceField.isNonCoulombicActivated();
+        }
+        [[nodiscard]] bool isGuffActivated() const
+        {
+            return !_forceField.isNonCoulombicActivated();
+        }
+        [[nodiscard]] bool isCellListActivated() const
+        {
+            return _cellList.isActive();
+        }
+        [[nodiscard]] bool isConstraintsActivated() const
+        {
+            return _constraints.isActive();
+        }
+        [[nodiscard]] bool isIntraNonBondedActivated() const
+        {
+            return _intraNonBonded.isActive();
+        }
 
         /************************************
          *                                  *
@@ -148,47 +178,164 @@ namespace engine
          *                         *
          ***************************/
 
-        [[nodiscard]] timings::Timings               &getTimings() { return _timings; }
-        [[nodiscard]] simulationBox::CellList        &getCellList() { return _cellList; }
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox() { return _simulationBox; }
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData() { return _physicalData; }
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData() { return _averagePhysicalData; }
-        [[nodiscard]] constraints::Constraints       &getConstraints() { return _constraints; }
-        [[nodiscard]] forceField::ForceField         &getForceField() { return _forceField; }
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
-        [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return _resetKinetics; }
+        [[nodiscard]] timings::Timings        &getTimings() { return _timings; }
+        [[nodiscard]] simulationBox::CellList &getCellList()
+        {
+            return _cellList;
+        }
+        [[nodiscard]] simulationBox::SimulationBox &getSimulationBox()
+        {
+            return _simulationBox;
+        }
+        [[nodiscard]] physicalData::PhysicalData &getPhysicalData()
+        {
+            return _physicalData;
+        }
+        [[nodiscard]] physicalData::PhysicalData &getAveragePhysicalData()
+        {
+            return _averagePhysicalData;
+        }
+        [[nodiscard]] constraints::Constraints &getConstraints()
+        {
+            return _constraints;
+        }
+        [[nodiscard]] forceField::ForceField &getForceField()
+        {
+            return _forceField;
+        }
+        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded()
+        {
+            return _intraNonBonded;
+        }
+        [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics()
+        {
+            return _resetKinetics;
+        }
 
-        [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+        [[nodiscard]] forceField::ForceField *getForceFieldPtr()
+        {
+            return &_forceField;
+        }
 
         [[nodiscard]] virial::Virial         &getVirial() { return *_virial; }
-        [[nodiscard]] integrator::Integrator &getIntegrator() { return *_integrator; }
-        [[nodiscard]] potential::Potential   &getPotential() { return *_potential; }
-        [[nodiscard]] thermostat::Thermostat &getThermostat() { return *_thermostat; }
-        [[nodiscard]] manostat::Manostat     &getManostat() { return *_manostat; }
+        [[nodiscard]] integrator::Integrator &getIntegrator()
+        {
+            return *_integrator;
+        }
+        [[nodiscard]] potential::Potential &getPotential()
+        {
+            return *_potential;
+        }
+        [[nodiscard]] thermostat::Thermostat &getThermostat()
+        {
+            return *_thermostat;
+        }
+        [[nodiscard]] manostat::Manostat &getManostat() { return *_manostat; }
 
-        [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput() { return _engineOutput.getInstantEnergyOutput(); }
-        [[nodiscard]] output::MomentumOutput   &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-        [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
-        [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-        [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        [[nodiscard]] EngineOutput &getEngineOutput() { return _engineOutput; }
+        [[nodiscard]] output::EnergyOutput &getEnergyOutput()
+        {
+            return _engineOutput.getEnergyOutput();
+        }
+        [[nodiscard]] output::EnergyOutput &getInstantEnergyOutput()
+        {
+            return _engineOutput.getInstantEnergyOutput();
+        }
+        [[nodiscard]] output::MomentumOutput &getMomentumOutput()
+        {
+            return _engineOutput.getMomentumOutput();
+        }
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput()
+        {
+            return _engineOutput.getXyzOutput();
+        }
+        [[nodiscard]] output::TrajectoryOutput &getVelOutput()
+        {
+            return _engineOutput.getVelOutput();
+        }
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput()
+        {
+            return _engineOutput.getForceOutput();
+        }
+        [[nodiscard]] output::TrajectoryOutput &getChargeOutput()
+        {
+            return _engineOutput.getChargeOutput();
+        }
+        [[nodiscard]] output::LogOutput &getLogOutput()
+        {
+            return _engineOutput.getLogOutput();
+        }
+        [[nodiscard]] output::StdoutOutput &getStdoutOutput()
+        {
+            return _engineOutput.getStdoutOutput();
+        }
+        [[nodiscard]] output::RstFileOutput &getRstFileOutput()
+        {
+            return _engineOutput.getRstFileOutput();
+        }
+        [[nodiscard]] output::InfoOutput &getInfoOutput()
+        {
+            return _engineOutput.getInfoOutput();
+        }
 
-        [[nodiscard]] output::VirialOutput  &getVirialOutput() { return _engineOutput.getVirialOutput(); }
-        [[nodiscard]] output::StressOutput  &getStressOutput() { return _engineOutput.getStressOutput(); }
-        [[nodiscard]] output::BoxFileOutput &getBoxFileOutput() { return _engineOutput.getBoxFileOutput(); }
+        [[nodiscard]] output::VirialOutput &getVirialOutput()
+        {
+            return _engineOutput.getVirialOutput();
+        }
+        [[nodiscard]] output::StressOutput &getStressOutput()
+        {
+            return _engineOutput.getStressOutput();
+        }
+        [[nodiscard]] output::BoxFileOutput &getBoxFileOutput()
+        {
+            return _engineOutput.getBoxFileOutput();
+        }
 
-        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerVelOutput() { return _engineOutput.getRingPolymerVelOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerForceOutput() { return _engineOutput.getRingPolymerForceOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerChargeOutput() { return _engineOutput.getRingPolymerChargeOutput(); }
-        [[nodiscard]] RPEnergyOutput      &getRingPolymerEnergyOutput() { return _engineOutput.getRingPolymerEnergyOutput(); }
+        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput()
+        {
+            return _engineOutput.getRingPolymerRstFileOutput();
+        }
+        [[nodiscard]] RPTrajectoryOutput &getRingPolymerXyzOutput()
+        {
+            return _engineOutput.getRingPolymerXyzOutput();
+        }
+        [[nodiscard]] RPTrajectoryOutput &getRingPolymerVelOutput()
+        {
+            return _engineOutput.getRingPolymerVelOutput();
+        }
+        [[nodiscard]] RPTrajectoryOutput &getRingPolymerForceOutput()
+        {
+            return _engineOutput.getRingPolymerForceOutput();
+        }
+        [[nodiscard]] RPTrajectoryOutput &getRingPolymerChargeOutput()
+        {
+            return _engineOutput.getRingPolymerChargeOutput();
+        }
+        [[nodiscard]] RPEnergyOutput &getRingPolymerEnergyOutput()
+        {
+            return _engineOutput.getRingPolymerEnergyOutput();
+        }
+
+#ifdef WITH_KOKKOS
+        [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
+        )
+        {
+            return _kokkosSimulationBox;
+        }
+        [[nodiscard]] potential::KokkosLennardJones &getKokkosLennardJones()
+        {
+            return _kokkosLennardJones;
+        }
+
+        void initKokkosSimulationBox(const size_t numAtoms)
+        {
+            _kokkosSimulationBox = simulationBox::KokkosSimulationBox(numAtoms);
+        }
+        void initKokkosLennardJones(const size_t numAtomTypes)
+        {
+            _kokkosLennardJones = potential::KokkosLennardJones(numAtomTypes);
+        }
+#endif
     };
 
 }   // namespace engine
