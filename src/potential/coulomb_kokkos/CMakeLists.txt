@@ -13,7 +13,8 @@ target_link_libraries(coulombPotential_kokkos
     PUBLIC
     linearAlgebra
     Kokkos::kokkos
-    Kokkos::kokkoskernels
+
+    # Kokkos::kokkoskernels
 )
 
 install(TARGETS coulombPotential_kokkos

@@ -24,10 +24,9 @@
 
 #define _POTENTIAL_HPP_
 
-#include <Kokkos_Core.hpp>   // for Kokkos::parallel_for, Kokkos::RangePolicy
-#include <cstddef>           // for size_t
-#include <memory>            // for shared_ptr, __shared_ptr_access, make_shared
-#include <utility>           // for pair
+#include <cstddef>   // for size_t
+#include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
+#include <utility>   // for pair
 
 #include "vector3d.hpp"   // for Vec3D
 
@@ -42,15 +41,12 @@ namespace simulationBox
     class Molecule;
     class SimulationBox;
     class Box;
-    class KokkosSimulationBox;
 }   // namespace simulationBox
 
 namespace potential
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-    class KokkosLennardJones;    // forward declaration
-    class KokkosCoulombWolf;     // forward declaration
 
     /**
      * @class Potential
@@ -136,18 +132,6 @@ namespace potential
        public:
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
-    };
-
-    /**
-     * @class KokkosPotential
-     *
-     * @brief Kokkos implementation of the potential
-     *
-     */
-    class KokkosPotential
-    {
-       public:
-        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &, KokkosLennardJones &, KokkosCoulombWolf &);
     };
 
     /**

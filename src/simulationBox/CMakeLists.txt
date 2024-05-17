@@ -30,7 +30,8 @@ if(BUILD_WITH_KOKKOS)
     target_link_libraries(simulationBox
         PUBLIC
         Kokkos::kokkos
-        Kokkos::kokkoskernels
+
+        # Kokkos::kokkoskernels
     )
 
     target_include_directories(simulationBox

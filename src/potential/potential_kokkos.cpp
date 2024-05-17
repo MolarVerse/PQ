@@ -20,20 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "potential_kokkos.hpp"
+
 #include <cstddef>   // for size_t
 
-#include "coulombPotential.hpp"     // for CoulombPotential
 #include "coulombWolf_kokkos.hpp"   // for CoulombWolf implementation with Kokkos
 #include "lennardJones_kokkos.hpp"   // for LennardJones implementation with Kokkos
-#include "molecule.hpp"              // for Molecule
 #include "physicalData.hpp"          // for PhysicalData
-#include "potential.hpp"
 #include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
-
-namespace simulationBox
-{
-    class CellList;
-}   // namespace simulationBox
 
 using namespace potential;
 
@@ -46,13 +40,13 @@ using namespace potential;
  * @param simBox
  * @param physicalData
  */
-inline void KokkosPotential::calculateForces(
+KOKKOS_INLINE_FUNCTION
+void KokkosPotential::calculateForces(
     simulationBox::SimulationBox       &simBox,
     simulationBox::KokkosSimulationBox &kokkosSimBox,
     physicalData::PhysicalData         &physicalData,
-    simulationBox::CellList &,
-    KokkosLennardJones &ljPotential,
-    KokkosCoulombWolf  &coulombWolf
+    KokkosLennardJones                 &ljPotential,
+    KokkosCoulombWolf                  &coulombWolf
 )
 {
     // set total coulombic and non-coulombic energy
@@ -113,7 +107,7 @@ inline void KokkosPotential::calculateForces(
 
                 auto distance = Kokkos::sqrt(normSquared);
 
-                if (distance > CoulombPotential::getCoulombRadiusCutOff())
+                if (distance > coulombWolf.getCoulombRadiusCutOff())
                 {
                     continue;
                 }

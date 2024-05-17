@@ -14,7 +14,8 @@ target_link_libraries(nonCoulombPotential_kokkos
     linearAlgebra
 
     Kokkos::kokkos
-    Kokkos::kokkoskernels
+
+    # Kokkos::kokkoskernels
 )
 
 install(TARGETS nonCoulombPotential_kokkos
