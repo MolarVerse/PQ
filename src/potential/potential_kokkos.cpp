@@ -64,6 +64,7 @@ inline void KokkosPotential::calculateForces(
 
     kokkosSimBox.initializeForces();
     kokkosSimBox.transferPositionsFromSimulationBox(simBox);
+    kokkosSimBox.transferPartialChargesFromSimulationBox(simBox);
 
     auto atomTypes = kokkosSimBox.getAtomTypes().d_view;
     auto molTypes  = kokkosSimBox.getMolTypes().d_view;
@@ -73,6 +74,7 @@ inline void KokkosPotential::calculateForces(
     auto positions      = kokkosSimBox.getPositions().d_view;
     auto forces         = kokkosSimBox.getForces().d_view;
     auto partialCharges = kokkosSimBox.getPartialCharges().d_view;
+    auto shiftForces    = kokkosSimBox.getShiftForces().d_view;
 
     Kokkos::parallel_reduce(
         "Reduction",
@@ -99,13 +101,20 @@ inline void KokkosPotential::calculateForces(
                     positions(i, 2) - positions(j, 2)
                 };
 
+                double txyz[3];
+                kokkosSimBox.calculateShiftVector(dxyz, txyz);
+
+                dxyz[0] += txyz[0];
+                dxyz[1] += txyz[1];
+                dxyz[2] += txyz[2];
+
                 auto normSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
                 // TODO: txyz
                 auto distance = Kokkos::sqrt(normSquared);
 
-                if (distance < CoulombPotential::getCoulombRadiusCutOff())
+                if (distance > CoulombPotential::getCoulombRadiusCutOff())
                 {
                     continue;
                 }
@@ -120,27 +129,27 @@ inline void KokkosPotential::calculateForces(
                     force_i
                 );
 
+                coulombEnergy += coulombicEnergy;
+
                 const auto vdWType_j = internalGlobalVDWTypes(j);
                 const auto nRCCutOff =
                     ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
 
                 if (distance < nRCCutOff)
                 {
-                    continue;
+                    auto nonCoulombicEnergy = ljPotential.calculate(
+                        distance,
+                        dxyz,
+                        force_i,
+                        vdWType_i,
+                        vdWType_j
+                    );
+                    nonCoulombEnergy += nonCoulombicEnergy;
                 }
 
-                auto nonCoulombicEnergy = ljPotential.calculate(
-                    distance,
-                    dxyz,
-                    force_i,
-                    vdWType_i,
-                    vdWType_j
-                );
-
-                coulombEnergy    += coulombicEnergy;
-                nonCoulombEnergy += nonCoulombicEnergy;
-
-                // TODO: shiftforces
+                shiftForces(i, 0) += force_i[0] * txyz[0] / 2;
+                shiftForces(i, 1) += force_i[1] * txyz[1] / 2;
+                shiftForces(i, 2) += force_i[2] * txyz[2] / 2;
             }
         },
         totalCoulombEnergy,

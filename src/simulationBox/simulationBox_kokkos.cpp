@@ -39,6 +39,17 @@ KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
 {
 }
 
+void KokkosSimulationBox::calculateShiftVector(const double* dxyz, double* txyz)
+    const
+{
+    txyz[0] = -_boxDimensions.d_view(0) *
+              Kokkos::round(dxyz[0] / _boxDimensions.d_view(0));
+    txyz[1] = -_boxDimensions.d_view(1) *
+              Kokkos::round(dxyz[1] / _boxDimensions.d_view(1));
+    txyz[2] = -_boxDimensions.d_view(2) *
+              Kokkos::round(dxyz[2] / _boxDimensions.d_view(2));
+}
+
 /**
  * @brief transfer atom types from simulation box
  *
@@ -136,6 +147,22 @@ void KokkosSimulationBox::transferPartialChargesFromSimulationBox(
     }
 
     Kokkos::deep_copy(_partialCharges.d_view, _partialCharges.h_view);
+}
+
+/**
+ * @brief transfer box dimensions from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferBoxDimensionsFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    _boxDimensions.h_view(0) = simBox.getBoxDimensions()[0];
+    _boxDimensions.h_view(1) = simBox.getBoxDimensions()[1];
+    _boxDimensions.h_view(2) = simBox.getBoxDimensions()[2];
+
+    Kokkos::deep_copy(_boxDimensions.d_view, _boxDimensions.h_view);
 }
 
 /**

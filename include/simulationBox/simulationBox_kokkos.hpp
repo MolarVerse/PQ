@@ -51,11 +51,16 @@ namespace simulationBox
         Kokkos::DualView<double* [3]> _shiftForces;
         Kokkos::DualView<double*>     _partialCharges;
 
+        Kokkos::DualView<double[3]> _boxDimensions =
+            Kokkos::DualView<double[3]>("boxDimensions");
+
        public:
         KokkosSimulationBox(size_t numAtoms);
 
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
+
+        void calculateShiftVector(const double* dxyz, double* txyz) const;
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);
@@ -65,6 +70,7 @@ namespace simulationBox
 
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
+        void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
 
         void initializeForces();
         void initializeShiftForces();
@@ -92,9 +98,17 @@ namespace simulationBox
         {
             return _forces;
         }
+        [[nodiscard]] Kokkos::DualView<double* [3]>& getShiftForces()
+        {
+            return _shiftForces;
+        }
         [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges()
         {
             return _partialCharges;
+        }
+        [[nodiscard]] Kokkos::DualView<double[3]>& getBoxDimensions()
+        {
+            return _boxDimensions;
         }
     };
 }   // namespace simulationBox
