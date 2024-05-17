@@ -20,12 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <cstddef>   // for size_t
+
 #include "molecule.hpp"       // for Molecule
 #include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
-
-#include <cstddef>   // for size_t
+#include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
+#include "coulombPotential.hpp"      // for CoulombPotential
 
 namespace simulationBox
 {
@@ -35,15 +36,14 @@ namespace simulationBox
 using namespace potential;
 
 /**
- * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
- * using Kokkos parallelization.
+ * @brief calculates forces, coulombic and non-coulombic energy for brute force
+ * routine using Kokkos parallelization.
  *
  * @param simBox
  * @param physicalData
  */
-inline void PotentialKokkos::calculateForces(simulationBox::SimulationBox &simBox,
-                                             physicalData::PhysicalData   &physicalData,
-                                             simulationBox::CellList &)
+inline void PotentialKokkos::
+    calculateForces(simulationBox::SimulationBox &simBox, simulationBox::KokkosSimulationBox &kokkosSimBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
 {
     Kokkos::initialize();
     {
@@ -54,56 +54,104 @@ inline void PotentialKokkos::calculateForces(simulationBox::SimulationBox &simBo
         // get number of atoms
         const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
-        // create Kokkos Views for positions and forces
-        Kokkos::View<double*, Kokkos::HostSpace> positions("positions", 3 * numberOfAtoms);
-        Kokkos::View<double*, Kokkos::HostSpace> forces("forces", 3 * numberOfAtoms);
+        kokkosSimBox.initializeForces();
+        kokkosSimBox.transferPositionsFromSimulationBox(simBox);
 
-        // flatten positions
-        auto flattenedPositions = simBox.flattenPositions();
-        auto flattenedForces    = simBox.flattenForces();
+        auto atomTypes = kokkosSimBox.getAtomTypes().d_view;
+        auto molTypes  = kokkosSimBox.getMolTypes().d_view;
+        auto internalGlobalVDWTypes =
+            kokkosSimBox.getInternalGlobalVDWTypes().d_view;
 
-        // copy flattened positions and forces to Kokkos View
-        for (size_t i = 0; i < 3 * numberOfAtoms; ++i)
-        {
-            positions(i) = flattenedPositions[i];
-            forces(i)    = flattenedForces[i];
-        }
+        auto positions      = kokkosSimBox.getPositions().d_view;
+        auto forces         = kokkosSimBox.getForces().d_view;
+        auto partialCharges = kokkosSimBox.getPartialCharges().d_view;
 
-        // create Kokkos View on device
-        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> positionsDevice("positionsDevice", 3 * numberOfAtoms);
-        Kokkos::View<double*, Kokkos::DefaultExecutionSpace> forcesDevice("forcesDevice", 3 * numberOfAtoms);
+        Kokkos::parallel_reduce(
+            "Reduction",
+            numberOfAtoms,
+            KOKKOS_LAMBDA(
+                const size_t i,
+                double      &coulombEnergy,
+                double      &nonCoulombEnergy
+            ) {
 
-        // copy positions and forces to device
-        Kokkos::deep_copy(positionsDevice, positions);
-        Kokkos::deep_copy(forcesDevice, forces);
+                const auto partialCharge_i = partialCharges(i);
+                const auto vdWType_i       = internalGlobalVDWTypes(i);
+                auto force_i               = &forces(i, 0);
 
-        Kokkos::parallel_reduce(numberOfAtoms, KOKKOS_LAMBDA(const size_t i, double &coulombEnergy, double &nonCoulombEnergy)
-        {
-            // calculate forces
-            forcesDevice(i) = 0.0;
+                for (size_t j = 0; j < numberOfAtoms; ++j)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
 
-            // calculate coulombic energy
-            coulombEnergy += 0.0;
-            nonCoulombEnergy += 0.0;
-        }, totalCoulombEnergy, totalNonCoulombEnergy);
+                    double dxyz[3] = {
+                        positions(i, 0) - positions(j, 0),
+                        positions(i, 1) - positions(j, 1),
+                        positions(i, 2) - positions(j, 2)
+                    };
 
-        // copy forces back to host
-        Kokkos::deep_copy(forces, forcesDevice);
+                    auto normSquared = dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+                    auto distance   = Kokkos::sqrt(normSquared);
 
-        // copy forces back to simulation box
-        for (size_t i = 0; i < 3 * numberOfAtoms; ++i)
-        {
-            flattenedForces[i] = forces(i);
-        }
 
-        // unflatten forces
-        simBox.deFlattenForces(flattenedForces);
+                    if (distance < CoulombPotential::getCoulombRadiusCutOff())
+                    {
+                        continue;
+                    }
+
+                    const auto partialCharge_j = partialCharges(j);
+                    const auto vdWType_j       = internalGlobalVDWTypes(j);
+
+                    auto [coulombicEnergy, nonCoulombicEnergy] =
+                        PotentialKokkos::calculatePairEnergy
+                        (
+                            distance,
+                            dxyz,
+                            force_i,
+                            partialCharge_i,
+                            vdWType_i,
+                            partialCharge_j,
+                            vdWType_j
+                        );
+
+                    coulombEnergy    += coulombicEnergy;
+                    nonCoulombEnergy += nonCoulombicEnergy;
+                }
+            },
+            totalCoulombEnergy,
+            totalNonCoulombEnergy
+        );
 
         // set total coulombic and non-coulombic energy
         physicalData.setCoulombEnergy(totalCoulombEnergy);
         physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
-
     }   // end of Kokkos scope
     Kokkos::finalize();
+}
+
+/**
+ * @brief calculates pair energy for two atoms
+ *
+ * @return Kokkos::pair<double, double>
+ */
+KOKKOS_INLINE_FUNCTION
+Kokkos::pair<double, double> PotentialKokkos::calculatePairEnergy(
+    const double distance,
+    const double dxyz[3],
+    double *force_i,
+    const double partialCharge_i,
+    const size_t vdWType_i,
+    const double partialCharge_j,
+    const size_t vdWType_j
+)
+{
+    auto coulombicEnergy    = 0.0;
+    auto nonCoulombicEnergy = 0.0;
+
+
+
+    return Kokkos::make_pair(coulombicEnergy, nonCoulombicEnergy);
 }

@@ -24,13 +24,12 @@
 
 #define _POTENTIAL_HPP_
 
-#include "vector3d.hpp"   // for Vec3D
-
 #include <Kokkos_Core.hpp>   // for Kokkos::parallel_for, Kokkos::RangePolicy
-
 #include <cstddef>           // for size_t
 #include <memory>            // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>           // for pair
+
+#include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
 {
@@ -43,6 +42,7 @@ namespace simulationBox
     class Molecule;
     class SimulationBox;
     class Box;
+    class KokkosSimulationBox;
 }   // namespace simulationBox
 
 namespace potential
@@ -60,22 +60,29 @@ namespace potential
      * - brute force
      * - cell list
      *
-     * @note _nonCoulombPairsVector is just a container to store the nonCoulombicPairs for later processing
+     * @note _nonCoulombPairsVector is just a container to store the
+     * nonCoulombicPairs for later processing
      *
      */
     class Potential
     {
-      protected:
+       protected:
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPotential;
 
-      public:
+       public:
         virtual ~Potential() = default;
 
-        virtual void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
+        virtual void
+        calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const simulationBox::Box &, simulationBox::Molecule &, simulationBox::Molecule &, const size_t, const size_t) const;
+            const simulationBox::Box &,
+            simulationBox::Molecule &,
+            simulationBox::Molecule &,
+            const size_t,
+            const size_t
+        ) const;
 
         template <typename T>
         void makeCoulombPotential(T p)
@@ -89,15 +96,28 @@ namespace potential
             _nonCoulombPotential = std::make_shared<T>(nonCoulombPotential);
         }
 
-        void setNonCoulombPotential(std::shared_ptr<NonCoulombPotential> nonCoulombPotential)
+        void setNonCoulombPotential(
+            std::shared_ptr<NonCoulombPotential> nonCoulombPotential
+        )
         {
             _nonCoulombPotential = nonCoulombPotential;
         }
 
-        [[nodiscard]] CoulombPotential                    &getCoulombPotential() const { return *_coulombPotential; }
-        [[nodiscard]] NonCoulombPotential                 &getNonCoulombPotential() const { return *_nonCoulombPotential; }
-        [[nodiscard]] std::shared_ptr<CoulombPotential>    getCoulombPotentialSharedPtr() const { return _coulombPotential; }
-        [[nodiscard]] std::shared_ptr<NonCoulombPotential> getNonCoulombPotentialSharedPtr() const
+        [[nodiscard]] CoulombPotential &getCoulombPotential() const
+        {
+            return *_coulombPotential;
+        }
+        [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const
+        {
+            return *_nonCoulombPotential;
+        }
+        [[nodiscard]] std::shared_ptr<CoulombPotential> getCoulombPotentialSharedPtr(
+        ) const
+        {
+            return _coulombPotential;
+        }
+        [[nodiscard]] std::shared_ptr<NonCoulombPotential> getNonCoulombPotentialSharedPtr(
+        ) const
         {
             return _nonCoulombPotential;
         }
@@ -111,8 +131,9 @@ namespace potential
      */
     class PotentialBruteForce : public Potential
     {
-      public:
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
+       public:
+        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+            override;
     };
 
     /**
@@ -123,8 +144,17 @@ namespace potential
      */
     class PotentialKokkos : public Potential
     {
-      public:
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
+       public:
+        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &);
+        Kokkos::pair<double, double> calculatePairEnergy(
+            const double distance,
+            const double dxyz[3],
+            double      *force_i,
+            const double partialCharge_i,
+            const size_t vdWType_i,
+            const double partialCharge_j,
+            const size_t vdWType_j
+        );
     };
 
     /**
@@ -135,8 +165,9 @@ namespace potential
      */
     class PotentialCellList : public Potential
     {
-      public:
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) override;
+       public:
+        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+            override;
     };
 
 }   // namespace potential

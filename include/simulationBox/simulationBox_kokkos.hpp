@@ -27,6 +27,7 @@
 #include <Kokkos_DualView.hpp>
 
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vector3D
 
 /**
  * @namespace simulationBox
@@ -62,6 +63,21 @@ namespace simulationBox
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
 
         void initializeForces();
+        void transferForcesToSimulationBox(SimulationBox& simBox);
+
+        // getters
+        Kokkos::DualView<size_t*>& getAtomTypes() { return _atomTypes; }
+        Kokkos::DualView<size_t*>& getMolTypes() { return _molTypes; }
+        Kokkos::DualView<size_t*>& getInternalGlobalVDWTypes()
+        {
+            return _internalGlobalVDWTypes;
+        }
+        Kokkos::DualView<double* [3]>& getPositions() { return _positions; }
+        Kokkos::DualView<double* [3]>& getForces() { return _forces; }
+        Kokkos::DualView<double*>&     getPartialCharges()
+        {
+            return _partialCharges;
+        }
     };
 }   // namespace simulationBox
 

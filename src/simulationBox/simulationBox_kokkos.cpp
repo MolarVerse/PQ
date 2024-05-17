@@ -135,3 +135,26 @@ void KokkosSimulationBox::initializeForces()
 
     Kokkos::deep_copy(_forces.d_view, _forces.h_view);
 }
+
+/**
+ * @brief transfer forces to simulation box
+*/
+void KokkosSimulationBox::transferForcesToSimulationBox(
+    SimulationBox& simBox
+)
+{
+    // copy forces back to host
+    Kokkos::deep_copy(_forces.h_view, _forces.d_view);
+
+
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        simBox.getAtom(i).addForce(
+            {
+                _forces.h_view(i, 0),
+                _forces.h_view(i, 1),
+                _forces.h_view(i, 2)
+            }
+        );
+    }
+}
