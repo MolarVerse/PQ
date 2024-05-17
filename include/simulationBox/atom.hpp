@@ -67,6 +67,10 @@ namespace simulationBox
         void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
         void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
         void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
+        void addForce(const double force_x, const double force_y, const double force_z)
+        {
+            _force += {force_x, force_y, force_z};
+        }
         void addShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
         void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
