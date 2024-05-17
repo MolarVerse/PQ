@@ -8,6 +8,13 @@ set(simulationBox_source_files
     atom.cpp
 )
 
+if(BUILD_WITH_MPI)
+    set(simulationBox_source_files
+        ${simulationBox_source_files}
+        simulationBox_MPI.cpp
+    )
+endif()
+
 if(BUILD_WITH_KOKKOS)
     set(simulationBox_source_files
         ${simulationBox_source_files}
