@@ -68,3 +68,54 @@ void KokkosLennardJones::transferFromNonCoulombPairMatrix(
     Kokkos::deep_copy(_c6.d_view, _c6.h_view);
     Kokkos::deep_copy(_c12.d_view, _c12.h_view);
 }
+
+/**
+ * @brief Calculate the Lennard-Jones (12-6) energy and forces
+ * between two atoms and add the forces to the force vector.
+ *
+ * @param distance distance between atoms
+ * @param dxyz distance vector
+ * @param force_i force vector
+ * @param vdWType_i van der Waals type of atom i
+ * @param vdWType_j van der Waals type of atom j
+ * @return double energy
+ */
+double KokkosLennardJones::calculate(
+    const double distance,
+    const double dxyz[3],
+    double      *force_i,
+    const size_t vdWType_i,
+    const size_t vdWType_j
+) const
+{
+    // calculate r^12 and r^6
+    auto distanceSquared = distance * distance;
+    auto distanceSixth   = distanceSquared * distanceSquared * distanceSquared;
+    auto distanceTwelfth = distanceSixth * distanceSixth;
+
+    // calculate energy
+    auto energy = _c12.d_view(vdWType_i, vdWType_j) / distanceTwelfth;
+
+    energy += _c6.d_view(vdWType_i, vdWType_j) / distanceSixth;
+
+    energy -= _energyCutoffs.d_view(vdWType_i, vdWType_j);
+
+    energy -= _forceCutoffs.d_view(vdWType_i, vdWType_j) *
+              (_radialCutoffs.d_view(vdWType_i, vdWType_j) - distance);
+
+    // calculate force
+    auto scalarForce =
+        12.0 * _c12.d_view(vdWType_i, vdWType_j) / (distanceTwelfth * distance);
+    scalarForce -=
+        6.0 * _c6.d_view(vdWType_i, vdWType_j) / (distanceSixth * distance);
+    scalarForce -= _forceCutoffs.d_view(vdWType_i, vdWType_j);
+
+    // normalize force
+    scalarForce /= distance;
+
+    force_i[0] += scalarForce * dxyz[0];
+    force_i[1] += scalarForce * dxyz[1];
+    force_i[2] += scalarForce * dxyz[2];
+
+    return energy;
+}

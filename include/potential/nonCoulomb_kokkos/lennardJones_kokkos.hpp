@@ -92,19 +92,14 @@ namespace potential
             return _c12.d_view(i, j);
         }
 
-        double calculate(
+        [[nodiscard]] double calculate(
             const double distance,
             const double dxyz[3],
             double      *force_i,
             const size_t vdWType_i,
             const size_t vdWType_j
-        ) const
-        {
-            auto nonCoulombicEnergy = 0.0;
-
-            return nonCoulombicEnergy;
-        }
-    };
+        ) const;
+        };
 }   // namespace potential
 
 #endif   // _KOKKOS_LENNARD_JONES_PAIR_HPP_

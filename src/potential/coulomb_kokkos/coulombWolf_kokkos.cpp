@@ -98,9 +98,9 @@ KokkosCoulombWolf::KokkosCoulombWolf(
     scalarForce *= coulombPrefactor;
     scalarForce /= distance;
 
-    force[0] = scalarForce * dxyz[0];
-    force[1] = scalarForce * dxyz[1];
-    force[2] = scalarForce * dxyz[2];
+    force[0] += scalarForce * dxyz[0];
+    force[1] += scalarForce * dxyz[1];
+    force[2] += scalarForce * dxyz[2];
 
     energy *= coulombPrefactor;
     return energy;
