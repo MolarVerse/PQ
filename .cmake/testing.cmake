@@ -70,4 +70,4 @@ if(${BUILD_WITH_GCOVR})
     )
 endif()
 
-# add_subdirectory(tests)
+add_definitions(-DWITH_TESTS)

@@ -83,10 +83,16 @@ if(BUILD_WITH_KOKKOS)
     include(kokkos)
 endif()
 
-include(testing)
+if(BUILD_WITH_TESTS)
+    include(testing)
+endif()
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if(BUILD_WITH_TESTS)
+    add_subdirectory(tests)
+endif()
+
 add_subdirectory(apps)
 
 if(BUILD_WITH_DOC)
