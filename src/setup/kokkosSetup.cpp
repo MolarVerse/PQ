@@ -22,6 +22,8 @@
 
 #include "kokkosSetup.hpp"
 
+#include <iostream>
+
 #include "constants/conversionFactors.hpp"
 #include "coulombWolf.hpp"
 #include "engine.hpp"
@@ -39,6 +41,9 @@ using namespace setup;
  */
 void setup::setupKokkos(engine::Engine &engine)
 {
+    engine.getStdoutOutput().writeSetup("Kokkos");
+    engine.getLogOutput().writeSetup("Kokkos");
+
     KokkosSetup kokkosSetup(engine);
     kokkosSetup.setup();
 }
@@ -54,19 +59,21 @@ void KokkosSetup::setup()
     if (settings::PotentialSettings::getNonCoulombType() !=
         settings::NonCoulombType::LJ)
     {
-        customException::UserInputExceptionWarning(
+        auto warning = customException::UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of non "
             "Coulomb potential - falling back to serial execution"
         );
+        std::cerr << warning.what() << std::endl;
         return;
     }
 
     if (settings::PotentialSettings::getCoulombLongRangeType() != "wolf")
     {
-        customException::UserInputExceptionWarning(
+        auto warning = customException::UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of "
             "Coulomb long range potential - falling back to serial execution"
         );
+        std::cerr << warning.what() << std::endl;
         return;
     }
 

@@ -56,8 +56,10 @@ void KokkosPotential::calculateForces(
     const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
     kokkosSimBox.initializeForces();
+    kokkosSimBox.initializeShiftForces();
     kokkosSimBox.transferPositionsFromSimulationBox(simBox);
     kokkosSimBox.transferPartialChargesFromSimulationBox(simBox);
+    kokkosSimBox.transferBoxDimensionsFromSimulationBox(simBox);
 
     auto atomTypes = kokkosSimBox.getAtomTypes().d_view;
     auto molTypes  = kokkosSimBox.getMolTypes().d_view;
@@ -68,6 +70,7 @@ void KokkosPotential::calculateForces(
     auto forces         = kokkosSimBox.getForces().d_view;
     auto partialCharges = kokkosSimBox.getPartialCharges().d_view;
     auto shiftForces    = kokkosSimBox.getShiftForces().d_view;
+    auto boxDimensions  = kokkosSimBox.getBoxDimensions().d_view;
 
     Kokkos::parallel_reduce(
         "Reduction",
@@ -95,7 +98,17 @@ void KokkosPotential::calculateForces(
                 };
 
                 double txyz[3];
-                kokkosSimBox.calculateShiftVector(dxyz, txyz);
+                // simulationBox::KokkosSimulationBox::calculateShiftVector(
+                //     dxyz,
+                //     boxDimensions,
+                //     txyz
+                // );
+                txyz[0] = -boxDimensions(0) *
+                          Kokkos::round(dxyz[0] / boxDimensions(0));
+                txyz[1] = -boxDimensions(1) *
+                          Kokkos::round(dxyz[1] / boxDimensions(1));
+                txyz[2] = -boxDimensions(2) *
+                          Kokkos::round(dxyz[2] / boxDimensions(2));
 
                 dxyz[0] += txyz[0];
                 dxyz[1] += txyz[1];

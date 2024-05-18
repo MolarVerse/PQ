@@ -60,7 +60,11 @@ namespace simulationBox
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        void calculateShiftVector(const double* dxyz, double* txyz) const;
+        KOKKOS_FUNCTION static void calculateShiftVector(
+            const double* dxyz,
+            const double* boxDimensions,
+            double*       txyz
+        );
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);

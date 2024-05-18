@@ -35,19 +35,21 @@ KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
       _internalGlobalVDWTypes("internalGlobalVDWTypes", numAtoms),
       _positions("positions", numAtoms),
       _forces("forces", numAtoms),
+      _shiftForces("shiftForces", numAtoms),
       _partialCharges("partialCharges", numAtoms)
 {
 }
 
-void KokkosSimulationBox::calculateShiftVector(const double* dxyz, double* txyz)
-    const
+KOKKOS_FUNCTION void KokkosSimulationBox::calculateShiftVector(
+    const double* dxyz,
+    const double* boxDimensions,
+    double*       txyz
+)
 {
-    txyz[0] = -_boxDimensions.d_view(0) *
-              Kokkos::round(dxyz[0] / _boxDimensions.d_view(0));
-    txyz[1] = -_boxDimensions.d_view(1) *
-              Kokkos::round(dxyz[1] / _boxDimensions.d_view(1));
-    txyz[2] = -_boxDimensions.d_view(2) *
-              Kokkos::round(dxyz[2] / _boxDimensions.d_view(2));
+    printf("KokkosSimulationBox::calculateShiftVector\n");
+    txyz[0] = -boxDimensions[0] * Kokkos::round(dxyz[0] / boxDimensions[0]);
+    txyz[1] = -boxDimensions[1] * Kokkos::round(dxyz[1] / boxDimensions[1]);
+    txyz[2] = -boxDimensions[2] * Kokkos::round(dxyz[2] / boxDimensions[2]);
 }
 
 /**

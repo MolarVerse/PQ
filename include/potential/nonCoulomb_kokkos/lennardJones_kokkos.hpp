@@ -68,7 +68,7 @@ namespace potential
         [[nodiscard]] Kokkos::DualView<double **> &getC6() { return _c6; }
         [[nodiscard]] Kokkos::DualView<double **> &getC12() { return _c12; }
 
-        [[nodiscard]] double getRadialCutoff(const size_t i, const size_t j)
+        KOKKOS_FUNCTION double getRadialCutoff(const size_t i, const size_t j)
             const
         {
             return _radialCutoffs.d_view(i, j);
@@ -92,14 +92,47 @@ namespace potential
             return _c12.d_view(i, j);
         }
 
-        [[nodiscard]] double calculate(
+        KOKKOS_FUNCTION double calculate(
             const double distance,
             const double dxyz[3],
             double      *force_i,
             const size_t vdWType_i,
             const size_t vdWType_j
-        ) const;
-        };
+        ) const
+        {
+            // calculate r^12 and r^6
+            const auto distanceSquared = distance * distance;
+            const auto distanceSixth =
+                distanceSquared * distanceSquared * distanceSquared;
+            const auto distanceTwelfth = distanceSixth * distanceSixth;
+
+            const auto c12     = _c12.d_view(vdWType_i, vdWType_j);
+            const auto c6      = _c6.d_view(vdWType_i, vdWType_j);
+            const auto eCutoff = _energyCutoffs.d_view(vdWType_i, vdWType_j);
+            const auto fCutoff = _forceCutoffs.d_view(vdWType_i, vdWType_j);
+            const auto rCutoff = _radialCutoffs.d_view(vdWType_i, vdWType_j);
+
+            // calculate energy
+            auto energy  = c12 / distanceTwelfth;
+            energy      += c6 / distanceSixth;
+            energy      -= eCutoff;
+            energy      -= fCutoff * (rCutoff - distance);
+
+            // calculate force
+            auto scalarForce  = 12.0 * c12 / (distanceTwelfth * distance);
+            scalarForce      += 6.0 * c6 / (distanceSixth * distance);
+            scalarForce      -= fCutoff;
+
+            // normalize force
+            scalarForce /= distance;
+
+            force_i[0] += scalarForce * dxyz[0];
+            force_i[1] += scalarForce * dxyz[1];
+            force_i[2] += scalarForce * dxyz[2];
+
+            return energy;
+        }
+    };
 }   // namespace potential
 
 #endif   // _KOKKOS_LENNARD_JONES_PAIR_HPP_
