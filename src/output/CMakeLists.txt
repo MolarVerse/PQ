@@ -31,8 +31,14 @@ target_link_libraries(output
     physicalData
     simulationBox
     settings
-    gtest
 )
+
+if(BUILD_WITH_TESTS)
+    target_link_libraries(output
+        PUBLIC
+        gtest
+    )
+endif()
 
 install(TARGETS output
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
