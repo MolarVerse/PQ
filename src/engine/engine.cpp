@@ -67,9 +67,6 @@ void Engine::run()
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
-
-    if (settings::Settings::useKokkos())
-        Kokkos::finalize();
 }
 
 /**

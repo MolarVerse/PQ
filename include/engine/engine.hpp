@@ -101,8 +101,7 @@ namespace engine
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
         potential::KokkosLennardJones      _kokkosLennardJones;
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential =
-            potential::KokkosPotential();
+        potential::KokkosPotential         _kokkosPotential;
 #endif
 
         std::unique_ptr<integrator::Integrator> _integrator =
@@ -361,6 +360,10 @@ namespace engine
                 wolfParameter3,
                 prefactor
             );
+        }
+        void initKokkosPotential()
+        {
+            _kokkosPotential = potential::KokkosPotential();
         }
 #endif
     };

@@ -71,9 +71,10 @@ void KokkosSetup::setup()
     }
 
     settings::Settings::activateKokkos();
-    Kokkos::initialize();
 
-    auto numAtoms = _engine.getSimulationBox().getNumberOfAtoms();
+    _engine.initKokkosPotential();
+
+    const auto numAtoms = _engine.getSimulationBox().getNumberOfAtoms();
 
     _engine.initKokkosSimulationBox(numAtoms);
 
@@ -92,7 +93,7 @@ void KokkosSetup::setup()
         _engine.getSimulationBox()
     );
 
-    auto numAtomTypes =
+    const auto numAtomTypes =
         _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
 
     _engine.initKokkosLennardJones(numAtomTypes);

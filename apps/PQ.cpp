@@ -20,11 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "commandLineArgs.hpp"   // for CommandLineArgs
-#include "engine.hpp"            // for Engine
-#include "inputFileReader.hpp"   // for readJobType
-#include "setup.hpp"             // for setupSimulation
-
 #include <cstdlib>      // for EXIT_SUCCESS
 #include <exception>    // for exception
 #include <filesystem>   // for remove_all
@@ -33,14 +28,23 @@
 #include <string>       // for string, char_traits
 #include <vector>       // for vector
 
-#ifdef WITH_MPI
-#include "mpi.hpp"   // for MPI
+#include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "engine.hpp"            // for Engine
+#include "inputFileReader.hpp"   // for readJobType
+#include "setup.hpp"             // for setupSimulation
 
+#ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
+
+#include "mpi.hpp"   // for MPI
 #endif
 
 static int PQ(int argc, const std::vector<std::string> &arguments)
 {
+#ifdef WITH_KOKKOS
+    Kokkos::initialize();
+#endif
+
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
@@ -58,6 +62,10 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
     /*
         HERE ENDS THE MAIN LOOP
     */
+
+#ifdef WITH_KOKKOS
+    Kokkos::finalize();
+#endif
 
     return EXIT_SUCCESS;
 }
