@@ -24,9 +24,13 @@
 
 #define _CONVERSION_FACTORS_HPP_
 
+#include <cmath>
+
 #include "natureConstants.hpp"
 
-#include <cmath>
+#ifndef M_PI
+#define M_PI std::numbers::pi
+#endif
 
 namespace constants
 {
@@ -52,48 +56,65 @@ namespace constants
     static constexpr double _METER_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_METER_;
 
     static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_;
-    static constexpr double _METER_TO_BOHR_RADIUS_ = 1.0 / _BOHR_RADIUS_TO_METER_;
+    static constexpr double _METER_TO_BOHR_RADIUS_ =
+        1.0 / _BOHR_RADIUS_TO_METER_;
 
-    static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ = _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
-    static constexpr double _BOHR_RADIUS_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_BOHR_RADIUS_;
+    static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ =
+        _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
+    static constexpr double _BOHR_RADIUS_TO_ANGSTROM_ =
+        1.0 / _ANGSTROM_TO_BOHR_RADIUS_;
 
     /**
      * @brief Conversion factors for area units
      */
-    static constexpr double _ANGSTROM_SQUARED_TO_METER_SQUARED_ = _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
-    static constexpr double _METER_SQUARED_TO_ANGSTROM_SQUARED_ = 1 / _ANGSTROM_SQUARED_TO_METER_SQUARED_;
+    static constexpr double _ANGSTROM_SQUARED_TO_METER_SQUARED_ =
+        _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
+    static constexpr double _METER_SQUARED_TO_ANGSTROM_SQUARED_ =
+        1 / _ANGSTROM_SQUARED_TO_METER_SQUARED_;
 
     /**
      * @brief Conversion factors for volume units
      */
-    static constexpr double _ANGSTROM_CUBIC_TO_METER_CUBIC_ = _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
-    static constexpr double _METER_CUBIC_TO_ANGSTROM_CUBIC_ = 1.0 / _ANGSTROM_CUBIC_TO_METER_CUBIC_;
-    static constexpr double _ANGSTROM_CUBIC_TO_LITER_       = _ANGSTROM_CUBIC_TO_METER_CUBIC_ * 1.0e3;
-    static constexpr double _LITER_TO_ANGSTROM_CUBIC_       = 1.0 / _ANGSTROM_CUBIC_TO_LITER_;
+    static constexpr double _ANGSTROM_CUBIC_TO_METER_CUBIC_ =
+        _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
+    static constexpr double _METER_CUBIC_TO_ANGSTROM_CUBIC_ =
+        1.0 / _ANGSTROM_CUBIC_TO_METER_CUBIC_;
+    static constexpr double _ANGSTROM_CUBIC_TO_LITER_ =
+        _ANGSTROM_CUBIC_TO_METER_CUBIC_ * 1.0e3;
+    static constexpr double _LITER_TO_ANGSTROM_CUBIC_ =
+        1.0 / _ANGSTROM_CUBIC_TO_LITER_;
     static constexpr double _BOHR_RADIUS_CUBIC_TO_ANGSTROM_CUBIC_ =
-        _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_;
+        _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_ *
+        _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for density units
      */
-    static constexpr double _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_       = _KG_TO_AMU_ / _LITER_TO_ANGSTROM_CUBIC_;
-    static constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ = 1.0 / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
+    static constexpr double _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_ =
+        _KG_TO_AMU_ / _LITER_TO_ANGSTROM_CUBIC_;
+    static constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ =
+        1.0 / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
 
     /**
      * @brief Conversion factors for energy units
      */
-    static constexpr double _KCAL_TO_JOULE_                      = 4184.0;
-    static constexpr double _JOULE_TO_KCAL_                      = 1.0 / _KCAL_TO_JOULE_;
-    static constexpr double _JOULE_TO_KCAL_PER_MOL_              = _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
-    static constexpr double _KCAL_PER_MOL_TO_JOULE_              = 1.0 / _JOULE_TO_KCAL_PER_MOL_;
-    static constexpr double _HARTREE_TO_KCAL_PER_MOL_            = 627.5096080305927;
-    static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ = _BOLTZMANN_CONSTANT_ * _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _KCAL_TO_JOULE_ = 4184.0;
+    static constexpr double _JOULE_TO_KCAL_ = 1.0 / _KCAL_TO_JOULE_;
+    static constexpr double _JOULE_TO_KCAL_PER_MOL_ =
+        _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_PER_MOL_TO_JOULE_ =
+        1.0 / _JOULE_TO_KCAL_PER_MOL_;
+    static constexpr double _HARTREE_TO_KCAL_PER_MOL_ = 627.5096080305927;
+    static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ =
+        _BOLTZMANN_CONSTANT_ * _JOULE_TO_KCAL_PER_MOL_;
 
     /**
      * @brief Conversion factors for squared energy units
      */
-    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_      = _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
-    static constexpr double _REDUCED_PLANCK_CONSTANT_SQUARED_ = _REDUCED_PLANCK_CONSTANT_ * _REDUCED_PLANCK_CONSTANT_;
+    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_ =
+        _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
+    static constexpr double _REDUCED_PLANCK_CONSTANT_SQUARED_ =
+        _REDUCED_PLANCK_CONSTANT_ * _REDUCED_PLANCK_CONSTANT_;
 
     /**
      * @brief Conversion factors for force units
@@ -104,8 +125,10 @@ namespace constants
     /**
      * @brief Conversion factors for stress units
      */
-    static constexpr double _HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ =
-        _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_;
+    static constexpr double
+        _HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ =
+            _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_ /
+            _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for time units
@@ -124,8 +147,9 @@ namespace constants
     /**
      * @brief Conversion factors for velocities
      */
-    static constexpr double _M_PER_S_TO_CM_PER_S_        = 1.0e2;
-    static constexpr double _SPEED_OF_LIGHT_IN_CM_PER_S_ = _SPEED_OF_LIGHT_ * _M_PER_S_TO_CM_PER_S_;
+    static constexpr double _M_PER_S_TO_CM_PER_S_ = 1.0e2;
+    static constexpr double _SPEED_OF_LIGHT_IN_CM_PER_S_ =
+        _SPEED_OF_LIGHT_ * _M_PER_S_TO_CM_PER_S_;
 
     /**
      * @brief Conversion factors for frequencies

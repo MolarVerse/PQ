@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/MolarVerse/PQ/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/PQ)
 [![Docs](https://github.com/MolarVerse/PQ/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/PQ/)
 
+
 ## How to Use
 
 To perform calculations using the PQ program just execute the executable `PQ` with a given input file
@@ -12,7 +13,21 @@ To perform calculations using the PQ program just execute the executable `PQ` wi
 
 ## Building from Source
 
-Create a build directory and navigate into this directory. Within this directory configure cmake:
+Prerequisites:
+- CMake >= 3.12
+- GCC   >= 13.0
+
+Clone the PQ GitHub repository and navigate into the directory:
+
+    git clone https://github.com/MolarVerse/PQ.git
+    cd PQ
+
+Create a build directory and navigate into this directory:
+
+    mkdir build
+    cd build
+
+Within this directory configure CMake:
 
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
@@ -23,6 +38,8 @@ Optionally it is also possible to enable MPI for Ring Polymer MD
 For compilation then type:
 
     make -j<#procs>
+
+The executable binary is then found in the subfolder named "apps" inside the build directory.
 
 ## Singularity
 
