@@ -16,10 +16,16 @@ target_include_directories(restartFileReader
 
 target_link_libraries(restartFileReader
     PUBLIC
-    gtest
     engine
     linearAlgebra
 )
+
+if(BUILD_WITH_TESTS)
+    target_link_libraries(restartFileReader
+        PUBLIC
+        gtest
+    )
+endif()
 
 install(TARGETS restartFileReader
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
