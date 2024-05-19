@@ -52,12 +52,13 @@ namespace simulationBox
         Kokkos::DualView<double* [3]> _forces;
         Kokkos::DualView<double* [3]> _shiftForces;
         Kokkos::DualView<double*>     _partialCharges;
+        Kokkos::DualView<double*>     _masses;
 
         Kokkos::DualView<double*> _boxDimensions =
             Kokkos::DualView<double*>("boxDimensions", 3);
 
        public:
-        KokkosSimulationBox(size_t numAtoms);
+        explicit KokkosSimulationBox(size_t numAtoms);
 
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
@@ -76,6 +77,8 @@ namespace simulationBox
                 -boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
         }
 
+        void initKokkosSimulationBox(simulationBox::SimulationBox& simBox);
+
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);
         void transferMoleculeIndicesFromSimulationBox(SimulationBox& simBox);
@@ -85,7 +88,9 @@ namespace simulationBox
 
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
         void transferVelocitiesFromSimulationBox(SimulationBox& simBox);
+        void transferForcesFromSimulationBox(SimulationBox& simBox);
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
+        void transferMassesFromSimulationBox(SimulationBox& simBox);
         void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
 
         void transferPositionsToSimulationBox(SimulationBox& simBox);
@@ -113,6 +118,10 @@ namespace simulationBox
         {
             return _positions;
         }
+        [[nodiscard]] Kokkos::DualView<double* [3]>& getVelocities()
+        {
+            return _velocities;
+        }
         [[nodiscard]] Kokkos::DualView<double* [3]>& getForces()
         {
             return _forces;
@@ -121,6 +130,7 @@ namespace simulationBox
         {
             return _shiftForces;
         }
+        [[nodiscard]] Kokkos::DualView<double*>& getMasses() { return _masses; }
         [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges()
         {
             return _partialCharges;

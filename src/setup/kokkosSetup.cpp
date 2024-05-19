@@ -83,25 +83,15 @@ void KokkosSetup::setup()
 
     const auto numAtoms = _engine.getSimulationBox().getNumberOfAtoms();
 
+    /************************************
+     * Initialize Kokkos simulation box *
+     ************************************/
+
     _engine.initKokkosSimulationBox(numAtoms);
 
     auto kokkosSimulationBox = _engine.getKokkosSimulationBox();
 
-    kokkosSimulationBox.transferAtomTypesFromSimulationBox(
-        _engine.getSimulationBox()
-    );
-    kokkosSimulationBox.transferMolTypesFromSimulationBox(
-        _engine.getSimulationBox()
-    );
-    kokkosSimulationBox.transferMoleculeIndicesFromSimulationBox(
-        _engine.getSimulationBox()
-    );
-    kokkosSimulationBox.transferInternalGlobalVDWTypesFromSimulationBox(
-        _engine.getSimulationBox()
-    );
-    kokkosSimulationBox.transferPartialChargesFromSimulationBox(
-        _engine.getSimulationBox()
-    );
+    kokkosSimulationBox.initKokkosSimulationBox(_engine.getSimulationBox());
 
     auto forceFieldNonCoulomb = dynamic_cast<potential::ForceFieldNonCoulomb &>(
         _engine.getPotential().getNonCoulombPotential()

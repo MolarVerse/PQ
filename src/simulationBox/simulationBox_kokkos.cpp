@@ -38,8 +38,28 @@ KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
       _velocities("velocities", numAtoms),
       _forces("forces", numAtoms),
       _shiftForces("shiftForces", numAtoms),
+      _masses("masses", numAtoms),
       _partialCharges("partialCharges", numAtoms)
 {
+}
+
+/**
+ * @brief initialize simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::initKokkosSimulationBox(SimulationBox& simBox)
+{
+    transferAtomTypesFromSimulationBox(simBox);
+    transferMolTypesFromSimulationBox(simBox);
+    transferMoleculeIndicesFromSimulationBox(simBox);
+    transferInternalGlobalVDWTypesFromSimulationBox(simBox);
+    transferPositionsFromSimulationBox(simBox);
+    transferVelocitiesFromSimulationBox(simBox);
+    transferForcesFromSimulationBox(simBox);
+    transferMassesFromSimulationBox(simBox);
+    transferPartialChargesFromSimulationBox(simBox);
+    transferBoxDimensionsFromSimulationBox(simBox);
 }
 
 /**
@@ -155,7 +175,9 @@ void KokkosSimulationBox::transferVelocitiesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto numberOfAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < numberOfAtoms; ++i)
     {
         _velocities.h_view(i, 0) = simBox.getAtom(i).getVelocity()[0];
         _velocities.h_view(i, 1) = simBox.getAtom(i).getVelocity()[1];
@@ -163,6 +185,38 @@ void KokkosSimulationBox::transferVelocitiesFromSimulationBox(
     }
 
     deep_copy(_velocities.d_view, _velocities.h_view);
+}
+
+/**
+ * @brief transfer forces from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferForcesFromSimulationBox(SimulationBox& simBox)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _forces.h_view(i, 0) = simBox.getAtom(i).getForce()[0];
+        _forces.h_view(i, 1) = simBox.getAtom(i).getForce()[1];
+        _forces.h_view(i, 2) = simBox.getAtom(i).getForce()[2];
+    }
+
+    deep_copy(_forces.d_view, _forces.h_view);
+}
+
+/**
+ * @brief transfer masses from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferMassesFromSimulationBox(SimulationBox& simBox)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _masses.h_view(i) = simBox.getAtom(i).getMass();
+    }
+
+    deep_copy(_masses.d_view, _masses.h_view);
 }
 
 /**

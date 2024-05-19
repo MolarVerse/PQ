@@ -56,7 +56,6 @@ void KokkosPotential::calculateForces(
     const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
     kokkosSimBox.transferPositionsFromSimulationBox(simBox);
-    kokkosSimBox.transferPartialChargesFromSimulationBox(simBox);
     kokkosSimBox.transferBoxDimensionsFromSimulationBox(simBox);
 
     const auto atomTypes       = kokkosSimBox.getAtomTypes().d_view;
