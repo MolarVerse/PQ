@@ -48,6 +48,7 @@ namespace simulationBox
         Kokkos::DualView<size_t*> _internalGlobalVDWTypes;
 
         Kokkos::DualView<double* [3]> _positions;
+        Kokkos::DualView<double* [3]> _velocities;
         Kokkos::DualView<double* [3]> _forces;
         Kokkos::DualView<double* [3]> _shiftForces;
         Kokkos::DualView<double*>     _partialCharges;
@@ -68,11 +69,11 @@ namespace simulationBox
         )
         {
             txyz[0] =
-                boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
+                -boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
             txyz[1] =
-                boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
+                -boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
             txyz[2] =
-                boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
+                -boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
         }
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
@@ -83,9 +84,11 @@ namespace simulationBox
         );
 
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
+        void transferVelocitiesFromSimulationBox(SimulationBox& simBox);
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
         void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
 
+        void transferPositionsToSimulationBox(SimulationBox& simBox);
         void transferForcesToSimulationBox(SimulationBox& simBox);
         void transferShiftForcesToSimulationBox(SimulationBox& simBox);
 
@@ -122,9 +125,9 @@ namespace simulationBox
         {
             return _partialCharges;
         }
-        [[nodiscard]] Kokkos::DualView<double*>* getBoxDimensions()
+        [[nodiscard]] Kokkos::DualView<double*> getBoxDimensions()
         {
-            return &_boxDimensions;
+            return _boxDimensions;
         }
     };
 }   // namespace simulationBox

@@ -95,7 +95,7 @@ namespace potential
         KOKKOS_FUNCTION double calculate(
             const double distance,
             const double dxyz[3],
-            double       force_i[3],
+            double      *force_i,
             const size_t vdWType_i,
             const size_t vdWType_j
         ) const

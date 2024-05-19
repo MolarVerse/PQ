@@ -35,23 +35,12 @@ KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
       _moleculeIndices("moleculeIndices", numAtoms),
       _internalGlobalVDWTypes("internalGlobalVDWTypes", numAtoms),
       _positions("positions", numAtoms),
+      _velocities("velocities", numAtoms),
       _forces("forces", numAtoms),
       _shiftForces("shiftForces", numAtoms),
       _partialCharges("partialCharges", numAtoms)
 {
 }
-
-// KOKKOS_FUNCTION void KokkosSimulationBox::calculateShiftVector(
-//     const double*           dxyz,
-//     Kokkos::View<double[3]> boxDimensions,
-//     double*                 txyz
-// )
-// {
-//     printf("KokkosSimulationBox::calculateShiftVector\n");
-//     txyz[0] = -boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
-//     txyz[1] = -boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
-//     txyz[2] = -boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
-// }
 
 /**
  * @brief transfer atom types from simulation box
@@ -83,12 +72,12 @@ void KokkosSimulationBox::transferMolTypesFromSimulationBox(
 
     for (size_t i = 0; i < simBox.getNumberOfMolecules(); ++i)
     {
-        auto molecule = simBox.getMolecule(i);
+        const auto molecule = simBox.getMolecule(i);
 
         for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
         {
             _molTypes.h_view(atom_counter) = molecule.getMoltype();
-            atom_counter++;
+            ++atom_counter;
         }
     }
 
@@ -108,12 +97,12 @@ void KokkosSimulationBox::transferMoleculeIndicesFromSimulationBox(
 
     for (size_t i = 0; i < simBox.getNumberOfMolecules(); ++i)
     {
-        auto molecule = simBox.getMolecule(i);
+        const auto molecule = simBox.getMolecule(i);
 
         for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
         {
             _moleculeIndices.h_view(atom_counter) = i;
-            atom_counter++;
+            ++atom_counter;
         }
     }
 
@@ -158,6 +147,25 @@ void KokkosSimulationBox::transferPositionsFromSimulationBox(
 }
 
 /**
+ * @brief transfer velocities from simulation box
+ *
+ * @param simBox simulation box
+ */
+void KokkosSimulationBox::transferVelocitiesFromSimulationBox(
+    SimulationBox& simBox
+)
+{
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        _velocities.h_view(i, 0) = simBox.getAtom(i).getVelocity()[0];
+        _velocities.h_view(i, 1) = simBox.getAtom(i).getVelocity()[1];
+        _velocities.h_view(i, 2) = simBox.getAtom(i).getVelocity()[2];
+    }
+
+    deep_copy(_velocities.d_view, _velocities.h_view);
+}
+
+/**
  * @brief transfer partial charges from simulation box
  *
  * @param simBox simulation box
@@ -188,6 +196,25 @@ void KokkosSimulationBox::transferBoxDimensionsFromSimulationBox(
     _boxDimensions.h_view(2) = simBox.getBoxDimensions()[2];
 
     deep_copy(_boxDimensions.d_view, _boxDimensions.h_view);
+}
+
+/**
+ * @brief transfer positions to simulation box
+ */
+void KokkosSimulationBox::transferPositionsToSimulationBox(SimulationBox& simBox
+)
+{
+    // copy positions back to host
+    deep_copy(_positions.h_view, _positions.d_view);
+
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        simBox.getAtom(i).setPosition(
+            {_positions.h_view(i, 0),
+             _positions.h_view(i, 1),
+             _positions.h_view(i, 2)}
+        );
+    }
 }
 
 /**

@@ -59,8 +59,8 @@ void KokkosPotential::calculateForces(
     kokkosSimBox.transferPartialChargesFromSimulationBox(simBox);
     kokkosSimBox.transferBoxDimensionsFromSimulationBox(simBox);
 
-    const auto atomTypes        = kokkosSimBox.getAtomTypes().d_view;
-    const auto moleculeInidices = kokkosSimBox.getMoleculeIndices().d_view;
+    const auto atomTypes       = kokkosSimBox.getAtomTypes().d_view;
+    const auto moleculeIndices = kokkosSimBox.getMoleculeIndices().d_view;
     auto       internalGlobalVDWTypes =
         kokkosSimBox.getInternalGlobalVDWTypes().d_view;
 
@@ -68,7 +68,9 @@ void KokkosPotential::calculateForces(
     auto forces         = kokkosSimBox.getForces().d_view;
     auto partialCharges = kokkosSimBox.getPartialCharges().d_view;
     auto shiftForces    = kokkosSimBox.getShiftForces().d_view;
-    auto boxDimensions  = kokkosSimBox.getBoxDimensions()->d_view;
+    auto boxDimensions  = kokkosSimBox.getBoxDimensions().d_view;
+
+    const auto rcCutoff = coulombWolf.getCoulombRadiusCutOff();
 
     Kokkos::parallel_reduce(
         "Reduction",
@@ -78,7 +80,7 @@ void KokkosPotential::calculateForces(
             double      &coulombEnergy,
             double      &nonCoulombEnergy
         ) {
-            const auto moleculeIndex_i = moleculeInidices(i);
+            const auto moleculeIndex_i = moleculeIndices(i);
             const auto partialCharge_i = partialCharges(i);
             const auto vdWType_i       = internalGlobalVDWTypes(i);
 
@@ -92,7 +94,7 @@ void KokkosPotential::calculateForces(
 
             for (size_t j = 0; j < numberOfAtoms; ++j)
             {
-                const auto moleculeIndex_j = moleculeInidices(j);
+                const auto moleculeIndex_j = moleculeIndices(j);
 
                 if (moleculeIndex_i == moleculeIndex_j)
                     continue;
@@ -116,8 +118,6 @@ void KokkosPotential::calculateForces(
 
                 const auto distanceSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
-
-                const auto rcCutoff = coulombWolf.getCoulombRadiusCutOff();
 
                 if (distanceSquared > rcCutoff * rcCutoff)
                     continue;
