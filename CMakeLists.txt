@@ -39,13 +39,20 @@ else()
     message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
 endif()
 
-# *****************
-# set install rpath
-# *****************
-SET(CMAKE_INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
-)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+if(WIN32)
+    set(CMAKE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/result")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+else()
+    # *****************
+    # set install rpath
+    # *****************
+    SET(CMAKE_INSTALL_RPATH
+        "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
+    )
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif()
 
 # ***************
 # cmake cxx flags
@@ -53,6 +60,10 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # set default flags
 set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
+
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-use-linker-plugin")
+endif()
 
 # add flags dependent on build type
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
