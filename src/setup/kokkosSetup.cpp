@@ -93,6 +93,9 @@ void KokkosSetup::setup()
     kokkosSimulationBox.transferMolTypesFromSimulationBox(
         _engine.getSimulationBox()
     );
+    kokkosSimulationBox.transferMoleculeIndicesFromSimulationBox(
+        _engine.getSimulationBox()
+    );
     kokkosSimulationBox.transferInternalGlobalVDWTypesFromSimulationBox(
         _engine.getSimulationBox()
     );
@@ -100,16 +103,16 @@ void KokkosSetup::setup()
         _engine.getSimulationBox()
     );
 
+    auto forceFieldNonCoulomb = dynamic_cast<potential::ForceFieldNonCoulomb &>(
+        _engine.getPotential().getNonCoulombPotential()
+    );
+
     const auto numAtomTypes =
-        _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
+        forceFieldNonCoulomb.getNonCoulombPairsMatrix().rows();
 
     _engine.initKokkosLennardJones(numAtomTypes);
 
     auto kokkosLennardJones = _engine.getKokkosLennardJones();
-
-    auto forceFieldNonCoulomb = dynamic_cast<potential::ForceFieldNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
-    );
 
     kokkosLennardJones.transferFromNonCoulombPairMatrix(
         forceFieldNonCoulomb.getNonCoulombPairsMatrix()

@@ -55,22 +55,20 @@ void KokkosPotential::calculateForces(
     // get number of atoms
     const size_t numberOfAtoms = simBox.getNumberOfAtoms();
 
-    kokkosSimBox.initializeForces();
-    kokkosSimBox.initializeShiftForces();
     kokkosSimBox.transferPositionsFromSimulationBox(simBox);
     kokkosSimBox.transferPartialChargesFromSimulationBox(simBox);
     kokkosSimBox.transferBoxDimensionsFromSimulationBox(simBox);
 
-    auto atomTypes = kokkosSimBox.getAtomTypes().d_view;
-    auto molTypes  = kokkosSimBox.getMolTypes().d_view;
-    auto internalGlobalVDWTypes =
+    const auto atomTypes        = kokkosSimBox.getAtomTypes().d_view;
+    const auto moleculeInidices = kokkosSimBox.getMoleculeIndices().d_view;
+    auto       internalGlobalVDWTypes =
         kokkosSimBox.getInternalGlobalVDWTypes().d_view;
 
     auto positions      = kokkosSimBox.getPositions().d_view;
     auto forces         = kokkosSimBox.getForces().d_view;
     auto partialCharges = kokkosSimBox.getPartialCharges().d_view;
     auto shiftForces    = kokkosSimBox.getShiftForces().d_view;
-    auto boxDimensions  = kokkosSimBox.getBoxDimensions().d_view;
+    auto boxDimensions  = kokkosSimBox.getBoxDimensions()->d_view;
 
     Kokkos::parallel_reduce(
         "Reduction",
@@ -80,16 +78,24 @@ void KokkosPotential::calculateForces(
             double      &coulombEnergy,
             double      &nonCoulombEnergy
         ) {
+            const auto moleculeIndex_i = moleculeInidices(i);
             const auto partialCharge_i = partialCharges(i);
             const auto vdWType_i       = internalGlobalVDWTypes(i);
-            auto       force_i         = &forces(i, 0);
+
+            forces(i, 0) = 0.0;
+            forces(i, 1) = 0.0;
+            forces(i, 2) = 0.0;
+
+            shiftForces(i, 0) = 0.0;
+            shiftForces(i, 1) = 0.0;
+            shiftForces(i, 2) = 0.0;
 
             for (size_t j = 0; j < numberOfAtoms; ++j)
             {
-                if (i == j)
-                {
+                const auto moleculeIndex_j = moleculeInidices(j);
+
+                if (moleculeIndex_i == moleculeIndex_j)
                     continue;
-                }
 
                 double dxyz[3] = {
                     positions(i, 0) - positions(j, 0),
@@ -98,40 +104,35 @@ void KokkosPotential::calculateForces(
                 };
 
                 double txyz[3];
-                // simulationBox::KokkosSimulationBox::calculateShiftVector(
-                //     dxyz,
-                //     boxDimensions,
-                //     txyz
-                // );
-                txyz[0] = -boxDimensions(0) *
-                          Kokkos::round(dxyz[0] / boxDimensions(0));
-                txyz[1] = -boxDimensions(1) *
-                          Kokkos::round(dxyz[1] / boxDimensions(1));
-                txyz[2] = -boxDimensions(2) *
-                          Kokkos::round(dxyz[2] / boxDimensions(2));
+                simulationBox::KokkosSimulationBox::calculateShiftVector(
+                    dxyz,
+                    boxDimensions,
+                    txyz
+                );
 
                 dxyz[0] += txyz[0];
                 dxyz[1] += txyz[1];
                 dxyz[2] += txyz[2];
 
-                auto normSquared =
+                const auto distanceSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
-                auto distance = Kokkos::sqrt(normSquared);
+                const auto rcCutoff = coulombWolf.getCoulombRadiusCutOff();
 
-                if (distance > coulombWolf.getCoulombRadiusCutOff())
-                {
+                if (distanceSquared > rcCutoff * rcCutoff)
                     continue;
-                }
 
                 const auto partialCharge_j = partialCharges(j);
+                const auto distance        = Kokkos::sqrt(distanceSquared);
+
+                double force_ij[3] = {0.0, 0.0, 0.0};
 
                 const auto coulombicEnergy = coulombWolf.calculate(
                     distance,
                     partialCharge_i,
                     partialCharge_j,
                     dxyz,
-                    force_i
+                    force_ij
                 );
 
                 coulombEnergy += coulombicEnergy;
@@ -145,16 +146,20 @@ void KokkosPotential::calculateForces(
                     auto nonCoulombicEnergy = ljPotential.calculate(
                         distance,
                         dxyz,
-                        force_i,
+                        force_ij,
                         vdWType_i,
                         vdWType_j
                     );
                     nonCoulombEnergy += nonCoulombicEnergy;
                 }
 
-                shiftForces(i, 0) += force_i[0] * txyz[0] / 2;
-                shiftForces(i, 1) += force_i[1] * txyz[1] / 2;
-                shiftForces(i, 2) += force_i[2] * txyz[2] / 2;
+                shiftForces(i, 0) += force_ij[0] * txyz[0] / 2;
+                shiftForces(i, 1) += force_ij[1] * txyz[1] / 2;
+                shiftForces(i, 2) += force_ij[2] * txyz[2] / 2;
+
+                forces(i, 0) += force_ij[0];
+                forces(i, 1) += force_ij[1];
+                forces(i, 2) += force_ij[2];
             }
         },
         totalCoulombEnergy,

@@ -66,7 +66,7 @@ namespace potential
             const double charge_i,
             const double charge_j,
             const double dxyz[3],
-            double      *force
+            double       force[3]
         ) const
         {
             const auto prefactor      = _prefactor.d_view();

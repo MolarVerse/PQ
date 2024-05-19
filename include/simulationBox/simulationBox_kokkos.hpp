@@ -44,6 +44,7 @@ namespace simulationBox
        private:
         Kokkos::DualView<size_t*> _atomTypes;
         Kokkos::DualView<size_t*> _molTypes;
+        Kokkos::DualView<size_t*> _moleculeIndices;
         Kokkos::DualView<size_t*> _internalGlobalVDWTypes;
 
         Kokkos::DualView<double* [3]> _positions;
@@ -51,8 +52,8 @@ namespace simulationBox
         Kokkos::DualView<double* [3]> _shiftForces;
         Kokkos::DualView<double*>     _partialCharges;
 
-        Kokkos::DualView<double[3]> _boxDimensions =
-            Kokkos::DualView<double[3]>("boxDimensions");
+        Kokkos::DualView<double*> _boxDimensions =
+            Kokkos::DualView<double*>("boxDimensions", 3);
 
        public:
         KokkosSimulationBox(size_t numAtoms);
@@ -60,14 +61,23 @@ namespace simulationBox
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        KOKKOS_FUNCTION static void calculateShiftVector(
-            const double* dxyz,
-            const double* boxDimensions,
-            double*       txyz
-        );
+        KOKKOS_INLINE_FUNCTION static void calculateShiftVector(
+            const double*         dxyz,
+            Kokkos::View<double*> boxDimensions,
+            double*               txyz
+        )
+        {
+            txyz[0] =
+                boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
+            txyz[1] =
+                boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
+            txyz[2] =
+                boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
+        }
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);
+        void transferMoleculeIndicesFromSimulationBox(SimulationBox& simBox);
         void transferInternalGlobalVDWTypesFromSimulationBox(
             SimulationBox& simBox
         );
@@ -76,8 +86,6 @@ namespace simulationBox
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
         void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
 
-        void initializeForces();
-        void initializeShiftForces();
         void transferForcesToSimulationBox(SimulationBox& simBox);
         void transferShiftForcesToSimulationBox(SimulationBox& simBox);
 
@@ -89,6 +97,10 @@ namespace simulationBox
         [[nodiscard]] Kokkos::DualView<size_t*>& getMolTypes()
         {
             return _molTypes;
+        }
+        [[nodiscard]] Kokkos::DualView<size_t*>& getMoleculeIndices()
+        {
+            return _moleculeIndices;
         }
         [[nodiscard]] Kokkos::DualView<size_t*>& getInternalGlobalVDWTypes()
         {
@@ -110,9 +122,9 @@ namespace simulationBox
         {
             return _partialCharges;
         }
-        [[nodiscard]] Kokkos::DualView<double[3]>& getBoxDimensions()
+        [[nodiscard]] Kokkos::DualView<double*>* getBoxDimensions()
         {
-            return _boxDimensions;
+            return &_boxDimensions;
         }
     };
 }   // namespace simulationBox
