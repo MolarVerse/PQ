@@ -22,15 +22,16 @@
 
 #include "trajectoryOutput.hpp"
 
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
-
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
+#include <sstream>   // for ostringstream
 #include <string>    // for operator<<
 #include <vector>    // for vector
+
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
 using namespace output;
 
@@ -41,7 +42,8 @@ using namespace output;
  */
 void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
+    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions()
+        << "  " << simBox.getBoxAngles() << '\n';
 }
 
 /**
@@ -51,20 +53,26 @@ void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
  */
 void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
 {
+    std::ostringstream buffer;
+
     writeHeader(simBox);
-    _fp << '\n';
+    buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
+             i < numberOfAtoms;
+             ++i)
         {
-            _fp << std::format("{:<5}\t", molecule.getAtomName(i));
+            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            _fp << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[0]);
-            _fp << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[1]);
-            _fp << std::format("{:15.8f}\n", molecule.getAtomPosition(i)[2]);
-
-            _fp << std::flush;
+            buffer << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[0]);
+            buffer << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[1]);
+            buffer << std::format("{:15.8f}\n", molecule.getAtomPosition(i)[2]);
         }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -74,20 +82,26 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
  */
 void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
 {
+    std::ostringstream buffer;
+
     writeHeader(simBox);
-    _fp << '\n';
+    buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
+             i < numberOfAtoms;
+             ++i)
         {
-            _fp << std::format("{:<5}\t", molecule.getAtomName(i));
+            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[0]);
-            _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[1]);
-            _fp << std::format("{:20.8e}\n", molecule.getAtomVelocity(i)[2]);
-
-            _fp << std::flush;
+            buffer << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[0]);
+            buffer << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[1]);
+            buffer << std::format("{:20.8e}\n", molecule.getAtomVelocity(i)[2]);
         }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -97,20 +111,29 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
  */
 void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
 {
+    std::ostringstream buffer;
+
     writeHeader(simBox);
-    _fp << std::format("# Total force = {:.5e} kcal/mol/Angstrom\n", simBox.calculateTotalForce());
+    buffer << std::format(
+        "# Total force = {:.5e} kcal/mol/Angstrom\n",
+        simBox.calculateTotalForce()
+    );
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
+             i < numberOfAtoms;
+             ++i)
         {
-            _fp << std::format("{:<5}\t", molecule.getAtomName(i));
+            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            _fp << std::format("{:15.8f}\t", molecule.getAtomForce(i)[0]);
-            _fp << std::format("{:15.8f}\t", molecule.getAtomForce(i)[1]);
-            _fp << std::format("{:15.8f}\n", molecule.getAtomForce(i)[2]);
-
-            _fp << std::flush;
+            buffer << std::format("{:15.8f}\t", molecule.getAtomForce(i)[0]);
+            buffer << std::format("{:15.8f}\t", molecule.getAtomForce(i)[1]);
+            buffer << std::format("{:15.8f}\n", molecule.getAtomForce(i)[2]);
         }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -120,16 +143,24 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
  */
 void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
 {
+    std::ostringstream buffer;
+
     writeHeader(simBox);
-    _fp << '\n';
+    buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms(); i < numberOfAtoms; ++i)
+        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
+             i < numberOfAtoms;
+             ++i)
         {
-            _fp << std::format("{:<5}\t", molecule.getAtomName(i));
+            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            _fp << std::format("{:15.8f}\n", molecule.getPartialCharge(i));
+            buffer << std::format("{:15.8f}\n", molecule.getPartialCharge(i));
 
-            _fp << std::flush;
+            buffer << std::flush;
         }
+    
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
