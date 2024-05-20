@@ -118,7 +118,7 @@ void KokkosPotential::calculateForces(
                 const auto distanceSquared =
                     dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
 
-                if (distanceSquared > rcCutoff * rcCutoff)
+                if (distanceSquared > rcCutoff() * rcCutoff())
                     continue;
 
                 const auto partialCharge_j = partialCharges(j);

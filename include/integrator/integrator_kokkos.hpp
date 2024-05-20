@@ -64,7 +64,7 @@ namespace integrator
             simulationBox::KokkosSimulationBox &kokkosSimBox
         );
 
-        KOKKOS_FUNCTION
+        KOKKOS_INLINE_FUNCTION
         void integrate_velocities(
             double *velocities,
             double *forces,

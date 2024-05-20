@@ -101,9 +101,9 @@ namespace potential
             return energy;
         }
 
-        KOKKOS_FUNCTION double getCoulombRadiusCutOff() const
+        Kokkos::View<double> getCoulombRadiusCutOff() const
         {
-            return _coulombRadiusCutOff.d_view();
+            return _coulombRadiusCutOff.d_view;
         }
     };
 

@@ -71,19 +71,24 @@ void KokkosVelocityVerlet::firstStep(
     auto       positions     = kokkosSimBox.getPositions().d_view;
     const auto boxDimensions = kokkosSimBox.getBoxDimensions().d_view;
 
-    const auto dt         = _dt.d_view();
-    const auto timeFactor = _timeFactor.d_view();
+    const auto dt             = _dt.d_view;
+    const auto timeFactor     = _timeFactor.d_view;
+    const auto velocityFactor = _velocityFactor.d_view;
 
     Kokkos::parallel_for(
         simBox.getNumberOfAtoms(),
         KOKKOS_LAMBDA(const size_t i) {
             double pos[3] = {positions(i, 0), positions(i, 1), positions(i, 2)};
 
-            integrate_velocities(&velocities(i, 0), &forces(i, 0), masses(i));
+            // integrate_velocities(&velocities(i, 0), &forces(i, 0),
+            // masses(i));
 
             for (size_t j = 0; j < 3; ++j)
             {
-                pos[j] += dt * velocities(i, j) * timeFactor;
+                velocities(i, j) +=
+                    forces(i, j) / masses(i) * dt() * velocityFactor();
+
+                pos[j] += dt() * velocities(i, j) * timeFactor();
             }
 
             double txyz[3] = {0.0, 0.0, 0.0};
@@ -120,13 +125,23 @@ void KokkosVelocityVerlet::secondStep(
     kokkosSimBox.transferVelocitiesFromSimulationBox(simBox);
 
     auto forces     = kokkosSimBox.getForces().d_view;
-    auto masses     = kokkosSimBox.getMasses().d_view;
     auto velocities = kokkosSimBox.getVelocities().d_view;
+    auto masses     = kokkosSimBox.getMasses().d_view;
+
+    const auto dt             = _dt.d_view;
+    const auto velocityFactor = _velocityFactor.d_view;
 
     Kokkos::parallel_for(
         simBox.getNumberOfAtoms(),
         KOKKOS_LAMBDA(const size_t i) {
-            integrate_velocities(&velocities(i, 0), &forces(i, 0), masses(i));
+            // integrate_velocities(&velocities(i, 0), &forces(i, 0),
+            // masses(i));
+
+            for (size_t j = 0; j < 3; ++j)
+            {
+                velocities(i, j) +=
+                    forces(i, j) / masses(i) * dt() * velocityFactor();
+            }
         }
     );
 
