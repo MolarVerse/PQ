@@ -41,10 +41,14 @@ namespace input::topology
      */
     class DihedralSection : public TopologySection
     {
-      public:
+       public:
         [[nodiscard]] std::string keyword() override { return "dihedrals"; }
-        void                      processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
-        void                      endedNormally(bool) const override;
+        void                      endedNormally(const bool) const override;
+
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
     };
 }   // namespace input::topology
 

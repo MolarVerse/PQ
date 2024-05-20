@@ -20,14 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_SECTION_HPP_
+#ifndef _J_COUPLING_SECTION_HPP_
 
-#define _BOND_SECTION_HPP_
+#define _J_COUPLING_SECTION_HPP_
 
-#include <string>   // for allocator, string
-#include <vector>   // for vector
-
-#include "topologySection.hpp"   // for TopologySection
+#include "topologySection.hpp"
 
 namespace engine
 {
@@ -37,15 +34,15 @@ namespace engine
 namespace input::topology
 {
     /**
-     * @class BondSection
+     * @class JCouplingSection
      *
-     * @brief reads bond section of topology file
+     * @brief reads j coupling section of topology file
      *
      */
-    class BondSection : public TopologySection
+    class JCouplingSection : public TopologySection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "bonds"; }
+        [[nodiscard]] std::string keyword() override { return "j-couplings"; }
         void                      endedNormally(const bool) const override;
 
         void processSection(
@@ -55,4 +52,4 @@ namespace input::topology
     };
 }   // namespace input::topology
 
-#endif   // _BOND_SECTION_HPP_
+#endif   // _J_COUPLING_SECTION_HPP_
