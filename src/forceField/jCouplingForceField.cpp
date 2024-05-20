@@ -20,39 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_SECTION_HPP_
-
-#define _BOND_SECTION_HPP_
-
-#include <string>   // for allocator, string
-#include <vector>   // for vector
-
-#include "topologySection.hpp"   // for TopologySection
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
-
-namespace input::topology
-{
-    /**
-     * @class BondSection
-     *
-     * @brief reads bond section of topology file
-     *
-     */
-    class BondSection : public TopologySection
-    {
-       public:
-        [[nodiscard]] std::string keyword() override { return "bonds"; }
-        void                      endedNormally(const bool) const override;
-
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-    };
-}   // namespace input::topology
-
-#endif   // _BOND_SECTION_HPP_
+#include "jCouplingForceField.hpp"

@@ -31,11 +31,17 @@ target_link_libraries(inputFileParser
     engine
     utilities
     output
-    gtest
     forceField
     settings
     references
 )
+
+if(BUILD_WITH_TESTS)
+    target_link_libraries(inputFileParser
+        PUBLIC
+        gtest
+    )
+endif()
 
 install(TARGETS inputFileParser
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/

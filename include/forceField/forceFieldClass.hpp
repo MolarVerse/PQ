@@ -24,16 +24,18 @@
 
 #define _Force_FIELD_CLASS_HPP_
 
+#include <cstddef>
+#include <memory>
+#include <vector>
+
 #include "angleForceField.hpp"
 #include "angleType.hpp"
 #include "bondForceField.hpp"
 #include "bondType.hpp"
 #include "dihedralForceField.hpp"
 #include "dihedralType.hpp"
-
-#include <cstddef>
-#include <memory>
-#include <vector>
+#include "jCouplingForceField.hpp"
+#include "jCouplingType.hpp"
 
 namespace simulationBox
 {
@@ -61,33 +63,37 @@ namespace forceField
      */
     class ForceField
     {
-      private:
+       private:
         bool _isNonCoulombicActivated = false;
 
-        std::vector<BondForceField>     _bonds;
-        std::vector<AngleForceField>    _angles;
-        std::vector<DihedralForceField> _dihedrals;
-        std::vector<DihedralForceField> _improperDihedrals;
+        std::vector<BondForceField>      _bonds;
+        std::vector<AngleForceField>     _angles;
+        std::vector<DihedralForceField>  _dihedrals;
+        std::vector<DihedralForceField>  _improperDihedrals;
+        std::vector<JCouplingForceField> _jCouplings;
 
-        std::vector<BondType>     _bondTypes;
-        std::vector<AngleType>    _angleTypes;
-        std::vector<DihedralType> _dihedralTypes;
-        std::vector<DihedralType> _improperDihedralTypes;
+        std::vector<BondType>      _bondTypes;
+        std::vector<AngleType>     _angleTypes;
+        std::vector<DihedralType>  _dihedralTypes;
+        std::vector<DihedralType>  _improperDihedralTypes;
+        std::vector<JCouplingType> _jCouplingTypes;
 
         std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
-      public:
+       public:
         void calculateBondedInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateBondInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateAngleInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateImproperDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        void calculateJCouplingInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-        const BondType     &findBondTypeById(size_t id) const;
-        const AngleType    &findAngleTypeById(size_t id) const;
-        const DihedralType &findDihedralTypeById(size_t id) const;
-        const DihedralType &findImproperDihedralTypeById(size_t id) const;
+        const BondType      &findBondTypeById(size_t id) const;
+        const AngleType     &findAngleTypeById(size_t id) const;
+        const DihedralType  &findDihedralTypeById(size_t id) const;
+        const DihedralType  &findImproperDihedralTypeById(size_t id) const;
+        const JCouplingType &findJCouplingTypeById(size_t id) const;
 
         /*****************************
          * standard activate methods *
@@ -96,21 +102,57 @@ namespace forceField
         void activateNonCoulombic() { _isNonCoulombicActivated = true; }
         void deactivateNonCoulombic() { _isNonCoulombicActivated = false; }
 
-        [[nodiscard]] bool isNonCoulombicActivated() const { return _isNonCoulombicActivated; }
+        [[nodiscard]] bool isNonCoulombicActivated() const
+        {
+            return _isNonCoulombicActivated;
+        }
 
-        /************************
-         * standard add methods *
-         ************************/
+        /***********************************
+         * standard add ForceField Objects *
+         ***********************************/
 
         void addBond(const BondForceField &bond) { _bonds.push_back(bond); }
-        void addAngle(const AngleForceField &angle) { _angles.push_back(angle); }
-        void addDihedral(const DihedralForceField &dihedral) { _dihedrals.push_back(dihedral); }
-        void addImproperDihedral(const DihedralForceField &improperDihedral) { _improperDihedrals.push_back(improperDihedral); }
+        void addAngle(const AngleForceField &angle)
+        {
+            _angles.push_back(angle);
+        }
+        void addDihedral(const DihedralForceField &dihedral)
+        {
+            _dihedrals.push_back(dihedral);
+        }
+        void addImproperDihedral(const DihedralForceField &improperDihedral)
+        {
+            _improperDihedrals.push_back(improperDihedral);
+        }
+        void addJCoupling(const JCouplingForceField &jCoupling)
+        {
+            _jCouplings.push_back(jCoupling);
+        }
 
-        void addBondType(const BondType &bondType) { _bondTypes.push_back(bondType); }
-        void addAngleType(const AngleType &angleType) { _angleTypes.push_back(angleType); }
-        void addDihedralType(const DihedralType &dihedralType) { _dihedralTypes.push_back(dihedralType); }
-        void addImproperDihedralType(const DihedralType &improperType) { _improperDihedralTypes.push_back(improperType); }
+        /***************************************
+         * standard add ForceFieldType objects *
+         ***************************************/
+
+        void addBondType(const BondType &bondType)
+        {
+            _bondTypes.push_back(bondType);
+        }
+        void addAngleType(const AngleType &angleType)
+        {
+            _angleTypes.push_back(angleType);
+        }
+        void addDihedralType(const DihedralType &dihedralType)
+        {
+            _dihedralTypes.push_back(dihedralType);
+        }
+        void addImproperDihedralType(const DihedralType &improperType)
+        {
+            _improperDihedralTypes.push_back(improperType);
+        }
+        void addJCouplingType(const JCouplingType &jCouplingType)
+        {
+            _jCouplingTypes.push_back(jCouplingType);
+        }
 
         /**************************
          * standard clear methods *
@@ -120,6 +162,7 @@ namespace forceField
         void clearAngleTypes() { _angleTypes.clear(); }
         void clearDihedralTypes() { _dihedralTypes.clear(); }
         void clearImproperDihedralTypes() { _improperDihedralTypes.clear(); }
+        void clearJCouplingTypes() { _jCouplingTypes.clear(); }
 
         /********************
          *                  *
@@ -127,8 +170,18 @@ namespace forceField
          *                  *
          ********************/
 
-        void setNonCoulombPotential(const std::shared_ptr<potential::NonCoulombPotential> &pot) { _nonCoulombPotential = pot; }
-        void setCoulombPotential(const std::shared_ptr<potential::CoulombPotential> &pot) { _coulombPotential = pot; }
+        void setNonCoulombPotential(
+            const std::shared_ptr<potential::NonCoulombPotential> &pot
+        )
+        {
+            _nonCoulombPotential = pot;
+        }
+        void setCoulombPotential(
+            const std::shared_ptr<potential::CoulombPotential> &pot
+        )
+        {
+            _coulombPotential = pot;
+        }
 
         /********************
          *                  *
@@ -136,15 +189,46 @@ namespace forceField
          *                  *
          ********************/
 
-        [[nodiscard]] std::vector<BondForceField>     &getBonds() { return _bonds; }
-        [[nodiscard]] std::vector<AngleForceField>    &getAngles() { return _angles; }
-        [[nodiscard]] std::vector<DihedralForceField> &getDihedrals() { return _dihedrals; }
-        [[nodiscard]] std::vector<DihedralForceField> &getImproperDihedrals() { return _improperDihedrals; }
+        [[nodiscard]] std::vector<BondForceField> &getBonds() { return _bonds; }
+        [[nodiscard]] std::vector<AngleForceField> &getAngles()
+        {
+            return _angles;
+        }
+        [[nodiscard]] std::vector<DihedralForceField> &getDihedrals()
+        {
+            return _dihedrals;
+        }
+        [[nodiscard]] std::vector<DihedralForceField> &getImproperDihedrals()
+        {
+            return _improperDihedrals;
+        }
+        [[nodiscard]] std::vector<JCouplingForceField> &getJCouplings()
+        {
+            return _jCouplings;
+        }
 
-        [[nodiscard]] const std::vector<BondType>     &getBondTypes() const { return _bondTypes; }
-        [[nodiscard]] const std::vector<AngleType>    &getAngleTypes() const { return _angleTypes; }
-        [[nodiscard]] const std::vector<DihedralType> &getDihedralTypes() const { return _dihedralTypes; }
-        [[nodiscard]] const std::vector<DihedralType> &getImproperDihedralTypes() const { return _improperDihedralTypes; }
+        [[nodiscard]] const std::vector<BondType> &getBondTypes() const
+        {
+            return _bondTypes;
+        }
+        [[nodiscard]] const std::vector<AngleType> &getAngleTypes() const
+        {
+            return _angleTypes;
+        }
+        [[nodiscard]] const std::vector<DihedralType> &getDihedralTypes() const
+        {
+            return _dihedralTypes;
+        }
+        [[nodiscard]] const std::vector<DihedralType> &getImproperDihedralTypes(
+        ) const
+        {
+            return _improperDihedralTypes;
+        }
+        [[nodiscard]] const std::vector<JCouplingType> &getJCouplingTypes(
+        ) const
+        {
+            return _jCouplingTypes;
+        }
     };
 
 }   // namespace forceField

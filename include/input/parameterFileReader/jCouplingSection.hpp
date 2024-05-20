@@ -20,39 +20,44 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_SECTION_HPP_
+#ifndef _J_COUPLING_SECTION_HPP_
 
-#define _BOND_SECTION_HPP_
+#define _J_COUPLING_SECTION_HPP_
 
 #include <string>   // for allocator, string
 #include <vector>   // for vector
 
-#include "topologySection.hpp"   // for TopologySection
+#include "parameterFileSection.hpp"   // for ParameterFileSection
 
 namespace engine
 {
     class Engine;   // forward declaration
 }
 
-namespace input::topology
+namespace input::parameterFile
 {
     /**
-     * @class BondSection
+     * @class JCouplingSection
      *
-     * @brief reads bond section of topology file
+     * @brief reads j-coupling section of parameter file
      *
      */
-    class BondSection : public TopologySection
+    class JCouplingSection : public ParameterFileSection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "bonds"; }
-        void                      endedNormally(const bool) const override;
+        [[nodiscard]] std::string keyword() override { return "j-couplings"; }
 
         void processSection(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine
         ) override;
-    };
-}   // namespace input::topology
 
-#endif   // _BOND_SECTION_HPP_
+        void processHeader(
+            [[maybe_unused]] std::vector<std::string> &lineElements,
+            [[maybe_unused]] engine::Engine           &engine
+        ) override {};   // TODO: implement
+    };
+
+}   // namespace input::parameterFile
+
+#endif   // _J_COUPLING_SECTION_HPP_

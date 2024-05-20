@@ -31,12 +31,18 @@ target_link_libraries(setup
     engine
     utilities
     output
-    gtest
     potential
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
 )
+
+if(BUILD_WITH_TESTS)
+    target_link_libraries(setup
+        PUBLIC
+        gtest
+    )
+endif()
 
 if(BUILD_WITH_MPI)
     target_link_libraries(setup

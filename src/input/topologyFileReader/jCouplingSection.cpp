@@ -20,48 +20,46 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "dihedralSection.hpp"
+#include "jCouplingSection.hpp"
 
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <string>      // for string, allocator
 #include <vector>      // for vector
 
-#include "dihedralForceField.hpp"   // for BondForceField
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for TopologyException
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for TopologyException
+#include "jCouplingForceField.hpp"   // for JCouplingForceField
 
 using namespace input::topology;
 
 /**
- * @brief processes the dihedral section of the topology file
+ * @brief processes the j-coupling section of the topology file
  *
  * @details one line consists of 5 or 6 elements:
  * 1. atom index 1
  * 2. atom index 2
  * 3. atom index 3
  * 4. atom index 4
- * 5. dihedral type
- * 6. linker marked with a '*' (optional)
+ * 5. j-coupling type
  *
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
- * not 5 or 6
+ * @throws customException::TopologyException if number of elements in line
+ is not 5
  * @throws customException::TopologyException if atom indices are the same
- * (=same atoms)
- * @throws customException::TopologyException if sixth element is not a '*'
+ (=same atoms)
  */
-void DihedralSection::processSection(
+void JCouplingSection::processSection(
     std::vector<std::string> &lineElements,
     engine::Engine           &engine
 )
 {
-    if (lineElements.size() != 5 && lineElements.size() != 6)
+    if (lineElements.size() != 5)
         throw customException::TopologyException(std::format(
-            "Wrong number of arguments in topology file dihedral section at "
-            "line {} - number of elements has to be 5 or 6!",
+            "Wrong number of arguments in topology file j-coupling "
+            "section at line {} - number of elements has to be 5!",
             _lineNumber
         ));
 
@@ -70,63 +68,48 @@ void DihedralSection::processSection(
     auto atom3        = stoul(lineElements[2]);
     auto atom4        = stoul(lineElements[3]);
     auto dihedralType = stoul(lineElements[4]);
-    auto isLinker     = false;
-
-    if (6 == lineElements.size())
-    {
-        if (lineElements[5] == "*")
-            isLinker = true;
-        else
-            throw customException::TopologyException(std::format(
-                "Sixth entry in topology file in dihedral section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
-    }
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);
     const auto [it, end] = std::ranges::unique(atoms);
     atoms.erase(it, end);
+
     if (4 != atoms.size())
         throw customException::TopologyException(std::format(
-            "Topology file dihedral section at line {} - atoms cannot be the "
-            "same!",
+            "Topology file dihedral section at line {} "
+            "- atoms cannot be the same!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIndex3] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
-    const auto [molecule4, atomIndex4] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom4);
+    auto simBox = engine.getSimulationBox();
 
-    auto dihedralForceField = forceField::DihedralForceField(
+    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [molecule3, atomIndex3] = simBox.findMoleculeByAtomIndex(atom3);
+    const auto [molecule4, atomIndex4] = simBox.findMoleculeByAtomIndex(atom4);
+
+    auto jCouplingForceField = forceField::JCouplingForceField(
         {molecule1, molecule2, molecule3, molecule4},
         {atomIndex1, atomIndex2, atomIndex3, atomIndex4},
         dihedralType
     );
-    dihedralForceField.setIsLinker(isLinker);
 
-    engine.getForceField().addDihedral(dihedralForceField);
+    engine.getForceField().addJCoupling(jCouplingForceField);
 }
 
 /**
- * @brief checks if dihedral sections ends normally
+ * @brief checks if j-coupling section ends normally
  *
  * @param endedNormal
  *
  * @throws customException::TopologyException if endedNormal is false
  */
-void DihedralSection::endedNormally(const bool endedNormal) const
+void JCouplingSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
         throw customException::TopologyException(std::format(
-            "Topology file dihedral section at line {} - no end of section "
-            "found!",
+            "Topology file j-coupling section at line {} "
+            "- no end of section found!",
             _lineNumber
         ));
 }
