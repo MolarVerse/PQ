@@ -99,13 +99,13 @@ ParameterFileSection *ParameterFileReader::determineSection(
  */
 void ParameterFileReader::deleteSection(const ParameterFileSection *section)
 {
-    auto sections = _parameterFileSections;
+    using namespace std::ranges;
 
     auto sectionIsEqual = [section](auto &sectionUniquePtr)
     { return sectionUniquePtr.get() == section; };
 
-    const auto result = std::ranges::find_if(sections, sectionIsEqual);
-    sections.erase(result);
+    const auto result = find_if(_parameterFileSections, sectionIsEqual);
+    _parameterFileSections.erase(result);
 }
 
 /**
