@@ -96,10 +96,9 @@ TEST_F(TestParameterFileReader, determineSection)
     );
 
     EXPECT_THROW_MSG(
-        reader->determineSection({"notAValidSection"}),
+        [[maybe_unused]] const auto dummy = reader->determineSection({"N.A."}),
         customException::ParameterFileException,
-        "Unknown or already parsed keyword \"notAValidSection\" in parameter "
-        "file"
+        "Unknown or already parsed keyword \"N.A.\" in parameter file"
     );
 }
 

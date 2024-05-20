@@ -58,8 +58,8 @@ namespace input::parameterFile
         ) override;
 
         void processHeader(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            [[maybe_unused]] std::vector<std::string> &lineElements,
+            [[maybe_unused]] engine::Engine           &engine
         ) override {};   // TODO: implement
     };
 
