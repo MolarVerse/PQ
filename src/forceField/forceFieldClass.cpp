@@ -91,7 +91,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
     auto isDihedralId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
 
-    auto       dihedrals    = _dihedralTypes;
+    auto      &dihedrals    = _dihedralTypes;
     const auto dihedralType = std::ranges::find_if(dihedrals, isDihedralId);
 
     if (dihedralType != dihedrals.end())
@@ -117,7 +117,7 @@ const DihedralType &ForceField::findImproperDihedralTypeById(const size_t id
     auto isImproperId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
 
-    auto       impropers    = _improperDihedralTypes;
+    auto      &impropers    = _improperDihedralTypes;
     const auto dihedralType = std::ranges::find_if(impropers, isImproperId);
 
     if (dihedralType != impropers.end())
