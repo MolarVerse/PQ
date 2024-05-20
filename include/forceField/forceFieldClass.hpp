@@ -87,11 +87,13 @@ namespace forceField
         void calculateAngleInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateImproperDihedralInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        void calculateJCouplingInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
 
-        const BondType     &findBondTypeById(size_t id) const;
-        const AngleType    &findAngleTypeById(size_t id) const;
-        const DihedralType &findDihedralTypeById(size_t id) const;
-        const DihedralType &findImproperDihedralTypeById(size_t id) const;
+        const BondType      &findBondTypeById(size_t id) const;
+        const AngleType     &findAngleTypeById(size_t id) const;
+        const DihedralType  &findDihedralTypeById(size_t id) const;
+        const DihedralType  &findImproperDihedralTypeById(size_t id) const;
+        const JCouplingType &findJCouplingTypeById(size_t id) const;
 
         /*****************************
          * standard activate methods *
@@ -160,6 +162,7 @@ namespace forceField
         void clearAngleTypes() { _angleTypes.clear(); }
         void clearDihedralTypes() { _dihedralTypes.clear(); }
         void clearImproperDihedralTypes() { _improperDihedralTypes.clear(); }
+        void clearJCouplingTypes() { _jCouplingTypes.clear(); }
 
         /********************
          *                  *
@@ -199,6 +202,10 @@ namespace forceField
         {
             return _improperDihedrals;
         }
+        [[nodiscard]] std::vector<JCouplingForceField> &getJCouplings()
+        {
+            return _jCouplings;
+        }
 
         [[nodiscard]] const std::vector<BondType> &getBondTypes() const
         {
@@ -216,6 +223,11 @@ namespace forceField
         ) const
         {
             return _improperDihedralTypes;
+        }
+        [[nodiscard]] const std::vector<JCouplingType> &getJCouplingTypes(
+        ) const
+        {
+            return _jCouplingTypes;
         }
     };
 
