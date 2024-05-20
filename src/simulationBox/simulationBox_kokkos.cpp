@@ -272,6 +272,26 @@ void KokkosSimulationBox::transferPositionsToSimulationBox(SimulationBox& simBox
 }
 
 /**
+ * @brief transfer velocities to simulation box
+ */
+void KokkosSimulationBox::transferVelocitiesToSimulationBox(
+    SimulationBox& simBox
+)
+{
+    // copy velocities back to host
+    deep_copy(_velocities.h_view, _velocities.d_view);
+
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        simBox.getAtom(i).setVelocity(
+            {_velocities.h_view(i, 0),
+             _velocities.h_view(i, 1),
+             _velocities.h_view(i, 2)}
+        );
+    }
+}
+
+/**
  * @brief transfer forces to simulation box
  */
 void KokkosSimulationBox::transferForcesToSimulationBox(SimulationBox& simBox)

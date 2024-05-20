@@ -68,7 +68,11 @@ void MMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
+#ifdef WITH_KOKKOS
+    _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
+#else
     _integrator->firstStep(_simulationBox);
+#endif
 
     _constraints.applyShake(_simulationBox);
 
@@ -98,7 +102,11 @@ void MMMDEngine::takeStep()
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
+#ifdef WITH_KOKKOS
+    _kokkosVelocityVerlet.secondStep(_simulationBox, _kokkosSimulationBox);
+#else
     _integrator->secondStep(_simulationBox);
+#endif
 
     _constraints.applyRattle();
 

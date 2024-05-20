@@ -94,6 +94,7 @@ namespace simulationBox
         void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
 
         void transferPositionsToSimulationBox(SimulationBox& simBox);
+        void transferVelocitiesToSimulationBox(SimulationBox& simBox);
         void transferForcesToSimulationBox(SimulationBox& simBox);
         void transferShiftForcesToSimulationBox(SimulationBox& simBox);
 

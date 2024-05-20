@@ -44,6 +44,7 @@
 
 #ifdef WITH_KOKKOS
 #include "coulombWolf_kokkos.hpp"
+#include "integrator_kokkos.hpp"
 #include "lennardJones_kokkos.hpp"
 #include "potential_kokkos.hpp"
 #include "simulationBox_kokkos.hpp"
@@ -102,6 +103,7 @@ namespace engine
         potential::KokkosLennardJones      _kokkosLennardJones;
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
         potential::KokkosPotential         _kokkosPotential;
+        integrator::KokkosVelocityVerlet   _kokkosVelocityVerlet;
 #endif
 
         std::unique_ptr<integrator::Integrator> _integrator =
@@ -334,6 +336,15 @@ namespace engine
         {
             return _kokkosCoulombWolf;
         }
+        [[nodiscard]] potential::KokkosPotential &getKokkosPotential()
+        {
+            return _kokkosPotential;
+        }
+        [[nodiscard]] integrator::KokkosVelocityVerlet &getKokkosVelocityVerlet(
+        )
+        {
+            return _kokkosVelocityVerlet;
+        }
 
         void initKokkosSimulationBox(const size_t numAtoms)
         {
@@ -364,6 +375,18 @@ namespace engine
         void initKokkosPotential()
         {
             _kokkosPotential = potential::KokkosPotential();
+        }
+        void initKokkosVelocityVerlet(
+            const double dt,
+            const double velocityFactor,
+            const double timeFactor
+        )
+        {
+            _kokkosVelocityVerlet = integrator::KokkosVelocityVerlet(
+                dt,
+                velocityFactor,
+                timeFactor
+            );
         }
 #endif
     };

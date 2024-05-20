@@ -21,3 +21,114 @@
 ******************************************************************************/
 
 #include "integrator_kokkos.hpp"
+
+using namespace integrator;
+
+/**
+ * @brief constructor
+ *
+ * @param dt             time step
+ * @param velocityFactor velocity factor
+ * @param timeFactor     time factor
+ */
+KokkosVelocityVerlet::KokkosVelocityVerlet(
+    const double dt,
+    const double velocityFactor,
+    const double timeFactor
+)
+    : _dt("dt", 1),
+      _velocityFactor("velocityFactor", 1),
+      _timeFactor("timeFactor", 1)
+{
+    _dt.h_view()             = dt;
+    _velocityFactor.h_view() = velocityFactor;
+    _timeFactor.h_view()     = timeFactor;
+
+    Kokkos::deep_copy(_dt.d_view, _dt.h_view);
+    Kokkos::deep_copy(_velocityFactor.d_view, _velocityFactor.h_view);
+    Kokkos::deep_copy(_timeFactor.d_view, _timeFactor.h_view);
+}
+
+/**
+ * @brief first step of the velocity Verlet integrator
+ *
+ * @param simBox      simulation box
+ * @param kokkosSimBox Kokkos simulation box
+ */
+void KokkosVelocityVerlet::firstStep(
+    simulationBox::SimulationBox       &simBox,
+    simulationBox::KokkosSimulationBox &kokkosSimBox
+)
+{
+    kokkosSimBox.transferPositionsFromSimulationBox(simBox);
+    kokkosSimBox.transferForcesFromSimulationBox(simBox);
+    kokkosSimBox.transferVelocitiesFromSimulationBox(simBox);
+    kokkosSimBox.transferBoxDimensionsFromSimulationBox(simBox);
+
+    auto       velocities    = kokkosSimBox.getVelocities().d_view;
+    auto       forces        = kokkosSimBox.getForces().d_view;
+    auto       masses        = kokkosSimBox.getMasses().d_view;
+    auto       positions     = kokkosSimBox.getPositions().d_view;
+    const auto boxDimensions = kokkosSimBox.getBoxDimensions().d_view;
+
+    const auto dt         = _dt.d_view();
+    const auto timeFactor = _timeFactor.d_view();
+
+    Kokkos::parallel_for(
+        simBox.getNumberOfAtoms(),
+        KOKKOS_LAMBDA(const size_t i) {
+            double pos[3] = {positions(i, 0), positions(i, 1), positions(i, 2)};
+
+            integrate_velocities(&velocities(i, 0), &forces(i, 0), masses(i));
+
+            for (size_t j = 0; j < 3; ++j)
+            {
+                pos[j] += dt * velocities(i, j) * timeFactor;
+            }
+
+            double txyz[3] = {0.0, 0.0, 0.0};
+
+            simulationBox::KokkosSimulationBox::calculateShiftVector(
+                pos,
+                boxDimensions,
+                txyz
+            );
+
+            for (size_t j = 0; j < 3; ++j)
+            {
+                positions(i, j) += pos[j] + txyz[j];
+            }
+        }
+    );   // TODO: calculate new center of mass
+
+    kokkosSimBox.transferVelocitiesToSimulationBox(simBox);
+    kokkosSimBox.transferPositionsToSimulationBox(simBox);
+}
+
+/**
+ * @brief second step of the velocity Verlet integrator
+ *
+ * @param simBox      simulation box
+ * @param kokkosSimBox Kokkos simulation box
+ */
+void KokkosVelocityVerlet::secondStep(
+    simulationBox::SimulationBox       &simBox,
+    simulationBox::KokkosSimulationBox &kokkosSimBox
+)
+{
+    kokkosSimBox.transferForcesFromSimulationBox(simBox);
+    kokkosSimBox.transferVelocitiesFromSimulationBox(simBox);
+
+    auto forces     = kokkosSimBox.getForces().d_view;
+    auto masses     = kokkosSimBox.getMasses().d_view;
+    auto velocities = kokkosSimBox.getVelocities().d_view;
+
+    Kokkos::parallel_for(
+        simBox.getNumberOfAtoms(),
+        KOKKOS_LAMBDA(const size_t i) {
+            integrate_velocities(&velocities(i, 0), &forces(i, 0), masses(i));
+        }
+    );
+
+    kokkosSimBox.transferVelocitiesToSimulationBox(simBox);
+}

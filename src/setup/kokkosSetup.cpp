@@ -33,6 +33,7 @@
 #include "potentialSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox_kokkos.hpp"
+#include "timingsSettings.hpp"
 
 using namespace setup;
 
@@ -97,6 +98,10 @@ void KokkosSetup::setup()
         _engine.getPotential().getNonCoulombPotential()
     );
 
+    /************************************
+     * Initialize Kokkos Lennard Jones  *
+     ************************************/
+
     const auto numAtomTypes =
         forceFieldNonCoulomb.getNonCoulombPairsMatrix().rows();
 
@@ -107,6 +112,10 @@ void KokkosSetup::setup()
     kokkosLennardJones.transferFromNonCoulombPairMatrix(
         forceFieldNonCoulomb.getNonCoulombPairsMatrix()
     );
+
+    /************************************
+     * Initialize Kokkos Coulomb Wolf   *
+     ************************************/
 
     auto wolfPotential = dynamic_cast<potential::CoulombWolf &>(
         _engine.getPotential().getCoulombPotential()
@@ -119,5 +128,15 @@ void KokkosSetup::setup()
         wolfPotential.getWolfParameter2(),
         wolfPotential.getWolfParameter3(),
         constants::_COULOMB_PREFACTOR_
+    );
+
+    /********************************
+     * Initialize Kokkos Integrator *
+     ********************************/
+
+    _engine.initKokkosVelocityVerlet(
+        settings::TimingsSettings::getTimeStep(),
+        constants::_V_VERLET_VELOCITY_FACTOR_,
+        constants::_FS_TO_S_
     );
 }
