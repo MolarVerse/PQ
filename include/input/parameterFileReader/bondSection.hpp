@@ -24,10 +24,10 @@
 
 #define _BOND_SECTION_HPP_
 
-#include "parameterFileSection.hpp"
-
 #include <string>   // for allocator, string
 #include <vector>   // for vector
+
+#include "parameterFileSection.hpp"
 
 namespace engine
 {
@@ -44,11 +44,18 @@ namespace input::parameterFile
      */
     class BondSection : public ParameterFileSection
     {
-      public:
+       public:
         [[nodiscard]] std::string keyword() override { return "bonds"; }
 
-        void processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
-        void processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
+
+        void processHeader(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override {};   // TODO: implement
     };
 
 }   // namespace input::parameterFile

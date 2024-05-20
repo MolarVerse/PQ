@@ -35,12 +35,18 @@ using namespace forceField;
  */
 bool JCouplingType::operator==(const JCouplingType &other) const
 {
+    const auto k         = _forceConstant;
+    const auto other_k   = other._forceConstant;
+    const auto phi       = _phaseShift;
+    const auto other_phi = other._phaseShift;
+
     auto isEqual = _id == other._id;
-    isEqual      = isEqual && utilities::compare(_forceConstant, other._forceConstant);
+    isEqual      = isEqual && utilities::compare(_J0, other._J0);
+    isEqual      = isEqual && utilities::compare(k, other_k);
     isEqual      = isEqual && utilities::compare(_a, other._a);
     isEqual      = isEqual && utilities::compare(_b, other._b);
     isEqual      = isEqual && utilities::compare(_c, other._c);
-    isEqual      = isEqual && utilities::compare(_phaseShift, other._phaseShift);
+    isEqual      = isEqual && utilities::compare(phi, other_phi);
 
     return isEqual;
 }

@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _IMPROPER_DIHEDRAL_SECTION_HPP_
+#ifndef _J_COUPLING_SECTION_HPP_
 
-#define _IMPROPER_DIHEDRAL_SECTION_HPP_
+#define _J_COUPLING_SECTION_HPP_
 
 #include <string>   // for allocator, string
 #include <vector>   // for vector
@@ -37,15 +37,15 @@ namespace engine
 namespace input::parameterFile
 {
     /**
-     * @class ImproperDihedralSection
+     * @class JCouplingSection
      *
-     * @brief reads improper dihedral section of parameter file
+     * @brief reads j-coupling section of parameter file
      *
      */
-    class ImproperDihedralSection : public ParameterFileSection
+    class JCouplingSection : public ParameterFileSection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "impropers"; }
+        [[nodiscard]] std::string keyword() override { return "j-couplings"; }
 
         void processSection(
             std::vector<std::string> &lineElements,
@@ -60,4 +60,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _IMPROPER_DIHEDRAL_SECTION_HPP_
+#endif   // _J_COUPLING_SECTION_HPP_

@@ -47,7 +47,7 @@ using namespace input::topology;
  * @param engine
  *
  * @throws customException::TopologyException if number of elements in line
- is not 5 or 6
+ is not 5
  * @throws customException::TopologyException if atom indices are the same
  (=same atoms)
  */
