@@ -62,7 +62,7 @@ TEST_F(TestParameterFileReader, isNeeded)
  */
 TEST_F(TestParameterFileReader, determineSection)
 {
-    auto reader = _parameterFileReader;
+    auto *reader = _parameterFileReader;
     EXPECT_EQ(reader->getParameterFileSections().size(), 7);
 
     const auto *section = reader->determineSection({"types"});
@@ -110,7 +110,7 @@ TEST_F(TestParameterFileReader, determineSection)
  */
 TEST_F(TestParameterFileReader, deleteSection)
 {
-    auto reader = _parameterFileReader;
+    auto *reader = _parameterFileReader;
     EXPECT_EQ(reader->getParameterFileSections().size(), 7);
 
     const auto *section = reader->determineSection({"types"});

@@ -72,15 +72,14 @@ namespace forceField
         JCouplingForceField(
             const std::vector<simulationBox::Molecule *> &molecules,
             const std::vector<size_t>                    &atomIndices,
-            size_t                                        type
+            const size_t                                  type
         )
             : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
-        // void calculateEnergyAndForces(const simulationBox::SimulationBox &,
-        //                               physicalData::PhysicalData &,
-        //                               const bool isImproperDihedral,
-        //                               const potential::CoulombPotential &,
-        //                               potential::NonCoulombPotential &);
+        void calculateEnergyAndForces(
+            const simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData         &data
+        ) {};   // TODO: implement
 
         /***************************
          * standard setter methods *
