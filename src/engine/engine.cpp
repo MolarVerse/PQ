@@ -59,7 +59,7 @@ void Engine::run()
 
     _timings.stopTimeManager("TotalSimulation");
 
-    const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
+    const auto elapsedTime = double(_timings.calculateElapsedTime()) * 1e-3;
 
     references::ReferencesOutput::writeReferencesFile();
 
@@ -82,7 +82,7 @@ void Engine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _timings.startTimeManager("Output");
+        // _timings.startTimeManager("Output");
 
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
@@ -130,7 +130,7 @@ void Engine::writeOutput()
 
         _averagePhysicalData = physicalData::PhysicalData();
 
-        _timings.stopTimeManager("Output");
+        // _timings.stopTimeManager("Output");
     }
 
     _physicalData.reset();

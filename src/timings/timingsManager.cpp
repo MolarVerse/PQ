@@ -42,9 +42,9 @@ void TimingsManager::endTimer()
  * @brief calculates the elapsed time in ms
  *
  */
-long TimingsManager::calculateElapsedTime() const
+double TimingsManager::calculateElapsedTime() const
 {
-    return std::chrono::duration_cast<ms>(_totalTime).count();
+    return double(std::chrono::duration_cast<ms>(_totalTime).count());
 }
 
 double TimingsManager::calculateAverageLoopTime() const

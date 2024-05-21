@@ -36,7 +36,7 @@ Timings::Timings(const std::string_view name) : _name(name) {}
  * @brief calculates the elapsed time in ms
  *
  */
-long Timings::calculateElapsedTime() const
+double Timings::calculateElapsedTime() const
 {
     auto elapsedTime = 0;
 

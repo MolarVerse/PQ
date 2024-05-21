@@ -44,15 +44,15 @@ namespace timings
 
         Time     _start;
         Time     _end;
-        Duration _totalTime;
-        Duration _lastStepTime;
+        Duration _totalTime    = Duration::zero();
+        Duration _lastStepTime = Duration::zero();
 
        public:
         explicit TimingsManager(const std::string_view name) : _name(name) {}
 
         void endTimer();
 
-        [[nodiscard]] long   calculateElapsedTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;
         [[nodiscard]] double calculateAverageLoopTime() const;
 

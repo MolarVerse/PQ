@@ -63,7 +63,7 @@ namespace timings
         Timings()  = default;
         ~Timings() = default;
 
-        [[nodiscard]] long   calculateElapsedTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime();
 
         [[nodiscard]] size_t findTimeManagerIndex(const std::string_view) const;
