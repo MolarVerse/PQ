@@ -57,9 +57,9 @@ void Engine::run()
         writeOutput();
     }
 
-    _timings.stopTimeManager("TotalSimulation");
+    _timer.stopSimulationTimer();
 
-    const auto elapsedTime = double(_timings.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
     references::ReferencesOutput::writeReferencesFile();
 
@@ -82,8 +82,6 @@ void Engine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        // _timings.startTimeManager("Output");
-
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
@@ -109,10 +107,10 @@ void Engine::writeOutput()
     // included in total simulation time
     // Unfortunately, setup is therefore included in the first looptime output
     // but this is not a big problem - could also be a feature and not a bug
-    _timings.stopTimeManager("TotalSimulation");
-    _timings.startTimeManager("TotalSimulation");
+    _timer.stopSimulationTimer();
+    _timer.startSimulationTimer();
 
-    _physicalData.setLoopTime(_timings.calculateLoopTime());
+    _physicalData.setLoopTime(_timer.calculateLoopTime());
     _averagePhysicalData.updateAverages(_physicalData);
 
     if (0 == _step % outputFreq)
@@ -129,8 +127,6 @@ void Engine::writeOutput()
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
         _averagePhysicalData = physicalData::PhysicalData();
-
-        // _timings.stopTimeManager("Output");
     }
 
     _physicalData.reset();
@@ -140,9 +136,9 @@ void Engine::writeOutput()
  * @brief Adds a timings section to the timingsSection vector.
  *
  */
-void Engine::addTimingsSection(const timings::Timings &timings)
+void Engine::addTimer(const timings::Timer &timings)
 {
-    _timingsSections.push_back(timings);
+    _timer.addTimer(timings);
 }
 
 /**
@@ -231,7 +227,7 @@ physicalData::PhysicalData &Engine::getAveragePhysicalData()
 /**
  * @brief get the reference to the Constraints
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 constraints::Constraints &Engine::getConstraints() { return _constraints; }
 
@@ -307,7 +303,7 @@ EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
 /**
  * @brief get the reference to the energy output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::EnergyOutput &Engine::getEnergyOutput()
 {
@@ -317,7 +313,7 @@ output::EnergyOutput &Engine::getEnergyOutput()
 /**
  * @brief get the reference to the instant energy output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::EnergyOutput &Engine::getInstantEnergyOutput()
 {
@@ -327,7 +323,7 @@ output::EnergyOutput &Engine::getInstantEnergyOutput()
 /**
  * @brief get the reference to the momentum output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::MomentumOutput &Engine::getMomentumOutput()
 {
@@ -337,7 +333,7 @@ output::MomentumOutput &Engine::getMomentumOutput()
 /**
  * @brief get the reference to the xyz output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::TrajectoryOutput &Engine::getXyzOutput()
 {
@@ -347,7 +343,7 @@ output::TrajectoryOutput &Engine::getXyzOutput()
 /**
  * @brief get the reference to the vel output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::TrajectoryOutput &Engine::getVelOutput()
 {
@@ -357,7 +353,7 @@ output::TrajectoryOutput &Engine::getVelOutput()
 /**
  * @brief get the reference to the force output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::TrajectoryOutput &Engine::getForceOutput()
 {
@@ -367,7 +363,7 @@ output::TrajectoryOutput &Engine::getForceOutput()
 /**
  * @brief get the reference to the charge output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::TrajectoryOutput &Engine::getChargeOutput()
 {
@@ -377,7 +373,7 @@ output::TrajectoryOutput &Engine::getChargeOutput()
 /**
  * @brief get the reference to the log output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::LogOutput &Engine::getLogOutput()
 {
@@ -387,7 +383,7 @@ output::LogOutput &Engine::getLogOutput()
 /**
  * @brief get the reference to the stdout output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::StdoutOutput &Engine::getStdoutOutput()
 {
@@ -397,7 +393,7 @@ output::StdoutOutput &Engine::getStdoutOutput()
 /**
  * @brief get the reference to the rst file output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::RstFileOutput &Engine::getRstFileOutput()
 {
@@ -407,7 +403,7 @@ output::RstFileOutput &Engine::getRstFileOutput()
 /**
  * @brief get the reference to the info output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::InfoOutput &Engine::getInfoOutput()
 {
@@ -417,7 +413,7 @@ output::InfoOutput &Engine::getInfoOutput()
 /**
  * @brief get the reference to the virial output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::VirialOutput &Engine::getVirialOutput()
 {
@@ -427,7 +423,7 @@ output::VirialOutput &Engine::getVirialOutput()
 /**
  * @brief get the reference to the stress output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::StressOutput &Engine::getStressOutput()
 {
@@ -437,7 +433,7 @@ output::StressOutput &Engine::getStressOutput()
 /**
  * @brief get the reference to the box file output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 output::BoxFileOutput &Engine::getBoxFileOutput()
 {
@@ -447,7 +443,7 @@ output::BoxFileOutput &Engine::getBoxFileOutput()
 /**
  * @brief get the reference to the ring polymer rst file output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPRestartFileOutput &Engine::getRingPolymerRstFileOutput()
 {
@@ -457,7 +453,7 @@ RPRestartFileOutput &Engine::getRingPolymerRstFileOutput()
 /**
  * @brief get the reference to the ring polymer xyz output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPTrajectoryOutput &Engine::getRingPolymerXyzOutput()
 {
@@ -467,7 +463,7 @@ RPTrajectoryOutput &Engine::getRingPolymerXyzOutput()
 /**
  * @brief get the reference to the ring polymer vel output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPTrajectoryOutput &Engine::getRingPolymerVelOutput()
 {
@@ -477,7 +473,7 @@ RPTrajectoryOutput &Engine::getRingPolymerVelOutput()
 /**
  * @brief get the reference to the ring polymer force output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPTrajectoryOutput &Engine::getRingPolymerForceOutput()
 {
@@ -487,7 +483,7 @@ RPTrajectoryOutput &Engine::getRingPolymerForceOutput()
 /**
  * @brief get the reference to the ring polymer charge output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPTrajectoryOutput &Engine::getRingPolymerChargeOutput()
 {
@@ -497,7 +493,7 @@ RPTrajectoryOutput &Engine::getRingPolymerChargeOutput()
 /**
  * @brief get the reference to the ring polymer energy output
  *
- * @return timings::Timings&
+ * @return timings::Timer&
  */
 RPEnergyOutput &Engine::getRingPolymerEnergyOutput()
 {

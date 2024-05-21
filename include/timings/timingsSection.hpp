@@ -20,15 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_HPP_
+#ifndef _TIMINGS_SECTION_HPP_
 
-#define _TIMINGS_HPP_
+#define _TIMINGS_SECTION_HPP_
 
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
-#include <string>    // for string
-
-#include "timingsManager.hpp"   // for TimingsManager
 
 namespace timings
 {
@@ -39,49 +36,31 @@ namespace timings
 
     using namespace std::chrono;
 
-    /**
-     * @class Timings
-     *
-     * @brief Stores all timings information
-     *
-     * @details
-     *  stores internal simulation timings
-     *  as well as all timings corresponding to
-     *  execution time
-     *
-     */
-    class Timings
+    class TimingsSection
     {
-       protected:
-        std::string _name = "DefaultTimings";
+       private:
+        std::string _name;
+        size_t      _steps = 0;
 
-        std::vector<TimingsManager> _timingDetails;
+        Time     _start;
+        Time     _end;
+        Duration _totalTime    = Duration::zero();
+        Duration _lastStepTime = Duration::zero();
 
        public:
-        explicit Timings(const std::string_view);
+        explicit TimingsSection(const std::string_view name) : _name(name) {}
 
-        Timings()  = default;
-        ~Timings() = default;
+        void endTimer();
 
         [[nodiscard]] double calculateElapsedTime() const;
-        [[nodiscard]] double calculateLoopTime();
+        [[nodiscard]] double calculateLoopTime() const;
+        [[nodiscard]] double calculateAverageLoopTime() const;
 
-        [[nodiscard]] size_t findTimeManagerIndex(const std::string_view) const;
+        [[nodiscard]] std::string getName() const { return _name; }
 
-        void startTimeManager(const std::string_view name);
-        void stopTimeManager(const std::string_view name);
-
-        [[nodiscard]] TimingsManager getTimingsManager(
-            const std::string_view name
-        ) const;
-
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-        [[nodiscard]] Timings getTimings() const { return *this; }
+        void beginTimer() { _start = high_resolution_clock::now(); }
     };
 
 }   // namespace timings
 
-#endif   // _TIMINGS_HPP_
+#endif   // _TIMINGS_SECTION_HPP_

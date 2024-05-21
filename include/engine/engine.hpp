@@ -31,6 +31,7 @@
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
+#include "globalTimer.hpp"
 #include "integrator.hpp"
 #include "intraNonBonded.hpp"
 #include "manostat.hpp"
@@ -39,7 +40,6 @@
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "thermostat.hpp"
-#include "timings.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
@@ -109,8 +109,7 @@ namespace engine
 
         EngineOutput _engineOutput;
 
-        timings::Timings              _timings;
-        std::vector<timings::Timings> _timingsSections;
+        timings::GlobalTimer _timer;
 
         simulationBox::CellList        _cellList;
         simulationBox::SimulationBox   _simulationBox;
@@ -142,7 +141,7 @@ namespace engine
         virtual void run();
         virtual void writeOutput();
 
-        void addTimingsSection(const timings::Timings &timings);
+        void addTimer(const timings::Timer &timings);
 
         // virtual function to be overwritten by derived classes
         virtual void takeStep() {};
@@ -217,16 +216,10 @@ namespace engine
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] size_t            getStep() const { return _step; }
-        [[nodiscard]] timings::Timings &getTimings() { return _timings; }
+        [[nodiscard]] size_t                getStep() const { return _step; }
+        [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
-        void setTimings(const timings::Timings &timings) { _timings = timings; }
-
-        /***************************
-         *                         *
-         * standard getter methods *
-         *                         *
-         ***************************/
+        void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] KokkosSimulationBox  &getKokkosSimulationBox();

@@ -1,6 +1,7 @@
 add_library(timings
-    timings.cpp
-    timingsManager.cpp
+    timer.cpp
+    timingsSection.cpp
+    globalTimer.cpp
 )
 
 target_include_directories(timings

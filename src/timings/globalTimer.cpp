@@ -20,49 +20,38 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "timingsManager.hpp"
+#include "globalTimer.hpp"
 
-#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
+#include "timer.hpp"
 
 using namespace timings;
 
 /**
- * @brief end the timer
+ * @brief adds a simulation timer
  *
+ * @param simulationTimer
  */
-void TimingsManager::endTimer()
+void GlobalTimer::addSimulationTimer(const Timer &simulationTimer)
 {
-    _end           = std::chrono::high_resolution_clock::now();
-    _steps         = _steps + 1;
-    _totalTime    += _end - _start;
-    _lastStepTime  = _end - _start;
+    _simulationTimer = simulationTimer;
 }
 
 /**
- * @brief calculates the elapsed time in ms
+ * @brief calculates the loop time of the simulation
  *
+ * @return double
  */
-double TimingsManager::calculateElapsedTime() const
+double GlobalTimer::calculateLoopTime() const
 {
-    return double(std::chrono::duration_cast<ms>(_totalTime).count());
-}
-
-double TimingsManager::calculateAverageLoopTime() const
-{
-    auto time = double(std::chrono::duration_cast<ns>(_totalTime).count());
-    time      = time * 1e-9 / double(_steps);
-
-    return time;
+    return _simulationTimer.calculateLoopTime();
 }
 
 /**
- * @brief calculates the loop time in s
+ * @brief calculates the elapsed time of the simulation
  *
+ * @return double
  */
-double TimingsManager::calculateLoopTime() const
+double GlobalTimer::calculateElapsedTime() const
 {
-    auto time = double(std::chrono::duration_cast<ns>(_lastStepTime).count());
-    time      = time * 1e-9;
-
-    return time;
+    return _simulationTimer.calculateElapsedTime();
 }

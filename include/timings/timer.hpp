@@ -20,12 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_MANAGER_HPP_
+#ifndef _TIMER_HPP_
 
-#define _TIMINGS_MANAGER_HPP_
+#define _TIMER_HPP_
 
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
+#include <string>    // for string
+
+#include "timingsSection.hpp"   // for TimingsManager
 
 namespace timings
 {
@@ -36,31 +39,52 @@ namespace timings
 
     using namespace std::chrono;
 
-    class TimingsManager
+    /**
+     * @class Timer
+     *
+     * @brief Stores all timings information
+     *
+     * @details
+     *  stores internal simulation timings
+     *  as well as all timings corresponding to
+     *  execution time
+     *
+     */
+    class Timer
     {
-       private:
-        std::string _name;
-        size_t      _steps = 0;
+       protected:
+        std::string _name = "DefaultTimings";
 
-        Time     _start;
-        Time     _end;
-        Duration _totalTime    = Duration::zero();
-        Duration _lastStepTime = Duration::zero();
+        std::vector<TimingsSection> _timingDetails;
 
        public:
-        explicit TimingsManager(const std::string_view name) : _name(name) {}
+        explicit Timer(const std::string_view);
 
-        void endTimer();
+        Timer()  = default;
+        ~Timer() = default;
 
         [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;
-        [[nodiscard]] double calculateAverageLoopTime() const;
 
-        [[nodiscard]] std::string getName() const { return _name; }
+        [[nodiscard]] size_t findTimingsSectionIndex(const std::string_view name
+        ) const;
 
-        void beginTimer() { _start = high_resolution_clock::now(); }
+        void startTimingsSection();
+        void startTimingsSection(const std::string_view name);
+        void stopTimingsSection();
+        void stopTimingsSection(const std::string_view name);
+
+        [[nodiscard]] TimingsSection getTimingsSection(
+            const std::string_view name
+        ) const;
+
+        /********************************
+         * standard getters and setters *
+         ********************************/
+
+        [[nodiscard]] Timer getTimer() const { return *this; }
     };
 
 }   // namespace timings
 
-#endif   // _TIMINGS_MANAGER_HPP_
+#endif   // _TIMER_HPP_

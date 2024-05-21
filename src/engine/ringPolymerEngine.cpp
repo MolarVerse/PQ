@@ -33,7 +33,7 @@
 #include "physicalData.hpp"                          // for PhysicalData
 #include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
-#include "timings.hpp"                               // for Timings
+#include "timer.hpp"                                 // for Timings
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"   // for Vector3D, normSquared
 
@@ -59,14 +59,15 @@ void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
  */
 void RingPolymerEngine::writeOutput()
 {
+    auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
+    auto &rpmdData        = _ringPolymerBeadsPhysicalData;
+
     const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
     const auto step0      = settings::TimingsSettings::getStepCount();
     const auto effStep    = _step + step0;
 
     if (0 == _step % outputFreq)
     {
-        _timings.startTimeManager("Output");
-
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
@@ -86,27 +87,22 @@ void RingPolymerEngine::writeOutput()
     // is now included in total simulation time Unfortunately, setup is
     // therefore included in the first looptime output but this is not a big
     // problem - could also be a feature and not a bug
-    _timings.stopTimeManager("TotalSimulation");
-    _timings.startTimeManager("TotalSimulation");
+    _timer.stopSimulationTimer();
+    _timer.startSimulationTimer();
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        _ringPolymerBeadsPhysicalData[i].setLoopTime(_timings.calculateLoopTime(
-        ));
-        _averageRingPolymerBeadsPhysicalData[i].updateAverages(
-            _ringPolymerBeadsPhysicalData[i]
-        );
+        rpmdData[i].setLoopTime(_timer.calculateLoopTime());
+        averageRPMDData[i].updateAverages(rpmdData[i]);
     }
 
     if (0 == _step % outputFreq)
     {
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-            _averageRingPolymerBeadsPhysicalData[i].makeAverages(
-                static_cast<double>(outputFreq)
-            );
+            averageRPMDData[i].makeAverages(static_cast<double>(outputFreq));
 
-        _physicalData        = mean(_ringPolymerBeadsPhysicalData);
-        _averagePhysicalData = mean(_averageRingPolymerBeadsPhysicalData);
+        _physicalData        = mean(rpmdData);
+        _averagePhysicalData = mean(averageRPMDData);
 
         const auto dt            = settings::TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
@@ -119,20 +115,16 @@ void RingPolymerEngine::writeOutput()
 
         _engineOutput.writeRingPolymerEnergyFile(
             step0 + _step,
-            _averageRingPolymerBeadsPhysicalData
+            averageRPMDData
         );
 
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-            _averageRingPolymerBeadsPhysicalData[i] =
-                physicalData::PhysicalData();
+            averageRPMDData[i] = physicalData::PhysicalData();
 
         _averagePhysicalData = physicalData::PhysicalData();
-
-        _timings.stopTimeManager("Output");
     }
 
-    for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _ringPolymerBeadsPhysicalData[i].reset();
+    for (size_t i = 0; i < _ringPolymerBeads.size(); ++i) rpmdData[i].reset();
 }
 
 /**

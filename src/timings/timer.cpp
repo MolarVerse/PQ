@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "timings.hpp"
+#include "timer.hpp"
 
 #include "exceptions.hpp"
 #include "timingsSettings.hpp"
@@ -30,13 +30,13 @@ using namespace timings;
 /*
  * @brief constructor
  */
-Timings::Timings(const std::string_view name) : _name(name) {}
+Timer::Timer(const std::string_view name) : _name(name) {}
 
 /**
  * @brief calculates the elapsed time in ms
  *
  */
-double Timings::calculateElapsedTime() const
+double Timer::calculateElapsedTime() const
 {
     auto elapsedTime = 0;
 
@@ -50,7 +50,7 @@ double Timings::calculateElapsedTime() const
  * @brief calculates the loop time in s
  *
  */
-double Timings::calculateLoopTime()
+double Timer::calculateLoopTime() const
 {
     auto loopTime = 0.0;
 
@@ -61,12 +61,12 @@ double Timings::calculateLoopTime()
 }
 
 /**
- * @brief get TimingsManager by name
+ * @brief get TimingsSection by name
  *
  */
-TimingsManager Timings::getTimingsManager(const std::string_view name) const
+TimingsSection Timer::getTimingsSection(const std::string_view name) const
 {
-    const auto index = findTimeManagerIndex(name);
+    const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
         throw customException::CustomException("Timer not found");
@@ -75,12 +75,29 @@ TimingsManager Timings::getTimingsManager(const std::string_view name) const
 }
 
 /**
+ * @brief starts a new timer with default name
+ *
+ */
+void Timer::startTimingsSection()
+{
+    const auto index = findTimingsSectionIndex(_name);
+
+    if (index == _timingDetails.size())
+    {
+        _timingDetails.emplace_back(_name);
+        _timingDetails.back().beginTimer();
+    }
+    else
+        _timingDetails[index].beginTimer();
+}
+
+/**
  * @brief starts a new timer
  *
  */
-void Timings::startTimeManager(const std::string_view name)
+void Timer::startTimingsSection(const std::string_view name)
 {
-    const auto index = findTimeManagerIndex(name);
+    const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
     {
@@ -92,28 +109,42 @@ void Timings::startTimeManager(const std::string_view name)
 }
 
 /**
- * @brief find timeManager by name
+ * @brief stops a timer with default name
  *
  */
-size_t Timings::findTimeManagerIndex(const std::string_view name) const
+void Timer::stopTimingsSection()
 {
-    for (size_t i = 0; i < _timingDetails.size(); ++i)
-        if (_timingDetails[i].getName() == name)
-            return i;
+    const auto index = findTimingsSectionIndex(_name);
 
-    return _timingDetails.size();
+    if (index == _timingDetails.size())
+        throw customException::CustomException("Timer not found");
+
+    _timingDetails[index].endTimer();
 }
 
 /**
  * @brief stops a timer
  *
  */
-void Timings::stopTimeManager(const std::string_view name)
+void Timer::stopTimingsSection(const std::string_view name)
 {
-    const auto index = findTimeManagerIndex(name);
+    const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
         throw customException::CustomException("Timer not found");
 
     _timingDetails[index].endTimer();
+}
+
+/**
+ * @brief find timeManager by name
+ *
+ */
+size_t Timer::findTimingsSectionIndex(const std::string_view name) const
+{
+    for (size_t i = 0; i < _timingDetails.size(); ++i)
+        if (_timingDetails[i].getName() == name)
+            return i;
+
+    return _timingDetails.size();
 }
