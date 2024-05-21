@@ -57,7 +57,7 @@ void Engine::run()
         writeOutput();
     }
 
-    _timings.endTimer();
+    _timings.stopTimeManager("TotalSimulation");
 
     const auto elapsedTime = _timings.calculateElapsedTime() * 1e-3;
 
@@ -76,28 +76,14 @@ void Engine::run()
  */
 void Engine::writeOutput()
 {
-    _averagePhysicalData.updateAverages(_physicalData);
-
     const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
+    const auto step0      = settings::TimingsSettings::getStepCount();
+    const auto effStep    = _step + step0;
 
     if (0 == _step % outputFreq)
     {
         _timings.startTimeManager("Output");
 
-        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
-
-        const auto dt            = settings::TimingsSettings::getTimeStep();
-        const auto step0         = _timings.getStepCount();
-        const auto effStep       = _step + step0;
-        const auto effStepDouble = static_cast<double>(effStep);
-
-        const auto simTime  = effStepDouble * dt * constants::_FS_TO_PS_;
-        const auto loopTime = _timings.calculateLoopTime(_step);
-
-        _engineOutput.writeEnergyFile(effStep, loopTime, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, loopTime, _physicalData);
-        _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(simTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
@@ -115,6 +101,32 @@ void Engine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
+    }
+
+    // NOTE:
+    // stop and restart immediately time manager - maximum lost time is en file
+    // writing in last step of simulation but on the other hand setup is now
+    // included in total simulation time
+    // Unfortunately, setup is therefore included in the first looptime output
+    // but this is not a big problem - could also be a feature and not a bug
+    _timings.stopTimeManager("TotalSimulation");
+    _timings.startTimeManager("TotalSimulation");
+
+    _physicalData.setLoopTime(_timings.calculateLoopTime());
+    _averagePhysicalData.updateAverages(_physicalData);
+
+    if (0 == _step % outputFreq)
+    {
+        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+
+        const auto dt            = settings::TimingsSettings::getTimeStep();
+        const auto effStepDouble = static_cast<double>(effStep);
+        const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
+
+        _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
+        _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
+        _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
         _averagePhysicalData = physicalData::PhysicalData();
 

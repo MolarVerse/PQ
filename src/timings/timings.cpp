@@ -30,18 +30,7 @@ using namespace timings;
 /*
  * @brief constructor
  */
-Timings::Timings() { beginTimer(); }
-
-/**
- * @brief calculates the total simulation time in fs
- *
- */
-double Timings::calculateTotalSimTime(const size_t step) const
-{
-    const auto totalSteps = step + _stepCount;
-
-    return totalSteps * settings::TimingsSettings::getTimeStep();
-}
+Timings::Timings(const std::string_view name) : _name(name) {}
 
 /**
  * @brief calculates the elapsed time in ms
@@ -49,20 +38,40 @@ double Timings::calculateTotalSimTime(const size_t step) const
  */
 long Timings::calculateElapsedTime() const
 {
-    return duration_cast<ms>(_end - _start).count();
+    auto elapsedTime = 0;
+
+    for (const auto& timing : _timingDetails)
+        elapsedTime += timing.calculateElapsedTime();
+
+    return elapsedTime;
 }
 
 /**
  * @brief calculates the loop time in s
  *
  */
-double Timings::calculateLoopTime(const size_t numberOfSteps)
+double Timings::calculateLoopTime()
 {
-    _end          = high_resolution_clock::now();
-    auto loopTime = double(duration_cast<ns>(_end - _start).count());
-    loopTime      = loopTime * 1e-9 / double(numberOfSteps);
+    auto loopTime = 0.0;
+
+    for (const auto& timing : _timingDetails)
+        loopTime += timing.calculateLoopTime();
 
     return loopTime;
+}
+
+/**
+ * @brief get TimingsManager by name
+ *
+ */
+TimingsManager Timings::getTimingsManager(const std::string_view name) const
+{
+    const auto index = findTimeManagerIndex(name);
+
+    if (index == _timingDetails.size())
+        throw customException::CustomException("Timer not found");
+
+    return _timingDetails[index];
 }
 
 /**

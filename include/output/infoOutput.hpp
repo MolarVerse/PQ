@@ -24,9 +24,9 @@
 
 #define __INFO_OUTPUT_HPP__
 
-#include "output.hpp"   // for Output
-
 #include <string_view>   // for string_view
+
+#include "output.hpp"   // for Output
 
 namespace physicalData
 {
@@ -44,16 +44,31 @@ namespace output
      */
     class InfoOutput : public Output
     {
-      private:
+       private:
         void writeHeader();
-        void writeLeft(const double value, const std::string_view &name, const std::string_view &unit);
-        void writeLeftScientific(const double value, const std::string_view &name, const std::string_view &unit);
-        void writeRight(const double value, const std::string_view &name, const std::string_view &unit);
+        void writeLeft(
+            const double            value,
+            const std::string_view &name,
+            const std::string_view &unit
+        );
+        void writeLeftScientific(
+            const double            value,
+            const std::string_view &name,
+            const std::string_view &unit
+        );
+        void writeRight(
+            const double            value,
+            const std::string_view &name,
+            const std::string_view &unit
+        );
 
-      public:
+       public:
         using Output::Output;
 
-        void write(const double simulationTime, const double loopTime, const physicalData::PhysicalData &data);
+        void write(
+            const double                      simulationTime,
+            const physicalData::PhysicalData &data
+        );
     };
 
 }   // namespace output

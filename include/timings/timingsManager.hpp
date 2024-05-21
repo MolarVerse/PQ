@@ -45,6 +45,7 @@ namespace timings
         Time     _start;
         Time     _end;
         Duration _totalTime;
+        Duration _lastStepTime;
 
        public:
         explicit TimingsManager(const std::string_view name) : _name(name) {}
@@ -53,6 +54,7 @@ namespace timings
 
         [[nodiscard]] long   calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;
+        [[nodiscard]] double calculateAverageLoopTime() const;
 
         [[nodiscard]] std::string getName() const { return _name; }
 

@@ -52,37 +52,34 @@ namespace timings
      */
     class Timings
     {
-       private:
-        size_t _stepCount = 0;
-
-        Time _start;
-        Time _end;
+       protected:
+        std::string _name = "DefaultTimings";
 
         std::vector<TimingsManager> _timingDetails;
 
        public:
-        Timings();
+        explicit Timings(const std::string_view);
+
+        Timings()  = default;
         ~Timings() = default;
 
         [[nodiscard]] long   calculateElapsedTime() const;
-        [[nodiscard]] double calculateTotalSimTime(const size_t step) const;
-        [[nodiscard]] double calculateLoopTime(const size_t numberOfSteps);
+        [[nodiscard]] double calculateLoopTime();
 
         [[nodiscard]] size_t findTimeManagerIndex(const std::string_view) const;
 
         void startTimeManager(const std::string_view name);
         void stopTimeManager(const std::string_view name);
 
-        void beginTimer() { _start = high_resolution_clock::now(); }
-        void endTimer() { _end = high_resolution_clock::now(); }
+        [[nodiscard]] TimingsManager getTimingsManager(
+            const std::string_view name
+        ) const;
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] size_t getStepCount() const { return _stepCount; }
-
-        void setStepCount(const size_t stepCount) { _stepCount = stepCount; }
+        [[nodiscard]] Timings getTimings() const { return *this; }
     };
 
 }   // namespace timings

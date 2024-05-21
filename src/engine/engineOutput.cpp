@@ -39,9 +39,12 @@ using namespace engine;
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeEnergyFile(
+    const size_t                      step,
+    const physicalData::PhysicalData &physicalData
+)
 {
-    _energyOutput->write(step, loopTime, physicalData);
+    _energyOutput->write(step, physicalData);
 }
 
 /**
@@ -50,11 +53,12 @@ void EngineOutput::writeEnergyFile(const size_t step, const double loopTime, con
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeInstantEnergyFile(const size_t                      step,
-                                          const double                      loopTime,
-                                          const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeInstantEnergyFile(
+    const size_t                      step,
+    const physicalData::PhysicalData &physicalData
+)
 {
-    _instantEnergyOutput->write(step, loopTime, physicalData);
+    _instantEnergyOutput->write(step, physicalData);
 }
 
 /**
@@ -63,7 +67,10 @@ void EngineOutput::writeInstantEnergyFile(const size_t                      step
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeMomentumFile(const size_t step, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeMomentumFile(
+    const size_t                      step,
+    const physicalData::PhysicalData &physicalData
+)
 {
     _momentumOutput->write(step, physicalData);
 }
@@ -73,28 +80,40 @@ void EngineOutput::writeMomentumFile(const size_t step, const physicalData::Phys
  *
  * @param simulationBox
  */
-void EngineOutput::writeXyzFile(simulationBox::SimulationBox &simulationBox) { _xyzOutput->writeXyz(simulationBox); }
+void EngineOutput::writeXyzFile(simulationBox::SimulationBox &simulationBox)
+{
+    _xyzOutput->writeXyz(simulationBox);
+}
 
 /**
  * @brief wrapper for velocity file output function
  *
  * @param simulationBox
  */
-void EngineOutput::writeVelFile(simulationBox::SimulationBox &simulationBox) { _velOutput->writeVelocities(simulationBox); }
+void EngineOutput::writeVelFile(simulationBox::SimulationBox &simulationBox)
+{
+    _velOutput->writeVelocities(simulationBox);
+}
 
 /**
  * @brief wrapper for force file output function
  *
  * @param simulationBox
  */
-void EngineOutput::writeForceFile(simulationBox::SimulationBox &simulationBox) { _forceOutput->writeForces(simulationBox); }
+void EngineOutput::writeForceFile(simulationBox::SimulationBox &simulationBox)
+{
+    _forceOutput->writeForces(simulationBox);
+}
 
 /**
  * @brief wrapper for charge file output function
  *
  * @param simulationBox
  */
-void EngineOutput::writeChargeFile(simulationBox::SimulationBox &simulationBox) { _chargeOutput->writeCharges(simulationBox); }
+void EngineOutput::writeChargeFile(simulationBox::SimulationBox &simulationBox)
+{
+    _chargeOutput->writeCharges(simulationBox);
+}
 
 /**
  * @brief wrapper for info file output function
@@ -102,9 +121,12 @@ void EngineOutput::writeChargeFile(simulationBox::SimulationBox &simulationBox) 
  * @param time
  * @param physicalData
  */
-void EngineOutput::writeInfoFile(const double time, const double loopTime, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeInfoFile(
+    const double                      time,
+    const physicalData::PhysicalData &physicalData
+)
 {
-    _infoOutput->write(time, loopTime, physicalData);
+    _infoOutput->write(time, physicalData);
 }
 
 /**
@@ -113,7 +135,10 @@ void EngineOutput::writeInfoFile(const double time, const double loopTime, const
  * @param simulationBox
  * @param step
  */
-void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, const size_t step)
+void EngineOutput::writeRstFile(
+    simulationBox::SimulationBox &simulationBox,
+    const size_t                  step
+)
 {
     _rstFileOutput->write(simulationBox, step);
 }
@@ -124,7 +149,10 @@ void EngineOutput::writeRstFile(simulationBox::SimulationBox &simulationBox, con
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeVirialFile(const size_t step, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeVirialFile(
+    const size_t                      step,
+    const physicalData::PhysicalData &physicalData
+)
 {
     _virialOutput->write(step, physicalData);
 }
@@ -135,7 +163,10 @@ void EngineOutput::writeVirialFile(const size_t step, const physicalData::Physic
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeStressFile(const size_t step, const physicalData::PhysicalData &physicalData)
+void EngineOutput::writeStressFile(
+    const size_t                      step,
+    const physicalData::PhysicalData &physicalData
+)
 {
     _stressOutput->write(step, physicalData);
 }
@@ -145,7 +176,10 @@ void EngineOutput::writeStressFile(const size_t step, const physicalData::Physic
  *
  * @param simulationBox
  */
-void EngineOutput::writeBoxFile(const size_t step, const simulationBox::Box &simulationBox)
+void EngineOutput::writeBoxFile(
+    const size_t              step,
+    const simulationBox::Box &simulationBox
+)
 {
     _boxFileOutput->write(step, simulationBox);
 }
@@ -156,7 +190,10 @@ void EngineOutput::writeBoxFile(const size_t step, const simulationBox::Box &sim
  * @param simulationBox
  * @param step
  */
-void EngineOutput::writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &beads, const size_t step)
+void EngineOutput::writeRingPolymerRstFile(
+    std::vector<simulationBox::SimulationBox> &beads,
+    const size_t                               step
+)
 {
     _ringPolymerRstFileOutput->write(beads, step);
 }
@@ -166,7 +203,9 @@ void EngineOutput::writeRingPolymerRstFile(std::vector<simulationBox::Simulation
  *
  * @param beads
  */
-void EngineOutput::writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &beads)
+void EngineOutput::writeRingPolymerXyzFile(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
     _ringPolymerXyzOutput->writeXyz(beads);
 }
@@ -176,7 +215,9 @@ void EngineOutput::writeRingPolymerXyzFile(std::vector<simulationBox::Simulation
  *
  * @param beads
  */
-void EngineOutput::writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &beads)
+void EngineOutput::writeRingPolymerVelFile(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
     _ringPolymerVelOutput->writeVelocities(beads);
 }
@@ -186,7 +227,9 @@ void EngineOutput::writeRingPolymerVelFile(std::vector<simulationBox::Simulation
  *
  * @param beads
  */
-void EngineOutput::writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &beads)
+void EngineOutput::writeRingPolymerForceFile(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
     _ringPolymerForceOutput->writeForces(beads);
 }
@@ -196,7 +239,9 @@ void EngineOutput::writeRingPolymerForceFile(std::vector<simulationBox::Simulati
  *
  * @param beads
  */
-void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &beads)
+void EngineOutput::writeRingPolymerChargeFile(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
     _ringPolymerChargeOutput->writeCharges(beads);
 }
@@ -207,7 +252,10 @@ void EngineOutput::writeRingPolymerChargeFile(std::vector<simulationBox::Simulat
  * @param step
  * @param physicalData
  */
-void EngineOutput::writeRingPolymerEnergyFile(const size_t step, const std::vector<physicalData::PhysicalData> &dataVector)
+void EngineOutput::writeRingPolymerEnergyFile(
+    const size_t                                   step,
+    const std::vector<physicalData::PhysicalData> &dataVector
+)
 {
     _ringPolymerEnergyOutput->write(step, dataVector);
 }

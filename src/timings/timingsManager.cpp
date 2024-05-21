@@ -32,9 +32,10 @@ using namespace timings;
  */
 void TimingsManager::endTimer()
 {
-    _end        = std::chrono::high_resolution_clock::now();
-    _steps      = _steps + 1;
-    _totalTime += _end - _start;
+    _end           = std::chrono::high_resolution_clock::now();
+    _steps         = _steps + 1;
+    _totalTime    += _end - _start;
+    _lastStepTime  = _end - _start;
 }
 
 /**
@@ -46,14 +47,22 @@ long TimingsManager::calculateElapsedTime() const
     return std::chrono::duration_cast<ms>(_totalTime).count();
 }
 
+double TimingsManager::calculateAverageLoopTime() const
+{
+    auto time = double(std::chrono::duration_cast<ns>(_totalTime).count());
+    time      = time * 1e-9 / double(_steps);
+
+    return time;
+}
+
 /**
  * @brief calculates the loop time in s
  *
  */
 double TimingsManager::calculateLoopTime() const
 {
-    auto loopTime = double(std::chrono::duration_cast<ns>(_totalTime).count());
-    loopTime      = loopTime * 1e-9 / double(_steps);
+    auto time = double(std::chrono::duration_cast<ns>(_lastStepTime).count());
+    time      = time * 1e-9;
 
-    return loopTime;
+    return time;
 }

@@ -64,9 +64,10 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
-    auto timer      = timings::Timings();
-    auto setupTimer = timings::Timings();
-    setupTimer.startTimeManager("Setup");
+    auto timer      = timings::Timings("Simulation");
+    auto setupTimer = timings::Timings("Setup");
+    timer.startTimeManager("TotalSimulation");
+    setupTimer.startTimeManager("TotalSetup");
 
     engine.getStdoutOutput().writeHeader();
 
@@ -88,7 +89,7 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 
-    setupTimer.stopTimeManager("Setup");
+    setupTimer.stopTimeManager("TotalSetup");
     engine.setTimings(timer);
     engine.addTimingsSection(setupTimer);
 }

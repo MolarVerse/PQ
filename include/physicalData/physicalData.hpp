@@ -24,11 +24,11 @@
 
 #define _PHYSICAL_DATA_HPP_
 
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "vector3d.hpp"          // for Vec3D
-
 #include <functional>   // for _Bind_front_t, bind_front, function
 #include <vector>       // for vector
+
+#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
 {
@@ -49,8 +49,9 @@ namespace physicalData
      */
     class PhysicalData
     {
-      private:
+       private:
         double _numberOfQMAtoms = 0.0;
+        double _loopTime        = 0.0;
 
         double _volume      = 0.0;
         double _density     = 0.0;
@@ -83,13 +84,16 @@ namespace physicalData
 
         double _ringPolymerEnergy = 0.0;
 
-      public:
+       public:
         void calculateTemperature(simulationBox::SimulationBox &);
         void calculateKinetics(simulationBox::SimulationBox &);
         void changeKineticVirialToAtomic();
 
-        std::function<linearAlgebra::StaticMatrix3x3<double>()> getKineticEnergyVirialVector =
-            std::bind_front(&PhysicalData::getKineticEnergyMolecularVector, this);
+        std::function<linearAlgebra::StaticMatrix3x3<double>()>
+            getKineticEnergyVirialVector = std::bind_front(
+                &PhysicalData::getKineticEnergyMolecularVector,
+                this
+            );
 
         void updateAverages(const PhysicalData &);
         void makeAverages(const double);
@@ -104,61 +108,149 @@ namespace physicalData
          * standard adders  *
          ********************/
 
-        void addVirial(const linearAlgebra::tensor3D &virial) { _virial += virial; }
+        void addVirial(const linearAlgebra::tensor3D &virial)
+        {
+            _virial += virial;
+        }
 
-        void addCoulombEnergy(const double coulombEnergy) { _coulombEnergy += coulombEnergy; }
-        void addNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy += nonCoulombEnergy; }
+        void addCoulombEnergy(const double coulombEnergy)
+        {
+            _coulombEnergy += coulombEnergy;
+        }
+        void addNonCoulombEnergy(const double nonCoulombEnergy)
+        {
+            _nonCoulombEnergy += nonCoulombEnergy;
+        }
 
-        void addBondEnergy(const double bondEnergy) { _bondEnergy += bondEnergy; }
-        void addAngleEnergy(const double angleEnergy) { _angleEnergy += angleEnergy; }
-        void addDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy += dihedralEnergy; }
-        void addImproperEnergy(const double improperEnergy) { _improperEnergy += improperEnergy; }
+        void addBondEnergy(const double bondEnergy)
+        {
+            _bondEnergy += bondEnergy;
+        }
+        void addAngleEnergy(const double angleEnergy)
+        {
+            _angleEnergy += angleEnergy;
+        }
+        void addDihedralEnergy(const double dihedralEnergy)
+        {
+            _dihedralEnergy += dihedralEnergy;
+        }
+        void addImproperEnergy(const double improperEnergy)
+        {
+            _improperEnergy += improperEnergy;
+        }
 
-        void addRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy += ringPolymerEnergy; }
+        void addRingPolymerEnergy(const double ringPolymerEnergy)
+        {
+            _ringPolymerEnergy += ringPolymerEnergy;
+        }
 
         /********************
          * standard setters *
          ********************/
 
-        void setNumberOfQMAtoms(const double nQMAtoms) { _numberOfQMAtoms = nQMAtoms; }
+        void setNumberOfQMAtoms(const double nQMAtoms)
+        {
+            _numberOfQMAtoms = nQMAtoms;
+        }
+
+        void setLoopTime(const double loopTime) { _loopTime = loopTime; }
 
         void setVolume(const double volume) { _volume = volume; }
         void setDensity(const double density) { _density = density; }
-        void setTemperature(const double temperature) { _temperature = temperature; }
+        void setTemperature(const double temperature)
+        {
+            _temperature = temperature;
+        }
         void setPressure(const double pressure) { _pressure = pressure; }
 
-        void setVirial(const linearAlgebra::tensor3D &virial) { _virial = virial; }
-        void setStressTensor(const linearAlgebra::tensor3D &stressTensor) { _stressTensor = stressTensor; }
+        void setVirial(const linearAlgebra::tensor3D &virial)
+        {
+            _virial = virial;
+        }
+        void setStressTensor(const linearAlgebra::tensor3D &stressTensor)
+        {
+            _stressTensor = stressTensor;
+        }
 
         void setMomentum(const linearAlgebra::Vec3D &vec) { _momentum = vec; }
-        void setAngularMomentum(const linearAlgebra::Vec3D &vec) { _angularMomentum = vec; }
+        void setAngularMomentum(const linearAlgebra::Vec3D &vec)
+        {
+            _angularMomentum = vec;
+        }
 
-        void setKineticEnergy(const double kineticEnergy) { _kineticEnergy = kineticEnergy; }
-        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyAtomicTensor = vec; }
-        void setKineticEnergyMolecularVector(const linearAlgebra::tensor3D &vec) { _kineticEnergyMolecularTensor = vec; }
+        void setKineticEnergy(const double kineticEnergy)
+        {
+            _kineticEnergy = kineticEnergy;
+        }
+        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D &vec)
+        {
+            _kineticEnergyAtomicTensor = vec;
+        }
+        void setKineticEnergyMolecularVector(const linearAlgebra::tensor3D &vec)
+        {
+            _kineticEnergyMolecularTensor = vec;
+        }
 
-        void setCoulombEnergy(const double coulombEnergy) { _coulombEnergy = coulombEnergy; }
-        void setNonCoulombEnergy(const double nonCoulombEnergy) { _nonCoulombEnergy = nonCoulombEnergy; }
-        void setIntraCoulombEnergy(const double intraCoulombEnergy) { _intraCoulombEnergy = intraCoulombEnergy; }
-        void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy) { _intraNonCoulombEnergy = intraNonCoulombEnergy; }
+        void setCoulombEnergy(const double coulombEnergy)
+        {
+            _coulombEnergy = coulombEnergy;
+        }
+        void setNonCoulombEnergy(const double nonCoulombEnergy)
+        {
+            _nonCoulombEnergy = nonCoulombEnergy;
+        }
+        void setIntraCoulombEnergy(const double intraCoulombEnergy)
+        {
+            _intraCoulombEnergy = intraCoulombEnergy;
+        }
+        void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
+        {
+            _intraNonCoulombEnergy = intraNonCoulombEnergy;
+        }
 
-        void setBondEnergy(const double bondEnergy) { _bondEnergy = bondEnergy; }
-        void setAngleEnergy(const double angleEnergy) { _angleEnergy = angleEnergy; }
-        void setDihedralEnergy(const double dihedralEnergy) { _dihedralEnergy = dihedralEnergy; }
-        void setImproperEnergy(const double improperEnergy) { _improperEnergy = improperEnergy; }
+        void setBondEnergy(const double bondEnergy)
+        {
+            _bondEnergy = bondEnergy;
+        }
+        void setAngleEnergy(const double angleEnergy)
+        {
+            _angleEnergy = angleEnergy;
+        }
+        void setDihedralEnergy(const double dihedralEnergy)
+        {
+            _dihedralEnergy = dihedralEnergy;
+        }
+        void setImproperEnergy(const double improperEnergy)
+        {
+            _improperEnergy = improperEnergy;
+        }
 
         void setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
 
-        void setNoseHooverMomentumEnergy(const double momentumEnergy) { _noseHooverMomentumEnergy = momentumEnergy; }
-        void setNoseHooverFrictionEnergy(const double frictionEnergy) { _noseHooverFrictionEnergy = frictionEnergy; }
+        void setNoseHooverMomentumEnergy(const double momentumEnergy)
+        {
+            _noseHooverMomentumEnergy = momentumEnergy;
+        }
+        void setNoseHooverFrictionEnergy(const double frictionEnergy)
+        {
+            _noseHooverFrictionEnergy = frictionEnergy;
+        }
 
-        void setRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
+        void setRingPolymerEnergy(const double ringPolymerEnergy)
+        {
+            _ringPolymerEnergy = ringPolymerEnergy;
+        }
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] double getNumberOfQMAtoms() const { return _numberOfQMAtoms; }
+        [[nodiscard]] double getNumberOfQMAtoms() const
+        {
+            return _numberOfQMAtoms;
+        }
+
+        [[nodiscard]] double getLoopTime() const { return _loopTime; }
 
         [[nodiscard]] double getVolume() const { return _volume; }
         [[nodiscard]] double getDensity() const { return _density; }
@@ -166,30 +258,77 @@ namespace physicalData
         [[nodiscard]] double getPressure() const { return _pressure; }
 
         [[nodiscard]] double getKineticEnergy() const { return _kineticEnergy; }
-        [[nodiscard]] double getNonCoulombEnergy() const { return _nonCoulombEnergy; }
+        [[nodiscard]] double getNonCoulombEnergy() const
+        {
+            return _nonCoulombEnergy;
+        }
         [[nodiscard]] double getCoulombEnergy() const { return _coulombEnergy; }
-        [[nodiscard]] double getIntraCoulombEnergy() const { return _intraCoulombEnergy; }
-        [[nodiscard]] double getIntraNonCoulombEnergy() const { return _intraNonCoulombEnergy; }
-        [[nodiscard]] double getIntraEnergy() const { return _intraCoulombEnergy + _intraNonCoulombEnergy; }
+        [[nodiscard]] double getIntraCoulombEnergy() const
+        {
+            return _intraCoulombEnergy;
+        }
+        [[nodiscard]] double getIntraNonCoulombEnergy() const
+        {
+            return _intraNonCoulombEnergy;
+        }
+        [[nodiscard]] double getIntraEnergy() const
+        {
+            return _intraCoulombEnergy + _intraNonCoulombEnergy;
+        }
 
         [[nodiscard]] double getBondEnergy() const { return _bondEnergy; }
         [[nodiscard]] double getAngleEnergy() const { return _angleEnergy; }
-        [[nodiscard]] double getDihedralEnergy() const { return _dihedralEnergy; }
-        [[nodiscard]] double getImproperEnergy() const { return _improperEnergy; }
+        [[nodiscard]] double getDihedralEnergy() const
+        {
+            return _dihedralEnergy;
+        }
+        [[nodiscard]] double getImproperEnergy() const
+        {
+            return _improperEnergy;
+        }
 
         [[nodiscard]] double getQMEnergy() const { return _qmEnergy; }
 
-        [[nodiscard]] double getNoseHooverMomentumEnergy() const { return _noseHooverMomentumEnergy; }
-        [[nodiscard]] double getNoseHooverFrictionEnergy() const { return _noseHooverFrictionEnergy; }
+        [[nodiscard]] double getNoseHooverMomentumEnergy() const
+        {
+            return _noseHooverMomentumEnergy;
+        }
+        [[nodiscard]] double getNoseHooverFrictionEnergy() const
+        {
+            return _noseHooverFrictionEnergy;
+        }
 
-        [[nodiscard]] double getRingPolymerEnergy() const { return _ringPolymerEnergy; }
+        [[nodiscard]] double getRingPolymerEnergy() const
+        {
+            return _ringPolymerEnergy;
+        }
 
-        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector() const { return _kineticEnergyAtomicTensor; }
-        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyMolecularVector() const { return _kineticEnergyMolecularTensor; }
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
-        [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const { return _stressTensor; }
-        [[nodiscard]] linearAlgebra::Vec3D    getMomentum() const { return _momentum; }
-        [[nodiscard]] linearAlgebra::Vec3D    getAngularMomentum() const { return _angularMomentum; }
+        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector(
+        ) const
+        {
+            return _kineticEnergyAtomicTensor;
+        }
+        [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyMolecularVector(
+        ) const
+        {
+            return _kineticEnergyMolecularTensor;
+        }
+        [[nodiscard]] linearAlgebra::tensor3D getVirial() const
+        {
+            return _virial;
+        }
+        [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const
+        {
+            return _stressTensor;
+        }
+        [[nodiscard]] linearAlgebra::Vec3D getMomentum() const
+        {
+            return _momentum;
+        }
+        [[nodiscard]] linearAlgebra::Vec3D getAngularMomentum() const
+        {
+            return _angularMomentum;
+        }
     };
 
 }   // namespace physicalData
