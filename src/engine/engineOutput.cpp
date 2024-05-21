@@ -34,6 +34,40 @@ namespace simulationBox
 using namespace engine;
 
 /**
+ * @brief constructor
+ */
+EngineOutput::EngineOutput()
+{
+    _energyOutput        = std::make_unique<EnergyOutput>("default.en");
+    _instantEnergyOutput = std::make_unique<EnergyOutput>("default.instant_en");
+    _momentumOutput      = std::make_unique<MomentumOutput>("default.mom");
+    _xyzOutput           = std::make_unique<TrajectoryOutput>("default.xyz");
+    _velOutput           = std::make_unique<TrajectoryOutput>("default.vel");
+    _forceOutput         = std::make_unique<TrajectoryOutput>("default.force");
+    _chargeOutput        = std::make_unique<TrajectoryOutput>("default.chg");
+    _logOutput           = std::make_unique<LogOutput>("default.log");
+    _stdoutOutput        = std::make_unique<StdoutOutput>("stdout");
+    _rstFileOutput       = std::make_unique<RstFileOutput>("default.rst");
+    _infoOutput          = std::make_unique<InfoOutput>("default.info");
+    _virialOutput        = std::make_unique<VirialOutput>("default.vir");
+    _stressOutput        = std::make_unique<StressOutput>("default.stress");
+    _boxFileOutput       = std::make_unique<BoxFileOutput>("default.box");
+
+    _ringPolymerRstFileOutput =
+        std::make_unique<RingPolymerRestartFileOutput>("default.rst");
+    _ringPolymerXyzOutput =
+        std::make_unique<RingPolymerTrajectoryOutput>("default.xyz");
+    _ringPolymerVelOutput =
+        std::make_unique<RingPolymerTrajectoryOutput>("default.vel");
+    _ringPolymerForceOutput =
+        std::make_unique<RingPolymerTrajectoryOutput>("default.force");
+    _ringPolymerChargeOutput =
+        std::make_unique<RingPolymerTrajectoryOutput>("default.chg");
+    _ringPolymerEnergyOutput =
+        std::make_unique<RingPolymerEnergyOutput>("default.en");
+}
+
+/**
  * @brief wrapper for energy file output function
  *
  * @param step
