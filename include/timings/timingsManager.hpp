@@ -20,14 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_HPP_
+#ifndef _TIMINGS_MANAGER_HPP_
 
-#define _TIMINGS_HPP_
+#define _TIMINGS_MANAGER_HPP_
 
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
-
-#include "timingsManager.hpp"   // for TimingsManager
 
 namespace timings
 {
@@ -36,61 +34,45 @@ namespace timings
     using ms       = std::chrono::milliseconds;
     using ns       = std::chrono::nanoseconds;
 
-    /**
-     * @class Timings
-     *
-     * @brief Stores all timings information
-     *
-     * @details
-     *  stores internal simulation timings
-     *  as well as all timings corresponding to
-     *  execution time
-     *
-     */
-    class Timings
+    class TimingsManager
     {
        private:
-        size_t _stepCount = 0;
+        std::string _name;
+        size_t      _steps = 0;
 
-        Time _start;
-        Time _end;
-
-        std::vector<TimingsManager> _timings;
+        Time     _start;
+        Time     _end;
+        Duration _totalTime;
 
        public:
-        Timings();
-        ~Timings() = default;
+        explicit TimingsManager(const std::string& name) : _name(name) {}
 
-        [[nodiscard]] double calculateTotalSimulationTime(const size_t step
-        ) const;
+        [[nodiscard]] std::string getName() const { return _name; }
 
         void beginTimer()
         {
             _start = std::chrono::high_resolution_clock::now();
         }
-        void endTimer() { _end = std::chrono::high_resolution_clock::now(); }
+
+        void endTimer()
+        {
+            _end        = std::chrono::high_resolution_clock::now();
+            _steps      = _steps + 1;
+            _totalTime += _end - _start;
+        }
 
         [[nodiscard]] long calculateElapsedTime() const
         {
-            return std::chrono::duration_cast<ms>(_end - _start).count();
+            return std::chrono::duration_cast<ms>(_totalTime).count();
         }
-        [[nodiscard]] double calculateLoopTime(const size_t numberOfSteps)
+
+        [[nodiscard]] double calculateLoopTime() const
         {
-            _end = std::chrono::high_resolution_clock::now();
-            return double(std::chrono::duration_cast<ns>(_end - _start).count()
-                   ) *
-                   1e-9 / double(numberOfSteps);
+            return double(std::chrono::duration_cast<ns>(_totalTime).count()) *
+                   1e-9 / double(_steps);
         }
-
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-        [[nodiscard]] size_t getStepCount() const { return _stepCount; }
-
-        void setStepCount(const size_t stepCount) { _stepCount = stepCount; }
     };
 
 }   // namespace timings
 
-#endif   // _TIMINGS_HPP_
+#endif   // _TIMINGS_MANAGER_HPP_
