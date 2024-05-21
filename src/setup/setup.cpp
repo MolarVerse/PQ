@@ -46,6 +46,7 @@
 #include "settings.hpp"               // for Settings
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
+#include "timings.hpp"                // for Timings
 #include "topologyReader.hpp"         // for readTopologyFile
 
 #ifdef WITH_KOKKOS
@@ -63,6 +64,9 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
+    auto timer = timings::Timings();
+    timer.startTimeManager("Setup");
+
     engine.getStdoutOutput().writeHeader();
 
     readInputFile(inputFileName, engine);
@@ -82,6 +86,9 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
+
+    timer.stopTimeManager("Setup");
+    engine.setTimings(timer);
 }
 
 /**

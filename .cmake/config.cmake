@@ -23,7 +23,7 @@ endif()
 # *****************
 # BUILD WITH KOKKOS
 # *****************
-option(BUILD_WITH_KOKKOS "Build with Kokkos" ON)
+option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
 
 # **************
 # BUILD WITH MPI

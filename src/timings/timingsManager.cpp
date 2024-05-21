@@ -20,32 +20,40 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_HPP_
+#include "timingsManager.hpp"
 
-#define _SETUP_HPP_
+#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 
-#include <string>   // for string
-
-namespace engine
-{
-    class Engine;
-}   // namespace engine
+using namespace timings;
 
 /**
- * @namespace setup
- *
- * @note
- *  This namespace contains all the functions that are used to setup the
- *  simulation. This includes reading the input file, the moldescriptor,
- *  the rst file, the guff.dat file, and post processing the setup.
+ * @brief end the timer
  *
  */
-namespace setup
+void TimingsManager::endTimer()
 {
-    void setupSimulation(const std::string &inputFileName, engine::Engine &);
+    _end        = std::chrono::high_resolution_clock::now();
+    _steps      = _steps + 1;
+    _totalTime += _end - _start;
+}
 
-    void readFiles(engine::Engine &);
-    void setupEngine(engine::Engine &);
-}   // namespace setup
+/**
+ * @brief calculates the elapsed time in ms
+ *
+ */
+long TimingsManager::calculateElapsedTime() const
+{
+    return std::chrono::duration_cast<ms>(_totalTime).count();
+}
 
-#endif   // _SETUP_HPP_
+/**
+ * @brief calculates the loop time in s
+ *
+ */
+double TimingsManager::calculateLoopTime() const
+{
+    auto loopTime = double(std::chrono::duration_cast<ns>(_totalTime).count());
+    loopTime      = loopTime * 1e-9 / double(_steps);
+
+    return loopTime;
+}

@@ -26,6 +26,7 @@
 
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
+#include <string>    // for string
 
 #include "timingsManager.hpp"   // for TimingsManager
 
@@ -63,9 +64,14 @@ namespace timings
         Timings();
         ~Timings() = default;
 
-        [[nodiscard]] double calculateTotalSimTime(const size_t step) const;
         [[nodiscard]] long   calculateElapsedTime() const;
+        [[nodiscard]] double calculateTotalSimTime(const size_t step) const;
         [[nodiscard]] double calculateLoopTime(const size_t numberOfSteps);
+
+        [[nodiscard]] size_t findTimeManagerIndex(const std::string_view) const;
+
+        void startTimeManager(const std::string_view name);
+        void stopTimeManager(const std::string_view name);
 
         void beginTimer() { _start = high_resolution_clock::now(); }
         void endTimer() { _end = high_resolution_clock::now(); }

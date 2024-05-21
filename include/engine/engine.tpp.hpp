@@ -20,32 +20,43 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_HPP_
+#ifndef _ENGINE_TPP_
 
-#define _SETUP_HPP_
+#define _ENGINE_TPP_
 
-#include <string>   // for string
+#include "engine.hpp"
+
+/***************************
+ * make unique_ptr methods *
+ ***************************/
 
 namespace engine
 {
-    class Engine;
+    template <typename T>
+    inline void Engine::makeIntegrator(T integrator)
+    {
+        _integrator = std::make_unique<T>(integrator);
+    }
+    template <typename T>
+    inline void Engine::makePotential(T)
+    {
+        _potential = std::make_unique<T>();
+    }
+    template <typename T>
+    inline void Engine::makeThermostat(T thermostat)
+    {
+        _thermostat = std::make_unique<T>(thermostat);
+    }
+    template <typename T>
+    inline void Engine::makeManostat(T manostat)
+    {
+        _manostat = std::make_unique<T>(manostat);
+    }
+    template <typename T>
+    inline void Engine::makeVirial(T virial)
+    {
+        _virial = std::make_unique<T>(virial);
+    }
 }   // namespace engine
 
-/**
- * @namespace setup
- *
- * @note
- *  This namespace contains all the functions that are used to setup the
- *  simulation. This includes reading the input file, the moldescriptor,
- *  the rst file, the guff.dat file, and post processing the setup.
- *
- */
-namespace setup
-{
-    void setupSimulation(const std::string &inputFileName, engine::Engine &);
-
-    void readFiles(engine::Engine &);
-    void setupEngine(engine::Engine &);
-}   // namespace setup
-
-#endif   // _SETUP_HPP_
+#endif   // _ENGINE_TPP_

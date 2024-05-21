@@ -40,8 +40,6 @@ using namespace engine;
  */
 void Engine::run()
 {
-    _timings.beginTimer();
-
     _physicalData.calculateKinetics(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(
@@ -80,27 +78,26 @@ void Engine::writeOutput()
 {
     _averagePhysicalData.updateAverages(_physicalData);
 
-    const auto outputFrequency =
-        settings::OutputFileSettings::getOutputFrequency();
+    const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
 
-    if (0 == _step % outputFrequency)
+    if (0 == _step % outputFreq)
     {
-        _averagePhysicalData.makeAverages(static_cast<double>(outputFrequency));
+        _timings.startTimeManager("Output");
+
+        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
         const auto dt            = settings::TimingsSettings::getTimeStep();
         const auto step0         = _timings.getStepCount();
-        const auto effectiveStep = _step + step0;
-        const auto simulationTime =
-            static_cast<double>(effectiveStep) * dt * constants::_FS_TO_PS_;
+        const auto effStep       = _step + step0;
+        const auto effStepDouble = static_cast<double>(effStep);
+
+        const auto simTime  = effStepDouble * dt * constants::_FS_TO_PS_;
         const auto loopTime = _timings.calculateLoopTime(_step);
 
-        _engineOutput
-            .writeEnergyFile(effectiveStep, loopTime, _averagePhysicalData);
-        _engineOutput
-            .writeInstantEnergyFile(effectiveStep, loopTime, _physicalData);
-        _engineOutput.writeMomentumFile(effectiveStep, _averagePhysicalData);
-        _engineOutput
-            .writeInfoFile(simulationTime, loopTime, _averagePhysicalData);
+        _engineOutput.writeEnergyFile(effStep, loopTime, _averagePhysicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, loopTime, _physicalData);
+        _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
+        _engineOutput.writeInfoFile(simTime, loopTime, _averagePhysicalData);
         _engineOutput.writeXyzFile(_simulationBox);
         _engineOutput.writeVelFile(_simulationBox);
         _engineOutput.writeForceFile(_simulationBox);
@@ -108,17 +105,387 @@ void Engine::writeOutput()
         _engineOutput.writeRstFile(_simulationBox, _step + step0);
 
         _engineOutput.writeVirialFile(
-            effectiveStep,
+            effStep,
             _physicalData
         );   // use physicalData instead of averagePhysicalData
+
         _engineOutput.writeStressFile(
-            effectiveStep,
+            effStep,
             _physicalData
         );   // use physicalData instead of averagePhysicalData
-        _engineOutput.writeBoxFile(effectiveStep, _simulationBox.getBox());
+
+        _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
 
         _averagePhysicalData = physicalData::PhysicalData();
+
+        _timings.stopTimeManager("Output");
     }
 
     _physicalData.reset();
 }
+
+/**
+ * @brief checks if the force field is activated
+ *
+ * @return true
+ * @return false
+ */
+bool Engine::isForceFieldNonCoulombicsActivated() const
+{
+    return _forceField.isNonCoulombicActivated();
+}
+
+/**
+ * @brief checks if the guff formalism is activated
+ *
+ * @return true
+ * @return false
+ */
+bool Engine::isGuffActivated() const
+{
+    return !_forceField.isNonCoulombicActivated();
+}
+
+/**
+ * @brief checks if the cell list is activated
+ *
+ * @return true
+ * @return false
+ */
+bool Engine::isCellListActivated() const { return _cellList.isActive(); }
+
+/**
+ * @brief checks if any constraints are activated
+ *
+ * @return true
+ * @return false
+ */
+bool Engine::isConstraintsActivated() const { return _constraints.isActive(); }
+
+/**
+ * @brief checks if the intra non bonded interactions are activated
+ *
+ * @return true
+ * @return false
+ */
+bool Engine::isIntraNonBondedActivated() const
+{
+    return _intraNonBonded.isActive();
+}
+
+/**
+ * @brief get the reference to the cell list
+ *
+ * @return simulationBox::CellList&
+ */
+simulationBox::CellList &Engine::getCellList() { return _cellList; }
+
+/**
+ * @brief get the reference to the simulation box
+ *
+ * @return simulationBox::SimulationBox&
+ */
+simulationBox::SimulationBox &Engine::getSimulationBox()
+{
+    return _simulationBox;
+}
+
+/**
+ * @brief get the reference to the physical data
+ *
+ * @return physicalData::PhysicalData&
+ */
+physicalData::PhysicalData &Engine::getPhysicalData() { return _physicalData; }
+
+/**
+ * @brief get the reference to the average physical data
+ *
+ * @return physicalData::PhysicalData&
+ */
+physicalData::PhysicalData &Engine::getAveragePhysicalData()
+{
+    return _averagePhysicalData;
+}
+
+/**
+ * @brief get the reference to the Constraints
+ *
+ * @return timings::Timings&
+ */
+constraints::Constraints &Engine::getConstraints() { return _constraints; }
+
+/**
+ * @brief get the reference to the force field
+ *
+ * @return forceField::ForceField&
+ */
+forceField::ForceField &Engine::getForceField() { return _forceField; }
+
+/**
+ * @brief get the reference to the intra non bonded interactions
+ *
+ * @return intraNonBonded::IntraNonBonded&
+ */
+intraNonBonded::IntraNonBonded &Engine::getIntraNonBonded()
+{
+    return _intraNonBonded;
+}
+
+/**
+ * @brief get the reference to the reset kinetics
+ *
+ * @return resetKinetics::ResetKinetics&
+ */
+resetKinetics::ResetKinetics &Engine::getResetKinetics()
+{
+    return _resetKinetics;
+}
+
+/**
+ * @brief get the reference to the virial
+ *
+ * @return thermostat::Thermostat&
+ */
+virial::Virial &Engine::getVirial() { return *_virial; }
+
+/**
+ * @brief get the reference to the integrator
+ *
+ * @return thermostat::Thermostat&
+ */
+integrator::Integrator &Engine::getIntegrator() { return *_integrator; }
+
+/**
+ * @brief get the reference to the potential
+ *
+ * @return thermostat::Thermostat&
+ */
+potential::Potential &Engine::getPotential() { return *_potential; }
+
+/**
+ * @brief get the reference to the thermostat
+ *
+ * @return thermostat::Thermostat&
+ */
+thermostat::Thermostat &Engine::getThermostat() { return *_thermostat; }
+
+/**
+ * @brief get the reference to the manostat
+ *
+ * @return thermostat::Thermostat&
+ */
+manostat::Manostat &Engine::getManostat() { return *_manostat; }
+
+/**
+ * @brief get the reference to the engine output
+ *
+ * @return thermostat::Thermostat&
+ */
+EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
+
+/**
+ * @brief get the reference to the energy output
+ *
+ * @return timings::Timings&
+ */
+output::EnergyOutput &Engine::getEnergyOutput()
+{
+    return _engineOutput.getEnergyOutput();
+}
+
+/**
+ * @brief get the reference to the instant energy output
+ *
+ * @return timings::Timings&
+ */
+output::EnergyOutput &Engine::getInstantEnergyOutput()
+{
+    return _engineOutput.getInstantEnergyOutput();
+}
+
+/**
+ * @brief get the reference to the momentum output
+ *
+ * @return timings::Timings&
+ */
+output::MomentumOutput &Engine::getMomentumOutput()
+{
+    return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz output
+ *
+ * @return timings::Timings&
+ */
+output::TrajectoryOutput &Engine::getXyzOutput()
+{
+    return _engineOutput.getXyzOutput();
+}
+
+/**
+ * @brief get the reference to the vel output
+ *
+ * @return timings::Timings&
+ */
+output::TrajectoryOutput &Engine::getVelOutput()
+{
+    return _engineOutput.getVelOutput();
+}
+
+/**
+ * @brief get the reference to the force output
+ *
+ * @return timings::Timings&
+ */
+output::TrajectoryOutput &Engine::getForceOutput()
+{
+    return _engineOutput.getForceOutput();
+}
+
+/**
+ * @brief get the reference to the charge output
+ *
+ * @return timings::Timings&
+ */
+output::TrajectoryOutput &Engine::getChargeOutput()
+{
+    return _engineOutput.getChargeOutput();
+}
+
+/**
+ * @brief get the reference to the log output
+ *
+ * @return timings::Timings&
+ */
+output::LogOutput &Engine::getLogOutput()
+{
+    return _engineOutput.getLogOutput();
+}
+
+/**
+ * @brief get the reference to the stdout output
+ *
+ * @return timings::Timings&
+ */
+output::StdoutOutput &Engine::getStdoutOutput()
+{
+    return _engineOutput.getStdoutOutput();
+}
+
+/**
+ * @brief get the reference to the rst file output
+ *
+ * @return timings::Timings&
+ */
+output::RstFileOutput &Engine::getRstFileOutput()
+{
+    return _engineOutput.getRstFileOutput();
+}
+
+/**
+ * @brief get the reference to the info output
+ *
+ * @return timings::Timings&
+ */
+output::InfoOutput &Engine::getInfoOutput()
+{
+    return _engineOutput.getInfoOutput();
+}
+
+/**
+ * @brief get the reference to the virial output
+ *
+ * @return timings::Timings&
+ */
+output::VirialOutput &Engine::getVirialOutput()
+{
+    return _engineOutput.getVirialOutput();
+}
+
+/**
+ * @brief get the reference to the stress output
+ *
+ * @return timings::Timings&
+ */
+output::StressOutput &Engine::getStressOutput()
+{
+    return _engineOutput.getStressOutput();
+}
+
+/**
+ * @brief get the reference to the box file output
+ *
+ * @return timings::Timings&
+ */
+output::BoxFileOutput &Engine::getBoxFileOutput()
+{
+    return _engineOutput.getBoxFileOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer rst file output
+ *
+ * @return timings::Timings&
+ */
+RPRestartFileOutput &Engine::getRingPolymerRstFileOutput()
+{
+    return _engineOutput.getRingPolymerRstFileOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer xyz output
+ *
+ * @return timings::Timings&
+ */
+RPTrajectoryOutput &Engine::getRingPolymerXyzOutput()
+{
+    return _engineOutput.getRingPolymerXyzOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer vel output
+ *
+ * @return timings::Timings&
+ */
+RPTrajectoryOutput &Engine::getRingPolymerVelOutput()
+{
+    return _engineOutput.getRingPolymerVelOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer force output
+ *
+ * @return timings::Timings&
+ */
+RPTrajectoryOutput &Engine::getRingPolymerForceOutput()
+{
+    return _engineOutput.getRingPolymerForceOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer charge output
+ *
+ * @return timings::Timings&
+ */
+RPTrajectoryOutput &Engine::getRingPolymerChargeOutput()
+{
+    return _engineOutput.getRingPolymerChargeOutput();
+}
+
+/**
+ * @brief get the reference to the ring polymer energy output
+ *
+ * @return timings::Timings&
+ */
+RPEnergyOutput &Engine::getRingPolymerEnergyOutput()
+{
+    return _engineOutput.getRingPolymerEnergyOutput();
+}
+
+/**
+ * @brief get the pointer to the force field
+ *
+ * @return thermostat::Thermostat&
+ */
+forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }

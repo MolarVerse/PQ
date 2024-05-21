@@ -34,6 +34,8 @@ namespace timings
     using ms       = std::chrono::milliseconds;
     using ns       = std::chrono::nanoseconds;
 
+    using namespace std::chrono;
+
     class TimingsManager
     {
        private:
@@ -45,32 +47,16 @@ namespace timings
         Duration _totalTime;
 
        public:
-        explicit TimingsManager(const std::string& name) : _name(name) {}
+        explicit TimingsManager(const std::string_view name) : _name(name) {}
+
+        void endTimer();
+
+        [[nodiscard]] long   calculateElapsedTime() const;
+        [[nodiscard]] double calculateLoopTime() const;
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        void beginTimer()
-        {
-            _start = std::chrono::high_resolution_clock::now();
-        }
-
-        void endTimer()
-        {
-            _end        = std::chrono::high_resolution_clock::now();
-            _steps      = _steps + 1;
-            _totalTime += _end - _start;
-        }
-
-        [[nodiscard]] long calculateElapsedTime() const
-        {
-            return std::chrono::duration_cast<ms>(_totalTime).count();
-        }
-
-        [[nodiscard]] double calculateLoopTime() const
-        {
-            return double(std::chrono::duration_cast<ns>(_totalTime).count()) *
-                   1e-9 / double(_steps);
-        }
+        void beginTimer() { _start = high_resolution_clock::now(); }
     };
 
 }   // namespace timings

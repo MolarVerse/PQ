@@ -1,4 +1,4 @@
-add_library(engine
+set(engine_source_files
     engine.cpp
 
     mmmdEngine.cpp
@@ -7,6 +7,17 @@ add_library(engine
     ringPolymerqmmdEngine.cpp
 
     engineOutput.cpp
+)
+
+if(BUILD_WITH_KOKKOS)
+    set(engine_source_files
+        ${engine_source_files}
+        engine_kokkos.cpp
+    )
+endif()
+
+add_library(engine
+    ${engine_source_files}
 )
 
 target_include_directories(engine

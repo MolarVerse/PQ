@@ -22,6 +22,7 @@
 
 #include "timings.hpp"
 
+#include "exceptions.hpp"
 #include "timingsSettings.hpp"
 
 using namespace timings;
@@ -29,11 +30,7 @@ using namespace timings;
 /*
  * @brief constructor
  */
-Timings::Timings()
-{
-    _timingDetails.emplace_back(TimingsManager("Writing"));
-    _timingDetails.emplace_back(TimingsManager("Setup"));
-}
+Timings::Timings() { beginTimer(); }
 
 /**
  * @brief calculates the total simulation time in fs
@@ -66,4 +63,48 @@ double Timings::calculateLoopTime(const size_t numberOfSteps)
     loopTime      = loopTime * 1e-9 / double(numberOfSteps);
 
     return loopTime;
+}
+
+/**
+ * @brief starts a new timer
+ *
+ */
+void Timings::startTimeManager(const std::string_view name)
+{
+    const auto index = findTimeManagerIndex(name);
+
+    if (index == _timingDetails.size())
+    {
+        _timingDetails.emplace_back(name);
+        _timingDetails.back().beginTimer();
+    }
+    else
+        _timingDetails[index].beginTimer();
+}
+
+/**
+ * @brief find timeManager by name
+ *
+ */
+size_t Timings::findTimeManagerIndex(const std::string_view name) const
+{
+    for (size_t i = 0; i < _timingDetails.size(); ++i)
+        if (_timingDetails[i].getName() == name)
+            return i;
+
+    return _timingDetails.size();
+}
+
+/**
+ * @brief stops a timer
+ *
+ */
+void Timings::stopTimeManager(const std::string_view name)
+{
+    const auto index = findTimeManagerIndex(name);
+
+    if (index == _timingDetails.size())
+        throw customException::CustomException("Timer not found");
+
+    _timingDetails[index].endTimer();
 }
