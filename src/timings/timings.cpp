@@ -21,3 +21,49 @@
 ******************************************************************************/
 
 #include "timings.hpp"
+
+#include "timingsSettings.hpp"
+
+using namespace timings;
+
+/*
+ * @brief constructor
+ */
+Timings::Timings()
+{
+    _timingDetails.emplace_back(TimingsManager("Writing"));
+    _timingDetails.emplace_back(TimingsManager("Setup"));
+}
+
+/**
+ * @brief calculates the total simulation time in fs
+ *
+ */
+double Timings::calculateTotalSimTime(const size_t step) const
+{
+    const auto totalSteps = step + _stepCount;
+
+    return totalSteps * settings::TimingsSettings::getTimeStep();
+}
+
+/**
+ * @brief calculates the elapsed time in ms
+ *
+ */
+long Timings::calculateElapsedTime() const
+{
+    return duration_cast<ms>(_end - _start).count();
+}
+
+/**
+ * @brief calculates the loop time in s
+ *
+ */
+double Timings::calculateLoopTime(const size_t numberOfSteps)
+{
+    _end          = high_resolution_clock::now();
+    auto loopTime = double(duration_cast<ns>(_end - _start).count());
+    loopTime      = loopTime * 1e-9 / double(numberOfSteps);
+
+    return loopTime;
+}
