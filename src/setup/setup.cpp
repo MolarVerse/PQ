@@ -64,8 +64,9 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
-    auto timer = timings::Timings();
-    timer.startTimeManager("Setup");
+    auto timer      = timings::Timings();
+    auto setupTimer = timings::Timings();
+    setupTimer.startTimeManager("Setup");
 
     engine.getStdoutOutput().writeHeader();
 
@@ -87,8 +88,9 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 
-    timer.stopTimeManager("Setup");
+    setupTimer.stopTimeManager("Setup");
     engine.setTimings(timer);
+    engine.addTimingsSection(setupTimer);
 }
 
 /**
@@ -107,7 +109,7 @@ void setup::readFiles(Engine &engine)
 
     parameterFile::readParameterFile(engine);
 
-    input::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBondedReader::readIntraNonBondedFile(engine);
 }
 
 /**

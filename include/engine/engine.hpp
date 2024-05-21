@@ -107,8 +107,11 @@ namespace engine
        protected:
         size_t _step = 1;
 
-        EngineOutput                   _engineOutput;
-        timings::Timings               _timings;
+        EngineOutput _engineOutput;
+
+        timings::Timings              _timings;
+        std::vector<timings::Timings> _timingsSections;
+
         simulationBox::CellList        _cellList;
         simulationBox::SimulationBox   _simulationBox;
         physicalData::PhysicalData     _physicalData;
@@ -138,6 +141,8 @@ namespace engine
 
         virtual void run();
         virtual void writeOutput();
+
+        void addTimingsSection(const timings::Timings &timings);
 
         // virtual function to be overwritten by derived classes
         virtual void takeStep() {};

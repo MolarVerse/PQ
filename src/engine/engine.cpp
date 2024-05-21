@@ -125,6 +125,15 @@ void Engine::writeOutput()
 }
 
 /**
+ * @brief Adds a timings section to the timingsSection vector.
+ *
+ */
+void Engine::addTimingsSection(const timings::Timings &timings)
+{
+    _timingsSections.push_back(timings);
+}
+
+/**
  * @brief checks if the force field is activated
  *
  * @return true
