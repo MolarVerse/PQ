@@ -293,3 +293,63 @@ void EngineOutput::writeRingPolymerEnergyFile(
 {
     _ringPolymerEnergyOutput->write(step, dataVector);
 }
+
+/**
+ * @brief getter for ring polymer restart file output
+ *
+ * @return RPMDRestartFileOutput
+ */
+RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
+{
+    return *_ringPolymerRstFileOutput;
+}
+
+/**
+ * @brief getter for ring polymer trajectory xyz output
+ *
+ * @return RPMDTrajectoryOutput
+ */
+RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
+{
+    return *_ringPolymerXyzOutput;
+}
+
+/**
+ * @brief getter for ring polymer trajectory velocity output
+ *
+ * @return RPMDTrajectoryOutput
+ */
+RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
+{
+    return *_ringPolymerVelOutput;
+}
+
+/**
+ * @brief getter for ring polymer trajectory force output
+ *
+ * @return RPMDTrajectoryOutput
+ */
+RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
+{
+    return *_ringPolymerForceOutput;
+}
+
+/**
+ * @brief getter for ring polymer trajectory charge output
+ *
+ * @return RPMDTrajectoryOutput
+ */
+RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
+{
+    return *_ringPolymerChargeOutput;
+}
+
+/**
+ * @brief getter for ring polymer energy output
+ *
+ * @return RPMDEnergyOutput
+ */
+RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
+{
+    return *_ringPolymerEnergyOutput;
+}

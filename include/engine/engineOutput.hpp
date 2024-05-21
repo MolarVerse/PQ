@@ -39,6 +39,7 @@
 #include "rstFileOutput.hpp"                  // for RstFileOutput
 #include "stdoutOutput.hpp"                   // for StdoutOutput
 #include "stressOutput.hpp"                   // for StressOutput
+#include "timer.hpp"                          // for Timer
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 #include "virialOutput.hpp"                   // for VirialOutput
 
@@ -60,13 +61,15 @@ namespace engine
     using RPMDTrajectoryOutput  = RingPolymerTrajectoryOutput;
     using RPMDEnergyOutput      = RingPolymerEnergyOutput;
 
+    using SimulationBox = simulationBox::SimulationBox;
+
     /**
      * @class EngineOutput
      *
      * @brief contains unique pointers to all of the output classes
      *
      */
-    class EngineOutput
+    class EngineOutput : public timings::Timer
     {
        private:
         std::unique_ptr<EnergyOutput> _energyOutput;
@@ -112,17 +115,13 @@ namespace engine
         void writeBoxFile(const size_t, const simulationBox::Box &);
 
         void writeRingPolymerRstFile(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<SimulationBox> &,
             const size_t
         );
-        void writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox>
-                                         &);
-        void writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox>
-                                         &);
-        void writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox>
-                                           &);
-        void writeRingPolymerChargeFile(std::vector<
-                                        simulationBox::SimulationBox> &);
+        void writeRingPolymerXyzFile(std::vector<SimulationBox> &);
+        void writeRingPolymerVelFile(std::vector<SimulationBox> &);
+        void writeRingPolymerForceFile(std::vector<SimulationBox> &);
+        void writeRingPolymerChargeFile(std::vector<SimulationBox> &);
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
         EnergyOutput &getEnergyOutput() { return *_energyOutput; }
@@ -141,30 +140,12 @@ namespace engine
         StressOutput  &getStressOutput() { return *_stressOutput; }
         BoxFileOutput &getBoxFileOutput() { return *_boxFileOutput; }
 
-        RingPolymerRestartFileOutput &getRingPolymerRstFileOutput()
-        {
-            return *_ringPolymerRstFileOutput;
-        }
-        RingPolymerTrajectoryOutput &getRingPolymerXyzOutput()
-        {
-            return *_ringPolymerXyzOutput;
-        }
-        RingPolymerTrajectoryOutput &getRingPolymerVelOutput()
-        {
-            return *_ringPolymerVelOutput;
-        }
-        RingPolymerTrajectoryOutput &getRingPolymerForceOutput()
-        {
-            return *_ringPolymerForceOutput;
-        }
-        RingPolymerTrajectoryOutput &getRingPolymerChargeOutput()
-        {
-            return *_ringPolymerChargeOutput;
-        }
-        RingPolymerEnergyOutput &getRingPolymerEnergyOutput()
-        {
-            return *_ringPolymerEnergyOutput;
-        }
+        RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerXyzOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerVelOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerForceOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerChargeOutput();
+        RingPolymerEnergyOutput      &getRingPolymerEnergyOutput();
     };
 
 }   // namespace engine
