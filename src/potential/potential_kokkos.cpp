@@ -93,7 +93,7 @@ void KokkosPotential::calculateForces(
             shiftForces(i, 1) = 0.0;
             shiftForces(i, 2) = 0.0;
 
-            for (size_t j = 0; j < numberOfAtoms; ++j)
+            for (size_t j = i; j < numberOfAtoms; ++j)
             {
                 const auto moleculeIndex_j = moleculeIndices(j);
 
@@ -154,13 +154,21 @@ void KokkosPotential::calculateForces(
                     nonCoulombEnergy += nonCoulombicEnergy;
                 }
 
-                shiftForces(i, 0) += force_ij[0] * txyz[0] / 2;
-                shiftForces(i, 1) += force_ij[1] * txyz[1] / 2;
-                shiftForces(i, 2) += force_ij[2] * txyz[2] / 2;
+                shiftForces(i, 0) += force_ij[0] * txyz[0];
+                shiftForces(i, 1) += force_ij[1] * txyz[1];
+                shiftForces(i, 2) += force_ij[2] * txyz[2];
+                
+                // atomic add
+                Kokkos::atomic_add(&forces(i, 0), force_ij[0]);
+                Kokkos::atomic_add(&forces(i, 1), force_ij[1]);
+                Kokkos::atomic_add(&forces(i, 2), force_ij[2]);
 
-                forces(i, 0) += force_ij[0];
-                forces(i, 1) += force_ij[1];
-                forces(i, 2) += force_ij[2];
+                Kokkos::atomic_add(&forces(j, 0), -force_ij[0]);
+                Kokkos::atomic_add(&forces(j, 1), -force_ij[1]);
+                Kokkos::atomic_add(&forces(j, 2), -force_ij[2]);
+                // forces(i, 0) += force_ij[0];
+                // forces(i, 1) += force_ij[1];
+                // forces(i, 2) += force_ij[2];
             }
         },
         totalCoulombEnergy,
@@ -168,8 +176,8 @@ void KokkosPotential::calculateForces(
     );
 
     // half energy because of double counting
-    totalCoulombEnergy    *= 0.5;
-    totalNonCoulombEnergy *= 0.5;
+    // totalCoulombEnergy    *= 0.5;
+    // totalNonCoulombEnergy *= 0.5;
 
     kokkosSimBox.transferForcesToSimulationBox(simBox);
     kokkosSimBox.transferShiftForcesToSimulationBox(simBox);
