@@ -27,6 +27,8 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
+#include "timer.hpp"   // for Timer
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -41,7 +43,7 @@ namespace integrator
      * @brief Integrator is a base class for all integrators
      *
      */
-    class Integrator
+    class Integrator : public timings::Timer
     {
        protected:
         std::string _integratorType;

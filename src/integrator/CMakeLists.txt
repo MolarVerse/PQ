@@ -30,6 +30,7 @@ target_link_libraries(integrator
     PUBLIC
     simulationBox
     settings
+    timings
 )
 
 if(BUILD_WITH_KOKKOS)

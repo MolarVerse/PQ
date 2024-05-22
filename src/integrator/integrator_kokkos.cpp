@@ -60,6 +60,8 @@ void KokkosVelocityVerlet::firstStep(
     simulationBox::KokkosSimulationBox &kokkosSimBox
 )
 {
+    startTimingsSection("Velocity Verlet - first step");
+
     kokkosSimBox.transferPositionsFromSimulationBox(simBox);
     kokkosSimBox.transferForcesFromSimulationBox(simBox);
     kokkosSimBox.transferVelocitiesFromSimulationBox(simBox);
@@ -108,6 +110,8 @@ void KokkosVelocityVerlet::firstStep(
 
     kokkosSimBox.transferVelocitiesToSimulationBox(simBox);
     kokkosSimBox.transferPositionsToSimulationBox(simBox);
+
+    stopTimingsSection("Velocity Verlet - first step");
 }
 
 /**
@@ -121,6 +125,8 @@ void KokkosVelocityVerlet::secondStep(
     simulationBox::KokkosSimulationBox &kokkosSimBox
 )
 {
+    startTimingsSection("Velocity Verlet - second step");
+
     kokkosSimBox.transferForcesFromSimulationBox(simBox);
     kokkosSimBox.transferVelocitiesFromSimulationBox(simBox);
 
@@ -146,4 +152,6 @@ void KokkosVelocityVerlet::secondStep(
     );
 
     kokkosSimBox.transferVelocitiesToSimulationBox(simBox);
+
+    stopTimingsSection("Velocity Verlet - second step");
 }

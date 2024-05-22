@@ -24,10 +24,11 @@
 
 #define _KOKKOS_INTEGRATOR_HPP_
 
-#include <Kokkos_DualView.hpp>
+#include <Kokkos_DualView.hpp>   // for DualView
 
-#include "simulationBox.hpp"
-#include "simulationBox_kokkos.hpp"
+#include "simulationBox.hpp"          // for SimulationBox
+#include "simulationBox_kokkos.hpp"   // for KokkosSimulationBox
+#include "timer.hpp"                  // for Timer
 
 namespace integrator
 {
@@ -37,7 +38,7 @@ namespace integrator
      * @brief KokkosVelocityVerlet is a class for the velocity Verlet integrator
      *
      */
-    class KokkosVelocityVerlet
+    class KokkosVelocityVerlet : public timings::Timer
     {
        private:
         Kokkos::DualView<double> _dt;

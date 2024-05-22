@@ -62,6 +62,18 @@ void Engine::run()
     const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
     _engineOutput.setTimerName("Output");
+    _timer.addTimer(_engineOutput.getTimer());
+
+    _thermostat->setTimerName("Thermostat");
+    _timer.addTimer(_thermostat->getTimer());
+
+    _integrator->setTimerName("Integrator");
+    _timer.addTimer(_integrator->getTimer());
+
+#ifdef WITH_KOKKOS
+    _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
+    _timer.addTimer(_kokkosVelocityVerlet.getTimer());
+#endif
 
     references::ReferencesOutput::writeReferencesFile();
 
