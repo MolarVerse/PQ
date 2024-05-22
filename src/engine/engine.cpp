@@ -70,9 +70,24 @@ void Engine::run()
     _integrator->setTimerName("Integrator");
     _timer.addTimer(_integrator->getTimer());
 
+    _constraints.setTimerName("Constraints");
+    _timer.addTimer(_constraints.getTimer());
+
+    _cellList.setTimerName("Cell List");
+    _timer.addTimer(_cellList.getTimer());
+
+    _potential->setTimerName("Potential");
+    _timer.addTimer(_potential->getTimer());
+
+    _intraNonBonded.setTimerName("IntraNonBonded");
+    _timer.addTimer(_intraNonBonded.getTimer());
+
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
     _timer.addTimer(_kokkosVelocityVerlet.getTimer());
+
+    _kokkosPotential.setTimerName("Kokkos Potential");
+    _timer.addTimer(_kokkosPotential.getTimer());
 #endif
 
     references::ReferencesOutput::writeReferencesFile();
