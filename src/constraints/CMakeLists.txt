@@ -14,6 +14,7 @@ target_link_libraries(constraints
     simulationBox
     linearAlgebra
     settings
+    timings
 )
 
 install(TARGETS constraints
