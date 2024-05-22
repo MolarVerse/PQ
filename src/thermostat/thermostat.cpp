@@ -39,7 +39,12 @@ using thermostat::Thermostat;
  * @param simulationBox
  * @param physicalData
  */
-void Thermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
+void Thermostat::applyThermostat(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
+    startTimingsSection("Calc Temperature");
     physicalData.calculateTemperature(simulationBox);
+    stopTimingsSection("Calc Temperature");
 }

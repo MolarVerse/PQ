@@ -61,6 +61,8 @@ void Engine::run()
 
     const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
+    _engineOutput.setTimerName("Output");
+
     references::ReferencesOutput::writeReferencesFile();
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);

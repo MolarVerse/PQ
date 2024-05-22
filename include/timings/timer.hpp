@@ -82,7 +82,10 @@ namespace timings
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] Timer getTimer() const { return *this; }
+        void setTimerName(const std::string_view name) { _name = name; }
+
+        [[nodiscard]] std::string getTimerName() const { return _name; }
+        [[nodiscard]] Timer       getTimer() const { return *this; }
     };
 
 }   // namespace timings
