@@ -68,7 +68,7 @@ void MMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
-#ifdef WITH_KOKKOS
+#ifdef WITH_KOKKOS_NO
     _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
 #else
     _integrator->firstStep(_simulationBox);

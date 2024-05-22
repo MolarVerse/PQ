@@ -107,7 +107,7 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime(),
+        timer.calculateElapsedTime() * 1e-3,
         100.0,
         100.0
     );

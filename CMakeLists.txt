@@ -57,7 +57,11 @@ set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
 # add flags dependent on build type
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -flto -march=native -mtune=native -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -march=native -mtune=native -g")
+
+    if(NOT BUILD_WITH_KOKKOS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+    endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
