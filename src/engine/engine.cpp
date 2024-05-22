@@ -91,6 +91,9 @@ void Engine::run()
     _manostat->setTimerName("Manostat");
     _timer.addTimer(_manostat->getTimer());
 
+    _resetKinetics.setTimerName("Reset Kinetics");
+    _timer.addTimer(_resetKinetics.getTimer());
+
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
     _timer.addTimer(_kokkosVelocityVerlet.getTimer());

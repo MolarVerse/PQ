@@ -24,9 +24,10 @@
 
 #define _RESET_KINETICS_HPP_
 
-#include "vector3d.hpp"   // for Vec3D
-
 #include <cstddef>   // for size_t
+
+#include "timer.hpp"      // for Timer
+#include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
 {
@@ -43,12 +44,13 @@ namespace resetKinetics
     /**
      * @class ResetKinetics
      *
-     * @brief base class for the reset of the kinetics - represents also class for no reset
+     * @brief base class for the reset of the kinetics - represents also class
+     * for no reset
      *
      */
-    class ResetKinetics
+    class ResetKinetics : public timings::Timer
     {
-      protected:
+       protected:
         size_t _nStepsTemperatureReset;
         size_t _frequencyTemperatureReset;
         size_t _nStepsMomentumReset;
@@ -60,17 +62,22 @@ namespace resetKinetics
         linearAlgebra::Vec3D _momentum;
         linearAlgebra::Vec3D _angularMomentum;
 
-      public:
+       public:
         ResetKinetics() = default;
-        ResetKinetics(const size_t nStepsTemperatureReset,
-                      const size_t frequencyTemperatureReset,
-                      const size_t nStepsMomentumReset,
-                      const size_t frequencyMomentumReset,
-                      const size_t nStepsAngularReset,
-                      const size_t frequencyAngularReset)
-            : _nStepsTemperatureReset(nStepsTemperatureReset), _frequencyTemperatureReset(frequencyTemperatureReset),
-              _nStepsMomentumReset(nStepsMomentumReset), _frequencyMomentumReset(frequencyMomentumReset),
-              _nStepsAngularReset(nStepsAngularReset), _frequencyAngularReset(frequencyAngularReset){};
+        ResetKinetics(
+            const size_t nStepsTemperatureReset,
+            const size_t frequencyTemperatureReset,
+            const size_t nStepsMomentumReset,
+            const size_t frequencyMomentumReset,
+            const size_t nStepsAngularReset,
+            const size_t frequencyAngularReset
+        )
+            : _nStepsTemperatureReset(nStepsTemperatureReset),
+              _frequencyTemperatureReset(frequencyTemperatureReset),
+              _nStepsMomentumReset(nStepsMomentumReset),
+              _frequencyMomentumReset(frequencyMomentumReset),
+              _nStepsAngularReset(nStepsAngularReset),
+              _frequencyAngularReset(frequencyAngularReset){};
 
         void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &);
         void resetTemperature(simulationBox::SimulationBox &);
@@ -81,18 +88,39 @@ namespace resetKinetics
          * standard setters *
          *******************/
 
-        void setTemperature(const double temperature) { _temperature = temperature; }
-        void setMomentum(const linearAlgebra::Vec3D &momentum) { _momentum = momentum; }
-        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum) { _angularMomentum = angularMomentum; }
+        void setTemperature(const double temperature)
+        {
+            _temperature = temperature;
+        }
+        void setMomentum(const linearAlgebra::Vec3D &momentum)
+        {
+            _momentum = momentum;
+        }
+        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum)
+        {
+            _angularMomentum = angularMomentum;
+        }
 
         /********************
          * standard getters *
          *******************/
 
-        [[nodiscard]] size_t getNStepsTemperatureReset() const { return _nStepsTemperatureReset; }
-        [[nodiscard]] size_t getFrequencyTemperatureReset() const { return _frequencyTemperatureReset; }
-        [[nodiscard]] size_t getNStepsMomentumReset() const { return _nStepsMomentumReset; }
-        [[nodiscard]] size_t getFrequencyMomentumReset() const { return _frequencyMomentumReset; }
+        [[nodiscard]] size_t getNStepsTemperatureReset() const
+        {
+            return _nStepsTemperatureReset;
+        }
+        [[nodiscard]] size_t getFrequencyTemperatureReset() const
+        {
+            return _frequencyTemperatureReset;
+        }
+        [[nodiscard]] size_t getNStepsMomentumReset() const
+        {
+            return _nStepsMomentumReset;
+        }
+        [[nodiscard]] size_t getFrequencyMomentumReset() const
+        {
+            return _frequencyMomentumReset;
+        }
     };
 
 }   // namespace resetKinetics
