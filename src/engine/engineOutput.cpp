@@ -78,7 +78,9 @@ void EngineOutput::writeEnergyFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("EnergyOutput");
     _energyOutput->write(step, physicalData);
+    stopTimingsSection("EnergyOutput");
 }
 
 /**
@@ -92,7 +94,9 @@ void EngineOutput::writeInstantEnergyFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("InstantEnergyOutput");
     _instantEnergyOutput->write(step, physicalData);
+    stopTimingsSection("InstantEnergyOutput");
 }
 
 /**
