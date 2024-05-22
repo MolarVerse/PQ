@@ -88,6 +88,9 @@ void Engine::run()
     _physicalData.setTimerName("Physical Data");
     _timer.addTimer(_physicalData.getTimer());
 
+    _manostat->setTimerName("Manostat");
+    _timer.addTimer(_manostat->getTimer());
+
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
     _timer.addTimer(_kokkosVelocityVerlet.getTimer());
