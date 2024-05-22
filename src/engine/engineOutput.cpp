@@ -331,15 +331,26 @@ void EngineOutput::writeRingPolymerEnergyFile(
 }
 
 /**
+ * @brief wrapper for timings file output function
+ *
+ * @param timer
+ */
+void EngineOutput::writeTimingsFile(const timings::GlobalTimer &timer)
+{
+    // NOTE:
+    // here is no timer applied, since the timings file is written at the end of
+    // the simulation
+    _timingsOutput->write(timer);
+}
+
+/**
  * @brief getter for ring polymer restart file output
  *
  * @return RPMDRestartFileOutput
  */
 RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
 {
-    startTimingsSection("RingPolymerRestartFileOutput");
     return *_ringPolymerRstFileOutput;
-    stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
 /**
@@ -349,9 +360,7 @@ RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerXyzOutput;
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -361,9 +370,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerVelOutput;
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -373,9 +380,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerForceOutput;
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -385,9 +390,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerChargeOutput;
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -397,7 +400,5 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
  */
 RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
 {
-    startTimingsSection("RingPolymerEnergyOutput");
     return *_ringPolymerEnergyOutput;
-    stopTimingsSection("RingPolymerEnergyOutput");
 }

@@ -40,6 +40,7 @@
 #include "stdoutOutput.hpp"                   // for StdoutOutput
 #include "stressOutput.hpp"                   // for StressOutput
 #include "timer.hpp"                          // for Timer
+#include "timingsOutput.hpp"                  // for TimingsOutput
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 #include "virialOutput.hpp"                   // for VirialOutput
 
@@ -97,6 +98,8 @@ namespace engine
         std::unique_ptr<RPMDTrajectoryOutput>  _ringPolymerChargeOutput;
         std::unique_ptr<RPMDEnergyOutput>      _ringPolymerEnergyOutput;
 
+        std::unique_ptr<TimingsOutput> _timingsOutput;
+
        public:
         EngineOutput();
 
@@ -124,6 +127,8 @@ namespace engine
         void writeRingPolymerChargeFile(std::vector<SimulationBox> &);
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
+        void writeTimingsFile(const timings::GlobalTimer &);
+
         EnergyOutput &getEnergyOutput() { return *_energyOutput; }
         EnergyOutput &getInstantEnergyOutput() { return *_instantEnergyOutput; }
         MomentumOutput   &getMomentumOutput() { return *_momentumOutput; }
@@ -146,6 +151,8 @@ namespace engine
         RingPolymerTrajectoryOutput  &getRingPolymerForceOutput();
         RingPolymerTrajectoryOutput  &getRingPolymerChargeOutput();
         RingPolymerEnergyOutput      &getRingPolymerEnergyOutput();
+
+        TimingsOutput &getTimingsOutput() { return *_timingsOutput; }
     };
 
 }   // namespace engine

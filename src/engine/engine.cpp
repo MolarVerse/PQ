@@ -104,6 +104,8 @@ void Engine::run()
 
     references::ReferencesOutput::writeReferencesFile();
 
+    _engineOutput.writeTimingsFile(_timer);
+
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
