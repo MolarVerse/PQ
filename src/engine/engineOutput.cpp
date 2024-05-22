@@ -110,7 +110,9 @@ void EngineOutput::writeMomentumFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("MomentumOutput");
     _momentumOutput->write(step, physicalData);
+    stopTimingsSection("MomentumOutput");
 }
 
 /**
@@ -120,7 +122,9 @@ void EngineOutput::writeMomentumFile(
  */
 void EngineOutput::writeXyzFile(simulationBox::SimulationBox &simulationBox)
 {
+    startTimingsSection("TrajectoryOutput");
     _xyzOutput->writeXyz(simulationBox);
+    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -130,7 +134,9 @@ void EngineOutput::writeXyzFile(simulationBox::SimulationBox &simulationBox)
  */
 void EngineOutput::writeVelFile(simulationBox::SimulationBox &simulationBox)
 {
+    startTimingsSection("TrajectoryOutput");
     _velOutput->writeVelocities(simulationBox);
+    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -140,7 +146,9 @@ void EngineOutput::writeVelFile(simulationBox::SimulationBox &simulationBox)
  */
 void EngineOutput::writeForceFile(simulationBox::SimulationBox &simulationBox)
 {
+    startTimingsSection("TrajectoryOutput");
     _forceOutput->writeForces(simulationBox);
+    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -150,7 +158,9 @@ void EngineOutput::writeForceFile(simulationBox::SimulationBox &simulationBox)
  */
 void EngineOutput::writeChargeFile(simulationBox::SimulationBox &simulationBox)
 {
+    startTimingsSection("TrajectoryOutput");
     _chargeOutput->writeCharges(simulationBox);
+    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -164,7 +174,9 @@ void EngineOutput::writeInfoFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("InfoOutput");
     _infoOutput->write(time, physicalData);
+    stopTimingsSection("InfoOutput");
 }
 
 /**
@@ -178,7 +190,9 @@ void EngineOutput::writeRstFile(
     const size_t                  step
 )
 {
+    startTimingsSection("RstFileOutput");
     _rstFileOutput->write(simulationBox, step);
+    stopTimingsSection("RstFileOutput");
 }
 
 /**
@@ -192,7 +206,9 @@ void EngineOutput::writeVirialFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("VirialOutput");
     _virialOutput->write(step, physicalData);
+    stopTimingsSection("VirialOutput");
 }
 
 /**
@@ -206,7 +222,9 @@ void EngineOutput::writeStressFile(
     const physicalData::PhysicalData &physicalData
 )
 {
+    startTimingsSection("StressOutput");
     _stressOutput->write(step, physicalData);
+    stopTimingsSection("StressOutput");
 }
 
 /**
@@ -219,7 +237,9 @@ void EngineOutput::writeBoxFile(
     const simulationBox::Box &simulationBox
 )
 {
+    startTimingsSection("BoxFileOutput");
     _boxFileOutput->write(step, simulationBox);
+    stopTimingsSection("BoxFileOutput");
 }
 
 /**
@@ -233,7 +253,9 @@ void EngineOutput::writeRingPolymerRstFile(
     const size_t                               step
 )
 {
+    startTimingsSection("RingPolymerRestartFileOutput");
     _ringPolymerRstFileOutput->write(beads, step);
+    stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
 /**
@@ -245,7 +267,9 @@ void EngineOutput::writeRingPolymerXyzFile(
     std::vector<simulationBox::SimulationBox> &beads
 )
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     _ringPolymerXyzOutput->writeXyz(beads);
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -257,7 +281,9 @@ void EngineOutput::writeRingPolymerVelFile(
     std::vector<simulationBox::SimulationBox> &beads
 )
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     _ringPolymerVelOutput->writeVelocities(beads);
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -269,7 +295,9 @@ void EngineOutput::writeRingPolymerForceFile(
     std::vector<simulationBox::SimulationBox> &beads
 )
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     _ringPolymerForceOutput->writeForces(beads);
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -281,7 +309,9 @@ void EngineOutput::writeRingPolymerChargeFile(
     std::vector<simulationBox::SimulationBox> &beads
 )
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     _ringPolymerChargeOutput->writeCharges(beads);
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -295,7 +325,9 @@ void EngineOutput::writeRingPolymerEnergyFile(
     const std::vector<physicalData::PhysicalData> &dataVector
 )
 {
+    startTimingsSection("RingPolymerEnergyOutput");
     _ringPolymerEnergyOutput->write(step, dataVector);
+    stopTimingsSection("RingPolymerEnergyOutput");
 }
 
 /**
@@ -305,7 +337,9 @@ void EngineOutput::writeRingPolymerEnergyFile(
  */
 RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
 {
+    startTimingsSection("RingPolymerRestartFileOutput");
     return *_ringPolymerRstFileOutput;
+    stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
 /**
@@ -315,7 +349,9 @@ RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerXyzOutput;
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -325,7 +361,9 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerVelOutput;
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -335,7 +373,9 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerForceOutput;
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -345,7 +385,9 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
  */
 RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
 {
+    startTimingsSection("RingPolymerTrajectoryOutput");
     return *_ringPolymerChargeOutput;
+    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -355,5 +397,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
  */
 RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
 {
+    startTimingsSection("RingPolymerEnergyOutput");
     return *_ringPolymerEnergyOutput;
+    stopTimingsSection("RingPolymerEnergyOutput");
 }
