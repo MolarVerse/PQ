@@ -44,13 +44,13 @@ void TimingsSection::endTimer()
  */
 double TimingsSection::calculateElapsedTime() const
 {
-    return double(std::chrono::duration_cast<ms>(_totalTime).count());
+    return double(std::chrono::duration_cast<ns>(_totalTime).count()) * 1.0e-6;
 }
 
 double TimingsSection::calculateAverageLoopTime() const
 {
     auto time = double(std::chrono::duration_cast<ns>(_totalTime).count());
-    time      = time * 1e-9 / double(_steps);
+    time      = time * 1.0e-9 / double(_steps);
 
     return time;
 }

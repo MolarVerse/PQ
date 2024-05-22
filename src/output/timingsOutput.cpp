@@ -58,7 +58,7 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime(),
+        timer.calculateElapsedTime() * 1e-3,
         100.0
     );
 
@@ -74,7 +74,7 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time,
+            time * 1e-3,
             percentage
         );
     }
@@ -129,7 +129,7 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time,
+            time * 1e-3,
             percentage,
             100.0
         );
@@ -145,7 +145,7 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
             _fp << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                 subName,
-                subTime,
+                subTime * 1e-3,
                 subTotPercentage,
                 subPercentage
             );
