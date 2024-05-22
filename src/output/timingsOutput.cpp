@@ -153,4 +153,6 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
 
         _fp << "\n";
     }
+
+    _fp << std::flush;
 }
