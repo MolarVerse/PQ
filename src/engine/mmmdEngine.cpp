@@ -79,7 +79,7 @@ void MMMDEngine::takeStep()
     _cellList.updateCellList(_simulationBox);
 
 #ifdef WITH_KOKKOS
-    potential::KokkosPotential::calculateForces(
+    _kokkosPotential.calculateForces(
         _simulationBox,
         _kokkosSimulationBox,
         _physicalData,

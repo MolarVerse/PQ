@@ -26,6 +26,7 @@ target_link_libraries(potential
     simulationBox
     coulombPotential
     nonCoulombPotential
+    timings
 )
 
 if(BUILD_WITH_KOKKOS)

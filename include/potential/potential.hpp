@@ -28,6 +28,7 @@
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
+#include "timer.hpp"      // for Timer
 #include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
@@ -62,7 +63,7 @@ namespace potential
      * nonCoulombicPairs for later processing
      *
      */
-    class Potential
+    class Potential : public timings::Timer
     {
        protected:
         std::shared_ptr<CoulombPotential>    _coulombPotential;

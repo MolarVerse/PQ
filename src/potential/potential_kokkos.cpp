@@ -48,6 +48,8 @@ void KokkosPotential::calculateForces(
     KokkosCoulombWolf                  &coulombWolf
 )
 {
+    startTimingsSection("InterNonBonded");
+
     // set total coulombic and non-coulombic energy
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
@@ -175,4 +177,6 @@ void KokkosPotential::calculateForces(
     // set total coulombic and non-coulombic energy
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBonded");
 }

@@ -46,6 +46,8 @@ PotentialBruteForce::~PotentialBruteForce() = default;
 inline void PotentialBruteForce::
     calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
 {
+    startTimingsSection("InterNonBonded");
+
     const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
@@ -88,4 +90,6 @@ inline void PotentialBruteForce::
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBonded");
 }

@@ -54,6 +54,8 @@ inline void PotentialCellList::calculateForces(
     simulationBox::CellList      &cellList
 )
 {
+    startTimingsSection("InterNonBonded");
+
     const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
@@ -136,4 +138,6 @@ inline void PotentialCellList::calculateForces(
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBonded");
 }

@@ -52,6 +52,7 @@ target_link_libraries(simulationBox
     box
     exceptions
     settings
+    timings
 )
 
 install(TARGETS simulationBox
