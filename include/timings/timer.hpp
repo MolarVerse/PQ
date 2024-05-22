@@ -74,6 +74,8 @@ namespace timings
         void stopTimingsSection();
         void stopTimingsSection(const std::string_view name);
 
+        void sortTimingsSections();
+
         [[nodiscard]] TimingsSection getTimingsSection(
             const std::string_view name
         ) const;

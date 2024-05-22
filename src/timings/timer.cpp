@@ -22,6 +22,9 @@
 
 #include "timer.hpp"
 
+#include <algorithm>   // for ranges::sort
+#include <ranges>      // for ranges::sort
+
 #include "exceptions.hpp"
 #include "timingsSettings.hpp"
 
@@ -147,4 +150,17 @@ size_t Timer::findTimingsSectionIndex(const std::string_view name) const
             return i;
 
     return _timingDetails.size();
+}
+
+/**
+ * @brief sort the timings sections
+ *
+ */
+void Timer::sortTimingsSections()
+{
+    std::ranges::sort(
+        _timingDetails,
+        [](const TimingsSection& a, const TimingsSection& b)
+        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+    );
 }

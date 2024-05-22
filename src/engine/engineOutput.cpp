@@ -65,6 +65,8 @@ EngineOutput::EngineOutput()
         std::make_unique<RingPolymerTrajectoryOutput>("default.chg");
     _ringPolymerEnergyOutput =
         std::make_unique<RingPolymerEnergyOutput>("default.en");
+
+    _timingsOutput = std::make_unique<TimingsOutput>("default.timings");
 }
 
 /**
@@ -335,7 +337,7 @@ void EngineOutput::writeRingPolymerEnergyFile(
  *
  * @param timer
  */
-void EngineOutput::writeTimingsFile(const timings::GlobalTimer &timer)
+void EngineOutput::writeTimingsFile(timings::GlobalTimer &timer)
 {
     // NOTE:
     // here is no timer applied, since the timings file is written at the end of

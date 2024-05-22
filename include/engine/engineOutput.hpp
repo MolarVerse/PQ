@@ -127,7 +127,7 @@ namespace engine
         void writeRingPolymerChargeFile(std::vector<SimulationBox> &);
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
-        void writeTimingsFile(const timings::GlobalTimer &);
+        void writeTimingsFile(timings::GlobalTimer &);
 
         EnergyOutput &getEnergyOutput() { return *_energyOutput; }
         EnergyOutput &getInstantEnergyOutput() { return *_instantEnergyOutput; }

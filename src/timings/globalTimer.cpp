@@ -22,6 +22,9 @@
 
 #include "globalTimer.hpp"
 
+#include <algorithm>   // for ranges::sort
+#include <ranges>      // for ranges::sort
+
 #include "timer.hpp"
 
 using namespace timings;
@@ -31,7 +34,7 @@ using namespace timings;
  *
  * @param simulationTimer
  */
-void GlobalTimer::addSimulationTimer(const Timer &simulationTimer)
+void GlobalTimer::addSimulationTimer(const Timer& simulationTimer)
 {
     _simulationTimer = simulationTimer;
 }
@@ -55,3 +58,25 @@ double GlobalTimer::calculateElapsedTime() const
 {
     return _simulationTimer.calculateElapsedTime();
 }
+
+/**
+ * @brief sorts the timers
+ *
+ */
+void GlobalTimer::sortTimers()
+{
+    for (auto& timer : _timers) timer.sortTimingsSections();
+
+    std::ranges::sort(
+        _timers,
+        [](const Timer& a, const Timer& b)
+        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+    );
+}
+
+/**
+ * @brief get the timers
+ *
+ * @return const std::vector<Timer>&
+ */
+const std::vector<Timer>& GlobalTimer::getTimers() const { return _timers; }
