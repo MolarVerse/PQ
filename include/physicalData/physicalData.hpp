@@ -28,6 +28,7 @@
 #include <vector>       // for vector
 
 #include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "timer.hpp"             // for Timer
 #include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
@@ -47,7 +48,7 @@ namespace physicalData
      * @brief PhysicalData is a class for output data storage
      *
      */
-    class PhysicalData
+    class PhysicalData : public timings::Timer
     {
        private:
         double _numberOfQMAtoms = 0.0;

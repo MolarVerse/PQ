@@ -85,6 +85,9 @@ void Engine::run()
     _virial->setTimerName("Virial");
     _timer.addTimer(_virial->getTimer());
 
+    _physicalData.setTimerName("Physical Data");
+    _timer.addTimer(_physicalData.getTimer());
+
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
     _timer.addTimer(_kokkosVelocityVerlet.getTimer());

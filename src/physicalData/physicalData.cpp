@@ -41,6 +41,8 @@ using namespace physicalData;
 void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 )
 {
+    startTimingsSection("Calc Kinetics");
+
     _momentum                     = linearAlgebra::Vec3D();
     _kineticEnergyAtomicTensor    = linearAlgebra::tensor3D();
     _kineticEnergyMolecularTensor = linearAlgebra::tensor3D();
@@ -78,6 +80,8 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
         constants::_FS_TO_S_;
 
     _momentum *= constants::_FS_TO_S_;
+
+    stopTimingsSection("Calc Kinetics");
 }
 
 /**
