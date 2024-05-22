@@ -304,21 +304,21 @@ resetKinetics::ResetKinetics &Engine::getResetKinetics()
 /**
  * @brief get the reference to the virial
  *
- * @return thermostat::Thermostat&
+ * @return virial::Virial&
  */
 virial::Virial &Engine::getVirial() { return *_virial; }
 
 /**
  * @brief get the reference to the integrator
  *
- * @return thermostat::Thermostat&
+ * @return integrator::Integrator&
  */
 integrator::Integrator &Engine::getIntegrator() { return *_integrator; }
 
 /**
  * @brief get the reference to the potential
  *
- * @return thermostat::Thermostat&
+ * @return potential::Potential&
  */
 potential::Potential &Engine::getPotential() { return *_potential; }
 
@@ -332,21 +332,21 @@ thermostat::Thermostat &Engine::getThermostat() { return *_thermostat; }
 /**
  * @brief get the reference to the manostat
  *
- * @return thermostat::Thermostat&
+ * @return manostat::Manostat&
  */
 manostat::Manostat &Engine::getManostat() { return *_manostat; }
 
 /**
  * @brief get the reference to the engine output
  *
- * @return thermostat::Thermostat&
+ * @return EngineOutput&
  */
 EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
 
 /**
  * @brief get the reference to the energy output
  *
- * @return timings::Timer&
+ * @return output::EnergyOutput&
  */
 output::EnergyOutput &Engine::getEnergyOutput()
 {
@@ -356,7 +356,7 @@ output::EnergyOutput &Engine::getEnergyOutput()
 /**
  * @brief get the reference to the instant energy output
  *
- * @return timings::Timer&
+ * @return output::EnergyOutput&
  */
 output::EnergyOutput &Engine::getInstantEnergyOutput()
 {
@@ -366,7 +366,7 @@ output::EnergyOutput &Engine::getInstantEnergyOutput()
 /**
  * @brief get the reference to the momentum output
  *
- * @return timings::Timer&
+ * @return output::MomentumOutput&
  */
 output::MomentumOutput &Engine::getMomentumOutput()
 {
@@ -376,7 +376,7 @@ output::MomentumOutput &Engine::getMomentumOutput()
 /**
  * @brief get the reference to the xyz output
  *
- * @return timings::Timer&
+ * @return output::TrajectoryOutput&
  */
 output::TrajectoryOutput &Engine::getXyzOutput()
 {
@@ -386,7 +386,7 @@ output::TrajectoryOutput &Engine::getXyzOutput()
 /**
  * @brief get the reference to the vel output
  *
- * @return timings::Timer&
+ * @return output::TrajectoryOutput&
  */
 output::TrajectoryOutput &Engine::getVelOutput()
 {
@@ -396,7 +396,7 @@ output::TrajectoryOutput &Engine::getVelOutput()
 /**
  * @brief get the reference to the force output
  *
- * @return timings::Timer&
+ * @return output::TrajectoryOutput&
  */
 output::TrajectoryOutput &Engine::getForceOutput()
 {
@@ -406,7 +406,7 @@ output::TrajectoryOutput &Engine::getForceOutput()
 /**
  * @brief get the reference to the charge output
  *
- * @return timings::Timer&
+ * @return output::TrajectoryOutput&
  */
 output::TrajectoryOutput &Engine::getChargeOutput()
 {
@@ -416,7 +416,7 @@ output::TrajectoryOutput &Engine::getChargeOutput()
 /**
  * @brief get the reference to the log output
  *
- * @return timings::Timer&
+ * @return output::LogOutput&
  */
 output::LogOutput &Engine::getLogOutput()
 {
@@ -426,7 +426,7 @@ output::LogOutput &Engine::getLogOutput()
 /**
  * @brief get the reference to the stdout output
  *
- * @return timings::Timer&
+ * @return output::StdoutOutput&
  */
 output::StdoutOutput &Engine::getStdoutOutput()
 {
@@ -436,7 +436,7 @@ output::StdoutOutput &Engine::getStdoutOutput()
 /**
  * @brief get the reference to the rst file output
  *
- * @return timings::Timer&
+ * @return output::RstFileOutput&
  */
 output::RstFileOutput &Engine::getRstFileOutput()
 {
@@ -446,7 +446,7 @@ output::RstFileOutput &Engine::getRstFileOutput()
 /**
  * @brief get the reference to the info output
  *
- * @return timings::Timer&
+ * @return output::InfoOutput&
  */
 output::InfoOutput &Engine::getInfoOutput()
 {
@@ -456,7 +456,7 @@ output::InfoOutput &Engine::getInfoOutput()
 /**
  * @brief get the reference to the virial output
  *
- * @return timings::Timer&
+ * @return output::VirialOutput&
  */
 output::VirialOutput &Engine::getVirialOutput()
 {
@@ -466,7 +466,7 @@ output::VirialOutput &Engine::getVirialOutput()
 /**
  * @brief get the reference to the stress output
  *
- * @return timings::Timer&
+ * @return output::StressOutput&
  */
 output::StressOutput &Engine::getStressOutput()
 {
@@ -476,7 +476,7 @@ output::StressOutput &Engine::getStressOutput()
 /**
  * @brief get the reference to the box file output
  *
- * @return timings::Timer&
+ * @return output::BoxFileOutput&
  */
 output::BoxFileOutput &Engine::getBoxFileOutput()
 {
@@ -484,11 +484,21 @@ output::BoxFileOutput &Engine::getBoxFileOutput()
 }
 
 /**
+ * @brief get the TimingsOutput
+ *
+ * @return output::TimingsOutput&
+ */
+output::TimingsOutput &Engine::getTimingsOutput()
+{
+    return _engineOutput.getTimingsOutput();
+}
+
+/**
  * @brief get the reference to the ring polymer rst file output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerRestartFileOutput&
  */
-RPRestartFileOutput &Engine::getRingPolymerRstFileOutput()
+RPMDRestartFileOutput &Engine::getRingPolymerRstFileOutput()
 {
     return _engineOutput.getRingPolymerRstFileOutput();
 }
@@ -496,9 +506,9 @@ RPRestartFileOutput &Engine::getRingPolymerRstFileOutput()
 /**
  * @brief get the reference to the ring polymer xyz output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerTrajectoryOutput&
  */
-RPTrajectoryOutput &Engine::getRingPolymerXyzOutput()
+RPMDTrajectoryOutput &Engine::getRingPolymerXyzOutput()
 {
     return _engineOutput.getRingPolymerXyzOutput();
 }
@@ -506,9 +516,9 @@ RPTrajectoryOutput &Engine::getRingPolymerXyzOutput()
 /**
  * @brief get the reference to the ring polymer vel output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerTrajectoryOutput&
  */
-RPTrajectoryOutput &Engine::getRingPolymerVelOutput()
+RPMDTrajectoryOutput &Engine::getRingPolymerVelOutput()
 {
     return _engineOutput.getRingPolymerVelOutput();
 }
@@ -516,9 +526,9 @@ RPTrajectoryOutput &Engine::getRingPolymerVelOutput()
 /**
  * @brief get the reference to the ring polymer force output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerTrajectoryOutput&
  */
-RPTrajectoryOutput &Engine::getRingPolymerForceOutput()
+RPMDTrajectoryOutput &Engine::getRingPolymerForceOutput()
 {
     return _engineOutput.getRingPolymerForceOutput();
 }
@@ -526,9 +536,9 @@ RPTrajectoryOutput &Engine::getRingPolymerForceOutput()
 /**
  * @brief get the reference to the ring polymer charge output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerTrajectoryOutput&
  */
-RPTrajectoryOutput &Engine::getRingPolymerChargeOutput()
+RPMDTrajectoryOutput &Engine::getRingPolymerChargeOutput()
 {
     return _engineOutput.getRingPolymerChargeOutput();
 }
@@ -536,9 +546,9 @@ RPTrajectoryOutput &Engine::getRingPolymerChargeOutput()
 /**
  * @brief get the reference to the ring polymer energy output
  *
- * @return timings::Timer&
+ * @return output::RingPolymerEnergyOutput&
  */
-RPEnergyOutput &Engine::getRingPolymerEnergyOutput()
+RPMDEnergyOutput &Engine::getRingPolymerEnergyOutput()
 {
     return _engineOutput.getRingPolymerEnergyOutput();
 }
@@ -546,6 +556,6 @@ RPEnergyOutput &Engine::getRingPolymerEnergyOutput()
 /**
  * @brief get the pointer to the force field
  *
- * @return thermostat::Thermostat&
+ * @return forceField::ForceField*
  */
 forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }

@@ -78,4 +78,79 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
             percentage
         );
     }
+
+    _fp << "\n";
+    _fp << "\n";
+    _fp << "\n";
+    _fp << "\n";
+
+    _fp << std::format(
+        "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
+        "Section",
+        "Time [s]",
+        "Time [%]",
+        "RelT [%]"
+    );
+
+    // write a line consisting only of '-'
+    _fp << std::format(
+        "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
+        std::string(30, '-'),
+        std::string(10, '-'),
+        std::string(10, '-'),
+        std::string(10, '-')
+    );
+
+    _fp << "\n";
+
+    // write the simulation timer
+    _fp << std::format(
+        "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+        "Total",
+        timer.calculateElapsedTime(),
+        100.0,
+        100.0
+    );
+
+    _fp << "\n";
+
+    // write the execution timers
+    for (const auto &section : timer.getTimers())
+    {
+        auto subsections = section.getTimingDetails();
+
+        if (subsections.empty())
+            continue;
+
+        const auto name       = section.getTimerName();
+        const auto time       = section.calculateElapsedTime();
+        const auto percentage = (time / timer.calculateElapsedTime()) * 100.0;
+
+        _fp << std::format(
+            "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+            name,
+            time,
+            percentage,
+            100.0
+        );
+
+        for (const auto &subSection : subsections)
+        {
+            const auto subName = subSection.getName();
+            const auto subTime = subSection.calculateElapsedTime();
+            const auto subTotPercentage =
+                (subTime / timer.calculateElapsedTime()) * 100.0;
+            const auto subPercentage = (subTime / time) * 100.0;
+
+            _fp << std::format(
+                "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+                subName,
+                subTime,
+                subTotPercentage,
+                subPercentage
+            );
+        }
+
+        _fp << "\n";
+    }
 }

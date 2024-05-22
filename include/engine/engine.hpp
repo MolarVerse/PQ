@@ -64,17 +64,18 @@ namespace output
     class BoxFileOutput;                  // forward declaration
     class RingPolymerRestartFileOutput;   // forward declaration
     class RingPolymerTrajectoryOutput;    // forward declaration
+    class TimingsOutput;                  // forward declaration
 
 }   // namespace output
 
 namespace engine
 {
-    using RPRestartFileOutput = output::RingPolymerRestartFileOutput;
-    using RPTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
-    using RPVelOutput         = output::RingPolymerTrajectoryOutput;
-    using RPForceOutput       = output::RingPolymerTrajectoryOutput;
-    using RPChargeOutput      = output::RingPolymerTrajectoryOutput;
-    using RPEnergyOutput      = output::RingPolymerEnergyOutput;
+    using RPMDRestartFileOutput = output::RingPolymerRestartFileOutput;
+    using RPMDTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
+    using RPMDVelOutput         = output::RingPolymerTrajectoryOutput;
+    using RPMDForceOutput       = output::RingPolymerTrajectoryOutput;
+    using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
+    using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
 
     using UniqueIntegrator = std::unique_ptr<integrator::Integrator>;
     using VelocityVerlet   = integrator::VelocityVerlet;
@@ -188,12 +189,13 @@ namespace engine
         [[nodiscard]] output::VirialOutput           &getVirialOutput();
         [[nodiscard]] output::StressOutput           &getStressOutput();
         [[nodiscard]] output::BoxFileOutput          &getBoxFileOutput();
-        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput();
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerVelOutput();
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerForceOutput();
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerChargeOutput();
-        [[nodiscard]] RPEnergyOutput      &getRingPolymerEnergyOutput();
+        [[nodiscard]] output::TimingsOutput          &getTimingsOutput();
+        [[nodiscard]] RPMDRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerXyzOutput();
+        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerVelOutput();
+        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerForceOutput();
+        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerChargeOutput();
+        [[nodiscard]] RPMDEnergyOutput      &getRingPolymerEnergyOutput();
 
         [[nodiscard]] forceField::ForceField *getForceFieldPtr();
 

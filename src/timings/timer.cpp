@@ -36,6 +36,15 @@ using namespace timings;
 Timer::Timer(const std::string_view name) : _name(name) {}
 
 /**
+ * @brief get timings details
+ *
+ */
+std::vector<TimingsSection> Timer::getTimingDetails() const
+{
+    return _timingDetails;
+}
+
+/**
  * @brief calculates the elapsed time in ms
  *
  */
