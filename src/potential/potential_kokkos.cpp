@@ -48,7 +48,7 @@ void KokkosPotential::calculateForces(
     KokkosCoulombWolf                  &coulombWolf
 )
 {
-    startTimingsSection("InterNonBonded");
+    startTimingsSection("InterNonBonded - Transfer");
 
     // set total coulombic and non-coulombic energy
     double totalCoulombEnergy    = 0.0;
@@ -72,6 +72,10 @@ void KokkosPotential::calculateForces(
     auto boxDimensions  = kokkosSimBox.getBoxDimensions().d_view;
 
     const auto rcCutoff = coulombWolf.getCoulombRadiusCutOff();
+
+    stopTimingsSection("InterNonBonded - Transfer");
+
+    startTimingsSection("InterNonBonded");
 
     Kokkos::parallel_reduce(
         "Reduction",
@@ -167,6 +171,10 @@ void KokkosPotential::calculateForces(
         totalNonCoulombEnergy
     );
 
+    stopTimingsSection("InterNonBonded");
+
+    startTimingsSection("InterNonBonded - Transfer");
+
     // half energy because of double counting
     totalCoulombEnergy    *= 0.5;
     totalNonCoulombEnergy *= 0.5;
@@ -178,5 +186,5 @@ void KokkosPotential::calculateForces(
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
-    stopTimingsSection("InterNonBonded");
+    stopTimingsSection("InterNonBonded - Transfer");
 }
