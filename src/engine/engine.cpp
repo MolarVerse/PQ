@@ -82,6 +82,9 @@ void Engine::run()
     _intraNonBonded.setTimerName("IntraNonBonded");
     _timer.addTimer(_intraNonBonded.getTimer());
 
+    _virial->setTimerName("Virial");
+    _timer.addTimer(_virial->getTimer());
+
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
     _timer.addTimer(_kokkosVelocityVerlet.getTimer());
