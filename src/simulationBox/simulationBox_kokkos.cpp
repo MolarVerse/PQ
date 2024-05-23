@@ -63,6 +63,14 @@ void KokkosSimulationBox::initKokkosSimulationBox(SimulationBox& simBox)
 }
 
 /**
+ * @brief initialize forces
+ */
+void KokkosSimulationBox::initForces()
+{
+    Kokkos::deep_copy(_forces.d_view, 0.0);
+}
+
+/**
  * @brief transfer atom types from simulation box
  *
  * @param simBox simulation box

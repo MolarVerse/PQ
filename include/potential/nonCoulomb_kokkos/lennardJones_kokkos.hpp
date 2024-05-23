@@ -93,9 +93,8 @@ namespace potential
         }
 
         KOKKOS_FUNCTION double calculate(
-            const double distance,
-            const double dxyz[3],
-            double      *force_i,
+            const float  distance,
+            float       &force,
             const size_t vdWType_i,
             const size_t vdWType_j
         ) const
@@ -123,12 +122,7 @@ namespace potential
             scalarForce      += 6.0 * c6 / (distanceSixth * distance);
             scalarForce      -= fCutoff;
 
-            // normalize force
-            scalarForce /= distance;
-
-            force_i[0] += scalarForce * dxyz[0];
-            force_i[1] += scalarForce * dxyz[1];
-            force_i[2] += scalarForce * dxyz[2];
+            force += scalarForce;
 
             return energy;
         }

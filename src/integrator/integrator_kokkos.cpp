@@ -80,7 +80,7 @@ void KokkosVelocityVerlet::firstStep(
     Kokkos::parallel_for(
         simBox.getNumberOfAtoms(),
         KOKKOS_LAMBDA(const size_t i) {
-            double pos[3] = {positions(i, 0), positions(i, 1), positions(i, 2)};
+            float pos[3] = {positions(i, 0), positions(i, 1), positions(i, 2)};
 
             // integrate_velocities(&velocities(i, 0), &forces(i, 0),
             // masses(i));
@@ -93,7 +93,7 @@ void KokkosVelocityVerlet::firstStep(
                 pos[j] += dt() * velocities(i, j) * timeFactor();
             }
 
-            double txyz[3] = {0.0, 0.0, 0.0};
+            float txyz[3] = {0.0, 0.0, 0.0};
 
             simulationBox::KokkosSimulationBox::calculateShiftVector(
                 pos,
