@@ -92,7 +92,7 @@ namespace potential
             return _c12.d_view(i, j);
         }
 
-        KOKKOS_FUNCTION double calculate(
+        KOKKOS_INLINE_FUNCTION double calculate(
             const double distance,
             const double dxyz[3],
             double      *force_i,
