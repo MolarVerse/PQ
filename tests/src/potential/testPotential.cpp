@@ -7,7 +7,10 @@
 
 using namespace potential;
 
-TEST(TestPotentialKokkos, placeholder) { EXPECT_TRUE(true); }
+TEST(TestPotential, placeholder) { 
+    EXPECT_TRUE(true); 
+
+}
 
 /*
  * main function to run all tests

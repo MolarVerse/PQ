@@ -62,11 +62,10 @@ namespace potential
         ~KokkosCoulombWolf() = default;
 
         KOKKOS_INLINE_FUNCTION double calculate(
-            const double distance,
-            const double charge_i,
-            const double charge_j,
-            const double dxyz[3],
-            double       force[3]
+            const float distance,
+            const float charge_i,
+            const float charge_j,
+            float      &force
         ) const
         {
             const auto prefactor      = _prefactor.d_view();
@@ -91,11 +90,8 @@ namespace potential
                 wolfParameter2 * Kokkos::exp(-kappaDistanceSquared) / distance;
 
             scalarForce *= coulombPrefactor;
-            scalarForce /= distance;
 
-            force[0] += scalarForce * dxyz[0];
-            force[1] += scalarForce * dxyz[1];
-            force[2] += scalarForce * dxyz[2];
+            force += scalarForce;
 
             energy *= coulombPrefactor;
             return energy;

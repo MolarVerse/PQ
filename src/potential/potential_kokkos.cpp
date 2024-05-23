@@ -104,13 +104,13 @@ void KokkosPotential::calculateForces(
                 if (moleculeIndex_i == moleculeIndex_j)
                     continue;
 
-                double dxyz[3] = {
+                float dxyz[3] = {
                     positions(i, 0) - positions(j, 0),
                     positions(i, 1) - positions(j, 1),
                     positions(i, 2) - positions(j, 2)
                 };
 
-                double txyz[3];
+                float txyz[3];
                 simulationBox::KokkosSimulationBox::calculateShiftVector(
                     dxyz,
                     boxDimensions,
@@ -130,14 +130,13 @@ void KokkosPotential::calculateForces(
                 const auto partialCharge_j = partialCharges(j);
                 const auto distance        = Kokkos::sqrt(distanceSquared);
 
-                double force_ij[3] = {0.0, 0.0, 0.0};
+                float force = 0.0;
 
                 const auto coulombicEnergy = coulombWolf.calculate(
                     distance,
                     partialCharge_i,
                     partialCharge_j,
-                    dxyz,
-                    force_ij
+                    force
                 );
 
                 coulombEnergy += coulombicEnergy;
@@ -148,15 +147,19 @@ void KokkosPotential::calculateForces(
 
                 if (distance < nRCCutOff)
                 {
-                    auto nonCoulombicEnergy = ljPotential.calculate(
-                        distance,
-                        dxyz,
-                        force_ij,
-                        vdWType_i,
-                        vdWType_j
-                    );
+                    auto nonCoulombicEnergy =
+                        ljPotential
+                            .calculate(distance, force, vdWType_i, vdWType_j);
                     nonCoulombEnergy += nonCoulombicEnergy;
                 }
+
+                force /= distance;
+
+                float force_ij[3] = {
+                    force * dxyz[0],
+                    force * dxyz[1],
+                    force * dxyz[2]
+                };
 
                 shiftForces(i, 0) += force_ij[0] * txyz[0] / 2;
                 shiftForces(i, 1) += force_ij[1] * txyz[1] / 2;

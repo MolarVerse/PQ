@@ -41,10 +41,6 @@
 
 static int PQ(int argc, const std::vector<std::string> &arguments)
 {
-#ifdef WITH_KOKKOS
-    Kokkos::initialize();
-#endif
-
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 
@@ -75,6 +71,10 @@ int main(int argc, char *argv[])
 {
 #ifdef WITH_MPI
     mpi::MPI::init(&argc, &argv);
+#endif
+
+#ifdef WITH_KOKKOS
+    Kokkos::initialize(argc, argv);
 #endif
 
     try

@@ -47,15 +47,15 @@ namespace simulationBox
         Kokkos::DualView<size_t*> _moleculeIndices;
         Kokkos::DualView<size_t*> _internalGlobalVDWTypes;
 
-        Kokkos::DualView<double* [3]> _positions;
-        Kokkos::DualView<double* [3]> _velocities;
-        Kokkos::DualView<double* [3]> _forces;
-        Kokkos::DualView<double* [3]> _shiftForces;
-        Kokkos::DualView<double*>     _partialCharges;
-        Kokkos::DualView<double*>     _masses;
+        Kokkos::DualView<float* [3], Kokkos::LayoutLeft> _positions;
+        Kokkos::DualView<float* [3], Kokkos::LayoutLeft> _velocities;
+        Kokkos::DualView<float* [3], Kokkos::LayoutLeft> _forces;
+        Kokkos::DualView<float* [3], Kokkos::LayoutLeft> _shiftForces;
+        Kokkos::DualView<float*>                         _partialCharges;
+        Kokkos::DualView<float*>                         _masses;
 
-        Kokkos::DualView<double*> _boxDimensions =
-            Kokkos::DualView<double*>("boxDimensions", 3);
+        Kokkos::DualView<float*> _boxDimensions =
+            Kokkos::DualView<float*>("boxDimensions", 3);
 
        public:
         explicit KokkosSimulationBox(size_t numAtoms);
@@ -64,9 +64,9 @@ namespace simulationBox
         ~KokkosSimulationBox() = default;
 
         KOKKOS_INLINE_FUNCTION static void calculateShiftVector(
-            const double*         dxyz,
-            Kokkos::View<double*> boxDimensions,
-            double*               txyz
+            const float*         dxyz,
+            Kokkos::View<float*> boxDimensions,
+            float*               txyz
         )
         {
             txyz[0] =
@@ -78,6 +78,7 @@ namespace simulationBox
         }
 
         void initKokkosSimulationBox(simulationBox::SimulationBox& simBox);
+        void initForces();
 
         void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);
@@ -115,28 +116,32 @@ namespace simulationBox
         {
             return _internalGlobalVDWTypes;
         }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getPositions()
+        [[nodiscard]] Kokkos::DualView<float* [3], Kokkos::LayoutLeft>& getPositions(
+        )
         {
             return _positions;
         }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getVelocities()
+        [[nodiscard]] Kokkos::DualView<float* [3], Kokkos::LayoutLeft>& getVelocities(
+        )
         {
             return _velocities;
         }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getForces()
+        [[nodiscard]] Kokkos::DualView<float* [3], Kokkos::LayoutLeft>& getForces(
+        )
         {
             return _forces;
         }
-        [[nodiscard]] Kokkos::DualView<double* [3]>& getShiftForces()
+        [[nodiscard]] Kokkos::DualView<float* [3], Kokkos::LayoutLeft>& getShiftForces(
+        )
         {
             return _shiftForces;
         }
-        [[nodiscard]] Kokkos::DualView<double*>& getMasses() { return _masses; }
-        [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges()
+        [[nodiscard]] Kokkos::DualView<float*>& getMasses() { return _masses; }
+        [[nodiscard]] Kokkos::DualView<float*>& getPartialCharges()
         {
             return _partialCharges;
         }
-        [[nodiscard]] Kokkos::DualView<double*> getBoxDimensions()
+        [[nodiscard]] Kokkos::DualView<float*> getBoxDimensions()
         {
             return _boxDimensions;
         }
