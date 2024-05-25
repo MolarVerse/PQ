@@ -156,9 +156,3 @@ TEST_F(TestInputFileReader, testChargeFilename)
     parser.parseChargeFilename(lineElements, 0);
     EXPECT_EQ(settings::OutputFileSettings::getChargeFileName(), _fileName);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

@@ -132,9 +132,3 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
                      customException::InputFileException,
                      "Maximum rattle iterations must be positive");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

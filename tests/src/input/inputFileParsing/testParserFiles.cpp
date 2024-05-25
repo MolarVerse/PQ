@@ -222,9 +222,3 @@ TEST_F(TestInputFileReader, guffDatFilename)
         "data/guffDatReader/guff.dat"
     );
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

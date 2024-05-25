@@ -244,9 +244,3 @@ TEST_F(TestEnergyOutput, noseHooverActive)
         "1.03923e+01\t     0.10000"
     );
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

@@ -110,9 +110,3 @@ TEST_F(TestInputFileReader, testParseThermostat)
                      "Invalid thermostat \"notValid\" at line 0 in input file. Possible options are: none, berendsen, "
                      "velocity_rescaling, langevin, nh-chain");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

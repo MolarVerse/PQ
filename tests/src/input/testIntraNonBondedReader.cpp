@@ -144,9 +144,3 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
     EXPECT_EQ(atomIndices[1], std::vector<int>({}));
     EXPECT_EQ(atomIndices[2], std::vector<int>({1}));
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

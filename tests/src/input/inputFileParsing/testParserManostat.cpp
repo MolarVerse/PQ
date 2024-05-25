@@ -109,9 +109,3 @@ TEST_F(TestInputFileReader, ParseCompressibility)
     EXPECT_THROW_MSG(
         parser.parseCompressibility(lineElements, 0), customException::InputFileException, "Compressibility cannot be negative");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

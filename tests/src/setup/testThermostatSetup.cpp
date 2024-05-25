@@ -84,9 +84,3 @@ TEST_F(TestSetup, setupThermostat)
 
     EXPECT_NO_THROW(setupThermostat(*_engine));
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

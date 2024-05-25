@@ -19,9 +19,8 @@ foreach(source_file ${source_files})
         PRIVATE
         topologyFileReader
         gtest
-        gtest_main
         gmock
-        gmock_main
+        pq_test_main
     )
     add_test(
         NAME ${test_name}

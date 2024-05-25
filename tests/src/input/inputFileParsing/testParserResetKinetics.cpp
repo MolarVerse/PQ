@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
 #include "exceptions.hpp"                     // for InputFileException
+#include "gtest/gtest.h"                      // for Message, TestPartResult
 #include "inputFileParser.hpp"                // for readInput
 #include "inputFileParserResetKinetics.hpp"   // for InputFileParserResetKinetics
 #include "resetKineticsSettings.hpp"          // for ResetKineticsSettings
 #include "testInputFileReader.hpp"            // for TestInputFileReader
 #include "throwWithMessage.hpp"               // for EXPECT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
@@ -47,7 +48,11 @@ TEST_F(TestInputFileReader, testParseNScale)
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
 
     lineElements = {"nscale", "=", "-1"};
-    EXPECT_THROW_MSG(parser.parseNScale(lineElements, 0), customException::InputFileException, "Nscale must be positive");
+    EXPECT_THROW_MSG(
+        parser.parseNScale(lineElements, 0),
+        customException::InputFileException,
+        "Nscale must be positive"
+    );
 }
 
 /**
@@ -63,7 +68,11 @@ TEST_F(TestInputFileReader, testParseFScale)
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
 
     lineElements = {"fscale", "=", "-1"};
-    EXPECT_THROW_MSG(parser.parseFScale(lineElements, 0), customException::InputFileException, "Fscale must be positive");
+    EXPECT_THROW_MSG(
+        parser.parseFScale(lineElements, 0),
+        customException::InputFileException,
+        "Fscale must be positive"
+    );
 }
 
 /**
@@ -79,7 +88,11 @@ TEST_F(TestInputFileReader, testParseNReset)
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
 
     lineElements = {"nreset", "=", "-1"};
-    EXPECT_THROW_MSG(parser.parseNReset(lineElements, 0), customException::InputFileException, "Nreset must be positive");
+    EXPECT_THROW_MSG(
+        parser.parseNReset(lineElements, 0),
+        customException::InputFileException,
+        "Nreset must be positive"
+    );
 }
 
 /**
@@ -95,11 +108,9 @@ TEST_F(TestInputFileReader, testParseFReset)
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
 
     lineElements = {"freset", "=", "-1"};
-    EXPECT_THROW_MSG(parser.parseFReset(lineElements, 0), customException::InputFileException, "Freset must be positive");
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_THROW_MSG(
+        parser.parseFReset(lineElements, 0),
+        customException::InputFileException,
+        "Freset must be positive"
+    );
 }

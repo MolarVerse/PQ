@@ -75,9 +75,3 @@ TEST_F(TestStepCountSection, testProcess)
     _section->process(line, *_engine);
     EXPECT_EQ(settings::TimingsSettings::getStepCount(), 1000);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

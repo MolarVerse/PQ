@@ -20,13 +20,32 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#include <gtest/gtest.h>
 
-#include <memory>   // for allocator
+#ifdef WITH_KOKKOS
+#include <Kokkos_Core.hpp>
+#endif
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include "potential.hpp"   // for Potential
+class MyTestEnvironment : public ::testing::Environment {
+public:
+    void SetUp() override {
+        #ifdef WITH_KOKKOS
+        Kokkos::initialize();
+        #endif
+    }
 
-using namespace potential;
+    void TearDown() override {
+        #ifdef WITH_KOKKOS
+        Kokkos::finalize();
+        #endif
+    }
+};
 
-TEST(TestPotentialKokkos, placeholder) { EXPECT_TRUE(true); }
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+
+    // Register our custom environment
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment);
+
+    return RUN_ALL_TESTS();
+}

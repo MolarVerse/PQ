@@ -52,9 +52,3 @@ TEST_F(TestInputFileReader, parseQMScript)
     parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

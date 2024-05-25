@@ -7,16 +7,4 @@
 
 using namespace potential;
 
-TEST(TestPotential, placeholder) { 
-    EXPECT_TRUE(true); 
-
-}
-
-/*
- * main function to run all tests
- */
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+TEST(TestPotential, placeholder) { EXPECT_TRUE(true); }
