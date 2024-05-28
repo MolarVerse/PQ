@@ -24,9 +24,9 @@
 
 #define _LANGEVIN_THERMOSTAT_HPP_
 
-#include "thermostat.hpp"
-
 #include <random>   // for std::random_device, std::mt19937
+
+#include "thermostat.hpp"
 
 namespace physicalData
 {
@@ -43,22 +43,34 @@ namespace thermostat
 
     class LangevinThermostat : public Thermostat
     {
-      private:
+       private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
         double _friction = 0.0;
         double _sigma    = 0.0;
 
-      public:
+       public:
         LangevinThermostat() = default;
-        explicit LangevinThermostat(const double targetTemperature, const double friction);
+        explicit LangevinThermostat(
+            const double targetTemperature,
+            const double friction
+        );
         LangevinThermostat(const LangevinThermostat &);
+
+        void calculateSigma(
+            const double friction,
+            const double targetTemperature
+        );
+
+        void setTargetTemperature(const double targetTemperature) override;
 
         void applyLangevin(simulationBox::SimulationBox &);
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
-        void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
+            override;
+        void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &)
+            override;
 
         [[nodiscard]] double getFriction() const { return _friction; }
         [[nodiscard]] double getSigma() const { return _sigma; }

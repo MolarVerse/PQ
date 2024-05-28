@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "vector3d.hpp"   // for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), ASSER...
+
+#include <array>      // for array
+#include <cmath>      // for sqrt
+#include <iostream>   // for cout, ostream
+#include <string>     // for allocator, string
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertionResult
-#include <array>           // for array
-#include <cmath>           // for sqrt
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), ASSER...
-#include <iostream>        // for cout, ostream
-#include <string>          // for allocator, string
+#include "vector3d.hpp"    // for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
 
 using namespace linearAlgebra;
 
@@ -156,8 +157,14 @@ TEST(TestVector3d, additionOperator)
     const auto vec7 = Vector3D<Vec3D>{vec1, vec2, vec1};
     const auto vec8 = Vector3D<Vec3D>{vec2, vec1, vec2};
 
-    EXPECT_EQ(vec7 + vec8, Vector3D<Vec3D>(vec1 + vec2, vec2 + vec1, vec1 + vec2));
-    EXPECT_EQ(vec7 + vec1, Vector3D<Vec3D>(vec1 + vec1, vec2 + vec1, vec1 + vec1));
+    EXPECT_EQ(
+        vec7 + vec8,
+        Vector3D<Vec3D>(vec1 + vec2, vec2 + vec1, vec1 + vec2)
+    );
+    EXPECT_EQ(
+        vec7 + vec1,
+        Vector3D<Vec3D>(vec1 + vec1, vec2 + vec1, vec1 + vec1)
+    );
 }
 
 /**
@@ -190,8 +197,14 @@ TEST(TestVector3d, subtractionOperator)
     const auto vec7 = Vector3D<Vec3D>{vec1, vec2, vec1};
     const auto vec8 = Vector3D<Vec3D>{vec2, vec1, vec2};
 
-    EXPECT_EQ(vec7 - vec8, Vector3D<Vec3D>(vec1 - vec2, vec2 - vec1, vec1 - vec2));
-    EXPECT_EQ(vec7 - vec1, Vector3D<Vec3D>(vec1 - vec1, vec2 - vec1, vec1 - vec1));
+    EXPECT_EQ(
+        vec7 - vec8,
+        Vector3D<Vec3D>(vec1 - vec2, vec2 - vec1, vec1 - vec2)
+    );
+    EXPECT_EQ(
+        vec7 - vec1,
+        Vector3D<Vec3D>(vec1 - vec1, vec2 - vec1, vec1 - vec1)
+    );
     EXPECT_EQ(-vec7, Vector3D<Vec3D>(-vec1, -vec2, -vec1));
 }
 
@@ -223,8 +236,14 @@ TEST(TestVector3d, multiplicationOperator)
     const auto vec7 = Vector3D<Vec3D>{vec1, vec2, vec1};
     const auto vec8 = Vector3D<Vec3D>{vec2, vec1, vec2};
 
-    EXPECT_EQ(vec7 * vec8, Vector3D<Vec3D>(vec1 * vec2, vec2 * vec1, vec1 * vec2));
-    EXPECT_EQ(vec7 * vec1, Vector3D<Vec3D>(vec1 * vec1, vec2 * vec1, vec1 * vec1));
+    EXPECT_EQ(
+        vec7 * vec8,
+        Vector3D<Vec3D>(vec1 * vec2, vec2 * vec1, vec1 * vec2)
+    );
+    EXPECT_EQ(
+        vec7 * vec1,
+        Vector3D<Vec3D>(vec1 * vec1, vec2 * vec1, vec1 * vec1)
+    );
 }
 
 /**
@@ -255,8 +274,14 @@ TEST(TestVector3d, divisionOperator)
     const auto vec7 = Vector3D<Vec3D>{vec1, vec2, vec1};
     const auto vec8 = Vector3D<Vec3D>{vec2, vec1, vec2};
 
-    EXPECT_EQ(vec7 / vec8, Vector3D<Vec3D>(vec1 / vec2, vec2 / vec1, vec1 / vec2));
-    EXPECT_EQ(vec7 / vec2, Vector3D<Vec3D>(vec1 / vec2, vec2 / vec2, vec1 / vec2));
+    EXPECT_EQ(
+        vec7 / vec8,
+        Vector3D<Vec3D>(vec1 / vec2, vec2 / vec1, vec1 / vec2)
+    );
+    EXPECT_EQ(
+        vec7 / vec2,
+        Vector3D<Vec3D>(vec1 / vec2, vec2 / vec2, vec1 / vec2)
+    );
 }
 
 /**
@@ -654,7 +679,10 @@ TEST(TestVector3d, additionAssignmentOperator)
     vec4        += vec4;
     EXPECT_EQ(vec4, Vector3D<Vec3D>(vec + vec, subVec + subVec, vec + vec));
     vec4 += vec;
-    EXPECT_EQ(vec4, Vector3D<Vec3D>(vec + vec + vec, subVec + subVec + vec, vec + vec + vec));
+    EXPECT_EQ(
+        vec4,
+        Vector3D<Vec3D>(vec + vec + vec, subVec + subVec + vec, vec + vec + vec)
+    );
 }
 
 /**
@@ -686,7 +714,10 @@ TEST(TestVector3d, subtractionAssignmentOperator)
     vec4        -= vec4;
     EXPECT_EQ(vec4, Vector3D<Vec3D>(vec - vec, subVec - subVec, vec - vec));
     vec4 -= vec;
-    EXPECT_EQ(vec4, Vector3D<Vec3D>(vec - vec - vec, subVec - subVec - vec, vec - vec - vec));
+    EXPECT_EQ(
+        vec4,
+        Vector3D<Vec3D>(vec - vec - vec, subVec - subVec - vec, vec - vec - vec)
+    );
 }
 
 /**
@@ -718,7 +749,10 @@ TEST(TestVector3d, multiplicationAssignmentOperator)
     vec4        *= vec4;
     EXPECT_EQ(vec4, Vector3D<Vec3D>(vec * vec, subVec * subVec, vec * vec));
     vec4 *= vec;
-    EXPECT_EQ(vec4, Vector3D<Vec3D>(vec * vec * vec, subVec * subVec * vec, vec * vec * vec));
+    EXPECT_EQ(
+        vec4,
+        Vector3D<Vec3D>(vec * vec * vec, subVec * subVec * vec, vec * vec * vec)
+    );
 }
 
 /**
@@ -750,11 +784,8 @@ TEST(TestVector3d, divisionAssignmentOperator)
     vec4        /= vec4;
     EXPECT_EQ(vec4, Vector3D<Vec3D>(vec / vec, subVec / subVec, vec / vec));
     vec4 /= vec;
-    EXPECT_EQ(vec4, Vector3D<Vec3D>(vec / vec / vec, subVec / subVec / vec, vec / vec / vec));
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_EQ(
+        vec4,
+        Vector3D<Vec3D>(vec / vec / vec, subVec / subVec / vec, vec / vec / vec)
+    );
 }

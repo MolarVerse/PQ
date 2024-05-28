@@ -34,20 +34,33 @@ using namespace input;
 /**
  * @brief Construct a new InputFileParserQM:: InputFileParserQM object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and
- * _keywordCountMap: 1) qm_prog <string> 2) qm_script <string>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
+ * <string>
  *
  * @param engine
  */
-InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserQM::InputFileParserQM(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
     addKeyword(
-        std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false
+        std::string("qm_prog"),
+        bind_front(&InputFileParserQM::parseQMMethod, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_script"),
+        bind_front(&InputFileParserQM::parseQMScript, this),
+        false
     );
     addKeyword(
         std::string("qm_script_full_path"),
         bind_front(&InputFileParserQM::parseQMScriptFullPath, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_loop_time_limit"),
+        bind_front(&InputFileParserQM::parseQMLoopTimeLimit, this),
         false
     );
 }
@@ -78,7 +91,8 @@ void InputFileParserQM::parseQMMethod(
 
     else
         throw customException::InputFileException(std::format(
-            "Invalid qm_prog \"{}\" in input file - possible values are: dftbplus, "
+            "Invalid qm_prog \"{}\" in input file - possible values are: "
+            "dftbplus, "
             "pyscf, turbomole",
             lineElements[2]
         ));
@@ -103,9 +117,10 @@ void InputFileParserQM::parseQMScript(
 /**
  * @brief parse external QM script name
  *
- * @details this keyword is used for singularity builds to ensure that the user knows
- * what he is doing. With a singularity build the script has to be accessed from outside of
- * the container and therefore the general keyword qm_script is not applicable.
+ * @details this keyword is used for singularity builds to ensure that the user
+ * knows what he is doing. With a singularity build the script has to be
+ * accessed from outside of the container and therefore the general keyword
+ * qm_script is not applicable.
  *
  * @param lineElements
  * @param lineNumber
@@ -118,4 +133,20 @@ void InputFileParserQM::parseQMScriptFullPath(
     checkCommand(lineElements, lineNumber);
 
     settings::QMSettings::setQMScriptFullPath(lineElements[2]);
+}
+
+/**
+ * @brief parse the time limit for the QM loop
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQM::parseQMLoopTimeLimit(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    settings::QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
 }

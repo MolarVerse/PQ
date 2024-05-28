@@ -22,6 +22,8 @@
 
 #include "mmmdEngine.hpp"
 
+#include <memory>   // for unique_ptr
+
 #include "celllist.hpp"          // for CellList
 #include "constraints.hpp"       // for Constraints
 #include "engineOutput.hpp"      // for engine
@@ -35,8 +37,9 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
 
-#include <memory>   // for unique_ptr
-
+#ifdef WITH_KOKKOS
+#include "potential_kokkos.hpp"   // for KokkosPotential
+#endif
 using namespace engine;
 
 /**
@@ -64,13 +67,27 @@ void MMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
+#ifdef WITH_KOKKOS_NO
+    _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
+#else
     _integrator->firstStep(_simulationBox);
+#endif
 
     _constraints.applyShake(_simulationBox);
 
     _cellList.updateCellList(_simulationBox);
 
+#ifdef WITH_KOKKOS
+    _kokkosPotential.calculateForces(
+        _simulationBox,
+        _kokkosSimulationBox,
+        _physicalData,
+        _kokkosLennardJones,
+        _kokkosCoulombWolf
+    );
+#else
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+#endif
 
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
@@ -78,13 +95,23 @@ void MMMDEngine::takeStep()
 
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
+    _constraints.applyDistanceConstraints(
+        _simulationBox,
+        _physicalData,
+        calculateTotalSimulationTime()
+    );
+
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
+#ifdef WITH_KOKKOS
+    _kokkosVelocityVerlet.secondStep(_simulationBox, _kokkosSimulationBox);
+#else
     _integrator->secondStep(_simulationBox);
+#endif
 
     _constraints.applyRattle();
 
@@ -95,4 +122,6 @@ void MMMDEngine::takeStep()
     _manostat->applyManostat(_simulationBox, _physicalData);
 
     _resetKinetics.reset(_step, _physicalData, _simulationBox);
+
+    _thermostat->applyTemperatureRamping();
 }

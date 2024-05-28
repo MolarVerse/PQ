@@ -55,6 +55,7 @@ namespace defaults
     static constexpr char _RING_POLYMER_FORCE_FILENAME_DEFAULT_[]      = "default.rpmd.force";
     static constexpr char _RING_POLYMER_CHARGE_FILENAME_DEFAULT_[]     = "default.rpmd.charge";
     static constexpr char _RING_POLYMER_ENERGY_FILENAME_DEFAULT_[]     = "default.rpmd.en";
+    static constexpr char _TIMINGS_FILENAME_DEFAULT_[]                 = "default.timings";
 
     static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;   // in Angstrom
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
@@ -81,6 +82,8 @@ namespace defaults
     static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_      = 4.591e-5;   // default value for berendsen manostat
 
     static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
+
+    static constexpr double _QM_LOOP_TIME_LIMIT_DEFAULT_ = -1.0;   // in s
 
 }   // namespace defaults
 

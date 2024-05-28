@@ -22,9 +22,10 @@
 
 #include "testTrajectoryOutput.hpp"
 
+#include <iosfwd>   // for ifstream
+#include <string>   // for getline, allocator, string
+
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <iosfwd>          // for ifstream
-#include <string>          // for getline, allocator, string
 
 /**
  * @brief Test the writeXyz method
@@ -65,11 +66,23 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "H    \t      1.00000000e+00\t      1.00000000e+00\t      1.00000000e+00");
+    EXPECT_EQ(
+        line,
+        "H    \t      1.00000000e+00\t      1.00000000e+00\t      "
+        "1.00000000e+00"
+    );
     getline(file, line);
-    EXPECT_EQ(line, "O    \t      3.00000000e+00\t      4.00000000e+00\t      5.00000000e+00");
+    EXPECT_EQ(
+        line,
+        "O    \t      3.00000000e+00\t      4.00000000e+00\t      "
+        "5.00000000e+00"
+    );
     getline(file, line);
-    EXPECT_EQ(line, "Ar   \t      1.00000000e+00\t      1.00000000e+00\t      1.00000000e+00");
+    EXPECT_EQ(
+        line,
+        "Ar   \t      1.00000000e+00\t      1.00000000e+00\t      "
+        "1.00000000e+00"
+    );
 }
 
 /**
@@ -116,10 +129,4 @@ TEST_F(TestTrajectoryOutput, writeCharges)
     EXPECT_EQ(line, "O    \t    -1.00000000");
     getline(file, line);
     EXPECT_EQ(line, "Ar   \t     0.00000000");
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

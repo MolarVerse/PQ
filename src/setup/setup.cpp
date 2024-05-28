@@ -48,6 +48,7 @@
 #include "settings.hpp"               // for Settings
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
+#include "timer.hpp"                  // for Timings
 #include "topologyReader.hpp"         // for readTopologyFile
 
 using namespace engine;
@@ -61,6 +62,11 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
+    auto simulationTimer = timings::Timer("Simulation");
+    auto setupTimer      = timings::Timer("Setup");
+    simulationTimer.startTimingsSection();
+    setupTimer.startTimingsSection("TotalSetup");
+
     engine.getStdoutOutput().writeHeader();
 
     readInputFile(inputFileName, engine);
@@ -74,8 +80,16 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
 
+#ifdef WITH_KOKKOS
+    setupKokkos(engine);
+#endif
+
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
+
+    setupTimer.stopTimingsSection("TotalSetup");
+    engine.getTimer().addSimulationTimer(simulationTimer);
+    engine.addTimer(setupTimer);
 }
 
 /**
@@ -94,7 +108,7 @@ void setup::readFiles(Engine &engine)
 
     parameterFile::readParameterFile(engine);
 
-    input::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBondedReader::readIntraNonBondedFile(engine);
 }
 
 /**

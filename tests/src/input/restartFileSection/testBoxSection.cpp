@@ -78,9 +78,3 @@ TEST_F(TestBoxSection, testProcess)
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

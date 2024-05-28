@@ -22,16 +22,16 @@
 
 #include "berendsenManostat.hpp"
 
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for cbrt
+#include <functional>   // for identity
+
 #include "exceptions.hpp"        // for ExceptionType
 #include "physicalData.hpp"      // for PhysicalData
 #include "simulationBox.hpp"     // for SimulationBox
 #include "staticMatrix3x3.hpp"   // for diagonal, diagonalMatrix, trace
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for Vec3D
-
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for cbrt
-#include <functional>   // for identity
 
 using manostat::AnisotropicBerendsenManostat;
 using manostat::BerendsenManostat;
@@ -47,7 +47,11 @@ using namespace linearAlgebra;
  * @param tau
  * @param compressibility
  */
-BerendsenManostat::BerendsenManostat(const double targetPressure, const double tau, const double compressibility)
+BerendsenManostat::BerendsenManostat(
+    const double targetPressure,
+    const double tau,
+    const double compressibility
+)
     : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
 {
     _dt = settings::TimingsSettings::getTimeStep();
@@ -59,8 +63,13 @@ BerendsenManostat::BerendsenManostat(const double targetPressure, const double t
  * @param simBox
  * @param physicalData
  */
-void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
+void BerendsenManostat::applyManostat(
+    simulationBox::SimulationBox &simBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
+    startTimingsSection("Berendsen");
+
     calculatePressure(simBox, physicalData);
 
     const auto mu = calculateMu();
@@ -70,11 +79,16 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION);
+    simBox.checkCoulombRadiusCutOff(
+        customException::ExceptionType::MANOSTATEXCEPTION
+    );
 
-    auto scaleMolecule = [&mu, &simBox](auto &molecule) { molecule.scale(mu, simBox.getBox()); };
+    auto scaleMolecule = [&mu, &simBox](auto &molecule)
+    { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
+
+    stopTimingsSection("Berendsen");
 }
 
 /**
@@ -84,14 +98,18 @@ void BerendsenManostat::applyManostat(simulationBox::SimulationBox &simBox, phys
  */
 tensor3D BerendsenManostat::calculateMu() const
 {
-    return diagonalMatrix(::cbrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - trace(_pressureTensor) / 3.0)));
+    return diagonalMatrix(::cbrt(
+        1.0 - _compressibility * _dt / _tau *
+                  (_targetPressure - trace(_pressureTensor) / 3.0)
+    ));
 }
 
 /**
  * @brief calculate mu as scaling factor for Berendsen manostat (semi-isotropic)
  *
- * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of the isotropic coupled axes and _2DAnisotropicAxis is
- * the index of the anisotropic axis
+ * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of the
+ * isotropic coupled axes and _2DAnisotropicAxis is the index of the anisotropic
+ * axis
  *
  * @return tensor3D
  */
@@ -103,8 +121,10 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     const auto p_xy  = (p_x + p_y) / 2.0;
     const auto p_z   = p_xyz[_2DAnisotropicAxis];
 
-    const double mu_xy = ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
-    const double mu_z  = 1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
+    const double mu_xy =
+        ::sqrt(1.0 - _compressibility * _dt / _tau * (_targetPressure - p_xy));
+    const double mu_z =
+        1.0 - _compressibility * _dt / _tau * (_targetPressure - p_z);
 
     linearAlgebra::Vec3D mu;
 
@@ -122,18 +142,23 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
  */
 tensor3D AnisotropicBerendsenManostat::calculateMu() const
 {
-    return diagonalMatrix(1.0 - _compressibility * _dt / _tau * (_targetPressure - diagonal(_pressureTensor)));
+    return diagonalMatrix(
+        1.0 - _compressibility * _dt / _tau *
+                  (_targetPressure - diagonal(_pressureTensor))
+    );
 }
 
 /**
- * @brief calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)
+ * @brief calculate mu as scaling factor for Berendsen manostat (full
+ * anisotropic including angles)
  *
  * @return tensor3D
  */
 tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
 {
-    auto mu =
-        kroneckerDeltaMatrix<double>() - _compressibility * _dt / _tau * (diagonalMatrix(_targetPressure) - _pressureTensor);
+    auto mu = kroneckerDeltaMatrix<double>() -
+              _compressibility * _dt / _tau *
+                  (diagonalMatrix(_targetPressure) - _pressureTensor);
 
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];

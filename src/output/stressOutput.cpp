@@ -51,15 +51,15 @@ using output::StressOutput;
 void StressOutput::write(const size_t step, const physicalData::PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[0][0]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[0][1]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[0][2]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[1][0]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[1][1]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[1][2]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[2][0]);
-    _fp << std::format("{:20.5e}\t", data.getVirial()[2][1]);
-    _fp << std::format("{:20.5e}\n", data.getVirial()[2][2]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[0][0]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[0][1]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[0][2]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[1][0]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[1][1]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[1][2]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[2][0]);
+    _fp << std::format("{:20.5e}\t", data.getStressTensor()[2][1]);
+    _fp << std::format("{:20.5e}\n", data.getStressTensor()[2][2]);
 
     _fp << std::flush;
 }

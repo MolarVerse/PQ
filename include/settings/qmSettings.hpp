@@ -24,6 +24,8 @@
 
 #define _QM_SETTINGS_HPP_
 
+#include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
+
 #include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -57,6 +59,8 @@ namespace settings
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
 
+        static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
+
       public:
         static void setQMMethod(const std::string_view &method);
 
@@ -64,9 +68,13 @@ namespace settings
         static void setQMScript(const std::string_view &script) { _qmScript = script; }
         static void setQMScriptFullPath(const std::string_view &script) { _qmScriptFullPath = script; }
 
+        static void setQMLoopTimeLimit(const double time) { _qmLoopTimeLimit = time; }
+
         [[nodiscard]] static QMMethod    getQMMethod() { return _qmMethod; }
         [[nodiscard]] static std::string getQMScript() { return _qmScript; }
         [[nodiscard]] static std::string getQMScriptFullPath() { return _qmScriptFullPath; }
+
+        [[nodiscard]] static double getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
     };
 }   // namespace settings
 

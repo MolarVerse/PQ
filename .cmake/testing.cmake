@@ -31,6 +31,7 @@ if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     set(EXCLUDE_FOR_GCOVR
         "\.build"
+        .build
         tests
         build/_deps # don't know why build
         apps
@@ -40,6 +41,13 @@ if(${BUILD_WITH_GCOVR})
         src/setup/setup.cpp
         src/engine/*
         include/engine/*
+    )
+
+    set(GCOVR_ADDITIONAL_ARGS
+        "--exclude-throw-branches"
+        "--exclude-function-lines"
+        "--exclude-noncode-lines"
+        "--gcov-ignore-errors=no_working_dir_found"
     )
 
     setup_target_for_coverage_gcovr_html(
@@ -55,7 +63,11 @@ if(${BUILD_WITH_GCOVR})
     )
 
     setup_target_for_coverage_lcov(
-        NAME coverage_lcov EXECUTABLE ctest LCOV_ARGS " --no-external " EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*)
+        NAME coverage_lcov
+        EXECUTABLE ctest
+        LCOV_ARGS " --no-external "
+        EXCLUDE tests* _deps* apps* external* apps* benchmarks* build* .build*
+    )
 endif()
 
-# add_subdirectory(tests)
+add_definitions(-DWITH_TESTS)

@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
 #include "exceptions.hpp"                // for InputFileException
+#include "gtest/gtest.h"                 // for Message, TestPartResult, testing
 #include "inputFileParser.hpp"           // for readInput
 #include "inputFileParserManostat.hpp"   // for InputFileParserManostat
 #include "manostatSettings.hpp"          // for ManostatSettings
 #include "testInputFileReader.hpp"       // for TestInputFileReader
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult, testing
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
@@ -53,7 +54,8 @@ TEST_F(TestInputFileReader, ParsePressure)
 /**
  * @brief tests parsing the "p_relaxation" command
  *
- * @details if the relaxation time of the manostat is negative it throws inputFileException
+ * @details if the relaxation time of the manostat is negative it throws
+ * inputFileException
  *
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
@@ -64,15 +66,18 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
     lineElements = {"p_relaxation", "=", "-100.0"};
-    EXPECT_THROW_MSG(parser.parseManostatRelaxationTime(lineElements, 0),
-                     customException::InputFileException,
-                     "Relaxation time of manostat cannot be negative");
+    EXPECT_THROW_MSG(
+        parser.parseManostatRelaxationTime(lineElements, 0),
+        customException::InputFileException,
+        "Relaxation time of manostat cannot be negative"
+    );
 }
 
 /**
  * @brief tests parsing the "manostat" command
  *
- * @details if the manostat is not valid it throws inputFileException - valid options are "none" and "berendsen"
+ * @details if the manostat is not valid it throws inputFileException - valid
+ * options are "none" and "berendsen"
  *
  */
 TEST_F(TestInputFileReader, ParseManostat)
@@ -80,16 +85,32 @@ TEST_F(TestInputFileReader, ParseManostat)
     InputFileParserManostat  parser(*_engine);
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parser.parseManostat(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getManostatType(), settings::ManostatType::NONE);
+    EXPECT_EQ(
+        settings::ManostatSettings::getManostatType(),
+        settings::ManostatType::NONE
+    );
 
     lineElements = {"manostat", "=", "berendsen"};
     parser.parseManostat(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(
+        settings::ManostatSettings::getManostatType(),
+        settings::ManostatType::BERENDSEN
+    );
+
+    lineElements = {"manostat", "=", "stochastic_rescaling"};
+    parser.parseManostat(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getManostatType(),
+        settings::ManostatType::STOCHASTIC_RESCALING
+    );
 
     lineElements = {"manostat", "=", "notValid"};
-    EXPECT_THROW_MSG(parser.parseManostat(lineElements, 0),
-                     customException::InputFileException,
-                     "Invalid manostat \"notValid\" at line 0 in input file. Possible options are: berendsen and none");
+    EXPECT_THROW_MSG(
+        parser.parseManostat(lineElements, 0),
+        customException::InputFileException,
+        "Invalid manostat \"notValid\" at line 0 in input file. Possible "
+        "options are: berendsen and none"
+    );
 }
 
 /**
@@ -107,11 +128,105 @@ TEST_F(TestInputFileReader, ParseCompressibility)
 
     lineElements = {"compressibility", "=", "-0.1"};
     EXPECT_THROW_MSG(
-        parser.parseCompressibility(lineElements, 0), customException::InputFileException, "Compressibility cannot be negative");
+        parser.parseCompressibility(lineElements, 0),
+        customException::InputFileException,
+        "Compressibility cannot be negative"
+    );
 }
 
-int main(int argc, char **argv)
+/**
+ * @brief tests parsing the "isotropy" command
+ *
+ */
+TEST_F(TestInputFileReader, ParseIsotropy)
 {
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    InputFileParserManostat  parser(*_engine);
+    std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::ISOTROPIC
+    );
+
+    lineElements = {"isotropy", "=", "anisotropic"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::ANISOTROPIC
+    );
+
+    lineElements = {"isotropy", "=", "full_anisotropic"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::FULL_ANISOTROPIC
+    );
+
+    lineElements = {"isotropy", "=", "xz"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+
+    lineElements = {"isotropy", "=", "zx"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+
+    lineElements = {"isotropy", "=", "yz"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+
+    lineElements = {"isotropy", "=", "zy"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+
+    lineElements = {"isotropy", "=", "xy"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+
+    lineElements = {"isotropy", "=", "yx"};
+    parser.parseIsotropy(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getIsotropy(),
+        settings::Isotropy::SEMI_ISOTROPIC
+    );
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
+    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+
+    lineElements = {"isotropy", "=", "notValid"};
+    EXPECT_THROW_MSG(
+        parser.parseIsotropy(lineElements, 0),
+        customException::InputFileException,
+        "Invalid isotropy \"notValid\" at line 0 in input file. Possible "
+        "options are: isotropic, xy, xz, yz, anisotropic and full_anisotropic"
+    );
 }

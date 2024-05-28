@@ -31,7 +31,7 @@ Public License along with this program.  If not, see
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
-#include "vector3d.hpp"   // for Vec3D
+#include "timer.hpp"
 
 namespace physicalData
 {
@@ -61,11 +61,11 @@ namespace potential
      * - brute force
      * - cell list
      *
-     * @note _nonCoulombPairsVector is just a container to
-     * store the nonCoulombicPairs for later processing
+     * @note _nonCoulombPairsVector is just a container to store the
+     * nonCoulombicPairs for later processing
      *
      */
-    class Potential
+    class Potential : public timings::Timer
     {
        protected:
         std::shared_ptr<CoulombPotential>    _coulombPotential;
@@ -74,16 +74,16 @@ namespace potential
        public:
         virtual ~Potential() = default;
 
-        virtual void calculateForces(simulationBox::SimulationBox &,
-                                     physicalData::PhysicalData &,
-                                     simulationBox::CellList &) = 0;
+        virtual void
+        calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
 
         std::pair<double, double> calculateSingleInteraction(
             const simulationBox::Box &,
             simulationBox::Molecule &,
             simulationBox::Molecule &,
             const size_t,
-            const size_t) const;
+            const size_t
+        ) const;
 
         template <typename T>
         void makeCoulombPotential(T p)
@@ -98,7 +98,8 @@ namespace potential
         }
 
         void setNonCoulombPotential(
-            std::shared_ptr<NonCoulombPotential> nonCoulombPotential)
+            std::shared_ptr<NonCoulombPotential> nonCoulombPotential
+        )
         {
             _nonCoulombPotential = nonCoulombPotential;
         }
@@ -107,20 +108,17 @@ namespace potential
         {
             return *_coulombPotential;
         }
-
         [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const
         {
             return *_nonCoulombPotential;
         }
-
-        [[nodiscard]] std::shared_ptr<CoulombPotential>
-        getCoulombPotentialSharedPtr() const
+        [[nodiscard]] std::shared_ptr<CoulombPotential> getCoulombPotentialSharedPtr(
+        ) const
         {
             return _coulombPotential;
         }
-
-        [[nodiscard]] std::shared_ptr<NonCoulombPotential>
-        getNonCoulombPotentialSharedPtr() const
+        [[nodiscard]] std::shared_ptr<NonCoulombPotential> getNonCoulombPotentialSharedPtr(
+        ) const
         {
             return _nonCoulombPotential;
         }
@@ -135,9 +133,9 @@ namespace potential
     class PotentialBruteForce : public Potential
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &,
-                             physicalData::PhysicalData &,
-                             simulationBox::CellList &) override;
+        ~PotentialBruteForce();
+        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+            override;
     };
 
     /**
@@ -149,9 +147,9 @@ namespace potential
     class PotentialCellList : public Potential
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &,
-                             physicalData::PhysicalData &,
-                             simulationBox::CellList &) override;
+        ~PotentialCellList();
+        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+            override;
     };
 
 }   // namespace potential

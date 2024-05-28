@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "matrix.hpp"   // for Matrix, linearAlgebra
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), InitG...
+
+#include <memory>   // for allocator
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), InitG...
-#include <memory>          // for allocator
+#include "matrix.hpp"      // for Matrix, linearAlgebra
 
 using namespace linearAlgebra;
 
@@ -65,10 +66,4 @@ TEST(TestMatrix, size)
     auto mat = Matrix<int>(2, 3);
 
     EXPECT_EQ(mat.size(), 6);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

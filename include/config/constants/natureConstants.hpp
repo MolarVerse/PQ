@@ -26,6 +26,10 @@
 
 #include <cmath>
 
+#ifndef M_PI
+#define M_PI std::numbers::pi
+#endif
+
 namespace constants
 {
     /**
@@ -41,15 +45,17 @@ namespace constants
     /**
      * @brief Planck constant in J s
      */
-    static constexpr double _PLANCK_CONSTANT_         = 6.62607015e-34;
-    static constexpr double _REDUCED_PLANCK_CONSTANT_ = _PLANCK_CONSTANT_ / (2.0 * M_PI);
+    static constexpr double _PLANCK_CONSTANT_ = 6.62607015e-34;
+    static constexpr double _REDUCED_PLANCK_CONSTANT_ =
+        _PLANCK_CONSTANT_ / (2.0 * M_PI);
 
     /**
      * @brief Boltzmann constant in J K⁻¹
      * @brief universal gas constant in J mol⁻¹ K⁻¹
      */
-    static constexpr double _BOLTZMANN_CONSTANT_     = 1.380649e-23;
-    static constexpr double _UNIVERSAL_GAS_CONSTANT_ = _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
+    static constexpr double _BOLTZMANN_CONSTANT_ = 1.380649e-23;
+    static constexpr double _UNIVERSAL_GAS_CONSTANT_ =
+        _BOLTZMANN_CONSTANT_ * _AVOGADRO_NUMBER_;
 
     /**
      * @brief electron charge in C
@@ -59,7 +65,8 @@ namespace constants
     /**
      * @brief electron charge squared in C²
      */
-    static constexpr double _ELECTRON_CHARGE_SQUARED_ = _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
+    static constexpr double _ELECTRON_CHARGE_SQUARED_ =
+        _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
 
     /**
      * @brief electron mass in kg

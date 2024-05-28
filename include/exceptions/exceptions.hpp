@@ -273,6 +273,20 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /**
+     * @class QMRunTimeExceeded inherits from CustomException
+     *
+     * @brief Exception for QM runtime exceeded
+     *
+     */
+    class QMRunTimeExceeded : public CustomException
+    {
+      public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_

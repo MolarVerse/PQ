@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for EXPECT_EQ, Test, TestInfo (ptr only)
-#include <memory>          // for allocator
+
+#include <memory>   // for allocator
+
+#include "gtest/gtest.h"           // for Message, TestPartResult
+#include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
 
 /**
  * @brief tests string function of enum nonCoulombType
@@ -47,26 +48,38 @@ TEST(TestPotentialSettings, string_nonCoulombType)
 TEST(TestPotentialSettings, setNonCoulombType)
 {
     settings::PotentialSettings::setNonCoulombType("lj");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::LJ);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::LJ
+    );
 
     settings::PotentialSettings::setNonCoulombType("lj_9_12");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::LJ_9_12);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::LJ_9_12
+    );
 
     settings::PotentialSettings::setNonCoulombType("buck");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::BUCKINGHAM);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::BUCKINGHAM
+    );
 
     settings::PotentialSettings::setNonCoulombType("morse");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::MORSE);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::MORSE
+    );
 
     settings::PotentialSettings::setNonCoulombType("guff");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::GUFF);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::GUFF
+    );
 
     settings::PotentialSettings::setNonCoulombType("none");
-    EXPECT_EQ(settings::PotentialSettings::getNonCoulombType(), settings::NonCoulombType::NONE);
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        settings::NonCoulombType::NONE
+    );
 }

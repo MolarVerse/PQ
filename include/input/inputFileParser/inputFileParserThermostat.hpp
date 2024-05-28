@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_THERMOSTAT_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -45,15 +45,49 @@ namespace input
      */
     class InputFileParserThermostat : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserThermostat(engine::Engine &);
 
-        void parseThermostat(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseTemperature(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseThermostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseThermostatFriction(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseThermostatChainLength(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseThermostatCouplingFrequency(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseThermostat(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseTemperature(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseStartTemperature(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseEndTemperature(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseTemperatureRampSteps(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseTemperatureRampFrequency(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseThermostatRelaxationTime(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseThermostatFriction(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseThermostatChainLength(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
+        void parseThermostatCouplingFrequency(
+            const std::vector<std::string> &lineElements,
+            const size_t                    lineNumber
+        );
     };
 
 }   // namespace input

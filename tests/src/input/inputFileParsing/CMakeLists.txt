@@ -17,6 +17,7 @@ set(source_files
     testParserNonCoulomb.cpp
     testParserFiles.cpp
     testParserQM.cpp
+    testParserRingPolymer.cpp
 )
 
 foreach(source_file ${source_files})
@@ -31,9 +32,8 @@ foreach(source_file ${source_files})
         PRIVATE
         PQ_input
         gtest
-        gtest_main
         gmock
-        gmock_main
+        pq_test_main
     )
     add_test(
         NAME ${test_name}

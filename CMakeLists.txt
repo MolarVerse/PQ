@@ -14,7 +14,7 @@ endif()
 # project initializeation
 # ***********************
 project(PQ
-    DESCRIPTION "Path Integral Molecular Dynamics - Quantum Charge Field"
+    DESCRIPTION "MolarVerse - PQ"
     LANGUAGES CXX C)
 
 # **************************
@@ -39,13 +39,20 @@ else()
     message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
 endif()
 
-# *****************
-# set install rpath
-# *****************
-SET(CMAKE_INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX}/lib/;"
-)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+if(WIN32)
+    set(CMAKE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/result")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+else()
+    # *****************
+    # set install rpath
+    # *****************
+    SET(CMAKE_INSTALL_RPATH
+        "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
+    )
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif()
 
 # ***************
 # cmake cxx flags
@@ -54,16 +61,24 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # set default flags
 set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
 
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-use-linker-plugin")
+endif()
+
 # add flags dependent on build type
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -flto -march=native -mtune=native -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -march=native -mtune=native -g")
+
+    if(NOT BUILD_WITH_KOKKOS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+    endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 else()
     message("\n   Release with Debug build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -coverage -pg -fprofile-arcs -ftest-coverage")
 endif()
 
 # add git version as flag
@@ -87,10 +102,16 @@ if(BUILD_WITH_PYTHON_BINDINGS)
     include(python_bindings)
 endif()
 
-include(testing)
+if(BUILD_WITH_TESTS)
+    include(testing)
+endif()
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if(BUILD_WITH_TESTS)
+    add_subdirectory(tests)
+endif()
+
 add_subdirectory(apps)
 
 if(BUILD_WITH_DOC)

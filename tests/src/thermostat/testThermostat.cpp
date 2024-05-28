@@ -22,35 +22,101 @@
 
 #include "testThermostat.hpp"
 
+#include <cmath>    // for sqrt
+#include <memory>   // for allocator
+
 #include "berendsenThermostat.hpp"                   // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
+#include "gtest/gtest.h"                             // for InitGoogleTest
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "timingsSettings.hpp"                       // for TimingsSettings
-
-#include "gtest/gtest.h"   // for InitGoogleTest
-#include <cmath>           // for sqrt
-#include <memory>          // for allocator
 
 TEST_F(TestThermostat, calculateTemperature)
 {
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
-    const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);
-    const auto mass_mol1_atom1     = _simulationBox->getMolecule(0).getAtomMass(0);
-    const auto mass_mol1_atom2     = _simulationBox->getMolecule(0).getAtomMass(1);
+    const auto velocity_mol1_atom1 =
+        _simulationBox->getMolecule(0).getAtomVelocity(0);
+    const auto velocity_mol1_atom2 =
+        _simulationBox->getMolecule(0).getAtomVelocity(1);
+    const auto mass_mol1_atom1 = _simulationBox->getMolecule(0).getAtomMass(0);
+    const auto mass_mol1_atom2 = _simulationBox->getMolecule(0).getAtomMass(1);
 
-    const auto velocity_mol2_atom1 = _simulationBox->getMolecule(1).getAtomVelocity(0);
-    const auto mass_mol2_atom1     = _simulationBox->getMolecule(1).getAtomMass(0);
+    const auto velocity_mol2_atom1 =
+        _simulationBox->getMolecule(1).getAtomVelocity(0);
+    const auto mass_mol2_atom1 = _simulationBox->getMolecule(1).getAtomMass(0);
 
-    const auto kineticEnergyAtomicVector = mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
-                                           mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2 +
-                                           mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
+    const auto kineticEnergyAtomicVector =
+        mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
+        mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2 +
+        mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    EXPECT_EQ(_data->getTemperature(), sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / (nDOF));
+    EXPECT_EQ(
+        _data->getTemperature(),
+        sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ /
+            (nDOF)
+    );
+}
+
+TEST_F(TestThermostat, applyTemperatureRamping)
+{
+    _thermostat->setTemperatureIncrease(0.0);
+    _thermostat->setTemperatureRampingSteps(0);
+    _thermostat->setTemperatureRampingFrequency(1);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(1);
+    _thermostat->setTemperatureRampingFrequency(1);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(2);
+    _thermostat->setTemperatureRampingFrequency(1);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(4);
+    _thermostat->setTemperatureRampingFrequency(2);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
 }
 
 TEST_F(TestThermostat, applyThermostatBerendsen)
@@ -58,31 +124,35 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
-    const auto velocity_mol1_atom1 = _simulationBox->getMolecule(0).getAtomVelocity(0);
-    const auto velocity_mol1_atom2 = _simulationBox->getMolecule(0).getAtomVelocity(1);
-    const auto mass_mol1_atom1     = _simulationBox->getMolecule(0).getAtomMass(0);
-    const auto mass_mol1_atom2     = _simulationBox->getMolecule(0).getAtomMass(1);
+    const auto velocity_mol1_atom1 =
+        _simulationBox->getMolecule(0).getAtomVelocity(0);
+    const auto velocity_mol1_atom2 =
+        _simulationBox->getMolecule(0).getAtomVelocity(1);
+    const auto mass_mol1_atom1 = _simulationBox->getMolecule(0).getAtomMass(0);
+    const auto mass_mol1_atom2 = _simulationBox->getMolecule(0).getAtomMass(1);
 
-    const auto velocity_mol2_atom1 = _simulationBox->getMolecule(1).getAtomVelocity(0);
-    const auto mass_mol2_atom1     = _simulationBox->getMolecule(1).getAtomMass(0);
+    const auto velocity_mol2_atom1 =
+        _simulationBox->getMolecule(1).getAtomVelocity(0);
+    const auto mass_mol2_atom1 = _simulationBox->getMolecule(1).getAtomMass(0);
 
-    const auto kineticEnergyAtomicVector = mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
-                                           mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2 +
-                                           mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
+    const auto kineticEnergyAtomicVector =
+        mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
+        mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2 +
+        mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
-    const auto oldTemperature = sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ / static_cast<double>(nDOF);
+    const auto oldTemperature = sum(kineticEnergyAtomicVector) *
+                                constants::_TEMPERATURE_FACTOR_ /
+                                static_cast<double>(nDOF);
 
-    const auto berendsenFactor = ::sqrt(1.0 + 0.1 / 100.0 * (300.0 / oldTemperature - 1.0));
+    const auto berendsenFactor =
+        ::sqrt(1.0 + 0.1 / 100.0 * (300.0 / oldTemperature - 1.0));
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_EQ(_data->getTemperature(), oldTemperature * berendsenFactor * berendsenFactor);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_EQ(
+        _data->getTemperature(),
+        oldTemperature * berendsenFactor * berendsenFactor
+    );
 }

@@ -24,13 +24,13 @@
 
 #define _INTRA_NON_BONDED_READER_HPP_
 
-#include "engine.hpp"   // for Engine
-
 #include <cstddef>   // for size_t
 #include <iosfwd>    // for ifstream
 #include <string>    // for string
 
-namespace input::intraNonBonded
+#include "engine.hpp"   // for Engine
+
+namespace input::intraNonBondedReader
 {
     void               readIntraNonBondedFile(engine::Engine &);
     [[nodiscard]] bool isNeeded(const engine::Engine &engine);
@@ -38,11 +38,12 @@ namespace input::intraNonBonded
     /**
      * @class IntraNonBondedReader
      *
-     * @brief reads the intra non bonded interactions from the intraNonBonded file
+     * @brief reads the intra non bonded interactions from the intraNonBonded
+     * file
      */
     class IntraNonBondedReader
     {
-      private:
+       private:
         std::string   _fileName;
         std::ifstream _fp;
 
@@ -50,19 +51,26 @@ namespace input::intraNonBonded
 
         engine::Engine &_engine;
 
-      public:
-        IntraNonBondedReader(const std::string &fileName, engine::Engine &engine)
+       public:
+        IntraNonBondedReader(
+            const std::string &fileName,
+            engine::Engine    &engine
+        )
             : _fileName(fileName), _fp(fileName), _engine(engine){};
 
         void                 read();
         void                 processMolecule(const size_t moleculeType);
         void                 checkDuplicates() const;
-        [[nodiscard]] size_t findMoleculeType(const std::string &identifier) const;
+        [[nodiscard]] size_t findMoleculeType(const std::string &identifier
+        ) const;
 
-        void setFileName(const std::string_view &fileName) { _fileName = fileName; }
+        void setFileName(const std::string_view &fileName)
+        {
+            _fileName = fileName;
+        }
         void reInitializeFp() { _fp = std::ifstream(_fileName); }
     };
 
-}   // namespace input::intraNonBonded
+}   // namespace input::intraNonBondedReader
 
 #endif   // _INTRA_NON_BONDED_READER_HPP_
