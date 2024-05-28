@@ -23,3 +23,5 @@ examples/**/perf*
 *.gcov
 
 googletest
+
+**/__pycacke__*
