@@ -22,14 +22,14 @@
 
 #include "dihedralSection.hpp"
 
-#include "dihedralForceField.hpp"   // for BondForceField
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for TopologyException
-
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <string>      // for string, allocator
 #include <vector>      // for vector
+
+#include "dihedralForceField.hpp"   // for BondForceField
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for TopologyException
 
 using namespace input::topology;
 
@@ -47,16 +47,23 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is not 5 or 6
- * @throws customException::TopologyException if atom indices are the same (=same atoms)
+ * @throws customException::TopologyException if number of elements in line is
+ * not 5 or 6
+ * @throws customException::TopologyException if atom indices are the same
+ * (=same atoms)
  * @throws customException::TopologyException if sixth element is not a '*'
  */
-void DihedralSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
+void DihedralSection::processSection(
+    std::vector<std::string> &lineElements,
+    engine::Engine           &engine
+)
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw customException::TopologyException(std::format(
-            "Wrong number of arguments in topology file dihedral section at line {} - number of elements has to be 5 or 6!",
-            _lineNumber));
+            "Wrong number of arguments in topology file dihedral section at "
+            "line {} - number of elements has to be 5 or 6!",
+            _lineNumber
+        ));
 
     auto atom1        = stoul(lineElements[0]);
     auto atom2        = stoul(lineElements[1]);
@@ -71,7 +78,10 @@ void DihedralSection::processSection(std::vector<std::string> &lineElements, eng
             isLinker = true;
         else
             throw customException::TopologyException(std::format(
-                "Sixth entry in topology file in dihedral section has to be a \'*\' or empty at line {}!", _lineNumber));
+                "Sixth entry in topology file in dihedral section has to be a "
+                "\'*\' or empty at line {}!",
+                _lineNumber
+            ));
     }
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
@@ -79,16 +89,26 @@ void DihedralSection::processSection(std::vector<std::string> &lineElements, eng
     const auto [it, end] = std::ranges::unique(atoms);
     atoms.erase(it, end);
     if (4 != atoms.size())
-        throw customException::TopologyException(
-            std::format("Topology file dihedral section at line {} - atoms cannot be the same!", _lineNumber));
+        throw customException::TopologyException(std::format(
+            "Topology file dihedral section at line {} - atoms cannot be the "
+            "same!",
+            _lineNumber
+        ));
 
-    const auto [molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIndex3] = engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
-    const auto [molecule4, atomIndex4] = engine.getSimulationBox().findMoleculeByAtomIndex(atom4);
+    const auto [molecule1, atomIndex1] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    const auto [molecule3, atomIndex3] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
+    const auto [molecule4, atomIndex4] =
+        engine.getSimulationBox().findMoleculeByAtomIndex(atom4);
 
     auto dihedralForceField = forceField::DihedralForceField(
-        {molecule1, molecule2, molecule3, molecule4}, {atomIndex1, atomIndex2, atomIndex3, atomIndex4}, dihedralType);
+        {molecule1, molecule2, molecule3, molecule4},
+        {atomIndex1, atomIndex2, atomIndex3, atomIndex4},
+        dihedralType
+    );
     dihedralForceField.setIsLinker(isLinker);
 
     engine.getForceField().addDihedral(dihedralForceField);
@@ -101,9 +121,12 @@ void DihedralSection::processSection(std::vector<std::string> &lineElements, eng
  *
  * @throws customException::TopologyException if endedNormal is false
  */
-void DihedralSection::endedNormally(bool endedNormal) const
+void DihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(
-            std::format("Topology file dihedral section at line {} - no end of section found!", _lineNumber));
+        throw customException::TopologyException(std::format(
+            "Topology file dihedral section at line {} - no end of section "
+            "found!",
+            _lineNumber
+        ));
 }

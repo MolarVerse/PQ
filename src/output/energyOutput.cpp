@@ -26,6 +26,7 @@
 #include <ostream>   // for basic_ostream, ofstream
 #include <string>    // for operator<<
 
+#include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
@@ -97,6 +98,12 @@ void EnergyOutput::write(
     {
         _fp << std::format("{:20.12f}\t", data.getNoseHooverMomentumEnergy());
         _fp << std::format("{:20.12f}\t", data.getNoseHooverFrictionEnergy());
+    }
+
+    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    {
+        _fp << std::format("{:20.12f}\t", data.getLowerDistanceConstraints());
+        _fp << std::format("{:20.12f}\t", data.getUpperDistanceConstraints());
     }
 
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));

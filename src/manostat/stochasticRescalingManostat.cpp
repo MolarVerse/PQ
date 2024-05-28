@@ -124,7 +124,7 @@ linearAlgebra::tensor3D StochasticRescalingManostat::calculateMu(
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getTargetTemperature();
+                    settings::ThermostatSettings::getActualTargetTemperature();
     const auto randomFactor =
         std::normal_distribution<double>(0.0, 1.0)(_generator);
 
@@ -153,7 +153,7 @@ linearAlgebra::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getTargetTemperature();
+                    settings::ThermostatSettings::getActualTargetTemperature();
     const auto randomFactor =
         std::normal_distribution<double>(0.0, 1.0)(_generator);
 
@@ -206,7 +206,7 @@ linearAlgebra::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getTargetTemperature();
+                    settings::ThermostatSettings::getActualTargetTemperature();
     const auto randomFactor =
         std::normal_distribution<double>(0.0, 1.0)(_generator);
 
@@ -236,7 +236,7 @@ linearAlgebra::tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
 {
     const auto compressibilityFactor = _compressibility * _dt / _tau;
     const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getTargetTemperature();
+                    settings::ThermostatSettings::getActualTargetTemperature();
     const auto randomFactor =
         std::normal_distribution<double>(0.0, 1.0)(_generator);
 

@@ -27,6 +27,7 @@
 #include <ostream>   // for operator<<, basic_ostream, char_traits
 #include <string>    // for operator<<
 
+#include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
@@ -113,6 +114,12 @@ void InfoOutput::write(
             "E(NH-FRICTION)",
             "kcal/mol"
         );
+    }
+
+    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    {
+        writeLeft(data.getLowerDistanceConstraints(), "LOWER-DIST-CONSTR", "kcal/mol");
+        writeRight(data.getUpperDistanceConstraints(), "UPPER-DIST-CONSTR", "kcal/mol");
     }
 
     writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");

@@ -137,7 +137,7 @@ void RingPolymerEngine::coupleRingPolymerBeads()
         settings::RingPolymerSettings::getNumberOfBeads();
     const auto numberOfAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
     const auto temperature =
-        settings::ThermostatSettings::getTargetTemperature();
+        settings::ThermostatSettings::getActualTargetTemperature();
     const auto rpmd_factor = constants::_RPMD_PREFACTOR_ * numberOfBeads *
                              numberOfBeads * temperature * temperature;
 

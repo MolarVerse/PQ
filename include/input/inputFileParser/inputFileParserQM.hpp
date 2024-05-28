@@ -51,6 +51,7 @@ namespace input
         void parseQMMethod(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseQMScript(const std::vector<std::string> &lineElements, const size_t lineNumber);
         void parseQMScriptFullPath(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseQMLoopTimeLimit(const std::vector<std::string> &lineElements, const size_t lineNumber);
     };
 
 }   // namespace input

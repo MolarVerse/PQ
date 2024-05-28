@@ -75,6 +75,9 @@ namespace physicalData
         double _noseHooverMomentumEnergy = 0.0;
         double _noseHooverFrictionEnergy = 0.0;
 
+        double _lowerDistanceConstraints = 0.0;
+        double _upperDistanceConstraints = 0.0;
+
         linearAlgebra::Vec3D    _momentum                     = {0.0, 0.0, 0.0};
         linearAlgebra::Vec3D    _angularMomentum              = {0.0, 0.0, 0.0};
         linearAlgebra::tensor3D _kineticEnergyAtomicTensor    = {0.0};
@@ -237,10 +240,16 @@ namespace physicalData
             _noseHooverFrictionEnergy = frictionEnergy;
         }
 
-        void setRingPolymerEnergy(const double ringPolymerEnergy)
+        void setLowerDistanceConstraints(const double lowerDistanceConstraints)
         {
-            _ringPolymerEnergy = ringPolymerEnergy;
+            _lowerDistanceConstraints = lowerDistanceConstraints;
         }
+        void setUpperDistanceConstraints(const double upperDistanceConstraints)
+        {
+            _upperDistanceConstraints = upperDistanceConstraints;
+        }
+
+        void setRingPolymerEnergy(const double ringPolymerEnergy) { _ringPolymerEnergy = ringPolymerEnergy; }
 
         /********************
          * standard getters *
@@ -299,10 +308,10 @@ namespace physicalData
             return _noseHooverFrictionEnergy;
         }
 
-        [[nodiscard]] double getRingPolymerEnergy() const
-        {
-            return _ringPolymerEnergy;
-        }
+        [[nodiscard]] double getLowerDistanceConstraints() const { return _lowerDistanceConstraints; }
+        [[nodiscard]] double getUpperDistanceConstraints() const { return _upperDistanceConstraints; }
+
+        [[nodiscard]] double getRingPolymerEnergy() const { return _ringPolymerEnergy; }
 
         [[nodiscard]] linearAlgebra::tensor3D getKineticEnergyAtomicVector(
         ) const

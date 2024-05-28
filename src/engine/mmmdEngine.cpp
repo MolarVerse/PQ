@@ -40,7 +40,6 @@
 #ifdef WITH_KOKKOS
 #include "potential_kokkos.hpp"   // for KokkosPotential
 #endif
-
 using namespace engine;
 
 /**
@@ -96,6 +95,12 @@ void MMMDEngine::takeStep()
 
     _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
 
+    _constraints.applyDistanceConstraints(
+        _simulationBox,
+        _physicalData,
+        calculateTotalSimulationTime()
+    );
+
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
     _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
@@ -117,4 +122,6 @@ void MMMDEngine::takeStep()
     _manostat->applyManostat(_simulationBox, _physicalData);
 
     _resetKinetics.reset(_step, _physicalData, _simulationBox);
+
+    _thermostat->applyTemperatureRamping();
 }

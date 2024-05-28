@@ -22,60 +22,74 @@
 
 #include "parameterFileReader.hpp"
 
-#include "angleSection.hpp"              // for AngleSection
-#include "bondSection.hpp"               // for BondSection
-#include "dihedralSection.hpp"           // for DihedralSection
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for InputFileException, ParameterFileExce...
-#include "fileSettings.hpp"              // for FileSettings
-#include "forceFieldSettings.hpp"        // for ForceFieldSettings
-#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
-#include "stringUtilities.hpp"           // for removeComments, splitString, toLowerCopy
-#include "typesSection.hpp"              // for TypesSection
-
 #include <functional>   // for identity
 #include <ranges>       // for __find_if_fn, find_if
+
+#include "angleSection.hpp"      // for AngleSection
+#include "bondSection.hpp"       // for BondSection
+#include "dihedralSection.hpp"   // for DihedralSection
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, ParameterFileExce...
+#include "fileSettings.hpp"      // for FileSettings
+#include "forceFieldSettings.hpp"        // for ForceFieldSettings
+#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
+#include "jCouplingSection.hpp"          // for JCouplingSection
+#include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
+#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "typesSection.hpp"      // for TypesSection
 
 using namespace input::parameterFile;
 
 /**
  * @brief constructor
  *
- * @details initializes file pointer _fp with filename and adds all parameter file sections to _parameterFileSections
+ * @details initializes file pointer _fp with filename and adds all parameter
+ * file sections to _parameterFileSections
  *
  * @param filename
  * @param engine
  */
-ParameterFileReader::ParameterFileReader(const std::string &filename, engine::Engine &engine)
+ParameterFileReader::ParameterFileReader(
+    const std::string &filename,
+    engine::Engine    &engine
+)
     : _fileName(filename), _fp(filename), _engine(engine)
 {
     _parameterFileSections.push_back(std::make_unique<TypesSection>());
     _parameterFileSections.push_back(std::make_unique<BondSection>());
     _parameterFileSections.push_back(std::make_unique<AngleSection>());
     _parameterFileSections.push_back(std::make_unique<DihedralSection>());
-    _parameterFileSections.push_back(std::make_unique<ImproperDihedralSection>());
+    _parameterFileSections.push_back(std::make_unique<ImproperDihedralSection>()
+    );
+    _parameterFileSections.push_back(std::make_unique<JCouplingSection>());
     _parameterFileSections.push_back(std::make_unique<NonCoulombicsSection>());
 }
 
 /**
- * @brief determines which section of the parameter file the header line belongs to
+ * @brief determines which section of the parameter file the header line belongs
+ * to
  *
  * @param lineElements
  * @return ParameterFileSection*
  *
- * @throws customException::ParameterFileException if unknown or already parsed keyword
+ * @throws customException::ParameterFileException if unknown or already parsed
+ * keyword
  */
-ParameterFileSection *ParameterFileReader::determineSection(const std::vector<std::string> &lineElements)
+ParameterFileSection *ParameterFileReader::determineSection(
+    const std::vector<std::string> &lineElements
+)
 {
-    const auto iterEnd = _parameterFileSections.end();
+    const auto iterStart = _parameterFileSections.begin();
+    const auto iterEnd   = _parameterFileSections.end();
 
-    for (auto section = _parameterFileSections.begin(); section != iterEnd; ++section)
+    for (auto section = iterStart; section != iterEnd; ++section)
         if ((*section)->keyword() == utilities::toLowerCopy(lineElements[0]))
             return (*section).get();
 
-    throw customException::ParameterFileException("Unknown or already parsed keyword \"" + lineElements[0] +
-                                                  "\" in parameter file");
+    throw customException::ParameterFileException(
+        "Unknown or already parsed keyword \"" + lineElements[0] +
+        "\" in parameter file"
+    );
 }
 
 /**
@@ -85,16 +99,21 @@ ParameterFileSection *ParameterFileReader::determineSection(const std::vector<st
  */
 void ParameterFileReader::deleteSection(const ParameterFileSection *section)
 {
-    auto       sectionIsEqual = [section](auto &sectionUniquePtr) { return sectionUniquePtr.get() == section; };
-    const auto result         = std::ranges::find_if(_parameterFileSections, sectionIsEqual);
+    using namespace std::ranges;
+
+    auto sectionIsEqual = [section](auto &sectionUniquePtr)
+    { return sectionUniquePtr.get() == section; };
+
+    const auto result = find_if(_parameterFileSections, sectionIsEqual);
     _parameterFileSections.erase(result);
 }
 
 /**
  * @brief reads parameter file
  *
- * @details Reads parameter file and according to the first word of the line, the corresponding section is called and then the
- * line is processed. After processing the line, the section is deleted from _parameterFileSections.
+ * @details Reads parameter file and according to the first word of the line,
+ * the corresponding section is called and then the line is processed. After
+ * processing the line, the section is deleted from _parameterFileSections.
  *
  * @throws customException::InputFileException if file was not provided
  * @throws customException::InputFileException if file does not exist
@@ -102,7 +121,9 @@ void ParameterFileReader::deleteSection(const ParameterFileSection *section)
 void ParameterFileReader::read()
 {
     if (!settings::FileSettings::isParameterFileNameSet())
-        throw customException::InputFileException("Parameter file needed for requested simulation setup");
+        throw customException::InputFileException(
+            "Parameter file needed for requested simulation setup"
+        );
 
     std::string line;
     int         lineNumber = 1;
@@ -139,10 +160,19 @@ void input::parameterFile::readParameterFile(engine::Engine &engine)
     if (!isNeeded())
         return;
 
-    engine.getStdoutOutput().writeRead("Parameter File", settings::FileSettings::getParameterFilename());
-    engine.getLogOutput().writeRead("Parameter File", settings::FileSettings::getParameterFilename());
+    engine.getStdoutOutput().writeRead(
+        "Parameter File",
+        settings::FileSettings::getParameterFilename()
+    );
+    engine.getLogOutput().writeRead(
+        "Parameter File",
+        settings::FileSettings::getParameterFilename()
+    );
 
-    ParameterFileReader parameterFileReader(settings::FileSettings::getParameterFilename(), engine);
+    ParameterFileReader parameterFileReader(
+        settings::FileSettings::getParameterFilename(),
+        engine
+    );
     parameterFileReader.read();
 }
 

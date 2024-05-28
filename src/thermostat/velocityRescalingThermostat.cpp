@@ -22,8 +22,7 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <math.h>   // for sqrt
-
+#include <cmath>    // for sqrt
 #include <memory>   // for __shared_ptr_access, shared_ptr
 #include <vector>   // for vector
 

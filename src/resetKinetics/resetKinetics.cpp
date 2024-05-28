@@ -100,7 +100,7 @@ void ResetKinetics::reset(
 void ResetKinetics::resetTemperature(simulationBox::SimulationBox &simBox)
 {
     const auto targetTemperature =
-        settings::ThermostatSettings::getTargetTemperature();
+        settings::ThermostatSettings::getActualTargetTemperature();
     const auto lambda = ::sqrt(targetTemperature / _temperature);
 
     std::ranges::for_each(

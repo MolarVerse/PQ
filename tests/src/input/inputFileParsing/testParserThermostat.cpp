@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
 #include "exceptions.hpp"                  // for InputFileException
+#include "gtest/gtest.h"                   // for Message, TestPartResult
 #include "inputFileParser.hpp"             // for readInput
 #include "inputFileParserThermostat.hpp"   // for InputFileParserThermostat
 #include "testInputFileReader.hpp"         // for TestInputFileReader
 #include "thermostatSettings.hpp"          // for ThermostatSettings
 #include "throwWithMessage.hpp"            // for EXPECT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
@@ -53,13 +54,17 @@ TEST_F(TestInputFileReader, testParseTemperature)
 
     lineElements = {"temp", "=", "-100.0"};
     EXPECT_THROW_MSG(
-        parser.parseTemperature(lineElements, 0), customException::InputFileException, "Temperature cannot be negative");
+        parser.parseTemperature(lineElements, 0),
+        customException::InputFileException,
+        "Temperature cannot be negative"
+    );
 }
 
 /**
  * @brief tests parsing the "t_relaxation" command
  *
- * @details if the relaxation time of the thermostat is negative it throws inputFileException
+ * @details if the relaxation time of the thermostat is negative it throws
+ * inputFileException
  *
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
@@ -70,15 +75,18 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
 
     lineElements = {"t_relaxation", "=", "-100.0"};
-    EXPECT_THROW_MSG(parser.parseThermostatRelaxationTime(lineElements, 0),
-                     customException::InputFileException,
-                     "Relaxation time of thermostat cannot be negative");
+    EXPECT_THROW_MSG(
+        parser.parseThermostatRelaxationTime(lineElements, 0),
+        customException::InputFileException,
+        "Relaxation time of thermostat cannot be negative"
+    );
 }
 
 /**
  * @brief tests parsing the "thermostat" command
  *
- * @details if the thermostat is not valid it throws inputFileException - valid options are "none" and "berendsen"
+ * @details if the thermostat is not valid it throws inputFileException - valid
+ * options are "none" and "berendsen"
  *
  */
 TEST_F(TestInputFileReader, testParseThermostat)
@@ -86,27 +94,198 @@ TEST_F(TestInputFileReader, testParseThermostat)
     InputFileParserThermostat parser(*_engine);
     std::vector<std::string>  lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::NONE);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::NONE
+    );
 
     lineElements = {"thermostat", "=", "berendsen"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::BERENDSEN);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::BERENDSEN
+    );
 
     lineElements = {"thermostat", "=", "langevin"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::LANGEVIN);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::LANGEVIN
+    );
 
     lineElements = {"thermostat", "=", "velocity_rescaling"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::VELOCITY_RESCALING);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::VELOCITY_RESCALING
+    );
+
+    lineElements = {"thermostat", "=", "rescale"};
+    parser.parseThermostat(lineElements, 0);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::VELOCITY_RESCALING
+    );
 
     lineElements = {"thermostat", "=", "nh-chain"};
     parser.parseThermostat(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getThermostatType(), settings::ThermostatType::NOSE_HOOVER);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getThermostatType(),
+        settings::ThermostatType::NOSE_HOOVER
+    );
 
     lineElements = {"thermostat", "=", "notValid"};
-    EXPECT_THROW_MSG(parser.parseThermostat(lineElements, 0),
-                     customException::InputFileException,
-                     "Invalid thermostat \"notValid\" at line 0 in input file. Possible options are: none, berendsen, "
-                     "velocity_rescaling, langevin, nh-chain");
+    EXPECT_THROW_MSG(
+        parser.parseThermostat(lineElements, 0),
+        customException::InputFileException,
+        "Invalid thermostat \"notValid\" at line 0 in input file. Possible "
+        "options are: none, berendsen, "
+        "velocity_rescaling, langevin, nh-chain"
+    );
+}
+
+/**
+ * @brief tests parsing the "friction" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseFriction)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"friction", "=", "0.1"};
+    parser.parseThermostatFriction(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getFriction(), 0.1 * 1.0e12);
+
+    lineElements = {"friction", "=", "-0.1"};
+    EXPECT_THROW_MSG(
+        parser.parseThermostatFriction(lineElements, 0),
+        customException::InputFileException,
+        "Friction of thermostat cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "nh-chain-length" command
+ *
+ * @details if the chain length is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseChainLength)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"nh-chain-length", "=", "10"};
+    parser.parseThermostatChainLength(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getNoseHooverChainLength(), 10);
+
+    lineElements = {"nh-chain-length", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseThermostatChainLength(lineElements, 0),
+        customException::InputFileException,
+        "Chain length of thermostat cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "coupling_frequency" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseCouplingFrequency)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"coupling_frequency", "=", "10"};
+    parser.parseThermostatCouplingFrequency(lineElements, 0);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getNoseHooverCouplingFrequency(),
+        10
+    );
+
+    lineElements = {"coupling_frequency", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseThermostatCouplingFrequency(lineElements, 0),
+        customException::InputFileException,
+        "Coupling frequency of thermostat cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "temp_ramp_steps" command
+ *
+ * @details if the number of steps is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"temp_ramp_steps", "=", "10"};
+    parser.parseTemperatureRampSteps(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
+
+    lineElements = {"temp_ramp_steps", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseTemperatureRampSteps(lineElements, 0),
+        customException::InputFileException,
+        "Temperature ramp steps cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "temp_ramp_frequency" command
+ *
+ * @details if the frequency is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"temp_ramp_frequency", "=", "10"};
+    parser.parseTemperatureRampFrequency(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
+
+    lineElements = {"temp_ramp_frequency", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseTemperatureRampFrequency(lineElements, 0),
+        customException::InputFileException,
+        "Temperature ramp frequency cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "start_temperature" command
+ *
+ * @details if the start temperature is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseStartTemperature)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"start_temperature", "=", "10"};
+    parser.parseStartTemperature(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
+
+    lineElements = {"start_temperature", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseStartTemperature(lineElements, 0),
+        customException::InputFileException,
+        "Start temperature cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "end_temperature" command
+ *
+ * @details if the end temperature is negative it throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseEndTemperature)
+{
+    InputFileParserThermostat parser(*_engine);
+    std::vector<std::string>  lineElements = {"end_temperature", "=", "10"};
+    parser.parseEndTemperature(lineElements, 0);
+    EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
+
+    lineElements = {"end_temperature", "=", "-10"};
+    EXPECT_THROW_MSG(
+        parser.parseEndTemperature(lineElements, 0),
+        customException::InputFileException,
+        "End temperature cannot be negative"
+    );
 }

@@ -45,6 +45,7 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(e
     addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
     addKeyword(std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
     addKeyword(std::string("qm_script_full_path"), bind_front(&InputFileParserQM::parseQMScriptFullPath, this), false);
+    addKeyword(std::string("qm_loop_time_limit"), bind_front(&InputFileParserQM::parseQMLoopTimeLimit, this), false);
 }
 
 /**
@@ -101,4 +102,17 @@ void InputFileParserQM::parseQMScriptFullPath(const std::vector<std::string> &li
     checkCommand(lineElements, lineNumber);
 
     settings::QMSettings::setQMScriptFullPath(lineElements[2]);
+}
+
+/**
+ * @brief parse the time limit for the QM loop
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void InputFileParserQM::parseQMLoopTimeLimit(const std::vector<std::string> &lineElements, const size_t lineNumber)
+{
+    checkCommand(lineElements, lineNumber);
+
+    settings::QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
 }

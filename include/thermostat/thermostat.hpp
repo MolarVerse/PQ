@@ -25,6 +25,7 @@
 #define _THERMOSTAT_HPP_
 
 #include "timer.hpp"   // for Timer
+#include "cstddef"   // for size_t
 
 namespace physicalData
 {
@@ -56,6 +57,10 @@ namespace thermostat
         double _temperature       = 0.0;
         double _targetTemperature = 0.0;
 
+        double _temperatureIncrease = 0.0;
+        size_t _rampingStepsLeft    = 0;
+        size_t _rampingFrequency    = 0;
+
        public:
         Thermostat() = default;
         explicit Thermostat(const double targetTemperature)
@@ -64,10 +69,65 @@ namespace thermostat
         }
         virtual ~Thermostat() = default;
 
+        void applyTemperatureRamping();
+
         virtual void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &) {
         };
         virtual void applyThermostatOnForces(simulationBox::SimulationBox &) {};
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        // is a virtual method, so it can be overridden
+        // for example the state of the Langevin thermostat changes
+        // when the target temperature is set
+        virtual void setTargetTemperature(const double targetTemperature)
+        {
+            _targetTemperature = targetTemperature;
+        }
+
+        void setTemperatureIncrease(const double temperatureIncrease)
+        {
+            _temperatureIncrease = temperatureIncrease;
+        }
+
+        void setTemperatureRampingSteps(const size_t steps)
+        {
+            _rampingStepsLeft = steps;
+        }
+
+        void setTemperatureRampingFrequency(const size_t frequency)
+        {
+            _rampingFrequency = frequency;
+        }
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] double getTemperature() const { return _temperature; }
+
+        [[nodiscard]] double getTargetTemperature() const
+        {
+            return _targetTemperature;
+        }
+
+        [[nodiscard]] double getTemperatureIncrease() const
+        {
+            return _temperatureIncrease;
+        }
+
+        [[nodiscard]] size_t getRampingStepsLeft() const
+        {
+            return _rampingStepsLeft;
+        }
+
+        [[nodiscard]] size_t getRampingFrequency() const
+        {
+            return _rampingFrequency;
+        }
     };
 
 }   // namespace thermostat

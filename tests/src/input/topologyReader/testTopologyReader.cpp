@@ -43,10 +43,10 @@ TEST_F(TestTopologyReader, isNeeded)
 {
     EXPECT_FALSE(isNeeded(*_engine));
 
-    _engine->getConstraints().activate();
+    _engine->getConstraints().activateShake();
     EXPECT_TRUE(isNeeded(*_engine));
 
-    _engine->getConstraints().deactivate();
+    _engine->getConstraints().deactivateShake();
     settings::ForceFieldSettings::activate();
     EXPECT_TRUE(isNeeded(*_engine));
 }
@@ -69,7 +69,7 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _engine->getConstraints().activate();
+    _engine->getConstraints().activateShake();
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();

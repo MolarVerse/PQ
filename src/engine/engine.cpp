@@ -185,6 +185,20 @@ void Engine::addTimer(const timings::Timer &timings)
 }
 
 /**
+ * @brief Calculate total simulation time.
+ *
+ * @return double
+ */
+double Engine::calculateTotalSimulationTime() const
+{
+    const auto step0   = settings::TimingsSettings::getStepCount();
+    const auto dt      = settings::TimingsSettings::getTimeStep();
+    const auto effStep = _step + step0;
+
+    return static_cast<double>(effStep) * dt;
+}
+
+/**
  * @brief checks if the force field is activated
  *
  * @return true

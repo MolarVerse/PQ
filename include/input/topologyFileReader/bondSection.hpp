@@ -24,10 +24,10 @@
 
 #define _BOND_SECTION_HPP_
 
-#include "topologySection.hpp"   // for TopologySection
-
 #include <string>   // for allocator, string
 #include <vector>   // for vector
+
+#include "topologySection.hpp"   // for TopologySection
 
 namespace engine
 {
@@ -44,10 +44,14 @@ namespace input::topology
      */
     class BondSection : public TopologySection
     {
-      public:
+       public:
         [[nodiscard]] std::string keyword() override { return "bonds"; }
-        void                      processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
-        void                      endedNormally(bool) const override;
+        void                      endedNormally(const bool) const override;
+
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
     };
 }   // namespace input::topology
 

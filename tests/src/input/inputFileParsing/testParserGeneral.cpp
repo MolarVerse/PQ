@@ -83,3 +83,43 @@ TEST_F(TestInputFileReader, JobType)
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 }
+
+/**
+ * @brief tests parsing the "dim" command
+ *
+ */
+TEST_F(TestInputFileReader, parseDimensionality)
+{
+    InputFileParserGeneral   parser(*_engine);
+    std::vector<std::string> lineElements = {"dim", "=", "3"};
+    parser.parseDimensionality(lineElements, 0);
+    EXPECT_EQ(settings::Settings::getDimensionality(), 3);
+
+    lineElements = {"dim", "=", "3D"};
+    parser.parseDimensionality(lineElements, 0);
+    EXPECT_EQ(settings::Settings::getDimensionality(), 3);
+
+    lineElements = {"dim", "=", "2"};
+    EXPECT_THROW_MSG(
+        parser.parseDimensionality(lineElements, 0),
+        customException::InputFileException,
+        "Invalid dimensionality \"2\" in input file - possible values are: 3, "
+        "3d"
+    );
+
+    lineElements = {"dim", "=", "1"};
+    EXPECT_THROW_MSG(
+        parser.parseDimensionality(lineElements, 0),
+        customException::InputFileException,
+        "Invalid dimensionality \"1\" in input file - possible values are: 3, "
+        "3d"
+    );
+
+    lineElements = {"dim", "=", "0"};
+    EXPECT_THROW_MSG(
+        parser.parseDimensionality(lineElements, 0),
+        customException::InputFileException,
+        "Invalid dimensionality \"0\" in input file - possible values are: 3, "
+        "3d"
+    );
+}

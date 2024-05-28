@@ -128,7 +128,7 @@ TEST_F(TestConstraints, applyShake_notConverged_deactivated)
 
     settings::TimingsSettings::setTimeStep(2.0);
 
-    _constraints->deactivate();
+    _constraints->deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 }
@@ -192,7 +192,7 @@ TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
     _constraints->setRattleTolerance(0.0);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    _constraints->deactivate();
+    _constraints->deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyRattle());
 }

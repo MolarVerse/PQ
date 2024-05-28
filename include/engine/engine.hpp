@@ -144,6 +144,8 @@ namespace engine
 
         void addTimer(const timings::Timer &timings);
 
+        [[nodiscard]] double calculateTotalSimulationTime() const;
+
         // virtual function to be overwritten by derived classes
         virtual void takeStep() {};
 

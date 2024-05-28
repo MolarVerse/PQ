@@ -114,3 +114,43 @@ TEST_F(TestInputFileReader, testParseFReset)
         "Freset must be positive"
     );
 }
+
+/**
+ * @brief tests parsing the "nreset_angular" command
+ *
+ * @details if the nreset_angular is negative it throws inputFileException
+ */
+TEST_F(TestInputFileReader, testParseNResetAngular)
+{
+    InputFileParserResetKinetics parser(*_engine);
+    std::vector<std::string>     lineElements = {"nreset_angular", "=", "3"};
+    parser.parseNResetAngular(lineElements, 0);
+    EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
+
+    lineElements = {"nreset_angular", "=", "-1"};
+    EXPECT_THROW_MSG(
+        parser.parseNResetAngular(lineElements, 0),
+        customException::InputFileException,
+        "Nreset_angular must be positive"
+    );
+}
+
+/**
+ * @brief tests parsing the "freset_angular" command
+ *
+ * @details if the freset_angular is negative it throws inputFileException
+ */
+TEST_F(TestInputFileReader, testParseFResetAngular)
+{
+    InputFileParserResetKinetics parser(*_engine);
+    std::vector<std::string>     lineElements = {"freset_angular", "=", "3"};
+    parser.parseFResetAngular(lineElements, 0);
+    EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
+
+    lineElements = {"freset_angular", "=", "-1"};
+    EXPECT_THROW_MSG(
+        parser.parseFResetAngular(lineElements, 0),
+        customException::InputFileException,
+        "Freset_angular must be positive"
+    );
+}

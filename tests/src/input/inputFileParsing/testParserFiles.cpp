@@ -222,3 +222,32 @@ TEST_F(TestInputFileReader, guffDatFilename)
         "data/guffDatReader/guff.dat"
     );
 }
+
+/**
+ * @brief tests parsing the "rpmd_start_file" command
+ */
+TEST_F(TestInputFileReader, testRpmdStartFileName)
+{
+    InputFileParserFiles     parser(*_engine);
+    std::vector<std::string> lineElements = {
+        "rpmd_start_file",
+        "=",
+        "rpmd_start.xyz"
+    };
+    EXPECT_THROW_MSG(
+        parser.parseRingPolymerStartFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open ring polymer start file - filename = rpmd_start.xyz"
+    );
+
+    lineElements = {
+        "rpmd_start_file",
+        "=",
+        "data/inputFileReader/inputFile.txt"
+    };
+    parser.parseRingPolymerStartFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getRingPolymerStartFileName(),
+        "data/inputFileReader/inputFile.txt"
+    );
+}

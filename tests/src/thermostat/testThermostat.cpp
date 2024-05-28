@@ -61,6 +61,64 @@ TEST_F(TestThermostat, calculateTemperature)
     );
 }
 
+TEST_F(TestThermostat, applyTemperatureRamping)
+{
+    _thermostat->setTemperatureIncrease(0.0);
+    _thermostat->setTemperatureRampingSteps(0);
+    _thermostat->setTemperatureRampingFrequency(1);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(1);
+    _thermostat->setTemperatureRampingFrequency(1);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(2);
+    _thermostat->setTemperatureRampingFrequency(1);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureRampingSteps(4);
+    _thermostat->setTemperatureRampingFrequency(2);
+    _thermostat->setTargetTemperature(300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+}
+
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
