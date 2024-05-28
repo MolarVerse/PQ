@@ -35,11 +35,11 @@ endforeach()
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
-        NAME coverage_nonCoulombPotential
+        NAME coverage_potential
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
         EXECUTABLE "ctest"
-        EXECUTABLE_ARGS "-L;nonCoulombPotential"
+        EXECUTABLE_ARGS "-L;potential"
         OUTPUT_PATH "coverage"
     )
 endif()
