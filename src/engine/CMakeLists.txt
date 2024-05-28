@@ -3,6 +3,7 @@ set(engine_source_files
 
     mmmdEngine.cpp
     qmmdEngine.cpp
+    qmmmmdEngine.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 

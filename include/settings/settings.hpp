@@ -40,6 +40,7 @@ namespace settings
     {
         MM_MD,
         QM_MD,
+        QMMM_MD,
         RING_POLYMER_QM_MD,
         NONE
     };
@@ -102,6 +103,18 @@ namespace settings
 
         [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
         [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
+        [[nodiscard]] static bool isQMMMActivated()
+        {
+            return _isMMActivated && _isQMActivated;
+        }
+        [[nodiscard]] static bool isQMOnlyActivated()
+        {
+            return _isQMActivated && !_isMMActivated;
+        }
+        [[nodiscard]] static bool isMMOnlyActivated()
+        {
+            return _isMMActivated && !_isQMActivated;
+        }
         [[nodiscard]] static bool isRingPolymerMDActivated()
         {
             return _isRingPolymerMDActivated;

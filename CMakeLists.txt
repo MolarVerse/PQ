@@ -98,6 +98,10 @@ if(BUILD_WITH_KOKKOS)
     include(kokkos)
 endif()
 
+if(BUILD_WITH_PYTHON_BINDINGS)
+    include(python_bindings)
+endif()
+
 if(BUILD_WITH_TESTS)
     include(testing)
 endif()
@@ -113,10 +117,6 @@ add_subdirectory(apps)
 if(BUILD_WITH_DOC)
     include(doxygen)
     add_subdirectory(docs EXCLUDE_FROM_ALL)
-endif()
-
-if(BUILD_TOOLS)
-    add_subdirectory(tools)
 endif()
 
 if(BUILD_WITH_IWYU)

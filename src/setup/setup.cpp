@@ -39,6 +39,8 @@
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
+#include "qmmmSetup.hpp"              // for setupQMMM
+#include "qmmmmdEngine.hpp"           // for QMMMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
 #include "ringPolymerEngine.hpp"      // for RingPolymerEngine
@@ -48,10 +50,6 @@
 #include "thermostatSetup.hpp"        // for setupThermostat
 #include "timer.hpp"                  // for Timings
 #include "topologyReader.hpp"         // for readTopologyFile
-
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
 
 using namespace engine;
 using namespace input;
@@ -120,7 +118,10 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::isQMActivated())
+    if (settings::Settings::isQMMMActivated())
+        setupQM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+
+    if (settings::Settings::isQMOnlyActivated())
         setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
 
     resetKinetics::setupResetKinetics(engine);
@@ -146,4 +147,7 @@ void setup::setupEngine(Engine &engine)
     setupConstraints(engine);
 
     setupRingPolymer(engine);
+
+    if (settings::Settings::isQMMMActivated())
+        setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
 }

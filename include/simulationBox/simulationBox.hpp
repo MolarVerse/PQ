@@ -89,6 +89,7 @@ namespace simulationBox
 
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<std::shared_ptr<Atom>> _qmAtoms;
+        std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
@@ -154,6 +155,14 @@ namespace simulationBox
             const size_t atomIndex
         );
         [[nodiscard]] std::vector<MoleculeType> findNecessaryMoleculeTypes();
+
+        /************************
+         * QMMM related methods *
+         ************************/
+
+        void addQMCenterAtoms(const std::vector<int> &atomIndices);
+        void setupQMOnlyAtoms(const std::vector<int> &atomIndices);
+        void setupMMOnlyAtoms(const std::vector<int> &atomIndices);
 
         /************************
          * standard add methods *

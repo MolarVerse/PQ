@@ -4,18 +4,21 @@
     PQ
     Copyright (C) 2023-now  Jakob Gamper
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    This program is free software: you can redistribute it
+and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later
+version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    This program is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.  See the GNU General Public License for more
+details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General
+Public License along with this program.  If not, see
+<http://www.gnu.org/licenses/>.
 
 <GPL_HEADER>
 ******************************************************************************/
@@ -28,8 +31,7 @@
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
-#include "timer.hpp"      // for Timer
-#include "vector3d.hpp"   // for Vec3D
+#include "timer.hpp"
 
 namespace physicalData
 {
@@ -131,7 +133,7 @@ namespace potential
     class PotentialBruteForce : public Potential
     {
        public:
-        ~PotentialBruteForce() override;
+        ~PotentialBruteForce();
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
     };
@@ -145,7 +147,7 @@ namespace potential
     class PotentialCellList : public Potential
     {
        public:
-        ~PotentialCellList() override;
+        ~PotentialCellList();
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
     };

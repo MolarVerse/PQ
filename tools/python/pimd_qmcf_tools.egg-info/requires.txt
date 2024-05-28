@@ -1,4 +1,0 @@
-customtkinter
-numpy
-matplotlib
-pandas

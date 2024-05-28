@@ -20,29 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_MD_ENGINE_HPP_
+#include <string>
+#include <vector>
 
-#define _MM_MD_ENGINE_HPP_
-
-#include "engine.hpp"
-
-namespace engine
+namespace pq_python
 {
-
-    /**
-     * @class MMMDEngine
-     *
-     * @brief Contains all the information needed to run an MM MD simulation
-     *
-     */
-    class MMMDEngine : virtual public Engine
-    {
-      public:
-        ~MMMDEngine() override = default;
-
-        void takeStep() override;
-    };
-
-}   // namespace engine
-
-#endif   // _MM_MD_ENGINE_HPP_
+    std::vector<int> select(
+        const std::string &selection,
+        const std::string &restartFileName,
+        const std::string &moldescriptorFileName
+    );
+}   // namespace pq_python

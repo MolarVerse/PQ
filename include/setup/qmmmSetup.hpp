@@ -20,29 +20,47 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_MD_ENGINE_HPP_
+#ifndef _QMMM_SETUP_HPP_
 
-#define _MM_MD_ENGINE_HPP_
+#define _QMMM_SETUP_HPP_
 
-#include "engine.hpp"
+#include <string>   // for string
+#include <vector>   // for vector
 
 namespace engine
 {
+    class QMMMMDEngine;   // forward declaration
+}
+
+namespace setup
+{
+    void setupQMMM(engine::QMMMMDEngine &);
 
     /**
-     * @class MMMDEngine
+     * @class QMSetup
      *
-     * @brief Contains all the information needed to run an MM MD simulation
+     * @brief Setup QM
      *
      */
-    class MMMDEngine : virtual public Engine
+    class QMMMSetup
     {
-      public:
-        ~MMMDEngine() override = default;
+       private:
+        engine::QMMMMDEngine &_engine;
 
-        void takeStep() override;
+       public:
+        explicit QMMMSetup(engine::QMMMMDEngine &engine) : _engine(engine){};
+
+        void             setup();
+        void             setupQMCenter();
+        void             setupQMOnlyList();
+        void             setupMMOnlyList();
+        std::vector<int> parseSelection(const std::string &selection, const std::string &key);
+        std::vector<int> parseSelectionNoPython(
+            const std::string &selection,
+            const std::string &key
+        );
     };
 
-}   // namespace engine
+}   // namespace setup
 
-#endif   // _MM_MD_ENGINE_HPP_
+#endif   // _QMMM_SETUP_HPP_
