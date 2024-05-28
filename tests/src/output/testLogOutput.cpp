@@ -22,13 +22,13 @@
 
 #include "testLogOutput.hpp"
 
+#include <format>   // for format
+#include <iosfwd>   // for ifstream
+#include <string>   // for getline, allocator, string
+
+#include "gtest/gtest.h"        // for Message, TestPartResult
 #include "outputMessages.hpp"   // for _ANGSTROM_
 #include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <format>          // for format
-#include <iosfwd>          // for ifstream
-#include <string>          // for getline, allocator, string
 
 /**
  * @brief tests writing header to log file
@@ -44,39 +44,87 @@ TEST_F(TestLogOutput, writeHeader)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, R"(************************************************************************)");
+    EXPECT_EQ(
+        line,
+        R"(************************************************************************)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88888888ba     ,ad8888ba,                       *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88888888ba     ,ad8888ba,                       *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88      "8b   d8"'    `"8b                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88      "8b   d8"'    `"8b                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88      ,8P  d8'        `8b                     *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88      ,8P  d8'        `8b                     *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88aaaaaa8P'  88          88                     *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88aaaaaa8P'  88          88                     *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88""""""'    88          88                     *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88""""""'    88          88                     *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88           Y8,    "88,,8P                     *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88           Y8,    "88,,8P                     *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88            Y8a.    Y88P                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88            Y8a.    Y88P                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                      88             `"Y8888Y"Y8a                     *)");
+    EXPECT_EQ(
+        line,
+        R"(*                      88             `"Y8888Y"Y8a                     *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                      *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                      *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(************************************************************************)");
+    EXPECT_EQ(
+        line,
+        R"(************************************************************************)"
+    );
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, std::format("         Author:        {}", sysinfo::_AUTHOR_));
+    EXPECT_EQ(
+        line,
+        std::format("         Author:        {}", sysinfo::_AUTHOR_)
+    );
     getline(file, line);
-    EXPECT_EQ(line, std::format("         Email:         {}", sysinfo::_EMAIL_));
+    EXPECT_EQ(
+        line,
+        std::format("         Email:         {}", sysinfo::_EMAIL_)
+    );
 }
 
 /**
@@ -105,15 +153,30 @@ TEST_F(TestLogOutput, writeEndedNormally)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, R"(*************************************************************************)");
+    EXPECT_EQ(
+        line,
+        R"(*************************************************************************)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                       *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                       *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                          PQ ended normally                            *)");
+    EXPECT_EQ(
+        line,
+        R"(*                          PQ ended normally                            *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*                                                                       *)");
+    EXPECT_EQ(
+        line,
+        R"(*                                                                       *)"
+    );
     getline(file, line);
-    EXPECT_EQ(line, R"(*************************************************************************)");
+    EXPECT_EQ(
+        line,
+        R"(*************************************************************************)"
+    );
 }
 
 /**
@@ -128,7 +191,10 @@ TEST_F(TestLogOutput, writeDensityWarning)
     std::ifstream file("default.out");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "WARNING: Density and box dimensions set. Density will be ignored.");
+    EXPECT_EQ(
+        line,
+        "WARNING: Density and box dimensions set. Density will be ignored."
+    );
 }
 
 /**
@@ -144,11 +210,11 @@ TEST_F(TestLogOutput, writeInitialMomentum)
     std::string   line;
     getline(file, line);
     getline(file, line);
-    EXPECT_EQ(line, std::format("INFO:    Initial momentum = 1.00000e-01 {}*amu/fs", output::_ANGSTROM_));
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_EQ(
+        line,
+        std::format(
+            "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
+            output::_ANGSTROM_
+        )
+    );
 }

@@ -35,9 +35,11 @@ namespace engine
      * @brief Contains all the information needed to run an MM MD simulation
      *
      */
-    class MMMDEngine : public Engine
+    class MMMDEngine : virtual public Engine
     {
       public:
+        ~MMMDEngine() override = default;
+
         void takeStep() override;
     };
 

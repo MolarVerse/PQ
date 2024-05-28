@@ -24,9 +24,9 @@
 
 #define _SETTINGS_HPP_
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
-
 #include <string_view>   // for string_view
+
+#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
 
 namespace settings
 {
@@ -40,6 +40,7 @@ namespace settings
     {
         MM_MD,
         QM_MD,
+        QMMM_MD,
         RING_POLYMER_QM_MD,
         NONE
     };
@@ -52,16 +53,19 @@ namespace settings
      */
     class Settings
     {
-      private:
+       private:
         static inline JobType _jobtype;   // no default value
+
+        static inline bool _useKokkos = false;
 
         static inline bool _isMMActivated            = false;
         static inline bool _isQMActivated            = false;
         static inline bool _isRingPolymerMDActivated = false;
 
-        static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
+        static inline size_t _dimensionality =
+            defaults::_DIMENSIONALITY_DEFAULT_;
 
-      public:
+       public:
         Settings()  = default;
         ~Settings() = default;
 
@@ -72,11 +76,17 @@ namespace settings
 
         static void activateMM() { _isMMActivated = true; }
         static void activateQM() { _isQMActivated = true; }
-        static void activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
+        static void activateRingPolymerMD()
+        {
+            _isRingPolymerMDActivated = true;
+        }
 
         static void deactivateMM() { _isMMActivated = false; }
         static void deactivateQM() { _isQMActivated = false; }
-        static void deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
+        static void deactivateRingPolymerMD()
+        {
+            _isRingPolymerMDActivated = false;
+        }
 
         /***************************
          * standard getter methods *
@@ -84,20 +94,48 @@ namespace settings
 
         [[nodiscard]] static JobType getJobtype() { return _jobtype; }
 
-        [[nodiscard]] static size_t getDimensionality() { return _dimensionality; }
+        [[nodiscard]] static size_t getDimensionality()
+        {
+            return _dimensionality;
+        }
+
+        [[nodiscard]] static bool useKokkos() { return _useKokkos; }
 
         [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
         [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
-        [[nodiscard]] static bool isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
+        [[nodiscard]] static bool isQMMMActivated()
+        {
+            return _isMMActivated && _isQMActivated;
+        }
+        [[nodiscard]] static bool isQMOnlyActivated()
+        {
+            return _isQMActivated && !_isMMActivated;
+        }
+        [[nodiscard]] static bool isMMOnlyActivated()
+        {
+            return _isMMActivated && !_isQMActivated;
+        }
+        [[nodiscard]] static bool isRingPolymerMDActivated()
+        {
+            return _isRingPolymerMDActivated;
+        }
 
         /***************************
          * standard setter methods *
          ***************************/
 
+        static void activateKokkos() { _useKokkos = true; }
+
         static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
         static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
-        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD) { _isRingPolymerMDActivated = isRingPolymerMD; }
-        static void setDimensionality(const size_t dimensionality) { _dimensionality = dimensionality; }
+        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD)
+        {
+            _isRingPolymerMDActivated = isRingPolymerMD;
+        }
+        static void setDimensionality(const size_t dimensionality)
+        {
+            _dimensionality = dimensionality;
+        }
     };
 
 }   // namespace settings

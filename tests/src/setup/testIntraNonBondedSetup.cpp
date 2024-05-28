@@ -55,9 +55,3 @@ TEST_F(TestSetup, setupIntraNonBonded)
 
     EXPECT_EQ(_engine->getIntraNonBonded().getIntraNonBondedMaps().size(), 1);
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

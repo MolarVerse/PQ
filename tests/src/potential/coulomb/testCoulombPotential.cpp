@@ -20,12 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+
+#include <memory>   // for allocator
+
 #include "coulombPotential.hpp"          // for CoulombPotential, potential
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
-#include <memory>          // for allocator
+#include "gtest/gtest.h"                 // for Message, TestPartResult
 
 using namespace potential;
 
@@ -50,10 +51,4 @@ TEST(TestCoulombPotential, setCoulombRadiusCutOff)
     EXPECT_EQ(CoulombPotential::getCoulombRadiusCutOff(), 2.0);
     EXPECT_EQ(CoulombPotential::getCoulombEnergyCutOff(), 0.5);
     EXPECT_EQ(CoulombPotential::getCoulombForceCutOff(), 0.25);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

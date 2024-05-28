@@ -27,6 +27,8 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
+#include "timer.hpp"   // for Timer
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -41,27 +43,32 @@ namespace integrator
      * @brief Integrator is a base class for all integrators
      *
      */
-    class Integrator
+    class Integrator : public timings::Timer
     {
-      protected:
+       protected:
         std::string _integratorType;
 
-      public:
+       public:
         Integrator() = default;
-        explicit Integrator(const std::string_view integratorType) : _integratorType(integratorType){};
+        explicit Integrator(const std::string_view integratorType)
+            : _integratorType(integratorType){};
         virtual ~Integrator() = default;
 
         virtual void firstStep(simulationBox::SimulationBox &)  = 0;
         virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
         void integrateVelocities(simulationBox::Atom *) const;
-        void integratePositions(simulationBox::Atom *, const simulationBox::SimulationBox &) const;
+        void integratePositions(simulationBox::Atom *, const simulationBox::SimulationBox &)
+            const;
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] std::string_view getIntegratorType() const { return _integratorType; }
+        [[nodiscard]] std::string_view getIntegratorType() const
+        {
+            return _integratorType;
+        }
     };
 
     /**
@@ -72,7 +79,7 @@ namespace integrator
      */
     class VelocityVerlet : public Integrator
     {
-      public:
+       public:
         explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
 
         void firstStep(simulationBox::SimulationBox &) override;

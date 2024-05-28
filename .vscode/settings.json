@@ -108,7 +108,9 @@
         "__node_handle": "cpp",
         "__tuple": "cpp",
         "stack": "cpp",
-        "__bit_reference": "cpp"
+        "__bit_reference": "cpp",
+        "engine.hpp": "c",
+        "*.tpp": "c"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -140,6 +142,7 @@
         "iwyu",
         "jobtype",
         "jobtypes",
+        "KOKKOS",
         "Lennard",
         "LOGOUTPUT",
         "LOOPTIME",
@@ -169,6 +172,7 @@
         "progressbar",
         "qmcf",
         "qmcfc",
+        "qmmmmd",
         "rcoulomb",
         "rpmd",
         "RSTFILEEXCEPTION",

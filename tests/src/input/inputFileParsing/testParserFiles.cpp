@@ -192,8 +192,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    InputFileParserFiles     parser(*_engine);
-    std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
+    InputFileParserFiles           parser(*_engine);
+    const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
         parser.parseGuffPath(lineElements, 0),
         customException::InputFileException,
@@ -250,10 +250,4 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
         settings::FileSettings::getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
     );
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

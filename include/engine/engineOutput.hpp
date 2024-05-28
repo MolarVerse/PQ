@@ -24,6 +24,10 @@
 
 #define _ENGINE_OUTPUT_HPP_
 
+#include <cstddef>   // for size_t
+#include <memory>    // for make_unique, unique_ptr
+#include <vector>    // for vector
+
 #include "boxOutput.hpp"                      // for BoxFileOutput
 #include "energyOutput.hpp"                   // for EnergyOutput
 #include "infoOutput.hpp"                     // for InfoOutput
@@ -35,12 +39,10 @@
 #include "rstFileOutput.hpp"                  // for RstFileOutput
 #include "stdoutOutput.hpp"                   // for StdoutOutput
 #include "stressOutput.hpp"                   // for StressOutput
+#include "timer.hpp"                          // for Timer
+#include "timingsOutput.hpp"                  // for TimingsOutput
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 #include "virialOutput.hpp"                   // for VirialOutput
-
-#include <cstddef>   // for size_t
-#include <memory>    // for make_unique, unique_ptr
-#include <vector>    // for vector
 
 namespace physicalData
 {
@@ -54,88 +56,103 @@ namespace simulationBox
 
 namespace engine
 {
+    using namespace output;
+
+    using RPMDRestartFileOutput = RingPolymerRestartFileOutput;
+    using RPMDTrajectoryOutput  = RingPolymerTrajectoryOutput;
+    using RPMDEnergyOutput      = RingPolymerEnergyOutput;
+
+    using SimulationBox = simulationBox::SimulationBox;
+
     /**
      * @class EngineOutput
      *
      * @brief contains unique pointers to all of the output classes
      *
      */
-    class EngineOutput
+    class EngineOutput : public timings::Timer
     {
-      private:
-        std::unique_ptr<output::EnergyOutput> _energyOutput        = std::make_unique<output::EnergyOutput>("default.en");
-        std::unique_ptr<output::EnergyOutput> _instantEnergyOutput = std::make_unique<output::EnergyOutput>("default.instant_en");
-        std::unique_ptr<output::MomentumOutput>   _momentumOutput  = std::make_unique<output::MomentumOutput>("default.mom");
-        std::unique_ptr<output::TrajectoryOutput> _xyzOutput       = std::make_unique<output::TrajectoryOutput>("default.xyz");
-        std::unique_ptr<output::TrajectoryOutput> _velOutput       = std::make_unique<output::TrajectoryOutput>("default.vel");
-        std::unique_ptr<output::TrajectoryOutput> _forceOutput     = std::make_unique<output::TrajectoryOutput>("default.force");
-        std::unique_ptr<output::TrajectoryOutput> _chargeOutput    = std::make_unique<output::TrajectoryOutput>("default.chg");
-        std::unique_ptr<output::LogOutput>        _logOutput       = std::make_unique<output::LogOutput>("default.log");
-        std::unique_ptr<output::StdoutOutput>     _stdoutOutput    = std::make_unique<output::StdoutOutput>("stdout");
-        std::unique_ptr<output::RstFileOutput>    _rstFileOutput   = std::make_unique<output::RstFileOutput>("default.rst");
-        std::unique_ptr<output::InfoOutput>       _infoOutput      = std::make_unique<output::InfoOutput>("default.info");
+       private:
+        std::unique_ptr<EnergyOutput> _energyOutput;
+        std::unique_ptr<EnergyOutput> _instantEnergyOutput;
+        std::unique_ptr<InfoOutput>   _infoOutput;
 
-        std::unique_ptr<output::VirialOutput>  _virialOutput  = std::make_unique<output::VirialOutput>("default.vir");
-        std::unique_ptr<output::StressOutput>  _stressOutput  = std::make_unique<output::StressOutput>("default.stress");
-        std::unique_ptr<output::BoxFileOutput> _boxFileOutput = std::make_unique<output::BoxFileOutput>("default.box");
+        std::unique_ptr<TrajectoryOutput> _xyzOutput;
+        std::unique_ptr<TrajectoryOutput> _velOutput;
+        std::unique_ptr<TrajectoryOutput> _forceOutput;
+        std::unique_ptr<TrajectoryOutput> _chargeOutput;
+        std::unique_ptr<RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<output::RingPolymerRestartFileOutput> _ringPolymerRstFileOutput =
-            std::make_unique<output::RingPolymerRestartFileOutput>("default.rpmd.rst");
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerXyzOutput =
-            std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.xyz");
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerVelOutput =
-            std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.vel");
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerForceOutput =
-            std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.force");
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _ringPolymerChargeOutput =
-            std::make_unique<output::RingPolymerTrajectoryOutput>("default.rpmd.chg");
-        std::unique_ptr<output::RingPolymerEnergyOutput> _ringPolymerEnergyOutput =
-            std::make_unique<output::RingPolymerEnergyOutput>("default.rpmd.en");
+        std::unique_ptr<LogOutput>    _logOutput;
+        std::unique_ptr<StdoutOutput> _stdoutOutput;
 
-      public:
-        void writeEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
-        void writeInstantEnergyFile(const size_t step, const double loopTime, const physicalData::PhysicalData &);
+        std::unique_ptr<MomentumOutput> _momentumOutput;
+        std::unique_ptr<VirialOutput>   _virialOutput;
+        std::unique_ptr<StressOutput>   _stressOutput;
+        std::unique_ptr<BoxFileOutput>  _boxFileOutput;
+
+        std::unique_ptr<RPMDRestartFileOutput> _ringPolymerRstFileOutput;
+        std::unique_ptr<RPMDTrajectoryOutput>  _ringPolymerXyzOutput;
+        std::unique_ptr<RPMDTrajectoryOutput>  _ringPolymerVelOutput;
+        std::unique_ptr<RPMDTrajectoryOutput>  _ringPolymerForceOutput;
+        std::unique_ptr<RPMDTrajectoryOutput>  _ringPolymerChargeOutput;
+        std::unique_ptr<RPMDEnergyOutput>      _ringPolymerEnergyOutput;
+
+        std::unique_ptr<TimingsOutput> _timingsOutput;
+
+       public:
+        EngineOutput();
+
+        void writeEnergyFile(const size_t step, const physicalData::PhysicalData &);
+        void writeInstantEnergyFile(const size_t step, const physicalData::PhysicalData &);
         void writeMomentumFile(const size_t step, const physicalData::PhysicalData &);
         void writeXyzFile(simulationBox::SimulationBox &);
         void writeVelFile(simulationBox::SimulationBox &);
         void writeForceFile(simulationBox::SimulationBox &);
         void writeChargeFile(simulationBox::SimulationBox &);
-        void writeInfoFile(const double simulationTime, const double loopTime, const physicalData::PhysicalData &);
+        void writeInfoFile(const double simulationTime, const physicalData::PhysicalData &);
         void writeRstFile(simulationBox::SimulationBox &, const size_t);
 
         void writeVirialFile(const size_t, const physicalData::PhysicalData &);
         void writeStressFile(const size_t, const physicalData::PhysicalData &);
         void writeBoxFile(const size_t, const simulationBox::Box &);
 
-        void writeRingPolymerRstFile(std::vector<simulationBox::SimulationBox> &, const size_t);
-        void writeRingPolymerXyzFile(std::vector<simulationBox::SimulationBox> &);
-        void writeRingPolymerVelFile(std::vector<simulationBox::SimulationBox> &);
-        void writeRingPolymerForceFile(std::vector<simulationBox::SimulationBox> &);
-        void writeRingPolymerChargeFile(std::vector<simulationBox::SimulationBox> &);
+        void writeRingPolymerRstFile(
+            std::vector<SimulationBox> &,
+            const size_t
+        );
+        void writeRingPolymerXyzFile(std::vector<SimulationBox> &);
+        void writeRingPolymerVelFile(std::vector<SimulationBox> &);
+        void writeRingPolymerForceFile(std::vector<SimulationBox> &);
+        void writeRingPolymerChargeFile(std::vector<SimulationBox> &);
         void writeRingPolymerEnergyFile(const size_t, const std::vector<physicalData::PhysicalData> &);
 
-        output::EnergyOutput     &getEnergyOutput() { return *_energyOutput; }
-        output::EnergyOutput     &getInstantEnergyOutput() { return *_instantEnergyOutput; }
-        output::MomentumOutput   &getMomentumOutput() { return *_momentumOutput; }
-        output::TrajectoryOutput &getXyzOutput() { return *_xyzOutput; }
-        output::TrajectoryOutput &getVelOutput() { return *_velOutput; }
-        output::TrajectoryOutput &getForceOutput() { return *_forceOutput; }
-        output::TrajectoryOutput &getChargeOutput() { return *_chargeOutput; }
-        output::LogOutput        &getLogOutput() { return *_logOutput; }
-        output::StdoutOutput     &getStdoutOutput() { return *_stdoutOutput; }
-        output::RstFileOutput    &getRstFileOutput() { return *_rstFileOutput; }
-        output::InfoOutput       &getInfoOutput() { return *_infoOutput; }
+        void writeTimingsFile(timings::GlobalTimer &);
 
-        output::VirialOutput  &getVirialOutput() { return *_virialOutput; }
-        output::StressOutput  &getStressOutput() { return *_stressOutput; }
-        output::BoxFileOutput &getBoxFileOutput() { return *_boxFileOutput; }
+        EnergyOutput &getEnergyOutput() { return *_energyOutput; }
+        EnergyOutput &getInstantEnergyOutput() { return *_instantEnergyOutput; }
+        MomentumOutput   &getMomentumOutput() { return *_momentumOutput; }
+        TrajectoryOutput &getXyzOutput() { return *_xyzOutput; }
+        TrajectoryOutput &getVelOutput() { return *_velOutput; }
+        TrajectoryOutput &getForceOutput() { return *_forceOutput; }
+        TrajectoryOutput &getChargeOutput() { return *_chargeOutput; }
+        LogOutput        &getLogOutput() { return *_logOutput; }
+        StdoutOutput     &getStdoutOutput() { return *_stdoutOutput; }
+        RstFileOutput    &getRstFileOutput() { return *_rstFileOutput; }
+        InfoOutput       &getInfoOutput() { return *_infoOutput; }
 
-        output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput() { return *_ringPolymerRstFileOutput; }
-        output::RingPolymerTrajectoryOutput  &getRingPolymerXyzOutput() { return *_ringPolymerXyzOutput; }
-        output::RingPolymerTrajectoryOutput  &getRingPolymerVelOutput() { return *_ringPolymerVelOutput; }
-        output::RingPolymerTrajectoryOutput  &getRingPolymerForceOutput() { return *_ringPolymerForceOutput; }
-        output::RingPolymerTrajectoryOutput  &getRingPolymerChargeOutput() { return *_ringPolymerChargeOutput; }
-        output::RingPolymerEnergyOutput      &getRingPolymerEnergyOutput() { return *_ringPolymerEnergyOutput; }
+        VirialOutput  &getVirialOutput() { return *_virialOutput; }
+        StressOutput  &getStressOutput() { return *_stressOutput; }
+        BoxFileOutput &getBoxFileOutput() { return *_boxFileOutput; }
+
+        RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerXyzOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerVelOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerForceOutput();
+        RingPolymerTrajectoryOutput  &getRingPolymerChargeOutput();
+        RingPolymerEnergyOutput      &getRingPolymerEnergyOutput();
+
+        TimingsOutput &getTimingsOutput() { return *_timingsOutput; }
     };
 
 }   // namespace engine

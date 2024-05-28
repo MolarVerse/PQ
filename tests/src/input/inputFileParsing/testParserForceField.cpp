@@ -66,9 +66,3 @@ TEST_F(TestInputFileReader, testParseForceField)
         customException::InputFileException,
         "Invalid force-field keyword \"notValid\" at line 0 in input file - possible keywords are \"on\", \"off\" or \"bonded\"");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

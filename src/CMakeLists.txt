@@ -23,6 +23,10 @@ add_subdirectory(QM)
 add_subdirectory(maxwellBoltzmann)
 add_subdirectory(box)
 
+if(BUILD_WITH_PYTHON_BINDINGS)
+    add_subdirectory(python)
+endif()
+
 if(BUILD_WITH_MPI)
     add_subdirectory(mpi)
 endif()

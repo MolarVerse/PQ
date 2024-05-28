@@ -230,9 +230,3 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         "options are: isotropic, xy, xz, yz, anisotropic and full_anisotropic"
     );
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

@@ -177,9 +177,3 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
         R"(Invalid distance-constraints keyword "1" at line 0 in input file\n Possible keywords are "on" and "off")"
     );
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

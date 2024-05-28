@@ -22,30 +22,47 @@
 
 #include "inputFileParserQM.hpp"
 
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
+
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "qmSettings.hpp"        // for Settings
 #include "stringUtilities.hpp"   // for toLowerCopy
-
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
 
 using namespace input;
 
 /**
  * @brief Construct a new InputFileParserQM:: InputFileParserQM object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) qm_prog <string>
- * 2) qm_script <string>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
+ * <string>
  *
  * @param engine
  */
-InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserQM::InputFileParserQM(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("qm_prog"), bind_front(&InputFileParserQM::parseQMMethod, this), false);
-    addKeyword(std::string("qm_script"), bind_front(&InputFileParserQM::parseQMScript, this), false);
-    addKeyword(std::string("qm_script_full_path"), bind_front(&InputFileParserQM::parseQMScriptFullPath, this), false);
-    addKeyword(std::string("qm_loop_time_limit"), bind_front(&InputFileParserQM::parseQMLoopTimeLimit, this), false);
+    addKeyword(
+        std::string("qm_prog"),
+        bind_front(&InputFileParserQM::parseQMMethod, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_script"),
+        bind_front(&InputFileParserQM::parseQMScript, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_script_full_path"),
+        bind_front(&InputFileParserQM::parseQMScriptFullPath, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_loop_time_limit"),
+        bind_front(&InputFileParserQM::parseQMLoopTimeLimit, this),
+        false
+    );
 }
 
 /**
@@ -54,7 +71,10 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine) : InputFileParser(e
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserQM::parseQMMethod(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -71,7 +91,11 @@ void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElemen
 
     else
         throw customException::InputFileException(std::format(
-            "Invalid qm_prog \"{}\" in input file - possible values are: dftbplus, pyscf, turbomole", lineElements[2]));
+            "Invalid qm_prog \"{}\" in input file - possible values are: "
+            "dftbplus, "
+            "pyscf, turbomole",
+            lineElements[2]
+        ));
 }
 
 /**
@@ -80,7 +104,10 @@ void InputFileParserQM::parseQMMethod(const std::vector<std::string> &lineElemen
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMScript(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserQM::parseQMScript(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -90,14 +117,18 @@ void InputFileParserQM::parseQMScript(const std::vector<std::string> &lineElemen
 /**
  * @brief parse external QM script name
  *
- * @details this keyword is used for singularity builds to ensure that the user knows
- * what he is doing. With a singularity build the script has to be accessed from outside of
- * the container and therefore the general keyword qm_script is not applicable.
+ * @details this keyword is used for singularity builds to ensure that the user
+ * knows what he is doing. With a singularity build the script has to be
+ * accessed from outside of the container and therefore the general keyword
+ * qm_script is not applicable.
  *
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMScriptFullPath(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserQM::parseQMScriptFullPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -110,7 +141,10 @@ void InputFileParserQM::parseQMScriptFullPath(const std::vector<std::string> &li
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMLoopTimeLimit(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserQM::parseQMLoopTimeLimit(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 

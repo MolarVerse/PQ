@@ -1,4 +1,4 @@
-add_library(setup
+set(setup_source_files
     setup.cpp
     simulationBoxSetup.cpp
     celllistSetup.cpp
@@ -11,8 +11,20 @@ add_library(setup
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
     qmSetup.cpp
+    qmmmSetup.cpp
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
+)
+
+if(BUILD_WITH_KOKKOS)
+    set(setup_source_files
+        ${setup_source_files}
+        kokkosSetup.cpp
+    )
+endif()
+
+add_library(setup
+    ${setup_source_files}
 )
 
 target_include_directories(setup
@@ -48,6 +60,15 @@ if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
         PQ_mpi
+    )
+endif()
+
+if(BUILD_WITH_PYTHON_BINDINGS)
+    add_definitions(-DPYTHON_ENABLED)
+
+    target_link_libraries(setup
+        PUBLIC
+        pq_python
     )
 endif()
 

@@ -14,9 +14,8 @@ foreach(source_file ${source_files})
         PRIVATE
         utilities
         gtest
-        gtest_main
         gmock
-        gmock_main
+        pq_test_main
     )
     add_test(
         NAME ${test_name}
