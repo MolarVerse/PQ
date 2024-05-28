@@ -55,6 +55,8 @@ void ResetKinetics::reset(
     simulationBox::SimulationBox &simBox
 )
 {
+    startTimingsSection("Reset Kinetics");
+
     _momentum        = physicalData.getMomentum() * constants::_S_TO_FS_;
     _angularMomentum = physicalData.getAngularMomentum() * constants::_S_TO_FS_;
     _temperature     = physicalData.getTemperature();
@@ -82,6 +84,8 @@ void ResetKinetics::reset(
     physicalData.setTemperature(_temperature);
     physicalData.setMomentum(_momentum * constants::_FS_TO_S_);
     physicalData.setAngularMomentum(_angularMomentum * constants::_FS_TO_S_);
+
+    stopTimingsSection("Reset Kinetics");
 }
 
 /**

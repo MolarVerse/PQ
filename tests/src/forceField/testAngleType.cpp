@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "angleType.hpp"   // for AngleType
-
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
-#include <string>          // for allocator, string
+
+#include <string>   // for allocator, string
+
+#include "angleType.hpp"   // for AngleType
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 
 /**
  * @brief tests operator== for AngleType
@@ -42,10 +43,4 @@ TEST(TestAngleType, operatorEqual)
     EXPECT_FALSE(angleType1 == angleType3);
     EXPECT_FALSE(angleType1 == angleType4);
     EXPECT_FALSE(angleType1 == angleType5);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

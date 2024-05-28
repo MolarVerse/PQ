@@ -57,9 +57,3 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
         "Number of beads must be at least 2 - in input file in line 0"
     );
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

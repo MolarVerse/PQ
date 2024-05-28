@@ -45,7 +45,9 @@ void Thermostat::applyThermostat(
     physicalData::PhysicalData   &physicalData
 )
 {
+    startTimingsSection("Calc Temperature");
     physicalData.calculateTemperature(simulationBox);
+    stopTimingsSection("Calc Temperature");
 }
 
 /**

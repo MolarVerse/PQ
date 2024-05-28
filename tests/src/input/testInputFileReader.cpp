@@ -217,9 +217,3 @@ TEST_F(TestInputFileReader, testReadJobType)
                      customException::InputFileException,
                      "Missing keyword \"jobtype\" in input file");
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

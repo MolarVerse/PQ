@@ -12,6 +12,7 @@ target_link_libraries(physicalData
     PUBLIC
     utilities
     simulationBox
+    timings
 )
 
 install(TARGETS physicalData

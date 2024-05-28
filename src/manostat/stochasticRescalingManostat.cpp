@@ -85,6 +85,8 @@ void StochasticRescalingManostat::applyManostat(
     physicalData::PhysicalData   &physicalData
 )
 {
+    startTimingsSection("Stochastic Rescaling");
+
     calculatePressure(simBox, physicalData);
 
     const auto mu = calculateMu(simBox.getVolume());
@@ -105,6 +107,8 @@ void StochasticRescalingManostat::applyManostat(
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+
+    stopTimingsSection("Stochastic Rescaling");
 }
 
 /**

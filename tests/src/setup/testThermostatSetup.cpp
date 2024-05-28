@@ -268,9 +268,3 @@ TEST_F(TestSetup, setupThermostat_nh_chain)
     EXPECT_EQ(noseHooverThermostat.getCouplingFrequency(), 29979245800000);
     EXPECT_EQ(noseHooverThermostat.getChi().size(), 6);
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

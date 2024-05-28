@@ -25,6 +25,7 @@
 #define _MANOSTAT_HPP_
 
 #include "staticMatrix3x3.hpp"   // for tensor3D
+#include "timer.hpp"             // for Timer
 
 namespace physicalData
 {
@@ -44,19 +45,22 @@ namespace manostat
      * @brief Manostat is a base class for all manostats
      *
      */
-    class Manostat
+    class Manostat : public timings::Timer
     {
-      protected:
+       protected:
         linearAlgebra::tensor3D _pressureTensor = {0.0};
         double                  _pressure;
-        double                  _targetPressure;   // no default value, must be set
+        double _targetPressure;   // no default value, must be set
 
-      public:
+       public:
         Manostat() = default;
-        explicit Manostat(const double targetPressure) : _targetPressure(targetPressure) {}
+        explicit Manostat(const double targetPressure)
+            : _targetPressure(targetPressure)
+        {
+        }
         virtual ~Manostat() = default;
 
-        void         calculatePressure(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        void calculatePressure(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
     };
 

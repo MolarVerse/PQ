@@ -24,6 +24,7 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
+#include <any>       // for any
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr
 #include <vector>    // for vector
@@ -40,21 +41,29 @@ namespace potential
     /**
      * @class NonCoulombPotential
      *
-     * @brief NonCoulombPotential is a base class for guff as well as force field non coulomb potentials
+     * @brief NonCoulombPotential is a base class for guff as well as force
+     * field non coulomb potentials
      *
      */
     class NonCoulombPotential
     {
-      protected:
-        MixingRule _mixingRule = MixingRule::NONE;   // no mixing rule TODO: implement (including input file keyword)
+       protected:
+        MixingRule _mixingRule =
+            MixingRule::NONE;   // no mixing rule TODO: implement (including
+                                // input file keyword)
 
-      public:
+       public:
         virtual ~NonCoulombPotential() = default;
 
-        [[nodiscard]] virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) = 0;
-        [[nodiscard]] MixingRule                              getMixingRule() const { return _mixingRule; }
+        [[nodiscard]] virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(
+            const std::vector<size_t> &indices
+        ) = 0;
+        [[nodiscard]] MixingRule getMixingRule() const { return _mixingRule; }
 
-        void setMixingRule(const MixingRule mixingRule) { _mixingRule = mixingRule; }
+        void setMixingRule(const MixingRule mixingRule)
+        {
+            _mixingRule = mixingRule;
+        }
     };
 
 }   // namespace potential

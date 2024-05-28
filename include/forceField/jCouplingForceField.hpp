@@ -76,10 +76,8 @@ namespace forceField
         )
             : connectivity::Dihedral(molecules, atomIndices), _type(type){};
 
-        void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData         &data
-        ) {};   // TODO: implement
+        void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &) {
+        };   // TODO: implement
 
         /***************************
          * standard setter methods *

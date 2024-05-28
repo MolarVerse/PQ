@@ -289,9 +289,3 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
         "End temperature cannot be negative"
     );
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

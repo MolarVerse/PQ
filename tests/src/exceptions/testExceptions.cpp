@@ -20,13 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "exceptions.hpp"         // for GuffDatException, InputFileException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
-#include <memory>          // for allocator
-#include <string_view>     // for string_view
+
+#include <memory>        // for allocator
+#include <string_view>   // for string_view
+
+#include "exceptions.hpp"         // for GuffDatException, InputFileException
+#include "gtest/gtest.h"          // for Message, TestPartResult
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 /**
  * @brief tests throwing input file exception
@@ -34,7 +35,11 @@
  */
 TEST(TestExceptions, inputFileException)
 {
-    EXPECT_THROW_MSG(throw customException::InputFileException("test"), customException::InputFileException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::InputFileException("test"),
+        customException::InputFileException,
+        "test"
+    );
 }
 
 /**
@@ -43,7 +48,11 @@ TEST(TestExceptions, inputFileException)
  */
 TEST(TestExceptions, rstFileException)
 {
-    EXPECT_THROW_MSG(throw customException::RstFileException("test"), customException::RstFileException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::RstFileException("test"),
+        customException::RstFileException,
+        "test"
+    );
 }
 
 /**
@@ -52,7 +61,11 @@ TEST(TestExceptions, rstFileException)
  */
 TEST(TestExceptions, UserInputException)
 {
-    EXPECT_THROW_MSG(throw customException::UserInputException("test"), customException::UserInputException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::UserInputException("test"),
+        customException::UserInputException,
+        "test"
+    );
 }
 
 /**
@@ -61,7 +74,11 @@ TEST(TestExceptions, UserInputException)
  */
 TEST(TestExceptions, molDescriptorException)
 {
-    EXPECT_THROW_MSG(throw customException::MolDescriptorException("test"), customException::MolDescriptorException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::MolDescriptorException("test"),
+        customException::MolDescriptorException,
+        "test"
+    );
 }
 
 /**
@@ -71,7 +88,10 @@ TEST(TestExceptions, molDescriptorException)
 TEST(TestExceptions, userInputExceptionWarning)
 {
     EXPECT_THROW_MSG(
-        throw customException::UserInputExceptionWarning("test"), customException::UserInputExceptionWarning, "test");
+        throw customException::UserInputExceptionWarning("test"),
+        customException::UserInputExceptionWarning,
+        "test"
+    );
 }
 
 /**
@@ -80,7 +100,11 @@ TEST(TestExceptions, userInputExceptionWarning)
  */
 TEST(TestExceptions, guffDatException)
 {
-    EXPECT_THROW_MSG(throw customException::GuffDatException("test"), customException::GuffDatException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::GuffDatException("test"),
+        customException::GuffDatException,
+        "test"
+    );
 }
 
 /**
@@ -89,7 +113,11 @@ TEST(TestExceptions, guffDatException)
  */
 TEST(TestExceptions, topologyException)
 {
-    EXPECT_THROW_MSG(throw customException::TopologyException("test"), customException::TopologyException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::TopologyException("test"),
+        customException::TopologyException,
+        "test"
+    );
 }
 
 /**
@@ -98,7 +126,11 @@ TEST(TestExceptions, topologyException)
  */
 TEST(TestExceptions, parameterFileException)
 {
-    EXPECT_THROW_MSG(throw customException::ParameterFileException("test"), customException::ParameterFileException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::ParameterFileException("test"),
+        customException::ParameterFileException,
+        "test"
+    );
 }
 
 /**
@@ -107,7 +139,11 @@ TEST(TestExceptions, parameterFileException)
  */
 TEST(TestExceptions, manostatException)
 {
-    EXPECT_THROW_MSG(throw customException::ManostatException("test"), customException::ManostatException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::ManostatException("test"),
+        customException::ManostatException,
+        "test"
+    );
 }
 
 /**
@@ -116,7 +152,11 @@ TEST(TestExceptions, manostatException)
  */
 TEST(TestExceptions, intraNonBondedException)
 {
-    EXPECT_THROW_MSG(throw customException::IntraNonBondedException("test"), customException::IntraNonBondedException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::IntraNonBondedException("test"),
+        customException::IntraNonBondedException,
+        "test"
+    );
 }
 
 /**
@@ -125,7 +165,11 @@ TEST(TestExceptions, intraNonBondedException)
  */
 TEST(TestExceptions, shakeException)
 {
-    EXPECT_THROW_MSG(throw customException::ShakeException("test"), customException::ShakeException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::ShakeException("test"),
+        customException::ShakeException,
+        "test"
+    );
 }
 
 /**
@@ -134,7 +178,11 @@ TEST(TestExceptions, shakeException)
  */
 TEST(TestExceptions, cellListException)
 {
-    EXPECT_THROW_MSG(throw customException::CellListException("test"), customException::CellListException, "test");
+    EXPECT_THROW_MSG(
+        throw customException::CellListException("test"),
+        customException::CellListException,
+        "test"
+    );
 }
 
 /**
@@ -144,7 +192,10 @@ TEST(TestExceptions, cellListException)
 TEST(TestExceptions, ringPolymerRestartFileException)
 {
     EXPECT_THROW_MSG(
-        throw customException::RingPolymerRestartFileException("test"), customException::RingPolymerRestartFileException, "test");
+        throw customException::RingPolymerRestartFileException("test"),
+        customException::RingPolymerRestartFileException,
+        "test"
+    );
 }
 
 /**
@@ -153,11 +204,9 @@ TEST(TestExceptions, ringPolymerRestartFileException)
  */
 TEST(TestExceptions, qmRunnerException)
 {
-    EXPECT_THROW_MSG(throw customException::QMRunnerException("test"), customException::QMRunnerException, "test");
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_THROW_MSG(
+        throw customException::QMRunnerException("test"),
+        customException::QMRunnerException,
+        "test"
+    );
 }

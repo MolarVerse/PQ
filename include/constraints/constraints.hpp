@@ -24,13 +24,13 @@
 
 #define _CONSTRAINTS_HPP_
 
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 #include "bondConstraint.hpp"       // for BondConstraint
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "physicalData.hpp"         // for PhysicalData
-
-#include <cstddef>
-#include <vector>
+#include "timer.hpp"            // for Timer
 
 namespace simulationBox
 {
@@ -48,9 +48,10 @@ namespace constraints
      *
      * @brief class containing all constraints
      *
-     * @details it performs the shake and rattle algorithm on all bond constraints
+     * @details it performs the shake and rattle algorithm on all bond
+     * constraints
      */
-    class Constraints
+    class Constraints : public timings::Timer
     {
       private:
         bool _shakeActivated               = defaults::_CONSTRAINTS_ARE_ACTIVE_DEFAULT_;
@@ -66,8 +67,10 @@ namespace constraints
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
 
-      public:
-        void calculateConstraintBondRefs(const simulationBox::SimulationBox &simulationBox);
+       public:
+        void calculateConstraintBondRefs(
+            const simulationBox::SimulationBox &simulationBox
+        );
 
         void applyShake(const simulationBox::SimulationBox &simulationBox);
         void applyRattle();
@@ -109,8 +112,14 @@ namespace constraints
 
         [[nodiscard]] size_t getShakeMaxIter() const { return _shakeMaxIter; }
         [[nodiscard]] size_t getRattleMaxIter() const { return _rattleMaxIter; }
-        [[nodiscard]] double getShakeTolerance() const { return _shakeTolerance; }
-        [[nodiscard]] double getRattleTolerance() const { return _rattleTolerance; }
+        [[nodiscard]] double getShakeTolerance() const
+        {
+            return _shakeTolerance;
+        }
+        [[nodiscard]] double getRattleTolerance() const
+        {
+            return _rattleTolerance;
+        }
 
         /***************************
          * standard setter methods *

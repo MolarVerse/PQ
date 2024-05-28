@@ -47,19 +47,24 @@ void NoseHooverThermostat::applyThermostatOnForces(
     simulationBox::SimulationBox &simBox
 )
 {
-    const auto   kb        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
-    const auto   kT_target = kb * _targetTemperature;
-    const double degreesOfFreedom = simBox.getDegreesOfFreedom();
-    const auto   omegaSquared     = _couplingFrequency * _couplingFrequency;
+    startTimingsSection("Nose-Hoover - Forces");
 
-    const auto factor = _chi[0] * omegaSquared /
-                        (kT_target * degreesOfFreedom) *
-                        constants::_MOMENTUM_TO_FORCE_;
+    const auto kB        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
+    const auto kT_target = kB * _targetTemperature;
+
+    const double degreesOfFreedom    = simBox.getDegreesOfFreedom();
+    const auto   couplingFreqSquared = _couplingFrequency * _couplingFrequency;
+
+    auto factor  = _chi[0] * couplingFreqSquared;
+    factor      /= (kT_target * degreesOfFreedom);
+    factor      *= constants::_MOMENTUM_TO_FORCE_;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
 
     std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
+
+    stopTimingsSection("Nose-Hoover - Forces");
 }
 
 /**
@@ -76,44 +81,53 @@ void NoseHooverThermostat::applyThermostat(
     physicalData::PhysicalData   &physicalData
 )
 {
+    startTimingsSection("Nose-Hoover - Velocities");
+
     physicalData.calculateTemperature(simBox);
 
-    _temperature                  = physicalData.getTemperature();
-    const double degreesOfFreedom = simBox.getDegreesOfFreedom();
+    _temperature = physicalData.getTemperature();
 
-    auto timestep  = settings::TimingsSettings::getTimeStep();
-    timestep      *= constants::_FS_TO_S_;
+    const auto degreesOfFreedom    = double(simBox.getDegreesOfFreedom());
+    const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
-    const auto kb        = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
-    const auto kT        = kb * _temperature;
-    const auto kT_target = kb * _targetTemperature;
+    const auto dt = settings::TimingsSettings::getTimeStep();
+    const auto kB = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
-    const auto omegaSquared = _couplingFrequency * _couplingFrequency;
+    const auto timestep  = dt * constants::_FS_TO_S_;
+    const auto kT        = kB * _temperature;
+    const auto kT_target = kB * _targetTemperature;
 
-    _chi[0] += timestep * (kT - kT_target) * degreesOfFreedom;
-    _chi[0] -= timestep * _chi[0] * _chi[1] / kT_target * omegaSquared;
+    auto chi  = (kT - kT_target) * degreesOfFreedom;
+    chi      -= _chi[0] * _chi[1] / kT_target * couplingFreqSquared;
 
-    auto ratio  = _chi[0] / (kT_target * degreesOfFreedom) * omegaSquared;
-    _zeta[0]   += ratio * timestep;
+    _chi[0] += timestep * chi;
 
-    ratio               *= _chi[0];
-    auto energyMomentum  = ratio;
-    auto energyFriction  = degreesOfFreedom * _zeta[0];
+    auto ratio = _chi[0] / (kT_target * degreesOfFreedom) * couplingFreqSquared;
+
+    _zeta[0] += ratio * timestep;
+    ratio    *= _chi[0];
+
+    auto energyMomentum = ratio;
+    auto energyFriction = degreesOfFreedom * _zeta[0];
 
     for (size_t i = 1; i < _chi.size() - 1; ++i)
     {
-        _chi[i] += timestep * ratio;
-        _chi[i] -= timestep * kT_target;
-        _chi[i] -= timestep * _chi[i] * _chi[i + 1] / kT_target * omegaSquared;
+        chi  = ratio;
+        chi -= kT_target;
+        chi -= _chi[i] * _chi[i + 1] / kT_target * couplingFreqSquared;
 
-        ratio     = _chi[i] / kT_target * omegaSquared;
+        _chi[i] += timestep * chi;
+
+        ratio     = _chi[i] / kT_target * couplingFreqSquared;
         _zeta[i] += ratio * timestep;
+        ratio    *= _chi[i];
 
-        ratio          *= _chi[i];
         energyMomentum += ratio;
         energyFriction += _zeta[i];
     }
 
     physicalData.setNoseHooverMomentumEnergy(energyMomentum);
     physicalData.setNoseHooverFrictionEnergy(energyFriction);
+
+    stopTimingsSection("Nose-Hoover - Velocities");
 }

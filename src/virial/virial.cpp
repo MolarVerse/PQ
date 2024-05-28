@@ -22,26 +22,31 @@
 
 #include "virial.hpp"
 
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
+
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox
 #include "simulationBox.hpp"   // for SimulationBox
-
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
 
 using namespace virial;
 
 /**
  * @brief calculate virial for general systems
  *
- * @details It calculates the virial for all atoms in the simulation box without any corrections.
- *          It already sets the virial in the physicalData object
+ * @details It calculates the virial for all atoms in the simulation box without
+ * any corrections. It already sets the virial in the physicalData object
  *
  * @param simulationBox
  * @param physicalData
  */
-void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
+void Virial::calculateVirial(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
+    startTimingsSection("Virial");
+
     _virial = {0.0};
 
     for (auto &molecule : simulationBox.getMolecules())
@@ -55,13 +60,16 @@ void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physic
             const auto xyz           = molecule.getAtomPosition(i);
 
             // TODO: check if correct with shiftForcexyz
-            _virial += tensorProduct(xyz, forcexyz) + diagonalMatrix(shiftForcexyz);
+            _virial +=
+                tensorProduct(xyz, forcexyz) + diagonalMatrix(shiftForcexyz);
 
             molecule.setAtomShiftForce(i, {0.0, 0.0, 0.0});
         }
     }
 
     physicalData.setVirial(_virial);
+
+    stopTimingsSection("Virial");
 }
 
 /**
@@ -74,7 +82,10 @@ void Virial::calculateVirial(simulationBox::SimulationBox &simulationBox, physic
  * @param simulationBox
  * @param physicalData
  */
-void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
+void VirialMolecular::calculateVirial(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
     Virial::calculateVirial(simulationBox, physicalData);
 
@@ -88,9 +99,13 @@ void VirialMolecular::calculateVirial(simulationBox::SimulationBox &simulationBo
  *
  * @param simulationBox
  */
-void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBox &simulationBox,
-                                                     physicalData::PhysicalData   &physicalData)
+void VirialMolecular::intraMolecularVirialCorrection(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
+    startTimingsSection("IntraMolecular Correction");
+
     _virial = {0.0};
 
     for (const auto &molecule : simulationBox.getMolecules())
@@ -112,4 +127,6 @@ void VirialMolecular::intraMolecularVirialCorrection(simulationBox::SimulationBo
     }
 
     physicalData.addVirial(_virial);
+
+    stopTimingsSection("IntraMolecular Correction");
 }

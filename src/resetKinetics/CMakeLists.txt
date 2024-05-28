@@ -13,6 +13,7 @@ target_link_libraries(resetKinetics
     simulationBox
     physicalData
     settings
+    timings
 )
 
 install(TARGETS resetKinetics

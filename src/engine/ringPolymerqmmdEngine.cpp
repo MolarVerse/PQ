@@ -73,7 +73,7 @@ void RingPolymerQMMDEngine::takeStep()
     _constraints.applyDistanceConstraints(
         _simulationBox,
         _physicalData,
-        _timings.calculateTotalSimulationTime(_step)
+        calculateTotalSimulationTime()
     );
 
     coupleRingPolymerBeads();

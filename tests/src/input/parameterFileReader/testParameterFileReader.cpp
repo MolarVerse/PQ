@@ -177,9 +177,3 @@ TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_NO_THROW(input::parameterFile::readParameterFile(*_engine));
 }
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
-}

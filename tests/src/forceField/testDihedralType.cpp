@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "dihedralType.hpp"   // for DihedralType
-
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_...
-#include <string>          // for allocator, string
+
+#include <string>   // for allocator, string
+
+#include "dihedralType.hpp"   // for DihedralType
+#include "gtest/gtest.h"      // for AssertionResult, Message, TestPartResult
 
 /**
  * @brief tests operator== for DihedralType
@@ -44,10 +45,4 @@ TEST(TestDihedralType, operatorEqual)
     EXPECT_FALSE(dihedralType1 == dihedralType4);
     EXPECT_FALSE(dihedralType1 == dihedralType5);
     EXPECT_FALSE(dihedralType1 == dihedralType6);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

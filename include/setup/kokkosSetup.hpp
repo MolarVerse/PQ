@@ -20,19 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "timings.hpp"
+#ifndef _KOKKOS_SETUP_HPP_
 
-#include "timingsSettings.hpp"
+#define _KOKKOS_SETUP_HPP_
 
-using namespace timings;
-
-/**
- * @brief calculates the total simulation time in fs
- *
- */
-double Timings::calculateTotalSimulationTime(const size_t step) const
+namespace engine
 {
-    const auto totalSteps = step + _stepCount;
+    class Engine;   // forward declaration
 
-    return totalSteps * settings::TimingsSettings::getTimeStep();
 }
+
+namespace setup
+{
+    void setupKokkos(engine::Engine &);
+
+    /**
+     * @class KokkosSetup
+     *
+     * @brief setup Kokkos
+     */
+    class KokkosSetup
+    {
+       private:
+        engine::Engine &_engine;
+
+       public:
+        explicit KokkosSetup(engine::Engine &engine) : _engine(engine){};
+
+        void setup();
+    };
+
+}   // namespace setup
+
+#endif   // _KOKKOS_SETUP_HPP_

@@ -1,10 +1,88 @@
-#ifdef WITH_MPI
+/*****************************************************************************
+<GPL_HEADER>
 
-#include "simulationBox.hpp"
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
 
 #include <algorithm>   // for for_each
 
+#include "simulationBox.hpp"
+
 using simulationBox::SimulationBox;
+
+#ifdef WITH_MPI
+
+/**
+ * @brief flattens atom types of each atom into a single vector of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenAtomTypes()
+{
+    std::vector<size_t> atomTypes;
+
+    auto addAtomTypes = [&atomTypes](auto &atom)
+    { atomTypes.push_back(atom->getAtomType()); };
+
+    std::ranges::for_each(_atoms, addAtomTypes);
+
+    return atomTypes;
+}
+
+/**
+ * @brief flattens mol types of each molecule of each atom into a single vector
+ * of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenMolTypes()
+{
+    std::vector<size_t> molTypes;
+
+    auto addMolTypes = [&molTypes](auto &molecule)
+    {
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            molTypes.push_back(molecule.getMoltype());
+    };
+
+    std::ranges::for_each(_molecules, addMolTypes);
+
+    return molTypes;
+}
+
+/**
+ * @brief flattens internal global VDW types of each atom into a single vector
+ * of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
+{
+    std::vector<size_t> internalGlobalVDWTypes;
+
+    auto addInternalGlobalVDWTypes = [&internalGlobalVDWTypes](auto &atom)
+    { internalGlobalVDWTypes.push_back(atom->getInternalGlobalVDWType()); };
+
+    std::ranges::for_each(_atoms, addInternalGlobalVDWTypes);
+
+    return internalGlobalVDWTypes;
+}
 
 /**
  * @brief flattens positions of each atom into a single vector of doubles
@@ -73,6 +151,23 @@ std::vector<double> SimulationBox::flattenForces()
     std::ranges::for_each(_atoms, addForces);
 
     return forces;
+}
+
+/**
+ * @brief flattens partial charges of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::flattenPartialCharges()
+{
+    std::vector<double> partialCharges;
+
+    auto addPartialCharges = [&partialCharges](auto &atom)
+    { partialCharges.push_back(atom->getPartialCharge()); };
+
+    std::ranges::for_each(_atoms, addPartialCharges);
+
+    return partialCharges;
 }
 
 /**

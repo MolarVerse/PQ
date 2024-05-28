@@ -22,6 +22,8 @@
 
 #include "setup.hpp"
 
+#include <iostream>   // for operator<<, basic_ostream, cout
+
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
@@ -44,9 +46,12 @@
 #include "settings.hpp"               // for Settings
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
+#include "timer.hpp"                  // for Timings
 #include "topologyReader.hpp"         // for readTopologyFile
 
-#include <iostream>   // for operator<<, basic_ostream, cout
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 using namespace engine;
 using namespace input;
@@ -59,6 +64,11 @@ using namespace input;
  */
 void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
 {
+    auto simulationTimer = timings::Timer("Simulation");
+    auto setupTimer      = timings::Timer("Setup");
+    simulationTimer.startTimingsSection();
+    setupTimer.startTimingsSection("TotalSetup");
+
     engine.getStdoutOutput().writeHeader();
 
     readInputFile(inputFileName, engine);
@@ -72,8 +82,16 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
 
+#ifdef WITH_KOKKOS
+    setupKokkos(engine);
+#endif
+
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
+
+    setupTimer.stopTimingsSection("TotalSetup");
+    engine.getTimer().addSimulationTimer(simulationTimer);
+    engine.addTimer(setupTimer);
 }
 
 /**
@@ -92,7 +110,7 @@ void setup::readFiles(Engine &engine)
 
     parameterFile::readParameterFile(engine);
 
-    input::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBondedReader::readIntraNonBondedFile(engine);
 }
 
 /**
@@ -117,7 +135,8 @@ void setup::setupEngine(Engine &engine)
 
     if (settings::Settings::isMMActivated())
     {
-        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+        setupPotential(engine
+        );   // has to be after simulationBox setup due to coulomb radius cutoff
 
         setupIntraNonBonded(engine);
 
