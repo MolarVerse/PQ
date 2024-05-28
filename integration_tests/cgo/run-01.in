@@ -1,4 +1,4 @@
-# ysz
+# CGO
 # Example for a QMCF run
 
 
@@ -21,11 +21,11 @@
 
     # Temperature algorithm (Berendsen), Relaxation time in ps 
     # and target temperature in K
-      ##thermostat = berendsen; temp = 998.15; t_relaxation = 0.1;
+    # thermostat = berendsen; temp = 998.15; t_relaxation = 0.1;
 
     # Pressure algorithm (Berendsen), Relaxation time in ps 
     # and target pressure in bar
-      #manostat = berendsen; pressure = 1.013; p_relaxation = 1.0;
+    # manostat = berendsen; pressure = 1.013; p_relaxation = 1.0;
 
     # Time Integrator 
       integrator = v-verlet;

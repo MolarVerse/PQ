@@ -1,0 +1,46 @@
+# PQ INPUT FILE
+# MD Keywords
+
+    # Type of this run
+      jobtype = mm-md;
+
+    # Number of steps to be performed and timestep in fs
+      nstep = 10;
+      timestep = 0.5; 
+
+    # Output frequency of ALL data files
+      output_freq = 1; 
+
+    # Coulombic cutoff 
+      rcoulomb = 20.0; 
+
+    # Enabling reaction field and giving a proper dielectric constant
+      long_range = wolf; 
+
+    # Temperature algorithm (Nose-Hoover Chain), Coupling frequency omega in 1/s,  
+    # number of coupled thermostats (chainlength) and target temperature in K
+    # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
+    # thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+    # manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
+
+      integrator = v-verlet;
+      rattle-tolerance = 1e9;
+      shake-tolerance = 1e-3;
+
+      force-field = on;  
+      shake = on;
+ 
+# Input Files
+
+     start_file       = chignolin.rst; 
+
+     parameter_file   = qmcfc.param;
+     topology_file    = topology.top;
+     intra-nonbonded_file = intra_nonbonded.dat;
+
+
+# Output Files
+
+     file_prefix = chig-01;
+
+# end of infile
