@@ -32,6 +32,7 @@
 #include "inputFileReader.hpp"        // for readInputFile
 #include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "kokkosSetup.hpp"            // for setupKokkos
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
