@@ -171,6 +171,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#rpmd-n-replica">RPMD_n_replica</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#qm-mm-keys">QM/MM Keys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qm-center">QM_Center</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-only-list">QM_Only_List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mm-only-list">MM_Only_List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-charges">QM_Charges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-core-radius">QM_Core_Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qmmm-layer-radius">QMMM_Layer_Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qmmm-smoothing-radius">QMMM_Smoothing_Radius</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#cell-list-keys">Cell List Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cell-list">Cell-List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cell-number">Cell-Number</a></li>
@@ -272,8 +282,15 @@
 <tr class="row-even"><td><p>{bool}</p></td>
 <td><p>true/false</p></td>
 </tr>
+<tr class="row-odd"><td><p>{selection}</p></td>
+<td><p>selection</p></td>
+</tr>
 </tbody>
 </table>
+<div class="admonition note" id="selectiontype">
+<p class="admonition-title">Note</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">{selection}</span></code> type is used to select a specific atom or group of atoms. If the PQ software package was build including <code class="code docutils literal notranslate"><span class="pre">python3.12</span></code> dependencies, the user can apply the selection grammar defined in the <a class="reference external" href="https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html">PQAnalysis package</a>. However, if PQ was compiled without these dependencies it is possible to index <em>via</em> the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2}</span></code>. If a range of atom indices should be selected the user can use the following syntax <code class="code docutils literal notranslate"><span class="pre">{0-5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10..15}</span></code>, where all would be equivalent to <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">11,</span> <span class="pre">12,</span> <span class="pre">13,</span> <span class="pre">14,</span> <span class="pre">15}</span></code>.</p>
+</div>
 </section>
 <section id="input-keys">
 <h3>Input Keys<a class="headerlink" href="#input-keys" title="Link to this heading"></a></h3>
@@ -1086,6 +1103,65 @@
 <p class="admonition-title">Note</p>
 <p>This keyword is required for any kind of ring polymer MD simulation!</p>
 </div>
+</section>
+</section>
+<section id="qm-mm-keys">
+<h2>QM/MM Keys<a class="headerlink" href="#qm-mm-keys" title="Link to this heading"></a></h2>
+<section id="qm-center">
+<h3>QM_Center<a class="headerlink" href="#qm-center" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_center = {selection} -&gt; 0</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
+</section>
+<section id="qm-only-list">
+<h3>QM_Only_List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_only_list = {selection}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+</section>
+<section id="mm-only-list">
+<h3>MM_Only_List<a class="headerlink" href="#mm-only-list" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>mm_only_list = {selection}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">mm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+</section>
+<section id="qm-charges">
+<h3>QM_Charges<a class="headerlink" href="#qm-charges" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_charges = {string} -&gt; “off”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword the user can specify the charge model for the QM atoms. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">off</span></code> the charges of the QM atoms are taken from the MM model applied. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">on</span></code> the charges of the QM atoms are taken from the QM calculation.</p>
+</section>
+<section id="qm-core-radius">
+<h3>QM_Core_Radius<a class="headerlink" href="#qm-core-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_core_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
+</section>
+<section id="qmmm-layer-radius">
+<h3>QMMM_Layer_Radius<a class="headerlink" href="#qmmm-layer-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
+</section>
+<section id="qmmm-smoothing-radius">
+<h3>QMMM_Smoothing_Radius<a class="headerlink" href="#qmmm-smoothing-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
 </section>
 </section>
 <section id="cell-list-keys">
