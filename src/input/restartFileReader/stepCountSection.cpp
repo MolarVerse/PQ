@@ -22,14 +22,14 @@
 
 #include "stepCountSection.hpp"
 
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for RstFileException
+#include "timings.hpp"      // for Timings
+
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <string>    // for string, stoi
 #include <vector>    // for vector
-
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for RstFileException
-#include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input::restartFile;
 
@@ -46,24 +46,16 @@ using namespace input::restartFile;
  * @throws RstFileException if the number of elements in the line is not 2
  * @throws RstFileException if the step count is negative
  */
-void StepCountSection::process(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
-)
+void StepCountSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 2)
-        throw customException::RstFileException(std::format(
-            "Error in line {}: Step count section must have 2 elements",
-            _lineNumber
-        ));
+        throw customException::RstFileException(
+            std::format("Error in line {}: Step count section must have 2 elements", _lineNumber));
 
     auto stepCount = stoi(lineElements[1]);
 
     if (stepCount < 0)
-        throw customException::RstFileException(std::format(
-            "Error in line {}: Step count must be positive",
-            _lineNumber
-        ));
+        throw customException::RstFileException(std::format("Error in line {}: Step count must be positive", _lineNumber));
 
-    settings::TimingsSettings::setStepCount(size_t(stepCount));
+    engine.getTimings().setStepCount(size_t(stepCount));
 }

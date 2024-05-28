@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
+#include "bondType.hpp"   // for BondType
 
-#include <string>   // for allocator, string
-
-#include "bondType.hpp"    // for BondType
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
+#include <string>          // for allocator, string
 
 /**
  * @brief tests operator== for BondType
@@ -43,4 +42,10 @@ TEST(TestBondType, operatorEqual)
     EXPECT_FALSE(bondType1 == bondType3);
     EXPECT_FALSE(bondType1 == bondType4);
     EXPECT_FALSE(bondType1 == bondType5);
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

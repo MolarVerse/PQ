@@ -388,3 +388,9 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
         _fileName
     );
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

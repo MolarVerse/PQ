@@ -24,10 +24,10 @@
 
 #define _DISTANCE_CONSTRAINTS_SECTION_HPP_
 
+#include "topologySection.hpp"   // for TopologySection
+
 #include <string>   // for allocator, string
 #include <vector>   // for vector
-
-#include "topologySection.hpp"   // for TopologySection
 
 namespace engine
 {
@@ -44,18 +44,10 @@ namespace input::topology
      */
     class DistanceConstraintsSection : public TopologySection
     {
-       public:
-        [[nodiscard]] std::string keyword() override
-        {
-            return "dist_constraints";
-        }
-
-        void endedNormally(const bool) const override;
-
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
+      public:
+        [[nodiscard]] std::string keyword() override { return "dist_constraints"; }
+        void                      processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
+        void                      endedNormally(bool) const override;
     };
 }   // namespace input::topology
 

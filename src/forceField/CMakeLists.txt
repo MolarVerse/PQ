@@ -5,8 +5,6 @@ add_library(forceField
     angleType.cpp
     dihedralForceField.cpp
     dihedralType.cpp
-    jCouplingForceField.cpp
-    jCouplingType.cpp
     forceFieldClass.cpp
     forceField.cpp
 )

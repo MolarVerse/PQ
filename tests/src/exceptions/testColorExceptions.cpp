@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CaptureStdout, GetCapturedStdout
-
-#include <string>        // for allocator, string
-#include <string_view>   // for string_view
-
 #include "color.hpp"        // for Code
 #include "exceptions.hpp"   // for CustomException
-#include "gtest/gtest.h"    // for Message, TestPartResult
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for Test, CaptureStdout, GetCapturedStdout
+#include <string>          // for allocator, string
+#include <string_view>     // for string_view
 
 /**
  * @brief tests colorful output for FG_RED
@@ -53,4 +52,10 @@ TEST(TestColor, orangeException)
     customException.colorfulOutput(Color::FG_ORANGE, "test");
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_STREQ(output.c_str(), "\033[33mtest\033[39m\n");
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

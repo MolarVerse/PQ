@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_THROW, TestInfo (ptr ...
-
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
-
 #include "exceptions.hpp"                 // for ParameterFileException
-#include "gtest/gtest.h"                  // for Message, TestPartResult, tes...
 #include "parameterFileSection.hpp"       // for parameterFile
 #include "potentialSettings.hpp"          // for PotentialSettings
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 #include "typesSection.hpp"               // for TypesSection
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, tes...
+#include <gtest/gtest.h>   // for EXPECT_THROW, TestInfo (ptr ...
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace input::parameterFile;
 
@@ -41,42 +40,26 @@ using namespace input::parameterFile;
  */
 TEST_F(TestParameterFileSection, processSectionTypes)
 {
-    std::vector<std::string> lineElements =
-        {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
+    std::vector<std::string>               lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
     input::parameterFile::TypesSection typesSection;
     typesSection.process(lineElements, *_engine);
     EXPECT_EQ(settings::PotentialSettings::getScale14Coulomb(), 0.23);
     EXPECT_EQ(settings::PotentialSettings::getScale14VanDerWaals(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
-    EXPECT_THROW(
-        typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
-    );
+    EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "1.01"};
-    EXPECT_THROW(
-        typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
-    );
+    EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "1.23", "0.01"};
-    EXPECT_THROW(
-        typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
-    );
+    EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "-0.23", "0.01"};
-    EXPECT_THROW(
-        typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
-    );
+    EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "-0.01"};
-    EXPECT_THROW(
-        typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
-    );
+    EXPECT_THROW(typesSection.process(lineElements, *_engine), customException::ParameterFileException);
 }
 
 TEST_F(TestParameterFileSection, endedNormallyTypes)
@@ -84,11 +67,9 @@ TEST_F(TestParameterFileSection, endedNormallyTypes)
     auto typesSection = TypesSection();
     ASSERT_NO_THROW(typesSection.endedNormally(true));
 
-    ASSERT_THROW_MSG(
-        typesSection.endedNormally(false),
-        customException::ParameterFileException,
-        "Parameter file types section ended abnormally!"
-    );
+    ASSERT_THROW_MSG(typesSection.endedNormally(false),
+                     customException::ParameterFileException,
+                     "Parameter file types section ended abnormally!");
 }
 
 /**
@@ -100,4 +81,10 @@ TEST_F(TestParameterFileSection, dummyHeaderTest)
     auto typesSection = TypesSection();
     auto lineElements = std::vector<std::string>({"dummy"});
     EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine));
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

@@ -1,4 +1,4 @@
-find_package(Git QUIET)
+find_package(GIT)
 
 if(Git_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     # Update submodules as needed

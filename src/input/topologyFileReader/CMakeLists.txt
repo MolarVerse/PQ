@@ -7,7 +7,6 @@ add_library(topologyFileReader
     angleSection.cpp
     dihedralSection.cpp
     improperDihedralSection.cpp
-    jCouplingSection.cpp
     distanceConstraintsSection.cpp
 )
 

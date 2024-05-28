@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Message, TestPartResult
-
-#include <fstream>   // for ifstream
-#include <string>    // for getline, allocator, string
-
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "momentumOutput.hpp"       // for MomentumOutput
+#include "physicalData.hpp"         // for PhysicalData
+#include "settings.hpp"             // for Settings
+#include "testEnergyOutput.hpp"     // for TestEnergyOutput
+#include "vector3d.hpp"             // for Vec3D
+
 #include "gtest/gtest.h"   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
-#include "momentumOutput.hpp"     // for MomentumOutput
-#include "physicalData.hpp"       // for PhysicalData
-#include "settings.hpp"           // for Settings
-#include "testEnergyOutput.hpp"   // for TestEnergyOutput
-#include "vector3d.hpp"           // for Vec3D
+#include <fstream>         // for ifstream
+#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <string>          // for getline, allocator, string
 
 /**
  * @brief tests writing momentum output file
@@ -52,11 +51,13 @@ TEST_F(TestEnergyOutput, writeMomentumFile)
     std::ifstream file("default.mom");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(
-        line,
-        "       100\t         5.00000e+00\t         3.00000e+00\t         "
-        "4.00000e+00\t         0.00000e+00\t         "
-        "5.00000e+00\t         4.00000e+00\t         0.00000e+00\t         "
-        "3.00000e+00"
-    );
+    EXPECT_EQ(line,
+              "       100\t         5.00000e+00\t         3.00000e+00\t         4.00000e+00\t         0.00000e+00\t         "
+              "5.00000e+00\t         4.00000e+00\t         0.00000e+00\t         3.00000e+00");
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

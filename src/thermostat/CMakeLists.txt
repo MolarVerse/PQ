@@ -17,7 +17,6 @@ target_link_libraries(thermostat
     simulationBox
     physicalData
     settings
-    timings
 )
 
 install(TARGETS thermostat

@@ -20,17 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
-
-#include <cstdio>    // for remove
-#include <fstream>   // for ofstream
-#include <string>    // for string, allocator
-#include <vector>    // for vector
-
 #include "exceptions.hpp"        // for InputFileException
-#include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
+
+#include "gmock/gmock.h"   // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include <cstdio>          // for remove
+#include <fstream>         // for ofstream
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
+#include <string>          // for string, allocator
+#include <vector>          // for vector
 
 /**
  * @brief removeComments test by comment character
@@ -54,33 +53,18 @@ TEST(TestStringUtilities, removeComments)
 TEST(TestStringUtilities, getLineCommands)
 {
     std::string line2 = "test";
-    EXPECT_THROW(
-        utilities::getLineCommands(line2, 0),
-        customException::InputFileException
-    );
+    EXPECT_THROW(utilities::getLineCommands(line2, 0), customException::InputFileException);
     auto *line = "nstep = 1";
-    ASSERT_THROW(
-        utilities::getLineCommands(line, 1),
-        customException::InputFileException
-    );
+    ASSERT_THROW(utilities::getLineCommands(line, 1), customException::InputFileException);
 
     line = "nstep = 1;";
-    ASSERT_THAT(
-        utilities::getLineCommands(line, 1),
-        testing::ElementsAre("nstep = 1")
-    );
+    ASSERT_THAT(utilities::getLineCommands(line, 1), testing::ElementsAre("nstep = 1"));
 
     line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(
-        utilities::getLineCommands(line, 1),
-        customException::InputFileException
-    );
+    ASSERT_THROW(utilities::getLineCommands(line, 1), customException::InputFileException);
 
     line = "nstep = 1; nstep = 2;";
-    ASSERT_THAT(
-        utilities::getLineCommands(line, 1),
-        testing::ElementsAre("nstep = 1", " nstep = 2")
-    );
+    ASSERT_THAT(utilities::getLineCommands(line, 1), testing::ElementsAre("nstep = 1", " nstep = 2"));
 }
 
 /**
@@ -130,4 +114,10 @@ TEST(TestStringUtilities, fileExists)
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
     std::remove(file.c_str());
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

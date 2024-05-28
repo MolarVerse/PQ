@@ -22,8 +22,9 @@ foreach(source_file ${source_files})
         potential
         engine
         gtest
+        gtest_main
         gmock
-        pq_test_main
+        gmock_main
     )
     add_test(
         NAME ${test_name}

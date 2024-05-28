@@ -26,7 +26,6 @@
 #include "exceptions.hpp"              // for InputFileException, customException
 #include "mmmdEngine.hpp"              // for MMMDEngine
 #include "qmmdEngine.hpp"              // for QMMDEngine
-#include "qmmmmdEngine.hpp"            // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -88,13 +87,6 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
         settings::Settings::setJobtype("QMMD");
         settings::Settings::activateQM();
         engine.reset(new engine::QMMDEngine());
-    }
-    else if (jobtype == "qmmm-md")
-    {
-        settings::Settings::setJobtype("QMMM_MD");
-        settings::Settings::activateMM();
-        settings::Settings::activateQM();
-        engine.reset(new engine::QMMMMDEngine());
     }
     else if (jobtype == "qm-rpmd")
     {

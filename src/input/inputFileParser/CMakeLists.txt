@@ -11,7 +11,6 @@ add_library(inputFileParser
     inputFileParserNonCoulomb.cpp
     inputFileParserOutput.cpp
     inputFileParserQM.cpp
-    inputFileParserQMMM.cpp
     inputFileParserResetKinetics.cpp
     inputFileParserRingPolymer.cpp
     inputFileParserSimulationBox.cpp

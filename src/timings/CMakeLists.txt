@@ -1,7 +1,5 @@
 add_library(timings
-    timer.cpp
-    timingsSection.cpp
-    globalTimer.cpp
+    timings.cpp
 )
 
 target_include_directories(timings
@@ -12,7 +10,6 @@ target_include_directories(timings
 
 target_link_libraries(timings
     PUBLIC
-    exceptions
     settings
 )
 

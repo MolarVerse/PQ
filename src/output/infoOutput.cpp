@@ -22,11 +22,6 @@
 
 #include "infoOutput.hpp"
 
-#include <format>    // for format
-#include <ios>       // for ofstream
-#include <ostream>   // for operator<<, basic_ostream, char_traits
-#include <string>    // for operator<<
-
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
@@ -36,6 +31,11 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "vector3d.hpp"             // for norm
 
+#include <format>    // for format
+#include <ios>       // for ofstream
+#include <ostream>   // for operator<<, basic_ostream, char_traits
+#include <string>    // for operator<<
+
 using namespace output;
 
 /**
@@ -43,21 +43,17 @@ using namespace output;
  *
  * @details
  * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
- * - Bond, Angle, Dihedral and Improper energies are only available if the force
- * field is active.
+ * - Bond, Angle, Dihedral and Improper energies are only available if the force field is active.
  * - qm energy is only available if qm is active.
  * - coulomb and non-coulomb energies are only available if mm is active.
  * - volume and density are only available if manostat is active.
- * - nose hoover momentum and friction energies are only available if nose
- * hoover thermostat is active.
+ * - nose hoover momentum and friction energies are only available if nose hoover thermostat is active.
  *
  * @param simulationTime
+ * @param loopTime
  * @param data
  */
-void InfoOutput::write(
-    const double                      simulationTime,
-    const physicalData::PhysicalData &data
-)
+void InfoOutput::write(const double simulationTime, const double loopTime, const physicalData::PhysicalData &data)
 {
     _fp.close();
 
@@ -94,26 +90,16 @@ void InfoOutput::write(
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
-    if (settings::ManostatSettings::getManostatType() !=
-        settings::ManostatType::NONE)
+    if (settings::ManostatSettings::getManostatType() != settings::ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
         writeRight(data.getDensity(), "DENSITY", "g/cm^3");
     }
 
-    if (settings::ThermostatSettings::getThermostatType() ==
-        settings::ThermostatType::NOSE_HOOVER)
+    if (settings::ThermostatSettings::getThermostatType() == settings::ThermostatType::NOSE_HOOVER)
     {
-        writeLeft(
-            data.getNoseHooverMomentumEnergy(),
-            "E(NH-MOMENTUM)",
-            "kcal/mol"
-        );
-        writeRight(
-            data.getNoseHooverFrictionEnergy(),
-            "E(NH-FRICTION)",
-            "kcal/mol"
-        );
+        writeLeft(data.getNoseHooverMomentumEnergy(), "E(NH-MOMENTUM)", "kcal/mol");
+        writeRight(data.getNoseHooverFrictionEnergy(), "E(NH-FRICTION)", "kcal/mol");
     }
 
     if (settings::ConstraintSettings::isDistanceConstraintsActivated())
@@ -123,7 +109,7 @@ void InfoOutput::write(
     }
 
     writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
-    writeRight(data.getLoopTime(), "LOOPTIME", "s");
+    writeRight(loopTime, "LOOPTIME", "s");
 
     _fp << std::format("{:-^89}", "") << "\n\n";
 
@@ -152,11 +138,7 @@ void InfoOutput::writeHeader()
  * @param formatter
  * @param precision
  */
-void InfoOutput::writeLeft(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
+void InfoOutput::writeLeft(const double value, const std::string_view &name, const std::string_view &unit)
 {
     _fp << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
 }
@@ -170,11 +152,7 @@ void InfoOutput::writeLeft(
  * @param formatter
  * @param precision
  */
-void InfoOutput::writeLeftScientific(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
+void InfoOutput::writeLeftScientific(const double value, const std::string_view &name, const std::string_view &unit)
 {
     _fp << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
 }
@@ -188,11 +166,7 @@ void InfoOutput::writeLeftScientific(
  * @param formatter
  * @param precision
  */
-void InfoOutput::writeRight(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
+void InfoOutput::writeRight(const double value, const std::string_view &name, const std::string_view &unit)
 {
     _fp << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
 }

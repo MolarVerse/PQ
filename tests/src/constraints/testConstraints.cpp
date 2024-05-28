@@ -22,13 +22,13 @@
 
 #include "testConstraints.hpp"
 
-#include <string>   // for basic_string
-
 #include "exceptions.hpp"         // for ShakeException
-#include "gmock/gmock.h"          // for DoubleNear, ElementsAre, MakePredica...
-#include "gtest/gtest.h"          // for Message, TestPartResult, InitGoogleTest
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"    // for TimingsSettings
+
+#include "gmock/gmock.h"   // for DoubleNear, ElementsAre, MakePredica...
+#include "gtest/gtest.h"   // for Message, TestPartResult, InitGoogleTest
+#include <string>          // for basic_string
 
 /**
  * @brief tests calculation of all bond constraints ref bond lengths
@@ -37,14 +37,8 @@
 TEST_F(TestConstraints, calcRefBondLengths)
 {
     _constraints->calculateConstraintBondRefs(*_box);
-    EXPECT_EQ(
-        _constraints->getBondConstraints()[0].getShakeDistanceRef(),
-        linearAlgebra::Vec3D(0.0, -1.0, -2.0)
-    );
-    EXPECT_EQ(
-        _constraints->getBondConstraints()[1].getShakeDistanceRef(),
-        linearAlgebra::Vec3D(1.0, -2.0, -3.0)
-    );
+    EXPECT_EQ(_constraints->getBondConstraints()[0].getShakeDistanceRef(), linearAlgebra::Vec3D(0.0, -1.0, -2.0));
+    EXPECT_EQ(_constraints->getBondConstraints()[1].getShakeDistanceRef(), linearAlgebra::Vec3D(1.0, -2.0, -3.0));
 }
 
 /**
@@ -61,43 +55,22 @@ TEST_F(TestConstraints, applyShake_converged)
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 
-    EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(0),
-        testing::ElementsAre(
-            testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(1.23165, 1e-5),
-            testing::DoubleNear(1.46331, 1e-5)
-        )
-    );
-    EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(1),
-        testing::ElementsAre(
-            testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(1.76835, 1e-5),
-            testing::DoubleNear(2.53669, 1e-5)
-        )
-    );
-    EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(0),
-        testing::ElementsAre(
-            testing::DoubleNear(0.0, 1e-5),
-            testing::DoubleNear(0.115827, 1e-5),
-            testing::DoubleNear(0.231654, 1e-5)
-        )
-    );
-    EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(1),
-        testing::ElementsAre(
-            testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(0.884173, 1e-5),
-            testing::DoubleNear(0.768346, 1e-5)
-        )
-    );
+    EXPECT_THAT(_box->getMolecules()[0].getAtomPosition(0),
+                testing::ElementsAre(
+                    testing::DoubleNear(1.0, 1e-5), testing::DoubleNear(1.23165, 1e-5), testing::DoubleNear(1.46331, 1e-5)));
+    EXPECT_THAT(_box->getMolecules()[0].getAtomPosition(1),
+                testing::ElementsAre(
+                    testing::DoubleNear(1.0, 1e-5), testing::DoubleNear(1.76835, 1e-5), testing::DoubleNear(2.53669, 1e-5)));
+    EXPECT_THAT(_box->getMolecules()[0].getAtomVelocity(0),
+                testing::ElementsAre(
+                    testing::DoubleNear(0.0, 1e-5), testing::DoubleNear(0.115827, 1e-5), testing::DoubleNear(0.231654, 1e-5)));
+    EXPECT_THAT(_box->getMolecules()[0].getAtomVelocity(1),
+                testing::ElementsAre(
+                    testing::DoubleNear(1.0, 1e-5), testing::DoubleNear(0.884173, 1e-5), testing::DoubleNear(0.768346, 1e-5)));
 }
 
 /**
- * @brief test apply shake algorithm to all bond constraints and it does not
- * converge
+ * @brief test apply shake algorithm to all bond constraints and it does not converge
  *
  */
 TEST_F(TestConstraints, applyShake_notConverged)
@@ -109,15 +82,11 @@ TEST_F(TestConstraints, applyShake_notConverged)
     settings::TimingsSettings::setTimeStep(2.0);
 
     EXPECT_THROW_MSG(
-        _constraints->applyShake(*_box),
-        customException::ShakeException,
-        "Shake algorithm did not converge for 2 bonds."
-    );
+        _constraints->applyShake(*_box), customException::ShakeException, "Shake algorithm did not converge for 2 bonds.");
 }
 
 /**
- * @brief test apply shake algorithm to all bond constraints and it does not
- * converge but is deactivated
+ * @brief test apply shake algorithm to all bond constraints and it does not converge but is deactivated
  *
  */
 TEST_F(TestConstraints, applyShake_notConverged_deactivated)
@@ -147,25 +116,14 @@ TEST_F(TestConstraints, applyRattle_converged)
 
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(0),
-        testing::ElementsAre(
-            testing::DoubleNear(0.0, 1e-5),
-            testing::DoubleNear(0.3, 1e-5),
-            testing::DoubleNear(0.6, 1e-5)
-        )
-    );
+        testing::ElementsAre(testing::DoubleNear(0.0, 1e-5), testing::DoubleNear(0.3, 1e-5), testing::DoubleNear(0.6, 1e-5)));
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(1),
-        testing::ElementsAre(
-            testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(0.7, 1e-5),
-            testing::DoubleNear(0.4, 1e-5)
-        )
-    );
+        testing::ElementsAre(testing::DoubleNear(1.0, 1e-5), testing::DoubleNear(0.7, 1e-5), testing::DoubleNear(0.4, 1e-5)));
 }
 
 /**
- * @brief test apply rattle algorithm to all bond constraints and it does not
- * converge
+ * @brief test apply rattle algorithm to all bond constraints and it does not converge
  *
  */
 TEST_F(TestConstraints, applyRattle_notConverged)
@@ -175,15 +133,11 @@ TEST_F(TestConstraints, applyRattle_notConverged)
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_THROW_MSG(
-        _constraints->applyRattle(),
-        customException::ShakeException,
-        "Rattle algorithm did not converge for 2 bonds."
-    );
+        _constraints->applyRattle(), customException::ShakeException, "Rattle algorithm did not converge for 2 bonds.");
 }
 
 /**
- * @brief test apply rattle algorithm to all bond constraints and it does not
- * converge but is deactivated
+ * @brief test apply rattle algorithm to all bond constraints and it does not converge but is deactivated
  *
  */
 TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
@@ -195,4 +149,10 @@ TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
     _constraints->deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyRattle());
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

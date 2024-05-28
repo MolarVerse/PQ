@@ -12,7 +12,6 @@ target_link_libraries(virial
     PUBLIC
     simulationBox
     physicalData
-    timings
 )
 
 install(TARGETS virial

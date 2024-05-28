@@ -15,8 +15,9 @@ foreach(source_file ${source_files})
         physicalData
         simulationBox
         gtest
-        pq_test_main
+        gtest_main
         gmock
+        gmock_main
     )
     add_test(
         NAME ${test_name}

@@ -1,0 +1,18 @@
+[files]
+xyz = ["umcm-9-md-19.xyz"]
+
+[outputfiles]
+xyz = "output.xyz"
+
+[system]
+atomIndices = [
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624
+]
+numberOfAtomsPerMolecule = 2

@@ -24,10 +24,10 @@
 
 #define _DIHEDRAL_SECTION_HPP_
 
+#include "parameterFileSection.hpp"   // for ParameterFileSection
+
 #include <string>   // for allocator, string
 #include <vector>   // for vector
-
-#include "parameterFileSection.hpp"   // for ParameterFileSection
 
 namespace engine
 {
@@ -44,18 +44,11 @@ namespace input::parameterFile
      */
     class DihedralSection : public ParameterFileSection
     {
-       public:
+      public:
         [[nodiscard]] std::string keyword() override { return "dihedrals"; }
 
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-
-        void processHeader(
-            [[maybe_unused]] std::vector<std::string> &lineElements,
-            [[maybe_unused]] engine::Engine           &engine
-        ) override {};   // TODO: implement
+        void processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
+        void processHeader(std::vector<std::string> &, engine::Engine &) override{};   // TODO: implement
     };
 
 }   // namespace input::parameterFile

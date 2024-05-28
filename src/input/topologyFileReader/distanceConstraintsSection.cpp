@@ -114,7 +114,7 @@ void DistanceConstraintsSection::processSection(
  *
  * @throws customException::TopologyException if endedNormal is false
  */
-void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
+void DistanceConstraintsSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
         throw customException::TopologyException(std::format(

@@ -20,16 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ, Init...
-
-#include <string>   // for allocator, basic_string
-
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraints.hpp"        // for Constraints
-#include "constraintsSetup.hpp"   // for ConstraintsSetup, setupConstraints
-#include "engine.hpp"             // for Engine
-#include "gtest/gtest.h"          // for Message, TestPartResult
-#include "testSetup.hpp"          // for TestSetup
+#include "constraints.hpp"          // for Constraints
+#include "constraintsSetup.hpp"     // for ConstraintsSetup, setupConstraints
+#include "engine.hpp"               // for Engine
+#include "testSetup.hpp"            // for TestSetup
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ, Init...
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 
@@ -79,13 +78,17 @@ TEST_F(TestSetup, setupConstraints)
 
     _engine->getConstraints().deactivateShake();
     EXPECT_NO_THROW(setupConstraints(*_engine));
-    const auto shakeToleranceDeactivated =
-        _engine->getConstraints().getShakeTolerance();
+    const auto shakeToleranceDeactivated = _engine->getConstraints().getShakeTolerance();
 
     _engine->getConstraints().activateShake();
     EXPECT_NO_THROW(setupConstraints(*_engine));
-    const auto shakeToleranceActivated =
-        _engine->getConstraints().getShakeTolerance();
+    const auto shakeToleranceActivated = _engine->getConstraints().getShakeTolerance();
 
     EXPECT_NE(shakeToleranceDeactivated, shakeToleranceActivated);
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

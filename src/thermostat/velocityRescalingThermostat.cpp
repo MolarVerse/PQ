@@ -56,24 +56,24 @@ void VelocityRescalingThermostat::applyThermostat(
     physicalData::PhysicalData   &physicalData
 )
 {
-    startTimingsSection("Velocity Rescaling");
-
     physicalData.calculateTemperature(simulationBox);
 
     _temperature = physicalData.getTemperature();
 
-    const auto timeStep  = settings::TimingsSettings::getTimeStep();
-    const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof       = double(simulationBox.getDegreesOfFreedom());
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto timeStep = settings::TimingsSettings::getTimeStep();
 
-    auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
-    rescalingFactor      *= random;
+    const auto rescalingFactor =
+        2.0 *
+        ::sqrt(
+            timeStep * _targetTemperature /
+            (_temperature * double(simulationBox.getDegreesOfFreedom()) * _tau)
+        ) *
+        std::normal_distribution<double>(0.0, 1.0)(_generator);
 
-    auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
-    lambda      += rescalingFactor;
-
-    const auto berendsenFactor = ::sqrt(lambda);
+    const auto berendsenFactor = ::sqrt(
+        1.0 + timeStep / _tau * (_targetTemperature / _temperature - 1.0) +
+        rescalingFactor
+    );
 
     for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
@@ -81,6 +81,4 @@ void VelocityRescalingThermostat::applyThermostat(
     physicalData.setTemperature(
         _temperature * berendsenFactor * berendsenFactor
     );
-
-    stopTimingsSection("Velocity Rescaling");
 }

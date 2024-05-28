@@ -50,3 +50,9 @@ TEST_F(TestSetup, setupCellList)
 
     EXPECT_NO_THROW(setupCellList(*_engine));
 }
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

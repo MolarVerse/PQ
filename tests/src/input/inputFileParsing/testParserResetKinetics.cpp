@@ -154,3 +154,9 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
         "Freset_angular must be positive"
     );
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

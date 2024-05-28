@@ -74,3 +74,9 @@ TEST_F(TestTopologySection, endedNormallyBond)
     EXPECT_THROW(bondSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(bondSection.endedNormally(true));
 }
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

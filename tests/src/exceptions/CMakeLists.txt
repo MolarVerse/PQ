@@ -15,8 +15,9 @@ foreach(source_file ${source_files})
         PRIVATE
         exceptions
         gtest
+        gtest_main
         gmock
-        pq_test_main
+        gmock_main
     )
     add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests)
 

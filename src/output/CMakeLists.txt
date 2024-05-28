@@ -17,8 +17,6 @@ add_library(output
     ringPolymerRestartFileOutput.cpp
     ringPolymerTrajectoryOutput.cpp
     ringPolymerEnergyOutput.cpp
-
-    timingsOutput.cpp
 )
 
 target_include_directories(output
