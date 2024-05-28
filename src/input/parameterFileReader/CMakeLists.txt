@@ -8,7 +8,6 @@ add_library(parameterFileReader
     angleSection.cpp
     dihedralSection.cpp
     improperDihedralSection.cpp
-    jCouplingSection.cpp
     nonCoulombicsSection.cpp
 )
 

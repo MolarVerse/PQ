@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstddef>   // for size_t
-
 #include "molecule.hpp"       // for Molecule
 #include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
+
+#include <cstddef>   // for size_t
 
 namespace simulationBox
 {
@@ -34,20 +34,16 @@ namespace simulationBox
 
 using namespace potential;
 
-PotentialBruteForce::~PotentialBruteForce() = default;
-
 /**
- * @brief calculates forces, coulombic and non-coulombic energy for brute force
- * routine
+ * @brief calculates forces, coulombic and non-coulombic energy for brute force routine
  *
  * @param simBox
  * @param physicalData
  */
-inline void PotentialBruteForce::
-    calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
+inline void PotentialBruteForce::calculateForces(simulationBox::SimulationBox &simBox,
+                                                 physicalData::PhysicalData   &physicalData,
+                                                 simulationBox::CellList &)
 {
-    startTimingsSection("InterNonBonded");
-
     const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
@@ -63,23 +59,15 @@ inline void PotentialBruteForce::
 
         for (size_t mol2 = 0; mol2 < mol1; ++mol2)
         {
-            auto        &molecule2 = simBox.getMolecule(mol2);
-            const size_t numberOfAtomsInMolecule_j =
-                molecule2.getNumberOfAtoms();
+            auto        &molecule2                 = simBox.getMolecule(mol2);
+            const size_t numberOfAtomsInMolecule_j = molecule2.getNumberOfAtoms();
 
             for (size_t atom1 = 0; atom1 < numberOfAtomsInMolecule_i; ++atom1)
             {
-                for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j;
-                     ++atom2)
+                for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j; ++atom2)
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(
-                            *box,
-                            molecule1,
-                            molecule2,
-                            atom1,
-                            atom2
-                        );
+                        calculateSingleInteraction(*box, molecule1, molecule2, atom1, atom2);
 
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
@@ -90,6 +78,4 @@ inline void PotentialBruteForce::
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBonded");
 }

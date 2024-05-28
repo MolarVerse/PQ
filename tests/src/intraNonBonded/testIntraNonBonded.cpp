@@ -20,19 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
-
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <memory>    // for shared_ptr, allocator, make_shared
-#include <string>    // for basic_string
-#include <vector>    // for vector
-
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
@@ -44,6 +35,14 @@
 #include "simulationBox.hpp"             // for SimulationBox
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <cstddef>         // for size_t
+#include <format>          // for format
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
+#include <memory>          // for shared_ptr, allocator, make_shared
+#include <string>          // for basic_string
+#include <vector>          // for vector
+
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
@@ -54,36 +53,23 @@ namespace potential
  */
 TEST(testIntraNonBonded, findIntraNonBondedContainerByMolType)
 {
-    const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
-    const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
-    const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+    const auto intraNonBondedContainer1 = intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+    const auto intraNonBondedContainer2 = intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+    const auto intraNonBondedContainer3 = intraNonBonded::IntraNonBondedContainer(2, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer2);
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
-    const auto *intraNonBondedContainerPtr =
-        intraNonBonded.findIntraNonBondedContainerByMolType(1);
+    const auto *intraNonBondedContainerPtr = intraNonBonded.findIntraNonBondedContainerByMolType(1);
 
-    EXPECT_EQ(
-        intraNonBondedContainerPtr->getMolType(),
-        intraNonBondedContainer2.getMolType()
-    );
-    EXPECT_EQ(
-        intraNonBondedContainerPtr->getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
-    );
+    EXPECT_EQ(intraNonBondedContainerPtr->getMolType(), intraNonBondedContainer2.getMolType());
+    EXPECT_EQ(intraNonBondedContainerPtr->getAtomIndices(), intraNonBondedContainer2.getAtomIndices());
 
-    EXPECT_THROW_MSG(
-        [[maybe_unused]] const auto dummy =
-            intraNonBonded.findIntraNonBondedContainerByMolType(3),
-        customException::IntraNonBondedException,
-        std::format("IntraNonBondedContainer with molType 3 not found!")
-    )
+    EXPECT_THROW_MSG([[maybe_unused]] const auto dummy = intraNonBonded.findIntraNonBondedContainerByMolType(3),
+                     customException::IntraNonBondedException,
+                     std::format("IntraNonBondedContainer with molType 3 not found!"))
 }
 
 /**
@@ -91,12 +77,9 @@ TEST(testIntraNonBonded, findIntraNonBondedContainerByMolType)
  */
 TEST(testIntraNonBonded, fillIntraNonBondedMaps)
 {
-    const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
-    const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
-    const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+    const auto intraNonBondedContainer1 = intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+    const auto intraNonBondedContainer2 = intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+    const auto intraNonBondedContainer3 = intraNonBonded::IntraNonBondedContainer(2, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -119,46 +102,16 @@ TEST(testIntraNonBonded, fillIntraNonBondedMaps)
     intraNonBonded.fillIntraNonBondedMaps(simulationBox);
 
     EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps().size(), 5);
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[0].getMolecule(),
-        &simulationBox.getMolecule(0)
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[0].getAtomIndices(),
-        intraNonBondedContainer1.getAtomIndices()
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[1].getMolecule(),
-        &simulationBox.getMolecule(1)
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[1].getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[2].getMolecule(),
-        &simulationBox.getMolecule(2)
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[2].getAtomIndices(),
-        intraNonBondedContainer3.getAtomIndices()
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[3].getMolecule(),
-        &simulationBox.getMolecule(3)
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[3].getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[4].getMolecule(),
-        &simulationBox.getMolecule(4)
-    );
-    EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[4].getAtomIndices(),
-        intraNonBondedContainer3.getAtomIndices()
-    );
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[0].getMolecule(), &simulationBox.getMolecule(0));
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[0].getAtomIndices(), intraNonBondedContainer1.getAtomIndices());
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[1].getMolecule(), &simulationBox.getMolecule(1));
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[1].getAtomIndices(), intraNonBondedContainer2.getAtomIndices());
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[2].getMolecule(), &simulationBox.getMolecule(2));
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[2].getAtomIndices(), intraNonBondedContainer3.getAtomIndices());
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[3].getMolecule(), &simulationBox.getMolecule(3));
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[3].getAtomIndices(), intraNonBondedContainer2.getAtomIndices());
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[4].getMolecule(), &simulationBox.getMolecule(4));
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps()[4].getAtomIndices(), intraNonBondedContainer3.getAtomIndices());
 }
 
 /**
@@ -191,19 +144,14 @@ TEST(TestIntraNonBonded, calculate)
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
-    auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
-    auto intraNonBondedMap =
-        intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
+    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+    auto intraNonBondedMap  = intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
     auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
     auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
-    nonCoulombPotential.setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
-    );
+    nonCoulombPotential.setNonCoulombPairsMatrix(linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2));
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
+    auto nonCoulombPair = potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
     nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     nonCoulombPotential.setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
@@ -215,11 +163,13 @@ TEST(TestIntraNonBonded, calculate)
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedMap(intraNonBondedMap);
 
-    intraNonBonded.setCoulombPotential(
-        std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
-    );
-    intraNonBonded.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(nonCoulombPotential)
-    );
+    intraNonBonded.setCoulombPotential(std::make_shared<potential::CoulombShiftedPotential>(coulombPotential));
+    intraNonBonded.setNonCoulombPotential(std::make_shared<potential::ForceFieldNonCoulomb>(nonCoulombPotential));
     EXPECT_NO_THROW(intraNonBonded.calculate(simulationBox, physicalData));
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

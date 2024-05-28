@@ -77,3 +77,9 @@ TEST_F(TestInputFileReader, numberOfCells)
                      customException::InputFileException,
                      "Number of cells must be positive - number of cells = 0");
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

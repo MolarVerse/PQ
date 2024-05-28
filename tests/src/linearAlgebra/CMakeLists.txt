@@ -18,8 +18,9 @@ foreach(source_file ${source_files})
         PRIVATE
         linearAlgebra
         gtest
+        gtest_main
         gmock
-        pq_test_main
+        gmock_main
     )
 
     add_test(

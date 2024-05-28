@@ -22,16 +22,16 @@
 
 #include "celllist.hpp"
 
-#include <algorithm>     // for ranges::for_each
-#include <functional>    // for identity
-#include <map>           // for map
-#include <string_view>   // for string_view
-
 #include "cell.hpp"                // for Cell
 #include "exceptions.hpp"          // for CellListException
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
+
+#include <algorithm>     // for ranges::for_each
+#include <functional>    // for identity
+#include <map>           // for map
+#include <string_view>   // for string_view
 
 using namespace simulationBox;
 using namespace linearAlgebra;
@@ -44,8 +44,7 @@ using namespace linearAlgebra;
  */
 [[nodiscard]] size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
 {
-    return cellIndices[0] * _nCells[1] * _nCells[2] +
-           cellIndices[1] * _nCells[2] + cellIndices[2];
+    return cellIndices[0] * _nCells[1] * _nCells[2] + cellIndices[1] * _nCells[2] + cellIndices[2];
 }
 
 /**
@@ -75,25 +74,19 @@ void CellList::setup(const SimulationBox &simulationBox)
  *
  * @param simulationBox
  */
-void CellList::determineCellSize(const linearAlgebra::Vec3D &box)
-{
-    _cellSize = box / Vec3D(_nCells);
-}
+void CellList::determineCellSize(const linearAlgebra::Vec3D &box) { _cellSize = box / Vec3D(_nCells); }
 
 /**
  * @brief check if coulomb cutoff is smaller than half of the largest cell size
  *
- * @throws customException::CellListException if coulomb cutoff is smaller than
- * half of the largest cell size
+ * @throws customException::CellListException if coulomb cutoff is smaller than half of the largest cell size
  *
  * @param coulombCutoff
  */
 void CellList::checkCoulombCutoff(const double coulombCutoff) const
 {
     if (coulombCutoff < maximum(_cellSize) / 2.0)
-        throw customException::CellListException(
-            "Coulomb cutoff is smaller than half of the largest cell size."
-        );
+        throw customException::CellListException("Coulomb cutoff is smaller than half of the largest cell size.");
 }
 
 /**
@@ -112,9 +105,7 @@ void CellList::determineCellBoundaries(const linearAlgebra::Vec3D &box)
                 auto      *cell      = &_cells[cellIndex];
 
                 cell->setLowerBoundary(-box / 2.0 + Vec3D(ijk) * _cellSize);
-                cell->setUpperBoundary(
-                    -box / 2.0 + (Vec3D(ijk) + 1) * _cellSize
-                );
+                cell->setUpperBoundary(-box / 2.0 + (Vec3D(ijk) + 1) * _cellSize);
 
                 cell->setCellIndex(ijk);
             }
@@ -129,10 +120,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
-    std::ranges::for_each(
-        _cells,
-        [this](auto &cell) { addNeighbouringCellPointers(cell); }
-    );
+    std::ranges::for_each(_cells, [this](auto &cell) { addNeighbouringCellPointers(cell); });
 }
 
 /**
@@ -145,31 +133,24 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
     const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
     for (int i = -int(_nNeighbourCells[0]); i <= int(_nNeighbourCells[0]); ++i)
-        for (int j = -int(_nNeighbourCells[1]); j <= int(_nNeighbourCells[1]);
-             ++j)
-            for (int k = -int(_nNeighbourCells[2]);
-                 k <= int(_nNeighbourCells[2]);
-                 ++k)
+        for (int j = -int(_nNeighbourCells[1]); j <= int(_nNeighbourCells[1]); ++j)
+            for (int k = -int(_nNeighbourCells[2]); k <= int(_nNeighbourCells[2]); ++k)
             {
                 const auto ijk = Vec3Di(i, j, k);
 
                 if (ijk == Vec3Di(0, 0, 0))
                     continue;
 
-                auto neighbourCellIndex = ijk + Vec3Di(cell.getCellIndex());
-                neighbourCellIndex -=
-                    Vec3Di(_nCells) *
-                    Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
+                auto neighbourCellIndex  = ijk + Vec3Di(cell.getCellIndex());
+                neighbourCellIndex      -= Vec3Di(_nCells) * Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
 
-                const auto neighbourCellIndexScalar =
-                    getCellIndex(Vec3Dul(neighbourCellIndex));
+                const auto neighbourCellIndexScalar = getCellIndex(Vec3Dul(neighbourCellIndex));
 
                 Cell *neighbourCell = &_cells[neighbourCellIndexScalar];
 
                 cell.addNeighbourCell(neighbourCell);
 
-                if (cell.getNumberOfNeighbourCells() ==
-                    (totalCellNeighbours - 1) / 2)
+                if (cell.getNumberOfNeighbourCells() == (totalCellNeighbours - 1) / 2)
                     return;
             }
 }
@@ -177,11 +158,9 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
 /**
  * @brief update cell list after during simulation
  *
- * @details it checks if the box size has changed and if so it clears the cell
- * list and sets it up again then it clears all molecular and atomic information
- * in the cells (for the case the box size has not changed) and add the
- * molecules and atomic indices again to the cells depending on their new
- * positions
+ * @details it checks if the box size has changed and if so it clears the cell list and sets it up again
+ * then it clears all molecular and atomic information in the cells (for the case the box size has not changed)
+ * and add the molecules and atomic indices again to the cells depending on their new positions
  *
  * @param simulationBox
  */
@@ -189,8 +168,6 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 {
     if (!_activated)
         return;
-
-    startTimingsSection("Update");
 
     if (simulationBox.getBoxSizeHasChanged())
     {
@@ -208,17 +185,13 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     std::ranges::for_each(_cells, clearMoleculesAndAtomIndices);
 
     addMoleculesToCells(simulationBox);
-
-    stopTimingsSection("Update");
 }
 
 /**
  * @brief add molecules and atom indices to cells
  *
- * @details it is not sufficient to just add the molecules to the cells, because
- * this program works on an atom based cutoff scheme therefore e.g. the center
- * of mass of a molecule could be in one cell, but some of its atoms could be in
- * a neighbouring cell
+ * @details it is not sufficient to just add the molecules to the cells, because this program works on an atom based cutoff scheme
+ * therefore e.g. the center of mass of a molecule could be in one cell, but some of its atoms could be in a neighbouring cell
  *
  * @param simulationBox
  */
@@ -226,25 +199,19 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 {
     const auto box = simulationBox.getBoxDimensions();
 
-    for (size_t i = 0, nMolecules = simulationBox.getNumberOfMolecules();
-         i < nMolecules;
-         ++i)
+    for (size_t i = 0, nMolecules = simulationBox.getNumberOfMolecules(); i < nMolecules; ++i)
     {
         auto *molecule                = &simulationBox.getMolecule(i);
         auto  mapCellIndexToAtomIndex = std::map<size_t, std::vector<size_t>>();
 
-        for (size_t j = 0, nAtoms = molecule->getNumberOfAtoms(); j < nAtoms;
-             ++j)
+        for (size_t j = 0, nAtoms = molecule->getNumberOfAtoms(); j < nAtoms; ++j)
         {
             const auto position = molecule->getAtomPosition(j);
 
             const auto atomCellIndices = getCellIndexOfAtom(box, position);
             const auto cellIndexScalar = getCellIndex(atomCellIndices);
 
-            const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(
-                cellIndexScalar,
-                std::vector<size_t>({j})
-            );
+            const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(cellIndexScalar, std::vector<size_t>({j}));
 
             if (!successful)
                 mapCellIndexToAtomIndex[cellIndexScalar].push_back(j);
@@ -257,10 +224,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
             _cells[cellIndex].addAtomIndices(atomIndices);
         };
 
-        std::ranges::for_each(
-            mapCellIndexToAtomIndex,
-            addMoleculeAndAtomIndicesToCell
-        );
+        std::ranges::for_each(mapCellIndexToAtomIndex, addMoleculeAndAtomIndicesToCell);
     }
 }
 
@@ -271,10 +235,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
  * @param position
  * @return Vec3Dul
  */
-[[nodiscard]] Vec3Dul CellList::getCellIndexOfAtom(
-    const Vec3D &box,
-    const Vec3D &position
-) const
+[[nodiscard]] Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position) const
 {
     auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 

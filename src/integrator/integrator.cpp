@@ -22,15 +22,15 @@
 
 #include "integrator.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <functional>   // for identity
-
 #include "atom.hpp"                                  // for Atom
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _V_VERLET_VELOCITY_FACTOR_
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for operator*, Vector3D
+
+#include <algorithm>    // for __for_each_fn, for_each
+#include <functional>   // for identity
 
 using namespace integrator;
 
@@ -46,8 +46,7 @@ void Integrator::integrateVelocities(simulationBox::Atom *atom) const
     const auto force    = atom->getForce();
     const auto mass     = atom->getMass();
 
-    velocity += settings::TimingsSettings::getTimeStep() * force / mass *
-                constants::_V_VERLET_VELOCITY_FACTOR_;
+    velocity += settings::TimingsSettings::getTimeStep() * force / mass * constants::_V_VERLET_VELOCITY_FACTOR_;
 
     atom->setVelocity(velocity);
 }
@@ -59,16 +58,12 @@ void Integrator::integrateVelocities(simulationBox::Atom *atom) const
  * @param index
  * @param simBox
  */
-void Integrator::integratePositions(
-    simulationBox::Atom                *atom,
-    const simulationBox::SimulationBox &simBox
-) const
+void Integrator::integratePositions(simulationBox::Atom *atom, const simulationBox::SimulationBox &simBox) const
 {
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();
 
-    position += settings::TimingsSettings::getTimeStep() * velocity *
-                constants::_FS_TO_S_;
+    position += settings::TimingsSettings::getTimeStep() * velocity * constants::_FS_TO_S_;
     simBox.applyPBC(position);
 
     atom->setPosition(position);
@@ -81,7 +76,6 @@ void Integrator::integratePositions(
  */
 void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
 {
-    startTimingsSection("Velocity Verlet - First Step");
 
     auto integrate = [this, &simBox](auto &atom)
     {
@@ -100,8 +94,6 @@ void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
     };
 
     std::ranges::for_each(simBox.getMolecules(), calculateCOM);
-
-    stopTimingsSection("Velocity Verlet - First Step");
 }
 
 /**
@@ -111,12 +103,5 @@ void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
  */
 void VelocityVerlet::secondStep(simulationBox::SimulationBox &simBox)
 {
-    startTimingsSection("Velocity Verlet - Second Step");
-
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [this](auto atom) { integrateVelocities(atom.get()); }
-    );
-
-    stopTimingsSection("Velocity Verlet - Second Step");
+    std::ranges::for_each(simBox.getAtoms(), [this](auto atom) { integrateVelocities(atom.get()); });
 }

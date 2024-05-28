@@ -24,9 +24,9 @@
 
 #define _ENERGY_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "output.hpp"   // for Output
+
+#include <cstddef>   // for size_t
 
 namespace physicalData
 {
@@ -43,10 +43,10 @@ namespace output
      */
     class EnergyOutput : public Output
     {
-       public:
+      public:
         using Output::Output;
 
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void write(const size_t step, const double loopTime, const physicalData::PhysicalData &);
     };
 
 }   // namespace output

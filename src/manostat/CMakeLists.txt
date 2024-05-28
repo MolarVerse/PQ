@@ -17,7 +17,6 @@ target_link_libraries(manostat
     physicalData
     linearAlgebra
     settings
-    timings
 )
 
 install(TARGETS manostat

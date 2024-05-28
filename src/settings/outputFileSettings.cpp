@@ -52,16 +52,12 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
 /**
  * @brief returns the reference file name
  *
- * @details in order to avoid overwriting the reference file and not to set it
- * in the input file - the reference file name is set to the log file name +
- * ".ref"
+ * @details in order to avoid overwriting the reference file and not to set it in the input file - the reference file name is set
+ * to the log file name + ".ref"
  *
  * @param restartFileName
  */
-std::string OutputFileSettings::getReferenceFileName()
-{
-    return _logFileName + ".ref";
-}
+std::string OutputFileSettings::getReferenceFileName() { return _logFileName + ".ref"; }
 
 /**
  * @brief sets the file prefix for all output files
@@ -124,36 +120,23 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
      * ring polymer output files *
      *****************************/
 
-    if (defaults::_RING_POLYMER_RESTART_FILENAME_DEFAULT_ ==
-        _ringPolymerRestartFileName)
+    if (defaults::_RING_POLYMER_RESTART_FILENAME_DEFAULT_ == _ringPolymerRestartFileName)
         _ringPolymerRestartFileName = prefix + ".rpmd.rst";
 
-    if (defaults::_RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_ ==
-        _ringPolymerTrajectoryFileName)
+    if (defaults::_RING_POLYMER_TRAJECTORY_FILENAME_DEFAULT_ == _ringPolymerTrajectoryFileName)
         _ringPolymerTrajectoryFileName = prefix + ".rpmd.xyz";
 
-    if (defaults::_RING_POLYMER_VELOCITY_FILENAME_DEFAULT_ ==
-        _ringPolymerVelocityFileName)
+    if (defaults::_RING_POLYMER_VELOCITY_FILENAME_DEFAULT_ == _ringPolymerVelocityFileName)
         _ringPolymerVelocityFileName = prefix + ".rpmd.vel";
 
-    if (defaults::_RING_POLYMER_FORCE_FILENAME_DEFAULT_ ==
-        _ringPolymerForceFileName)
+    if (defaults::_RING_POLYMER_FORCE_FILENAME_DEFAULT_ == _ringPolymerForceFileName)
         _ringPolymerForceFileName = prefix + ".rpmd.force";
 
-    if (defaults::_RING_POLYMER_CHARGE_FILENAME_DEFAULT_ ==
-        _ringPolymerChargeFileName)
+    if (defaults::_RING_POLYMER_CHARGE_FILENAME_DEFAULT_ == _ringPolymerChargeFileName)
         _ringPolymerChargeFileName = prefix + ".rpmd.chrg";
 
-    if (defaults::_RING_POLYMER_ENERGY_FILENAME_DEFAULT_ ==
-        _ringPolymerEnergyFileName)
+    if (defaults::_RING_POLYMER_ENERGY_FILENAME_DEFAULT_ == _ringPolymerEnergyFileName)
         _ringPolymerEnergyFileName = prefix + ".rpmd.en";
-
-    /********************
-     * the timings file *
-     ********************/
-
-    if (defaults::_TIMINGS_FILENAME_DEFAULT_ == _timingsFileName)
-        _timingsFileName = prefix + ".timings";
 }
 
 /**
@@ -163,27 +146,25 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
  */
 std::string OutputFileSettings::determineMostCommonPrefix()
 {
-    std::vector<std::string> fileNames = {
-        _restartFileName,
-        _logFileName,
-        _trajectoryFileName,
-        _energyFileName,
-        _instantEnergyFileName,
-        _forceFileName,
-        _velocityFileName,
-        _chargeFileName,
-        _infoFileName,
-        _momentumFileName,
-        _virialFileName,
-        _stressFileName,
-        _boxFileName,
-        _ringPolymerRestartFileName,
-        _ringPolymerTrajectoryFileName,
-        _ringPolymerVelocityFileName,
-        _ringPolymerForceFileName,
-        _ringPolymerChargeFileName,
-        _timingsFileName
-    };
+
+    std::vector<std::string> fileNames = {_restartFileName,
+                                          _logFileName,
+                                          _trajectoryFileName,
+                                          _energyFileName,
+                                          _instantEnergyFileName,
+                                          _forceFileName,
+                                          _velocityFileName,
+                                          _chargeFileName,
+                                          _infoFileName,
+                                          _momentumFileName,
+                                          _virialFileName,
+                                          _stressFileName,
+                                          _boxFileName,
+                                          _ringPolymerRestartFileName,
+                                          _ringPolymerTrajectoryFileName,
+                                          _ringPolymerVelocityFileName,
+                                          _ringPolymerForceFileName,
+                                          _ringPolymerChargeFileName};
 
     auto removeEnding = [](std::string &fileName)
     {
@@ -203,8 +184,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
     std::string mostCommonPrefix = "default";
     int         count            = 0;
 
-    auto getHighestOccurrence =
-        [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
+    auto getHighestOccurrence = [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
     {
         if (fileName == "default")
             return;

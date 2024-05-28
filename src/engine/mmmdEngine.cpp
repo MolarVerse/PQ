@@ -37,9 +37,6 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
 
-#ifdef WITH_KOKKOS
-#include "potential_kokkos.hpp"   // for KokkosPotential
-#endif
 using namespace engine;
 
 /**
@@ -67,27 +64,13 @@ void MMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
-#ifdef WITH_KOKKOS_NO
-    _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
-#else
     _integrator->firstStep(_simulationBox);
-#endif
 
     _constraints.applyShake(_simulationBox);
 
     _cellList.updateCellList(_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.calculateForces(
-        _simulationBox,
-        _kokkosSimulationBox,
-        _physicalData,
-        _kokkosLennardJones,
-        _kokkosCoulombWolf
-    );
-#else
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
-#endif
 
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
@@ -98,7 +81,7 @@ void MMMDEngine::takeStep()
     _constraints.applyDistanceConstraints(
         _simulationBox,
         _physicalData,
-        calculateTotalSimulationTime()
+        _timings.calculateTotalSimulationTime(_step)
     );
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
@@ -107,11 +90,7 @@ void MMMDEngine::takeStep()
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.secondStep(_simulationBox, _kokkosSimulationBox);
-#else
     _integrator->secondStep(_simulationBox);
-#endif
 
     _constraints.applyRattle();
 

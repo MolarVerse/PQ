@@ -22,14 +22,14 @@
 
 #include "testRestartFileReader.hpp"
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
-
 #include "fileSettings.hpp"          // for FileSettings
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "moldescriptorReader.hpp"   // for MoldescriptorReader
 #include "restartFileReader.hpp"     // for RstFileReader, readRstFile
 #include "restartFileSection.hpp"    // for RstFileSection, readInput
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <string>          // for string, allocator, basic_string
+#include <vector>          // for vector
 
 using namespace input;
 
@@ -61,9 +61,7 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
-    settings::FileSettings::setMolDescriptorFileName(
-        "examples/setup/moldescriptor.dat"
-    );
+    settings::FileSettings::setMolDescriptorFileName("examples/setup/moldescriptor.dat");
     molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
@@ -71,4 +69,10 @@ TEST_F(TestRstFileReader, rstFileReading)
 
     moldescriptor.read();
     ASSERT_NO_THROW(restartFile::readRestartFile(*_engine));
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

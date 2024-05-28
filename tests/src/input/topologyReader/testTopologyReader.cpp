@@ -86,3 +86,9 @@ TEST_F(TestTopologyReader, readTopologyFile)
     settings::FileSettings::setTopologyFileName("topology.top");
     input::topology::readTopologyFile(*_engine);
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

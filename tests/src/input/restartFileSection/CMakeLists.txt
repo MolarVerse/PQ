@@ -17,8 +17,9 @@ foreach(source_file ${source_files})
         PRIVATE
         restartFileReader
         gtest
+        gtest_main
         gmock
-        pq_test_main
+        gmock_main
     )
     add_test(
         NAME ${test_name}

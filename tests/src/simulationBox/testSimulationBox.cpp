@@ -22,26 +22,23 @@
 
 #include "testSimulationBox.hpp"
 
-#include <algorithm>   // for copy
-#include <cstddef>     // for size_t, std
-#include <map>         // for map
-#include <optional>    // for optional
-#include <string>      // for string
-#include <vector>      // for vector
-
-#include "exceptions.hpp"   // for ManostatException, RstFileException
-#include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
+#include "exceptions.hpp"          // for ManostatException, RstFileException
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "throwWithMessage.hpp"    // for throwWithMessage
+
+#include "gtest/gtest.h"   // for Message, TestPartResult, AssertionRe...
+#include <algorithm>       // for copy
+#include <cstddef>         // for size_t, std
+#include <map>             // for map
+#include <optional>        // for optional
+#include <string>          // for string
+#include <vector>          // for vector
 
 /**
  * @brief tests numberOfAtoms function
  *
  */
-TEST_F(TestSimulationBox, numberOfAtoms)
-{
-    EXPECT_EQ(_simulationBox->getNumberOfAtoms(), 5);
-}
+TEST_F(TestSimulationBox, numberOfAtoms) { EXPECT_EQ(_simulationBox->getNumberOfAtoms(), 5); }
 
 /**
  * @brief tests calculateDegreesOfFreedom function
@@ -63,14 +60,8 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
 
     auto molecules = _simulationBox->getMolecules();
 
-    EXPECT_EQ(
-        molecules[0].getCenterOfMass(),
-        linearAlgebra::Vec3D(1 / 3.0, 0.5, 0.0)
-    );
-    EXPECT_EQ(
-        molecules[1].getCenterOfMass(),
-        linearAlgebra::Vec3D(2 / 3.0, 0.0, 0.0)
-    );
+    EXPECT_EQ(molecules[0].getCenterOfMass(), linearAlgebra::Vec3D(1 / 3.0, 0.5, 0.0));
+    EXPECT_EQ(molecules[1].getCenterOfMass(), linearAlgebra::Vec3D(2 / 3.0, 0.0, 0.0));
 }
 
 /**
@@ -95,10 +86,7 @@ TEST_F(TestSimulationBox, findMoleculeType)
     const auto molecule = _simulationBox->findMoleculeType(1);
     EXPECT_EQ(molecule.getMoltype(), 1);
 
-    EXPECT_THROW(
-        [[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3),
-        customException::RstFileException
-    );
+    EXPECT_THROW([[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3), customException::RstFileException);
 }
 
 /**
@@ -107,18 +95,15 @@ TEST_F(TestSimulationBox, findMoleculeType)
  */
 TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 {
-    const auto &[molecule1, atomIndex1] =
-        _simulationBox->findMoleculeByAtomIndex(3);
+    const auto &[molecule1, atomIndex1] = _simulationBox->findMoleculeByAtomIndex(3);
     EXPECT_EQ(molecule1, &(_simulationBox->getMolecules()[0]));
     EXPECT_EQ(atomIndex1, 2);
 
-    const auto &[molecule2, atomIndex2] =
-        _simulationBox->findMoleculeByAtomIndex(4);
+    const auto &[molecule2, atomIndex2] = _simulationBox->findMoleculeByAtomIndex(4);
     EXPECT_EQ(molecule2, &(_simulationBox->getMolecules()[1]));
     EXPECT_EQ(atomIndex2, 0);
 
-    EXPECT_THROW([[maybe_unused]] const auto dummy =
-                     _simulationBox->findMoleculeByAtomIndex(6);
+    EXPECT_THROW([[maybe_unused]] const auto dummy = _simulationBox->findMoleculeByAtomIndex(6);
                  , customException::UserInputException);
 }
 
@@ -159,53 +144,32 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
 }
 
 /**
- * @brief tests checkCoulombRadiusCutoff function if the radius cut off is
- * larger than half of the minimal box
+ * @brief tests checkCoulombRadiusCutoff function if the radius cut off is larger than half of the minimal box
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
     _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
 
-    EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
-        "Coulomb radius cut off is larger than half of the minimal box "
-        "dimension"
-    );
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
 
-    EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
-            customException::ExceptionType::MANOSTATEXCEPTION
-        ),
-        customException::ManostatException,
-        "Coulomb radius cut off is larger than half of the minimal box "
-        "dimension"
-    );
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::MANOSTATEXCEPTION),
+                     customException::ManostatException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
 
     _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
 
-    EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
-        "Coulomb radius cut off is larger than half of the minimal box "
-        "dimension"
-    );
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
 
     _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
 
-    EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
-        "Coulomb radius cut off is larger than half of the minimal box "
-        "dimension"
-    );
+    EXPECT_THROW_MSG(_simulationBox->checkCoulombRadiusCutOff(customException::ExceptionType::USERINPUTEXCEPTION),
+                     customException::UserInputException,
+                     "Coulomb radius cut off is larger than half of the minimal box dimension");
 }
 
 /**
@@ -214,6 +178,7 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
  */
 TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
 {
+
     simulationBox::SimulationBox simulationBox;
     simulationBox::MoleculeType  molecule1(1);
     simulationBox::MoleculeType  molecule2(2);
@@ -231,10 +196,7 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     simulationBox.setupExternalToInternalGlobalVdwTypesMap();
 
     EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes().size(), 3);
-    EXPECT_EQ(
-        simulationBox.getExternalGlobalVdwTypes(),
-        std::vector<size_t>({1, 3, 5})
-    );
+    EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes(), std::vector<size_t>({1, 3, 5}));
 
     EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().size(), 3);
     EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(1), 0);
@@ -268,10 +230,7 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
 
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
     EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);
-    EXPECT_EQ(
-        _simulationBox->findMoleculeTypeByString("mol3").has_value(),
-        false
-    );
+    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol3").has_value(), false);
 }
 
 /**
@@ -322,37 +281,29 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
 
     simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes();
 
-    EXPECT_EQ(
-        simulationBox.getMolecule(0).getPartialCharges(),
-        molecule1.getPartialCharges()
-    );
-    EXPECT_EQ(
-        simulationBox.getMolecule(1).getPartialCharges(),
-        molecule2.getPartialCharges()
-    );
-    EXPECT_EQ(
-        simulationBox.getMolecule(2).getPartialCharges(),
-        molecule1.getPartialCharges()
-    );
+    EXPECT_EQ(simulationBox.getMolecule(0).getPartialCharges(), molecule1.getPartialCharges());
+    EXPECT_EQ(simulationBox.getMolecule(1).getPartialCharges(), molecule2.getPartialCharges());
+    EXPECT_EQ(simulationBox.getMolecule(2).getPartialCharges(), molecule1.getPartialCharges());
 }
 
 /**
  * @brief tests setPartialChargesOfMoleculesFromMoleculeTypes function
  *
  */
-TEST_F(
-    TestSimulationBox,
-    setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound
-)
+TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound)
 {
     simulationBox::SimulationBox  simulationBox;
     const simulationBox::Molecule molecule1(1);
 
     simulationBox.addMolecule(molecule1);
 
-    EXPECT_THROW_MSG(
-        simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
-        customException::UserInputException,
-        "Molecule type 1 not found in molecule types"
-    );
+    EXPECT_THROW_MSG(simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
+                     customException::UserInputException,
+                     "Molecule type 1 not found in molecule types");
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

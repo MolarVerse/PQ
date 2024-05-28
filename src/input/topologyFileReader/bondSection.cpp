@@ -22,15 +22,15 @@
 
 #include "bondSection.hpp"
 
-#include <format>   // for format
-#include <string>   // for stoul, string, operator==, char_traits
-#include <vector>   // for vector
-
 #include "bondForceField.hpp"    // for BondForceField
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for TopologyException
 #include "forceFieldClass.hpp"   // for ForceField
 #include "simulationBox.hpp"     // for SimulationBox
+
+#include <format>   // for format
+#include <string>   // for stoul, string, operator==, char_traits
+#include <vector>   // for vector
 
 using namespace input::topology;
 
@@ -46,23 +46,16 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
- * not 3 or 4
- * @throws customException::TopologyException if atom indices are the same
- * (=same atoms)
+ * @throws customException::TopologyException if number of elements in line is not 3 or 4
+ * @throws customException::TopologyException if atom indices are the same (=same atoms)
  * @throws customException::TopologyException if forth element is not a '*'
  */
-void BondSection::processSection(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
-)
+void BondSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
 {
     if (lineElements.size() != 3 && lineElements.size() != 4)
         throw customException::TopologyException(std::format(
-            "Wrong number of arguments in topology file bond section at line "
-            "{} - number of elements has to be 3 or 4!",
-            _lineNumber
-        ));
+            "Wrong number of arguments in topology file bond section at line {} - number of elements has to be 3 or 4!",
+            _lineNumber));
 
     const auto atom1    = stoul(lineElements[0]);
     const auto atom2    = stoul(lineElements[1]);
@@ -74,32 +67,18 @@ void BondSection::processSection(
         if (lineElements[3] == "*")
             isLinker = true;
         else
-            throw customException::TopologyException(std::format(
-                "Forth entry in topology file in bond section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
+            throw customException::TopologyException(
+                std::format("Forth entry in topology file in bond section has to be a \'*\' or empty at line {}!", _lineNumber));
     }
 
     if (atom1 == atom2)
-        throw customException::TopologyException(std::format(
-            "Topology file shake section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+        throw customException::TopologyException(
+            std::format("Topology file shake section at line {} - atoms cannot be the same!", _lineNumber));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    const auto [molecule1, atomIndex1] = engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] = engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
 
-    auto bondForceField = forceField::BondForceField(
-        molecule1,
-        molecule2,
-        atomIndex1,
-        atomIndex2,
-        bondType
-    );
+    auto bondForceField = forceField::BondForceField(molecule1, molecule2, atomIndex1, atomIndex2, bondType);
     bondForceField.setIsLinker(isLinker);
 
     engine.getForceField().addBond(bondForceField);
@@ -112,11 +91,9 @@ void BondSection::processSection(
  *
  * @throws customException::TopologyException if endedNormal is false
  */
-void BondSection::endedNormally(const bool endedNormal) const
+void BondSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
-            "Topology file bond section at line {} - no end of section found!",
-            _lineNumber
-        ));
+        throw customException::TopologyException(
+            std::format("Topology file bond section at line {} - no end of section found!", _lineNumber));
 }

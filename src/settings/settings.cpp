@@ -43,8 +43,6 @@ void Settings::setJobtype(const std::string_view jobtype)
         _jobtype = settings::JobType::QM_MD;
     else if (jobtypeToLower == "ring_polymer_qmmd")
         _jobtype = settings::JobType::RING_POLYMER_QM_MD;
-    else if (jobtypeToLower == "qmmmmd")
-        _jobtype = settings::JobType::QMMM_MD;
     else
         _jobtype = settings::JobType::NONE;
 }

@@ -24,13 +24,13 @@
 
 #define _PARAMETER_FILE_READER_HPP_
 
+#include "parameterFileSection.hpp"
+
 #include <fstream>   // for ifstream
 #include <memory>    // for unique_ptr
 #include <string>
 #include <string_view>   // for string_view
 #include <vector>        // for vector
-
-#include "parameterFileSection.hpp"
 
 namespace engine
 {
@@ -51,45 +51,29 @@ namespace input::parameterFile
      */
     class ParameterFileReader
     {
-       private:
+      private:
         std::string     _fileName;
         std::ifstream   _fp;
         engine::Engine &_engine;
 
-        std::vector<std::unique_ptr<ParameterFileSection>>
-            _parameterFileSections;
+        std::vector<std::unique_ptr<ParameterFileSection>> _parameterFileSections;
 
-       public:
-        ParameterFileReader(
-            const std::string &filename,
-            engine::Engine    &engine
-        );
+      public:
+        ParameterFileReader(const std::string &filename, engine::Engine &engine);
 
         void read();
 
-        [[nodiscard]] ParameterFileSection *determineSection(
-            const std::vector<std::string> &lineElements
-        );
-        void deleteSection(const ParameterFileSection *section);
+        [[nodiscard]] ParameterFileSection *determineSection(const std::vector<std::string> &lineElements);
+        void                                deleteSection(const ParameterFileSection *section);
 
         /**************************************
          * standard getter and setter methods *
          **************************************/
 
-        void setFilename(const std::string_view &filename)
-        {
-            _fileName = filename;
-        }
+        void setFilename(const std::string_view &filename) { _fileName = filename; }
 
-        [[nodiscard]] std::vector<section_unique_ptr> &getParameterFileSections(
-        )
-        {
-            return _parameterFileSections;
-        }
-        [[nodiscard]] const std::string &getFilename() const
-        {
-            return _fileName;
-        }
+        [[nodiscard]] std::vector<section_unique_ptr> &getParameterFileSections() { return _parameterFileSections; }
+        [[nodiscard]] const std::string               &getFilename() const { return _fileName; }
     };
 
 }   // namespace input::parameterFile

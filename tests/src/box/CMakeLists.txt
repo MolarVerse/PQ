@@ -16,8 +16,9 @@ foreach(source_file ${source_files})
         box
         linearAlgebra
         gtest
+        gtest_main
         gmock
-        pq_test_main
+        gmock_main
     )
     add_test(
         NAME ${test_name}

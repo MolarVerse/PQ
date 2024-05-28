@@ -58,3 +58,9 @@ TEST(TestQMSetup, setupQMFull)
     engine::QMMDEngine engine;
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

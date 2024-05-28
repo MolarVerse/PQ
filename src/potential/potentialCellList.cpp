@@ -20,42 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
 #include "cell.hpp"           // for Cell, simulationBox
 #include "celllist.hpp"       // for CellList
 #include "physicalData.hpp"   // for PhysicalData
 #include "potential.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
 
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
+
 using namespace potential;
 
-PotentialCellList::~PotentialCellList() = default;
-
 /**
- * @brief calculates forces, coulombic and non-coulombic energy for cell list
- * routine
+ * @brief calculates forces, coulombic and non-coulombic energy for cell list routine
  *
- * @details first loops over all possible combinations of molecules within the
- * same cell, then over all possible molecule combinations between adjacent
- * cells. For the second loop over different cells, it is necessary to check if
- * the two molecules are the same to avoid double counting. Due to the cutoff
- * criterion which is based on atoms a molecule can be found in more than only
- * one cell.
+ * @details first loops over all possible combinations of molecules within the same cell, then over all possible molecule
+ * combinations between adjacent cells. For the second loop over different cells, it is necessary to check if the two
+ * molecules are the same to avoid double counting. Due to the cutoff criterion which is based on atoms a molecule can be
+ * found in more than only one cell.
  *
  * @param simBox
  * @param physicalData
  * @param cellList
  */
-inline void PotentialCellList::calculateForces(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData,
-    simulationBox::CellList      &cellList
-)
+inline void PotentialCellList::calculateForces(simulationBox::SimulationBox &simBox,
+                                               physicalData::PhysicalData   &physicalData,
+                                               simulationBox::CellList      &cellList)
 {
-    startTimingsSection("InterNonBonded");
-
     const auto box = simBox.getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
@@ -78,13 +69,7 @@ inline void PotentialCellList::calculateForces(
                     for (const size_t atom2 : cell1.getAtomIndices(mol2))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction(
-                                *box,
-                                *molecule1,
-                                *molecule2,
-                                atom1,
-                                atom2
-                            );
+                            calculateSingleInteraction(*box, *molecule1, *molecule2, atom1, atom2);
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
@@ -99,8 +84,7 @@ inline void PotentialCellList::calculateForces(
 
         for (const auto *cell2 : cell1.getNeighbourCells())
         {
-            const auto numberOfMoleculesInCell_j =
-                cell2->getNumberOfMolecules();
+            const auto numberOfMoleculesInCell_j = cell2->getNumberOfMolecules();
 
             for (size_t mol1 = 0; mol1 < numberOfMoleculesInCell_i; ++mol1)
             {
@@ -108,8 +92,7 @@ inline void PotentialCellList::calculateForces(
 
                 for (const auto atom1 : cell1.getAtomIndices(mol1))
                 {
-                    for (size_t mol2 = 0; mol2 < numberOfMoleculesInCell_j;
-                         ++mol2)
+                    for (size_t mol2 = 0; mol2 < numberOfMoleculesInCell_j; ++mol2)
                     {
                         auto *molecule2 = cell2->getMolecule(mol2);
 
@@ -119,13 +102,7 @@ inline void PotentialCellList::calculateForces(
                         for (const auto atom2 : cell2->getAtomIndices(mol2))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
-                                calculateSingleInteraction(
-                                    *box,
-                                    *molecule1,
-                                    *molecule2,
-                                    atom1,
-                                    atom2
-                                );
+                                calculateSingleInteraction(*box, *molecule1, *molecule2, atom1, atom2);
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
@@ -138,6 +115,4 @@ inline void PotentialCellList::calculateForces(
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBonded");
 }

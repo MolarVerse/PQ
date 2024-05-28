@@ -133,3 +133,9 @@ TEST_F(TestMoldescriptorReader, globalVdwTypes)
                      "Error in moldescriptor file at line 6 - force field noncoulombics is activated but no global van der Waals "
                      "parameter given");
 }
+
+int main(int argc, char **argv)
+{
+    InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

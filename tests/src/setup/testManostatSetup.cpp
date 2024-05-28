@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
-
-#include <string>   // for allocator, basic_string
-
 #include "berendsenManostat.hpp"   // for BerendsenManostat
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException, customException
-#include "gtest/gtest.h"           // for Message, TestPartResult
 #include "manostat.hpp"            // for BerendsenManostat, Manostat
 #include "manostatSettings.hpp"    // for ManostatSettings
 #include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup
 #include "testSetup.hpp"           // for TestSetup
+
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
+#include <string>          // for allocator, basic_string
 
 using namespace setup;
 
@@ -53,16 +52,20 @@ TEST_F(TestSetup, setup)
     settings::ManostatSettings::setTargetPressure(300.0);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    const auto berendsenManostat =
-        dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
+    const auto berendsenManostat = dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
     EXPECT_EQ(berendsenManostat.getTau(), 1.0 * 1000);
 
     settings::ManostatSettings::setTauManostat(0.2);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    const auto berendsenManostat2 =
-        dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
+    const auto berendsenManostat2 = dynamic_cast<manostat::BerendsenManostat &>(_engine->getManostat());
     EXPECT_EQ(berendsenManostat2.getTau(), 0.2 * 1000);
 
     EXPECT_NO_THROW(setupManostat(*_engine));
+}
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
 }

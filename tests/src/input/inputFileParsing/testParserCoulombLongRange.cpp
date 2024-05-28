@@ -75,3 +75,9 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
     EXPECT_THROW_MSG(
         parser.parseWolfParameter(lineElements, 0), customException::InputFileException, "Wolf parameter cannot be negative");
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

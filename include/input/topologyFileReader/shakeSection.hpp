@@ -24,10 +24,10 @@
 
 #define _SHAKE_SECTION_HPP_
 
+#include "topologySection.hpp"   // for TopologySection
+
 #include <string>   // for allocator, string
 #include <vector>   // for vector
-
-#include "topologySection.hpp"   // for TopologySection
 
 namespace engine
 {
@@ -44,14 +44,10 @@ namespace input::topology
      */
     class ShakeSection : public TopologySection
     {
-       public:
+      public:
         [[nodiscard]] std::string keyword() override { return "shake"; }
-        void                      endedNormally(const bool) const override;
-
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
+        void                      processSection(std::vector<std::string> &lineElements, engine::Engine &) override;
+        void                      endedNormally(bool) const override;
     };
 }   // namespace input::topology
 

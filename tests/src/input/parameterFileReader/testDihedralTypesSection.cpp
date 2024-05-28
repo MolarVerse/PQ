@@ -68,3 +68,9 @@ TEST_F(TestParameterFileSection, endedNormallyDihedral)
                      customException::ParameterFileException,
                      "Parameter file dihedrals section ended abnormally!");
 }
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

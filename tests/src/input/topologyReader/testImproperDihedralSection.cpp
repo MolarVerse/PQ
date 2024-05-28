@@ -74,3 +74,9 @@ TEST_F(TestTopologySection, endedNormallyImproperDihedral)
     EXPECT_THROW(improperDihedralSection.endedNormally(false), customException::TopologyException);
     EXPECT_NO_THROW(improperDihedralSection.endedNormally(true));
 }
+
+int main(int argc, char **argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return ::RUN_ALL_TESTS();
+}

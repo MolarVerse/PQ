@@ -22,13 +22,6 @@
 
 #include "inputFileReader.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <format>      // for format
-#include <fstream>     // for ifstream, basic_istream
-#include <map>         // for map, operator==
-#include <string>      // for char_traits, string
-#include <vector>      // for vector
-
 #include "engine.hpp"                            // for Engine
 #include "exceptions.hpp"                        // for InputFileException
 #include "inputFileParserCellList.hpp"           // for InputFileParserCellList
@@ -42,28 +35,33 @@
 #include "inputFileParserNonCoulomb.hpp"         // for InputFileParserNonCoulomb
 #include "inputFileParserOutput.hpp"             // for InputFileParserOutput
 #include "inputFileParserQM.hpp"                 // for InputFileParserQM
-#include "inputFileParserQMMM.hpp"               // for InputFileParserQM
 #include "inputFileParserResetKinetics.hpp"      // for InputFileParserResetKinetics
 #include "inputFileParserRingPolymer.hpp"        // for InputFileParserRingPolymer
 #include "inputFileParserSimulationBox.hpp"      // for InputFileParserSimulationBox
 #include "inputFileParserThermostat.hpp"         // for InputFileParserThermostat
 #include "inputFileParserTimings.hpp"            // for InputFileParserTimings
 #include "inputFileParserVirial.hpp"             // for InputFileParserVirial
-#include "stringUtilities.hpp"   // for getLineCommands, removeComments, splitString, toLowerCopy
+#include "stringUtilities.hpp"                   // for getLineCommands, removeComments, splitString, toLowerCopy
+
+#include <algorithm>   // for __for_each_fn, for_each
+#include <format>      // for format
+#include <fstream>     // for ifstream, basic_istream
+#include <map>         // for map, operator==
+#include <string>      // for char_traits, string
+#include <vector>      // for vector
 
 using namespace input;
 
 /**
  * @brief Construct a new Input File Reader:: Input File Reader object
  *
- * @details adds all parsers to the _parsers vector and calls addKeywords() to add all keywords to
- * the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap
+ * @details adds all parsers to the _parsers vector and calls addKeywords() to add all keywords to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap
  *
  * @param fileName
  * @param engine
  */
-InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engine &engine)
-    : _fileName(fileName), _engine(engine)
+InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engine &engine) : _fileName(fileName), _engine(engine)
 {
     _parsers.push_back(std::make_unique<InputFileParserCellList>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserConstraints>(_engine));
@@ -81,7 +79,6 @@ InputFileReader::InputFileReader(const std::string_view &fileName, engine::Engin
     _parsers.push_back(std::make_unique<InputFileParserTimings>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserVirial>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
-    _parsers.push_back(std::make_unique<InputFileParserQMMM>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserRingPolymer>(_engine));
 
     addKeywords();
@@ -114,8 +111,7 @@ void InputFileReader::addKeywords()
 /**
  * @brief process command
  *
- * @details Checks if keyword is in _keywordFuncMap, calls the corresponding function and increments
- * the keyword count.
+ * @details Checks if keyword is in _keywordFuncMap, calls the corresponding function and increments the keyword count.
  *
  * @param lineElements
  *
@@ -126,9 +122,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     const auto keyword = utilities::toLowerCopy(lineElements[0]);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw customException::InputFileException(
-            std::format("Invalid keyword \"{}\" at line {}", keyword, _lineNumber)
-        );
+        throw customException::InputFileException(std::format("Invalid keyword \"{}\" at line {}", keyword, _lineNumber));
 
     ParseFunc parserFunc = _keywordFuncMap[keyword];
     parserFunc(lineElements, _lineNumber);
@@ -139,11 +133,10 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
 /**
  * @brief read input file
  *
- * @details Reads input file line by line. One line can consist of multiple commands separated by
- * semicolons. For each command the process() function is called.
+ * @details Reads input file line by line. One line can consist of multiple commands separated by semicolons. For each command the
+ * process() function is called.
  *
- * @note Also single command lines have to be terminated with a semicolon. '#' is used for comments
- * as in all other file formats.
+ * @note Also single command lines have to be terminated with a semicolon. '#' is used for comments as in all other file formats.
  *
  * @throw InputFileException if file not found
  */
@@ -261,14 +254,10 @@ void InputFileReader::postProcess()
         const auto &[keyword, count] = keyWordCountElement;
 
         if (_keywordRequiredMap[keyword] && (0 == count))
-            throw customException::InputFileException(
-                "Missing keyword \"" + keyword + "\" in input file"
-            );
+            throw customException::InputFileException("Missing keyword \"" + keyword + "\" in input file");
 
         if (count > 1)
-            throw customException::InputFileException(
-                "Multiple keywords \"" + keyword + "\" in input file"
-            );
+            throw customException::InputFileException("Multiple keywords \"" + keyword + "\" in input file");
     };
 
     std::ranges::for_each(_keywordCountMap, checkKeyWordCount);
@@ -277,8 +266,7 @@ void InputFileReader::postProcess()
 /**
  * @brief process equal sign
  *
- * @details replaces equal sign with " = " to make sure that the equal sign is always surrounded by
- * spaces
+ * @details replaces equal sign with " = " to make sure that the equal sign is always surrounded by spaces
  *
  * @param command
  * @param lineNumber
@@ -293,6 +281,5 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
 
     else
         throw customException::InputFileException(
-            std::format("Missing equal sign in command \"{}\" in line {}", command, lineNumber)
-        );
+            std::format("Missing equal sign in command \"{}\" in line {}", command, lineNumber));
 }

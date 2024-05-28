@@ -43,18 +43,18 @@ namespace input::topology
      */
     class TopologySection
     {
-       protected:
+      protected:
         int            _lineNumber;
         std::ifstream *_fp;
 
-       public:
+      public:
         virtual ~TopologySection() = default;
 
         void process(std::vector<std::string> &lineElements, engine::Engine &);
 
-        virtual std::string keyword() = 0;
-        virtual void processSection(std::vector<std::string> &lineElements, engine::Engine &) = 0;
-        virtual void endedNormally(const bool) const = 0;
+        virtual std::string keyword()                                                                = 0;
+        virtual void        processSection(std::vector<std::string> &lineElements, engine::Engine &) = 0;
+        virtual void        endedNormally(bool) const                                                = 0;
 
         void setLineNumber(const int lineNumber) { _lineNumber = lineNumber; }
         void setFp(std::ifstream *fp) { _fp = fp; }

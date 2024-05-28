@@ -24,10 +24,9 @@
 
 #define _VIRIAL_HPP_
 
-#include <string>   // for string
-
 #include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "timer.hpp"             // for Timer
+
+#include <string>   // for string
 
 namespace simulationBox
 {
@@ -51,33 +50,25 @@ namespace virial
      *
      * @brief Base class for virial calculation
      *
-     * @details implements virial calculation, which is valid for both atomic
-     * and molecular systems
+     * @details implements virial calculation, which is valid for both atomic and molecular systems
      */
-    class Virial : public timings::Timer
+    class Virial
     {
-       protected:
+      protected:
         std::string _virialType;
 
         linearAlgebra::tensor3D _virial;
 
-       public:
+      public:
         virtual ~Virial() = default;
 
         virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &) {
-        };
+        virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &){};
 
-        void setVirial(const linearAlgebra::tensor3D &virial)
-        {
-            _virial = virial;
-        }
+        void setVirial(const linearAlgebra::tensor3D &virial) { _virial = virial; }
 
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const
-        {
-            return _virial;
-        }
-        [[nodiscard]] std::string getVirialType() const { return _virialType; }
+        [[nodiscard]] linearAlgebra::tensor3D getVirial() const { return _virial; }
+        [[nodiscard]] std::string             getVirialType() const { return _virialType; }
     };
 
     /**
@@ -85,18 +76,15 @@ namespace virial
      *
      * @brief Class for virial calculation of molecular systems
      *
-     * @details overrides calculateVirial() function to include intra-molecular
-     * virial correction
+     * @details overrides calculateVirial() function to include intra-molecular virial correction
      */
     class VirialMolecular : public Virial
     {
-       public:
+      public:
         VirialMolecular() : Virial() { _virialType = "molecular"; }
 
-        void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
-        void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
+        void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
     };
 
     /**
@@ -104,13 +92,12 @@ namespace virial
      *
      * @brief Class for virial calculation of atomic systems
      *
-     * @details dummy class for atomic systems, since no virial correction is
-     * needed
+     * @details dummy class for atomic systems, since no virial correction is needed
      *
      */
     class VirialAtomic : public Virial
     {
-       public:
+      public:
         VirialAtomic() : Virial() { _virialType = "atomic"; }
     };
 

@@ -24,7 +24,6 @@
 
 #define _THERMOSTAT_HPP_
 
-#include "timer.hpp"   // for Timer
 #include "cstddef"   // for size_t
 
 namespace physicalData
@@ -51,7 +50,7 @@ namespace thermostat
      * calculate the temperature
      *
      */
-    class Thermostat : public timings::Timer
+    class Thermostat
     {
        protected:
         double _temperature       = 0.0;

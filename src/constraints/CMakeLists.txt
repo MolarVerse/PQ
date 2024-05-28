@@ -15,7 +15,6 @@ target_link_libraries(constraints
     simulationBox
     linearAlgebra
     settings
-    timings
     physicalData
 )
 
