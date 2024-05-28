@@ -44,6 +44,13 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
+      - name: Run integration Tests
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pip install pqanalysis
+          pytest integration_tests
+
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

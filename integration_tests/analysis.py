@@ -5,7 +5,7 @@ from PQAnalysis.io import read_trajectory, EnergyFileReader
 
 def check_pq_output(base_name, folder_name):
 
-    ref_path = "../tests/" + folder_name + "/ref_data/"
+    ref_path = "../" + folder_name + "/ref_data/"
 
     traj = read_trajectory(base_name + ".xyz")
     ref_traj = read_trajectory(ref_path + base_name + ".xyz")

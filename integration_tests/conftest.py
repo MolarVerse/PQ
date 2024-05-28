@@ -30,12 +30,17 @@ def tmpdir():
 @pytest.fixture(scope="function")
 def test_with_data_dir(example_dir):
 
-    tmpdir = "tmpdir"
+    file_folder = pathlib.Path(__file__).parent.absolute()
+
+    example_dir = file_folder / example_dir
+    tmpdir = str(file_folder / "tmpdir")
 
     if os.path.exists(tmpdir) and os.path.isdir(tmpdir):
         shutil.rmtree(tmpdir)
 
-    shutil.copytree(os.path.join("tests", example_dir), tmpdir)
+    print(os.path.abspath(tmpdir))
+
+    shutil.copytree(example_dir, tmpdir)
 
     os.chdir(tmpdir)
 
@@ -53,7 +58,7 @@ def execute_pq(input_file):
     # PQ lies in ../../build/apps/PQ
 
     pq_executable = os.path.join(
-        folder_path, "..", "..", "build", "apps", "PQ")
+        folder_path, "..", "build", "apps", "PQ")
 
     # Run the pq executable with the input file
     process = subprocess.Popen(

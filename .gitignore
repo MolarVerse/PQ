@@ -24,4 +24,5 @@ examples/**/perf*
 
 googletest
 
-**/__pycacke__*
+**/__pycache__*
+**/.pytest_cache
