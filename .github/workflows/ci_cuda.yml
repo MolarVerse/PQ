@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_KOKKOS=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_TURING75=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_KOKKOS=ON -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_TURING75=ON -DKokkos_CXX_STANDARD=20 ..
           make -j20
           make coverage_xml
         env:
