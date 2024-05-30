@@ -9,15 +9,12 @@ if(NOT Kokkos_FOUND)
     FetchContent_MakeAvailable(kokkos)
 endif()
 
-find_package(KokkosKernels QUIET)
+# find_package(KokkosKernels QUIET)
 
-if(NOT KokkosKernels_FOUND)
-    FetchContent_Declare(kokkos-kernels
-        GIT_REPOSITORY "https://github.com/kokkos/kokkos-kernels.git"
-    )
-    FetchContent_MakeAvailable(kokkos-kernels)
-endif()
-
-set(Kokkos_CXX_STANDARD 20)
-
+# if(NOT KokkosKernels_FOUND)
+# FetchContent_Declare(kokkos-kernels
+# GIT_REPOSITORY "https://github.com/kokkos/kokkos-kernels.git"
+# )
+# FetchContent_MakeAvailable(kokkos-kernels)
+# endif()
 add_definitions(-DWITH_KOKKOS)
