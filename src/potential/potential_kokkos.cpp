@@ -104,13 +104,13 @@ void KokkosPotential::calculateForces(
                 if (moleculeIndex_i == moleculeIndex_j)
                     continue;
 
-                float dxyz[3] = {
+                double dxyz[3] = {
                     positions(i, 0) - positions(j, 0),
                     positions(i, 1) - positions(j, 1),
                     positions(i, 2) - positions(j, 2)
                 };
 
-                float txyz[3];
+                double txyz[3];
                 simulationBox::KokkosSimulationBox::calculateShiftVector(
                     dxyz,
                     boxDimensions,
@@ -130,7 +130,7 @@ void KokkosPotential::calculateForces(
                 const auto partialCharge_j = partialCharges(j);
                 const auto distance        = Kokkos::sqrt(distanceSquared);
 
-                float force = 0.0;
+                double force = 0.0;
 
                 const auto coulombicEnergy = coulombWolf.calculate(
                     distance,
@@ -155,7 +155,7 @@ void KokkosPotential::calculateForces(
 
                 force /= distance;
 
-                float force_ij[3] = {
+                double force_ij[3] = {
                     force * dxyz[0],
                     force * dxyz[1],
                     force * dxyz[2]

@@ -62,10 +62,10 @@ namespace potential
         ~KokkosCoulombWolf() = default;
 
         KOKKOS_INLINE_FUNCTION double calculate(
-            const float distance,
-            const float charge_i,
-            const float charge_j,
-            float      &force
+            const double distance,
+            const double charge_i,
+            const double charge_j,
+            double      &force
         ) const
         {
             const auto prefactor      = _prefactor.d_view();

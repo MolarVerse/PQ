@@ -1,0 +1,45 @@
+# ysz
+# Example for a QMCF run
+
+
+# MD Keywords
+
+    # Type of this run
+      jobtype = mm-md;
+
+    # Number of steps to be performed and timestep in fs 
+      nstep = 10; timestep = 2.0;
+
+    # Output frequency of ALL data files
+      output_freq = 1;
+
+    # Coulombic cutoff 
+      rcoulomb = 10.0; 
+
+    # Enabling reaction field and giving a proper dielectric constant
+      long_range = wolf; wolf_param = 0.22; 
+
+    # Temperature algorithm (Berendsen), Relaxation time in ps 
+    # and target temperature in K
+      ##thermostat = berendsen; temp = 998.15; t_relaxation = 0.1;
+
+    # Pressure algorithm (Berendsen), Relaxation time in ps 
+    # and target pressure in bar
+      #manostat = berendsen; pressure = 1.013; p_relaxation = 1.0;
+
+    # Time Integrator 
+      integrator = v-verlet;
+
+    # Potential settings
+      noncoulomb = buck;
+
+# Input files
+
+      start_file   = cgo-mm-00.rst;
+
+# Output files
+
+      file_prefix  = cgo-mm-01;
+
+# end of infile
+
