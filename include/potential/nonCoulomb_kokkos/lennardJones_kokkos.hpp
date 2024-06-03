@@ -93,8 +93,8 @@ namespace potential
         }
 
         KOKKOS_INLINE_FUNCTION double calculate(
-            const float  distance,
-            float       &force,
+            const double distance,
+            double      &force,
             const size_t vdWType_i,
             const size_t vdWType_j
         ) const
