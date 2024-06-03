@@ -30,6 +30,8 @@
 
 namespace settings
 {
+    using namespace defaults;
+
     /**
      * @class ConstraintSettings
      *
@@ -39,34 +41,28 @@ namespace settings
     class ConstraintSettings
     {
        private:
-        static inline bool _shakeActivated =
-            defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;   // true
-        static inline bool _distanceConstraintsActivated =
-            defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;   // true
+        static inline bool _shakeActive          = _CONSTRAINTS_ACTIVE_DEFAULT_;
+        static inline bool _distanceConstsActive = _CONSTRAINTS_ACTIVE_DEFAULT_;
 
-        static inline size_t _shakeMaxIter =
-            defaults::_SHAKE_MAX_ITER_DEFAULT_;   // 20
-        static inline size_t _rattleMaxIter =
-            defaults::_RATTLE_MAX_ITER_DEFAULT_;   // 20
+        static inline size_t _shakeMaxIter  = _SHAKE_MAX_ITER_DEFAULT_;
+        static inline size_t _rattleMaxIter = _RATTLE_MAX_ITER_DEFAULT_;
 
-        static inline double _shakeTolerance =
-            defaults::_SHAKE_TOLERANCE_DEFAULT_;   // 1e-8
-        static inline double _rattleTolerance =
-            defaults::_RATTLE_TOLERANCE_DEFAULT_;   // 1e-8
+        static inline double _shakeTolerance  = _SHAKE_TOLERANCE_DEFAULT_;
+        static inline double _rattleTolerance = _RATTLE_TOLERANCE_DEFAULT_;
 
        public:
         ConstraintSettings()  = default;
         ~ConstraintSettings() = default;
 
-        static void activateShake() { _shakeActivated = true; }
-        static void deactivateShake() { _shakeActivated = false; }
+        static void activateShake() { _shakeActive = true; }
+        static void deactivateShake() { _shakeActive = false; }
         static void activateDistanceConstraints()
         {
-            _distanceConstraintsActivated = true;
+            _distanceConstsActive = true;
         }
         static void deactivateDistanceConstraints()
         {
-            _distanceConstraintsActivated = false;
+            _distanceConstsActive = false;
         }
 
         static void setShakeMaxIter(const size_t shakeMaxIter)
@@ -86,10 +82,10 @@ namespace settings
             _rattleTolerance = rattleTolerance;
         }
 
-        [[nodiscard]] static bool isShakeActivated() { return _shakeActivated; }
+        [[nodiscard]] static bool isShakeActivated() { return _shakeActive; }
         [[nodiscard]] static bool isDistanceConstraintsActivated()
         {
-            return _distanceConstraintsActivated;
+            return _distanceConstsActive;
         }
 
         [[nodiscard]] static size_t getShakeMaxIter() { return _shakeMaxIter; }
