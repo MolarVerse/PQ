@@ -155,30 +155,252 @@ void Constraints::applyRattle()
  * @param time
  *
  */
-void Constraints::applyDistanceConstraints(const simulationBox::SimulationBox &simulationBox,
-                                           physicalData::PhysicalData         &data,
-                                           const double                        time)
+void Constraints::applyDistanceConstraints(
+    const simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData         &data,
+    const double                        time
+)
 {
-    if (!_distanceConstraintsActivated)
+    if (!_distanceConstActivated)
         return;
 
     auto effective_time = time - _startTime;
 
     effective_time = effective_time > 0.0 ? effective_time : -1.0;
 
-    std::ranges::for_each(_distanceConstraints,
-                          [&simulationBox, effective_time](auto &distanceConstraint)
-                          { distanceConstraint.applyDistanceConstraint(simulationBox, effective_time); });
+    std::ranges::for_each(
+        _distanceConstraints,
+        [&simulationBox, effective_time](auto &distanceConstraint) {
+            distanceConstraint.applyDistanceConstraint(
+                simulationBox,
+                effective_time
+            );
+        }
+    );
 
     auto lowerEnergy = 0.0;
     auto upperEnergy = 0.0;
 
-    std::ranges::for_each(_distanceConstraints,
-                          [&lowerEnergy](const auto &distanceConstraint) { lowerEnergy += distanceConstraint.getLowerEnergy(); });
+    std::ranges::for_each(
+        _distanceConstraints,
+        [&lowerEnergy](const auto &distanceConstraint)
+        { lowerEnergy += distanceConstraint.getLowerEnergy(); }
+    );
 
-    std::ranges::for_each(_distanceConstraints,
-                          [&upperEnergy](const auto &distanceConstraint) { upperEnergy += distanceConstraint.getUpperEnergy(); });
+    std::ranges::for_each(
+        _distanceConstraints,
+        [&upperEnergy](const auto &distanceConstraint)
+        { upperEnergy += distanceConstraint.getUpperEnergy(); }
+    );
 
     data.setLowerDistanceConstraints(lowerEnergy);
     data.setUpperDistanceConstraints(upperEnergy);
+}
+
+/*****************************
+ *                           *
+ * standard activate methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief activates the shake algorithm
+ *
+ */
+void Constraints::activateDistanceConstraints()
+{
+    _distanceConstActivated = true;
+}
+
+/**
+ * @brief deactivates the shake algorithm
+ *
+ */
+void Constraints::deactivateDistanceConstraints()
+{
+    _distanceConstActivated = false;
+}
+
+/**
+ * @brief checks if shake algorithm is active
+ *
+ * @return true if shake algorithm is active
+ */
+bool Constraints::isShakeActive() const { return _shakeActivated; }
+
+/**
+ * @brief checks if mShake algorithm is active
+ *
+ * @return true if mShake algorithm is active
+ */
+bool Constraints::isMShakeActive() const { return _mShakeActivated; }
+
+/**
+ * @brief checks if distance constraints are active
+ *
+ * @return true if distance constraints are active
+ */
+bool Constraints::isDistanceConstraintsActive() const
+{
+    return _distanceConstActivated;
+}
+
+/**
+ * @brief checks if any constraint is active
+ *
+ */
+bool Constraints::isActive() const
+{
+    return _shakeActivated || _mShakeActivated || _distanceConstActivated;
+}
+
+/************************
+ *                      *
+ * standard add methods *
+ *                      *
+ ************************/
+
+/**
+ * @brief adds a bond constraint to the constraints
+ *
+ * @param bondConstraint
+ *
+ */
+void Constraints::addBondConstraint(const BondConstraint &bondConstraint)
+{
+    _bondConstraints.push_back(bondConstraint);
+}
+
+/**
+ * @brief adds a distance constraint to the constraints
+ *
+ * @param distanceConstraint
+ *
+ */
+void Constraints::addDistanceConstraint(
+    const DistanceConstraint &distanceConstraint
+)
+{
+    _distanceConstraints.push_back(distanceConstraint);
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief returns all bond constraints
+ *
+ * @return all bond constraints
+ */
+const std::vector<BondConstraint> &Constraints::getBondConstraints() const
+{
+    return _bondConstraints;
+}
+
+/**
+ * @brief returns all distance constraints
+ *
+ * @return all distance constraints
+ */
+const std::vector<DistanceConstraint> &Constraints::getDistanceConstraints(
+) const
+{
+    return _distanceConstraints;
+}
+
+/**
+ * @brief returns the number of bond constraints
+ *
+ * @return the number of bond constraints
+ */
+size_t Constraints::getNumberOfBondConstraints() const
+{
+    return _bondConstraints.size();
+}
+
+/**
+ * @brief returns the number of distance constraints
+ *
+ * @return the number of distance constraints
+ */
+size_t Constraints::getNumberOfDistanceConstraints() const
+{
+    return _distanceConstraints.size();
+}
+
+/**
+ * @brief returns the maximum number of iterations for the shake algorithm
+ *
+ * @return the maximum number of iterations for the shake algorithm
+ */
+size_t Constraints::getShakeMaxIter() const { return _shakeMaxIter; }
+
+/**
+ * @brief returns the maximum number of iterations for the rattle algorithm
+ *
+ * @return the maximum number of iterations for the rattle algorithm
+ */
+size_t Constraints::getRattleMaxIter() const { return _rattleMaxIter; }
+
+/**
+ * @brief returns the shake tolerance
+ *
+ * @return the shake tolerance
+ */
+double Constraints::getShakeTolerance() const { return _shakeTolerance; }
+
+/**
+ * @brief returns the rattle tolerance
+ *
+ * @return the rattle tolerance
+ */
+double Constraints::getRattleTolerance() const { return _rattleTolerance; }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief sets the maximum number of iterations for the shake algorithm
+ *
+ * @param shakeMaxIter
+ */
+void Constraints::setShakeMaxIter(const size_t shakeMaxIter)
+{
+    _shakeMaxIter = shakeMaxIter;
+}
+
+/**
+ * @brief sets the maximum number of iterations for the rattle algorithm
+ *
+ * @param rattleMaxIter
+ */
+void Constraints::setRattleMaxIter(const size_t rattleMaxIter)
+{
+    _rattleMaxIter = rattleMaxIter;
+}
+
+/**
+ * @brief sets the shake tolerance
+ *
+ * @param shakeTolerance
+ */
+void Constraints::setShakeTolerance(const double shakeTolerance)
+{
+    _shakeTolerance = shakeTolerance;
+}
+
+/**
+ * @brief sets the rattle tolerance
+ *
+ * @param rattleTolerance
+ */
+void Constraints::setRattleTolerance(const double rattleTolerance)
+{
+    _rattleTolerance = rattleTolerance;
 }
