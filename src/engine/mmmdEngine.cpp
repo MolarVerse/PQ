@@ -107,7 +107,7 @@ void MMMDEngine::takeStep()
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
-#ifdef WITH_KOKKOS
+#ifdef WITH_KOKKOS_NO
     _kokkosVelocityVerlet.secondStep(_simulationBox, _kokkosSimulationBox);
 #else
     _integrator->secondStep(_simulationBox);

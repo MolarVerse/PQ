@@ -59,10 +59,6 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
         HERE ENDS THE MAIN LOOP
     */
 
-#ifdef WITH_KOKKOS
-    Kokkos::finalize();
-#endif
-
     return EXIT_SUCCESS;
 }
 
@@ -90,6 +86,10 @@ int main(int argc, char *argv[])
         ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
+
+#ifdef WITH_KOKKOS
+    Kokkos::finalize();
+#endif
 
 #ifdef WITH_MPI
     mpi::MPI::finalize();
