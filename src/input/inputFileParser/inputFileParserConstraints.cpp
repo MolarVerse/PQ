@@ -126,6 +126,7 @@ void InputFileParserConstraints::parseShakeActivated(
             lineElements[2],
             lineNumber
         );
+
         throw customException::InputFileException(message);
     }
 }
