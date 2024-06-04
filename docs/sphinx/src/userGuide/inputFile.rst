@@ -862,7 +862,11 @@ Possible options are:
 
    1) **off** (default) - no shake will be applied
 
-   2) **on** - shake for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2) **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   3) **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   4) **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied.
 
 Shake-Tolerance
 ===============
