@@ -267,7 +267,7 @@ void InputFileParserFiles::parseMoldescriptorFilename(
  *
  * @throws customException::InputFileException deprecated keyword
  */
-[[noreturn]] void InputFileParserFiles::parseGuffPath(
+void InputFileParserFiles::parseGuffPath(
     const std::vector<std::string> &,
     const size_t
 )

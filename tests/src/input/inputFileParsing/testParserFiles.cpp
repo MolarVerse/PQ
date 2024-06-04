@@ -258,18 +258,18 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
     InputFileParserFiles     parser(*_engine);
-    std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.xyz"};
+    std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
 
     EXPECT_THROW_MSG(
         parser.parseMShakeFilename(lineElements, 0),
         customException::InputFileException,
-        "Cannot open mshake file - filename = mshake.xyz"
+        "Cannot open mshake file - filename = mshake.dat"
     );
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parser.parseMShakeFilename(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getMShakeFileName(),
-        "data/mshakeReader/mshake.xyz"
+        "data/mshakeReader/mshake.dat"
     );
 }
