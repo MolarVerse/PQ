@@ -23,13 +23,14 @@
 #include "constraintsSetup.hpp"
 
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraints.hpp"          // for Constraints
-#include "engine.hpp"               // for Engine
+#include "constraints.hpp"   // for Constraints
+#include "engine.hpp"        // for Engine
 
 using namespace setup;
 
 /**
- * @brief constructs a new Constraints Setup:: Constraints Setup object and calls setup
+ * @brief constructs a new Constraints Setup:: Constraints Setup object and
+ * calls setup
  *
  * @param engine
  */
@@ -59,13 +60,28 @@ void ConstraintsSetup::setup()
 }
 
 /**
+ * @brief setup M-SHAKE
+ *
+ */
+void ConstraintsSetup::setupMShake()
+{
+    if (!_engine.getConstraints().isMShakeActive())
+        return;
+
+    throw customException::UserInputException("M-SHAKE is not implemented yet");
+}
+
+/**
  * @brief sets constraints tolerances
  *
  */
 void ConstraintsSetup::setupTolerances()
 {
-    _engine.getConstraints().setShakeTolerance(settings::ConstraintSettings::getShakeTolerance());
-    _engine.getConstraints().setRattleTolerance(settings::ConstraintSettings::getRattleTolerance());
+    const auto shakeTol  = settings::ConstraintSettings::getShakeTolerance();
+    const auto rattleTol = settings::ConstraintSettings::getRattleTolerance();
+
+    _engine.getConstraints().setShakeTolerance(shakeTol);
+    _engine.getConstraints().setRattleTolerance(rattleTol);
 }
 
 /**
@@ -74,15 +90,23 @@ void ConstraintsSetup::setupTolerances()
  */
 void ConstraintsSetup::setupMaxIterations()
 {
-    _engine.getConstraints().setShakeMaxIter(settings::ConstraintSettings::getShakeMaxIter());
-    _engine.getConstraints().setRattleMaxIter(settings::ConstraintSettings::getRattleMaxIter());
+    const auto shakeMaxIter  = settings::ConstraintSettings::getShakeMaxIter();
+    const auto rattleMaxIter = settings::ConstraintSettings::getRattleMaxIter();
+
+    _engine.getConstraints().setShakeMaxIter(shakeMaxIter);
+    _engine.getConstraints().setRattleMaxIter(rattleMaxIter);
 }
 
 /**
  * @brief sets constraints reference bond lengths
  *
  */
-void ConstraintsSetup::setupRefBondLengths() { _engine.getConstraints().calculateConstraintBondRefs(_engine.getSimulationBox()); }
+void ConstraintsSetup::setupRefBondLengths()
+{
+    _engine.getConstraints().calculateConstraintBondRefs(
+        _engine.getSimulationBox()
+    );
+}
 
 /**
  * @brief corrects the number of degrees of freedom for the constraints
@@ -90,11 +114,19 @@ void ConstraintsSetup::setupRefBondLengths() { _engine.getConstraints().calculat
  */
 void ConstraintsSetup::setupDegreesOfFreedom()
 {
-    _engine.getSimulationBox().setDegreesOfFreedom(_engine.getSimulationBox().getDegreesOfFreedom() -
-                                                   _engine.getConstraints().getNumberOfBondConstraints());
+    auto      &constraints      = _engine.getConstraints();
+    const auto nBondConstraints = constraints.getNumberOfBondConstraints();
+
+    auto dof  = _engine.getSimulationBox().getDegreesOfFreedom();
+    dof      -= nBondConstraints;
+
+    _engine.getSimulationBox().setDegreesOfFreedom(dof);
 
     _engine.getLogOutput().writeSetupInfo(
-        std::format("constraint DOF:   {:8d}", _engine.getConstraints().getNumberOfBondConstraints()));
+        std::format("constraint DOF:   {:8d}", nBondConstraints)
+    );
+
     _engine.getLogOutput().writeSetupInfo(
-        std::format("simulation DOF:   {:8d}", _engine.getSimulationBox().getDegreesOfFreedom()));
+        std::format("simulation DOF:   {:8d}", dof)
+    );
 }
