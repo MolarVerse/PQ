@@ -42,8 +42,10 @@ namespace settings
        private:
         static inline std::string _molDescriptorFileName =
             defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;
+
         static inline std::string _guffDatFileName =
             defaults::_GUFF_FILENAME_DEFAULT_;
+
         static inline std::string _topologyFileName;
         static inline std::string _parameterFileName;
         static inline std::string _intraNonBondedFileName;
@@ -65,138 +67,45 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getMolDescriptorFileName()
-        {
-            return _molDescriptorFileName;
-        }
-        [[nodiscard]] static std::string getGuffDatFileName()
-        {
-            return _guffDatFileName;
-        }
-        [[nodiscard]] static std::string getTopologyFileName()
-        {
-            return _topologyFileName;
-        }
-        [[nodiscard]] static std::string getParameterFilename()
-        {
-            return _parameterFileName;
-        }
-        [[nodiscard]] static std::string getIntraNonBondedFileName()
-        {
-            return _intraNonBondedFileName;
-        }
-        [[nodiscard]] static std::string getStartFileName()
-        {
-            return _startFileName;
-        }
-        [[nodiscard]] static std::string getRingPolymerStartFileName()
-        {
-            return _ringPolymerStartFileName;
-        }
-        [[nodiscard]] static std::string getMShakeFileName()
-        {
-            return _mShakeFileName;
-        }
+        [[nodiscard]] static std::string getMolDescriptorFileName();
+        [[nodiscard]] static std::string getGuffDatFileName();
+        [[nodiscard]] static std::string getTopologyFileName();
+        [[nodiscard]] static std::string getParameterFilename();
+        [[nodiscard]] static std::string getIntraNonBondedFileName();
+        [[nodiscard]] static std::string getStartFileName();
+        [[nodiscard]] static std::string getRingPolymerStartFileName();
+        [[nodiscard]] static std::string getMShakeFileName();
 
-        [[nodiscard]] static bool isTopologyFileNameSet()
-        {
-            return _isTopologyFileNameSet;
-        }
-        [[nodiscard]] static bool isParameterFileNameSet()
-        {
-            return _isParameterFileNameSet;
-        }
-        [[nodiscard]] static bool isIntraNonBondedFileNameSet()
-        {
-            return _isIntraNonBondedFileNameSet;
-        }
-        [[nodiscard]] static bool isRingPolymerStartFileNameSet()
-        {
-            return _isRingPolymerStartFileNameSet;
-        }
-        [[nodiscard]] static bool isMShakeFileNameSet()
-        {
-            return _isMShakeFileNameSet;
-        }
+        [[nodiscard]] static bool isTopologyFileNameSet();
+        [[nodiscard]] static bool isParameterFileNameSet();
+        [[nodiscard]] static bool isIntraNonBondedFileNameSet();
+        [[nodiscard]] static bool isRingPolymerStartFileNameSet();
+        [[nodiscard]] static bool isMShakeFileNameSet();
 
         /********************
          * standard setters *
          ********************/
 
-        static void setMolDescriptorFileName(const std::string_view name)
-        {
-            FileSettings::_molDescriptorFileName = name;
-        }
-        static void setGuffDatFileName(const std::string_view name)
-        {
-            FileSettings::_guffDatFileName = name;
-        }
-        static void setTopologyFileName(const std::string_view name)
-        {
-            FileSettings::_topologyFileName = name;
-        }
-        static void setParameterFileName(const std::string_view name)
-        {
-            FileSettings::_parameterFileName = name;
-        }
-        static void setIntraNonBondedFileName(const std::string_view name)
-        {
-            FileSettings::_intraNonBondedFileName = name;
-        }
-        static void setStartFileName(const std::string_view name)
-        {
-            FileSettings::_startFileName = name;
-        }
-        static void setRingPolymerStartFileName(const std::string_view name)
-        {
-            FileSettings::_ringPolymerStartFileName = name;
-        }
-        static void setMShakeFileName(const std::string_view name)
-        {
-            FileSettings::_mShakeFileName = name;
-        }
+        static void setMolDescriptorFileName(const std::string_view name);
+        static void setGuffDatFileName(const std::string_view name);
+        static void setTopologyFileName(const std::string_view name);
+        static void setParameterFileName(const std::string_view name);
+        static void setIntraNonBondedFileName(const std::string_view name);
+        static void setStartFileName(const std::string_view name);
+        static void setRingPolymerStartFileName(const std::string_view name);
+        static void setMShakeFileName(const std::string_view name);
 
-        static void setIsTopologyFileNameSet()
-        {
-            FileSettings::_isTopologyFileNameSet = true;
-        }
-        static void setIsParameterFileNameSet()
-        {
-            FileSettings::_isParameterFileNameSet = true;
-        }
-        static void setIsIntraNonBondedFileNameSet()
-        {
-            FileSettings::_isIntraNonBondedFileNameSet = true;
-        }
-        static void setIsRingPolymerStartFileNameSet()
-        {
-            FileSettings::_isRingPolymerStartFileNameSet = true;
-        }
-        static void setIsMShakeFileNameSet()
-        {
-            FileSettings::_isMShakeFileNameSet = true;
-        }
+        static void setIsTopologyFileNameSet();
+        static void setIsParameterFileNameSet();
+        static void setIsIntraNonBondedFileNameSet();
+        static void setIsRingPolymerStartFileNameSet();
+        static void setIsMShakeFileNameSet();
 
-        static void unsetIsTopologyFileNameSet()
-        {
-            FileSettings::_isTopologyFileNameSet = false;
-        }
-        static void unsetIsParameterFileNameSet()
-        {
-            FileSettings::_isParameterFileNameSet = false;
-        }
-        static void unsetIsIntraNonBondedFileNameSet()
-        {
-            FileSettings::_isIntraNonBondedFileNameSet = false;
-        }
-        static void unsetIsRingPolymerStartFileNameSet()
-        {
-            FileSettings::_isRingPolymerStartFileNameSet = false;
-        }
-        static void unsetIsMShakeFileNameSet()
-        {
-            FileSettings::_isMShakeFileNameSet = false;
-        }
+        static void unsetIsTopologyFileNameSet();
+        static void unsetIsParameterFileNameSet();
+        static void unsetIsIntraNonBondedFileNameSet();
+        static void unsetIsRingPolymerStartFileNameSet();
+        static void unsetIsMShakeFileNameSet();
     };
 
 }   // namespace settings
