@@ -103,7 +103,7 @@ void InputFileParserConstraints::parseShakeActivated(
 {
     checkCommand(lineElements, lineNumber);
 
-    if (lineElements[2] == "on")
+    if (lineElements[2] == "on" || lineElements[2] == "shake")
     {
         _engine.getConstraints().activateShake();
         settings::ConstraintSettings::activateShake();
@@ -113,10 +113,16 @@ void InputFileParserConstraints::parseShakeActivated(
         _engine.getConstraints().deactivateShake();
         settings::ConstraintSettings::deactivateShake();
     }
+    else if (lineElements[2] == "mshake")
+    {
+        _engine.getConstraints().activateMShake();
+        settings::ConstraintSettings::activateMShake();
+    }
     else
     {
         auto message = format(
-            R"(Invalid shake keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+            "(Invalid shake keyword \"{}\" at line {} in input file\n Possible "
+            "keywords are: \"on\", \"off\", \"shake\", \"mshake\")",
             lineElements[2],
             lineNumber
         );

@@ -40,7 +40,8 @@ using namespace input;
 /**
  * @brief tests parsing the "shake" command
  *
- * @details possible options are on or off - otherwise throws inputFileException
+ * @details if the keyword is not "on", "off", "shake" or "mshake", throws
+ * inputFileException, otherwise it sets either shake or mshake active.
  *
  */
 TEST_F(TestInputFileReader, testParseShakeActivated)
@@ -58,11 +59,30 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     EXPECT_TRUE(_engine->getConstraints().isShakeActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
 
+    settings::ConstraintSettings::deactivateShake();
+    _engine->getConstraints().deactivateShake();
+
+    lineElements = {"shake", "=", "shake"};
+    parser.parseShakeActivated(lineElements, 0);
+    EXPECT_TRUE(_engine->getConstraints().isActive());
+    EXPECT_TRUE(_engine->getConstraints().isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
+
+    settings::ConstraintSettings::deactivateShake();
+    _engine->getConstraints().deactivateShake();
+
+    lineElements = {"shake", "=", "mshake"};
+    parser.parseShakeActivated(lineElements, 0);
+    EXPECT_TRUE(_engine->getConstraints().isActive());
+    EXPECT_TRUE(_engine->getConstraints().isMShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isMShakeActivated());
+
     lineElements = {"shake", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseShakeActivated(lineElements, 0),
         customException::InputFileException,
-        R"(Invalid shake keyword "1" at line 0 in input file\n Possible keywords are "on" and "off")"
+        "(Invalid shake keyword \"1\" at line 0 in input file\n Possible "
+        "keywords are: \"on\", \"off\", \"shake\", \"mshake\")"
     );
 }
 
