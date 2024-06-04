@@ -42,6 +42,7 @@ namespace settings
     {
        private:
         static inline bool _shakeActive          = _CONSTRAINTS_ACTIVE_DEFAULT_;
+        static inline bool _mShakeActive         = _CONSTRAINTS_ACTIVE_DEFAULT_;
         static inline bool _distanceConstsActive = _CONSTRAINTS_ACTIVE_DEFAULT_;
 
         static inline size_t _shakeMaxIter  = _SHAKE_MAX_ITER_DEFAULT_;
@@ -54,53 +55,38 @@ namespace settings
         ConstraintSettings()  = default;
         ~ConstraintSettings() = default;
 
-        static void activateShake() { _shakeActive = true; }
-        static void deactivateShake() { _shakeActive = false; }
-        static void activateDistanceConstraints()
-        {
-            _distanceConstsActive = true;
-        }
-        static void deactivateDistanceConstraints()
-        {
-            _distanceConstsActive = false;
-        }
+        /*****************************
+         * standard activate methods *
+         *****************************/
 
-        static void setShakeMaxIter(const size_t shakeMaxIter)
-        {
-            _shakeMaxIter = shakeMaxIter;
-        }
-        static void setRattleMaxIter(const size_t rattleMaxIter)
-        {
-            _rattleMaxIter = rattleMaxIter;
-        }
-        static void setShakeTolerance(const double shakeTolerance)
-        {
-            _shakeTolerance = shakeTolerance;
-        }
-        static void setRattleTolerance(const double rattleTolerance)
-        {
-            _rattleTolerance = rattleTolerance;
-        }
+        static void activateShake();
+        static void deactivateShake();
+        static void activateMShake();
+        static void deactivateMShake();
+        static void activateDistanceConstraints();
+        static void deactivateDistanceConstraints();
 
-        [[nodiscard]] static bool isShakeActivated() { return _shakeActive; }
-        [[nodiscard]] static bool isDistanceConstraintsActivated()
-        {
-            return _distanceConstsActive;
-        }
+        /***************************
+         * standard getter methods *
+         ***************************/
 
-        [[nodiscard]] static size_t getShakeMaxIter() { return _shakeMaxIter; }
-        [[nodiscard]] static size_t getRattleMaxIter()
-        {
-            return _rattleMaxIter;
-        }
-        [[nodiscard]] static double getShakeTolerance()
-        {
-            return _shakeTolerance;
-        }
-        [[nodiscard]] static double getRattleTolerance()
-        {
-            return _rattleTolerance;
-        }
+        [[nodiscard]] static bool isShakeActivated();
+        [[nodiscard]] static bool isMShakeActivated();
+        [[nodiscard]] static bool isDistanceConstraintsActivated();
+
+        [[nodiscard]] static size_t getShakeMaxIter();
+        [[nodiscard]] static size_t getRattleMaxIter();
+        [[nodiscard]] static double getShakeTolerance();
+        [[nodiscard]] static double getRattleTolerance();
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        static void setShakeMaxIter(const size_t shakeMaxIter);
+        static void setRattleMaxIter(const size_t rattleMaxIter);
+        static void setShakeTolerance(const double shakeTolerance);
+        static void setRattleTolerance(const double rattleTolerance);
     };
 
 }   // namespace settings
