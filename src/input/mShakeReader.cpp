@@ -225,3 +225,23 @@ void MShakeReader::processAtomLines(
 
     mShakeReference.setAtoms(atoms);
 }
+
+/**
+ * @brief getter for engine
+ *
+ * @return engine
+ */
+[[nodiscard]] engine::Engine &MShakeReader::getEngine() const
+{
+    return _engine;
+}
+
+/**
+ * @brief getter for file name
+ *
+ * @return file name
+ */
+[[nodiscard]] std::string MShakeReader::getFileName() const
+{
+    return _fileName;
+}

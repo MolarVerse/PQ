@@ -70,6 +70,9 @@ namespace input::mShake
             std::vector<std::string>     &lines,
             constraints::MShakeReference &mShakeReference
         );
+
+        [[nodiscard]] engine::Engine &getEngine() const;
+        [[nodiscard]] std::string     getFileName() const;
     };
 }   // namespace input::mShake
 

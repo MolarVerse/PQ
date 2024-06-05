@@ -21,3 +21,16 @@
 ******************************************************************************/
 
 #include "testMShakeReader.hpp"
+
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "mShakeReader.hpp"
+#include "throwWithMessage.hpp"
+
+TEST_F(TestMShakeReader, testConstructor)
+{
+    settings::FileSettings::setMShakeFileName("notExistingFile");
+    const auto reader = input::mShake::MShakeReader(*_engine);
+    EXPECT_EQ(reader.getFileName(), "notExistingFile");
+    reader.getEngine();
+}
