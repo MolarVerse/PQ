@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_MOLDESCRIPTOR_READER_H_
+#ifndef _TEST_M_SHAKE_READER_HPP_
 
-#define _TEST_MOLDESCRIPTOR_READER_H_
+#define _TEST_M_SHAKE_READER_HPP_
 
 #include <gtest/gtest.h>
 
@@ -34,7 +34,7 @@
  * @brief Fixture class for testing the MoldescriptorReader class
  *
  */
-class TestMoldescriptorReader : public ::testing::Test
+class TestMShakeReader : public ::testing::Test
 {
    protected:
     void SetUp() override { _engine = new engine::Engine(); }
@@ -42,4 +42,4 @@ class TestMoldescriptorReader : public ::testing::Test
     engine::Engine *_engine;
 };
 
-#endif
+#endif   // _TEST_M_SHAKE_READER_HPP_
