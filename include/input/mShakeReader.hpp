@@ -52,7 +52,7 @@ namespace input::mShake
     class MShakeReader
     {
        private:
-        size_t        _lineNumber;
+        size_t        _lineNumber = 0;
         std::string   _fileName;
         std::ifstream _fp;
 

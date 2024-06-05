@@ -323,6 +323,16 @@ const std::vector<DistanceConstraint> &Constraints::getDistanceConstraints(
 }
 
 /**
+ * @brief returns all mShake references
+ *
+ * @return all mShake references
+ */
+const std::vector<MShakeReference> &Constraints::getMShakeReferences() const
+{
+    return _mShakeReferences;
+}
+
+/**
  * @brief returns the number of bond constraints
  *
  * @return the number of bond constraints

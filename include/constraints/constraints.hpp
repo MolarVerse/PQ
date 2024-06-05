@@ -117,6 +117,8 @@ namespace constraints
         ) const;
         [[nodiscard]] const std::vector<DistanceConstraint> &getDistanceConstraints(
         ) const;
+        [[nodiscard]] const std::vector<MShakeReference> &getMShakeReferences(
+        ) const;
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;

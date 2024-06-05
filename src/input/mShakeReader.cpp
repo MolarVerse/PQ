@@ -74,15 +74,6 @@ void MShakeReader::read()
 
         ++_lineNumber;
 
-        if (lineElements.empty())
-            customException::MShakeFileException(std::format(
-                "Empty line in mShake file at line {}! The M-Shake file should "
-                "be in the form a an extended xyz file. Therefore, this line "
-                "should be the header line of the extended xyz file and "
-                "contain the number of atoms.",
-                _lineNumber
-            ));
-
         const auto nAtoms = std::stoi(lineElements[0]);
 
         auto mShakeReference = constraints::MShakeReference();
@@ -111,14 +102,22 @@ void MShakeReader::read()
  *
  * @param line
  * @param mShakeReference (empty)
+ * 
+ * @throws customException::MShakeFileException - if no moltype definition is found in the comment line
  */
 void MShakeReader::processCommentLine(
     std::string                  &line,
     constraints::MShakeReference &mShakeReference
 )
 {
-    line         = utilities::removeComments(line, "#");
-    auto configs = utilities::getLineCommands(line, _lineNumber);
+    auto lineCommands = utilities::removeComments(line, "#");
+
+    auto configs = std::vector<std::string>();
+
+    if (lineCommands.empty())
+        configs = {};
+    else
+        configs = utilities::getLineCommands(lineCommands, _lineNumber);
 
     auto foundMolType = false;
 
@@ -127,9 +126,9 @@ void MShakeReader::processCommentLine(
         utilities::addSpaces(config, "=", _lineNumber);
         auto configElements = utilities::splitString(config);
 
-        if (utilities::toLowerCopy(configElements[0]) == "moltypes")
+        if (utilities::toLowerCopy(configElements[0]) == "moltype")
         {
-            const auto molType = std::stoi(configElements[1]);
+            const auto molType = std::stoi(configElements[2]);
             try
             {
                 auto simBox = _engine.getSimulationBox();
@@ -139,19 +138,17 @@ void MShakeReader::processCommentLine(
                 );
 
                 foundMolType = true;
+                break;
             }
             catch (const customException::RstFileException &e)
             {
                 throw customException::MShakeFileException(e.what());
             }
-
-            if (foundMolType)
-                break;
         }
     }
 
     if (!foundMolType)
-        customException::MShakeFileException(std::format(
+        throw customException::MShakeFileException(std::format(
             "Unknown command in mShake file at line {}! The M-Shake file "
             "should be in the form a an extended xyz file. Here, the "
             "comment line should contain the molecule type from the "
@@ -171,6 +168,9 @@ void MShakeReader::processCommentLine(
  * @details processes atom line
  *
  * @param lines
+ * 
+ * @throws customException::MShakeFileException - if a line does not contain exactly 4 (1 str and 3 double) arguments
+ * @throws customException::MShakeFileException - if the atomnames in the mshake file do not correspond to the atom names in the rst file
  */
 void MShakeReader::processAtomLines(
     std::vector<std::string>     &lines,
@@ -186,13 +186,11 @@ void MShakeReader::processAtomLines(
         auto lineElements = utilities::splitString(line);
 
         if (lineElements.size() != 4)
-            customException::MShakeFileException(std::format(
-                "Wrong number of elements in atom line in mShake file at line "
-                "{}! "
-                "The M-Shake file should be in the form a an extended xyz "
-                "file. "
-                "Therefore, this line should contain the atom type and the "
-                "coordinates of the atom.",
+            throw customException::MShakeFileException(std::format(
+                "Wrong number of elements in atom lines in mShake file "
+                "starting at line {}! The M-Shake file should be in the form a "
+                "an extended xyz file. Therefore, this line should contain the "
+                "atom type and the coordinates of the atom.",
                 _lineNumber
             ));
 
@@ -214,7 +212,7 @@ void MShakeReader::processAtomLines(
     auto &refAtomNames = molType.getAtomNames();
 
     if (atomNames != refAtomNames)
-        customException::MShakeFileException(std::format(
+        throw customException::MShakeFileException(std::format(
             "Atom names in mShake file at line {} do not match the atom "
             "names of the molecule type! The M-Shake file should be in the "
             "form a an extended xyz file. Therefore, the atom names in the "
