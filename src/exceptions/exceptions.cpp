@@ -32,7 +32,10 @@ using namespace customException;
  * @param color
  * @param exception
  */
-void CustomException::colorfulOutput(const Color::Code color, const std::string_view exception) const
+void CustomException::colorfulOutput(
+    const Color::Code      color,
+    const std::string_view exception
+) const
 {
     const Color::Modifier modifier(color);
     const Color::Modifier def(Color::FG_DEFAULT);
@@ -213,5 +216,16 @@ const char *MPIException::what() const throw()
 const char *QMRunTimeExceeded::what() const throw()
 {
     colorfulOutput(Color::FG_RED, "QMRunTimeExceeded");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *MShakeFileException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "MShakeError");
     return _message.c_str();
 }
