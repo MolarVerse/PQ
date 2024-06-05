@@ -4,6 +4,7 @@ add_library(PQ_input
     inputFileReader.cpp
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
+    mShakeReader.cpp
     commandLineArgs.cpp
 )
 
