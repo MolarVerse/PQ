@@ -23,8 +23,9 @@
 #include "constraintsSetup.hpp"
 
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraints.hpp"   // for Constraints
-#include "engine.hpp"        // for Engine
+#include "constraints.hpp"    // for Constraints
+#include "engine.hpp"         // for Engine
+#include "mShakeReader.hpp"   // for readMShake
 
 using namespace setup;
 
@@ -67,6 +68,8 @@ void ConstraintsSetup::setupMShake()
 {
     if (!_engine.getConstraints().isMShakeActive())
         return;
+
+    input::mShake::readMShake(_engine);
 
     throw customException::UserInputException("M-SHAKE is not implemented yet");
 }

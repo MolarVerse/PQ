@@ -30,6 +30,7 @@
 #include "bondConstraint.hpp"       // for BondConstraint
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
+#include "mShakeReference.hpp"      // for MShakeReference
 #include "physicalData.hpp"         // for PhysicalData
 #include "timer.hpp"                // for Timer
 
@@ -71,6 +72,7 @@ namespace constraints
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
+        std::vector<MShakeReference>    _mShakeReferences;
 
        public:
         void calculateConstraintBondRefs(const SimBox &simulationBox);
@@ -105,6 +107,7 @@ namespace constraints
 
         void addBondConstraint(const BondConstraint &bondConstraint);
         void addDistanceConstraint(const DistanceConstraint &distanceConst);
+        void addMShakeReference(const MShakeReference &mShakeReference);
 
         /***************************
          * standard getter methods *

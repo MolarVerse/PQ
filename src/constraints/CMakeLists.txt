@@ -2,6 +2,7 @@ add_library(constraints
     constraints.cpp
     bondConstraint.cpp
     distanceConstraint.cpp
+    mShakeReference.cpp
 )
 
 target_include_directories(constraints

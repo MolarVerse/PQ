@@ -24,12 +24,19 @@
 
 #define _M_SHAKE_READER_HPP_
 
+#include <cstddef>   // for size_t
 #include <fstream>   // for ifstream
 #include <string>    // for string
+#include <vector>    // for vector
 
 namespace engine
 {
     class Engine;   // Forward declaration
+}
+
+namespace constraints
+{
+    class MShakeReference;   // Forward declaration
 }
 
 namespace input::mShake
@@ -45,7 +52,7 @@ namespace input::mShake
     class MShakeReader
     {
        private:
-        int           _lineNumber;
+        size_t        _lineNumber;
         std::string   _fileName;
         std::ifstream _fp;
 
@@ -55,8 +62,14 @@ namespace input::mShake
         explicit MShakeReader(engine::Engine &engine);
 
         void read();
-        void processCommentLine(std::string &line);
-        void processAtomLine(std::string &line);
+        void processCommentLine(
+            std::string                  &line,
+            constraints::MShakeReference &mShakeReference
+        );
+        void processAtomLines(
+            std::vector<std::string>     &lines,
+            constraints::MShakeReference &mShakeReference
+        );
     };
 }   // namespace input::mShake
 

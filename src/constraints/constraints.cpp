@@ -284,6 +284,17 @@ void Constraints::addDistanceConstraint(
     _distanceConstraints.push_back(distanceConstraint);
 }
 
+/**
+ * @brief adds a mShake reference to the constraints
+ *
+ * @param mShakeReference
+ *
+ */
+void Constraints::addMShakeReference(const MShakeReference &mShakeReference)
+{
+    _mShakeReferences.push_back(mShakeReference);
+}
+
 /***************************
  *                         *
  * standard getter methods *
