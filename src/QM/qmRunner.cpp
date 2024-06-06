@@ -22,13 +22,6 @@
 
 #include "qmRunner.hpp"
 
-#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
-#include "exceptions.hpp"                    // for InputFileException
-#include "physicalData.hpp"                  // for PhysicalData
-#include "qmSettings.hpp"                    // for QMSettings
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "vector3d.hpp"                      // for Vec3D
-
 #include <algorithm>    // for __for_each_fn, for_each
 #include <chrono>       // for seconds
 #include <format>       // for format
@@ -38,6 +31,13 @@
 #include <string>       // for string
 #include <thread>       // for sleep_for
 #include <vector>       // for vector
+
+#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
+#include "exceptions.hpp"                    // for InputFileException
+#include "physicalData.hpp"                  // for PhysicalData
+#include "qmSettings.hpp"                    // for QMSettings
+#include "simulationBox.hpp"                 // for SimulationBox
+#include "vector3d.hpp"                      // for Vec3D
 
 using QM::QMRunner;
 
@@ -67,11 +67,15 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
  *
  * @param simBox
  */
-void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
+void QMRunner::run(
+    simulationBox::SimulationBox &simBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
     writeCoordsFile(simBox);
 
-    std::jthread timeoutThread{[this](const std::stop_token stopToken) { throwAfterTimeout(stopToken); }};
+    std::jthread timeoutThread{[this](const std::stop_token stopToken)
+                               { throwAfterTimeout(stopToken); }};
 
     execute();
 
@@ -82,7 +86,8 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
 }
 
 /**
- * @brief reads the force file (including qm energy) and sets the forces of the atoms
+ * @brief reads the force file (including qm energy) and sets the forces of the
+ * atoms
  *
  * @param box
  * @param physicalData
@@ -91,19 +96,28 @@ void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalD
  *  - if the force file cannot be opened
  *  - if the force file is empty
  */
-void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+void QMRunner::readForceFile(
+    simulationBox::SimulationBox &box,
+    physicalData::PhysicalData   &physicalData
+)
 {
     const std::string forceFileName = "qm_forces";
 
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
-        throw customException::QMRunnerException(
-            std::format("Cannot open {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
+        throw customException::QMRunnerException(std::format(
+            "Cannot open {} force file \"{}\"",
+            string(settings::QMSettings::getQMMethod()),
+            forceFileName
+        ));
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw customException::QMRunnerException(
-            std::format("Empty {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
+        throw customException::QMRunnerException(std::format(
+            "Empty {} force file \"{}\"",
+            string(settings::QMSettings::getQMMethod()),
+            forceFileName
+        ));
 
     double energy = 0.0;
 
@@ -117,10 +131,14 @@ void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::Ph
 
         forceFile >> grad[0] >> grad[1] >> grad[2];
 
-        atom->setForce(-grad * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
+        atom->setForce(
+            -grad * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_
+        );
     };
 
     std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
+
+    ::system(std::format("rm -f {}", forceFileName).c_str());
 }

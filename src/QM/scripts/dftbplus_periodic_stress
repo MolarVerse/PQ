@@ -119,8 +119,14 @@ else
 
 
 # execute dftb
-`dftb+ > run.out`;
-`mv detailed.out $dftb_out`;
+if(system("dftb+ > run.out"))
+{
+  die "\n\n\t (-) $progname: Error executing dftb+.\n";
+}
+if(system("mv detailed.out $dftb_out"))
+{
+  die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
+}
 
 # extract energy and forces from Gaussian output and write forces to file
 
