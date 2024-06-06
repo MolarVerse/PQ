@@ -30,6 +30,7 @@
 #include <utility>   // for make_pair, pair
 #include <vector>
 
+#include "exceptions.hpp"
 #include "vector3d.hpp"
 
 namespace linearAlgebra
@@ -139,7 +140,27 @@ namespace linearAlgebra
     template <typename T>
     std::vector<T> Matrix<T>::solve(const std::vector<T> &b)
     {
-        return (_data.transpose() * _data).ldlt().solve(_data.transpose() * b);
+        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(b.size());
+        std::ranges::copy(b, bEigen.data());
+
+        Eigen::MatrixXd              matrix = _data.transpose() * _data;
+        Eigen::LDLT<Eigen::MatrixXd> ldlt(matrix);
+
+        if (ldlt.info() != Eigen::Success)
+        {
+            // matrix is not positive-definite
+            throw customException::LinearAlgebraException(
+                "Matrix is not positive-definite."
+            );
+        }
+
+        auto solutionEigen = ldlt.solve(_data.transpose() * bEigen);
+
+        std::vector<T> solution;
+        for (int i = 0; i < solutionEigen.size(); ++i)
+            solution.push_back(solutionEigen(i));
+
+        return solution;
     }
 
 }   // namespace linearAlgebra
