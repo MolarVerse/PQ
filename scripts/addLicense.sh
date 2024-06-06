@@ -9,7 +9,7 @@ for i in $(find src/ tests/ include/ tools/ apps/ -regex ".*\.\(hpp\|cpp\|c\|h\)
 
 done
 
-for i in $(find tools/ | grep "\.py"); do
+for i in $(find integration_tests/ | grep "\.py"); do
 
     if ! grep -q Copyright $i; then
 
