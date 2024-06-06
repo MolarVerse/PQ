@@ -57,7 +57,8 @@ namespace customException
         MPIEXCEPTION,
         QMRUNTIMEEXCEEDED,
         MSHAKEFILEEXCEPTION,
-        MSHAKEEXCEPTION
+        MSHAKEEXCEPTION,
+        LINEARALGEBRAEXCEPTION
     };
 
     /**
@@ -313,6 +314,19 @@ namespace customException
      * @brief Exception for MShake errors
      */
     class MShakeException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class LinearAlgebraException inherits from CustomException
+     *
+     * @brief Exception for linear algebra errors
+     */
+    class LinearAlgebraException : public CustomException
     {
        public:
         using CustomException::CustomException;
