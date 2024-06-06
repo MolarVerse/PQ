@@ -71,7 +71,7 @@ void ConstraintsSetup::setupMShake()
 
     input::mShake::readMShake(_engine);
 
-    _engine.getConstraints().initMShake();
+    _engine.getConstraints().initMShake(_engine.getSimulationBox());
 
     throw customException::UserInputException("M-SHAKE is not implemented yet");
 }

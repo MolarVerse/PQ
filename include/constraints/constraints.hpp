@@ -78,7 +78,7 @@ namespace constraints
        public:
         void calculateConstraintBondRefs(const SimBox &simulationBox);
 
-        void initMShake();
+        void initMShake(SimBox &simulationBox);
 
         void applyShake(SimBox &simulationBox);
         void _applyShake(SimBox &simulationBox);

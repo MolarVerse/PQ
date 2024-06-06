@@ -28,7 +28,7 @@
 
 #include "mShakeReference.hpp"   // for MShakeReference
 #include "matrix.hpp"            // for Matrix
-#include "vectorNear.hpp"        // for Vec3D
+#include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
 {

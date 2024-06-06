@@ -37,8 +37,13 @@ using namespace constraints;
 /**
  * @brief init M-Shake from M-Shake references
  *
+ * @param simulationBox
+ *
  */
-void Constraints::initMShake() { _mShake.initMShake(); }
+void Constraints::initMShake(simulationBox::SimulationBox &simBox)
+{
+    _mShake.initMShake(simBox);
+}
 
 /**
  * @brief calculates the reference bond data of all bond constraints
