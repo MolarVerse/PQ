@@ -13,7 +13,8 @@ target_include_directories(linearAlgebra
 )
 
 target_link_libraries(linearAlgebra
-    PUBLIC
+    PRIVATE
+    Eigen3::Eigen
 )
 
 install(TARGETS linearAlgebra

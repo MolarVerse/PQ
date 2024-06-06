@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <eigen3/Eigen/Dense>
 #include <utility>   // for make_pair, pair
 #include <vector>
 
@@ -38,15 +39,16 @@ namespace linearAlgebra
     template <typename T>
     class Matrix
     {
-      protected:
-        size_t                      _rows;
-        size_t                      _cols;
-        std::vector<std::vector<T>> _data;
+       protected:
+        size_t                                           _rows;
+        size_t                                           _cols;
+        Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> _data;
 
-      public:
+       public:
         Matrix() = default;
         explicit Matrix(const size_t rows, const size_t cols);
         explicit Matrix(const size_t rowsAndCols);
+        explicit Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data);
 
         /**
          * @brief index operator
@@ -54,12 +56,26 @@ namespace linearAlgebra
          * @param const size_t index
          * @return std::vector<T> &
          */
-        std::vector<T> &operator[](const size_t index) { return _data[index]; }
+        T &operator()(const size_t index_i, const size_t index_j)
+        {
+            return _data(index_i, index_j);
+        }
 
-        [[nodiscard]] size_t                    rows() const { return _rows; }
-        [[nodiscard]] size_t                    cols() const { return _cols; }
-        [[nodiscard]] size_t                    size() const { return _rows * _cols; }
-        [[nodiscard]] std::pair<size_t, size_t> shape() const { return std::make_pair(_rows, _cols); }
+        /**
+         * @brief const index operator
+         *
+         * @param const size_t index
+         * @return const std::vector<T> &
+         */
+        Matrix<T> inverse();
+
+        [[nodiscard]] size_t rows() const { return _rows; }
+        [[nodiscard]] size_t cols() const { return _cols; }
+        [[nodiscard]] size_t size() const { return _rows * _cols; }
+        [[nodiscard]] std::pair<size_t, size_t> shape() const
+        {
+            return std::make_pair(_rows, _cols);
+        }
     };
 
     /**
@@ -70,10 +86,10 @@ namespace linearAlgebra
      * @param cols
      */
     template <typename T>
-    Matrix<T>::Matrix(const size_t rows, const size_t cols) : _rows(rows), _cols(cols)
+    Matrix<T>::Matrix(const size_t rows, const size_t cols)
+        : _rows(rows), _cols(cols)
     {
-        _data.resize(rows);
-        std::ranges::for_each(_data, [cols](auto &row) { row.resize(cols); });
+        _data.resize(rows, cols);
     }
 
     /**
@@ -83,10 +99,36 @@ namespace linearAlgebra
      * @param rowsAndCols
      */
     template <typename T>
-    Matrix<T>::Matrix(const size_t rowsAndCols) : _rows(rowsAndCols), _cols(rowsAndCols)
+    Matrix<T>::Matrix(const size_t rowsAndCols)
+        : _rows(rowsAndCols), _cols(rowsAndCols)
     {
-        _data.resize(rowsAndCols);
-        std::ranges::for_each(_data, [rowsAndCols](auto &row) { row.resize(rowsAndCols); });
+        _data.resize(rowsAndCols, rowsAndCols);
+    }
+
+    /**
+     * @brief Construct a new Matrix< T>:: Matrix object
+     *
+     * @tparam T
+     * @param data
+     */
+    template <typename T>
+    Matrix<T>::Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data)
+        : _data(data)
+    {
+        _rows = _data.rows();
+        _cols = _data.cols();
+    }
+
+    /**
+     * @brief Inverts the matrix using Eigen library
+     *
+     * @tparam T
+     * @return Matrix<T> &
+     */
+    template <typename T>
+    Matrix<T> Matrix<T>::inverse()
+    {
+        return Matrix<T>(_data.inverse());
     }
 
 }   // namespace linearAlgebra

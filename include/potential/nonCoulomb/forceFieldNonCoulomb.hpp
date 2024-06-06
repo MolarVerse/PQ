@@ -113,7 +113,7 @@ namespace potential
         template <typename T>
         void setNonCoulombPairsMatrix(c_ul index1, c_ul index2, T &value)
         {
-            _nonCoulombPairsMatrix[index1][index2] = std::make_shared<T>(value);
+            _nonCoulombPairsMatrix(index1, index2) = std::make_shared<T>(value);
         }
     };
 

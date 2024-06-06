@@ -96,19 +96,19 @@ TEST(TestPotential, fillDiagonalElementsOfNonCoulombPairsMatrix)
     EXPECT_EQ(potential.getNonCoulombPairsMatrix().rows(), 2);
     EXPECT_EQ(potential.getNonCoulombPairsMatrix().cols(), 2);
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][0]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(0, 0)->getInternalType1(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][0]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(0, 0)->getInternalType2(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][1]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(1, 1)->getInternalType1(),
         9
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][1]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(1, 1)->getInternalType2(),
         9
     );
 }
@@ -305,19 +305,19 @@ TEST(
     potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
 
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
         1
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
         1
     );
 }
@@ -366,19 +366,19 @@ TEST(
     potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
 
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
         1
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
         1
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
         0
     );
 }
@@ -434,19 +434,19 @@ TEST(
     potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
 
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[0][1]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
         1
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType1(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
         0
     );
     EXPECT_EQ(
-        potential.getNonCoulombPairsMatrix()[1][0]->getInternalType2(),
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
         1
     );
 }

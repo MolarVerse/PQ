@@ -18,6 +18,9 @@ target_link_libraries(constraints
     settings
     timings
     physicalData
+
+    PRIVATE
+    Eigen3::Eigen
 )
 
 install(TARGETS constraints
