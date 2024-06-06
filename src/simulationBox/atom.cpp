@@ -22,11 +22,30 @@
 
 #include "atom.hpp"
 
+#include "atomMassMap.hpp"        // for atomMassMap
 #include "box.hpp"                // for Box
+#include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "stringUtilities.hpp"    // for toLowerCopy
 #include "vector3d.hpp"           // for Vec3D
 
 using simulationBox::Atom;
+
+/**
+ * @brief sets the mass of the atom
+ *
+ * @throw customException::MolDescriptorException if the atom name is invalid
+ */
+void Atom::initMass()
+{
+    const auto keyword = utilities::toLowerCopy(_name);
+    if (!constants::atomMassMap.contains(keyword))
+        throw customException::MolDescriptorException(
+            "Invalid atom name \"" + keyword + "\""
+        );
+    else
+        setMass(constants::atomMassMap.at(keyword));
+}
 
 /**
  * @brief scales the velocities of the atom in orthogonal space
@@ -34,13 +53,18 @@ using simulationBox::Atom;
  * @param scalingFactor
  * @param box
  */
-void Atom::scaleVelocityOrthogonalSpace(const linearAlgebra::tensor3D &scalingTensor, const simulationBox::Box &box)
+void Atom::scaleVelocityOrthogonalSpace(
+    const linearAlgebra::tensor3D &scalingTensor,
+    const simulationBox::Box      &box
+)
 {
-    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+    if (settings::ManostatSettings::getIsotropy() !=
+        settings::Isotropy::FULL_ANISOTROPIC)
         _velocity = box.transformIntoOrthogonalSpace(_velocity);
 
     _velocity = scalingTensor * _velocity;
 
-    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+    if (settings::ManostatSettings::getIsotropy() !=
+        settings::Isotropy::FULL_ANISOTROPIC)
         _velocity = box.transformIntoSimulationSpace(_velocity);
 }
