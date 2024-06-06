@@ -31,6 +31,7 @@
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "mShakeReference.hpp"      // for MShakeReference
+#include "matrix.hpp"               // for Matrix
 #include "physicalData.hpp"         // for PhysicalData
 #include "timer.hpp"                // for Timer
 
@@ -70,12 +71,18 @@ namespace constraints
         double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
         double _startTime       = 0.0;
 
-        std::vector<BondConstraint>     _bondConstraints;
-        std::vector<DistanceConstraint> _distanceConstraints;
-        std::vector<MShakeReference>    _mShakeReferences;
+        std::vector<BondConstraint>      _bondConstraints;
+        std::vector<DistanceConstraint>  _distanceConstraints;
+        std::vector<MShakeReference>     _mShakeReferences;
+        std::vector<std::vector<double>> _mShakeRSquaredRefs;
+
+        std::vector<linearAlgebra::Matrix<double>> _mShakeMatrices;
+        std::vector<linearAlgebra::Matrix<double>> _mShakeInvMatrices;
 
        public:
         void calculateConstraintBondRefs(const SimBox &simulationBox);
+
+        void initMShake();
 
         void applyShake(const SimBox &simulationBox);
         void applyRattle();

@@ -102,14 +102,23 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
         error_message
     );
 
+    auto molType = simulationBox::MoleculeType(1);
+    mShakeReference.setMoleculeType(molType);
+
+    atomLines = std::vector<std::string>{atomLine1};
+
+    EXPECT_THROW_MSG(
+        reader.processAtomLines(atomLines, mShakeReference),
+        customException::MShakeFileException,
+        "Molecule type 1 has only one atom. M-Shake requires at least two "
+        "atoms."
+    );
+
     atomLine1 = "H 0.0 0.0 0.0";
     atomLine2 = "O 1.0 1.0 1.0  #asdfasdf";
     atomLine3 = "C 2.0 2.0 2.0   ";
 
     atomLines = std::vector<std::string>{atomLine1, atomLine2, atomLine3};
-
-    auto molType = simulationBox::MoleculeType(1);
-    mShakeReference.setMoleculeType(molType);
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
@@ -143,6 +152,52 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
     EXPECT_EQ(atoms[2].getPosition()[0], 2.0);
     EXPECT_EQ(atoms[2].getPosition()[1], 2.0);
     EXPECT_EQ(atoms[2].getPosition()[2], 2.0);
+}
+
+TEST_F(TestMShakeReader, testReadMemberFunction)
+{
+    settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
+
+    auto molType = simulationBox::MoleculeType(1);
+    molType.addAtomName("H");
+    molType.addAtomName("O");
+    molType.addAtomName("C");
+    _engine->getSimulationBox().addMoleculeType(molType);
+
+    auto molType2 = simulationBox::MoleculeType(2);
+    molType2.addAtomName("H");
+    molType2.addAtomName("O");
+    _engine->getSimulationBox().addMoleculeType(molType2);
+
+    input::mShake::readMShake(*_engine);
+
+    auto mShakeReferences = _engine->getConstraints().getMShakeReferences();
+
+    EXPECT_EQ(mShakeReferences.size(), 2);
+    EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);
+    EXPECT_EQ(mShakeReferences[1].getMoleculeType().getMoltype(), 2);
+    EXPECT_EQ(mShakeReferences[0].getAtoms().size(), 3);
+    EXPECT_EQ(mShakeReferences[1].getAtoms().size(), 2);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getName(), "H");
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[1].getName(), "O");
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[2].getName(), "C");
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[0].getName(), "H");
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[1].getName(), "O");
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getPosition()[0], 0.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getPosition()[1], 0.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getPosition()[2], 0.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[1].getPosition()[0], 1.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[1].getPosition()[1], 1.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[1].getPosition()[2], 1.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[2].getPosition()[0], 2.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[2].getPosition()[1], 2.0);
+    EXPECT_EQ(mShakeReferences[0].getAtoms()[2].getPosition()[2], 2.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[0].getPosition()[0], 0.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[0].getPosition()[1], 0.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[0].getPosition()[2], 0.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[1].getPosition()[0], 1.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[1].getPosition()[1], 1.0);
+    EXPECT_EQ(mShakeReferences[1].getAtoms()[1].getPosition()[2], 1.0);
 }
 
 TEST_F(TestMShakeReader, testRead)

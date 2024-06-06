@@ -102,8 +102,9 @@ void MShakeReader::read()
  *
  * @param line
  * @param mShakeReference (empty)
- * 
- * @throws customException::MShakeFileException - if no moltype definition is found in the comment line
+ *
+ * @throws customException::MShakeFileException - if no moltype definition is
+ * found in the comment line
  */
 void MShakeReader::processCommentLine(
     std::string                  &line,
@@ -168,9 +169,11 @@ void MShakeReader::processCommentLine(
  * @details processes atom line
  *
  * @param lines
- * 
- * @throws customException::MShakeFileException - if a line does not contain exactly 4 (1 str and 3 double) arguments
- * @throws customException::MShakeFileException - if the atomnames in the mshake file do not correspond to the atom names in the rst file
+ *
+ * @throws customException::MShakeFileException - if a line does not contain
+ * exactly 4 (1 str and 3 double) arguments
+ * @throws customException::MShakeFileException - if the atomnames in the mshake
+ * file do not correspond to the atom names in the rst file
  */
 void MShakeReader::processAtomLines(
     std::vector<std::string>     &lines,
@@ -207,9 +210,18 @@ void MShakeReader::processAtomLines(
         atomNames.push_back(atomName);
         atoms.push_back(atom);
     }
-    // // _engine.addAt
+
     auto  molType      = mShakeReference.getMoleculeType();
     auto &refAtomNames = molType.getAtomNames();
+
+    if (atoms.size() == 1)
+    {
+        throw customException::MShakeFileException(std::format(
+            "Molecule type {} has only one atom. M-Shake requires at least two "
+            "atoms.",
+            molType.getMoltype()
+        ));
+    }
 
     if (atomNames != refAtomNames)
         throw customException::MShakeFileException(std::format(
@@ -222,16 +234,6 @@ void MShakeReader::processAtomLines(
         ));
 
     mShakeReference.setAtoms(atoms);
-}
-
-/**
- * @brief getter for engine
- *
- * @return engine
- */
-[[nodiscard]] engine::Engine &MShakeReader::getEngine() const
-{
-    return _engine;
 }
 
 /**

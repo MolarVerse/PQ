@@ -65,8 +65,9 @@ namespace constraints
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] const std::vector<simulationBox::Atom> &getAtoms() const;
-        [[nodiscard]] simulationBox::MoleculeType &getMoleculeType() const;
+        [[nodiscard]] size_t getNumberOfAtoms() const;
+        [[nodiscard]] std::vector<simulationBox::Atom> &getAtoms();
+        [[nodiscard]] simulationBox::MoleculeType      &getMoleculeType() const;
     };
 }   // namespace constraints
 

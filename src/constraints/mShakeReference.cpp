@@ -47,6 +47,11 @@ void MShakeReference::setMoleculeType(simulationBox::MoleculeType &moltype)
     _moleculeType = std::make_shared<simulationBox::MoleculeType>(moltype);
 }
 
+/**
+ * @brief Set the atoms object
+ *
+ * @param atoms
+ */
 void MShakeReference::setAtoms(const std::vector<simulationBox::Atom> &atoms)
 {
     _atoms = atoms;
@@ -58,11 +63,25 @@ void MShakeReference::setAtoms(const std::vector<simulationBox::Atom> &atoms)
  *                         *
  ***************************/
 
-const std::vector<simulationBox::Atom> &MShakeReference::getAtoms() const
-{
-    return _atoms;
-}
+/**
+ * @brief get the number of atoms
+ *
+ * @return const size_t
+ */
+size_t MShakeReference::getNumberOfAtoms() const { return _atoms.size(); }
 
+/**
+ * @brief get the atoms
+ *
+ * @return const std::vector<simulationBox::Atom>&
+ */
+std::vector<simulationBox::Atom> &MShakeReference::getAtoms() { return _atoms; }
+
+/**
+ * @brief get the molecule type
+ *
+ * @return const simulationBox::MoleculeType&
+ */
 simulationBox::MoleculeType &MShakeReference::getMoleculeType() const
 {
     return *_moleculeType;

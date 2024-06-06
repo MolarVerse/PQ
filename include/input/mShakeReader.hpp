@@ -71,8 +71,7 @@ namespace input::mShake
             constraints::MShakeReference &mShakeReference
         );
 
-        [[nodiscard]] engine::Engine &getEngine() const;
-        [[nodiscard]] std::string     getFileName() const;
+        [[nodiscard]] std::string getFileName() const;
     };
 }   // namespace input::mShake
 

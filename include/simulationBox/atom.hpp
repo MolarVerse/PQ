@@ -67,17 +67,38 @@ namespace simulationBox
        public:
         Atom() = default;
 
-        void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
-        void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
+        void initMass();
+
+        void addPosition(const linearAlgebra::Vec3D &position)
+        {
+            _position += position;
+        }
+        void addVelocity(const linearAlgebra::Vec3D &velocity)
+        {
+            _velocity += velocity;
+        }
         void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
-        void addForce(const double force_x, const double force_y, const double force_z)
+        void addForce(
+            const double force_x,
+            const double force_y,
+            const double force_z
+        )
         {
             _force += {force_x, force_y, force_z};
         }
-        void addShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce += shiftForce; }
+        void addShiftForce(const linearAlgebra::Vec3D &shiftForce)
+        {
+            _shiftForce += shiftForce;
+        }
 
-        void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
-        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
+        void scaleVelocity(const double scaleFactor)
+        {
+            _velocity *= scaleFactor;
+        }
+        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor)
+        {
+            _velocity *= scaleFactor;
+        }
         void scaleVelocityOrthogonalSpace(
             const linearAlgebra::tensor3D &scaleFactor,
             const Box                     &box
@@ -88,13 +109,25 @@ namespace simulationBox
          ***************************/
 
         [[nodiscard]] std::string getName() const { return _name; }
-        [[nodiscard]] std::string getAtomTypeName() const { return _atomTypeName; }
+        [[nodiscard]] std::string getAtomTypeName() const
+        {
+            return _atomTypeName;
+        }
 
-        [[nodiscard]] size_t getExternalAtomType() const { return _externalAtomType; }
+        [[nodiscard]] size_t getExternalAtomType() const
+        {
+            return _externalAtomType;
+        }
         [[nodiscard]] size_t getAtomType() const { return _atomType; }
 
-        [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
-        [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+        [[nodiscard]] size_t getExternalGlobalVDWType() const
+        {
+            return _externalGlobalVDWType;
+        }
+        [[nodiscard]] size_t getInternalGlobalVDWType() const
+        {
+            return _internalGlobalVDWType;
+        }
 
         [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
         [[nodiscard]] bool isMMOnly() const { return _isMMOnly; }
@@ -103,21 +136,39 @@ namespace simulationBox
         [[nodiscard]] double getMass() const { return _mass; }
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
 
-        [[nodiscard]] linearAlgebra::Vec3D getPosition() const { return _position; }
-        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const { return _velocity; }
+        [[nodiscard]] linearAlgebra::Vec3D getPosition() const
+        {
+            return _position;
+        }
+        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const
+        {
+            return _velocity;
+        }
         [[nodiscard]] linearAlgebra::Vec3D getForce() const { return _force; }
-        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const { return _shiftForce; }
+        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const
+        {
+            return _shiftForce;
+        }
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setName(const std::string_view &name) { _name = name; }
-        void setAtomTypeName(const std::string_view &atomTypeName) { _atomTypeName = atomTypeName; }
-        void setAtomicNumber(const int atomicNumber) { _atomicNumber = atomicNumber; }
+        void setAtomTypeName(const std::string_view &atomTypeName)
+        {
+            _atomTypeName = atomTypeName;
+        }
+        void setAtomicNumber(const int atomicNumber)
+        {
+            _atomicNumber = atomicNumber;
+        }
 
         void setMass(const double mass) { _mass = mass; }
-        void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
+        void setPartialCharge(const double partialCharge)
+        {
+            _partialCharge = partialCharge;
+        }
 
         void setAtomType(const size_t atomType) { _atomType = atomType; }
         void setExternalAtomType(const size_t externalAtomType)
@@ -136,10 +187,19 @@ namespace simulationBox
         void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
         void setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
 
-        void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
-        void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }
+        void setPosition(const linearAlgebra::Vec3D &position)
+        {
+            _position = position;
+        }
+        void setVelocity(const linearAlgebra::Vec3D &velocity)
+        {
+            _velocity = velocity;
+        }
         void setForce(const linearAlgebra::Vec3D &force) { _force = force; }
-        void setShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce = shiftForce; }
+        void setShiftForce(const linearAlgebra::Vec3D &shiftForce)
+        {
+            _shiftForce = shiftForce;
+        }
 
         void setForceToZero() { _force = {0.0, 0.0, 0.0}; }
     };

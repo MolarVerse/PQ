@@ -28,9 +28,79 @@
 #include <string>       // for string
 #include <vector>       // for vector
 
-#include "exceptions.hpp"
+#include "exceptions.hpp"      // for ShakeException
+#include "mathUtilities.hpp"   // for kroneckerDelta
 
 using namespace constraints;
+
+/**
+ * @brief init M-Shake from M-Shake references
+ *
+ */
+void Constraints::initMShake()
+{
+    for (auto &mShakeReference : _mShakeReferences)
+    {
+        const auto nAtoms = mShakeReference.getNumberOfAtoms();
+        const auto nBonds = nAtoms * (nAtoms - 1) / 2;
+
+        auto &atoms = mShakeReference.getAtoms();
+
+        std::vector<double>           rSquaredReds;
+        linearAlgebra::Matrix<double> mShakeMatrix(nBonds, nBonds);
+
+        size_t bond_ij = 0;
+        for (size_t i = 0; i < nAtoms - 1; ++i)
+        {
+            atoms[i].initMass();
+            const auto mass_i = atoms[i].getMass();
+
+            for (size_t j = i + 1; j < nAtoms; ++j)
+            {
+                atoms[j].initMass();
+                const auto mass_j = atoms[j].getMass();
+
+                auto dxyz_ij = atoms[i].getPosition() - atoms[j].getPosition();
+                auto r2_ij   = dot(dxyz_ij, dxyz_ij);
+
+                rSquaredReds.push_back(r2_ij);
+
+                size_t bond_kl = 0;
+
+                for (size_t k = 0; k < nAtoms - 1; ++k)
+                {
+                    for (size_t l = k + 1; l < nAtoms; ++l)
+                    {
+                        auto dxyz_kl =
+                            atoms[k].getPosition() - atoms[l].getPosition();
+
+                        const auto ik = utilities::kroneckerDelta(i, k);
+                        const auto il = utilities::kroneckerDelta(i, l);
+                        const auto jk = utilities::kroneckerDelta(j, k);
+                        const auto jl = utilities::kroneckerDelta(j, l);
+
+                        auto mShakeElement  = (ik - il) / mass_i;
+                        mShakeElement      += (jl - jk) / mass_j;
+                        mShakeElement      *= dot(dxyz_ij, dxyz_kl);
+
+                        mShakeMatrix(bond_ij, bond_kl) = mShakeElement;
+
+                        ++bond_kl;
+                    }
+                }
+
+                ++bond_ij;
+            }
+        }
+
+        _mShakeRSquaredRefs.push_back(rSquaredReds);
+        _mShakeMatrices.push_back(mShakeMatrix);
+
+        auto invMatrix = mShakeMatrix.inverse();
+
+        _mShakeInvMatrices.push_back(invMatrix);
+    }
+}
 
 /**
  * @brief calculates the reference bond data of all bond constraints
@@ -56,7 +126,8 @@ void Constraints::calculateConstraintBondRefs(
 /**
  * @brief applies the shake algorithm to all bond constraints
  *
- * @throws customException::ShakeException if shake algorithm does not converge
+ * @throws customException::ShakeException if shake algorithm does not
+ * converge
  */
 void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 {
@@ -104,7 +175,8 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
 /**
  * @brief applies the rattle algorithm to all bond constraints
  *
- * @throws customException::ShakeException if rattle algorithm does not converge
+ * @throws customException::ShakeException if rattle algorithm does not
+ * converge
  */
 void Constraints::applyRattle()
 {
