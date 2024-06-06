@@ -30,6 +30,8 @@
 #include <utility>   // for make_pair, pair
 #include <vector>
 
+#include "vector3d.hpp"
+
 namespace linearAlgebra
 {
     /**
@@ -61,21 +63,17 @@ namespace linearAlgebra
             return _data(index_i, index_j);
         }
 
-        /**
-         * @brief const index operator
-         *
-         * @param const size_t index
-         * @return const std::vector<T> &
-         */
-        Matrix<T> inverse();
-
-        [[nodiscard]] size_t rows() const { return _rows; }
-        [[nodiscard]] size_t cols() const { return _cols; }
-        [[nodiscard]] size_t size() const { return _rows * _cols; }
         [[nodiscard]] std::pair<size_t, size_t> shape() const
         {
             return std::make_pair(_rows, _cols);
         }
+
+        [[nodiscard]] size_t rows() const { return _rows; }
+        [[nodiscard]] size_t cols() const { return _cols; }
+        [[nodiscard]] size_t size() const { return _rows * _cols; }
+
+        Matrix<T>      inverse();
+        std::vector<T> solve(const std::vector<T> &b);
     };
 
     /**
@@ -129,6 +127,19 @@ namespace linearAlgebra
     Matrix<T> Matrix<T>::inverse()
     {
         return Matrix<T>(_data.inverse());
+    }
+
+    /**
+     * @brief solve the linear system of equations
+     *
+     * @tparam T
+     * @return Vector3D<T>
+     *
+     */
+    template <typename T>
+    std::vector<T> Matrix<T>::solve(const std::vector<T> &b)
+    {
+        return (_data.transpose() * _data).ldlt().solve(_data.transpose() * b);
     }
 
 }   // namespace linearAlgebra

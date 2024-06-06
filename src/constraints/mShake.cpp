@@ -87,14 +87,16 @@ void MShake::initMShakeReferences()
                         const auto pos_l   = atoms[l].getPosition();
                         const auto dxyz_kl = pos_k - pos_l;
 
-                        const auto ik = utilities::kroneckerDelta(i, k);
-                        const auto il = utilities::kroneckerDelta(i, l);
-                        const auto jk = utilities::kroneckerDelta(j, k);
-                        const auto jl = utilities::kroneckerDelta(j, l);
-
-                        auto mShakeElement  = (ik - il) / mass_i;
-                        mShakeElement      += (jl - jk) / mass_j;
-                        mShakeElement      *= dot(dxyz_ij, dxyz_kl);
+                        const auto mShakeElement = calculateShakeMatrixElement(
+                            i,
+                            j,
+                            k,
+                            l,
+                            mass_i,
+                            mass_j,
+                            dxyz_ij,
+                            dxyz_kl
+                        );
 
                         mShakeMatrix(bond_ij, bond_kl) = mShakeElement;
 
@@ -135,41 +137,157 @@ void MShake::initPosBeforeIntegration(simulationBox::SimulationBox &simBox)
  * @param simulationBox
  *
  */
-void MShake::applyShake(simulationBox::SimulationBox &simulationBox)
+void MShake::applyMShake(
+    const double                  rattleTolerance,
+    simulationBox::SimulationBox &simulationBox
+)
 {
     auto &molecules = simulationBox.getMolecules();
 
-    auto dt        = settings::TimingsSettings::getTimeStep();
-    auto dtSquared = dt * dt;
+    const auto dt          = settings::TimingsSettings::getTimeStep();
+    const auto timeFactor  = 4.0 * dt * dt;
+    const auto shakeFactor = 2.0 * dt * dt;
 
-    dt        *= constants::_FS_TO_S_;
-    dtSquared *= constants::_V_VERLET_VELOCITY_FACTOR_;
-
-    for (auto &molecule : molecules)
+    for (size_t mol = 0; mol < molecules.size(); ++mol)
     {
-        const auto moltype = molecule.getMoltype();
+        auto      &molecule = molecules[mol];
+        const auto moltype  = molecule.getMoltype();
 
         if (!isMShakeType(moltype))
             continue;
 
-        const auto mShakeIndex = findMShakeReferenceIndex(moltype);
-        const auto nAtoms      = molecule.getNumberOfAtoms();
-        const auto nBonds      = _mShakeInvMatrices[mShakeIndex].rows();
+        const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
+        const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
+        const auto nAtoms       = molecule.getNumberOfAtoms();
+        const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
 
-        auto  xyzUnconstrained = molecule.getAtomPositions();
         auto &atoms            = molecule.getAtoms();
+        auto  posUnconstrained = _posBeforeIntegration[mol];
 
-        for (auto &atom : atoms)
+        std::vector<linearAlgebra::Vec3D> bondsUnconstrained(nBonds);
+        std::vector<double>               shakeVector(nBonds);
+        linearAlgebra::Matrix<double>     mShakeMatrix(nBonds, nBonds);
+
+        size_t index_ij = 0;
+
+        for (size_t i = 0; i < nAtoms - 1; ++i)
+            for (size_t j = i + 1; j < nAtoms; ++j)
+            {
+                const auto pos_i = _posBeforeIntegration[mol][i];
+                const auto pos_j = _posBeforeIntegration[mol][j];
+                auto       dxyz  = pos_i - pos_j;
+
+                simulationBox.applyPBC(dxyz);
+
+                const auto r2    = dot(dxyz, dxyz);
+                const auto r2Ref = mShakeR2Refs[index_ij];
+
+                const auto r2Deviation = r2 - r2Ref;
+
+                bondsUnconstrained[index_ij] = dxyz;
+                shakeVector[index_ij]        = r2Deviation / timeFactor;
+
+                ++index_ij;
+            }
+
+        while (true)
         {
-            const auto &vel   = atom->getVelocity();
-            const auto &force = atom->getForce();
-            const auto &mass  = atom->getMass();
+            auto converged = true;
+            index_ij       = 0;
 
-            // xyzUnconstrained += vel * dt * constants::_FS_TO_S_;
+            for (size_t i = 0; i < nAtoms - 1; ++i)
+            {
+                const auto mass_i = atoms[i]->getMass();
 
-            // // dtSquared contains already all conversion factors
-            // xyzUnconstrained += force / mass * dtSquared;
+                for (size_t j = i + 1; j < nAtoms; ++j)
+                {
+                    const auto mass_j   = atoms[j]->getMass();
+                    size_t     index_kl = 0;
+
+                    for (size_t k = 0; k < nAtoms - 1; ++k)
+                    {
+                        for (size_t l = 0; l < nAtoms - 1; ++l)
+                        {
+                            const auto mShakeElement =
+                                calculateShakeMatrixElement(
+                                    i,
+                                    j,
+                                    k,
+                                    l,
+                                    mass_i,
+                                    mass_j,
+                                    bondsUnconstrained[index_ij],
+                                    bondsUnconstrained[index_kl]
+                                );
+
+                            mShakeMatrix(index_ij, index_kl) = mShakeElement;
+
+                            ++index_kl;
+                        }
+                    }
+
+                    ++index_ij;
+                }
+            }
+
+            const auto solutionVector = mShakeMatrix.solve(shakeVector);
+
+            index_ij = 0;
+
+            for (size_t i = 0; i < nAtoms - 1; ++i)
+            {
+                const auto mass_i = atoms[i]->getMass();
+
+                for (size_t j = i + 1; j < nAtoms; ++j)
+                {
+                    const auto mass_j = atoms[j]->getMass();
+
+                    auto posAdjustment = shakeFactor *
+                                         solutionVector[index_ij] *
+                                         _posBeforeIntegration[mol][i];
+
+                    posUnconstrained[i] -= posAdjustment / mass_i;
+                    posUnconstrained[j] += posAdjustment / mass_j;
+
+                    atoms[i]->addVelocity(-posAdjustment / (mass_i * dt));
+                    atoms[j]->addVelocity(posAdjustment / (mass_j * dt));
+
+                    ++index_ij;
+                }
+            }
+
+            index_ij = 0;
+
+            for (size_t i = 0; i < nAtoms - 1; ++i)
+            {
+                for (size_t j = i + 1; j < nAtoms; ++j)
+                {
+                    auto pos = posUnconstrained[i] - posUnconstrained[j];
+                    simulationBox.applyPBC(pos);
+
+                    const auto r2    = dot(pos, pos);
+                    const auto r2Ref = mShakeR2Refs[index_ij];
+
+                    const auto r2Deviation = r2 - r2Ref;
+
+                    shakeVector[index_ij]        = r2Deviation / timeFactor;
+                    bondsUnconstrained[index_ij] = pos;
+
+                    if (::abs(r2Deviation) / (2.0 * r2Ref) > rattleTolerance)
+                        converged = false;
+
+                    ++index_ij;
+                }
+            }
+
+            if (!converged)
+                break;
         }
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            atoms[i]->setPosition(posUnconstrained[i]);
+
+        molecule.calculateCenterOfMass(simulationBox.getBox());
     }
 }
 
@@ -271,4 +389,31 @@ void MShake::addMShakeReference(const MShakeReference &mShakeReference)
 const std::vector<MShakeReference> &MShake::getMShakeReferences() const
 {
     return _mShakeReferences;
+}
+
+/**
+ * @brief calculate M - Shake matrix element
+ *
+ */
+double MShake::calculateShakeMatrixElement(
+    const size_t               i,
+    const size_t               j,
+    const size_t               k,
+    const size_t               l,
+    const double               mass_i,
+    const double               mass_j,
+    const linearAlgebra::Vec3D pos_ij,
+    const linearAlgebra::Vec3D pos_kl
+)
+{
+    const auto ik = utilities::kroneckerDelta(i, k);
+    const auto il = utilities::kroneckerDelta(i, l);
+    const auto jk = utilities::kroneckerDelta(j, k);
+    const auto jl = utilities::kroneckerDelta(j, l);
+
+    auto mShakeElement  = (ik - il) / mass_i;
+    mShakeElement      += (jl - jk) / mass_j;
+    mShakeElement      *= dot(pos_ij, pos_kl);
+
+    return mShakeElement;
 }

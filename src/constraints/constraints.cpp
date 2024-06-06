@@ -139,12 +139,7 @@ void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
  */
 void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
 {
-    auto molecules = simulationBox.getMolecules();
-
-    for (auto &molecule : molecules)
-    {
-        const auto moltype = molecule.getMoltype();
-    }
+    _mShake.applyMShake(_rattleTolerance, simulationBox);
 }
 
 /**

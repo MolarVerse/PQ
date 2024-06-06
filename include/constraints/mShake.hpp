@@ -56,7 +56,18 @@ namespace constraints
         void initMShakeReferences();
         void initPosBeforeIntegration(simulationBox::SimulationBox &);
 
-        void applyShake(simulationBox::SimulationBox &simulationBox);
+        double calculateShakeMatrixElement(
+            const size_t               i,
+            const size_t               j,
+            const size_t               k,
+            const size_t               l,
+            const double               mass_i,
+            const double               mass_j,
+            const linearAlgebra::Vec3D pos_ij,
+            const linearAlgebra::Vec3D pos_kl
+        );
+
+        void applyMShake(const double, simulationBox::SimulationBox &);
         bool isMShakeType(const size_t moltype) const;
 
         [[nodiscard]] const MShakeReference &findMShakeReference(const size_t
