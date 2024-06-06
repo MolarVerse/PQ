@@ -229,3 +229,14 @@ const char *MShakeFileException::what() const throw()
     colorfulOutput(Color::FG_RED, "MShakeError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *MShakeException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "MShakeError");
+    return _message.c_str();
+}

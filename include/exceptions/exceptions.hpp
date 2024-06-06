@@ -56,7 +56,8 @@ namespace customException
         QMRUNNEREXCEPTION,
         MPIEXCEPTION,
         QMRUNTIMEEXCEEDED,
-        MSHAKEFILEEXCEPTION
+        MSHAKEFILEEXCEPTION,
+        MSHAKEEXCEPTION
     };
 
     /**
@@ -299,6 +300,19 @@ namespace customException
      * @brief Exception for mShake errors
      */
     class MShakeFileException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class MShakeException inherits from CustomException
+     *
+     * @brief Exception for MShake errors
+     */
+    class MShakeException : public CustomException
     {
        public:
         using CustomException::CustomException;

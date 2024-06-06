@@ -30,6 +30,7 @@
 
 #include "exceptions.hpp"      // for ShakeException
 #include "mathUtilities.hpp"   // for kroneckerDelta
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
 
@@ -37,70 +38,7 @@ using namespace constraints;
  * @brief init M-Shake from M-Shake references
  *
  */
-void Constraints::initMShake()
-{
-    for (auto &mShakeReference : _mShakeReferences)
-    {
-        const auto nAtoms = mShakeReference.getNumberOfAtoms();
-        const auto nBonds = nAtoms * (nAtoms - 1) / 2;
-
-        auto &atoms = mShakeReference.getAtoms();
-
-        std::vector<double>           rSquaredReds;
-        linearAlgebra::Matrix<double> mShakeMatrix(nBonds, nBonds);
-
-        size_t bond_ij = 0;
-        for (size_t i = 0; i < nAtoms - 1; ++i)
-        {
-            atoms[i].initMass();
-            const auto mass_i = atoms[i].getMass();
-
-            for (size_t j = i + 1; j < nAtoms; ++j)
-            {
-                atoms[j].initMass();
-                const auto mass_j = atoms[j].getMass();
-
-                auto dxyz_ij = atoms[i].getPosition() - atoms[j].getPosition();
-                auto r2_ij   = dot(dxyz_ij, dxyz_ij);
-
-                rSquaredReds.push_back(r2_ij);
-
-                size_t bond_kl = 0;
-
-                for (size_t k = 0; k < nAtoms - 1; ++k)
-                {
-                    for (size_t l = k + 1; l < nAtoms; ++l)
-                    {
-                        auto dxyz_kl =
-                            atoms[k].getPosition() - atoms[l].getPosition();
-
-                        const auto ik = utilities::kroneckerDelta(i, k);
-                        const auto il = utilities::kroneckerDelta(i, l);
-                        const auto jk = utilities::kroneckerDelta(j, k);
-                        const auto jl = utilities::kroneckerDelta(j, l);
-
-                        auto mShakeElement  = (ik - il) / mass_i;
-                        mShakeElement      += (jl - jk) / mass_j;
-                        mShakeElement      *= dot(dxyz_ij, dxyz_kl);
-
-                        mShakeMatrix(bond_ij, bond_kl) = mShakeElement;
-
-                        ++bond_kl;
-                    }
-                }
-
-                ++bond_ij;
-            }
-        }
-
-        _mShakeRSquaredRefs.push_back(rSquaredReds);
-        _mShakeMatrices.push_back(mShakeMatrix);
-
-        auto invMatrix = mShakeMatrix.inverse();
-
-        _mShakeInvMatrices.push_back(invMatrix);
-    }
-}
+void Constraints::initMShake() { _mShake.initMShake(); }
 
 /**
  * @brief calculates the reference bond data of all bond constraints
@@ -124,16 +62,32 @@ void Constraints::calculateConstraintBondRefs(
 }
 
 /**
+ * @brief applies both shake and mShake algorithm to all bond constraints
+ *
+ * @param simulationBox
+ */
+void Constraints::applyShake(simulationBox::SimulationBox &simulationBox)
+{
+    if (!_shakeActivated && !_mShakeActivated)
+        return;
+
+    if (_shakeActivated)
+        _applyShake(simulationBox);
+
+    if (_mShakeActivated)
+        _applyMShake(simulationBox);
+}
+
+/**
  * @brief applies the shake algorithm to all bond constraints
+ *
+ * @param simulationBox
  *
  * @throws customException::ShakeException if shake algorithm does not
  * converge
  */
-void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
+void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
 {
-    if (!_shakeActivated)
-        return;
-
     startTimingsSection("Shake");
 
     std::vector<bool> convergedVector;
@@ -170,6 +124,22 @@ void Constraints::applyShake(const simulationBox::SimulationBox &simulationBox)
         ));
 
     stopTimingsSection("Shake");
+}
+
+/**
+ * @brief applies the mShake algorithm to all bond constraints
+ *
+ * @param simulationBox
+ *
+ */
+void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
+{
+    auto molecules = simulationBox.getMolecules();
+
+    for (auto &molecule : molecules)
+    {
+        const auto moltype = molecule.getMoltype();
+    }
 }
 
 /**
@@ -364,7 +334,7 @@ void Constraints::addDistanceConstraint(
  */
 void Constraints::addMShakeReference(const MShakeReference &mShakeReference)
 {
-    _mShakeReferences.push_back(mShakeReference);
+    _mShake.addMShakeReference(mShakeReference);
 }
 
 /***************************
@@ -401,7 +371,7 @@ const std::vector<DistanceConstraint> &Constraints::getDistanceConstraints(
  */
 const std::vector<MShakeReference> &Constraints::getMShakeReferences() const
 {
-    return _mShakeReferences;
+    return _mShake.getMShakeReferences();
 }
 
 /**
