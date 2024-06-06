@@ -98,6 +98,10 @@ if(BUILD_WITH_KOKKOS)
     include(kokkos)
 endif()
 
+if(BUILD_WITH_CUDA)
+    include(cuda)
+endif()
+
 if(BUILD_WITH_PYTHON_BINDINGS)
     include(python_bindings)
 endif()

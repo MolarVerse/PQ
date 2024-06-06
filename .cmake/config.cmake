@@ -26,6 +26,11 @@ endif()
 option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
 
 # *****************
+# BUILD WITH CUDA
+# *****************
+option(BUILD_WITH_CUDA "Build with CUDA" ON)
+
+# *****************
 # BUILD WITH TESTS
 # *****************
 option(BUILD_WITH_TESTS "Build tests" ON)
@@ -38,7 +43,7 @@ option(BUILD_WITH_MPI "Build with MPI" OFF)
 # ***********
 # BUILD TOOLS
 # ***********
-option(BUILD_WITH_PYTHON_BINDINGS "Build with python bindings" ON)
+option(BUILD_WITH_PYTHON_BINDINGS "Build with python bindings" OFF)
 
 # ***************
 # BUILD WITH IWYU
