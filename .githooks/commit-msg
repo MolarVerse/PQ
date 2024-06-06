@@ -1,0 +1,169 @@
+#!/bin/bash
+
+message=$(cat .git/COMMIT_EDITMSG)
+lowercase_message=${message,,}
+
+# Check for patterns and handle errors
+matched=false
+
+# Features
+if [[ "$lowercase_message" =~ ^feat(\(.+\))?: ]]; then
+  matched=true
+  group="Feature"
+fi
+
+# Bug Fixes
+if [[ "$lowercase_message" =~ ^fix(\(.+\))?: ]]; then
+  matched=true
+  group="Fix"
+fi
+
+if [[ "$lowercase_message" =~ ^docs(\(.+\))?: ]]; then
+  matched=true
+  group="Docs"
+elif [[ "$lowercase_message" =~ ^doc(\(.+\))?: ]]; then
+  matched=true
+  group="Docs"
+fi
+
+if [[ "$lowercase_message" =~ ^style(\(.+\))?: ]]; then
+  matched=true
+  group="Style"
+fi
+
+if [[ "$lowercase_message" =~ ^refactor(\(.+\))?: ]]; then
+  matched=true
+  group="Refactor"
+elif [[ "$lowercase_message" =~ ^ref(\(.+\))?: ]]; then
+  matched=true
+  group="Refactor"
+fi
+
+if [[ "$lowercase_message" =~ ^perf(\(.+\))?: ]]; then
+  matched=true
+  group="Performance"
+fi
+
+if [[ "$lowercase_message" =~ ^test(\(.+\))?: ]]; then
+  matched=true
+  group="Test"
+elif [[ "$lowercase_message" =~ ^tests(\(.+\))?: ]]; then
+  matched=true
+  group="Test"
+fi
+
+#chore
+if [[ "$lowercase_message" =~ ^chore(\(.+\))?: ]]; then
+  matched=true
+  group="Chore"
+fi
+
+#merge
+if [[ "$lowercase_message" =~ ^merge(\(.+\))?: ]]; then
+  matched=true
+  group="Merge"
+fi
+
+# Reverts
+if [[ "$lowercase_message" =~ ^revert(\(.+\))?: ]]; then
+  matched=true
+  group="Revert"
+fi
+
+if [[ "$lowercase_message" =~ ^build(\(.+\))?: ]]; then
+  matched=true
+  group="Breaking"
+fi
+
+# Examples
+if [[ "$lowercase_message" =~ ^example(\(.+\))?: ]]; then
+  matched=true
+  group="Example"
+elif [[ "$lowercase_message" =~ ^examples(\(.+\))?: ]]; then
+  matched=true
+  group="Example"
+fi
+
+# Dependency Updates (informational)
+if [[ "$lowercase_message" =~ ^deps(\(.+\))?: ]]; then
+  matched=true
+  group="Dependency"
+fi
+
+# ci
+if [[ "$lowercase_message" =~ ^ci(\(.+\))?: ]]; then
+  matched=true
+  group="CI"
+fi
+
+#pylint
+if [[ "$lowercase_message" =~ ^pylint(\(.+\))?: ]]; then
+  matched=true
+  group="Pylint"
+fi
+
+if [[ "$lowercase_message" =~ ^admin(\(.+\))?: ]]; then
+  matched=true
+  group="Administrative"
+fi
+
+#random stuff that doesn't fit into any of the above categories
+#starting with a $
+if [[ "$lowercase_message" =~ ^\$ ]]; then
+  matched=true
+  group="Random"
+fi
+
+# ... (similar checks for other patterns in the list)
+
+# No match found
+if ! $matched; then
+  echo "Error: Commit message header '$message' does not match any defined pattern!\n"
+
+  #list me all possible patterns per group in a nice formatted output
+  echo "Possible patterns are:"
+  echo "  - Group:          Pattern(s)"
+  echo "  - --------------------------------------------"
+  echo "  - Feature:        feat:"
+  echo "  - Fix:            fix:"
+  echo "  - Docs:           docs:, doc:"
+  echo "  - Style:          style:"
+  echo "  - Refactor:       refactor:, ref:"
+  echo "  - Performance:    perf:"
+  echo "  - Test:           test:, tests:"
+  echo "  - Chore:          chore:"
+  echo "  - Merge:          merge:"
+  echo "  - Revert:         revert:"
+  echo "  - Build:          build:"
+  echo "  - Example:        example:, examples:"
+  echo "  - Dependency:     deps:"
+  echo "  - CI:             ci:"
+  echo "  - Pylint:         pylint:"
+  echo "  - Administrative: admin:"
+  echo "  - Random:         $"
+  # ... (similar output for other patterns in the list)
+  echo "  - --------------------------------------------\n"
+
+  echo "Please use one of the patterns above in the commit message header."
+  echo "You can also add a scope in parentheses after the pattern (e.g. 'feat(scope): ...')."
+  exit 1
+fi
+
+# Matched a pattern, check for skip flag (optional)
+if [[ ${skip+unset} ]]; then # Check if skip variable is set
+  if [[ "$lowercase_message" =~ $skip ]]; then
+    echo "Skipping commit '$message' (marked for skipping)"
+    exit 0 # Allow skipping with exit code 0 for a clean commit process
+  fi
+fi
+
+# Check for duplicate Signed-off-by lines (optional)
+test "" = "$(grep '^Signed-off-by: ' "$1" | sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+  echo >&2 "Error: Duplicate Signed-off-by lines found in commit message!"
+  exit 1
+}
+
+# Commit passed checks (optional)
+echo "Commit message '$message' ($group) looks good!"
+
+# Script exits successfully (no need for explicit exit code)
