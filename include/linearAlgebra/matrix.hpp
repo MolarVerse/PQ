@@ -53,21 +53,9 @@ namespace linearAlgebra
         explicit Matrix(const size_t rowsAndCols);
         explicit Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data);
 
-        /**
-         * @brief index operator
-         *
-         * @param const size_t index
-         * @return std::vector<T> &
-         */
-        T &operator()(const size_t index_i, const size_t index_j)
-        {
-            return _data(index_i, index_j);
-        }
+        [[nodiscard]] T &operator()(const size_t index_i, const size_t index_j);
 
-        [[nodiscard]] std::pair<size_t, size_t> shape() const
-        {
-            return std::make_pair(_rows, _cols);
-        }
+        [[nodiscard]] std::pair<size_t, size_t> shape() const;
 
         [[nodiscard]] size_t rows() const { return _rows; }
         [[nodiscard]] size_t cols() const { return _cols; }
@@ -116,6 +104,29 @@ namespace linearAlgebra
     {
         _rows = _data.rows();
         _cols = _data.cols();
+    }
+
+    /**
+     * @brief index operator
+     *
+     * @param const size_t index
+     * @return std::vector<T> &
+     */
+    template <typename T>
+    T &Matrix<T>::operator()(const size_t index_i, const size_t index_j)
+    {
+        return _data(index_i, index_j);
+    }
+
+    /**
+     * @brief returns the shape of the matrix
+     *
+     * @return std::pair<size_t, size_t>
+     */
+    template <typename T>
+    std::pair<size_t, size_t> Matrix<T>::shape() const
+    {
+        return std::make_pair(_rows, _cols);
     }
 
     /**
