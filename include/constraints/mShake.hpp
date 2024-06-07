@@ -58,6 +58,7 @@ namespace constraints
         void initMShakeReferences();
         void initPosBeforeIntegration(SimBox &);
         void applyMShake(const double, SimBox &);
+        void applyMRattle(const double, SimBox &);
 
         [[nodiscard]] size_t calculateNumberOfBondConstraints(SimBox &) const;
 

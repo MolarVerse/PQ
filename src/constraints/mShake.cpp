@@ -291,6 +291,81 @@ void MShake::applyMShake(
     }
 }
 
+void MShake::applyMRattle(
+    const double                  rattleTolerance,
+    simulationBox::SimulationBox &simulationBox
+)
+{
+    auto &molecules = simulationBox.getMolecules();
+
+    for (size_t mol = 0; mol < molecules.size(); ++mol)
+    {
+        auto      &molecule = molecules[mol];
+        const auto moltype  = molecule.getMoltype();
+
+        if (!isMShakeType(moltype))
+            continue;
+
+        const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
+        const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
+        const auto nAtoms       = molecule.getNumberOfAtoms();
+        const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
+
+        auto &atoms = molecule.getAtoms();
+
+        std::vector<double>               rattleVector(nBonds);
+        std::vector<linearAlgebra::Vec3D> bonds(nBonds);
+
+        size_t index_ij = 0;
+        for (size_t i = 0; i < nAtoms - 1; ++i)
+        {
+            for (size_t j = i + 1; j < nAtoms; ++j)
+            {
+                const auto pos_i = atoms[i]->getPosition();
+                const auto pos_j = atoms[j]->getPosition();
+                auto       dxyz  = pos_i - pos_j;
+
+                simulationBox.applyPBC(dxyz);
+
+                const auto v_i = atoms[i]->getVelocity();
+                const auto v_j = atoms[j]->getVelocity();
+                const auto dv  = v_i - v_j;
+
+                bonds[index_ij]        = dxyz;
+                rattleVector[index_ij] = dot(dxyz, dv);
+
+                ++index_ij;
+            }
+        }
+
+        index_ij = 0;
+        for (size_t i = 0; i < nAtoms - 1; ++i)
+        {
+            const auto mass_i = atoms[i]->getMass();
+
+            for (size_t j = i + 1; j < nAtoms; ++j)
+            {
+                const auto mass_j = atoms[j]->getMass();
+
+                auto velConstraint = 0.0;
+
+                for (size_t k = 0; k < nBonds; ++k)
+                {
+                    velConstraint += _mShakeMatrices[mShakeIndex](index_ij, k) *
+                                     rattleVector[k];
+                }
+
+                const auto velAdjustment = velConstraint * bonds[index_ij];
+
+                atoms[i]->addVelocity(velAdjustment / mass_i);
+                atoms[j]->addVelocity(-velAdjustment / mass_j);
+
+                ++index_ij;
+            }
+        }
+    }
+}
+
 /**
  * @brief check if molecule type is M - Shake type
  *
@@ -323,7 +398,8 @@ bool MShake::isMShakeType(const size_t moltype) const
  *
  * @return bool
  *
- * @throw customException::MShakeException if no M - Shake reference is found
+ * @throw customException::MShakeException if no M - Shake reference is
+ * found
  */
 const MShakeReference &MShake::findMShakeReference(const size_t moltype) const
 {
@@ -349,7 +425,8 @@ const MShakeReference &MShake::findMShakeReference(const size_t moltype) const
  *
  * @return size_t
  *
- * @throw customException::MShakeException if no M - Shake reference is found
+ * @throw customException::MShakeException if no M - Shake reference is
+ * found
  */
 size_t MShake::findMShakeReferenceIndex(const size_t moltype) const
 {
