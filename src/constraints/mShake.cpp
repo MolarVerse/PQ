@@ -25,6 +25,7 @@
 #include <format>   // for std::format
 
 #include "constants.hpp"         // for constants
+#include "distanceKernels.hpp"   // for distVecAndDist2
 #include "mShakeReference.hpp"   // for MShakeReference
 #include "mathUtilities.hpp"     // for dot
 #include "matrix.hpp"            // for Matrix
@@ -51,68 +52,73 @@ void MShake::initMShakeReferences()
 {
     for (auto &mShakeReference : _mShakeReferences)
     {
+        auto &atoms = mShakeReference.getAtoms();
+
+        /************************************
+         * initialize the mass of all atoms *
+         ************************************/
+        for (auto &atom : atoms) atom.initMass();
+
         const auto nAtoms = mShakeReference.getNumberOfAtoms();
         const auto nBonds = nAtoms * (nAtoms - 1) / 2;
-
-        auto &atoms = mShakeReference.getAtoms();
 
         std::vector<double>           rSquaredRefs;
         linearAlgebra::Matrix<double> mShakeMatrix(nBonds, nBonds);
 
         size_t bond_ij = 0;
+
         for (size_t i = 0; i < nAtoms - 1; ++i)
         {
-            atoms[i].initMass();
             const auto mass_i = atoms[i].getMass();
 
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
-                atoms[j].initMass();
                 const auto mass_j = atoms[j].getMass();
 
-                const auto pos_i   = atoms[i].getPosition();
-                const auto pos_j   = atoms[j].getPosition();
-                const auto dxyz_ij = pos_i - pos_j;
-                const auto r2_ij   = dot(dxyz_ij, dxyz_ij);
+                const auto [dxyz_ij, r2_ij] = kernel::distVecAndDist2(
+                    atoms[i].getPosition(),
+                    atoms[j].getPosition()
+                );
 
                 rSquaredRefs.push_back(r2_ij);
 
                 size_t bond_kl = 0;
-
                 for (size_t k = 0; k < nAtoms - 1; ++k)
-                {
                     for (size_t l = k + 1; l < nAtoms; ++l)
                     {
-                        const auto pos_k   = atoms[k].getPosition();
-                        const auto pos_l   = atoms[l].getPosition();
-                        const auto dxyz_kl = pos_k - pos_l;
+                        const auto dxyz_kl = kernel::distVec(
+                            atoms[k].getPosition(),
+                            atoms[l].getPosition()
+                        );
 
-                        const auto mShakeElement = calculateShakeMatrixElement(
-                            i,
-                            j,
-                            k,
-                            l,
-                            mass_i,
-                            mass_j,
-                            dxyz_ij,
-                            dxyz_kl
+                        const auto mShakeElement = calcMatrixElement(
+                            {i, j, k, l},
+                            {mass_i, mass_j},
+                            {dxyz_ij, dxyz_kl}
                         );
 
                         mShakeMatrix(bond_ij, bond_kl) = mShakeElement;
 
                         ++bond_kl;
                     }
-                }
 
                 ++bond_ij;
             }
         }
 
-        _mShakeRSquaredRefs.push_back(rSquaredRefs);
-        _mShakeMatrices.push_back(mShakeMatrix);
-
+        /*********************
+         * invert the matrix *
+         *********************/
         const auto invMatrix = mShakeMatrix.inverse();
 
+        /*******************************************************
+         * add the calculated values to the respective vectors *
+         * each molecule type has its own set of references    *
+         * therefore, in the end each reference vector has a   *
+         * size equal to the number of m-shake molecule types  *
+         *******************************************************/
+        _mShakeRSquaredRefs.push_back(rSquaredRefs);
+        _mShakeMatrices.push_back(mShakeMatrix);
         _mShakeInvMatrices.push_back(invMatrix);
     }
 }
@@ -126,6 +132,14 @@ void MShake::initMShakeReferences()
 void MShake::initPosBeforeIntegration(simulationBox::SimulationBox &simBox)
 {
     const auto &molecules = simBox.getMolecules();
+
+    _posBeforeIntegration.clear();
+
+    /******************************************************
+     * NOTE: add the positions of all atoms to the vector *
+     *       the positions are in the form of a           *
+     *       std::vector<linearAlgebra::Vec3D>            *
+     ******************************************************/
 
     for (const auto &molecule : molecules)
         _posBeforeIntegration.push_back(molecule.getAtomPositions());
@@ -173,13 +187,12 @@ void MShake::applyMShake(
         for (size_t i = 0; i < nAtoms - 1; ++i)
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
-                const auto pos_i = _posBeforeIntegration[mol][i];
-                const auto pos_j = _posBeforeIntegration[mol][j];
-                auto       dxyz  = pos_i - pos_j;
+                const auto [dxyz, r2] = kernel::distVecAndDist2(
+                    _posBeforeIntegration[mol][i],
+                    _posBeforeIntegration[mol][i],
+                    simulationBox
+                );
 
-                simulationBox.applyPBC(dxyz);
-
-                const auto r2    = dot(dxyz, dxyz);
                 const auto r2Ref = mShakeR2Refs[index_ij];
 
                 const auto r2Deviation = r2 - r2Ref;
@@ -208,17 +221,12 @@ void MShake::applyMShake(
                     {
                         for (size_t l = 0; l < nAtoms - 1; ++l)
                         {
-                            const auto mShakeElement =
-                                calculateShakeMatrixElement(
-                                    i,
-                                    j,
-                                    k,
-                                    l,
-                                    mass_i,
-                                    mass_j,
-                                    bondsUnconstrained[index_ij],
-                                    bondsUnconstrained[index_kl]
-                                );
+                            const auto mShakeElement = calcMatrixElement(
+                                {i, j, k, l},
+                                {mass_i, mass_j},
+                                {bondsUnconstrained[index_ij],
+                                 bondsUnconstrained[index_kl]}
+                            );
 
                             mShakeMatrix(index_ij, index_kl) = mShakeElement;
 
@@ -242,9 +250,9 @@ void MShake::applyMShake(
                 {
                     const auto mass_j = atoms[j]->getMass();
 
-                    auto posAdjustment = shakeFactor *
-                                         solutionVector[index_ij] *
-                                         _posBeforeIntegration[mol][i];
+                    const auto posAdjustment = shakeFactor *
+                                               solutionVector[index_ij] *
+                                               _posBeforeIntegration[mol][i];
 
                     posUnconstrained[i] -= posAdjustment / mass_i;
                     posUnconstrained[j] += posAdjustment / mass_j;
@@ -262,10 +270,12 @@ void MShake::applyMShake(
             {
                 for (size_t j = i + 1; j < nAtoms; ++j)
                 {
-                    auto pos = posUnconstrained[i] - posUnconstrained[j];
-                    simulationBox.applyPBC(pos);
+                    const auto [pos, r2] = kernel::distVecAndDist2(
+                        posUnconstrained[i],
+                        posUnconstrained[j],
+                        simulationBox
+                    );
 
-                    const auto r2    = dot(pos, pos);
                     const auto r2Ref = mShakeR2Refs[index_ij];
 
                     const auto r2Deviation = r2 - r2Ref;
@@ -291,10 +301,14 @@ void MShake::applyMShake(
     }
 }
 
-void MShake::applyMRattle(
-    const double                  rattleTolerance,
-    simulationBox::SimulationBox &simulationBox
-)
+/**
+ * @brief apply M - Rattle to correct velocities
+ *
+ * @param rattleTolerance
+ * @param simulationBox
+ *
+ */
+void MShake::applyMRattle(simulationBox::SimulationBox &simulationBox)
 {
     auto &molecules = simulationBox.getMolecules();
 
@@ -321,11 +335,11 @@ void MShake::applyMRattle(
         {
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
-                const auto pos_i = atoms[i]->getPosition();
-                const auto pos_j = atoms[j]->getPosition();
-                auto       dxyz  = pos_i - pos_j;
-
-                simulationBox.applyPBC(dxyz);
+                const auto dxyz = kernel::distVec(
+                    atoms[i]->getPosition(),
+                    atoms[j]->getPosition(),
+                    simulationBox
+                );
 
                 const auto v_i = atoms[i]->getVelocity();
                 const auto v_j = atoms[j]->getVelocity();
@@ -351,8 +365,9 @@ void MShake::applyMRattle(
 
                 for (size_t k = 0; k < nBonds; ++k)
                 {
-                    velConstraint += _mShakeMatrices[mShakeIndex](index_ij, k) *
-                                     rattleVector[k];
+                    velConstraint +=
+                        _mShakeInvMatrices[mShakeIndex](index_ij, k) *
+                        rattleVector[k];
                 }
 
                 const auto velAdjustment = velConstraint * bonds[index_ij];
@@ -499,21 +514,27 @@ size_t MShake::calculateNumberOfBondConstraints(
  * @brief calculate M - Shake matrix element
  *
  */
-double MShake::calculateShakeMatrixElement(
-    const size_t               i,
-    const size_t               j,
-    const size_t               k,
-    const size_t               l,
-    const double               mass_i,
-    const double               mass_j,
-    const linearAlgebra::Vec3D pos_ij,
-    const linearAlgebra::Vec3D pos_kl
-)
+double MShake::calcMatrixElement(
+    const std::tuple<size_t, size_t, size_t, size_t>            &indices,
+    const std::pair<double, double>                             &masses,
+    const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
+) const
 {
+    const auto i = std::get<0>(indices);
+    const auto j = std::get<1>(indices);
+    const auto k = std::get<2>(indices);
+    const auto l = std::get<3>(indices);
+
     const auto ik = utilities::kroneckerDelta(i, k);
     const auto il = utilities::kroneckerDelta(i, l);
     const auto jk = utilities::kroneckerDelta(j, k);
     const auto jl = utilities::kroneckerDelta(j, l);
+
+    const auto mass_i = masses.first;
+    const auto mass_j = masses.second;
+
+    const auto &pos_ij = pos.first;
+    const auto &pos_kl = pos.second;
 
     auto mShakeElement  = (ik - il) / mass_i;
     mShakeElement      += (jl - jk) / mass_j;

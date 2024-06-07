@@ -38,14 +38,23 @@ namespace simulationBox
 namespace constraints
 {
 
-    using SimBox = simulationBox::SimulationBox;
+    using SimBox    = simulationBox::SimulationBox;
+    using Vec3D     = linearAlgebra::Vec3D;
+    using MShakeRef = MShakeReference;
 
+    /**
+     * @class MShake
+     *
+     * @brief class containing all information about the mShake algorithm
+     *
+     * @details it performs the mShake algorithm on all bond constraints
+     */
     class MShake
     {
        private:
-        std::vector<MShakeReference>                   _mShakeReferences;
-        std::vector<std::vector<double>>               _mShakeRSquaredRefs;
-        std::vector<std::vector<linearAlgebra::Vec3D>> _posBeforeIntegration;
+        std::vector<MShakeRef>           _mShakeReferences;
+        std::vector<std::vector<double>> _mShakeRSquaredRefs;
+        std::vector<std::vector<Vec3D>>  _posBeforeIntegration;
 
         std::vector<linearAlgebra::Matrix<double>> _mShakeMatrices;
         std::vector<linearAlgebra::Matrix<double>> _mShakeInvMatrices;
@@ -58,29 +67,20 @@ namespace constraints
         void initMShakeReferences();
         void initPosBeforeIntegration(SimBox &);
         void applyMShake(const double, SimBox &);
-        void applyMRattle(const double, SimBox &);
+        void applyMRattle(SimBox &);
 
         [[nodiscard]] size_t calculateNumberOfBondConstraints(SimBox &) const;
-
-        [[nodiscard]] double calculateShakeMatrixElement(
-            const size_t               i,
-            const size_t               j,
-            const size_t               k,
-            const size_t               l,
-            const double               mass_i,
-            const double               mass_j,
-            const linearAlgebra::Vec3D pos_ij,
-            const linearAlgebra::Vec3D pos_kl
-        );
+        [[nodiscard]] double calcMatrixElement(
+            const std::tuple<size_t, size_t, size_t, size_t> &indices,
+            const std::pair<double, double>                  &masses,
+            const std::pair<Vec3D, Vec3D>                    &pos
+        ) const;
 
         bool isMShakeType(const size_t moltype) const;
 
-        [[nodiscard]] const MShakeReference &findMShakeReference(const size_t
-        ) const;
+        [[nodiscard]] const MShakeRef &findMShakeReference(const size_t) const;
+        [[nodiscard]] const std::vector<MShakeRef> &getMShakeReferences() const;
         [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-
-        [[nodiscard]] const std::vector<MShakeReference> &getMShakeReferences(
-        ) const;
 
         void addMShakeReference(const MShakeReference &mShakeReference);
     };
