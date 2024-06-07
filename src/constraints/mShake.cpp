@@ -30,6 +30,7 @@
 #include "mathUtilities.hpp"     // for dot
 #include "matrix.hpp"            // for Matrix
 #include "simulationBox.hpp"     // for SimulationBox
+#include "stlVector.hpp"         // for dot
 #include "timingsSettings.hpp"   // for settings
 
 using namespace constraints;
@@ -38,10 +39,7 @@ using namespace constraints;
  * @brief init M - Shake
  *
  **/
-void MShake::initMShake(simulationBox::SimulationBox &simBox)
-{
-    initMShakeReferences();
-}
+void MShake::initMShake() { initMShakeReferences(); }
 
 /**
  * @brief init M - Shake references
@@ -129,7 +127,7 @@ void MShake::initMShakeReferences()
  *
  */
 void MShake::applyMShake(
-    const double                  rattleTolerance,
+    const double                  shakeTolerance,
     simulationBox::SimulationBox &simulationBox
 )
 {
@@ -328,7 +326,7 @@ void MShake::applyMShake(
                      * reference value is larger than the tolerance value *
                      ******************************************************/
 
-                    if (::abs(r2Deviation) / (2.0 * r2Ref) > rattleTolerance)
+                    if (::abs(r2Deviation) / (2.0 * r2Ref) > shakeTolerance)
                         converged = false;
 
                     ++index_ij;
@@ -349,7 +347,7 @@ void MShake::applyMShake(
 /**
  * @brief apply M - Rattle to correct velocities
  *
- * @param rattleTolerance
+ * @param shakeTolerance
  * @param simulationBox
  *
  */
@@ -367,8 +365,9 @@ void MShake::applyMRattle(simulationBox::SimulationBox &simulationBox)
 
         const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
+        auto       mShakeMatrix = _mShakeInvMatrices[mShakeIndex];
         const auto nAtoms       = molecule.getNumberOfAtoms();
-        const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
+        const auto nBonds       = mShakeMatrix.rows();
 
         auto &atoms = molecule.getAtoms();
 
@@ -406,14 +405,7 @@ void MShake::applyMRattle(simulationBox::SimulationBox &simulationBox)
             {
                 const auto mass_j = atoms[j]->getMass();
 
-                auto velConstraint = 0.0;
-
-                for (size_t k = 0; k < nBonds; ++k)
-                {
-                    velConstraint +=
-                        _mShakeInvMatrices[mShakeIndex](index_ij, k) *
-                        rattleVector[k];
-                }
+                auto velConstraint = dot(mShakeMatrix(index_ij), rattleVector);
 
                 const auto velAdjustment = velConstraint * bonds[index_ij];
 
