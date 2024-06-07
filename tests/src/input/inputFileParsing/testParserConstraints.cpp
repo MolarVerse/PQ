@@ -75,6 +75,8 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     parser.parseShakeActivated(lineElements, 0);
     EXPECT_TRUE(_engine->getConstraints().isActive());
     EXPECT_TRUE(_engine->getConstraints().isMShakeActive());
+    EXPECT_TRUE(_engine->getConstraints().isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
     EXPECT_TRUE(settings::ConstraintSettings::isMShakeActivated());
 
     lineElements = {"shake", "=", "1"};

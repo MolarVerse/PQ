@@ -116,7 +116,9 @@ void InputFileParserConstraints::parseShakeActivated(
     else if (lineElements[2] == "mshake")
     {
         _engine.getConstraints().activateMShake();
+        _engine.getConstraints().activateShake();
         settings::ConstraintSettings::activateMShake();
+        settings::ConstraintSettings::activateShake();
     }
     else
     {
