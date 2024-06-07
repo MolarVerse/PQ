@@ -143,7 +143,7 @@ TEST_F(TestConstraints, applyRattle_converged)
     _constraints->setRattleTolerance(1.0e-4);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    EXPECT_NO_THROW(_constraints->applyRattle());
+    EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(0),
@@ -175,7 +175,7 @@ TEST_F(TestConstraints, applyRattle_notConverged)
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_THROW_MSG(
-        _constraints->applyRattle(),
+        _constraints->applyRattle(*_box),
         customException::ShakeException,
         "Rattle algorithm did not converge for 2 bonds."
     );
@@ -194,7 +194,7 @@ TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
 
     _constraints->deactivateShake();
 
-    EXPECT_NO_THROW(_constraints->applyRattle());
+    EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 }
 
 /**

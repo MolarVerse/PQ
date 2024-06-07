@@ -54,7 +54,7 @@ namespace linearAlgebra
         explicit Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data);
 
         [[nodiscard]] T &operator()(const size_t index_i, const size_t index_j);
-        [[nodiscard]] std::vector<T> &operator()(const size_t index);
+        [[nodiscard]] std::vector<T> operator()(const size_t index);
 
         [[nodiscard]] std::pair<size_t, size_t> shape() const;
 
@@ -126,15 +126,13 @@ namespace linearAlgebra
      * @return std::vector<T> &
      */
     template <typename T>
-    std::vector<T> &Matrix<T>::operator()(const size_t index)
+    std::vector<T> Matrix<T>::operator()(const size_t index)
     {
-        auto solutionEigen = _data(index);
+        std::vector<T> row;
 
-        std::vector<T> solution;
-        for (int i = 0; i < solutionEigen.size(); ++i)
-            solution.push_back(solutionEigen(i));
+        for (size_t i = 0; i < _cols; ++i) row.push_back(_data(index, i));
 
-        return solution;
+        return row;
     }
 
     /**
