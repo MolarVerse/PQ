@@ -33,6 +33,12 @@ namespace simulationBox
 
 namespace kernel
 {
+    double distSquared(
+        const linearAlgebra::Vec3D         &pos_i,
+        const linearAlgebra::Vec3D         &pos_j,
+        const simulationBox::SimulationBox &simBox
+    );
+
     linearAlgebra::Vec3D distVec(
         const linearAlgebra::Vec3D &pos_i,
         const linearAlgebra::Vec3D &pos_j
