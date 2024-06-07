@@ -40,21 +40,31 @@
 
 using namespace input::restartFile;
 
+using MoleculeType = simulationBox::MoleculeType;
+using Molecule     = simulationBox::Molecule;
+
 /**
  * @brief processes the atom section of the rst file
  *
- * @details this function reads one molecule from the restart file and ends if number of atoms in
- * the molecule is reached. Then the RestartFileReader continues with the next section (possibly the
- * atom section again for the next molecule)
+ * @details this function reads one molecule from the restart file and ends if
+ * number of atoms in the molecule is reached. Then the RestartFileReader
+ * continues with the next section (possibly the atom section again for the next
+ * molecule)
  *
  * @param lineElements all elements of the line
  * @param engine
  *
  * @throws customException::RstFileException if the molecule type is not found
- * @throws customException::RstFileException if the number of atoms in the molecule is not correct
+ * @throws customException::RstFileException if the number of atoms in the
+ * molecule is not correct
  */
-void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+void AtomSection::process(
+    std::vector<std::string> &lineElements,
+    engine::Engine           &engine
+)
 {
+    auto &simBox = engine.getSimulationBox();
+
     checkNumberOfLineArguments(lineElements);
 
     /**********************************
@@ -65,16 +75,16 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
 
     if (0 == moltype)
     {
-        processQMAtomLine(lineElements, engine.getSimulationBox());
+        processQMAtomLine(lineElements, simBox);
         return;
     }
 
-    std::unique_ptr<simulationBox::MoleculeType> moleculeType;
+    std::unique_ptr<MoleculeType> moleculeType;
 
     try
     {
         moleculeType = std::make_unique<simulationBox::MoleculeType>(
-            engine.getSimulationBox().findMoleculeType(moltype)
+            simBox.findMoleculeType(moltype)
         );
     }
     catch (const customException::RstFileException &e)
@@ -85,7 +95,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         throw;
     }
 
-    auto molecule = std::make_unique<simulationBox::Molecule>(moleculeType->getMoltype());
+    auto molecule = std::make_unique<Molecule>(moleculeType->getMoltype());
 
     molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
     molecule->setName(moleculeType->getName());
@@ -96,7 +106,8 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
     while (true)
     {
         /********************************************************************************
-         * check if molecule type of atom line is the same as the current molecule type *
+         * check if molecule type of atom line is the same as the current
+         *molecule type *
          ********************************************************************************/
 
         if (molecule->getMoltype() != moltype)
@@ -106,7 +117,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
                 molecule->getNumberOfAtoms()
             ));
 
-        processAtomLine(lineElements, engine.getSimulationBox(), *molecule);
+        processAtomLine(lineElements, simBox, *molecule);
 
         ++atomCounter;
 
@@ -122,7 +133,10 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
 
         checkAtomLine(lineElements, *molecule);
 
-        while (lineElements.empty()) checkAtomLine(lineElements, *molecule);
+        while (lineElements.empty())
+        {
+            checkAtomLine(lineElements, *molecule);
+        }
 
         checkNumberOfLineArguments(lineElements);
 
@@ -131,7 +145,7 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
         ++_lineNumber;
     }
 
-    engine.getSimulationBox().addMolecule(*molecule);
+    simBox.addMolecule(*molecule);
 }
 
 /**
@@ -141,9 +155,9 @@ void AtomSection::process(std::vector<std::string> &lineElements, engine::Engine
  * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz
  *
  * @note for backward compatibility the line can also look like this:
- * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old z_old vx_old vy_old vz_old
- * fx_old fy_old fz_old but the old coordinates, velocities and forces are not used and also not
- * read from the file
+ * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old z_old
+ * vx_old vy_old vz_old fx_old fy_old fz_old but the old coordinates, velocities
+ * and forces are not used and also not read from the file
  *
  * @param lineElements
  * @param simBox
@@ -159,9 +173,27 @@ void AtomSection::processAtomLine(
 
     atom->setAtomTypeName(lineElements[0]);
 
-    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    const auto x = stod(lineElements[3]);
+    const auto y = stod(lineElements[4]);
+    const auto z = stod(lineElements[5]);
+
+    const auto vx = stod(lineElements[6]);
+    const auto vy = stod(lineElements[7]);
+    const auto vz = stod(lineElements[8]);
+
+    const auto fx = stod(lineElements[9]);
+    const auto fy = stod(lineElements[10]);
+    const auto fz = stod(lineElements[11]);
+
+    const auto oldX = (lineElements.size() == 21) ? stod(lineElements[12]) : x;
+    const auto oldY = (lineElements.size() == 21) ? stod(lineElements[13]) : y;
+    const auto oldZ = (lineElements.size() == 21) ? stod(lineElements[14]) : z;
+
+    atom->setPosition({x, y, z});
+    atom->setVelocity({vx, vy, vz});
+    atom->setForce({fx, fy, fz});
+
+    atom->setPositionOld({oldX, oldY, oldZ});
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
@@ -183,8 +215,8 @@ void AtomSection::processQMAtomLine(
     simulationBox::SimulationBox &simBox
 )
 {
-    auto atom     = std::make_shared<simulationBox::Atom>();
-    auto molecule = std::make_unique<simulationBox::Molecule>(0);
+    const auto atom     = std::make_shared<simulationBox::Atom>();
+    const auto molecule = std::make_unique<simulationBox::Molecule>(0);
 
     molecule->setName("QM");
     molecule->setNumberOfAtoms(1);
@@ -192,9 +224,27 @@ void AtomSection::processQMAtomLine(
     atom->setAtomTypeName(lineElements[0]);
     atom->setName(lineElements[0]);
 
-    atom->setPosition({stod(lineElements[3]), stod(lineElements[4]), stod(lineElements[5])});
-    atom->setVelocity({stod(lineElements[6]), stod(lineElements[7]), stod(lineElements[8])});
-    atom->setForce({stod(lineElements[9]), stod(lineElements[10]), stod(lineElements[11])});
+    const auto x = stod(lineElements[3]);
+    const auto y = stod(lineElements[4]);
+    const auto z = stod(lineElements[5]);
+
+    const auto vx = stod(lineElements[6]);
+    const auto vy = stod(lineElements[7]);
+    const auto vz = stod(lineElements[8]);
+
+    const auto fx = stod(lineElements[9]);
+    const auto fy = stod(lineElements[10]);
+    const auto fz = stod(lineElements[11]);
+
+    const auto oldX = (lineElements.size() == 21) ? stod(lineElements[12]) : x;
+    const auto oldY = (lineElements.size() == 21) ? stod(lineElements[13]) : y;
+    const auto oldZ = (lineElements.size() == 21) ? stod(lineElements[14]) : z;
+
+    atom->setPosition({x, y, z});
+    atom->setVelocity({vx, vy, vz});
+    atom->setForce({fx, fy, fz});
+
+    atom->setPositionOld({oldX, oldY, oldZ});
 
     atom->setQMOnly(true);
     molecule->setQMOnly(true);
@@ -207,13 +257,15 @@ void AtomSection::processQMAtomLine(
 }
 
 /**
- * @brief checks if the next line of the rst file exists - if not an exception is thrown
+ * @brief checks if the next line of the rst file exists - if not an
+ * exception is thrown
  *
  * @param lineElements
  * @param line
  * @param molecule
  *
- * @throws customException::RstFileException if the next line of the rst file does not exist
+ * @throws customException::RstFileException if the next line of the rst
+ * file does not exist
  */
 void AtomSection::checkAtomLine(
     std::vector<std::string>      &lineElements,
@@ -236,17 +288,21 @@ void AtomSection::checkAtomLine(
 }
 
 /**
- * @brief checks if the number of elements in the line is correct. The atom section must have 12 or
- * 21 elements.
+ * @brief checks if the number of elements in the line is correct. The atom
+ * section must have 12 or 21 elements.
  *
  * @param lineElements
  *
- * @throws customException::RstFileException if the number of elements in the line is not 12 or 21
+ * @throws customException::RstFileException if the number of elements in
+ * the line is not 12 or 21
  */
-void AtomSection::checkNumberOfLineArguments(std::vector<std::string> &lineElements) const
+void AtomSection::checkNumberOfLineArguments(
+    std::vector<std::string> &lineElements
+) const
 {
     if ((lineElements.size() != 21) && (lineElements.size() != 12))
-        throw customException::RstFileException(
-            std::format("Error in line {}: Atom section must have 12 or 21 elements", _lineNumber)
-        );
+        throw customException::RstFileException(std::format(
+            "Error in line {}: Atom section must have 12 or 21 elements",
+            _lineNumber
+        ));
 }
