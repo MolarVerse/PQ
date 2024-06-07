@@ -78,12 +78,14 @@ namespace constraints
        public:
         void calculateConstraintBondRefs(const SimBox &simulationBox);
 
-        void initMShake(SimBox &simulationBox);
+        void initMShake();
 
         void applyShake(SimBox &simulationBox);
         void _applyShake(SimBox &simulationBox);
         void _applyMShake(SimBox &simulationBox);
-        void applyRattle();
+        void applyRattle(SimBox &simulationBox);
+        void _applyRattle();
+        void _applyMRattle(SimBox &simulationBox);
         void applyDistanceConstraints(
             const SimBox &simBox,
             PhysicalData &data,

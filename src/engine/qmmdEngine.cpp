@@ -68,7 +68,7 @@ void QMMDEngine::takeStep()
 
     _integrator->secondStep(_simulationBox);
 
-    _constraints.applyRattle();
+    _constraints.applyRattle(_simulationBox);
 
     _thermostat->applyThermostat(_simulationBox, _physicalData);
 

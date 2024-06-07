@@ -40,10 +40,7 @@ using namespace constraints;
  * @param simulationBox
  *
  */
-void Constraints::initMShake(simulationBox::SimulationBox &simBox)
-{
-    _mShake.initMShake(simBox);
-}
+void Constraints::initMShake() { _mShake.initMShake(); }
 
 /**
  * @brief calculates the reference bond data of all bond constraints
@@ -139,7 +136,9 @@ void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
  */
 void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
 {
-    _mShake.applyMShake(_rattleTolerance, simulationBox);
+    startTimingsSection("MShake - Shake");
+    _mShake.applyMShake(_shakeTolerance, simulationBox);
+    stopTimingsSection("MShake - Shake");
 }
 
 /**
@@ -148,11 +147,26 @@ void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
  * @throws customException::ShakeException if rattle algorithm does not
  * converge
  */
-void Constraints::applyRattle()
+void Constraints::applyRattle(simulationBox::SimulationBox &simBox)
 {
-    if (!_shakeActivated)
+    if (!_shakeActivated && !_mShakeActivated)
         return;
 
+    if (_shakeActivated)
+        _applyRattle();
+
+    if (_mShakeActivated)
+        _applyMRattle(simBox);
+}
+
+/**
+ * @brief applies the rattle algorithm to all bond constraints
+ *
+ * @throws customException::ShakeException if rattle algorithm does not
+ * converge
+ */
+void Constraints::_applyRattle()
+{
     startTimingsSection("Rattle");
 
     std::vector<bool> convergedVector;
@@ -188,6 +202,18 @@ void Constraints::applyRattle()
         ));
 
     stopTimingsSection("Rattle");
+}
+
+/**
+ * @brief applies M-Shake Rattle algorithm
+ *
+ * @param simulationBox
+ */
+void Constraints::_applyMRattle(simulationBox::SimulationBox &simulationBox)
+{
+    startTimingsSection("MShake - Rattle");
+    _mShake.applyMRattle(simulationBox);
+    stopTimingsSection("MShake - Rattle");
 }
 
 /**

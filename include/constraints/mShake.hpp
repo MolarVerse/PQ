@@ -62,7 +62,7 @@ namespace constraints
         MShake()  = default;
         ~MShake() = default;
 
-        void initMShake(SimBox &);
+        void initMShake();
         void initMShakeReferences();
         void applyMShake(const double, SimBox &);
         void applyMRattle(SimBox &);
