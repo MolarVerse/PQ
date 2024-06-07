@@ -10,7 +10,7 @@ target_include_directories(kernels
 
 target_link_libraries(kernels
     PUBLIC
-    lienarAlgebra
+    linearAlgebra
     simulationBox
 )
 
