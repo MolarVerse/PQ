@@ -19,6 +19,7 @@ target_link_libraries(constraints
     settings
     timings
     physicalData
+    kernels
 
     PRIVATE
     Eigen3::Eigen

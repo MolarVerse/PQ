@@ -33,6 +33,17 @@ namespace simulationBox
 
 namespace kernel
 {
+    linearAlgebra::Vec3D distVec(
+        const linearAlgebra::Vec3D &pos_i,
+        const linearAlgebra::Vec3D &pos_j
+    );
+
+    linearAlgebra::Vec3D distVec(
+        const linearAlgebra::Vec3D         &pos_i,
+        const linearAlgebra::Vec3D         &pos_j,
+        const simulationBox::SimulationBox &simBox
+    );
+
     std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
         const linearAlgebra::Vec3D &pos_i,
         const linearAlgebra::Vec3D &pos_j

@@ -28,6 +28,42 @@
 #include "vector3d.hpp"
 
 /**
+ * @brief Calculate the distance vector between two particles.
+ *
+ * @param pos_i
+ * @param pos_j
+ *
+ * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ */
+linearAlgebra::Vec3D kernel::distVec(
+    const linearAlgebra::Vec3D &pos_i,
+    const linearAlgebra::Vec3D &pos_j
+)
+{
+    return pos_i - pos_j;
+}
+
+/**
+ * @brief Calculate the distance vector between two particles.
+ *
+ * @param pos_i
+ * @param pos_j
+ * @param simBox
+ *
+ * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ */
+linearAlgebra::Vec3D kernel::distVec(
+    const linearAlgebra::Vec3D         &pos_i,
+    const linearAlgebra::Vec3D         &pos_j,
+    const simulationBox::SimulationBox &simBox
+)
+{
+    auto r_ij = pos_i - pos_j;
+    simBox.applyPBC(r_ij);
+    return r_ij;
+}
+
+/**
  * @brief Calculate the distance vector and the squared distance between two
  * particles.
  *
