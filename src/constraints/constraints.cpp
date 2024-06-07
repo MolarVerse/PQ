@@ -385,6 +385,18 @@ size_t Constraints::getNumberOfBondConstraints() const
 }
 
 /**
+ * @brief returns the number of mShake constraints
+ *
+ * @return the number of mShake constraints
+ */
+size_t Constraints::getNumberOfMShakeConstraints(
+    simulationBox::SimulationBox &simBox
+) const
+{
+    return _mShake.calculateNumberOfBondConstraints(simBox);
+}
+
+/**
  * @brief returns the number of distance constraints
  *
  * @return the number of distance constraints

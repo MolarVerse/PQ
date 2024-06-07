@@ -126,6 +126,7 @@ namespace constraints
         ) const;
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
+        [[nodiscard]] size_t getNumberOfMShakeConstraints(SimBox &) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         [[nodiscard]] size_t getShakeMaxIter() const;

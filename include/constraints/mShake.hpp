@@ -38,6 +38,8 @@ namespace simulationBox
 namespace constraints
 {
 
+    using SimBox = simulationBox::SimulationBox;
+
     class MShake
     {
        private:
@@ -52,11 +54,14 @@ namespace constraints
         MShake()  = default;
         ~MShake() = default;
 
-        void initMShake(simulationBox::SimulationBox &);
+        void initMShake(SimBox &);
         void initMShakeReferences();
-        void initPosBeforeIntegration(simulationBox::SimulationBox &);
+        void initPosBeforeIntegration(SimBox &);
+        void applyMShake(const double, SimBox &);
 
-        double calculateShakeMatrixElement(
+        [[nodiscard]] size_t calculateNumberOfBondConstraints(SimBox &) const;
+
+        [[nodiscard]] double calculateShakeMatrixElement(
             const size_t               i,
             const size_t               j,
             const size_t               k,
@@ -67,18 +72,16 @@ namespace constraints
             const linearAlgebra::Vec3D pos_kl
         );
 
-        void applyMShake(const double, simulationBox::SimulationBox &);
         bool isMShakeType(const size_t moltype) const;
 
         [[nodiscard]] const MShakeReference &findMShakeReference(const size_t
         ) const;
-
         [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-
-        void addMShakeReference(const MShakeReference &mShakeReference);
 
         [[nodiscard]] const std::vector<MShakeReference> &getMShakeReferences(
         ) const;
+
+        void addMShakeReference(const MShakeReference &mShakeReference);
     };
 }   // namespace constraints
 
