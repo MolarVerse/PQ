@@ -54,7 +54,6 @@ namespace constraints
        private:
         std::vector<MShakeRef>           _mShakeReferences;
         std::vector<std::vector<double>> _mShakeRSquaredRefs;
-        std::vector<std::vector<Vec3D>>  _posBeforeIntegration;
 
         std::vector<linearAlgebra::Matrix<double>> _mShakeMatrices;
         std::vector<linearAlgebra::Matrix<double>> _mShakeInvMatrices;
@@ -65,7 +64,6 @@ namespace constraints
 
         void initMShake(SimBox &);
         void initMShakeReferences();
-        void initPosBeforeIntegration(SimBox &);
         void applyMShake(const double, SimBox &);
         void applyMRattle(SimBox &);
 
@@ -76,11 +74,11 @@ namespace constraints
             const std::pair<Vec3D, Vec3D>                    &pos
         ) const;
 
-        bool isMShakeType(const size_t moltype) const;
+        [[nodiscard]] bool isMShakeType(const size_t moltype) const;
 
+        [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
         [[nodiscard]] const MShakeRef &findMShakeReference(const size_t) const;
         [[nodiscard]] const std::vector<MShakeRef> &getMShakeReferences() const;
-        [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
 
         void addMShakeReference(const MShakeReference &mShakeReference);
     };

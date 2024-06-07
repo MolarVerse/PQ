@@ -41,7 +41,6 @@ using namespace constraints;
 void MShake::initMShake(simulationBox::SimulationBox &simBox)
 {
     initMShakeReferences();
-    initPosBeforeIntegration(simBox);
 }
 
 /**
@@ -124,28 +123,6 @@ void MShake::initMShakeReferences()
 }
 
 /**
- * @brief init positions before integration
- *
- * @param simBox
- *
- */
-void MShake::initPosBeforeIntegration(simulationBox::SimulationBox &simBox)
-{
-    const auto &molecules = simBox.getMolecules();
-
-    _posBeforeIntegration.clear();
-
-    /******************************************************
-     * NOTE: add the positions of all atoms to the vector *
-     *       the positions are in the form of a           *
-     *       std::vector<linearAlgebra::Vec3D>            *
-     ******************************************************/
-
-    for (const auto &molecule : molecules)
-        _posBeforeIntegration.push_back(molecule.getAtomPositions());
-}
-
-/**
  * @brief applies the mShake algorithm to all bond constraints
  *
  * @param simulationBox
@@ -174,31 +151,67 @@ void MShake::applyMShake(
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
         const auto nAtoms       = molecule.getNumberOfAtoms();
         const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
-
-        auto &atoms            = molecule.getAtoms();
-        auto  posUnconstrained = _posBeforeIntegration[mol];
+        auto      &atoms        = molecule.getAtoms();
 
         std::vector<linearAlgebra::Vec3D> bondsUnconstrained(nBonds);
+        std::vector<linearAlgebra::Vec3D> bondsPrevious(nBonds);
         std::vector<double>               shakeVector(nBonds);
         linearAlgebra::Matrix<double>     mShakeMatrix(nBonds, nBonds);
+
+        std::vector<linearAlgebra::Vec3D> posUnconstrained;
+
+        /******************************************************
+         * initialize the unconstrained positions of all atoms *
+         *******************************************************/
+
+        for (const auto &atom : atoms)
+            posUnconstrained.push_back(atom->getPosition());
+
+        /****************************************
+         * initialize pre while loop iterations *
+         ****************************************/
 
         size_t index_ij = 0;
 
         for (size_t i = 0; i < nAtoms - 1; ++i)
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
+                /*************************************************
+                 * determine bond vector of integrated positions *
+                 *************************************************/
+
                 const auto [dxyz, r2] = kernel::distVecAndDist2(
-                    _posBeforeIntegration[mol][i],
-                    _posBeforeIntegration[mol][i],
+                    atoms[i]->getPosition(),
+                    atoms[j]->getPosition(),
                     simulationBox
                 );
+
+                bondsUnconstrained[index_ij] = dxyz;
+
+                /**************************************************
+                 * shake vector from the deviation of the length  *
+                 * of the bond vector from the reference value.   *
+                 * Divide by the time factor to get a measurement *
+                 * of a force.                                    *
+                 **************************************************/
 
                 const auto r2Ref = mShakeR2Refs[index_ij];
 
                 const auto r2Deviation = r2 - r2Ref;
 
-                bondsUnconstrained[index_ij] = dxyz;
-                shakeVector[index_ij]        = r2Deviation / timeFactor;
+                shakeVector[index_ij] = r2Deviation / timeFactor;
+
+                /*****************************************************
+                 * determine bond vector of not integrated positions *
+                 *****************************************************/
+
+                const auto dxyz_prev = kernel::distVec(
+                    atoms[i]->getPositionOld(),
+                    atoms[j]->getPositionOld(),
+                    simulationBox
+                );
+
+                bondsPrevious[index_ij] = dxyz_prev;
 
                 ++index_ij;
             }
@@ -207,6 +220,10 @@ void MShake::applyMShake(
         {
             auto converged = true;
             index_ij       = 0;
+
+            /*****************************************
+             * fill (nBonds x nBonds) m-Shake matrix *
+             *****************************************/
 
             for (size_t i = 0; i < nAtoms - 1; ++i)
             {
@@ -238,9 +255,20 @@ void MShake::applyMShake(
                 }
             }
 
+            /*********************************************************
+             * solve the linear system of equations                  *
+             *        b = A * x                                      *
+             * where b is the shakeVector, A is the mShakeMatrix and *
+             * x is the solutionVector                               *
+             *********************************************************/
+
             const auto solutionVector = mShakeMatrix.solve(shakeVector);
 
             index_ij = 0;
+
+            /********************************************
+             * adjust velocities and positions of atoms *
+             ********************************************/
 
             for (size_t i = 0; i < nAtoms - 1; ++i)
             {
@@ -250,9 +278,11 @@ void MShake::applyMShake(
                 {
                     const auto mass_j = atoms[j]->getMass();
 
-                    const auto posAdjustment = shakeFactor *
-                                               solutionVector[index_ij] *
-                                               _posBeforeIntegration[mol][i];
+                    const auto &bondPrev = bondsPrevious[index_ij];
+                    const auto &solution = solutionVector[index_ij];
+
+                    auto posAdjustment  = solution * bondPrev;
+                    posAdjustment      *= shakeFactor;
 
                     posUnconstrained[i] -= posAdjustment / mass_i;
                     posUnconstrained[j] += posAdjustment / mass_j;
@@ -270,18 +300,33 @@ void MShake::applyMShake(
             {
                 for (size_t j = i + 1; j < nAtoms; ++j)
                 {
-                    const auto [pos, r2] = kernel::distVecAndDist2(
+                    /*************************************************
+                     * determine bond vector of integrated positions *
+                     *************************************************/
+
+                    const auto [dxyz, r2] = kernel::distVecAndDist2(
                         posUnconstrained[i],
                         posUnconstrained[j],
                         simulationBox
                     );
 
-                    const auto r2Ref = mShakeR2Refs[index_ij];
+                    bondsUnconstrained[index_ij] = dxyz;
 
+                    /**************************************************
+                     * shake vector from the deviation of the length  *
+                     * of the bond vector from the reference value.   *
+                     * Divide by the time factor to get a measurement *
+                     * of a force.                                    *
+                     **************************************************/
+
+                    const auto r2Ref       = mShakeR2Refs[index_ij];
                     const auto r2Deviation = r2 - r2Ref;
+                    shakeVector[index_ij]  = r2Deviation / timeFactor;
 
-                    shakeVector[index_ij]        = r2Deviation / timeFactor;
-                    bondsUnconstrained[index_ij] = pos;
+                    /******************************************************
+                     * check if the deviation of the bond length from the *
+                     * reference value is larger than the tolerance value *
+                     ******************************************************/
 
                     if (::abs(r2Deviation) / (2.0 * r2Ref) > rattleTolerance)
                         converged = false;
