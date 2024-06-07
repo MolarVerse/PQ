@@ -119,19 +119,27 @@ void ConstraintsSetup::setupRefBondLengths()
  */
 void ConstraintsSetup::setupDegreesOfFreedom()
 {
-    auto      &constraints      = _engine.getConstraints();
-    const auto nBondConstraints = constraints.getNumberOfBondConstraints();
+    auto &simBox      = _engine.getSimulationBox();
+    auto &constraints = _engine.getConstraints();
 
-    auto dof  = _engine.getSimulationBox().getDegreesOfFreedom();
-    dof      -= nBondConstraints;
+    const auto nBondConst   = constraints.getNumberOfBondConstraints();
+    const auto nMShakeConst = constraints.getNumberOfMShakeConstraints(simBox);
 
-    _engine.getSimulationBox().setDegreesOfFreedom(dof);
+    auto dof  = simBox.getDegreesOfFreedom();
+    dof      -= nBondConst;
+    dof      -= nMShakeConst;
+
+    simBox.setDegreesOfFreedom(dof);
 
     _engine.getLogOutput().writeSetupInfo(
-        std::format("constraint DOF:   {:8d}", nBondConstraints)
+        std::format("constraint SHAKE DOF:   {:8d}", nBondConst)
     );
 
     _engine.getLogOutput().writeSetupInfo(
-        std::format("simulation DOF:   {:8d}", dof)
+        std::format("constraint M-SHAKE DOF: {:8d}", nMShakeConst)
+    );
+
+    _engine.getLogOutput().writeSetupInfo(
+        std::format("simulation DOF:         {:8d}", dof)
     );
 }
