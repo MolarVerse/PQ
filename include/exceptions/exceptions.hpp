@@ -24,12 +24,12 @@
 
 #define _EXCEPTIONS_HPP_
 
-#include "color.hpp"
-
 #include <cstddef>
 #include <exception>
 #include <string>
 #include <string_view>
+
+#include "color.hpp"
 
 namespace customException
 {
@@ -52,7 +52,13 @@ namespace customException
         INTRANONBONDEDEXCEPTION,
         SHAKEEXCEPTION,
         CELLLISTEXCEPTION,
-        RINGPOLYMERRESTARTFILEEXCEPTION
+        RINGPOLYMERRESTARTFILEEXCEPTION,
+        QMRUNNEREXCEPTION,
+        MPIEXCEPTION,
+        QMRUNTIMEEXCEEDED,
+        MSHAKEFILEEXCEPTION,
+        MSHAKEEXCEPTION,
+        LINEARALGEBRAEXCEPTION
     };
 
     /**
@@ -63,12 +69,14 @@ namespace customException
      */
     class CustomException : public std::exception
     {
-      protected:
+       protected:
         std::string _message;
 
-      public:
-        explicit CustomException(const std::string_view message) : _message(message){};
-        void colorfulOutput(const Color::Code color, const std::string_view) const;
+       public:
+        explicit CustomException(const std::string_view message)
+            : _message(message){};
+        void colorfulOutput(const Color::Code color, const std::string_view)
+            const;
     };
 
     /**
@@ -79,7 +87,7 @@ namespace customException
      */
     class InputFileException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -93,7 +101,7 @@ namespace customException
      */
     class RstFileException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -107,7 +115,7 @@ namespace customException
      */
     class UserInputException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -121,7 +129,7 @@ namespace customException
      */
     class MolDescriptorException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -135,7 +143,7 @@ namespace customException
      */
     class UserInputExceptionWarning : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -149,7 +157,7 @@ namespace customException
      */
     class GuffDatException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -162,7 +170,7 @@ namespace customException
      */
     class TopologyException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -175,7 +183,7 @@ namespace customException
      */
     class ParameterFileException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -188,7 +196,7 @@ namespace customException
      */
     class ManostatException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -201,7 +209,7 @@ namespace customException
      */
     class IntraNonBondedException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -214,7 +222,7 @@ namespace customException
      */
     class ShakeException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -227,7 +235,7 @@ namespace customException
      */
     class CellListException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -240,7 +248,7 @@ namespace customException
      */
     class RingPolymerRestartFileException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -253,7 +261,7 @@ namespace customException
      */
     class QMRunnerException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -267,7 +275,7 @@ namespace customException
      */
     class MPIException : public CustomException
     {
-      public:
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;
@@ -281,7 +289,46 @@ namespace customException
      */
     class QMRunTimeExceeded : public CustomException
     {
-      public:
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class MShakeFileException inherits from CustomException
+     *
+     * @brief Exception for mShake errors
+     */
+    class MShakeFileException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class MShakeException inherits from CustomException
+     *
+     * @brief Exception for MShake errors
+     */
+    class MShakeException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class LinearAlgebraException inherits from CustomException
+     *
+     * @brief Exception for linear algebra errors
+     */
+    class LinearAlgebraException : public CustomException
+    {
+       public:
         using CustomException::CustomException;
 
         const char *what() const throw() override;

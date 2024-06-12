@@ -49,15 +49,15 @@ void KokkosLennardJones::transferFromNonCoulombPairMatrix(
     {
         for (size_t j = 0; j < pairMatrix.cols(); ++j)
         {
-            _radialCutoffs.h_view(i, j) = pairMatrix[i][j]->getRadialCutOff();
-            _energyCutoffs.h_view(i, j) = pairMatrix[i][j]->getEnergyCutOff();
-            _forceCutoffs.h_view(i, j)  = pairMatrix[i][j]->getForceCutOff();
+            _radialCutoffs.h_view(i, j) = pairMatrix(i, j)->getRadialCutOff();
+            _energyCutoffs.h_view(i, j) = pairMatrix(i, j)->getEnergyCutOff();
+            _forceCutoffs.h_view(i, j)  = pairMatrix(i, j)->getForceCutOff();
 
             _c6.h_view(i, j) =
-                dynamic_cast<LennardJonesPair *>(pairMatrix[i][j].get())
+                dynamic_cast<LennardJonesPair *>(pairMatrix(i, j).get())
                     ->getC6();
             _c12.h_view(i, j) =
-                dynamic_cast<LennardJonesPair *>(pairMatrix[i][j].get())
+                dynamic_cast<LennardJonesPair *>(pairMatrix(i, j).get())
                     ->getC12();
         }
     }

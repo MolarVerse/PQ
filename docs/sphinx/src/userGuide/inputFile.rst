@@ -862,7 +862,11 @@ Possible options are:
 
    1) **off** (default) - no shake will be applied
 
-   2) **on** - shake for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2) **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   3) **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   4) **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
 
 Shake-Tolerance
 ===============

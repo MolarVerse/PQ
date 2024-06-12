@@ -35,6 +35,8 @@ namespace simulationBox
 {
     class Box;   // forward declaration
 
+    using tensor3D = linearAlgebra::tensor3D;
+
     /**
      * @class Atom
      *
@@ -60,6 +62,7 @@ namespace simulationBox
         double _partialCharge;
 
         linearAlgebra::Vec3D _position;
+        linearAlgebra::Vec3D _positionOld;
         linearAlgebra::Vec3D _velocity;
         linearAlgebra::Vec3D _force;
         linearAlgebra::Vec3D _shiftForce;
@@ -67,81 +70,85 @@ namespace simulationBox
        public:
         Atom() = default;
 
-        void addPosition(const linearAlgebra::Vec3D &position) { _position += position; }
-        void addVelocity(const linearAlgebra::Vec3D &velocity) { _velocity += velocity; }
-        void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
-        void addForce(const double force_x, const double force_y, const double force_z)
-        {
-            _force += {force_x, force_y, force_z};
-        }
-        void addShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce += shiftForce; }
+        void initMass();
 
-        void scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
-        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor) { _velocity *= scaleFactor; }
+        /*******************
+         * scaling methods *
+         *******************/
+
+        void scaleVelocity(const double scaleFactor);
+        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(
-            const linearAlgebra::tensor3D &scaleFactor,
-            const Box                     &box
+            const tensor3D &scaleFactor,
+            const Box      &box
         );
+
+        /**************************
+         * standard adder methods *
+         **************************/
+
+        void addPosition(const linearAlgebra::Vec3D &position);
+        void addVelocity(const linearAlgebra::Vec3D &velocity);
+        void addForce(const linearAlgebra::Vec3D &force);
+        void addForce(
+            const double force_x,
+            const double force_y,
+            const double force_z
+        );
+        void addShiftForce(const linearAlgebra::Vec3D &shiftForce);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::string getName() const { return _name; }
-        [[nodiscard]] std::string getAtomTypeName() const { return _atomTypeName; }
+        [[nodiscard]] bool isQMOnly() const;
+        [[nodiscard]] bool isMMOnly() const;
 
-        [[nodiscard]] size_t getExternalAtomType() const { return _externalAtomType; }
-        [[nodiscard]] size_t getAtomType() const { return _atomType; }
+        [[nodiscard]] std::string getName() const;
+        [[nodiscard]] std::string getAtomTypeName() const;
 
-        [[nodiscard]] size_t getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
-        [[nodiscard]] size_t getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+        [[nodiscard]] size_t getExternalAtomType() const;
+        [[nodiscard]] size_t getAtomType() const;
 
-        [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
-        [[nodiscard]] bool isMMOnly() const { return _isMMOnly; }
+        [[nodiscard]] size_t getExternalGlobalVDWType() const;
+        [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int    getAtomicNumber() const { return _atomicNumber; }
-        [[nodiscard]] double getMass() const { return _mass; }
-        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
+        [[nodiscard]] int    getAtomicNumber() const;
+        [[nodiscard]] double getMass() const;
+        [[nodiscard]] double getPartialCharge() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getPosition() const { return _position; }
-        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const { return _velocity; }
-        [[nodiscard]] linearAlgebra::Vec3D getForce() const { return _force; }
-        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const { return _shiftForce; }
+        [[nodiscard]] linearAlgebra::Vec3D getPosition() const;
+        [[nodiscard]] linearAlgebra::Vec3D getPositionOld() const;
+        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const;
+        [[nodiscard]] linearAlgebra::Vec3D getForce() const;
+        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setName(const std::string_view &name) { _name = name; }
-        void setAtomTypeName(const std::string_view &atomTypeName) { _atomTypeName = atomTypeName; }
-        void setAtomicNumber(const int atomicNumber) { _atomicNumber = atomicNumber; }
+        void setQMOnly(const bool isQMOnly);
+        void setMMOnly(const bool isMMOnly);
 
-        void setMass(const double mass) { _mass = mass; }
-        void setPartialCharge(const double partialCharge) { _partialCharge = partialCharge; }
+        void setName(const std::string_view &name);
+        void setAtomTypeName(const std::string_view &atomTypeName);
+        void setAtomicNumber(const int atomicNumber);
 
-        void setAtomType(const size_t atomType) { _atomType = atomType; }
-        void setExternalAtomType(const size_t externalAtomType)
-        {
-            _externalAtomType = externalAtomType;
-        }
-        void setExternalGlobalVDWType(const size_t externalGlobalVDWType)
-        {
-            _externalGlobalVDWType = externalGlobalVDWType;
-        }
-        void setInternalGlobalVDWType(const size_t internalGlobalVDWType)
-        {
-            _internalGlobalVDWType = internalGlobalVDWType;
-        }
+        void setMass(const double mass);
+        void setPartialCharge(const double partialCharge);
 
-        void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
-        void setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
+        void setAtomType(const size_t atomType);
+        void setExternalAtomType(const size_t externalAtomType);
+        void setExternalGlobalVDWType(const size_t externalGlobalVDWType);
+        void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
 
-        void setPosition(const linearAlgebra::Vec3D &position) { _position = position; }
-        void setVelocity(const linearAlgebra::Vec3D &velocity) { _velocity = velocity; }
-        void setForce(const linearAlgebra::Vec3D &force) { _force = force; }
-        void setShiftForce(const linearAlgebra::Vec3D &shiftForce) { _shiftForce = shiftForce; }
+        void setPosition(const linearAlgebra::Vec3D &position);
+        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
+        void setVelocity(const linearAlgebra::Vec3D &velocity);
+        void setForce(const linearAlgebra::Vec3D &force);
+        void setShiftForce(const linearAlgebra::Vec3D &shiftForce);
 
-        void setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+        void setForceToZero();
     };
 }   // namespace simulationBox
 

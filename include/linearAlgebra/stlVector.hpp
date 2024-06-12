@@ -69,6 +69,20 @@ namespace std
         return *std::ranges::max_element(vector);
     }
 
+    /**
+     * @brief dot product of two vectors
+     *
+     * @param a std::vector<T>
+     * @param b std::vector<T>
+     *
+     * @return T dot product of a and b
+     */
+    template <typename T>
+    T dot(const std::vector<T> &a, const std::vector<T> &b)
+    {
+        return std::inner_product(a.begin(), a.end(), b.begin(), T());
+    }
+
 }   // namespace std
 
 #endif   // _STL_VECTOR_HPP_

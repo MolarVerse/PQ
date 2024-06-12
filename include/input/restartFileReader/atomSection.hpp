@@ -31,10 +31,10 @@
 
 #ifdef WITH_TESTS
 #include <gtest/gtest_prod.h>   // for FRIEND_TEST
-#endif
 
 class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
+#endif
 
 namespace engine
 {
@@ -49,6 +49,10 @@ namespace simulationBox
 
 namespace input::restartFile
 {
+    using SimBox   = simulationBox::SimulationBox;
+    using Molecule = simulationBox::Molecule;
+    using strings  = std::vector<std::string>;
+
     /**
      * @class AtomSection
      *
@@ -58,10 +62,10 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        private:
-        void processAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &, simulationBox::Molecule &)
-            const;
-        void processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &);
-        void checkAtomLine(std::vector<std::string> &lineElements, const simulationBox::Molecule &);
+        void processAtomLine(strings &lineElements, SimBox &, Molecule &) const;
+        void processQMAtomLine(strings &lineElements, SimBox &);
+
+        void checkAtomLine(strings &lineElements, const Molecule &);
 
 #ifdef WITH_TESTS
         FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
@@ -71,10 +75,9 @@ namespace input::restartFile
        public:
         [[nodiscard]] std::string keyword() override { return ""; }
         [[nodiscard]] bool        isHeader() override { return false; }
-        void checkNumberOfLineArguments(std::vector<std::string> &lineElements
-        ) const;
-        void process(std::vector<std::string> &lineElements, engine::Engine &)
-            override;
+
+        void checkNumberOfLineArguments(strings &) const;
+        void process(strings &lineElements, engine::Engine &) override;
     };
 
 }   // namespace input::restartFile

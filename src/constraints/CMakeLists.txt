@@ -2,6 +2,8 @@ add_library(constraints
     constraints.cpp
     bondConstraint.cpp
     distanceConstraint.cpp
+    mShakeReference.cpp
+    mShake.cpp
 )
 
 target_include_directories(constraints
@@ -17,6 +19,10 @@ target_link_libraries(constraints
     settings
     timings
     physicalData
+    kernels
+
+    PRIVATE
+    Eigen3::Eigen
 )
 
 install(TARGETS constraints

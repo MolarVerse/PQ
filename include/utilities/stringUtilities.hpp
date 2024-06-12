@@ -34,15 +34,23 @@
  */
 namespace utilities
 {
-    std::string removeComments(std::string &line, const std::string_view &commentChar);
+    std::string removeComments(
+        std::string            &line,
+        const std::string_view &commentChar
+    );
 
-    std::vector<std::string> getLineCommands(const std::string &line, const size_t lineNumber);
+    std::vector<std::string> getLineCommands(
+        const std::string &line,
+        const size_t       lineNumber
+    );
 
     std::vector<std::string> splitString(const std::string &);
 
     std::string toLowerCopy(std::string);
     std::string toLowerCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
+
+    void addSpaces(std::string &, const std::string &, const size_t);
 
     bool fileExists(const std::string &);
 

@@ -22,42 +22,86 @@
 
 #include "inputFileParserFiles.hpp"
 
+#include <cstddef>       // for size_t
+#include <functional>    // for _Bind_front_t, bind_front
+#include <string_view>   // for string_view
+
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "fileSettings.hpp"      // for FileSettings
 #include "intraNonBonded.hpp"    // for IntraNonBonded
 #include "stringUtilities.hpp"   // for fileExists
 
-#include <cstddef>       // for size_t
-#include <functional>    // for _Bind_front_t, bind_front
-#include <string_view>   // for string_view
-
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object
+ * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
+ * Non Coulomb Type object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) intra-nonBonded_file <string>
- * 2) topology_file <string>
- * 3) parameter_file <string>
- * 4) start_file <string> (required)
- * 5) moldescriptor_file <string>
- * 6) guff_path <string> (deprecated)
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
+ * topology_file <string> 3) parameter_file <string> 4) start_file <string>
+ * (required) 5) moldescriptor_file <string> 6) guff_path <string> (deprecated)
  * 7) guff_file <string>
  *
  * @param engine
  */
-InputFileParserFiles::InputFileParserFiles(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserFiles::InputFileParserFiles(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("intra-nonBonded_file"), bind_front(&InputFileParserFiles::parseIntraNonBondedFile, this), false);
-    addKeyword(std::string("topology_file"), bind_front(&InputFileParserFiles::parseTopologyFilename, this), false);
-    addKeyword(std::string("parameter_file"), bind_front(&InputFileParserFiles::parseParameterFilename, this), false);
-    addKeyword(std::string("start_file"), bind_front(&InputFileParserFiles::parseStartFilename, this), true);
-    addKeyword(std::string("rpmd_start_file"), bind_front(&InputFileParserFiles::parseRingPolymerStartFilename, this), false);
-    addKeyword(std::string("moldescriptor_file"), bind_front(&InputFileParserFiles::parseMoldescriptorFilename, this), false);
-    addKeyword(std::string("guff_path"), bind_front(&InputFileParserFiles::parseGuffPath, this), false);
-    addKeyword(std::string("guff_file"), bind_front(&InputFileParserFiles::parseGuffDatFilename, this), false);
+    addKeyword(
+        std::string("intra-nonBonded_file"),
+        bind_front(&InputFileParserFiles::parseIntraNonBondedFile, this),
+        false
+    );
+
+    addKeyword(
+        std::string("topology_file"),
+        bind_front(&InputFileParserFiles::parseTopologyFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("parameter_file"),
+        bind_front(&InputFileParserFiles::parseParameterFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("start_file"),
+        bind_front(&InputFileParserFiles::parseStartFilename, this),
+        true
+    );
+
+    addKeyword(
+        std::string("rpmd_start_file"),
+        bind_front(&InputFileParserFiles::parseRingPolymerStartFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("moldescriptor_file"),
+        bind_front(&InputFileParserFiles::parseMoldescriptorFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("guff_path"),
+        bind_front(&InputFileParserFiles::parseGuffPath, this),
+        false
+    );
+
+    addKeyword(
+        std::string("guff_file"),
+        bind_front(&InputFileParserFiles::parseGuffDatFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("mshake_file"),
+        bind_front(&InputFileParserFiles::parseMShakeFilename, this),
+        false
+    );
 }
 
 /**
@@ -70,14 +114,19 @@ InputFileParserFiles::InputFileParserFiles(engine::Engine &engine) : InputFilePa
  *
  * @throws customException::InputFileException if the file does not exist
  */
-void InputFileParserFiles::parseIntraNonBondedFile(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseIntraNonBondedFile(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &fileName = lineElements[2];
 
     if (!utilities::fileExists(fileName))
-        throw customException::InputFileException("Intra non bonded file \"" + fileName + "\"" + " File not found");
+        throw customException::InputFileException(
+            "Intra non bonded file \"" + fileName + "\"" + " File not found"
+        );
 
     _engine.getIntraNonBonded().activate();
 
@@ -91,16 +140,22 @@ void InputFileParserFiles::parseIntraNonBondedFile(const std::vector<std::string
  * @param lineElements
  * @param lineNumber
  *
- * @throws customException::InputFileException if topology filename is empty or file does not exist
+ * @throws customException::InputFileException if topology filename is empty or
+ * file does not exist
  */
-void InputFileParserFiles::parseTopologyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseTopologyFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open topology file - filename = " + filename);
+        throw customException::InputFileException(
+            "Cannot open topology file - filename = " + filename
+        );
 
     settings::FileSettings::setTopologyFileName(filename);
     settings::FileSettings::setIsTopologyFileNameSet();
@@ -112,16 +167,22 @@ void InputFileParserFiles::parseTopologyFilename(const std::vector<std::string> 
  * @param lineElements
  * @param lineNumber
  *
- * @throws customException::InputFileException if parameter filename is empty or file does not exist
+ * @throws customException::InputFileException if parameter filename is empty or
+ * file does not exist
  */
-void InputFileParserFiles::parseParameterFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseParameterFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open parameter file - filename = " + filename);
+        throw customException::InputFileException(
+            "Cannot open parameter file - filename = " + filename
+        );
 
     settings::FileSettings::setParameterFileName(filename);
     settings::FileSettings::setIsParameterFileNameSet();
@@ -133,14 +194,19 @@ void InputFileParserFiles::parseParameterFilename(const std::vector<std::string>
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserFiles::parseStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseStartFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open start file - filename = " + filename);
+        throw customException::InputFileException(
+            "Cannot open start file - filename = " + filename
+        );
 
     settings::FileSettings::setStartFileName(filename);
 }
@@ -151,14 +217,19 @@ void InputFileParserFiles::parseStartFilename(const std::vector<std::string> &li
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserFiles::parseRingPolymerStartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseRingPolymerStartFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open ring polymer start file - filename = " + filename);
+        throw customException::InputFileException(
+            "Cannot open ring polymer start file - filename = " + filename
+        );
 
     settings::FileSettings::setRingPolymerStartFileName(filename);
     settings::FileSettings::setIsRingPolymerStartFileNameSet();
@@ -173,15 +244,20 @@ void InputFileParserFiles::parseRingPolymerStartFilename(const std::vector<std::
  *
  * @throws customException::InputFileException if file does not exist
  */
-void InputFileParserFiles::parseMoldescriptorFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseMoldescriptorFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open moldescriptor file - filename = " + filename +
-                                                  " - file not found");
+        throw customException::InputFileException(
+            "Cannot open moldescriptor file - filename = " + filename +
+            " - file not found"
+        );
 
     settings::FileSettings::setMolDescriptorFileName(filename);
 }
@@ -191,9 +267,14 @@ void InputFileParserFiles::parseMoldescriptorFilename(const std::vector<std::str
  *
  * @throws customException::InputFileException deprecated keyword
  */
-[[noreturn]] void InputFileParserFiles::parseGuffPath(const std::vector<std::string> &, const size_t)
+void InputFileParserFiles::parseGuffPath(
+    const std::vector<std::string> &,
+    const size_t
+)
 {
-    throw customException::InputFileException(R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)");
+    throw customException::InputFileException(
+        R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)"
+    );
 }
 
 /**
@@ -205,14 +286,43 @@ void InputFileParserFiles::parseMoldescriptorFilename(const std::vector<std::str
  *
  * @throws customException::InputFileException if file does not exist
  */
-void InputFileParserFiles::parseGuffDatFilename(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserFiles::parseGuffDatFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException("Cannot open guff file - filename = " + filename);
+        throw customException::InputFileException(
+            "Cannot open guff file - filename = " + filename
+        );
 
     settings::FileSettings::setGuffDatFileName(filename);
+}
+
+/**
+ * @brief parse mshake file of simulation and set it in settings
+ *
+ * @param lineElements
+ *
+ * @throws customException::InputFileException if file does not exist
+ */
+void InputFileParserFiles::parseMShakeFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto &filename = lineElements[2];
+
+    if (!utilities::fileExists(filename))
+        throw customException::InputFileException(
+            "Cannot open mshake file - filename = " + filename
+        );
+
+    settings::FileSettings::setMShakeFileName(filename);
 }
