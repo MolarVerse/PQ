@@ -19,6 +19,7 @@ set(EIGEN_MPL2_ONLY ON)
 set(EIGEN_BUILD_PKGCONFIG OFF)
 set(EIGEN_BUILD_DOC OFF)
 FetchContent_MakeAvailable(Eigen)
+FetchContent_GetProperties(Eigen)
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "fetched")
