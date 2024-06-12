@@ -94,6 +94,10 @@ Possible options are:
 
    3) **qm-rpmd** - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringPolymerMDKeys` keywords section
 
+   4) **qmmm-md** - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+
+   5) **opt** - represents a geometry optimization calculation. (Not implemented yet)
+
 
 Timestep
 ========

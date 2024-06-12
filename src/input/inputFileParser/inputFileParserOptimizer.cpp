@@ -20,55 +20,59 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "inputFileParserRingPolymer.hpp"
+#include "inputFileParserOptimizer.hpp"
 
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <format>   // for std::format
+#include <string>   // for std::string
 
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "exceptions.hpp"          // for customException::InputFileException
+#include "optimizerSettings.hpp"   // for OptimizerSettings
+#include "stringUtilities.hpp"     // for utilities::toLowerCopy
 
 using namespace input;
+using namespace settings;
 
 /**
- * @brief Construct a new InputFileParserRingPolymer::
- * InputFileParserRingPolymer object
+ * @brief Constructor
  *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) rpmd_n_replica <size_t>
+ * @details following keywords are added:
+ * - optimizer <string>
  *
- * @param engine
+ * @param engine The engine
  */
-InputFileParserRingPolymer::InputFileParserRingPolymer(engine::Engine &engine)
+InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
     : InputFileParser(engine)
 {
     addKeyword(
-        std::string("rpmd_n_replica"),
-        bind_front(&InputFileParserRingPolymer::parseNumberOfBeads, this),
+        "optimizer",
+        bind_front(&InputFileParserOptimizer::parseOptimizer, this),
         false
     );
 }
 
 /**
- * @brief parse number of beads for ring polymer md
+ * @brief Parses the optimizer
  *
- * @param lineElements
- * @param lineNumber
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
  */
-void InputFileParserRingPolymer::parseNumberOfBeads(
+void InputFileParserOptimizer::parseOptimizer(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    auto numberOfBeads = stoi(lineElements[2]);
+    const auto method = utilities::toLowerCopy(lineElements[2]);
 
-    if (numberOfBeads < 2)
+    if ("gradient-descent" == method)
+        OptimizerSettings::setOptimizer(Optimizer::GRADIENT_DESCENT);
+    else
         throw customException::InputFileException(std::format(
-            "Number of beads must be at least 2 - in input file in line {}",
+            "Unknown optimizer method \"{}\" in input file "
+            "at line {}.\n"
+            "Possible options are: gradient-descent",
+            lineElements[2],
             lineNumber
         ));
-
-    settings::RingPolymerSettings::setNumberOfBeads(size_t(numberOfBeads));
 }

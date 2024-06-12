@@ -40,6 +40,7 @@
 #include "inputFileParserIntegrator.hpp"      // for InputFileParserIntegrator
 #include "inputFileParserManostat.hpp"        // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"      // for InputFileParserNonCoulomb
+#include "inputFileParserOptimizer.hpp"       // for InputFileParserOptimizer
 #include "inputFileParserOutput.hpp"          // for InputFileParserOutput
 #include "inputFileParserQM.hpp"              // for InputFileParserQM
 #include "inputFileParserQMMM.hpp"            // for InputFileParserQM
@@ -88,6 +89,7 @@ InputFileReader::InputFileReader(
     _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserQMMM>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserRingPolymer>(_engine));
+    _parsers.push_back(std::make_unique<InputFileParserOptimizer>(_engine));
 
     addKeywords();
 }

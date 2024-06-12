@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserQMMM inherits from InputFileParser
      *
@@ -48,29 +50,13 @@ namespace input
        public:
         explicit InputFileParserQMMM(engine::Engine &);
 
-        void parseQMCenter(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseQMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseMMOnlyList(const std::vector<std::string> &lineElements, const size_t lineNumber);
-
-        void parseUseQMCharges(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseQMCoreRadius(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseQMMMLayerRadius(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseQMMMSmoothingRadius(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
+        void parseQMCenter(const strings &, const size_t);
+        void parseQMOnlyList(const strings &, const size_t);
+        void parseMMOnlyList(const strings &, const size_t);
+        void parseUseQMCharges(const strings &, const size_t);
+        void parseQMCoreRadius(const strings &, const size_t);
+        void parseQMMMLayerRadius(const strings &, const size_t);
+        void parseQMMMSmoothingRadius(const strings &, const size_t);
     };
 
 }   // namespace input

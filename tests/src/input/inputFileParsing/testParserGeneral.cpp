@@ -77,8 +77,12 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
         customException::InputFileException,
-        "Invalid jobtype \"notValid\" in input file - possible values are: "
-        "mm-md, qm-md, qm-rpmd"
+        "Invalid jobtype \"notValid\" in input file - possible values are:\n"
+        "- opt\n"
+        "- mm-md\n"
+        "- qm-md\n"
+        "- qmmm-md\n"
+        "- qm-rpmd\n"
     );
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
@@ -103,23 +107,23 @@ TEST_F(TestInputFileReader, parseDimensionality)
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"2\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"2\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 
     lineElements = {"dim", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"1\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"1\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 
     lineElements = {"dim", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"0\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"0\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 }

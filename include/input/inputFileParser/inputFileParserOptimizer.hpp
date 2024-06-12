@@ -20,39 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#ifndef _INPUT_FILE_PARSER_OPTIMIZER_HPP_
 
-#define _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
-
-#include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
+#define _INPUT_FILE_PARSER_OPTIMIZER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
 
 namespace input
 {
     using strings = std::vector<std::string>;
 
     /**
-     * @class InputFileParserNonCoulomb inherits from InputFileParser
+     * @class InputFileParserOptimizer
      *
-     * @brief Parses the non-Coulomb type commands in the input file
+     * @brief Parses the input file for the optimizer
      *
      */
-    class InputFileParserNonCoulomb : public InputFileParser
+    class InputFileParserOptimizer : public InputFileParser
     {
        public:
-        explicit InputFileParserNonCoulomb(engine::Engine &);
+        explicit InputFileParserOptimizer(engine::Engine &);
 
-        void parseNonCoulombType(const strings &, const size_t);
+        void parseOptimizer(const strings &, const size_t);
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#endif   // _INPUT_FILE_PARSER_OPTIMIZER_HPP_

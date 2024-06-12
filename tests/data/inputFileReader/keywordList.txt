@@ -1,3 +1,7 @@
+jobtype                     true       
+
+optimizer                   false
+
 cell-list                   false
 cell-number                 false
 
@@ -13,7 +17,6 @@ wolf_param                  false
 
 force-field                 false
 
-jobtype                     true       
 start_file                  true
 rpmd_start_file             false
 moldescriptor_file          false

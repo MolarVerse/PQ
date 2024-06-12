@@ -20,39 +20,46 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#ifndef _OPTIMIZER_SETTINGS_HPP_
 
-#define _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#define _OPTIMIZER_SETTINGS_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
-#include <vector>    // for vector
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
 
-namespace engine
+namespace settings
 {
-    class Engine;   // Forward declaration
-}
-
-namespace input
-{
-    using strings = std::vector<std::string>;
-
     /**
-     * @class InputFileParserNonCoulomb inherits from InputFileParser
-     *
-     * @brief Parses the non-Coulomb type commands in the input file
+     * @class enum Optimizer
      *
      */
-    class InputFileParserNonCoulomb : public InputFileParser
+    enum class Optimizer : size_t
     {
-       public:
-        explicit InputFileParserNonCoulomb(engine::Engine &);
-
-        void parseNonCoulombType(const strings &, const size_t);
+        NONE,
+        GRADIENT_DESCENT,
     };
 
-}   // namespace input
+    std::string string(const Optimizer method);
 
-#endif   // _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+    /**
+     * @class OptimizerSettings
+     *
+     * @brief stores all information about the optimizer
+     *
+     */
+    class OptimizerSettings
+    {
+       private:
+        static inline Optimizer _optimizer = Optimizer::GRADIENT_DESCENT;
+
+       public:
+        static void setOptimizer(const std::string_view &optimizer);
+        static void setOptimizer(const Optimizer optimizer);
+
+        static Optimizer getOptimizer();
+    };   // namespace settings
+}   // namespace settings
+
+#endif   // _OPTIMIZER_SETTINGS_HPP_

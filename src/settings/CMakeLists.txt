@@ -12,6 +12,7 @@ add_library(settings
     qmSettings.cpp
     ringPolymerSettings.cpp
     outputFileSettings.cpp
+    optimizerSettings.cpp
 )
 
 target_include_directories(settings

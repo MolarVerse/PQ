@@ -111,6 +111,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         parser.parseInitializeVelocities(lineElements3, 0),
         customException::InputFileException,
         "Invalid value for initialize velocities - \"wrongKeyword\" at line 0 "
-        "in input file. Possible options are: true, false"
+        "in input file.\n"
+        "Possible options are: true, false"
     );
 }

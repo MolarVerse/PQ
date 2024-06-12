@@ -91,9 +91,8 @@ void InputFileParserQM::parseQMMethod(
 
     else
         throw customException::InputFileException(std::format(
-            "Invalid qm_prog \"{}\" in input file - possible values are: "
-            "dftbplus, "
-            "pyscf, turbomole",
+            "Invalid qm_prog \"{}\" in input file.\n"
+            "Possible values are: dftbplus, pyscf, turbomole",
             lineElements[2]
         ));
 }
@@ -110,7 +109,6 @@ void InputFileParserQM::parseQMScript(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMSettings::setQMScript(lineElements[2]);
 }
 
@@ -131,7 +129,6 @@ void InputFileParserQM::parseQMScriptFullPath(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMSettings::setQMScriptFullPath(lineElements[2]);
 }
 
@@ -147,6 +144,5 @@ void InputFileParserQM::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
 }

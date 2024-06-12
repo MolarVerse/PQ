@@ -22,33 +22,43 @@
 
 #include "inputFileParserCellList.hpp"   // for InputFileParserCellList
 
-#include "celllist.hpp"          // for CellList
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for InputFileException
-#include "inputFileParser.hpp"   // for checkCommand, InputFileParser
-#include "stringUtilities.hpp"   // for toLowerCopy
-
 #include <cstddef>      // for size_t
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 #include <string>       // for allocator, operator==, string
 #include <vector>       // for vector
 
+#include "celllist.hpp"          // for CellList
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException
+#include "inputFileParser.hpp"   // for checkCommand, InputFileParser
+#include "stringUtilities.hpp"   // for toLowerCopy
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Cell List:: Input File Parser Cell List object
+ * @brief Construct a new Input File Parser Cell List:: Input File Parser Cell
+ * List object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) cell-list <on/off>
- * 2) cell-number <size_t>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) cell-list <on/off> 2)
+ * cell-number <size_t>
  *
  * @param engine
  */
-InputFileParserCellList::InputFileParserCellList(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserCellList::InputFileParserCellList(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("cell-list"), bind_front(&InputFileParserCellList::parseCellListActivated, this), false);
-    addKeyword(std::string("cell-number"), bind_front(&InputFileParserCellList::parseNumberOfCells, this), false);
+    addKeyword(
+        std::string("cell-list"),
+        bind_front(&InputFileParserCellList::parseCellListActivated, this),
+        false
+    );
+    addKeyword(
+        std::string("cell-number"),
+        bind_front(&InputFileParserCellList::parseNumberOfCells, this),
+        false
+    );
 }
 
 /**
@@ -60,9 +70,13 @@ InputFileParserCellList::InputFileParserCellList(engine::Engine &engine) : Input
  *
  * @param lineElements
  *
- * @throws customException::InputFileException if cell-list keyword is not "on" or "off"
+ * @throws customException::InputFileException if cell-list keyword is not "on"
+ * or "off"
  */
-void InputFileParserCellList::parseCellListActivated(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserCellList::parseCellListActivated(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -75,10 +89,13 @@ void InputFileParserCellList::parseCellListActivated(const std::vector<std::stri
         _engine.getCellList().deactivate();
 
     else
-        throw customException::InputFileException(
-            format(R"(Invalid cell-list keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
-                   lineElements[2],
-                   lineNumber));
+        throw customException::InputFileException(std::format(
+            "Invalid cell-list keyword \"{}\" "
+            "at line {} in input file\n"
+            "Possible keywords are \"on\" and \"off\"",
+            lineElements[2],
+            lineNumber
+        ));
 }
 
 /**
@@ -88,16 +105,23 @@ void InputFileParserCellList::parseCellListActivated(const std::vector<std::stri
  *
  * @param lineElements
  *
- * @throws customException::InputFileException if number of cells is not positive
+ * @throws customException::InputFileException if number of cells is not
+ * positive
  */
-void InputFileParserCellList::parseNumberOfCells(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserCellList::parseNumberOfCells(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto cellNumber = stoi(lineElements[2]);
 
     if (cellNumber <= 0)
-        throw customException::InputFileException("Number of cells must be positive - number of cells = " + lineElements[2]);
+        throw customException::InputFileException(
+            "Number of cells must be positive - number of cells = " +
+            lineElements[2]
+        );
 
     _engine.getCellList().setNumberOfCells(size_t(cellNumber));
 }
