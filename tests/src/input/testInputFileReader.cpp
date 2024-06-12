@@ -127,7 +127,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(readInputFile(filename, *_engine));
+    ASSERT_NO_THROW(readInputFile(filename, *_mdEngine));
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
