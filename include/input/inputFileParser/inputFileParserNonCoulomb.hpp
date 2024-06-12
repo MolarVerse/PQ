@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserNonCoulomb inherits from InputFileParser
      *
@@ -45,10 +47,10 @@ namespace input
      */
     class InputFileParserNonCoulomb : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserNonCoulomb(engine::Engine &);
 
-        void parseNonCoulombType(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNonCoulombType(const strings &, const size_t);
     };
 
 }   // namespace input
