@@ -35,147 +35,6 @@
 using namespace engine;
 
 /**
- * @brief Run the simulation for numberOfSteps steps.
- *
- */
-void Engine::run()
-{
-    _physicalData.calculateKinetics(getSimulationBox());
-
-    _engineOutput.getLogOutput().writeInitialMomentum(
-        norm(_physicalData.getMomentum())
-    );
-
-    const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
-    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
-
-    for (; _step <= numberOfSteps; ++_step)
-    {
-        bar.update();
-        takeStep();
-
-        writeOutput();
-    }
-
-    _timer.stopSimulationTimer();
-
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
-
-    _engineOutput.setTimerName("Output");
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _thermostat->setTimerName("Thermostat");
-    _timer.addTimer(_thermostat->getTimer());
-
-    _integrator->setTimerName("Integrator");
-    _timer.addTimer(_integrator->getTimer());
-
-    _constraints.setTimerName("Constraints");
-    _timer.addTimer(_constraints.getTimer());
-
-    _cellList.setTimerName("Cell List");
-    _timer.addTimer(_cellList.getTimer());
-
-    _potential->setTimerName("Potential");
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded.setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded.getTimer());
-
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
-
-    _physicalData.setTimerName("Physical Data");
-    _timer.addTimer(_physicalData.getTimer());
-
-    _manostat->setTimerName("Manostat");
-    _timer.addTimer(_manostat->getTimer());
-
-    _resetKinetics.setTimerName("Reset Kinetics");
-    _timer.addTimer(_resetKinetics.getTimer());
-
-#ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
-    _timer.addTimer(_kokkosVelocityVerlet.getTimer());
-
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
-
-    references::ReferencesOutput::writeReferencesFile();
-
-    _engineOutput.writeTimingsFile(_timer);
-
-    _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
-    _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
-}
-
-/**
- * @brief Writes output files.
- *
- * @details output files are written if the step is a multiple of the output
- * frequency.
- *
- */
-void Engine::writeOutput()
-{
-    const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
-    const auto step0      = settings::TimingsSettings::getStepCount();
-    const auto effStep    = _step + step0;
-
-    if (0 == _step % outputFreq)
-    {
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeVelFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeChargeFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, _step + step0);
-
-        _engineOutput.writeVirialFile(
-            effStep,
-            _physicalData
-        );   // use physicalData instead of averagePhysicalData
-
-        _engineOutput.writeStressFile(
-            effStep,
-            _physicalData
-        );   // use physicalData instead of averagePhysicalData
-
-        _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
-    }
-
-    // NOTE:
-    // stop and restart immediately time manager - maximum lost time is en file
-    // writing in last step of simulation but on the other hand setup is now
-    // included in total simulation time
-    // Unfortunately, setup is therefore included in the first looptime output
-    // but this is not a big problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
-
-    _physicalData.setLoopTime(_timer.calculateLoopTime());
-    _averagePhysicalData.updateAverages(_physicalData);
-
-    if (0 == _step % outputFreq)
-    {
-        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
-
-        const auto dt            = settings::TimingsSettings::getTimeStep();
-        const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
-
-        _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
-        _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
-        _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
-
-        _averagePhysicalData = physicalData::PhysicalData();
-    }
-
-    _physicalData.reset();
-}
-
-/**
  * @brief Adds a timings section to the timingsSection vector.
  *
  */
@@ -306,28 +165,11 @@ intraNonBonded::IntraNonBonded &Engine::getIntraNonBonded()
 }
 
 /**
- * @brief get the reference to the reset kinetics
- *
- * @return resetKinetics::ResetKinetics&
- */
-resetKinetics::ResetKinetics &Engine::getResetKinetics()
-{
-    return _resetKinetics;
-}
-
-/**
  * @brief get the reference to the virial
  *
  * @return virial::Virial&
  */
 virial::Virial &Engine::getVirial() { return *_virial; }
-
-/**
- * @brief get the reference to the integrator
- *
- * @return integrator::Integrator&
- */
-integrator::Integrator &Engine::getIntegrator() { return *_integrator; }
 
 /**
  * @brief get the reference to the potential
@@ -337,18 +179,11 @@ integrator::Integrator &Engine::getIntegrator() { return *_integrator; }
 potential::Potential &Engine::getPotential() { return *_potential; }
 
 /**
- * @brief get the reference to the thermostat
+ * @brief get the pointer to the force field
  *
- * @return thermostat::Thermostat&
+ * @return forceField::ForceField*
  */
-thermostat::Thermostat &Engine::getThermostat() { return *_thermostat; }
-
-/**
- * @brief get the reference to the manostat
- *
- * @return manostat::Manostat&
- */
-manostat::Manostat &Engine::getManostat() { return *_manostat; }
+forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }
 
 /**
  * @brief get the reference to the engine output
@@ -356,76 +191,6 @@ manostat::Manostat &Engine::getManostat() { return *_manostat; }
  * @return EngineOutput&
  */
 EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
-
-/**
- * @brief get the reference to the energy output
- *
- * @return output::EnergyOutput&
- */
-output::EnergyOutput &Engine::getEnergyOutput()
-{
-    return _engineOutput.getEnergyOutput();
-}
-
-/**
- * @brief get the reference to the instant energy output
- *
- * @return output::EnergyOutput&
- */
-output::EnergyOutput &Engine::getInstantEnergyOutput()
-{
-    return _engineOutput.getInstantEnergyOutput();
-}
-
-/**
- * @brief get the reference to the momentum output
- *
- * @return output::MomentumOutput&
- */
-output::MomentumOutput &Engine::getMomentumOutput()
-{
-    return _engineOutput.getMomentumOutput();
-}
-
-/**
- * @brief get the reference to the xyz output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &Engine::getXyzOutput()
-{
-    return _engineOutput.getXyzOutput();
-}
-
-/**
- * @brief get the reference to the vel output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &Engine::getVelOutput()
-{
-    return _engineOutput.getVelOutput();
-}
-
-/**
- * @brief get the reference to the force output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &Engine::getForceOutput()
-{
-    return _engineOutput.getForceOutput();
-}
-
-/**
- * @brief get the reference to the charge output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &Engine::getChargeOutput()
-{
-    return _engineOutput.getChargeOutput();
-}
 
 /**
  * @brief get the reference to the log output
@@ -448,56 +213,6 @@ output::StdoutOutput &Engine::getStdoutOutput()
 }
 
 /**
- * @brief get the reference to the rst file output
- *
- * @return output::RstFileOutput&
- */
-output::RstFileOutput &Engine::getRstFileOutput()
-{
-    return _engineOutput.getRstFileOutput();
-}
-
-/**
- * @brief get the reference to the info output
- *
- * @return output::InfoOutput&
- */
-output::InfoOutput &Engine::getInfoOutput()
-{
-    return _engineOutput.getInfoOutput();
-}
-
-/**
- * @brief get the reference to the virial output
- *
- * @return output::VirialOutput&
- */
-output::VirialOutput &Engine::getVirialOutput()
-{
-    return _engineOutput.getVirialOutput();
-}
-
-/**
- * @brief get the reference to the stress output
- *
- * @return output::StressOutput&
- */
-output::StressOutput &Engine::getStressOutput()
-{
-    return _engineOutput.getStressOutput();
-}
-
-/**
- * @brief get the reference to the box file output
- *
- * @return output::BoxFileOutput&
- */
-output::BoxFileOutput &Engine::getBoxFileOutput()
-{
-    return _engineOutput.getBoxFileOutput();
-}
-
-/**
  * @brief get the TimingsOutput
  *
  * @return output::TimingsOutput&
@@ -506,70 +221,3 @@ output::TimingsOutput &Engine::getTimingsOutput()
 {
     return _engineOutput.getTimingsOutput();
 }
-
-/**
- * @brief get the reference to the ring polymer rst file output
- *
- * @return output::RingPolymerRestartFileOutput&
- */
-RPMDRestartFileOutput &Engine::getRingPolymerRstFileOutput()
-{
-    return _engineOutput.getRingPolymerRstFileOutput();
-}
-
-/**
- * @brief get the reference to the ring polymer xyz output
- *
- * @return output::RingPolymerTrajectoryOutput&
- */
-RPMDTrajectoryOutput &Engine::getRingPolymerXyzOutput()
-{
-    return _engineOutput.getRingPolymerXyzOutput();
-}
-
-/**
- * @brief get the reference to the ring polymer vel output
- *
- * @return output::RingPolymerTrajectoryOutput&
- */
-RPMDTrajectoryOutput &Engine::getRingPolymerVelOutput()
-{
-    return _engineOutput.getRingPolymerVelOutput();
-}
-
-/**
- * @brief get the reference to the ring polymer force output
- *
- * @return output::RingPolymerTrajectoryOutput&
- */
-RPMDTrajectoryOutput &Engine::getRingPolymerForceOutput()
-{
-    return _engineOutput.getRingPolymerForceOutput();
-}
-
-/**
- * @brief get the reference to the ring polymer charge output
- *
- * @return output::RingPolymerTrajectoryOutput&
- */
-RPMDTrajectoryOutput &Engine::getRingPolymerChargeOutput()
-{
-    return _engineOutput.getRingPolymerChargeOutput();
-}
-
-/**
- * @brief get the reference to the ring polymer energy output
- *
- * @return output::RingPolymerEnergyOutput&
- */
-RPMDEnergyOutput &Engine::getRingPolymerEnergyOutput()
-{
-    return _engineOutput.getRingPolymerEnergyOutput();
-}
-
-/**
- * @brief get the pointer to the force field
- *
- * @return forceField::ForceField*
- */
-forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }

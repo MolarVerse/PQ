@@ -24,12 +24,14 @@
 
 #define _TEST_INPUT_FILE_READER_H_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <cstdio>   // for remove
+#include <string>   // for allocator, string
+
 #include "engine.hpp"            // for Engine
 #include "inputFileReader.hpp"   // for InputFileReader
-
-#include <cstdio>          // for remove
-#include <gtest/gtest.h>   // for Test
-#include <string>          // for allocator, string
+#include "mdEngine.hpp"          // for MDEngine
 
 /**
  * @class TestInputFileReader
@@ -39,11 +41,15 @@
  */
 class TestInputFileReader : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _engine          = new engine::Engine();
         _inputFileReader = new input::InputFileReader("input.in", *_engine);
+
+        _mdEngine = new engine::MDEngine();
+        _inputFileReader_mdEngine =
+            new input::InputFileReader("input.in", *_mdEngine);
     }
 
     void TearDown() override
@@ -54,8 +60,11 @@ class TestInputFileReader : public ::testing::Test
 
     std::string _fileName = "";
 
-    engine::Engine             *_engine;
+    engine::Engine         *_engine;
     input::InputFileReader *_inputFileReader;
+
+    engine::MDEngine       *_mdEngine;
+    input::InputFileReader *_inputFileReader_mdEngine;
 
     void removeFile() const { std::remove(_fileName.c_str()); }
 };

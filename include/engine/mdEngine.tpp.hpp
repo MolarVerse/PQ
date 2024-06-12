@@ -20,31 +20,50 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_HPP_
+#ifndef _MD_ENGINE_TPP_
 
-#define _OPT_ENGINE_HPP_
+#define _MD_ENGINE_TPP_
 
-#include "engine.hpp"      // for Engine
-#include "optimizer.hpp"   // for Optimizer
+#include "mdEngine.hpp"
+
+/***************************
+ * make unique_ptr methods *
+ ***************************/
 
 namespace engine
 {
+    /**
+     * @brief make unique_ptr for integrator
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void MDEngine::makeIntegrator(T integrator)
+    {
+        _integrator = std::make_unique<T>(integrator);
+    }
 
     /**
-     * @class OptEngine
+     * @brief make unique_ptr for thermostat
      *
-     * @brief Optimizer engine
-     *
+     * @tparam T
      */
-    class OptEngine : public Engine
+    template <typename T>
+    inline void MDEngine::makeThermostat(T thermostat)
     {
-       private:
-        optimizer::Optimizer optimizer;
+        _thermostat = std::make_unique<T>(thermostat);
+    }
 
-       public:
-        // void takeStep() override;
-    };
-
+    /**
+     * @brief make unique_ptr for manostat
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void MDEngine::makeManostat(T manostat)
+    {
+        _manostat = std::make_unique<T>(manostat);
+    }
 }   // namespace engine
 
-#endif   // _OPT_ENGINE_HPP_
+#endif   // _MD_ENGINE_TPP_

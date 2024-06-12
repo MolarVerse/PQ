@@ -1,13 +1,14 @@
 set(engine_source_files
     engine.cpp
 
+    optEngine.cpp
+    mdEngine.cpp
+
     mmmdEngine.cpp
     qmmdEngine.cpp
     qmmmmdEngine.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
-
-    optEngine.cpp
 
     engineOutput.cpp
 )

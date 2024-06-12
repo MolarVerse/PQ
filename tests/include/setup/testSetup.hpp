@@ -27,14 +27,20 @@
 #include <gtest/gtest.h>
 
 #include "engine.hpp"
+#include "mdEngine.hpp"
 #include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
    protected:
-    void SetUp() override { _engine = new engine::Engine(); }
+    void SetUp() override
+    {
+        _engine   = new engine::Engine();
+        _mdEngine = new engine::MDEngine();
+    }
 
-    engine::Engine *_engine;
+    engine::Engine   *_engine;
+    engine::MDEngine *_mdEngine;
 
     void TearDown() override
     {
