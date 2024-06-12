@@ -152,17 +152,23 @@ void setup::setupEngine(Engine &engine)
         setupQM(dynamic_cast<engine::QMMMMDEngine &>(engine));
 
     if (settings::Settings::isQMOnlyActivated())
-        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
+        setupQM(dynamic_cast<engine::QMMDEngine &>(engine)
+        );   // TODO: does make problems with optimization maybe qm should be
+             // excluded
 
-    resetKinetics::setupResetKinetics(engine);
+    if (settings::Settings::isMDJobType())
+        resetKinetics::setupResetKinetics(engine);
 
     simulationBox::setupSimulationBox(engine);
 
     setupCellList(engine);
 
-    setupThermostat(engine);
+    if (settings::Settings::isMDJobType())
+    {
+        setupThermostat(engine);
 
-    setupManostat(engine);
+        setupManostat(engine);
+    }
 
     if (settings::Settings::isMMActivated())
     {
@@ -175,7 +181,8 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    setupRingPolymer(engine);
+    if (settings::Settings::isMDJobType())
+        setupRingPolymer(engine);
 
     if (settings::Settings::isQMMMActivated())
         setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
