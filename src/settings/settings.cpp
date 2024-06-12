@@ -22,11 +22,17 @@
 
 #include "settings.hpp"
 
-#include "stringUtilities.hpp"   // for toLowerCopy
-
 #include <string>   // for operator==, string
 
+#include "stringUtilities.hpp"   // for toLowerCopy
+
 using settings::Settings;
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
 /**
  * @brief sets the jobtype to enum in settings
@@ -50,7 +56,77 @@ void Settings::setJobtype(const std::string_view jobtype)
 }
 
 /**
+ * @brief sets the jobtype to enum in settings
+ *
+ * @param jobtype
+ */
+void Settings::setJobtype(const JobType jobtype) { _jobtype = jobtype; }
+
+/**
+ * @brief sets MM to active
+ *
+ * @param dimensionality
+ */
+void Settings::setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
+
+/**
+ * @brief sets QM to active
+ *
+ * @param dimensionality
+ */
+void Settings::setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
+
+/**
+ * @brief sets Ring Polymer MD to active
+ *
+ * @param dimensionality
+ */
+void Settings::setIsRingPolymerMDActivated(const bool isRingPolymerMD)
+{
+    _isRingPolymerMDActivated = isRingPolymerMD;
+}
+
+/**
+ * @brief sets the dimensionality
+ *
+ * @param dimensionality
+ */
+void Settings::setDimensionality(const size_t dimensionality)
+{
+    _dimensionality = dimensionality;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the jobtype
+ *
+ * @return JobType
+ */
+settings::JobType Settings::getJobtype() { return _jobtype; }
+
+/**
+ * @brief get the dimensionality
+ *
+ * @return size_t
+ */
+size_t Settings::getDimensionality() { return _dimensionality; }
+
+/******************************
+ *                            *
+ * standard is-active methods *
+ *                            *
+ ******************************/
+
+/**
  * @brief Returns true if the jobtype does no use any MM type simulations
+ *
+ * @return true/false if the jobtype does no use any MM type simulations
+ *
  */
 bool Settings::isQMOnly()
 {
@@ -61,3 +137,132 @@ bool Settings::isQMOnly()
     else
         return false;
 }
+
+/**
+ * @brief Returns true if the jobtype does is based on MD simulations
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isMDJobType()
+{
+    auto isMD = false;
+    isMD      = isMD || _jobtype == JobType::MM_MD;
+    isMD      = isMD || _jobtype == JobType::QM_MD;
+    isMD      = isMD || _jobtype == JobType::QMMM_MD;
+    isMD      = isMD || _jobtype == JobType::RING_POLYMER_QM_MD;
+
+    return isMD;
+}
+
+/**
+ * @brief Returns true if the jobtype does is based on optimization
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isOptJobType() { return _jobtype == JobType::OPT; }
+
+/**
+ * @brief Returns true if the MM simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isMMActivated() { return _isMMActivated; }
+
+/**
+ * @brief Returns true if the QM simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isQMActivated() { return _isQMActivated; }
+
+/**
+ * @brief Returns true if both MM and QM simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isQMMMActivated() { return _isMMActivated && _isQMActivated; }
+
+/**
+ * @brief Returns true if only QM simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isQMOnlyActivated() { return _isQMActivated && !_isMMActivated; }
+
+/**
+ * @brief Returns true if only MM simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isMMOnlyActivated() { return _isMMActivated && !_isQMActivated; }
+
+/**
+ * @brief Returns true if the ring polymer MD simulations are activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
+
+/**
+ * @brief Returns true if Kokkos is activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::useKokkos() { return _useKokkos; }
+
+/*****************************
+ *                           *
+ * standard activate methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief activate MM
+ *
+ */
+void Settings::activateMM() { _isMMActivated = true; }
+
+/**
+ * @brief activate QM
+ *
+ */
+void Settings::activateQM() { _isQMActivated = true; }
+
+/**
+ * @brief activate ring polymer MD simulations
+ *
+ */
+void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
+
+/**
+ * @brief activate Kokkos
+ *
+ */
+void Settings::activateKokkos() { _useKokkos = true; }
+
+/**
+ * @brief deactivate MM
+ *
+ */
+void Settings::deactivateMM() { _isMMActivated = false; }
+
+/**
+ * @brief deactivate QM
+ *
+ */
+void Settings::deactivateQM() { _isQMActivated = false; }
+
+/**
+ * @brief deactivate ring polymer MD simulations
+ *
+ */
+void Settings::deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
