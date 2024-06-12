@@ -111,7 +111,7 @@ void QMSettings::setQMLoopTimeLimit(const double time)
  *
  * @return QMMethod
  */
-QMSettings::QMMethod getQMMethod() { return _qmMethod; }
+QMMethod QMSettings::getQMMethod() { return _qmMethod; }
 
 /**
  * @brief returns the qmScript
