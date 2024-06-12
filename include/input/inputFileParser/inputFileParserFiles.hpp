@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserNonCoulomb inherits from InputFileParser
      *
@@ -48,50 +50,15 @@ namespace input
        public:
         explicit InputFileParserFiles(engine::Engine &);
 
-        void parseIntraNonBondedFile(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseTopologyFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseParameterFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseStartFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseRingPolymerStartFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseMoldescriptorFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseGuffDatFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseGuffPath(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
-
-        void parseMShakeFilename(
-            const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
-        );
+        void parseIntraNonBondedFile(const strings &, const size_t);
+        void parseTopologyFilename(const strings &, const size_t);
+        void parseParameterFilename(const strings &, const size_t);
+        void parseStartFilename(const strings &, const size_t);
+        void parseRingPolymerStartFilename(const strings &, const size_t);
+        void parseMoldescriptorFilename(const strings &, const size_t);
+        void parseGuffDatFilename(const strings &, const size_t);
+        void parseGuffPath(const strings &, const size_t);
+        void parseMShakeFilename(const strings &, const size_t);
     };
 
 }   // namespace input
