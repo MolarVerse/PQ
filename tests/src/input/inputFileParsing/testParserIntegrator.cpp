@@ -25,12 +25,12 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "gtest/gtest.h"         // for Message, TestPartResult
 #include "inputFileParser.hpp"   // for readInput
 #include "inputFileParserIntegrator.hpp"   // for InputFileParserIntegrator
 #include "integrator.hpp"                  // for Integrator
+#include "mdEngine.hpp"                    // for Engine
 #include "testInputFileReader.hpp"         // for TestInputFileReader
 #include "throwWithMessage.hpp"            // for ASSERT_THROW_MSG
 
@@ -44,10 +44,10 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    InputFileParserIntegrator parser(*_engine);
+    InputFileParserIntegrator parser(*_mdEngine);
     std::vector<std::string>  lineElements = {"integrator", "=", "v-verlet"};
     parser.parseIntegrator(lineElements, 0);
-    EXPECT_EQ(_engine->getIntegrator().getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(

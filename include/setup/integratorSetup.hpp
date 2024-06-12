@@ -26,8 +26,9 @@
 
 namespace engine
 {
-    class Engine;   // forward declaration
-}
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
@@ -39,11 +40,11 @@ namespace setup
      */
     class IntegratorSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        engine::MDEngine &_engine;
 
-      public:
-        explicit IntegratorSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit IntegratorSetup(engine::MDEngine &engine) : _engine(engine){};
     };
 
 }   // namespace setup

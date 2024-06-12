@@ -42,6 +42,7 @@ namespace settings
         QM_MD,
         QMMM_MD,
         RING_POLYMER_QM_MD,
+        OPT,
         NONE
     };
 
@@ -62,8 +63,9 @@ namespace settings
         static inline bool _isQMActivated            = false;
         static inline bool _isRingPolymerMDActivated = false;
 
-        static inline size_t _dimensionality =
-            defaults::_DIMENSIONALITY_DEFAULT_;
+        // clang-format off
+        static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
+        // clang-format on
 
        public:
         Settings()  = default;
@@ -118,6 +120,13 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated()
         {
             return _isRingPolymerMDActivated;
+        }
+
+        [[nodiscard]] static bool isMDJobType()
+        {
+            return _jobtype == JobType::MM_MD || _jobtype == JobType::QM_MD ||
+                   _jobtype == JobType::QMMM_MD ||
+                   _jobtype == JobType::RING_POLYMER_QM_MD;
         }
 
         /***************************

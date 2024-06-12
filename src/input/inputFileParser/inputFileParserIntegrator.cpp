@@ -26,9 +26,10 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "integrator.hpp"        // for VelocityVerlet, integrator
+#include "mdEngine.hpp"          // for Engine
+#include "settings.hpp"          // for Settings
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -72,10 +73,17 @@ void InputFileParserIntegrator::parseIntegrator(
 
     const auto integrator = utilities::toLowerCopy(lineElements[2]);
 
+    if (!settings::Settings::isMDJobType())
+        throw customException::InputFileException(
+            std::format("Integrator is only supported for MD simulations!")
+        );
+
     if (integrator == "v-verlet")
-        _engine.makeIntegrator(integrator::VelocityVerlet());
+        dynamic_cast<engine::MDEngine &>(_engine).makeIntegrator(
+            integrator::VelocityVerlet()
+        );
     else
-        throw customException::InputFileException(format(
+        throw customException::InputFileException(std::format(
             "Invalid integrator \"{}\" at line {} in input file",
             lineElements[2],
             lineNumber

@@ -32,19 +32,14 @@
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
-#include "integrator.hpp"
 #include "intraNonBonded.hpp"
-#include "manostat.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
-#include "resetKinetics.hpp"
 #include "simulationBox.hpp"
-#include "thermostat.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
 #include "coulombWolf_kokkos.hpp"
-#include "integrator_kokkos.hpp"
 #include "lennardJones_kokkos.hpp"
 #include "potential_kokkos.hpp"
 #include "simulationBox_kokkos.hpp"
@@ -77,24 +72,15 @@ namespace engine
     using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
     using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
 
-    using UniqueIntegrator = std::unique_ptr<integrator::Integrator>;
-    using VelocityVerlet   = integrator::VelocityVerlet;
-
-    using UniqueThermostat = std::unique_ptr<thermostat::Thermostat>;
-    using Thermostat       = thermostat::Thermostat;
-
-    using UniqueManostat = std::unique_ptr<manostat::Manostat>;
-    using UniqueVirial   = std::unique_ptr<virial::Virial>;
-
+    using UniqueVirial    = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;
     using BruteForce      = potential::PotentialBruteForce;
 
 #ifdef WITH_KOKKOS
-    using KokkosSimulationBox  = simulationBox::KokkosSimulationBox;
-    using KokkosLennardJones   = potential::KokkosLennardJones;
-    using KokkosCoulombWolf    = potential::KokkosCoulombWolf;
-    using KokkosPotential      = potential::KokkosPotential;
-    using KokkosVelocityVerlet = integrator::KokkosVelocityVerlet;
+    using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
+    using KokkosLennardJones  = potential::KokkosLennardJones;
+    using KokkosCoulombWolf   = potential::KokkosCoulombWolf;
+    using KokkosPotential     = potential::KokkosPotential;
 #endif
 
     /**
@@ -119,28 +105,23 @@ namespace engine
         constraints::Constraints       _constraints;
         forceField::ForceField         _forceField;
         intraNonBonded::IntraNonBonded _intraNonBonded;
-        resetKinetics::ResetKinetics   _resetKinetics;
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
         potential::KokkosLennardJones      _kokkosLennardJones;
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
         potential::KokkosPotential         _kokkosPotential;
-        integrator::KokkosVelocityVerlet   _kokkosVelocityVerlet;
 #endif
 
-        UniqueIntegrator _integrator = std::make_unique<VelocityVerlet>();
-        UniqueThermostat _thermostat = std::make_unique<Thermostat>();
-        UniqueManostat   _manostat   = std::make_unique<manostat::Manostat>();
-        UniqueVirial     _virial = std::make_unique<virial::VirialMolecular>();
-        UniquePotential  _potential = std::make_unique<BruteForce>();
+        UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();
+        UniquePotential _potential = std::make_unique<BruteForce>();
 
        public:
         Engine()          = default;
         virtual ~Engine() = default;
 
-        virtual void run();
-        virtual void writeOutput();
+        virtual void run() {};
+        virtual void writeOutput() {};
 
         void addTimer(const timings::Timer &timings);
 
@@ -170,34 +151,13 @@ namespace engine
         [[nodiscard]] constraints::Constraints       &getConstraints();
         [[nodiscard]] forceField::ForceField         &getForceField();
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics();
         [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] integrator::Integrator         &getIntegrator();
         [[nodiscard]] potential::Potential           &getPotential();
-        [[nodiscard]] thermostat::Thermostat         &getThermostat();
-        [[nodiscard]] manostat::Manostat             &getManostat();
-        [[nodiscard]] EngineOutput                   &getEngineOutput();
-        [[nodiscard]] output::EnergyOutput           &getEnergyOutput();
-        [[nodiscard]] output::EnergyOutput           &getInstantEnergyOutput();
-        [[nodiscard]] output::MomentumOutput         &getMomentumOutput();
-        [[nodiscard]] output::TrajectoryOutput       &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput       &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput       &getForceOutput();
-        [[nodiscard]] output::TrajectoryOutput       &getChargeOutput();
-        [[nodiscard]] output::LogOutput              &getLogOutput();
-        [[nodiscard]] output::StdoutOutput           &getStdoutOutput();
-        [[nodiscard]] output::RstFileOutput          &getRstFileOutput();
-        [[nodiscard]] output::InfoOutput             &getInfoOutput();
-        [[nodiscard]] output::VirialOutput           &getVirialOutput();
-        [[nodiscard]] output::StressOutput           &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput          &getBoxFileOutput();
-        [[nodiscard]] output::TimingsOutput          &getTimingsOutput();
-        [[nodiscard]] RPMDRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerXyzOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerVelOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerForceOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerChargeOutput();
-        [[nodiscard]] RPMDEnergyOutput      &getRingPolymerEnergyOutput();
+
+        [[nodiscard]] EngineOutput          &getEngineOutput();
+        [[nodiscard]] output::LogOutput     &getLogOutput();
+        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
         [[nodiscard]] forceField::ForceField *getForceFieldPtr();
 
@@ -206,13 +166,7 @@ namespace engine
          ***************************/
 
         template <typename T>
-        void makeIntegrator(T integrator);
-        template <typename T>
         void makePotential(T);
-        template <typename T>
-        void makeThermostat(T thermostat);
-        template <typename T>
-        void makeManostat(T manostat);
         template <typename T>
         void makeVirial(T virial);
 
@@ -226,11 +180,10 @@ namespace engine
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
 
 #ifdef WITH_KOKKOS
-        [[nodiscard]] KokkosSimulationBox  &getKokkosSimulationBox();
-        [[nodiscard]] KokkosLennardJones   &getKokkosLennardJones();
-        [[nodiscard]] KokkosCoulombWolf    &getKokkosCoulombWolf();
-        [[nodiscard]] KokkosPotential      &getKokkosPotential();
-        [[nodiscard]] KokkosVelocityVerlet &getKokkosVelocityVerlet();
+        [[nodiscard]] KokkosSimulationBox &getKokkosSimulationBox();
+        [[nodiscard]] KokkosLennardJones  &getKokkosLennardJones();
+        [[nodiscard]] KokkosCoulombWolf   &getKokkosCoulombWolf();
+        [[nodiscard]] KokkosPotential     &getKokkosPotential();
         void initKokkosSimulationBox(const size_t numAtoms);
         void initKokkosLennardJones(const size_t numAtomTypes);
         void initKokkosCoulombWolf(
@@ -242,11 +195,6 @@ namespace engine
             const double prefactor
         );
         void initKokkosPotential();
-        void initKokkosVelocityVerlet(
-            const double dt,
-            const double velocityFactor,
-            const double timeFactor
-        );
 #endif
     };
 }   // namespace engine
