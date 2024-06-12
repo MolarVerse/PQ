@@ -66,6 +66,6 @@ void OptimizerSettings::setOptimizer(const Optimizer optimizer)
 /**
  * @brief returns the optimizer as string
  *
- * @return std::string
+ * @return Optimizer
  */
-std::string OptimizerSettings::getOptimizer() { return string(_optimizer); }
+Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }

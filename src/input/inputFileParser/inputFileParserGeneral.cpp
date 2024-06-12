@@ -29,6 +29,7 @@
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException, customException
 #include "mmmdEngine.hpp"     // for MMMDEngine
+#include "optEngine.hpp"      // for OptimizerEngine
 #include "qmmdEngine.hpp"     // for QMMDEngine
 #include "qmmmmdEngine.hpp"   // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
@@ -99,6 +100,12 @@ void InputFileParserGeneral::parseJobTypeForEngine(
     if (jobtype == "opt")
     {
         settings::Settings::setJobtype("OPT");
+        settings::Settings::activateMM();
+        engine.reset(new engine::OptEngine());
+
+        throw customException::InputFileException(
+            "Optimization is not implemented yet"
+        );
     }
     else if (jobtype == "mm-md")
     {

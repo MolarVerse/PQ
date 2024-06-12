@@ -38,6 +38,7 @@ namespace input
      */
     class InputFileParserOptimizer : public InputFileParser
     {
+       public:
         explicit InputFileParserOptimizer(engine::Engine &);
 
         void parseOptimizer(const strings &, const size_t);

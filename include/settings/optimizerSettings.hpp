@@ -31,6 +31,10 @@
 
 namespace settings
 {
+    /**
+     * @class enum Optimizer
+     *
+     */
     enum class Optimizer : size_t
     {
         NONE,
@@ -54,7 +58,7 @@ namespace settings
         static void setOptimizer(const std::string_view &optimizer);
         static void setOptimizer(const Optimizer optimizer);
 
-        static std::string getOptimizer();
+        static Optimizer getOptimizer();
     };   // namespace settings
 }   // namespace settings
 

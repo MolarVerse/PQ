@@ -22,7 +22,15 @@
 
 #include "inputFileParserOptimizer.hpp"
 
+#include <format>   // for std::format
+#include <string>   // for std::string
+
+#include "exceptions.hpp"          // for customException::InputFileException
+#include "optimizerSettings.hpp"   // for OptimizerSettings
+#include "stringUtilities.hpp"     // for utilities::toLowerCopy
+
 using namespace input;
+using namespace settings;
 
 /**
  * @brief Constructor
@@ -53,4 +61,18 @@ void InputFileParserOptimizer::parseOptimizer(
     const size_t                    lineNumber
 )
 {
+    checkCommand(lineElements, lineNumber);
+
+    const auto method = utilities::toLowerCopy(lineElements[2]);
+
+    if ("gradient-descent" == method)
+        OptimizerSettings::setOptimizer(Optimizer::GRADIENT_DESCENT);
+    else
+        throw customException::InputFileException(std::format(
+            "Unknown optimizer method \"{}\" in input file "
+            "at line {}.\n"
+            "Possible options are: gradient-descent",
+            lineElements[2],
+            lineNumber
+        ));
 }
