@@ -37,13 +37,13 @@ std::string settings::string(const QMMethod method)
 {
     switch (method)
     {
-    case QMMethod::DFTBPLUS: return "DFTBPLUS";
+        case QMMethod::DFTBPLUS: return "DFTBPLUS";
 
-    case QMMethod::PYSCF: return "PYSCF";
+        case QMMethod::PYSCF: return "PYSCF";
 
-    case QMMethod::TURBOMOLE: return "TURBOMOLE";
+        case QMMethod::TURBOMOLE: return "TURBOMOLE";
 
-    default: return "none";
+        default: return "none";
     }
 }
 
@@ -68,3 +68,68 @@ void QMSettings::setQMMethod(const std::string_view &method)
     else
         _qmMethod = QMMethod::NONE;
 }
+
+/**
+ * @brief sets the qmMethod to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
+
+/**
+ * @brief sets the qmScript in settings
+ *
+ * @param script
+ */
+void QMSettings::setQMScript(const std::string_view &script)
+{
+    _qmScript = script;
+}
+
+/**
+ * @brief sets the qmScriptFullPath in settings
+ *
+ * @param script
+ */
+void QMSettings::setQMScriptFullPath(const std::string_view &script)
+{
+    _qmScriptFullPath = script;
+}
+
+/**
+ * @brief sets the qmLoopTimeLimit in settings
+ *
+ * @param time
+ */
+void QMSettings::setQMLoopTimeLimit(const double time)
+{
+    _qmLoopTimeLimit = time;
+}
+
+/**
+ * @brief returns the qmMethod
+ *
+ * @return QMMethod
+ */
+QMSettings::QMMethod getQMMethod() { return _qmMethod; }
+
+/**
+ * @brief returns the qmScript
+ *
+ * @return std::string
+ */
+std::string QMSettings::getQMScript() { return _qmScript; }
+
+/**
+ * @brief returns the qmScriptFullPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
+
+/**
+ * @brief returns the qmLoopTimeLimit
+ *
+ * @return double
+ */
+double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
