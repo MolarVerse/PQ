@@ -77,8 +77,12 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
         customException::InputFileException,
-        "Invalid jobtype \"notValid\" in input file - possible values are: "
-        "mm-md, qm-md, qm-rpmd"
+        "Invalid jobtype \"notValid\" in input file - possible values are:\n"
+        "- opt\n"
+        "- mm-md\n"
+        "- qm-md\n"
+        "- qmmm-md\n"
+        "- qm-rpmd\n"
     );
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));

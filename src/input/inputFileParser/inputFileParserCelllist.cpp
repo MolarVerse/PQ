@@ -90,9 +90,9 @@ void InputFileParserCellList::parseCellListActivated(
 
     else
         throw customException::InputFileException(std::format(
-            "(Invalid cell-list keyword \"{}\" "
+            "Invalid cell-list keyword \"{}\" "
             "at line {} in input file\n"
-            "Possible keywords are \"on\" and \"off\")",
+            "Possible keywords are \"on\" and \"off\"",
             lineElements[2],
             lineNumber
         ));

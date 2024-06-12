@@ -128,12 +128,12 @@ void InputFileParserGeneral::parseJobTypeForEngine(
     }
     else
         throw customException::InputFileException(format(
-            "Invalid jobtype \"{}\" in input file - possible values are: "
+            "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- opt\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qm-rpmd\n"
-            "- qmmm-md\n",
+            "- qmmm-md\n"
+            "- qm-rpmd\n",
             lineElements[2]
         ));
 }
