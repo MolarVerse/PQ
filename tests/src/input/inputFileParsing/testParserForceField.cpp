@@ -20,26 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "engine.hpp"                      // for Engine
-#include "exceptions.hpp"                  // for InputFileException, customException
-#include "forceFieldClass.hpp"             // for ForceField
-#include "forceFieldSettings.hpp"          // for ForceFieldSettings
-#include "inputFileParser.hpp"             // for readInput
+#include <gtest/gtest.h>   // for EXPECT_FALSE, EXPECT_TRUE
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException, customException
+#include "forceFieldClass.hpp"      // for ForceField
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "gtest/gtest.h"            // for AssertionResult, Message
+#include "inputFileParser.hpp"      // for readInput
 #include "inputFileParserForceField.hpp"   // for InputFileParserForceField
 #include "testInputFileReader.hpp"         // for TestInputFileReader
 #include "throwWithMessage.hpp"            // for ASSERT_THROW_MSG
-
-#include "gtest/gtest.h"   // for AssertionResult, Message
-#include <gtest/gtest.h>   // for EXPECT_FALSE, EXPECT_TRUE
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
 /**
  * @brief tests parsing the "force-field" command
  *
- * @details possible options are on, off or bonded - otherwise throws inputFileException
+ * @details possible options are on, off or bonded - otherwise throws
+ * inputFileException
  *
  */
 TEST_F(TestInputFileReader, testParseForceField)
@@ -64,5 +66,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     ASSERT_THROW_MSG(
         parser.parseForceFieldType(lineElements, 0),
         customException::InputFileException,
-        "Invalid force-field keyword \"notValid\" at line 0 in input file - possible keywords are \"on\", \"off\" or \"bonded\"");
+        "Invalid force-field keyword \"notValid\" at line 0 in input file\n"
+        "Possible keywords are \"on\", \"off\" or \"bonded\""
+    );
 }
