@@ -14,6 +14,7 @@ set(setup_source_files
     qmmmSetup.cpp
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
+    optimizerSetup.cpp
 )
 
 if(BUILD_WITH_KOKKOS)

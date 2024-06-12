@@ -48,6 +48,18 @@ InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
         bind_front(&InputFileParserOptimizer::parseOptimizer, this),
         false
     );
+
+    addKeyword(
+        "learning-rate-strategy",
+        bind_front(&InputFileParserOptimizer::parseLearningRateStrategy, this),
+        false
+    );
+
+    addKeyword(
+        "initial-learning-rate",
+        bind_front(&InputFileParserOptimizer::parseInitialLearningRate, this),
+        false
+    );
 }
 
 /**
@@ -55,6 +67,9 @@ InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
  *
  * @param lineElements The elements of the line
  * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the optimizer method is
+ * unknown
  */
 void InputFileParserOptimizer::parseOptimizer(
     const std::vector<std::string> &lineElements,
@@ -65,14 +80,78 @@ void InputFileParserOptimizer::parseOptimizer(
 
     const auto method = utilities::toLowerCopy(lineElements[2]);
 
-    if ("gradient-descent" == method)
-        OptimizerSettings::setOptimizer(Optimizer::GRADIENT_DESCENT);
+    if ("steepest-descent" == method)
+        OptimizerSettings::setOptimizer(Optimizer::STEEPEST_DESCENT);
     else
         throw customException::InputFileException(std::format(
             "Unknown optimizer method \"{}\" in input file "
             "at line {}.\n"
-            "Possible options are: gradient-descent",
+            "Possible options are: steepest-descent",
             lineElements[2],
             lineNumber
         ));
+}
+
+/**
+ * @brief Parses the learning rate strategy
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the learning rate strategy is
+ * unknown
+ */
+void InputFileParserOptimizer::parseLearningRateStrategy(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto strategy = utilities::toLowerCopy(lineElements[2]);
+
+    if ("constant" == strategy)
+        OptimizerSettings::setLearningRateStrategy(
+            LearningRateStrategy::CONSTANT
+        );
+
+    else if ("decay" == strategy)
+        OptimizerSettings::setLearningRateStrategy(LearningRateStrategy::DECAY);
+
+    else
+        throw customException::InputFileException(std::format(
+            "Unknown learning rate strategy \"{}\" in input file "
+            "at line {}.\n"
+            "Possible options are: constant, decay",
+            lineElements[2],
+            lineNumber
+        ));
+}
+
+/**
+ * @brief Parses the initial learning rate
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the initial learning rate is
+ * less than or equal to 0.0
+ */
+void InputFileParserOptimizer::parseInitialLearningRate(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto initialLearningRate = std::stod(lineElements[2]);
+
+    if (initialLearningRate <= 0.0)
+        throw customException::InputFileException(std::format(
+            "Initial learning rate must be greater than 0.0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setInitialLearningRate(initialLearningRate);
 }

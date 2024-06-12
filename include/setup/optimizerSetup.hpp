@@ -20,31 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_HPP_
+#ifndef _OPTIMIZER_SETUP_HPP_
 
-#define _OPTIMIZER_HPP_
+#define _OPTIMIZER_SETUP_HPP_
 
-namespace optimizer
-{
-
-    /**
-     * @class Optimizer
-     *
-     * @brief Base class for all optimizers
-     *
-     */
-    class Optimizer
-    {
-       protected:
-        double _initialLearningRate;
-
-       public:
-        explicit Optimizer(const double initialLearningRate);
-
-        Optimizer()          = default;
-        virtual ~Optimizer() = default;
-    };
-
-}   // namespace optimizer
-
-#endif   // _OPTIMIZER_HPP_
+#endif   // _OPTIMIZER_SETUP_HPP_

@@ -1,6 +1,8 @@
 jobtype                     true       
 
 optimizer                   false
+learning-rate-strategy      false
+initial-learning-rate       false
 
 cell-list                   false
 cell-number                 false

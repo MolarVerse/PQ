@@ -21,3 +21,15 @@
 ******************************************************************************/
 
 #include "optimizer.hpp"
+
+using namespace optimizer;
+
+/**
+ * @brief Construct a new Optimizer object
+ *
+ * @param initialLearningRate
+ */
+Optimizer::Optimizer(const double initialLearningRate)
+    : _initialLearningRate(initialLearningRate)
+{
+}

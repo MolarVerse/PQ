@@ -34,11 +34,34 @@ std::string settings::string(const Optimizer method)
 {
     switch (method)
     {
-        case Optimizer::GRADIENT_DESCENT: return "GRADIENT-DESCENT";
+        case Optimizer::STEEPEST_DESCENT: return "STEEPEST-DESCENT";
 
         default: return "none";
     }
 }
+
+/**
+ * @brief returns the learning rate strategy as string
+ *
+ * @param method
+ * @return std::string
+ */
+std::string settings::string(const LearningRateStrategy method)
+{
+    switch (method)
+    {
+        case LearningRateStrategy::CONSTANT: return "CONSTANT";
+        case LearningRateStrategy::DECAY: return "DECAY";
+
+        default: return "none";
+    }
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
 /**
  * @brief sets the optimizer to enum in settings
@@ -47,10 +70,10 @@ std::string settings::string(const Optimizer method)
  */
 void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
 {
-    if ("gradient-descent" == optimizer)
-        _optimizer = Optimizer::GRADIENT_DESCENT;
+    if ("steepest-descent" == optimizer)
+        setOptimizer(Optimizer::STEEPEST_DESCENT);
     else
-        _optimizer = Optimizer::NONE;
+        setOptimizer(Optimizer::NONE);
 }
 
 /**
@@ -64,8 +87,72 @@ void OptimizerSettings::setOptimizer(const Optimizer optimizer)
 }
 
 /**
+ * @brief sets the optimizer to enum in settings
+ *
+ * @param method
+ */
+void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
+{
+    if ("constant" == method)
+        setLearningRateStrategy(LearningRateStrategy::CONSTANT);
+    else if ("decay" == method)
+        setLearningRateStrategy(LearningRateStrategy::DECAY);
+    else
+        setLearningRateStrategy(LearningRateStrategy::NONE);
+}
+
+/**
+ * @brief sets the optimizer to enum in settings
+ *
+ * @param method
+ */
+void OptimizerSettings::setLearningRateStrategy(
+    const LearningRateStrategy method
+)
+{
+    _learningRateStrategy = method;
+}
+
+/**
+ * @brief sets the initial learning rate
+ *
+ * @param learningRate
+ */
+void OptimizerSettings::setInitialLearningRate(const double learningRate)
+{
+    _initialLearningRate      = learningRate;
+    _isInitialLearningRateSet = true;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
  * @brief returns the optimizer as string
  *
  * @return Optimizer
  */
 Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
+
+/**
+ * @brief returns the learning rate strategy as string
+ *
+ * @return LearningRateStrategy
+ */
+LearningRateStrategy OptimizerSettings::getLearningRateStrategy()
+{
+    return _learningRateStrategy;
+}
+
+/**
+ * @brief returns the initial learning rate
+ *
+ * @return double
+ */
+double OptimizerSettings::getInitialLearningRate()
+{
+    return _initialLearningRate;
+}
