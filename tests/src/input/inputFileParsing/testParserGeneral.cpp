@@ -107,23 +107,23 @@ TEST_F(TestInputFileReader, parseDimensionality)
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"2\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"2\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 
     lineElements = {"dim", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"1\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"1\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 
     lineElements = {"dim", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
         customException::InputFileException,
-        "Invalid dimensionality \"0\" in input file - possible values are: 3, "
-        "3d"
+        "Invalid dimensionality \"0\" in input file\n"
+        "Possible values are: 3, 3d"
     );
 }

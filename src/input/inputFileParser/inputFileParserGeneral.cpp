@@ -167,8 +167,8 @@ void InputFileParserGeneral::parseDimensionality(
         settings::Settings::setDimensionality(size_t(dimensionality));
     else
         throw customException::InputFileException(format(
-            "Invalid dimensionality \"{}\" in input file - possible values "
-            "are: 3, 3d",
+            "Invalid dimensionality \"{}\" in input file\n"
+            "Possible values are: 3, 3d",
             lineElements[2]
         ));
 }
