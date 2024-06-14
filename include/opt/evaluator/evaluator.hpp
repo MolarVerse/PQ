@@ -20,41 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_HPP_
+#ifndef _EVALUATOR_HPP_
 
-#define _OPTIMIZER_HPP_
+#define _EVALUATOR_HPP_
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
-
-namespace engine
+namespace opt
 {
-    class OptEngine;   // forward declaration
-
-}   // namespace engine
-
-namespace optimization
-{
-    /**
-     * @class Optimizer
-     *
-     * @brief Base class for all optimizers
-     *
-     */
-    class Optimizer
+    class Evaluator
     {
-       protected:
-        size_t _nEpochs;
-
        public:
-        explicit Optimizer(const size_t);
-
-        Optimizer()          = default;
-        virtual ~Optimizer() = default;
-
-        virtual void update(const double learningRate) = 0;
+        Evaluator()          = default;
+        virtual ~Evaluator() = default;
     };
 
-}   // namespace optimization
+}   // namespace opt
 
-#endif   // _OPTIMIZER_HPP_
+#endif  // _EVALUATOR_HPP_

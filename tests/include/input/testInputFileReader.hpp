@@ -31,7 +31,7 @@
 
 #include "inputFileReader.hpp"   // for InputFileReader
 #include "mmmdEngine.hpp"        // for MDEngine
-#include "mmoptEngine.hpp"       // for MDEngine
+#include "optEngine.hpp"         // for MDEngine
 
 /**
  * @class TestInputFileReader
@@ -50,7 +50,7 @@ class TestInputFileReader : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = new engine::MMOptEngine();
+        _engine   = new engine::OptEngine();
         _mdEngine = new engine::MMMDEngine();
         _inputFileReader_mdEngine =
             new input::InputFileReader("input.in", *_mdEngine);

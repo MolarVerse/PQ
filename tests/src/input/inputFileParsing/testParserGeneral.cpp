@@ -32,7 +32,7 @@
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
 #include "mmmdEngine.hpp"               // for MMMDEngine
-#include "mmoptEngine.hpp"              // for MMOptEngine
+#include "optEngine.hpp"                // for MMOptEngine
 #include "qmmdEngine.hpp"               // for QMMDEngine
 #include "qmmmmdEngine.hpp"             // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"    // for RingPolymerQMMDEngine
@@ -85,7 +85,7 @@ TEST_F(TestInputFileReader, JobType)
     // EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
     // EXPECT_EQ(Settings::isOptJobType(), true);
     // EXPECT_EQ(Settings::isMMActivated(), true);
-    // EXPECT_EQ(typeid(*engine), typeid(engine::MMOptEngine));
+    // EXPECT_EQ(typeid(*engine), typeid(engine::OptEngine));
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
         customException::InputFileException,

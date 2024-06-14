@@ -20,31 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_OPT_ENGINE_HPP_
+#ifndef _MM_EVALUATOR_HPP_
 
-#define _MM_OPT_ENGINE_HPP_
+#define _MM_EVALUATOR_HPP_
 
-#include "optEngine.hpp"   // for OptEngine
+#include "evaluator.hpp"
 
-namespace engine
+namespace opt
 {
-    /**
-     * @class MMOptEngine
-     *
-     * @brief Minimization engine
-     *
-     */
-    class MMOptEngine : public OptEngine
+    class MMEvaluator : public Evaluator
     {
-       private:
-        /* data */
        public:
-        MMOptEngine()        = default;
-        ~MMOptEngine() final = default;
-
-        void updateForces() final;
+        MMEvaluator()          = default;
+        virtual ~MMEvaluator() = default;
     };
 
-}   // namespace engine
+}   // namespace opt
 
-#endif   // _MM_OPT_ENGINE_HPP_
+#endif // _MM_EVALUATOR_HPP_

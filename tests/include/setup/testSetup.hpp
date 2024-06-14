@@ -28,7 +28,7 @@
 
 #include "engine.hpp"
 #include "mmmdEngine.hpp"
-#include "mmoptEngine.hpp"
+#include "optEngine.hpp"
 #include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
@@ -40,7 +40,7 @@ class TestSetup : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = new engine::MMOptEngine();
+        _engine   = new engine::OptEngine();
         _mdEngine = new engine::MMMDEngine();
     }
 
