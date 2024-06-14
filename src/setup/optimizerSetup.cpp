@@ -33,6 +33,15 @@
 
 using setup::OptimizerSetup;
 
+using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
+using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
+using SharedForceField     = std::shared_ptr<forceField::ForceField>;
+using SharedPotential      = std::shared_ptr<potential::Potential>;
+using SharedPhysicalData   = std::shared_ptr<physicalData::PhysicalData>;
+using SharedConstraints    = std::shared_ptr<constraints::Constraints>;
+using SharedIntraNonBonded = std::shared_ptr<intraNonBonded::IntraNonBonded>;
+using SharedVirial         = std::shared_ptr<virial::Virial>;
+
 /**
  * @brief Wrapper for the optimizer setup
  *
@@ -138,12 +147,29 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
  */
 std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
 {
+    auto evaluator = std::make_shared<opt::Evaluator>();
+
     if (settings::Settings::getJobtype() == settings::JobType::MM_OPT)
-        return std::make_shared<opt::MMEvaluator>();
+        evaluator = std::make_shared<opt::MMEvaluator>();
 
     else
         throw customException::UserInputException(
             "Unknown job type for the optimizer in order to setup up the "
             "evaluator"
         );
+
+    evaluator->setCellList(SharedCellList(_optEngine.getCellListPtr()));
+    evaluator->setForceField(SharedForceField(_optEngine.getForceFieldPtr()));
+    evaluator->setPotential(SharedPotential(_optEngine.getPotentialPtr()));
+    evaluator->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
+    evaluator->setVirial(SharedVirial(_optEngine.getVirialPtr()));
+    evaluator->setConstraints(SharedConstraints(_optEngine.getConstraintsPtr())
+    );
+    evaluator->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
+    )));
+    evaluator->setIntraNonBonded(
+        SharedIntraNonBonded(_optEngine.getIntraNonBondedPtr())
+    );
+
+    return evaluator;
 }

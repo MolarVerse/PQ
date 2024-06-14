@@ -21,3 +21,99 @@
 ******************************************************************************/
 
 #include "evaluator.hpp"
+
+using namespace opt;
+
+/**
+ * @brief set the potential
+ *
+ * @param potential
+ */
+void Evaluator::setPotential(
+    const std::shared_ptr<potential::Potential> potential
+)
+{
+    _potential = potential;
+}
+
+/**
+ * @brief set the simulation box
+ *
+ * @param simBox
+ */
+void Evaluator::setSimulationBox(
+    const std::shared_ptr<simulationBox::SimulationBox> simBox
+)
+{
+    _simulationBox = simBox;
+}
+
+/**
+ * @brief set the constraints
+ *
+ * @param constraints
+ */
+void Evaluator::setConstraints(
+    const std::shared_ptr<constraints::Constraints> constraints
+)
+{
+    _constraints = constraints;
+}
+
+/**
+ * @brief set the cell list
+ *
+ * @param cellList
+ */
+void Evaluator::setCellList(
+    const std::shared_ptr<simulationBox::CellList> cellList
+)
+{
+    _cellList = cellList;
+}
+
+/**
+ * @brief set the force field
+ *
+ * @param forceField
+ */
+void Evaluator::setForceField(
+    const std::shared_ptr<forceField::ForceField> forceField
+)
+{
+    _forceField = forceField;
+}
+
+/**
+ * @brief set the physical data
+ *
+ * @param potential
+ */
+void Evaluator::setPhysicalData(
+    const std::shared_ptr<physicalData::PhysicalData> physicalData
+)
+{
+    _physicalData = physicalData;
+}
+
+/**
+ * @brief set the virial
+ *
+ * @param virial
+ */
+void Evaluator::setVirial(const std::shared_ptr<virial::Virial> virial)
+{
+    _virial = virial;
+}
+
+/**
+ * @brief set the intra non bonded
+ *
+ * @param i
+ */
+void Evaluator::setIntraNonBonded(
+    const std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+)
+{
+    _intraNonBonded = intraNonBonded;
+}

@@ -157,7 +157,14 @@ namespace engine
         [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
         [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] forceField::ForceField *getForceFieldPtr();
+        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
+        [[nodiscard]] potential::Potential           *getPotentialPtr();
+        [[nodiscard]] virial::Virial                 *getVirialPtr();
+        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
+        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
+        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
+        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
 
         /***************************
          * make unique_ptr methods *

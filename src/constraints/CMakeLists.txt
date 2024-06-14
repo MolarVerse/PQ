@@ -13,15 +13,16 @@ target_include_directories(constraints
 
 target_link_libraries(constraints
     PUBLIC
+    physicalData
+
+    PRIVATE
     connectivity
     simulationBox
     linearAlgebra
     settings
     timings
-    physicalData
     kernels
 
-    PRIVATE
     Eigen3::Eigen
 )
 

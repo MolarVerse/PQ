@@ -11,7 +11,7 @@ target_include_directories(connectivity
 )
 
 target_link_libraries(connectivity
-    PUBLIC
+    PRIVATE
     simulationBox
 )
 

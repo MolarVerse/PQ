@@ -24,8 +24,55 @@
 
 #define _EVALUATOR_HPP_
 
+#include <memory>   // for shared_ptr
+
+namespace constraints
+{
+    class Constraints;   // forward declaration
+}   // namespace constraints
+
+namespace forceField
+{
+    class ForceField;   // forward declaration
+}   // namespace forceField
+
+namespace intraNonBonded
+{
+    class IntraNonBonded;   // forward declaration
+}   // namespace intraNonBonded
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace potential
+{
+    class Potential;   // forward declaration
+}   // namespace potential
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+    class CellList;        // forward declaration
+}   // namespace simulationBox
+
+namespace virial
+{
+    class Virial;   // forward declaration
+}   // namespace virial
+
 namespace opt
 {
+    using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
+    using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
+    using SharedForceField   = std::shared_ptr<forceField::ForceField>;
+    using SharedPotential    = std::shared_ptr<potential::Potential>;
+    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+    using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
+    using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
+    using SharedVirial       = std::shared_ptr<virial::Virial>;
+
     /**
      * @class Evaluator
      *
@@ -35,9 +82,28 @@ namespace opt
      */
     class Evaluator
     {
+       private:
+        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<constraints::Constraints>       _constraints;
+        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
+        std::shared_ptr<virial::Virial>                 _virial;
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
+
+        void setPotential(const SharedPotential);
+        void setSimulationBox(const SharedSimBox);
+        void setConstraints(const SharedConstraints);
+        void setCellList(const SharedCellList);
+        void setForceField(const SharedForceField);
+        void setPhysicalData(const SharedPhysicalData);
+        void setVirial(const SharedVirial);
+        void setIntraNonBonded(const SharedIntraNonBond);
     };
 
 }   // namespace opt
