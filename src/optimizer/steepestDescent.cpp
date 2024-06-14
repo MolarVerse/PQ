@@ -24,7 +24,7 @@
 
 #include "optimizer.hpp"
 
-using namespace optimizer;
+using namespace optimization;
 
 /**
  * @brief Constructor
@@ -32,10 +32,4 @@ using namespace optimizer;
  * @param nIterations
  * @param learningRate
  */
-SteepestDescent::SteepestDescent(
-    const size_t nIterations,
-    const double learningRate
-)
-    : Optimizer(nIterations, learningRate)
-{
-}
+SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}

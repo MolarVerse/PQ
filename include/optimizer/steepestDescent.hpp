@@ -26,7 +26,7 @@
 
 #include "optimizer.hpp"
 
-namespace optimizer
+namespace optimization
 {
     /**
      * @class SteepestDescent
@@ -37,12 +37,12 @@ namespace optimizer
     class SteepestDescent : public Optimizer
     {
        public:
-        SteepestDescent(const size_t, const double);
+        SteepestDescent(const size_t nEpochs);
 
         SteepestDescent()        = default;
         ~SteepestDescent() final = default;
     };
 
-}   // namespace optimizer
+}   // namespace optimization
 
 #endif   // _STEEPEST_DESCENT_HPP_
