@@ -1,5 +1,7 @@
 add_library(optimizer
     optimizer.cpp
+
+    steepestDescent.cpp
 )
 
 target_include_directories(optimizer
