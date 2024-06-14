@@ -22,7 +22,11 @@
 
 #include "optimizer.hpp"
 
-using namespace optimizer;
+#include <memory>   // for std::shared_ptr
+
+#include "learningRateStrategy.hpp"
+
+using namespace optimization;
 
 /**
  * @brief Construct a new Optimizer object
@@ -30,7 +34,16 @@ using namespace optimizer;
  * @param nEpochs
  * @param initialLearningRate
  */
-Optimizer::Optimizer(const size_t nEpochs, const double initialLearningRate)
-    : _nEpochs(nEpochs), _initialLearningRate(initialLearningRate)
+Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+
+/**
+ * @brief set the learning rate from a shared pointer
+ *
+ * @param learningRateStrategy
+ */
+void Optimizer::setLearningRateStrategy(
+    const std::shared_ptr<LearningRateStrategy> &strategy
+)
 {
+    _learningRateStrategy = strategy;
 }

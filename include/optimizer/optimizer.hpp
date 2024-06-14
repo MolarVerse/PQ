@@ -25,9 +25,13 @@
 #define _OPTIMIZER_HPP_
 
 #include <cstddef>   // for size_t
+#include <memory>    // for shared_ptr
 
-namespace optimizer
+#include "learningRateStrategy.hpp"
+
+namespace optimization
 {
+    using SharedLRStrategy = std::shared_ptr<LearningRateStrategy>;
 
     /**
      * @class Optimizer
@@ -39,15 +43,23 @@ namespace optimizer
     {
        protected:
         size_t _nEpochs;
-        double _initialLearningRate;
+
+        SharedLRStrategy _learningRateStrategy;
 
        public:
-        explicit Optimizer(const size_t, const double);
+        explicit Optimizer(const size_t);
 
         Optimizer()          = default;
         virtual ~Optimizer() = default;
+
+        void setLearningRateStrategy(const SharedLRStrategy &);
+
+        template <typename T>
+        void makeLearningRateStrategy(T learningRateStrategy);
     };
 
-}   // namespace optimizer
+}   // namespace optimization
+
+#include "optimizer.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _OPTIMIZER_HPP_
