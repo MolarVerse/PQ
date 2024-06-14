@@ -124,6 +124,16 @@ void OptimizerSettings::setInitialLearningRate(const double learningRate)
     _isInitialLearningRateSet = true;
 }
 
+/**
+ * @brief sets the number of epochs
+ *
+ * @param nEpochs
+ */
+void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
+{
+    _nEpochs = nEpochs;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -156,3 +166,10 @@ double OptimizerSettings::getInitialLearningRate()
 {
     return _initialLearningRate;
 }
+
+/**
+ * @brief returns the number of epochs
+ *
+ * @return size_t
+ */
+size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }

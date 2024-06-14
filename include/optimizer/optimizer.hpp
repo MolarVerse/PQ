@@ -24,6 +24,8 @@
 
 #define _OPTIMIZER_HPP_
 
+#include <cstddef>   // for size_t
+
 namespace optimizer
 {
 
@@ -36,10 +38,11 @@ namespace optimizer
     class Optimizer
     {
        protected:
+        size_t _nEpochs;
         double _initialLearningRate;
 
        public:
-        explicit Optimizer(const double initialLearningRate);
+        explicit Optimizer(const size_t, const double);
 
         Optimizer()          = default;
         virtual ~Optimizer() = default;

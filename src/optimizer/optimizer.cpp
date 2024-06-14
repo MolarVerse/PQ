@@ -27,9 +27,10 @@ using namespace optimizer;
 /**
  * @brief Construct a new Optimizer object
  *
+ * @param nEpochs
  * @param initialLearningRate
  */
-Optimizer::Optimizer(const double initialLearningRate)
-    : _initialLearningRate(initialLearningRate)
+Optimizer::Optimizer(const size_t nEpochs, const double initialLearningRate)
+    : _nEpochs(nEpochs), _initialLearningRate(initialLearningRate)
 {
 }

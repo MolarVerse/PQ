@@ -88,6 +88,7 @@ namespace defaults
     static constexpr double _QM_LOOP_TIME_LIMIT_DEFAULT_ = -1.0;   // in s
 
     static constexpr char   _OPTIMIZER_DEFAULT_[]           = "gradient-descent";
+    static constexpr size_t _N_EPOCHS_DEFAULT_              = 100;
     static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0;
 
     // clang-format on

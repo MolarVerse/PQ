@@ -50,6 +50,12 @@ InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
     );
 
     addKeyword(
+        "n-iterations",
+        bind_front(&InputFileParserOptimizer::parseNumberOfEpochs, this),
+        false
+    );
+
+    addKeyword(
         "learning-rate-strategy",
         bind_front(&InputFileParserOptimizer::parseLearningRateStrategy, this),
         false
@@ -90,6 +96,34 @@ void InputFileParserOptimizer::parseOptimizer(
             lineElements[2],
             lineNumber
         ));
+}
+
+/**
+ * @brief Parses the number of epochs
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the number of epochs is less
+ * than or equal to 0
+ */
+void InputFileParserOptimizer::parseNumberOfEpochs(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto numberOfEpochs = std::stoi(lineElements[2]);
+
+    if (numberOfEpochs <= 0)
+        throw customException::InputFileException(std::format(
+            "Number of epochs must be greater than 0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setNumberOfEpochs(size_t(numberOfEpochs));
 }
 
 /**

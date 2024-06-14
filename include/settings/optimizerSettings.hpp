@@ -68,6 +68,8 @@ namespace settings
         static inline Optimizer _optimizer = Optimizer::STEEPEST_DESCENT;
         static inline LearningRateStrategy _learningRateStrategy = LearningRateStrategy::NONE;
 
+        static inline size_t _nEpochs = defaults::_N_EPOCHS_DEFAULT_;
+
         static inline double _initialLearningRate      = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
         static inline bool   _isInitialLearningRateSet = false;
         // clang-format on
@@ -83,6 +85,8 @@ namespace settings
         static void setLearningRateStrategy(const std::string_view &);
         static void setLearningRateStrategy(const LearningRateStrategy);
 
+        static void setNumberOfEpochs(const size_t);
+
         static void setInitialLearningRate(const double);
 
         /***************************
@@ -91,6 +95,7 @@ namespace settings
 
         [[nodiscard]] static Optimizer            getOptimizer();
         [[nodiscard]] static LearningRateStrategy getLearningRateStrategy();
+        [[nodiscard]] static size_t               getNumberOfEpochs();
         [[nodiscard]] static double               getInitialLearningRate();
 
     };   // namespace settings
