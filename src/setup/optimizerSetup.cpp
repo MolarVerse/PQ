@@ -66,10 +66,9 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
 void OptimizerSetup::setup()
 {
     const auto learningRateStrategy = setupLearningRateStrategy();
+    const auto optimizer            = setupEmptyOptimizer();
 
-    auto optimizer = setupEmptyOptimizer();
-    optimizer->setLearningRateStrategy(learningRateStrategy);
-
+    _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
 }
 

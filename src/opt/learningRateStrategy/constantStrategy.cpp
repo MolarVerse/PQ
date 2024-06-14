@@ -20,29 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STEEPEST_DESCENT_HPP_
+#include "constantStrategy.hpp"
 
-#define _STEEPEST_DESCENT_HPP_
+using namespace optimization;
 
-#include "optimizer.hpp"
-
-namespace optimization
+/**
+ * @brief Construct a new ConstantLRStrategy::ConstantLRStrategy object
+ *
+ * @param initialLearningRate
+ */
+ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
+    : LearningRateStrategy(initialLearningRate)
 {
-    /**
-     * @class SteepestDescent
-     *
-     * @brief Steepest Descent optimizer
-     *
-     */
-    class SteepestDescent : public Optimizer
-    {
-       public:
-        SteepestDescent(const size_t nEpochs);
+}
 
-        SteepestDescent()        = default;
-        ~SteepestDescent() final = default;
-    };
-
-}   // namespace optimization
-
-#endif   // _STEEPEST_DESCENT_HPP_
+/**
+ * @brief Update the learning rate
+ *
+ * @return double
+ */
+double ConstantLRStrategy::updateLearningRate() { return _initialLearningRate; }

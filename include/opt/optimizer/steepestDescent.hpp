@@ -20,43 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_TPP_
+#ifndef _STEEPEST_DESCENT_HPP_
 
-#define _OPT_ENGINE_TPP_
+#define _STEEPEST_DESCENT_HPP_
 
-#include "optEngine.hpp"
+#include "optimizer.hpp"
 
-namespace engine
+namespace optimization
 {
-    /***************************************
-     *                                     *
-     * standard make smart pointer methods *
-     *                                     *
-     ***************************************/
-
     /**
-     * @brief make shared_ptr for optimizer
+     * @class SteepestDescent
      *
-     * @tparam T
-     * @param optimizer
-     */
-    template <typename T>
-    inline void OptEngine::makeOptimizer(T optimizer)
-    {
-        _optimizer = std::make_shared<T>(optimizer);
-    }
-
-    /**
-     * @brief set the learning rate strategy from a shared pointer
+     * @brief Steepest Descent optimizer
      *
-     * @param strategy
      */
-    template <typename T>
-    inline void OptEngine::makeLearningRateStrategy(T strategy)
+    class SteepestDescent : public Optimizer
     {
-        _learningRateStrategy = std::make_shared<T>(strategy);
-    }
+       public:
+        explicit SteepestDescent(const size_t nEpochs);
 
-}   // namespace engine
+        SteepestDescent()        = default;
+        ~SteepestDescent() final = default;
 
-#endif   // _OPT_ENGINE_TPP_
+        void update(const double learningRate) final;
+    };
+
+}   // namespace optimization
+
+#endif   // _STEEPEST_DESCENT_HPP_

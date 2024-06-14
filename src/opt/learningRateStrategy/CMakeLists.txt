@@ -6,7 +6,7 @@ add_library(learningRateStrategy
 
 target_include_directories(learningRateStrategy
     PUBLIC
-    ${PROJECT_SOURCE_DIR}/include/optimizer/learningRateStrategy
+    ${PROJECT_SOURCE_DIR}/include/opt/learningRateStrategy
 )
 
 target_link_libraries(learningRateStrategy

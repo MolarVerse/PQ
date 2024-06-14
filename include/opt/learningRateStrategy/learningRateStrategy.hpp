@@ -24,6 +24,12 @@
 
 #define _LEARNING_RATE_STRATEGY_HPP_
 
+namespace engine
+{
+    class OptEngine;   // forward declaration
+
+}   // namespace engine
+
 namespace optimization
 {
     /**

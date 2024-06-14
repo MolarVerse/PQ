@@ -20,31 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_OPT_ENGINE_HPP_
+#include "optimizer.hpp"
 
-#define _MM_OPT_ENGINE_HPP_
+#include <memory>   // for std::shared_ptr
 
-#include "optEngine.hpp"   // for OptEngine
+using namespace optimization;
 
-namespace engine
-{
-    /**
-     * @class MMOptEngine
-     *
-     * @brief Minimization engine
-     *
-     */
-    class MMOptEngine : public OptEngine
-    {
-       private:
-        /* data */
-       public:
-        MMOptEngine()        = default;
-        ~MMOptEngine() final = default;
-
-        void updateForces() final;
-    };
-
-}   // namespace engine
-
-#endif   // _MM_OPT_ENGINE_HPP_
+/**
+ * @brief Construct a new Optimizer object
+ *
+ * @param nEpochs
+ * @param initialLearningRate
+ */
+Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}

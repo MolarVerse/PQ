@@ -30,7 +30,42 @@ using namespace optimization;
  *
  * @param optimizer
  */
-void OptEngine::setOptimizer(std::shared_ptr<Optimizer> &optimizer)
+void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
 {
     _optimizer = optimizer;
+}
+
+/**
+ * @brief set the learning rate strategy from a shared pointer
+ *
+ * @param learningRateStrategy
+ */
+void OptEngine::setLearningRateStrategy(
+    const std::shared_ptr<LearningRateStrategy> &strategy
+)
+{
+    _learningRateStrategy = strategy;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the optimizer
+ *
+ * @return std::shared_ptr<Optimizer>
+ */
+std::shared_ptr<Optimizer> &OptEngine::getOptimizer() { return _optimizer; }
+
+/**
+ * @brief get the learning rate strategy
+ *
+ * @return std::shared_ptr<LearningRateStrategy>
+ */
+std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
+{
+    return _learningRateStrategy;
 }

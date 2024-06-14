@@ -10,8 +10,6 @@ set(engine_source_files
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
-    mmoptEngine.cpp
-
     engineOutput.cpp
 )
 
@@ -59,7 +57,8 @@ target_link_libraries(engine
     intraNonBonded
     QM
     references
-    optimizer
+
+    optimization
 )
 
 if(BUILD_WITH_KOKKOS)

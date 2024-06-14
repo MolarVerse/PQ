@@ -26,11 +26,15 @@
 
 #include <memory>   // for unique_ptr
 
-#include "engine.hpp"      // for Engine
-#include "optimizer.hpp"   // for Optimizer
+#include "engine.hpp"               // for Engine
+#include "optimizer.hpp"            // for Optimizer
+#include "learningRateStrategy.hpp" // for learningRateStrategy
 
 namespace engine
 {
+
+    using LRStrategy = optimization::LearningRateStrategy;
+    using Optimizer  = optimization::Optimizer;
 
     /**
      * @class OptEngine
@@ -41,19 +45,37 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::shared_ptr<optimization::Optimizer> _optimizer;
+        std::shared_ptr<Optimizer>  _optimizer;
+        std::shared_ptr<LRStrategy> _learningRateStrategy;
 
        public:
-        void setOptimizer(std::shared_ptr<optimization::Optimizer> &optimizer);
+        void run() final {};
+        void takeStep() final {};
+        void writeOutput() final {};
 
-        virtual void updateForces() = 0;
+        /********************************
+         * standard setter methods      *
+         ********************************/
 
-        void run() final{};
-        void takeStep() final{};
-        void writeOutput() final{};
+        void setOptimizer(const std::shared_ptr<Optimizer> &optimizer);
+        void setLearningRateStrategy(const std::shared_ptr<LRStrategy> &);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] std::shared_ptr<Optimizer>  &getOptimizer();
+        [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
+
+        /***************************************
+         * standard make smart pointer methods *
+         ***************************************/
 
         template <typename T>
         void makeOptimizer(T optimizer);
+
+        template <typename T>
+        void makeLearningRateStrategy(T strategy);
     };
 
 }   // namespace engine

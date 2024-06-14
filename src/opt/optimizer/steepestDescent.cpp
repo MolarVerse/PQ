@@ -20,30 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "steepestDescent.hpp"
+
 #include "optimizer.hpp"
-
-#include <memory>   // for std::shared_ptr
-
-#include "learningRateStrategy.hpp"
 
 using namespace optimization;
 
 /**
- * @brief Construct a new Optimizer object
+ * @brief Constructor
  *
- * @param nEpochs
- * @param initialLearningRate
+ * @param nIterations
+ * @param learningRate
  */
-Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
 
 /**
- * @brief set the learning rate from a shared pointer
+ * @brief update the optimizer
  *
- * @param learningRateStrategy
+ * @param learningRate
  */
-void Optimizer::setLearningRateStrategy(
-    const std::shared_ptr<LearningRateStrategy> &strategy
-)
-{
-    _learningRateStrategy = strategy;
-}
+void SteepestDescent::update(const double learningRate) {}
