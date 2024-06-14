@@ -24,14 +24,15 @@
 
 #define _TEST_TOPOLOGY_READER_HPP_
 
-#include "engine.hpp"           // for Engine
+#include <gtest/gtest.h>   // for Test
+
+#include <string>   // for allocator
+
 #include "fileSettings.hpp"     // for FileSettings
+#include "mmmdEngine.hpp"       // for Engine
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
 #include "topologyReader.hpp"   // for TopologyReader
-
-#include <gtest/gtest.h>   // for Test
-#include <string>          // for allocator
 
 /**
  * @class TestTopologyReader
@@ -41,8 +42,8 @@
  */
 class TestTopologyReader : public ::testing::Test
 {
-  protected:
-    engine::Engine                      *_engine;
+   protected:
+    engine::Engine                  *_engine;
     input::topology::TopologyReader *_topologyReader;
 
     void SetUp() override
@@ -53,12 +54,18 @@ class TestTopologyReader : public ::testing::Test
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(2);
 
-        _engine = new engine::Engine();
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _topologyReader = new input::topology::TopologyReader("data/topologyReader/topology.top", *_engine);
+        _topologyReader = new input::topology::TopologyReader(
+            "data/topologyReader/topology.top",
+            *_engine
+        );
         settings::FileSettings::setIsTopologyFileNameSet();
     }
 

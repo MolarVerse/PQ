@@ -206,8 +206,15 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
 
     // FIXME: Does not work on macos using EXPECT_EQ
-    EXPECT_NEAR(pair.getEnergyCutOff(), 1.0 / ::pow(10.0, 6) + 3.0 / ::pow(10.0, 12), 1e-5);
-    EXPECT_EQ(pair.getForceCutOff(), 6.0 / ::pow(10.0, 7) + 12.0 * 3.0 / ::pow(10.0, 13));
+    EXPECT_NEAR(
+        pair.getEnergyCutOff(),
+        1.0 / ::pow(10.0, 6) + 3.0 / ::pow(10.0, 12),
+        1e-5
+    );
+    EXPECT_EQ(
+        pair.getForceCutOff(),
+        6.0 / ::pow(10.0, 7) + 12.0 * 3.0 / ::pow(10.0, 13)
+    );
 
     const auto &pair2 = dynamic_cast<potential::LennardJonesPair &>(
         *(_engine->getPotential()
@@ -526,7 +533,7 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::Engine              engine;
+    engine::MMMDEngine          engine;
     simulationBox::Molecule     molecule1(1);
     simulationBox::Molecule     molecule2(2);
     simulationBox::MoleculeType moleculeType1(1);

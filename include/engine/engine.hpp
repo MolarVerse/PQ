@@ -120,15 +120,13 @@ namespace engine
         Engine()          = default;
         virtual ~Engine() = default;
 
-        virtual void run() {};
-        virtual void writeOutput() {};
+        virtual void run()         = 0;
+        virtual void takeStep()    = 0;
+        virtual void writeOutput() = 0;
 
         void addTimer(const timings::Timer &timings);
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
-
-        // virtual function to be overwritten by derived classes
-        virtual void takeStep() {};
 
         /**********************************
          * information about active parts *

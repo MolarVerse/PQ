@@ -41,6 +41,8 @@ namespace engine
        public:
         MMOptEngine()        = default;
         ~MMOptEngine() final = default;
+
+        void updateForces() final {};
     };
 
 }   // namespace engine

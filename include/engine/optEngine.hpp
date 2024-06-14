@@ -46,6 +46,12 @@ namespace engine
        public:
         void setOptimizer(std::shared_ptr<optimization::Optimizer> &optimizer);
 
+        virtual void updateForces() = 0;
+
+        void run() final{};
+        void takeStep() final{};
+        void writeOutput() final{};
+
         template <typename T>
         void makeOptimizer(T optimizer);
     };
