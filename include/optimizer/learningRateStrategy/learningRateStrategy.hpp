@@ -34,7 +34,7 @@ namespace optimization
      */
     class LearningRateStrategy
     {
-       private:
+       protected:
         double _initialLearningRate;
 
        public:
