@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_MANOSTAT_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserManostat inherits from InputFileParser
      *
@@ -45,14 +47,14 @@ namespace input
      */
     class InputFileParserManostat : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserManostat(engine::Engine &);
 
-        void parseManostat(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parsePressure(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseManostatRelaxationTime(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseCompressibility(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseIsotropy(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseManostat(const strings &, const size_t);
+        void parsePressure(const strings &, const size_t);
+        void parseManostatRelaxationTime(const strings &, const size_t);
+        void parseCompressibility(const strings &, const size_t);
+        void parseIsotropy(const strings &, const size_t);
     };
 
 }   // namespace input

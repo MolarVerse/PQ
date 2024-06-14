@@ -31,9 +31,14 @@
  * @return true
  * @return false
  */
-bool utilities::compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b, const double &tolerance)
+bool utilities::compare(
+    const linearAlgebra::Vec3D &a,
+    const linearAlgebra::Vec3D &b,
+    const double               &tolerance
+)
 {
-    return compare<double>(a[0], b[0], tolerance) && compare<double>(a[1], b[1], tolerance) &&
+    return compare<double>(a[0], b[0], tolerance) &&
+           compare<double>(a[1], b[1], tolerance) &&
            compare<double>(a[2], b[2], tolerance);
 }
 
@@ -45,7 +50,23 @@ bool utilities::compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3
  * @return true
  * @return false
  */
-bool utilities::compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b)
+bool utilities::compare(
+    const linearAlgebra::Vec3D &a,
+    const linearAlgebra::Vec3D &b
+)
 {
-    return compare<double>(a[0], b[0]) && compare<double>(a[1], b[1]) && compare<double>(a[2], b[2]);
+    return compare<double>(a[0], b[0]) && compare<double>(a[1], b[1]) &&
+           compare<double>(a[2], b[2]);
+}
+
+/**
+ * @brief Kronecker delta function
+ *
+ * @param i
+ * @param j
+ * @return size_t
+ */
+size_t utilities::kroneckerDelta(const size_t i, const size_t j)
+{
+    return i == j ? 1 : 0;
 }

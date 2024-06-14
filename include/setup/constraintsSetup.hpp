@@ -41,13 +41,15 @@ namespace setup
      */
     class ConstraintsSetup
     {
-      private:
+       private:
         engine::Engine &_engine;
 
-      public:
+       public:
         explicit ConstraintsSetup(engine::Engine &engine) : _engine(engine){};
 
         void setup();
+
+        void setupMShake();
 
         void setupTolerances();
         void setupMaxIterations();

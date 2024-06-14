@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.tpp": "c",
         "*.tcc": "cpp",
         "fstream": "cpp",
         "iosfwd": "cpp",
@@ -110,7 +111,7 @@
         "stack": "cpp",
         "__bit_reference": "cpp",
         "engine.hpp": "c",
-        "*.tpp": "c"
+        "nnls": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -143,6 +144,7 @@
         "jobtype",
         "jobtypes",
         "KOKKOS",
+        "ldlt",
         "Lennard",
         "LOGOUTPUT",
         "LOOPTIME",
@@ -155,6 +157,9 @@
         "MOLDESCRIPTOREXCEPTION",
         "moldescritor",
         "moltype",
+        "MPIEXCEPTION",
+        "mshake",
+        "MSHAKEFILEEXCEPTION",
         "mtest",
         "Neighbouring",
         "Neighbours",
@@ -173,6 +178,8 @@
         "qmcf",
         "qmcfc",
         "qmmmmd",
+        "QMRUNNEREXCEPTION",
+        "QMRUNTIMEEXCEEDED",
         "rcoulomb",
         "rpmd",
         "RSTFILEEXCEPTION",

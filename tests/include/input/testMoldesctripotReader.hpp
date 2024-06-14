@@ -24,10 +24,9 @@
 
 #define _TEST_MOLDESCRIPTOR_READER_H_
 
-#include "engine.hpp"
-#include "moldescriptorReader.hpp"
-
 #include <gtest/gtest.h>
+
+#include "engine.hpp"
 
 /**
  * @class TestMoldescriptorReader
@@ -37,7 +36,7 @@
  */
 class TestMoldescriptorReader : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override { _engine = new engine::Engine(); }
 
     engine::Engine *_engine;

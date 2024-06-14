@@ -32,26 +32,22 @@
 
 namespace engine
 {
-    template <typename T>
-    inline void Engine::makeIntegrator(T integrator)
-    {
-        _integrator = std::make_unique<T>(integrator);
-    }
+    /**
+     * @brief make unique_ptr for potential
+     *
+     * @tparam T
+     */
     template <typename T>
     inline void Engine::makePotential(T)
     {
         _potential = std::make_unique<T>();
     }
-    template <typename T>
-    inline void Engine::makeThermostat(T thermostat)
-    {
-        _thermostat = std::make_unique<T>(thermostat);
-    }
-    template <typename T>
-    inline void Engine::makeManostat(T manostat)
-    {
-        _manostat = std::make_unique<T>(manostat);
-    }
+
+    /**
+     * @brief make unique_ptr for virial
+     *
+     * @tparam T
+     */
     template <typename T>
     inline void Engine::makeVirial(T virial)
     {

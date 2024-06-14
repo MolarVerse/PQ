@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_RING_POLYMER_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserRingPolymer inherits from InputFileParser
      *
@@ -45,10 +47,10 @@ namespace input
      */
     class InputFileParserRingPolymer : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserRingPolymer(engine::Engine &);
 
-        void parseNumberOfBeads(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNumberOfBeads(const strings &, const size_t);
     };
 
 }   // namespace input

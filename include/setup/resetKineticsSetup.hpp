@@ -26,8 +26,9 @@
 
 namespace engine
 {
-    class Engine;   // forward declaration
-}
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup::resetKinetics
 {
@@ -42,11 +43,12 @@ namespace setup::resetKinetics
      */
     class ResetKineticsSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        engine::MDEngine &_engine;
 
-      public:
-        explicit ResetKineticsSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit ResetKineticsSetup(engine::MDEngine &engine)
+            : _engine(engine){};
 
         void setup();
     };

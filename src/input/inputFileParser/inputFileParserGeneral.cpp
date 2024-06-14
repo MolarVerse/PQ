@@ -22,42 +22,60 @@
 
 #include "inputFileParserGeneral.hpp"
 
-#include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for InputFileException, customException
-#include "mmmdEngine.hpp"              // for MMMDEngine
-#include "qmmdEngine.hpp"              // for QMMDEngine
-#include "qmmmmdEngine.hpp"            // for QMMMMDEngine
-#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "settings.hpp"                // for Settings
-#include "stringUtilities.hpp"         // for toLowerCopy
-
 #include <algorithm>    // for ranges::remove
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for InputFileException, customException
+#include "mmmdEngine.hpp"     // for MMMDEngine
+#include "optEngine.hpp"      // for OptimizerEngine
+#include "qmmdEngine.hpp"     // for QMMDEngine
+#include "qmmmmdEngine.hpp"   // for QMMMMDEngine
+#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
+#include "settings.hpp"                // for Settings
+#include "stringUtilities.hpp"         // for toLowerCopy
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser General:: Input File Parser General object
+ * @brief Construct a new Input File Parser General:: Input File Parser General
+ * object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) jobtype <string> (required)
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) jobtype <string> (required)
  *
  * @param engine
  */
-InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("jobtype"), bind_front(&InputFileParserGeneral::parseJobType, this), true);
-    addKeyword(std::string("dim"), bind_front(&InputFileParserGeneral::parseDimensionality, this), false);
+    addKeyword(
+        std::string("jobtype"),
+        bind_front(&InputFileParserGeneral::parseJobType, this),
+        true
+    );
+    addKeyword(
+        std::string("dim"),
+        bind_front(&InputFileParserGeneral::parseDimensionality, this),
+        false
+    );
 }
 
 /**
- * @brief parse jobtype of simulation left empty just to not parse it again after engine is generated
+ * @brief parse jobtype of simulation left empty just to not parse it again
+ * after engine is generated
  */
-void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, const size_t) {}
+void InputFileParserGeneral::parseJobType(
+    const std::vector<std::string> &,
+    const size_t
+)
+{
+}
 
 /**
- * @brief parse jobtype of simulation and set it in settings and reset engine unique_ptr
+ * @brief parse jobtype of simulation and set it in settings and reset engine
+ * unique_ptr
  *
  * @details Possible options are:
  * 1) mm-md
@@ -69,15 +87,27 @@ void InputFileParserGeneral::parseJobType(const std::vector<std::string> &, cons
  *
  * @throw customException::InputFileException if jobtype is not recognised
  */
-void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string>  &lineElements,
-                                                   const size_t                     lineNumber,
-                                                   std::unique_ptr<engine::Engine> &engine)
+void InputFileParserGeneral::parseJobTypeForEngine(
+    const std::vector<std::string>  &lineElements,
+    const size_t                     lineNumber,
+    std::unique_ptr<engine::Engine> &engine
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto jobtype = utilities::toLowerCopy(lineElements[2]);
 
-    if (jobtype == "mm-md")
+    if (jobtype == "opt")
+    {
+        settings::Settings::setJobtype("OPT");
+        settings::Settings::activateMM();
+        engine.reset(new engine::OptEngine());
+
+        throw customException::InputFileException(
+            "Optimization is not implemented yet"
+        );
+    }
+    else if (jobtype == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
         settings::Settings::activateMM();
@@ -104,8 +134,15 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
         engine.reset(new engine::RingPolymerQMMDEngine());
     }
     else
-        throw customException::InputFileException(
-            format("Invalid jobtype \"{}\" in input file - possible values are: mm-md, qm-md, qm-rpmd", lineElements[2]));
+        throw customException::InputFileException(format(
+            "Invalid jobtype \"{}\" in input file - possible values are:\n"
+            "- opt\n"
+            "- mm-md\n"
+            "- qm-md\n"
+            "- qmmm-md\n"
+            "- qm-rpmd\n",
+            lineElements[2]
+        ));
 }
 
 /**
@@ -117,9 +154,13 @@ void InputFileParserGeneral::parseJobTypeForEngine(const std::vector<std::string
  * @param lineElements
  * @param lineNumber
  *
- * @throw customException::InputFileException if dimensionality is not recognised
+ * @throw customException::InputFileException if dimensionality is not
+ * recognised
  */
-void InputFileParserGeneral::parseDimensionality(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserGeneral::parseDimensionality(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -132,6 +173,9 @@ void InputFileParserGeneral::parseDimensionality(const std::vector<std::string> 
     if (dimensionality == 3)
         settings::Settings::setDimensionality(size_t(dimensionality));
     else
-        throw customException::InputFileException(
-            format("Invalid dimensionality \"{}\" in input file - possible values are: 3, 3d", lineElements[2]));
+        throw customException::InputFileException(format(
+            "Invalid dimensionality \"{}\" in input file\n"
+            "Possible values are: 3, 3d",
+            lineElements[2]
+        ));
 }

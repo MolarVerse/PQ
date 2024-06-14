@@ -48,8 +48,10 @@ std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulombPair(
     const std::vector<size_t> &indices
 )
 {
-    return _nonCoulombPairsMatrix[getGlobalVdwType1(indices)]
-                                 [getGlobalVdwType2(indices)];
+    return _nonCoulombPairsMatrix(
+        getGlobalVdwType1(indices),
+        getGlobalVdwType2(indices)
+    );
 }
 
 /**
@@ -161,7 +163,7 @@ void ForceFieldNonCoulomb::fillDiagonalElementsOfNonCoulombPairsMatrix(
     for (size_t i = 0, numberOfDiagonalElements = diagonalElements.size();
          i < numberOfDiagonalElements;
          ++i)
-        _nonCoulombPairsMatrix[i][i] = diagonalElements[i];
+        _nonCoulombPairsMatrix(i, i) = diagonalElements[i];
 }
 
 /**
@@ -223,18 +225,18 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
             ));
         }
 
-        _nonCoulombPairsMatrix[atomType1][atomType2] = *nonCoulombicPair1;
-        _nonCoulombPairsMatrix[atomType2][atomType1] = *nonCoulombicPair1;
+        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair1;
+        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair1;
     }
     else if (nonCoulombicPair1 != std::nullopt)
     {
-        _nonCoulombPairsMatrix[atomType1][atomType2] = *nonCoulombicPair1;
-        _nonCoulombPairsMatrix[atomType2][atomType1] = *nonCoulombicPair1;
+        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair1;
+        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair1;
     }
     else
     {
-        _nonCoulombPairsMatrix[atomType1][atomType2] = *nonCoulombicPair2;
-        _nonCoulombPairsMatrix[atomType2][atomType1] = *nonCoulombicPair2;
+        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair2;
+        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair2;
     }
 }
 

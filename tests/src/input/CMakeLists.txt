@@ -5,6 +5,7 @@ set(source_files
     testInputFileReader.cpp
     testIntraNonBondedReader.cpp
     testCommandLineArgs.cpp
+    testMShakeReader.cpp
 )
 
 foreach(source_file ${source_files})

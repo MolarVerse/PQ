@@ -60,6 +60,7 @@ TEST_F(TestInputFileReader, testParseVirial)
     EXPECT_THROW_MSG(
         parser.parseVirial(lineElements, 0),
         customException::InputFileException,
-        "Invalid virial setting \"notValid\" at line 0 in input file"
+        "Invalid virial setting \"notValid\" at line 0 in input file.\n"
+        "Possible options are: molecular or atomic"
     );
 }

@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_CONSTRAINTS_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,7 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
     /**
      * @class InputFileParserConstraints inherits from InputFileParser
      *
@@ -45,16 +46,16 @@ namespace input
      */
     class InputFileParserConstraints : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserConstraints(engine::Engine &);
 
-        void parseShakeActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseShakeTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseShakeIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRattleTolerance(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRattleIteration(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseShakeActivated(const strings &, const size_t);
+        void parseShakeTolerance(const strings &, const size_t);
+        void parseShakeIteration(const strings &, const size_t);
+        void parseRattleTolerance(const strings &, const size_t);
+        void parseRattleIteration(const strings &, const size_t);
 
-        void parseDistanceConstraintActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseDistanceConstraintActivated(const strings &, const size_t);
     };
 
 }   // namespace input

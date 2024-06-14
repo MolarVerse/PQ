@@ -143,7 +143,7 @@ TEST_F(TestConstraints, applyRattle_converged)
     _constraints->setRattleTolerance(1.0e-4);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    EXPECT_NO_THROW(_constraints->applyRattle());
+    EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(0),
@@ -175,7 +175,7 @@ TEST_F(TestConstraints, applyRattle_notConverged)
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_THROW_MSG(
-        _constraints->applyRattle(),
+        _constraints->applyRattle(*_box),
         customException::ShakeException,
         "Rattle algorithm did not converge for 2 bonds."
     );
@@ -194,5 +194,37 @@ TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
 
     _constraints->deactivateShake();
 
-    EXPECT_NO_THROW(_constraints->applyRattle());
+    EXPECT_NO_THROW(_constraints->applyRattle(*_box));
+}
+
+/**
+ * @brief test activate and deactivate different constraints
+ *
+ */
+TEST_F(TestConstraints, isActivated)
+{
+    _constraints->deactivateShake();
+    _constraints->deactivateMShake();
+    _constraints->deactivateDistanceConstraints();
+    EXPECT_FALSE(_constraints->isActive());
+
+    _constraints->activateShake();
+    EXPECT_TRUE(_constraints->isActive());
+    EXPECT_TRUE(_constraints->isShakeActive());
+
+    _constraints->deactivateShake();
+    EXPECT_FALSE(_constraints->isActive());
+    EXPECT_FALSE(_constraints->isShakeActive());
+
+    _constraints->activateMShake();
+    EXPECT_TRUE(_constraints->isActive());
+    EXPECT_TRUE(_constraints->isMShakeActive());
+
+    _constraints->deactivateMShake();
+    EXPECT_FALSE(_constraints->isActive());
+    EXPECT_FALSE(_constraints->isShakeActive());
+
+    _constraints->activateDistanceConstraints();
+    EXPECT_TRUE(_constraints->isActive());
+    EXPECT_TRUE(_constraints->isDistanceConstraintsActive());
 }

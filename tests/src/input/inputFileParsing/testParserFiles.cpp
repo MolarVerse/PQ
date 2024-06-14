@@ -170,8 +170,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     EXPECT_THROW_MSG(
         parser.parseMoldescriptorFilename(lineElements, 0),
         customException::InputFileException,
-        "Cannot open moldescriptor file - filename = moldescriptor.txt - file "
-        "not found"
+        "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
+        "file not found"
     );
 
     lineElements = {
@@ -249,5 +249,27 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     EXPECT_EQ(
         settings::FileSettings::getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
+    );
+}
+
+/**
+ * @brief tests parsing the "mshake_file" command
+ */
+TEST_F(TestInputFileReader, testMShakeFileName)
+{
+    InputFileParserFiles     parser(*_engine);
+    std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
+
+    EXPECT_THROW_MSG(
+        parser.parseMShakeFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open mshake file - filename = mshake.dat"
+    );
+
+    lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
+    parser.parseMShakeFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getMShakeFileName(),
+        "data/mshakeReader/mshake.dat"
     );
 }

@@ -90,6 +90,8 @@ message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
 # ************************
 set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
+include(eigen)
+
 if(BUILD_WITH_MPI)
     include(mpi)
 endif()

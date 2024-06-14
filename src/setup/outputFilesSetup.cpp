@@ -29,6 +29,7 @@
 #include "engine.hpp"                         // for Engine
 #include "infoOutput.hpp"                     // for InfoOutput
 #include "logOutput.hpp"                      // for LogOutput
+#include "mdEngine.hpp"                       // for MDEngine
 #include "momentumOutput.hpp"                 // for MomentumOutput
 #include "outputFileSettings.hpp"             // for OutputFileSettings
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
@@ -50,6 +51,8 @@ void setup::setupOutputFiles(engine::Engine &engine)
 
     OutputFilesSetup outputFilesSetup(engine);
     outputFilesSetup.setup();
+
+    engine.getLogOutput().writeHeader();
 }
 
 /**
@@ -69,71 +72,85 @@ void OutputFilesSetup::setup()
         settings::OutputFileSettings::replaceDefaultValues(prefix);
     }
 
-    _engine.getRstFileOutput().setFilename(
-        settings::OutputFileSettings::getRestartFileName()
-    );
-    _engine.getEnergyOutput().setFilename(
-        settings::OutputFileSettings::getEnergyFileName()
-    );
-    _engine.getInstantEnergyOutput().setFilename(
-        settings::OutputFileSettings::getInstantEnergyFileName()
-    );
-    _engine.getXyzOutput().setFilename(
-        settings::OutputFileSettings::getTrajectoryFileName()
-    );
     _engine.getLogOutput().setFilename(
         settings::OutputFileSettings::getLogFileName()
     );
-    _engine.getInfoOutput().setFilename(
-        settings::OutputFileSettings::getInfoFileName()
-    );
-    _engine.getVelOutput().setFilename(
-        settings::OutputFileSettings::getVelocityFileName()
-    );
-    _engine.getForceOutput().setFilename(
-        settings::OutputFileSettings::getForceFileName()
-    );
-    _engine.getChargeOutput().setFilename(
-        settings::OutputFileSettings::getChargeFileName()
-    );
-    _engine.getMomentumOutput().setFilename(
-        settings::OutputFileSettings::getMomentumFileName()
-    );
-    _engine.getVirialOutput().setFilename(
-        settings::OutputFileSettings::getVirialFileName()
-    );
-    _engine.getStressOutput().setFilename(
-        settings::OutputFileSettings::getStressFileName()
-    );
-    _engine.getBoxFileOutput().setFilename(
-        settings::OutputFileSettings::getBoxFileName()
-    );
-
-    if (settings::Settings::isRingPolymerMDActivated())
-    {
-        _engine.getRingPolymerRstFileOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerRestartFileName()
-        );
-        _engine.getRingPolymerXyzOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerTrajectoryFileName()
-        );
-        _engine.getRingPolymerVelOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerVelocityFileName()
-        );
-        _engine.getRingPolymerForceOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerForceFileName()
-        );
-        _engine.getRingPolymerChargeOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerChargeFileName()
-        );
-        _engine.getRingPolymerEnergyOutput().setFilename(
-            settings::OutputFileSettings::getRingPolymerEnergyFileName()
-        );
-    }
 
     _engine.getTimingsOutput().setFilename(
         settings::OutputFileSettings::getTimingsFileName()
     );
 
-    _engine.getLogOutput().writeHeader();
+    if (settings::Settings::isMDJobType())
+    {
+        dynamic_cast<engine::MDEngine &>(_engine)
+            .getRstFileOutput()
+            .setFilename(settings::OutputFileSettings::getRestartFileName());
+        dynamic_cast<engine::MDEngine &>(_engine).getEnergyOutput().setFilename(
+            settings::OutputFileSettings::getEnergyFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine)
+            .getInstantEnergyOutput()
+            .setFilename(settings::OutputFileSettings::getInstantEnergyFileName(
+            ));
+        dynamic_cast<engine::MDEngine &>(_engine).getXyzOutput().setFilename(
+            settings::OutputFileSettings::getTrajectoryFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine).getInfoOutput().setFilename(
+            settings::OutputFileSettings::getInfoFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine).getVelOutput().setFilename(
+            settings::OutputFileSettings::getVelocityFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine).getForceOutput().setFilename(
+            settings::OutputFileSettings::getForceFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine).getChargeOutput().setFilename(
+            settings::OutputFileSettings::getChargeFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine)
+            .getMomentumOutput()
+            .setFilename(settings::OutputFileSettings::getMomentumFileName());
+        dynamic_cast<engine::MDEngine &>(_engine).getVirialOutput().setFilename(
+            settings::OutputFileSettings::getVirialFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine).getStressOutput().setFilename(
+            settings::OutputFileSettings::getStressFileName()
+        );
+        dynamic_cast<engine::MDEngine &>(_engine)
+            .getBoxFileOutput()
+            .setFilename(settings::OutputFileSettings::getBoxFileName());
+
+        if (settings::Settings::isRingPolymerMDActivated())
+        {
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerRstFileOutput()
+                .setFilename(
+                    settings::OutputFileSettings::getRingPolymerRestartFileName(
+                    )
+                );
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerXyzOutput()
+                .setFilename(settings::OutputFileSettings::
+                                 getRingPolymerTrajectoryFileName());
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerVelOutput()
+                .setFilename(settings::OutputFileSettings::
+                                 getRingPolymerVelocityFileName());
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerForceOutput()
+                .setFilename(
+                    settings::OutputFileSettings::getRingPolymerForceFileName()
+                );
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerChargeOutput()
+                .setFilename(
+                    settings::OutputFileSettings::getRingPolymerChargeFileName()
+                );
+            dynamic_cast<engine::MDEngine &>(_engine)
+                .getRingPolymerEnergyOutput()
+                .setFilename(
+                    settings::OutputFileSettings::getRingPolymerEnergyFileName()
+                );
+        }
+    }
 }

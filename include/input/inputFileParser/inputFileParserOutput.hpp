@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_OUTPUT_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserOutput inherits from InputFileParser
      *
@@ -45,33 +47,33 @@ namespace input
      */
     class InputFileParserOutput : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserOutput(engine::Engine &);
 
-        void parseOutputFreq(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseFilePrefix(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseOutputFreq(const strings &, const size_t);
+        void parseFilePrefix(const strings &, const size_t);
 
-        void parseLogFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseInfoFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseInstantEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseMomentumFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseLogFilename(const strings &, const size_t);
+        void parseInfoFilename(const strings &, const size_t);
+        void parseEnergyFilename(const strings &, const size_t);
+        void parseInstantEnergyFilename(const strings &, const size_t);
+        void parseTrajectoryFilename(const strings &, const size_t);
+        void parseVelocityFilename(const strings &, const size_t);
+        void parseForceFilename(const strings &, const size_t);
+        void parseRestartFilename(const strings &, const size_t);
+        void parseChargeFilename(const strings &, const size_t);
+        void parseMomentumFilename(const strings &, const size_t);
 
-        void parseVirialFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseStressFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseBoxFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseVirialFilename(const strings &, const size_t);
+        void parseStressFilename(const strings &, const size_t);
+        void parseBoxFilename(const strings &, const size_t);
 
-        void parseRPMDRestartFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDTrajectoryFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDVelocityFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDForceFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDChargeFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseRPMDEnergyFilename(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseRPMDRestartFilename(const strings &, const size_t);
+        void parseRPMDTrajectoryFilename(const strings &, const size_t);
+        void parseRPMDVelocityFilename(const strings &, const size_t);
+        void parseRPMDForceFilename(const strings &, const size_t);
+        void parseRPMDChargeFilename(const strings &, const size_t);
+        void parseRPMDEnergyFilename(const strings &, const size_t);
     };
 
 }   // namespace input

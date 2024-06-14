@@ -24,11 +24,11 @@
 
 #define _MOLDESCRIPTOR_READER_HPP_
 
-#include "defaults.hpp"
-
 #include <fstream>   // for ifstream
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "defaults.hpp"
 
 namespace engine
 {
@@ -52,19 +52,20 @@ namespace input::molDescriptor
      */
     class MoldescriptorReader
     {
-      private:
+       private:
         int           _lineNumber;
         std::string   _fileName = defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;
         std::ifstream _fp;
 
         engine::Engine &_engine;
 
-      public:
+       public:
         explicit MoldescriptorReader(engine::Engine &engine);
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(simulationBox::MoleculeType &) const;
+        void convertExternalToInternalAtomTypes(simulationBox::MoleculeType &)
+            const;
     };
 
 }   // namespace input::molDescriptor

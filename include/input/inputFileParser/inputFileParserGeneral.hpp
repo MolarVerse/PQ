@@ -24,12 +24,12 @@
 
 #define _INPUT_FILE_PARSER_GENERAL_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <memory>    // for unique_ptr
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -38,6 +38,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserGeneral inherits from InputFileParser
      *
@@ -46,13 +48,13 @@ namespace input
      */
     class InputFileParserGeneral : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserGeneral(engine::Engine &);
 
-        void parseJobType(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseDimensionality(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseJobType(const strings &, const size_t);
+        void parseDimensionality(const strings &, const size_t);
 
-        void parseJobTypeForEngine(const std::vector<std::string> &, const size_t, std::unique_ptr<engine::Engine> &);
+        void parseJobTypeForEngine(const strings &, const size_t, std::unique_ptr<engine::Engine> &);
     };
 
 }   // namespace input

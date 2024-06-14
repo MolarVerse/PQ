@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_RESET_KINETICS_HPP_
 
-#include "inputFileParser.hpp"
-
 #include <cstddef>   // for size_t
 #include <string>
 #include <vector>
+
+#include "inputFileParser.hpp"
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserResetKinetics inherits from InputFileParser
      *
@@ -45,15 +47,15 @@ namespace input
      */
     class InputFileParserResetKinetics : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserResetKinetics(engine::Engine &);
 
-        void parseNScale(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseFScale(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseNReset(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseFReset(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseNResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseFResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseNScale(const strings &, const size_t);
+        void parseFScale(const strings &, const size_t);
+        void parseNReset(const strings &, const size_t);
+        void parseFReset(const strings &, const size_t);
+        void parseNResetAngular(const strings &, const size_t);
+        void parseFResetAngular(const strings &, const size_t);
     };
 
 }   // namespace input

@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_QM_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserQM inherits from InputFileParser
      *
@@ -45,13 +47,13 @@ namespace input
      */
     class InputFileParserQM : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserQM(engine::Engine &);
 
-        void parseQMMethod(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseQMScript(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseQMScriptFullPath(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseQMLoopTimeLimit(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseQMMethod(const strings &, const size_t);
+        void parseQMScript(const strings &, const size_t);
+        void parseQMScriptFullPath(const strings &, const size_t);
+        void parseQMLoopTimeLimit(const strings &, const size_t);
     };
 
 }   // namespace input

@@ -17,14 +17,14 @@ if(PQANALYSIS_INSTALLED EQUAL 1)
     execute_process(
 
         # TODO: as soon as next release is out, change this to <pip install pqanalysis>
-        COMMAND ${Python_EXECUTABLE} -m pip install git+https://github.com/MolarVerse/PQAnalysis.git@dev
+        COMMAND ${Python_EXECUTABLE} -m pip install PQAnalysis
         RESULT_VARIABLE PIP_INSTALL_RESULT
     )
 else()
     execute_process(
 
         # TODO: as soon as next release is out, change this to <pip install pqanalysis>
-        COMMAND ${Python_EXECUTABLE} -m pip install update git+https://github.com/MolarVerse/PQAnalysis.git@dev
+        COMMAND ${Python_EXECUTABLE} -m pip install update PQAnalysis
         RESULT_VARIABLE PIP_INSTALL_RESULT
     )
 endif()

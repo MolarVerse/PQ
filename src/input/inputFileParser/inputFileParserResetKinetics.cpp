@@ -22,34 +22,60 @@
 
 #include "inputFileParserResetKinetics.hpp"
 
-#include "exceptions.hpp"              // for InputFileException, customException
-#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-
 #include <cstddef>       // for size_t, std
 #include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Reset Kinetics:: Input File Parser Reset Kinetics object
+ * @brief Construct a new Input File Parser Reset Kinetics:: Input File Parser
+ * Reset Kinetics object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) nscale <size_t>
- * 2) fscale <size_t>
- * 3) nreset <size_t>
- * 4) freset <size_t>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) nscale <size_t> 2) fscale
+ * <size_t> 3) nreset <size_t> 4) freset <size_t>
  *
  * @param engine
  */
-InputFileParserResetKinetics::InputFileParserResetKinetics(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserResetKinetics::InputFileParserResetKinetics(
+    engine::Engine &engine
+)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("nscale"), bind_front(&InputFileParserResetKinetics::parseNScale, this), false);
-    addKeyword(std::string("fscale"), bind_front(&InputFileParserResetKinetics::parseFScale, this), false);
-    addKeyword(std::string("nreset"), bind_front(&InputFileParserResetKinetics::parseNReset, this), false);
-    addKeyword(std::string("freset"), bind_front(&InputFileParserResetKinetics::parseFReset, this), false);
-    addKeyword(std::string("nreset_angular"), bind_front(&InputFileParserResetKinetics::parseNResetAngular, this), false);
-    addKeyword(std::string("freset_angular"), bind_front(&InputFileParserResetKinetics::parseFResetAngular, this), false);
+    addKeyword(
+        std::string("nscale"),
+        bind_front(&InputFileParserResetKinetics::parseNScale, this),
+        false
+    );
+    addKeyword(
+        std::string("fscale"),
+        bind_front(&InputFileParserResetKinetics::parseFScale, this),
+        false
+    );
+    addKeyword(
+        std::string("nreset"),
+        bind_front(&InputFileParserResetKinetics::parseNReset, this),
+        false
+    );
+    addKeyword(
+        std::string("freset"),
+        bind_front(&InputFileParserResetKinetics::parseFReset, this),
+        false
+    );
+    addKeyword(
+        std::string("nreset_angular"),
+        bind_front(&InputFileParserResetKinetics::parseNResetAngular, this),
+        false
+    );
+    addKeyword(
+        std::string("freset_angular"),
+        bind_front(&InputFileParserResetKinetics::parseFResetAngular, this),
+        false
+    );
 }
 
 /**
@@ -62,7 +88,10 @@ InputFileParserResetKinetics::InputFileParserResetKinetics(engine::Engine &engin
  *
  * @throw customException::InputFileException if nscale is negative
  */
-void InputFileParserResetKinetics::parseNScale(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseNScale(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -84,7 +113,10 @@ void InputFileParserResetKinetics::parseNScale(const std::vector<std::string> &l
  *
  * @throw customException::InputFileException if fscale is negative
  */
-void InputFileParserResetKinetics::parseFScale(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseFScale(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -106,7 +138,10 @@ void InputFileParserResetKinetics::parseFScale(const std::vector<std::string> &l
  *
  * @throw customException::InputFileException if nreset is negative
  */
-void InputFileParserResetKinetics::parseNReset(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseNReset(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -128,7 +163,10 @@ void InputFileParserResetKinetics::parseNReset(const std::vector<std::string> &l
  *
  * @throw customException::InputFileException if freset is negative
  */
-void InputFileParserResetKinetics::parseFReset(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseFReset(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -150,16 +188,23 @@ void InputFileParserResetKinetics::parseFReset(const std::vector<std::string> &l
  *
  * @throw customException::InputFileException if nreset_angular is negative
  */
-void InputFileParserResetKinetics::parseNResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseNResetAngular(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto nResetAngular = stoi(lineElements[2]);
 
     if (nResetAngular < 0)
-        throw customException::InputFileException("Nreset_angular must be positive");
+        throw customException::InputFileException(
+            "Nreset_angular must be positive"
+        );
 
-    settings::ResetKineticsSettings::setNResetAngular(static_cast<size_t>(nResetAngular));
+    settings::ResetKineticsSettings::setNResetAngular(
+        static_cast<size_t>(nResetAngular)
+    );
 }
 
 /**
@@ -172,14 +217,21 @@ void InputFileParserResetKinetics::parseNResetAngular(const std::vector<std::str
  *
  * @throw customException::InputFileException if freset_angular is negative
  */
-void InputFileParserResetKinetics::parseFResetAngular(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserResetKinetics::parseFResetAngular(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto fResetAngular = stoi(lineElements[2]);
 
     if (fResetAngular < 0)
-        throw customException::InputFileException("Freset_angular must be positive");
+        throw customException::InputFileException(
+            "Freset_angular must be positive"
+        );
 
-    settings::ResetKineticsSettings::setFResetAngular(static_cast<size_t>(fResetAngular));
+    settings::ResetKineticsSettings::setFResetAngular(
+        static_cast<size_t>(fResetAngular)
+    );
 }

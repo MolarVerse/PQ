@@ -1,6 +1,9 @@
 set(engine_source_files
     engine.cpp
 
+    optEngine.cpp
+    mdEngine.cpp
+
     mmmdEngine.cpp
     qmmdEngine.cpp
     qmmmmdEngine.cpp
@@ -54,6 +57,7 @@ target_link_libraries(engine
     intraNonBonded
     QM
     references
+    optimizer
 )
 
 if(BUILD_WITH_KOKKOS)

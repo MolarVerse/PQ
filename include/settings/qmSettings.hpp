@@ -24,11 +24,11 @@
 
 #define _QM_SETTINGS_HPP_
 
-#include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
-
 #include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
+
+#include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
 
 namespace settings
 {
@@ -54,27 +54,27 @@ namespace settings
      */
     class QMSettings
     {
-      private:
+       private:
         static inline QMMethod    _qmMethod         = QMMethod::NONE;
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
 
+        // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
+        // clang-format on
 
-      public:
+       public:
         static void setQMMethod(const std::string_view &method);
 
-        static void setQMMethod(const QMMethod method) { _qmMethod = method; }
-        static void setQMScript(const std::string_view &script) { _qmScript = script; }
-        static void setQMScriptFullPath(const std::string_view &script) { _qmScriptFullPath = script; }
+        static void setQMMethod(const QMMethod method);
+        static void setQMScript(const std::string_view &script);
+        static void setQMScriptFullPath(const std::string_view &script);
+        static void setQMLoopTimeLimit(const double time);
 
-        static void setQMLoopTimeLimit(const double time) { _qmLoopTimeLimit = time; }
-
-        [[nodiscard]] static QMMethod    getQMMethod() { return _qmMethod; }
-        [[nodiscard]] static std::string getQMScript() { return _qmScript; }
-        [[nodiscard]] static std::string getQMScriptFullPath() { return _qmScriptFullPath; }
-
-        [[nodiscard]] static double getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+        [[nodiscard]] static QMMethod    getQMMethod();
+        [[nodiscard]] static std::string getQMScript();
+        [[nodiscard]] static std::string getQMScriptFullPath();
+        [[nodiscard]] static double      getQMLoopTimeLimit();
     };
 }   // namespace settings
 

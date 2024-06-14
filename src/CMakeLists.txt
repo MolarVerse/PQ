@@ -22,6 +22,8 @@ add_subdirectory(exceptions)
 add_subdirectory(QM)
 add_subdirectory(maxwellBoltzmann)
 add_subdirectory(box)
+add_subdirectory(kernels)
+add_subdirectory(optimizer)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_subdirectory(python)

@@ -56,7 +56,8 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        linearAlgebra::Vec3D               _centerOfMass = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
+        linearAlgebra::Vec3D _centerOfMass =
+            linearAlgebra::Vec3D(0.0, 0.0, 0.0);
         std::map<size_t, size_t>           _externalToInternalAtomTypes;
         std::vector<std::shared_ptr<Atom>> _atoms;
 
@@ -81,7 +82,10 @@ namespace simulationBox
          * standard adder methods for atom data *
          *****************************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom) { _atoms.push_back(atom); }
+        void addAtom(const std::shared_ptr<Atom> atom)
+        {
+            _atoms.push_back(atom);
+        }
 
         void addAtomPosition(c_ul index, const linearAlgebra::Vec3D &position)
         {
@@ -95,7 +99,10 @@ namespace simulationBox
         {
             _atoms[index]->addForce(force);
         }
-        void addAtomShiftForce(c_ul index, const linearAlgebra::Vec3D &shiftForce)
+        void addAtomShiftForce(
+            c_ul                        index,
+            const linearAlgebra::Vec3D &shiftForce
+        )
         {
             _atoms[index]->addShiftForce(shiftForce);
         }
@@ -116,7 +123,10 @@ namespace simulationBox
         {
             _atoms[index]->setForce(force);
         }
-        void setAtomShiftForce(c_ul index, const linearAlgebra::Vec3D &shiftForce)
+        void setAtomShiftForce(
+            c_ul                        index,
+            const linearAlgebra::Vec3D &shiftForce
+        )
         {
             _atoms[index]->setShiftForce(shiftForce);
         }
@@ -128,6 +138,15 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(c_ul index) const
         {
             return _atoms[index]->getPosition();
+        }
+        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions() const
+        {
+            std::vector<linearAlgebra::Vec3D> positions;
+            for (const auto &atom : _atoms)
+            {
+                positions.push_back(atom->getPosition());
+            }
+            return positions;
         }
         [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(c_ul index) const
         {
@@ -146,17 +165,26 @@ namespace simulationBox
         {
             return _atoms[index]->getAtomicNumber();
         }
-        [[nodiscard]] double getAtomMass(c_ul index) const { return _atoms[index]->getMass(); }
+        [[nodiscard]] double getAtomMass(c_ul index) const
+        {
+            return _atoms[index]->getMass();
+        }
         [[nodiscard]] double getPartialCharge(c_ul index) const
         {
             return _atoms[index]->getPartialCharge();
         }
-        [[nodiscard]] size_t getAtomType(c_ul index) const { return _atoms[index]->getAtomType(); }
+        [[nodiscard]] size_t getAtomType(c_ul index) const
+        {
+            return _atoms[index]->getAtomType();
+        }
         [[nodiscard]] size_t getInternalGlobalVDWType(c_ul index) const
         {
             return _atoms[index]->getInternalGlobalVDWType();
         }
-        [[nodiscard]] std::string getAtomName(c_ul index) const { return _atoms[index]->getName(); }
+        [[nodiscard]] std::string getAtomName(c_ul index) const
+        {
+            return _atoms[index]->getName();
+        }
 
         /***************************
          * standard getter methods *
@@ -164,7 +192,10 @@ namespace simulationBox
 
         [[nodiscard]] size_t getMoltype() const { return _moltype; }
         [[nodiscard]] size_t getNumberOfAtoms() const { return _numberOfAtoms; }
-        [[nodiscard]] size_t getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
+        [[nodiscard]] size_t getDegreesOfFreedom() const
+        {
+            return 3 * getNumberOfAtoms();
+        }
 
         [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
 
@@ -173,10 +204,16 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const { return _name; }
 
-        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const { return _centerOfMass; }
+        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const
+        {
+            return _centerOfMass;
+        }
 
         [[nodiscard]] Atom &getAtom(c_ul index) { return *(_atoms[index]); }
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms() { return _atoms; }
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms()
+        {
+            return _atoms;
+        }
 
         /***************************
          * standard setter methods *
@@ -186,7 +223,10 @@ namespace simulationBox
 
         void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
 
-        void setNumberOfAtoms(c_ul numberOfAtoms) { _numberOfAtoms = numberOfAtoms; }
+        void setNumberOfAtoms(c_ul numberOfAtoms)
+        {
+            _numberOfAtoms = numberOfAtoms;
+        }
         void setMoltype(c_ul moltype) { _moltype = moltype; }
 
         void setCharge(const double charge) { _charge = charge; }
