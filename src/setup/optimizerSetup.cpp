@@ -23,9 +23,12 @@
 #include "optimizerSetup.hpp"
 
 #include "optEngine.hpp"
+#include "optimizerSettings.hpp"
 #include "settings.hpp"
+#include "steepestDescent.hpp"
 
 using setup::OptimizerSetup;
+using namespace settings;
 
 /**
  * @brief Wrapper for the optimizer setup
@@ -34,7 +37,7 @@ using setup::OptimizerSetup;
  */
 void setup::setupOptimizer(engine::Engine &engine)
 {
-    if (!settings::Settings::isOptJobType())
+    if (!Settings::isOptJobType())
         return;
 
     engine.getStdoutOutput().writeSetup("optimizer");
@@ -58,4 +61,26 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  * @brief Setup the optimizer
  *
  */
-void OptimizerSetup::setup() {}
+void OptimizerSetup::setup()
+{
+    const auto nEpochs        = OptimizerSettings::getNumberOfEpochs();
+    const auto learningRate_0 = OptimizerSettings::getInitialLearningRate();
+
+    switch (OptimizerSettings::getOptimizer())
+    {
+        case Optimizer::STEEPEST_DESCENT:
+        {
+            _optEngine.makeOptimizer(
+                optimizer::SteepestDescent(nEpochs, learningRate_0)
+            );
+            break;
+        }
+        default:
+        {
+            throw customException::UserInputException(std::format(
+                "Unknown optimizer type {}",
+                string(OptimizerSettings::getOptimizer())
+            ));
+        }
+    }
+}
