@@ -25,7 +25,7 @@
 #include "optEngine.hpp"
 #include "settings.hpp"
 
-using namespace setup;
+using setup::OptimizerSetup;
 
 /**
  * @brief Wrapper for the optimizer setup

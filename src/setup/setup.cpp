@@ -181,7 +181,7 @@ void setup::setupEngine(Engine &engine)
         setupRingPolymer(engine);
 
     if (settings::Settings::isQMMMActivated())
-        setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+        setupQMMM(engine);
 
     if (settings::Settings::isOptJobType())
         setupOptimizer(engine);

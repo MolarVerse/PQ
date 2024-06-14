@@ -35,24 +35,29 @@
 #include "fileSettings.hpp"   // for FileSettings
 #include "qmmmSettings.hpp"   // for QMMMSettings
 #include "qmmmmdEngine.hpp"   // for QMMMEngine
+#include "settings.hpp"       // for Settings
 
 #ifdef PYTHON_ENABLED
 #include "selection.hpp"   // for select
 #endif
 
 using setup::QMMMSetup;
+using namespace settings;
 
 /**
  * @brief wrapper to build QMMMSetup object and call setup
  *
  * @param engine
  */
-void setup::setupQMMM(engine::QMMMMDEngine &engine)
+void setup::setupQMMM(engine::Engine &engine)
 {
+    if (!Settings::isQMMMActivated())
+        return;
+
     engine.getStdoutOutput().writeSetup("QMMM setup");
     engine.getLogOutput().writeSetup("QMMM setup");
 
-    QMMMSetup qmmmSetup(engine);
+    QMMMSetup qmmmSetup(dynamic_cast<engine::QMMMMDEngine &>(engine));
     qmmmSetup.setup();
 }
 
@@ -71,14 +76,17 @@ void QMMMSetup::setup()
 /**
  * @brief setup QM center
  *
- * @details This function determines the indices of the atoms that should be treated as the QM
- * center. The QM center is the region of the system that is treated with QM methods. All
- * atomIndices that are part of the QM center are added to the QM center list in the simulation box.
+ * @details This function determines the indices of the atoms that should be
+ * treated as the QM center. The QM center is the region of the system that is
+ * treated with QM methods. All atomIndices that are part of the QM center are
+ * added to the QM center list in the simulation box.
  *
  */
 void QMMMSetup::setupQMCenter()
 {
-    const auto qmCenter = parseSelection(settings::QMMMSettings::getQMCenterString(), "qm_center");
+    const auto qmCenterString = QMMMSettings::getQMCenterString();
+    const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
+
     _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
 }
 
@@ -88,8 +96,9 @@ void QMMMSetup::setupQMCenter()
  */
 void QMMMSetup::setupQMOnlyList()
 {
-    const auto qmOnlyList =
-        parseSelection(settings::QMMMSettings::getQMOnlyListString(), "qm_only_list");
+    const auto qmOnlyListString = QMMMSettings::getQMOnlyListString();
+    const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
+
     _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
 }
 
@@ -99,34 +108,42 @@ void QMMMSetup::setupQMOnlyList()
  */
 void QMMMSetup::setupMMOnlyList()
 {
-    const auto mmOnlyList =
-        parseSelection(settings::QMMMSettings::getMMOnlyListString(), "mm_only_list");
+    const auto mmOnlyListString = QMMMSettings::getMMOnlyListString();
+    const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
+
     _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
 }
 
 /**
  * @brief parse selection string
  *
- * @details This function parses a string that contains a selection of atoms. The selection can be
- * a list of atom indices or a selection string that is understood by the PQAnalysis Python package.
- * In order to use the full selection parser power of the PQAnalysis Python package, the PQ build
- * must be compiled with Python bindings. If the PQ build is compiled without Python bindings, the
- * selection string must be a comma-separated list of integers or a - separated range of indices,
- * representing the atom indices in the restart file that should be treated as the selection. If the
- * selection is empty, the function returns a vector with a single element, 0.
+ * @details This function parses a string that contains a selection of atoms.
+ * The selection can be a list of atom indices or a selection string that is
+ * understood by the PQAnalysis Python package. In order to use the full
+ * selection parser power of the PQAnalysis Python package, the PQ build must be
+ * compiled with Python bindings. If the PQ build is compiled without Python
+ * bindings, the selection string must be a comma-separated list of integers or
+ * a - separated range of indices, representing the atom indices in the restart
+ * file that should be treated as the selection. If the selection is empty, the
+ * function returns a vector with a single element, 0.
  *
  * @param selection The selection string
  * @param key The key of the selection string
  *
  * @return std::vector<int> The selection vector
  *
- * @throws customException::InputFileException if the selection string contains characters that are
- * not digits, "-" or commas and the PQ build is compiled without Python bindings.
+ * @throws customException::InputFileException if the selection string contains
+ * characters that are not digits, "-" or commas and the PQ build is compiled
+ * without Python bindings.
  */
-std::vector<int> QMMMSetup::parseSelection(const std::string &selection, const std::string &key)
+std::vector<int> QMMMSetup::parseSelection(
+    const std::string &selection,
+    const std::string &key
+)
 {
-    std::string restartFileName       = settings::FileSettings::getStartFileName();
-    std::string moldescriptorFileName = settings::FileSettings::getMolDescriptorFileName();
+    std::string restartFileName = FileSettings::getStartFileName();
+    std::string moldescriptorFileName =
+        FileSettings::getMolDescriptorFileName();
 
     std::vector<int> selectionVector;
 
@@ -139,18 +156,27 @@ std::vector<int> QMMMSetup::parseSelection(const std::string &selection, const s
 
 #ifdef PYTHON_ENABLED
     if (needsPython)
-        selectionVector = pq_python::select(selection, restartFileName, moldescriptorFileName);
+        selectionVector = pq_python::select(
+            selection,
+            restartFileName,
+            moldescriptorFileName
+        );
 #else
 
     // check if string contains any characters that are not digits or commas
     if (needsPython)
     {
         throw customException::InputFileException(std::format(
-            "The value of key {} - {} contains characters that are not digits, \"-\" or commas. The"
-            "current build of PQ was compiled without Python bindings, so the {} string "
-            "must be a comma-separated list of integers, representing the atom indices in the "
-            "restart file that should be treated as the {}. In order to use the full selection "
-            "parser power of the PQAnalysis Python package, the PQ build must be compiled with "
+            "The value of key {} - {} contains characters that are not digits, "
+            "\"-\" or commas. The"
+            "current build of PQ was compiled without Python bindings, so the "
+            "{} string "
+            "must be a comma-separated list of integers, representing the atom "
+            "indices in the "
+            "restart file that should be treated as the {}. In order to use "
+            "the full selection "
+            "parser power of the PQAnalysis Python package, the PQ build must "
+            "be compiled with "
             "Python bindings.",
             key,
             selection,
@@ -178,7 +204,8 @@ std::vector<int> QMMMSetup::parseSelection(const std::string &selection, const s
  *
  * @return std::vector<int> The selection vector
  *
- * @throws customException::InputFileException if the selection string is an empty list
+ * @throws customException::InputFileException if the selection string is an
+ * empty list
  */
 std::vector<int> QMMMSetup::parseSelectionNoPython(
     const std::string &selection,
@@ -195,22 +222,31 @@ std::vector<int> QMMMSetup::parseSelectionNoPython(
         {
             nextPos = selection.size();
         }
-        std::string_view atomIndexString(selection.c_str() + pos, nextPos - pos);
-        // remove all whitespaces from the atom index string
-        atomIndexString.remove_prefix(
-            std::min(atomIndexString.find_first_not_of(" "), atomIndexString.size())
+        std::string_view atomIndexString(
+            selection.c_str() + pos,
+            nextPos - pos
         );
+        // remove all whitespaces from the atom index string
+        atomIndexString.remove_prefix(std::min(
+            atomIndexString.find_first_not_of(" "),
+            atomIndexString.size()
+        ));
         atomIndexString.remove_suffix(
             atomIndexString.size() -
-            std::min(atomIndexString.find_last_not_of(" ") + 1, atomIndexString.size())
+            std::min(
+                atomIndexString.find_last_not_of(" ") + 1,
+                atomIndexString.size()
+            )
         );
 
         // check if the atom index string is a range of indices
         size_t rangePos = atomIndexString.find('-');
         if (rangePos != std::string::npos)
         {
-            int start = std::stoi(std::string(atomIndexString.substr(0, rangePos)));
-            int end   = std::stoi(std::string(atomIndexString.substr(rangePos + 1)));
+            int start =
+                std::stoi(std::string(atomIndexString.substr(0, rangePos)));
+            int end =
+                std::stoi(std::string(atomIndexString.substr(rangePos + 1)));
             for (int i = start; i <= end; ++i)
             {
                 selectionVector.push_back(i);
@@ -227,8 +263,10 @@ std::vector<int> QMMMSetup::parseSelectionNoPython(
     if (selectionVector.empty())
     {
         throw customException::InputFileException(std::format(
-            "The value of key {} - {} is an empty list. The {} string must be a comma-separated "
-            "list of integers or ranges, representing the atom indices in the restart file that "
+            "The value of key {} - {} is an empty list. The {} string must be "
+            "a comma-separated "
+            "list of integers or ranges, representing the atom indices in the "
+            "restart file that "
             "should be treated as the {}.",
             key,
             selection,
