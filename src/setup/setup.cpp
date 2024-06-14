@@ -35,6 +35,7 @@
 #include "kokkosSetup.hpp"            // for setupKokkos
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "optimizerSetup.hpp"         // for setupOptimizer
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
 #include "parameterFileReader.hpp"    // for readParameterFile
 #include "potentialSetup.hpp"         // for setupPotential
@@ -148,13 +149,8 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::isQMMMActivated())
-        setupQM(dynamic_cast<engine::QMMMMDEngine &>(engine));
-
-    if (settings::Settings::isQMOnlyActivated())
-        setupQM(dynamic_cast<engine::QMMDEngine &>(engine)
-        );   // TODO: does make problems with optimization maybe qm should be
-             // excluded
+    if (settings::Settings::isQMActivated())
+        setupQM(engine);
 
     if (settings::Settings::isMDJobType())
         resetKinetics::setupResetKinetics(engine);
@@ -188,5 +184,5 @@ void setup::setupEngine(Engine &engine)
         setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
 
     if (settings::Settings::isOptJobType())
-        setupOptimization(engine);
+        setupOptimizer(engine);
 }

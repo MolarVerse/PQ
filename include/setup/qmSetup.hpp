@@ -26,12 +26,14 @@
 
 namespace engine
 {
+    class Engine;       // forward declaration
     class QMMDEngine;   // forward declaration
-}
+
+}   // namespace engine
 
 namespace setup
 {
-    void setupQM(engine::QMMDEngine &);
+    void setupQM(engine::Engine &);
 
     /**
      * @class QMSetup
@@ -41,16 +43,17 @@ namespace setup
      */
     class QMSetup
     {
-      private:
+       private:
         engine::QMMDEngine &_engine;
 
-      public:
+       public:
         explicit QMSetup(engine::QMMDEngine &engine) : _engine(engine){};
 
         void setup();
         void setupQMMethod();
         void setupQMScript() const;
         void setupCoulombRadiusCutOff() const;
+        void setupWriteInfo() const;
     };
 
 }   // namespace setup
