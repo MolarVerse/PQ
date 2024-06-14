@@ -186,4 +186,7 @@ void setup::setupEngine(Engine &engine)
 
     if (settings::Settings::isQMMMActivated())
         setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+
+    if (settings::Settings::isOptJobType())
+        setupOptimization(engine);
 }

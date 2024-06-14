@@ -24,4 +24,34 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
+namespace engine
+{
+    class Engine;      // Forward declaration
+    class OptEngine;   // Forward declaration
+
+}   // namespace engine
+
+namespace setup
+{
+    void setupOptimizer(engine::Engine &);
+
+    /**
+     * @class OptimizerSetup
+     *
+     * @brief Setup optimizer
+     *
+     */
+    class OptimizerSetup
+    {
+       protected:
+        engine::OptEngine &_optEngine;
+
+       public:
+        explicit OptimizerSetup(engine::OptEngine &optEngine);
+
+        void setup();
+    };
+
+}   // namespace setup
+
 #endif   // _OPTIMIZER_SETUP_HPP_

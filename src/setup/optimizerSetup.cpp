@@ -21,3 +21,41 @@
 ******************************************************************************/
 
 #include "optimizerSetup.hpp"
+
+#include "optEngine.hpp"
+#include "settings.hpp"
+
+using namespace setup;
+
+/**
+ * @brief Wrapper for the optimizer setup
+ *
+ * @param engine
+ */
+void setup::setupOptimizer(engine::Engine &engine)
+{
+    if (!settings::Settings::isOptJobType())
+        return;
+
+    engine.getStdoutOutput().writeSetup("optimizer");
+    engine.getLogOutput().writeSetup("optimizer");
+
+    OptimizerSetup optimizerSetup(dynamic_cast<engine::OptEngine &>(engine));
+    optimizerSetup.setup();
+}
+
+/**
+ * @brief Construct a new OptimizerSetup object
+ *
+ * @param optEngine
+ */
+OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
+    : _optEngine(optEngine)
+{
+}
+
+/**
+ * @brief Setup the optimizer
+ *
+ */
+void OptimizerSetup::setup() {}
