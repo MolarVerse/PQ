@@ -20,40 +20,29 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_HPP_
+#ifndef _OPT_ENGINE_TPP_
 
-#define _OPT_ENGINE_HPP_
+#define _OPT_ENGINE_TPP_
 
-#include <memory>   // for unique_ptr
-
-#include "engine.hpp"      // for Engine
-#include "optimizer.hpp"   // for Optimizer
+#include "optEngine.hpp"
 
 namespace engine
 {
+    /***************************
+     * make unique_ptr methods *
+     ***************************/
 
     /**
-     * @class OptEngine
+     * @brief make unique_ptr for optimizer
      *
-     * @brief Optimizer engine
-     *
+     * @tparam T
+     * @param optimizer
      */
-    class OptEngine : public Engine
+    template <typename T>
+    inline void OptEngine::makeOptimizer(T optimizer)
     {
-       private:
-        std::unique_ptr<optimizer::Optimizer> _optimizer;
-
-       public:
-        /***************************
-         * make unique_ptr methods *
-         ***************************/
-
-        template <typename T>
-        void makeOptimizer(T optimizer);
-    };
-
+        _optimizer = std::make_unique<T>(optimizer);
+    }
 }   // namespace engine
 
-#include "optEngine.tpp.hpp"   // DO NOT MOVE THIS LINE
-
-#endif   // _OPT_ENGINE_HPP_
+#endif   // _OPT_ENGINE_TPP_
