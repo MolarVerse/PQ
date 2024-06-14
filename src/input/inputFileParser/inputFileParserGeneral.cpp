@@ -29,7 +29,7 @@
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException, customException
 #include "mmmdEngine.hpp"     // for MMMDEngine
-#include "optEngine.hpp"      // for OptimizerEngine
+#include "mmoptEngine.hpp"    // for MMOptEngine
 #include "qmmdEngine.hpp"     // for QMMDEngine
 #include "qmmmmdEngine.hpp"   // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
@@ -97,46 +97,39 @@ void InputFileParserGeneral::parseJobTypeForEngine(
 
     const auto jobtype = utilities::toLowerCopy(lineElements[2]);
 
-    if (jobtype == "opt")
+    if (jobtype == "mm-opt")
     {
-        settings::Settings::setJobtype("OPT");
-        settings::Settings::activateMM();
-        engine.reset(new engine::OptEngine());
+        settings::Settings::setJobtype("MMOPT");
+        engine.reset(new engine::MMOptEngine());
 
         throw customException::InputFileException(
-            "Optimization is not implemented yet"
+            "Optimization is not yet implemented"
         );
     }
     else if (jobtype == "mm-md")
     {
         settings::Settings::setJobtype("MMMD");
-        settings::Settings::activateMM();
         engine.reset(new engine::MMMDEngine());
     }
     else if (jobtype == "qm-md")
     {
         settings::Settings::setJobtype("QMMD");
-        settings::Settings::activateQM();
         engine.reset(new engine::QMMDEngine());
     }
     else if (jobtype == "qmmm-md")
     {
-        settings::Settings::setJobtype("QMMM_MD");
-        settings::Settings::activateMM();
-        settings::Settings::activateQM();
+        settings::Settings::setJobtype("QMMMMD");
         engine.reset(new engine::QMMMMDEngine());
     }
     else if (jobtype == "qm-rpmd")
     {
         settings::Settings::setJobtype("Ring_Polymer_QMMD");
-        settings::Settings::activateQM();
-        settings::Settings::activateRingPolymerMD();
         engine.reset(new engine::RingPolymerQMMDEngine());
     }
     else
         throw customException::InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
-            "- opt\n"
+            "- mm-opt\n"
             "- mm-md\n"
             "- qm-md\n"
             "- qmmm-md\n"

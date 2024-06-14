@@ -32,13 +32,16 @@
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
 #include "mmmdEngine.hpp"               // for MMMDEngine
+#include "mmoptEngine.hpp"              // for MMOptEngine
 #include "qmmdEngine.hpp"               // for QMMDEngine
+#include "qmmmmdEngine.hpp"             // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"    // for RingPolymerQMMDEngine
 #include "settings.hpp"                 // for Settings
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
 
 using namespace input;
+using namespace settings;
 
 /**
  * @brief tests parsing the "jobtype" command
@@ -53,32 +56,48 @@ TEST_F(TestInputFileReader, JobType)
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_MD);
-    EXPECT_EQ(settings::Settings::isMMActivated(), true);
+    EXPECT_EQ(Settings::getJobtype(), JobType::MM_MD);
+    EXPECT_EQ(Settings::isMMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::QM_MD);
-    EXPECT_EQ(settings::Settings::isQMActivated(), true);
+    EXPECT_EQ(Settings::getJobtype(), JobType::QM_MD);
+    EXPECT_EQ(Settings::isQMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(
-        settings::Settings::getJobtype(),
-        settings::JobType::RING_POLYMER_QM_MD
-    );
-    EXPECT_EQ(settings::Settings::isQMActivated(), true);
-    EXPECT_EQ(settings::Settings::isRingPolymerMDActivated(), true);
+    EXPECT_EQ(Settings::getJobtype(), JobType::RING_POLYMER_QM_MD);
+    EXPECT_EQ(Settings::isQMActivated(), true);
+    EXPECT_EQ(Settings::isRingPolymerMDActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::RingPolymerQMMDEngine));
+
+    lineElements = {"jobtype", "=", "qmmm-md"};
+    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    EXPECT_EQ(Settings::getJobtype(), JobType::QMMM_MD);
+    EXPECT_EQ(Settings::isQMActivated(), true);
+    EXPECT_EQ(Settings::isMMActivated(), true);
+    EXPECT_EQ(typeid(*engine), typeid(engine::QMMMMDEngine));
+
+    lineElements = {"jobtype", "=", "mm-opt"};
+    // parser.parseJobTypeForEngine(lineElements, 0, engine);
+    // EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
+    // EXPECT_EQ(Settings::isOptJobType(), true);
+    // EXPECT_EQ(Settings::isMMActivated(), true);
+    // EXPECT_EQ(typeid(*engine), typeid(engine::MMOptEngine));
+    EXPECT_THROW_MSG(
+        parser.parseJobTypeForEngine(lineElements, 0, engine),
+        customException::InputFileException,
+        "Optimization is not yet implemented"
+    );
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
         customException::InputFileException,
         "Invalid jobtype \"notValid\" in input file - possible values are:\n"
-        "- opt\n"
+        "- mm-opt\n"
         "- mm-md\n"
         "- qm-md\n"
         "- qmmm-md\n"
@@ -97,11 +116,11 @@ TEST_F(TestInputFileReader, parseDimensionality)
     InputFileParserGeneral   parser(*_engine);
     std::vector<std::string> lineElements = {"dim", "=", "3"};
     parser.parseDimensionality(lineElements, 0);
-    EXPECT_EQ(settings::Settings::getDimensionality(), 3);
+    EXPECT_EQ(Settings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "3D"};
     parser.parseDimensionality(lineElements, 0);
-    EXPECT_EQ(settings::Settings::getDimensionality(), 3);
+    EXPECT_EQ(Settings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "2"};
     EXPECT_THROW_MSG(

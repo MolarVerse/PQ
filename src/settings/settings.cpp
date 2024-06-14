@@ -44,15 +44,17 @@ void Settings::setJobtype(const std::string_view jobtype)
     const auto jobtypeToLower = utilities::toLowerCopy(jobtype);
 
     if (jobtypeToLower == "mmmd")
-        _jobtype = settings::JobType::MM_MD;
+        setJobtype(settings::JobType::MM_MD);
     else if (jobtypeToLower == "qmmd")
-        _jobtype = settings::JobType::QM_MD;
+        setJobtype(settings::JobType::QM_MD);
     else if (jobtypeToLower == "ring_polymer_qmmd")
-        _jobtype = settings::JobType::RING_POLYMER_QM_MD;
+        setJobtype(settings::JobType::RING_POLYMER_QM_MD);
     else if (jobtypeToLower == "qmmmmd")
-        _jobtype = settings::JobType::QMMM_MD;
+        setJobtype(settings::JobType::QMMM_MD);
+    else if (jobtypeToLower == "mmopt")
+        setJobtype(settings::JobType::MM_OPT);
     else
-        _jobtype = settings::JobType::NONE;
+        setJobtype(settings::JobType::NONE);
 }
 
 /**
@@ -60,7 +62,51 @@ void Settings::setJobtype(const std::string_view jobtype)
  *
  * @param jobtype
  */
-void Settings::setJobtype(const JobType jobtype) { _jobtype = jobtype; }
+void Settings::setJobtype(const JobType jobtype)
+{
+    _jobtype = jobtype;
+
+    switch (jobtype)
+    {
+        case JobType::MM_OPT:   // fallthrough
+        case JobType::MM_MD:
+        {
+            activateMM();
+            deactivateQM();
+            deactivateRingPolymerMD();
+            break;
+        }
+        case JobType::QM_MD:
+        {
+            deactivateMM();
+            activateQM();
+            deactivateRingPolymerMD();
+            break;
+        }
+        case JobType::RING_POLYMER_QM_MD:
+        {
+            deactivateMM();
+            activateQM();
+            activateRingPolymerMD();
+            break;
+        }
+        case JobType::QMMM_MD:
+        {
+            activateMM();
+            activateQM();
+            deactivateRingPolymerMD();
+            break;
+        }
+        case JobType::NONE:   // fallthrough
+        default:
+        {
+            deactivateMM();
+            deactivateQM();
+            deactivateRingPolymerMD();
+            break;
+        }
+    }
+}
 
 /**
  * @brief sets MM to active
@@ -161,7 +207,7 @@ bool Settings::isMDJobType()
  * @return true/false
  *
  */
-bool Settings::isOptJobType() { return _jobtype == JobType::OPT; }
+bool Settings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
 
 /**
  * @brief Returns true if the MM simulations are activated

@@ -10,6 +10,8 @@ set(engine_source_files
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
+    mmoptEngine.cpp
+
     engineOutput.cpp
 )
 

@@ -42,7 +42,7 @@ namespace settings
         QM_MD,
         QMMM_MD,
         RING_POLYMER_QM_MD,
-        OPT,
+        MM_OPT,
         NONE
     };
 
@@ -113,7 +113,7 @@ namespace settings
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
         [[nodiscard]] static bool useKokkos();
-        };
+    };
 
 }   // namespace settings
 
