@@ -26,6 +26,13 @@
 
 namespace opt
 {
+    /**
+     * @class Evaluator
+     *
+     * @brief Base class for all evaluators (e.g. MM, QM, ...)
+     *        Evaluators are used to evaluate forces/hessians
+     *
+     */
     class Evaluator
     {
        public:
@@ -35,4 +42,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif  // _EVALUATOR_HPP_
+#endif   // _EVALUATOR_HPP_

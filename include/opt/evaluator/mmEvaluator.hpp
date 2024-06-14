@@ -28,6 +28,12 @@
 
 namespace opt
 {
+    /**
+     * @class MMEvaluator
+     *
+     * @brief Evaluator to evaluate forces/hessians using MM
+     *
+     */
     class MMEvaluator : public Evaluator
     {
        public:
@@ -37,4 +43,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif // _MM_EVALUATOR_HPP_
+#endif   // _MM_EVALUATOR_HPP_

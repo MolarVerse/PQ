@@ -33,7 +33,7 @@ namespace engine
 
 }   // namespace engine
 
-namespace optimization
+namespace opt
 {
     /**
      * @class Optimizer
@@ -55,6 +55,6 @@ namespace optimization
         virtual void update(const double learningRate) = 0;
     };
 
-}   // namespace optimization
+}   // namespace opt
 
 #endif   // _OPTIMIZER_HPP_

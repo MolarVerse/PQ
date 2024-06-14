@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "constantStrategy.hpp"
+#include "mmEvaluator.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "settings.hpp"
@@ -67,16 +68,18 @@ void OptimizerSetup::setup()
 {
     const auto learningRateStrategy = setupLearningRateStrategy();
     const auto optimizer            = setupEmptyOptimizer();
+    const auto evaluator            = setupEvaluator();
 
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
+    _optEngine.setEvaluator(evaluator);
 }
 
 /**
  * @brief Setup an empty optimizer
  *
  */
-std::shared_ptr<optimization::Optimizer> OptimizerSetup::setupEmptyOptimizer()
+std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs = settings::OptimizerSettings::getNumberOfEpochs();
 
@@ -84,7 +87,7 @@ std::shared_ptr<optimization::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     {
         case settings::Optimizer::STEEPEST_DESCENT:
         {
-            return std::make_shared<optimization::SteepestDescent>(nEpochs);
+            return std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
         }
         default:
@@ -101,7 +104,7 @@ std::shared_ptr<optimization::Optimizer> OptimizerSetup::setupEmptyOptimizer()
  * @brief Setup the learning rate strategy
  *
  */
-std::shared_ptr<optimization::LearningRateStrategy> OptimizerSetup::
+std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
     setupLearningRateStrategy()
 {
     const auto alpha_0 = settings::OptimizerSettings::getInitialLearningRate();
@@ -110,7 +113,7 @@ std::shared_ptr<optimization::LearningRateStrategy> OptimizerSetup::
     {
         case settings::LearningRateStrategy::CONSTANT:
         {
-            return std::make_shared<optimization::ConstantLRStrategy>(alpha_0);
+            return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
         case settings::LearningRateStrategy::DECAY:
         {
@@ -127,4 +130,20 @@ std::shared_ptr<optimization::LearningRateStrategy> OptimizerSetup::
             ));
         }
     }
+}
+
+/**
+ * @brief Setup the evaluator
+ *
+ */
+std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
+{
+    if (settings::Settings::getJobtype() == settings::JobType::MM_OPT)
+        return std::make_shared<opt::MMEvaluator>();
+
+    else
+        throw customException::UserInputException(
+            "Unknown job type for the optimizer in order to setup up the "
+            "evaluator"
+        );
 }

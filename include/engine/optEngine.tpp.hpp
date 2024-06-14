@@ -57,6 +57,17 @@ namespace engine
         _learningRateStrategy = std::make_shared<T>(strategy);
     }
 
+    /**
+     * @brief set the evaluator from a shared pointer
+     *
+     * @param evaluator
+     */
+    template <typename T>
+    inline void OptEngine::makeEvaluator(T evaluator)
+    {
+        _evaluator = std::make_shared<T>(evaluator);
+    }
+
 }   // namespace engine
 
 #endif   // _OPT_ENGINE_TPP_

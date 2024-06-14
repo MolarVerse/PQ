@@ -22,7 +22,7 @@
 
 #include "constantStrategy.hpp"
 
-using namespace optimization;
+using namespace opt;
 
 /**
  * @brief Construct a new ConstantLRStrategy::ConstantLRStrategy object

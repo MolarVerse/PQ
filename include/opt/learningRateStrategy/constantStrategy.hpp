@@ -26,7 +26,7 @@
 
 #include "learningRateStrategy.hpp"
 
-namespace optimization
+namespace opt
 {
     /**
      * @class ConstantLRStrategy
@@ -45,6 +45,6 @@ namespace optimization
         double updateLearningRate() override;
     };
 
-}   // namespace optimization
+}   // namespace opt
 
 #endif   // _CONSTANT_LEARNING_RATE_STRATEGY_HPP_

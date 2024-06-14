@@ -26,15 +26,16 @@
 
 #include <memory>   // for unique_ptr
 
-#include "engine.hpp"               // for Engine
-#include "optimizer.hpp"            // for Optimizer
-#include "learningRateStrategy.hpp" // for learningRateStrategy
+#include "engine.hpp"                 // for Engine
+#include "evaluator.hpp"              // for Evaluator
+#include "learningRateStrategy.hpp"   // for learningRateStrategy
+#include "optimizer.hpp"              // for Optimizer
 
 namespace engine
 {
 
-    using LRStrategy = optimization::LearningRateStrategy;
-    using Optimizer  = optimization::Optimizer;
+    using LRStrategy = opt::LearningRateStrategy;
+    using Evaluator  = opt::Evaluator;
 
     /**
      * @class OptEngine
@@ -45,8 +46,9 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::shared_ptr<Optimizer>  _optimizer;
-        std::shared_ptr<LRStrategy> _learningRateStrategy;
+        std::shared_ptr<opt::Optimizer> _optimizer;
+        std::shared_ptr<LRStrategy>     _learningRateStrategy;
+        std::shared_ptr<opt::Evaluator> _evaluator;
 
        public:
         void run() final {};
@@ -57,15 +59,17 @@ namespace engine
          * standard setter methods      *
          ********************************/
 
-        void setOptimizer(const std::shared_ptr<Optimizer> &optimizer);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer> &optimizer);
         void setLearningRateStrategy(const std::shared_ptr<LRStrategy> &);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator> &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::shared_ptr<Optimizer>  &getOptimizer();
+        [[nodiscard]] std::shared_ptr<opt::Optimizer> &getOptimizer();
         [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
+        [[nodiscard]] std::shared_ptr<opt::Evaluator> &getEvaluator();
 
         /***************************************
          * standard make smart pointer methods *
@@ -76,6 +80,9 @@ namespace engine
 
         template <typename T>
         void makeLearningRateStrategy(T strategy);
+
+        template <typename T>
+        void makeEvaluator(T evaluator);
     };
 
 }   // namespace engine

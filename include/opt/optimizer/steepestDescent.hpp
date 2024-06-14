@@ -26,7 +26,7 @@
 
 #include "optimizer.hpp"
 
-namespace optimization
+namespace opt
 {
     /**
      * @class SteepestDescent
@@ -45,6 +45,6 @@ namespace optimization
         void update(const double learningRate) final;
     };
 
-}   // namespace optimization
+}   // namespace opt
 
 #endif   // _STEEPEST_DESCENT_HPP_

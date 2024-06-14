@@ -24,7 +24,7 @@
 
 #include "optimizer.hpp"
 
-using namespace optimization;
+using namespace opt;
 
 /**
  * @brief Constructor

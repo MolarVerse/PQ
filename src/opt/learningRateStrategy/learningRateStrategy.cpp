@@ -22,7 +22,7 @@
 
 #include "learningRateStrategy.hpp"
 
-using namespace optimization;
+using namespace opt;
 
 /**
  * @brief Construct a new LearningRateStrategy object

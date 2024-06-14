@@ -30,7 +30,7 @@ namespace engine
 
 }   // namespace engine
 
-namespace optimization
+namespace opt
 {
     /**
      * @class LearningRateStrategy
@@ -52,6 +52,6 @@ namespace optimization
         virtual double updateLearningRate() = 0;
     };
 
-}   // namespace optimization
+}   // namespace opt
 
 #endif   // _LEARNING_RATE_STRATEGY_HPP_

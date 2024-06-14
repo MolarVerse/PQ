@@ -23,7 +23,7 @@
 #include "optEngine.hpp"
 
 using namespace engine;
-using namespace optimization;
+using namespace opt;
 
 /**
  * @brief set the optimizer from a shared pointer
@@ -45,6 +45,16 @@ void OptEngine::setLearningRateStrategy(
 )
 {
     _learningRateStrategy = strategy;
+}
+
+/**
+ * @brief set the evaluator from a shared pointer
+ *
+ * @param evaluator
+ */
+void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
+{
+    _evaluator = evaluator;
 }
 
 /***************************
@@ -69,3 +79,10 @@ std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
 {
     return _learningRateStrategy;
 }
+
+/**
+ * @brief get the evaluator
+ *
+ * @return std::shared_ptr<Evaluator>
+ */
+std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }

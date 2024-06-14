@@ -24,7 +24,7 @@
 
 #include <memory>   // for std::shared_ptr
 
-using namespace optimization;
+using namespace opt;
 
 /**
  * @brief Construct a new Optimizer object

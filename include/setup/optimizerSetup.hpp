@@ -33,18 +33,16 @@ namespace engine
 
 }   // namespace engine
 
-namespace optimization
+namespace opt
 {
     class Optimizer;              // Forward declaration
     class LearningRateStrategy;   // Forward declaration
+    class Evaluator;              // Forward declaration
 
-}   // namespace optimization
+}   // namespace opt
 
 namespace setup
 {
-    using Optimizer            = optimization::Optimizer;
-    using LearningRateStrategy = optimization::LearningRateStrategy;
-
     void setupOptimizer(engine::Engine &);
 
     /**
@@ -63,8 +61,9 @@ namespace setup
 
         void setup();
 
-        std::shared_ptr<Optimizer>            setupEmptyOptimizer();
-        std::shared_ptr<LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::Evaluator>            setupEvaluator();
     };
 
 }   // namespace setup
