@@ -21,3 +21,16 @@
 ******************************************************************************/
 
 #include "optEngine.hpp"
+
+using namespace engine;
+using namespace optimization;
+
+/**
+ * @brief set the optimizer from a shared pointer
+ *
+ * @param optimizer
+ */
+void OptEngine::setOptimizer(std::shared_ptr<Optimizer> &optimizer)
+{
+    _optimizer = optimizer;
+}

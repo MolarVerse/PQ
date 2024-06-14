@@ -41,12 +41,10 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::unique_ptr<optimizer::Optimizer> _optimizer;
+        std::shared_ptr<optimization::Optimizer> _optimizer;
 
        public:
-        /***************************
-         * make unique_ptr methods *
-         ***************************/
+        void setOptimizer(std::shared_ptr<optimization::Optimizer> &optimizer);
 
         template <typename T>
         void makeOptimizer(T optimizer);

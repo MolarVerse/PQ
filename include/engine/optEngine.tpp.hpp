@@ -28,12 +28,8 @@
 
 namespace engine
 {
-    /***************************
-     * make unique_ptr methods *
-     ***************************/
-
     /**
-     * @brief make unique_ptr for optimizer
+     * @brief make shared_ptr for optimizer
      *
      * @tparam T
      * @param optimizer
@@ -41,7 +37,7 @@ namespace engine
     template <typename T>
     inline void OptEngine::makeOptimizer(T optimizer)
     {
-        _optimizer = std::make_unique<T>(optimizer);
+        _optimizer = std::make_shared<T>(optimizer);
     }
 }   // namespace engine
 
