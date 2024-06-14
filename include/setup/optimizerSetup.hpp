@@ -24,6 +24,8 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
+#include <memory>   // for shared_ptr
+
 namespace engine
 {
     class Engine;      // Forward declaration
@@ -31,8 +33,18 @@ namespace engine
 
 }   // namespace engine
 
+namespace optimization
+{
+    class Optimizer;              // Forward declaration
+    class LearningRateStrategy;   // Forward declaration
+
+}   // namespace optimization
+
 namespace setup
 {
+    using Optimizer            = optimization::Optimizer;
+    using LearningRateStrategy = optimization::LearningRateStrategy;
+
     void setupOptimizer(engine::Engine &);
 
     /**
@@ -50,6 +62,9 @@ namespace setup
         explicit OptimizerSetup(engine::OptEngine &optEngine);
 
         void setup();
+
+        std::shared_ptr<Optimizer>            setupEmptyOptimizer();
+        std::shared_ptr<LearningRateStrategy> setupLearningRateStrategy();
     };
 
 }   // namespace setup

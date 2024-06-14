@@ -22,13 +22,14 @@
 
 #include "optimizerSetup.hpp"
 
+#include <memory>
+
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "settings.hpp"
 #include "steepestDescent.hpp"
 
 using setup::OptimizerSetup;
-using namespace settings;
 
 /**
  * @brief Wrapper for the optimizer setup
@@ -37,7 +38,7 @@ using namespace settings;
  */
 void setup::setupOptimizer(engine::Engine &engine)
 {
-    if (!Settings::isOptJobType())
+    if (!settings::Settings::isOptJobType())
         return;
 
     engine.getStdoutOutput().writeSetup("optimizer");
@@ -63,23 +64,60 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
-    const auto nEpochs        = OptimizerSettings::getNumberOfEpochs();
-    const auto learningRate_0 = OptimizerSettings::getInitialLearningRate();
+    auto optimizer = setupEmptyOptimizer();
 
-    switch (OptimizerSettings::getOptimizer())
+    _optEngine.setOptimizer(optimizer);
+}
+
+/**
+ * @brief Setup an empty optimizer
+ *
+ */
+std::shared_ptr<optimization::Optimizer> OptimizerSetup::setupEmptyOptimizer()
+{
+    const auto nEpochs = settings::OptimizerSettings::getNumberOfEpochs();
+
+    switch (settings::OptimizerSettings::getOptimizer())
     {
-        case Optimizer::STEEPEST_DESCENT:
+        case settings::Optimizer::STEEPEST_DESCENT:
         {
-            _optEngine.makeOptimizer(
-                optimizer::SteepestDescent(nEpochs, learningRate_0)
-            );
+            return std::make_shared<optimization::SteepestDescent>(nEpochs);
             break;
         }
         default:
         {
             throw customException::UserInputException(std::format(
                 "Unknown optimizer type {}",
-                string(OptimizerSettings::getOptimizer())
+                string(settings::OptimizerSettings::getOptimizer())
+            ));
+        }
+    }
+}
+
+/**
+ * @brief Setup the learning rate strategy
+ *
+ */
+std::shared_ptr<optimization::LearningRateStrategy> OptimizerSetup::
+    setupLearningRateStrategy()
+{
+    const auto alpha_0 = settings::OptimizerSettings::getInitialLearningRate();
+
+    switch (settings::OptimizerSettings::getLearningRateStrategy())
+    {
+        case settings::LearningRateStrategy::CONSTANT:
+        {
+            break;
+        }
+        case settings::LearningRateStrategy::DECAY:
+        {
+            break;
+        }
+        default:
+        {
+            throw customException::UserInputException(std::format(
+                "Unknown learning rate strategy type {}",
+                string(settings::OptimizerSettings::getLearningRateStrategy())
             ));
         }
     }
