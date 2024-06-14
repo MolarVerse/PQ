@@ -24,6 +24,7 @@
 
 #include <memory>
 
+#include "constantStrategy.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "settings.hpp"
@@ -64,7 +65,10 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
+    const auto learningRateStrategy = setupLearningRateStrategy();
+
     auto optimizer = setupEmptyOptimizer();
+    optimizer->setLearningRateStrategy(learningRateStrategy);
 
     _optEngine.setOptimizer(optimizer);
 }
@@ -107,10 +111,13 @@ std::shared_ptr<optimization::LearningRateStrategy> OptimizerSetup::
     {
         case settings::LearningRateStrategy::CONSTANT:
         {
-            break;
+            return std::make_shared<optimization::ConstantLRStrategy>(alpha_0);
         }
         case settings::LearningRateStrategy::DECAY:
         {
+            throw customException::UserInputException(
+                "Decay learning rate strategy not implemented yet"
+            );
             break;
         }
         default:
