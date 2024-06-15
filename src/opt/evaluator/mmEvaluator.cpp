@@ -73,5 +73,6 @@ void MMEvaluator::updateForces()
 
     // _constraints.applyRattle(_simulationBox);
 
+    _physicalDataOld->copy(*_physicalData);
     _simulationBox->updateOldForces();
 }
