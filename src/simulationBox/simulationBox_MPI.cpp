@@ -26,6 +26,7 @@
 
 using simulationBox::SimulationBox;
 
+// TODO: fix issue when compiling with cuda but not with mpi
 #if defined(WITH_MPI) || defined(WITH_CUDA)
 
 /**
@@ -82,6 +83,21 @@ std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
     std::ranges::for_each(_atoms, addInternalGlobalVDWTypes);
 
     return internalGlobalVDWTypes;
+}
+
+/**
+ * @brief flattens molecule indices of each atom into a single vector of size_t
+ *
+ * @return std::vector<size_t>
+ */
+std::vector<size_t> SimulationBox::getMoleculeIndices()
+{
+    std::vector<size_t> moleculeIndices;
+
+    auto addMoleculeIndices = [&moleculeIndices](auto &atom)
+    { moleculeIndices.push_back(atom->getMoleculeIndex()); };
+
+    return moleculeIndices;
 }
 
 /**

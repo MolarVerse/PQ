@@ -144,6 +144,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<size_t> flattenAtomTypes();
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
         [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<size_t> getMoleculeIndices();
 
         [[nodiscard]] std::vector<double> flattenPositions();
         [[nodiscard]] std::vector<double> flattenVelocities();
