@@ -50,6 +50,8 @@ namespace engine
         std::shared_ptr<LRStrategy>     _learningRateStrategy;
         std::shared_ptr<opt::Evaluator> _evaluator;
 
+        physicalData::PhysicalData _physicalDataOld;
+
        public:
         void run() final {};
         void takeStep() final {};
@@ -70,6 +72,8 @@ namespace engine
         [[nodiscard]] std::shared_ptr<opt::Optimizer> &getOptimizer();
         [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
         [[nodiscard]] std::shared_ptr<opt::Evaluator> &getEvaluator();
+
+        [[nodiscard]] physicalData::PhysicalData *getPhysicalDataOldPtr();
 
         /***************************************
          * standard make smart pointer methods *

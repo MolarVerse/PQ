@@ -86,3 +86,13 @@ std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
  * @return std::shared_ptr<Evaluator>
  */
 std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }
+
+/**
+ * @brief get the old physical data pointer
+ *
+ * @return physicalData::PhysicalData*
+ */
+physicalData::PhysicalData *OptEngine::getPhysicalDataOldPtr()
+{
+    return &_physicalDataOld;
+}
