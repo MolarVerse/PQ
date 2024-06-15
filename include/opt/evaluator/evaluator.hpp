@@ -89,6 +89,7 @@ namespace opt
         std::shared_ptr<simulationBox::CellList>        _cellList;
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
         std::shared_ptr<virial::Virial>                 _virial;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
@@ -108,6 +109,7 @@ namespace opt
         void setCellList(const SharedCellList);
         void setForceField(const SharedForceField);
         void setPhysicalData(const SharedPhysicalData);
+        void setPhysicalDataOld(const SharedPhysicalData);
         void setVirial(const SharedVirial);
         void setIntraNonBonded(const SharedIntraNonBond);
     };

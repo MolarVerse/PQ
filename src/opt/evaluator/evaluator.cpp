@@ -103,6 +103,18 @@ void Evaluator::setPhysicalData(
 }
 
 /**
+ * @brief set the old physical data
+ *
+ * @param potential
+ */
+void Evaluator::setPhysicalDataOld(
+    const std::shared_ptr<physicalData::PhysicalData> physicalDataOld
+)
+{
+    _physicalDataOld = physicalDataOld;
+}
+
+/**
  * @brief set the virial
  *
  * @param virial
