@@ -29,9 +29,9 @@
 #include <cstdio>   // for remove
 #include <string>   // for allocator, string
 
-#include "engine.hpp"            // for Engine
 #include "inputFileReader.hpp"   // for InputFileReader
-#include "mdEngine.hpp"          // for MDEngine
+#include "mmmdEngine.hpp"        // for MDEngine
+#include "optEngine.hpp"         // for MDEngine
 
 /**
  * @class TestInputFileReader
@@ -44,10 +44,14 @@ class TestInputFileReader : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _engine          = new engine::Engine();
         _inputFileReader = new input::InputFileReader("input.in", *_engine);
 
-        _mdEngine = new engine::MDEngine();
+        // NOTE: here the MMOPTEngine is used as dummy engine
+        //       for testing the InputFileReader class
+        //       The mdEngine is used only for special cases
+        //       where optEngine is not supported
+        _engine   = new engine::OptEngine();
+        _mdEngine = new engine::MMMDEngine();
         _inputFileReader_mdEngine =
             new input::InputFileReader("input.in", *_mdEngine);
     }

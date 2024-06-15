@@ -24,14 +24,15 @@
 
 #define _TEST_PARAMETER_FILE_READER_HPP_
 
-#include "engine.hpp"                // for Engine
+#include <gtest/gtest.h>   // for Test
+
+#include <string>   // for allocator
+
 #include "fileSettings.hpp"          // for FileSettings
+#include "mmmdEngine.hpp"            // for Engine
 #include "molecule.hpp"              // for Molecule
 #include "parameterFileReader.hpp"   // for ParameterFileReader
 #include "simulationBox.hpp"         // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <string>          // for allocator
 
 /**
  * @class TestParameterFileReader
@@ -41,8 +42,8 @@
  */
 class TestParameterFileReader : public ::testing::Test
 {
-  protected:
-    engine::Engine                                *_engine;
+   protected:
+    engine::Engine                            *_engine;
     input::parameterFile::ParameterFileReader *_parameterFileReader;
 
     void SetUp() override
@@ -53,13 +54,18 @@ class TestParameterFileReader : public ::testing::Test
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(2);
 
-        _engine = new engine::Engine();
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _parameterFileReader =
-            new input::parameterFile::ParameterFileReader("data/parameterFileReader/param.param", *_engine);
+        _parameterFileReader = new input::parameterFile::ParameterFileReader(
+            "data/parameterFileReader/param.param",
+            *_engine
+        );
         settings::FileSettings::setIsParameterFileNameSet();
     }
 

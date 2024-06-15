@@ -38,10 +38,22 @@ namespace settings
     enum class Optimizer : size_t
     {
         NONE,
-        GRADIENT_DESCENT,
+        STEEPEST_DESCENT,
+    };
+
+    /**
+     * @class enum LearningRateStrategy
+     *
+     */
+    enum class LearningRateStrategy : size_t
+    {
+        NONE,
+        CONSTANT,
+        DECAY,
     };
 
     std::string string(const Optimizer method);
+    std::string string(const LearningRateStrategy method);
 
     /**
      * @class OptimizerSettings
@@ -52,13 +64,40 @@ namespace settings
     class OptimizerSettings
     {
        private:
-        static inline Optimizer _optimizer = Optimizer::GRADIENT_DESCENT;
+        // clang-format off
+        static inline Optimizer _optimizer = Optimizer::STEEPEST_DESCENT;
+        static inline LearningRateStrategy _learningRateStrategy = LearningRateStrategy::NONE;
+
+        static inline size_t _nEpochs = defaults::_N_EPOCHS_DEFAULT_;
+
+        static inline double _initialLearningRate      = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
+        static inline bool   _isInitialLearningRateSet = false;
+        // clang-format on
 
        public:
+        /***************************
+         * standard setter methods *
+         ***************************/
+
         static void setOptimizer(const std::string_view &optimizer);
         static void setOptimizer(const Optimizer optimizer);
 
-        static Optimizer getOptimizer();
+        static void setLearningRateStrategy(const std::string_view &);
+        static void setLearningRateStrategy(const LearningRateStrategy);
+
+        static void setNumberOfEpochs(const size_t);
+
+        static void setInitialLearningRate(const double);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] static Optimizer            getOptimizer();
+        [[nodiscard]] static LearningRateStrategy getLearningRateStrategy();
+        [[nodiscard]] static size_t               getNumberOfEpochs();
+        [[nodiscard]] static double               getInitialLearningRate();
+
     };   // namespace settings
 }   // namespace settings
 

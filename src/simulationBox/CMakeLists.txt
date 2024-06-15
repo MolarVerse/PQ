@@ -1,5 +1,6 @@
 set(simulationBox_source_files
     simulationBox.cpp
+    simulationBox_standardMethods.cpp
 
     molecule.cpp
     moleculeType.cpp

@@ -14,6 +14,8 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         constraints
+        connectivity
+        simulationBox
         settings
         utilities
         gtest

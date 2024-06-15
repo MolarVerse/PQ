@@ -47,6 +47,21 @@ void Atom::initMass()
         setMass(constants::atomMassMap.at(keyword));
 }
 
+/**
+ * @brief updates the old position of the atom to the current position
+ */
+void Atom::updateOldPosition() { _positionOld = _position; }
+
+/**
+ * @brief updates the old velocity of the atom to the current velocity
+ */
+void Atom::updateOldVelocity() { _velocityOld = _velocity; }
+
+/**
+ * @brief updates the old force of the atom to the current force
+ */
+void Atom::updateOldForce() { _forceOld = _force; }
+
 /*******************
  *                 *
  * scaling methods *

@@ -186,6 +186,64 @@ potential::Potential &Engine::getPotential() { return *_potential; }
 forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }
 
 /**
+ * @brief get the pointer to the potential
+ *
+ * @return potential::Potential*
+ */
+potential::Potential *Engine::getPotentialPtr() { return _potential.get(); }
+
+/**
+ * @brief get the pointer to the virial
+ *
+ * @return virial::Virial*
+ */
+virial::Virial *Engine::getVirialPtr() { return _virial.get(); }
+
+/**
+ * @brief get the pointer to the cell list
+ *
+ * @return simulationBox::CellList*
+ */
+simulationBox::CellList *Engine::getCellListPtr() { return &_cellList; }
+
+/**
+ * @brief get the pointer to the simulation box
+ *
+ * @return simulationBox::SimulationBox*
+ */
+simulationBox::SimulationBox *Engine::getSimulationBoxPtr()
+{
+    return &_simulationBox;
+}
+
+/**
+ * @brief get the pointer to the physical data
+ *
+ * @return physicalData::PhysicalData*
+ */
+physicalData::PhysicalData *Engine::getPhysicalDataPtr()
+{
+    return &_physicalData;
+}
+
+/**
+ * @brief get the pointer to the constraints
+ *
+ * @return constraints::Constraints*
+ */
+constraints::Constraints *Engine::getConstraintsPtr() { return &_constraints; }
+
+/**
+ * @brief get the pointer to the intra non bonded interactions
+ *
+ * @return intraNonBonded::IntraNonBonded*
+ */
+intraNonBonded::IntraNonBonded *Engine::getIntraNonBondedPtr()
+{
+    return &_intraNonBonded;
+}
+
+/**
  * @brief get the reference to the engine output
  *
  * @return EngineOutput&

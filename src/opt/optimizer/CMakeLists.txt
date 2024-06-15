@@ -1,15 +1,18 @@
 add_library(optimizer
     optimizer.cpp
+
+    steepestDescent.cpp
 )
 
 target_include_directories(optimizer
     PUBLIC
-    ${PROJECT_SOURCE_DIR}/include/optimizer
+    ${PROJECT_SOURCE_DIR}/include/opt/optimizer
 )
 
 target_link_libraries(optimizer
-    PUBLIC
+    PRIVATE
     linearAlgebra
+    simulationBox
 )
 
 install(TARGETS optimizer

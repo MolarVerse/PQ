@@ -73,9 +73,6 @@ namespace engine
         void run() override;
         void writeOutput() override;
 
-        // virtual function to be overwritten by derived classes
-        void takeStep() override {};
-
         /***************************
          * standard getter methods *
          ***************************/

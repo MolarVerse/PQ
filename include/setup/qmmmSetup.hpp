@@ -29,12 +29,14 @@
 
 namespace engine
 {
+    class Engine;         // forward declaration
     class QMMMMDEngine;   // forward declaration
-}
+
+}   // namespace engine
 
 namespace setup
 {
-    void setupQMMM(engine::QMMMMDEngine &);
+    void setupQMMM(engine::Engine &);
 
     /**
      * @class QMSetup
@@ -50,15 +52,13 @@ namespace setup
        public:
         explicit QMMMSetup(engine::QMMMMDEngine &engine) : _engine(engine){};
 
-        void             setup();
-        void             setupQMCenter();
-        void             setupQMOnlyList();
-        void             setupMMOnlyList();
-        std::vector<int> parseSelection(const std::string &selection, const std::string &key);
-        std::vector<int> parseSelectionNoPython(
-            const std::string &selection,
-            const std::string &key
-        );
+        void setup();
+        void setupQMCenter();
+        void setupQMOnlyList();
+        void setupMMOnlyList();
+
+        std::vector<int> parseSelection(const std::string &, const std::string &);
+        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
     };
 
 }   // namespace setup
