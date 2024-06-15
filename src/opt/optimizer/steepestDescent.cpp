@@ -23,6 +23,7 @@
 #include "steepestDescent.hpp"
 
 #include "optimizer.hpp"
+#include "simulationBox.hpp"
 
 using namespace opt;
 
@@ -39,4 +40,14 @@ SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
  *
  * @param learningRate
  */
-void SteepestDescent::update(const double learningRate) {}
+void SteepestDescent::update(const double learningRate)
+{
+    const auto &atoms = _simulationBox->getAtoms();
+
+    for (auto &atom : atoms)
+    {
+        const auto force = atom->getForce();
+
+        atom->addPosition(-learningRate * force);
+    }
+}

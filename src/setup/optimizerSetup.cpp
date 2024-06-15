@@ -92,11 +92,13 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs = settings::OptimizerSettings::getNumberOfEpochs();
 
+    auto optimizer = std::make_shared<opt::Optimizer>();
+
     switch (settings::OptimizerSettings::getOptimizer())
     {
         case settings::Optimizer::STEEPEST_DESCENT:
         {
-            return std::make_shared<opt::SteepestDescent>(nEpochs);
+            optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
         }
         default:
@@ -107,6 +109,10 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
             ));
         }
     }
+
+    optimizer->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
+
+    return optimizer;
 }
 
 /**
