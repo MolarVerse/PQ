@@ -57,7 +57,8 @@ target_link_libraries(engine
     intraNonBonded
     QM
     references
-    optimizer
+
+    optimization
 )
 
 if(BUILD_WITH_KOKKOS)

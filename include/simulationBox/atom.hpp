@@ -63,8 +63,12 @@ namespace simulationBox
 
         linearAlgebra::Vec3D _position;
         linearAlgebra::Vec3D _positionOld;
+
         linearAlgebra::Vec3D _velocity;
+        linearAlgebra::Vec3D _velocityOld;
+
         linearAlgebra::Vec3D _force;
+        linearAlgebra::Vec3D _forceOld;
         linearAlgebra::Vec3D _shiftForce;
 
        public:
@@ -72,16 +76,17 @@ namespace simulationBox
 
         void initMass();
 
+        void updateOldPosition();
+        void updateOldVelocity();
+        void updateOldForce();
+
         /*******************
          * scaling methods *
          *******************/
 
         void scaleVelocity(const double scaleFactor);
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
-        void scaleVelocityOrthogonalSpace(
-            const tensor3D &scaleFactor,
-            const Box      &box
-        );
+        void scaleVelocityOrthogonalSpace(const tensor3D &, const Box &);
 
         /**************************
          * standard adder methods *
@@ -90,11 +95,7 @@ namespace simulationBox
         void addPosition(const linearAlgebra::Vec3D &position);
         void addVelocity(const linearAlgebra::Vec3D &velocity);
         void addForce(const linearAlgebra::Vec3D &force);
-        void addForce(
-            const double force_x,
-            const double force_y,
-            const double force_z
-        );
+        void addForce(const double, const double, const double);
         void addShiftForce(const linearAlgebra::Vec3D &shiftForce);
 
         /***************************

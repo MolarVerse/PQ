@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_HPP_
+#include "learningRateStrategy.hpp"
 
-#define _OPTIMIZER_HPP_
+using namespace opt;
 
-namespace optimizer
+/**
+ * @brief Construct a new LearningRateStrategy object
+ *
+ * @param initialLearningRate
+ */
+LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
+    : _initialLearningRate(initialLearningRate)
 {
-    class Optimizer
-    {
-    public:
-    };
-} // namespace optimizer
-
-#endif // _OPTIMIZER_HPP_
+}

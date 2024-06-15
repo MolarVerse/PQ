@@ -21,3 +21,78 @@
 ******************************************************************************/
 
 #include "optEngine.hpp"
+
+using namespace engine;
+using namespace opt;
+
+/**
+ * @brief set the optimizer from a shared pointer
+ *
+ * @param optimizer
+ */
+void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
+{
+    _optimizer = optimizer;
+}
+
+/**
+ * @brief set the learning rate strategy from a shared pointer
+ *
+ * @param learningRateStrategy
+ */
+void OptEngine::setLearningRateStrategy(
+    const std::shared_ptr<LearningRateStrategy> &strategy
+)
+{
+    _learningRateStrategy = strategy;
+}
+
+/**
+ * @brief set the evaluator from a shared pointer
+ *
+ * @param evaluator
+ */
+void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
+{
+    _evaluator = evaluator;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the optimizer
+ *
+ * @return std::shared_ptr<Optimizer>
+ */
+std::shared_ptr<Optimizer> &OptEngine::getOptimizer() { return _optimizer; }
+
+/**
+ * @brief get the learning rate strategy
+ *
+ * @return std::shared_ptr<LearningRateStrategy>
+ */
+std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
+{
+    return _learningRateStrategy;
+}
+
+/**
+ * @brief get the evaluator
+ *
+ * @return std::shared_ptr<Evaluator>
+ */
+std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }
+
+/**
+ * @brief get the old physical data pointer
+ *
+ * @return physicalData::PhysicalData*
+ */
+physicalData::PhysicalData *OptEngine::getPhysicalDataOldPtr()
+{
+    return &_physicalDataOld;
+}

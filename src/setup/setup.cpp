@@ -35,6 +35,7 @@
 #include "kokkosSetup.hpp"            // for setupKokkos
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "optimizerSetup.hpp"         // for setupOptimizer
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
 #include "parameterFileReader.hpp"    // for readParameterFile
 #include "potentialSetup.hpp"         // for setupPotential
@@ -61,14 +62,12 @@ using namespace input;
  * @param inputFileName
  * @param engine
  */
-void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 {
     auto simulationTimer = timings::Timer("Simulation");
     auto setupTimer      = timings::Timer("Setup");
-    simulationTimer.startTimingsSection();
-    setupTimer.startTimingsSection("TotalSetup");
 
-    engine.getStdoutOutput().writeHeader();
+    startSetup(simulationTimer, setupTimer, engine);
 
     readInputFile(inputFileName, engine);
 
@@ -85,6 +84,37 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     setupKokkos(engine);
 #endif
 
+    endSetup(simulationTimer, setupTimer, engine);
+}
+
+/**
+ * @brief start the setup
+ *
+ * @param engine
+ */
+void setup::startSetup(
+    timings::Timer &simulationTimer,
+    timings::Timer &setupTimer,
+    Engine         &engine
+)
+{
+    simulationTimer.startTimingsSection();
+    setupTimer.startTimingsSection("TotalSetup");
+
+    engine.getStdoutOutput().writeHeader();
+}
+
+/**
+ * @brief end the setup
+ *
+ * @param engine
+ */
+void setup::endSetup(
+    const timings::Timer &simulationTimer,
+    timings::Timer       &setupTimer,
+    Engine               &engine
+)
+{
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 
@@ -119,26 +149,26 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::isQMMMActivated())
-        setupQM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+    if (settings::Settings::isQMActivated())
+        setupQM(engine);
 
-    if (settings::Settings::isQMOnlyActivated())
-        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
-
-    resetKinetics::setupResetKinetics(engine);
+    if (settings::Settings::isMDJobType())
+        resetKinetics::setupResetKinetics(engine);
 
     simulationBox::setupSimulationBox(engine);
 
     setupCellList(engine);
 
-    setupThermostat(engine);
+    if (settings::Settings::isMDJobType())
+    {
+        setupThermostat(engine);
 
-    setupManostat(engine);
+        setupManostat(engine);
+    }
 
     if (settings::Settings::isMMActivated())
     {
-        setupPotential(engine
-        );   // has to be after simulationBox setup due to coulomb radius cutoff
+        setupPotential(engine);
 
         setupIntraNonBonded(engine);
 
@@ -147,8 +177,12 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    setupRingPolymer(engine);
+    if (settings::Settings::isMDJobType())
+        setupRingPolymer(engine);
 
     if (settings::Settings::isQMMMActivated())
-        setupQMMM(dynamic_cast<engine::QMMMMDEngine &>(engine));
+        setupQMMM(engine);
+
+    if (settings::Settings::isOptJobType())
+        setupOptimizer(engine);
 }

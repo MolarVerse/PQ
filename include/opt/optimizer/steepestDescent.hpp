@@ -20,4 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifndef _STEEPEST_DESCENT_HPP_
+
+#define _STEEPEST_DESCENT_HPP_
+
 #include "optimizer.hpp"
+
+namespace opt
+{
+    /**
+     * @class SteepestDescent
+     *
+     * @brief Steepest Descent optimizer
+     *
+     */
+    class SteepestDescent : public Optimizer
+    {
+       public:
+        explicit SteepestDescent(const size_t nEpochs);
+
+        SteepestDescent()        = default;
+        ~SteepestDescent() final = default;
+
+        void update(const double learningRate) final;
+    };
+
+}   // namespace opt
+
+#endif   // _STEEPEST_DESCENT_HPP_

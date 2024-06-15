@@ -37,21 +37,99 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parserOptimizer)
 {
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), Optimizer::GRADIENT_DESCENT);
+    EXPECT_EQ(OptimizerSettings::getOptimizer(), Optimizer::STEEPEST_DESCENT);
 
     OptimizerSettings::setOptimizer("none");
 
     auto parser = InputFileParserOptimizer(*_engine);
-    parser.parseOptimizer({"optimizer", "=", "gradient-descent"}, 0);
+    parser.parseOptimizer({"optimizer", "=", "steepest-descent"}, 0);
     EXPECT_EQ(
         settings::OptimizerSettings::getOptimizer(),
-        settings::Optimizer::GRADIENT_DESCENT
+        settings::Optimizer::STEEPEST_DESCENT
     );
 
     ASSERT_THROW_MSG(
         parser.parseOptimizer({"optimizer", "=", "notValid"}, 0),
         customException::InputFileException,
         "Unknown optimizer method \"notValid\" in input file at line 0.\n"
-        "Possible options are: gradient-descent"
+        "Possible options are: steepest-descent"
+    )
+}
+
+TEST_F(TestInputFileReader, parseNumberOfEpochs)
+{
+    EXPECT_EQ(OptimizerSettings::getNumberOfEpochs(), 100);
+
+    auto parser = InputFileParserOptimizer(*_engine);
+    parser.parseNumberOfEpochs({"n-iterations", "=", "1000"}, 0);
+    EXPECT_EQ(settings::OptimizerSettings::getNumberOfEpochs(), 1000);
+
+    ASSERT_THROW_MSG(
+        parser.parseNumberOfEpochs({"n-iterations", "=", "-1000"}, 0),
+        customException::InputFileException,
+        "Number of epochs must be greater than 0 in input file at line 0."
+    )
+}
+
+TEST_F(TestInputFileReader, parserLearningRateStrategy)
+{
+    EXPECT_EQ(
+        OptimizerSettings::getLearningRateStrategy(),
+        LearningRateStrategy::NONE
+    );
+
+    OptimizerSettings::setLearningRateStrategy("none");
+
+    auto parser = InputFileParserOptimizer(*_engine);
+    parser.parseLearningRateStrategy(
+        {"learning-rate-strategy", "=", "decay"},
+        0
+    );
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        settings::LearningRateStrategy::DECAY
+    );
+
+    parser.parseLearningRateStrategy(
+        {"learning-rate-strategy", "=", "constant"},
+        0
+    );
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        settings::LearningRateStrategy::CONSTANT
+    );
+
+    ASSERT_THROW_MSG(
+        parser.parseLearningRateStrategy(
+            {"learning-rate-strategy", "=", "notValid"},
+            0
+        ),
+        customException::InputFileException,
+        "Unknown learning rate strategy \"notValid\" in input file at line 0.\n"
+        "Possible options are: constant, decay"
+    )
+}
+
+TEST_F(TestInputFileReader, parserInitialLearningRate)
+{
+    EXPECT_EQ(
+        OptimizerSettings::getInitialLearningRate(),
+        defaults::_INITIAL_LEARNING_RATE_DEFAULT_
+    );
+
+    OptimizerSettings::setInitialLearningRate(0.0);
+
+    auto parser = InputFileParserOptimizer(*_engine);
+    parser.parseInitialLearningRate({"initial-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(settings::OptimizerSettings::getInitialLearningRate(), 0.99);
+
+    ASSERT_THROW_MSG(
+        parser.parseInitialLearningRate(
+            {"initial-learning-rate", "=", "-0.99"},
+            0
+        ),
+        customException::InputFileException,
+        "Initial learning rate must be greater than 0.0 in input file at line "
+        "0."
     )
 }

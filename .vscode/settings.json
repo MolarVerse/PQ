@@ -111,7 +111,8 @@
         "stack": "cpp",
         "__bit_reference": "cpp",
         "engine.hpp": "c",
-        "nnls": "cpp"
+        "nnls": "cpp",
+        "nonlinearoptimization": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -153,6 +154,7 @@
         "manostats",
         "manotstat",
         "MMMD",
+        "mmopt",
         "moldescriptor",
         "MOLDESCRIPTOREXCEPTION",
         "moldescritor",

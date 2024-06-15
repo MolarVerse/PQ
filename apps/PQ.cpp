@@ -47,7 +47,7 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
     auto engine = std::unique_ptr<engine::Engine>();
     input::readJobType(commandLineArgs.getInputFileName(), engine);
 
-    setup::setupSimulation(commandLineArgs.getInputFileName(), *engine);
+    setup::setupRequestedJob(commandLineArgs.getInputFileName(), *engine);
 
     /*
         HERE STARTS THE MAIN LOOP

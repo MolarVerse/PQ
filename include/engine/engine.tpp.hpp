@@ -26,12 +26,12 @@
 
 #include "engine.hpp"
 
-/***************************
- * make unique_ptr methods *
- ***************************/
-
 namespace engine
 {
+    /***************************
+     * make unique_ptr methods *
+     ***************************/
+
     /**
      * @brief make unique_ptr for potential
      *

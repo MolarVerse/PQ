@@ -24,20 +24,21 @@
 
 #define _TEST_GUFFDAT_READER_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for __shared_ptr_access, make_shared
+
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "engine.hpp"                    // for Engine
 #include "fileSettings.hpp"              // for FileSettings
 #include "guffDatReader.hpp"             // for GuffDatReader
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
+#include "mmmdEngine.hpp"                // for Engine
 #include "molecule.hpp"                  // for Molecule
 #include "moleculeType.hpp"              // for MoleculeType
 #include "potential.hpp"                 // for PotentialBruteForce, Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, make_shared
 
 /**
  * @class TestGuffDatReader
@@ -47,7 +48,7 @@
  */
 class TestGuffDatReader : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         auto moleculeType1 = simulationBox::MoleculeType();
@@ -87,7 +88,11 @@ class TestGuffDatReader : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        _engine = new engine::Engine();
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
+
         _engine->getSimulationBox().addMoleculeType(moleculeType1);
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
@@ -95,11 +100,17 @@ class TestGuffDatReader : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
 
         _engine->makePotential(potential::PotentialBruteForce());
-        _engine->getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
+        _engine->getPotential().makeNonCoulombPotential(
+            potential::GuffNonCoulomb()
+        );
         _engine->getPotential().makeCoulombPotential(
-            potential::CoulombShiftedPotential(settings::PotentialSettings::getCoulombRadiusCutOff()));
+            potential::CoulombShiftedPotential(
+                settings::PotentialSettings::getCoulombRadiusCutOff()
+            )
+        );
 
-        settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
+        settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat"
+        );
         settings::PotentialSettings::setNonCoulombType("guff");
 
         _guffDatReader = new input::guffdat::GuffDatReader(*_engine);

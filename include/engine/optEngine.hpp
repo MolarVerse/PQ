@@ -24,11 +24,18 @@
 
 #define _OPT_ENGINE_HPP_
 
-#include "engine.hpp"      // for Engine
-#include "optimizer.hpp"   // for Optimizer
+#include <memory>   // for unique_ptr
+
+#include "engine.hpp"                 // for Engine
+#include "evaluator.hpp"              // for Evaluator
+#include "learningRateStrategy.hpp"   // for learningRateStrategy
+#include "optimizer.hpp"              // for Optimizer
 
 namespace engine
 {
+
+    using LRStrategy = opt::LearningRateStrategy;
+    using Evaluator  = opt::Evaluator;
 
     /**
      * @class OptEngine
@@ -39,12 +46,51 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        optimizer::Optimizer optimizer;
+        std::shared_ptr<opt::Optimizer> _optimizer;
+        std::shared_ptr<LRStrategy>     _learningRateStrategy;
+        std::shared_ptr<opt::Evaluator> _evaluator;
+
+        physicalData::PhysicalData _physicalDataOld;
 
        public:
-        // void takeStep() override;
+        void run() final {};
+        void takeStep() final {};
+        void writeOutput() final {};
+
+        /********************************
+         * standard setter methods      *
+         ********************************/
+
+        void setOptimizer(const std::shared_ptr<opt::Optimizer> &optimizer);
+        void setLearningRateStrategy(const std::shared_ptr<LRStrategy> &);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator> &);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] std::shared_ptr<opt::Optimizer> &getOptimizer();
+        [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
+        [[nodiscard]] std::shared_ptr<opt::Evaluator> &getEvaluator();
+
+        [[nodiscard]] physicalData::PhysicalData *getPhysicalDataOldPtr();
+
+        /***************************************
+         * standard make smart pointer methods *
+         ***************************************/
+
+        template <typename T>
+        void makeOptimizer(T optimizer);
+
+        template <typename T>
+        void makeLearningRateStrategy(T strategy);
+
+        template <typename T>
+        void makeEvaluator(T evaluator);
     };
 
 }   // namespace engine
+
+#include "optEngine.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _OPT_ENGINE_HPP_
