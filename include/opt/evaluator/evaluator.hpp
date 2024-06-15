@@ -82,7 +82,7 @@ namespace opt
      */
     class Evaluator
     {
-       private:
+       protected:
         std::shared_ptr<potential::Potential>           _potential;
         std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
@@ -95,6 +95,12 @@ namespace opt
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
+
+        virtual void updateForces() = 0;
+
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setPotential(const SharedPotential);
         void setSimulationBox(const SharedSimBox);

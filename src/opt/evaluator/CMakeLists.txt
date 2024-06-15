@@ -12,6 +12,13 @@ target_include_directories(evaluator
 target_link_libraries(evaluator
     PRIVATE
     linearAlgebra
+    potential
+    constraints
+    physicalData
+    virial
+    simulationBox
+    forceField
+    intraNonBonded
 )
 
 install(TARGETS evaluator

@@ -21,3 +21,55 @@
 ******************************************************************************/
 
 #include "mmEvaluator.hpp"
+
+#include "celllist.hpp"
+#include "constraints.hpp"
+#include "forceFieldClass.hpp"
+#include "intraNonBonded.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
+#include "virial.hpp"
+
+using namespace opt;
+
+/**
+ * @brief update forces
+ *
+ */
+void MMEvaluator::updateForces()
+{
+    // _constraints->applyShake(_simulationBox);
+
+    _cellList->updateCellList(*_simulationBox);
+
+#ifdef WITH_KOKKOS
+    throw std::runtime_error("Kokkos not implemented in Optimizer");
+    _kokkosPotential.calculateForces(
+        _simulationBox,
+        _kokkosSimulationBox,
+        _physicalData,
+        _kokkosLennardJones,
+        _kokkosCoulombWolf
+    );
+#else
+    _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+#endif
+
+    _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+    // _virial->calculateVirial(_simulationBox, _physicalData);
+
+    _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+
+    // _constraints->applyDistanceConstraints(
+    //     _simulationBox,
+    //     _physicalData,
+    //     calculateTotalSimulationTime()
+    // );
+
+    // _constraints.calculateConstraintBondRefs(_simulationBox);
+
+    // _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
+
+    // _constraints.applyRattle(_simulationBox);
+}

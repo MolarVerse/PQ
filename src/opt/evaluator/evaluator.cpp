@@ -24,6 +24,12 @@
 
 using namespace opt;
 
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
 /**
  * @brief set the potential
  *

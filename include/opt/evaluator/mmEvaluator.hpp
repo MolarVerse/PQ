@@ -39,6 +39,8 @@ namespace opt
        public:
         MMEvaluator()          = default;
         virtual ~MMEvaluator() = default;
+
+        void updateForces() override;
     };
 
 }   // namespace opt
