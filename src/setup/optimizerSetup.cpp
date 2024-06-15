@@ -173,6 +173,9 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
     );
     evaluator->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
     )));
+    evaluator->setPhysicalData(
+        SharedPhysicalData(_optEngine.getPhysicalDataOldPtr())
+    );
     evaluator->setIntraNonBonded(
         SharedIntraNonBonded(_optEngine.getIntraNonBondedPtr())
     );
