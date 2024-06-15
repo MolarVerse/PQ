@@ -85,6 +85,17 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 }
 
 /**
+ * @brief copies one physicalData to another
+ *
+ * @param physicalData
+ */
+void PhysicalData::copy(const PhysicalData &physicalData)
+{
+    reset();
+    updateAverages(physicalData);
+}
+
+/**
  * @brief calculates the sum of all physicalData of last steps
  *
  * @param physicalData
