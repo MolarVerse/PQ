@@ -33,8 +33,16 @@ namespace engine
 
 }   // namespace engine
 
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+
+}   // namespace simulationBox
+
 namespace opt
 {
+    using SharedSimulationBox = std::shared_ptr<simulationBox::SimulationBox>;
+
     /**
      * @class Optimizer
      *
@@ -46,6 +54,8 @@ namespace opt
        protected:
         size_t _nEpochs;
 
+        SharedSimulationBox _simulationBox;
+
        public:
         explicit Optimizer(const size_t);
 
@@ -53,6 +63,8 @@ namespace opt
         virtual ~Optimizer() = default;
 
         virtual void update(const double learningRate) = 0;
+
+        void setSimulationBox(const SharedSimulationBox);
     };
 
 }   // namespace opt

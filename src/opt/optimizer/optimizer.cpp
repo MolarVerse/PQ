@@ -33,3 +33,15 @@ using namespace opt;
  * @param initialLearningRate
  */
 Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+
+/**
+ * @brief set simulation box shared pointer
+ *
+ * @param simulationBox
+ */
+void Optimizer::setSimulationBox(
+    const std::shared_ptr<simulationBox::SimulationBox> simulationBox
+)
+{
+    _simulationBox = simulationBox;
+}
