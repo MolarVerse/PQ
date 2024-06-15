@@ -11,6 +11,13 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
+if(BUILD_WITH_CUDA)
+    set(potential_source_files
+        ${potential_source_files}
+        potential_cuda.cpp
+    )
+endif()
+
 add_library(potential
     ${potential_source_files}
 )
@@ -45,6 +52,17 @@ if(BUILD_WITH_KOKKOS)
         Kokkos::kokkos
 
         # Kokkos::kokkoskernels
+    )
+endif()
+
+if(BUILD_WITH_CUDA)
+    target_include_directories(potential
+        PUBLIC
+        ${CUDA_INCLUDE_DIRS}
+    )
+    target_link_libraries(potential
+        PUBLIC
+        ${CUDA_LIBRARIES}
     )
 endif()
 

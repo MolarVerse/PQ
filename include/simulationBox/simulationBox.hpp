@@ -140,7 +140,7 @@ namespace simulationBox
             const size_t atomIndex
         );
 
-#ifdef WITH_MPI
+#if defined(WITH_MPI) || defined(WITH_CUDA)
         [[nodiscard]] std::vector<size_t> flattenAtomTypes();
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
         [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();

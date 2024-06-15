@@ -26,7 +26,7 @@
 
 using simulationBox::SimulationBox;
 
-#ifdef WITH_MPI
+#if defined(WITH_MPI) || defined(WITH_CUDA)
 
 /**
  * @brief flattens atom types of each atom into a single vector of size_t
