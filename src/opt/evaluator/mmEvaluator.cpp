@@ -72,4 +72,6 @@ void MMEvaluator::updateForces()
     // _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     // _constraints.applyRattle(_simulationBox);
+
+    _simulationBox->updateOldForces();
 }

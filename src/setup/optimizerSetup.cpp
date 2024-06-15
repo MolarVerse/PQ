@@ -92,7 +92,7 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs = settings::OptimizerSettings::getNumberOfEpochs();
 
-    auto optimizer = std::make_shared<opt::Optimizer>();
+    std::shared_ptr<opt::Optimizer> optimizer;
 
     switch (settings::OptimizerSettings::getOptimizer())
     {
@@ -153,7 +153,7 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
  */
 std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
 {
-    auto evaluator = std::make_shared<opt::Evaluator>();
+    std::shared_ptr<opt::Evaluator> evaluator;
 
     if (settings::Settings::getJobtype() == settings::JobType::MM_OPT)
         evaluator = std::make_shared<opt::MMEvaluator>();
