@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#if defined(WITH_MPI) || defined(WITH_CUDA)
+
 #include <algorithm>   // for for_each
 
 #include "simulationBox.hpp"
 
 using simulationBox::SimulationBox;
-
-// TODO: fix issue when compiling with cuda but not with mpi
-#if defined(WITH_MPI) || defined(WITH_CUDA)
 
 /**
  * @brief flattens atom types of each atom into a single vector of size_t
@@ -94,8 +93,18 @@ std::vector<size_t> SimulationBox::getMoleculeIndices()
 {
     std::vector<size_t> moleculeIndices;
 
-    auto addMoleculeIndices = [&moleculeIndices](auto &atom)
-    { moleculeIndices.push_back(atom->getMoleculeIndex()); };
+    auto atom_counter = 0;
+
+    auto addMoleculeIndices = [&moleculeIndices, &atom_counter](auto &molecule)
+    {
+        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+        {
+            moleculeIndices.push_back(atom_counter);
+            ++atom_counter;
+        }
+    };
+
+    std::ranges::for_each(_molecules, addMoleculeIndices);
 
     return moleculeIndices;
 }
@@ -255,4 +264,4 @@ void SimulationBox::deFlattenForces(const std::vector<double> &forces)
     std::ranges::for_each(_atoms, setForces);
 }
 
-#endif   // WITH_MPI
+#endif   // WITH_MPI || WITH_CUDA

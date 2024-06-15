@@ -12,7 +12,14 @@ set(simulationBox_source_files
 if(BUILD_WITH_MPI)
     set(simulationBox_source_files
         ${simulationBox_source_files}
-        simulationBox_MPI.cpp
+        simulationBox_parallel.cpp
+    )
+endif()
+
+if(BUILD_WITH_CUDA)
+    set(simulationBox_source_files
+        ${simulationBox_source_files}
+        simulationBox_parallel.cpp
     )
 endif()
 
@@ -31,8 +38,6 @@ if(BUILD_WITH_KOKKOS)
     target_link_libraries(simulationBox
         PUBLIC
         Kokkos::kokkos
-
-        # Kokkos::kokkoskernels
     )
 
     target_include_directories(simulationBox

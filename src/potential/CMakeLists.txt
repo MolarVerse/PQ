@@ -14,7 +14,7 @@ endif()
 if(BUILD_WITH_CUDA)
     set(potential_source_files
         ${potential_source_files}
-        potential_cuda.cpp
+        potential_cuda.cu
     )
 endif()
 
@@ -37,9 +37,6 @@ target_link_libraries(potential
 )
 
 if(BUILD_WITH_KOKKOS)
-    # add_dependencies(potential
-    # kokkos
-    # )
     target_include_directories(potential
         PUBLIC
         ${Kokkos_INCLUDE_DIRS_RET}
@@ -50,20 +47,13 @@ if(BUILD_WITH_KOKKOS)
         nonCoulombPotential_kokkos
         coulombPotential_kokkos
         Kokkos::kokkos
-
-        # Kokkos::kokkoskernels
     )
 endif()
 
 if(BUILD_WITH_CUDA)
-    target_include_directories(potential
-        PUBLIC
-        ${CUDA_INCLUDE_DIRS}
-    )
     target_link_libraries(potential
         PUBLIC
-        ${CUDA_LIBRARIES}
-    )
+        ${CUDA_LIBRARIES})
 endif()
 
 install(TARGETS potential
