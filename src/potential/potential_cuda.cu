@@ -33,6 +33,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 #include "potential.cuh"
+#include "simulationBox_cuda.cuh"
 
 namespace simulationBox
 {
@@ -44,39 +45,21 @@ using namespace potential;
 /**
  * @brief Cuda kernel to calculate forces, coulombic and non-coulombic energy
  *
- * @param atomTypes
- * @param moleculeIndices
- * @param internalGlobalVDWTypes
- * @param molTypes
- * @param partialCharges
- * @param positions
- * @param forces
- * @param numberOfMolecules
+ * @param simulationBox
  * @param coulombEnergy
  * @param nonCoulombEnergy
  */
  __global__ void calculateForcesKernel(
-    double3 boxDimensions,
-    size_t *atomTypes,
-    size_t *moleculeIndices,
-    size_t *internalGlobalVDWTypes,
-    size_t *molTypes,
-    double *partialCharges,
-    double *positions,
-    double *forces,
-    size_t  numberOfMolecules,
-    double *coulombParameters,
+    SimulationBoxCuda_t *simBox,
     double *coulombEnergy,
     double *nonCoulombEnergy
 )
 {
-    
-
     // get thread id
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
     // check if thread id is smaller than number of molecules
-    if (i < numberOfMolecules)
+    if (i < simBox->numAtoms)
     {
         // forces
         double3 forces_i = {0.0, 0.0, 0.0};
@@ -85,76 +68,9 @@ using namespace potential;
         double3 shiftForces_i = {0.0, 0.0, 0.0};
 
         // get atom type, molecule index, molecule type, partial charge and position
-        size_t moleculeIndex_i = moleculeIndices[i];
-        double partialCharge_i = partialCharges[i];
-        size_t vDWType_i  = internalGlobalVDWTypes[i];
-
-        // coulomb cutoff
-        double coulombRadiusCutOff = coulombParameters[0];
-        double coulR2 = coulombRadiusCutOff * coulombRadiusCutOff;
-
-        // get positions of i-th molecule
-        double3 position_i = {
-            positions[3 * i],
-            positions[3 * i + 1],
-            positions[3 * i + 2]
-        };
-
-        for (size_t j = 0; j < numberOfMolecules; ++j)
-        {
-            const auto molecularIndex_j = moleculeIndices[j];
-
-            // check if i-th molecule is equal to j-th molecule
-            if (moleculeIndex_i == molecularIndex_j)
-            {
-                continue;
-            }
-
-            double3 position_j = {
-                positions[3 * j],
-                positions[3 * j + 1],
-                positions[3 * j + 2]
-            };
-
-            // calculate direction vector
-            // TODO: check if direction is correct
-            double3 dxyz = {
-                position_i.x - position_j.x,
-                position_i.y - position_j.y,
-                position_i.z - position_j.z
-            };
-
-            double3 txyz = calculateShiftVector(dxyz, boxDimensions);
-
-            // shift positions
-            dxyz.x += txyz.x;
-            dxyz.y += txyz.y;
-            dxyz.z += txyz.z;
-
-            // distance squared 
-            double r2 = dxyz.x * dxyz.x + dxyz.y * dxyz.y + dxyz.z * dxyz.z;
-
-            // if distance squared is smaller than coulomb radius cutoff
-            if (coulR2 < r2)
-            {
-                continue;
-            }
-
-            // get partial charge of j-th molecule
-            double partialCharge_j = partialCharges[j];
-
-            // calculate distance
-            double distance = sqrt(r2);
-
-            // initialize force 
-            double force = 0.0;
-
-
-            // add atomic coulombic energy
-            // atomicAdd(coulombEnergy, coulombicEnergy);
-        
-
-        }
+        size_t moleculeIndex_i = simBox->moleculeIndices[i];
+        double partialCharge_i = simBox->partialCharges[i];
+        size_t vDWType_i  = simBox->internalGlobalVDWTypes[i];
     }
 }
 
@@ -175,117 +91,11 @@ inline void PotentialCuda::
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    // get box parameters
-    const auto h_boxDimensions = simBox.getBox().getBoxDimensions();
-    double3    d_boxDimensions = {
-        h_boxDimensions[0],
-        h_boxDimensions[1],
-        h_boxDimensions[2]
-    };
+    // cuda simulation box
+    SimulationBox::SimulationBoxCuda *d_simBox = SimulationBoxCuda(simBox.getNumAtoms());
+    d_simBox->transferDataToDevice(simBox);
+    SimulationBoxCuda_t *simBox_t = d_simBox->getSimulationBoxCuda();
 
-    
-    // get Coulomb potential parameters
-    const double h_coulombParameters = _coulombPotential::getCoulombParameters();
-
-    // get simulation parameters from simulation box
-    const auto h_atomTypes       = simBox.flattenAtomTypes();
-    const auto h_moleculeIndices = simBox.getMoleculeIndices();
-    const auto h_internalGlobalVDWTypes =
-        simBox.flattenInternalGlobalVDWTypes();
-    const auto h_molTypes       = simBox.flattenMolTypes();
-    const auto h_partialCharges = simBox.flattenPartialCharges();
-    const auto h_positions      = simBox.flattenPositions();
-
-    // TODO: check if forces are set to zero
-    const auto h_forces = simBox.flattenForces();
-
-    // initialize device memory
-    double *d_coulombParameters;
-    size_t *d_atomTypes;
-    size_t *d_moleculeIndices;
-    size_t *d_internalGlobalVDWTypes;
-    size_t *d_molTypes;
-    double *d_partialCharges;
-    double *d_positions;
-    double *d_forces;
-
-    // allocate memory on device
-    cudaMalloc(
-        &d_coulombParameters,
-        h_coulombParameters.size() * sizeof(double));
-    cudaMalloc(&d_atomTypes, h_atomTypes.size() * sizeof(size_t));
-    cudaMalloc(
-        &d_moleculeIndices,
-        h_moleculeIndices.size() * sizeof(size_t)
-    );
-    cudaMalloc(
-        &d_internalGlobalVDWTypes,
-        h_internalGlobalVDWTypes.size() * sizeof(size_t)
-    );
-    cudaMalloc(
-        &d_internalGlobalVDWTypes,
-        h_internalGlobalVDWTypes.size() * sizeof(size_t)
-    );
-    cudaMalloc(&d_molTypes, h_molTypes.size() * sizeof(size_t));
-    cudaMalloc(
-        &d_partialCharges,
-        h_partialCharges.size() * sizeof(double)
-    );
-    cudaMalloc(&d_positions, h_positions.size() * sizeof(double));
-    cudaMalloc(&d_forces, h_forces.size() * sizeof(double));
-
-    // copy data to device
-    cudaMemcpy(
-        d_coulombParameters,
-        h_coulombParameters.data(),
-        h_coulombParameters.size() * sizeof(double),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_atomTypes,
-        h_atomTypes.data(),
-        h_atomTypes.size() * sizeof(size_t),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_moleculeIndices,
-        h_moleculeIndices.data(),
-        h_moleculeIndices.size() * sizeof(size_t),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_internalGlobalVDWTypes,
-        h_internalGlobalVDWTypes.data(),
-        h_internalGlobalVDWTypes.size() * sizeof(size_t),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_molTypes,
-        h_molTypes.data(),
-        h_molTypes.size() * sizeof(size_t),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_partialCharges,
-        h_partialCharges.data(),
-        h_partialCharges.size() * sizeof(double),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_positions,
-        h_positions.data(),
-        h_positions.size() * sizeof(double),
-        cudaMemcpyHostToDevice
-    );
-    cudaMemcpy(
-        d_forces,
-        h_forces.data(),
-        h_forces.size() * sizeof(double),
-        cudaMemcpyHostToDevice
-    );
-
-    // get number of atoms
-    const size_t numberOfMolecules = simBox.getNumberOfMolecules();
 
     // end transfer timings ---------------------------------------------------
     stopTimingsSection("InterNonBonded - Transfer");
@@ -298,16 +108,7 @@ inline void PotentialCuda::
 
     // calculate forces on device
     calculateForcesKernel<<<grid_size, block_size>>>(
-        d_boxDimensions,
-        d_atomTypes,
-        d_moleculeIndices,
-        d_internalGlobalVDWTypes,
-        d_molTypes,
-        d_partialCharges,
-        d_positions,
-        d_forces,
-        d_coulombParameters,
-        numberOfMolecules,
+        simBox_t,
         &totalCoulombEnergy,
         &totalNonCoulombEnergy
     );

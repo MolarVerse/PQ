@@ -26,16 +26,39 @@
 #include "cuda_runtime.h"
 #include "simulationBox.hpp"
 
-
 /**
     * @brief Namespace for the simulation box
 */
 namespace simulationBox
 {
+    /**
+     * @brief Structure for the simulation box on the device
+     */
+    struct SimulationBoxCuda_t
+    {
+        size_t numAtoms;
+        size_t *numInternalGlobalVDWTypes;
+        double *boxDimensions;
+        size_t *atomTypes;
+        size_t *moleculeIndices;
+        size_t *internalGlobalVDWTypes;
+        size_t *molTypes;
+        double *partialCharges;
+        double *positions;
+        double *forces;
+        double *shiftForces;
+        double *velocities;
+        double *masses;
+    };  // struct SimulationBoxCuda_t
+
+    /**
+     * @brief Class for the simulation box on the device
+     */
     class SimulationBoxCuda : public SimulationBox
     {
         private:
             // device variables
+            size_t numAtoms;
             size_t *_atomTypes;
             size_t *_molTypes;
             size_t *_moleculeIndices;
@@ -50,38 +73,42 @@ namespace simulationBox
 
     public:
         // constructor
-        explicit SimulationBoxCuda(size_t numAtoms){
-            
-        }
+        SimulationBoxCuda(size_t numAtoms);
 
-        // default constructor
-        SimulationBoxCuda() = default;
         // default destructor
-        ~SimulationBoxCuda() = default;
+        ~SimulationBoxCuda();
 
-        void initCudaSimulationBox(simulationBox::SimulationBox &simBox);
+        // transfer data to devide
+        void transferDataToDevice(SimulationBox& simBox);
+        // helper functions
+        void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
         void transferMolTypesFromSimulationBox(SimulationBox& simBox);
         void transferMoleculeIndicesFromSimulationBox(SimulationBox& simBox);
         void transferInternalGlobalVDWTypesFromSimulationBox(
             SimulationBox& simBox
         );
-
         void transferPositionsFromSimulationBox(SimulationBox& simBox);
         void transferVelocitiesFromSimulationBox(SimulationBox& simBox);
         void transferForcesFromSimulationBox(SimulationBox& simBox);
         void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
         void transferMassesFromSimulationBox(SimulationBox& simBox);
         void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
-
         void transferPositionsToSimulationBox(SimulationBox& simBox);
         void transferVelocitiesToSimulationBox(SimulationBox& simBox);
         void transferForcesToSimulationBox(SimulationBox& simBox);
         void transferShiftForcesToSimulationBox(SimulationBox& simBox);
-    }
 
+        // transfer data from device
+        void transferDataFromDevice(SimulationBox& simBox);
+        // helper functions
+        void transferForcesFromDevice(SimulationBox& simBox);
+        void transferShiftForcesFromDevice(SimulationBox& simBox);
 
+        // get device variables
+        SimulationBoxCuda_t getSimulationBoxCuda();
+    };
 
-}   // namespace simulationBox
+};   // namespace simulationBox
 
 #endif // SIMULATIONBOX_CUDA_HPP
      

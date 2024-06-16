@@ -20,6 +20,7 @@ if(BUILD_WITH_CUDA)
     set(simulationBox_source_files
         ${simulationBox_source_files}
         simulationBox_parallel.cpp
+        simulationBox_cuda.cu
     )
 endif()
 
