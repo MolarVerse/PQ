@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr
 
+#include "convergenceSettings.hpp"   // for ConvergenceSettings
 namespace engine
 {
     class OptEngine;   // forward declaration
@@ -56,6 +57,22 @@ namespace opt
 
         SharedSimulationBox _simulationBox;
 
+        bool _enableEnergyConv;
+        bool _enableMaxForceConv;
+        bool _enableRMSForceConv;
+
+        double _relEnergyConv;
+        double _relMaxForceConv;
+        double _relRMSForceConv;
+
+        double _absEnergyConv;
+        double _absMaxForceConv;
+        double _absRMSForceConv;
+
+        settings::ConvStrategy _energyConvStrategy;
+        settings::ConvStrategy _maxForceConvStrategy;
+        settings::ConvStrategy _rmsForceConvStrategy;
+
        public:
         explicit Optimizer(const size_t);
 
@@ -64,7 +81,23 @@ namespace opt
 
         virtual void update(const double learningRate) = 0;
 
+        /***************************
+         * standard setter methods *
+         ***************************/
+
         void setSimulationBox(const SharedSimulationBox);
+
+        void setEnableEnergyConv(const bool);
+        void setEnableMaxForceConv(const bool);
+        void setEnableRMSForceConv(const bool);
+
+        void setRelEnergyConv(const double);
+        void setRelMaxForceConv(const double);
+        void setRelRMSForceConv(const double);
+
+        void setAbsEnergyConv(const double);
+        void setAbsMaxForceConv(const double);
+        void setAbsRMSForceConv(const double);
     };
 
 }   // namespace opt

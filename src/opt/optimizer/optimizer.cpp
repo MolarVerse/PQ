@@ -34,6 +34,12 @@ using namespace opt;
  */
 Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
 
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
 /**
  * @brief set simulation box shared pointer
  *
@@ -44,4 +50,94 @@ void Optimizer::setSimulationBox(
 )
 {
     _simulationBox = simulationBox;
+}
+
+/**
+ * @brief set energy convergence flag
+ *
+ * @param enableEnergyConv
+ */
+void Optimizer::setEnableEnergyConv(const bool enableEnergyConv)
+{
+    _enableEnergyConv = enableEnergyConv;
+}
+
+/**
+ * @brief set max force convergence flag
+ *
+ * @param enableMaxForceConv
+ */
+void Optimizer::setEnableMaxForceConv(const bool enableMaxForceConv)
+{
+    _enableMaxForceConv = enableMaxForceConv;
+}
+
+/**
+ * @brief set RMS force convergence flag
+ *
+ * @param enableRMSForceConv
+ */
+void Optimizer::setEnableRMSForceConv(const bool enableRMSForceConv)
+{
+    _enableRMSForceConv = enableRMSForceConv;
+}
+
+/**
+ * @brief set relative energy convergence
+ *
+ * @param relEnergyConv
+ */
+void Optimizer::setRelEnergyConv(const double relEnergyConv)
+{
+    _relEnergyConv = relEnergyConv;
+}
+
+/**
+ * @brief set relative max force convergence
+ *
+ * @param relMaxForceConv
+ */
+void Optimizer::setRelMaxForceConv(const double relMaxForceConv)
+{
+    _relMaxForceConv = relMaxForceConv;
+}
+
+/**
+ * @brief set relative RMS force convergence
+ *
+ * @param relRMSForceConv
+ */
+void Optimizer::setRelRMSForceConv(const double relRMSForceConv)
+{
+    _relRMSForceConv = relRMSForceConv;
+}
+
+/**
+ * @brief set absolute energy convergence
+ *
+ * @param absEnergyConv
+ */
+void Optimizer::setAbsEnergyConv(const double absEnergyConv)
+{
+    _absEnergyConv = absEnergyConv;
+}
+
+/**
+ * @brief set absolute max force convergence
+ *
+ * @param absMaxForceConv
+ */
+void Optimizer::setAbsMaxForceConv(const double absMaxForceConv)
+{
+    _absMaxForceConv = absMaxForceConv;
+}
+
+/**
+ * @brief set absolute RMS force convergence
+ *
+ * @param absRMSForceConv
+ */
+void Optimizer::setAbsRMSForceConv(const double absRMSForceConv)
+{
+    _absRMSForceConv = absRMSForceConv;
 }
