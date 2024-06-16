@@ -122,6 +122,8 @@ namespace simulationBox
         [[nodiscard]] double calculateTotalForce();
         [[nodiscard]] double calculateRMSForce() const;
         [[nodiscard]] double calculateMaxForce() const;
+        [[nodiscard]] double calculateRMSForceOld() const;
+        [[nodiscard]] double calculateMaxForceOld() const;
         [[nodiscard]] Vec3D  calculateMomentum();
         [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D &);
         [[nodiscard]] Vec3D  calculateBoxDimensionsFromDensity() const;
@@ -194,6 +196,7 @@ namespace simulationBox
         [[nodiscard]] MoleculeType &getMoleculeType(const size_t index);
 
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
+        [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms();
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms();

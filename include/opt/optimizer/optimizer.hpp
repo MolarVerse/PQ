@@ -28,6 +28,7 @@
 #include <memory>    // for shared_ptr
 
 #include "convergenceSettings.hpp"   // for ConvergenceSettings
+#include "typeAliases.hpp"           // for SharedSimulationBox
 namespace engine
 {
     class OptEngine;   // forward declaration
@@ -42,8 +43,6 @@ namespace simulationBox
 
 namespace opt
 {
-    using SharedSimulationBox = std::shared_ptr<simulationBox::SimulationBox>;
-
     /**
      * @class Optimizer
      *
@@ -55,7 +54,8 @@ namespace opt
        protected:
         size_t _nEpochs;
 
-        SharedSimulationBox _simulationBox;
+        pq::SharedSimulationBox _simulationBox;
+        pq::SharedPhysicalData  _physicalData;
 
         bool _enableEnergyConv;
         bool _enableMaxForceConv;
@@ -80,11 +80,14 @@ namespace opt
 
         virtual void update(const double learningRate) = 0;
 
+        [[nodiscard]] bool hasConverged() const;
+
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setSimulationBox(const SharedSimulationBox);
+        void setSimulationBox(const pq::SharedSimulationBox);
+        void setPhysicalData(const pq::SharedPhysicalData);
 
         void setEnableEnergyConv(const bool);
         void setEnableMaxForceConv(const bool);

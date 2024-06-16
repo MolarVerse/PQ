@@ -544,6 +544,30 @@ double SimulationBox::calculateMaxForce() const
 }
 
 /**
+ * @brief calculate rms old force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateRMSForceOld() const
+{
+    const auto scalarForces = getAtomicScalarForcesOld();
+
+    return rms(scalarForces);
+}
+
+/**
+ * @brief calculate max force old of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateMaxForceOld() const
+{
+    const auto scalarForces = getAtomicScalarForcesOld();
+
+    return max(scalarForces);
+}
+
+/**
  * @brief calculate temperature of simulationBox
  *
  */

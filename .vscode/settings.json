@@ -112,7 +112,8 @@
         "__bit_reference": "cpp",
         "engine.hpp": "c",
         "nnls": "cpp",
-        "nonlinearoptimization": "cpp"
+        "nonlinearoptimization": "cpp",
+        "sparseextra": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [

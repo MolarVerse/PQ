@@ -7,6 +7,7 @@ add_library(optimizer
 target_include_directories(optimizer
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/opt/optimizer
+    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(optimizer

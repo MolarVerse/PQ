@@ -4,20 +4,34 @@
 
 #include <cstddef>      // for size_t
 #include <functional>   // for std::function
+#include <memory>       // for std::shared_ptr
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "matrix.hpp"            // for tensor3D
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "vector3d.hpp"          // for Vec3D
+#include "staticMatrix3x3Class.hpp"
+#include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+
+}   // namespace simulationBox
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+
+}   // namespace physicalData
 
 namespace pq
 {
     using strings = std::vector<std::string>;
 
-    using Vec3D            = linearAlgebra::Vec3D;
-    using tensor3D         = linearAlgebra::tensor3D;
-    using StaticMatrix3x3D = linearAlgebra::StaticMatrix3x3<double>;
+    using Vec3D    = linearAlgebra::Vec3D;
+    using tensor3D = linearAlgebra::tensor3D;
+
+    using SharedSimulationBox = std::shared_ptr<simulationBox::SimulationBox>;
+    using SharedPhysicalData  = std::shared_ptr<physicalData::PhysicalData>;
 
 }   // namespace pq
 

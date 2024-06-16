@@ -280,6 +280,13 @@ linearAlgebra::Vec3D Atom::getVelocity() const { return _velocity; }
 linearAlgebra::Vec3D Atom::getForce() const { return _force; }
 
 /**
+ * @brief return the old force of the atom
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D Atom::getForceOld() const { return _forceOld; }
+
+/**
  * @brief return the shift force of the atom
  *
  * @return linearAlgebra::Vec3D

@@ -205,6 +205,23 @@ std::vector<double> SimulationBox::getAtomicScalarForces() const
 }
 
 /**
+ * @brief get atomic scalar forces old
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
+{
+    std::vector<double> atomicScalarForces;
+
+    for (const auto &atom : _atoms)
+    {
+        atomicScalarForces.push_back(norm(atom->getForceOld()));
+    }
+
+    return atomicScalarForces;
+}
+
+/**
  * @brief get all atoms
  *
  * @return std::vector<std::shared_ptr<Atom>>&

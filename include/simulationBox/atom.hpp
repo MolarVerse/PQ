@@ -122,6 +122,7 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3D getPositionOld() const;
         [[nodiscard]] linearAlgebra::Vec3D getVelocity() const;
         [[nodiscard]] linearAlgebra::Vec3D getForce() const;
+        [[nodiscard]] linearAlgebra::Vec3D getForceOld() const;
         [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const;
 
         /***************************

@@ -58,8 +58,8 @@ namespace simulationBox
 
         virtual void setBoxDimensions(const pq::Vec3D &boxDimensions);
 
-        [[nodiscard]] virtual pq::Vec3D            getBoxAngles() const;
-        [[nodiscard]] virtual pq::StaticMatrix3x3D getBoxMatrix() const;
+        [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
+        [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
         [[nodiscard]] virtual pq::Vec3D transformIntoOrthogonalSpace(
             const pq::Vec3D &position

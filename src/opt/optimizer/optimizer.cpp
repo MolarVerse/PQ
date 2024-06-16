@@ -24,6 +24,8 @@
 
 #include <memory>   // for std::shared_ptr
 
+#include "simulationBox.hpp"
+
 using namespace opt;
 
 /**
@@ -33,6 +35,21 @@ using namespace opt;
  * @param initialLearningRate
  */
 Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+
+/**
+ * @brief check if the optimizer has converged
+ *
+ */
+bool Optimizer::hasConverged() const
+{
+    const auto rmsForceOld = _simulationBox->calculateRMSForceOld();
+    const auto rmsForceNew = _simulationBox->calculateRMSForce();
+
+    const auto maxForceOld = _simulationBox->calculateMaxForceOld();
+    const auto maxForceNew = _simulationBox->calculateMaxForce();
+
+    return false
+}
 
 /***************************
  *                         *
@@ -50,6 +67,18 @@ void Optimizer::setSimulationBox(
 )
 {
     _simulationBox = simulationBox;
+}
+
+/**
+ * @brief set physical data shared pointer
+ *
+ * @param physicalData
+ */
+void Optimizer::setPhysicalData(
+    const std::shared_ptr<physicalData::PhysicalData> physicalData
+)
+{
+    _physicalData = physicalData;
 }
 
 /**
