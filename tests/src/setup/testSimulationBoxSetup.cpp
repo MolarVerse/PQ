@@ -427,7 +427,7 @@ TEST_F(TestSetup, noDensity)
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
-        constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
     );
 }
 
@@ -435,7 +435,7 @@ TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
     _engine->getSimulationBox().setDensity(
-        constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
     );
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
@@ -463,7 +463,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
-        constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
     );
 }
 

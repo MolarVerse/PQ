@@ -590,7 +590,7 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
 void SimulationBox::calculateDensity()
 {
     _density = _totalMass / _box->calculateVolume() *
-               constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+               constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_;
 }
 
 /**

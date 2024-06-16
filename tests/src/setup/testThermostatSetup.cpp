@@ -243,7 +243,7 @@ TEST_F(TestSetup, setupThermostat_langevin)
 
     const auto conversionFactor =
         constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_METER_SQUARED_TO_ANGSTROM_SQUARED_ *
+        constants::_M2_TO_ANGSTROM2_ *
         constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *

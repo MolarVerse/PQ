@@ -39,10 +39,9 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
 
 TEST(TestOrthoRhombicBox, calculateBoxDimensionsFromDensity)
 {
-    auto         box = OrthorhombicBox();
-    const double density =
-        1.0 / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
-    const double               totalMass     = 1.0;
+    auto         box       = OrthorhombicBox();
+    const double density   = 1.0 / constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_;
+    const double totalMass = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(
         box.calculateBoxDimensionsFromDensity(totalMass, density),
