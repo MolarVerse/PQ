@@ -7,7 +7,9 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "vector3d.hpp"   // for Vec3D
+#include "matrix.hpp"            // for tensor3D
+#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"          // for Vec3D
 
 namespace pq
 {
