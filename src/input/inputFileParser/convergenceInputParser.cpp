@@ -197,16 +197,16 @@ void ConvInputParser::parseConvergenceStrategy(
     const auto strategy = utilities::toLowerCopy(lineElements[2]);
 
     if ("rigorous" == strategy)
-        ConvSettings::setConvergenceStrategy(ConvStrategy::RIGOROUS);
+        ConvSettings::setConvStrategy(ConvStrategy::RIGOROUS);
 
     else if ("loose" == strategy)
-        ConvSettings::setConvergenceStrategy(ConvStrategy::LOOSE);
+        ConvSettings::setConvStrategy(ConvStrategy::LOOSE);
 
     else if ("absolute" == strategy)
-        ConvSettings::setConvergenceStrategy(ConvStrategy::ABSOLUTE);
+        ConvSettings::setConvStrategy(ConvStrategy::ABSOLUTE);
 
     else if ("relative" == strategy)
-        ConvSettings::setConvergenceStrategy(ConvStrategy::RELATIVE);
+        ConvSettings::setConvStrategy(ConvStrategy::RELATIVE);
 
     else
         throw customException::InputFileException(std::format(
@@ -234,16 +234,16 @@ void ConvInputParser::parseEnergyConvergenceStrategy(
     const auto strategy = utilities::toLowerCopy(lineElements[2]);
 
     if ("rigorous" == strategy)
-        ConvSettings::setEnergyConvergenceStrategy(ConvStrategy::RIGOROUS);
+        ConvSettings::setEnergyConvStrategy(ConvStrategy::RIGOROUS);
 
     else if ("loose" == strategy)
-        ConvSettings::setEnergyConvergenceStrategy(ConvStrategy::LOOSE);
+        ConvSettings::setEnergyConvStrategy(ConvStrategy::LOOSE);
 
     else if ("absolute" == strategy)
-        ConvSettings::setEnergyConvergenceStrategy(ConvStrategy::ABSOLUTE);
+        ConvSettings::setEnergyConvStrategy(ConvStrategy::ABSOLUTE);
 
     else if ("relative" == strategy)
-        ConvSettings::setEnergyConvergenceStrategy(ConvStrategy::RELATIVE);
+        ConvSettings::setEnergyConvStrategy(ConvStrategy::RELATIVE);
 
     else
         throw customException::InputFileException(std::format(
@@ -271,16 +271,16 @@ void ConvInputParser::parseForceConvergenceStrategy(
     const auto strategy = utilities::toLowerCopy(lineElements[2]);
 
     if ("rigorous" == strategy)
-        ConvSettings::setForceConvergenceStrategy(ConvStrategy::RIGOROUS);
+        ConvSettings::setForceConvStrategy(ConvStrategy::RIGOROUS);
 
     else if ("loose" == strategy)
-        ConvSettings::setForceConvergenceStrategy(ConvStrategy::LOOSE);
+        ConvSettings::setForceConvStrategy(ConvStrategy::LOOSE);
 
     else if ("absolute" == strategy)
-        ConvSettings::setForceConvergenceStrategy(ConvStrategy::ABSOLUTE);
+        ConvSettings::setForceConvStrategy(ConvStrategy::ABSOLUTE);
 
     else if ("relative" == strategy)
-        ConvSettings::setForceConvergenceStrategy(ConvStrategy::RELATIVE);
+        ConvSettings::setForceConvStrategy(ConvStrategy::RELATIVE);
 
     else
         throw customException::InputFileException(std::format(
@@ -308,10 +308,10 @@ void ConvInputParser::parseUseEnergyConvergence(
     const auto useEnergyConvergence = utilities::toLowerCopy(lineElements[2]);
 
     if ("true" == useEnergyConvergence)
-        ConvSettings::setUseEnergyConvergence(true);
+        ConvSettings::setUseEnergyConv(true);
 
     else if ("false" == useEnergyConvergence)
-        ConvSettings::setUseEnergyConvergence(false);
+        ConvSettings::setUseEnergyConv(false);
 
     else
         throw customException::InputFileException(std::format(
@@ -339,10 +339,10 @@ void ConvInputParser::parseUseForceConvergence(
     const auto useForceConvergence = utilities::toLowerCopy(lineElements[2]);
 
     if ("true" == useForceConvergence)
-        ConvSettings::setUseForceConvergence(true);
+        ConvSettings::setUseForceConv(true);
 
     else if ("false" == useForceConvergence)
-        ConvSettings::setUseForceConvergence(false);
+        ConvSettings::setUseForceConv(false);
 
     else
         throw customException::InputFileException(std::format(
@@ -370,10 +370,10 @@ void ConvInputParser::parseUseMaxForceConvergence(
     const auto useMaxForceConvergence = utilities::toLowerCopy(lineElements[2]);
 
     if ("true" == useMaxForceConvergence)
-        ConvSettings::setUseMaxForceConvergence(true);
+        ConvSettings::setUseMaxForceConv(true);
 
     else if ("false" == useMaxForceConvergence)
-        ConvSettings::setUseMaxForceConvergence(false);
+        ConvSettings::setUseMaxForceConv(false);
 
     else
         throw customException::InputFileException(std::format(
@@ -401,10 +401,10 @@ void ConvInputParser::parseUseRMSForceConvergence(
     const auto useRMSForceConvergence = utilities::toLowerCopy(lineElements[2]);
 
     if ("true" == useRMSForceConvergence)
-        ConvSettings::setUseRMSForceConvergence(true);
+        ConvSettings::setUseRMSForceConv(true);
 
     else if ("false" == useRMSForceConvergence)
-        ConvSettings::setUseRMSForceConvergence(false);
+        ConvSettings::setUseRMSForceConv(false);
 
     else
         throw customException::InputFileException(std::format(
@@ -441,7 +441,7 @@ void ConvInputParser::parseEnergyConvergence(
             lineNumber
         ));
 
-    ConvSettings::setEnergyConvergence(energyConvergence);
+    ConvSettings::setEnergyConv(energyConvergence);
 }
 
 /**
@@ -470,7 +470,7 @@ void ConvInputParser::parseRelativeEnergyConvergence(
             lineNumber
         ));
 
-    ConvSettings::setRelEnergyConvergence(relativeEnergyConvergence);
+    ConvSettings::setRelEnergyConv(relativeEnergyConvergence);
 }
 
 /**
@@ -499,7 +499,7 @@ void ConvInputParser::parseAbsoluteEnergyConvergence(
             lineNumber
         ));
 
-    ConvSettings::setAbsEnergyConvergence(absoluteEnergyConvergence);
+    ConvSettings::setAbsEnergyConv(absoluteEnergyConvergence);
 }
 
 /**
@@ -527,7 +527,7 @@ void ConvInputParser::parseForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setForceConvergence(forceConvergence);
+    ConvSettings::setForceConv(forceConvergence);
 }
 
 /**
@@ -555,7 +555,7 @@ void ConvInputParser::parseRelativeForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setRelForceConvergence(relativeForceConvergence);
+    ConvSettings::setRelForceConv(relativeForceConvergence);
 }
 
 /**
@@ -583,7 +583,7 @@ void ConvInputParser::parseAbsoluteForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setAbsForceConvergence(absoluteForceConvergence);
+    ConvSettings::setAbsForceConv(absoluteForceConvergence);
 }
 
 /**
@@ -611,7 +611,7 @@ void ConvInputParser::parseMaxForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setMaxForceConvergence(maxForceConvergence);
+    ConvSettings::setMaxForceConv(maxForceConvergence);
 }
 
 /**
@@ -640,7 +640,7 @@ void ConvInputParser::parseRelativeMaxForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setRelMaxForceConvergence(relativeMaxForceConvergence);
+    ConvSettings::setRelMaxForceConv(relativeMaxForceConvergence);
 }
 
 /**
@@ -669,7 +669,7 @@ void ConvInputParser::parseAbsoluteMaxForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setAbsMaxForceConvergence(absoluteMaxForceConvergence);
+    ConvSettings::setAbsMaxForceConv(absoluteMaxForceConvergence);
 }
 
 /**
@@ -697,7 +697,7 @@ void ConvInputParser::parseRMSForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setRMSForceConvergence(rmsForceConvergence);
+    ConvSettings::setRMSForceConv(rmsForceConvergence);
 }
 
 /**
@@ -726,7 +726,7 @@ void ConvInputParser::parseRelativeRMSForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setRelRMSForceConvergence(relativeRMSForceConvergence);
+    ConvSettings::setRelRMSForceConv(relativeRMSForceConvergence);
 }
 
 /**
@@ -755,5 +755,5 @@ void ConvInputParser::parseAbsoluteRMSForceConvergence(
             lineNumber
         ));
 
-    ConvSettings::setAbsRMSForceConvergence(absoluteRMSForceConvergence);
+    ConvSettings::setAbsRMSForceConv(absoluteRMSForceConvergence);
 }

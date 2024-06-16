@@ -56,31 +56,34 @@ namespace settings
     class ConvSettings
     {
        private:
+        static inline std::optional<double> _energyConv;
+        static inline std::optional<double> _relEnergyConv;
+        static inline std::optional<double> _absEnergyConv;
+
+        static inline std::optional<double> _forceConv;
+        static inline std::optional<double> _relForceConv;
+        static inline std::optional<double> _absForceConv;
+
+        static inline std::optional<double> _maxForceConv;
+        static inline std::optional<double> _relMaxForceConv;
+        static inline std::optional<double> _absMaxForceConv;
+
+        static inline std::optional<double> _rmsForceConv;
+        static inline std::optional<double> _relRMSForceConv;
+        static inline std::optional<double> _absRMSForceConv;
+
+        static inline bool _useEnergyConv   = true;
+        static inline bool _useForceConv    = true;
+        static inline bool _useMaxForceConv = true;
+        static inline bool _useRMSForceConv = true;
+
+        static inline std::optional<ConvStrategy> _convStrategy;
+        static inline std::optional<ConvStrategy> _energyConvStrategy;
+        static inline std::optional<ConvStrategy> _forceConvStrategy;
+
         // clang-format off
-        static inline std::optional<double> _energyConvergence;
-        static inline std::optional<double> _relEnergyConvergence;
-        static inline std::optional<double> _absEnergyConvergence;
-
-        static inline std::optional<double> _forceConvergence;
-        static inline std::optional<double> _relForceConvergence;
-        static inline std::optional<double> _absForceConvergence;
-
-        static inline std::optional<double> _maxForceConvergence;
-        static inline std::optional<double> _relMaxForceConvergence;
-        static inline std::optional<double> _absMaxForceConvergence;
-
-        static inline std::optional<double> _rmsForceConvergence;
-        static inline std::optional<double> _relRMSForceConvergence;
-        static inline std::optional<double> _absRMSForceConvergence;
-
-        static inline bool _useEnergyConvergence   = true;
-        static inline bool _useForceConvergence    = true;
-        static inline bool _useMaxForceConvergence = true;
-        static inline bool _useRMSForceConvergence = true;
-
-        static inline ConvStrategy _convergenceStrategy       = ConvStrategy::RIGOROUS;
-        static inline ConvStrategy _energyConvergenceStrategy = ConvStrategy::RIGOROUS;
-        static inline ConvStrategy _forceConvergenceStrategy  = ConvStrategy::RIGOROUS;
+        static inline std::string _defaultEnergyConvStrategy = defaults::_ENERGY_CONV_STRATEGY_DEFAULT_;
+        static inline std::string _defaultForceConvStrategy  = defaults::_FORCE_CONV_STRATEGY_DEFAULT_;
         // clang-format on
 
        public:
@@ -92,64 +95,68 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setEnergyConvergence(const double);
-        static void setRelEnergyConvergence(const double);
-        static void setAbsEnergyConvergence(const double);
+        static void setEnergyConv(const double);
+        static void setRelEnergyConv(const double);
+        static void setAbsEnergyConv(const double);
 
-        static void setForceConvergence(const double);
-        static void setRelForceConvergence(const double);
-        static void setAbsForceConvergence(const double);
+        static void setForceConv(const double);
+        static void setRelForceConv(const double);
+        static void setAbsForceConv(const double);
 
-        static void setMaxForceConvergence(const double);
-        static void setRelMaxForceConvergence(const double);
-        static void setAbsMaxForceConvergence(const double);
+        static void setMaxForceConv(const double);
+        static void setRelMaxForceConv(const double);
+        static void setAbsMaxForceConv(const double);
 
-        static void setRMSForceConvergence(const double);
-        static void setRelRMSForceConvergence(const double);
-        static void setAbsRMSForceConvergence(const double);
+        static void setRMSForceConv(const double);
+        static void setRelRMSForceConv(const double);
+        static void setAbsRMSForceConv(const double);
 
-        static void setUseEnergyConvergence(const bool);
-        static void setUseForceConvergence(const bool);
-        static void setUseMaxForceConvergence(const bool);
-        static void setUseRMSForceConvergence(const bool);
+        static void setUseEnergyConv(const bool);
+        static void setUseForceConv(const bool);
+        static void setUseMaxForceConv(const bool);
+        static void setUseRMSForceConv(const bool);
 
-        static void setConvergenceStrategy(const ConvStrategy);
-        static void setConvergenceStrategy(const std::string_view &);
+        static void setConvStrategy(const ConvStrategy);
+        static void setConvStrategy(const std::string_view &);
 
-        static void setEnergyConvergenceStrategy(const ConvStrategy);
-        static void setEnergyConvergenceStrategy(const std::string_view &);
+        static void setEnergyConvStrategy(const ConvStrategy);
+        static void setEnergyConvStrategy(const std::string_view &);
 
-        static void setForceConvergenceStrategy(const ConvStrategy);
-        static void setForceConvergenceStrategy(const std::string_view &);
+        static void setForceConvStrategy(const ConvStrategy);
+        static void setForceConvStrategy(const std::string_view &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static std::optional<double> getEnergyConvergence();
-        [[nodiscard]] static std::optional<double> getRelEnergyConvergence();
-        [[nodiscard]] static std::optional<double> getAbsEnergyConvergence();
+        [[nodiscard]] static std::optional<double> getEnergyConv();
+        [[nodiscard]] static std::optional<double> getRelEnergyConv();
+        [[nodiscard]] static std::optional<double> getAbsEnergyConv();
 
-        [[nodiscard]] static std::optional<double> getForceConvergence();
-        [[nodiscard]] static std::optional<double> getRelForceConvergence();
-        [[nodiscard]] static std::optional<double> getAbsForceConvergence();
+        [[nodiscard]] static std::optional<double> getForceConv();
+        [[nodiscard]] static std::optional<double> getRelForceConv();
+        [[nodiscard]] static std::optional<double> getAbsForceConv();
 
-        [[nodiscard]] static std::optional<double> getMaxForceConvergence();
-        [[nodiscard]] static std::optional<double> getRelMaxForceConvergence();
-        [[nodiscard]] static std::optional<double> getAbsMaxForceConvergence();
+        [[nodiscard]] static std::optional<double> getMaxForceConv();
+        [[nodiscard]] static std::optional<double> getRelMaxForceConv();
+        [[nodiscard]] static std::optional<double> getAbsMaxForceConv();
 
-        [[nodiscard]] static std::optional<double> getRMSForceConvergence();
-        [[nodiscard]] static std::optional<double> getRelRMSForceConvergence();
-        [[nodiscard]] static std::optional<double> getAbsRMSForceConvergence();
+        [[nodiscard]] static std::optional<double> getRMSForceConv();
+        [[nodiscard]] static std::optional<double> getRelRMSForceConv();
+        [[nodiscard]] static std::optional<double> getAbsRMSForceConv();
 
-        [[nodiscard]] static bool getUseEnergyConvergence();
-        [[nodiscard]] static bool getUseForceConvergence();
-        [[nodiscard]] static bool getUseMaxForceConvergence();
-        [[nodiscard]] static bool getUseRMSForceConvergence();
+        [[nodiscard]] static bool getUseEnergyConv();
+        [[nodiscard]] static bool getUseForceConv();
+        [[nodiscard]] static bool getUseMaxForceConv();
+        [[nodiscard]] static bool getUseRMSForceConv();
 
-        [[nodiscard]] static ConvStrategy getConvergenceStrategy();
-        [[nodiscard]] static ConvStrategy getEnergyConvergenceStrategy();
-        [[nodiscard]] static ConvStrategy getForceConvergenceStrategy();
+        [[nodiscard]] static std::optional<ConvStrategy> getConvStrategy();
+        [[nodiscard]] static std::optional<ConvStrategy> getForceConvStrategy();
+        [[nodiscard]] static std::optional<ConvStrategy> getEnergyConvStrategy(
+        );
+
+        [[nodiscard]] static ConvStrategy getDefaultEnergyConvStrategy();
+        [[nodiscard]] static ConvStrategy getDefaultForceConvStrategy();
     };
 
 }   // namespace settings

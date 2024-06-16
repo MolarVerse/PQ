@@ -70,8 +70,7 @@ namespace opt
         double _absRMSForceConv;
 
         settings::ConvStrategy _energyConvStrategy;
-        settings::ConvStrategy _maxForceConvStrategy;
-        settings::ConvStrategy _rmsForceConvStrategy;
+        settings::ConvStrategy _forceConvStrategy;
 
        public:
         explicit Optimizer(const size_t);
@@ -98,6 +97,9 @@ namespace opt
         void setAbsEnergyConv(const double);
         void setAbsMaxForceConv(const double);
         void setAbsRMSForceConv(const double);
+
+        void setEnergyConvStrategy(const settings::ConvStrategy);
+        void setForceConvStrategy(const settings::ConvStrategy);
     };
 
 }   // namespace opt

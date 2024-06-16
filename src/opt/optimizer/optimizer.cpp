@@ -141,3 +141,27 @@ void Optimizer::setAbsRMSForceConv(const double absRMSForceConv)
 {
     _absRMSForceConv = absRMSForceConv;
 }
+
+/**
+ * @brief set energy convergence strategy
+ *
+ * @param energyConvStrategy
+ */
+void Optimizer::setEnergyConvStrategy(
+    const settings::ConvStrategy energyConvStrategy
+)
+{
+    _energyConvStrategy = energyConvStrategy;
+}
+
+/**
+ * @brief set force convergence strategy
+ *
+ * @param forceConvStrategy
+ */
+void Optimizer::setForceConvStrategy(
+    const settings::ConvStrategy forceConvStrategy
+)
+{
+    _forceConvStrategy = forceConvStrategy;
+}

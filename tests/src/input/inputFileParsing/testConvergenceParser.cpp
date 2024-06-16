@@ -37,25 +37,25 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parserConvergenceStrategy)
 {
-    EXPECT_EQ(ConvSettings::getConvergenceStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RIGOROUS);
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"conv-strategy", "=", "loose"};
     parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvergenceStrategy(), ConvStrategy::LOOSE);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::LOOSE);
 
     lineElements = strings{"conv-strategy", "=", "absolute"};
     parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvergenceStrategy(), ConvStrategy::ABSOLUTE);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::ABSOLUTE);
 
     lineElements = strings{"conv-strategy", "=", "relative"};
     parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvergenceStrategy(), ConvStrategy::RELATIVE);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RELATIVE);
 
     lineElements = strings{"conv-strategy", "=", "rigorous"};
     parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvergenceStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RIGOROUS);
 
     ASSERT_THROW_MSG(
         parser.parseConvergenceStrategy({"conv-strategy", "=", "notValid"}, 0),
@@ -67,40 +67,25 @@ TEST_F(TestInputFileReader, parserConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvergenceStrategy(),
-        ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RIGOROUS);
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"energy-conv-strategy", "=", "loose"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvergenceStrategy(),
-        ConvStrategy::LOOSE
-    );
+    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::LOOSE);
 
     lineElements = strings{"energy-conv-strategy", "=", "absolute"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvergenceStrategy(),
-        ConvStrategy::ABSOLUTE
-    );
+    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::ABSOLUTE);
 
     lineElements = strings{"energy-conv-strategy", "=", "relative"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvergenceStrategy(),
-        ConvStrategy::RELATIVE
-    );
+    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RELATIVE);
 
     lineElements = strings{"energy-conv-strategy", "=", "rigorous"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvergenceStrategy(),
-        ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RIGOROUS);
 
     ASSERT_THROW_MSG(
         parser.parseEnergyConvergenceStrategy(
@@ -116,37 +101,25 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserForceConvergenceStrategy)
 {
-    EXPECT_EQ(
-        ConvSettings::getForceConvergenceStrategy(),
-        ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RIGOROUS);
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"force-conv-strategy", "=", "loose"};
     parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getForceConvergenceStrategy(), ConvStrategy::LOOSE);
+    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::LOOSE);
 
     lineElements = strings{"force-conv-strategy", "=", "absolute"};
     parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getForceConvergenceStrategy(),
-        ConvStrategy::ABSOLUTE
-    );
+    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::ABSOLUTE);
 
     lineElements = strings{"force-conv-strategy", "=", "relative"};
     parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getForceConvergenceStrategy(),
-        ConvStrategy::RELATIVE
-    );
+    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RELATIVE);
 
     lineElements = strings{"force-conv-strategy", "=", "rigorous"};
     parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(
-        ConvSettings::getForceConvergenceStrategy(),
-        ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RIGOROUS);
 
     ASSERT_THROW_MSG(
         parser.parseForceConvergenceStrategy(
@@ -162,17 +135,17 @@ TEST_F(TestInputFileReader, parserForceConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserUseEnergyConvergence)
 {
-    EXPECT_TRUE(ConvSettings::getUseEnergyConvergence());
+    EXPECT_TRUE(ConvSettings::getUseEnergyConv());
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"use-energy-conv", "=", "false"};
     parser.parseUseEnergyConvergence(lineElements, 0);
-    EXPECT_FALSE(ConvSettings::getUseEnergyConvergence());
+    EXPECT_FALSE(ConvSettings::getUseEnergyConv());
 
     lineElements = strings{"use-energy-conv", "=", "true"};
     parser.parseUseEnergyConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getUseEnergyConvergence());
+    EXPECT_TRUE(ConvSettings::getUseEnergyConv());
 
     ASSERT_THROW_MSG(
         parser
@@ -186,17 +159,17 @@ TEST_F(TestInputFileReader, parserUseEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserUseForceConvergence)
 {
-    EXPECT_TRUE(ConvSettings::getUseForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseForceConv());
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"use-force-conv", "=", "false"};
     parser.parseUseForceConvergence(lineElements, 0);
-    EXPECT_FALSE(ConvSettings::getUseForceConvergence());
+    EXPECT_FALSE(ConvSettings::getUseForceConv());
 
     lineElements = strings{"use-force-conv", "=", "true"};
     parser.parseUseForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getUseForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseForceConv());
 
     ASSERT_THROW_MSG(
         parser.parseUseForceConvergence({"use-force-conv", "=", "notValid"}, 0),
@@ -209,17 +182,17 @@ TEST_F(TestInputFileReader, parserUseForceConvergence)
 
 TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
 {
-    EXPECT_TRUE(ConvSettings::getUseMaxForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseMaxForceConv());
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"use-max-force-conv", "=", "false"};
     parser.parseUseMaxForceConvergence(lineElements, 0);
-    EXPECT_FALSE(ConvSettings::getUseMaxForceConvergence());
+    EXPECT_FALSE(ConvSettings::getUseMaxForceConv());
 
     lineElements = strings{"use-max-force-conv", "=", "true"};
     parser.parseUseMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getUseMaxForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseMaxForceConv());
 
     ASSERT_THROW_MSG(
         parser.parseUseMaxForceConvergence(
@@ -236,17 +209,17 @@ TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
 {
-    EXPECT_TRUE(ConvSettings::getUseRMSForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseRMSForceConv());
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"use-rms-force-conv", "=", "false"};
     parser.parseUseRMSForceConvergence(lineElements, 0);
-    EXPECT_FALSE(ConvSettings::getUseRMSForceConvergence());
+    EXPECT_FALSE(ConvSettings::getUseRMSForceConv());
 
     lineElements = strings{"use-rms-force-conv", "=", "true"};
     parser.parseUseRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getUseRMSForceConvergence());
+    EXPECT_TRUE(ConvSettings::getUseRMSForceConv());
 
     ASSERT_THROW_MSG(
         parser.parseUseRMSForceConvergence(
@@ -263,14 +236,14 @@ TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
 
 TEST_F(TestInputFileReader, parserEnergyConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getEnergyConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getEnergyConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"energy-conv", "=", "1e-3"};
     parser.parseEnergyConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getEnergyConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getEnergyConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getEnergyConv().has_value());
+    EXPECT_EQ(ConvSettings::getEnergyConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseEnergyConvergence({"energy-conv", "=", "-1"}, 0),
@@ -282,14 +255,14 @@ TEST_F(TestInputFileReader, parserEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getRelEnergyConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getRelEnergyConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"rel-energy-conv", "=", "1e-3"};
     parser.parseRelativeEnergyConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelEnergyConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getRelEnergyConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getRelEnergyConv().has_value());
+    EXPECT_EQ(ConvSettings::getRelEnergyConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser
@@ -302,14 +275,14 @@ TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getAbsEnergyConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getAbsEnergyConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"abs-energy-conv", "=", "1e-3"};
     parser.parseAbsoluteEnergyConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsEnergyConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getAbsEnergyConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getAbsEnergyConv().has_value());
+    EXPECT_EQ(ConvSettings::getAbsEnergyConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser
@@ -322,14 +295,14 @@ TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"force-conv", "=", "1e-3"};
     parser.parseForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseForceConvergence({"force-conv", "=", "-1"}, 0),
@@ -340,14 +313,14 @@ TEST_F(TestInputFileReader, parserForceConvergence)
 
 TEST_F(TestInputFileReader, parserRelativeForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getRelForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getRelForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"rel-force-conv", "=", "1e-3"};
     parser.parseRelativeForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getRelForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getRelForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getRelForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseRelativeForceConvergence({"rel-force-conv", "=", "-1"}, 0),
@@ -359,14 +332,14 @@ TEST_F(TestInputFileReader, parserRelativeForceConvergence)
 
 TEST_F(TestInputFileReader, parserAbsoluteForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getAbsForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getAbsForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"abs-force-conv", "=", "1e-3"};
     parser.parseAbsoluteForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getAbsForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getAbsForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getAbsForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseAbsoluteForceConvergence({"abs-force-conv", "=", "-1"}, 0),
@@ -378,14 +351,14 @@ TEST_F(TestInputFileReader, parserAbsoluteForceConvergence)
 
 TEST_F(TestInputFileReader, parserMaxForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getMaxForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getMaxForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"max-force-conv", "=", "1e-3"};
     parser.parseMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getMaxForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getMaxForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getMaxForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getMaxForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseMaxForceConvergence({"max-force-conv", "=", "-1"}, 0),
@@ -397,14 +370,14 @@ TEST_F(TestInputFileReader, parserMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserRelativeMaxForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getRelMaxForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getRelMaxForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"rel-max-force-conv", "=", "1e-3"};
     parser.parseRelativeMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelMaxForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getRelMaxForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getRelMaxForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getRelMaxForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseRelativeMaxForceConvergence(
@@ -419,14 +392,14 @@ TEST_F(TestInputFileReader, parserRelativeMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserAbsoluteMaxForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getAbsMaxForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getAbsMaxForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"abs-max-force-conv", "=", "1e-3"};
     parser.parseAbsoluteMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsMaxForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getAbsMaxForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getAbsMaxForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getAbsMaxForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseAbsoluteMaxForceConvergence(
@@ -441,14 +414,14 @@ TEST_F(TestInputFileReader, parserAbsoluteMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserRMSForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getRMSForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getRMSForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"rms-force-conv", "=", "1e-3"};
     parser.parseRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRMSForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getRMSForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getRMSForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getRMSForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseRMSForceConvergence({"rms-force-conv", "=", "-1"}, 0),
@@ -460,14 +433,14 @@ TEST_F(TestInputFileReader, parserRMSForceConvergence)
 
 TEST_F(TestInputFileReader, parserRelativeRMSForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getRelRMSForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getRelRMSForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"rel-rms-force-conv", "=", "1e-3"};
     parser.parseRelativeRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelRMSForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getRelRMSForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getRelRMSForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getRelRMSForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseRelativeRMSForceConvergence(
@@ -482,14 +455,14 @@ TEST_F(TestInputFileReader, parserRelativeRMSForceConvergence)
 
 TEST_F(TestInputFileReader, parserAbsoluteRMSForceConvergence)
 {
-    EXPECT_FALSE(ConvSettings::getAbsRMSForceConvergence().has_value());
+    EXPECT_FALSE(ConvSettings::getAbsRMSForceConv().has_value());
 
     auto parser = ConvInputParser(*_engine);
 
     const auto lineElements = strings{"abs-rms-force-conv", "=", "1e-3"};
     parser.parseAbsoluteRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsRMSForceConvergence().has_value());
-    EXPECT_EQ(ConvSettings::getAbsRMSForceConvergence().value(), 1e-3);
+    EXPECT_TRUE(ConvSettings::getAbsRMSForceConv().has_value());
+    EXPECT_EQ(ConvSettings::getAbsRMSForceConv().value(), 1e-3);
 
     ASSERT_THROW_MSG(
         parser.parseAbsoluteRMSForceConvergence(
