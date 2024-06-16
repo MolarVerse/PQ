@@ -65,11 +65,13 @@ using namespace potential;
     double *positions,
     double *forces,
     size_t  numberOfMolecules,
-    double coulombParameters[1],
+    double *coulombParameters,
     double *coulombEnergy,
     double *nonCoulombEnergy
 )
 {
+    
+
     // get thread id
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -83,9 +85,9 @@ using namespace potential;
         double3 shiftForces_i = {0.0, 0.0, 0.0};
 
         // get atom type, molecule index, molecule type, partial charge and position
-        size_t moleculeIndex = moleculeIndices[i];
-        size_t atomType = atomTypes[i];
-        size_t vDWType  = internalGlobalVDWTypes[i];
+        size_t moleculeIndex_i = moleculeIndices[i];
+        double partialCharge_i = partialCharges[i];
+        size_t vDWType_i  = internalGlobalVDWTypes[i];
 
         // coulomb cutoff
         double coulombRadiusCutOff = coulombParameters[0];
@@ -103,7 +105,7 @@ using namespace potential;
             const auto molecularIndex_j = moleculeIndices[j];
 
             // check if i-th molecule is equal to j-th molecule
-            if (moleculeIndex == molecularIndex_j)
+            if (moleculeIndex_i == molecularIndex_j)
             {
                 continue;
             }
@@ -137,60 +139,24 @@ using namespace potential;
             {
                 continue;
             }
+
+            // get partial charge of j-th molecule
+            double partialCharge_j = partialCharges[j];
+
+            // calculate distance
+            double distance = sqrt(r2);
+
+            // initialize force 
+            double force = 0.0;
+
+
+            // add atomic coulombic energy
+            // atomicAdd(coulombEnergy, coulombicEnergy);
+        
+
         }
     }
 }
-
-/**
- * @brief calculate shift vector
- *
- * @param dxyz
- * @param box
- * @return double3
- */
-__device__ double3 calculateShiftVector(double3 dxyz, double3 boxDimensions)
-{
-    double3 txyz;
-    txyz.x = -boxDimensions.x * round(dxyz.x / boxDimensions.x);
-    txyz.y = -boxDimensions.y * round(dxyz.y / boxDimensions.y);
-    txyz.z = -boxDimensions.z * round(dxyz.z / boxDimensions.z);
-
-    return txyz;
-}
-
-/**
- * @brief calculates coulombic
- * routine.
- *
- * @param distance
- * @param charge_i
- * @param charge_j
- * @param force_i
- * @return void
-*/
-__device__ void calculateCoulombic(
-    double distance,
-    double charge_i,
-    double charge_j,
-    double3 &force_i
-)
-{
-    // calculate coulombic energy
-    double coulombEnergy = charge_i * charge_j / distance;
-
-    // calculate coulombic force
-    double3 coulombForce = {
-        coulombEnergy * distance,
-        coulombEnergy * distance,
-        coulombEnergy * distance
-    };
-
-    // add coulombic force to force_i
-    force_i.x += coulombForce.x;
-    force_i.y += coulombForce.y;
-    force_i.z += coulombForce.z;
-}
-
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for CUDA
@@ -200,7 +166,7 @@ __device__ void calculateCoulombic(
  * @param physicalData
  */
 inline void PotentialCuda::
-    calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
+    calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
 {
     // start transfer timings -------------------------------------------------
     startTimingsSection("InterNonBonded - Transfer");
@@ -219,10 +185,7 @@ inline void PotentialCuda::
 
     
     // get Coulomb potential parameters
-    const double coulombParameters = {
-        CoulombPotential::getCoulombRadiusCutOff()
-
-    };
+    const double h_coulombParameters = _coulombPotential::getCoulombParameters();
 
     // get simulation parameters from simulation box
     const auto h_atomTypes       = simBox.flattenAtomTypes();
@@ -237,6 +200,7 @@ inline void PotentialCuda::
     const auto h_forces = simBox.flattenForces();
 
     // initialize device memory
+    double *d_coulombParameters;
     size_t *d_atomTypes;
     size_t *d_moleculeIndices;
     size_t *d_internalGlobalVDWTypes;
@@ -246,26 +210,79 @@ inline void PotentialCuda::
     double *d_forces;
 
     // allocate memory on device
-    cudaMallocManaged(&d_atomTypes, h_atomTypes.size() * sizeof(size_t));
-    cudaMallocManaged(
+    cudaMalloc(
+        &d_coulombParameters,
+        h_coulombParameters.size() * sizeof(double));
+    cudaMalloc(&d_atomTypes, h_atomTypes.size() * sizeof(size_t));
+    cudaMalloc(
         &d_moleculeIndices,
         h_moleculeIndices.size() * sizeof(size_t)
     );
-    cudaMallocManaged(
+    cudaMalloc(
         &d_internalGlobalVDWTypes,
         h_internalGlobalVDWTypes.size() * sizeof(size_t)
     );
-    cudaMallocManaged(
+    cudaMalloc(
         &d_internalGlobalVDWTypes,
         h_internalGlobalVDWTypes.size() * sizeof(size_t)
     );
-    cudaMallocManaged(&d_molTypes, h_molTypes.size() * sizeof(size_t));
-    cudaMallocManaged(
+    cudaMalloc(&d_molTypes, h_molTypes.size() * sizeof(size_t));
+    cudaMalloc(
         &d_partialCharges,
         h_partialCharges.size() * sizeof(double)
     );
-    cudaMallocManaged(&d_positions, h_positions.size() * sizeof(double));
-    cudaMallocManaged(&d_forces, h_forces.size() * sizeof(double));
+    cudaMalloc(&d_positions, h_positions.size() * sizeof(double));
+    cudaMalloc(&d_forces, h_forces.size() * sizeof(double));
+
+    // copy data to device
+    cudaMemcpy(
+        d_coulombParameters,
+        h_coulombParameters.data(),
+        h_coulombParameters.size() * sizeof(double),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_atomTypes,
+        h_atomTypes.data(),
+        h_atomTypes.size() * sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_moleculeIndices,
+        h_moleculeIndices.data(),
+        h_moleculeIndices.size() * sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_internalGlobalVDWTypes,
+        h_internalGlobalVDWTypes.data(),
+        h_internalGlobalVDWTypes.size() * sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_molTypes,
+        h_molTypes.data(),
+        h_molTypes.size() * sizeof(size_t),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_partialCharges,
+        h_partialCharges.data(),
+        h_partialCharges.size() * sizeof(double),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_positions,
+        h_positions.data(),
+        h_positions.size() * sizeof(double),
+        cudaMemcpyHostToDevice
+    );
+    cudaMemcpy(
+        d_forces,
+        h_forces.data(),
+        h_forces.size() * sizeof(double),
+        cudaMemcpyHostToDevice
+    );
 
     // get number of atoms
     const size_t numberOfMolecules = simBox.getNumberOfMolecules();
@@ -289,7 +306,7 @@ inline void PotentialCuda::
         d_partialCharges,
         d_positions,
         d_forces,
-        coulombParameters,
+        d_coulombParameters,
         numberOfMolecules,
         &totalCoulombEnergy,
         &totalNonCoulombEnergy

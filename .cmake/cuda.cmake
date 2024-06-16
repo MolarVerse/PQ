@@ -1,3 +1,7 @@
 find_package(CUDA 12.4 REQUIRED)
+find_package(CUDAToolkit 12.4 REQUIRED)
+enable_language(CUDA)
+set(CMAKE_CUDA_STANDARD 20)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 include_directories(${CUDA_INCLUDE_DIRS})
 add_definitions(-DWITH_CUDA)

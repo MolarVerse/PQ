@@ -50,6 +50,13 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
+if (BUILD_WITH_CUDA)
+    target_include_directories(potential
+        PUBLIC
+        ${CUDA_INCLUDE_DIRS}
+    )
+endif()
+
 install(TARGETS potential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

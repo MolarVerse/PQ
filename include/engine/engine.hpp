@@ -120,6 +120,7 @@ namespace engine
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
         potential::KokkosPotential         _kokkosPotential;
 #endif
+
 #ifdef WITH_CUDA
         potential::PotentialCuda _cudaPotential;
 #endif
