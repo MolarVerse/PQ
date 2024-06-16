@@ -7,10 +7,16 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-namespace types
+#include "vector3d.hpp"   // for Vec3D
+
+namespace pq
 {
     using strings = std::vector<std::string>;
 
-}   // namespace types
+    using Vec3D            = linearAlgebra::Vec3D;
+    using tensor3D         = linearAlgebra::tensor3D;
+    using StaticMatrix3x3D = linearAlgebra::StaticMatrix3x3<double>;
+
+}   // namespace pq
 
 #endif   // _TYPE_ALIASES_HPP_

@@ -41,11 +41,11 @@ namespace engine
 namespace input
 {
     void checkEqualSign(const std::string_view &, const size_t);
-    void checkCommand(const types::strings &, const size_t);
-    void checkCommandArray(const types::strings &, const size_t);
+    void checkCommand(const pq::strings &, const size_t);
+    void checkCommandArray(const pq::strings &, const size_t);
 
     // special type definition for the parsing functions
-    using ParseFunc = std::function<void(const types::strings &, const size_t)>;
+    using ParseFunc = std::function<void(const pq::strings &, const size_t)>;
 
     /**
      * @class InputFileParser
