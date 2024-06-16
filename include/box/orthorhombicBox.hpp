@@ -24,7 +24,8 @@
 
 #define _ORTHORHOMBIC_BOX_HPP_
 
-#include "box.hpp"   // for Box
+#include "box.hpp"           // for Box
+#include "typeAliases.hpp"   // for tensor3D, Vec3D
 
 namespace simulationBox
 {
@@ -36,16 +37,19 @@ namespace simulationBox
      */
     class OrthorhombicBox : public Box
     {
-      public:
+       public:
         [[nodiscard]] double calculateVolume() override;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override;
+        void applyPBC(pq::Vec3D &position) const override;
+        void scaleBox(const pq::tensor3D &scalingTensor) override;
 
-        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
+        [[nodiscard]] pq::Vec3D calculateShiftVector(const pq::Vec3D &)
+            const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const override;
-
-        [[nodiscard]] linearAlgebra::Vec3D calculateBoxDimensionsFromDensity(const double totalMass, const double density);
+        [[nodiscard]] pq::Vec3D calculateBoxDimensionsFromDensity(
+            const double totalMass,
+            const double density
+        );
     };
 
 }   // namespace simulationBox
