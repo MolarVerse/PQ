@@ -124,22 +124,6 @@ namespace potential
         }
     };
 
-#ifdef WITH_CUDA
-    /**
-     * @class PotentialCuda
-     *
-     * @brief cuda implementation of the potential
-     *
-     */
-    class PotentialCuda : public Potential
-    {
-       public:
-        ~PotentialCuda();
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
-            override;
-    };
-#endif   // WITH_CUDA
-
     /**
      * @class PotentialBruteForce
      *

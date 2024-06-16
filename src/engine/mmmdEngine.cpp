@@ -85,6 +85,8 @@ void MMMDEngine::takeStep()
         _kokkosLennardJones,
         _kokkosCoulombWolf
     );
+#elseif WITH_CUDA
+    _cudaPotential.calculateForces(_simulationBox, _physicalData, _cellList);
 #else
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 #endif

@@ -50,12 +50,6 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
-if(BUILD_WITH_CUDA)
-    target_link_libraries(potential
-        PUBLIC
-        ${CUDA_LIBRARIES})
-endif()
-
 install(TARGETS potential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -23,15 +23,16 @@
 
 #include "box.hpp"                // for Box
 #include "coulombPotential.hpp"   // for CoulombPotential
+#include "coulombWolf.hpp"        // for CoulombWolf
 #include "cuda_runtime.h"
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
-#include "potential.hpp"
+#include "potential.hpp"             // for Potential
 #include "simulationBox.hpp"   // for SimulationBox
 
-#include "kernels.cu" 
+#include "potential.cuh"
 
 namespace simulationBox
 {
@@ -39,8 +40,6 @@ namespace simulationBox
 }   // namespace simulationBox
 
 using namespace potential;
-
-PotentialCuda::~PotentialCuda() = default;
 
 /**
  * @brief Cuda kernel to calculate forces, coulombic and non-coulombic energy
@@ -66,6 +65,7 @@ PotentialCuda::~PotentialCuda() = default;
     double *positions,
     double *forces,
     size_t  numberOfMolecules,
+    double coulombParameters[1],
     double *coulombEnergy,
     double *nonCoulombEnergy
 )
@@ -82,9 +82,14 @@ PotentialCuda::~PotentialCuda() = default;
         // shift forces
         double3 shiftForces_i = {0.0, 0.0, 0.0};
 
-        // get atom type
+        // get atom type, molecule index, molecule type, partial charge and position
+        size_t moleculeIndex = moleculeIndices[i];
         size_t atomType = atomTypes[i];
         size_t vDWType  = internalGlobalVDWTypes[i];
+
+        // coulomb cutoff
+        double coulombRadiusCutOff = coulombParameters[0];
+        double coulR2 = coulombRadiusCutOff * coulombRadiusCutOff;
 
         // get positions of i-th molecule
         double3 position_i = {
@@ -95,11 +100,43 @@ PotentialCuda::~PotentialCuda() = default;
 
         for (size_t j = 0; j < numberOfMolecules; ++j)
         {
+            const auto molecularIndex_j = moleculeIndices[j];
+
+            // check if i-th molecule is equal to j-th molecule
+            if (moleculeIndex == molecularIndex_j)
+            {
+                continue;
+            }
+
             double3 position_j = {
                 positions[3 * j],
                 positions[3 * j + 1],
                 positions[3 * j + 2]
             };
+
+            // calculate direction vector
+            // TODO: check if direction is correct
+            double3 dxyz = {
+                position_i.x - position_j.x,
+                position_i.y - position_j.y,
+                position_i.z - position_j.z
+            };
+
+            double3 txyz = calculateShiftVector(dxyz, boxDimensions);
+
+            // shift positions
+            dxyz.x += txyz.x;
+            dxyz.y += txyz.y;
+            dxyz.z += txyz.z;
+
+            // distance squared 
+            double r2 = dxyz.x * dxyz.x + dxyz.y * dxyz.y + dxyz.z * dxyz.z;
+
+            // if distance squared is smaller than coulomb radius cutoff
+            if (coulR2 < r2)
+            {
+                continue;
+            }
         }
     }
 }
@@ -120,6 +157,40 @@ __device__ double3 calculateShiftVector(double3 dxyz, double3 boxDimensions)
 
     return txyz;
 }
+
+/**
+ * @brief calculates coulombic
+ * routine.
+ *
+ * @param distance
+ * @param charge_i
+ * @param charge_j
+ * @param force_i
+ * @return void
+*/
+__device__ void calculateCoulombic(
+    double distance,
+    double charge_i,
+    double charge_j,
+    double3 &force_i
+)
+{
+    // calculate coulombic energy
+    double coulombEnergy = charge_i * charge_j / distance;
+
+    // calculate coulombic force
+    double3 coulombForce = {
+        coulombEnergy * distance,
+        coulombEnergy * distance,
+        coulombEnergy * distance
+    };
+
+    // add coulombic force to force_i
+    force_i.x += coulombForce.x;
+    force_i.y += coulombForce.y;
+    force_i.z += coulombForce.z;
+}
+
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for CUDA
@@ -144,6 +215,13 @@ inline void PotentialCuda::
         h_boxDimensions[0],
         h_boxDimensions[1],
         h_boxDimensions[2]
+    };
+
+    
+    // get Coulomb potential parameters
+    const double coulombParameters = {
+        CoulombPotential::getCoulombRadiusCutOff()
+
     };
 
     // get simulation parameters from simulation box
@@ -211,6 +289,7 @@ inline void PotentialCuda::
         d_partialCharges,
         d_positions,
         d_forces,
+        coulombParameters,
         numberOfMolecules,
         &totalCoulombEnergy,
         &totalNonCoulombEnergy

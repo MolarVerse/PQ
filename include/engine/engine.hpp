@@ -45,6 +45,10 @@
 #include "simulationBox_kokkos.hpp"
 #endif
 
+#ifdef WITH_CUDA
+#include "potential.cuh"
+#endif
+
 namespace output
 {
     class EnergyOutput;                   // forward declaration
@@ -83,6 +87,10 @@ namespace engine
     using KokkosPotential     = potential::KokkosPotential;
 #endif
 
+#ifdef WITH_CUDA
+    using PotentialCuda = potential::PotentialCuda;
+#endif
+
     /**
      * @class Engine
      *
@@ -111,6 +119,9 @@ namespace engine
         potential::KokkosLennardJones      _kokkosLennardJones;
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
         potential::KokkosPotential         _kokkosPotential;
+#endif
+#ifdef WITH_CUDA
+        potential::PotentialCuda _cudaPotential;
 #endif
 
         UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();
