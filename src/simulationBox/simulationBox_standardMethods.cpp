@@ -188,6 +188,23 @@ MoleculeType &SimulationBox::getMoleculeType(const size_t index)
 }
 
 /**
+ * @brief get atomic scalar forces
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::getAtomicScalarForces() const
+{
+    std::vector<double> atomicScalarForces;
+
+    for (const auto &atom : _atoms)
+    {
+        atomicScalarForces.push_back(norm(atom->getForce()));
+    }
+
+    return atomicScalarForces;
+}
+
+/**
  * @brief get all atoms
  *
  * @return std::vector<std::shared_ptr<Atom>>&

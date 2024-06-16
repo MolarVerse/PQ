@@ -31,6 +31,7 @@
 #include "exceptions.hpp"          // for RstFileException, UserInputException
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "settings.hpp"            // for Settings
+#include "stlVector.hpp"           // for rms
 
 using simulationBox::Molecule;
 using simulationBox::MoleculeType;
@@ -516,6 +517,30 @@ double SimulationBox::calculateTotalForce()
     );
 
     return norm(totalForce);
+}
+
+/**
+ * @brief calculate RMS force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateRMSForce() const
+{
+    const auto scalarForces = getAtomicScalarForces();
+
+    return rms(scalarForces);
+}
+
+/**
+ * @brief calculate max scalar force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateMaxForce() const
+{
+    const auto scalarForces = getAtomicScalarForces();
+
+    return max(scalarForces);
 }
 
 /**

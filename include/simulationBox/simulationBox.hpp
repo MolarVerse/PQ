@@ -120,11 +120,12 @@ namespace simulationBox
 
         [[nodiscard]] double calculateTemperature();
         [[nodiscard]] double calculateTotalForce();
+        [[nodiscard]] double calculateRMSForce() const;
+        [[nodiscard]] double calculateMaxForce() const;
         [[nodiscard]] Vec3D  calculateMomentum();
         [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D &);
-
-        [[nodiscard]] Vec3D calculateBoxDimensionsFromDensity() const;
-        [[nodiscard]] Vec3D calculateShiftVector(const Vec3D &position) const;
+        [[nodiscard]] Vec3D  calculateBoxDimensionsFromDensity() const;
+        [[nodiscard]] Vec3D  calculateShiftVector(const Vec3D &position) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -191,6 +192,8 @@ namespace simulationBox
         [[nodiscard]] Atom         &getQMAtom(const size_t index);
         [[nodiscard]] Molecule     &getMolecule(const size_t index);
         [[nodiscard]] MoleculeType &getMoleculeType(const size_t index);
+
+        [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
 
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms();
         [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms();
