@@ -29,6 +29,7 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
+#include "convergenceInputParser.hpp"       // for ConvergenceInputParser
 #include "engine.hpp"                       // for Engine
 #include "exceptions.hpp"                   // for InputFileException
 #include "inputFileParserCellList.hpp"      // for InputFileParserCellList
@@ -40,7 +41,6 @@
 #include "inputFileParserIntegrator.hpp"      // for InputFileParserIntegrator
 #include "inputFileParserManostat.hpp"        // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"      // for InputFileParserNonCoulomb
-#include "inputFileParserOptimizer.hpp"       // for InputFileParserOptimizer
 #include "inputFileParserOutput.hpp"          // for InputFileParserOutput
 #include "inputFileParserQM.hpp"              // for InputFileParserQM
 #include "inputFileParserQMMM.hpp"            // for InputFileParserQM
@@ -50,6 +50,7 @@
 #include "inputFileParserThermostat.hpp"      // for InputFileParserThermostat
 #include "inputFileParserTimings.hpp"         // for InputFileParserTimings
 #include "inputFileParserVirial.hpp"          // for InputFileParserVirial
+#include "optInputParser.hpp"                 // for OptInputParser
 #include "stringUtilities.hpp"   // for getLineCommands, removeComments, splitString, toLowerCopy
 
 using namespace input;
@@ -89,7 +90,9 @@ InputFileReader::InputFileReader(
     _parsers.push_back(std::make_unique<InputFileParserQM>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserQMMM>(_engine));
     _parsers.push_back(std::make_unique<InputFileParserRingPolymer>(_engine));
-    _parsers.push_back(std::make_unique<InputFileParserOptimizer>(_engine));
+
+    _parsers.push_back(std::make_unique<OptInputParser>(_engine));
+    _parsers.push_back(std::make_unique<ConvInputParser>(_engine));
 
     addKeywords();
 }

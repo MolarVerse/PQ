@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "inputFileParserOptimizer.hpp"
+#include "optInputParser.hpp"
 
 #include <format>   // for std::format
 #include <string>   // for std::string
@@ -37,33 +37,35 @@ using namespace settings;
  *
  * @details following keywords are added:
  * - optimizer <string>
+ * - n-iterations <int>
+ * - learning-rate-strategy <string>
+ * - initial-learning-rate <double>
  *
  * @param engine The engine
  */
-InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
-    : InputFileParser(engine)
+OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         "optimizer",
-        bind_front(&InputFileParserOptimizer::parseOptimizer, this),
+        bind_front(&OptInputParser::parseOptimizer, this),
         false
     );
 
     addKeyword(
         "n-iterations",
-        bind_front(&InputFileParserOptimizer::parseNumberOfEpochs, this),
+        bind_front(&OptInputParser::parseNumberOfEpochs, this),
         false
     );
 
     addKeyword(
         "learning-rate-strategy",
-        bind_front(&InputFileParserOptimizer::parseLearningRateStrategy, this),
+        bind_front(&OptInputParser::parseLearningRateStrategy, this),
         false
     );
 
     addKeyword(
         "initial-learning-rate",
-        bind_front(&InputFileParserOptimizer::parseInitialLearningRate, this),
+        bind_front(&OptInputParser::parseInitialLearningRate, this),
         false
     );
 }
@@ -77,7 +79,7 @@ InputFileParserOptimizer::InputFileParserOptimizer(engine::Engine &engine)
  * @throws customException::InputFileException if the optimizer method is
  * unknown
  */
-void InputFileParserOptimizer::parseOptimizer(
+void OptInputParser::parseOptimizer(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -107,7 +109,7 @@ void InputFileParserOptimizer::parseOptimizer(
  * @throws customException::InputFileException if the number of epochs is less
  * than or equal to 0
  */
-void InputFileParserOptimizer::parseNumberOfEpochs(
+void OptInputParser::parseNumberOfEpochs(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -135,7 +137,7 @@ void InputFileParserOptimizer::parseNumberOfEpochs(
  * @throws customException::InputFileException if the learning rate strategy is
  * unknown
  */
-void InputFileParserOptimizer::parseLearningRateStrategy(
+void OptInputParser::parseLearningRateStrategy(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -171,7 +173,7 @@ void InputFileParserOptimizer::parseLearningRateStrategy(
  * @throws customException::InputFileException if the initial learning rate is
  * less than or equal to 0.0
  */
-void InputFileParserOptimizer::parseInitialLearningRate(
+void OptInputParser::parseInitialLearningRate(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )

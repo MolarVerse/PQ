@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_OPTIMIZER_HPP_
+#ifndef _OPT_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_OPTIMIZER_HPP_
+#define _OPT_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
 
@@ -31,15 +31,15 @@ namespace input
     using strings = std::vector<std::string>;
 
     /**
-     * @class InputFileParserOptimizer
+     * @class OptInputParser
      *
      * @brief Parses the input file for the optimizer
      *
      */
-    class InputFileParserOptimizer : public InputFileParser
+    class OptInputParser : public InputFileParser
     {
        public:
-        explicit InputFileParserOptimizer(engine::Engine &);
+        explicit OptInputParser(engine::Engine &);
 
         void parseOptimizer(const strings &, const size_t);
 
@@ -55,4 +55,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_OPTIMIZER_HPP_
+#endif   // _OPT_INPUT_PARSER_HPP_

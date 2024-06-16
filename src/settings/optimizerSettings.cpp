@@ -145,7 +145,7 @@ void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
  *
  * @return Optimizer
  */
-Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
+settings::Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
 
 /**
  * @brief returns the learning rate strategy as string

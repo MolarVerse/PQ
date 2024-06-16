@@ -24,8 +24,10 @@
 
 #define _OPTIMIZER_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
+#include <cstddef>       // for size_t
+#include <optional>      // for optional
+#include <string>        // for string
+#include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
 

@@ -18,7 +18,9 @@ set(source_files
     testParserFiles.cpp
     testParserQM.cpp
     testParserRingPolymer.cpp
-    testParserOptimizer.cpp
+
+    testOptParser.cpp
+    testConvergenceParser.cpp
 )
 
 foreach(source_file ${source_files})

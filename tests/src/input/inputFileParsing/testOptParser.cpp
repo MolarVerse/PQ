@@ -24,13 +24,13 @@
 
 #include <string>   // for string, allocator
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "inputFileParser.hpp"   // for readInput
-#include "inputFileParserOptimizer.hpp"   // for InputFileParserOptimizer
-#include "optimizerSettings.hpp"          // for OptimizerSettings
-#include "testInputFileReader.hpp"        // for TestInputFileReader
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "exceptions.hpp"            // for InputFileException, customException
+#include "gtest/gtest.h"             // for Message, TestPartResult
+#include "inputFileParser.hpp"       // for readInput
+#include "optInputParser.hpp"        // for InputFileParserOptimizer
+#include "optimizerSettings.hpp"     // for OptimizerSettings
+#include "testInputFileReader.hpp"   // for TestInputFileReader
+#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 using namespace input;
 using namespace settings;
@@ -41,7 +41,7 @@ TEST_F(TestInputFileReader, parserOptimizer)
 
     OptimizerSettings::setOptimizer("none");
 
-    auto parser = InputFileParserOptimizer(*_engine);
+    auto parser = OptInputParser(*_engine);
     parser.parseOptimizer({"optimizer", "=", "steepest-descent"}, 0);
     EXPECT_EQ(
         settings::OptimizerSettings::getOptimizer(),
@@ -60,7 +60,7 @@ TEST_F(TestInputFileReader, parseNumberOfEpochs)
 {
     EXPECT_EQ(OptimizerSettings::getNumberOfEpochs(), 100);
 
-    auto parser = InputFileParserOptimizer(*_engine);
+    auto parser = OptInputParser(*_engine);
     parser.parseNumberOfEpochs({"n-iterations", "=", "1000"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getNumberOfEpochs(), 1000);
 
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 
     OptimizerSettings::setLearningRateStrategy("none");
 
-    auto parser = InputFileParserOptimizer(*_engine);
+    auto parser = OptInputParser(*_engine);
     parser.parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "decay"},
         0
@@ -119,7 +119,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 
     OptimizerSettings::setInitialLearningRate(0.0);
 
-    auto parser = InputFileParserOptimizer(*_engine);
+    auto parser = OptInputParser(*_engine);
     parser.parseInitialLearningRate({"initial-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getInitialLearningRate(), 0.99);
 
