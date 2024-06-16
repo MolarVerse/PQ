@@ -252,14 +252,14 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
 
     if (isRelAbsConvSet && isMaxRMSConvSet)
     {
-        throw customException::UserInputException(std::format(
+        throw customException::UserInputException(
             "You defined at least one of "
             "{\"rel-force-conv\",\"abs-force-conv\"} "
             "and at least one of {\"max-force-conv\",\"rms-force-conv\"}. "
             "These two pairs of convergence criteria are mutually exclusive. "
             "For more details on the hierarchy of convergence criteria, see "
             "the documentation."
-        ));
+        );
     }
     else if (isRelAbsConvSet)
     {

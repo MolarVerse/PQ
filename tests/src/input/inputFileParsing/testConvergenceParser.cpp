@@ -37,7 +37,7 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parserConvergenceStrategy)
 {
-    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(ConvSettings::getConvStrategy(), std::optional<ConvStrategy>());
 
     auto parser = ConvInputParser(*_engine);
 
@@ -67,7 +67,10 @@ TEST_F(TestInputFileReader, parserConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
-    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(
+        ConvSettings::getEnergyConvStrategy(),
+        std::optional<ConvStrategy>()
+    );
 
     auto parser = ConvInputParser(*_engine);
 
@@ -101,7 +104,10 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserForceConvergenceStrategy)
 {
-    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(
+        ConvSettings::getForceConvStrategy(),
+        std::optional<ConvStrategy>()
+    );
 
     auto parser = ConvInputParser(*_engine);
 

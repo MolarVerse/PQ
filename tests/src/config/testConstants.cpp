@@ -146,11 +146,7 @@ TEST(TestConstants, bohrRadiusToMeter)
 }
 TEST(TestConstants, meterToBohrRadius)
 {
-    EXPECT_NEAR(
-        constants::_M_TO_BOHR_RADIUS_ * constants::_BOHR_RADIUS_,
-        1.0,
-        1e-9
-    );
+    EXPECT_NEAR(constants::_M_TO_BOHR_ * constants::_BOHR_RADIUS_, 1.0, 1e-9);
 }
 TEST(TestConstants, angstromToBohrRadius)
 {
@@ -175,7 +171,7 @@ TEST(TestConstants, bohrRadiusToAngstrom)
 TEST(TestConstants, angstromSquaredToMeterSquared)
 {
     EXPECT_NEAR(
-        constants::_ANGSTROM_SQUARED_TO_M2 /
+        constants::_ANGSTROM2_TO_M2_ /
             (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_),
         1.0,
         1e-9

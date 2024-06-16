@@ -73,7 +73,7 @@ namespace constants
      * @brief Conversion factors for volume units
      */
     // clang-format off
-    static constexpr double _ANGSTROM3_TO_M3     = _ANGSTROM2_TO_M2_ * _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_;
+    static constexpr double _ANGSTROM3_TO_M3     = _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_;
     static constexpr double _M3_TO_ANGSTROM3_    = 1.0 / _ANGSTROM3_TO_M3;
     static constexpr double _ANGSTROM3_TO_L_     = _ANGSTROM3_TO_M3 * 1.0e3;
     static constexpr double _L_TO_ANGSTROM3_     = 1.0 / _ANGSTROM3_TO_L_;
