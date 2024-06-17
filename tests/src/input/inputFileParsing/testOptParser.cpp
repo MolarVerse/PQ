@@ -75,7 +75,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
     EXPECT_EQ(
         OptimizerSettings::getLearningRateStrategy(),
-        LearningRateStrategy::NONE
+        LearningRateStrategy::CONSTANT_DECAY
     );
 
     OptimizerSettings::setLearningRateStrategy("none");

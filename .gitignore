@@ -10,6 +10,8 @@ _build*
 
 install/
 
+examples/cgo
+
 examples/**/testset*
 examples/**/perf*
 

@@ -70,7 +70,7 @@ namespace settings
        private:
         // clang-format off
         static inline Optimizer _optimizer             = Optimizer::STEEPEST_DESCENT;
-        static inline LRStrategy _learningRateStrategy = LRStrategy::NONE;
+        static inline LRStrategy _learningRateStrategy = LRStrategy::CONSTANT_DECAY;
 
         static inline size_t _nEpochs           = defaults::_N_EPOCHS_DEFAULT_;
         static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;

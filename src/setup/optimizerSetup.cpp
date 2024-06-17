@@ -162,10 +162,10 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
         }
         default:
         {
-            throw customException::UserInputException(std::format(
-                "Unknown learning rate strategy type {}",
-                string(OptimizerSettings::getLearningRateStrategy())
-            ));
+            throw customException::UserInputException(
+                std::format("In order to run the optimizer, you need to "
+                            "specify a learning rate strategy.")
+            );
         }
     }
 }
