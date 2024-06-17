@@ -89,6 +89,7 @@ namespace defaults
 
     static constexpr char   _OPTIMIZER_DEFAULT_[]           = "gradient-descent";
     static constexpr size_t _N_EPOCHS_DEFAULT_              = 100;
+    static constexpr size_t _LR_UPDATE_FREQUENCY_DEFAULT_   = 1;
     static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0;
 
     static constexpr char   _ENERGY_CONV_STRATEGY_DEFAULT_[] = "rigorous";
