@@ -35,11 +35,7 @@
 #include "potential.cuh"
 #include "simulationBox_cuda.cuh"
 
-namespace simulationBox
-{
-    class CellList;
-}   // namespace simulationBox
-
+using namespace simulationBox;
 using namespace potential;
 
 /**
@@ -82,7 +78,9 @@ using namespace potential;
  * @param physicalData
  */
 inline void PotentialCuda::
-    calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
+    calculateForces(simulationBox::SimulationBox &simBox, 
+        SimulationBoxCuda &simBoxCuda,
+        physicalData::PhysicalData &physicalData)
 {
     // start transfer timings -------------------------------------------------
     startTimingsSection("InterNonBonded - Transfer");
@@ -92,9 +90,7 @@ inline void PotentialCuda::
     double totalNonCoulombEnergy = 0.0;
 
     // cuda simulation box
-    SimulationBox::SimulationBoxCuda *d_simBox = SimulationBoxCuda(simBox.getNumAtoms());
-    d_simBox->transferDataToDevice(simBox);
-    SimulationBoxCuda_t *simBox_t = d_simBox->getSimulationBoxCuda();
+    SimulationBoxCuda_t *simBox_struct = simBoxCuda.getSimulationBoxCuda();
 
 
     // end transfer timings ---------------------------------------------------
@@ -104,11 +100,11 @@ inline void PotentialCuda::
     startTimingsSection("InterNonBonded");
 
     size_t block_size = 256;
-    size_t grid_size  = (numberOfMolecules + block_size - 1) / block_size;
+    size_t grid_size  = (simBox_struct->numAtoms + block_size - 1) / block_size;
 
     // calculate forces on device
     calculateForcesKernel<<<grid_size, block_size>>>(
-        simBox_t,
+        simBox_struct,
         &totalCoulombEnergy,
         &totalNonCoulombEnergy
     );
@@ -126,8 +122,8 @@ inline void PotentialCuda::
     totalCoulombEnergy    *= 0.5;
     totalNonCoulombEnergy *= 0.5;
 
-    simBox.deFlattenForces(h_forces);
-    // TODO: check if shift forces transfer is needed
+    // transfer data from device
+    _simulationBoxCuda.transferDataFromDevice(simBox);
 
     // set total coulombic and non-coulombic energy
     physicalData.setCoulombEnergy(totalCoulombEnergy);
@@ -135,15 +131,6 @@ inline void PotentialCuda::
 
     // stop transfer timings ---------------------------------------------------
     stopTimingsSection("InterNonBonded - Transfer");
-
-    // free memory on device
-    cudaFree(d_atomTypes);
-    cudaFree(d_moleculeIndices);
-    cudaFree(d_internalGlobalVDWTypes);
-    cudaFree(d_molTypes);
-    cudaFree(d_partialCharges);
-    cudaFree(d_positions);
-    cudaFree(d_forces);
 
     return;
 }

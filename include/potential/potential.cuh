@@ -49,6 +49,7 @@ namespace potential {
         // calculate forces
         void calculateForces(
             simulationBox::SimulationBox &simBox,
+            simulationBox::simulationBoxCuda &simBoxCuda,
             physicalData::PhysicalData &physicalData
         );
     };

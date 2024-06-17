@@ -47,6 +47,7 @@
 
 #ifdef WITH_CUDA
 #include "potential.cuh"
+#include "simulationBox_cuda.cuh"
 #endif
 
 namespace output
@@ -88,7 +89,8 @@ namespace engine
 #endif
 
 #ifdef WITH_CUDA
-    using PotentialCuda = potential::PotentialCuda;
+    using PotentialCuda     = potential::PotentialCuda;
+    using SimulationBoxCuda = simulationBox::SimulationBoxCuda;
 #endif
 
     /**
@@ -122,7 +124,8 @@ namespace engine
 #endif
 
 #ifdef WITH_CUDA
-        potential::PotentialCuda _cudaPotential;
+        potential::PotentialCuda         _cudaPotential;
+        simulationBox::SimulationBoxCuda _cudaSimulationBox;
 #endif
 
         UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();

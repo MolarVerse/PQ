@@ -87,19 +87,6 @@ namespace potential
         {
             return _wolfParameter3;
         }
-#ifdef WITH_CUDA
-        [[nodiscard]] std::vector<double> *getParameters() const
-        {
-            std::vector<double> parameters = {
-                CoulombPotential::_coulombRadiusCutOff,
-                _kappa,
-                _wolfParameter1,
-                _wolfParameter2,
-                _wolfParameter3
-            };
-            return &parameters;
-        }
-#endif
     };
 
 }   // namespace potential
