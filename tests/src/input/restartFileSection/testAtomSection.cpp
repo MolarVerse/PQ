@@ -63,13 +63,14 @@ TEST_F(TestAtomSection, numberOfArguments)
 {
     _section->_lineNumber = 7;
     for (size_t i = 0; i < 25; ++i)
-        if (i != 12 && i != 21)
+        if (i % 3 != 0 || i < 6 || i > 21)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
                 _section->process(line, *_engine),
                 customException::RstFileException,
-                "Error in line 7: Atom section must have 12 or 21 elements"
+                "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
+                "21 elements"
             );
         }
 }

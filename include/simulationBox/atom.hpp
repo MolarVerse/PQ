@@ -145,10 +145,13 @@ namespace simulationBox
         void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
 
         void setPosition(const linearAlgebra::Vec3D &position);
-        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
         void setVelocity(const linearAlgebra::Vec3D &velocity);
         void setForce(const linearAlgebra::Vec3D &force);
         void setShiftForce(const linearAlgebra::Vec3D &shiftForce);
+
+        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
+        void setVelocityOld(const linearAlgebra::Vec3D &velocityOld);
+        void setForceOld(const linearAlgebra::Vec3D &forceOld);
 
         void setForceToZero();
     };

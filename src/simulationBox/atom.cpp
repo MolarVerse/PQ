@@ -405,16 +405,6 @@ void Atom::setPosition(const linearAlgebra::Vec3D &position)
 }
 
 /**
- * @brief set the old position of the atom
- *
- * @param position
- */
-void Atom::setPositionOld(const linearAlgebra::Vec3D &position)
-{
-    _positionOld = position;
-}
-
-/**
  * @brief set the velocity of the atom
  *
  * @param velocity
@@ -445,3 +435,30 @@ void Atom::setShiftForce(const linearAlgebra::Vec3D &shiftForce)
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the old position of the atom
+ *
+ * @param position
+ */
+void Atom::setPositionOld(const linearAlgebra::Vec3D &position)
+{
+    _positionOld = position;
+}
+
+/**
+ * @brief set the old velocity of the atom
+ *
+ * @param velocity
+ */
+void Atom::setVelocityOld(const linearAlgebra::Vec3D &velocity)
+{
+    _velocityOld = velocity;
+}
+
+/**
+ * @brief set the old force of the atom
+ *
+ * @param force
+ */
+void Atom::setForceOld(const linearAlgebra::Vec3D &force) { _forceOld = force; }

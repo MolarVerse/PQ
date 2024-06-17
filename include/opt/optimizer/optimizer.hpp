@@ -54,9 +54,9 @@ namespace opt
        protected:
         size_t _nEpochs;
 
-        pq::SharedSimulationBox _simulationBox;
-        pq::SharedPhysicalData  _physicalData;
-        pq::SharedPhysicalData  _physicalDataOld;
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedPhysicalData _physicalDataOld;
 
         bool _enableEnergyConv;
         bool _enableMaxForceConv;
@@ -92,7 +92,7 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setSimulationBox(const pq::SharedSimulationBox);
+        void setSimulationBox(const pq::SharedSimBox);
         void setPhysicalData(const pq::SharedPhysicalData);
         void setPhysicalDataOld(const pq::SharedPhysicalData);
 
@@ -116,7 +116,6 @@ namespace opt
          ***************************/
 
         [[nodiscard]] size_t getNEpochs() const;
-
     };
 
 }   // namespace opt

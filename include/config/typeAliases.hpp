@@ -35,6 +35,8 @@
 
 namespace simulationBox
 {
+    class Molecule;        // forward declaration
+    class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
 
 }   // namespace simulationBox
@@ -52,8 +54,13 @@ namespace pq
     using Vec3D    = linearAlgebra::Vec3D;
     using tensor3D = linearAlgebra::tensor3D;
 
-    using SharedSimulationBox = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedPhysicalData  = std::shared_ptr<physicalData::PhysicalData>;
+    using SimBox   = simulationBox::SimulationBox;
+    using Molecule = simulationBox::Molecule;
+    using Atom     = simulationBox::Atom;
+
+    using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
+    using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
+    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
 
 }   // namespace pq
 
