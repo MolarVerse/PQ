@@ -56,6 +56,7 @@ namespace opt
 
         pq::SharedSimulationBox _simulationBox;
         pq::SharedPhysicalData  _physicalData;
+        pq::SharedPhysicalData  _physicalDataOld;
 
         bool _enableEnergyConv;
         bool _enableMaxForceConv;
@@ -88,6 +89,7 @@ namespace opt
 
         void setSimulationBox(const pq::SharedSimulationBox);
         void setPhysicalData(const pq::SharedPhysicalData);
+        void setPhysicalDataOld(const pq::SharedPhysicalData);
 
         void setEnableEnergyConv(const bool);
         void setEnableMaxForceConv(const bool);

@@ -48,7 +48,7 @@ bool Optimizer::hasConverged() const
     const auto maxForceOld = _simulationBox->calculateMaxForceOld();
     const auto maxForceNew = _simulationBox->calculateMaxForce();
 
-    return false
+    return false;
 }
 
 /***************************
@@ -79,6 +79,18 @@ void Optimizer::setPhysicalData(
 )
 {
     _physicalData = physicalData;
+}
+
+/**
+ * @brief set physical data old shared pointer
+ *
+ * @param physicalDataOld
+ */
+void Optimizer::setPhysicalDataOld(
+    const std::shared_ptr<physicalData::PhysicalData> physicalDataOld
+)
+{
+    _physicalDataOld = physicalDataOld;
 }
 
 /**

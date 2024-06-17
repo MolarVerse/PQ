@@ -116,6 +116,9 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     optimizer->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
     optimizer->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
     )));
+    optimizer->setPhysicalDataOld(
+        SharedPhysicalData(_optEngine.getPhysicalDataOldPtr())
+    );
 
     return optimizer;
 }
