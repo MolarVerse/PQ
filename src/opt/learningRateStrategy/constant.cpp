@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "constantStrategy.hpp"
+#include "constant.hpp"
 
 using namespace opt;
 

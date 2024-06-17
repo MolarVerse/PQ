@@ -1,7 +1,8 @@
 add_library(learningRateStrategy
     learningRateStrategy.cpp
 
-    constantStrategy.cpp
+    constant.cpp
+    constantDecay.cpp
 )
 
 target_include_directories(learningRateStrategy
