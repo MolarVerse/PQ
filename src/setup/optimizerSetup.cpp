@@ -79,15 +79,11 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
-    const auto learningRateStrategy = setupLearningRateStrategy();
+    auto       learningRateStrategy = setupLearningRateStrategy();
     const auto optimizer            = setupEmptyOptimizer();
     const auto evaluator            = setupEvaluator();
 
-    const auto minLearningRate = OptimizerSettings::getMinLearningRate();
-    const auto maxLearningRate = OptimizerSettings::getMaxLearningRate();
-
-    learningRateStrategy->setMinLearningRate(minLearningRate);
-    learningRateStrategy->setMaxLearningRate(maxLearningRate);
+    setupMinMaxLR(learningRateStrategy);
 
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
@@ -172,6 +168,37 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
             ));
         }
     }
+}
+
+/**
+ * @brief setup min max learning rate
+ *
+ * @param learningRateStrategy as shared pointer reference
+ */
+void OptimizerSetup::setupMinMaxLR(
+    std::shared_ptr<opt::LearningRateStrategy> &learningRateStrategy
+)
+{
+    const auto minLearningRate = OptimizerSettings::getMinLearningRate();
+    const auto maxLearningRate = OptimizerSettings::getMaxLearningRate();
+
+    if (maxLearningRate.has_value())
+    {
+        const auto maxLearningRateValue = maxLearningRate.value();
+
+        if (minLearningRate >= maxLearningRateValue)
+        {
+            throw customException::UserInputException(std::format(
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLearningRate,
+                maxLearningRateValue
+            ));
+        }
+    }
+
+    learningRateStrategy->setMinLearningRate(minLearningRate);
+    learningRateStrategy->setMaxLearningRate(maxLearningRate);
 }
 
 /**
