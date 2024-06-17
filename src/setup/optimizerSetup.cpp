@@ -138,12 +138,9 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case LearningRateStrategy::DECAY:
+        case LearningRateStrategy::CONSTANT_DECAY:
         {
-            throw customException::UserInputException(
-                "Decay learning rate strategy not implemented yet"
-            );
-            break;
+            return std::make_shared<opt::ConstantDecayLRStrategy>(alpha_0);
         }
         default:
         {
