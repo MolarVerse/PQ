@@ -153,6 +153,26 @@ void OptimizerSettings::setLearningRateDecay(const double decay)
     _learningRateDecay = decay;
 }
 
+/**
+ * @brief sets the min learning rate
+ *
+ * @param minLearningRate
+ */
+void OptimizerSettings::setMinLearningRate(const double minLearningRate)
+{
+    _minLearningRate = minLearningRate;
+}
+
+/**
+ * @brief sets the max learning rate
+ *
+ * @param maxLearningRate
+ */
+void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
+{
+    _maxLearningRate = maxLearningRate;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -201,6 +221,13 @@ double OptimizerSettings::getInitialLearningRate()
 }
 
 /**
+ * @brief returns the min learning rate
+ *
+ * @return double
+ */
+double OptimizerSettings::getMinLearningRate() { return _minLearningRate; }
+
+/**
  * @brief returns the learning rate decay
  *
  * @return std::optional<double>
@@ -208,4 +235,14 @@ double OptimizerSettings::getInitialLearningRate()
 std::optional<double> OptimizerSettings::getLearningRateDecay()
 {
     return _learningRateDecay;
+}
+
+/**
+ * @brief returns the max learning rate
+ *
+ * @return std::optional<double>
+ */
+std::optional<double> OptimizerSettings::getMaxLearningRate()
+{
+    return _maxLearningRate;
 }

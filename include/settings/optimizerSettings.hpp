@@ -76,8 +76,11 @@ namespace settings
         static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;
 
         static inline double _initialLearningRate = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
+        static inline double _minLearningRate     = defaults::_MIN_LEARNING_RATE_DEFAULT_;
 
         static inline std::optional<double> _learningRateDecay;
+        static inline std::optional<double> _maxLearningRate;
+
         // clang-format on
 
        public:
@@ -97,6 +100,9 @@ namespace settings
         static void setInitialLearningRate(const double);
         static void setLearningRateDecay(const double);
 
+        static void setMaxLearningRate(const double);
+        static void setMinLearningRate(const double);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -107,8 +113,11 @@ namespace settings
         [[nodiscard]] static size_t getNumberOfEpochs();
         [[nodiscard]] static size_t getLRUpdateFrequency();
 
-        [[nodiscard]] static double                getInitialLearningRate();
+        [[nodiscard]] static double getInitialLearningRate();
+        [[nodiscard]] static double getMinLearningRate();
+
         [[nodiscard]] static std::optional<double> getLearningRateDecay();
+        [[nodiscard]] static std::optional<double> getMaxLearningRate();
 
     };   // namespace settings
 }   // namespace settings
