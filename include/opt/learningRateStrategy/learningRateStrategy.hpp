@@ -24,6 +24,8 @@
 
 #define _LEARNING_RATE_STRATEGY_HPP_
 
+#include <cstddef>   // for size_t
+
 namespace engine
 {
     class OptEngine;   // forward declaration
@@ -41,11 +43,13 @@ namespace opt
     class LearningRateStrategy
     {
        protected:
+        size_t _frequency = 1;
         double _initialLearningRate;
         double _learningRate;
 
        public:
-        explicit LearningRateStrategy(const double initialLearningRate);
+        explicit LearningRateStrategy(const double);
+        explicit LearningRateStrategy(const double, const size_t);
 
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;

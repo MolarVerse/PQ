@@ -36,6 +36,22 @@ LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
 }
 
 /**
+ * @brief Construct a new LearningRateStrategy object
+ *
+ * @param initialLearningRate
+ * @param frequency
+ */
+LearningRateStrategy::LearningRateStrategy(
+    const double initialLearningRate,
+    const size_t frequency
+)
+    : _frequency(frequency),
+      _initialLearningRate(initialLearningRate),
+      _learningRate(initialLearningRate)
+{
+}
+
+/**
  * @brief Get the learning rate
  *
  * @return double
