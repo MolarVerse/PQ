@@ -35,6 +35,16 @@
 using namespace constraints;
 
 /**
+ * @brief clone constraints
+ *
+ * @return std::shared_ptr<Constraints>
+ */
+std::shared_ptr<Constraints> Constraints::clone() const
+{
+    return std::make_shared<Constraints>(*this);
+}
+
+/**
  * @brief init M-Shake from M-Shake references
  *
  * @param simulationBox

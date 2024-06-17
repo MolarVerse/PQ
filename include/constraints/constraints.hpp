@@ -76,6 +76,8 @@ namespace constraints
         std::vector<DistanceConstraint> _distanceConstraints;
 
        public:
+        std::shared_ptr<Constraints> clone() const;
+        
         void calculateConstraintBondRefs(const SimBox &simulationBox);
 
         void initMShake();
