@@ -82,6 +82,11 @@ namespace opt
         virtual void update(const double learningRate) = 0;
 
         [[nodiscard]] bool hasConverged() const;
+        [[nodiscard]] bool hasPropertyConv(
+            const bool,
+            const bool,
+            const settings::ConvStrategy
+        ) const;
 
         /***************************
          * standard setter methods *

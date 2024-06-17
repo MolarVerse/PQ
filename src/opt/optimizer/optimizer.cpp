@@ -24,7 +24,8 @@
 
 #include <memory>   // for std::shared_ptr
 
-#include "simulationBox.hpp"
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace opt;
 
@@ -39,16 +40,92 @@ Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
 /**
  * @brief check if the optimizer has converged
  *
+ * @return true/false if the optimizer has converged
  */
 bool Optimizer::hasConverged() const
 {
+    const auto energyOld = _physicalDataOld->getTotalEnergy();
+    const auto energyNew = _physicalData->getTotalEnergy();
+
     const auto rmsForceOld = _simulationBox->calculateRMSForceOld();
     const auto rmsForceNew = _simulationBox->calculateRMSForce();
 
     const auto maxForceOld = _simulationBox->calculateMaxForceOld();
     const auto maxForceNew = _simulationBox->calculateMaxForce();
 
-    return false;
+    auto converged = true;
+
+    if (_enableEnergyConv)
+    {
+        const auto absDeviation = std::abs(energyOld - energyNew);
+        const auto relDeviation = absDeviation / std::abs(energyOld);
+
+        const auto isAbsConv = absDeviation < _absEnergyConv;
+        const auto isRelConv = relDeviation < _relEnergyConv;
+
+        const auto isEnergyConverged =
+            hasPropertyConv(isAbsConv, isRelConv, _energyConvStrategy);
+
+        converged = converged && isEnergyConverged;
+    }
+
+    if (_enableMaxForceConv)
+    {
+        const auto absDeviation = std::abs(maxForceOld - maxForceNew);
+        const auto relDeviation = absDeviation / std::abs(maxForceOld);
+
+        const auto isAbsConv = absDeviation < _absMaxForceConv;
+        const auto isRelConv = relDeviation < _relMaxForceConv;
+
+        const auto isMaxForceConverged =
+            hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
+
+        converged = converged && isMaxForceConverged;
+    }
+
+    if (_enableRMSForceConv)
+    {
+        const auto absDeviation = std::abs(rmsForceOld - rmsForceNew);
+        const auto relDeviation = absDeviation / std::abs(rmsForceOld);
+
+        const auto isAbsConv = absDeviation < _absRMSForceConv;
+        const auto isRelConv = relDeviation < _relRMSForceConv;
+
+        const auto isRMSForceConverged =
+            hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
+
+        converged = converged && isRMSForceConverged;
+    }
+
+    return converged;
+}
+
+/**
+ * @brief check if a property of the optimizer has converged
+ * according to the convergence strategy set
+ *
+ * @param absConv
+ * @param relConv
+ * @param convStrategy
+ * @return true
+ * @return false
+ */
+bool Optimizer::hasPropertyConv(
+    const bool                   absConv,
+    const bool                   relConv,
+    const settings::ConvStrategy convStrategy
+) const
+{
+    if (convStrategy == settings::ConvStrategy::RIGOROUS)
+        return absConv && relConv;
+    else if (convStrategy == settings::ConvStrategy::LOOSE)
+        return absConv || relConv;
+    else if (convStrategy == settings::ConvStrategy::ABSOLUTE)
+        return absConv;
+    else if (convStrategy == settings::ConvStrategy::RELATIVE)
+        return relConv;
+    else
+        return false;
 }
 
 /***************************
