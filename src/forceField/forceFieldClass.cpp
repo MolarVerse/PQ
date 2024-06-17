@@ -33,6 +33,16 @@
 using namespace forceField;
 
 /**
+ * @brief clones the force field
+ *
+ * @return std::shared_ptr<ForceField>
+ */
+std::shared_ptr<ForceField> ForceField::clone() const
+{
+    return std::make_shared<ForceField>(*this);
+}
+
+/**
  * @brief find bond type by id
  *
  * @param id

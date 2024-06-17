@@ -82,6 +82,8 @@ namespace forceField
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
        public:
+        std::shared_ptr<ForceField> clone() const;
+
         void calculateBondedInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateBondInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void calculateAngleInteractions(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
