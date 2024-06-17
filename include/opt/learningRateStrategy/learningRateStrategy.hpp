@@ -25,6 +25,7 @@
 #define _LEARNING_RATE_STRATEGY_HPP_
 
 #include <cstddef>    // for size_t
+#include <memory>     // for shared_ptr
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -63,6 +64,8 @@ namespace opt
 
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
+
+        virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
         virtual void updateLearningRate() = 0;
         void         checkLearningRate();

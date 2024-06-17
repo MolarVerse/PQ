@@ -57,6 +57,16 @@ ConstantDecayLRStrategy::ConstantDecayLRStrategy(
 }
 
 /**
+ * @brief Clone the learning rate strategy
+ *
+ * @return std::shared_ptr<LearningRateStrategy>
+ */
+std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
+{
+    return std::make_shared<ConstantDecayLRStrategy>(*this);
+}
+
+/**
  * @brief Update the learning rate
  */
 void ConstantDecayLRStrategy::updateLearningRate()

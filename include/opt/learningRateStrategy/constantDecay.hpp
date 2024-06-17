@@ -54,6 +54,8 @@ namespace opt
         ConstantDecayLRStrategy()           = default;
         ~ConstantDecayLRStrategy() override = default;
 
+        std::shared_ptr<LearningRateStrategy> clone() const override;
+
         void updateLearningRate() override;
     };
 

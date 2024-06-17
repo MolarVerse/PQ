@@ -35,6 +35,16 @@ ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
 }
 
 /**
+ * @brief Clone the learning rate strategy
+ *
+ * @return std::shared_ptr<LearningRateStrategy>
+ */
+std::shared_ptr<LearningRateStrategy> ConstantLRStrategy::clone() const
+{
+    return std::make_shared<ConstantLRStrategy>(*this);
+}
+
+/**
  * @brief Update the learning rate
  *
  * @details This function does nothing, as the learning rate is constant.
