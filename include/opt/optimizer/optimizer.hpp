@@ -110,6 +110,13 @@ namespace opt
 
         void setEnergyConvStrategy(const settings::ConvStrategy);
         void setForceConvStrategy(const settings::ConvStrategy);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] size_t getNEpochs() const;
+
     };
 
 }   // namespace opt

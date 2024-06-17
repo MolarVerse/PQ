@@ -52,14 +52,16 @@ namespace engine
 
         physicalData::PhysicalData _physicalDataOld;
 
+        bool _converged = false;
+
        public:
-        void run() final {};
-        void takeStep() final {};
+        void run() final;
+        void takeStep() final;
         void writeOutput() final {};
 
-        /********************************
-         * standard setter methods      *
-         ********************************/
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setOptimizer(const std::shared_ptr<opt::Optimizer> &optimizer);
         void setLearningRateStrategy(const std::shared_ptr<LRStrategy> &);

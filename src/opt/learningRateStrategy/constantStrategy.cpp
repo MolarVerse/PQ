@@ -37,6 +37,6 @@ ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
 /**
  * @brief Update the learning rate
  *
- * @return double
+ * @details This function does nothing, as the learning rate is constant.
  */
-double ConstantLRStrategy::updateLearningRate() { return _initialLearningRate; }
+void ConstantLRStrategy::updateLearningRate() {}

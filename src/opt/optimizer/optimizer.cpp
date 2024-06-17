@@ -283,3 +283,16 @@ void Optimizer::setForceConvStrategy(
 {
     _forceConvStrategy = forceConvStrategy;
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the number of epochs
+ *
+ * @return size_t
+ */
+size_t Optimizer::getNEpochs() const { return _nEpochs; }

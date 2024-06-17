@@ -26,6 +26,50 @@ using namespace engine;
 using namespace opt;
 
 /**
+ * @brief run the optimizer
+ */
+void OptEngine::run()
+{
+    for (size_t i = 0; i < _optimizer->getNEpochs(); ++i)
+    {
+        takeStep();
+
+        if (_converged)
+            break;
+    }
+
+    if (!_converged)
+    {
+        // TODO: add details as argument
+        getLogOutput().writeConvergenceWarning("");
+        getStdoutOutput().writeConvergenceWarning("");
+    }
+
+    writeOutput();
+}
+
+/**
+ * @brief take a step
+ */
+void OptEngine::takeStep()
+{
+    _optimizer->update(_learningRateStrategy->getLearningRate());
+
+    _evaluator->updateForces();
+
+    _converged = _optimizer->hasConverged();
+
+    if (!_converged)
+        _learningRateStrategy->updateLearningRate();
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
  * @brief set the optimizer from a shared pointer
  *
  * @param optimizer

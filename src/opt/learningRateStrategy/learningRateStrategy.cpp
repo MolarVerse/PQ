@@ -30,6 +30,14 @@ using namespace opt;
  * @param initialLearningRate
  */
 LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
-    : _initialLearningRate(initialLearningRate)
+    : _initialLearningRate(initialLearningRate),
+      _learningRate(initialLearningRate)
 {
 }
+
+/**
+ * @brief Get the learning rate
+ *
+ * @return double
+ */
+double LearningRateStrategy::getLearningRate() const { return _learningRate; }

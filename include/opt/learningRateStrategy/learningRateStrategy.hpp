@@ -42,6 +42,7 @@ namespace opt
     {
        protected:
         double _initialLearningRate;
+        double _learningRate;
 
        public:
         explicit LearningRateStrategy(const double initialLearningRate);
@@ -49,7 +50,9 @@ namespace opt
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
 
-        virtual double updateLearningRate() = 0;
+        virtual void updateLearningRate() = 0;
+
+        [[nodiscard]] double getLearningRate() const;
     };
 
 }   // namespace opt
