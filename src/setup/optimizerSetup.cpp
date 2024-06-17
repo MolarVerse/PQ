@@ -83,10 +83,10 @@ void OptimizerSetup::setup()
     const auto optimizer            = setupEmptyOptimizer();
     const auto evaluator            = setupEvaluator();
 
-    // setupMinMaxLR(learningRateStrategy);
+    setupMinMaxLR(learningRateStrategy);
 
-    // _optEngine.setLearningRateStrategy(learningRateStrategy);
-    // _optEngine.setOptimizer(optimizer);
+    _optEngine.setLearningRateStrategy(*learningRateStrategy);
+    _optEngine.setOptimizer(*optimizer);
     _optEngine.setEvaluator(*evaluator);
 }
 

@@ -40,7 +40,7 @@ SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
  *
  * @return std::shared_ptr<Optimizer>
  */
-std::shared_ptr<Optimizer> SteepestDescent::clone()
+std::shared_ptr<Optimizer> SteepestDescent::clone() const
 {
     return std::make_shared<SteepestDescent>(*this);
 }
