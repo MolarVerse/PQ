@@ -33,6 +33,15 @@
 using namespace opt;
 
 /**
+ * @brief clones the evaluator
+ *
+ */
+std::shared_ptr<Evaluator> MMEvaluator::clone() const
+{
+    return std::make_shared<MMEvaluator>(*this);
+}
+
+/**
  * @brief update forces
  *
  */

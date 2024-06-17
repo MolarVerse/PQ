@@ -97,6 +97,8 @@ namespace opt
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
+        virtual std::shared_ptr<Evaluator> clone() const = 0;
+
         virtual void updateForces() = 0;
 
         void setPotential(const potential::Potential &);
