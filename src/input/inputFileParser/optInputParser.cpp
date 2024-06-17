@@ -76,7 +76,7 @@ OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
-        "learning-rate-update-frequency",
+        "learning-rate-update-freq",
         bind_front(&OptInputParser::parseLearningRateUpdateFrequency, this),
         false
     );
