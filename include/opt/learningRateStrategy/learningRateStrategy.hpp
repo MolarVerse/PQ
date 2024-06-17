@@ -25,6 +25,7 @@
 #define _LEARNING_RATE_STRATEGY_HPP_
 
 #include <cstddef>   // for size_t
+#include <string>    // for string
 
 namespace engine
 {
@@ -44,6 +45,7 @@ namespace opt
     {
        protected:
         size_t _frequency = 1;
+        size_t _counter   = 0;
         double _initialLearningRate;
         double _learningRate;
 
@@ -54,7 +56,7 @@ namespace opt
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
 
-        virtual void updateLearningRate() = 0;
+        virtual void updateLearningRate(std::string &) = 0;
 
         [[nodiscard]] double getLearningRate() const;
     };
