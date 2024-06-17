@@ -78,6 +78,16 @@ void SimulationBox::copy(const SimulationBox &toCopy)
 }
 
 /**
+ * @brief clone simulationBox object
+ *
+ * @return std::shared_ptr<SimulationBox>
+ */
+std::shared_ptr<SimulationBox> SimulationBox::clone() const
+{
+    return std::make_shared<SimulationBox>(*this);
+}
+
+/**
  * @brief finds molecule by moleculeType if (size_t)
  *
  * @param moleculeType

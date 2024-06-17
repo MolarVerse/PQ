@@ -101,6 +101,7 @@ namespace simulationBox
 
        public:
         void copy(const SimulationBox &);
+        [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
         void checkCoulombRadiusCutOff(const CustomException) const;
         void setupExternalToInternalGlobalVdwTypesMap();
