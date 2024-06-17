@@ -51,7 +51,7 @@ std::string settings::string(const LearningRateStrategy method)
     switch (method)
     {
         case LearningRateStrategy::CONSTANT: return "CONSTANT";
-        case LearningRateStrategy::DECAY: return "DECAY";
+        case LearningRateStrategy::CONSTANT_DECAY: return "CONSTANT-DECAY";
 
         default: return "none";
     }
@@ -95,8 +95,8 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
     if ("constant" == method)
         setLearningRateStrategy(LearningRateStrategy::CONSTANT);
-    else if ("decay" == method)
-        setLearningRateStrategy(LearningRateStrategy::DECAY);
+    else if ("constant-decay" == method)
+        setLearningRateStrategy(LearningRateStrategy::CONSTANT_DECAY);
     else
         setLearningRateStrategy(LearningRateStrategy::NONE);
 }
