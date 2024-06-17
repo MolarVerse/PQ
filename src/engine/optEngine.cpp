@@ -60,7 +60,25 @@ void OptEngine::takeStep()
     _converged = _optimizer->hasConverged();
 
     if (!_converged)
-        _learningRateStrategy->updateLearningRate();
+    {
+        std::string _message = "";
+
+        _learningRateStrategy->updateLearningRate(_message);
+
+        if (_message != "")
+        {
+            std::string message = std::format(
+                "Execution stopped at epoch {} out of {}.\n The following "
+                "warning problem was encountered during the learning rate "
+                "update:\n{}",
+                _step,
+                _optimizer->getNEpochs(),
+                _message
+            );
+        }
+    }
+
+    ++_step;
 }
 
 /***************************
