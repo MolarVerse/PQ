@@ -24,7 +24,8 @@
 
 #include <memory>
 
-#include "constantStrategy.hpp"
+#include "constant.hpp"
+#include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
 #include "mmEvaluator.hpp"
@@ -140,7 +141,22 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
         }
         case LearningRateStrategy::CONSTANT_DECAY:
         {
-            return std::make_shared<opt::ConstantDecayLRStrategy>(alpha_0);
+            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
+
+            if (!alphaDecay.has_value())
+                throw customException::UserInputException(
+                    "You need to specify a learning rate decay factor for the "
+                    "constant decay learning rate strategy"
+                );
+
+            const auto alphaDecayValue = alphaDecay.value();
+            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
+
+            return std::make_shared<opt::ConstantDecayLRStrategy>(
+                alpha_0,
+                alphaDecayValue,
+                alphaFreq
+            );
         }
         default:
         {
