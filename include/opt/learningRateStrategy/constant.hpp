@@ -42,7 +42,7 @@ namespace opt
         ConstantLRStrategy()           = default;
         ~ConstantLRStrategy() override = default;
 
-        void updateLearningRate() override;
+        void updateLearningRate(std::string &) override;
     };
 
 }   // namespace opt
