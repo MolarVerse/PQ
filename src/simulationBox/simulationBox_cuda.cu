@@ -23,29 +23,30 @@
 #include "cuda_runtime.h"
 #include "simulationBox_cuda.cuh"
 #include "simulationBox.hpp"
+#include "vector3d.hpp"
 
 using namespace simulationBox;
 
 /**
  * @brief Constructor
  * 
- * @param numAtoms
+ * @param _numAtoms
  */
 SimulationBoxCuda::SimulationBoxCuda(size_t numAtoms){
     // set number of atoms
-    this->numAtoms = numAtoms;
+    _numAtoms = numAtoms;
     // allocate memory on device
-    cudaMalloc((void **)&_atomTypes, numAtoms * sizeof(size_t));
-    cudaMalloc((void **)&_molTypes, numAtoms * sizeof(size_t));
-    cudaMalloc((void **)&_moleculeIndices, numAtoms * sizeof(size_t));
-    cudaMalloc((void **)&_internatGlobalVDWTypes, numAtoms * sizeof(size_t));
-    cudaMalloc((void **)&_positions, numAtoms * 3 * sizeof(double));
-    cudaMalloc((void **)&_velocities, numAtoms * 3 * sizeof(double));
-    cudaMalloc((void **)&_forces, numAtoms * 3 * sizeof(double));
-    cudaMalloc((void **)&_shiftForeces, numAtoms * 3 * sizeof(double));
-    cudaMalloc((void **)&_pratialCharges, numAtoms * sizeof(double));
-    cudaMalloc((void **)&_masses, numAtoms * sizeof(double));
-    cudaMalloc((void **)&_boxDimensions, 3 * sizeof(double));
+    cudaMallocManaged((void **)&_atomTypes, _numAtoms * sizeof(size_t));
+    cudaMallocManaged((void **)&_molTypes, _numAtoms * sizeof(size_t));
+    cudaMallocManaged((void **)&_moleculeIndices, _numAtoms * sizeof(size_t));
+    cudaMallocManaged((void **)&_internalGlobalVDWTypes, _numAtoms * sizeof(size_t));
+    cudaMallocManaged((void **)&_positions, _numAtoms * 3 * sizeof(double));
+    cudaMallocManaged((void **)&_velocities, _numAtoms * 3 * sizeof(double));
+    cudaMallocManaged((void **)&_forces, _numAtoms * 3 * sizeof(double));
+    cudaMallocManaged((void **)&_shiftForces, _numAtoms * 3 * sizeof(double));
+    cudaMallocManaged((void **)&_pratialCharges, _numAtoms * sizeof(double));
+    cudaMallocManaged((void **)&_masses, _numAtoms * sizeof(double));
+    cudaMallocManaged((void **)&_boxDimensions, 3 * sizeof(double));
 }
 
 /**
@@ -56,11 +57,11 @@ SimulationBoxCuda::~SimulationBoxCuda(){
     cudaFree(_atomTypes);
     cudaFree(_molTypes);
     cudaFree(_moleculeIndices);
-    cudaFree(_internatGlobalVDWTypes);
+    cudaFree(_internalGlobalVDWTypes);
     cudaFree(_positions);
     cudaFree(_velocities);
     cudaFree(_forces);
-    cudaFree(_shiftForeces);
+    cudaFree(_shiftForces);
     cudaFree(_pratialCharges);
     cudaFree(_masses);
     cudaFree(_boxDimensions);
@@ -69,155 +70,173 @@ SimulationBoxCuda::~SimulationBoxCuda(){
 /**
  * @brief Transfer data to device
  */
-void SimulationBoxCuda::transferDataToDevice(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferDataToDevice(SimulationBox &simBox){
     // transfer data to device
-    transferAtomTypesFromSimulationBox(simulationBox);
-    transferMolTypesFromSimulationBox(simulationBox);
-    transferMoleculeIndicesFromSimulationBox(simulationBox);
-    transferInternalGlobalVDWTypesFromSimulationBox(simulationBox);
-    transferPositionsFromSimulationBox(simulationBox);
-    transferVelocitiesFromSimulationBox(simulationBox);
-    transferForcesFromSimulationBox(simulationBox);
-    transferPartialChargesFromSimulationBox(simulationBox);
-    transferMassesFromSimulationBox(simulationBox);
-    transferBoxDimensionsFromSimulationBox(simulationBox);
+    transferAtomTypesFromSimulationBox(simBox);
+    transferMolTypesFromSimulationBox(simBox);
+    transferMoleculeIndicesFromSimulationBox(simBox);
+    transferInternalGlobalVDWTypesFromSimulationBox(simBox);
+    transferPositionsFromSimulationBox(simBox);
+    transferVelocitiesFromSimulationBox(simBox);
+    transferForcesFromSimulationBox(simBox);
+    transferPartialChargesFromSimulationBox(simBox);
+    transferMassesFromSimulationBox(simBox);
+    transferBoxDimensionsFromSimulationBox(simBox);
 }
 
 /**
  * @brief Transfer atom types from simulation box
  */
-void SimulationBoxCuda::transferAtomTypesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferAtomTypesFromSimulationBox(SimulationBox &simBox){
     // transfer atom types from simulation box
-    cudaMemcpy(_atomTypes, simulationBox.getAtomTypes(), numAtoms * sizeof(size_t), cudaMemcpyHostToDevice);
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _atomTypes[i] = simBox.getAtom(i).getAtomType();
+    }
 }
 
 /**
  * @brief Transfer mol types from simulation box
  */
-void SimulationBoxCuda::transferMolTypesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferMolTypesFromSimulationBox(SimulationBox &simBox){
     // transfer mol types from simulation box
-    cudaMemcpy(_molTypes, simulationBox.getMolTypes(), numAtoms * sizeof(size_t), cudaMemcpyHostToDevice);
+    auto molTypes = simBox.flattenMolTypes();
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _molTypes[i] = molTypes[i];
+    }
 }
 
 /**
  * @brief Transfer molecule indices from simulation box
  */
-void SimulationBoxCuda::transferMoleculeIndicesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferMoleculeIndicesFromSimulationBox(SimulationBox &simBox){
     // transfer molecule indices from simulation box
-    cudaMemcpy(_moleculeIndices, simulationBox.getMoleculeIndices(), numAtoms * sizeof(size_t), cudaMemcpyHostToDevice);
+    auto moleculeIndices = simBox.getMoleculeIndices();
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _moleculeIndices[i] = moleculeIndices[i];
+    }
 }
 
 /**
  * @brief Transfer internal global VDW types from simulation box
  */
-void SimulationBoxCuda::transferInternalGlobalVDWTypesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferInternalGlobalVDWTypesFromSimulationBox(SimulationBox &simBox){
     // transfer internal global VDW types from simulation box
-    cudaMemcpy(_internatGlobalVDWTypes, simulationBox.getInternalGlobalVDWTypes(), numAtoms * sizeof(size_t), cudaMemcpyHostToDevice);
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _internalGlobalVDWTypes[i] = simBox.getAtom(i).getInternalGlobalVDWType();
+    }
 }
 
 /**
  * @brief Transfer positions from simulation box
  */
-void SimulationBoxCuda::transferPositionsFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferPositionsFromSimulationBox(SimulationBox &simBox){
     // transfer positions from simulation box
-    cudaMemcpy(_positions, simulationBox.getPositions(), numAtoms * 3 * sizeof(double), cudaMemcpyHostToDevice);
+    auto positions = simBox.flattenPositions();
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _positions[i * 3] = positions[i * 3];
+        _positions[i * 3 + 1] = positions[i * 3 + 1];
+        _positions[i * 3 + 2] = positions[i * 3 + 2];
+    }
 }
 
 /**
  * @brief Transfer velocities from simulation box
  */
-void SimulationBoxCuda::transferVelocitiesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferVelocitiesFromSimulationBox(SimulationBox &simBox){
     // transfer velocities from simulation box
-    cudaMemcpy(_velocities, simulationBox.getVelocities(), numAtoms * 3 * sizeof(double), cudaMemcpyHostToDevice);
+    auto velocities = simBox.flattenVelocities();
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _velocities[i * 3] = velocities[i * 3];
+        _velocities[i * 3 + 1] = velocities[i * 3 + 1];
+        _velocities[i * 3 + 2] = velocities[i * 3 + 2];
+    }
 }
 
 /**
  * @brief Transfer forces from simulation box
  */
-void SimulationBoxCuda::transferForcesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferForcesFromSimulationBox(SimulationBox &simBox){
     // transfer forces from simulation box
-    cudaMemcpy(_forces, simulationBox.getForces(), numAtoms * 3 * sizeof(double), cudaMemcpyHostToDevice);
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _forces[i * 3] = 0;
+        _forces[i * 3 + 1] = 0;
+        _forces[i * 3 + 2] = 0;
+    }
 }
 
 /**
  * @brief Transfer partial charges from simulation box
  */
-void SimulationBoxCuda::transferPartialChargesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferPartialChargesFromSimulationBox(SimulationBox &simBox){
     // transfer partial charges from simulation box
-    cudaMemcpy(_pratialCharges, simulationBox.getPartialCharges(), numAtoms * sizeof(double), cudaMemcpyHostToDevice);
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _pratialCharges[i] = simBox.getAtom(i).getPartialCharge();
+    }
 }
 
 /**
  * @brief Transfer masses from simulation box
  */
-void SimulationBoxCuda::transferMassesFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferMassesFromSimulationBox(SimulationBox &simBox){
     // transfer masses from simulation box
-    cudaMemcpy(_masses, simulationBox.getMasses(), numAtoms * sizeof(double), cudaMemcpyHostToDevice);
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {
+        _masses[i] = simBox.getAtom(i).getMass();
+    }
 }
 
 /**
  * @brief Transfer box dimensions from simulation box
  */
-void SimulationBoxCuda::transferBoxDimensionsFromSimulationBox(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferBoxDimensionsFromSimulationBox(SimulationBox &simBox){
     // transfer box dimensions from simulation box
-    cudaMemcpy(_boxDimensions, simulationBox.getBoxDimensions(), 3 * sizeof(double), cudaMemcpyHostToDevice);
-}
-
-/**
- * @brief Transfer positions to simulation box
- */
-void SimulationBoxCuda::transferPositionsToSimulationBox(SimulationBox &simulationBox){
-    // transfer positions to simulation box
-    cudaMemcpy(simulationBox.getPositions(), _positions, numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
-}
-
-/**
- * @brief Transfer velocities to simulation box
- */
-void SimulationBoxCuda::transferVelocitiesToSimulationBox(SimulationBox &simulationBox){
-    // transfer velocities to simulation box
-    cudaMemcpy(simulationBox.getVelocities(), _velocities, numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
-}
-
-/**
- * @brief Transfer forces to simulation box
- */
-void SimulationBoxCuda::transferForcesToSimulationBox(SimulationBox &simulationBox){
-    // transfer forces to simulation box
-    cudaMemcpy(simulationBox.getForces(), _forces, numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
-}
-
-/**
- * @brief Transfer shift forces to simulation box
- */
-void SimulationBoxCuda::transferShiftForcesToSimulationBox(SimulationBox &simulationBox){
-    // transfer shift forces to simulation box
-    cudaMemcpy(simulationBox.getShiftForces(), _shiftForeces, numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
+    auto boxDimensions = simBox.getBoxDimensions();
+    for (size_t i = 0; i < 3; ++i)
+    {
+        _boxDimensions[i] = boxDimensions[i];
+    }
 }
 
 /**
  * @brief Transfer data from device
  */
-void SimulationBoxCuda::transferDataFromDevice(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferDataFromDevice(SimulationBox &simBox){
     // transfer data from device
-    transferForcesFromDevice(simulationBox);
-    transferShiftForcesFromDevice(simulationBox);
+    transferForcesFromDevice(simBox);
+    transferShiftForcesFromDevice(simBox);
 }
 
 /**
  * @brief Transfer forces from device
  */
-void SimulationBoxCuda::transferForcesFromDevice(SimulationBox &simulationBox){
+void SimulationBoxCuda::transferForcesFromDevice(SimulationBox &simBox){
     // transfer forces from device
-    cudaMemcpy(_forces, simulationBox.getForces(), numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
+    simBox.deFlattenForces(_forces);
 }
 
 /**
- * @brief Transfer shift forces from device
+ * @brief Transfer shift forces to simulation box
  */
-void SimulationBoxCuda::transferShiftForcesFromDevice(SimulationBox &simulationBox){
-    // transfer shift forces from device
-    cudaMemcpy(_shiftForeces, simulationBox.getShiftForces(), numAtoms * 3 * sizeof(double), cudaMemcpyDeviceToHost);
+void SimulationBoxCuda::transferShiftForcesFromDevice(SimulationBox& simBox){
+    // transfer shift forces to simulation box atoms
+    for (size_t i = 0; i < _numAtoms; ++i)
+    {   
+        linearAlgebra::Vec3D shiftForces;
+        
+        shiftForces[0] = _shiftForces[i * 3];
+        shiftForces[1] = _shiftForces[i * 3 + 1];
+        shiftForces[2] = _shiftForces[i * 3 + 2];
+
+        simBox.getAtom(i).setShiftForce(shiftForces);
+    }
 }
 
 /**
@@ -225,23 +244,21 @@ void SimulationBoxCuda::transferShiftForcesFromDevice(SimulationBox &simulationB
  */
 SimulationBoxCuda_t *SimulationBoxCuda::getSimulationBoxCuda(){
     // create simulation box cuda
-    SimulationBoxCuda_t *simulationBoxCuda;
-
-    // set simulation box cuda
-    simulationBoxCuda->numAtoms = _numAtoms;
-    simulationBoxCuda->numInternalGlobalVDWTypes = _numInternalGlobalVDWTypes;
-    simulationBoxCuda->atomTypes = _atomTypes;
-    simulationBoxCuda->molTypes = _molTypes;
-    simulationBoxCuda->moleculeIndices = _moleculeIndices;
-    simulationBoxCuda->internalGlobalVDWTypes = _internatGlobalVDWTypes;
-    simulationBoxCuda->positions = _positions;
-    simulationBoxCuda->velocities = _velocities;
-    simulationBoxCuda->forces = _forces;
-    simulationBoxCuda->shiftForeces = _shiftForeces;
-    simulationBoxCuda->pratialCharges = _pratialCharges;
-    simulationBoxCuda->masses = _masses;
-    simulationBoxCuda->boxDimensions = _boxDimensions;
+    SimulationBoxCuda_t *simBoxCuda = new SimulationBoxCuda_t;
+    // set variables
+    simBoxCuda->numAtoms = _numAtoms;
+    simBoxCuda->atomTypes = _atomTypes;
+    simBoxCuda->molTypes = _molTypes;
+    simBoxCuda->moleculeIndices = _moleculeIndices;
+    simBoxCuda->internalGlobalVDWTypes = _internalGlobalVDWTypes;
+    simBoxCuda->positions = _positions;
+    simBoxCuda->velocities = _velocities;
+    simBoxCuda->forces = _forces;
+    simBoxCuda->shiftForces = _shiftForces;
+    simBoxCuda->pratialCharges = _pratialCharges;
+    simBoxCuda->masses = _masses;
+    simBoxCuda->boxDimensions = _boxDimensions;
 
     // return simulation box cuda
-    return simulationBoxCuda;
+    return simBoxCuda;
 }

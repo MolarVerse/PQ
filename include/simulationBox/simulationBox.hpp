@@ -154,6 +154,7 @@ namespace simulationBox
         void deFlattenPositions(const std::vector<double> &positions);
         void deFlattenVelocities(const std::vector<double> &velocities);
         void deFlattenForces(const std::vector<double> &forces);
+        void deFlattenForces(const double *forces);
 #endif
 
         /************************

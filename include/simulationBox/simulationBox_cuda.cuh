@@ -37,19 +37,18 @@ namespace simulationBox
     struct SimulationBoxCuda_t
     {
         size_t numAtoms;
-        size_t *numInternalGlobalVDWTypes;
-        double *boxDimensions;
         size_t *atomTypes;
+        size_t *molTypes;
         size_t *moleculeIndices;
         size_t *internalGlobalVDWTypes;
-        size_t *molTypes;
-        double *partialCharges;
         double *positions;
+        double *velocities;
         double *forces;
         double *shiftForces;
-        double *velocities;
+        double *pratialCharges;
         double *masses;
-    };  // struct SimulationBoxCuda_t
+        double *boxDimensions;
+    }; // struct SimulationBoxCuda_t
 
     /**
      * @brief Class for the simulation box on the device
@@ -58,15 +57,15 @@ namespace simulationBox
     {
         private:
             // device variables
-            size_t numAtoms;
+            size_t _numAtoms;
             size_t *_atomTypes;
             size_t *_molTypes;
             size_t *_moleculeIndices;
-            size_t *_internatGlobalVDWTypes;
+            size_t *_internalGlobalVDWTypes;
             double *_positions;
             double *_velocities;
             double *_forces;
-            double *_shiftForeces;
+            double *_shiftForces;
             double *_pratialCharges;
             double *_masses;
             double *_boxDimensions;
@@ -96,7 +95,6 @@ namespace simulationBox
         void transferPositionsToSimulationBox(SimulationBox& simBox);
         void transferVelocitiesToSimulationBox(SimulationBox& simBox);
         void transferForcesToSimulationBox(SimulationBox& simBox);
-        void transferShiftForcesToSimulationBox(SimulationBox& simBox);
 
         // transfer data from device
         void transferDataFromDevice(SimulationBox& simBox);
@@ -105,7 +103,7 @@ namespace simulationBox
         void transferShiftForcesFromDevice(SimulationBox& simBox);
 
         // get device variables
-        SimulationBoxCuda_t getSimulationBoxCuda();
+        SimulationBoxCuda_t *getSimulationBoxCuda();
     };
 
 };   // namespace simulationBox

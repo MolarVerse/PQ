@@ -264,4 +264,27 @@ void SimulationBox::deFlattenForces(const std::vector<double> &forces)
     std::ranges::for_each(_atoms, setForces);
 }
 
+/**
+ * @brief de-flattens forces of each atom from a array of doubles
+ *
+ * @param forces
+ */
+void SimulationBox::deFlattenForces(const double *forces)
+{
+    size_t index = 0;
+
+    auto setForces = [&forces, &index](auto &atom)
+    {
+        linearAlgebra::Vec3D force;
+
+        force[0] = forces[index++];
+        force[1] = forces[index++];
+        force[2] = forces[index++];
+
+        atom->setForce(force);
+    };
+
+    std::ranges::for_each(_atoms, setForces);
+}
+
 #endif   // WITH_MPI || WITH_CUDA
