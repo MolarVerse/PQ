@@ -94,7 +94,7 @@ namespace std
     template <typename T>
     T rms(const std::vector<T> &a)
     {
-        return std::sqrt(dot(a, a));
+        return std::sqrt(dot(a, a) / a.size());
     }
 
 }   // namespace std
