@@ -79,6 +79,8 @@ namespace opt
         Optimizer()          = default;
         virtual ~Optimizer() = default;
 
+        virtual std::shared_ptr<Optimizer> clone() const = 0;
+
         virtual void update(const double learningRate) = 0;
 
         [[nodiscard]] bool hasConverged() const;
@@ -88,13 +90,22 @@ namespace opt
             const settings::ConvStrategy
         ) const;
 
+        /********************************
+         * standard make shared methods *
+         ********************************/
+
+        template <typename T>
+        void makePhysicalDataOld(T &physicalData)
+        {
+            _physicalDataOld = std::make_shared<T>(physicalData);
+        }
+
         /***************************
          * standard setter methods *
          ***************************/
 
         void setSimulationBox(const pq::SharedSimBox);
         void setPhysicalData(const pq::SharedPhysicalData);
-        void setPhysicalDataOld(const pq::SharedPhysicalData);
 
         void setEnableEnergyConv(const bool);
         void setEnableMaxForceConv(const bool);

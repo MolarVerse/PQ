@@ -22,7 +22,8 @@
 
 #include "optimizer.hpp"
 
-#include <memory>   // for std::shared_ptr
+#include <iostream>   // for std::cout
+#include <memory>     // for std::shared_ptr
 
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -67,6 +68,11 @@ bool Optimizer::hasConverged() const
             hasPropertyConv(isAbsConv, isRelConv, _energyConvStrategy);
 
         converged = converged && isEnergyConverged;
+
+        std::cout << "energyOld: " << energyOld << std::endl;
+        std::cout << "energyNew: " << energyNew << std::endl;
+        std::cout << "absDeviation: " << absDeviation << std::endl;
+        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
     }
 
     if (_enableMaxForceConv)
@@ -81,6 +87,11 @@ bool Optimizer::hasConverged() const
             hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
 
         converged = converged && isMaxForceConverged;
+
+        std::cout << "maxForceOld: " << maxForceOld << std::endl;
+        std::cout << "maxForceNew: " << maxForceNew << std::endl;
+        std::cout << "absDeviation: " << absDeviation << std::endl;
+        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
     }
 
     if (_enableRMSForceConv)
@@ -95,6 +106,11 @@ bool Optimizer::hasConverged() const
             hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
 
         converged = converged && isRMSForceConverged;
+
+        std::cout << "rmsForceOld: " << rmsForceOld << std::endl;
+        std::cout << "rmsForceNew: " << rmsForceNew << std::endl;
+        std::cout << "absDeviation: " << absDeviation << std::endl;
+        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
     }
 
     return converged;
@@ -156,18 +172,6 @@ void Optimizer::setPhysicalData(
 )
 {
     _physicalData = physicalData;
-}
-
-/**
- * @brief set physical data old shared pointer
- *
- * @param physicalDataOld
- */
-void Optimizer::setPhysicalDataOld(
-    const std::shared_ptr<physicalData::PhysicalData> physicalDataOld
-)
-{
-    _physicalDataOld = physicalDataOld;
 }
 
 /**

@@ -36,6 +36,16 @@ using namespace opt;
 SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
 
 /**
+ * @brief clone the optimizer
+ *
+ * @return std::shared_ptr<Optimizer>
+ */
+std::shared_ptr<Optimizer> SteepestDescent::clone()
+{
+    return std::make_shared<SteepestDescent>(*this);
+}
+
+/**
  * @brief update the optimizer
  *
  * @param learningRate

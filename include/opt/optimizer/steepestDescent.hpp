@@ -42,6 +42,8 @@ namespace opt
         SteepestDescent()        = default;
         ~SteepestDescent() final = default;
 
+        std::shared_ptr<Optimizer> clone() final;
+
         void update(const double learningRate) final;
     };
 
