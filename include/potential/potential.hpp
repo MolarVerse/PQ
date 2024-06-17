@@ -76,6 +76,7 @@ namespace potential
 
         virtual void
         calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
+        virtual std::shared_ptr<Potential> clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
             const simulationBox::Box &,
@@ -136,6 +137,11 @@ namespace potential
         ~PotentialBruteForce();
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
+
+        std::shared_ptr<Potential> clone() const override
+        {
+            return std::make_shared<PotentialBruteForce>(*this);
+        }
     };
 
     /**
@@ -150,6 +156,11 @@ namespace potential
         ~PotentialCellList();
         void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
             override;
+
+        std::shared_ptr<Potential> clone() const override
+        {
+            return std::make_shared<PotentialCellList>(*this);
+        }
     };
 
 }   // namespace potential
