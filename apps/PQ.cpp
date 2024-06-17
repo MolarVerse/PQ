@@ -69,10 +69,6 @@ int main(int argc, char *argv[])
     mpi::MPI::init(&argc, &argv);
 #endif
 
-#ifdef WITH_KOKKOS
-    Kokkos::initialize(argc, argv);
-#endif
-
     try
     {
         auto arguments = std::vector<std::string>(argv, argv + argc);
@@ -86,10 +82,6 @@ int main(int argc, char *argv[])
         ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
-
-#ifdef WITH_KOKKOS
-    Kokkos::finalize();
-#endif
 
 #ifdef WITH_MPI
     mpi::MPI::finalize();

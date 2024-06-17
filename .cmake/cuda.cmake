@@ -1,7 +1,12 @@
+# separate compilation on 
+set(CUDA_POSITION_INDEPENDENT_CODE ON)
+set(CUDA_SEPARABLE_COMPILATION ON)
+set(CUDA_RESOLVE_DEVICE_SYMBOLS ON)
 find_package(CUDA 12.4 REQUIRED)
 find_package(CUDAToolkit 12.4 REQUIRED)
 enable_language(CUDA)
 set(CMAKE_CUDA_STANDARD 20)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS}")
 include_directories(${CUDA_INCLUDE_DIRS})
 add_definitions(-DWITH_CUDA)

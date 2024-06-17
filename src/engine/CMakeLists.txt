@@ -13,10 +13,10 @@ set(engine_source_files
     engineOutput.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
+if(BUILD_WITH_CUDA)
     set(engine_source_files
         ${engine_source_files}
-        engine_kokkos.cpp
+        engine_cuda.cu
     )
 endif()
 
@@ -61,11 +61,15 @@ target_link_libraries(engine
     optimization
 )
 
-if(BUILD_WITH_KOKKOS)
+if(BUILD_WITH_CUDA)
     target_link_libraries(engine
         PUBLIC
-        nonCoulombPotential_kokkos
-        coulombPotential_kokkos
+        nonCoulombPotential_cuda
+        coulombPotential_cuda
+    )
+    target_include_directories(engine
+        PUBLIC
+        ${CUDA_INCLUDE_DIRS}
     )
 endif()
 

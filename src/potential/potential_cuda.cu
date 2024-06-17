@@ -21,19 +21,8 @@
 ******************************************************************************/
 #include <cstddef>   // for size_t
 
-#include "box.hpp"                // for Box
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "coulombWolf.hpp"        // for CoulombWolf
-#include "cuda_runtime.h"
-#include "molecule.hpp"              // for Molecule
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "physicalData.hpp"          // for PhysicalData
-#include "potential.hpp"             // for Potential
-#include "simulationBox.hpp"   // for SimulationBox
-
-#include "potential.cuh"
-#include "simulationBox_cuda.cuh"
+#include "potential_cuda.cuh"   // for CudaPotential
+#include "simulationBox_cuda.cuh"   // for CudaSimulationBox
 
 using namespace simulationBox;
 using namespace potential;
@@ -45,10 +34,12 @@ using namespace potential;
  * @param coulombEnergy
  * @param nonCoulombEnergy
  */
- __global__ void calculateForcesKernel(
-    SimulationBoxCuda_t *simBox,
-    double *coulombEnergy,
-    double *nonCoulombEnergy
+__global__ void calculateForcesKernel(
+    CudaSimulationBox_t* simBox,
+    CudaLennardJones_t* lennardJones,
+    CudaCoulombWolf_t* coulombWolf,
+    double* coulombEnergy,
+    double* nonCoulombEnergy
 )
 {
     // get thread id
@@ -57,16 +48,93 @@ using namespace potential;
     // check if thread id is smaller than number of molecules
     if (i < simBox->numAtoms)
     {
+        // coulombic energy
+        double* coulombEnergy_i = &coulombEnergy[i];
+        double* nonCoulombEnergy_i = &nonCoulombEnergy[i];
+
         // forces
-        double3 forces_i = {0.0, 0.0, 0.0};
+        double3 forces_i = { 0.0, 0.0, 0.0 };
 
         // shift forces
-        double3 shiftForces_i = {0.0, 0.0, 0.0};
+        double3 shiftForces_i = { 0.0, 0.0, 0.0 };
 
         // get atom type, molecule index, molecule type, partial charge and position
         size_t moleculeIndex_i = simBox->moleculeIndices[i];
         double partialCharge_i = simBox->partialCharges[i];
-        size_t vDWType_i  = simBox->internalGlobalVDWTypes[i];
+        size_t vDWType_i = simBox->internalGlobalVDWTypes[i];
+
+        for (size_t j = 0; j < simBox->numAtoms; ++j)
+        {
+            size_t moleculeIndex_j = simBox->moleculeIndices[j];
+
+            if (moleculeIndex_i == moleculeIndex_j)
+                continue;
+
+            double dxyz[3] = {
+                simBox->positions[i * 3 + 0] - simBox->positions[j * 3 + 0],
+                simBox->positions[i * 3 + 1] - simBox->positions[j * 3 + 1],
+                simBox->positions[i * 3 + 2] - simBox->positions[j * 3 + 2]
+            };
+
+            double txyz[3];
+
+            calculateShiftVectorKernel(
+                dxyz,
+                simBox->boxDimensions,
+                txyz
+            );
+
+            dxyz[0] += txyz[0];
+            dxyz[1] += txyz[1];
+            dxyz[2] += txyz[2];
+
+            double distanceSquared =
+                dxyz[0] * dxyz[0] + dxyz[1] * dxyz[1] + dxyz[2] * dxyz[2];
+
+            if (distanceSquared > coulombWolf->coulombRadiusCutOff * coulombWolf->coulombRadiusCutOff)
+                continue;
+
+            double partialCharge_j = simBox->partialCharges[j];
+            double distance = sqrt(distanceSquared);
+
+            double force = 0.0;
+
+            potential::calculateWolfKernel(
+                coulombWolf,
+                distance,
+                partialCharge_i,
+                partialCharge_j,
+                force,
+                coulombEnergy_i
+            );
+
+            size_t vdWType_j = simBox->internalGlobalVDWTypes[j];
+            double nRCCutOff = lennardJones->radialCutoffs[vDWType_i * lennardJones->numAtomTypes + vdWType_j];
+
+            if (distance < nRCCutOff)
+            {
+                potential::calculateLennardJonesKernel(
+                    lennardJones, distance, force, vDWType_i, vdWType_j, nonCoulombEnergy_i
+                );
+            }
+
+            force /= distance;
+
+            double force_ij[3] = {
+                force * dxyz[0],
+                force * dxyz[1],
+                force * dxyz[2]
+            };
+
+            simBox->shiftForces[i + 0] += force_ij[0] * txyz[0] / 2;
+            simBox->shiftForces[i + 1] += force_ij[1] * txyz[1] / 2;
+            simBox->shiftForces[i + 2] += force_ij[2] * txyz[2] / 2;
+
+            simBox->forces[i + 0] += force_ij[0];
+            simBox->forces[i + 1] += force_ij[1];
+            simBox->forces[i + 2] += force_ij[2];
+        }
+
     }
 }
 
@@ -77,21 +145,32 @@ using namespace potential;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialCuda::
-    calculateForces(simulationBox::SimulationBox &simBox, 
-        SimulationBoxCuda &simBoxCuda,
-        physicalData::PhysicalData &physicalData)
+inline void CudaPotential::
+calculateForces(SimulationBox& simBox,
+    PhysicalData& physicalData,
+    CudaSimulationBox& simBoxCuda,
+    CudaLennardJones& lennardJonesCuda,
+    CudaCoulombWolf& coulombWolfCuda
+)
 {
     // start transfer timings -------------------------------------------------
     startTimingsSection("InterNonBonded - Transfer");
 
     // set total coulombic and non-coulombic energy
-    double totalCoulombEnergy    = 0.0;
+    double totalCoulombEnergy = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     // cuda simulation box
-    SimulationBoxCuda_t *simBox_struct = simBoxCuda.getSimulationBoxCuda();
+    CudaSimulationBox_t* simBox_struct = simBoxCuda.getSimulationBoxCuda();
+    CudaLennardJones_t* lennardJones_struct = lennardJonesCuda.getCudaLennardJones();
+    CudaCoulombWolf_t* coulombWolf_struct = coulombWolfCuda.getCudaCoulombWolf();
 
+    // create energy arrays on device
+    double* d_coulombEnergies;
+    double* d_nonCoulombEnergies;
+
+    cudaMallocManaged(&d_coulombEnergies, simBox.getNumberOfAtoms() * sizeof(double));
+    cudaMallocManaged(&d_nonCoulombEnergies, simBox.getNumberOfAtoms() * sizeof(double));
 
     // end transfer timings ---------------------------------------------------
     stopTimingsSection("InterNonBonded - Transfer");
@@ -100,17 +179,26 @@ inline void PotentialCuda::
     startTimingsSection("InterNonBonded");
 
     size_t block_size = 256;
-    size_t grid_size  = (simBox_struct->numAtoms + block_size - 1) / block_size;
+    size_t grid_size = (simBox_struct->numAtoms + block_size - 1) / block_size;
 
     // calculate forces on device
-    calculateForcesKernel<<<grid_size, block_size>>>(
+    calculateForcesKernel << <grid_size, block_size >> > (
         simBox_struct,
-        &totalCoulombEnergy,
-        &totalNonCoulombEnergy
-    );
+        lennardJones_struct,
+        coulombWolf_struct,
+        d_coulombEnergies,
+        d_nonCoulombEnergies
+        );
 
     // synchronize device
     cudaDeviceSynchronize();
+
+    // copy data from device
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        totalCoulombEnergy += d_coulombEnergies[i];
+        totalNonCoulombEnergy += d_nonCoulombEnergies[i];
+    }
 
     // stop calculation timings ------------------------------------------------
     stopTimingsSection("InterNonBonded");
@@ -119,11 +207,11 @@ inline void PotentialCuda::
     startTimingsSection("InterNonBonded - Transfer");
 
     // half energy due to double counting
-    totalCoulombEnergy    *= 0.5;
+    totalCoulombEnergy *= 0.5;
     totalNonCoulombEnergy *= 0.5;
 
     // transfer data from device
-    _simulationBoxCuda.transferDataFromDevice(simBox);
+    simBoxCuda.transferDataFromDevice(simBox);
 
     // set total coulombic and non-coulombic energy
     physicalData.setCoulombEnergy(totalCoulombEnergy);

@@ -94,12 +94,9 @@ void MDEngine::run()
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
 
-#ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
-    _timer.addTimer(_kokkosVelocityVerlet.getTimer());
-
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
+#ifdef WITH_CUDA
+    _cudaPotential.setTimerName("Cuda Potential");
+    _timer.addTimer(_cudaPotential.getTimer());
 #endif
 
     references::ReferencesOutput::writeReferencesFile();

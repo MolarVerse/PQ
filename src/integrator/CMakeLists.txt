@@ -2,13 +2,6 @@ set(integrator_source_files
     integrator.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
-    set(integrator_source_files
-        ${integrator_source_files}
-        integrator_kokkos.cpp
-    )
-endif()
-
 add_library(integrator
     ${integrator_source_files}
 )
@@ -19,26 +12,12 @@ target_include_directories(integrator
     ${PROJECT_SOURCE_DIR}/include/integrator
 )
 
-if(BUILD_WITH_KOKKOS)
-    target_include_directories(integrator
-        PUBLIC
-        ${Kokkos_INCLUDE_DIRS_RETS}
-    )
-endif()
-
 target_link_libraries(integrator
     PUBLIC
     simulationBox
     settings
     timings
 )
-
-if(BUILD_WITH_KOKKOS)
-    target_link_libraries(integrator
-        PUBLIC
-        Kokkos::kokkos
-    )
-endif()
 
 install(TARGETS integrator
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/

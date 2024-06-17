@@ -1,12 +1,6 @@
 set(source_files
 )
 
-if(BUILD_WITH_KOKKOS)
-    list(APPEND source_files
-        testPotentialKokkos.cpp
-    )
-endif()
-
 foreach(source_file ${source_files})
     get_filename_component(test_name ${source_file} NAME_WE)
     add_executable(${test_name} ${source_file})

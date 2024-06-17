@@ -38,16 +38,11 @@
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
-#ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
-#endif
-
 #ifdef WITH_CUDA
-#include "potential.cuh"
 #include "simulationBox_cuda.cuh"
+#include "potential_cuda.cuh"
+#include "coulombWolf_cuda.cuh"
+#include "lennardJones_cuda.cuh"
 #endif
 
 namespace output
@@ -71,26 +66,21 @@ namespace output
 namespace engine
 {
     using RPMDRestartFileOutput = output::RingPolymerRestartFileOutput;
-    using RPMDTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
-    using RPMDVelOutput         = output::RingPolymerTrajectoryOutput;
-    using RPMDForceOutput       = output::RingPolymerTrajectoryOutput;
-    using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
-    using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
+    using RPMDTrajectoryOutput = output::RingPolymerTrajectoryOutput;
+    using RPMDVelOutput = output::RingPolymerTrajectoryOutput;
+    using RPMDForceOutput = output::RingPolymerTrajectoryOutput;
+    using RPMDChargeOutput = output::RingPolymerTrajectoryOutput;
+    using RPMDEnergyOutput = output::RingPolymerEnergyOutput;
 
-    using UniqueVirial    = std::unique_ptr<virial::Virial>;
+    using UniqueVirial = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;
-    using BruteForce      = potential::PotentialBruteForce;
-
-#ifdef WITH_KOKKOS
-    using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
-    using KokkosLennardJones  = potential::KokkosLennardJones;
-    using KokkosCoulombWolf   = potential::KokkosCoulombWolf;
-    using KokkosPotential     = potential::KokkosPotential;
-#endif
+    using BruteForce = potential::PotentialBruteForce;
 
 #ifdef WITH_CUDA
-    using PotentialCuda     = potential::PotentialCuda;
-    using SimulationBoxCuda = simulationBox::SimulationBoxCuda;
+    using CudaSimulationBox = simulationBox::CudaSimulationBox;
+    using CudaPotential = potential::CudaPotential;
+    using CudaCoulombWolf = potential::CudaCoulombWolf;
+    using CudaLennardJones = potential::CudaLennardJones;
 #endif
 
     /**
@@ -101,7 +91,7 @@ namespace engine
      */
     class Engine
     {
-       protected:
+    protected:
         size_t _step = 1;
 
         EngineOutput _engineOutput;
@@ -116,30 +106,25 @@ namespace engine
         forceField::ForceField         _forceField;
         intraNonBonded::IntraNonBonded _intraNonBonded;
 
-#ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
-#endif
-
 #ifdef WITH_CUDA
-        potential::PotentialCuda         _cudaPotential;
-        simulationBox::SimulationBoxCuda _cudaSimulationBox;
+        simulationBox::CudaSimulationBox _cudaSimulationBox;
+        potential::CudaPotential         _cudaPotential;
+        potential::CudaCoulombWolf       _cudaCoulombWolf;
+        potential::CudaLennardJones      _cudaLennardJones;
 #endif
 
         UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();
         UniquePotential _potential = std::make_unique<BruteForce>();
 
-       public:
-        Engine()          = default;
+    public:
+        Engine() = default;
         virtual ~Engine() = default;
 
-        virtual void run()         = 0;
-        virtual void takeStep()    = 0;
+        virtual void run() = 0;
+        virtual void takeStep() = 0;
         virtual void writeOutput() = 0;
 
-        void addTimer(const timings::Timer &timings);
+        void addTimer(const timings::Timer& timings);
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
 
@@ -157,29 +142,29 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::CellList        &getCellList();
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]] simulationBox::CellList& getCellList();
+        [[nodiscard]] simulationBox::SimulationBox& getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData& getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData& getAveragePhysicalData();
+        [[nodiscard]] constraints::Constraints& getConstraints();
+        [[nodiscard]] forceField::ForceField& getForceField();
+        [[nodiscard]] intraNonBonded::IntraNonBonded& getIntraNonBonded();
+        [[nodiscard]] virial::Virial& getVirial();
+        [[nodiscard]] potential::Potential& getPotential();
 
-        [[nodiscard]] EngineOutput          &getEngineOutput();
-        [[nodiscard]] output::LogOutput     &getLogOutput();
-        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput& getEngineOutput();
+        [[nodiscard]] output::LogOutput& getLogOutput();
+        [[nodiscard]] output::StdoutOutput& getStdoutOutput();
+        [[nodiscard]] output::TimingsOutput& getTimingsOutput();
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
-        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] forceField::ForceField* getForceFieldPtr();
+        [[nodiscard]] potential::Potential* getPotentialPtr();
+        [[nodiscard]] virial::Virial* getVirialPtr();
+        [[nodiscard]] simulationBox::CellList* getCellListPtr();
+        [[nodiscard]] simulationBox::SimulationBox* getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData* getPhysicalDataPtr();
+        [[nodiscard]] constraints::Constraints* getConstraintsPtr();
+        [[nodiscard]] intraNonBonded::IntraNonBonded* getIntraNonBondedPtr();
 
         /***************************
          * make unique_ptr methods *
@@ -195,18 +180,18 @@ namespace engine
          ********************************/
 
         [[nodiscard]] size_t                getStep() const { return _step; }
-        [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
+        [[nodiscard]] timings::GlobalTimer& getTimer() { return _timer; }
 
-        void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
+        void setTimer(const timings::GlobalTimer& timer) { _timer = timer; }
 
-#ifdef WITH_KOKKOS
-        [[nodiscard]] KokkosSimulationBox &getKokkosSimulationBox();
-        [[nodiscard]] KokkosLennardJones  &getKokkosLennardJones();
-        [[nodiscard]] KokkosCoulombWolf   &getKokkosCoulombWolf();
-        [[nodiscard]] KokkosPotential     &getKokkosPotential();
-        void initKokkosSimulationBox(const size_t numAtoms);
-        void initKokkosLennardJones(const size_t numAtomTypes);
-        void initKokkosCoulombWolf(
+#ifdef WITH_CUDA
+        [[nodiscard]] CudaSimulationBox& getCudaSimulationBox();
+        [[nodiscard]] CudaLennardJones& getCudaLennardJones();
+        [[nodiscard]] CudaCoulombWolf& getCudaCoulombWolf();
+        [[nodiscard]] CudaPotential& getCudaPotential();
+        void initCudaSimulationBox(const size_t numAtoms);
+        void initCudaLennardJones(const size_t numAtomTypes);
+        void initCudaCoulombWolf(
             const double coulombRadiusCutOff,
             const double kappa,
             const double wolfParameter1,
@@ -214,7 +199,7 @@ namespace engine
             const double wolfParameter3,
             const double prefactor
         );
-        void initKokkosPotential();
+        void initCudaPotential();
 #endif
     };
 }   // namespace engine

@@ -57,7 +57,7 @@ namespace settings
        private:
         static inline JobType _jobtype;   // no default value
 
-        static inline bool _useKokkos = false;
+        static inline bool _useCuda = false;
 
         static inline bool _isMMActivated            = false;
         static inline bool _isQMActivated            = false;
@@ -97,7 +97,7 @@ namespace settings
         static void activateMM();
         static void activateQM();
         static void activateRingPolymerMD();
-        static void activateKokkos();
+        static void activateCuda();
 
         static void deactivateMM();
         static void deactivateQM();
@@ -112,7 +112,7 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
-        [[nodiscard]] static bool useKokkos();
+        [[nodiscard]] static bool useCuda();
     };
 
 }   // namespace settings

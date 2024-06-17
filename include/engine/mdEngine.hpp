@@ -30,10 +30,6 @@
 #include "resetKinetics.hpp"
 #include "thermostat.hpp"
 
-#ifdef WITH_KOKKOS
-#include "integrator_kokkos.hpp"
-#endif
-
 namespace engine
 {
     using VelocityVerlet   = integrator::VelocityVerlet;
@@ -44,10 +40,6 @@ namespace engine
 
     using UniqueManostat = std::unique_ptr<manostat::Manostat>;
 
-#ifdef WITH_KOKKOS
-    using KokkosVelocityVerlet = integrator::KokkosVelocityVerlet;
-#endif
-
     /**
      * @brief Molecular dynamics engine
      *
@@ -57,10 +49,6 @@ namespace engine
     {
        protected:
         resetKinetics::ResetKinetics _resetKinetics;
-
-#ifdef WITH_KOKKOS
-        integrator::KokkosVelocityVerlet _kokkosVelocityVerlet;
-#endif
 
         UniqueIntegrator _integrator = std::make_unique<VelocityVerlet>();
         UniqueThermostat _thermostat = std::make_unique<Thermostat>();
@@ -111,19 +99,6 @@ namespace engine
         template <typename T>
         void makeManostat(T manostat);
 
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-#ifdef WITH_KOKKOS
-        [[nodiscard]] KokkosVelocityVerlet &getKokkosVelocityVerlet();
-
-        void initKokkosVelocityVerlet(
-            const double dt,
-            const double velocityFactor,
-            const double timeFactor
-        );
-#endif
     };
 }   // namespace engine
 

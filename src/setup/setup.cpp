@@ -32,7 +32,7 @@
 #include "inputFileReader.hpp"        // for readInputFile
 #include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
-#include "kokkosSetup.hpp"            // for setupKokkos
+#include "cudaSetup.cuh"              // for setupCuda
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
 #include "optimizerSetup.hpp"         // for setupOptimizer
@@ -62,10 +62,10 @@ using namespace input;
  * @param inputFileName
  * @param engine
  */
-void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
     auto simulationTimer = timings::Timer("Simulation");
-    auto setupTimer      = timings::Timer("Setup");
+    auto setupTimer = timings::Timer("Setup");
 
     startSetup(simulationTimer, setupTimer, engine);
 
@@ -80,8 +80,8 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
 
-#ifdef WITH_KOKKOS
-    setupKokkos(engine);
+#ifdef WITH_CUDA
+    setupCuda(engine);
 #endif
 
     endSetup(simulationTimer, setupTimer, engine);
@@ -93,9 +93,9 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  * @param engine
  */
 void setup::startSetup(
-    timings::Timer &simulationTimer,
-    timings::Timer &setupTimer,
-    Engine         &engine
+    timings::Timer& simulationTimer,
+    timings::Timer& setupTimer,
+    Engine& engine
 )
 {
     simulationTimer.startTimingsSection();
@@ -110,9 +110,9 @@ void setup::startSetup(
  * @param engine
  */
 void setup::endSetup(
-    const timings::Timer &simulationTimer,
-    timings::Timer       &setupTimer,
-    Engine               &engine
+    const timings::Timer& simulationTimer,
+    timings::Timer& setupTimer,
+    Engine& engine
 )
 {
     engine.getStdoutOutput().writeSetupCompleted();
@@ -129,7 +129,7 @@ void setup::endSetup(
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(Engine &engine)
+void setup::readFiles(Engine& engine)
 {
     molDescriptor::readMolDescriptor(engine);
 
@@ -147,7 +147,7 @@ void setup::readFiles(Engine &engine)
  *
  * @param engine
  */
-void setup::setupEngine(Engine &engine)
+void setup::setupEngine(Engine& engine)
 {
     if (settings::Settings::isQMActivated())
         setupQM(engine);

@@ -22,22 +22,14 @@
 
 #include <gtest/gtest.h>
 
-#ifdef WITH_KOKKOS
-#include <Kokkos_Core.hpp>
-#endif
-
 class MyTestEnvironment : public ::testing::Environment {
 public:
     void SetUp() override {
-        #ifdef WITH_KOKKOS
-        Kokkos::initialize();
-        #endif
+        return;
     }
 
     void TearDown() override {
-        #ifdef WITH_KOKKOS
-        Kokkos::finalize();
-        #endif
+        return;
     }
 };
 

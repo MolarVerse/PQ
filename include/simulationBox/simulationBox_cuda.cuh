@@ -31,51 +31,52 @@
 */
 namespace simulationBox
 {
+
     /**
      * @brief Structure for the simulation box on the device
      */
-    struct SimulationBoxCuda_t
+    struct CudaSimulationBox_t
     {
         size_t numAtoms;
-        size_t *atomTypes;
-        size_t *molTypes;
-        size_t *moleculeIndices;
-        size_t *internalGlobalVDWTypes;
-        double *positions;
-        double *velocities;
-        double *forces;
-        double *shiftForces;
-        double *pratialCharges;
-        double *masses;
-        double *boxDimensions;
-    }; // struct SimulationBoxCuda_t
+        size_t* atomTypes;
+        size_t* molTypes;
+        size_t* moleculeIndices;
+        size_t* internalGlobalVDWTypes;
+        double* positions;
+        double* velocities;
+        double* forces;
+        double* shiftForces;
+        double* partialCharges;
+        double* masses;
+        double* boxDimensions;
+    }; // struct CudaSimulationBox_t
 
     /**
      * @brief Class for the simulation box on the device
      */
-    class SimulationBoxCuda : public SimulationBox
+    class CudaSimulationBox : public SimulationBox
     {
-        private:
-            // device variables
-            size_t _numAtoms;
-            size_t *_atomTypes;
-            size_t *_molTypes;
-            size_t *_moleculeIndices;
-            size_t *_internalGlobalVDWTypes;
-            double *_positions;
-            double *_velocities;
-            double *_forces;
-            double *_shiftForces;
-            double *_pratialCharges;
-            double *_masses;
-            double *_boxDimensions;
+    private:
+        // device variables
+        size_t _numAtoms;
+        size_t* _atomTypes;
+        size_t* _molTypes;
+        size_t* _moleculeIndices;
+        size_t* _internalGlobalVDWTypes;
+        double* _positions;
+        double* _velocities;
+        double* _forces;
+        double* _shiftForces;
+        double* _partialCharges;
+        double* _masses;
+        double* _boxDimensions;
 
     public:
         // constructor
-        SimulationBoxCuda(size_t numAtoms);
+        CudaSimulationBox(size_t numAtoms);
 
         // default destructor
-        ~SimulationBoxCuda();
+        ~CudaSimulationBox();
 
         // transfer data to devide
         void transferDataToDevice(SimulationBox& simBox);
@@ -103,10 +104,16 @@ namespace simulationBox
         void transferShiftForcesFromDevice(SimulationBox& simBox);
 
         // get device variables
-        SimulationBoxCuda_t *getSimulationBoxCuda();
+        CudaSimulationBox_t* getSimulationBoxCuda();
     };
+
+    // calculate shift vector
+    __device__ void calculateShiftVectorKernel(
+        const double* positions,
+        const double* boxDimensions,
+        double* shiftForces
+    );
 
 };   // namespace simulationBox
 
 #endif // SIMULATIONBOX_CUDA_HPP
-     

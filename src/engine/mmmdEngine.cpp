@@ -37,8 +37,8 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
 
-#ifdef WITH_KOKKOS
-#include "potential_kokkos.hpp"   // for KokkosPotential
+#ifdef WITH_CUDA
+#include "potential_cuda.cuh"   // for CudaPotential
 #endif
 using namespace engine;
 
@@ -67,30 +67,23 @@ void MMMDEngine::takeStep()
 {
     _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
 
-#ifdef WITH_KOKKOS_NO
-    _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
-#else
     _integrator->firstStep(_simulationBox);
-#endif
 
     _constraints.applyShake(_simulationBox);
 
     _cellList.updateCellList(_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.calculateForces(
+#ifdef WITH_CUDA
+    _cudaPotential.calculateForces(
         _simulationBox,
-        _kokkosSimulationBox,
         _physicalData,
-        _kokkosLennardJones,
-        _kokkosCoulombWolf
+        _cudaSimulationBox,
+        _cudaLennardJones,
+        _cudaCoulombWolf
     );
-#elif WITH_CUDA
-    _cudaPotential.calculateForces(_simulationBox, _physicalData);
 #else
     _potential->calculateForces(_simulationBox, _physicalData, _cellList);
 #endif
-
     _intraNonBonded.calculate(_simulationBox, _physicalData);
 
     _virial->calculateVirial(_simulationBox, _physicalData);
@@ -109,11 +102,7 @@ void MMMDEngine::takeStep()
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.secondStep(_simulationBox, _kokkosSimulationBox);
-#else
     _integrator->secondStep(_simulationBox);
-#endif
 
     _constraints.applyRattle(_simulationBox);
 

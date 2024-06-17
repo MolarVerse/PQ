@@ -21,11 +21,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 # *****************
-# BUILD WITH KOKKOS
-# *****************
-option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
-
-# *****************
 # BUILD WITH CUDA
 # *****************
 option(BUILD_WITH_CUDA "Build with CUDA" ON)

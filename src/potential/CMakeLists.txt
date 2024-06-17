@@ -4,13 +4,6 @@ set(potential_source_files
     potentialCellList.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
-    set(potential_source_files
-        ${potential_source_files}
-        potential_kokkos.cpp
-    )
-endif()
-
 if(BUILD_WITH_CUDA)
     set(potential_source_files
         ${potential_source_files}
@@ -36,24 +29,17 @@ target_link_libraries(potential
     timings
 )
 
-if(BUILD_WITH_KOKKOS)
-    target_include_directories(potential
-        PUBLIC
-        ${Kokkos_INCLUDE_DIRS_RET}
-    )
-
-    target_link_libraries(potential
-        PUBLIC
-        nonCoulombPotential_kokkos
-        coulombPotential_kokkos
-        Kokkos::kokkos
-    )
-endif()
-
 if (BUILD_WITH_CUDA)
     target_include_directories(potential
         PUBLIC
         ${CUDA_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(potential
+        PUBLIC
+        nonCoulombPotential_cuda
+        coulombPotential_cuda
+        simulationBox_cuda
     )
 endif()
 
@@ -64,7 +50,7 @@ install(TARGETS potential
 add_subdirectory(coulomb)
 add_subdirectory(nonCoulomb)
 
-if(BUILD_WITH_KOKKOS)
-    add_subdirectory(nonCoulomb_kokkos)
-    add_subdirectory(coulomb_kokkos)
+if(BUILD_WITH_CUDA)
+    add_subdirectory(nonCoulomb_cuda)
+    add_subdirectory(coulomb_cuda)
 endif()

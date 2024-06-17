@@ -258,12 +258,12 @@ bool Settings::isMMOnlyActivated() { return _isMMActivated && !_isQMActivated; }
 bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
 /**
- * @brief Returns true if Kokkos is activated
+ * @brief Returns true if CUDA is activated
  *
  * @return true/false
  *
  */
-bool Settings::useKokkos() { return _useKokkos; }
+bool Settings::useCuda() { return _useCuda; }
 
 /*****************************
  *                           *
@@ -290,10 +290,10 @@ void Settings::activateQM() { _isQMActivated = true; }
 void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
 
 /**
- * @brief activate Kokkos
+ * @brief activate CUDA
  *
  */
-void Settings::activateKokkos() { _useKokkos = true; }
+void Settings::activateCuda() { _useCuda = true; }
 
 /**
  * @brief deactivate MM

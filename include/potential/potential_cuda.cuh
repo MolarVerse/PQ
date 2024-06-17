@@ -23,34 +23,36 @@
 # ifndef POTENTIAL_CUDA_HPP
 # define POTENTIAL_CUDA_HPP
 
+# include "cuda_runtime.h"   // for cudaMallocManaged, cudaFree
+
+# include "simulationBox.hpp"   // for SimulationBox
+# include "simulationBox_cuda.cuh"   // for CudaSimulationBox
+# include "lennardJones_cuda.cuh"   // for CudaLennardJones
+# include "coulombWolf_cuda.cuh"    // for CudaCoulombWolf
 # include "potential.hpp"
+# include "physicalData.hpp"   // for PhysicalData
 
 #include "timer.hpp"   // for Timer
 
-namespace physicalData
-{
-    class PhysicalData;
-}
-
-namespace simulationBox
-{
-    class SimulationBox;
-}   // namespace simulationBox
-
+using namespace simulationBox;
+using namespace potential;
+using namespace physicalData;
 
 namespace potential {
 
-    class LennardJones;   // forward declaration
-    class CoulombWolf;    // forward declaration
-    
-    class PotentialCuda : public timings::Timer
+    class CudaLennardJones;   // forward declaration
+    class CudaCoulombWolf;    // forward declaration
+
+    class CudaPotential : public timings::Timer
     {
     public:
         // calculate forces
         void calculateForces(
-            simulationBox::SimulationBox &simBox,
-            simulationBox::simulationBoxCuda &simBoxCuda,
-            physicalData::PhysicalData &physicalData
+            SimulationBox& simBox,
+            PhysicalData& physicalData,
+            CudaSimulationBox& simBoxCuda,
+            CudaLennardJones& lennardJones,
+            CudaCoulombWolf& coulombWolf
         );
     };
 }   // namespace potential

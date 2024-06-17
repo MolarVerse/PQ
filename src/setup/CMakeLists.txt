@@ -17,10 +17,10 @@ set(setup_source_files
     optimizerSetup.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
+if(BUILD_WITH_CUDA)
     set(setup_source_files
         ${setup_source_files}
-        kokkosSetup.cpp
+        cudaSetup.cu
     )
 endif()
 

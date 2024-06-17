@@ -24,28 +24,9 @@ if(BUILD_WITH_CUDA)
     )
 endif()
 
-if(BUILD_WITH_KOKKOS)
-    set(simulationBox_source_files
-        ${simulationBox_source_files}
-        simulationBox_kokkos.cpp
-    )
-endif()
-
 add_library(simulationBox
     ${simulationBox_source_files}
 )
-
-if(BUILD_WITH_KOKKOS)
-    target_link_libraries(simulationBox
-        PUBLIC
-        Kokkos::kokkos
-    )
-
-    target_include_directories(simulationBox
-        PUBLIC
-        ${Kokkos_INCLUDE_DIRS_RET}
-    )
-endif()
 
 target_include_directories(simulationBox
     PUBLIC
@@ -65,3 +46,10 @@ target_link_libraries(simulationBox
 install(TARGETS simulationBox
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+if(BUILD_WITH_CUDA)
+    target_include_directories(simulationBox
+        PUBLIC
+        ${CUDA_INCLUDE_DIRS}
+    )
+endif()

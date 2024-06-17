@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _KOKKOS_SETUP_HPP_
+#ifndef _CUDA_SETUP_HPP_
 
-#define _KOKKOS_SETUP_HPP_
+#define _CUDA_SETUP_HPP_
 
 namespace engine
 {
@@ -32,24 +32,24 @@ namespace engine
 
 namespace setup
 {
-    void setupKokkos(engine::Engine &);
+    void setupCuda(engine::Engine &);
 
     /**
-     * @class KokkosSetup
+     * @class CudaSetup
      *
-     * @brief setup Kokkos
+     * @brief Class for the CUDA setup
      */
-    class KokkosSetup
+    class CudaSetup
     {
        private:
         engine::Engine &_engine;
 
        public:
-        explicit KokkosSetup(engine::Engine &engine) : _engine(engine){};
+        explicit CudaSetup(engine::Engine &engine) : _engine(engine){};
 
         void setup();
     };
 
 }   // namespace setup
 
-#endif   // _KOKKOS_SETUP_HPP_
+#endif   // _CUDA_SETUP_HPP_

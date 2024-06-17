@@ -51,11 +51,11 @@
  */
 namespace simulationBox
 {
-    using c_ul      = const size_t;
-    using Vec3D     = linearAlgebra::Vec3D;
-    using vector3d  = std::vector<std::vector<std::vector<double>>>;
-    using vector4d  = std::vector<vector3d>;
-    using vector5d  = std::vector<vector4d>;
+    using c_ul = const size_t;
+    using Vec3D = linearAlgebra::Vec3D;
+    using vector3d = std::vector<std::vector<std::vector<double>>>;
+    using vector4d = std::vector<vector3d>;
+    using vector5d = std::vector<vector4d>;
     using map_ul_ul = std::map<size_t, size_t>;
 
     using CustomException = customException::ExceptionType;
@@ -77,19 +77,19 @@ namespace simulationBox
      */
     class SimulationBox
     {
-       private:
+    private:
         int _waterType;
         int _ammoniaType;
 
         size_t _degreesOfFreedom = 0;
 
-        double _totalMass   = 0.0;
+        double _totalMass = 0.0;
         double _totalCharge = 0.0;
-        double _density     = 0.0;
+        double _density = 0.0;
 
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
-        Vec3D                              _centerOfMass = {0.0, 0.0, 0.0};
+        Vec3D                              _centerOfMass = { 0.0, 0.0, 0.0 };
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<std::shared_ptr<Atom>> _qmAtoms;
         std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
@@ -99,8 +99,8 @@ namespace simulationBox
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
-       public:
-        void copy(const SimulationBox &);
+    public:
+        void copy(const SimulationBox&);
 
         void checkCoulombRadiusCutOff(const CustomException) const;
         void setupExternalToInternalGlobalVdwTypesMap();
@@ -121,22 +121,22 @@ namespace simulationBox
         [[nodiscard]] double calculateTemperature();
         [[nodiscard]] double calculateTotalForce();
         [[nodiscard]] Vec3D  calculateMomentum();
-        [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D &);
+        [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D&);
 
         [[nodiscard]] Vec3D calculateBoxDimensionsFromDensity() const;
-        [[nodiscard]] Vec3D calculateShiftVector(const Vec3D &position) const;
+        [[nodiscard]] Vec3D calculateShiftVector(const Vec3D& position) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule> findMolecule(const size_t);
-        [[nodiscard]] MoleculeType &findMoleculeType(const size_t moleculeType);
+        [[nodiscard]] MoleculeType& findMoleculeType(const size_t moleculeType);
         [[nodiscard]] std::vector<MoleculeType> findNecessaryMoleculeTypes();
 
         [[nodiscard]] std::optional<size_t> findMoleculeTypeByString(
-            const std::string &moleculeType
+            const std::string& moleculeType
         ) const;
-        [[nodiscard]] std::pair<Molecule *, size_t> findMoleculeByAtomIndex(
+        [[nodiscard]] std::pair<Molecule*, size_t> findMoleculeByAtomIndex(
             const size_t atomIndex
         );
 
@@ -151,19 +151,19 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> flattenForces();
         [[nodiscard]] std::vector<double> flattenPartialCharges();
 
-        void deFlattenPositions(const std::vector<double> &positions);
-        void deFlattenVelocities(const std::vector<double> &velocities);
-        void deFlattenForces(const std::vector<double> &forces);
-        void deFlattenForces(const double *forces);
+        void deFlattenPositions(const std::vector<double>& positions);
+        void deFlattenVelocities(const std::vector<double>& velocities);
+        void deFlattenForces(const std::vector<double>& forces);
+        void deFlattenForces(const double* forces);
 #endif
 
         /************************
          * QMMM related methods *
          ************************/
 
-        void addQMCenterAtoms(const std::vector<int> &atomIndices);
-        void setupQMOnlyAtoms(const std::vector<int> &atomIndices);
-        void setupMMOnlyAtoms(const std::vector<int> &atomIndices);
+        void addQMCenterAtoms(const std::vector<int>& atomIndices);
+        void setupQMOnlyAtoms(const std::vector<int>& atomIndices);
+        void setupMMOnlyAtoms(const std::vector<int>& atomIndices);
 
         /************************
          * standard add methods *
@@ -171,8 +171,8 @@ namespace simulationBox
 
         void addAtom(const std::shared_ptr<Atom> atom);
         void addQMAtom(const std::shared_ptr<Atom> atom);
-        void addMolecule(const Molecule &molecule);
-        void addMoleculeType(const MoleculeType &molecule);
+        void addMolecule(const Molecule& molecule);
+        void addMoleculeType(const MoleculeType& molecule);
 
         /***************************
          * standard getter methods *
@@ -187,23 +187,23 @@ namespace simulationBox
         [[nodiscard]] double getTotalMass() const;
         [[nodiscard]] double getTotalCharge() const;
         [[nodiscard]] double getDensity() const;
-        [[nodiscard]] Vec3D &getCenterOfMass();
+        [[nodiscard]] Vec3D& getCenterOfMass();
 
-        [[nodiscard]] Atom         &getAtom(const size_t index);
-        [[nodiscard]] Atom         &getQMAtom(const size_t index);
-        [[nodiscard]] Molecule     &getMolecule(const size_t index);
-        [[nodiscard]] MoleculeType &getMoleculeType(const size_t index);
+        [[nodiscard]] Atom& getAtom(const size_t index);
+        [[nodiscard]] Atom& getQMAtom(const size_t index);
+        [[nodiscard]] Molecule& getMolecule(const size_t index);
+        [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms();
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getQMAtoms();
-        [[nodiscard]] std::vector<Molecule>              &getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>          &getMoleculeTypes();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getAtoms();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getQMAtoms();
+        [[nodiscard]] std::vector<Molecule>& getMolecules();
+        [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
-        [[nodiscard]] std::vector<size_t> &getExternalGlobalVdwTypes();
-        [[nodiscard]] map_ul_ul &getExternalToInternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
+        [[nodiscard]] map_ul_ul& getExternalToInternalGlobalVDWTypes();
 
-        [[nodiscard]] Box                 &getBox();
-        [[nodiscard]] Box                 &getBox() const;
+        [[nodiscard]] Box& getBox();
+        [[nodiscard]] Box& getBox() const;
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
@@ -219,7 +219,7 @@ namespace simulationBox
         void setDegreesOfFreedom(const size_t degreesOfFreedom);
 
         template <typename T>
-        void setBox(const T &box)
+        void setBox(const T& box)
         {
             _box = std::make_shared<T>(box);
         }
@@ -228,8 +228,8 @@ namespace simulationBox
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(Vec3D &position) const;
-        void scaleBox(const tensor3D &scalingTensor);
+        void applyPBC(Vec3D& position) const;
+        void scaleBox(const tensor3D& scalingTensor);
 
         [[nodiscard]] double calculateVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -241,7 +241,7 @@ namespace simulationBox
         [[nodiscard]] Vec3D getBoxAngles() const;
 
         void setVolume(const double volume) const;
-        void setBoxDimensions(const Vec3D &boxDimensions) const;
+        void setBoxDimensions(const Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
 
