@@ -161,9 +161,9 @@ void OptEngine::takeStep()
  *
  * @param optimizer
  */
-void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
+void OptEngine::setOptimizer(const Optimizer &optimizer)
 {
-    _optimizer = optimizer;
+    _optimizer = optimizer.clone();
 }
 
 /**
@@ -171,11 +171,9 @@ void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
  *
  * @param learningRateStrategy
  */
-void OptEngine::setLearningRateStrategy(
-    const std::shared_ptr<LearningRateStrategy> &strategy
-)
+void OptEngine::setLearningRateStrategy(const LearningRateStrategy &strategy)
 {
-    _learningRateStrategy = strategy;
+    _learningRateStrategy = strategy.clone();
 }
 
 /**
@@ -183,9 +181,9 @@ void OptEngine::setLearningRateStrategy(
  *
  * @param evaluator
  */
-void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
+void OptEngine::setEvaluator(const Evaluator &evaluator)
 {
-    _evaluator = evaluator;
+    _evaluator = evaluator.clone();
 }
 
 /***************************
