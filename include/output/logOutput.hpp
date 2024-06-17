@@ -36,7 +36,7 @@ namespace output
      */
     class LogOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void writeEmptyLine() { _fp << '\n' << std::flush; }
@@ -45,6 +45,7 @@ namespace output
         void writeEndedNormally(const double elapsedTime);
 
         void writeDensityWarning();
+        void writeConvergenceWarning(const std::string &message);
         void writeInitialMomentum(const double momentum);
 
         void writeSetup(const std::string &setup);

@@ -22,11 +22,11 @@
 
 #include "logOutput.hpp"
 
-#include "outputMessages.hpp"   // for initialMomentumMessage
-
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <string>    // for char_traits, operator<<
+
+#include "outputMessages.hpp"   // for initialMomentumMessage
 
 using output::LogOutput;
 
@@ -48,13 +48,27 @@ void LogOutput::writeEndedNormally(const double elapsedTime)
 }
 
 /**
- * @brief write a warning message to the log file if density and box dimensions are set
+ * @brief write a warning message to the log file if density and box dimensions
+ * are set
  *
  */
 void LogOutput::writeDensityWarning()
 {
-    _fp << _WARNING_ << "Density and box dimensions set. Density will be ignored."
-        << "\n\n"
+    _fp << _WARNING_
+        << "Density and box dimensions set. Density will be ignored." << "\n\n"
+        << std::flush;
+}
+
+/**
+ * @brief write a warning message to the log file if the optimization did not
+ * converge
+ *
+ * @param message
+ */
+void LogOutput::writeConvergenceWarning(const std::string &message)
+{
+    _fp << _WARNING_ << "Optimizer did not converge. " << "\n\n"
+        << message << "\n\n"
         << std::flush;
 }
 
@@ -66,27 +80,42 @@ void LogOutput::writeDensityWarning()
 void LogOutput::writeInitialMomentum(const double momentum)
 {
     _fp << "\n" << std::flush;
-    _fp << std::format("{}Initial momentum = {:.5e} {}*amu/fs\n", _INFO_, momentum, _ANGSTROM_) << std::flush;
+    _fp << std::format(
+               "{}Initial momentum = {:.5e} {}*amu/fs\n",
+               _INFO_,
+               momentum,
+               _ANGSTROM_
+           )
+        << std::flush;
 }
 
 /**
  * @brief write a message to inform about the start of the setup
  *
  */
-void LogOutput::writeSetup(const std::string &setup) { _fp << setupMessage(setup) << '\n' << std::flush; }
+void LogOutput::writeSetup(const std::string &setup)
+{
+    _fp << setupMessage(setup) << '\n' << std::flush;
+}
 
 /**
  * @brief write a message to inform about the setup
  *
  */
-void LogOutput::writeSetupInfo(const std::string &setupInfo) { _fp << _OUTPUT_ << setupInfo << '\n' << std::flush; }
+void LogOutput::writeSetupInfo(const std::string &setupInfo)
+{
+    _fp << _OUTPUT_ << setupInfo << '\n' << std::flush;
+}
 
 /**
  * @brief write a message to the stdout to inform that the setup is completed
  *
  * @param momentum
  */
-void LogOutput::writeSetupCompleted() { _fp << setupCompletedMessage() << '\n' << std::flush; }
+void LogOutput::writeSetupCompleted()
+{
+    _fp << setupCompletedMessage() << '\n' << std::flush;
+}
 
 /**
  * @brief write a message to inform about starting to read a file
