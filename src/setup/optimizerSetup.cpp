@@ -33,6 +33,7 @@
 #include "optimizerSettings.hpp"
 #include "settings.hpp"
 #include "steepestDescent.hpp"
+#include "timingsSettings.hpp"
 
 using setup::OptimizerSetup;
 using namespace settings;
@@ -96,7 +97,7 @@ void OptimizerSetup::setup()
  */
 std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
-    const auto nEpochs = OptimizerSettings::getNumberOfEpochs();
+    const auto nEpochs = TimingsSettings::getNumberOfSteps();
 
     std::shared_ptr<opt::Optimizer> optimizer;
 

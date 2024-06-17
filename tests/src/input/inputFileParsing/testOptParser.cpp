@@ -56,21 +56,6 @@ TEST_F(TestInputFileReader, parserOptimizer)
     )
 }
 
-TEST_F(TestInputFileReader, parseNumberOfEpochs)
-{
-    EXPECT_EQ(OptimizerSettings::getNumberOfEpochs(), 100);
-
-    auto parser = OptInputParser(*_engine);
-    parser.parseNumberOfEpochs({"n-iterations", "=", "1000"}, 0);
-    EXPECT_EQ(settings::OptimizerSettings::getNumberOfEpochs(), 1000);
-
-    ASSERT_THROW_MSG(
-        parser.parseNumberOfEpochs({"n-iterations", "=", "-1000"}, 0),
-        customException::InputFileException,
-        "Number of epochs must be greater than 0 in input file at line 0."
-    )
-}
-
 TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
     EXPECT_EQ(

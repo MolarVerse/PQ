@@ -43,8 +43,6 @@ namespace input
 
         void parseOptimizer(const strings &, const size_t);
 
-        void parseNumberOfEpochs(const strings &, const size_t);
-
         void parseLearningRateStrategy(const strings &, const size_t);
         void parseInitialLearningRate(const strings &, const size_t);
         void parseLearningRateUpdateFrequency(const strings &, const size_t);
