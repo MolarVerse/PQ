@@ -156,10 +156,10 @@ bool Optimizer::hasPropertyConv(
  * @param simulationBox
  */
 void Optimizer::setSimulationBox(
-    const std::shared_ptr<simulationBox::SimulationBox> simulationBox
+    const simulationBox::SimulationBox &simulationBox
 )
 {
-    _simulationBox = simulationBox;
+    _simulationBox = simulationBox.clone();
 }
 
 /**
@@ -167,11 +167,21 @@ void Optimizer::setSimulationBox(
  *
  * @param physicalData
  */
-void Optimizer::setPhysicalData(
-    const std::shared_ptr<physicalData::PhysicalData> physicalData
+void Optimizer::setPhysicalData(const physicalData::PhysicalData &physicalData)
+{
+    _physicalData = physicalData.clone();
+}
+
+/**
+ * @brief set old physical data shared pointer
+ *
+ * @param physicalData
+ */
+void Optimizer::setPhysicalDataOld(
+    const physicalData::PhysicalData &physicalData
 )
 {
-    _physicalData = physicalData;
+    _physicalDataOld = physicalData.clone();
 }
 
 /**

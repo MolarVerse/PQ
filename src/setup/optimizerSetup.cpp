@@ -79,15 +79,15 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
-    // auto       learningRateStrategy = setupLearningRateStrategy();
-    // const auto optimizer            = setupEmptyOptimizer();
-    const auto evaluator = setupEvaluator();
+    auto       learningRateStrategy = setupLearningRateStrategy();
+    const auto optimizer            = setupEmptyOptimizer();
+    const auto evaluator            = setupEvaluator();
 
     // setupMinMaxLR(learningRateStrategy);
 
     // _optEngine.setLearningRateStrategy(learningRateStrategy);
     // _optEngine.setOptimizer(optimizer);
-    _optEngine.setEvaluator(evaluator);
+    _optEngine.setEvaluator(*evaluator);
 }
 
 /**
@@ -116,10 +116,9 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
         }
     }
 
-    optimizer->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
-    optimizer->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
-    )));
-    optimizer->makePhysicalDataOld(_optEngine.getPhysicalDataOld());
+    optimizer->setSimulationBox(_optEngine.getSimulationBox());
+    optimizer->setPhysicalData(_optEngine.getPhysicalData());
+    optimizer->setPhysicalDataOld(_optEngine.getPhysicalDataOld());
 
     return optimizer;
 }

@@ -90,22 +90,13 @@ namespace opt
             const settings::ConvStrategy
         ) const;
 
-        /********************************
-         * standard make shared methods *
-         ********************************/
-
-        template <typename T>
-        void makePhysicalDataOld(T &physicalData)
-        {
-            _physicalDataOld = std::make_shared<T>(physicalData);
-        }
-
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setSimulationBox(const pq::SharedSimBox);
-        void setPhysicalData(const pq::SharedPhysicalData);
+        void setSimulationBox(const simulationBox::SimulationBox &);
+        void setPhysicalData(const physicalData::PhysicalData &);
+        void setPhysicalDataOld(const physicalData::PhysicalData &);
 
         void setEnableEnergyConv(const bool);
         void setEnableMaxForceConv(const bool);
