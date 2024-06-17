@@ -151,14 +151,16 @@ void OptInputParser::parseLearningRateStrategy(
             LearningRateStrategy::CONSTANT
         );
 
-    else if ("decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LearningRateStrategy::DECAY);
+    else if ("constant-decay" == strategy)
+        OptimizerSettings::setLearningRateStrategy(
+            LearningRateStrategy::CONSTANT_DECAY
+        );
 
     else
         throw customException::InputFileException(std::format(
             "Unknown learning rate strategy \"{}\" in input file "
             "at line {}.\n"
-            "Possible options are: constant, decay",
+            "Possible options are: constant, constant-decay",
             lineElements[2],
             lineNumber
         ));
