@@ -68,6 +68,18 @@ OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
         bind_front(&OptInputParser::parseInitialLearningRate, this),
         false
     );
+
+    addKeyword(
+        "learning-rate-decay",
+        bind_front(&OptInputParser::parseLearningRateDecay, this),
+        false
+    );
+
+    addKeyword(
+        "learning-rate-update-frequency",
+        bind_front(&OptInputParser::parseLearningRateUpdateFrequency, this),
+        false
+    );
 }
 
 /**
@@ -192,4 +204,60 @@ void OptInputParser::parseInitialLearningRate(
         ));
 
     OptimizerSettings::setInitialLearningRate(initialLearningRate);
+}
+
+/**
+ * @brief Parses the learning rate decay
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the learning rate decay is
+ * less than or equal to 0.0
+ */
+void OptInputParser::parseLearningRateDecay(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto decay = std::stod(lineElements[2]);
+
+    if (decay <= 0.0)
+        throw customException::InputFileException(std::format(
+            "Learning rate decay must be greater than 0.0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setLearningRateDecay(decay);
+}
+
+/**
+ * @brief Parses the learning rate update frequency
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the learning rate update
+ * frequency is less than or equal to 0
+ */
+void OptInputParser::parseLearningRateUpdateFrequency(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto frequency = std::stoi(lineElements[2]);
+
+    if (frequency <= 0)
+        throw customException::InputFileException(std::format(
+            "Learning rate update frequency must be greater than 0 in input "
+            "file at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setLRUpdateFrequency(size_t(frequency));
 }
