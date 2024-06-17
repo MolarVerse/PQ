@@ -48,6 +48,8 @@ namespace output
         void writeDensityWarning();
         void writeInitialMomentum(const double momentum);
 
+        void writeOptWarning(const std::string &message);
+
         void writeSetup(const std::string &setup);
         void writeSetupInfo(const std::string &setupInfo);
         void writeSetupCompleted();
