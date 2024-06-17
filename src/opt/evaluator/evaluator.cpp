@@ -22,116 +22,109 @@
 
 #include "evaluator.hpp"
 
+#include "celllist.hpp"
+#include "constraints.hpp"
+#include "forceFieldClass.hpp"
+#include "intraNonBonded.hpp"
+#include "physicalData.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
+#include "virial.hpp"
+
 using namespace opt;
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
 /**
- * @brief set the potential
+ * @brief set the potential as shared pointer
  *
- * @param potential
+ * @param potential - potential::Potential&
  */
-void Evaluator::setPotential(
-    const std::shared_ptr<potential::Potential> potential
-)
+void Evaluator::setPotential(const potential::Potential& potential)
 {
-    _potential = potential;
+    _potential = potential.clone();
 }
 
 /**
- * @brief set the simulation box
+ * @brief set the cell list as shared pointer
  *
- * @param simBox
+ * @param cellList - simulationBox::CellList&
+ */
+void Evaluator::setCellList(const simulationBox::CellList& cellList)
+{
+    _cellList = cellList.clone();
+}
+
+/**
+ * @brief set the simulation box as shared pointer
+ *
+ * @param simulationBox - simulationBox::SimulationBox&
  */
 void Evaluator::setSimulationBox(
-    const std::shared_ptr<simulationBox::SimulationBox> simBox
+    const simulationBox::SimulationBox& simulationBox
 )
 {
-    _simulationBox = simBox;
+    _simulationBox = simulationBox.clone();
 }
 
 /**
- * @brief set the constraints
+ * @brief set the constraints as shared pointer
  *
- * @param constraints
+ * @param constraints - constraints::Constraints&
  */
-void Evaluator::setConstraints(
-    const std::shared_ptr<constraints::Constraints> constraints
-)
+void Evaluator::setConstraints(const constraints::Constraints& constraints)
 {
-    _constraints = constraints;
+    _constraints = constraints.clone();
 }
 
 /**
- * @brief set the cell list
+ * @brief set the physical data as shared pointer
  *
- * @param cellList
+ * @param physicalData - physicalData::PhysicalData&
  */
-void Evaluator::setCellList(
-    const std::shared_ptr<simulationBox::CellList> cellList
-)
+void Evaluator::setPhysicalData(const physicalData::PhysicalData& physicalData)
 {
-    _cellList = cellList;
+    _physicalData = physicalData.clone();
 }
 
 /**
- * @brief set the force field
+ * @brief set the old physical data as shared pointer
  *
- * @param forceField
- */
-void Evaluator::setForceField(
-    const std::shared_ptr<forceField::ForceField> forceField
-)
-{
-    _forceField = forceField;
-}
-
-/**
- * @brief set the physical data
- *
- * @param potential
- */
-void Evaluator::setPhysicalData(
-    const std::shared_ptr<physicalData::PhysicalData> physicalData
-)
-{
-    _physicalData = physicalData;
-}
-
-/**
- * @brief set the old physical data
- *
- * @param potential
+ * @param physicalData - physicalData::PhysicalData&
  */
 void Evaluator::setPhysicalDataOld(
-    const std::shared_ptr<physicalData::PhysicalData> physicalDataOld
+    const physicalData::PhysicalData& physicalData
 )
 {
-    _physicalDataOld = physicalDataOld;
+    _physicalDataOld = physicalData.clone();
 }
 
 /**
- * @brief set the virial
+ * @brief set the force field as shared pointer
  *
- * @param virial
+ * @param forceField - forceField::ForceField&
  */
-void Evaluator::setVirial(const std::shared_ptr<virial::Virial> virial)
+void Evaluator::setForceField(const forceField::ForceField& forceField)
 {
-    _virial = virial;
+    _forceField = forceField.clone();
 }
 
 /**
- * @brief set the intra non bonded
+ * @brief set the intra non bonded as shared pointer
  *
- * @param i
+ * @param intraNonBonded - intraNonBonded::IntraNonBonded&
  */
 void Evaluator::setIntraNonBonded(
-    const std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+    const intraNonBonded::IntraNonBonded& intraNonBonded
 )
 {
-    _intraNonBonded = intraNonBonded;
+    _intraNonBonded = intraNonBonded.clone();
+}
+
+/**
+ * @brief set the virial as shared pointer
+ *
+ * @param virial - virial::Virial&
+ */
+void Evaluator::setVirial(const virial::Virial& virial)
+{
+    _virial = virial.clone();
 }

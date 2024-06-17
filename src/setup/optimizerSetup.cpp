@@ -79,14 +79,14 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
-    auto       learningRateStrategy = setupLearningRateStrategy();
-    const auto optimizer            = setupEmptyOptimizer();
-    const auto evaluator            = setupEvaluator();
+    // auto       learningRateStrategy = setupLearningRateStrategy();
+    // const auto optimizer            = setupEmptyOptimizer();
+    const auto evaluator = setupEvaluator();
 
-    setupMinMaxLR(learningRateStrategy);
+    // setupMinMaxLR(learningRateStrategy);
 
-    _optEngine.setLearningRateStrategy(learningRateStrategy);
-    _optEngine.setOptimizer(optimizer);
+    // _optEngine.setLearningRateStrategy(learningRateStrategy);
+    // _optEngine.setOptimizer(optimizer);
     _optEngine.setEvaluator(evaluator);
 }
 
@@ -119,9 +119,7 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     optimizer->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
     optimizer->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
     )));
-    optimizer->setPhysicalDataOld(
-        SharedPhysicalData(_optEngine.getPhysicalDataOldPtr())
-    );
+    optimizer->makePhysicalDataOld(_optEngine.getPhysicalDataOld());
 
     return optimizer;
 }
@@ -218,21 +216,16 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
             "evaluator"
         );
 
-    evaluator->setCellList(SharedCellList(_optEngine.getCellListPtr()));
-    evaluator->setForceField(SharedForceField(_optEngine.getForceFieldPtr()));
-    evaluator->setPotential(SharedPotential(_optEngine.getPotentialPtr()));
-    evaluator->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
-    evaluator->setVirial(SharedVirial(_optEngine.getVirialPtr()));
-    evaluator->setConstraints(SharedConstraints(_optEngine.getConstraintsPtr())
-    );
-    evaluator->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
-    )));
-    evaluator->setPhysicalData(
-        SharedPhysicalData(_optEngine.getPhysicalDataOldPtr())
-    );
-    evaluator->setIntraNonBonded(
-        SharedIntraNonBonded(_optEngine.getIntraNonBondedPtr())
-    );
+    evaluator->setCellList(_optEngine.getCellList());
+    evaluator->setSimulationBox(_optEngine.getSimulationBox());
+    evaluator->setPotential(_optEngine.getPotential());
+    evaluator->setForceField(_optEngine.getForceField());
+    evaluator->setConstraints(_optEngine.getConstraints());
+    evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
+    evaluator->setVirial(_optEngine.getVirial());
+    evaluator->setSimulationBox(_optEngine.getSimulationBox());
+    evaluator->setPhysicalData(_optEngine.getPhysicalData());
+    evaluator->setPhysicalDataOld(_optEngine.getPhysicalDataOld());
 
     return evaluator;
 }

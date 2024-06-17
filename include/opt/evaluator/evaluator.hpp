@@ -99,19 +99,15 @@ namespace opt
 
         virtual void updateForces() = 0;
 
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setPotential(const SharedPotential);
-        void setSimulationBox(const SharedSimBox);
-        void setConstraints(const SharedConstraints);
-        void setCellList(const SharedCellList);
-        void setForceField(const SharedForceField);
-        void setPhysicalData(const SharedPhysicalData);
-        void setPhysicalDataOld(const SharedPhysicalData);
-        void setVirial(const SharedVirial);
-        void setIntraNonBonded(const SharedIntraNonBond);
+        void setPotential(const potential::Potential &);
+        void setCellList(const simulationBox::CellList &);
+        void setSimulationBox(const simulationBox::SimulationBox &);
+        void setConstraints(const constraints::Constraints &);
+        void setPhysicalData(const physicalData::PhysicalData &);
+        void setPhysicalDataOld(const physicalData::PhysicalData &);
+        void setForceField(const forceField::ForceField &);
+        void setVirial(const virial::Virial &);
+        void setIntraNonBonded(const intraNonBonded::IntraNonBonded &);
     };
 
 }   // namespace opt
