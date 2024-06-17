@@ -38,6 +38,9 @@ using namespace opt;
  */
 void MMEvaluator::updateForces()
 {
+    _physicalDataOld->copy(*_physicalData);
+    _simulationBox->updateOldForces();
+
     // _constraints->applyShake(_simulationBox);
 
     _cellList->updateCellList(*_simulationBox);
@@ -72,7 +75,4 @@ void MMEvaluator::updateForces()
     // _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     // _constraints.applyRattle(_simulationBox);
-
-    _physicalDataOld->copy(*_physicalData);
-    _simulationBox->updateOldForces();
 }
