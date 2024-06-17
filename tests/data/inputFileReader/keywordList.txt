@@ -4,6 +4,8 @@ optimizer                   false
 n-interactions              false
 learning-rate-strategy      false
 initial-learning-rate       false
+learning-rate-decay         false
+learning-rate-update-freq   false
 
 conv-strategy               false
 energy-conv-strategy        false

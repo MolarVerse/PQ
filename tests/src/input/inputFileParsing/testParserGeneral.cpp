@@ -81,16 +81,11 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_EQ(typeid(*engine), typeid(engine::QMMMMDEngine));
 
     lineElements = {"jobtype", "=", "mm-opt"};
-    // parser.parseJobTypeForEngine(lineElements, 0, engine);
-    // EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
-    // EXPECT_EQ(Settings::isOptJobType(), true);
-    // EXPECT_EQ(Settings::isMMActivated(), true);
-    // EXPECT_EQ(typeid(*engine), typeid(engine::OptEngine));
-    EXPECT_THROW_MSG(
-        parser.parseJobTypeForEngine(lineElements, 0, engine),
-        customException::InputFileException,
-        "Optimization is not yet implemented"
-    );
+    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
+    EXPECT_EQ(Settings::isOptJobType(), true);
+    EXPECT_EQ(Settings::isMMActivated(), true);
+    EXPECT_EQ(typeid(*engine), typeid(engine::OptEngine));
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(

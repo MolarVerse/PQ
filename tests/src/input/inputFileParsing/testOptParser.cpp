@@ -82,12 +82,12 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 
     auto parser = OptInputParser(*_engine);
     parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "decay"},
+        {"learning-rate-strategy", "=", "constant-decay"},
         0
     );
     EXPECT_EQ(
         settings::OptimizerSettings::getLearningRateStrategy(),
-        settings::LearningRateStrategy::DECAY
+        settings::LearningRateStrategy::CONSTANT_DECAY
     );
 
     parser.parseLearningRateStrategy(
@@ -106,7 +106,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         ),
         customException::InputFileException,
         "Unknown learning rate strategy \"notValid\" in input file at line 0.\n"
-        "Possible options are: constant, decay"
+        "Possible options are: constant, constant-decay"
     )
 }
 
