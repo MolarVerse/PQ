@@ -101,10 +101,6 @@ void InputFileParserGeneral::parseJobTypeForEngine(
     {
         settings::Settings::setJobtype("MMOPT");
         engine.reset(new engine::OptEngine());
-
-        throw customException::InputFileException(
-            "Optimization is not yet implemented"
-        );
     }
     else if (jobtype == "mm-md")
     {
