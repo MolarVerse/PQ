@@ -38,7 +38,5 @@ ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
  * @brief Update the learning rate
  *
  * @details This function does nothing, as the learning rate is constant.
- *
- * @param message here the message is not used
  */
-void ConstantLRStrategy::updateLearningRate(std::string &) {}
+void ConstantLRStrategy::updateLearningRate() {}

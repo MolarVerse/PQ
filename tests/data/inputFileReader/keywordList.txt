@@ -6,6 +6,8 @@ learning-rate-strategy      false
 initial-learning-rate       false
 learning-rate-decay         false
 learning-rate-update-freq   false
+min-learning-rate           false
+max-learning-rate           false
 
 conv-strategy               false
 energy-conv-strategy        false

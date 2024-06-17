@@ -54,7 +54,7 @@ namespace opt
         ConstantDecayLRStrategy()           = default;
         ~ConstantDecayLRStrategy() override = default;
 
-        void updateLearningRate(std::string &message) override;
+        void updateLearningRate() override;
     };
 
 }   // namespace opt

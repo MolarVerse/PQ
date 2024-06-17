@@ -31,6 +31,22 @@
 using output::LogOutput;
 
 /**
+ * @brief write an empty line to the log file
+ *
+ */
+void LogOutput::writeEmptyLine() { _fp << '\n' << std::flush; }
+
+/**
+ * @brief write a message to the log file
+ *
+ * @param message
+ */
+void LogOutput::writeInfo(const std::string &message)
+{
+    _fp << message << '\n' << std::flush;
+}
+
+/**
  * @brief write header title
  *
  * @return string
@@ -65,11 +81,9 @@ void LogOutput::writeDensityWarning()
  *
  * @param message
  */
-void LogOutput::writeConvergenceWarning(const std::string &message)
+void LogOutput::writeOptWarning(const std::string &message)
 {
-    _fp << _WARNING_ << "Optimizer did not converge. " << "\n\n"
-        << message << "\n\n"
-        << std::flush;
+    _fp << _WARNING_ << message << "\n\n" << std::flush;
 }
 
 /**

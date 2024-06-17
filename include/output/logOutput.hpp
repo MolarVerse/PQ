@@ -39,13 +39,13 @@ namespace output
        public:
         using Output::Output;
 
-        void writeEmptyLine() { _fp << '\n' << std::flush; }
+        void writeEmptyLine();
+        void writeInfo(const std::string &message);
 
         void writeHeader();
         void writeEndedNormally(const double elapsedTime);
 
         void writeDensityWarning();
-        void writeConvergenceWarning(const std::string &message);
         void writeInitialMomentum(const double momentum);
 
         void writeSetup(const std::string &setup);

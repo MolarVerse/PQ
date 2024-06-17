@@ -59,7 +59,7 @@ ConstantDecayLRStrategy::ConstantDecayLRStrategy(
 /**
  * @brief Update the learning rate
  */
-void ConstantDecayLRStrategy::updateLearningRate(std::string &message)
+void ConstantDecayLRStrategy::updateLearningRate()
 {
     if (_counter % _frequency == 0)
         _learningRate -= _decay;
@@ -67,5 +67,5 @@ void ConstantDecayLRStrategy::updateLearningRate(std::string &message)
     ++_counter;
 
     if (_learningRate <= 0.0)
-        message = "Learning rate is zero or negative.";
+        _warningMessages.emplace_back("Learning rate got zero or negative.");
 }

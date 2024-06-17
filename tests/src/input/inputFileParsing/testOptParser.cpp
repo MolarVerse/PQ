@@ -133,3 +133,86 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
         "0."
     )
 }
+
+TEST_F(TestInputFileReader, parserLearningRateDecay)
+{
+    EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), std::nullopt);
+
+    OptimizerSettings::setLearningRateDecay(0.0);
+
+    auto parser = OptInputParser(*_engine);
+    parser.parseLearningRateDecay({"learning-rate-decay", "=", "0.99"}, 0);
+    EXPECT_EQ(settings::OptimizerSettings::getLearningRateDecay(), 0.99);
+
+    ASSERT_THROW_MSG(
+        parser.parseLearningRateDecay({"learning-rate-decay", "=", "-0.99"}, 0),
+        customException::InputFileException,
+        "Learning rate decay must be greater than 0.0 in input file at line 0."
+    )
+}
+
+TEST_F(TestInputFileReader, parserMaxLearningRate)
+{
+    EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), std::nullopt);
+
+    OptimizerSettings::setMaxLearningRate(0.0);
+
+    auto parser = OptInputParser(*_engine);
+    parser.parseMaxLearningRate({"max-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(settings::OptimizerSettings::getMaxLearningRate(), 0.99);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaxLearningRate({"max-learning-rate", "=", "-0.99"}, 0),
+        customException::InputFileException,
+        "Maximum learning rate must be greater than 0.0 in input file at line "
+        "0."
+    )
+}
+
+TEST_F(TestInputFileReader, parserLRUpdateFrequency)
+{
+    EXPECT_EQ(
+        OptimizerSettings::getLRUpdateFrequency(),
+        defaults::_LR_UPDATE_FREQUENCY_DEFAULT_
+    );
+
+    OptimizerSettings::setLRUpdateFrequency(0);
+
+    auto parser = OptInputParser(*_engine);
+    parser.parseLearningRateUpdateFrequency(
+        {"lr-update-frequency", "=", "100"},
+        0
+    );
+    EXPECT_EQ(settings::OptimizerSettings::getLRUpdateFrequency(), 100);
+
+    ASSERT_THROW_MSG(
+        parser.parseLearningRateUpdateFrequency(
+            {"lr-update-frequency", "=", "-100"},
+            0
+        ),
+        customException::InputFileException,
+        "Learning rate update frequency must be greater than 0 in input file "
+        "at line 0."
+    )
+}
+
+TEST_F(TestInputFileReader, parserMinLearningRate)
+{
+    EXPECT_EQ(
+        OptimizerSettings::getMinLearningRate(),
+        defaults::_MIN_LEARNING_RATE_DEFAULT_
+    );
+
+    OptimizerSettings::setMinLearningRate(0.0);
+
+    auto parser = OptInputParser(*_engine);
+    parser.parseMinLearningRate({"min-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(settings::OptimizerSettings::getMinLearningRate(), 0.99);
+
+    ASSERT_THROW_MSG(
+        parser.parseMinLearningRate({"min-learning-rate", "=", "-0.99"}, 0),
+        customException::InputFileException,
+        "Minimum learning rate must be greater than 0.0 in input file at line "
+        "0."
+    )
+}

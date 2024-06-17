@@ -22,6 +22,10 @@
 
 #include "optEngine.hpp"
 
+#include <format>   // for format
+
+#include "exceptions.hpp"
+
 using namespace engine;
 using namespace opt;
 
@@ -34,18 +38,73 @@ void OptEngine::run()
     {
         takeStep();
 
-        if (_converged)
+        if (_converged || _optStopped)
             break;
+
+        writeOutput();
     }
 
     if (!_converged)
     {
-        // TODO: add details as argument
-        getLogOutput().writeConvergenceWarning("");
-        getStdoutOutput().writeConvergenceWarning("");
+        throw customException::OptException(std::format(
+            "Optimizer did not converge after {} epochs.",
+            _optimizer->getNEpochs()
+        ));
     }
 
-    writeOutput();
+    if (_optStopped)
+    {
+        auto exceptionMessage = std::format(
+            "Optimizer stopped after {} epochs out of {}. The following error "
+            "messages were raised:\n",
+            _step,
+            _optimizer->getNEpochs()
+        );
+
+        const auto &errorMessages = _learningRateStrategy->getErrorMessages();
+
+        for (size_t i = 0; i < errorMessages.size(); ++i)
+            exceptionMessage +=
+                std::format("{}) {}\n", i + 1, errorMessages[i]);
+
+        throw customException::OptException(exceptionMessage);
+    }
+
+    _timer.stopSimulationTimer();
+
+    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+
+    _engineOutput.setTimerName("Output");
+    _timer.addTimer(_engineOutput.getTimer());
+
+    _constraints.setTimerName("Constraints");
+    _timer.addTimer(_constraints.getTimer());
+
+    _cellList.setTimerName("Cell List");
+    _timer.addTimer(_cellList.getTimer());
+
+    _potential->setTimerName("Potential");
+    _timer.addTimer(_potential->getTimer());
+
+    _intraNonBonded.setTimerName("IntraNonBonded");
+    _timer.addTimer(_intraNonBonded.getTimer());
+
+    _physicalData.setTimerName("Physical Data");
+    _timer.addTimer(_physicalData.getTimer());
+
+    _engineOutput.writeTimingsFile(_timer);
+
+    if (_converged)
+    {
+        const auto convergeMessage =
+            std::format("Optimizer converged after {} epochs.", _step);
+
+        getLogOutput().writeInfo(convergeMessage);
+        getStdoutOutput().writeInfo(convergeMessage);
+
+        getLogOutput().writeEndedNormally(elapsedTime);
+        getStdoutOutput().writeEndedNormally(elapsedTime);
+    }
 }
 
 /**
@@ -61,20 +120,30 @@ void OptEngine::takeStep()
 
     if (!_converged)
     {
-        std::string _message = "";
+        _learningRateStrategy->updateLearningRate();
 
-        _learningRateStrategy->updateLearningRate(_message);
+        if (!_learningRateStrategy->getErrorMessages().empty())
+            _optStopped = true;
 
-        if (_message != "")
+        const auto &warningMessages =
+            _learningRateStrategy->getWarningMessages();
+
+        if (!warningMessages.empty())
         {
-            std::string message = std::format(
-                "Execution stopped at epoch {} out of {}.\n The following "
-                "warning problem was encountered during the learning rate "
-                "update:\n{}",
+            const auto headerMessage = std::format(
+                "Updating learning rate did raise "
+                "the following warnings in epoch {} out of {}:",
                 _step,
-                _optimizer->getNEpochs(),
-                _message
+                _optimizer->getNEpochs()
             );
+            getLogOutput().writeOptWarning(headerMessage);
+            getStdoutOutput().writeOptWarning(headerMessage);
+
+            for (const auto &message : warningMessages)
+            {
+                getLogOutput().writeOptWarning(message);
+                getStdoutOutput().writeOptWarning(message);
+            }
         }
     }
 

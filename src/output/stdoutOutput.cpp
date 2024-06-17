@@ -33,6 +33,16 @@
 using output::StdoutOutput;
 
 /**
+ * @brief write a message to the stdout
+ *
+ * @param message
+ */
+void StdoutOutput::writeInfo(const std::string &message) const
+{
+    std::cout << message << '\n' << std::flush;
+}
+
+/**
  * @brief write header title
  *
  * @return string
@@ -78,19 +88,17 @@ void StdoutOutput::writeDensityWarning() const
  *
  * @param message
  */
-void StdoutOutput::writeConvergenceWarning(const std::string &message) const
+void StdoutOutput::writeOptWarning(const std::string &message) const
 {
     try
     {
-        throw customException::UserInputExceptionWarning(std::format(
-            "{}Optimizer did not converge. \n\n{}",
-            _OUTPUT_,
-            message
-        ));
+        throw customException::UserInputExceptionWarning(
+            std::format("{}{}", _WARNING_, message)
+        );
     }
     catch (const customException::UserInputExceptionWarning &e)
     {
-        std::cout << _OUTPUT_ << e.what() << "\n\n" << std::flush;
+        std::cout << e.what() << "\n\n" << std::flush;
     }
 }
 

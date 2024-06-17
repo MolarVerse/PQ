@@ -52,7 +52,8 @@ namespace engine
 
         physicalData::PhysicalData _physicalDataOld;
 
-        bool _converged = false;
+        bool _converged  = false;
+        bool _optStopped = false;
 
        public:
         void run() final;

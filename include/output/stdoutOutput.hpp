@@ -39,11 +39,13 @@ namespace output
        public:
         using Output::Output;
 
+        void writeInfo(const std::string &message) const;
+
         void writeHeader() const;
         void writeEndedNormally(const double elapsedTime) const;
 
         void writeDensityWarning() const;
-        void writeConvergenceWarning(const std::string &message) const;
+        void writeOptWarning(const std::string &message) const;
 
         void writeSetup(const std::string &setup) const;
         void writeSetupCompleted() const;
