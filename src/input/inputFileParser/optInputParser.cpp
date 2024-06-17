@@ -80,6 +80,18 @@ OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
         bind_front(&OptInputParser::parseLearningRateUpdateFrequency, this),
         false
     );
+
+    addKeyword(
+        "min-learning-rate",
+        bind_front(&OptInputParser::parseMinLearningRate, this),
+        false
+    );
+
+    addKeyword(
+        "max-learning-rate",
+        bind_front(&OptInputParser::parseMaxLearningRate, this),
+        false
+    );
 }
 
 /**
@@ -207,34 +219,6 @@ void OptInputParser::parseInitialLearningRate(
 }
 
 /**
- * @brief Parses the learning rate decay
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws customException::InputFileException if the learning rate decay is
- * less than or equal to 0.0
- */
-void OptInputParser::parseLearningRateDecay(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto decay = std::stod(lineElements[2]);
-
-    if (decay <= 0.0)
-        throw customException::InputFileException(std::format(
-            "Learning rate decay must be greater than 0.0 in input file "
-            "at line {}.",
-            lineNumber
-        ));
-
-    OptimizerSettings::setLearningRateDecay(decay);
-}
-
-/**
  * @brief Parses the learning rate update frequency
  *
  * @param lineElements The elements of the line
@@ -260,4 +244,88 @@ void OptInputParser::parseLearningRateUpdateFrequency(
         ));
 
     OptimizerSettings::setLRUpdateFrequency(size_t(frequency));
+}
+
+/**
+ * @brief Parses the minimum learning rate
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the minimum learning rate is
+ * less than or equal to 0.0
+ */
+void OptInputParser::parseMinLearningRate(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto minLearningRate = std::stod(lineElements[2]);
+
+    if (minLearningRate <= 0.0)
+        throw customException::InputFileException(std::format(
+            "Minimum learning rate must be greater than 0.0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setMinLearningRate(minLearningRate);
+}
+
+/**
+ * @brief Parses the maximum learning rate
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the maximum learning rate is
+ * less than or equal to 0.0
+ */
+void OptInputParser::parseMaxLearningRate(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto maxLearningRate = std::stod(lineElements[2]);
+
+    if (maxLearningRate <= 0.0)
+        throw customException::InputFileException(std::format(
+            "Maximum learning rate must be greater than 0.0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setMaxLearningRate(maxLearningRate);
+}
+
+/**
+ * @brief Parses the learning rate decay
+ *
+ * @param lineElements The elements of the line
+ * @param lineNumber The line number
+ *
+ * @throws customException::InputFileException if the learning rate decay is
+ * less than or equal to 0.0
+ */
+void OptInputParser::parseLearningRateDecay(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    const auto decay = std::stod(lineElements[2]);
+
+    if (decay <= 0.0)
+        throw customException::InputFileException(std::format(
+            "Learning rate decay must be greater than 0.0 in input file "
+            "at line {}.",
+            lineNumber
+        ));
+
+    OptimizerSettings::setLearningRateDecay(decay);
 }

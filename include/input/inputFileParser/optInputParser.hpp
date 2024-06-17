@@ -48,9 +48,10 @@ namespace input
         void parseLearningRateStrategy(const strings &, const size_t);
         void parseInitialLearningRate(const strings &, const size_t);
         void parseLearningRateUpdateFrequency(const strings &, const size_t);
+        void parseMinLearningRate(const strings &, const size_t);
+        void parseMaxLearningRate(const strings &, const size_t);
 
         void parseLearningRateDecay(const strings &, const size_t);
-        // void parseEndLearningRate(const strings &, const size_t);
     };
 
 }   // namespace input
