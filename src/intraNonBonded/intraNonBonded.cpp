@@ -34,6 +34,16 @@
 using namespace intraNonBonded;
 
 /**
+ * @brief clones the IntraNonBonded object
+ *
+ * @return std::shared_ptr<IntraNonBonded>
+ */
+std::shared_ptr<IntraNonBonded> IntraNonBonded::clone() const
+{
+    return std::make_shared<IntraNonBonded>(*this);
+}
+
+/**
  * @brief find a intraNonBondedContainer by molType and return a pointer to it
  *
  * @param molType
