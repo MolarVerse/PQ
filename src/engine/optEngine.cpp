@@ -219,11 +219,11 @@ std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
 std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }
 
 /**
- * @brief get the old physical data pointer
+ * @brief get the old physical data reference
  *
- * @return physicalData::PhysicalData*
+ * @return physicalData::PhysicalData&
  */
-physicalData::PhysicalData *OptEngine::getPhysicalDataOldPtr()
+physicalData::PhysicalData &OptEngine::getPhysicalDataOld()
 {
-    return &_physicalDataOld;
+    return _physicalDataOld;
 }

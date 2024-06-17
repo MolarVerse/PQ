@@ -76,7 +76,7 @@ namespace engine
         [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
         [[nodiscard]] std::shared_ptr<opt::Evaluator> &getEvaluator();
 
-        [[nodiscard]] physicalData::PhysicalData *getPhysicalDataOldPtr();
+        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
 
         /***************************************
          * standard make smart pointer methods *
