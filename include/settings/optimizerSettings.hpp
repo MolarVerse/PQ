@@ -54,8 +54,10 @@ namespace settings
         CONSTANT_DECAY,
     };
 
+    using LRStrategy = LearningRateStrategy;
+
     std::string string(const Optimizer method);
-    std::string string(const LearningRateStrategy method);
+    std::string string(const LRStrategy method);
 
     /**
      * @class OptimizerSettings
@@ -67,13 +69,15 @@ namespace settings
     {
        private:
         // clang-format off
-        static inline Optimizer _optimizer = Optimizer::STEEPEST_DESCENT;
-        static inline LearningRateStrategy _learningRateStrategy = LearningRateStrategy::NONE;
+        static inline Optimizer _optimizer             = Optimizer::STEEPEST_DESCENT;
+        static inline LRStrategy _learningRateStrategy = LRStrategy::NONE;
 
-        static inline size_t _nEpochs = defaults::_N_EPOCHS_DEFAULT_;
+        static inline size_t _nEpochs           = defaults::_N_EPOCHS_DEFAULT_;
+        static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;
 
-        static inline double _initialLearningRate      = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
-        static inline bool   _isInitialLearningRateSet = false;
+        static inline double _initialLearningRate = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
+
+        static inline std::optional<double> _learningRateDecay;
         // clang-format on
 
        public:
@@ -85,20 +89,26 @@ namespace settings
         static void setOptimizer(const Optimizer optimizer);
 
         static void setLearningRateStrategy(const std::string_view &);
-        static void setLearningRateStrategy(const LearningRateStrategy);
+        static void setLearningRateStrategy(const LRStrategy);
 
         static void setNumberOfEpochs(const size_t);
+        static void setLRUpdateFrequency(const size_t);
 
         static void setInitialLearningRate(const double);
+        static void setLearningRateDecay(const double);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static Optimizer            getOptimizer();
-        [[nodiscard]] static LearningRateStrategy getLearningRateStrategy();
-        [[nodiscard]] static size_t               getNumberOfEpochs();
-        [[nodiscard]] static double               getInitialLearningRate();
+        [[nodiscard]] static Optimizer  getOptimizer();
+        [[nodiscard]] static LRStrategy getLearningRateStrategy();
+
+        [[nodiscard]] static size_t getNumberOfEpochs();
+        [[nodiscard]] static size_t getLRUpdateFrequency();
+
+        [[nodiscard]] static double                getInitialLearningRate();
+        [[nodiscard]] static std::optional<double> getLearningRateDecay();
 
     };   // namespace settings
 }   // namespace settings

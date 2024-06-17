@@ -114,17 +114,6 @@ void OptimizerSettings::setLearningRateStrategy(
 }
 
 /**
- * @brief sets the initial learning rate
- *
- * @param learningRate
- */
-void OptimizerSettings::setInitialLearningRate(const double learningRate)
-{
-    _initialLearningRate      = learningRate;
-    _isInitialLearningRateSet = true;
-}
-
-/**
  * @brief sets the number of epochs
  *
  * @param nEpochs
@@ -132,6 +121,36 @@ void OptimizerSettings::setInitialLearningRate(const double learningRate)
 void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
 {
     _nEpochs = nEpochs;
+}
+
+/**
+ * @brief sets the learning rate update frequency
+ *
+ * @param frequency
+ */
+void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
+{
+    _LRupdateFrequency = frequency;
+}
+
+/**
+ * @brief sets the initial learning rate
+ *
+ * @param learningRate
+ */
+void OptimizerSettings::setInitialLearningRate(const double learningRate)
+{
+    _initialLearningRate = learningRate;
+}
+
+/**
+ * @brief sets the learning rate decay
+ *
+ * @param decay
+ */
+void OptimizerSettings::setLearningRateDecay(const double decay)
+{
+    _learningRateDecay = decay;
 }
 
 /***************************
@@ -158,6 +177,20 @@ LearningRateStrategy OptimizerSettings::getLearningRateStrategy()
 }
 
 /**
+ * @brief returns the number of epochs
+ *
+ * @return size_t
+ */
+size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+
+/**
+ * @brief returns the learning rate update frequency
+ *
+ * @return size_t
+ */
+size_t OptimizerSettings::getLRUpdateFrequency() { return _LRupdateFrequency; }
+
+/**
  * @brief returns the initial learning rate
  *
  * @return double
@@ -168,8 +201,11 @@ double OptimizerSettings::getInitialLearningRate()
 }
 
 /**
- * @brief returns the number of epochs
+ * @brief returns the learning rate decay
  *
- * @return size_t
+ * @return std::optional<double>
  */
-size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+std::optional<double> OptimizerSettings::getLearningRateDecay()
+{
+    return _learningRateDecay;
+}
