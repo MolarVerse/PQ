@@ -112,14 +112,12 @@ namespace pq
     using VirialMolecular = virial::VirialMolecular;
     using Potential       = potential::Potential;
     using BruteForcePot   = potential::PotentialBruteForce;
-    using PhysicalData    = physicalData::PhysicalData;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
     using Constraints     = constraints::Constraints;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
     using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
@@ -127,17 +125,29 @@ namespace pq
     using SharedVirial       = std::shared_ptr<virial::Virial>;
     using SharedPotential    = std::shared_ptr<potential::Potential>;
 
+    /**************************
+     * physicalData namespace *
+     **************************/
+    using PhysicalData       = physicalData::PhysicalData;
+    using VecPhysicalData    = std::vector<PhysicalData>;
+    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+
+    /*****************
+     * opt namespace *
+     *****************/
+
     using Evaluator       = opt::Evaluator;
     using MMEvaluator     = opt::MMEvaluator;
-    using LearningRate    = opt::LearningRateStrategy;
-    using ConstantLR      = opt::ConstantLRStrategy;
-    using ConstantDecayLR = opt::ConstantDecayLRStrategy;
+    using SharedEvaluator = std::shared_ptr<opt::Evaluator>;
+
+    using LearningRate       = opt::LearningRateStrategy;
+    using ConstantLR         = opt::ConstantLRStrategy;
+    using ConstantDecayLR    = opt::ConstantDecayLRStrategy;
+    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
+
     using Optimizer       = opt::Optimizer;
     using SteepestDescent = opt::SteepestDescent;
-
-    using SharedEvaluator    = std::shared_ptr<opt::Evaluator>;
-    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
-    using SharedOptimizer    = std::shared_ptr<opt::Optimizer>;
+    using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
 
 }   // namespace pq
 
