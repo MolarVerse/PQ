@@ -86,9 +86,9 @@ void OptimizerSetup::setup()
 
     setupMinMaxLR(learningRateStrategy);
 
-    _optEngine.setLearningRateStrategy(*learningRateStrategy);
-    _optEngine.setOptimizer(*optimizer);
-    _optEngine.setEvaluator(*evaluator);
+    _optEngine.setLearningRateStrategy(learningRateStrategy);
+    _optEngine.setOptimizer(optimizer);
+    _optEngine.setEvaluator(evaluator);
 }
 
 /**
@@ -117,9 +117,9 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
         }
     }
 
-    optimizer->setSimulationBox(_optEngine.getSimulationBox());
-    optimizer->setPhysicalData(_optEngine.getPhysicalData());
-    optimizer->setPhysicalDataOld(_optEngine.getPhysicalDataOld());
+    optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
+    optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
+    optimizer->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
     return optimizer;
 }
@@ -216,16 +216,16 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
             "evaluator"
         );
 
-    evaluator->setCellList(_optEngine.getCellList());
-    evaluator->setSimulationBox(_optEngine.getSimulationBox());
-    evaluator->setPotential(_optEngine.getPotential());
-    evaluator->setForceField(_optEngine.getForceField());
-    evaluator->setConstraints(_optEngine.getConstraints());
-    evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
-    evaluator->setVirial(_optEngine.getVirial());
-    evaluator->setSimulationBox(_optEngine.getSimulationBox());
-    evaluator->setPhysicalData(_optEngine.getPhysicalData());
-    evaluator->setPhysicalDataOld(_optEngine.getPhysicalDataOld());
+    evaluator->setCellList(_optEngine.getSharedCellList());
+    evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
+    evaluator->setPotential(_optEngine.getSharedPotential());
+    evaluator->setForceField(_optEngine.getSharedForceField());
+    evaluator->setConstraints(_optEngine.getSharedConstraints());
+    evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
+    evaluator->setVirial(_optEngine.getSharedVirial());
+    evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
+    evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());
+    evaluator->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
     return evaluator;
 }

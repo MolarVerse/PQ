@@ -31,6 +31,7 @@
 
 using namespace engine;
 using namespace opt;
+using namespace physicalData;
 
 /**
  * @brief run the optimizer
@@ -211,7 +212,7 @@ void OptEngine::writeOutput()
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
         // _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
-        _averagePhysicalData = physicalData::PhysicalData();
+        _averagePhysicalData = PhysicalData();
     }
 
     _physicalData->reset();
@@ -228,9 +229,9 @@ void OptEngine::writeOutput()
  *
  * @param optimizer
  */
-void OptEngine::setOptimizer(const Optimizer &optimizer)
+void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> optimizer)
 {
-    _optimizer = optimizer.clone();
+    _optimizer = optimizer;
 }
 
 /**
@@ -238,9 +239,11 @@ void OptEngine::setOptimizer(const Optimizer &optimizer)
  *
  * @param learningRateStrategy
  */
-void OptEngine::setLearningRateStrategy(const LearningRateStrategy &strategy)
+void OptEngine::setLearningRateStrategy(
+    const std::shared_ptr<LearningRateStrategy> learningRateStrategy
+)
 {
-    _learningRateStrategy = strategy.clone();
+    _learningRateStrategy = learningRateStrategy;
 }
 
 /**
@@ -248,9 +251,9 @@ void OptEngine::setLearningRateStrategy(const LearningRateStrategy &strategy)
  *
  * @param evaluator
  */
-void OptEngine::setEvaluator(const Evaluator &evaluator)
+void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> evaluator)
 {
-    _evaluator = evaluator.clone();
+    _evaluator = evaluator;
 }
 
 /***************************
@@ -264,14 +267,17 @@ void OptEngine::setEvaluator(const Evaluator &evaluator)
  *
  * @return std::shared_ptr<Optimizer>
  */
-std::shared_ptr<Optimizer> &OptEngine::getOptimizer() { return _optimizer; }
+std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
+{
+    return _optimizer;
+}
 
 /**
  * @brief get the learning rate strategy
  *
  * @return std::shared_ptr<LearningRateStrategy>
  */
-std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
+std::shared_ptr<LearningRateStrategy> OptEngine::getSharedLearningRate()
 {
     return _learningRateStrategy;
 }
@@ -281,14 +287,24 @@ std::shared_ptr<LearningRateStrategy> &OptEngine::getLearningRateStrategy()
  *
  * @return std::shared_ptr<Evaluator>
  */
-std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }
+std::shared_ptr<Evaluator> OptEngine::getSharedEvaluator()
+{
+    return _evaluator;
+}
 
 /**
  * @brief get the old physical data reference
  *
- * @return physicalData::PhysicalData&
+ * @return PhysicalData&
  */
-physicalData::PhysicalData &OptEngine::getPhysicalDataOld()
+PhysicalData &OptEngine::getPhysicalDataOld() { return *_physicalDataOld; }
+
+/**
+ * @brief get the shared old physical data reference
+ *
+ * @return SharedPhysicalData&
+ */
+std::shared_ptr<PhysicalData> OptEngine::getSharedPhysicalDataOld()
 {
-    return *_physicalDataOld;
+    return _physicalDataOld;
 }

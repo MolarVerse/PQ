@@ -29,6 +29,9 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace opt;
+using namespace physicalData;
+using namespace simulationBox;
+using namespace settings;
 
 /**
  * @brief Construct a new Optimizer object
@@ -36,7 +39,35 @@ using namespace opt;
  * @param nEpochs
  * @param initialLearningRate
  */
-Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+Optimizer::Optimizer(const size_t nEpochs)
+    : Optimizer(nEpochs, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+{
+}
+
+/**
+ * @brief Construct a new Optimizer object
+ *
+ */
+Optimizer::Optimizer(
+    const size_t nEpochs,
+    const double relEnergyConv,
+    const double relMaxForceConv,
+    const double relRMSForceConv,
+    const double absEnergyConv,
+    const double absMaxForceConv,
+    const double absRMSForceConv
+)
+    : _nEpochs(nEpochs),
+      _relEnergyConv(relEnergyConv),
+      _relMaxForceConv(relMaxForceConv),
+      _relRMSForceConv(relRMSForceConv),
+      _absEnergyConv(absEnergyConv),
+      _absMaxForceConv(absMaxForceConv),
+      _absRMSForceConv(absRMSForceConv)
+{
+    _energyConvStrategy = ConvStrategy::RIGOROUS;
+    _forceConvStrategy  = ConvStrategy::RIGOROUS;
+}
 
 /**
  * @brief check if the optimizer has converged
@@ -127,18 +158,18 @@ bool Optimizer::hasConverged() const
  * @return false
  */
 bool Optimizer::hasPropertyConv(
-    const bool                   absConv,
-    const bool                   relConv,
-    const settings::ConvStrategy convStrategy
+    const bool         absConv,
+    const bool         relConv,
+    const ConvStrategy convStrategy
 ) const
 {
-    if (convStrategy == settings::ConvStrategy::RIGOROUS)
+    if (convStrategy == ConvStrategy::RIGOROUS)
         return absConv && relConv;
-    else if (convStrategy == settings::ConvStrategy::LOOSE)
+    else if (convStrategy == ConvStrategy::LOOSE)
         return absConv || relConv;
-    else if (convStrategy == settings::ConvStrategy::ABSOLUTE)
+    else if (convStrategy == ConvStrategy::ABSOLUTE)
         return absConv;
-    else if (convStrategy == settings::ConvStrategy::RELATIVE)
+    else if (convStrategy == ConvStrategy::RELATIVE)
         return relConv;
     else
         return false;
@@ -156,10 +187,10 @@ bool Optimizer::hasPropertyConv(
  * @param simulationBox
  */
 void Optimizer::setSimulationBox(
-    const simulationBox::SimulationBox &simulationBox
+    const std::shared_ptr<SimulationBox> simulationBox
 )
 {
-    _simulationBox = simulationBox.clone();
+    _simulationBox = simulationBox;
 }
 
 /**
@@ -167,9 +198,10 @@ void Optimizer::setSimulationBox(
  *
  * @param physicalData
  */
-void Optimizer::setPhysicalData(const physicalData::PhysicalData &physicalData)
+void Optimizer::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
+)
 {
-    _physicalData = physicalData.clone();
+    _physicalData = physicalData;
 }
 
 /**
@@ -178,10 +210,10 @@ void Optimizer::setPhysicalData(const physicalData::PhysicalData &physicalData)
  * @param physicalData
  */
 void Optimizer::setPhysicalDataOld(
-    const physicalData::PhysicalData &physicalData
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
-    _physicalDataOld = physicalData.clone();
+    _physicalDataOld = physicalData;
 }
 
 /**
@@ -279,9 +311,7 @@ void Optimizer::setAbsRMSForceConv(const double absRMSForceConv)
  *
  * @param energyConvStrategy
  */
-void Optimizer::setEnergyConvStrategy(
-    const settings::ConvStrategy energyConvStrategy
-)
+void Optimizer::setEnergyConvStrategy(const ConvStrategy energyConvStrategy)
 {
     _energyConvStrategy = energyConvStrategy;
 }
@@ -291,9 +321,7 @@ void Optimizer::setEnergyConvStrategy(
  *
  * @param forceConvStrategy
  */
-void Optimizer::setForceConvStrategy(
-    const settings::ConvStrategy forceConvStrategy
-)
+void Optimizer::setForceConvStrategy(const ConvStrategy forceConvStrategy)
 {
     _forceConvStrategy = forceConvStrategy;
 }

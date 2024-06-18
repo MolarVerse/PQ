@@ -52,15 +52,15 @@ namespace opt
     class Optimizer
     {
        protected:
-        size_t _nEpochs;
+        size_t _nEpochs = 0;
 
         pq::SharedSimBox       _simulationBox;
         pq::SharedPhysicalData _physicalData;
         pq::SharedPhysicalData _physicalDataOld;
 
-        bool _enableEnergyConv;
-        bool _enableMaxForceConv;
-        bool _enableRMSForceConv;
+        bool _enableEnergyConv   = true;
+        bool _enableMaxForceConv = true;
+        bool _enableRMSForceConv = true;
 
         double _relEnergyConv;
         double _relMaxForceConv;
@@ -75,6 +75,15 @@ namespace opt
 
        public:
         explicit Optimizer(const size_t);
+        explicit Optimizer(
+            const size_t,
+            const double,
+            const double,
+            const double,
+            const double,
+            const double,
+            const double
+        );
 
         Optimizer()          = default;
         virtual ~Optimizer() = default;
@@ -94,9 +103,9 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setSimulationBox(const simulationBox::SimulationBox &);
-        void setPhysicalData(const physicalData::PhysicalData &);
-        void setPhysicalDataOld(const physicalData::PhysicalData &);
+        void setSimulationBox(const pq::SharedSimBox);
+        void setPhysicalData(const pq::SharedPhysicalData);
+        void setPhysicalDataOld(const pq::SharedPhysicalData);
 
         void setEnableEnergyConv(const bool);
         void setEnableMaxForceConv(const bool);

@@ -378,3 +378,20 @@ std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
 {
     return _intraNonBonded;
 }
+
+/**
+ * @brief get the shared pointer to the virial
+ *
+ * @return std::shared_ptr<Virial>
+ */
+std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
+
+/**
+ * @brief get the shared pointer to the potential
+ *
+ * @return std::shared_ptr<Potential>
+ */
+std::shared_ptr<Potential> Engine::getSharedPotential() const
+{
+    return _potential;
+}

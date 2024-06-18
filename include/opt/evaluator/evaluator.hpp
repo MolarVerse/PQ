@@ -26,53 +26,10 @@
 
 #include <memory>   // for shared_ptr
 
-namespace constraints
-{
-    class Constraints;   // forward declaration
-}   // namespace constraints
-
-namespace forceField
-{
-    class ForceField;   // forward declaration
-}   // namespace forceField
-
-namespace intraNonBonded
-{
-    class IntraNonBonded;   // forward declaration
-}   // namespace intraNonBonded
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}   // namespace physicalData
-
-namespace potential
-{
-    class Potential;   // forward declaration
-}   // namespace potential
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class CellList;        // forward declaration
-}   // namespace simulationBox
-
-namespace virial
-{
-    class Virial;   // forward declaration
-}   // namespace virial
+#include "typeAliases.hpp"
 
 namespace opt
 {
-    using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
-    using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedForceField   = std::shared_ptr<forceField::ForceField>;
-    using SharedPotential    = std::shared_ptr<potential::Potential>;
-    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
-    using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
-    using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-    using SharedVirial       = std::shared_ptr<virial::Virial>;
-
     /**
      * @class Evaluator
      *
@@ -101,15 +58,15 @@ namespace opt
 
         virtual void updateForces() = 0;
 
-        void setPotential(const potential::Potential &);
-        void setCellList(const simulationBox::CellList &);
-        void setSimulationBox(const simulationBox::SimulationBox &);
-        void setConstraints(const constraints::Constraints &);
-        void setPhysicalData(const physicalData::PhysicalData &);
-        void setPhysicalDataOld(const physicalData::PhysicalData &);
-        void setForceField(const forceField::ForceField &);
-        void setVirial(const virial::Virial &);
-        void setIntraNonBonded(const intraNonBonded::IntraNonBonded &);
+        void setPotential(const pq::SharedPotential);
+        void setCellList(const pq::SharedCellList);
+        void setSimulationBox(const pq::SharedSimBox);
+        void setConstraints(const pq::SharedConstraints);
+        void setPhysicalData(const pq::SharedPhysicalData);
+        void setPhysicalDataOld(const pq::SharedPhysicalData);
+        void setForceField(const pq::SharedForceField);
+        void setVirial(const pq::SharedVirial);
+        void setIntraNonBonded(const pq::SharedIntraNonBond);
     };
 
 }   // namespace opt

@@ -10,7 +10,7 @@ target_include_directories(optimization
 )
 
 target_link_libraries(optimization
-    PRIVATE
+    PUBLIC
     learningRateStrategy
     optimizer
     evaluator

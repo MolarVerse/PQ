@@ -75,8 +75,6 @@ namespace setup
         std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
         std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
         std::shared_ptr<opt::Evaluator>            setupEvaluator();
-
-
     };
 
 }   // namespace setup

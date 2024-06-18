@@ -181,6 +181,8 @@ namespace engine
         [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
         [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
         [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
+        [[nodiscard]] pq::SharedVirial       getSharedVirial() const;
+        [[nodiscard]] pq::SharedPotential    getSharedPotential() const;
 
         /***************************
          * make unique_ptr methods *

@@ -83,8 +83,14 @@ namespace constraints
 namespace opt
 {
     class LearningRateStrategy;
+    class ConstantLRStrategy;
+    class ConstantDecayLRStrategy;
+
     class Evaluator;
+    class MMEvaluator;
+
     class Optimizer;
+    class SteepestDescent;
 
 }   // namespace opt
 
@@ -108,9 +114,6 @@ namespace pq
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
     using Constraints     = constraints::Constraints;
-    using Evaluator       = opt::Evaluator;
-    using LearningRate    = opt::LearningRateStrategy;
-    using Optimizer       = opt::Optimizer;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
@@ -121,6 +124,18 @@ namespace pq
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
     using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    using Evaluator       = opt::Evaluator;
+    using MMEvaluator     = opt::MMEvaluator;
+    using LearningRate    = opt::LearningRateStrategy;
+    using ConstantLR      = opt::ConstantLRStrategy;
+    using ConstantDecayLR = opt::ConstantDecayLRStrategy;
+    using Optimizer       = opt::Optimizer;
+    using SteepestDescent = opt::SteepestDescent;
+
+    using SharedEvaluator    = std::shared_ptr<opt::Evaluator>;
+    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
+    using SharedOptimizer    = std::shared_ptr<opt::Optimizer>;
 
 }   // namespace pq
 

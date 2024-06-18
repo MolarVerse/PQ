@@ -32,99 +32,107 @@
 #include "virial.hpp"
 
 using namespace opt;
+using namespace potential;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace forceField;
+using namespace intraNonBonded;
+using namespace virial;
+using namespace constraints;
 
 /**
  * @brief set the potential as shared pointer
  *
- * @param potential - potential::Potential&
+ * @param potential - std::shared_ptr<Potential>
  */
-void Evaluator::setPotential(const potential::Potential& potential)
+void Evaluator::setPotential(const std::shared_ptr<Potential> potential)
 {
-    _potential = potential.clone();
+    _potential = potential;
 }
 
 /**
  * @brief set the cell list as shared pointer
  *
- * @param cellList - simulationBox::CellList&
+ * @param cellList - std::shared_ptr<CellList>
  */
-void Evaluator::setCellList(const simulationBox::CellList& cellList)
+void Evaluator::setCellList(const std::shared_ptr<CellList> cellList)
 {
-    _cellList = cellList.clone();
+    _cellList = cellList;
 }
 
 /**
  * @brief set the simulation box as shared pointer
  *
- * @param simulationBox - simulationBox::SimulationBox&
+ * @param simulationBox - std::shared_ptr<SimulationBox>
  */
 void Evaluator::setSimulationBox(
-    const simulationBox::SimulationBox& simulationBox
+    const std::shared_ptr<SimulationBox> simulationBox
 )
 {
-    _simulationBox = simulationBox.clone();
+    _simulationBox = simulationBox;
 }
 
 /**
  * @brief set the constraints as shared pointer
  *
- * @param constraints - constraints::Constraints&
+ * @param constraints - std::shared_ptr<Constraints>
  */
-void Evaluator::setConstraints(const constraints::Constraints& constraints)
+void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
 {
-    _constraints = constraints.clone();
+    _constraints = constraints;
 }
 
 /**
  * @brief set the physical data as shared pointer
  *
- * @param physicalData - physicalData::PhysicalData&
+ * @param physicalData - std::shared_ptr<PhysicalData>
  */
-void Evaluator::setPhysicalData(const physicalData::PhysicalData& physicalData)
+void Evaluator::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
+)
 {
-    _physicalData = physicalData.clone();
+    _physicalData = physicalData;
 }
 
 /**
  * @brief set the old physical data as shared pointer
  *
- * @param physicalData - physicalData::PhysicalData&
+ * @param physicalData - std::shared_ptr<PhysicalData>
  */
 void Evaluator::setPhysicalDataOld(
-    const physicalData::PhysicalData& physicalData
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
-    _physicalDataOld = physicalData.clone();
+    _physicalDataOld = physicalData;
 }
 
 /**
  * @brief set the force field as shared pointer
  *
- * @param forceField - forceField::ForceField&
+ * @param forceField - std::shared_ptr<ForceField>
  */
-void Evaluator::setForceField(const forceField::ForceField& forceField)
+void Evaluator::setForceField(const std::shared_ptr<ForceField> forceField)
 {
-    _forceField = forceField.clone();
+    _forceField = forceField;
 }
 
 /**
  * @brief set the intra non bonded as shared pointer
  *
- * @param intraNonBonded - intraNonBonded::IntraNonBonded&
+ * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
  */
 void Evaluator::setIntraNonBonded(
-    const intraNonBonded::IntraNonBonded& intraNonBonded
+    const std::shared_ptr<IntraNonBonded> intraNonBonded
 )
 {
-    _intraNonBonded = intraNonBonded.clone();
+    _intraNonBonded = intraNonBonded;
 }
 
 /**
  * @brief set the virial as shared pointer
  *
- * @param virial - virial::Virial&
+ * @param virial - std::shared_ptr<Virial>
  */
-void Evaluator::setVirial(const virial::Virial& virial)
+void Evaluator::setVirial(const std::shared_ptr<Virial> virial)
 {
-    _virial = virial.clone();
+    _virial = virial;
 }

@@ -26,10 +26,13 @@
 
 #include <memory>   // for unique_ptr
 
+#include "constant.hpp"               // for ConstantLearningRateStrategy
 #include "engine.hpp"                 // for Engine
 #include "evaluator.hpp"              // for Evaluator
 #include "learningRateStrategy.hpp"   // for learningRateStrategy
+#include "mmEvaluator.hpp"            // for MMEvaluator
 #include "optimizer.hpp"              // for Optimizer
+#include "steepestDescent.hpp"        // for SteepestDescent
 #include "typeAliases.hpp"
 
 namespace engine
@@ -43,11 +46,12 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::shared_ptr<pq::Optimizer>    _optimizer;
-        std::shared_ptr<pq::LearningRate> _learningRateStrategy;
-        std::shared_ptr<pq::Evaluator>    _evaluator;
+        pq::SharedOptimizer    _optimizer;
+        pq::SharedLearningRate _learningRateStrategy;
+        pq::SharedEvaluator    _evaluator;
 
-        pq::SharedPhysicalData _physicalDataOld;
+        pq::SharedPhysicalData _physicalDataOld =
+            std::make_shared<pq::PhysicalData>();
 
         bool _converged  = false;
         bool _optStopped = false;
@@ -61,37 +65,22 @@ namespace engine
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const pq::Optimizer &optimizer);
-        void setLearningRateStrategy(const pq::LearningRate &);
-        void setEvaluator(const pq::Evaluator &);
+        void setOptimizer(const std::shared_ptr<pq::Optimizer>);
+        void setLearningRateStrategy(const std::shared_ptr<pq::LearningRate>);
+        void setEvaluator(const std::shared_ptr<pq::Evaluator>);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::shared_ptr<pq::Optimizer> &getOptimizer();
-        [[nodiscard]] std::shared_ptr<pq::LearningRate> &getLearningRateStrategy(
-        );
-        [[nodiscard]] std::shared_ptr<pq::Evaluator> &getEvaluator();
+        [[nodiscard]] std::shared_ptr<pq::Optimizer>    getSharedOptimizer();
+        [[nodiscard]] std::shared_ptr<pq::LearningRate> getSharedLearningRate();
+        [[nodiscard]] std::shared_ptr<pq::Evaluator>    getSharedEvaluator();
 
-        [[nodiscard]] pq::PhysicalData &getPhysicalDataOld();
-
-        /***************************************
-         * standard make smart pointer methods *
-         ***************************************/
-
-        template <typename T>
-        void makeOptimizer(T optimizer);
-
-        template <typename T>
-        void makeLearningRateStrategy(T strategy);
-
-        template <typename T>
-        void makeEvaluator(T evaluator);
+        [[nodiscard]] pq::PhysicalData      &getPhysicalDataOld();
+        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
     };
 
 }   // namespace engine
-
-#include "optEngine.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _OPT_ENGINE_HPP_
