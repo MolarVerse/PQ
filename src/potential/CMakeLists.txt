@@ -39,7 +39,6 @@ if (BUILD_WITH_CUDA)
         PUBLIC
         nonCoulombPotential_cuda
         coulombPotential_cuda
-        simulationBox_cuda
     )
 endif()
 
