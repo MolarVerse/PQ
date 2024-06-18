@@ -73,6 +73,12 @@ namespace forceField
 
 }   // namespace forceField
 
+namespace constraints
+{
+    class Constraints;   // forward declaration
+
+}   // namespace constraints
+
 namespace pq
 {
     using strings = std::vector<std::string>;
@@ -89,6 +95,7 @@ namespace pq
     using IntraNonBond  = intraNonBonded::IntraNonBonded;
     using Virial        = virial::Virial;
     using ForceField    = forceField::ForceField;
+    using Constraints   = constraints::Constraints;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
@@ -96,6 +103,7 @@ namespace pq
     using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
+    using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
 
     using UniqueVirial    = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;

@@ -96,14 +96,6 @@ namespace engine
         timings::GlobalTimer _timer;
 
         physicalData::PhysicalData _averagePhysicalData;
-        constraints::Constraints   _constraints;
-
-#ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
-#endif
 
         // clang-format off
         pq::UniqueVirial       _virial         = std::make_unique<virial::VirialMolecular>();
@@ -113,7 +105,15 @@ namespace engine
         pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
         pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
+        pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
         // clang-format on
+
+#ifdef WITH_KOKKOS
+        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
+        potential::KokkosLennardJones      _kokkosLennardJones;
+        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
+        potential::KokkosPotential         _kokkosPotential;
+#endif
 
        public:
         Engine()          = default;

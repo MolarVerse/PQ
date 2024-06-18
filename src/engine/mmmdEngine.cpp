@@ -73,7 +73,7 @@ void MMMDEngine::takeStep()
     _integrator->firstStep(*_simulationBox);
 #endif
 
-    _constraints.applyShake(*_simulationBox);
+    _constraints->applyShake(*_simulationBox);
 
     _cellList->updateCellList(*_simulationBox);
 
@@ -95,13 +95,13 @@ void MMMDEngine::takeStep()
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 
-    _constraints.applyDistanceConstraints(
+    _constraints->applyDistanceConstraints(
         *_simulationBox,
         *_physicalData,
         calculateTotalSimulationTime()
     );
 
-    _constraints.calculateConstraintBondRefs(*_simulationBox);
+    _constraints->calculateConstraintBondRefs(*_simulationBox);
 
     _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
 
@@ -113,7 +113,7 @@ void MMMDEngine::takeStep()
     _integrator->secondStep(*_simulationBox);
 #endif
 
-    _constraints.applyRattle(*_simulationBox);
+    _constraints->applyRattle(*_simulationBox);
 
     _thermostat->applyThermostat(*_simulationBox, *_physicalData);
 

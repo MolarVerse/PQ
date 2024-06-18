@@ -70,8 +70,8 @@ void MDEngine::run()
     _integrator->setTimerName("Integrator");
     _timer.addTimer(_integrator->getTimer());
 
-    _constraints.setTimerName("Constraints");
-    _timer.addTimer(_constraints.getTimer());
+    _constraints->setTimerName("Constraints");
+    _timer.addTimer(_constraints->getTimer());
 
     _cellList->setTimerName("Cell List");
     _timer.addTimer(_cellList->getTimer());

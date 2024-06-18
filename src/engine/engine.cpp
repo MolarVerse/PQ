@@ -93,7 +93,7 @@ bool Engine::isCellListActivated() const { return _cellList->isActive(); }
  * @return true
  * @return false
  */
-bool Engine::isConstraintsActivated() const { return _constraints.isActive(); }
+bool Engine::isConstraintsActivated() const { return _constraints->isActive(); }
 
 /**
  * @brief checks if the intra non bonded interactions are activated
@@ -145,7 +145,7 @@ physicalData::PhysicalData &Engine::getAveragePhysicalData()
  *
  * @return timings::Timer&
  */
-constraints::Constraints &Engine::getConstraints() { return _constraints; }
+constraints::Constraints &Engine::getConstraints() { return *_constraints; }
 
 /**
  * @brief get the reference to the force field
@@ -231,7 +231,10 @@ physicalData::PhysicalData *Engine::getPhysicalDataPtr()
  *
  * @return constraints::Constraints*
  */
-constraints::Constraints *Engine::getConstraintsPtr() { return &_constraints; }
+constraints::Constraints *Engine::getConstraintsPtr()
+{
+    return _constraints.get();
+}
 
 /**
  * @brief get the pointer to the intra non bonded interactions
