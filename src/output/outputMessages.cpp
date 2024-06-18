@@ -89,7 +89,7 @@ std::string output::endedNormally()
 *                          PQ ended normally                            *
 *                                                                       *
 *************************************************************************
-)", 
+)",
 _INFO_);
     // clang-format on
 

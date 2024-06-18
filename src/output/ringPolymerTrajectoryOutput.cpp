@@ -22,9 +22,8 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
-#include <stddef.h>   // for size_t
-
 #include <algorithm>    // for __for_each_fn, for_each
+#include <cstddef>      // for size_t
 #include <format>       // for format
 #include <functional>   // for identity
 #include <ostream>      // for basic_ostream, ofstream, operator<<

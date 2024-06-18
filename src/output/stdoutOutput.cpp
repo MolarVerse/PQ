@@ -31,6 +31,7 @@
 #include "outputMessages.hpp"   // for initialMomentumMessage
 
 using output::StdoutOutput;
+using namespace customException;
 
 /**
  * @brief write a message to the stdout
@@ -71,12 +72,12 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw customException::UserInputExceptionWarning(std::format(
+        throw UserInputExceptionWarning(std::format(
             "{}Density and box dimensions set. Density will be ignored.",
             _OUTPUT_
         ));
     }
-    catch (const customException::UserInputExceptionWarning &e)
+    catch (const UserInputExceptionWarning &e)
     {
         std::cout << _OUTPUT_ << e.what() << "\n\n" << std::flush;
     }
@@ -86,17 +87,15 @@ void StdoutOutput::writeDensityWarning() const
  * @brief write a warning message to the stdout if the optimization did not
  * converge
  *
- * @param message
+ * @param msg
  */
-void StdoutOutput::writeOptWarning(const std::string &message) const
+void StdoutOutput::writeOptWarning(const std::string &msg) const
 {
     try
     {
-        throw customException::UserInputExceptionWarning(
-            std::format("{}{}", _WARNING_, message)
-        );
+        throw UserInputExceptionWarning(std::format("{}{}", _WARNING_, msg));
     }
-    catch (const customException::UserInputExceptionWarning &e)
+    catch (const UserInputExceptionWarning &e)
     {
         std::cout << e.what() << "\n\n" << std::flush;
     }
