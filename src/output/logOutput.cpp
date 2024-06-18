@@ -94,13 +94,15 @@ void LogOutput::writeOptWarning(const std::string &message)
 void LogOutput::writeInitialMomentum(const double momentum)
 {
     _fp << "\n" << std::flush;
+
     _fp << std::format(
-               "{}Initial momentum = {:.5e} {}*amu/fs\n",
-               _INFO_,
-               momentum,
-               _ANGSTROM_
-           )
-        << std::flush;
+        "{}Initial momentum = {:.5e} {}*amu/fs\n",
+        _INFO_,
+        momentum,
+        _ANGSTROM_
+    );
+
+    _fp << std::flush;
 }
 
 /**
