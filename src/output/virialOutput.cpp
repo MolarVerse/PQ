@@ -22,11 +22,11 @@
 
 #include "virialOutput.hpp"
 
-#include "physicalData.hpp"   // for PhysicalData
-
 #include <format>    // for format
 #include <fstream>   // for basic_ostream, ofstream
 #include <string>    // for operator<<
+
+#include "physicalData.hpp"   // for PhysicalData
 
 using output::VirialOutput;
 
@@ -48,7 +48,10 @@ using output::VirialOutput;
  * @param step
  * @param data
  */
-void VirialOutput::write(const size_t step, const physicalData::PhysicalData &data)
+void VirialOutput::write(
+    const size_t                      step,
+    const physicalData::PhysicalData &data
+)
 {
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.5e}\t", data.getVirial()[0][0]);
