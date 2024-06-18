@@ -30,13 +30,10 @@
 #include "evaluator.hpp"              // for Evaluator
 #include "learningRateStrategy.hpp"   // for learningRateStrategy
 #include "optimizer.hpp"              // for Optimizer
+#include "typeAliases.hpp"
 
 namespace engine
 {
-
-    using LRStrategy = opt::LearningRateStrategy;
-    using Evaluator  = opt::Evaluator;
-
     /**
      * @class OptEngine
      *
@@ -46,11 +43,11 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::shared_ptr<opt::Optimizer> _optimizer;
-        std::shared_ptr<LRStrategy>     _learningRateStrategy;
-        std::shared_ptr<opt::Evaluator> _evaluator;
+        std::shared_ptr<pq::Optimizer>    _optimizer;
+        std::shared_ptr<pq::LearningRate> _learningRateStrategy;
+        std::shared_ptr<pq::Evaluator>    _evaluator;
 
-        physicalData::PhysicalData _physicalDataOld;
+        pq::SharedPhysicalData _physicalDataOld;
 
         bool _converged  = false;
         bool _optStopped = false;
@@ -64,19 +61,20 @@ namespace engine
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const opt::Optimizer &optimizer);
-        void setLearningRateStrategy(const opt::LearningRateStrategy &);
-        void setEvaluator(const opt::Evaluator &);
+        void setOptimizer(const pq::Optimizer &optimizer);
+        void setLearningRateStrategy(const pq::LearningRate &);
+        void setEvaluator(const pq::Evaluator &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::shared_ptr<opt::Optimizer> &getOptimizer();
-        [[nodiscard]] std::shared_ptr<LRStrategy> &getLearningRateStrategy();
-        [[nodiscard]] std::shared_ptr<opt::Evaluator> &getEvaluator();
+        [[nodiscard]] std::shared_ptr<pq::Optimizer> &getOptimizer();
+        [[nodiscard]] std::shared_ptr<pq::LearningRate> &getLearningRateStrategy(
+        );
+        [[nodiscard]] std::shared_ptr<pq::Evaluator> &getEvaluator();
 
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
+        [[nodiscard]] pq::PhysicalData &getPhysicalDataOld();
 
         /***************************************
          * standard make smart pointer methods *

@@ -80,6 +80,14 @@ namespace constraints
 
 }   // namespace constraints
 
+namespace opt
+{
+    class LearningRateStrategy;
+    class Evaluator;
+    class Optimizer;
+
+}   // namespace opt
+
 namespace pq
 {
     using strings = std::vector<std::string>;
@@ -100,6 +108,9 @@ namespace pq
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
     using Constraints     = constraints::Constraints;
+    using Evaluator       = opt::Evaluator;
+    using LearningRate    = opt::LearningRateStrategy;
+    using Optimizer       = opt::Optimizer;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;

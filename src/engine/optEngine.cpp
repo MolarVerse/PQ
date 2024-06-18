@@ -290,5 +290,5 @@ std::shared_ptr<Evaluator> &OptEngine::getEvaluator() { return _evaluator; }
  */
 physicalData::PhysicalData &OptEngine::getPhysicalDataOld()
 {
-    return _physicalDataOld;
+    return *_physicalDataOld;
 }
