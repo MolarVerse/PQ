@@ -50,9 +50,8 @@ void RingPolymerTrajectoryOutput::writeHeader(
     const simulationBox::SimulationBox &simBox
 )
 {
-    _fp << simBox.getNumberOfAtoms() *
-               settings::RingPolymerSettings::getNumberOfBeads()
-        << "  ";
+    const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+    _fp << simBox.getNumberOfAtoms() * nBeads << "  ";
     _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
 }
 
@@ -70,29 +69,26 @@ void RingPolymerTrajectoryOutput::writeXyz(
     writeHeader(beads[0]);
     buffer << '\n';
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads();
-         ++i)
-        for (const auto &molecule : beads[i].getMolecules())
-            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-                 j < numberOfAtoms;
-                 ++j)
-            {
-                buffer
-                    << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+    const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
-                buffer << std::format(
-                    "{:15.8f}\t",
-                    molecule.getAtomPosition(j)[0]
-                );
-                buffer << std::format(
-                    "{:15.8f}\t",
-                    molecule.getAtomPosition(j)[1]
-                );
-                buffer << std::format(
-                    "{:15.8f}\n",
-                    molecule.getAtomPosition(j)[2]
-                );
+    for (size_t i = 0; i < nBeads; ++i)
+        for (const auto &molecule : beads[i].getMolecules())
+        {
+            const auto nAtoms = molecule.getNumberOfAtoms();
+            for (size_t j = 0; j < nAtoms; ++j)
+            {
+                const auto atomName = molecule.getAtomName(j);
+                const auto x        = molecule.getAtomPosition(j)[0];
+                const auto y        = molecule.getAtomPosition(j)[1];
+                const auto z        = molecule.getAtomPosition(j)[2];
+
+                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+
+                buffer << std::format("{:15.8f}\t", x);
+                buffer << std::format("{:15.8f}\t", y);
+                buffer << std::format("{:15.8f}\n", z);
             }
+        }
 
     // Write the buffer to the file
     _fp << buffer.str();
