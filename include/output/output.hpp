@@ -55,17 +55,17 @@ namespace output
         explicit Output(const std::string &filename) : _fileName(filename){};
 
         void setFilename(const std::string_view &);
-        void close() { _fp.close(); }
+        void close();
 
 #ifdef WITH_TESTS
         FRIEND_TEST(::TestOutput, testSpecialSetFilename);
 #endif
 
-        /********************************
-         * standard getters and setters *
-         ********************************/
+        /***************************
+         * standard getter methods *
+         ***************************/
 
-        std::string getFilename() const { return _fileName; }
+        std::string getFilename() const;
     };
 
 }   // namespace output
