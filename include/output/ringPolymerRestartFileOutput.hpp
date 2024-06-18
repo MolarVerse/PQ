@@ -24,10 +24,10 @@
 
 #define _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
-#include "output.hpp"
-
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
+
+#include "output.hpp"
 
 namespace simulationBox
 {
@@ -44,7 +44,7 @@ namespace output
      */
     class RingPolymerRestartFileOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void write(std::vector<simulationBox::SimulationBox> &, const size_t);
