@@ -89,7 +89,7 @@ CudaLennardJones_t* CudaLennardJones::getCudaLennardJones() const
  * @return energy of the Lennard-Jones potential
  */
 __device__ void calculateLennardJonesKernel(
-    CudaLennardJones_t* lennardJones,
+    CudaLennardJones_t * lennardJones,
     const double distance,
     double& force,
     const size_t vdWType_i,

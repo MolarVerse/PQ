@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef SIMULATIONBOX_CUDA_HPP
-#define SIMULATIONBOX_CUDA_HPP
+#ifndef _SIMULATIONBOX_CUDA_HPP_
+#define _SIMULATIONBOX_CUDA_HPP_
 
 #include "cuda_runtime.h"
 #include "simulationBox.hpp"
+#include "timer.hpp"
 
 /**
     * @brief Namespace for the simulation box
@@ -54,7 +55,7 @@ namespace simulationBox
     /**
      * @brief Class for the simulation box on the device
      */
-    class CudaSimulationBox : public SimulationBox
+    class CudaSimulationBox : timings::Timer
     {
     private:
         // device variables
