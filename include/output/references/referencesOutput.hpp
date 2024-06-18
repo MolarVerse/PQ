@@ -29,6 +29,8 @@
 #include <set>      // for set
 #include <string>   // for string
 
+#include "typeAliases.hpp"
+
 namespace references
 {
     /**
@@ -39,13 +41,13 @@ namespace references
      */
     class ReferencesOutput
     {
-      private:
+       private:
         static inline std::string _referenceFilesPath = REFERENCES_PATH_;
 
-        static inline std::set<std::string> _referenceFileNames = std::set<std::string>();
-        static inline std::set<std::string> _bibtexFileNames    = std::set<std::string>();
+        static inline pq::stringSet _referenceFileNames = pq::stringSet();
+        static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
 
-      public:
+       public:
         static void writeReferencesFile();
 
         static void addReferenceFile(const std::string &referenceFileName);

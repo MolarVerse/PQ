@@ -27,6 +27,7 @@
 #include <cstddef>      // for size_t
 #include <functional>   // for std::function
 #include <memory>       // for std::shared_ptr
+#include <set>          // for std::set
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
@@ -96,7 +97,8 @@ namespace opt
 
 namespace pq
 {
-    using strings = std::vector<std::string>;
+    using strings   = std::vector<std::string>;
+    using stringSet = std::set<std::string>;
 
     using Vec3D     = linearAlgebra::Vec3D;
     using Vec3DPair = std::pair<Vec3D, Vec3D>;
