@@ -18,6 +18,8 @@ add_library(output
     ringPolymerTrajectoryOutput.cpp
     ringPolymerEnergyOutput.cpp
 
+    optOutput.cpp
+
     timingsOutput.cpp
 )
 
