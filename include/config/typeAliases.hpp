@@ -38,6 +38,7 @@ namespace simulationBox
     class Molecule;        // forward declaration
     class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
+    class CellList;        // forward declaration
 
 }   // namespace simulationBox
 
@@ -68,6 +69,7 @@ namespace pq
     using tensor3D = linearAlgebra::tensor3D;
 
     using SimBox        = simulationBox::SimulationBox;
+    using CellList      = simulationBox::CellList;
     using Molecule      = simulationBox::Molecule;
     using Atom          = simulationBox::Atom;
     using BruteForcePot = potential::PotentialBruteForce;
@@ -76,6 +78,7 @@ namespace pq
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+    using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
 
     using UniqueVirial    = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;

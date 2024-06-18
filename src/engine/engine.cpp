@@ -85,7 +85,7 @@ bool Engine::isGuffActivated() const
  * @return true
  * @return false
  */
-bool Engine::isCellListActivated() const { return _cellList.isActive(); }
+bool Engine::isCellListActivated() const { return _cellList->isActive(); }
 
 /**
  * @brief checks if any constraints are activated
@@ -111,7 +111,7 @@ bool Engine::isIntraNonBondedActivated() const
  *
  * @return simulationBox::CellList&
  */
-simulationBox::CellList &Engine::getCellList() { return _cellList; }
+simulationBox::CellList &Engine::getCellList() { return *_cellList; }
 
 /**
  * @brief get the reference to the simulation box
@@ -204,7 +204,7 @@ virial::Virial *Engine::getVirialPtr() { return _virial.get(); }
  *
  * @return simulationBox::CellList*
  */
-simulationBox::CellList *Engine::getCellListPtr() { return &_cellList; }
+simulationBox::CellList *Engine::getCellListPtr() { return _cellList.get(); }
 
 /**
  * @brief get the pointer to the simulation box

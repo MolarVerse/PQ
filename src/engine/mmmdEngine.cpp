@@ -75,7 +75,7 @@ void MMMDEngine::takeStep()
 
     _constraints.applyShake(*_simulationBox);
 
-    _cellList.updateCellList(*_simulationBox);
+    _cellList->updateCellList(*_simulationBox);
 
 #ifdef WITH_KOKKOS
     _kokkosPotential.calculateForces(
@@ -86,7 +86,7 @@ void MMMDEngine::takeStep()
         _kokkosCoulombWolf
     );
 #else
-    _potential->calculateForces(*_simulationBox, *_physicalData, _cellList);
+    _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
 #endif
 
     _intraNonBonded.calculate(*_simulationBox, *_physicalData);

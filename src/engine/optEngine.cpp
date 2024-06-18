@@ -83,8 +83,8 @@ void OptEngine::run()
     _constraints.setTimerName("Constraints");
     _timer.addTimer(_constraints.getTimer());
 
-    _cellList.setTimerName("Cell List");
-    _timer.addTimer(_cellList.getTimer());
+    _cellList->setTimerName("Cell List");
+    _timer.addTimer(_cellList->getTimer());
 
     _potential->setTimerName("Potential");
     _timer.addTimer(_potential->getTimer());
