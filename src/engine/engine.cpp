@@ -65,7 +65,7 @@ double Engine::calculateTotalSimulationTime() const
  */
 bool Engine::isForceFieldNonCoulombicsActivated() const
 {
-    return _forceField.isNonCoulombicActivated();
+    return _forceField->isNonCoulombicActivated();
 }
 
 /**
@@ -76,7 +76,7 @@ bool Engine::isForceFieldNonCoulombicsActivated() const
  */
 bool Engine::isGuffActivated() const
 {
-    return !_forceField.isNonCoulombicActivated();
+    return !_forceField->isNonCoulombicActivated();
 }
 
 /**
@@ -152,7 +152,7 @@ constraints::Constraints &Engine::getConstraints() { return _constraints; }
  *
  * @return forceField::ForceField&
  */
-forceField::ForceField &Engine::getForceField() { return _forceField; }
+forceField::ForceField &Engine::getForceField() { return *_forceField; }
 
 /**
  * @brief get the reference to the intra non bonded interactions
@@ -183,7 +183,7 @@ potential::Potential &Engine::getPotential() { return *_potential; }
  *
  * @return forceField::ForceField*
  */
-forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }
+forceField::ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
 
 /**
  * @brief get the pointer to the potential

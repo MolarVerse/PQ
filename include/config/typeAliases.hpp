@@ -67,6 +67,12 @@ namespace intraNonBonded
 
 }   // namespace intraNonBonded
 
+namespace forceField
+{
+    class ForceField;   // forward declaration
+
+}   // namespace forceField
+
 namespace pq
 {
     using strings = std::vector<std::string>;
@@ -81,12 +87,15 @@ namespace pq
     using BruteForcePot = potential::PotentialBruteForce;
     using PhysicalData  = physicalData::PhysicalData;
     using IntraNonBond  = intraNonBonded::IntraNonBonded;
+    using Virial        = virial::Virial;
+    using ForceField    = forceField::ForceField;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
     using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
+    using SharedForceField   = std::shared_ptr<forceField::ForceField>;
 
     using UniqueVirial    = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;

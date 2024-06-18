@@ -93,7 +93,7 @@ void MMMDEngine::takeStep()
 
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 
-    _forceField.calculateBondedInteractions(*_simulationBox, *_physicalData);
+    _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 
     _constraints.applyDistanceConstraints(
         *_simulationBox,

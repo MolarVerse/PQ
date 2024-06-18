@@ -97,7 +97,6 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
         constraints::Constraints   _constraints;
-        forceField::ForceField     _forceField;
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
@@ -113,6 +112,7 @@ namespace engine
         pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
         pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
         pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
+        pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         // clang-format on
 
        public:
