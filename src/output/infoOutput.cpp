@@ -118,8 +118,16 @@ void InfoOutput::write(
 
     if (settings::ConstraintSettings::isDistanceConstraintsActivated())
     {
-        writeLeft(data.getLowerDistanceConstraints(), "LOWER-DIST-CONSTR", "kcal/mol");
-        writeRight(data.getUpperDistanceConstraints(), "UPPER-DIST-CONSTR", "kcal/mol");
+        writeLeft(
+            data.getLowerDistanceConstraints(),
+            "LOWER-DIST-CONSTR",
+            "kcal/mol"
+        );
+        writeRight(
+            data.getUpperDistanceConstraints(),
+            "UPPER-DIST-CONSTR",
+            "kcal/mol"
+        );
     }
 
     writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
