@@ -30,15 +30,17 @@ target_link_libraries(potential
 )
 
 if (BUILD_WITH_CUDA)
-    target_include_directories(potential
-        PUBLIC
-        ${CUDA_INCLUDE_DIRS}
+    set_target_properties(potential 
+        PROPERTIES 
+        CUDA_SEPARABLE_COMPILATION ON
+        CUDA_RESOLVE_DEVICE_SYMBOLS ON
     )
-
+    
     target_link_libraries(potential
         PUBLIC
-        nonCoulombPotential_cuda
         coulombPotential_cuda
+        nonCoulombPotential_cuda
+        CUDA::cudart
     )
 endif()
 

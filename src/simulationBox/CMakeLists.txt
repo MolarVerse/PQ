@@ -48,8 +48,9 @@ install(TARGETS simulationBox
 )
 
 if(BUILD_WITH_CUDA)
-    target_include_directories(simulationBox
-        PUBLIC
-        ${CUDA_INCLUDE_DIRS}
+    set_target_properties(simulationBox
+        PROPERTIES 
+        CUDA_SEPARABLE_COMPILATION ON
+        CUDA_RESOLVE_DEVICE_SYMBOLS OFF
     )
 endif()

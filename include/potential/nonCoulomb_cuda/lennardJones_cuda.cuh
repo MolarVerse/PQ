@@ -72,7 +72,7 @@ namespace potential
     };
 
     // calculate the Lennard-Jones potential
-    __device__ void calculateLennardJonesKernel(
+    __device__ __forceinline__ void calculateLennardJonesKernel(
         CudaLennardJones_t* lennardJones,
         const double distance,
         double& force,

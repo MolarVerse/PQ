@@ -81,7 +81,7 @@ namespace potential
         }
     };
 
-    __device__ void calculateWolfKernel(
+    __device__ __forceinline__ void calculateWolfKernel(
         CudaCoulombWolf_t* coulombWolf,
         const double distance,
         const double charge_i,

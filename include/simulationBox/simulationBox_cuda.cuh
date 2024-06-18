@@ -109,7 +109,7 @@ namespace simulationBox
     };
 
     // calculate shift vector
-    __device__ void calculateShiftVectorKernel(
+    __device__ __forceinline__ void calculateShiftVectorKernel(
         const double* positions,
         const double* boxDimensions,
         double* shiftForces

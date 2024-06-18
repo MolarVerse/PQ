@@ -88,8 +88,8 @@ CudaLennardJones_t* CudaLennardJones::getCudaLennardJones() const
  * @param vdWType_j van der Waals type of atom j
  * @return energy of the Lennard-Jones potential
  */
-__device__ void calculateLennardJonesKernel(
-    CudaLennardJones_t * lennardJones,
+__device__ __forceinline__ void calculateLennardJonesKernel(
+    CudaLennardJones_t* lennardJones,
     const double distance,
     double& force,
     const size_t vdWType_i,
