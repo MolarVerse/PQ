@@ -29,6 +29,7 @@ using simulationBox::TriclinicBox;
 
 using namespace linearAlgebra;
 using namespace settings;
+using namespace constants;
 
 /**
  * @brief Calculate the volume of the box
@@ -47,7 +48,7 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
  */
 void TriclinicBox::setBoxAngles(const Vec3D &boxAngles)
 {
-    _boxAngles = boxAngles * constants::_DEG_TO_RAD_;
+    _boxAngles = boxAngles * _DEG_TO_RAD_;
 
     calculateTransformationMatrix();
     calculateBoxMatrix();
@@ -121,7 +122,7 @@ void TriclinicBox::applyPBC(Vec3D &position) const
  * @param shiftVector
  * @return Vec3D
  */
-Vec3D TriclinicBox::calculateShiftVector(const Vec3D &shiftVector) const
+Vec3D TriclinicBox::calcShiftVector(const Vec3D &shiftVector) const
 {
     return _boxMatrix * round(inverse(_boxMatrix) * shiftVector);
 }
@@ -132,7 +133,7 @@ Vec3D TriclinicBox::calculateShiftVector(const Vec3D &shiftVector) const
  * @param vec
  * @return Vec3D
  */
-Vec3D TriclinicBox::transformIntoOrthogonalSpace(const Vec3D &vec) const
+Vec3D TriclinicBox::toOrthoSpace(const Vec3D &vec) const
 {
     return inverse(_transformationMatrix) * vec;
 }
@@ -143,7 +144,7 @@ Vec3D TriclinicBox::transformIntoOrthogonalSpace(const Vec3D &vec) const
  * @param mat
  * @return tensor3D
  */
-tensor3D TriclinicBox::transformIntoOrthogonalSpace(const tensor3D &mat) const
+tensor3D TriclinicBox::toOrthoSpace(const tensor3D &mat) const
 {
     return inverse(_transformationMatrix) * mat;
 }
@@ -154,7 +155,7 @@ tensor3D TriclinicBox::transformIntoOrthogonalSpace(const tensor3D &mat) const
  * @param vec
  * @return Vec3D
  */
-Vec3D TriclinicBox::transformIntoSimulationSpace(const Vec3D &vec) const
+Vec3D TriclinicBox::toSimSpace(const Vec3D &vec) const
 {
     return _transformationMatrix * vec;
 }
@@ -165,7 +166,7 @@ Vec3D TriclinicBox::transformIntoSimulationSpace(const Vec3D &vec) const
  * @param mat
  * @return tensor3D
  */
-tensor3D TriclinicBox::transformIntoSimulationSpace(const tensor3D &mat) const
+tensor3D TriclinicBox::toSimSpace(const tensor3D &mat) const
 {
     return _transformationMatrix * mat;
 }
@@ -190,7 +191,7 @@ void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
         const auto boxMatrix = scalingTensor * _boxMatrix;
 
         const auto &[boxDimensions, boxAngles] =
-            calculateBoxDimensionsAndAnglesFromBoxMatrix(boxMatrix);
+            calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
 
         setBoxDimensions(boxDimensions);
         setBoxAngles(boxAngles);
@@ -205,8 +206,9 @@ void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
  * @param boxMatrix
  * @return std::pair<Vec3D, Vec3D>
  */
-std::pair<Vec3D, Vec3D> simulationBox::
-    calculateBoxDimensionsAndAnglesFromBoxMatrix(const tensor3D &boxMatrix)
+std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
+    const tensor3D &boxMatrix
+)
 {
     const auto box_x = boxMatrix[0][0];
     const auto box_y = ::sqrt(

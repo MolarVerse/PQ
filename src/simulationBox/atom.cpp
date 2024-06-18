@@ -98,13 +98,13 @@ void Atom::scaleVelocityOrthogonalSpace(
 {
     if (settings::ManostatSettings::getIsotropy() !=
         settings::Isotropy::FULL_ANISOTROPIC)
-        _velocity = box.transformIntoOrthogonalSpace(_velocity);
+        _velocity = box.toOrthoSpace(_velocity);
 
     _velocity = scalingTensor * _velocity;
 
     if (settings::ManostatSettings::getIsotropy() !=
         settings::Isotropy::FULL_ANISOTROPIC)
-        _velocity = box.transformIntoSimulationSpace(_velocity);
+        _velocity = box.toSimSpace(_velocity);
 }
 
 /**************************

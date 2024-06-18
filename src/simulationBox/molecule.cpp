@@ -22,14 +22,14 @@
 
 #include "molecule.hpp"
 
-#include "box.hpp"                // for Box
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "vector3d.hpp"           // for Vec3D
-
 #include <algorithm>    // for std::ranges::for_each
 #include <functional>   // for identity, equal_to
 #include <iterator>     // for _Size, size
 #include <ranges>       // for subrange
+
+#include "box.hpp"                // for Box
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 
@@ -42,9 +42,14 @@ size_t Molecule::getNumberOfAtomTypes()
 {
     std::vector<size_t> externalAtomTypes;
 
-    std::ranges::transform(_atoms, std::back_inserter(externalAtomTypes), [](auto atom) { return atom->getExternalAtomType(); });
+    std::ranges::transform(
+        _atoms,
+        std::back_inserter(externalAtomTypes),
+        [](auto atom) { return atom->getExternalAtomType(); }
+    );
 
-    return getNumberOfAtoms() - std::ranges::size(std::ranges::unique(externalAtomTypes));
+    return getNumberOfAtoms() -
+           std::ranges::size(std::ranges::unique(externalAtomTypes));
 }
 
 /**
@@ -64,18 +69,21 @@ void Molecule::calculateCenterOfMass(const Box &box)
         const auto mass     = atom->getMass();
         const auto position = atom->getPosition();
 
-        _centerOfMass += mass * (position - box.calculateShiftVector(position - positionAtom1));
+        _centerOfMass +=
+            mass *
+            (position - box.calcShiftVector(position - positionAtom1));
     }
 
     _centerOfMass /= getMolMass();
 
-    _centerOfMass -= box.calculateShiftVector(_centerOfMass);
+    _centerOfMass -= box.calcShiftVector(_centerOfMass);
 }
 
 /**
  * @brief scales the positions of the molecule by shifting the center of mass
  *
- * @details scaling has to be done in orthogonal space since pressure scaling is done in orthogonal space
+ * @details scaling has to be done in orthogonal space since pressure scaling is
+ * done in orthogonal space
  *
  * @param shiftFactors
  */
@@ -83,41 +91,45 @@ void Molecule::scale(const linearAlgebra::tensor3D &shiftTensor, const Box &box)
 {
     auto centerOfMass = _centerOfMass;
 
-    if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
-        centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
+    if (settings::ManostatSettings::getIsotropy() !=
+        settings::Isotropy::FULL_ANISOTROPIC)
+        centerOfMass = box.toOrthoSpace(_centerOfMass);
 
     const auto shift = shiftTensor * centerOfMass - centerOfMass;
 
     auto scaleAtomPosition = [&box, shift](auto atom)
     {
         auto position = atom->getPosition();
-        if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
-            position = box.transformIntoOrthogonalSpace(position);
+        if (settings::ManostatSettings::getIsotropy() !=
+            settings::Isotropy::FULL_ANISOTROPIC)
+            position = box.toOrthoSpace(position);
 
         position += shift;
 
-        if (settings::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
-            position = box.transformIntoSimulationSpace(position);
+        if (settings::ManostatSettings::getIsotropy() !=
+            settings::Isotropy::FULL_ANISOTROPIC)
+            position = box.toSimSpace(position);
 
         atom->setPosition(position);
     };
 
     std::ranges::for_each(_atoms, scaleAtomPosition);
 }
-// void Molecule::scale(const linearAlgebra::tensor3D &shiftFactors, const Box &box)
+// void Molecule::scale(const linearAlgebra::tensor3D &shiftFactors, const Box
+// &box)
 // {
-//     const auto centerOfMass = box.transformIntoOrthogonalSpace(_centerOfMass);
+//     const auto centerOfMass = box.toOrthoSpace(_centerOfMass);
 
 //     const auto shift = centerOfMass * (shiftFactors - 1.0);
 
 //     auto scaleAtomPosition = [&box, shift](auto atom)
 //     {
 //         auto position = atom->getPosition();
-//         position      = box.transformIntoOrthogonalSpace(position);
+//         position      = box.toOrthoSpace(position);
 
 //         position += shift;
 
-//         position = box.transformIntoSimulationSpace(position);
+//         position = box.toSimSpace(position);
 
 //         atom->setPosition(position);
 //     };

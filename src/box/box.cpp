@@ -54,10 +54,7 @@ StaticMatrix3x3<double> Box::getBoxMatrix() const
  * @param position
  * @return Vec3D
  */
-Vec3D Box::transformIntoOrthogonalSpace(const Vec3D &position) const
-{
-    return position;
-}
+Vec3D Box::toOrthoSpace(const Vec3D &position) const { return position; }
 
 /**
  * @brief transform a tensor into orthogonal space
@@ -65,10 +62,7 @@ Vec3D Box::transformIntoOrthogonalSpace(const Vec3D &position) const
  * @param position
  * @return tensor3D
  */
-tensor3D Box::transformIntoOrthogonalSpace(const tensor3D &position) const
-{
-    return position;
-}
+tensor3D Box::toOrthoSpace(const tensor3D &position) const { return position; }
 
 /**
  * @brief transform a vector into simulation space
@@ -76,10 +70,7 @@ tensor3D Box::transformIntoOrthogonalSpace(const tensor3D &position) const
  * @param position
  * @return Vec3D
  */
-Vec3D Box::transformIntoSimulationSpace(const Vec3D &position) const
-{
-    return position;
-}
+Vec3D Box::toSimSpace(const Vec3D &position) const { return position; }
 
 /**
  * @brief transform a tensor into simulation space
@@ -87,10 +78,7 @@ Vec3D Box::transformIntoSimulationSpace(const Vec3D &position) const
  * @param position
  * @return tensor3D
  */
-tensor3D Box::transformIntoSimulationSpace(const tensor3D &position) const
-{
-    return position;
-}
+tensor3D Box::toSimSpace(const tensor3D &position) const { return position; }
 
 /**
  * @brief set the box dimensions

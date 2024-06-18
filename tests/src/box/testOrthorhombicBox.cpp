@@ -37,16 +37,13 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
 }
 
-TEST(TestOrthoRhombicBox, calculateBoxDimensionsFromDensity)
+TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
     auto         box       = OrthorhombicBox();
     const double density   = 1.0 / constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_;
     const double totalMass = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(
-        box.calculateBoxDimensionsFromDensity(totalMass, density),
-        boxDimensions
-    );
+    EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, calculateVolume)
@@ -101,7 +98,7 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
     box.setBoxDimensions({1.0, 1.0, 1.0});
     const linearAlgebra::Vec3D vector{0.2, 1.2, -0.8};
 
-    EXPECT_EQ(box.calculateShiftVector(vector)[0], 0.0);
-    EXPECT_EQ(box.calculateShiftVector(vector)[1], 1.0);
-    EXPECT_EQ(box.calculateShiftVector(vector)[2], -1.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[2], -1.0);
 }

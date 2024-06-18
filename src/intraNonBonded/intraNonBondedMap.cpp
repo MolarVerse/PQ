@@ -116,10 +116,9 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
     auto       dPos = pos1 - pos2;
     const auto txyz =
-        -box *
-        round(
-            dPos / box
-        );   // TODO: implement it more general via Box::calculateShiftVector
+        -box * round(
+                   dPos / box
+               );   // TODO: implement it more general via Box::calcShiftVector
 
     dPos += txyz;
 

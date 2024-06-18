@@ -21,3 +21,76 @@
 ******************************************************************************/
 
 #include "bond.hpp"
+
+using namespace connectivity;
+using namespace simulationBox;
+
+/**
+ * @brief Construct a new Bond:: Bond object
+ *
+ * @param molecule1
+ * @param molecule2
+ * @param atomIndex1
+ * @param atomIndex2
+ */
+Bond::Bond(
+    Molecule    *molecule1,
+    Molecule    *molecule2,
+    const size_t atomIndex1,
+    const size_t atomIndex2
+)
+    : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
+{
+}
+
+/**
+ * @brief Construct a new Bond:: Bond object
+ *
+ * @param molecule1
+ * @param atomIndex1
+ * @param molecule2
+ * @param atomIndex2
+ */
+Bond::Bond(
+    Molecule    *molecule1,
+    const size_t atomIndex1,
+    Molecule    *molecule2,
+    const size_t atomIndex2
+)
+    : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
+{
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief Get the molecule1 object
+ *
+ * @return Molecule*
+ */
+Molecule *Bond::getMolecule1() const { return _molecules[0]; }
+
+/**
+ * @brief Get the molecule2 object
+ *
+ * @return Molecule*
+ */
+Molecule *Bond::getMolecule2() const { return _molecules[1]; }
+
+/**
+ * @brief Get the atomIndex1 object
+ *
+ * @return size_t
+ */
+size_t Bond::getAtomIndex1() const { return _atomIndices[0]; }
+
+/**
+ * @brief Get the atomIndex2 object
+ *
+ * @return size_t
+ */
+size_t Bond::getAtomIndex2() const { return _atomIndices[1]; }

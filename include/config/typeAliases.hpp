@@ -83,8 +83,9 @@ namespace pq
 {
     using strings = std::vector<std::string>;
 
-    using Vec3D    = linearAlgebra::Vec3D;
-    using tensor3D = linearAlgebra::tensor3D;
+    using Vec3D     = linearAlgebra::Vec3D;
+    using Vec3DPair = std::pair<Vec3D, Vec3D>;
+    using tensor3D  = linearAlgebra::tensor3D;
 
     using SimBox        = simulationBox::SimulationBox;
     using CellList      = simulationBox::CellList;

@@ -127,8 +127,8 @@ namespace simulationBox
         [[nodiscard]] double calculateMaxForceOld() const;
         [[nodiscard]] Vec3D  calculateMomentum();
         [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D &);
-        [[nodiscard]] Vec3D  calculateBoxDimensionsFromDensity() const;
-        [[nodiscard]] Vec3D  calculateShiftVector(const Vec3D &position) const;
+        [[nodiscard]] Vec3D  calcBoxDimFromDensity() const;
+        [[nodiscard]] Vec3D  calcShiftVector(const Vec3D &position) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();

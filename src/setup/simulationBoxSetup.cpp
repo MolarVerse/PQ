@@ -414,7 +414,7 @@ void SimulationBoxSetup::checkBoxSettings()
     else if (!settings::SimulationBoxSettings::getBoxSet())
     {
         const auto boxDimensions =
-            _engine.getSimulationBox().calculateBoxDimensionsFromDensity();
+            _engine.getSimulationBox().calcBoxDimFromDensity();
         _engine.getSimulationBox().setBoxDimensions(boxDimensions);
         _engine.getSimulationBox().setVolume(
             _engine.getSimulationBox().calculateVolume()

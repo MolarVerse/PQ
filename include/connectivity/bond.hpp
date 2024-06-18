@@ -28,11 +28,7 @@
 #include <vector>
 
 #include "connectivityElement.hpp"
-
-namespace simulationBox
-{
-    class Molecule;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace connectivity
 {
@@ -46,33 +42,18 @@ namespace connectivity
     {
        public:
         using ConnectivityElement::ConnectivityElement;
-        Bond(
-            simulationBox::Molecule *molecule1,
-            simulationBox::Molecule *molecule2,
-            size_t                   atomIndex1,
-            size_t                   atomIndex2
-        )
-            : ConnectivityElement(
-                  {molecule1, molecule2},
-                  {atomIndex1, atomIndex2}
-              ){};
+
+        Bond(pq::Molecule *, pq::Molecule *, size_t, size_t);
+        Bond(pq::Molecule *, size_t, pq::Molecule *, size_t);
 
         /***************************
-         *                         *
          * standard getter methods *
-         *                         *
          ***************************/
 
-        [[nodiscard]] simulationBox::Molecule *getMolecule1() const
-        {
-            return _molecules[0];
-        }
-        [[nodiscard]] simulationBox::Molecule *getMolecule2() const
-        {
-            return _molecules[1];
-        }
-        [[nodiscard]] size_t getAtomIndex1() const { return _atomIndices[0]; }
-        [[nodiscard]] size_t getAtomIndex2() const { return _atomIndices[1]; }
+        [[nodiscard]] pq::Molecule *getMolecule1() const;
+        [[nodiscard]] pq::Molecule *getMolecule2() const;
+        [[nodiscard]] size_t        getAtomIndex1() const;
+        [[nodiscard]] size_t        getAtomIndex2() const;
     };
 
 }   // namespace connectivity

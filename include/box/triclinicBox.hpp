@@ -30,9 +30,7 @@
 
 namespace simulationBox
 {
-    std::pair<pq::Vec3D, pq::Vec3D> calculateBoxDimensionsAndAnglesFromBoxMatrix(
-        const pq::tensor3D &boxMatrix
-    );
+    pq::Vec3DPair calcBoxDimAndAnglesFromBoxMatrix(const pq::tensor3D &);
 
     /**
      * @class TriclinicBox
@@ -52,21 +50,16 @@ namespace simulationBox
 
        public:
         [[nodiscard]] double    calculateVolume() override;
-        [[nodiscard]] pq::Vec3D calculateShiftVector(const pq::Vec3D &)
+        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &)
             const override;
 
-        [[nodiscard]] pq::Vec3D transformIntoOrthogonalSpace(
-            const pq::Vec3D &position
-        ) const override;
-        [[nodiscard]] pq::tensor3D transformIntoOrthogonalSpace(
-            const pq::tensor3D &position
-        ) const override;
-        [[nodiscard]] pq::Vec3D transformIntoSimulationSpace(
-            const pq::Vec3D &position
-        ) const override;
-        [[nodiscard]] pq::tensor3D transformIntoSimulationSpace(
-            const pq::tensor3D &position
-        ) const override;
+        [[nodiscard]] pq::Vec3D toOrthoSpace(const pq::Vec3D &) const override;
+        [[nodiscard]] pq::tensor3D toOrthoSpace(const pq::tensor3D &)
+            const override;
+
+        [[nodiscard]] pq::Vec3D    toSimSpace(const pq::Vec3D &) const override;
+        [[nodiscard]] pq::tensor3D toSimSpace(const pq::tensor3D &)
+            const override;
 
         void applyPBC(pq::Vec3D &position) const override;
         void scaleBox(const pq::tensor3D &scalingTensor) override;
