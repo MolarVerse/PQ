@@ -36,6 +36,7 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
+#include "typeAliases.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
@@ -72,10 +73,6 @@ namespace engine
     using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
     using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
 
-    using UniqueVirial    = std::unique_ptr<virial::Virial>;
-    using UniquePotential = std::unique_ptr<potential::Potential>;
-    using BruteForce      = potential::PotentialBruteForce;
-
 #ifdef WITH_KOKKOS
     using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
     using KokkosLennardJones  = potential::KokkosLennardJones;
@@ -100,7 +97,6 @@ namespace engine
 
         simulationBox::CellList        _cellList;
         simulationBox::SimulationBox   _simulationBox;
-        physicalData::PhysicalData     _physicalData;
         physicalData::PhysicalData     _averagePhysicalData;
         constraints::Constraints       _constraints;
         forceField::ForceField         _forceField;
@@ -113,8 +109,11 @@ namespace engine
         potential::KokkosPotential         _kokkosPotential;
 #endif
 
-        UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();
-        UniquePotential _potential = std::make_unique<BruteForce>();
+        // clang-format off
+        pq::UniqueVirial       _virial       = std::make_unique<virial::VirialMolecular>();
+        pq::UniquePotential    _potential    = std::make_unique<pq::BruteForcePot>();
+        pq::SharedPhysicalData _physicalData = std::make_shared<pq::PhysicalData>();
+        // clang-format on
 
        public:
         Engine()          = default;

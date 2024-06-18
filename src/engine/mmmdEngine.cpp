@@ -65,7 +65,7 @@ using namespace engine;
  */
 void MMMDEngine::takeStep()
 {
-    _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+    _thermostat->applyThermostatHalfStep(_simulationBox, *_physicalData);
 
 #ifdef WITH_KOKKOS_NO
     _kokkosVelocityVerlet.firstStep(_simulationBox, _kokkosSimulationBox);
@@ -81,29 +81,29 @@ void MMMDEngine::takeStep()
     _kokkosPotential.calculateForces(
         _simulationBox,
         _kokkosSimulationBox,
-        _physicalData,
+        *_physicalData,
         _kokkosLennardJones,
         _kokkosCoulombWolf
     );
 #else
-    _potential->calculateForces(_simulationBox, _physicalData, _cellList);
+    _potential->calculateForces(_simulationBox, *_physicalData, _cellList);
 #endif
 
-    _intraNonBonded.calculate(_simulationBox, _physicalData);
+    _intraNonBonded.calculate(_simulationBox, *_physicalData);
 
-    _virial->calculateVirial(_simulationBox, _physicalData);
+    _virial->calculateVirial(_simulationBox, *_physicalData);
 
-    _forceField.calculateBondedInteractions(_simulationBox, _physicalData);
+    _forceField.calculateBondedInteractions(_simulationBox, *_physicalData);
 
     _constraints.applyDistanceConstraints(
         _simulationBox,
-        _physicalData,
+        *_physicalData,
         calculateTotalSimulationTime()
     );
 
     _constraints.calculateConstraintBondRefs(_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
+    _virial->intraMolecularVirialCorrection(_simulationBox, *_physicalData);
 
     _thermostat->applyThermostatOnForces(_simulationBox);
 
@@ -115,13 +115,13 @@ void MMMDEngine::takeStep()
 
     _constraints.applyRattle(_simulationBox);
 
-    _thermostat->applyThermostat(_simulationBox, _physicalData);
+    _thermostat->applyThermostat(_simulationBox, *_physicalData);
 
-    _physicalData.calculateKinetics(_simulationBox);
+    _physicalData->calculateKinetics(_simulationBox);
 
-    _manostat->applyManostat(_simulationBox, _physicalData);
+    _manostat->applyManostat(_simulationBox, *_physicalData);
 
-    _resetKinetics.reset(_step, _physicalData, _simulationBox);
+    _resetKinetics.reset(_step, *_physicalData, _simulationBox);
 
     _thermostat->applyTemperatureRamping();
 }

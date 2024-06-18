@@ -128,7 +128,7 @@ simulationBox::SimulationBox &Engine::getSimulationBox()
  *
  * @return physicalData::PhysicalData&
  */
-physicalData::PhysicalData &Engine::getPhysicalData() { return _physicalData; }
+physicalData::PhysicalData &Engine::getPhysicalData() { return *_physicalData; }
 
 /**
  * @brief get the reference to the average physical data
@@ -223,7 +223,7 @@ simulationBox::SimulationBox *Engine::getSimulationBoxPtr()
  */
 physicalData::PhysicalData *Engine::getPhysicalDataPtr()
 {
-    return &_physicalData;
+    return _physicalData.get();
 }
 
 /**

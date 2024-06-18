@@ -92,8 +92,8 @@ void OptEngine::run()
     _intraNonBonded.setTimerName("IntraNonBonded");
     _timer.addTimer(_intraNonBonded.getTimer());
 
-    _physicalData.setTimerName("Physical Data");
-    _timer.addTimer(_physicalData.getTimer());
+    _physicalData->setTimerName("Physical Data");
+    _timer.addTimer(_physicalData->getTimer());
 
     _engineOutput.writeTimingsFile(_timer);
 
@@ -175,12 +175,12 @@ void OptEngine::writeOutput()
 
         // _engineOutput.writeVirialFile(
         //     effStep,
-        //     _physicalData
+        //     *_physicalData
         // );   // use physicalData instead of averagePhysicalData
 
         // _engineOutput.writeStressFile(
         //     effStep,
-        //     _physicalData
+        //     *_physicalData
         // );   // use physicalData instead of averagePhysicalData
 
         // _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
@@ -195,8 +195,8 @@ void OptEngine::writeOutput()
     _timer.stopSimulationTimer();
     _timer.startSimulationTimer();
 
-    _physicalData.setLoopTime(_timer.calculateLoopTime());
-    _averagePhysicalData.updateAverages(_physicalData);
+    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
     {
@@ -214,7 +214,7 @@ void OptEngine::writeOutput()
         _averagePhysicalData = physicalData::PhysicalData();
     }
 
-    _physicalData.reset();
+    _physicalData->reset();
 }
 
 /***************************

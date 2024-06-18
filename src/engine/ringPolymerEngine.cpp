@@ -101,7 +101,7 @@ void RingPolymerEngine::writeOutput()
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
             averageRPMDData[i].makeAverages(static_cast<double>(outputFreq));
 
-        _physicalData        = mean(rpmdData);
+        _physicalData->copy(mean(rpmdData));
         _averagePhysicalData = mean(averageRPMDData);
 
         const auto dt            = settings::TimingsSettings::getTimeStep();
@@ -109,7 +109,7 @@ void RingPolymerEngine::writeOutput()
         const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
 

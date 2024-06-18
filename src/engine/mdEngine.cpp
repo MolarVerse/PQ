@@ -40,10 +40,10 @@ using namespace engine;
  */
 void MDEngine::run()
 {
-    _physicalData.calculateKinetics(getSimulationBox());
+    _physicalData->calculateKinetics(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(
-        norm(_physicalData.getMomentum())
+        norm(_physicalData->getMomentum())
     );
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
@@ -85,8 +85,8 @@ void MDEngine::run()
     _virial->setTimerName("Virial");
     _timer.addTimer(_virial->getTimer());
 
-    _physicalData.setTimerName("Physical Data");
-    _timer.addTimer(_physicalData.getTimer());
+    _physicalData->setTimerName("Physical Data");
+    _timer.addTimer(_physicalData->getTimer());
 
     _manostat->setTimerName("Manostat");
     _timer.addTimer(_manostat->getTimer());
@@ -133,12 +133,12 @@ void MDEngine::writeOutput()
 
         _engineOutput.writeVirialFile(
             effStep,
-            _physicalData
+            *_physicalData
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeStressFile(
             effStep,
-            _physicalData
+            *_physicalData
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
@@ -153,8 +153,8 @@ void MDEngine::writeOutput()
     _timer.stopSimulationTimer();
     _timer.startSimulationTimer();
 
-    _physicalData.setLoopTime(_timer.calculateLoopTime());
-    _averagePhysicalData.updateAverages(_physicalData);
+    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
     {
@@ -165,14 +165,14 @@ void MDEngine::writeOutput()
         const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
         _averagePhysicalData = physicalData::PhysicalData();
     }
 
-    _physicalData.reset();
+    _physicalData->reset();
 }
 
 /**
