@@ -169,9 +169,9 @@ void OptEngine::writeOutput()
     if (0 == _step % outputFreq)
     {
         std::cout << "Writing output files at step " << effStep << std::endl;
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, _step + step0);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
 
         // _engineOutput.writeVirialFile(
         //     effStep,
@@ -183,7 +183,7 @@ void OptEngine::writeOutput()
         //     *_physicalData
         // );   // use physicalData instead of averagePhysicalData
 
-        // _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
+        // _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
     }
 
     // NOTE:

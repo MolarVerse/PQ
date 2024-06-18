@@ -125,11 +125,11 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeVelFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeChargeFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, _step + step0);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeVelFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
 
         _engineOutput.writeVirialFile(
             effStep,
@@ -141,7 +141,7 @@ void MDEngine::writeOutput()
             *_physicalData
         );   // use physicalData instead of averagePhysicalData
 
-        _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
+        _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
     }
 
     // NOTE:

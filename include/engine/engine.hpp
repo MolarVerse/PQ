@@ -96,7 +96,6 @@ namespace engine
         timings::GlobalTimer _timer;
 
         simulationBox::CellList        _cellList;
-        simulationBox::SimulationBox   _simulationBox;
         physicalData::PhysicalData     _averagePhysicalData;
         constraints::Constraints       _constraints;
         forceField::ForceField         _forceField;
@@ -110,9 +109,10 @@ namespace engine
 #endif
 
         // clang-format off
-        pq::UniqueVirial       _virial       = std::make_unique<virial::VirialMolecular>();
-        pq::UniquePotential    _potential    = std::make_unique<pq::BruteForcePot>();
-        pq::SharedPhysicalData _physicalData = std::make_shared<pq::PhysicalData>();
+        pq::UniqueVirial       _virial        = std::make_unique<virial::VirialMolecular>();
+        pq::UniquePotential    _potential     = std::make_unique<pq::BruteForcePot>();
+        pq::SharedPhysicalData _physicalData  = std::make_shared<pq::PhysicalData>();
+        pq::SharedSimBox       _simulationBox = std::make_shared<pq::SimBox>();
         // clang-format on
 
        public:

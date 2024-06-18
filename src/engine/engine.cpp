@@ -120,7 +120,7 @@ simulationBox::CellList &Engine::getCellList() { return _cellList; }
  */
 simulationBox::SimulationBox &Engine::getSimulationBox()
 {
-    return _simulationBox;
+    return *_simulationBox;
 }
 
 /**
@@ -213,7 +213,7 @@ simulationBox::CellList *Engine::getCellListPtr() { return &_cellList; }
  */
 simulationBox::SimulationBox *Engine::getSimulationBoxPtr()
 {
-    return &_simulationBox;
+    return _simulationBox.get();
 }
 
 /**

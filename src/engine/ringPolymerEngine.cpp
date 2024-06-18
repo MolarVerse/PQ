@@ -68,11 +68,11 @@ void RingPolymerEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeVelFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeChargeFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, effStep);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeVelFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeRstFile(*_simulationBox, effStep);
 
         _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, effStep);
         _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
@@ -179,7 +179,7 @@ void RingPolymerEngine::combineBeads()
         settings::RingPolymerSettings::getNumberOfBeads();
 
     std::ranges::for_each(
-        _simulationBox.getAtoms(),
+        _simulationBox->getAtoms(),
         [](auto &atom)
         {
             atom->setPosition({0.0, 0.0, 0.0});
@@ -194,13 +194,13 @@ void RingPolymerEngine::combineBeads()
         {
             auto &atom = bead.getAtom(i);
 
-            _simulationBox.getAtom(i).addPosition(
+            _simulationBox->getAtom(i).addPosition(
                 atom.getPosition() / double(numberOfBeads)
             );
-            _simulationBox.getAtom(i).addVelocity(
+            _simulationBox->getAtom(i).addVelocity(
                 atom.getVelocity() / double(numberOfBeads)
             );
-            _simulationBox.getAtom(i).addForce(
+            _simulationBox->getAtom(i).addForce(
                 atom.getForce() / double(numberOfBeads)
             );
         }
