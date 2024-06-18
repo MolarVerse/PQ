@@ -58,7 +58,7 @@ namespace engine
        public:
         void run() final;
         void takeStep() final;
-        void writeOutput() final {};
+        void writeOutput() final;
 
         /***************************
          * standard setter methods *
