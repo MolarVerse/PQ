@@ -103,7 +103,7 @@ bool Engine::isConstraintsActivated() const { return _constraints.isActive(); }
  */
 bool Engine::isIntraNonBondedActivated() const
 {
-    return _intraNonBonded.isActive();
+    return _intraNonBonded->isActive();
 }
 
 /**
@@ -161,7 +161,7 @@ forceField::ForceField &Engine::getForceField() { return _forceField; }
  */
 intraNonBonded::IntraNonBonded &Engine::getIntraNonBonded()
 {
-    return _intraNonBonded;
+    return *_intraNonBonded;
 }
 
 /**
@@ -240,7 +240,7 @@ constraints::Constraints *Engine::getConstraintsPtr() { return &_constraints; }
  */
 intraNonBonded::IntraNonBonded *Engine::getIntraNonBondedPtr()
 {
-    return &_intraNonBonded;
+    return _intraNonBonded.get();
 }
 
 /**

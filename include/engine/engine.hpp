@@ -95,10 +95,9 @@ namespace engine
 
         timings::GlobalTimer _timer;
 
-        physicalData::PhysicalData     _averagePhysicalData;
-        constraints::Constraints       _constraints;
-        forceField::ForceField         _forceField;
-        intraNonBonded::IntraNonBonded _intraNonBonded;
+        physicalData::PhysicalData _averagePhysicalData;
+        constraints::Constraints   _constraints;
+        forceField::ForceField     _forceField;
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
@@ -108,11 +107,12 @@ namespace engine
 #endif
 
         // clang-format off
-        pq::UniqueVirial       _virial        = std::make_unique<virial::VirialMolecular>();
-        pq::UniquePotential    _potential     = std::make_unique<pq::BruteForcePot>();
-        pq::SharedPhysicalData _physicalData  = std::make_shared<pq::PhysicalData>();
-        pq::SharedSimBox       _simulationBox = std::make_shared<pq::SimBox>();
-        pq::SharedCellList     _cellList      = std::make_shared<pq::CellList>();
+        pq::UniqueVirial       _virial         = std::make_unique<virial::VirialMolecular>();
+        pq::UniquePotential    _potential      = std::make_unique<pq::BruteForcePot>();
+        pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
+        pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
+        pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
+        pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
         // clang-format on
 
        public:

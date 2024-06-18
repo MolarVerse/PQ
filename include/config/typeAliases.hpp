@@ -61,6 +61,12 @@ namespace virial
 
 }   // namespace virial
 
+namespace intraNonBonded
+{
+    class IntraNonBonded;   // forward declaration
+
+}   // namespace intraNonBonded
+
 namespace pq
 {
     using strings = std::vector<std::string>;
@@ -74,11 +80,13 @@ namespace pq
     using Atom          = simulationBox::Atom;
     using BruteForcePot = potential::PotentialBruteForce;
     using PhysicalData  = physicalData::PhysicalData;
+    using IntraNonBond  = intraNonBonded::IntraNonBonded;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
     using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
+    using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
 
     using UniqueVirial    = std::unique_ptr<virial::Virial>;
     using UniquePotential = std::unique_ptr<potential::Potential>;

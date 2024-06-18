@@ -89,7 +89,7 @@ void MMMDEngine::takeStep()
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
 #endif
 
-    _intraNonBonded.calculate(*_simulationBox, *_physicalData);
+    _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 

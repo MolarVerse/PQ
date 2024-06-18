@@ -89,8 +89,8 @@ void OptEngine::run()
     _potential->setTimerName("Potential");
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded.setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded.getTimer());
+    _intraNonBonded->setTimerName("IntraNonBonded");
+    _timer.addTimer(_intraNonBonded->getTimer());
 
     _physicalData->setTimerName("Physical Data");
     _timer.addTimer(_physicalData->getTimer());
