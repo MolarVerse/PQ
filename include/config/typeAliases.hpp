@@ -57,7 +57,8 @@ namespace potential
 
 namespace virial
 {
-    class Virial;   // forward declaration
+    class Virial;            // forward declaration
+    class VirialMolecular;   // forward declaration
 
 }   // namespace virial
 
@@ -87,16 +88,18 @@ namespace pq
     using Vec3DPair = std::pair<Vec3D, Vec3D>;
     using tensor3D  = linearAlgebra::tensor3D;
 
-    using SimBox        = simulationBox::SimulationBox;
-    using CellList      = simulationBox::CellList;
-    using Molecule      = simulationBox::Molecule;
-    using Atom          = simulationBox::Atom;
-    using BruteForcePot = potential::PotentialBruteForce;
-    using PhysicalData  = physicalData::PhysicalData;
-    using IntraNonBond  = intraNonBonded::IntraNonBonded;
-    using Virial        = virial::Virial;
-    using ForceField    = forceField::ForceField;
-    using Constraints   = constraints::Constraints;
+    using SimBox          = simulationBox::SimulationBox;
+    using CellList        = simulationBox::CellList;
+    using Molecule        = simulationBox::Molecule;
+    using Atom            = simulationBox::Atom;
+    using Virial          = virial::Virial;
+    using VirialMolecular = virial::VirialMolecular;
+    using Potential       = potential::Potential;
+    using BruteForcePot   = potential::PotentialBruteForce;
+    using PhysicalData    = physicalData::PhysicalData;
+    using IntraNonBond    = intraNonBonded::IntraNonBonded;
+    using ForceField      = forceField::ForceField;
+    using Constraints     = constraints::Constraints;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
@@ -105,9 +108,8 @@ namespace pq
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
-
-    using UniqueVirial    = std::unique_ptr<virial::Virial>;
-    using UniquePotential = std::unique_ptr<potential::Potential>;
+    using SharedVirial       = std::shared_ptr<virial::Virial>;
+    using SharedPotential    = std::shared_ptr<potential::Potential>;
 
 }   // namespace pq
 

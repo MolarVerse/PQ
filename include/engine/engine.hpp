@@ -98,8 +98,8 @@ namespace engine
         physicalData::PhysicalData _averagePhysicalData;
 
         // clang-format off
-        pq::UniqueVirial       _virial         = std::make_unique<virial::VirialMolecular>();
-        pq::UniquePotential    _potential      = std::make_unique<pq::BruteForcePot>();
+        pq::SharedVirial       _virial         = std::make_shared<pq::VirialMolecular>();
+        pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
         pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
         pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
         pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
@@ -141,15 +141,15 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::CellList        &getCellList();
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]] pq::CellList     &getCellList();
+        [[nodiscard]] pq::SimBox       &getSimulationBox();
+        [[nodiscard]] pq::PhysicalData &getPhysicalData();
+        [[nodiscard]] pq::PhysicalData &getAveragePhysicalData();
+        [[nodiscard]] pq::Constraints  &getConstraints();
+        [[nodiscard]] pq::ForceField   &getForceField();
+        [[nodiscard]] pq::IntraNonBond &getIntraNonBonded();
+        [[nodiscard]] pq::Virial       &getVirial();
+        [[nodiscard]] pq::Potential    &getPotential();
 
         [[nodiscard]] EngineOutput          &getEngineOutput();
         [[nodiscard]] output::LogOutput     &getLogOutput();
@@ -162,14 +162,25 @@ namespace engine
         [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
         [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
-        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] pq::ForceField   *getForceFieldPtr();
+        [[nodiscard]] pq::Potential    *getPotentialPtr();
+        [[nodiscard]] pq::Virial       *getVirialPtr();
+        [[nodiscard]] pq::CellList     *getCellListPtr();
+        [[nodiscard]] pq::SimBox       *getSimulationBoxPtr();
+        [[nodiscard]] pq::PhysicalData *getPhysicalDataPtr();
+        [[nodiscard]] pq::Constraints  *getConstraintsPtr();
+        [[nodiscard]] pq::IntraNonBond *getIntraNonBondedPtr();
+
+        /******************************
+         * get shared pointer methods *
+         ******************************/
+
+        [[nodiscard]] pq::SharedForceField   getSharedForceField() const;
+        [[nodiscard]] pq::SharedSimBox       getSharedSimulationBox() const;
+        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalData() const;
+        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
+        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
+        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
 
         /***************************
          * make unique_ptr methods *
