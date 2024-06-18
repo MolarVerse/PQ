@@ -279,3 +279,53 @@ output::TimingsOutput &Engine::getTimingsOutput()
 {
     return _engineOutput.getTimingsOutput();
 }
+
+/**
+ * @brief get the reference to the energy output
+ *
+ * @return output::EnergyOutput&
+ */
+output::EnergyOutput &Engine::getEnergyOutput()
+{
+    return _engineOutput.getEnergyOutput();
+}
+
+/**
+ * @brief get the reference to the xyz output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &Engine::getXyzOutput()
+{
+    return _engineOutput.getXyzOutput();
+}
+
+/**
+ * @brief get the reference to the force output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &Engine::getForceOutput()
+{
+    return _engineOutput.getForceOutput();
+}
+
+/**
+ * @brief get the reference to the rst file output
+ *
+ * @return output::RstFileOutput&
+ */
+output::RstFileOutput &Engine::getRstFileOutput()
+{
+    return _engineOutput.getRstFileOutput();
+}
+
+/**
+ * @brief get the reference to the info output
+ *
+ * @return output::InfoOutput&
+ */
+output::InfoOutput &Engine::getInfoOutput()
+{
+    return _engineOutput.getInfoOutput();
+}

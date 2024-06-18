@@ -84,4 +84,6 @@ void MMEvaluator::updateForces()
     // _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     // _constraints.applyRattle(_simulationBox);
+
+    std::cout << _physicalData->getTotalEnergy() << std::endl;
 }

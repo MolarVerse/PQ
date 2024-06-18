@@ -24,10 +24,10 @@
 
 #define _BOND_HPP_
 
-#include "connectivityElement.hpp"
-
 #include <cstddef>
 #include <vector>
+
+#include "connectivityElement.hpp"
 
 namespace simulationBox
 {
@@ -44,10 +44,18 @@ namespace connectivity
      */
     class Bond : public ConnectivityElement
     {
-      public:
+       public:
         using ConnectivityElement::ConnectivityElement;
-        Bond(simulationBox::Molecule *molecule1, simulationBox::Molecule *molecule2, size_t atomIndex1, size_t atomIndex2)
-            : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2}){};
+        Bond(
+            simulationBox::Molecule *molecule1,
+            simulationBox::Molecule *molecule2,
+            size_t                   atomIndex1,
+            size_t                   atomIndex2
+        )
+            : ConnectivityElement(
+                  {molecule1, molecule2},
+                  {atomIndex1, atomIndex2}
+              ){};
 
         /***************************
          *                         *
@@ -55,10 +63,16 @@ namespace connectivity
          *                         *
          ***************************/
 
-        [[nodiscard]] simulationBox::Molecule *getMolecule1() const { return _molecules[0]; }
-        [[nodiscard]] simulationBox::Molecule *getMolecule2() const { return _molecules[1]; }
-        [[nodiscard]] size_t                   getAtomIndex1() const { return _atomIndices[0]; }
-        [[nodiscard]] size_t                   getAtomIndex2() const { return _atomIndices[1]; }
+        [[nodiscard]] simulationBox::Molecule *getMolecule1() const
+        {
+            return _molecules[0];
+        }
+        [[nodiscard]] simulationBox::Molecule *getMolecule2() const
+        {
+            return _molecules[1];
+        }
+        [[nodiscard]] size_t getAtomIndex1() const { return _atomIndices[0]; }
+        [[nodiscard]] size_t getAtomIndex2() const { return _atomIndices[1]; }
     };
 
 }   // namespace connectivity

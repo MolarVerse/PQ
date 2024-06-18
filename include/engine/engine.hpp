@@ -157,6 +157,12 @@ namespace engine
         [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
         [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+
         [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
         [[nodiscard]] potential::Potential           *getPotentialPtr();
         [[nodiscard]] virial::Virial                 *getVirialPtr();

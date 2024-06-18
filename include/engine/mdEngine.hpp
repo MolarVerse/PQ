@@ -81,15 +81,10 @@ namespace engine
         [[nodiscard]] integrator::Integrator       &getIntegrator();
         [[nodiscard]] thermostat::Thermostat       &getThermostat();
         [[nodiscard]] manostat::Manostat           &getManostat();
-        [[nodiscard]] output::EnergyOutput         &getEnergyOutput();
         [[nodiscard]] output::EnergyOutput         &getInstantEnergyOutput();
         [[nodiscard]] output::MomentumOutput       &getMomentumOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getXyzOutput();
         [[nodiscard]] output::TrajectoryOutput     &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getForceOutput();
         [[nodiscard]] output::TrajectoryOutput     &getChargeOutput();
-        [[nodiscard]] output::RstFileOutput        &getRstFileOutput();
-        [[nodiscard]] output::InfoOutput           &getInfoOutput();
         [[nodiscard]] output::VirialOutput         &getVirialOutput();
         [[nodiscard]] output::StressOutput         &getStressOutput();
         [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();

@@ -255,27 +255,27 @@ namespace settings
             return _boxFileName;
         }
 
-        [[nodiscard]] static std::string getRingPolymerRestartFileName()
+        [[nodiscard]] static std::string getRPMDRestartFileName()
         {
             return _ringPolymerRestartFileName;
         }
-        [[nodiscard]] static std::string getRingPolymerTrajectoryFileName()
+        [[nodiscard]] static std::string getRPMDTrajFileName()
         {
             return _ringPolymerTrajectoryFileName;
         }
-        [[nodiscard]] static std::string getRingPolymerVelocityFileName()
+        [[nodiscard]] static std::string getRPMDVelocityFileName()
         {
             return _ringPolymerVelocityFileName;
         }
-        [[nodiscard]] static std::string getRingPolymerForceFileName()
+        [[nodiscard]] static std::string getRPMDForceFileName()
         {
             return _ringPolymerForceFileName;
         }
-        [[nodiscard]] static std::string getRingPolymerChargeFileName()
+        [[nodiscard]] static std::string getRPMDChargeFileName()
         {
             return _ringPolymerChargeFileName;
         }
-        [[nodiscard]] static std::string getRingPolymerEnergyFileName()
+        [[nodiscard]] static std::string getRPMDEnergyFileName()
         {
             return _ringPolymerEnergyFileName;
         }

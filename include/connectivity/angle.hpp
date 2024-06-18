@@ -36,7 +36,7 @@ namespace connectivity
      */
     class Angle : public ConnectivityElement
     {
-      public:
+       public:
         using ConnectivityElement::ConnectivityElement;
     };
 

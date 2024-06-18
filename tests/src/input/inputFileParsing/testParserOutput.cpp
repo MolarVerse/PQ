@@ -283,10 +283,7 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
         _fileName
     };
     parser.parseRPMDTrajectoryFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerTrajectoryFileName(),
-        _fileName
-    );
+    EXPECT_EQ(settings::OutputFileSettings::getRPMDTrajFileName(), _fileName);
 }
 
 /**
@@ -304,7 +301,7 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
     };
     parser.parseRPMDRestartFilename(lineElements, 0);
     EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerRestartFileName(),
+        settings::OutputFileSettings::getRPMDRestartFileName(),
         _fileName
     );
 }
@@ -323,10 +320,7 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
         _fileName
     };
     parser.parseRPMDEnergyFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerEnergyFileName(),
-        _fileName
-    );
+    EXPECT_EQ(settings::OutputFileSettings::getRPMDEnergyFileName(), _fileName);
 }
 
 /**
@@ -343,10 +337,7 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
         _fileName
     };
     parser.parseRPMDForceFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerForceFileName(),
-        _fileName
-    );
+    EXPECT_EQ(settings::OutputFileSettings::getRPMDForceFileName(), _fileName);
 }
 
 /**
@@ -363,10 +354,7 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
         _fileName
     };
     parser.parseRPMDChargeFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerChargeFileName(),
-        _fileName
-    );
+    EXPECT_EQ(settings::OutputFileSettings::getRPMDChargeFileName(), _fileName);
 }
 
 /**
@@ -384,7 +372,7 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
     };
     parser.parseRPMDVelocityFilename(lineElements, 0);
     EXPECT_EQ(
-        settings::OutputFileSettings::getRingPolymerVelocityFileName(),
+        settings::OutputFileSettings::getRPMDVelocityFileName(),
         _fileName
     );
 }

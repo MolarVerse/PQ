@@ -47,6 +47,19 @@ namespace physicalData
 
 }   // namespace physicalData
 
+namespace potential
+{
+    class Potential;             // forward declaration
+    class PotentialBruteForce;   // forward declaration
+
+}   // namespace potential
+
+namespace virial
+{
+    class Virial;   // forward declaration
+
+}   // namespace virial
+
 namespace pq
 {
     using strings = std::vector<std::string>;
@@ -54,13 +67,18 @@ namespace pq
     using Vec3D    = linearAlgebra::Vec3D;
     using tensor3D = linearAlgebra::tensor3D;
 
-    using SimBox   = simulationBox::SimulationBox;
-    using Molecule = simulationBox::Molecule;
-    using Atom     = simulationBox::Atom;
+    using SimBox        = simulationBox::SimulationBox;
+    using Molecule      = simulationBox::Molecule;
+    using Atom          = simulationBox::Atom;
+    using BruteForcePot = potential::PotentialBruteForce;
+    using PhysicalData  = physicalData::PhysicalData;
 
     using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+
+    using UniqueVirial    = std::unique_ptr<virial::Virial>;
+    using UniquePotential = std::unique_ptr<potential::Potential>;
 
 }   // namespace pq
 

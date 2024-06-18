@@ -207,16 +207,6 @@ thermostat::Thermostat &MDEngine::getThermostat() { return *_thermostat; }
 manostat::Manostat &MDEngine::getManostat() { return *_manostat; }
 
 /**
- * @brief get the reference to the energy output
- *
- * @return output::EnergyOutput&
- */
-output::EnergyOutput &MDEngine::getEnergyOutput()
-{
-    return _engineOutput.getEnergyOutput();
-}
-
-/**
  * @brief get the reference to the instant energy output
  *
  * @return output::EnergyOutput&
@@ -237,16 +227,6 @@ output::MomentumOutput &MDEngine::getMomentumOutput()
 }
 
 /**
- * @brief get the reference to the xyz output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &MDEngine::getXyzOutput()
-{
-    return _engineOutput.getXyzOutput();
-}
-
-/**
  * @brief get the reference to the vel output
  *
  * @return output::TrajectoryOutput&
@@ -257,16 +237,6 @@ output::TrajectoryOutput &MDEngine::getVelOutput()
 }
 
 /**
- * @brief get the reference to the force output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &MDEngine::getForceOutput()
-{
-    return _engineOutput.getForceOutput();
-}
-
-/**
  * @brief get the reference to the charge output
  *
  * @return output::TrajectoryOutput&
@@ -274,26 +244,6 @@ output::TrajectoryOutput &MDEngine::getForceOutput()
 output::TrajectoryOutput &MDEngine::getChargeOutput()
 {
     return _engineOutput.getChargeOutput();
-}
-
-/**
- * @brief get the reference to the rst file output
- *
- * @return output::RstFileOutput&
- */
-output::RstFileOutput &MDEngine::getRstFileOutput()
-{
-    return _engineOutput.getRstFileOutput();
-}
-
-/**
- * @brief get the reference to the info output
- *
- * @return output::InfoOutput&
- */
-output::InfoOutput &MDEngine::getInfoOutput()
-{
-    return _engineOutput.getInfoOutput();
 }
 
 /**
