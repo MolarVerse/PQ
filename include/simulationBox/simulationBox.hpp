@@ -37,6 +37,7 @@
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
 #include "triclinicBox.hpp"      // for TriclinicBox
+#include "typeAliases.hpp"       // for pq::Vec3D
 
 /**
  * @namespace simulationBox
@@ -52,7 +53,6 @@
 namespace simulationBox
 {
     using c_ul      = const size_t;
-    using Vec3D     = linearAlgebra::Vec3D;
     using vector3d  = std::vector<std::vector<std::vector<double>>>;
     using vector4d  = std::vector<vector3d>;
     using vector5d  = std::vector<vector4d>;
@@ -89,7 +89,7 @@ namespace simulationBox
 
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
-        Vec3D                              _centerOfMass = {0.0, 0.0, 0.0};
+        pq::Vec3D                          _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<std::shared_ptr<Atom>> _qmAtoms;
         std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
@@ -119,16 +119,17 @@ namespace simulationBox
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(const double displacement);
 
-        [[nodiscard]] double calculateTemperature();
-        [[nodiscard]] double calculateTotalForce();
-        [[nodiscard]] double calculateRMSForce() const;
-        [[nodiscard]] double calculateMaxForce() const;
-        [[nodiscard]] double calculateRMSForceOld() const;
-        [[nodiscard]] double calculateMaxForceOld() const;
-        [[nodiscard]] Vec3D  calculateMomentum();
-        [[nodiscard]] Vec3D  calculateAngularMomentum(const Vec3D &);
-        [[nodiscard]] Vec3D  calcBoxDimFromDensity() const;
-        [[nodiscard]] Vec3D  calcShiftVector(const Vec3D &position) const;
+        [[nodiscard]] double    calculateTemperature();
+        [[nodiscard]] double    calculateTotalForce();
+        [[nodiscard]] double    calculateRMSForce() const;
+        [[nodiscard]] double    calculateMaxForce() const;
+        [[nodiscard]] double    calculateRMSForceOld() const;
+        [[nodiscard]] double    calculateMaxForceOld() const;
+        [[nodiscard]] pq::Vec3D calculateMomentum();
+        [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D &);
+        [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
+        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &position
+        ) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -180,16 +181,16 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int    getWaterType() const;
-        [[nodiscard]] int    getAmmoniaType() const;
-        [[nodiscard]] size_t getNumberOfMolecules() const;
-        [[nodiscard]] size_t getDegreesOfFreedom() const;
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] size_t getNumberOfQMAtoms() const;
-        [[nodiscard]] double getTotalMass() const;
-        [[nodiscard]] double getTotalCharge() const;
-        [[nodiscard]] double getDensity() const;
-        [[nodiscard]] Vec3D &getCenterOfMass();
+        [[nodiscard]] int        getWaterType() const;
+        [[nodiscard]] int        getAmmoniaType() const;
+        [[nodiscard]] size_t     getNumberOfMolecules() const;
+        [[nodiscard]] size_t     getDegreesOfFreedom() const;
+        [[nodiscard]] size_t     getNumberOfAtoms() const;
+        [[nodiscard]] size_t     getNumberOfQMAtoms() const;
+        [[nodiscard]] double     getTotalMass() const;
+        [[nodiscard]] double     getTotalCharge() const;
+        [[nodiscard]] double     getDensity() const;
+        [[nodiscard]] pq::Vec3D &getCenterOfMass();
 
         [[nodiscard]] Atom         &getAtom(const size_t index);
         [[nodiscard]] Atom         &getQMAtom(const size_t index);
@@ -212,6 +213,10 @@ namespace simulationBox
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
+        [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
+        [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
+        [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -233,7 +238,7 @@ namespace simulationBox
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(Vec3D &position) const;
+        void applyPBC(pq::Vec3D &position) const;
         void scaleBox(const tensor3D &scalingTensor);
 
         [[nodiscard]] double calculateVolume() const;
@@ -242,11 +247,11 @@ namespace simulationBox
 
         [[nodiscard]] bool getBoxSizeHasChanged() const;
 
-        [[nodiscard]] Vec3D getBoxDimensions() const;
-        [[nodiscard]] Vec3D getBoxAngles() const;
+        [[nodiscard]] pq::Vec3D getBoxDimensions() const;
+        [[nodiscard]] pq::Vec3D getBoxAngles() const;
 
         void setVolume(const double volume) const;
-        void setBoxDimensions(const Vec3D &boxDimensions) const;
+        void setBoxDimensions(const pq::Vec3D &boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
 

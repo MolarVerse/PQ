@@ -303,6 +303,48 @@ std::shared_ptr<Box> SimulationBox::getBoxPtr() { return _box; }
  */
 std::shared_ptr<Box> SimulationBox::getBoxPtr() const { return _box; }
 
+/**
+ * @brief get all positions of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
+{
+    std::vector<linearAlgebra::Vec3D> positions;
+
+    for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
+
+    return positions;
+}
+
+/**
+ * @brief get all velocities of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
+{
+    std::vector<linearAlgebra::Vec3D> velocities;
+
+    for (const auto &atom : _atoms) velocities.push_back(atom->getVelocity());
+
+    return velocities;
+}
+
+/**
+ * @brief get all forces of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
+{
+    std::vector<linearAlgebra::Vec3D> forces;
+
+    for (const auto &atom : _atoms) forces.push_back(atom->getForce());
+
+    return forces;
+}
+
 /***************************
  *                         *
  * standard setter methods *
