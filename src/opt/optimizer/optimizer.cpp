@@ -69,6 +69,20 @@ Optimizer::Optimizer(
     _forceConvStrategy  = ConvStrategy::RIGOROUS;
 }
 
+void Optimizer::updateHistory()
+{
+    _energyHistory.push(_physicalData->getTotalEnergy());
+    _forceHistory.push(_simulationBox->getForces());
+    _positionHistory.push(_simulationBox->getPositions());
+
+    if (_energyHistory.size() > maxHistoryLength())
+    {
+        _energyHistory.pop();
+        _forceHistory.pop();
+        _positionHistory.pop();
+    }
+}
+
 /**
  * @brief check if the optimizer has converged
  *

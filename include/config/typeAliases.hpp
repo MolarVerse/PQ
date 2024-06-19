@@ -27,6 +27,7 @@
 #include <cstddef>      // for size_t
 #include <functional>   // for std::function
 #include <memory>       // for std::shared_ptr
+#include <queue>        // for std::queue
 #include <set>          // for std::set
 #include <string>       // for std::string
 #include <vector>       // for std::vector
@@ -100,9 +101,10 @@ namespace pq
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
-    using Vec3D     = linearAlgebra::Vec3D;
-    using Vec3DPair = std::pair<Vec3D, Vec3D>;
-    using tensor3D  = linearAlgebra::tensor3D;
+    using Vec3D         = linearAlgebra::Vec3D;
+    using Vec3DPair     = std::pair<Vec3D, Vec3D>;
+    using Vec3DVecQueue = std::queue<std::vector<Vec3D>>;
+    using tensor3D      = linearAlgebra::tensor3D;
 
     using SimBox          = simulationBox::SimulationBox;
     using CellList        = simulationBox::CellList;

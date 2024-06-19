@@ -29,17 +29,6 @@
 
 #include "convergenceSettings.hpp"   // for ConvergenceSettings
 #include "typeAliases.hpp"           // for SharedSimulationBox
-namespace engine
-{
-    class OptEngine;   // forward declaration
-
-}   // namespace engine
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-
-}   // namespace simulationBox
 
 namespace opt
 {
@@ -73,6 +62,10 @@ namespace opt
         settings::ConvStrategy _energyConvStrategy;
         settings::ConvStrategy _forceConvStrategy;
 
+        std::queue<double> _energyHistory;
+        pq::Vec3DVecQueue  _forceHistory;
+        pq::Vec3DVecQueue  _positionHistory;
+
        public:
         explicit Optimizer(const size_t);
         explicit Optimizer(
@@ -88,9 +81,11 @@ namespace opt
         Optimizer()          = default;
         virtual ~Optimizer() = default;
 
-        virtual std::shared_ptr<Optimizer> clone() const = 0;
+        virtual pq::SharedOptimizer clone() const                     = 0;
+        virtual void                update(const double learningRate) = 0;
+        virtual size_t              maxHistoryLength() const          = 0;
 
-        virtual void update(const double learningRate) = 0;
+        void updateHistory();
 
         [[nodiscard]] bool hasConverged() const;
         [[nodiscard]] bool hasPropertyConv(
