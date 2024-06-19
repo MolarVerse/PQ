@@ -40,23 +40,26 @@ namespace opt
     class Evaluator
     {
        protected:
-        std::shared_ptr<potential::Potential>           _potential;
-        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
-        std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<simulationBox::CellList>        _cellList;
-        std::shared_ptr<forceField::ForceField>         _forceField;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
-        std::shared_ptr<virial::Virial>                 _virial;
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        pq::SharedPotential    _potential;
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedConstraints  _constraints;
+        pq::SharedCellList     _cellList;
+        pq::SharedForceField   _forceField;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedPhysicalData _physicalDataOld;
+        pq::SharedVirial       _virial;
+        pq::SharedIntraNonBond _intraNonBonded;
 
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual std::shared_ptr<Evaluator> clone() const = 0;
+        virtual pq::SharedEvaluator clone() const = 0;
+        virtual void                evaluate()    = 0;
 
-        virtual void updateForces() = 0;
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setPotential(const pq::SharedPotential);
         void setCellList(const pq::SharedCellList);

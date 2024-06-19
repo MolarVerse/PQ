@@ -40,6 +40,10 @@ using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;
 
+/***************************
+ * standard setter methods *
+ ***************************/
+
 /**
  * @brief set the potential as shared pointer
  *
