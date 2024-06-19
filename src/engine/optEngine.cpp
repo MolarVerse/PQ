@@ -118,7 +118,7 @@ void OptEngine::takeStep()
 {
     _optimizer->update(_learningRateStrategy->getLearningRate());
 
-    _evaluator->updateForces();
+    _evaluator->evaluate();
 
     _converged = _optimizer->hasConverged();
 
