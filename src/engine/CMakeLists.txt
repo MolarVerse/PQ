@@ -17,6 +17,7 @@ if(BUILD_WITH_KOKKOS)
     set(engine_source_files
         ${engine_source_files}
         engine_kokkos.cpp
+        mdEngine_kokkos.cpp
     )
 endif()
 

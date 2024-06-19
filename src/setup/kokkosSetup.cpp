@@ -29,6 +29,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "mdEngine.hpp"
 #include "nonCoulombPotential.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"
@@ -134,7 +135,7 @@ void KokkosSetup::setup()
      * Initialize Kokkos Integrator *
      ********************************/
 
-    _engine.initKokkosVelocityVerlet(
+    dynamic_cast<engine::MDEngine &>(_engine).initKokkosVelocityVerlet(
         settings::TimingsSettings::getTimeStep(),
         constants::_V_VERLET_VELOCITY_FACTOR_,
         constants::_FS_TO_S_
