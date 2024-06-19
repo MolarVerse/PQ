@@ -62,9 +62,11 @@ namespace opt
         settings::ConvStrategy _energyConvStrategy;
         settings::ConvStrategy _forceConvStrategy;
 
-        std::queue<double> _energyHistory;
-        pq::Vec3DVecQueue  _forceHistory;
-        pq::Vec3DVecQueue  _positionHistory;
+        std::deque<double> _energyHistory;
+        std::deque<double> _maxForceHistory;
+        std::deque<double> _rmsForceHistory;
+        pq::Vec3DVecDeque  _forceHistory;
+        pq::Vec3DVecDeque  _positionHistory;
 
        public:
         explicit Optimizer(const size_t);
@@ -122,6 +124,17 @@ namespace opt
          ***************************/
 
         [[nodiscard]] size_t getNEpochs() const;
+
+        [[nodiscard]] size_t getHistoryIndex(int offset) const;
+
+        [[nodiscard]] double getEnergy() const;
+        [[nodiscard]] double getEnergy(const int) const;
+
+        [[nodiscard]] pq::Vec3DVec getForces() const;
+        [[nodiscard]] pq::Vec3DVec getForces(const int) const;
+
+        [[nodiscard]] pq::Vec3DVec getPositions() const;
+        [[nodiscard]] pq::Vec3DVec getPositions(const int) const;
     };
 
 }   // namespace opt

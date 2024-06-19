@@ -25,6 +25,7 @@
 #include <iostream>   // for std::cout
 #include <memory>     // for std::shared_ptr
 
+#include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
@@ -32,6 +33,7 @@ using namespace opt;
 using namespace physicalData;
 using namespace simulationBox;
 using namespace settings;
+using namespace customException;
 
 /**
  * @brief Construct a new Optimizer object
@@ -71,15 +73,15 @@ Optimizer::Optimizer(
 
 void Optimizer::updateHistory()
 {
-    _energyHistory.push(_physicalData->getTotalEnergy());
-    _forceHistory.push(_simulationBox->getForces());
-    _positionHistory.push(_simulationBox->getPositions());
+    _energyHistory.push_back(_physicalData->getTotalEnergy());
+    _forceHistory.push_back(_simulationBox->getForces());
+    _positionHistory.push_back(_simulationBox->getPositions());
 
     if (_energyHistory.size() > maxHistoryLength())
     {
-        _energyHistory.pop();
-        _forceHistory.pop();
-        _positionHistory.pop();
+        _energyHistory.pop_front();
+        _forceHistory.pop_front();
+        _positionHistory.pop_front();
     }
 }
 
@@ -352,3 +354,88 @@ void Optimizer::setForceConvStrategy(const ConvStrategy forceConvStrategy)
  * @return size_t
  */
 size_t Optimizer::getNEpochs() const { return _nEpochs; }
+
+/**
+ * @brief get history index
+ *
+ * @return size_t
+ */
+size_t Optimizer::getHistoryIndex(const int offset) const
+{
+    if (offset >= 0)
+        throw OptException(
+            "Offset must be negative to access history in the past"
+        );
+
+    const auto size  = int(_energyHistory.size());
+    const auto index = size_t(size + offset);
+
+    return index;
+}
+
+/**
+ * @brief get the last energy in the history
+ *
+ * @return double
+ */
+double Optimizer::getEnergy() const { return _energyHistory.back(); }
+
+/**
+ * @brief get the energy in history with negative index offset
+ *
+ * @param offset
+ *
+ */
+double Optimizer::getEnergy(const int offset) const
+{
+    const auto index = getHistoryIndex(offset);
+
+    return _energyHistory[index];
+}
+
+/**
+ * @brief get the last force in the history
+ *
+ * @return std::vector<pq::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
+{
+    return _forceHistory.back();
+}
+
+/**
+ * @brief get the force in history with negative index offset
+ *
+ * @param offset
+ *
+ */
+std::vector<linearAlgebra::Vec3D> Optimizer::getForces(const int offset) const
+{
+    const auto index = getHistoryIndex(offset);
+
+    return _forceHistory[index];
+}
+
+/**
+ * @brief get the last position in the history
+ *
+ * @return std::vector<pq::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
+{
+    return _positionHistory.back();
+}
+
+/**
+ * @brief get the position in history with negative index offset
+ *
+ * @param offset
+ *
+ */
+std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(const int offset
+) const
+{
+    const auto index = getHistoryIndex(offset);
+
+    return _positionHistory[index];
+}

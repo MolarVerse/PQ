@@ -38,6 +38,9 @@ using namespace physicalData;
  */
 void OptEngine::run()
 {
+    _evaluator->evaluate();
+    _optimizer->updateHistory();
+
     for (size_t i = 0; i < _optimizer->getNEpochs(); ++i)
     {
         takeStep();

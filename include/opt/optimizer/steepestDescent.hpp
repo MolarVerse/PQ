@@ -36,13 +36,17 @@ namespace opt
      */
     class SteepestDescent : public Optimizer
     {
+       private:
+        constexpr static size_t _maxHistoryLength = 2;
+
        public:
         explicit SteepestDescent(const size_t nEpochs);
 
         SteepestDescent()        = default;
         ~SteepestDescent() final = default;
 
-        std::shared_ptr<Optimizer> clone() const final;
+        [[nodiscard]] pq::SharedOptimizer clone() const final;
+        [[nodiscard]] size_t              maxHistoryLength() const final;
 
         void update(const double learningRate) final;
     };

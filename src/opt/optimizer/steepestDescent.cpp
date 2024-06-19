@@ -46,6 +46,13 @@ std::shared_ptr<Optimizer> SteepestDescent::clone() const
 }
 
 /**
+ * @brief get the maximum history length
+ *
+ * @return size_t
+ */
+size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
+
+/**
  * @brief update the optimizer
  *
  * @param learningRate
@@ -61,4 +68,6 @@ void SteepestDescent::update(const double learningRate)
         atom->setPositionOld(atom->getPosition());
         atom->addPosition(learningRate * force);
     }
+
+    updateHistory();
 }
