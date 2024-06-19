@@ -45,7 +45,7 @@ std::shared_ptr<Evaluator> MMEvaluator::clone() const
  * @brief update forces
  *
  */
-void MMEvaluator::updateForces()
+void MMEvaluator::evaluate()
 {
     _physicalDataOld->copy(*_physicalData);
     _simulationBox->updateOldForces();
