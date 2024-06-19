@@ -56,7 +56,7 @@ namespace linearAlgebra
     template <typename T>
     class Vector3D
     {
-      private:
+       private:
         union
         {
             std::array<T, 3> _xyz;
@@ -68,7 +68,7 @@ namespace linearAlgebra
             };
         };
 
-      public:
+       public:
         ~Vector3D() = default;
 
         Vector3D() = default;
@@ -116,7 +116,10 @@ namespace linearAlgebra
          * @param const Vector3D<T> rhs
          * @return bool
          */
-        bool operator==(const Vector3D<T> &rhs) const { return _x == rhs[0] && _y == rhs[1] && _z == rhs[2]; }
+        bool operator==(const Vector3D<T> &rhs) const
+        {
+            return _x == rhs[0] && _y == rhs[1] && _z == rhs[2];
+        }
 
         /**
          * @brief += operator for two Vector3d objects
@@ -188,7 +191,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator+(const Vector3D<T> &rhs) const { return Vector3D<T>(_x + rhs._x, _y + rhs._y, _z + rhs._z); }
+        Vector3D<T> operator+(const Vector3D<T> &rhs) const
+        {
+            return Vector3D<T>(_x + rhs._x, _y + rhs._y, _z + rhs._z);
+        }
 
         /**
          * @brief + operator for a Vector3d object and a scalar
@@ -196,7 +202,10 @@ namespace linearAlgebra
          * @param const T
          * @return Vector3D
          */
-        Vector3D<T> operator+(const T rhs) const { return Vector3D<T>(_x + rhs, _y + rhs, _z + rhs); }
+        Vector3D<T> operator+(const T rhs) const
+        {
+            return Vector3D<T>(_x + rhs, _y + rhs, _z + rhs);
+        }
 
         /**
          * @brief unary - operator for Vector3d
@@ -211,7 +220,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator-(const Vector3D<T> &rhs) const { return {_x - rhs._x, _y - rhs._y, _z - rhs._z}; }
+        Vector3D<T> operator-(const Vector3D<T> &rhs) const
+        {
+            return {_x - rhs._x, _y - rhs._y, _z - rhs._z};
+        }
 
         /**
          * @brief - operator for a Vector3d object and a scalar
@@ -219,7 +231,10 @@ namespace linearAlgebra
          * @param const T
          * @return Vector3D
          */
-        Vector3D<T> operator-(const T rhs) const { return Vector3D<T>(_x - rhs, _y - rhs, _z - rhs); }
+        Vector3D<T> operator-(const T rhs) const
+        {
+            return Vector3D<T>(_x - rhs, _y - rhs, _z - rhs);
+        }
 
         /**
          * @brief - operator for a Vector3d object and a scalar
@@ -239,7 +254,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator*(const T rhs) const { return Vector3D<T>(_x * rhs, _y * rhs, _z * rhs); }
+        Vector3D<T> operator*(const T rhs) const
+        {
+            return Vector3D<T>(_x * rhs, _y * rhs, _z * rhs);
+        }
 
         /**
          * @brief * operator for two Vector3d objects
@@ -247,7 +265,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator*(const Vector3D<T> &rhs) const { return {_x * rhs._x, _y * rhs._y, _z * rhs._z}; }
+        Vector3D<T> operator*(const Vector3D<T> &rhs) const
+        {
+            return {_x * rhs._x, _y * rhs._y, _z * rhs._z};
+        }
 
         /**
          * @brief * operator for a Vector3d object and a scalar
@@ -255,7 +276,10 @@ namespace linearAlgebra
          * @param const T
          * @return Vector3D
          */
-        friend Vector3D<T> operator*(const T lhs, const Vector3D<T> &rhs) { return rhs * lhs; }
+        friend Vector3D<T> operator*(const T lhs, const Vector3D<T> &rhs)
+        {
+            return rhs * lhs;
+        }
 
         /**
          * @brief / operator for two Vector3d objects
@@ -263,7 +287,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator/(const T rhs) const { return Vector3D<T>(_x / rhs, _y / rhs, _z / rhs); }
+        Vector3D<T> operator/(const T rhs) const
+        {
+            return Vector3D<T>(_x / rhs, _y / rhs, _z / rhs);
+        }
 
         /**
          * @brief / operator for two Vector3d objects
@@ -271,7 +298,10 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        Vector3D<T> operator/(const Vector3D<T> &rhs) const { return Vector3D<T>(_x / rhs._x, _y / rhs._y, _z / rhs._z); }
+        Vector3D<T> operator/(const Vector3D<T> &rhs) const
+        {
+            return Vector3D<T>(_x / rhs._x, _y / rhs._y, _z / rhs._z);
+        }
 
         /**
          * @brief / operator for a Vector3d object and a scalar
@@ -318,14 +348,20 @@ namespace linearAlgebra
          * @param const Vector3D<T>&
          * @return Vector3D
          */
-        friend Vector3D fabs(const Vector3D &v) { return Vector3D<T>(fabs(v._x), fabs(v._y), fabs(v._z)); }
+        friend Vector3D fabs(const Vector3D &v)
+        {
+            return Vector3D<T>(fabs(v._x), fabs(v._y), fabs(v._z));
+        }
 
         /**
          * @brief begin iterator for vector3d
          *
          * @return constexpr const_iterator<T>
          */
-        constexpr const_iterator<T> begin() const noexcept { return _xyz.begin(); }
+        constexpr const_iterator<T> begin() const noexcept
+        {
+            return _xyz.begin();
+        }
 
         /**
          * @brief end iterator for vector3d
@@ -343,7 +379,11 @@ namespace linearAlgebra
         template <class U>
         explicit operator Vector3D<U>() const
         {
-            return Vector3D<U>(static_cast<U>(_x), static_cast<U>(_y), static_cast<U>(_z));
+            return Vector3D<U>(
+                static_cast<U>(_x),
+                static_cast<U>(_y),
+                static_cast<U>(_z)
+            );
         }
 
         /**
@@ -352,7 +392,10 @@ namespace linearAlgebra
          * @param v
          * @return Vector3D<T>
          */
-        friend Vector3D<T> round(const Vector3D<T> &v) { return {rint(v[0]), rint(v[1]), rint(v[2])}; }
+        friend Vector3D<T> round(const Vector3D<T> &v)
+        {
+            return {rint(v[0]), rint(v[1]), rint(v[2])};
+        }
 
         /**
          * @brief ceil all entries of vector
@@ -360,7 +403,10 @@ namespace linearAlgebra
          * @param v
          * @return Vector3D<T>
          */
-        friend Vector3D<T> ceil(Vector3D<T> v) { return Vector3D<T>(ceil(v._x), ceil(v._y), ceil(v._z)); }
+        friend Vector3D<T> ceil(Vector3D<T> v)
+        {
+            return Vector3D<T>(ceil(v._x), ceil(v._y), ceil(v._z));
+        }
 
         /**
          * @brief floor all entries of vector
@@ -368,7 +414,10 @@ namespace linearAlgebra
          * @param v
          * @return Vector3D<T>
          */
-        friend Vector3D<T> floor(Vector3D<T> v) { return Vector3D<T>(floor(v._x), floor(v._y), floor(v._z)); }
+        friend Vector3D<T> floor(Vector3D<T> v)
+        {
+            return Vector3D<T>(floor(v._x), floor(v._y), floor(v._z));
+        }
 
         /**
          * @brief norm of vector
@@ -376,7 +425,10 @@ namespace linearAlgebra
          * @param v
          * @return T
          */
-        friend T norm(Vector3D<T> v) { return sqrt(v._x * v._x + v._y * v._y + v._z * v._z); }
+        friend T norm(Vector3D<T> v)
+        {
+            return sqrt(v._x * v._x + v._y * v._y + v._z * v._z);
+        }
 
         /**
          * @brief norm squared of vector
@@ -384,7 +436,10 @@ namespace linearAlgebra
          * @param v
          * @return T
          */
-        friend T normSquared(Vector3D<T> v) { return v._x * v._x + v._y * v._y + v._z * v._z; }
+        friend T normSquared(Vector3D<T> v)
+        {
+            return v._x * v._x + v._y * v._y + v._z * v._z;
+        }
 
         /**
          * @brief minimum of vector
@@ -392,7 +447,10 @@ namespace linearAlgebra
          * @param v
          * @return T
          */
-        friend T minimum(Vector3D<T> v) { return std::min(v._x, std::min(v._y, v._z)); }
+        friend T minimum(Vector3D<T> v)
+        {
+            return std::min(v._x, std::min(v._y, v._z));
+        }
 
         /**
          * @brief maximum of vector
@@ -400,7 +458,10 @@ namespace linearAlgebra
          * @param v
          * @return T
          */
-        friend T maximum(Vector3D<T> v) { return std::max(v._x, std::max(v._y, v._z)); }
+        friend T maximum(Vector3D<T> v)
+        {
+            return std::max(v._x, std::max(v._y, v._z));
+        }
 
         /**
          * @brief sum of vector
@@ -432,7 +493,10 @@ namespace linearAlgebra
          * @param v1
          * @param v2
          */
-        friend T dot(Vector3D<T> v1, Vector3D<T> v2) { return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z; }
+        friend T dot(Vector3D<T> v1, Vector3D<T> v2)
+        {
+            return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z;
+        }
 
         /**
          * @brief cross product of two vectors
@@ -443,7 +507,11 @@ namespace linearAlgebra
          */
         friend Vector3D<T> cross(Vector3D<T> v1, Vector3D<T> v2)
         {
-            return Vector3D<T>(v1._y * v2._z - v1._z * v2._y, v1._z * v2._x - v1._x * v2._z, v1._x * v2._y - v1._y * v2._x);
+            return Vector3D<T>(
+                v1._y * v2._z - v1._z * v2._y,
+                v1._z * v2._x - v1._x * v2._z,
+                v1._x * v2._y - v1._y * v2._x
+            );
         }
 
         /**
@@ -453,7 +521,10 @@ namespace linearAlgebra
          * @param v2
          * @return Vector3D<T>
          */
-        friend Vector3D<T> cos(Vector3D<T> v1) { return Vector3D<T>(cos(v1._x), cos(v1._y), cos(v1._z)); }
+        friend Vector3D<T> cos(Vector3D<T> v1)
+        {
+            return Vector3D<T>(cos(v1._x), cos(v1._y), cos(v1._z));
+        }
 
         /**
          * @brief calculates the cosine of the angle between two vectors
@@ -479,7 +550,10 @@ namespace linearAlgebra
          * @param v2
          * @return Vector3D<T>
          */
-        friend double angle(Vector3D<T> v1, Vector3D<T> v2) { return ::acos(cos(v1, v2)); }
+        friend double angle(Vector3D<T> v1, Vector3D<T> v2)
+        {
+            return ::acos(cos(v1, v2));
+        }
 
         /**
          * @brief calculates the exponential of the vector (for each element)
@@ -488,7 +562,10 @@ namespace linearAlgebra
          * @param v2
          * @return Vector3D<T>
          */
-        friend Vector3D<T> exp(Vector3D<T> v) { return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z)); }
+        friend Vector3D<T> exp(Vector3D<T> v)
+        {
+            return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z));
+        }
 
         /**
          * @brief ostream operator for vector3d
@@ -510,7 +587,26 @@ namespace linearAlgebra
          * @return std::vector<T>
          */
         std::vector<T> toStdVector() { return {_x, _y, _z}; }
+
+        /**
+         * @brief returns a std::vector of the norms of the vector
+         *
+         * @param v
+         *
+         * @return std::vector<T>
+         */
+        std::vector<T> norms(std::vector<Vector3D<T>> v)
+        requires std::is_fundamental_v<T>
+        {
+            std::vector<T> norms;
+
+            for (size_t i = 0; i < v.size(); ++i) norms.push_back(norm(v[i]));
+
+            return norms;
+        }
     };
+
+#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 }   // namespace linearAlgebra
 
