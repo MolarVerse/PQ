@@ -28,12 +28,17 @@
 
 namespace linearAlgebra
 {
-    template <class T>
-    class Vector3D;
+    // template <class T>
+    // class Vector3D;
 }
 
 namespace pq
 {
+    template <class T>
+    concept Addable = requires(T a, T b) {
+        { a + b } -> std::convertible_to<T>;
+        { a - b } -> std::convertible_to<T>;
+    };
 
 }   // namespace pq
 

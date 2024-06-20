@@ -82,7 +82,7 @@ namespace linearAlgebra
      */
     template <class T>
     void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
-    requires pq::Addable<T, T>
+    requires pq::Addable<T>
     {
         _x += rhs._x;
         _y += rhs._y;
@@ -97,7 +97,7 @@ namespace linearAlgebra
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator+=(const T rhs)
-    requires pq::Addable<T, T>
+    requires pq::Addable<T>
     {
         _x += rhs;
         _y += rhs;
@@ -105,9 +105,9 @@ namespace linearAlgebra
         return *this;
     }
 
-    /****************
-     * -= operators *
-     ****************/
+    // /****************
+    //  * -= operators *
+    //  ****************/
 
     /**
      * @brief operator -=
@@ -117,7 +117,7 @@ namespace linearAlgebra
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &rhs)
-    requires pq::Number<T>
+    requires pq::Addable<T>
     {
         _x -= rhs._x;
         _y -= rhs._y;
@@ -125,97 +125,97 @@ namespace linearAlgebra
         return *this;
     }
 
-    /**
-     * @brief operator -=
-     *
-     * @param const T rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
-    requires pq::Number<T>
-    {
-        _x -= rhs;
-        _y -= rhs;
-        _z -= rhs;
-        return *this;
-    }
+    // /**
+    //  * @brief operator -=
+    //  *
+    //  * @param const T rhs
+    //  * @return Vector3D<T>&
+    //  */
+    // template <class T>
+    // Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
+    // requires pq::Number<T>
+    // {
+    //     _x -= rhs;
+    //     _y -= rhs;
+    //     _z -= rhs;
+    //     return *this;
+    // }
 
-    /****************
-     * *= operators *
-     ****************/
+    // /****************
+    //  * *= operators *
+    //  ****************/
 
-    /**
-     * @brief operator *=
-     *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
-    requires pq::Number<T>
-    {
-        _x *= rhs._x;
-        _y *= rhs._y;
-        _z *= rhs._z;
-        return *this;
-    }
+    // /**
+    //  * @brief operator *=
+    //  *
+    //  * @tparam T
+    //  * @param rhs
+    //  * @return Vector3D<T>&
+    //  */
+    // template <class T>
+    // Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
+    // requires pq::Number<T>
+    // {
+    //     _x *= rhs._x;
+    //     _y *= rhs._y;
+    //     _z *= rhs._z;
+    //     return *this;
+    // }
 
-    /**
-     * @brief operator *=
-     *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
-    requires pq::Number<T>
-    {
-        _x *= rhs;
-        _y *= rhs;
-        _z *= rhs;
-        return *this;
-    }
+    // /**
+    //  * @brief operator *=
+    //  *
+    //  * @tparam T
+    //  * @param rhs
+    //  * @return Vector3D<T>&
+    //  */
+    // template <class T>
+    // Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
+    // requires pq::Number<T>
+    // {
+    //     _x *= rhs;
+    //     _y *= rhs;
+    //     _z *= rhs;
+    //     return *this;
+    // }
 
-    /****************
-     * /= operators *
-     ****************/
+    // /****************
+    //  * /= operators *
+    //  ****************/
 
-    /**
-     * @brief operator /=
-     *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
-    requires pq::Number<T>
-    {
-        _x /= rhs._x;
-        _y /= rhs._y;
-        _z /= rhs._z;
-        return *this;
-    }
+    // /**
+    //  * @brief operator /=
+    //  *
+    //  * @tparam T
+    //  * @param rhs
+    //  * @return Vector3D<T>&
+    //  */
+    // template <class T>
+    // Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
+    // requires pq::Number<T>
+    // {
+    //     _x /= rhs._x;
+    //     _y /= rhs._y;
+    //     _z /= rhs._z;
+    //     return *this;
+    // }
 
-    /**
-     * @brief operator /=
-     *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
-    requires pq::Number<T>
-    {
-        _x /= rhs;
-        _y /= rhs;
-        _z /= rhs;
-        return *this;
-    }
+    // /**
+    //  * @brief operator /=
+    //  *
+    //  * @tparam T
+    //  * @param rhs
+    //  * @return Vector3D<T>&
+    //  */
+    // template <class T>
+    // Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
+    // requires pq::Number<T>
+    // {
+    //     _x /= rhs;
+    //     _y /= rhs;
+    //     _z /= rhs;
+    //     return *this;
+    // }
 
     /**********************
      *                    *

@@ -31,6 +31,8 @@
 #include <type_traits>   // for is_fundamental_v
 #include <vector>        // for vector
 
+#include "concepts.hpp"   // for Addable
+
 namespace linearAlgebra
 {
     template <typename T>
@@ -78,37 +80,30 @@ namespace linearAlgebra
 
         using value_type = T;
 
-        /**
-         * @brief index operator
-         *
-         * @param const size_t index
-         * @return T&
-         */
-        T &operator[](const size_t index) { return _xyz[index]; }
+        /********************
+         * assign operators *
+         ********************/
 
-        /**
-         * @brief const index operator
-         *
-         * @param const size_t index
-         * @return const T&
-         */
-        const T &operator[](const size_t index) const { return _xyz[index]; }
-
-        /**
-         * @brief Construct a new Vector 3D object
-         *
-         * @param Vector3D<T>&
-         * @return Vector3D&
-         */
+        // = operators
         Vector3D &operator=(Vector3D<T> &);
-
-        /**
-         * @brief Construct a new Vector 3D object
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D&
-         */
         Vector3D &operator=(const Vector3D<T> &);
+
+        // clang-format off
+
+        // += operators
+        void operator+=(const Vector3D<T> &) requires pq::Addable<T>;
+        Vector3D &operator+=(const T) requires pq::Addable<T>;
+        
+        // -= operators
+        Vector3D &operator-=(const Vector3D<T> &) requires pq::Addable<T>;
+        // clang-format on
+
+        /**********************
+         * indexing operators *
+         **********************/
+
+        T       &operator[](const size_t index);
+        const T &operator[](const size_t index) const;
 
         /**
          * @brief operator ==
@@ -120,30 +115,6 @@ namespace linearAlgebra
         {
             return _x == rhs[0] && _y == rhs[1] && _z == rhs[2];
         }
-
-        /**
-         * @brief += operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @note void to be a lot faster than with return this*
-         */
-        void operator+=(const Vector3D<T> &);
-
-        /**
-         * @brief += operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D&
-         */
-        Vector3D &operator+=(const T);
-
-        /**
-         * @brief -= operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D&
-         */
-        Vector3D &operator-=(const Vector3D<T> &);
 
         /**
          * @brief -= operator for a Vector3d object and a scalar
@@ -606,8 +577,8 @@ namespace linearAlgebra
         }
     };
 
-#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
-
 }   // namespace linearAlgebra
+
+#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _VEC3D_HPP_
