@@ -24,6 +24,229 @@
 
 #define _VEC3D_TPP_
 
+#include "concepts.hpp"
 #include "vector3d.hpp"
+
+namespace linearAlgebra
+{
+    /********************
+     *                  *
+     * assign operators *
+     *                  *
+     ********************/
+
+    /***************
+     * = operators *
+     ***************/
+
+    /**
+     * @brief move assignment operator
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &rhs)
+    {
+        _x = rhs._x;
+        _y = rhs._y;
+        _z = rhs._z;
+        return *this;
+    }
+
+    /**
+     * @brief copy assignment operator
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &rhs)
+    {
+        _x = rhs._x;
+        _y = rhs._y;
+        _z = rhs._z;
+        return *this;
+    }
+
+    /****************
+     * += operators *
+     ****************/
+
+    /**
+     * @brief operator += inplace
+     *
+     * @param const Vector3D<T> &rhs
+     */
+    template <class T>
+    void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
+    requires pq::Addable<T, T>
+    {
+        _x += rhs._x;
+        _y += rhs._y;
+        _z += rhs._z;
+    }
+
+    /**
+     * @brief += operator for two Vector3d objects
+     *
+     * @param const Vector3D<T>&
+     * @return Vector3D
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator+=(const T rhs)
+    requires pq::Addable<T, T>
+    {
+        _x += rhs;
+        _y += rhs;
+        _z += rhs;
+        return *this;
+    }
+
+    /****************
+     * -= operators *
+     ****************/
+
+    /**
+     * @brief operator -=
+     *
+     * @param const Vector3D<T> &rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &rhs)
+    requires pq::Number<T>
+    {
+        _x -= rhs._x;
+        _y -= rhs._y;
+        _z -= rhs._z;
+        return *this;
+    }
+
+    /**
+     * @brief operator -=
+     *
+     * @param const T rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
+    requires pq::Number<T>
+    {
+        _x -= rhs;
+        _y -= rhs;
+        _z -= rhs;
+        return *this;
+    }
+
+    /****************
+     * *= operators *
+     ****************/
+
+    /**
+     * @brief operator *=
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
+    requires pq::Number<T>
+    {
+        _x *= rhs._x;
+        _y *= rhs._y;
+        _z *= rhs._z;
+        return *this;
+    }
+
+    /**
+     * @brief operator *=
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
+    requires pq::Number<T>
+    {
+        _x *= rhs;
+        _y *= rhs;
+        _z *= rhs;
+        return *this;
+    }
+
+    /****************
+     * /= operators *
+     ****************/
+
+    /**
+     * @brief operator /=
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
+    requires pq::Number<T>
+    {
+        _x /= rhs._x;
+        _y /= rhs._y;
+        _z /= rhs._z;
+        return *this;
+    }
+
+    /**
+     * @brief operator /=
+     *
+     * @tparam T
+     * @param rhs
+     * @return Vector3D<T>&
+     */
+    template <class T>
+    Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
+    requires pq::Number<T>
+    {
+        _x /= rhs;
+        _y /= rhs;
+        _z /= rhs;
+        return *this;
+    }
+
+    /**********************
+     *                    *
+     * indexing operators *
+     *                    *
+     **********************/
+
+    /**
+     * @brief index operator
+     *
+     * @param const size_t index
+     * @return T&
+     */
+    template <class T>
+    T &Vector3D<T>::operator[](const size_t index)
+    {
+        return _xyz[index];
+    }
+
+    /**
+     * @brief const index operator
+     *
+     * @param const size_t index
+     * @return const T&
+     */
+    template <class T>
+    const T &Vector3D<T>::operator[](const size_t index) const
+    {
+        return _xyz[index];
+    }
+
+}   // namespace linearAlgebra
 
 #endif   // _VEC3D_TPP_

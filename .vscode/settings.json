@@ -113,7 +113,8 @@
         "engine.hpp": "c",
         "nnls": "cpp",
         "nonlinearoptimization": "cpp",
-        "sparseextra": "cpp"
+        "sparseextra": "cpp",
+        "alignedvector3": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
