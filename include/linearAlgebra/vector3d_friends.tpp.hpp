@@ -24,6 +24,7 @@
 
 #define _VEC3D_FRIENDS_TPP_
 
+#include "concepts.hpp"
 #include "vector3d.hpp"
 
 namespace linearAlgebra
@@ -37,11 +38,13 @@ namespace linearAlgebra
     /**
      * @brief operator ==
      *
-     * @param const Vector3D<T> rhs
+     * @param const Vector3D<U>&
+     * @param const Vector3D<U>&
      * @return bool
      */
-    template <class T>
-    bool operator==(const Vector3D<T> &lhs, const Vector3D<T> &rhs)
+    template <class U>
+    requires std::equality_comparable<U>
+    bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs)
     {
         return lhs[0] == rhs[0] && lhs[1] == rhs[1] && lhs[2] == rhs[2];
     }
@@ -49,72 +52,126 @@ namespace linearAlgebra
     /**
      * @brief + operator for two Vector3d objects
      *
-     * @param const Vector3D<T>&
-     * @return Vector3D
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<std::common_type_t<U, V>>
      */
-    template <class T, class U>
-    requires pq::Addable<T, U>
-    Vector3D<std::common_type_t<T, U>> operator+(
-        const Vector3D<T> &lhs,
-        const Vector3D<T> &rhs
-    )
+    template <class U, class V>
+    requires pq::Addable<U> && pq::Addable<V>
+    auto operator+(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
-        using CommonType = std::common_type_t<T, U>;
-        return Vector3D<CommonType>(
+        return Vector3D<std::common_type_t<U, V>>(
             lhs[0] + rhs[0],
             lhs[1] + rhs[1],
             lhs[2] + rhs[2]
         );
     }
 
-    template <class T, class U>
-    requires pq::Addable<Vector3D<T>, Vector3D<U>>
-    Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
-        const Vector3D<Vector3D<T>> &lhs,
-        const Vector3D<Vector3D<U>> &rhs
-    )
+    // /**
+    //  * @brief + operator for two Vector3d of Vector3d objects
+    //  *
+    //  * @param const Vector3D<Vector3D<U>>&
+    //  * @param const Vector3D<Vector3D<V>>&
+    //  * @return Vector3D<Vector3D<std::common_type_t<U, V>>>
+    //  */
+    // template <class U, class V>
+    // requires pq::Addable<U> && pq::Addable<V>
+    // Vector3D<Vector3D<std::common_type_t<U, V>>> operator+(
+    //     const Vector3D<Vector3D<U>> &lhs,
+    //     const Vector3D<Vector3D<V>> &rhs
+    // )
+    // {
+    //     return Vector3D<Vector3D<std::common_type_t<U, V>>>(
+    //         lhs[0] + rhs[0],
+    //         lhs[1] + rhs[1],
+    //         lhs[2] + rhs[2]
+    //     );
+    // }
+
+    /**
+     * @brief + operator for a Vector3d object and a scalar
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return Vector3D<std::common_type_t<U, V>>
+     */
+    template <class U, class V>
+    requires pq::Addable<V> && pq::Vector3DType<U>
+    auto operator+(const Vector3D<U> &vec, const V scalar)
     {
-        return Vector3D<Vector3D<std::common_type_t<T, U>>>(
-            lhs.x + rhs.x,
-            lhs.y + rhs.y,
-            lhs.z + rhs.z
+        return Vector3D<std::common_type_t<U, V>>(
+            vec[0] + scalar,
+            vec[1] + scalar,
+            vec[2] + scalar
         );
     }
 
     /**
      * @brief + operator for a Vector3d object and a scalar
      *
-     * @param const T
-     * @return Vector3D
+     * @param const V
+     * @param const Vector3D<U>&
+     * @return Vector3D<std::common_type_t<U, V>>
      */
-    template <class T, class U>
-    requires pq::Addable<T, U>
-    Vector3D<std::common_type_t<T, U>> operator+(
-        const Vector3D<T> &lhs,
-        const U            rhs
-    )
+    template <class U, class V>
+    requires pq::Addable<U> && pq::Vector3DType<V>
+    auto operator+(const U scalar, const Vector3D<V> &vec)
     {
-        using CommonType = std::common_type_t<T, U>;
-        return Vector3D<CommonType>(
-            static_cast<CommonType>(lhs[0]) + rhs,
-            static_cast<CommonType>(lhs[1]) + rhs,
-            static_cast<CommonType>(lhs[2]) + rhs
+        return Vector3D<std::common_type_t<U, V>>(
+            vec[0] + scalar,
+            vec[1] + scalar,
+            vec[2] + scalar
         );
     }
 
-    template <class T, class U>
-    requires pq::Addable<T, U>
-    Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
-        const Vector3D<Vector3D<T>> &lhs,
-        const Vector3D<U>           &rhs
-    )
-    {
-        return Vector3D<Vector3D<std::common_type_t<T, U>>>(
-            lhs[0] + rhs,
-            lhs[1] + rhs,
-            lhs[2] + rhs
-        );
-    }
+    // template <class T, class U>
+    // requires pq::Addable<Vector3D<T>, Vector3D<U>>
+    // Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
+    //     const Vector3D<Vector3D<T>> &lhs,
+    //     const Vector3D<Vector3D<U>> &rhs
+    // )
+    // {
+    //     return Vector3D<Vector3D<std::common_type_t<T, U>>>(
+    //         lhs.x + rhs.x,
+    //         lhs.y + rhs.y,
+    //         lhs.z + rhs.z
+    //     );
+    // }
+
+    // /**
+    //  * @brief + operator for a Vector3d object and a scalar
+    //  *
+    //  * @param const T
+    //  * @return Vector3D
+    //  */
+    // template <class T, class U>
+    // requires pq::Addable<T, U>
+    // Vector3D<std::common_type_t<T, U>> operator+(
+    //     const Vector3D<T> &lhs,
+    //     const U            rhs
+    // )
+    // {
+    //     using CommonType = std::common_type_t<T, U>;
+    //     return Vector3D<CommonType>(
+    //         static_cast<CommonType>(lhs[0]) + rhs,
+    //         static_cast<CommonType>(lhs[1]) + rhs,
+    //         static_cast<CommonType>(lhs[2]) + rhs
+    //     );
+    // }
+
+    // template <class T, class U>
+    // requires pq::Addable<T, U>
+    // Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
+    //     const Vector3D<Vector3D<T>> &lhs,
+    //     const Vector3D<U>           &rhs
+    // )
+    // {
+    //     return Vector3D<Vector3D<std::common_type_t<T, U>>>(
+    //         lhs[0] + rhs,
+    //         lhs[1] + rhs,
+    //         lhs[2] + rhs
+    //     );
+    // }
 
 }   // namespace linearAlgebra
 

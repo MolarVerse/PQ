@@ -28,8 +28,8 @@
 
 namespace linearAlgebra
 {
-    // template <class T>
-    // class Vector3D;
+    template <class T>
+    class Vector3D;
 }
 
 namespace pq
@@ -39,6 +39,30 @@ namespace pq
         { a + b } -> std::convertible_to<T>;
         { a - b } -> std::convertible_to<T>;
     };
+
+    template <class T>
+    concept Multipliable = requires(T a, T b) {
+        { a* b } -> std::convertible_to<T>;
+    };
+
+    template <class T>
+    concept Dividable = Multipliable<T> && requires(T a, T b) {
+        { a / b } -> std::convertible_to<T>;
+    };
+
+    template <class T>
+    struct is_vector3d : std::false_type
+    {
+    };
+
+    template <class T>
+    requires std::is_same_v<T, linearAlgebra::Vector3D<typename T::value_type>>
+    struct is_vector3d<T> : std::true_type
+    {
+    };
+
+    template <class T>
+    concept Vector3DType = is_vector3d<T>::value;
 
 }   // namespace pq
 

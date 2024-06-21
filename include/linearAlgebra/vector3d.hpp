@@ -89,13 +89,21 @@ namespace linearAlgebra
         Vector3D &operator=(const Vector3D<T> &);
 
         // clang-format off
-
         // += operators
         void operator+=(const Vector3D<T> &) requires pq::Addable<T>;
-        Vector3D &operator+=(const T) requires pq::Addable<T>;
-        
+        Vector3D &operator+=(const T)        requires pq::Addable<T>;
+
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &) requires pq::Addable<T>;
+        Vector3D &operator-=(const T)             requires pq::Addable<T>;
+
+        // *= operators
+        Vector3D &operator*=(const Vector3D<T> &) requires pq::Multipliable<T>;
+        Vector3D &operator*=(const T)             requires pq::Multipliable<T>;
+
+        // /= operators
+        Vector3D &operator/=(const Vector3D<T> &) requires pq::Dividable<T>;
+        Vector3D &operator/=(const T)             requires pq::Dividable<T>;
         // clang-format on
 
         /**********************
@@ -105,78 +113,31 @@ namespace linearAlgebra
         T       &operator[](const size_t index);
         const T &operator[](const size_t index) const;
 
-        /**
-         * @brief operator ==
-         *
-         * @param const Vector3D<T> rhs
-         * @return bool
-         */
-        bool operator==(const Vector3D<T> &rhs) const
-        {
-            return _x == rhs[0] && _y == rhs[1] && _z == rhs[2];
-        }
+        /************************
+         * comparison operators *
+         ************************/
 
-        /**
-         * @brief -= operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D&
-         */
-        Vector3D &operator-=(const T);
+        template <class U>
+        requires std::equality_comparable<U>
+        friend bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
-        /**
-         * @brief *= operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D&
-         */
-        Vector3D &operator*=(const Vector3D<T> &);
+        template <class U, class V>
+        requires pq::Addable<U> && pq::Addable<V>
+        friend auto operator+(const Vector3D<U> &, const Vector3D<V> &);
 
-        /**
-         * @brief *= operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D&
-         */
-        Vector3D &operator*=(const T);
+        // template <class U, class V>
+        // requires pq::Addable<U> && pq::Addable<V>
+        // friend Vector3D<std::common_type<U, V>>
+        // operator+(const Vector3D<Vector3D<U>> &, const Vector3D<Vector3D<V>>
+        // &);
 
-        /**
-         * @brief /= operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D&
-         */
-        Vector3D &operator/=(const Vector3D<T> &);
+        template <class U, class V>
+        requires pq::Addable<V> && pq::Vector3DType<U>
+        friend auto operator+(const Vector3D<U> &, const V);
 
-        /**
-         * @brief /= operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D&
-         */
-        Vector3D &operator/=(const T);
-
-        /**
-         * @brief + operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D
-         */
-        Vector3D<T> operator+(const Vector3D<T> &rhs) const
-        {
-            return Vector3D<T>(_x + rhs._x, _y + rhs._y, _z + rhs._z);
-        }
-
-        /**
-         * @brief + operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D
-         */
-        Vector3D<T> operator+(const T rhs) const
-        {
-            return Vector3D<T>(_x + rhs, _y + rhs, _z + rhs);
-        }
+        template <class U, class V>
+        requires pq::Addable<U> && pq::Vector3DType<V>
+        friend auto operator+(const U, const Vector3D<V> &);
 
         /**
          * @brief unary - operator for Vector3d
@@ -579,6 +540,7 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "vector3d.tpp.hpp"           // DO NOT MOVE THIS LINE
+#include "vector3d_friends.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _VEC3D_HPP_
