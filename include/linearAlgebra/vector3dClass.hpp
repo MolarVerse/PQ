@@ -31,7 +31,7 @@
 #include <type_traits>   // for is_fundamental_v
 #include <vector>        // for vector
 
-#include "concepts.hpp"   // for Addable
+#include "concepts/vector3dConcepts.hpp"
 
 namespace linearAlgebra
 {
@@ -88,23 +88,33 @@ namespace linearAlgebra
         Vector3D &operator=(Vector3D<T> &);
         Vector3D &operator=(const Vector3D<T> &);
 
-        // clang-format off
         // += operators
-        void operator+=(const Vector3D<T> &) requires pq::ArithmeticVector3D<T>;
-        Vector3D &operator+=(const T)        requires pq::Arithmetic<T>;
+        void operator+=(const Vector3D<T> &)
+        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+
+        Vector3D &operator+=(const T)
+        requires pq::Arithmetic<T>;
 
         // -= operators
-        Vector3D &operator-=(const Vector3D<T> &) requires pq::ArithmeticVector3D<T>;
-        Vector3D &operator-=(const T)             requires pq::Arithmetic<T>;
+        Vector3D &operator-=(const Vector3D<T> &)
+        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+
+        Vector3D &operator-=(const T)
+        requires pq::Arithmetic<T>;
 
         // *= operators
-        Vector3D &operator*=(const Vector3D<T> &) requires pq::ArithmeticVector3D<T>;
-        Vector3D &operator*=(const T)             requires pq::Arithmetic<T>;
+        Vector3D &operator*=(const Vector3D<T> &)
+        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+
+        Vector3D &operator*=(const T)
+        requires pq::Arithmetic<T>;
 
         // /= operators
-        Vector3D &operator/=(const Vector3D<T> &) requires pq::ArithmeticVector3D<T>;
-        Vector3D &operator/=(const T)             requires pq::Arithmetic<T>;
-        // clang-format on
+        Vector3D &operator/=(const Vector3D<T> &)
+        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+
+        Vector3D &operator/=(const T)
+        requires pq::Arithmetic<T>;
 
         /**********************
          * indexing operators *
@@ -113,13 +123,12 @@ namespace linearAlgebra
         T       &operator[](const size_t index);
         const T &operator[](const size_t index) const;
 
-        /********************
+        /*******************
          * unary operators *
-         ********************/
+         *******************/
 
-        // clang-format off
-        Vector3D operator-() const requires pq::ArithmeticVector3D<T>;
-        // clang-format on
+        Vector3D operator-() const
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         /**
          * @brief * operator for two Vector3d objects

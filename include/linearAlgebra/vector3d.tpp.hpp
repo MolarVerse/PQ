@@ -24,7 +24,7 @@
 
 #define _VECTOR3D_TPP_
 
-#include "concepts.hpp"
+#include "concepts/vector3dConcepts.hpp"
 #include "vector3d.hpp"
 
 namespace linearAlgebra
@@ -64,8 +64,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x + rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V>)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
     auto operator+(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs[0] + rhs[0])>
     {
@@ -87,8 +87,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x + rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> - 1 == pq::Vector3DDepth_v<V>)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
     auto operator+(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs[0] + rhs)>
     {
@@ -106,8 +106,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x + rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V> - 1)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
     auto operator+(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs + rhs[0])>
     {
@@ -125,7 +125,7 @@ namespace linearAlgebra
      * @param const V
      * @return Vector3D<decltype(vec[0] + scalar)>
      */
-    template <pq::Vector3DConcept U, pq::Arithmetic V>
+    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator+(const U &vec, const V &scalar)
         -> Vector3D<decltype(vec[0] + scalar)>
     {
@@ -147,7 +147,7 @@ namespace linearAlgebra
      * @param const Vector3D<U>&
      * @return Vector3D<decltype(vec[0] + scalar)>
      */
-    template <pq::Arithmetic U, pq::Vector3DConcept V>
+    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator+(const U &scalar, const V &vec)
         -> Vector3D<decltype(vec[0] + scalar)>
     {
@@ -175,8 +175,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x - rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V>)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
     auto operator-(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs[0] - rhs[0])>
     {
@@ -198,8 +198,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x - rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> - 1 == pq::Vector3DDepth_v<V>)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
     auto operator-(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs[0] - rhs)>
     {
@@ -217,8 +217,8 @@ namespace linearAlgebra
      * @param const Vector3D<V>&
      * @return Vector3D<decltype(lhs.x - rhs.x)>
      */
-    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
-    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V> - 1)
+    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
+    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
     auto operator-(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs - rhs[0])>
     {
@@ -236,7 +236,7 @@ namespace linearAlgebra
      * @param const V
      * @return Vector3D<decltype(vec[0] - scalar)>
      */
-    template <pq::Vector3DConcept U, pq::Arithmetic V>
+    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator-(const U &vec, const V &scalar)
         -> Vector3D<decltype(vec[0] - scalar)>
     {
@@ -258,7 +258,7 @@ namespace linearAlgebra
      * @param const Vector3D<U>&
      * @return Vector3D<decltype(vec[0] - scalar)>
      */
-    template <pq::Arithmetic U, pq::Vector3DConcept V>
+    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator-(const U &scalar, const V &vec)
         -> Vector3D<decltype(vec[0] - scalar)>
     {

@@ -20,51 +20,53 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONCEPTS_HPP_
+#ifndef _INNER_TYPE_HPP_
 
-#define _CONCEPTS_HPP_
+#define _INNER_TYPE_HPP_
 
 #include <concepts>
 
-namespace linearAlgebra
-{
-    template <class T>
-    class Vector3D;
-}
+#include "base.hpp"
 
 namespace pq
 {
-    template <class T>
-    concept Integral = std::integral<T>;
-
-    template <class T>
-    concept FloatingPoint = std::floating_point<T>;
-
-    template <class T>
-    concept Arithmetic = Integral<T> || FloatingPoint<T>;
-
-    template <class T>
-    concept Vector3DConcept =
-        std::same_as<T, linearAlgebra::Vector3D<typename T::value_type>>;
-
-    template <class T>
-    concept ArithmeticVector3D = Vector3DConcept<T> || Arithmetic<T>;
-
+    /**
+     * @brief type trait to determine the inner type of a template class
+     *
+     * @tparam T
+     */
     template <typename T>
-    struct Vector3DDepth
+    struct InnerType
     {
-        static constexpr int value = 0;
+        using type = T;
     };
 
-    template <typename T>
-    struct Vector3DDepth<linearAlgebra::Vector3D<T>>
+    /**
+     * @brief type trait to determine the inner type of a template class
+     *
+     * @details specialization for template classes
+     *
+     * @tparam TemplateClass
+     * @tparam T
+     */
+    template <template <typename> class TemplateClass, typename T>
+    struct InnerType<TemplateClass<T>>
     {
-        static constexpr int value = 1 + Vector3DDepth<T>::value;
+        using type = typename InnerType<T>::type;
     };
 
+    /**
+     * @brief The inner type of a template class
+     *
+     * @tparam T
+     */
     template <typename T>
-    constexpr int Vector3DDepth_v = Vector3DDepth<T>::value;
+    using InnerType_t = typename InnerType<T>::type;
+
+    // Check if the inner type of a template class is arithmetic
+    template <typename T>
+    constexpr bool is_InnerType_arithmetic_v = is_arithmetic_v<InnerType_t<T>>;
 
 }   // namespace pq
 
-#endif   // _CONCEPTS_HPP_
+#endif   // _INNER_TYPE_HPP_
