@@ -681,12 +681,12 @@ Vec3D SimulationBox::calcShiftVector(const Vec3D &position) const
  */
 void SimulationBox::initPositions(const double displacement)
 {
-    std::random_device               randomDevice;
-    std::mt19937                     randomGenerator(randomDevice());
-    std::uniform_real_distribution<> uniformDistribution(
+    std::random_device             randomDevice;
+    std::mt19937                   randomGenerator(randomDevice());
+    std::uniform_real_distribution uniformDistribution{
         -displacement,
         displacement
-    );
+    };
 
     auto displacePositions =
         [&uniformDistribution, &randomGenerator, this](auto &atom)

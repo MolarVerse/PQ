@@ -20,233 +20,306 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VEC3D_TPP_
+#ifndef _VECTOR3D_TPP_
 
-#define _VEC3D_TPP_
+#define _VECTOR3D_TPP_
 
 #include "concepts.hpp"
 #include "vector3d.hpp"
 
 namespace linearAlgebra
 {
-    /********************
-     *                  *
-     * assign operators *
-     *                  *
-     ********************/
-
-    /***************
-     * = operators *
-     ***************/
+    /************************
+     *                      *
+     * comparison operators *
+     *                      *
+     ************************/
 
     /**
-     * @brief move assignment operator
+     * @brief operator ==
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param const Vector3D<U>&
+     * @param const Vector3D<U>&
+     * @return bool
      */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &rhs)
+    template <class U>
+    requires std::equality_comparable<U>
+    bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs)
     {
-        _x = rhs._x;
-        _y = rhs._y;
-        _z = rhs._z;
-        return *this;
+        return lhs[0] == rhs[0] && lhs[1] == rhs[1] && lhs[2] == rhs[2];
+    }
+
+    /*********************
+     *                   *
+     * binary + operator *
+     *                   *
+     *********************/
+
+    /**
+     * @brief + operator special case for two Vector3d objects
+     *
+     * @example Vector3D<int> + Vector3D<double>
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x + rhs.x)>
+     */
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V>)
+    auto operator+(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs[0] + rhs[0])>
+    {
+        using ResultType = decltype(lhs[0] + rhs[0]);
+
+        return Vector3D<ResultType>(
+            lhs[0] + rhs[0],
+            lhs[1] + rhs[1],
+            lhs[2] + rhs[2]
+        );
     }
 
     /**
-     * @brief copy assignment operator
+     * @brief + operator special case for nested Vector3d objects
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &rhs)
-    {
-        _x = rhs._x;
-        _y = rhs._y;
-        _z = rhs._z;
-        return *this;
-    }
-
-    /****************
-     * += operators *
-     ****************/
-
-    /**
-     * @brief operator += inplace
+     * @example Vector3D<Vector3D<int>> + Vector3D<double>
      *
-     * @param const Vector3D<T> &rhs
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x + rhs.x)>
      */
-    template <class T>
-    void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
-    requires pq::Addable<T>
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> - 1 == pq::Vector3DDepth_v<V>)
+    auto operator+(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs[0] + rhs)>
     {
-        _x += rhs._x;
-        _y += rhs._y;
-        _z += rhs._z;
+        using ResultType = decltype(lhs[0] + rhs);
+
+        return Vector3D<ResultType>(lhs[0] + rhs, lhs[1] + rhs, lhs[2] + rhs);
     }
 
     /**
-     * @brief += operator for two Vector3d objects
+     * @brief + operator special case for nested Vector3d objects
      *
-     * @param const Vector3D<T>&
-     * @return Vector3D
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator+=(const T rhs)
-    requires pq::Addable<T>
-    {
-        _x += rhs;
-        _y += rhs;
-        _z += rhs;
-        return *this;
-    }
-
-    /****************
-     * -= operators *
-     ****************/
-
-    /**
-     * @brief operator -=
+     * @example Vector3D<int> + Vector3D<Vector3D<double>>
      *
-     * @param const Vector3D<T> &rhs
-     * @return Vector3D<T>&
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x + rhs.x)>
      */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &rhs)
-    requires pq::Addable<T>
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V> - 1)
+    auto operator+(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs + rhs[0])>
     {
-        _x -= rhs._x;
-        _y -= rhs._y;
-        _z -= rhs._z;
-        return *this;
+        using ResultType = decltype(lhs + rhs[0]);
+
+        return Vector3D<ResultType>(lhs + rhs[0], lhs + rhs[1], lhs + rhs[2]);
     }
 
     /**
-     * @brief operator -=
+     * @brief + operator for a Vector3d object and a scalar
      *
-     * @param const T rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
-    requires pq::Addable<T>
-    {
-        _x -= rhs;
-        _y -= rhs;
-        _z -= rhs;
-        return *this;
-    }
-
-    /****************
-     * *= operators *
-     ****************/
-
-    /**
-     * @brief operator *=
+     * @example Vector3D<int> + double
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return Vector3D<decltype(vec[0] + scalar)>
      */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
-    requires pq::Multipliable<T>
+    template <pq::Vector3DConcept U, pq::Arithmetic V>
+    auto operator+(const U &vec, const V &scalar)
+        -> Vector3D<decltype(vec[0] + scalar)>
     {
-        _x *= rhs._x;
-        _y *= rhs._y;
-        _z *= rhs._z;
-        return *this;
+        using ResultType = decltype(vec[0] + scalar);
+
+        return Vector3D<ResultType>(
+            vec[0] + scalar,
+            vec[1] + scalar,
+            vec[2] + scalar
+        );
     }
 
     /**
-     * @brief operator *=
+     * @brief + operator for a Vector3d object and a scalar
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @example double + Vector3D<int>
+     *
+     * @param const V
+     * @param const Vector3D<U>&
+     * @return Vector3D<decltype(vec[0] + scalar)>
      */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
-    requires pq::Multipliable<T>
+    template <pq::Arithmetic U, pq::Vector3DConcept V>
+    auto operator+(const U &scalar, const V &vec)
+        -> Vector3D<decltype(vec[0] + scalar)>
     {
-        _x *= rhs;
-        _y *= rhs;
-        _z *= rhs;
-        return *this;
+        using ResultType = decltype(vec[0] + scalar);
+
+        return Vector3D<ResultType>(
+            vec[0] + scalar,
+            vec[1] + scalar,
+            vec[2] + scalar
+        );
     }
 
-    /****************
-     * /= operators *
-     ****************/
+    /*********************
+     *                   *
+     * binary - operator *
+     *                   *
+     *********************/
 
     /**
-     * @brief operator /=
+     * @brief - operator special case for two Vector3d objects
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
-     */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
-    requires pq::Dividable<T>
-    {
-        _x /= rhs._x;
-        _y /= rhs._y;
-        _z /= rhs._z;
-        return *this;
-    }
-
-    /**
-     * @brief operator /=
+     * @example Vector3D<int> - Vector3D<double>
      *
-     * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x - rhs.x)>
      */
-    template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
-    requires pq::Dividable<T>
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V>)
+    auto operator-(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs[0] - rhs[0])>
     {
-        _x /= rhs;
-        _y /= rhs;
-        _z /= rhs;
-        return *this;
-    }
+        using ResultType = decltype(lhs[0] - rhs[0]);
 
-    /**********************
-     *                    *
-     * indexing operators *
-     *                    *
-     **********************/
-
-    /**
-     * @brief index operator
-     *
-     * @param const size_t index
-     * @return T&
-     */
-    template <class T>
-    T &Vector3D<T>::operator[](const size_t index)
-    {
-        return _xyz[index];
+        return Vector3D<ResultType>(
+            lhs[0] - rhs[0],
+            lhs[1] - rhs[1],
+            lhs[2] - rhs[2]
+        );
     }
 
     /**
-     * @brief const index operator
+     * @brief - operator special case for nested Vector3d objects
      *
-     * @param const size_t index
-     * @return const T&
+     * @example Vector3D<Vector3D<int>> - Vector3D<double>
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x - rhs.x)>
      */
-    template <class T>
-    const T &Vector3D<T>::operator[](const size_t index) const
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> - 1 == pq::Vector3DDepth_v<V>)
+    auto operator-(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs[0] - rhs)>
     {
-        return _xyz[index];
+        using ResultType = decltype(lhs[0] - rhs);
+
+        return Vector3D<ResultType>(lhs[0] - rhs, lhs[1] - rhs, lhs[2] - rhs);
     }
+
+    /**
+     * @brief - operator special case for nested Vector3d objects
+     *
+     * @example Vector3D<int> - Vector3D<Vector3D<double>>
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return Vector3D<decltype(lhs.x - rhs.x)>
+     */
+    template <pq::Vector3DConcept U, pq::Vector3DConcept V>
+    requires(pq::Vector3DDepth_v<U> == pq::Vector3DDepth_v<V> - 1)
+    auto operator-(const U &lhs, const V &rhs)
+        -> Vector3D<decltype(lhs - rhs[0])>
+    {
+        using ResultType = decltype(lhs - rhs[0]);
+
+        return Vector3D<ResultType>(lhs - rhs[0], lhs - rhs[1], lhs - rhs[2]);
+    }
+
+    /**
+     * @brief - operator for a Vector3d object and a scalar
+     *
+     * @example Vector3D<int> - double
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return Vector3D<decltype(vec[0] - scalar)>
+     */
+    template <pq::Vector3DConcept U, pq::Arithmetic V>
+    auto operator-(const U &vec, const V &scalar)
+        -> Vector3D<decltype(vec[0] - scalar)>
+    {
+        using ResultType = decltype(vec[0] - scalar);
+
+        return Vector3D<ResultType>(
+            vec[0] - scalar,
+            vec[1] - scalar,
+            vec[2] - scalar
+        );
+    }
+
+    /**
+     * @brief - operator for a Vector3d object and a scalar
+     *
+     * @example double - Vector3D<int>
+     *
+     * @param const V
+     * @param const Vector3D<U>&
+     * @return Vector3D<decltype(vec[0] - scalar)>
+     */
+    template <pq::Arithmetic U, pq::Vector3DConcept V>
+    auto operator-(const U &scalar, const V &vec)
+        -> Vector3D<decltype(vec[0] - scalar)>
+    {
+        using ResultType = decltype(vec[0] - scalar);
+
+        return Vector3D<ResultType>(
+            vec[0] - scalar,
+            vec[1] - scalar,
+            vec[2] - scalar
+        );
+    }
+
+    // template <class T, class U>
+    // requires pq::Addable<Vector3D<T>, Vector3D<U>>
+    // Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
+    //     const Vector3D<Vector3D<T>> &lhs,
+    //     const Vector3D<Vector3D<U>> &rhs
+    // )
+    // {
+    //     return Vector3D<Vector3D<std::common_type_t<T, U>>>(
+    //         lhs.x + rhs.x,
+    //         lhs.y + rhs.y,
+    //         lhs.z + rhs.z
+    //     );
+    // }
+
+    // /**
+    //  * @brief + operator for a Vector3d object and a scalar
+    //  *
+    //  * @param const T
+    //  * @return Vector3D
+    //  */
+    // template <class T, class U>
+    // requires pq::Addable<T, U>
+    // Vector3D<std::common_type_t<T, U>> operator+(
+    //     const Vector3D<T> &lhs,
+    //     const U            rhs
+    // )
+    // {
+    //     using CommonType = std::common_type_t<T, U>;
+    //     return Vector3D<CommonType>(
+    //         static_cast<CommonType>(lhs[0]) + rhs,
+    //         static_cast<CommonType>(lhs[1]) + rhs,
+    //         static_cast<CommonType>(lhs[2]) + rhs
+    //     );
+    // }
+
+    // template <class T, class U>
+    // requires pq::Addable<T, U>
+    // Vector3D<Vector3D<std::common_type_t<T, U>>> operator+(
+    //     const Vector3D<Vector3D<T>> &lhs,
+    //     const Vector3D<U>           &rhs
+    // )
+    // {
+    //     return Vector3D<Vector3D<std::common_type_t<T, U>>>(
+    //         lhs[0] + rhs,
+    //         lhs[1] + rhs,
+    //         lhs[2] + rhs
+    //     );
+    // }
 
 }   // namespace linearAlgebra
 
-#endif   // _VEC3D_TPP_
+#endif   // _VECTOR3D_TPP_

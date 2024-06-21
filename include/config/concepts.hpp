@@ -35,34 +35,35 @@ namespace linearAlgebra
 namespace pq
 {
     template <class T>
-    concept Addable = requires(T a, T b) {
-        { a + b } -> std::convertible_to<T>;
-        { a - b } -> std::convertible_to<T>;
-    };
+    concept Integral = std::integral<T>;
 
     template <class T>
-    concept Multipliable = requires(T a, T b) {
-        { a* b } -> std::convertible_to<T>;
-    };
+    concept FloatingPoint = std::floating_point<T>;
 
     template <class T>
-    concept Dividable = Multipliable<T> && requires(T a, T b) {
-        { a / b } -> std::convertible_to<T>;
-    };
+    concept Arithmetic = Integral<T> || FloatingPoint<T>;
 
     template <class T>
-    struct is_vector3d : std::false_type
+    concept Vector3DConcept =
+        std::same_as<T, linearAlgebra::Vector3D<typename T::value_type>>;
+
+    template <class T>
+    concept ArithmeticVector3D = Vector3DConcept<T> || Arithmetic<T>;
+
+    template <typename T>
+    struct Vector3DDepth
     {
+        static constexpr int value = 0;
     };
 
-    template <class T>
-    requires std::is_same_v<T, linearAlgebra::Vector3D<typename T::value_type>>
-    struct is_vector3d<T> : std::true_type
+    template <typename T>
+    struct Vector3DDepth<linearAlgebra::Vector3D<T>>
     {
+        static constexpr int value = 1 + Vector3DDepth<T>::value;
     };
 
-    template <class T>
-    concept Vector3DType = is_vector3d<T>::value;
+    template <typename T>
+    constexpr int Vector3DDepth_v = Vector3DDepth<T>::value;
 
 }   // namespace pq
 

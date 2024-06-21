@@ -25,4 +25,4 @@
 template class linearAlgebra::Vector3D<double>;
 template class linearAlgebra::Vector3D<int>;
 template class linearAlgebra::Vector3D<size_t>;
-// template class linearAlgebra::Vector3D<linearAlgebra::Vector3D<double>>;
+template class linearAlgebra::Vector3D<linearAlgebra::Vector3D<double>>;
