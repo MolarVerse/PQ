@@ -130,49 +130,19 @@ namespace linearAlgebra
         Vector3D operator-() const
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        /**
-         * @brief fabs of all entries of vector
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D
-         */
-        friend Vector3D fabs(const Vector3D &v)
-        {
-            return Vector3D<T>(fabs(v._x), fabs(v._y), fabs(v._z));
-        }
+        /********************
+         * iterator methods *
+         ********************/
 
-        /**
-         * @brief begin iterator for vector3d
-         *
-         * @return constexpr const_iterator<T>
-         */
-        constexpr const_iterator<T> begin() const noexcept
-        {
-            return _xyz.begin();
-        }
+        constexpr const_iterator<T> begin() const noexcept;
+        constexpr const_iterator<T> end() const noexcept;
 
-        /**
-         * @brief end iterator for vector3d
-         *
-         * @return constexpr const_iterator<T>
-         */
-        constexpr const_iterator<T> end() const noexcept { return _xyz.end(); }
+        /*******************
+         * casting methods *
+         *******************/
 
-        /**
-         * @brief static cast of all vector members
-         *
-         * @tparam U
-         * @return Vector3D<U>
-         */
         template <class U>
-        explicit operator Vector3D<U>() const
-        {
-            return Vector3D<U>(
-                static_cast<U>(_x),
-                static_cast<U>(_y),
-                static_cast<U>(_z)
-            );
-        }
+        explicit operator Vector3D<U>() const;
 
         /**
          * @brief round all entries of vector

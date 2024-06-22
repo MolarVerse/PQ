@@ -265,6 +265,56 @@ namespace linearAlgebra
         return Vector3D<T>(-_x, -_y, -_z);
     }
 
+    /********************
+     *                  *
+     * iterator methods *
+     *                  *
+     ********************/
+
+    /**
+     * @brief begin iterator
+     *
+     * @return constexpr std::array<T, 3>::iterator
+     */
+    template <class T>
+    constexpr std::array<T, 3>::const_iterator Vector3D<T>::begin(
+    ) const noexcept
+    {
+        return _xyz.begin();
+    }
+
+    /**
+     * @brief end iterator
+     *
+     * @return constexpr std::array<T, 3>::iterator
+     */
+    template <class T>
+    constexpr std::array<T, 3>::const_iterator Vector3D<T>::end() const noexcept
+    {
+        return _xyz.end();
+    }
+
+    /*******************
+     * casting methods *
+     *******************/
+
+    /**
+     * @brief static cast of all vector members
+     *
+     * @tparam U
+     * @return Vector3D<U>
+     */
+    template <class T>
+    template <class U>
+    Vector3D<T>::operator Vector3D<U>() const
+    {
+        return Vector3D<U>(
+            static_cast<U>(_x),
+            static_cast<U>(_y),
+            static_cast<U>(_z)
+        );
+    }
+
 }   // namespace linearAlgebra
 
 #endif   // _VECTOR3D_CLASS_TPP_
