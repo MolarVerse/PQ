@@ -96,6 +96,13 @@ namespace opt
 
 }   // namespace opt
 
+namespace output
+{
+    class RingPolymerRestartFileOutput;
+    class RingPolymerTrajectoryOutput;
+    class RingPolymerEnergyOutput;
+
+}   // namespace output
 namespace pq
 {
     using strings   = std::vector<std::string>;
@@ -131,6 +138,7 @@ namespace pq
     /**************************
      * physicalData namespace *
      **************************/
+
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
@@ -151,6 +159,18 @@ namespace pq
     using Optimizer       = opt::Optimizer;
     using SteepestDescent = opt::SteepestDescent;
     using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
+
+    /********************
+     * output namespace *
+     ********************/
+
+    using RPMDRstFileOutput = output::RingPolymerRestartFileOutput;
+    using RPMDTrajOutput    = output::RingPolymerTrajectoryOutput;
+    using RPMDEnergyOutput  = output::RingPolymerEnergyOutput;
+
+    using UniqueRPMDRstFileOutput = std::unique_ptr<RPMDRstFileOutput>;
+    using UniqueRPMDTrajOutput    = std::unique_ptr<RPMDTrajOutput>;
+    using UniqueRPMDEnergyOutput  = std::unique_ptr<RPMDEnergyOutput>;
 
 }   // namespace pq
 
