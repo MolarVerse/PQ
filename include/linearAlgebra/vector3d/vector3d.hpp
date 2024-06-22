@@ -235,6 +235,12 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto max(const U &lhs) -> pq::InnerType_t<U>;
 
+    template <pq::ArithmeticVector3D U>
+    auto max(const std::vector<U> &v) -> decltype(max(v[0]));
+
+    template <pq::ArithmeticVector3D U>
+    auto maxNorm(const std::vector<U> &v) -> decltype(max(norms(v)));
+
     /******************
      * norm functions *
      ******************/
@@ -247,6 +253,9 @@ namespace linearAlgebra
 
     template <pq::ArithmeticVector3D U>
     auto norms(std::vector<U> v) -> std::vector<decltype(norm(v[0]))>;
+
+    template <pq::ArithmeticVector3D U>
+    auto rms(const std::vector<U> &v) -> decltype(norm(v[0]) / v.size());
 
     /****************
      * sum function *

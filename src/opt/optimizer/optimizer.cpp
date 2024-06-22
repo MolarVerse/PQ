@@ -28,6 +28,7 @@
 #include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
+#include "stlVector.hpp"       // for max, rms
 
 using namespace opt;
 using namespace physicalData;
@@ -77,11 +78,19 @@ void Optimizer::updateHistory()
     _forceHistory.push_back(_simulationBox->getForces());
     _positionHistory.push_back(_simulationBox->getPositions());
 
+    const auto rmsForce = rms(_simulationBox->getForces());
+    const auto maxForce = max(_simulationBox->getForces());
+
+    _rmsForceHistory.push_back(rmsForce);
+    _maxForceHistory.push_back(maxForce);
+
     if (_energyHistory.size() > maxHistoryLength())
     {
         _energyHistory.pop_front();
         _forceHistory.pop_front();
         _positionHistory.pop_front();
+        _rmsForceHistory.pop_front();
+        _maxForceHistory.pop_front();
     }
 }
 

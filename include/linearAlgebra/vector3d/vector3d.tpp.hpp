@@ -862,6 +862,43 @@ namespace linearAlgebra
         return std::max(vec[0], std::max(vec[1], vec[2]));
     }
 
+    /**
+     * @brief returns the maximum of the maximums of all Vector3d objects in a
+     * std::vector
+     *
+     * @tparam U
+     * @param v
+     * @return decltype(max(v[0]))
+     */
+    template <pq::ArithmeticVector3D U>
+    auto max(const std::vector<U> &v) -> decltype(max(v[0]))
+    {
+        std::vector<decltype(max(v[0]))> maxs;
+        maxs.reserve(v.size());
+
+        for (const auto &vec : v) maxs.push_back(max(vec));
+
+        return *std::ranges::max_element(maxs.begin(), maxs.end());
+    }
+
+    /**
+     * @brief returns the maximum of the norms of all Vector3d objects in a
+     *
+     * @tparam U
+     * @param v
+     * @return decltype(norm(v[0]))
+     */
+    template <pq::ArithmeticVector3D U>
+    auto maxNorm(const std::vector<U> &v) -> decltype(norm(v[0]))
+    {
+        std::vector<decltype(norm(v[0]))> norms;
+        norms.reserve(v.size());
+
+        for (const auto &vec : v) norms.push_back(norm(vec));
+
+        return *std::ranges::max_element(norms.begin(), norms.end());
+    }
+
     /******************
      *                *
      * norm functions *
@@ -916,6 +953,25 @@ namespace linearAlgebra
         for (const auto &vec : v) norms.push_back(norm(vec));
 
         return norms;
+    }
+
+    /**
+     * @brief rms function for a std::vector of Vector3d objects
+     *
+     * @example rms(std::vector<Vector3D<double>>)
+     *
+     * @tparam U
+     * @param v
+     * @return decltype(norm(v[0]) / v.size())
+     */
+    template <pq::ArithmeticVector3D U>
+    auto rms(const std::vector<U> &v) -> decltype(norm(v[0]) / v.size())
+    {
+        auto rms = 0.0;
+
+        for (const auto &vec : v) rms += normSquared(vec);
+
+        return std::sqrt(rms / v.size());
     }
 
     /****************
