@@ -198,7 +198,7 @@ namespace linearAlgebra
      **********************/
 
     template <pq::ArithmeticVector3D U>
-    auto round(const U &vec) -> Vector3D<decltype(std::round(vec[0]))>;
+    auto round(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>;
 
     template <pq::ArithmeticVector3D U>
     auto floor(const U &vec) -> Vector3D<decltype(std::floor(vec[0]))>;
@@ -208,6 +208,20 @@ namespace linearAlgebra
 
     template <pq::ArithmeticVector3D U>
     auto rint(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>;
+
+    /********************
+     * min/max function *
+     ********************/
+
+    template <pq::ArithmeticVector3D U>
+    auto min(const U &lhs) -> pq::InnerType_t<U>;
+
+    template <pq::ArithmeticVector3D U>
+    auto max(const U &lhs) -> pq::InnerType_t<U>;
+
+    /******************
+     * norm functions *
+     ******************/
 
 }   // namespace linearAlgebra
 

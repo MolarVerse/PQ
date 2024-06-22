@@ -696,14 +696,14 @@ namespace linearAlgebra
      * @return Vector3D<decltype(std::round(vec[0]))>
      */
     template <pq::ArithmeticVector3D U>
-    auto round(const U &vec) -> Vector3D<decltype(std::round(vec[0]))>
+    auto round(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>
     {
-        using ResultType = decltype(std::round(vec[0]));
+        using ResultType = decltype(std::rint(vec[0]));
 
         return Vector3D<ResultType>(
-            std::round(vec[0]),
-            std::round(vec[1]),
-            std::round(vec[2])
+            std::rint(vec[0]),
+            std::rint(vec[1]),
+            std::rint(vec[2])
         );
     }
 
@@ -769,6 +769,30 @@ namespace linearAlgebra
             std::rint(vec[2])
         );
     }
+
+    /*********************
+     *                   *
+     * min/max functions *
+     *                   *
+     *********************/
+
+    template <pq::ArithmeticVector3D U>
+    auto minimum(const U &vec) -> pq::InnerType_t<U>
+    {
+        return std::min(vec[0], std::min(vec[1], vec[2]));
+    }
+
+    template <pq::ArithmeticVector3D U>
+    auto maximum(const U &vec) -> pq::InnerType_t<U>
+    {
+        return std::max(vec[0], std::max(vec[1], vec[2]));
+    }
+
+    /******************
+     *                *
+     * norm functions *
+     *                *
+     ******************/
 
 }   // namespace linearAlgebra
 
