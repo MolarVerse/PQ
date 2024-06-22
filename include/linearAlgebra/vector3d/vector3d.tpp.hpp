@@ -776,12 +776,30 @@ namespace linearAlgebra
      *                   *
      *********************/
 
+    /**
+     * @brief minimum function for a Vector3d object
+     *
+     * @example minimum(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return InnerType_t<U>
+     */
     template <pq::ArithmeticVector3D U>
     auto minimum(const U &vec) -> pq::InnerType_t<U>
     {
         return std::min(vec[0], std::min(vec[1], vec[2]));
     }
 
+    /**
+     * @brief maximum function for a Vector3d object
+     *
+     * @example maximum(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return InnerType_t<U>
+     */
     template <pq::ArithmeticVector3D U>
     auto maximum(const U &vec) -> pq::InnerType_t<U>
     {
@@ -793,6 +811,36 @@ namespace linearAlgebra
      * norm functions *
      *                *
      ******************/
+
+    /**
+     * @brief norm function for a Vector3d object
+     *
+     * @example norm(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return decltype(std::sqrt(vec[0] * vec[0]))
+     */
+    template <pq::ArithmeticVector3D U>
+    auto norm(const U &vec) -> decltype(std::sqrt(vec[0] * vec[0]))
+    {
+        return std::sqrt(normSquared(vec));
+    }
+
+    /**
+     * @brief normSquared function for a Vector3d object
+     *
+     * @example normSquared(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return decltype(vec[0] * vec[0])
+     */
+    template <pq::ArithmeticVector3D U>
+    auto normSquared(const U &vec) -> decltype(vec[0] * vec[0])
+    {
+        return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    }
 
 }   // namespace linearAlgebra
 

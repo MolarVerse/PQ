@@ -145,28 +145,6 @@ namespace linearAlgebra
         explicit operator Vector3D<U>() const;
 
         /**
-         * @brief norm of vector
-         *
-         * @param v
-         * @return T
-         */
-        friend T norm(Vector3D<T> v)
-        {
-            return sqrt(v._x * v._x + v._y * v._y + v._z * v._z);
-        }
-
-        /**
-         * @brief norm squared of vector
-         *
-         * @param v
-         * @return T
-         */
-        friend T normSquared(Vector3D<T> v)
-        {
-            return v._x * v._x + v._y * v._y + v._z * v._z;
-        }
-
-        /**
          * @brief sum of vector
          *
          * @param v

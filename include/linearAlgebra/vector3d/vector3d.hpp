@@ -223,6 +223,12 @@ namespace linearAlgebra
      * norm functions *
      ******************/
 
+    template <pq::ArithmeticVector3D U>
+    auto norm(const U &vec) -> decltype(std::sqrt(vec[0] * vec[0]));
+
+    template <pq::ArithmeticVector3D U>
+    auto normSquared(const U &vec) -> decltype(vec[0] * vec[0]);
+
 }   // namespace linearAlgebra
 
 #include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
