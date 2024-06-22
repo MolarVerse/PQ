@@ -229,6 +229,9 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto normSquared(const U &vec) -> decltype(vec[0] * vec[0]);
 
+    template <pq::ArithmeticVector3D U>
+    auto norms(std::vector<U> v) -> std::vector<decltype(norm(v[0]))>;
+
     /****************
      * sum function *
      ****************/

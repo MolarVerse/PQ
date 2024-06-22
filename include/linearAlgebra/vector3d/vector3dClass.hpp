@@ -217,23 +217,6 @@ namespace linearAlgebra
          * @return std::vector<T>
          */
         std::vector<T> toStdVector() { return {_x, _y, _z}; }
-
-        /**
-         * @brief returns a std::vector of the norms of the vector
-         *
-         * @param v
-         *
-         * @return std::vector<T>
-         */
-        std::vector<T> norms(std::vector<Vector3D<T>> v)
-        requires std::is_fundamental_v<T>
-        {
-            std::vector<T> norms;
-
-            for (size_t i = 0; i < v.size(); ++i) norms.push_back(norm(v[i]));
-
-            return norms;
-        }
     };
 
 }   // namespace linearAlgebra

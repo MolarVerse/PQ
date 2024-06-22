@@ -842,6 +842,26 @@ namespace linearAlgebra
         return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
     }
 
+    /**
+     * @brief norms function for a std::vector of Vector3d objects
+     *
+     * @example norms(std::vector<Vector3D<double>>)
+     *
+     * @tparam U
+     * @param v
+     * @return std::vector<decltype(norm(v[0])>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto norms(std::vector<U> v) -> std::vector<decltype(norm(v[0]))>
+    {
+        std::vector<decltype(norm(v[0]))> norms;
+        norms.reserve(v.size());
+
+        for (const auto &vec : v) norms.push_back(norm(vec));
+
+        return norms;
+    }
+
     /****************
      *              *
      * sum function *
