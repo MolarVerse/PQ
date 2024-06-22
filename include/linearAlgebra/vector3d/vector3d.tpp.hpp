@@ -35,6 +35,10 @@ namespace linearAlgebra
      *                      *
      ************************/
 
+    /**************
+     * operator== *
+     **************/
+
     /**
      * @brief operator ==
      *
@@ -62,6 +66,10 @@ namespace linearAlgebra
     {
         return !(lhs == rhs);
     }
+
+    /**************
+     * operator< *
+     **************/
 
     /**
      * @brief operator <
@@ -91,6 +99,42 @@ namespace linearAlgebra
         return lhs[0] < rhs && lhs[1] < rhs && lhs[2] < rhs;
     }
 
+    /**************
+     * operator<= *
+     **************/
+
+    /**
+     * @brief operator <=
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
+    {
+        return !(lhs > rhs);
+    }
+
+    /**
+     * @brief operator <=
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<=(const Vector3D<U> &lhs, const V &rhs)
+    {
+        return !(lhs > rhs);
+    }
+
+    /*************
+     * operator> *
+     *************/
+
     /**
      * @brief operator >
      *
@@ -117,6 +161,38 @@ namespace linearAlgebra
     bool operator>(const Vector3D<U> &lhs, const V &rhs)
     {
         return lhs[0] > rhs && lhs[1] > rhs && lhs[2] > rhs;
+    }
+
+    /**************
+     * operator>= *
+     **************/
+
+    /**
+     * @brief operator >=
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+    /**
+     * @brief operator >=
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>=(const Vector3D<U> &lhs, const V &rhs)
+    {
+        return !(lhs < rhs);
     }
 
     /*********************
