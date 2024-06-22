@@ -130,6 +130,12 @@ namespace opt
         [[nodiscard]] double getEnergy() const;
         [[nodiscard]] double getEnergy(const int) const;
 
+        [[nodiscard]] double getRMSForce() const;
+        [[nodiscard]] double getRMSForce(const int) const;
+
+        [[nodiscard]] double getMaxForce() const;
+        [[nodiscard]] double getMaxForce(const int) const;
+
         [[nodiscard]] pq::Vec3DVec getForces() const;
         [[nodiscard]] pq::Vec3DVec getForces(const int) const;
 

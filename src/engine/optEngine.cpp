@@ -123,6 +123,8 @@ void OptEngine::takeStep()
 
     _evaluator->evaluate();
 
+    _optimizer->updateHistory();
+
     _converged = _optimizer->hasConverged();
 
     if (!_converged)

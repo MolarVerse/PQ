@@ -101,14 +101,14 @@ void Optimizer::updateHistory()
  */
 bool Optimizer::hasConverged() const
 {
-    const auto energyOld = _physicalDataOld->getTotalEnergy();
-    const auto energyNew = _physicalData->getTotalEnergy();
+    const auto energyOld = getEnergy(-2);
+    const auto energyNew = getEnergy(-1);
 
-    const auto rmsForceOld = _simulationBox->calculateRMSForceOld();
-    const auto rmsForceNew = _simulationBox->calculateRMSForce();
+    const auto rmsForceOld = getRMSForce(-2);
+    const auto rmsForceNew = getRMSForce(-1);
 
-    const auto maxForceOld = _simulationBox->calculateMaxForceOld();
-    const auto maxForceNew = _simulationBox->calculateMaxForce();
+    const auto maxForceOld = getMaxForce(-2);
+    const auto maxForceNew = getMaxForce(-1);
 
     auto converged = true;
 
@@ -400,6 +400,46 @@ double Optimizer::getEnergy(const int offset) const
     const auto index = getHistoryIndex(offset);
 
     return _energyHistory[index];
+}
+
+/**
+ * @brief get the last RMS force in the history
+ *
+ * @return double
+ */
+double Optimizer::getRMSForce() const { return _rmsForceHistory.back(); }
+
+/**
+ * @brief get the RMS force in history with negative index offset
+ *
+ * @param offset
+ *
+ */
+double Optimizer::getRMSForce(const int offset) const
+{
+    const auto index = getHistoryIndex(offset);
+
+    return _rmsForceHistory[index];
+}
+
+/**
+ * @brief get the last max force in the history
+ *
+ * @return double
+ */
+double Optimizer::getMaxForce() const { return _maxForceHistory.back(); }
+
+/**
+ * @brief get the max force in history with negative index offset
+ *
+ * @param offset
+ *
+ */
+double Optimizer::getMaxForce(const int offset) const
+{
+    const auto index = getHistoryIndex(offset);
+
+    return _maxForceHistory[index];
 }
 
 /**
