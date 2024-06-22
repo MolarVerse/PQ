@@ -186,6 +186,13 @@ namespace linearAlgebra
     auto operator/(const U &scalar, const V &vec)
         -> Vector3D<decltype(scalar / vec[0])>;
 
+    /*****************
+     * fabs function *
+     *****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto fabs(const U &vec) -> Vector3D<decltype(std::fabs(vec[0]))>;
+
 }   // namespace linearAlgebra
 
 #include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE

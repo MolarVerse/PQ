@@ -653,6 +653,33 @@ namespace linearAlgebra
         );
     }
 
+    /*****************
+     *               *
+     * fabs function *
+     *               *
+     *****************/
+
+    /**
+     * @brief fabs function for a Vector3d object
+     *
+     * @example fabs(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::fabs(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto fabs(const U &vec) -> Vector3D<decltype(std::fabs(vec[0]))>
+    {
+        using ResultType = decltype(std::fabs(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::fabs(vec[0]),
+            std::fabs(vec[1]),
+            std::fabs(vec[2])
+        );
+    }
+
 }   // namespace linearAlgebra
 
 #endif   // _VECTOR3D_TPP_
