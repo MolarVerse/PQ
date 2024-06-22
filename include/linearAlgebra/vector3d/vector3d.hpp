@@ -195,6 +195,20 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto fabs(const U &vec) -> Vector3D<decltype(std::fabs(vec[0]))>;
 
+    /****************
+     * exp function *
+     ****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto exp(const U &vec) -> Vector3D<decltype(std::exp(vec[0]))>;
+
+    /*****************
+     * sqrt function *
+     *****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto sqrt(const U &vec) -> Vector3D<decltype(std::sqrt(vec[0]))>;
+
     /**********************
      * rounding functions *
      **********************/
@@ -282,6 +296,13 @@ namespace linearAlgebra
 
     template <pq::ArithmeticVector3D U>
     auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)));
+
+    /**************
+     * ostream << *
+     **************/
+
+    template <pq::ArithmeticVector3D U>
+    std::ostream &operator<<(std::ostream &os, const U &v);
 
 }   // namespace linearAlgebra
 

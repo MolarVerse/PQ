@@ -682,6 +682,60 @@ namespace linearAlgebra
         );
     }
 
+    /****************
+     *              *
+     * exp function *
+     *              *
+     ****************/
+
+    /**
+     * @brief exp function for a Vector3d object
+     *
+     * @example exp(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::exp(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto exp(const U &vec) -> Vector3D<decltype(std::exp(vec[0]))>
+    {
+        using ResultType = decltype(std::exp(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::exp(vec[0]),
+            std::exp(vec[1]),
+            std::exp(vec[2])
+        );
+    }
+
+    /*****************
+     *               *
+     * sqrt function *
+     *               *
+     *****************/
+
+    /**
+     * @brief sqrt function for a Vector3d object
+     *
+     * @example sqrt(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::sqrt(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto sqrt(const U &vec) -> Vector3D<decltype(std::sqrt(vec[0]))>
+    {
+        using ResultType = decltype(std::sqrt(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::sqrt(vec[0]),
+            std::sqrt(vec[1]),
+            std::sqrt(vec[2])
+        );
+    }
+
     /**********************
      *                    *
      * rounding functions *
@@ -907,7 +961,9 @@ namespace linearAlgebra
     }
 
     /*****************
+     *               *
      * mean function *
+     *               *
      *****************/
 
     /**
@@ -926,7 +982,9 @@ namespace linearAlgebra
     }
 
     /***************
+     *             *
      * dot product *
+     *             *
      ***************/
 
     /**
@@ -947,7 +1005,9 @@ namespace linearAlgebra
     }
 
     /*****************
+     *               *
      * cross product *
+     *               *
      *****************/
 
     /**
@@ -1031,6 +1091,26 @@ namespace linearAlgebra
     auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)))
     {
         return std::acos(cos(v1, v2));
+    }
+
+    /**************
+     *            *
+     * ostream << *
+     *            *
+     **************/
+
+    /**
+     * @brief Operator << for a Vector3d object
+     *
+     * @tparam U
+     * @param os
+     * @param v
+     * @return std::ostream&
+     */
+    template <pq::ArithmeticVector3D U>
+    std::ostream &operator<<(std::ostream &os, const U &v)
+    {
+        return os << v[0] << " " << v[1] << " " << v[2];
     }
 
 }   // namespace linearAlgebra

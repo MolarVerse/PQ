@@ -315,6 +315,17 @@ namespace linearAlgebra
         );
     }
 
+    /**
+     * @brief cast to std::vector
+     *
+     * @return std::vector<T>
+     */
+    template <class T>
+    std::vector<T> Vector3D<T>::toStdVector()
+    {
+        return std::vector<T>(_xyz.begin(), _xyz.end());
+    }
+
 }   // namespace linearAlgebra
 
 #endif   // _VECTOR3D_CLASS_TPP_

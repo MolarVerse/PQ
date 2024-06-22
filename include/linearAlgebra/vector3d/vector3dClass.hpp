@@ -144,38 +144,7 @@ namespace linearAlgebra
         template <class U>
         explicit operator Vector3D<U>() const;
 
-        /**
-         * @brief calculates the exponential of the vector (for each element)
-         *
-         * @param v1
-         * @param v2
-         * @return Vector3D<T>
-         */
-        friend Vector3D<T> exp(Vector3D<T> v)
-        {
-            return Vector3D<T>(::exp(v._x), ::exp(v._y), ::exp(v._z));
-        }
-
-        /**
-         * @brief ostream operator for vector3d
-         *
-         * @param os
-         * @param v
-         * @return std::ostream&
-         */
-        friend std::ostream &operator<<(std::ostream &os, const Vector3D<T> &v)
-        {
-            return os << v._x << " " << v._y << " " << v._z;
-        }
-
-        /**
-         * @brief converts vector3d to std::vector
-         *
-         * @param v
-         *
-         * @return std::vector<T>
-         */
-        std::vector<T> toStdVector() { return {_x, _y, _z}; }
+        std::vector<T> toStdVector();
     };
 
 }   // namespace linearAlgebra
