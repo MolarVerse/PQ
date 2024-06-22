@@ -131,39 +131,6 @@ namespace linearAlgebra
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         /**
-         * @brief / operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D
-         */
-        Vector3D<T> operator/(const T rhs) const
-        {
-            return Vector3D<T>(_x / rhs, _y / rhs, _z / rhs);
-        }
-
-        /**
-         * @brief / operator for two Vector3d objects
-         *
-         * @param const Vector3D<T>&
-         * @return Vector3D
-         */
-        Vector3D<T> operator/(const Vector3D<T> &rhs) const
-        {
-            return Vector3D<T>(_x / rhs._x, _y / rhs._y, _z / rhs._z);
-        }
-
-        /**
-         * @brief / operator for a Vector3d object and a scalar
-         *
-         * @param const T
-         * @return Vector3D
-         */
-        friend Vector3D<T> operator/(const T rhs, const Vector3D<T> &lhs)
-        {
-            return Vector3D<T>(rhs / lhs._x, rhs / lhs._y, rhs / lhs._z);
-        }
-
-        /**
          * @brief < operator for vector3d and scalar
          *
          * @param const T t
