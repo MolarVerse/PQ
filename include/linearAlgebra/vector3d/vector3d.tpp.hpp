@@ -848,6 +848,15 @@ namespace linearAlgebra
      *              *
      ****************/
 
+    /**
+     * @brief sum function for a Vector3d object
+     *
+     * @example sum(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return decltype(vec[0] + vec[0])
+     */
     template <pq::ArithmeticVector3D U>
     auto sum(const U &vec) -> decltype(vec[0] + vec[0])
     {
@@ -860,10 +869,85 @@ namespace linearAlgebra
      *               *
      *****************/
 
+    /**
+     * @brief prod function for a Vector3d object
+     *
+     * @example prod(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return decltype(vec[0] * vec[0])
+     */
     template <pq::ArithmeticVector3D U>
     auto prod(const U &vec) -> decltype(vec[0] * vec[0])
     {
         return vec[0] * vec[1] * vec[2];
+    }
+
+    /*****************
+     * mean function *
+     *****************/
+
+    /**
+     * @brief mean function for a Vector3d object
+     *
+     * @example mean(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return decltype(sum(vec) / 3)
+     */
+    template <pq::ArithmeticVector3D U>
+    auto mean(const U &vec) -> decltype(sum(vec) / 3)
+    {
+        return sum(vec) / 3;
+    }
+
+    /***************
+     * dot product *
+     ***************/
+
+    /**
+     * @brief dot product for two Vector3d objects
+     *
+     * @example dot(Vector3D<int>, Vector3D<double>)
+     *
+     * @tparam U
+     * @tparam V
+     * @param lhs
+     * @param rhs
+     * @return decltype(lhs.x * rhs.x)
+     */
+    template <pq::ArithmeticVector3D U>
+    auto dot(const U &lhs, const U &rhs) -> decltype(lhs[0] * rhs[0])
+    {
+        return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
+    }
+
+    /*****************
+     * cross product *
+     *****************/
+
+    /**
+     * @brief cross product for two Vector3d objects
+     *
+     * @example cross(Vector3D<int>, Vector3D<double>)
+     *
+     * @tparam U
+     * @tparam V
+     * @param lhs
+     * @param rhs
+     * @return Vector3D<decltype(lhs.x * rhs.x)>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto cross(const U &lhs, const U &rhs)
+        -> Vector3D<decltype(lhs[0] * rhs[0])>
+    {
+        return Vector3D<decltype(lhs[0] * rhs[0])>(
+            lhs[1] * rhs[2] - lhs[2] * rhs[1],
+            lhs[2] * rhs[0] - lhs[0] * rhs[2],
+            lhs[0] * rhs[1] - lhs[1] * rhs[0]
+        );
     }
 
 }   // namespace linearAlgebra

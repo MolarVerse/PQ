@@ -243,6 +243,28 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto prod(const U &vec) -> decltype(vec[0] * vec[0]);
 
+    /*****************
+     * mean function *
+     *****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto mean(const U &vec) -> decltype(sum(vec) / 3);
+
+    /***************
+     * dot product *
+     ***************/
+
+    template <pq::ArithmeticVector3D U>
+    auto dot(const U &lhs, const U &rhs) -> decltype(lhs[0] * rhs[0]);
+
+    /*****************
+     * cross product *
+     *****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto cross(const U &lhs, const U &rhs)
+        -> Vector3D<decltype(lhs[0] * rhs[0])>;
+
 }   // namespace linearAlgebra
 
 #include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE

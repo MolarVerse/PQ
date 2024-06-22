@@ -145,41 +145,6 @@ namespace linearAlgebra
         explicit operator Vector3D<U>() const;
 
         /**
-         * @brief mean of vector
-         *
-         * @param v
-         * @return T
-         */
-        friend T mean(Vector3D<T> v) { return sum(v) / 3; }
-
-        /**
-         * @brief scalar_product of two vectors
-         *
-         * @param v1
-         * @param v2
-         */
-        friend T dot(Vector3D<T> v1, Vector3D<T> v2)
-        {
-            return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z;
-        }
-
-        /**
-         * @brief cross product of two vectors
-         *
-         * @param v1
-         * @param v2
-         * @return Vector3D<T>
-         */
-        friend Vector3D<T> cross(Vector3D<T> v1, Vector3D<T> v2)
-        {
-            return Vector3D<T>(
-                v1._y * v2._z - v1._z * v2._y,
-                v1._z * v2._x - v1._x * v2._z,
-                v1._x * v2._y - v1._y * v2._x
-            );
-        }
-
-        /**
          * @brief calculates the cosine of the vector (for each element)
          *
          * @param v1
