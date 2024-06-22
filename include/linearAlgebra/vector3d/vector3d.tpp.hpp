@@ -24,6 +24,8 @@
 
 #define _VECTOR3D_TPP_
 
+#include <algorithm>
+
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3d.hpp"
 
@@ -968,6 +970,67 @@ namespace linearAlgebra
             lhs[2] * rhs[0] - lhs[0] * rhs[2],
             lhs[0] * rhs[1] - lhs[1] * rhs[0]
         );
+    }
+
+    /***************************
+     *                         *
+     * angle related functions *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief cos function for a Vector3d object
+     *
+     * @example cos(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::cos(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto cos(const U &vec) -> Vector3D<decltype(std::cos(vec[0]))>
+    {
+        return Vector3D<decltype(std::cos(vec[0]))>(
+            std::cos(vec[0]),
+            std::cos(vec[1]),
+            std::cos(vec[2])
+        );
+    }
+
+    /**
+     * @brief cos function for two Vector3d objects
+     *
+     * @example cos(Vector3D<int>, Vector3D<double>)
+     *
+     * @tparam U
+     * @tparam V
+     * @param v1
+     * @param v2
+     * @return decltype(std::acos(cos(v1, v2)))
+     */
+    template <pq::ArithmeticVector3D U>
+    auto cos(const U &lhs, const U &rhs) -> decltype(dot(lhs, rhs))
+    {
+        auto cosine = dot(lhs, rhs) / (norm(lhs) * norm(rhs));
+
+        return std::clamp(cosine, -1.0, 1.0);
+    }
+
+    /**
+     * @brief angle function for two Vector3d objects
+     *
+     * @example angle(Vector3D<int>, Vector3D<double>)
+     *
+     * @tparam U
+     * @tparam V
+     * @param v1
+     * @param v2
+     * @return decltype(std::acos(cos(v1, v2)))
+     */
+    template <pq::ArithmeticVector3D U>
+    auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)))
+    {
+        return std::acos(cos(v1, v2));
     }
 
 }   // namespace linearAlgebra

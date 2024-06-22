@@ -24,6 +24,8 @@
 
 #define _VECTOR3d_HPP_
 
+#include <cmath>
+
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
 
@@ -267,6 +269,19 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto cross(const U &lhs, const U &rhs)
         -> Vector3D<decltype(lhs[0] * rhs[0])>;
+
+    /***************************
+     * angle related functions *
+     ***************************/
+
+    template <pq::ArithmeticVector3D U>
+    auto cos(const U &vec) -> Vector3D<decltype(std::cos(vec[0]))>;
+
+    template <pq::ArithmeticVector3D U>
+    auto cos(const U &lhs, const U &rhs) -> decltype(dot(lhs, rhs));
+
+    template <pq::ArithmeticVector3D U>
+    auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)));
 
 }   // namespace linearAlgebra
 
