@@ -49,6 +49,76 @@ namespace linearAlgebra
         return lhs[0] == rhs[0] && lhs[1] == rhs[1] && lhs[2] == rhs[2];
     }
 
+    /**
+     * @brief operator !=
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<U>&
+     * @return bool
+     */
+    template <class U>
+    requires std::equality_comparable<U>
+    bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    /**
+     * @brief operator <
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
+    {
+        return lhs[0] < rhs[0] && lhs[1] < rhs[1] && lhs[2] < rhs[2];
+    }
+
+    /**
+     * @brief operator <
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<(const Vector3D<U> &lhs, const V &rhs)
+    {
+        return lhs[0] < rhs && lhs[1] < rhs && lhs[2] < rhs;
+    }
+
+    /**
+     * @brief operator >
+     *
+     * @param const Vector3D<U>&
+     * @param const Vector3D<V>&
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
+    {
+        return lhs[0] > rhs[0] && lhs[1] > rhs[1] && lhs[2] > rhs[2];
+    }
+
+    /**
+     * @brief operator >
+     *
+     * @param const Vector3D<U>&
+     * @param const V
+     * @return bool
+     */
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>(const Vector3D<U> &lhs, const V &rhs)
+    {
+        return lhs[0] > rhs && lhs[1] > rhs && lhs[2] > rhs;
+    }
+
     /*********************
      *                   *
      * binary + operator *

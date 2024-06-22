@@ -37,6 +37,26 @@ namespace linearAlgebra
     requires std::equality_comparable<U>
     bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
+    template <class U>
+    requires std::equality_comparable<U>
+    bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
+
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
+
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator<(const Vector3D<U> &lhs, const V &rhs);
+
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
+
+    template <class U, class V>
+    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    bool operator>(const Vector3D<U> &lhs, const V &rhs);
+
     /*********************
      * binary + operator *
      *********************/

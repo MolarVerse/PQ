@@ -131,34 +131,6 @@ namespace linearAlgebra
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         /**
-         * @brief < operator for vector3d and scalar
-         *
-         * @param const T t
-         * @return bool
-         *
-         * @note returns true if all members of vector are less than t
-         */
-        bool operator<(const T t) const
-        requires std::is_fundamental_v<T>
-        {
-            return _x < t && _y < t && _z < t;
-        }
-
-        /**
-         * @brief > operator for vector3d and scalar
-         *
-         * @param const T t
-         * @return bool
-         *
-         * @note returns true if all members of vector are greater than t
-         */
-        bool operator>(const T t) const
-        requires std::is_fundamental_v<T>
-        {
-            return _x > t && _y > t && _z > t;
-        }
-
-        /**
          * @brief fabs of all entries of vector
          *
          * @param const Vector3D<T>&
