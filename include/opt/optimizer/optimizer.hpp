@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr
 
+#include "convergence.hpp"           // for Convergence
 #include "convergenceSettings.hpp"   // for ConvergenceSettings
 #include "typeAliases.hpp"           // for SharedSimulationBox
 
@@ -43,24 +44,11 @@ namespace opt
        protected:
         size_t _nEpochs = 0;
 
+        opt::Convergence _convergence;
+
         pq::SharedSimBox       _simulationBox;
         pq::SharedPhysicalData _physicalData;
         pq::SharedPhysicalData _physicalDataOld;
-
-        bool _enableEnergyConv   = true;
-        bool _enableMaxForceConv = true;
-        bool _enableRMSForceConv = true;
-
-        double _relEnergyConv;
-        double _relMaxForceConv;
-        double _relRMSForceConv;
-
-        double _absEnergyConv;
-        double _absMaxForceConv;
-        double _absRMSForceConv;
-
-        settings::ConvStrategy _energyConvStrategy;
-        settings::ConvStrategy _forceConvStrategy;
 
         std::deque<double> _energyHistory;
         std::deque<double> _maxForceHistory;
@@ -70,15 +58,6 @@ namespace opt
 
        public:
         explicit Optimizer(const size_t);
-        explicit Optimizer(
-            const size_t,
-            const double,
-            const double,
-            const double,
-            const double,
-            const double,
-            const double
-        );
 
         Optimizer()          = default;
         virtual ~Optimizer() = default;
@@ -88,36 +67,17 @@ namespace opt
         virtual size_t              maxHistoryLength() const          = 0;
 
         void updateHistory();
-
-        [[nodiscard]] bool hasConverged() const;
-        [[nodiscard]] bool hasPropertyConv(
-            const bool,
-            const bool,
-            const settings::ConvStrategy
-        ) const;
+        bool hasConverged();
 
         /***************************
          * standard setter methods *
          ***************************/
 
+        void setConvergence(const opt::Convergence &);
+
         void setSimulationBox(const pq::SharedSimBox);
         void setPhysicalData(const pq::SharedPhysicalData);
         void setPhysicalDataOld(const pq::SharedPhysicalData);
-
-        void setEnableEnergyConv(const bool);
-        void setEnableMaxForceConv(const bool);
-        void setEnableRMSForceConv(const bool);
-
-        void setRelEnergyConv(const double);
-        void setRelMaxForceConv(const double);
-        void setRelRMSForceConv(const double);
-
-        void setAbsEnergyConv(const double);
-        void setAbsMaxForceConv(const double);
-        void setAbsRMSForceConv(const double);
-
-        void setEnergyConvStrategy(const settings::ConvStrategy);
-        void setForceConvStrategy(const settings::ConvStrategy);
 
         /***************************
          * standard getter methods *

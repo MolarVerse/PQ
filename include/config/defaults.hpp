@@ -97,10 +97,8 @@ namespace defaults
     static constexpr char   _FORCE_CONV_STRATEGY_DEFAULT_[]  = "rigorous";
     static constexpr double _REL_ENERGY_CONV_DEFAULT_        = 1.0e-6;
     static constexpr double _ABS_ENERGY_CONV_DEFAULT_        = 1.0e-6;
-    static constexpr double _REL_MAX_FORCE_CONV_DEFAULT_     = 1.0e-6;
-    static constexpr double _ABS_MAX_FORCE_CONV_DEFAULT_     = 1.0e-6;
-    static constexpr double _REL_RMS_FORCE_CONV_DEFAULT_     = 1.0e-6;
-    static constexpr double _ABS_RMS_FORCE_CONV_DEFAULT_     = 1.0e-6;
+    static constexpr double _MAX_FORCE_CONV_DEFAULT_     = 1.0e-6;
+    static constexpr double _RMS_FORCE_CONV_DEFAULT_     = 1.0e-6;
 
     // clang-format on
 

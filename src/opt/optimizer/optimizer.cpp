@@ -42,36 +42,13 @@ using namespace customException;
  * @param nEpochs
  * @param initialLearningRate
  */
-Optimizer::Optimizer(const size_t nEpochs)
-    : Optimizer(nEpochs, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-{
-}
+Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
 
 /**
- * @brief Construct a new Optimizer object
+ * @brief update the optimizer history
  *
+ * @param learningRate
  */
-Optimizer::Optimizer(
-    const size_t nEpochs,
-    const double relEnergyConv,
-    const double relMaxForceConv,
-    const double relRMSForceConv,
-    const double absEnergyConv,
-    const double absMaxForceConv,
-    const double absRMSForceConv
-)
-    : _nEpochs(nEpochs),
-      _relEnergyConv(relEnergyConv),
-      _relMaxForceConv(relMaxForceConv),
-      _relRMSForceConv(relRMSForceConv),
-      _absEnergyConv(absEnergyConv),
-      _absMaxForceConv(absMaxForceConv),
-      _absRMSForceConv(absRMSForceConv)
-{
-    _energyConvStrategy = ConvStrategy::RIGOROUS;
-    _forceConvStrategy  = ConvStrategy::RIGOROUS;
-}
-
 void Optimizer::updateHistory()
 {
     _energyHistory.push_back(_physicalData->getTotalEnergy());
@@ -99,105 +76,18 @@ void Optimizer::updateHistory()
  *
  * @return true/false if the optimizer has converged
  */
-bool Optimizer::hasConverged() const
+bool Optimizer::hasConverged()
 {
     const auto energyOld = getEnergy(-2);
     const auto energyNew = getEnergy(-1);
 
-    const auto rmsForceOld = getRMSForce(-2);
     const auto rmsForceNew = getRMSForce(-1);
-
-    const auto maxForceOld = getMaxForce(-2);
     const auto maxForceNew = getMaxForce(-1);
 
-    auto converged = true;
+    _convergence.calcEnergyConvergence(energyOld, energyNew);
+    _convergence.calcForceConvergence(maxForceNew, rmsForceNew);
 
-    if (_enableEnergyConv)
-    {
-        const auto absDeviation = std::abs(energyOld - energyNew);
-        const auto relDeviation = absDeviation / std::abs(energyOld);
-
-        const auto isAbsConv = absDeviation < _absEnergyConv;
-        const auto isRelConv = relDeviation < _relEnergyConv;
-
-        const auto isEnergyConverged =
-            hasPropertyConv(isAbsConv, isRelConv, _energyConvStrategy);
-
-        converged = converged && isEnergyConverged;
-
-        std::cout << "energyOld: " << energyOld << std::endl;
-        std::cout << "energyNew: " << energyNew << std::endl;
-        std::cout << "absDeviation: " << absDeviation << std::endl;
-        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
-    }
-
-    if (_enableMaxForceConv)
-    {
-        const auto absDeviation = std::abs(maxForceOld - maxForceNew);
-        const auto relDeviation = absDeviation / std::abs(maxForceOld);
-
-        const auto isAbsConv = absDeviation < _absMaxForceConv;
-        const auto isRelConv = relDeviation < _relMaxForceConv;
-
-        const auto isMaxForceConverged =
-            hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
-
-        converged = converged && isMaxForceConverged;
-
-        std::cout << "maxForceOld: " << maxForceOld << std::endl;
-        std::cout << "maxForceNew: " << maxForceNew << std::endl;
-        std::cout << "absDeviation: " << absDeviation << std::endl;
-        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
-    }
-
-    if (_enableRMSForceConv)
-    {
-        const auto absDeviation = std::abs(rmsForceOld - rmsForceNew);
-        const auto relDeviation = absDeviation / std::abs(rmsForceOld);
-
-        const auto isAbsConv = absDeviation < _absRMSForceConv;
-        const auto isRelConv = relDeviation < _relRMSForceConv;
-
-        const auto isRMSForceConverged =
-            hasPropertyConv(isAbsConv, isRelConv, _forceConvStrategy);
-
-        converged = converged && isRMSForceConverged;
-
-        std::cout << "rmsForceOld: " << rmsForceOld << std::endl;
-        std::cout << "rmsForceNew: " << rmsForceNew << std::endl;
-        std::cout << "absDeviation: " << absDeviation << std::endl;
-        std::cout << "relDeviation: " << relDeviation << std::endl << std::endl;
-    }
-
-    return converged;
-}
-
-/**
- * @brief check if a property of the optimizer has converged
- * according to the convergence strategy set
- *
- * @param absConv
- * @param relConv
- * @param convStrategy
- * @return true
- * @return false
- */
-bool Optimizer::hasPropertyConv(
-    const bool         absConv,
-    const bool         relConv,
-    const ConvStrategy convStrategy
-) const
-{
-    if (convStrategy == ConvStrategy::RIGOROUS)
-        return absConv && relConv;
-    else if (convStrategy == ConvStrategy::LOOSE)
-        return absConv || relConv;
-    else if (convStrategy == ConvStrategy::ABSOLUTE)
-        return absConv;
-    else if (convStrategy == ConvStrategy::RELATIVE)
-        return relConv;
-    else
-        return false;
+    return _convergence.checkConvergence();
 }
 
 /***************************
@@ -205,6 +95,16 @@ bool Optimizer::hasPropertyConv(
  * standard setter methods *
  *                         *
  ***************************/
+
+/**
+ * @brief set convergence member
+ *
+ * @param convergence
+ */
+void Optimizer::setConvergence(const Convergence &convergence)
+{
+    _convergence = convergence;
+}
 
 /**
  * @brief set simulation box shared pointer
@@ -239,116 +139,6 @@ void Optimizer::setPhysicalDataOld(
 )
 {
     _physicalDataOld = physicalData;
-}
-
-/**
- * @brief set energy convergence flag
- *
- * @param enableEnergyConv
- */
-void Optimizer::setEnableEnergyConv(const bool enableEnergyConv)
-{
-    _enableEnergyConv = enableEnergyConv;
-}
-
-/**
- * @brief set max force convergence flag
- *
- * @param enableMaxForceConv
- */
-void Optimizer::setEnableMaxForceConv(const bool enableMaxForceConv)
-{
-    _enableMaxForceConv = enableMaxForceConv;
-}
-
-/**
- * @brief set RMS force convergence flag
- *
- * @param enableRMSForceConv
- */
-void Optimizer::setEnableRMSForceConv(const bool enableRMSForceConv)
-{
-    _enableRMSForceConv = enableRMSForceConv;
-}
-
-/**
- * @brief set relative energy convergence
- *
- * @param relEnergyConv
- */
-void Optimizer::setRelEnergyConv(const double relEnergyConv)
-{
-    _relEnergyConv = relEnergyConv;
-}
-
-/**
- * @brief set relative max force convergence
- *
- * @param relMaxForceConv
- */
-void Optimizer::setRelMaxForceConv(const double relMaxForceConv)
-{
-    _relMaxForceConv = relMaxForceConv;
-}
-
-/**
- * @brief set relative RMS force convergence
- *
- * @param relRMSForceConv
- */
-void Optimizer::setRelRMSForceConv(const double relRMSForceConv)
-{
-    _relRMSForceConv = relRMSForceConv;
-}
-
-/**
- * @brief set absolute energy convergence
- *
- * @param absEnergyConv
- */
-void Optimizer::setAbsEnergyConv(const double absEnergyConv)
-{
-    _absEnergyConv = absEnergyConv;
-}
-
-/**
- * @brief set absolute max force convergence
- *
- * @param absMaxForceConv
- */
-void Optimizer::setAbsMaxForceConv(const double absMaxForceConv)
-{
-    _absMaxForceConv = absMaxForceConv;
-}
-
-/**
- * @brief set absolute RMS force convergence
- *
- * @param absRMSForceConv
- */
-void Optimizer::setAbsRMSForceConv(const double absRMSForceConv)
-{
-    _absRMSForceConv = absRMSForceConv;
-}
-
-/**
- * @brief set energy convergence strategy
- *
- * @param energyConvStrategy
- */
-void Optimizer::setEnergyConvStrategy(const ConvStrategy energyConvStrategy)
-{
-    _energyConvStrategy = energyConvStrategy;
-}
-
-/**
- * @brief set force convergence strategy
- *
- * @param forceConvStrategy
- */
-void Optimizer::setForceConvStrategy(const ConvStrategy forceConvStrategy)
-{
-    _forceConvStrategy = forceConvStrategy;
 }
 
 /***************************

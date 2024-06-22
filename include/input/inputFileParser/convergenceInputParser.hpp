@@ -41,9 +41,7 @@ namespace input
        public:
         explicit ConvInputParser(engine::Engine &);
 
-        void parseConvergenceStrategy(const strings &, const size_t);
         void parseEnergyConvergenceStrategy(const strings &, const size_t);
-        void parseForceConvergenceStrategy(const strings &, const size_t);
 
         void parseUseEnergyConvergence(const strings &, const size_t);
         void parseUseForceConvergence(const strings &, const size_t);
@@ -55,16 +53,8 @@ namespace input
         void parseAbsoluteEnergyConvergence(const strings &, const size_t);
 
         void parseForceConvergence(const strings &, const size_t);
-        void parseRelativeForceConvergence(const strings &, const size_t);
-        void parseAbsoluteForceConvergence(const strings &, const size_t);
-
         void parseMaxForceConvergence(const strings &, const size_t);
-        void parseRelativeMaxForceConvergence(const strings &, const size_t);
-        void parseAbsoluteMaxForceConvergence(const strings &, const size_t);
-
         void parseRMSForceConvergence(const strings &, const size_t);
-        void parseRelativeRMSForceConvergence(const strings &, const size_t);
-        void parseAbsoluteRMSForceConvergence(const strings &, const size_t);
     };
 
 }   // namespace input

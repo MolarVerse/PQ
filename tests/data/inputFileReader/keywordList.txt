@@ -8,9 +8,7 @@ learning-rate-update-freq   false
 min-learning-rate           false
 max-learning-rate           false
 
-conv-strategy               false
 energy-conv-strategy        false
-force-conv-strategy         false
 use-energy-conv             false
 use-force-conv              false
 use-max-force-conv          false
@@ -19,14 +17,8 @@ energy-conv                 false
 rel-energy-conv             false
 abs-energy-conv             false
 force-conv                  false
-rel-force-conv              false
-abs-force-conv              false
 max-force-conv              false
-rel-max-force-conv          false
-abs-max-force-conv          false
 rms-force-conv              false
-rel-rms-force-conv          false
-abs-rms-force-conv          false
 
 cell-list                   false
 cell-number                 false

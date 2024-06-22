@@ -238,15 +238,13 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
 void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
 )
 {
-    setupConvergenceStrategy(optimizer);
+    const auto energyConvStrategy = ConvSettings::getEnergyConvStrategy();
+    const auto defEConvStrategy = ConvSettings::getDefaultEnergyConvStrategy();
+    const auto energyStrategy   = energyConvStrategy.value_or(defEConvStrategy);
 
     const auto useEnergyConv   = ConvSettings::getUseEnergyConv();
     const auto useMaxForceConv = ConvSettings::getUseMaxForceConv();
     const auto useRMSForceConv = ConvSettings::getUseRMSForceConv();
-
-    optimizer->setEnableEnergyConv(useEnergyConv);
-    optimizer->setEnableMaxForceConv(useMaxForceConv);
-    optimizer->setEnableRMSForceConv(useRMSForceConv);
 
     const auto energyConv    = ConvSettings::getEnergyConv();
     const auto absEnergyConv = ConvSettings::getAbsEnergyConv();
@@ -261,104 +259,29 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
     relEnergyConvValue = relEnergyConv.value_or(relEnergyConvValue);
     absEnergyConvValue = absEnergyConv.value_or(absEnergyConvValue);
 
-    optimizer->setRelEnergyConv(relEnergyConvValue);
-    optimizer->setAbsEnergyConv(absEnergyConvValue);
-
     const auto forceConv    = ConvSettings::getForceConv();
-    const auto relForceConv = ConvSettings::getRelForceConv();
-    const auto absForceConv = ConvSettings::getAbsForceConv();
+    const auto maxForceConv = ConvSettings::getMaxForceConv();
+    const auto rmsForceConv = ConvSettings::getRMSForceConv();
 
-    const auto maxForceConv    = ConvSettings::getMaxForceConv();
-    const auto relMaxForceConv = ConvSettings::getRelMaxForceConv();
-    const auto absMaxForceConv = ConvSettings::getAbsMaxForceConv();
+    const auto defMaxForceConv = defaults::_MAX_FORCE_CONV_DEFAULT_;
+    const auto defRMSForceConv = defaults::_RMS_FORCE_CONV_DEFAULT_;
 
-    const auto rmsForceConv    = ConvSettings::getRMSForceConv();
-    const auto relRMSForceConv = ConvSettings::getRelRMSForceConv();
-    const auto absRMSForceConv = ConvSettings::getAbsRMSForceConv();
+    auto maxForceConvValue = forceConv.value_or(defMaxForceConv);
+    auto rmsForceConvValue = forceConv.value_or(defRMSForceConv);
 
-    const auto defRelMaxForceConv = defaults::_REL_MAX_FORCE_CONV_DEFAULT_;
-    const auto defAbsMaxForceConv = defaults::_ABS_MAX_FORCE_CONV_DEFAULT_;
-    const auto defRelRMSForceConv = defaults::_REL_RMS_FORCE_CONV_DEFAULT_;
-    const auto defAbsRMSForceConv = defaults::_ABS_RMS_FORCE_CONV_DEFAULT_;
+    maxForceConvValue = maxForceConv.value_or(maxForceConvValue);
+    rmsForceConvValue = rmsForceConv.value_or(rmsForceConvValue);
 
-    auto relMaxForceConvValue = forceConv.value_or(defRelMaxForceConv);
-    auto absMaxForceConvValue = forceConv.value_or(defAbsMaxForceConv);
-    auto relRMSForceConvValue = forceConv.value_or(defRelRMSForceConv);
-    auto absRMSForceConvValue = forceConv.value_or(defAbsRMSForceConv);
+    const opt::Convergence convergence(
+        useEnergyConv,
+        useMaxForceConv,
+        useRMSForceConv,
+        relEnergyConvValue,
+        absEnergyConvValue,
+        maxForceConvValue,
+        rmsForceConvValue,
+        energyStrategy
+    );
 
-    auto isRelAbsConvSet = false;
-    isRelAbsConvSet      = isRelAbsConvSet || relForceConv.has_value();
-    isRelAbsConvSet      = isRelAbsConvSet || absForceConv.has_value();
-
-    auto isMaxRMSConvSet = false;
-    isMaxRMSConvSet      = isMaxRMSConvSet || maxForceConv.has_value();
-    isMaxRMSConvSet      = isMaxRMSConvSet || rmsForceConv.has_value();
-
-    if (isRelAbsConvSet && isMaxRMSConvSet)
-    {
-        throw customException::UserInputException(
-            "You defined at least one of "
-            "{\"rel-force-conv\",\"abs-force-conv\"} "
-            "and at least one of {\"max-force-conv\",\"rms-force-conv\"}. "
-            "These two pairs of convergence criteria are mutually exclusive. "
-            "For more details on the hierarchy of convergence criteria, see "
-            "the documentation."
-        );
-    }
-    else if (isRelAbsConvSet)
-    {
-        relMaxForceConvValue = relForceConv.value_or(relMaxForceConvValue);
-        absMaxForceConvValue = absForceConv.value_or(absMaxForceConvValue);
-        relRMSForceConvValue = relForceConv.value_or(relRMSForceConvValue);
-        absRMSForceConvValue = absForceConv.value_or(absRMSForceConvValue);
-    }
-    else if (isMaxRMSConvSet)
-    {
-        relMaxForceConvValue = maxForceConv.value_or(relMaxForceConvValue);
-        absMaxForceConvValue = maxForceConv.value_or(absMaxForceConvValue);
-        relRMSForceConvValue = rmsForceConv.value_or(relRMSForceConvValue);
-        absRMSForceConvValue = rmsForceConv.value_or(absRMSForceConvValue);
-    }
-
-    relMaxForceConvValue = relMaxForceConv.value_or(relMaxForceConvValue);
-    absMaxForceConvValue = absMaxForceConv.value_or(absMaxForceConvValue);
-    relRMSForceConvValue = relRMSForceConv.value_or(relRMSForceConvValue);
-    absRMSForceConvValue = absRMSForceConv.value_or(absRMSForceConvValue);
-
-    optimizer->setRelMaxForceConv(relMaxForceConvValue);
-    optimizer->setAbsMaxForceConv(absMaxForceConvValue);
-    optimizer->setRelRMSForceConv(relRMSForceConvValue);
-    optimizer->setAbsRMSForceConv(absRMSForceConvValue);
-}
-
-/**
- * @brief setup convergence strategy
- *
- * @param convStrategy as optional reference
- * @param energyConvStrategy as optional reference
- * @param forceConvStrategy as optional reference
- * @param optimizer as shared pointer reference
- */
-void OptimizerSetup::setupConvergenceStrategy(
-    std::shared_ptr<opt::Optimizer> &optimizer
-)
-{
-    const auto convStrategy       = ConvSettings::getConvStrategy();
-    const auto energyConvStrategy = ConvSettings::getEnergyConvStrategy();
-    const auto forceConvStrategy  = ConvSettings::getForceConvStrategy();
-
-    const auto defEConvStrategy = ConvSettings::getDefaultEnergyConvStrategy();
-    const auto defFConvStrategy = ConvSettings::getDefaultForceConvStrategy();
-
-    // set general conv strategy for both energy and force
-    // if set - otherwise use default strategy
-    auto energyStrategy = convStrategy.value_or(defEConvStrategy);
-    auto forceStrategy  = convStrategy.value_or(defFConvStrategy);
-
-    // if specific energy or force strategy is set, use it
-    energyStrategy = energyConvStrategy.value_or(energyStrategy);
-    forceStrategy  = forceConvStrategy.value_or(forceStrategy);
-
-    optimizer->setEnergyConvStrategy(energyStrategy);
-    optimizer->setForceConvStrategy(forceStrategy);
+    optimizer->setConvergence(convergence);
 }

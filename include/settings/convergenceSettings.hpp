@@ -61,29 +61,18 @@ namespace settings
         static inline std::optional<double> _absEnergyConv;
 
         static inline std::optional<double> _forceConv;
-        static inline std::optional<double> _relForceConv;
-        static inline std::optional<double> _absForceConv;
-
         static inline std::optional<double> _maxForceConv;
-        static inline std::optional<double> _relMaxForceConv;
-        static inline std::optional<double> _absMaxForceConv;
-
         static inline std::optional<double> _rmsForceConv;
-        static inline std::optional<double> _relRMSForceConv;
-        static inline std::optional<double> _absRMSForceConv;
 
         static inline bool _useEnergyConv   = true;
         static inline bool _useForceConv    = true;
         static inline bool _useMaxForceConv = true;
         static inline bool _useRMSForceConv = true;
 
-        static inline std::optional<ConvStrategy> _convStrategy;
         static inline std::optional<ConvStrategy> _energyConvStrategy;
-        static inline std::optional<ConvStrategy> _forceConvStrategy;
 
         // clang-format off
         static inline std::string _defaultEnergyConvStrategy = defaults::_ENERGY_CONV_STRATEGY_DEFAULT_;
-        static inline std::string _defaultForceConvStrategy  = defaults::_FORCE_CONV_STRATEGY_DEFAULT_;
         // clang-format on
 
        public:
@@ -100,30 +89,16 @@ namespace settings
         static void setAbsEnergyConv(const double);
 
         static void setForceConv(const double);
-        static void setRelForceConv(const double);
-        static void setAbsForceConv(const double);
-
         static void setMaxForceConv(const double);
-        static void setRelMaxForceConv(const double);
-        static void setAbsMaxForceConv(const double);
-
         static void setRMSForceConv(const double);
-        static void setRelRMSForceConv(const double);
-        static void setAbsRMSForceConv(const double);
 
         static void setUseEnergyConv(const bool);
         static void setUseForceConv(const bool);
         static void setUseMaxForceConv(const bool);
         static void setUseRMSForceConv(const bool);
 
-        static void setConvStrategy(const ConvStrategy);
-        static void setConvStrategy(const std::string_view &);
-
         static void setEnergyConvStrategy(const ConvStrategy);
         static void setEnergyConvStrategy(const std::string_view &);
-
-        static void setForceConvStrategy(const ConvStrategy);
-        static void setForceConvStrategy(const std::string_view &);
 
         /***************************
          * standard getter methods *
@@ -134,29 +109,18 @@ namespace settings
         [[nodiscard]] static std::optional<double> getAbsEnergyConv();
 
         [[nodiscard]] static std::optional<double> getForceConv();
-        [[nodiscard]] static std::optional<double> getRelForceConv();
-        [[nodiscard]] static std::optional<double> getAbsForceConv();
-
         [[nodiscard]] static std::optional<double> getMaxForceConv();
-        [[nodiscard]] static std::optional<double> getRelMaxForceConv();
-        [[nodiscard]] static std::optional<double> getAbsMaxForceConv();
-
         [[nodiscard]] static std::optional<double> getRMSForceConv();
-        [[nodiscard]] static std::optional<double> getRelRMSForceConv();
-        [[nodiscard]] static std::optional<double> getAbsRMSForceConv();
 
         [[nodiscard]] static bool getUseEnergyConv();
         [[nodiscard]] static bool getUseForceConv();
         [[nodiscard]] static bool getUseMaxForceConv();
         [[nodiscard]] static bool getUseRMSForceConv();
 
-        [[nodiscard]] static std::optional<ConvStrategy> getConvStrategy();
-        [[nodiscard]] static std::optional<ConvStrategy> getForceConvStrategy();
         [[nodiscard]] static std::optional<ConvStrategy> getEnergyConvStrategy(
         );
 
         [[nodiscard]] static ConvStrategy getDefaultEnergyConvStrategy();
-        [[nodiscard]] static ConvStrategy getDefaultForceConvStrategy();
     };
 
 }   // namespace settings

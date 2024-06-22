@@ -35,36 +35,6 @@
 using namespace input;
 using namespace settings;
 
-TEST_F(TestInputFileReader, parserConvergenceStrategy)
-{
-    EXPECT_EQ(ConvSettings::getConvStrategy(), std::optional<ConvStrategy>());
-
-    auto parser = ConvInputParser(*_engine);
-
-    auto lineElements = strings{"conv-strategy", "=", "loose"};
-    parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::LOOSE);
-
-    lineElements = strings{"conv-strategy", "=", "absolute"};
-    parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::ABSOLUTE);
-
-    lineElements = strings{"conv-strategy", "=", "relative"};
-    parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RELATIVE);
-
-    lineElements = strings{"conv-strategy", "=", "rigorous"};
-    parser.parseConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getConvStrategy(), ConvStrategy::RIGOROUS);
-
-    ASSERT_THROW_MSG(
-        parser.parseConvergenceStrategy({"conv-strategy", "=", "notValid"}, 0),
-        customException::InputFileException,
-        "Unknown convergence strategy \"notValid\" in input file at line 0.\n"
-        "Possible options are: rigorous, loose, absolute, relative"
-    )
-}
-
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
     EXPECT_EQ(
@@ -97,43 +67,6 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
         ),
         customException::InputFileException,
         "Unknown energy convergence strategy \"notValid\" in input file at "
-        "line 0.\n"
-        "Possible options are: rigorous, loose, absolute, relative"
-    )
-}
-
-TEST_F(TestInputFileReader, parserForceConvergenceStrategy)
-{
-    EXPECT_EQ(
-        ConvSettings::getForceConvStrategy(),
-        std::optional<ConvStrategy>()
-    );
-
-    auto parser = ConvInputParser(*_engine);
-
-    auto lineElements = strings{"force-conv-strategy", "=", "loose"};
-    parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::LOOSE);
-
-    lineElements = strings{"force-conv-strategy", "=", "absolute"};
-    parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::ABSOLUTE);
-
-    lineElements = strings{"force-conv-strategy", "=", "relative"};
-    parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RELATIVE);
-
-    lineElements = strings{"force-conv-strategy", "=", "rigorous"};
-    parser.parseForceConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getForceConvStrategy(), ConvStrategy::RIGOROUS);
-
-    ASSERT_THROW_MSG(
-        parser.parseForceConvergenceStrategy(
-            {"force-conv-strategy", "=", "notValid"},
-            0
-        ),
-        customException::InputFileException,
-        "Unknown force convergence strategy \"notValid\" in input file at "
         "line 0.\n"
         "Possible options are: rigorous, loose, absolute, relative"
     )
@@ -317,44 +250,6 @@ TEST_F(TestInputFileReader, parserForceConvergence)
     )
 }
 
-TEST_F(TestInputFileReader, parserRelativeForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getRelForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"rel-force-conv", "=", "1e-3"};
-    parser.parseRelativeForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getRelForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseRelativeForceConvergence({"rel-force-conv", "=", "-1"}, 0),
-        customException::InputFileException,
-        "Relative force convergence must be greater than 0.0 in input file "
-        "at line 0."
-    )
-}
-
-TEST_F(TestInputFileReader, parserAbsoluteForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getAbsForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"abs-force-conv", "=", "1e-3"};
-    parser.parseAbsoluteForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getAbsForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseAbsoluteForceConvergence({"abs-force-conv", "=", "-1"}, 0),
-        customException::InputFileException,
-        "Absolute force convergence must be greater than 0.0 in input file "
-        "at line 0."
-    )
-}
-
 TEST_F(TestInputFileReader, parserMaxForceConvergence)
 {
     EXPECT_FALSE(ConvSettings::getMaxForceConv().has_value());
@@ -374,50 +269,6 @@ TEST_F(TestInputFileReader, parserMaxForceConvergence)
     )
 }
 
-TEST_F(TestInputFileReader, parserRelativeMaxForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getRelMaxForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"rel-max-force-conv", "=", "1e-3"};
-    parser.parseRelativeMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelMaxForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getRelMaxForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseRelativeMaxForceConvergence(
-            {"rel-max-force-conv", "=", "-1"},
-            0
-        ),
-        customException::InputFileException,
-        "Relative max force convergence must be greater than 0.0 in input "
-        "file at line 0."
-    )
-}
-
-TEST_F(TestInputFileReader, parserAbsoluteMaxForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getAbsMaxForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"abs-max-force-conv", "=", "1e-3"};
-    parser.parseAbsoluteMaxForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsMaxForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getAbsMaxForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseAbsoluteMaxForceConvergence(
-            {"abs-max-force-conv", "=", "-1"},
-            0
-        ),
-        customException::InputFileException,
-        "Absolute max force convergence must be greater than 0.0 in input "
-        "file at line 0."
-    )
-}
-
 TEST_F(TestInputFileReader, parserRMSForceConvergence)
 {
     EXPECT_FALSE(ConvSettings::getRMSForceConv().has_value());
@@ -434,49 +285,5 @@ TEST_F(TestInputFileReader, parserRMSForceConvergence)
         customException::InputFileException,
         "RMS force convergence must be greater than 0.0 in input file at "
         "line 0."
-    )
-}
-
-TEST_F(TestInputFileReader, parserRelativeRMSForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getRelRMSForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"rel-rms-force-conv", "=", "1e-3"};
-    parser.parseRelativeRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getRelRMSForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getRelRMSForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseRelativeRMSForceConvergence(
-            {"rel-rms-force-conv", "=", "-1"},
-            0
-        ),
-        customException::InputFileException,
-        "Relative RMS force convergence must be greater than 0.0 in input "
-        "file at line 0."
-    )
-}
-
-TEST_F(TestInputFileReader, parserAbsoluteRMSForceConvergence)
-{
-    EXPECT_FALSE(ConvSettings::getAbsRMSForceConv().has_value());
-
-    auto parser = ConvInputParser(*_engine);
-
-    const auto lineElements = strings{"abs-rms-force-conv", "=", "1e-3"};
-    parser.parseAbsoluteRMSForceConvergence(lineElements, 0);
-    EXPECT_TRUE(ConvSettings::getAbsRMSForceConv().has_value());
-    EXPECT_EQ(ConvSettings::getAbsRMSForceConv().value(), 1e-3);
-
-    ASSERT_THROW_MSG(
-        parser.parseAbsoluteRMSForceConvergence(
-            {"abs-rms-force-conv", "=", "-1"},
-            0
-        ),
-        customException::InputFileException,
-        "Absolute RMS force convergence must be greater than 0.0 in input "
-        "file at line 0."
     )
 }
