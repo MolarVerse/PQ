@@ -193,6 +193,22 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto fabs(const U &vec) -> Vector3D<decltype(std::fabs(vec[0]))>;
 
+    /**********************
+     * rounding functions *
+     **********************/
+
+    template <pq::ArithmeticVector3D U>
+    auto round(const U &vec) -> Vector3D<decltype(std::round(vec[0]))>;
+
+    template <pq::ArithmeticVector3D U>
+    auto floor(const U &vec) -> Vector3D<decltype(std::floor(vec[0]))>;
+
+    template <pq::ArithmeticVector3D U>
+    auto ceil(const U &vec) -> Vector3D<decltype(std::ceil(vec[0]))>;
+
+    template <pq::ArithmeticVector3D U>
+    auto rint(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>;
+
 }   // namespace linearAlgebra
 
 #include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE

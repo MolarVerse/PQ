@@ -680,6 +680,96 @@ namespace linearAlgebra
         );
     }
 
+    /**********************
+     *                    *
+     * rounding functions *
+     *                    *
+     **********************/
+
+    /**
+     * @brief round function for a Vector3d object
+     *
+     * @example round(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::round(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto round(const U &vec) -> Vector3D<decltype(std::round(vec[0]))>
+    {
+        using ResultType = decltype(std::round(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::round(vec[0]),
+            std::round(vec[1]),
+            std::round(vec[2])
+        );
+    }
+
+    /**
+     * @brief floor function for a Vector3d object
+     *
+     * @example floor(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::floor(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto floor(const U &vec) -> Vector3D<decltype(std::floor(vec[0]))>
+    {
+        using ResultType = decltype(std::floor(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::floor(vec[0]),
+            std::floor(vec[1]),
+            std::floor(vec[2])
+        );
+    }
+
+    /**
+     * @brief ceil function for a Vector3d object
+     *
+     * @example ceil(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::ceil(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto ceil(const U &vec) -> Vector3D<decltype(std::ceil(vec[0]))>
+    {
+        using ResultType = decltype(std::ceil(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::ceil(vec[0]),
+            std::ceil(vec[1]),
+            std::ceil(vec[2])
+        );
+    }
+
+    /**
+     * @brief rint function for a Vector3d object
+     *
+     * @example rint(Vector3D<double>)
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(std::rint(vec[0]))>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto rint(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>
+    {
+        using ResultType = decltype(std::rint(vec[0]));
+
+        return Vector3D<ResultType>(
+            std::rint(vec[0]),
+            std::rint(vec[1]),
+            std::rint(vec[2])
+        );
+    }
+
 }   // namespace linearAlgebra
 
 #endif   // _VECTOR3D_TPP_

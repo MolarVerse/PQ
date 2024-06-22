@@ -145,39 +145,6 @@ namespace linearAlgebra
         explicit operator Vector3D<U>() const;
 
         /**
-         * @brief round all entries of vector
-         *
-         * @param v
-         * @return Vector3D<T>
-         */
-        friend Vector3D<T> round(const Vector3D<T> &v)
-        {
-            return {rint(v[0]), rint(v[1]), rint(v[2])};
-        }
-
-        /**
-         * @brief ceil all entries of vector
-         *
-         * @param v
-         * @return Vector3D<T>
-         */
-        friend Vector3D<T> ceil(Vector3D<T> v)
-        {
-            return Vector3D<T>(ceil(v._x), ceil(v._y), ceil(v._z));
-        }
-
-        /**
-         * @brief floor all entries of vector
-         *
-         * @param v
-         * @return Vector3D<T>
-         */
-        friend Vector3D<T> floor(Vector3D<T> v)
-        {
-            return Vector3D<T>(floor(v._x), floor(v._y), floor(v._z));
-        }
-
-        /**
          * @brief norm of vector
          *
          * @param v
