@@ -67,6 +67,7 @@ namespace input
         void parseVirialFilename(const strings &, const size_t);
         void parseStressFilename(const strings &, const size_t);
         void parseBoxFilename(const strings &, const size_t);
+        void parseOptFilename(const strings &, const size_t);
 
         void parseRPMDRestartFilename(const strings &, const size_t);
         void parseRPMDTrajectoryFilename(const strings &, const size_t);
