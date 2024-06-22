@@ -27,6 +27,7 @@
 #include <concepts>
 
 #include "concepts.hpp"
+#include "vector3dDepth.hpp"
 
 namespace linearAlgebra
 {
@@ -55,46 +56,13 @@ namespace pq
         Vector3DConcept<T> && pq::is_InnerType_arithmetic_v<T>;
 
     /**
-     * @brief type trait to determine the depth of a Vector3D
+     * @brief Concept for Vector3D types with depth 1
      *
      * @tparam T
      */
     template <class T>
-    struct Vector3DDepth
-    {
-        static constexpr int value = 0;
-    };
-
-    /**
-     * @brief type trait to determine the depth of a Vector3D
-     *
-     * @details specialization for Vector3D
-     *
-     * @tparam T
-     */
-    template <class T>
-    struct Vector3DDepth<linearAlgebra::Vector3D<T>>
-    {
-        static constexpr int value = 1 + Vector3DDepth<T>::value;
-    };
-
-    /**
-     * @brief constexpr variable to check the depth of a Vector3D
-     *
-     * @tparam T
-     */
-    template <class T>
-    constexpr int Vector3DDepth_v = Vector3DDepth<T>::value;
-
-    /**
-     * @brief constexpr variable to check the depth difference of two Vector3Ds
-     *
-     * @tparam T
-     * @tparam U
-     */
-    template <class T, class U>
-    constexpr int Vector3DDepthDifference_v =
-        Vector3DDepth_v<T> - Vector3DDepth_v<U>;
+    concept OneDimArithmeticVector3D =
+        ArithmeticVector3D<T> && Vector3DDepth_v<T> == 1;
 
 }   // namespace pq
 
