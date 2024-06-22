@@ -842,6 +842,30 @@ namespace linearAlgebra
         return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
     }
 
+    /****************
+     *              *
+     * sum function *
+     *              *
+     ****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto sum(const U &vec) -> decltype(vec[0] + vec[0])
+    {
+        return vec[0] + vec[1] + vec[2];
+    }
+
+    /*****************
+     *               *
+     * prod function *
+     *               *
+     *****************/
+
+    template <pq::ArithmeticVector3D U>
+    auto prod(const U &vec) -> decltype(vec[0] * vec[0])
+    {
+        return vec[0] * vec[1] * vec[2];
+    }
+
 }   // namespace linearAlgebra
 
 #endif   // _VECTOR3D_TPP_

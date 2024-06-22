@@ -145,22 +145,6 @@ namespace linearAlgebra
         explicit operator Vector3D<U>() const;
 
         /**
-         * @brief sum of vector
-         *
-         * @param v
-         * @return T
-         */
-        friend T sum(Vector3D<T> v) { return v._x + v._y + v._z; }
-
-        /**
-         * @brief product of vector
-         *
-         * @param v
-         * @return T
-         */
-        friend T prod(Vector3D<T> v) { return v._x * v._y * v._z; }
-
-        /**
          * @brief mean of vector
          *
          * @param v
