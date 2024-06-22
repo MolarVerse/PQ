@@ -8,6 +8,7 @@ target_include_directories(optimizer
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/opt/optimizer
     ${PROJECT_SOURCE_DIR}/include/config
+    ${PROJECT_SOURCE_DIR}/include/concepts
 )
 
 target_link_libraries(optimizer

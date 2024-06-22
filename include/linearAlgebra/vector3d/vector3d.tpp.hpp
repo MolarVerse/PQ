@@ -863,6 +863,36 @@ namespace linearAlgebra
     }
 
     /**
+     * @brief minimum function for a Vector3d object
+     *
+     * @example minimum(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return InnerType_t<U>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto min(const U &vec) -> pq::InnerType_t<U>
+    {
+        return minimum(vec);
+    }
+
+    /**
+     * @brief maximum function for a Vector3d object
+     *
+     * @example maximum(Vector3D<int>)
+     *
+     * @tparam U
+     * @param vec
+     * @return InnerType_t<U>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto max(const U &vec) -> pq::InnerType_t<U>
+    {
+        return maximum(vec);
+    }
+
+    /**
      * @brief returns the maximum of the maximums of all Vector3d objects in a
      * std::vector
      *
@@ -871,12 +901,12 @@ namespace linearAlgebra
      * @return decltype(max(v[0]))
      */
     template <pq::ArithmeticVector3D U>
-    auto max(const std::vector<U> &v) -> decltype(max(v[0]))
+    auto max(const std::vector<U> &v) -> decltype(maximum(v[0]))
     {
-        std::vector<decltype(max(v[0]))> maxs;
+        std::vector<decltype(maximum(v[0]))> maxs;
         maxs.reserve(v.size());
 
-        for (const auto &vec : v) maxs.push_back(max(vec));
+        for (const auto &vec : v) maxs.push_back(maximum(vec));
 
         return *std::ranges::max_element(maxs.begin(), maxs.end());
     }

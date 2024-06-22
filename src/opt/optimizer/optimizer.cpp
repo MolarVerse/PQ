@@ -28,7 +28,7 @@
 #include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-#include "stlVector.hpp"       // for max, rms
+#include "vector3d.hpp"        // for max, rms
 
 using namespace opt;
 using namespace physicalData;
