@@ -31,6 +31,7 @@
 #include "logOutput.hpp"                      // for LogOutput
 #include "mdEngine.hpp"                       // for MDEngine
 #include "momentumOutput.hpp"                 // for MomentumOutput
+#include "optEngine.hpp"                      // for OptEngine
 #include "outputFileSettings.hpp"             // for OutputFileSettings
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
@@ -124,5 +125,14 @@ void OutputFilesSetup::setup()
             mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile);
             mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile);
         }
+    }
+
+    if (Settings::isOptJobType())
+    {
+        auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
+
+        const auto optFileName = OutputFileSettings::getOptFileName();
+
+        optEngine.getOptOutput().setFilename(optFileName);
     }
 }

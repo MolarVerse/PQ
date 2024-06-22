@@ -79,6 +79,8 @@ namespace engine
 
         [[nodiscard]] pq::PhysicalData      &getPhysicalDataOld();
         [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
+
+        [[nodiscard]] output::OptOutput &getOptOutput();
     };
 
 }   // namespace engine

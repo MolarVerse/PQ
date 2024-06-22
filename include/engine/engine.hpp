@@ -151,6 +151,10 @@ namespace engine
         [[nodiscard]] pq::Virial       &getVirial();
         [[nodiscard]] pq::Potential    &getPotential();
 
+        /*************************
+         * output getter methods *
+         *************************/
+
         [[nodiscard]] EngineOutput          &getEngineOutput();
         [[nodiscard]] output::LogOutput     &getLogOutput();
         [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
@@ -161,6 +165,10 @@ namespace engine
         [[nodiscard]] output::InfoOutput       &getInfoOutput();
         [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
         [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+
+        /***********************
+         * get pointer methods *
+         ***********************/
 
         [[nodiscard]] pq::ForceField   *getForceFieldPtr();
         [[nodiscard]] pq::Potential    *getPotentialPtr();
