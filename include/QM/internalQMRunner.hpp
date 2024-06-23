@@ -42,6 +42,7 @@ namespace QM
         ~InternalQMRunner() override = default;
 
         void         run(pq::SimBox &, pq::PhysicalData &) override;
+        virtual void prepareAtoms(pq::SimBox &)                    = 0;
         void         execute() override                            = 0;
         virtual void collectData(pq::SimBox &, pq::PhysicalData &) = 0;
     };

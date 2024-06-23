@@ -1,0 +1,37 @@
+#ifndef _MACE_RUNNER_HPP_
+
+#define _MACE_RUNNER_HPP_
+
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+#include "internalQMRunner.hpp"   // for InternalQMRunner
+
+namespace QM
+{
+    /**
+     * @brief MaceRunner inherits from InternalQMRunner
+     *
+     */
+    class MaceRunner : public InternalQMRunner
+    {
+       private:
+        pybind11::object          _calculator;
+        pybind11::object          _atoms_module;
+        pybind11::array_t<double> _forces;
+        pybind11::array_t<double> _stress_tensor;
+        double                    _energy;
+
+       public:
+        MaceRunner();
+
+        ~MaceRunner() override = default;
+
+        void execute() override;
+        void prepareAtoms(pq::SimBox &) override;
+        void collectData(pq::SimBox &, pq::PhysicalData &) override;
+    };
+}   // namespace QM
+
+#endif   // _MACE_RUNNER_HPP_

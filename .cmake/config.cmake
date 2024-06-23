@@ -38,7 +38,7 @@ option(BUILD_WITH_MPI "Build with MPI" OFF)
 # ***********
 # BUILD TOOLS
 # ***********
-option(BUILD_WITH_PYTHON_BINDINGS "Build with python bindings" ON)
+option(BUILD_WITH_PYTHON_BINDINGS "Build with python bindings" OFF)
 
 # ***************
 # BUILD WITH IWYU
@@ -59,6 +59,12 @@ option(BUILD_WITH_DOCS "Build documentation" ON)
 # BUILD WITH BENCHMARKING
 # ***********************
 option(BUILD_WITH_BENCHMARKING "Build benchmarking" OFF)
+
+# **********************************************************
+# BULID_WITH_MACE - MACE is a library for machine learning
+# that is used in the ML module of the
+# *********************************************************
+option(BUILD_WITH_MACE "Build with MACE" ON)
 
 # **********************
 # BUILD WITH SINGULARITY

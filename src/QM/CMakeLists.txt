@@ -1,15 +1,18 @@
 set(source_files
     qmRunner.cpp
+
     externalQMRunner.cpp
+    internalQMRunner.cpp
+
     dftbplusRunner.cpp
     turbomoleRunner.cpp
     pyscfRunner.cpp
 )
 
-if(BUILD_WITH_PYTHON_BINDINGS)
+if(BUILD_WITH_MACE)
     set(source_files
         ${source_files}
-        internalQMRunner.cpp
+        maceRunner.cpp
     )
 endif()
 
@@ -31,6 +34,19 @@ target_link_libraries(QM
     physicalData
     exceptions
 )
+
+if(BUILD_WITH_MACE)
+    target_include_directories(QM
+        PUBLIC
+        ${pybind11_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(QM
+        PUBLIC
+        pybind11::embed
+        pybind11::module
+    )
+endif()
 
 if(BUILD_SHARED_LIBS)
     set(BUILD_STATIC "OFF")

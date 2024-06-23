@@ -21,3 +21,12 @@
 ******************************************************************************/
 
 #include "internalQMRunner.hpp"
+
+using QM::InternalQMRunner;
+
+void InternalQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
+{
+    prepareAtoms(simBox);
+    execute();
+    collectData(simBox, physicalData);
+}
