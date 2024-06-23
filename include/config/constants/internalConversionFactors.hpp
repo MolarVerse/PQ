@@ -36,19 +36,17 @@ namespace constants
     /**
      * @brief Conversion factors to SI units
      */
-    static constexpr double _FORCE_UNIT_TO_SI_ =
-        _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_METER_;
+    // clang-format off
+    static constexpr double _FORCE_UNIT_TO_SI_    = _KCAL_TO_J_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_M_;
     static constexpr double _MASS_UNIT_TO_SI_     = _AMU_TO_KG_;
     static constexpr double _TIME_UNIT_TO_SI_     = _FS_TO_S_;
-    static constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_METER_;
-    static constexpr double _ENERGY_UNIT_TO_SI_ =
-        _KCAL_TO_JOULE_ / _AVOGADRO_NUMBER_;
-    static constexpr double _VOLUME_UNIT_TO_SI_ =
-        _ANGSTROM_CUBIC_TO_METER_CUBIC_;
-    static constexpr double _PRESSURE_UNIT_TO_SI_ = _BAR_TO_PASCAL_;
-    static constexpr double _LENGTH_UNIT_TO_SI_   = _ANGSTROM_TO_METER_;
-    static constexpr double _MOMENTUM_UNIT_TO_SI_ =
-        _GRAM_TO_KG_ * _ANGSTROM_TO_METER_ / _AVOGADRO_NUMBER_;
+    static constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_M_;
+    static constexpr double _ENERGY_UNIT_TO_SI_   = _KCAL_TO_J_ / _AVOGADRO_NUMBER_;
+    static constexpr double _VOLUME_UNIT_TO_SI_   = _ANGSTROM3_TO_M3;
+    static constexpr double _PRESSURE_UNIT_TO_SI_ = _BAR_TO_P_;
+    static constexpr double _LENGTH_UNIT_TO_SI_   = _ANGSTROM_TO_M_;
+    static constexpr double _MOMENTUM_UNIT_TO_SI_ = _G_TO_KG_ * _ANGSTROM_TO_M_ / _AVOGADRO_NUMBER_;
+    // clang-format on
 
     /**
      * @brief Conversion factors to internal units
@@ -122,7 +120,7 @@ namespace constants
      * [eps0]   = F m⁻¹
      */
     static constexpr double _COULOMB_PREFACTOR_ =
-        1 / (4 * M_PI * _PERMITTIVITY_VACUUM_) * _ELECTRON_CHARGE_SQUARED_ *
+        1 / (4 * M_PI * _PERMITTIVITY_VACUUM_) * _ELECTRON_CHARGE2_ *
         _SI_TO_ENERGY_UNIT_ * _SI_TO_LENGTH_UNIT_;
 
     /**
@@ -131,8 +129,8 @@ namespace constants
      * @TODO: add details
      */
     static constexpr double _RPMD_PREFACTOR_ =
-        _BOLTZMANN_CONSTANT_SQUARED_ / _REDUCED_PLANCK_CONSTANT_SQUARED_ /
-        _METER_SQUARED_TO_ANGSTROM_SQUARED_ * _GRAM_TO_KG_ * _JOULE_TO_KCAL_;
+        _BOLTZMANN_CONSTANT2_ / _REDUCED_PLANCK_CONSTANT2_ / _M2_TO_ANGSTROM2_ *
+        _G_TO_KG_ * _J_TO_KCAL_;
 
     /**
      * @brief conversion factor for the momentum factor to force * s

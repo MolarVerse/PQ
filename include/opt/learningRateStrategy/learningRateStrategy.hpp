@@ -24,6 +24,12 @@
 
 #define _LEARNING_RATE_STRATEGY_HPP_
 
+#include <cstddef>    // for size_t
+#include <memory>     // for shared_ptr
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
+
 namespace engine
 {
     class OptEngine;   // forward declaration
@@ -41,15 +47,43 @@ namespace opt
     class LearningRateStrategy
     {
        protected:
+        size_t _frequency = 1;
+        size_t _counter   = 0;
         double _initialLearningRate;
+        double _learningRate;
+
+        double                _minLearningRate;
+        std::optional<double> _maxLearningRate;
+
+        std::vector<std::string> _warningMessages;
+        std::vector<std::string> _errorMessages;
 
        public:
-        explicit LearningRateStrategy(const double initialLearningRate);
+        explicit LearningRateStrategy(const double);
+        explicit LearningRateStrategy(const double, const size_t);
 
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
 
-        virtual double updateLearningRate() = 0;
+        virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
+
+        virtual void updateLearningRate() = 0;
+        void         checkLearningRate();
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] double                   getLearningRate() const;
+        [[nodiscard]] std::vector<std::string> getWarningMessages() const;
+        [[nodiscard]] std::vector<std::string> getErrorMessages() const;
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        void setMinLearningRate(const double);
+        void setMaxLearningRate(const std::optional<double>);
     };
 
 }   // namespace opt

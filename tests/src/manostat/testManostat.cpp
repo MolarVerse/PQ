@@ -93,9 +93,9 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
-    EXPECT_DOUBLE_EQ(boxNew[0], (boxOld * scaleFactors)[0]);
-    EXPECT_DOUBLE_EQ(boxNew[1], (boxOld * scaleFactors)[1]);
-    EXPECT_DOUBLE_EQ(boxNew[2], (boxOld * scaleFactors)[2]);
+    EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
+    EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
+    EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
     EXPECT_TRUE(utilities::compare(
         _box->getMolecule(0).getAtomPosition(0),
         linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,

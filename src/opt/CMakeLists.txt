@@ -11,9 +11,11 @@ target_include_directories(optimization
 
 target_link_libraries(optimization
     PUBLIC
+    PUBLIC
     learningRateStrategy
     optimizer
     evaluator
+    convergence
 )
 
 install(TARGETS optimization
@@ -23,3 +25,4 @@ install(TARGETS optimization
 add_subdirectory(learningRateStrategy)
 add_subdirectory(optimizer)
 add_subdirectory(evaluator)
+add_subdirectory(convergence)

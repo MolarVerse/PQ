@@ -19,7 +19,9 @@ add_library(inputFileParser
     inputFileParserTimings.cpp
     inputFileParserVirial.cpp
     inputFileParserFiles.cpp
-    inputFileParserOptimizer.cpp
+
+    optInputParser.cpp
+    convergenceInputParser.cpp
 )
 
 target_include_directories(inputFileParser

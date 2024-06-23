@@ -70,9 +70,9 @@ void RingPolymerQMMDEngine::takeStep()
 
     qmCalculation();
 
-    _constraints.applyDistanceConstraints(
-        _simulationBox,
-        _physicalData,
+    _constraints->applyDistanceConstraints(
+        *_simulationBox,
+        *_physicalData,
         calculateTotalSimulationTime()
     );
 

@@ -40,7 +40,8 @@ namespace opt
         MMEvaluator()          = default;
         virtual ~MMEvaluator() = default;
 
-        void updateForces() override;
+        pq::SharedEvaluator clone() const override;
+        void                evaluate() override;
     };
 
 }   // namespace opt

@@ -128,6 +128,11 @@ InputFileParserOutput::InputFileParserOutput(engine::Engine &engine)
         bind_front(&InputFileParserOutput::parseBoxFilename, this),
         false
     );
+    addKeyword(
+        std::string("opt_file"),
+        bind_front(&InputFileParserOutput::parseOptFilename, this),
+        false
+    );
 
     addKeyword(
         std::string("rpmd_restart_file"),
@@ -411,6 +416,22 @@ void InputFileParserOutput::parseBoxFilename(
 {
     checkCommand(lineElements, lineNumber);
     settings::OutputFileSettings::setBoxFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse optimization filename of simulation and add it to output
+ *
+ * @details default value is default.opt
+ *
+ * @param lineElements
+ */
+void InputFileParserOutput::parseOptFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    settings::OutputFileSettings::setOptFileName(lineElements[2]);
 }
 
 /**

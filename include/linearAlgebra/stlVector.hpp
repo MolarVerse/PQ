@@ -25,6 +25,7 @@
 #define _STL_VECTOR_HPP_
 
 #include <algorithm>   // for max_element
+#include <cmath>       // for sqrt
 #include <numeric>     // for accumulate
 #include <vector>      // for vector
 
@@ -81,6 +82,19 @@ namespace std
     T dot(const std::vector<T> &a, const std::vector<T> &b)
     {
         return std::inner_product(a.begin(), a.end(), b.begin(), T());
+    }
+
+    /**
+     * @brief root mean square of a vector
+     *
+     * @param a std::vector<T>
+     *
+     * @return T root mean square of a
+     */
+    template <typename T>
+    T rms(const std::vector<T> &a)
+    {
+        return std::sqrt(dot(a, a) / a.size());
     }
 
 }   // namespace std

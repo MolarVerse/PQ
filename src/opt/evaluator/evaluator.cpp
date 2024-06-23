@@ -22,116 +22,121 @@
 
 #include "evaluator.hpp"
 
+#include "celllist.hpp"
+#include "constraints.hpp"
+#include "forceFieldClass.hpp"
+#include "intraNonBonded.hpp"
+#include "physicalData.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
+#include "virial.hpp"
+
 using namespace opt;
+using namespace potential;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace forceField;
+using namespace intraNonBonded;
+using namespace virial;
+using namespace constraints;
 
 /***************************
- *                         *
  * standard setter methods *
- *                         *
  ***************************/
 
 /**
- * @brief set the potential
+ * @brief set the potential as shared pointer
  *
- * @param potential
+ * @param potential - std::shared_ptr<Potential>
  */
-void Evaluator::setPotential(
-    const std::shared_ptr<potential::Potential> potential
-)
+void Evaluator::setPotential(const std::shared_ptr<Potential> potential)
 {
     _potential = potential;
 }
 
 /**
- * @brief set the simulation box
+ * @brief set the cell list as shared pointer
  *
- * @param simBox
+ * @param cellList - std::shared_ptr<CellList>
  */
-void Evaluator::setSimulationBox(
-    const std::shared_ptr<simulationBox::SimulationBox> simBox
-)
-{
-    _simulationBox = simBox;
-}
-
-/**
- * @brief set the constraints
- *
- * @param constraints
- */
-void Evaluator::setConstraints(
-    const std::shared_ptr<constraints::Constraints> constraints
-)
-{
-    _constraints = constraints;
-}
-
-/**
- * @brief set the cell list
- *
- * @param cellList
- */
-void Evaluator::setCellList(
-    const std::shared_ptr<simulationBox::CellList> cellList
-)
+void Evaluator::setCellList(const std::shared_ptr<CellList> cellList)
 {
     _cellList = cellList;
 }
 
 /**
- * @brief set the force field
+ * @brief set the simulation box as shared pointer
  *
- * @param forceField
+ * @param simulationBox - std::shared_ptr<SimulationBox>
  */
-void Evaluator::setForceField(
-    const std::shared_ptr<forceField::ForceField> forceField
+void Evaluator::setSimulationBox(
+    const std::shared_ptr<SimulationBox> simulationBox
 )
 {
-    _forceField = forceField;
+    _simulationBox = simulationBox;
 }
 
 /**
- * @brief set the physical data
+ * @brief set the constraints as shared pointer
  *
- * @param potential
+ * @param constraints - std::shared_ptr<Constraints>
  */
-void Evaluator::setPhysicalData(
-    const std::shared_ptr<physicalData::PhysicalData> physicalData
+void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
+{
+    _constraints = constraints;
+}
+
+/**
+ * @brief set the physical data as shared pointer
+ *
+ * @param physicalData - std::shared_ptr<PhysicalData>
+ */
+void Evaluator::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;
 }
 
 /**
- * @brief set the old physical data
+ * @brief set the old physical data as shared pointer
  *
- * @param potential
+ * @param physicalData - std::shared_ptr<PhysicalData>
  */
 void Evaluator::setPhysicalDataOld(
-    const std::shared_ptr<physicalData::PhysicalData> physicalDataOld
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
-    _physicalDataOld = physicalDataOld;
+    _physicalDataOld = physicalData;
 }
 
 /**
- * @brief set the virial
+ * @brief set the force field as shared pointer
  *
- * @param virial
+ * @param forceField - std::shared_ptr<ForceField>
  */
-void Evaluator::setVirial(const std::shared_ptr<virial::Virial> virial)
+void Evaluator::setForceField(const std::shared_ptr<ForceField> forceField)
 {
-    _virial = virial;
+    _forceField = forceField;
 }
 
 /**
- * @brief set the intra non bonded
+ * @brief set the intra non bonded as shared pointer
  *
- * @param i
+ * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
  */
 void Evaluator::setIntraNonBonded(
-    const std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+    const std::shared_ptr<IntraNonBonded> intraNonBonded
 )
 {
     _intraNonBonded = intraNonBonded;
+}
+
+/**
+ * @brief set the virial as shared pointer
+ *
+ * @param virial - std::shared_ptr<Virial>
+ */
+void Evaluator::setVirial(const std::shared_ptr<Virial> virial)
+{
+    _virial = virial;
 }

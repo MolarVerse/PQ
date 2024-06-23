@@ -65,7 +65,7 @@ namespace constants
     /**
      * @brief electron charge squared in C²
      */
-    static constexpr double _ELECTRON_CHARGE_SQUARED_ =
+    static constexpr double _ELECTRON_CHARGE2_ =
         _ELECTRON_CHARGE_ * _ELECTRON_CHARGE_;
 
     /**

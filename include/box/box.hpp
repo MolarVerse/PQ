@@ -25,6 +25,7 @@
 #define _BOX_HPP_
 
 #include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
+#include "typeAliases.hpp"       // for diagonalMatrix
 #include "vector3d.hpp"          // for Vec3D
 
 namespace simulationBox
@@ -37,66 +38,52 @@ namespace simulationBox
      */
     class Box
     {
-      protected:
-        linearAlgebra::Vec3D _boxDimensions;
+       protected:
+        pq::Vec3D _boxDimensions;
 
         bool   _boxSizeHasChanged = false;
         double _volume;
 
-      public:
+       public:
         virtual ~Box() = default;
 
-        [[nodiscard]] virtual double               calculateVolume()                                                = 0;
-        [[nodiscard]] virtual linearAlgebra::Vec3D calculateShiftVector(const linearAlgebra::Vec3D &position) const = 0;
-        virtual void                               applyPBC(linearAlgebra::Vec3D &position) const                   = 0;
-        virtual void                               scaleBox(const linearAlgebra::tensor3D &scalingFactors)          = 0;
+        virtual void      applyPBC(pq::Vec3D &position) const          = 0;
+        virtual void      scaleBox(const pq::tensor3D &scalingFactors) = 0;
+        virtual double    calculateVolume()                            = 0;
+        virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const     = 0;
 
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *
          ******************************************************/
 
-        [[nodiscard]] virtual linearAlgebra::Vec3D                   getBoxAngles() const { return linearAlgebra::Vec3D(90.0); }
-        [[nodiscard]] virtual linearAlgebra::StaticMatrix3x3<double> getBoxMatrix() const
-        {
-            return diagonalMatrix(_boxDimensions);
-        }
+        virtual void setBoxDimensions(const pq::Vec3D &boxDimensions);
 
-        [[nodiscard]] virtual linearAlgebra::Vec3D transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &position) const
-        {
-            return position;
-        }
-        [[nodiscard]] virtual linearAlgebra::tensor3D transformIntoOrthogonalSpace(const linearAlgebra::tensor3D &position) const
-        {
-            return position;
-        }
-        [[nodiscard]] virtual linearAlgebra::Vec3D transformIntoSimulationSpace(const linearAlgebra::Vec3D &position) const
-        {
-            return position;
-        }
-        [[nodiscard]] virtual linearAlgebra::tensor3D transformIntoSimulationSpace(const linearAlgebra::tensor3D &position) const
-        {
-            return position;
-        }
+        [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
+        [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
-        virtual void setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions) { _boxDimensions = boxDimensions; }
+        [[nodiscard]] virtual pq::Vec3D toOrthoSpace(const pq::Vec3D &) const;
+        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(const pq::tensor3D &)
+            const;
+
+        [[nodiscard]] virtual pq::Vec3D    toSimSpace(const pq::Vec3D &) const;
+        [[nodiscard]] virtual pq::tensor3D toSimSpace(const pq::tensor3D &)
+            const;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
-
-        [[nodiscard]] double getVolume() const { return _volume; }
-        [[nodiscard]] double getMinimalBoxDimension() const { return minimum(_boxDimensions); }
-
-        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const { return _boxDimensions; }
+        [[nodiscard]] bool      getBoxSizeHasChanged() const;
+        [[nodiscard]] double    getVolume() const;
+        [[nodiscard]] double    getMinimalBoxDimension() const;
+        [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
         /********************
          * standard setters *
          ********************/
 
-        void setVolume(const double volume) { _volume = volume; }
-        void setBoxSizeHasChanged(const bool boxSizeHasChanged) { _boxSizeHasChanged = boxSizeHasChanged; }
+        void setVolume(const double volume);
+        void setBoxSizeHasChanged(const bool boxSizeHasChanged);
     };
 
 }   // namespace simulationBox

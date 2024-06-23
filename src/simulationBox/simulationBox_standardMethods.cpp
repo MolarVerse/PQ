@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "simulationBox.hpp"
 
 using namespace simulationBox;
@@ -166,6 +188,40 @@ MoleculeType &SimulationBox::getMoleculeType(const size_t index)
 }
 
 /**
+ * @brief get atomic scalar forces
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::getAtomicScalarForces() const
+{
+    std::vector<double> atomicScalarForces;
+
+    for (const auto &atom : _atoms)
+    {
+        atomicScalarForces.push_back(norm(atom->getForce()));
+    }
+
+    return atomicScalarForces;
+}
+
+/**
+ * @brief get atomic scalar forces old
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
+{
+    std::vector<double> atomicScalarForces;
+
+    for (const auto &atom : _atoms)
+    {
+        atomicScalarForces.push_back(norm(atom->getForceOld()));
+    }
+
+    return atomicScalarForces;
+}
+
+/**
  * @brief get all atoms
  *
  * @return std::vector<std::shared_ptr<Atom>>&
@@ -246,6 +302,48 @@ std::shared_ptr<Box> SimulationBox::getBoxPtr() { return _box; }
  * @return std::shared_ptr<Box>
  */
 std::shared_ptr<Box> SimulationBox::getBoxPtr() const { return _box; }
+
+/**
+ * @brief get all positions of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
+{
+    std::vector<linearAlgebra::Vec3D> positions;
+
+    for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
+
+    return positions;
+}
+
+/**
+ * @brief get all velocities of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
+{
+    std::vector<linearAlgebra::Vec3D> velocities;
+
+    for (const auto &atom : _atoms) velocities.push_back(atom->getVelocity());
+
+    return velocities;
+}
+
+/**
+ * @brief get all forces of all atoms
+ *
+ * @return std::vector<linearAlgebra::Vec3D>
+ */
+std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
+{
+    std::vector<linearAlgebra::Vec3D> forces;
+
+    for (const auto &atom : _atoms) forces.push_back(atom->getForce());
+
+    return forces;
+}
 
 /***************************
  *                         *

@@ -48,37 +48,37 @@ using engine::QMMDEngine;
  */
 void QMMDEngine::takeStep()
 {
-    _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+    _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
-    _integrator->firstStep(_simulationBox);
+    _integrator->firstStep(*_simulationBox);
 
-    _constraints.applyShake(_simulationBox);
+    _constraints->applyShake(*_simulationBox);
 
-    _qmRunner->run(_simulationBox, _physicalData);
+    _qmRunner->run(*_simulationBox, *_physicalData);
 
-    _constraints.applyDistanceConstraints(
-        _simulationBox,
-        _physicalData,
+    _constraints->applyDistanceConstraints(
+        *_simulationBox,
+        *_physicalData,
         calculateTotalSimulationTime()
     );
 
-    _constraints.calculateConstraintBondRefs(_simulationBox);
+    _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _thermostat->applyThermostatOnForces(_simulationBox);
+    _thermostat->applyThermostatOnForces(*_simulationBox);
 
-    _integrator->secondStep(_simulationBox);
+    _integrator->secondStep(*_simulationBox);
 
-    _constraints.applyRattle(_simulationBox);
+    _constraints->applyRattle(*_simulationBox);
 
-    _thermostat->applyThermostat(_simulationBox, _physicalData);
+    _thermostat->applyThermostat(*_simulationBox, *_physicalData);
 
-    _physicalData.calculateKinetics(_simulationBox);
+    _physicalData->calculateKinetics(*_simulationBox);
 
-    _manostat->applyManostat(_simulationBox, _physicalData);
+    _manostat->applyManostat(*_simulationBox, *_physicalData);
 
-    _resetKinetics.reset(_step, _physicalData, _simulationBox);
+    _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
 
     _thermostat->applyTemperatureRamping();
 
-    _physicalData.setNumberOfQMAtoms(_simulationBox.getNumberOfQMAtoms());
+    _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
 }

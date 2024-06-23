@@ -13,6 +13,7 @@ add_library(settings
     ringPolymerSettings.cpp
     outputFileSettings.cpp
     optimizerSettings.cpp
+    convergenceSettings.cpp
 )
 
 target_include_directories(settings

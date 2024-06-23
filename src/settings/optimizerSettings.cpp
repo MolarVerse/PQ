@@ -51,7 +51,7 @@ std::string settings::string(const LearningRateStrategy method)
     switch (method)
     {
         case LearningRateStrategy::CONSTANT: return "CONSTANT";
-        case LearningRateStrategy::DECAY: return "DECAY";
+        case LearningRateStrategy::CONSTANT_DECAY: return "CONSTANT-DECAY";
 
         default: return "none";
     }
@@ -95,8 +95,8 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
     if ("constant" == method)
         setLearningRateStrategy(LearningRateStrategy::CONSTANT);
-    else if ("decay" == method)
-        setLearningRateStrategy(LearningRateStrategy::DECAY);
+    else if ("constant-decay" == method)
+        setLearningRateStrategy(LearningRateStrategy::CONSTANT_DECAY);
     else
         setLearningRateStrategy(LearningRateStrategy::NONE);
 }
@@ -114,17 +114,6 @@ void OptimizerSettings::setLearningRateStrategy(
 }
 
 /**
- * @brief sets the initial learning rate
- *
- * @param learningRate
- */
-void OptimizerSettings::setInitialLearningRate(const double learningRate)
-{
-    _initialLearningRate      = learningRate;
-    _isInitialLearningRateSet = true;
-}
-
-/**
  * @brief sets the number of epochs
  *
  * @param nEpochs
@@ -132,6 +121,56 @@ void OptimizerSettings::setInitialLearningRate(const double learningRate)
 void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
 {
     _nEpochs = nEpochs;
+}
+
+/**
+ * @brief sets the learning rate update frequency
+ *
+ * @param frequency
+ */
+void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
+{
+    _LRupdateFrequency = frequency;
+}
+
+/**
+ * @brief sets the initial learning rate
+ *
+ * @param learningRate
+ */
+void OptimizerSettings::setInitialLearningRate(const double learningRate)
+{
+    _initialLearningRate = learningRate;
+}
+
+/**
+ * @brief sets the learning rate decay
+ *
+ * @param decay
+ */
+void OptimizerSettings::setLearningRateDecay(const double decay)
+{
+    _learningRateDecay = decay;
+}
+
+/**
+ * @brief sets the min learning rate
+ *
+ * @param minLearningRate
+ */
+void OptimizerSettings::setMinLearningRate(const double minLearningRate)
+{
+    _minLearningRate = minLearningRate;
+}
+
+/**
+ * @brief sets the max learning rate
+ *
+ * @param maxLearningRate
+ */
+void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
+{
+    _maxLearningRate = maxLearningRate;
 }
 
 /***************************
@@ -145,7 +184,7 @@ void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
  *
  * @return Optimizer
  */
-Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
+settings::Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
 
 /**
  * @brief returns the learning rate strategy as string
@@ -158,6 +197,20 @@ LearningRateStrategy OptimizerSettings::getLearningRateStrategy()
 }
 
 /**
+ * @brief returns the number of epochs
+ *
+ * @return size_t
+ */
+size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+
+/**
+ * @brief returns the learning rate update frequency
+ *
+ * @return size_t
+ */
+size_t OptimizerSettings::getLRUpdateFrequency() { return _LRupdateFrequency; }
+
+/**
  * @brief returns the initial learning rate
  *
  * @return double
@@ -168,8 +221,28 @@ double OptimizerSettings::getInitialLearningRate()
 }
 
 /**
- * @brief returns the number of epochs
+ * @brief returns the min learning rate
  *
- * @return size_t
+ * @return double
  */
-size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+double OptimizerSettings::getMinLearningRate() { return _minLearningRate; }
+
+/**
+ * @brief returns the learning rate decay
+ *
+ * @return std::optional<double>
+ */
+std::optional<double> OptimizerSettings::getLearningRateDecay()
+{
+    return _learningRateDecay;
+}
+
+/**
+ * @brief returns the max learning rate
+ *
+ * @return std::optional<double>
+ */
+std::optional<double> OptimizerSettings::getMaxLearningRate()
+{
+    return _maxLearningRate;
+}

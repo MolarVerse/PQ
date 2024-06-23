@@ -24,6 +24,10 @@
 
 #define _TEST_VIRIAL_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
@@ -31,23 +35,20 @@
 #include "vector3d.hpp"        // for Vec3D
 #include "virial.hpp"          // for Virial
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
-
 class TestVirial : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
-        _virial = new virial::Virial();
+        _virial = new virial::VirialAtomic();
         _data   = new physicalData::PhysicalData();
 
         _simulationBox = new simulationBox::SimulationBox();
 
         auto molecule1 = simulationBox::Molecule();
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<simulationBox::Atom>();
+        const auto atom2 = std::make_shared<simulationBox::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -75,7 +76,8 @@ class TestVirial : public ::testing::Test
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
 
-        _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0)
+        );
     }
 
     void TearDown() override

@@ -31,6 +31,7 @@
 #include "logOutput.hpp"                      // for LogOutput
 #include "mdEngine.hpp"                       // for MDEngine
 #include "momentumOutput.hpp"                 // for MomentumOutput
+#include "optEngine.hpp"                      // for OptEngine
 #include "outputFileSettings.hpp"             // for OutputFileSettings
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
@@ -40,6 +41,7 @@
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 
 using setup::OutputFilesSetup;
+using namespace settings;
 
 /**
  * @brief wrapper function to setup output files
@@ -61,96 +63,76 @@ void setup::setupOutputFiles(engine::Engine &engine)
  */
 void OutputFilesSetup::setup()
 {
-    if (settings::OutputFileSettings::isFilePrefixSet())
-        settings::OutputFileSettings::replaceDefaultValues(
-            settings::OutputFileSettings::getFilePrefix()
-        );
+    const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
+    auto       prefix      = std::string();
+
+    if (isPrefixSet)
+        prefix = OutputFileSettings::getFilePrefix();
     else
+        prefix = OutputFileSettings::determineMostCommonPrefix();
+
+    OutputFileSettings::replaceDefaultValues(prefix);
+
+    const auto logFileName     = OutputFileSettings::getLogFileName();
+    const auto timingsFileName = OutputFileSettings::getTimingsFileName();
+    const auto restartFileName = OutputFileSettings::getRestartFileName();
+    const auto energyFileName  = OutputFileSettings::getEnergyFileName();
+    const auto xyzFileName     = OutputFileSettings::getTrajectoryFileName();
+    const auto infoFileName    = OutputFileSettings::getInfoFileName();
+    const auto forceFileName   = OutputFileSettings::getForceFileName();
+
+    _engine.getLogOutput().setFilename(logFileName);
+    _engine.getTimingsOutput().setFilename(timingsFileName);
+    _engine.getRstFileOutput().setFilename(restartFileName);
+    _engine.getEnergyOutput().setFilename(energyFileName);
+    _engine.getXyzOutput().setFilename(xyzFileName);
+    _engine.getInfoOutput().setFilename(infoFileName);
+    _engine.getForceOutput().setFilename(forceFileName);
+
+    if (Settings::isMDJobType())
     {
-        const auto prefix =
-            settings::OutputFileSettings::determineMostCommonPrefix();
-        settings::OutputFileSettings::replaceDefaultValues(prefix);
+        auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
+
+        const auto instEnFile = OutputFileSettings::getInstantEnergyFileName();
+        const auto velFile    = OutputFileSettings::getVelocityFileName();
+        const auto chargeFile = OutputFileSettings::getChargeFileName();
+        const auto momFile    = OutputFileSettings::getMomentumFileName();
+        const auto virialFile = OutputFileSettings::getVirialFileName();
+        const auto stressFile = OutputFileSettings::getStressFileName();
+        const auto boxFile    = OutputFileSettings::getBoxFileName();
+
+        mdEngine.getInstantEnergyOutput().setFilename(instEnFile);
+        mdEngine.getVelOutput().setFilename(velFile);
+        mdEngine.getChargeOutput().setFilename(chargeFile);
+        mdEngine.getMomentumOutput().setFilename(momFile);
+        mdEngine.getVirialOutput().setFilename(virialFile);
+        mdEngine.getStressOutput().setFilename(stressFile);
+        mdEngine.getBoxFileOutput().setFilename(boxFile);
+
+        if (Settings::isRingPolymerMDActivated())
+        {
+            const auto RstFile = OutputFileSettings::getRPMDRestartFileName();
+            const auto xyzFile = OutputFileSettings::getRPMDTrajFileName();
+            const auto velFile = OutputFileSettings::getRPMDVelocityFileName();
+            const auto forceFile  = OutputFileSettings::getRPMDForceFileName();
+            const auto chargeFile = OutputFileSettings::getRPMDChargeFileName();
+            const auto energyFile = OutputFileSettings::getRPMDEnergyFileName();
+
+            mdEngine.getRingPolymerRstFileOutput().setFilename(RstFile);
+            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile);
+            mdEngine.getRingPolymerVelOutput().setFilename(velFile);
+            mdEngine.getRingPolymerForceOutput().setFilename(forceFile);
+            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile);
+            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile);
+        }
     }
 
-    _engine.getLogOutput().setFilename(
-        settings::OutputFileSettings::getLogFileName()
-    );
-
-    _engine.getTimingsOutput().setFilename(
-        settings::OutputFileSettings::getTimingsFileName()
-    );
-
-    if (settings::Settings::isMDJobType())
+    if (Settings::isOptJobType())
     {
-        dynamic_cast<engine::MDEngine &>(_engine)
-            .getRstFileOutput()
-            .setFilename(settings::OutputFileSettings::getRestartFileName());
-        dynamic_cast<engine::MDEngine &>(_engine).getEnergyOutput().setFilename(
-            settings::OutputFileSettings::getEnergyFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine)
-            .getInstantEnergyOutput()
-            .setFilename(settings::OutputFileSettings::getInstantEnergyFileName(
-            ));
-        dynamic_cast<engine::MDEngine &>(_engine).getXyzOutput().setFilename(
-            settings::OutputFileSettings::getTrajectoryFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine).getInfoOutput().setFilename(
-            settings::OutputFileSettings::getInfoFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine).getVelOutput().setFilename(
-            settings::OutputFileSettings::getVelocityFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine).getForceOutput().setFilename(
-            settings::OutputFileSettings::getForceFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine).getChargeOutput().setFilename(
-            settings::OutputFileSettings::getChargeFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine)
-            .getMomentumOutput()
-            .setFilename(settings::OutputFileSettings::getMomentumFileName());
-        dynamic_cast<engine::MDEngine &>(_engine).getVirialOutput().setFilename(
-            settings::OutputFileSettings::getVirialFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine).getStressOutput().setFilename(
-            settings::OutputFileSettings::getStressFileName()
-        );
-        dynamic_cast<engine::MDEngine &>(_engine)
-            .getBoxFileOutput()
-            .setFilename(settings::OutputFileSettings::getBoxFileName());
+        auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
-        if (settings::Settings::isRingPolymerMDActivated())
-        {
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerRstFileOutput()
-                .setFilename(
-                    settings::OutputFileSettings::getRingPolymerRestartFileName(
-                    )
-                );
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerXyzOutput()
-                .setFilename(settings::OutputFileSettings::
-                                 getRingPolymerTrajectoryFileName());
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerVelOutput()
-                .setFilename(settings::OutputFileSettings::
-                                 getRingPolymerVelocityFileName());
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerForceOutput()
-                .setFilename(
-                    settings::OutputFileSettings::getRingPolymerForceFileName()
-                );
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerChargeOutput()
-                .setFilename(
-                    settings::OutputFileSettings::getRingPolymerChargeFileName()
-                );
-            dynamic_cast<engine::MDEngine &>(_engine)
-                .getRingPolymerEnergyOutput()
-                .setFilename(
-                    settings::OutputFileSettings::getRingPolymerEnergyFileName()
-                );
-        }
+        const auto optFileName = OutputFileSettings::getOptFileName();
+
+        optEngine.getOptOutput().setFilename(optFileName);
     }
 }

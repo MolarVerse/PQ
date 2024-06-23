@@ -22,12 +22,12 @@
 
 #include "momentumOutput.hpp"
 
-#include "physicalData.hpp"   // for PhysicalData
-#include "vector3d.hpp"       // for Vec3D, norm
-
 #include <format>    // for format
 #include <fstream>   // for basic_ostream, ofstream
 #include <string>    // for operator<<
+
+#include "physicalData.hpp"   // for PhysicalData
+#include "vector3d.hpp"       // for Vec3D, norm
 
 using output::MomentumOutput;
 
@@ -48,7 +48,10 @@ using output::MomentumOutput;
  * @param step
  * @param data
  */
-void MomentumOutput::write(const size_t step, const physicalData::PhysicalData &data)
+void MomentumOutput::write(
+    const size_t                      step,
+    const physicalData::PhysicalData &data
+)
 {
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));

@@ -33,11 +33,23 @@
 using namespace opt;
 
 /**
+ * @brief clones the evaluator
+ *
+ */
+std::shared_ptr<Evaluator> MMEvaluator::clone() const
+{
+    return std::make_shared<MMEvaluator>(*this);
+}
+
+/**
  * @brief update forces
  *
  */
-void MMEvaluator::updateForces()
+void MMEvaluator::evaluate()
 {
+    _physicalDataOld->copy(*_physicalData);
+    _simulationBox->updateOldForces();
+
     // _constraints->applyShake(_simulationBox);
 
     _cellList->updateCellList(*_simulationBox);
@@ -61,7 +73,4 @@ void MMEvaluator::updateForces()
     // _virial->intraMolecularVirialCorrection(_simulationBox, _physicalData);
 
     // _constraints.applyRattle(_simulationBox);
-
-    _physicalDataOld->copy(*_physicalData);
-    _simulationBox->updateOldForces();
 }

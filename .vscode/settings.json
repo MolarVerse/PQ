@@ -112,7 +112,9 @@
         "__bit_reference": "cpp",
         "engine.hpp": "c",
         "nnls": "cpp",
-        "nonlinearoptimization": "cpp"
+        "nonlinearoptimization": "cpp",
+        "sparseextra": "cpp",
+        "alignedvector3": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -121,6 +123,7 @@
     ],
     "cSpell.words": [
         "Allman",
+        "ARMIN",
         "Berendsen",
         "CELLLISTEXCEPTION",
         "chrg",
@@ -163,6 +166,7 @@
         "mshake",
         "MSHAKEFILEEXCEPTION",
         "mtest",
+        "Multipliable",
         "Neighbouring",
         "Neighbours",
         "noncoulomb",

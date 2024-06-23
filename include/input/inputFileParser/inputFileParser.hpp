@@ -31,6 +31,8 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "typeAliases.hpp"   // for strings. ParseFunc
+
 namespace engine
 {
     class Engine;   // Forward declaration
@@ -38,13 +40,12 @@ namespace engine
 
 namespace input
 {
-    using strings = std::vector<std::string>;
-
     void checkEqualSign(const std::string_view &, const size_t);
-    void checkCommand(const strings &, const size_t);
-    void checkCommandArray(const strings &, const size_t);
+    void checkCommand(const pq::strings &, const size_t);
+    void checkCommandArray(const pq::strings &, const size_t);
 
-    using ParseFunc = std::function<void(const strings &, const size_t)>;
+    // special type definition for the parsing functions
+    using ParseFunc = std::function<void(const pq::strings &, const size_t)>;
 
     /**
      * @class InputFileParser

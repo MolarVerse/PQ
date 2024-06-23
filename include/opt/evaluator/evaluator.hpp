@@ -26,53 +26,10 @@
 
 #include <memory>   // for shared_ptr
 
-namespace constraints
-{
-    class Constraints;   // forward declaration
-}   // namespace constraints
-
-namespace forceField
-{
-    class ForceField;   // forward declaration
-}   // namespace forceField
-
-namespace intraNonBonded
-{
-    class IntraNonBonded;   // forward declaration
-}   // namespace intraNonBonded
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}   // namespace physicalData
-
-namespace potential
-{
-    class Potential;   // forward declaration
-}   // namespace potential
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class CellList;        // forward declaration
-}   // namespace simulationBox
-
-namespace virial
-{
-    class Virial;   // forward declaration
-}   // namespace virial
+#include "typeAliases.hpp"
 
 namespace opt
 {
-    using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
-    using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedForceField   = std::shared_ptr<forceField::ForceField>;
-    using SharedPotential    = std::shared_ptr<potential::Potential>;
-    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
-    using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
-    using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-    using SharedVirial       = std::shared_ptr<virial::Virial>;
-
     /**
      * @class Evaluator
      *
@@ -83,35 +40,36 @@ namespace opt
     class Evaluator
     {
        protected:
-        std::shared_ptr<potential::Potential>           _potential;
-        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
-        std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<simulationBox::CellList>        _cellList;
-        std::shared_ptr<forceField::ForceField>         _forceField;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
-        std::shared_ptr<virial::Virial>                 _virial;
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        pq::SharedPotential    _potential;
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedConstraints  _constraints;
+        pq::SharedCellList     _cellList;
+        pq::SharedForceField   _forceField;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedPhysicalData _physicalDataOld;
+        pq::SharedVirial       _virial;
+        pq::SharedIntraNonBond _intraNonBonded;
 
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual void updateForces() = 0;
+        virtual pq::SharedEvaluator clone() const = 0;
+        virtual void                evaluate()    = 0;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setPotential(const SharedPotential);
-        void setSimulationBox(const SharedSimBox);
-        void setConstraints(const SharedConstraints);
-        void setCellList(const SharedCellList);
-        void setForceField(const SharedForceField);
-        void setPhysicalData(const SharedPhysicalData);
-        void setPhysicalDataOld(const SharedPhysicalData);
-        void setVirial(const SharedVirial);
-        void setIntraNonBonded(const SharedIntraNonBond);
+        void setPotential(const pq::SharedPotential);
+        void setCellList(const pq::SharedCellList);
+        void setSimulationBox(const pq::SharedSimBox);
+        void setConstraints(const pq::SharedConstraints);
+        void setPhysicalData(const pq::SharedPhysicalData);
+        void setPhysicalDataOld(const pq::SharedPhysicalData);
+        void setForceField(const pq::SharedForceField);
+        void setVirial(const pq::SharedVirial);
+        void setIntraNonBonded(const pq::SharedIntraNonBond);
     };
 
 }   // namespace opt

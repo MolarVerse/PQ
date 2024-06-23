@@ -36,6 +36,23 @@ using namespace opt;
 SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
 
 /**
+ * @brief clone the optimizer
+ *
+ * @return std::shared_ptr<Optimizer>
+ */
+std::shared_ptr<Optimizer> SteepestDescent::clone() const
+{
+    return std::make_shared<SteepestDescent>(*this);
+}
+
+/**
+ * @brief get the maximum history length
+ *
+ * @return size_t
+ */
+size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
+
+/**
  * @brief update the optimizer
  *
  * @param learningRate
@@ -48,6 +65,7 @@ void SteepestDescent::update(const double learningRate)
     {
         const auto force = atom->getForce();
 
-        atom->addPosition(-learningRate * force);
+        atom->setPositionOld(atom->getPosition());
+        atom->addPosition(learningRate * force);
     }
 }

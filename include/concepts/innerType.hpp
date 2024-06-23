@@ -20,54 +20,53 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_TPP_
+#ifndef _INNER_TYPE_HPP_
 
-#define _OPT_ENGINE_TPP_
+#define _INNER_TYPE_HPP_
 
-#include "optEngine.hpp"
+#include <concepts>
 
-namespace engine
+#include "base.hpp"
+
+namespace pq
 {
-    /***************************************
-     *                                     *
-     * standard make smart pointer methods *
-     *                                     *
-     ***************************************/
-
     /**
-     * @brief make shared_ptr for optimizer
+     * @brief type trait to determine the inner type of a template class
      *
      * @tparam T
-     * @param optimizer
      */
     template <typename T>
-    inline void OptEngine::makeOptimizer(T optimizer)
+    struct InnerType
     {
-        _optimizer = std::make_shared<T>(optimizer);
-    }
+        using type = T;
+    };
 
     /**
-     * @brief set the learning rate strategy from a shared pointer
+     * @brief type trait to determine the inner type of a template class
      *
-     * @param strategy
+     * @details specialization for template classes
+     *
+     * @tparam TemplateClass
+     * @tparam T
      */
-    template <typename T>
-    inline void OptEngine::makeLearningRateStrategy(T strategy)
+    template <template <typename> class TemplateClass, typename T>
+    struct InnerType<TemplateClass<T>>
     {
-        _learningRateStrategy = std::make_shared<T>(strategy);
-    }
+        using type = typename InnerType<T>::type;
+    };
 
     /**
-     * @brief set the evaluator from a shared pointer
+     * @brief The inner type of a template class
      *
-     * @param evaluator
+     * @tparam T
      */
     template <typename T>
-    inline void OptEngine::makeEvaluator(T evaluator)
-    {
-        _evaluator = std::make_shared<T>(evaluator);
-    }
+    using InnerType_t = typename InnerType<T>::type;
 
-}   // namespace engine
+    // Check if the inner type of a template class is arithmetic
+    template <typename T>
+    constexpr bool is_InnerType_arithmetic_v = is_arithmetic_v<InnerType_t<T>>;
 
-#endif   // _OPT_ENGINE_TPP_
+}   // namespace pq
+
+#endif   // _INNER_TYPE_HPP_

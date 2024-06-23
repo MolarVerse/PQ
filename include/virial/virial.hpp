@@ -64,6 +64,8 @@ namespace virial
        public:
         virtual ~Virial() = default;
 
+        virtual std::shared_ptr<Virial> clone() const = 0;
+
         virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &) {
         };
@@ -93,6 +95,8 @@ namespace virial
        public:
         VirialMolecular() : Virial() { _virialType = "molecular"; }
 
+        std::shared_ptr<Virial> clone() const override;
+
         void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &)
             override;
         void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &)
@@ -112,6 +116,8 @@ namespace virial
     {
        public:
         VirialAtomic() : Virial() { _virialType = "atomic"; }
+
+        std::shared_ptr<Virial> clone() const override;
     };
 
 }   // namespace virial

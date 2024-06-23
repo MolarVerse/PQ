@@ -18,6 +18,8 @@ add_library(output
     ringPolymerTrajectoryOutput.cpp
     ringPolymerEnergyOutput.cpp
 
+    optOutput.cpp
+
     timingsOutput.cpp
 )
 
@@ -32,6 +34,7 @@ target_link_libraries(output
     utilities
     physicalData
     simulationBox
+    optimization
     settings
 )
 

@@ -169,31 +169,11 @@ void AtomSection::processAtomLine(
     simulationBox::Molecule      &molecule
 ) const
 {
-    const auto atom = std::make_shared<simulationBox::Atom>();
+    auto atom = std::make_shared<simulationBox::Atom>();
 
     atom->setAtomTypeName(lineElements[0]);
 
-    const auto x = stod(lineElements[3]);
-    const auto y = stod(lineElements[4]);
-    const auto z = stod(lineElements[5]);
-
-    const auto vx = stod(lineElements[6]);
-    const auto vy = stod(lineElements[7]);
-    const auto vz = stod(lineElements[8]);
-
-    const auto fx = stod(lineElements[9]);
-    const auto fy = stod(lineElements[10]);
-    const auto fz = stod(lineElements[11]);
-
-    const auto oldX = (lineElements.size() == 21) ? stod(lineElements[12]) : x;
-    const auto oldY = (lineElements.size() == 21) ? stod(lineElements[13]) : y;
-    const auto oldZ = (lineElements.size() == 21) ? stod(lineElements[14]) : z;
-
-    atom->setPosition({x, y, z});
-    atom->setVelocity({vx, vy, vz});
-    atom->setForce({fx, fy, fz});
-
-    atom->setPositionOld({oldX, oldY, oldZ});
+    setAtomPropertyVectors(lineElements, atom);
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
@@ -215,7 +195,7 @@ void AtomSection::processQMAtomLine(
     simulationBox::SimulationBox &simBox
 )
 {
-    const auto atom     = std::make_shared<simulationBox::Atom>();
+    auto       atom     = std::make_shared<simulationBox::Atom>();
     const auto molecule = std::make_unique<simulationBox::Molecule>(0);
 
     molecule->setName("QM");
@@ -224,27 +204,7 @@ void AtomSection::processQMAtomLine(
     atom->setAtomTypeName(lineElements[0]);
     atom->setName(lineElements[0]);
 
-    const auto x = stod(lineElements[3]);
-    const auto y = stod(lineElements[4]);
-    const auto z = stod(lineElements[5]);
-
-    const auto vx = stod(lineElements[6]);
-    const auto vy = stod(lineElements[7]);
-    const auto vz = stod(lineElements[8]);
-
-    const auto fx = stod(lineElements[9]);
-    const auto fy = stod(lineElements[10]);
-    const auto fz = stod(lineElements[11]);
-
-    const auto oldX = (lineElements.size() == 21) ? stod(lineElements[12]) : x;
-    const auto oldY = (lineElements.size() == 21) ? stod(lineElements[13]) : y;
-    const auto oldZ = (lineElements.size() == 21) ? stod(lineElements[14]) : z;
-
-    atom->setPosition({x, y, z});
-    atom->setVelocity({vx, vy, vz});
-    atom->setForce({fx, fy, fz});
-
-    atom->setPositionOld({oldX, oldY, oldZ});
+    setAtomPropertyVectors(lineElements, atom);
 
     atom->setQMOnly(true);
     molecule->setQMOnly(true);
@@ -288,6 +248,69 @@ void AtomSection::checkAtomLine(
 }
 
 /**
+ * @brief sets the atom properties from the line elements
+ *
+ * @param lineElements
+ * @param atom
+ */
+void AtomSection::setAtomPropertyVectors(
+    std::vector<std::string>             &lineElements,
+    std::shared_ptr<simulationBox::Atom> &atom
+) const
+{
+    const auto x = stod(lineElements[3]);
+    const auto y = stod(lineElements[4]);
+    const auto z = stod(lineElements[5]);
+
+    atom->setPosition({x, y, z});
+
+    if (lineElements.size() > 6)
+    {
+        const auto vx = stod(lineElements[6]);
+        const auto vy = stod(lineElements[7]);
+        const auto vz = stod(lineElements[8]);
+
+        atom->setVelocity({vx, vy, vz});
+    }
+
+    if (lineElements.size() > 9)
+    {
+        const auto fx = stod(lineElements[9]);
+        const auto fy = stod(lineElements[10]);
+        const auto fz = stod(lineElements[11]);
+
+        atom->setForce({fx, fy, fz});
+    }
+
+    if (lineElements.size() > 12)
+    {
+        const auto oldX = stod(lineElements[12]);
+        const auto oldY = stod(lineElements[13]);
+        const auto oldZ = stod(lineElements[14]);
+
+        atom->setPositionOld({oldX, oldY, oldZ});
+    }
+
+    if (lineElements.size() > 15)
+    {
+        const auto oldVx = stod(lineElements[15]);
+        const auto oldVy = stod(lineElements[16]);
+        const auto oldVz = stod(lineElements[17]);
+
+        atom->setVelocityOld({oldVx, oldVy, oldVz});
+    }
+
+    if (lineElements.size() > 18)
+    {
+        const auto oldFx = stod(lineElements[18]);
+        const auto oldFy = stod(lineElements[19]);
+        const auto oldFz = stod(lineElements[20]);
+
+        atom->setForceOld({oldFx, oldFy, oldFz});
+    }
+}
+
+/**
  * @brief checks if the number of elements in the line is correct. The atom
  * section must have 12 or 21 elements.
  *
@@ -300,9 +323,12 @@ void AtomSection::checkNumberOfLineArguments(
     std::vector<std::string> &lineElements
 ) const
 {
-    if ((lineElements.size() != 21) && (lineElements.size() != 12))
+    const auto lineSize = lineElements.size();
+
+    if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
         throw customException::RstFileException(std::format(
-            "Error in line {}: Atom section must have 12 or 21 elements",
+            "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
+            "21 elements",
             _lineNumber
         ));
 }

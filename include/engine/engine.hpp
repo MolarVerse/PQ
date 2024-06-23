@@ -36,6 +36,7 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
+#include "typeAliases.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
@@ -72,10 +73,6 @@ namespace engine
     using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
     using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
 
-    using UniqueVirial    = std::unique_ptr<virial::Virial>;
-    using UniquePotential = std::unique_ptr<potential::Potential>;
-    using BruteForce      = potential::PotentialBruteForce;
-
 #ifdef WITH_KOKKOS
     using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
     using KokkosLennardJones  = potential::KokkosLennardJones;
@@ -98,13 +95,18 @@ namespace engine
 
         timings::GlobalTimer _timer;
 
-        simulationBox::CellList        _cellList;
-        simulationBox::SimulationBox   _simulationBox;
-        physicalData::PhysicalData     _physicalData;
-        physicalData::PhysicalData     _averagePhysicalData;
-        constraints::Constraints       _constraints;
-        forceField::ForceField         _forceField;
-        intraNonBonded::IntraNonBonded _intraNonBonded;
+        physicalData::PhysicalData _averagePhysicalData;
+
+        // clang-format off
+        pq::SharedVirial       _virial         = std::make_shared<pq::VirialMolecular>();
+        pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
+        pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
+        pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
+        pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
+        pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
+        pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
+        pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
+        // clang-format on
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
@@ -112,9 +114,6 @@ namespace engine
         potential::KokkosCoulombWolf       _kokkosCoulombWolf;
         potential::KokkosPotential         _kokkosPotential;
 #endif
-
-        UniqueVirial    _virial = std::make_unique<virial::VirialMolecular>();
-        UniquePotential _potential = std::make_unique<BruteForce>();
 
        public:
         Engine()          = default;
@@ -142,29 +141,56 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::CellList        &getCellList();
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]] pq::CellList     &getCellList();
+        [[nodiscard]] pq::SimBox       &getSimulationBox();
+        [[nodiscard]] pq::PhysicalData &getPhysicalData();
+        [[nodiscard]] pq::PhysicalData &getAveragePhysicalData();
+        [[nodiscard]] pq::Constraints  &getConstraints();
+        [[nodiscard]] pq::ForceField   &getForceField();
+        [[nodiscard]] pq::IntraNonBond &getIntraNonBonded();
+        [[nodiscard]] pq::Virial       &getVirial();
+        [[nodiscard]] pq::Potential    &getPotential();
+
+        /*************************
+         * output getter methods *
+         *************************/
 
         [[nodiscard]] EngineOutput          &getEngineOutput();
         [[nodiscard]] output::LogOutput     &getLogOutput();
         [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
         [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
-        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+
+        /***********************
+         * get pointer methods *
+         ***********************/
+
+        [[nodiscard]] pq::ForceField   *getForceFieldPtr();
+        [[nodiscard]] pq::Potential    *getPotentialPtr();
+        [[nodiscard]] pq::Virial       *getVirialPtr();
+        [[nodiscard]] pq::CellList     *getCellListPtr();
+        [[nodiscard]] pq::SimBox       *getSimulationBoxPtr();
+        [[nodiscard]] pq::PhysicalData *getPhysicalDataPtr();
+        [[nodiscard]] pq::Constraints  *getConstraintsPtr();
+        [[nodiscard]] pq::IntraNonBond *getIntraNonBondedPtr();
+
+        /******************************
+         * get shared pointer methods *
+         ******************************/
+
+        [[nodiscard]] pq::SharedForceField   getSharedForceField() const;
+        [[nodiscard]] pq::SharedSimBox       getSharedSimulationBox() const;
+        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalData() const;
+        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
+        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
+        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
+        [[nodiscard]] pq::SharedVirial       getSharedVirial() const;
+        [[nodiscard]] pq::SharedPotential    getSharedPotential() const;
 
         /***************************
          * make unique_ptr methods *

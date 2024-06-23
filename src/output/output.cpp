@@ -22,10 +22,10 @@
 
 #include "output.hpp"
 
-#include "exceptions.hpp"   // for InputFileException, customException
-
 #include <filesystem>   // for create_directory
 #include <fstream>      // for ifstream, ofstream, std
+
+#include "exceptions.hpp"   // for InputFileException, customException
 
 using namespace std;
 using namespace customException;
@@ -47,7 +47,9 @@ void Output::setFilename(const string_view &filename)
         throw InputFileException("Filename cannot be empty");
 
     if (const ifstream fp(_fileName.c_str()); fp.good())
-        throw InputFileException("File already exists - filename = " + string(_fileName));
+        throw InputFileException(
+            "File already exists - filename = " + string(_fileName)
+        );
 
     openFile();
 }
@@ -63,5 +65,20 @@ void Output::openFile()
     _fp.open(_fileName);
 
     if (!_fp.is_open())
-        throw InputFileException("Could not open file - filename = " + _fileName);
+        throw InputFileException(
+            "Could not open file - filename = " + _fileName
+        );
 }
+
+/**
+ * @brief Closes the output file
+ *
+ */
+void Output::close() { _fp.close(); }
+
+/**
+ * @brief get filename
+ *
+ * @return string
+ */
+string Output::getFilename() const { return _fileName; }

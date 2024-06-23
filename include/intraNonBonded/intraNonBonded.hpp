@@ -78,9 +78,12 @@ namespace intraNonBonded
         std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
         std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
+
         vec_intra_container _intraNonBondedContainers;
 
        public:
+        std::shared_ptr<IntraNonBonded> clone() const;
+
         void calculate(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
 

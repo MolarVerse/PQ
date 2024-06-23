@@ -55,6 +55,8 @@ namespace simulationBox
         };   // 7x7x7
 
        public:
+        [[nodiscard]] std::shared_ptr<CellList> clone() const;
+
         void setup(const SimulationBox &);
         void updateCellList(SimulationBox &);
 

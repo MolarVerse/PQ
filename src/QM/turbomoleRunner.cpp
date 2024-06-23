@@ -22,14 +22,6 @@
 
 #include "turbomoleRunner.hpp"
 
-#include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for constants
-#include "exceptions.hpp"        // for InputFileException
-#include "qmSettings.hpp"        // for QMSettings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
-
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
 #include <format>       // for format
@@ -38,6 +30,14 @@
 #include <ranges>       // for borrowed_iterator_t, __distance_fn
 #include <string>       // for string
 #include <vector>       // for vector
+
+#include "atom.hpp"              // for Atom
+#include "constants.hpp"         // for constants
+#include "exceptions.hpp"        // for InputFileException
+#include "qmSettings.hpp"        // for QMSettings
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stringUtilities.hpp"   // for fileExists
+#include "vector3d.hpp"          // for Vec3D
 
 using QM::TurbomoleRunner;
 
@@ -52,16 +52,20 @@ void TurbomoleRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms(); i < numberOfAtoms; ++i)
+    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
+         i < numberOfAtoms;
+         ++i)
     {
         const auto &atom = box.getQMAtom(i);
 
         // turbomole does not support tabs in the coord file
-        coordsFile << std::format("   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
-                                  atom.getPosition()[0] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
-                                  atom.getPosition()[1] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
-                                  atom.getPosition()[2] * constants::_ANGSTROM_TO_BOHR_RADIUS_,
-                                  atom.getName());
+        coordsFile << std::format(
+            "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
+            atom.getPosition()[0] * constants::_ANGSTROM_TO_BOHR_,
+            atom.getPosition()[1] * constants::_ANGSTROM_TO_BOHR_,
+            atom.getPosition()[2] * constants::_ANGSTROM_TO_BOHR_,
+            atom.getName()
+        );
     }
 
     coordsFile << "$end\n";
@@ -75,14 +79,19 @@ void TurbomoleRunner::writeCoordsFile(simulationBox::SimulationBox &box)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
+    const auto scriptFileName =
+        _scriptPath + settings::QMSettings::getQMScript();
 
     if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format("Turbomole script file \"{}\" does not exist.", scriptFileName));
+        throw customException::InputFileException(std::format(
+            "Turbomole script file \"{}\" does not exist.",
+            scriptFileName
+        ));
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFileName, reuseCharges);
+    const auto command =
+        std::format("{} 0 {} 0 0 0", scriptFileName, reuseCharges);
     ::system(command.c_str());
 
     _isFirstExecution = false;

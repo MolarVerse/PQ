@@ -160,7 +160,7 @@ TEST(TestTriclinicBox, calculateShiftVectors)
         {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
     );
 
-    const auto shiftVector = box.calculateShiftVector(position);
+    const auto shiftVector = box.calcShiftVector(position);
 
     EXPECT_VECTOR_NEAR(shiftVector, (position - newPosition), 1e-8);
 }

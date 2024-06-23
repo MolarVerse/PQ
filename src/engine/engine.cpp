@@ -33,15 +33,22 @@
 #include "vector3d.hpp"                      // for norm
 
 using namespace engine;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace forceField;
+using namespace intraNonBonded;
+using namespace virial;
+using namespace potential;
+using namespace constraints;
+using namespace output;
+using namespace timings;
+using namespace settings;
 
 /**
  * @brief Adds a timings section to the timingsSection vector.
  *
  */
-void Engine::addTimer(const timings::Timer &timings)
-{
-    _timer.addTimer(timings);
-}
+void Engine::addTimer(const Timer &timings) { _timer.addTimer(timings); }
 
 /**
  * @brief Calculate total simulation time.
@@ -50,8 +57,8 @@ void Engine::addTimer(const timings::Timer &timings)
  */
 double Engine::calculateTotalSimulationTime() const
 {
-    const auto step0   = settings::TimingsSettings::getStepCount();
-    const auto dt      = settings::TimingsSettings::getTimeStep();
+    const auto step0   = TimingsSettings::getStepCount();
+    const auto dt      = TimingsSettings::getTimeStep();
     const auto effStep = _step + step0;
 
     return static_cast<double>(effStep) * dt;
@@ -65,7 +72,7 @@ double Engine::calculateTotalSimulationTime() const
  */
 bool Engine::isForceFieldNonCoulombicsActivated() const
 {
-    return _forceField.isNonCoulombicActivated();
+    return _forceField->isNonCoulombicActivated();
 }
 
 /**
@@ -76,7 +83,7 @@ bool Engine::isForceFieldNonCoulombicsActivated() const
  */
 bool Engine::isGuffActivated() const
 {
-    return !_forceField.isNonCoulombicActivated();
+    return !_forceField->isNonCoulombicActivated();
 }
 
 /**
@@ -85,7 +92,7 @@ bool Engine::isGuffActivated() const
  * @return true
  * @return false
  */
-bool Engine::isCellListActivated() const { return _cellList.isActive(); }
+bool Engine::isCellListActivated() const { return _cellList->isActive(); }
 
 /**
  * @brief checks if any constraints are activated
@@ -93,7 +100,7 @@ bool Engine::isCellListActivated() const { return _cellList.isActive(); }
  * @return true
  * @return false
  */
-bool Engine::isConstraintsActivated() const { return _constraints.isActive(); }
+bool Engine::isConstraintsActivated() const { return _constraints->isActive(); }
 
 /**
  * @brief checks if the intra non bonded interactions are activated
@@ -103,145 +110,127 @@ bool Engine::isConstraintsActivated() const { return _constraints.isActive(); }
  */
 bool Engine::isIntraNonBondedActivated() const
 {
-    return _intraNonBonded.isActive();
+    return _intraNonBonded->isActive();
 }
 
 /**
  * @brief get the reference to the cell list
  *
- * @return simulationBox::CellList&
+ * @return CellList&
  */
-simulationBox::CellList &Engine::getCellList() { return _cellList; }
+CellList &Engine::getCellList() { return *_cellList; }
 
 /**
  * @brief get the reference to the simulation box
  *
- * @return simulationBox::SimulationBox&
+ * @return SimulationBox&
  */
-simulationBox::SimulationBox &Engine::getSimulationBox()
-{
-    return _simulationBox;
-}
+SimulationBox &Engine::getSimulationBox() { return *_simulationBox; }
 
 /**
  * @brief get the reference to the physical data
  *
- * @return physicalData::PhysicalData&
+ * @return PhysicalData&
  */
-physicalData::PhysicalData &Engine::getPhysicalData() { return _physicalData; }
+PhysicalData &Engine::getPhysicalData() { return *_physicalData; }
 
 /**
  * @brief get the reference to the average physical data
  *
- * @return physicalData::PhysicalData&
+ * @return PhysicalData&
  */
-physicalData::PhysicalData &Engine::getAveragePhysicalData()
-{
-    return _averagePhysicalData;
-}
+PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
 
 /**
  * @brief get the reference to the Constraints
  *
  * @return timings::Timer&
  */
-constraints::Constraints &Engine::getConstraints() { return _constraints; }
+Constraints &Engine::getConstraints() { return *_constraints; }
 
 /**
  * @brief get the reference to the force field
  *
- * @return forceField::ForceField&
+ * @return ForceField&
  */
-forceField::ForceField &Engine::getForceField() { return _forceField; }
+ForceField &Engine::getForceField() { return *_forceField; }
 
 /**
  * @brief get the reference to the intra non bonded interactions
  *
- * @return intraNonBonded::IntraNonBonded&
+ * @return IntraNonBonded&
  */
-intraNonBonded::IntraNonBonded &Engine::getIntraNonBonded()
-{
-    return _intraNonBonded;
-}
+IntraNonBonded &Engine::getIntraNonBonded() { return *_intraNonBonded; }
 
 /**
  * @brief get the reference to the virial
  *
- * @return virial::Virial&
+ * @return Virial&
  */
-virial::Virial &Engine::getVirial() { return *_virial; }
+Virial &Engine::getVirial() { return *_virial; }
 
 /**
  * @brief get the reference to the potential
  *
- * @return potential::Potential&
+ * @return Potential&
  */
-potential::Potential &Engine::getPotential() { return *_potential; }
+Potential &Engine::getPotential() { return *_potential; }
 
 /**
  * @brief get the pointer to the force field
  *
- * @return forceField::ForceField*
+ * @return ForceField*
  */
-forceField::ForceField *Engine::getForceFieldPtr() { return &_forceField; }
+ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
 
 /**
  * @brief get the pointer to the potential
  *
- * @return potential::Potential*
+ * @return Potential*
  */
-potential::Potential *Engine::getPotentialPtr() { return _potential.get(); }
+Potential *Engine::getPotentialPtr() { return _potential.get(); }
 
 /**
  * @brief get the pointer to the virial
  *
- * @return virial::Virial*
+ * @return Virial*
  */
-virial::Virial *Engine::getVirialPtr() { return _virial.get(); }
+Virial *Engine::getVirialPtr() { return _virial.get(); }
 
 /**
  * @brief get the pointer to the cell list
  *
- * @return simulationBox::CellList*
+ * @return CellList*
  */
-simulationBox::CellList *Engine::getCellListPtr() { return &_cellList; }
+CellList *Engine::getCellListPtr() { return _cellList.get(); }
 
 /**
  * @brief get the pointer to the simulation box
  *
- * @return simulationBox::SimulationBox*
+ * @return SimulationBox*
  */
-simulationBox::SimulationBox *Engine::getSimulationBoxPtr()
-{
-    return &_simulationBox;
-}
+SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
 
 /**
  * @brief get the pointer to the physical data
  *
- * @return physicalData::PhysicalData*
+ * @return PhysicalData*
  */
-physicalData::PhysicalData *Engine::getPhysicalDataPtr()
-{
-    return &_physicalData;
-}
+PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
 
 /**
  * @brief get the pointer to the constraints
  *
- * @return constraints::Constraints*
+ * @return Constraints*
  */
-constraints::Constraints *Engine::getConstraintsPtr() { return &_constraints; }
+Constraints *Engine::getConstraintsPtr() { return _constraints.get(); }
 
 /**
  * @brief get the pointer to the intra non bonded interactions
  *
- * @return intraNonBonded::IntraNonBonded*
+ * @return IntraNonBonded*
  */
-intraNonBonded::IntraNonBonded *Engine::getIntraNonBondedPtr()
-{
-    return &_intraNonBonded;
-}
+IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
 
 /**
  * @brief get the reference to the engine output
@@ -253,19 +242,16 @@ EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
 /**
  * @brief get the reference to the log output
  *
- * @return output::LogOutput&
+ * @return LogOutput&
  */
-output::LogOutput &Engine::getLogOutput()
-{
-    return _engineOutput.getLogOutput();
-}
+LogOutput &Engine::getLogOutput() { return _engineOutput.getLogOutput(); }
 
 /**
  * @brief get the reference to the stdout output
  *
- * @return output::StdoutOutput&
+ * @return StdoutOutput&
  */
-output::StdoutOutput &Engine::getStdoutOutput()
+StdoutOutput &Engine::getStdoutOutput()
 {
     return _engineOutput.getStdoutOutput();
 }
@@ -273,9 +259,139 @@ output::StdoutOutput &Engine::getStdoutOutput()
 /**
  * @brief get the TimingsOutput
  *
- * @return output::TimingsOutput&
+ * @return TimingsOutput&
  */
-output::TimingsOutput &Engine::getTimingsOutput()
+TimingsOutput &Engine::getTimingsOutput()
 {
     return _engineOutput.getTimingsOutput();
+}
+
+/**
+ * @brief get the reference to the energy output
+ *
+ * @return EnergyOutput&
+ */
+EnergyOutput &Engine::getEnergyOutput()
+{
+    return _engineOutput.getEnergyOutput();
+}
+
+/**
+ * @brief get the reference to the xyz output
+ *
+ * @return TrajectoryOutput&
+ */
+TrajectoryOutput &Engine::getXyzOutput()
+{
+    return _engineOutput.getXyzOutput();
+}
+
+/**
+ * @brief get the reference to the force output
+ *
+ * @return TrajectoryOutput&
+ */
+TrajectoryOutput &Engine::getForceOutput()
+{
+    return _engineOutput.getForceOutput();
+}
+
+/**
+ * @brief get the reference to the rst file output
+ *
+ * @return RstFileOutput&
+ */
+RstFileOutput &Engine::getRstFileOutput()
+{
+    return _engineOutput.getRstFileOutput();
+}
+
+/**
+ * @brief get the reference to the info output
+ *
+ * @return InfoOutput&
+ */
+InfoOutput &Engine::getInfoOutput() { return _engineOutput.getInfoOutput(); }
+
+/******************************
+ *                            *
+ * get shared pointer methods *
+ *                            *
+ ******************************/
+
+/**
+ * @brief get the shared pointer to the force field
+ *
+ * @return std::shared_ptr<ForceField>
+ */
+std::shared_ptr<ForceField> Engine::getSharedForceField() const
+{
+    return _forceField;
+}
+
+/**
+ * @brief get the shared pointer to the simulation box
+ *
+ * @return std::shared_ptr<SimulationBox>
+ */
+std::shared_ptr<SimulationBox> Engine::getSharedSimulationBox() const
+{
+    return _simulationBox;
+}
+
+/**
+ * @brief get the shared pointer to the physical data
+ *
+ * @return std::shared_ptr<PhysicalData>
+ */
+std::shared_ptr<PhysicalData> Engine::getSharedPhysicalData() const
+{
+    return _physicalData;
+}
+
+/**
+ * @brief get the shared pointer to the cell list
+ *
+ * @return std::shared_ptr<CellList>
+ */
+std::shared_ptr<CellList> Engine::getSharedCellList() const
+{
+    return _cellList;
+}
+
+/**
+ * @brief get the shared pointer to the constraints
+ *
+ * @return std::shared_ptr<Constraints>
+ */
+std::shared_ptr<Constraints> Engine::getSharedConstraints() const
+{
+    return _constraints;
+}
+
+/**
+ * @brief get the shared pointer to the intra non bonded interactions
+ *
+ * @return std::shared_ptr<IntraNonBonded>
+ */
+std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
+{
+    return _intraNonBonded;
+}
+
+/**
+ * @brief get the shared pointer to the virial
+ *
+ * @return std::shared_ptr<Virial>
+ */
+std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
+
+/**
+ * @brief get the shared pointer to the potential
+ *
+ * @return std::shared_ptr<Potential>
+ */
+std::shared_ptr<Potential> Engine::getSharedPotential() const
+{
+    return _potential;
 }

@@ -22,6 +22,8 @@
 
 #include "learningRateStrategy.hpp"
 
+#include <format>   // for format
+
 using namespace opt;
 
 /**
@@ -30,6 +32,120 @@ using namespace opt;
  * @param initialLearningRate
  */
 LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
-    : _initialLearningRate(initialLearningRate)
+    : _initialLearningRate(initialLearningRate),
+      _learningRate(initialLearningRate)
 {
+}
+
+/**
+ * @brief Construct a new LearningRateStrategy object
+ *
+ * @param initialLearningRate
+ * @param frequency
+ */
+LearningRateStrategy::LearningRateStrategy(
+    const double initialLearningRate,
+    const size_t frequency
+)
+    : _frequency(frequency),
+      _initialLearningRate(initialLearningRate),
+      _learningRate(initialLearningRate)
+{
+}
+
+/**
+ * @brief check the learning rate if it is within the bounds
+ *       and update the learning rate
+ */
+void LearningRateStrategy::checkLearningRate()
+{
+    if (_maxLearningRate.has_value())
+        if (_learningRate > _maxLearningRate.value())
+        {
+            _learningRate      = _maxLearningRate.value();
+            const auto message = std::format(
+                "Learning rate {} is greater than the maximum learning rate "
+                "{}. Therefore, the learning rate is set to the maximum "
+                "learning rate.",
+                _learningRate,
+                _maxLearningRate.value()
+            );
+
+            _warningMessages.push_back(message);
+        }
+
+    if (_learningRate < _minLearningRate)
+    {
+        _learningRate      = _minLearningRate;
+        const auto message = std::format(
+            "Learning rate {} is less than the minimum learning rate {}. "
+            "Therefore, the learning rate is set to the minimum learning "
+            "rate.",
+            _learningRate,
+            _minLearningRate
+        );
+
+        _warningMessages.push_back(message);
+    }
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief Get the learning rate
+ *
+ * @return double
+ */
+double LearningRateStrategy::getLearningRate() const { return _learningRate; }
+
+/**
+ * @brief Get the warning messages
+ *
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> LearningRateStrategy::getWarningMessages() const
+{
+    return _warningMessages;
+}
+
+/**
+ * @brief Get the error messages
+ *
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> LearningRateStrategy::getErrorMessages() const
+{
+    return _errorMessages;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the minimum learning rate
+ *
+ * @param minLearningRate - double
+ */
+void LearningRateStrategy::setMinLearningRate(const double minLearningRate)
+{
+    _minLearningRate = minLearningRate;
+}
+
+/**
+ * @brief set the maximum learning rate
+ *
+ * @param maxLearningRate - std::optional<double>
+ */
+void LearningRateStrategy::setMaxLearningRate(
+    const std::optional<double> maxLearningRate
+)
+{
+    _maxLearningRate = maxLearningRate;
 }

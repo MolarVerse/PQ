@@ -24,14 +24,19 @@
 
 #include <memory>
 
-#include "constantStrategy.hpp"
+#include "constant.hpp"
+#include "constantDecay.hpp"
+#include "convergenceSettings.hpp"
+#include "defaults.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "settings.hpp"
 #include "steepestDescent.hpp"
+#include "timingsSettings.hpp"
 
 using setup::OptimizerSetup;
+using namespace settings;
 
 using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
 using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
@@ -49,7 +54,7 @@ using SharedVirial         = std::shared_ptr<virial::Virial>;
  */
 void setup::setupOptimizer(engine::Engine &engine)
 {
-    if (!settings::Settings::isOptJobType())
+    if (!Settings::isOptJobType())
         return;
 
     engine.getStdoutOutput().writeSetup("optimizer");
@@ -75,9 +80,11 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
  */
 void OptimizerSetup::setup()
 {
-    const auto learningRateStrategy = setupLearningRateStrategy();
+    auto       learningRateStrategy = setupLearningRateStrategy();
     const auto optimizer            = setupEmptyOptimizer();
     const auto evaluator            = setupEvaluator();
+
+    setupMinMaxLR(learningRateStrategy);
 
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
@@ -90,13 +97,13 @@ void OptimizerSetup::setup()
  */
 std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
-    const auto nEpochs = settings::OptimizerSettings::getNumberOfEpochs();
+    const auto nEpochs = TimingsSettings::getNumberOfSteps();
 
     std::shared_ptr<opt::Optimizer> optimizer;
 
-    switch (settings::OptimizerSettings::getOptimizer())
+    switch (OptimizerSettings::getOptimizer())
     {
-        case settings::Optimizer::STEEPEST_DESCENT:
+        case Optimizer::STEEPEST_DESCENT:
         {
             optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
@@ -105,12 +112,14 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
         {
             throw customException::UserInputException(std::format(
                 "Unknown optimizer type {}",
-                string(settings::OptimizerSettings::getOptimizer())
+                string(OptimizerSettings::getOptimizer())
             ));
         }
     }
 
-    optimizer->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
+    optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
+    optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
+    optimizer->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
     return optimizer;
 }
@@ -122,29 +131,72 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
     setupLearningRateStrategy()
 {
-    const auto alpha_0 = settings::OptimizerSettings::getInitialLearningRate();
+    const auto alpha_0 = OptimizerSettings::getInitialLearningRate();
 
-    switch (settings::OptimizerSettings::getLearningRateStrategy())
+    switch (OptimizerSettings::getLearningRateStrategy())
     {
-        case settings::LearningRateStrategy::CONSTANT:
+        case LearningRateStrategy::CONSTANT:
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case settings::LearningRateStrategy::DECAY:
+        case LearningRateStrategy::CONSTANT_DECAY:
         {
-            throw customException::UserInputException(
-                "Decay learning rate strategy not implemented yet"
+            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
+
+            if (!alphaDecay.has_value())
+                throw customException::UserInputException(
+                    "You need to specify a learning rate decay factor for the "
+                    "constant decay learning rate strategy"
+                );
+
+            const auto alphaDecayValue = alphaDecay.value();
+            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
+
+            return std::make_shared<opt::ConstantDecayLRStrategy>(
+                alpha_0,
+                alphaDecayValue,
+                alphaFreq
             );
-            break;
         }
         default:
         {
+            throw customException::UserInputException(
+                std::format("In order to run the optimizer, you need to "
+                            "specify a learning rate strategy.")
+            );
+        }
+    }
+}
+
+/**
+ * @brief setup min max learning rate
+ *
+ * @param learningRateStrategy as shared pointer reference
+ */
+void OptimizerSetup::setupMinMaxLR(
+    std::shared_ptr<opt::LearningRateStrategy> &learningRateStrategy
+)
+{
+    const auto minLearningRate = OptimizerSettings::getMinLearningRate();
+    const auto maxLearningRate = OptimizerSettings::getMaxLearningRate();
+
+    if (maxLearningRate.has_value())
+    {
+        const auto maxLearningRateValue = maxLearningRate.value();
+
+        if (minLearningRate >= maxLearningRateValue)
+        {
             throw customException::UserInputException(std::format(
-                "Unknown learning rate strategy type {}",
-                string(settings::OptimizerSettings::getLearningRateStrategy())
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLearningRate,
+                maxLearningRateValue
             ));
         }
     }
+
+    learningRateStrategy->setMinLearningRate(minLearningRate);
+    learningRateStrategy->setMaxLearningRate(maxLearningRate);
 }
 
 /**
@@ -155,7 +207,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
 {
     std::shared_ptr<opt::Evaluator> evaluator;
 
-    if (settings::Settings::getJobtype() == settings::JobType::MM_OPT)
+    if (Settings::getJobtype() == JobType::MM_OPT)
         evaluator = std::make_shared<opt::MMEvaluator>();
 
     else
@@ -164,21 +216,72 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
             "evaluator"
         );
 
-    evaluator->setCellList(SharedCellList(_optEngine.getCellListPtr()));
-    evaluator->setForceField(SharedForceField(_optEngine.getForceFieldPtr()));
-    evaluator->setPotential(SharedPotential(_optEngine.getPotentialPtr()));
-    evaluator->setSimulationBox(SharedSimBox(_optEngine.getSimulationBoxPtr()));
-    evaluator->setVirial(SharedVirial(_optEngine.getVirialPtr()));
-    evaluator->setConstraints(SharedConstraints(_optEngine.getConstraintsPtr())
-    );
-    evaluator->setPhysicalData(SharedPhysicalData(_optEngine.getPhysicalDataPtr(
-    )));
-    evaluator->setPhysicalData(
-        SharedPhysicalData(_optEngine.getPhysicalDataOldPtr())
-    );
-    evaluator->setIntraNonBonded(
-        SharedIntraNonBonded(_optEngine.getIntraNonBondedPtr())
-    );
+    evaluator->setCellList(_optEngine.getSharedCellList());
+    evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
+    evaluator->setPotential(_optEngine.getSharedPotential());
+    evaluator->setForceField(_optEngine.getSharedForceField());
+    evaluator->setConstraints(_optEngine.getSharedConstraints());
+    evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
+    evaluator->setVirial(_optEngine.getSharedVirial());
+    evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
+    evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());
+    evaluator->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
     return evaluator;
+}
+
+/**
+ * @brief setup convergence
+ *
+ * @param optimizer as shared pointer reference
+ */
+void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
+)
+{
+    const auto energyConvStrategy = ConvSettings::getEnergyConvStrategy();
+    const auto defEConvStrategy = ConvSettings::getDefaultEnergyConvStrategy();
+    const auto energyStrategy   = energyConvStrategy.value_or(defEConvStrategy);
+
+    const auto useEnergyConv   = ConvSettings::getUseEnergyConv();
+    const auto useMaxForceConv = ConvSettings::getUseMaxForceConv();
+    const auto useRMSForceConv = ConvSettings::getUseRMSForceConv();
+
+    const auto energyConv    = ConvSettings::getEnergyConv();
+    const auto absEnergyConv = ConvSettings::getAbsEnergyConv();
+    const auto relEnergyConv = ConvSettings::getRelEnergyConv();
+
+    const auto defRelEnergyConv = defaults::_REL_ENERGY_CONV_DEFAULT_;
+    const auto defAbsEnergyConv = defaults::_ABS_ENERGY_CONV_DEFAULT_;
+
+    auto relEnergyConvValue = energyConv.value_or(defRelEnergyConv);
+    auto absEnergyConvValue = energyConv.value_or(defAbsEnergyConv);
+
+    relEnergyConvValue = relEnergyConv.value_or(relEnergyConvValue);
+    absEnergyConvValue = absEnergyConv.value_or(absEnergyConvValue);
+
+    const auto forceConv    = ConvSettings::getForceConv();
+    const auto maxForceConv = ConvSettings::getMaxForceConv();
+    const auto rmsForceConv = ConvSettings::getRMSForceConv();
+
+    const auto defMaxForceConv = defaults::_MAX_FORCE_CONV_DEFAULT_;
+    const auto defRMSForceConv = defaults::_RMS_FORCE_CONV_DEFAULT_;
+
+    auto maxForceConvValue = forceConv.value_or(defMaxForceConv);
+    auto rmsForceConvValue = forceConv.value_or(defRMSForceConv);
+
+    maxForceConvValue = maxForceConv.value_or(maxForceConvValue);
+    rmsForceConvValue = rmsForceConv.value_or(rmsForceConvValue);
+
+    const opt::Convergence convergence(
+        useEnergyConv,
+        useMaxForceConv,
+        useRMSForceConv,
+        relEnergyConvValue,
+        absEnergyConvValue,
+        maxForceConvValue,
+        rmsForceConvValue,
+        energyStrategy
+    );
+
+    optimizer->setConvergence(convergence);
 }

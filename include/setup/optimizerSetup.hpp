@@ -24,7 +24,8 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
-#include <memory>   // for shared_ptr
+#include <memory>     // for shared_ptr
+#include <optional>   // for optional
 
 namespace engine
 {
@@ -41,6 +42,12 @@ namespace opt
 
 }   // namespace opt
 
+namespace settings
+{
+    enum class ConvStrategy : size_t;   // Forward declaration
+
+}   // namespace settings
+
 namespace setup
 {
     void setupOptimizer(engine::Engine &);
@@ -53,13 +60,16 @@ namespace setup
      */
     class OptimizerSetup
     {
-       protected:
+       private:
         engine::OptEngine &_optEngine;
 
        public:
         explicit OptimizerSetup(engine::OptEngine &optEngine);
 
         void setup();
+
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &);
+        void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
 
         std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
         std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();

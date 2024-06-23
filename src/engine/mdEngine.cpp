@@ -40,10 +40,10 @@ using namespace engine;
  */
 void MDEngine::run()
 {
-    _physicalData.calculateKinetics(getSimulationBox());
+    _physicalData->calculateKinetics(getSimulationBox());
 
     _engineOutput.getLogOutput().writeInitialMomentum(
-        norm(_physicalData.getMomentum())
+        norm(_physicalData->getMomentum())
     );
 
     const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
@@ -70,23 +70,23 @@ void MDEngine::run()
     _integrator->setTimerName("Integrator");
     _timer.addTimer(_integrator->getTimer());
 
-    _constraints.setTimerName("Constraints");
-    _timer.addTimer(_constraints.getTimer());
+    _constraints->setTimerName("Constraints");
+    _timer.addTimer(_constraints->getTimer());
 
-    _cellList.setTimerName("Cell List");
-    _timer.addTimer(_cellList.getTimer());
+    _cellList->setTimerName("Cell List");
+    _timer.addTimer(_cellList->getTimer());
 
     _potential->setTimerName("Potential");
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded.setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded.getTimer());
+    _intraNonBonded->setTimerName("IntraNonBonded");
+    _timer.addTimer(_intraNonBonded->getTimer());
 
     _virial->setTimerName("Virial");
     _timer.addTimer(_virial->getTimer());
 
-    _physicalData.setTimerName("Physical Data");
-    _timer.addTimer(_physicalData.getTimer());
+    _physicalData->setTimerName("Physical Data");
+    _timer.addTimer(_physicalData->getTimer());
 
     _manostat->setTimerName("Manostat");
     _timer.addTimer(_manostat->getTimer());
@@ -125,23 +125,23 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeVelFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeChargeFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, _step + step0);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeVelFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
 
         _engineOutput.writeVirialFile(
             effStep,
-            _physicalData
+            *_physicalData
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeStressFile(
             effStep,
-            _physicalData
+            *_physicalData
         );   // use physicalData instead of averagePhysicalData
 
-        _engineOutput.writeBoxFile(effStep, _simulationBox.getBox());
+        _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
     }
 
     // NOTE:
@@ -153,8 +153,8 @@ void MDEngine::writeOutput()
     _timer.stopSimulationTimer();
     _timer.startSimulationTimer();
 
-    _physicalData.setLoopTime(_timer.calculateLoopTime());
-    _averagePhysicalData.updateAverages(_physicalData);
+    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
     {
@@ -165,14 +165,14 @@ void MDEngine::writeOutput()
         const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
         _averagePhysicalData = physicalData::PhysicalData();
     }
 
-    _physicalData.reset();
+    _physicalData->reset();
 }
 
 /**
@@ -207,16 +207,6 @@ thermostat::Thermostat &MDEngine::getThermostat() { return *_thermostat; }
 manostat::Manostat &MDEngine::getManostat() { return *_manostat; }
 
 /**
- * @brief get the reference to the energy output
- *
- * @return output::EnergyOutput&
- */
-output::EnergyOutput &MDEngine::getEnergyOutput()
-{
-    return _engineOutput.getEnergyOutput();
-}
-
-/**
  * @brief get the reference to the instant energy output
  *
  * @return output::EnergyOutput&
@@ -237,16 +227,6 @@ output::MomentumOutput &MDEngine::getMomentumOutput()
 }
 
 /**
- * @brief get the reference to the xyz output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &MDEngine::getXyzOutput()
-{
-    return _engineOutput.getXyzOutput();
-}
-
-/**
  * @brief get the reference to the vel output
  *
  * @return output::TrajectoryOutput&
@@ -257,16 +237,6 @@ output::TrajectoryOutput &MDEngine::getVelOutput()
 }
 
 /**
- * @brief get the reference to the force output
- *
- * @return output::TrajectoryOutput&
- */
-output::TrajectoryOutput &MDEngine::getForceOutput()
-{
-    return _engineOutput.getForceOutput();
-}
-
-/**
  * @brief get the reference to the charge output
  *
  * @return output::TrajectoryOutput&
@@ -274,26 +244,6 @@ output::TrajectoryOutput &MDEngine::getForceOutput()
 output::TrajectoryOutput &MDEngine::getChargeOutput()
 {
     return _engineOutput.getChargeOutput();
-}
-
-/**
- * @brief get the reference to the rst file output
- *
- * @return output::RstFileOutput&
- */
-output::RstFileOutput &MDEngine::getRstFileOutput()
-{
-    return _engineOutput.getRstFileOutput();
-}
-
-/**
- * @brief get the reference to the info output
- *
- * @return output::InfoOutput&
- */
-output::InfoOutput &MDEngine::getInfoOutput()
-{
-    return _engineOutput.getInfoOutput();
 }
 
 /**

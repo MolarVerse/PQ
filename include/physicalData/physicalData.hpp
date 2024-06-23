@@ -99,6 +99,8 @@ namespace physicalData
                 this
             );
 
+        std::shared_ptr<PhysicalData> clone() const;
+
         void copy(const PhysicalData &);
         void updateAverages(const PhysicalData &);
         void makeAverages(const double);

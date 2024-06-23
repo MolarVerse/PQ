@@ -414,7 +414,7 @@ void SimulationBoxSetup::checkBoxSettings()
     else if (!settings::SimulationBoxSettings::getBoxSet())
     {
         const auto boxDimensions =
-            _engine.getSimulationBox().calculateBoxDimensionsFromDensity();
+            _engine.getSimulationBox().calcBoxDimFromDensity();
         _engine.getSimulationBox().setBoxDimensions(boxDimensions);
         _engine.getSimulationBox().setVolume(
             _engine.getSimulationBox().calculateVolume()
@@ -422,20 +422,20 @@ void SimulationBoxSetup::checkBoxSettings()
     }
     else if (!settings::SimulationBoxSettings::getDensitySet())
     {
-        const auto volume = _engine.getSimulationBox().calculateVolume();
-        const auto density =
-            _engine.getSimulationBox().getTotalMass() / volume *
-            constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        const auto volume  = _engine.getSimulationBox().calculateVolume();
+        const auto density = _engine.getSimulationBox().getTotalMass() /
+                             volume *
+                             constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_;
 
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
     }
     else
     {
-        const auto volume = _engine.getSimulationBox().calculateVolume();
-        const auto density =
-            _engine.getSimulationBox().getTotalMass() / volume *
-            constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_;
+        const auto volume  = _engine.getSimulationBox().calculateVolume();
+        const auto density = _engine.getSimulationBox().getTotalMass() /
+                             volume *
+                             constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_;
 
         _engine.getSimulationBox().setVolume(volume);
         _engine.getSimulationBox().setDensity(density);
