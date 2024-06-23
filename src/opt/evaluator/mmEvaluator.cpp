@@ -54,18 +54,7 @@ void MMEvaluator::evaluate()
 
     _cellList->updateCellList(*_simulationBox);
 
-#ifdef WITH_KOKKOS
-    throw std::runtime_error("Kokkos not implemented in Optimizer");
-    _kokkosPotential.calculateForces(
-        _simulationBox,
-        _kokkosSimulationBox,
-        _physicalData,
-        _kokkosLennardJones,
-        _kokkosCoulombWolf
-    );
-#else
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
-#endif
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 

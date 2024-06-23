@@ -67,16 +67,6 @@ potential::KokkosPotential &Engine::getKokkosPotential()
 }
 
 /**
- * @brief get reference to KokkosVelocityVerlet
- *
- * @return integrator::KokkosVelocityVerlet&
- */
-integrator::KokkosVelocityVerlet &Engine::getKokkosVelocityVerlet()
-{
-    return _kokkosVelocityVerlet;
-}
-
-/**
  * @brief initialize KokkosSimulationBox
  *
  * @param numAtoms number of atoms
@@ -131,23 +121,6 @@ void Engine::initKokkosCoulombWolf(
 void Engine::initKokkosPotential()
 {
     _kokkosPotential = potential::KokkosPotential();
-}
-
-/**
- * @brief initialize KokkosVelocityVerlet
- *
- * @param dt time step
- * @param velocityFactor factor for velocity
- * @param timeFactor factor for time
- */
-void Engine::initKokkosVelocityVerlet(
-    const double dt,
-    const double velocityFactor,
-    const double timeFactor
-)
-{
-    _kokkosVelocityVerlet =
-        integrator::KokkosVelocityVerlet(dt, velocityFactor, timeFactor);
 }
 
 #endif

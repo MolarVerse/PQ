@@ -48,7 +48,7 @@ target_link_libraries(setup
     coulombPotential
     nonCoulombPotential
     maxwellBoltzmann
-    optimizer
+    optimization
 )
 
 if(BUILD_WITH_TESTS)
