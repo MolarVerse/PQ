@@ -1,9 +1,20 @@
-add_library(QM
+set(source_files
     qmRunner.cpp
-
+    externalQMRunner.cpp
     dftbplusRunner.cpp
     turbomoleRunner.cpp
     pyscfRunner.cpp
+)
+
+if(BUILD_WITH_PYTHON_BINDINGS)
+    set(source_files
+        ${source_files}
+        internalQMRunner.cpp
+    )
+endif()
+
+add_library(QM
+    ${source_files}
 )
 
 target_include_directories(QM

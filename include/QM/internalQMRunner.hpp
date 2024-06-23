@@ -20,34 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TURBOMOLE_RUNNER_HPP_
+#ifndef _INTERNAL_QM_RUNNER_HPP_
 
-#define _TURBOMOLE_RUNNER_HPP_
+#define _INTERNAL_QM_RUNNER_HPP_
 
-#include "externalQMRunner.hpp"   // for ExternalQMRunner
+#include <string>   // for std::string
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "qmRunner.hpp"
+#include "typeAliases.hpp"
 
 namespace QM
 {
     /**
-     * @class TurbomoleRunner
-     *
-     * @brief class for running DFTB+ inheriting from ExternalQMRunner
+     * @brief InternalQMRunner inherits from QMRunner
      *
      */
-    class TurbomoleRunner : public ExternalQMRunner
+    class InternalQMRunner : public QMRunner
     {
-       private:
-        bool _isFirstExecution = true;
-
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void execute() override;
+        InternalQMRunner()           = default;
+        ~InternalQMRunner() override = default;
+
+        void         run(pq::SimBox &, pq::PhysicalData &) override;
+        void         execute() override                            = 0;
+        virtual void collectData(pq::SimBox &, pq::PhysicalData &) = 0;
     };
 }   // namespace QM
 
-#endif   // _TURBOMOLE_RUNNER_HPP_
+#endif   // _INTERNAL_QM_RUNNER_HPP_

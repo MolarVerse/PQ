@@ -24,7 +24,7 @@
 
 #define _DFTBPLUS_RUNNER_HPP_
 
-#include "qmRunner.hpp"   // for QMRunner
+#include "externalQMRunner.hpp"   // for ExternalQMRunner
 
 namespace simulationBox
 {
@@ -38,18 +38,21 @@ namespace QM
     /**
      * @class DFTBPlusRunner
      *
-     * @brief class for running DFTB+ inheriting from QMRunner
+     * @brief class for running DFTB+ inheriting from ExternalQMRunner
      *
      */
-    class DFTBPlusRunner : public QMRunner
+    class DFTBPlusRunner : public ExternalQMRunner
     {
-      private:
+       private:
         bool _isFirstExecution = true;
 
-      public:
+       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
-        void readStressTensor(simulationBox::Box &box, physicalData::PhysicalData &data) override;
+        void readStressTensor(
+            simulationBox::Box         &box,
+            physicalData::PhysicalData &data
+        ) override;
     };
 }   // namespace QM
 

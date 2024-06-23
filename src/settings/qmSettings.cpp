@@ -107,6 +107,22 @@ void QMSettings::setQMLoopTimeLimit(const double time)
 }
 
 /**
+ * @brief returns if the external qm runner is activated
+ *
+ * @return bool
+ */
+bool QMSettings::isExternalQMRunner()
+{
+    auto isExternal = false;
+
+    isExternal = isExternal || _qmMethod != QMMethod::DFTBPLUS;
+    isExternal = isExternal || _qmMethod != QMMethod::PYSCF;
+    isExternal = isExternal || _qmMethod != QMMethod::TURBOMOLE;
+
+    return isExternal;
+}
+
+/**
  * @brief returns the qmMethod
  *
  * @return QMMethod

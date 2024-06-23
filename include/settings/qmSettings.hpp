@@ -71,6 +71,8 @@ namespace settings
         static void setQMScriptFullPath(const std::string_view &script);
         static void setQMLoopTimeLimit(const double time);
 
+        [[nodiscard]] static bool isExternalQMRunner();
+
         [[nodiscard]] static QMMethod    getQMMethod();
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

@@ -61,7 +61,10 @@ void setup::setupQM(engine::Engine &engine)
 void QMSetup::setup()
 {
     setupQMMethod();
-    setupQMScript();
+
+    if (QMSettings::isExternalQMRunner())
+        setupQMScript();
+
     setupCoulombRadiusCutOff();
 
     setupWriteInfo();
@@ -105,8 +108,11 @@ void QMSetup::setupQMMethod()
  */
 void QMSetup::setupQMScript() const
 {
-    const auto singularityString = _engine.getQMRunner()->getSingularity();
-    const auto staticBuildString = _engine.getQMRunner()->getStaticBuild();
+    auto &qmRunner         = *_engine.getQMRunner();
+    auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
+
+    const auto singularityString = externalQMRunner.getSingularity();
+    const auto staticBuildString = externalQMRunner.getStaticBuild();
 
     const auto singularity = utilities::toLowerCopy(singularityString) == "on";
     const auto staticBuild = utilities::toLowerCopy(staticBuildString) == "on";
@@ -146,7 +152,7 @@ please refer to the documentation.
         else
         {
             // setting script path to empty string to avoid errors
-            _engine.getQMRunner()->setScriptPath("");
+            externalQMRunner.setScriptPath("");
             // overwriting qm_script with full path
             QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
@@ -161,7 +167,7 @@ please refer to the documentation.
     else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
     {
         // setting script path to empty string to avoid errors
-        _engine.getQMRunner()->setScriptPath("");
+        externalQMRunner.setScriptPath("");
         // overwriting qm_script with full path
         QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
