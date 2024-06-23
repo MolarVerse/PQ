@@ -51,6 +51,31 @@ namespace opt
 
         void calcEnergyConvergence(const double, const double);
         void calcForceConvergence(const double, const double);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] double getRelEnergy() const;
+        [[nodiscard]] double getAbsEnergy() const;
+        [[nodiscard]] double getAbsMaxForce() const;
+        [[nodiscard]] double getAbsRMSForce() const;
+
+        [[nodiscard]] settings::ConvStrategy getEnergyConvStrategy() const;
+
+        [[nodiscard]] bool isEnergyConvEnabled() const;
+        [[nodiscard]] bool isMaxForceConvEnabled() const;
+        [[nodiscard]] bool isRMSForceConvEnabled() const;
+
+        [[nodiscard]] bool isRelEnergyConv() const;
+        [[nodiscard]] bool isAbsEnergyConv() const;
+        [[nodiscard]] bool isAbsMaxForceConv() const;
+        [[nodiscard]] bool isAbsRMSForceConv() const;
+
+        [[nodiscard]] double getRelEnergyConvThreshold() const;
+        [[nodiscard]] double getAbsEnergyConvThreshold() const;
+        [[nodiscard]] double getAbsMaxForceConvThreshold() const;
+        [[nodiscard]] double getAbsRMSForceConvThreshold() const;
     };
 }   // namespace opt
 

@@ -68,6 +68,4 @@ void SteepestDescent::update(const double learningRate)
         atom->setPositionOld(atom->getPosition());
         atom->addPosition(learningRate * force);
     }
-
-    updateHistory();
 }

@@ -278,3 +278,10 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(const int offset
 
     return _positionHistory[index];
 }
+
+/**
+ * @brief get the convergence member
+ *
+ * @return opt::Convergence
+ */
+Convergence Optimizer::getConvergence() const { return _convergence; }

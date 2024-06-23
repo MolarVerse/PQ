@@ -34,6 +34,7 @@ target_link_libraries(output
     utilities
     physicalData
     simulationBox
+    optimization
     settings
 )
 

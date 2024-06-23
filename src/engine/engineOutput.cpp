@@ -56,6 +56,7 @@ EngineOutput::EngineOutput()
     _virialOutput        = make_unique<VirialOutput>("default.vir");
     _stressOutput        = make_unique<StressOutput>("default.stress");
     _boxFileOutput       = make_unique<BoxFileOutput>("default.box");
+    _optOutput           = make_unique<OptOutput>("default.opt");
 
     _rpmdRstFileOutput = make_unique<pq::RPMDRstFileOutput>("default.rpmd.rst");
     _rpmdXyzOutput     = make_unique<pq::RPMDTrajOutput>("default.rpmd.xyz");
@@ -249,7 +250,7 @@ void EngineOutput::writeOptFile(
 )
 {
     startTimingsSection("OptOutput");
-    // _optOutput->write(step, optimizer);
+    _optOutput->write(step, optimizer);
     stopTimingsSection("OptOutput");
 }
 

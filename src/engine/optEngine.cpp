@@ -26,6 +26,7 @@
 
 #include "exceptions.hpp"
 #include "outputFileSettings.hpp"
+#include "progressbar.hpp"
 #include "settings.hpp"
 #include "timingsSettings.hpp"
 
@@ -41,8 +42,14 @@ void OptEngine::run()
     _evaluator->evaluate();
     _optimizer->updateHistory();
 
-    for (size_t i = 0; i < _optimizer->getNEpochs(); ++i)
+    const auto numberOfSteps = _optimizer->getNEpochs();
+
+    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
+
+    for (size_t i = 0; i < numberOfSteps; ++i)
     {
+        bar.update();
+
         takeStep();
 
         if (_converged || _optStopped)
@@ -174,10 +181,10 @@ void OptEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        std::cout << "Writing output files at step " << effStep << std::endl;
         _engineOutput.writeXyzFile(*_simulationBox);
         _engineOutput.writeForceFile(*_simulationBox);
         _engineOutput.writeRstFile(*_simulationBox, _step + step0);
+        _engineOutput.writeOptFile(_step, *_optimizer);
 
         // _engineOutput.writeVirialFile(
         //     effStep,
