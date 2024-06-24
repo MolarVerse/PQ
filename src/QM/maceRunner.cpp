@@ -16,21 +16,21 @@ namespace
     const py::scoped_interpreter guard{};
 }
 
-MaceRunner::MaceRunner(const std::string &model)
+MaceRunner::MaceRunner(const std::string &model, const std::string &fpType)
 {
     try
     {
-        py::module_ mace        = py::module_::import("mace");
-        py::module_ calculators = py::module_::import("mace.calculators");
-        _atoms_module           = py::module_::import("ase.atoms");
+        const py::module_ mace        = py::module_::import("mace");
+        const py::module_ calculators = py::module_::import("mace.calculators");
+        _atoms_module                 = py::module_::import("ase.atoms");
 
-        py::dict kwargs;
-        kwargs["model"]         = "medium";
-        kwargs["dispersion"]    = pybind11::bool_(false);
-        kwargs["default_dtype"] = pybind11::str("float32");
-        kwargs["device"]        = pybind11::str("cuda");
+        py::dict calculatorArgs;
+        calculatorArgs["model"]         = model.c_str();
+        calculatorArgs["dispersion"]    = pybind11::bool_(false);
+        calculatorArgs["default_dtype"] = fpType.c_str();
+        calculatorArgs["device"]        = pybind11::str("cuda");
 
-        _calculator = calculators.attr("mace_mp")(**kwargs);
+        _calculator = calculators.attr("mace_mp")(**calculatorArgs);
     }
     catch (const py::error_already_set &e)
     {

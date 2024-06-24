@@ -29,6 +29,7 @@
 #include "physicalData.hpp"      // for PhysicalData
 #include "pyscfRunner.hpp"       // for PySCFRunner
 #include "resetKinetics.hpp"     // for ResetKinetics
+#include "settings.hpp"          // for Settings
 #include "thermostat.hpp"        // for Thermostat
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
@@ -107,7 +108,9 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::MACE)
     {
         const auto maceModel = string(QMSettings::getMaceModel());
-        _qmRunner            = std::make_shared<QM::MaceRunner>(maceModel);
+        const auto fpType    = Settings::getFloatingPointPybindString();
+
+        _qmRunner = std::make_shared<QM::MaceRunner>(maceModel, fpType);
     }
 
     else

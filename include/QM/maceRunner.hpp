@@ -26,7 +26,7 @@ namespace QM
         pybind11::array_t<double> _stress_tensor;
 
        public:
-        explicit MaceRunner(const std::string &model);
+        explicit MaceRunner(const std::string &, const std::string &);
         ~MaceRunner() override = default;
 
         void execute(pq::SimBox &) override;

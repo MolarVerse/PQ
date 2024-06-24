@@ -194,5 +194,7 @@ void QMSetup::setupWriteInfo() const
     const auto qmScriptMessage = std::format("QM script: {}", qmScript);
 
     _engine.getLogOutput().writeSetupInfo(qmRunnerMessage);
-    _engine.getLogOutput().writeSetupInfo(qmScriptMessage);
+
+    if (QMSettings::isExternalQMRunner())
+        _engine.getLogOutput().writeSetupInfo(qmScriptMessage);
 }
