@@ -47,6 +47,18 @@ namespace settings
     };
 
     /**
+     * @enum FPType
+     *
+     * @brief enum class to store the floating point type
+     *
+     */
+    enum class FPType
+    {
+        FLOAT,
+        DOUBLE
+    };
+
+    /**
      * @class Settings
      *
      * @brief Stores the general settings of the simulation
@@ -55,7 +67,8 @@ namespace settings
     class Settings
     {
        private:
-        static inline JobType _jobtype;   // no default value
+        static inline JobType _jobtype;
+        static inline FPType  _floatingPointType = FPType::DOUBLE;
 
         static inline bool _useKokkos = false;
 
@@ -78,6 +91,9 @@ namespace settings
         static void setJobtype(const std::string_view jobtype);
         static void setJobtype(const JobType jobtype);
 
+        static void setFloatingPointType(const std::string_view);
+        static void setFloatingPointType(const FPType);
+
         static void setIsMMActivated(const bool isMM);
         static void setIsQMActivated(const bool isQM);
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
@@ -88,7 +104,11 @@ namespace settings
          ***************************/
 
         [[nodiscard]] static JobType getJobtype();
-        [[nodiscard]] static size_t  getDimensionality();
+
+        [[nodiscard]] static FPType      getFloatingPointType();
+        [[nodiscard]] static std::string getFloatingPointPybindString();
+
+        [[nodiscard]] static size_t getDimensionality();
 
         /******************************
          * standard is-active methods *

@@ -109,6 +109,32 @@ void Settings::setJobtype(const JobType jobtype)
 }
 
 /**
+ * @brief sets the floating point type
+ *
+ * @param floatingPointType
+ */
+void Settings::setFloatingPointType(const std::string_view floatingPointType)
+{
+    const auto floatingPointTypeToLower =
+        utilities::toLowerCopy(floatingPointType);
+
+    if (floatingPointTypeToLower == "float")
+        setFloatingPointType(settings::FPType::FLOAT);
+    else
+        setFloatingPointType(settings::FPType::DOUBLE);
+}
+
+/**
+ * @brief sets the floating point type
+ *
+ * @param floatingPointType
+ */
+void Settings::setFloatingPointType(const FPType floatingPointType)
+{
+    _floatingPointType = floatingPointType;
+}
+
+/**
  * @brief sets MM to active
  *
  * @param dimensionality
@@ -154,6 +180,25 @@ void Settings::setDimensionality(const size_t dimensionality)
  * @return JobType
  */
 settings::JobType Settings::getJobtype() { return _jobtype; }
+
+/**
+ * @brief get the floating point type
+ *
+ * @return FPType
+ */
+settings::FPType Settings::getFloatingPointType() { return _floatingPointType; }
+
+/**
+ * @brief get the floating point string representation used in pybind11 bindings
+ *
+ */
+std::string Settings::getFloatingPointPybindString()
+{
+    if (_floatingPointType == FPType::FLOAT)
+        return "float32";
+    else
+        return "float64";
+}
 
 /**
  * @brief get the dimensionality
