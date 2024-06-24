@@ -31,6 +31,8 @@
 #include <stop_token>
 #include <string>
 
+#include "timer.hpp"
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -51,7 +53,7 @@ namespace QM
      * @brief base class for different qm engines
      *
      */
-    class QMRunner
+    class QMRunner : public timings::Timer
     {
        public:
         virtual ~QMRunner() = default;

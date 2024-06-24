@@ -41,6 +41,7 @@ MaceRunner::MaceRunner(const std::string &model)
 
 void MaceRunner::execute(simulationBox::SimulationBox &simBox)
 {
+    startTimingsSection("MACE prepare");
     const auto pos             = simBox.flattenPositions();
     array_d    positions_array = array_d(pos.size(), &pos[0]);
 
@@ -88,13 +89,21 @@ void MaceRunner::execute(simulationBox::SimulationBox &simBox)
     py::object atoms = _atoms_module.attr("Atoms")(**kwargs);
     atoms.attr("set_calculator")(_calculator);
 
+    stopTimingsSection("MACE prepare");
+    startTimingsSection("MACE get forces");
     _forces = atoms.attr("get_forces")().cast<array_d>();
+    stopTimingsSection("MACE get forces");
+
+    startTimingsSection("MACE get potential energy");
     _energy = atoms.attr("get_potential_energy")().cast<double>();
+    stopTimingsSection("MACE get potential energy");
 
     py::dict stress_dict;
     stress_dict["voigt"] = pybind11::bool_(false);
 
+    startTimingsSection("MACE get stress tensor");
     _stress_tensor = atoms.attr("get_stress")(stress_dict).cast<array_d>();
+    stopTimingsSection("MACE get stress tensor");
 }
 
 void MaceRunner::collectData(
@@ -102,6 +111,7 @@ void MaceRunner::collectData(
     physicalData::PhysicalData   &physicalData
 )
 {
+    startTimingsSection("MACE collect data");
     const auto forces = _forces.unchecked<2>();
     for (size_t i = 0; i < forces.shape(0); ++i)
         simBox.getAtoms()[i]->setForce(
@@ -126,4 +136,5 @@ void MaceRunner::collectData(
     const auto virial = stress_tensor_ * simBox.getVolume();
 
     physicalData.addVirial(virial);
+    stopTimingsSection("MACE collect data");
 }
