@@ -19,12 +19,13 @@ namespace QM
         : public InternalQMRunner
     {
        private:
-        double                       _energy        = 0.0;
-        pybind11::object             _calculator    = pybind11::none();
-        pybind11::object             _atoms_module  = pybind11::none();
-        pybind11::array_t<double>    _forces        = pybind11::none();
-        pybind11::array_t<double>    _stress_tensor = pybind11::none();
-        pybind11::scoped_interpreter _guard;
+        double                    _energy;
+        pybind11::object          _calculator;
+        pybind11::object          _atoms_module;
+        pybind11::array_t<double> _forces;
+        pybind11::array_t<double> _stress_tensor;
+
+        std::unique_ptr<pybind11::scoped_interpreter> _guard;
 
        public:
         explicit MaceRunner(const std::string &model);

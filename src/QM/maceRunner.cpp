@@ -7,7 +7,8 @@
 using QM::MaceRunner;
 using namespace pybind11;
 
-MaceRunner::MaceRunner(const std::string &model) : _guard{}
+MaceRunner::MaceRunner(const std::string &model)
+    : _guard(std::make_unique<pybind11::scoped_interpreter>())
 {
     std::cout << "Initializing MaceRunner" << std::endl;
 
