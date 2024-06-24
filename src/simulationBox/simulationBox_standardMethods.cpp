@@ -346,11 +346,26 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 }
 
 /**
+ * @brief get all atomic numbers of all atoms
+ *
+ * @return std::vector<int>
+ */
+std::vector<int> SimulationBox::getAtomicNumbers() const
+{
+    std::vector<int> atomicNumbers;
+
+    for (const auto &atom : _atoms)
+        atomicNumbers.push_back(atom->getAtomicNumber());
+
+    return atomicNumbers;
+}
+
+/**
  * @brief flattens positions of each atom into a single vector of doubles
  *
  * @return std::vector<double>
  */
-std::vector<double> SimulationBox::flattenPositions()
+std::vector<double> SimulationBox::flattenPositions() const
 {
     std::vector<double> positions;
 

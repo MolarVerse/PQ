@@ -32,9 +32,9 @@ MaceRunner::MaceRunner(const std::string &model, const std::string &fpType)
 
         _calculator = calculators.attr("mace_mp")(**calculatorArgs);
     }
-    catch (const py::error_already_set &e)
+    catch (const py::error_already_set &)
     {
-        PyErr_Print();
+        ::PyErr_Print();
         throw;
     }
 }
@@ -42,13 +42,15 @@ MaceRunner::MaceRunner(const std::string &model, const std::string &fpType)
 void MaceRunner::execute(simulationBox::SimulationBox &simBox)
 {
     startTimingsSection("MACE prepare");
-    const auto pos             = simBox.flattenPositions();
-    array_d    positions_array = array_d(pos.size(), &pos[0]);
 
     const auto nAtoms = simBox.getNumberOfAtoms();
 
-    auto shape   = std::vector<size_t>{nAtoms, 3};
-    auto strides = std::vector<size_t>{sizeof(double) * 3, sizeof(double)};
+    const auto pos             = simBox.flattenPositions();
+    array_d    positions_array = array_d(ssize_t(nAtoms), &pos[0]);
+
+    const auto shape = std::vector<size_t>{nAtoms, 3};
+    const auto strides =
+        std::vector<size_t>{sizeof(double) * 3, sizeof(double)};
 
     auto positions_array_reshaped = pybind11::array(py::buffer_info(
         positions_array.mutable_data(),            // Pointer to data
@@ -70,15 +72,13 @@ void MaceRunner::execute(simulationBox::SimulationBox &simBox)
         boxAngles[2]
     };
 
-    array_d             box_array_ = array_d(6, &box_array[0]);
+    auto box_array_ = array_d(6, &box_array[0]);
+
     std::array<bool, 3> pbc_array  = {true, true, true};
-    py::array_t<bool>   pbc_array_ = py::array_t<bool>(3, &pbc_array[0]);
+    auto                pbc_array_ = py::array_t<bool>(3, &pbc_array[0]);
 
-    std::vector<int> atomic_numbers;
-    for (const auto &atom : simBox.getAtoms())
-        atomic_numbers.push_back(atom->getAtomicNumber());
-
-    array_i atomic_numbers_array = array_i(nAtoms, &atomic_numbers[0]);
+    std::vector<int> atomic_numbers = simBox.getAtomicNumbers();
+    auto atomic_numbers_array = array_i(ssize_t(nAtoms), &atomic_numbers[0]);
 
     py::dict kwargs;
     kwargs["positions"] = positions_array_reshaped;
