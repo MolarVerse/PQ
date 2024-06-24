@@ -107,9 +107,7 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::MACE)
     {
         const auto maceModel = string(QMSettings::getMaceModel());
-        std::cout << "Mace model: " << maceModel << "\nInitializing MaceRunner"
-                  << std::endl;
-        _qmRunner = std::make_shared<QM::MaceRunner>(maceModel);
+        _qmRunner            = std::make_shared<QM::MaceRunner>(maceModel);
     }
 
     else

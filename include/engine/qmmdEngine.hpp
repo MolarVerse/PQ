@@ -30,10 +30,6 @@
 #include "qmRunner.hpp"     // for QMRunner
 #include "qmSettings.hpp"   // for QMSettings
 
-#ifdef BUILD_PYBIND11
-#include <pybind11/embed.h>
-#endif
-
 namespace engine
 {
 
@@ -47,9 +43,6 @@ namespace engine
     {
        protected:
         std::shared_ptr<QM::QMRunner> _qmRunner = nullptr;
-#ifdef BUILD_PYBIND11
-        pybind11::scoped_interpreter guard{};
-#endif
 
        public:
         ~QMMDEngine() override = default;

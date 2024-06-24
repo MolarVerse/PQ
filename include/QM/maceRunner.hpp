@@ -25,8 +25,6 @@ namespace QM
         pybind11::array_t<double> _forces;
         pybind11::array_t<double> _stress_tensor;
 
-        std::unique_ptr<pybind11::scoped_interpreter> _guard;
-
        public:
         explicit MaceRunner(const std::string &model);
         ~MaceRunner() override = default;

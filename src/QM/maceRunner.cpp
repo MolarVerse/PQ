@@ -7,11 +7,13 @@
 using QM::MaceRunner;
 using namespace pybind11;
 
-MaceRunner::MaceRunner(const std::string &model)
-    : _guard(std::make_unique<pybind11::scoped_interpreter>())
+namespace
 {
-    std::cout << "Initializing MaceRunner" << std::endl;
+    const scoped_interpreter guard{};
+}
 
+MaceRunner::MaceRunner(const std::string &model)
+{
     module_ mace        = module_::import("mace");
     module_ calculators = module_::import("mace.calculators");
     _atoms_module       = module_::import("ase.atoms");
@@ -23,7 +25,6 @@ MaceRunner::MaceRunner(const std::string &model)
     kwargs["device"]       = "cuda";
 
     _calculator = calculators.attr("mace_mp")(**kwargs);
-    std::cout << "Initializing MaceRunner" << std::endl;
 }
 
 void MaceRunner::prepareAtoms(simulationBox::SimulationBox &simBox)

@@ -1,3 +1,7 @@
+find_package(Python3 REQUIRED COMPONENTS Interpreter NumPy Development)
+
+link_libraries(Python3::NumPy)
+
 FetchContent_Declare(
     pybind11
     GIT_REPOSITORY https://github.com/pybind/pybind11.git
