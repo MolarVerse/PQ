@@ -150,7 +150,6 @@ namespace simulationBox
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
         [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
 
-        [[nodiscard]] std::vector<double> flattenPositions();
         [[nodiscard]] std::vector<double> flattenVelocities();
         [[nodiscard]] std::vector<double> flattenForces();
         [[nodiscard]] std::vector<double> flattenPartialCharges();
@@ -216,6 +215,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
+        [[nodiscard]] std::vector<double>    flattenPositions();
 
         /***************************
          * standard setter methods *

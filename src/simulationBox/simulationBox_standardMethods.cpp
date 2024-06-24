@@ -345,6 +345,29 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
     return forces;
 }
 
+/**
+ * @brief flattens positions of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> SimulationBox::flattenPositions()
+{
+    std::vector<double> positions;
+
+    auto addPositions = [&positions](auto &atom)
+    {
+        const auto position = atom->getPosition();
+
+        positions.push_back(position[0]);
+        positions.push_back(position[1]);
+        positions.push_back(position[2]);
+    };
+
+    std::ranges::for_each(_atoms, addPositions);
+
+    return positions;
+}
+
 /***************************
  *                         *
  * standard setter methods *

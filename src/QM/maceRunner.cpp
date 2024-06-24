@@ -8,6 +8,9 @@ using QM::MaceRunner;
 using std::vector;
 namespace py = pybind11;
 
+using array_d = py::array_t<double>;
+using array_i = py::array_t<int>;
+
 namespace
 {
     const py::scoped_interpreter guard{};
@@ -38,25 +41,13 @@ MaceRunner::MaceRunner(const std::string &model)
 
 void MaceRunner::execute(simulationBox::SimulationBox &simBox)
 {
-    const auto          positions = simBox.getPositions();
-    std::vector<double> pos;
-    for (const auto &p : positions)
-    {
-        pos.push_back(p[0]);
-        pos.push_back(p[1]);
-        pos.push_back(p[2]);
-    }
+    const auto pos             = simBox.flattenPositions();
+    array_d    positions_array = array_d(pos.size(), &pos[0]);
 
-    py::array_t<double> positions_array =
-        py::array_t<double>(pos.size(), &pos[0]);
+    const auto nAtoms = simBox.getNumberOfAtoms();
 
-    auto shape =
-        std::vector<size_t>{simBox.getNumberOfAtoms(), 3};   // Shape (N, 3)
-
-    auto strides = std::vector<size_t>{
-        sizeof(double) * 3,
-        sizeof(double)
-    };   // Strides (row-major)
+    auto shape   = std::vector<size_t>{nAtoms, 3};
+    auto strides = std::vector<size_t>{sizeof(double) * 3, sizeof(double)};
 
     auto positions_array_reshaped = pybind11::array(py::buffer_info(
         positions_array.mutable_data(),            // Pointer to data
@@ -69,16 +60,16 @@ void MaceRunner::execute(simulationBox::SimulationBox &simBox)
 
     const auto            boxDimension = simBox.getBoxDimensions();
     const auto            boxAngles    = simBox.getBoxAngles();
-    std::array<double, 9> box_array;
+    std::array<double, 6> box_array    = {
+        boxDimension[0],
+        boxDimension[1],
+        boxDimension[2],
+        boxAngles[0],
+        boxAngles[1],
+        boxAngles[2]
+    };
 
-    box_array[0] = boxDimension[0];
-    box_array[1] = boxDimension[1];
-    box_array[2] = boxDimension[2];
-    box_array[3] = boxAngles[0];
-    box_array[4] = boxAngles[1];
-    box_array[5] = boxAngles[2];
-
-    py::array_t<double> box_array_ = py::array_t<double>(6, &box_array[0]);
+    array_d             box_array_ = array_d(6, &box_array[0]);
     std::array<bool, 3> pbc_array  = {true, true, true};
     py::array_t<bool>   pbc_array_ = py::array_t<bool>(3, &pbc_array[0]);
 
@@ -86,8 +77,7 @@ void MaceRunner::execute(simulationBox::SimulationBox &simBox)
     for (const auto &atom : simBox.getAtoms())
         atomic_numbers.push_back(atom->getAtomicNumber());
 
-    py::array_t<int> atomic_numbers_array =
-        py::array_t<int>(atomic_numbers.size(), &atomic_numbers[0]);
+    array_i atomic_numbers_array = array_i(nAtoms, &atomic_numbers[0]);
 
     py::dict kwargs;
     kwargs["positions"] = positions_array_reshaped;
@@ -98,14 +88,13 @@ void MaceRunner::execute(simulationBox::SimulationBox &simBox)
     py::object atoms = _atoms_module.attr("Atoms")(**kwargs);
     atoms.attr("set_calculator")(_calculator);
 
-    _forces = atoms.attr("get_forces")().cast<py::array_t<double>>();
+    _forces = atoms.attr("get_forces")().cast<array_d>();
     _energy = atoms.attr("get_potential_energy")().cast<double>();
 
     py::dict stress_dict;
     stress_dict["voigt"] = pybind11::bool_(false);
 
-    _stress_tensor =
-        atoms.attr("get_stress")(stress_dict).cast<py::array_t<double>>();
+    _stress_tensor = atoms.attr("get_stress")(stress_dict).cast<array_d>();
 }
 
 void MaceRunner::collectData(
