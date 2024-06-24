@@ -44,8 +44,8 @@ namespace QM
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void run(pq::SimBox &, pq::PhysicalData &) override;
-        void execute() override = 0;
+        void         run(pq::SimBox &, pq::PhysicalData &) override;
+        virtual void execute() = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
         virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {};

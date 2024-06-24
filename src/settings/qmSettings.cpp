@@ -176,9 +176,9 @@ bool QMSettings::isExternalQMRunner()
 {
     auto isExternal = false;
 
-    isExternal = isExternal || _qmMethod != QMMethod::DFTBPLUS;
-    isExternal = isExternal || _qmMethod != QMMethod::PYSCF;
-    isExternal = isExternal || _qmMethod != QMMethod::TURBOMOLE;
+    isExternal = isExternal || _qmMethod == QMMethod::DFTBPLUS;
+    isExternal = isExternal || _qmMethod == QMMethod::PYSCF;
+    isExternal = isExternal || _qmMethod == QMMethod::TURBOMOLE;
 
     return isExternal;
 }

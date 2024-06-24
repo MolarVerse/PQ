@@ -42,7 +42,7 @@ namespace engine
     class QMMDEngine : virtual public MDEngine
     {
        protected:
-        std::shared_ptr<QM::QMRunner> _qmRunner = nullptr;
+        std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:
         ~QMMDEngine() override = default;

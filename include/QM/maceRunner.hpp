@@ -29,8 +29,7 @@ namespace QM
         explicit MaceRunner(const std::string &model);
         ~MaceRunner() override = default;
 
-        void execute() override;
-        void prepareAtoms(pq::SimBox &) override;
+        void execute(pq::SimBox &) override;
         void collectData(pq::SimBox &, pq::PhysicalData &) override;
     };
 }   // namespace QM

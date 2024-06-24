@@ -22,11 +22,17 @@
 
 #include "internalQMRunner.hpp"
 
+#include <thread>
+
 using QM::InternalQMRunner;
 
 void InternalQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
 {
-    prepareAtoms(simBox);
-    execute();
+    std::jthread timeoutThread{[this](const std::stop_token stopToken)
+                               { throwAfterTimeout(stopToken); }};
+
+    execute(simBox);
     collectData(simBox, physicalData);
+
+    timeoutThread.request_stop();
 }

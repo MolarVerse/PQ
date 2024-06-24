@@ -5,39 +5,67 @@
 #include "simulationBox.hpp"
 
 using QM::MaceRunner;
-using namespace pybind11;
+using std::vector;
+namespace py = pybind11;
 
 namespace
 {
-    const scoped_interpreter guard{};
+    const py::scoped_interpreter guard{};
 }
 
 MaceRunner::MaceRunner(const std::string &model)
 {
-    module_ mace        = module_::import("mace");
-    module_ calculators = module_::import("mace.calculators");
-    _atoms_module       = module_::import("ase.atoms");
+    try
+    {
+        py::module_ mace        = py::module_::import("mace");
+        py::module_ calculators = py::module_::import("mace.calculators");
+        _atoms_module           = py::module_::import("ase.atoms");
 
-    dict kwargs;
-    kwargs["model"]        = model.c_str();
-    kwargs["dispersion"]   = false;
-    kwargs["default_type"] = "float32";
-    kwargs["device"]       = "cuda";
+        py::dict kwargs;
+        kwargs["model"]         = "medium";
+        kwargs["dispersion"]    = pybind11::bool_(false);
+        kwargs["default_dtype"] = pybind11::str("float32");
+        kwargs["device"]        = pybind11::str("cuda");
 
-    _calculator = calculators.attr("mace_mp")(**kwargs);
+        _calculator = calculators.attr("mace_mp")(**kwargs);
+    }
+    catch (const py::error_already_set &e)
+    {
+        PyErr_Print();
+        throw;
+    }
 }
 
-void MaceRunner::prepareAtoms(simulationBox::SimulationBox &simBox)
+void MaceRunner::execute(simulationBox::SimulationBox &simBox)
 {
-    const auto                         positions = simBox.getPositions();
-    std::vector<std::array<double, 3>> pos;
+    const auto          positions = simBox.getPositions();
+    std::vector<double> pos;
     for (const auto &p : positions)
     {
-        pos.push_back({p[0], p[1], p[2]});
+        pos.push_back(p[0]);
+        pos.push_back(p[1]);
+        pos.push_back(p[2]);
     }
 
-    array_t<double> positions_array =
-        array_t<double>(pos.size() * 3, &pos[0][0]);
+    py::array_t<double> positions_array =
+        py::array_t<double>(pos.size(), &pos[0]);
+
+    auto shape =
+        std::vector<size_t>{simBox.getNumberOfAtoms(), 3};   // Shape (N, 3)
+
+    auto strides = std::vector<size_t>{
+        sizeof(double) * 3,
+        sizeof(double)
+    };   // Strides (row-major)
+
+    auto positions_array_reshaped = pybind11::array(py::buffer_info(
+        positions_array.mutable_data(),            // Pointer to data
+        sizeof(double),                            // Size of one scalar
+        py::format_descriptor<double>::format(),   // Data type
+        2,                                         // Number of dimensions
+        shape,                                     // Shape (N, 3)
+        strides                                    // Strides
+    ));
 
     const auto            boxDimension = simBox.getBoxDimensions();
     const auto            boxAngles    = simBox.getBoxAngles();
@@ -50,36 +78,34 @@ void MaceRunner::prepareAtoms(simulationBox::SimulationBox &simBox)
     box_array[4] = boxAngles[1];
     box_array[5] = boxAngles[2];
 
-    array_t<double>     box_array_ = array_t<double>(9, &box_array[0]);
+    py::array_t<double> box_array_ = py::array_t<double>(6, &box_array[0]);
     std::array<bool, 3> pbc_array  = {true, true, true};
-    array_t<bool>       pbc_array_ = array_t<bool>(3, &pbc_array[0]);
+    py::array_t<bool>   pbc_array_ = py::array_t<bool>(3, &pbc_array[0]);
 
     std::vector<int> atomic_numbers;
     for (const auto &atom : simBox.getAtoms())
-    {
         atomic_numbers.push_back(atom->getAtomicNumber());
-    }
 
-    array_t<int> atomic_numbers_array =
-        array_t<int>(atomic_numbers.size(), &atomic_numbers[0]);
+    py::array_t<int> atomic_numbers_array =
+        py::array_t<int>(atomic_numbers.size(), &atomic_numbers[0]);
 
-    dict kwargs;
-    kwargs["positions"] = positions_array;
+    py::dict kwargs;
+    kwargs["positions"] = positions_array_reshaped;
     kwargs["cell"]      = box_array_;
     kwargs["pbc"]       = pbc_array_;
     kwargs["numbers"]   = atomic_numbers_array;
 
-    object atoms = _atoms_module.attr("Atoms")(**kwargs);
+    py::object atoms = _atoms_module.attr("Atoms")(**kwargs);
     atoms.attr("set_calculator")(_calculator);
 
-    _forces        = atoms.attr("get_forces")().cast<array_t<double>>();
-    _energy        = atoms.attr("get_potential_energy")().cast<double>();
-    _stress_tensor = atoms.attr("get_stress")().cast<array_t<double>>();
-}
+    _forces = atoms.attr("get_forces")().cast<py::array_t<double>>();
+    _energy = atoms.attr("get_potential_energy")().cast<double>();
 
-void MaceRunner::execute()
-{
-    // nothing to do here
+    py::dict stress_dict;
+    stress_dict["voigt"] = pybind11::bool_(false);
+
+    _stress_tensor =
+        atoms.attr("get_stress")(stress_dict).cast<py::array_t<double>>();
 }
 
 void MaceRunner::collectData(
@@ -89,24 +115,26 @@ void MaceRunner::collectData(
 {
     const auto forces = _forces.unchecked<2>();
     for (size_t i = 0; i < forces.shape(0); ++i)
-    {
         simBox.getAtoms()[i]->setForce(
-            {forces(i, 0), forces(i, 1), forces(i, 2)}
+            {forces(i, 0) * constants::_EV_TO_KCAL_PER_MOL_,
+             forces(i, 1) * constants::_EV_TO_KCAL_PER_MOL_,
+             forces(i, 2) * constants::_EV_TO_KCAL_PER_MOL_}
         );
-    }
 
-    physicalData.setQMEnergy(_energy);
+    physicalData.setQMEnergy(_energy * constants::_EV_TO_KCAL_PER_MOL_);
 
-    const auto              stress_tensor = _stress_tensor.unchecked<2>();
+    const auto              stress_tensor = _stress_tensor.unchecked<1>();
     linearAlgebra::tensor3D stress_tensor_;
 
-    for (size_t i = 0; i < stress_tensor.shape(0); ++i)
-    {
-        for (size_t j = 0; j < stress_tensor.shape(1); ++j)
-        {
-            stress_tensor_[j][i] = stress_tensor(i, j);
-        }
-    }
+    for (size_t i = 0; i < 3; ++i)
+        for (size_t j = 0; j < 3; ++j)
+            stress_tensor_[j][i] = stress_tensor[i * 3 + j];
 
-    physicalData.setStressTensor(stress_tensor_);
+    physicalData.setStressTensor(
+        stress_tensor_ * constants::_EV_TO_KCAL_PER_MOL_
+    );
+
+    const auto virial = stress_tensor_ * simBox.getVolume();
+
+    physicalData.addVirial(virial);
 }

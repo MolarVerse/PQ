@@ -27,7 +27,6 @@
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
-#include <functional>   // for bind
 #include <string>       // for string
 #include <thread>       // for sleep_for
 #include <vector>       // for vector

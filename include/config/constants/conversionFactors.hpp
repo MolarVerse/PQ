@@ -96,6 +96,8 @@ namespace constants
     static constexpr double _J_TO_KCAL_                          = 1.0 / _KCAL_TO_J_;
     static constexpr double _J_TO_KCAL_PER_MOL_                  = _J_TO_KCAL_ * _AVOGADRO_NUMBER_;
     static constexpr double _KCAL_PER_MOL_TO_J_                  = 1.0 / _J_TO_KCAL_PER_MOL_;
+    static constexpr double _EV_TO_J_                            = 1.602176634e-19;
+    static constexpr double _EV_TO_KCAL_PER_MOL_                 = _EV_TO_J_ * _J_TO_KCAL_PER_MOL_;
     static constexpr double _HARTREE_TO_KCAL_PER_MOL_            = 627.5096080305927;
     static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ = _BOLTZMANN_CONSTANT_ * _J_TO_KCAL_PER_MOL_;
     // clang-format on
