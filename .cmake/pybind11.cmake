@@ -10,3 +10,6 @@ if(NOT pybind11_FOUND)
 else()
     message(STATUS "Successfully installed the pybind11 python package")
 endif()
+
+set(BUILD_WITH_PYBIND11 ON)
+add_definitions(-DWITH_PYBIND11)

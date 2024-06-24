@@ -33,32 +33,27 @@
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 using namespace input;
+using namespace settings;
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), settings::QMMethod::NONE);
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
 
     auto parser = InputFileParserQM(*_engine);
     parser.parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getQMMethod(),
-        settings::QMMethod::DFTBPLUS
-    );
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::DFTBPLUS);
 
     parser.parseQMMethod({"qm_prog", "=", "pyscf"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), settings::QMMethod::PYSCF);
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::PYSCF);
 
     parser.parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getQMMethod(),
-        settings::QMMethod::TURBOMOLE
-    );
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::TURBOMOLE);
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         customException::InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, pyscf, turbomole"
+        "Possible values are: dftbplus, pyscf, turbomole, mace"
     )
 }
 
@@ -66,7 +61,7 @@ TEST_F(TestInputFileReader, parseQMScript)
 {
     auto parser = InputFileParserQM(*_engine);
     parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
+    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
@@ -76,8 +71,5 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
         {"qm_script_full_path", "=", "/path/to/script.sh"},
         0
     );
-    EXPECT_EQ(
-        settings::QMSettings::getQMScriptFullPath(),
-        "/path/to/script.sh"
-    );
+    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
 }

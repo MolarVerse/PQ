@@ -70,6 +70,17 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
+if(BUILD_WITH_PYBIND11)
+    target_include_directories(engine
+        PRIVATE
+        ${pybind11_INCLUDE_DIR}
+    )
+    target_link_libraries(engine
+        PRIVATE
+        pybind11::embed
+    )
+endif()
+
 install(TARGETS engine
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

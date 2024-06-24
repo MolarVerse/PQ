@@ -41,10 +41,19 @@ namespace settings
         NONE,
         DFTBPLUS,
         PYSCF,
-        TURBOMOLE
+        TURBOMOLE,
+        MACE
+    };
+
+    enum class MaceModel : size_t
+    {
+        LARGE,
+        MEDIUM,
+        SMALL
     };
 
     std::string string(const QMMethod method);
+    std::string string(const MaceModel model);
 
     /**
      * @class QMSettings
@@ -63,13 +72,18 @@ namespace settings
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
         // clang-format on
 
+        static inline MaceModel _maceModel = MaceModel::LARGE;
+
        public:
         static void setQMMethod(const std::string_view &method);
-
         static void setQMMethod(const QMMethod method);
+
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
         static void setQMLoopTimeLimit(const double time);
+
+        static void setMaceModel(const std::string_view &model);
+        static void setMaceModel(const MaceModel model);
 
         [[nodiscard]] static bool isExternalQMRunner();
 
@@ -77,6 +91,7 @@ namespace settings
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
         [[nodiscard]] static double      getQMLoopTimeLimit();
+        [[nodiscard]] static MaceModel   getMaceModel();
     };
 }   // namespace settings
 

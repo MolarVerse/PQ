@@ -1,26 +1,28 @@
 #include "maceRunner.hpp"
 
 #include "physicalData.hpp"
+#include "pybind11/embed.h"
 #include "simulationBox.hpp"
 
 using QM::MaceRunner;
 using namespace pybind11;
 
-MaceRunner::MaceRunner()
+MaceRunner::MaceRunner(const std::string &model) : _guard{}
 {
-    initialize_interpreter();
+    std::cout << "Initializing MaceRunner" << std::endl;
 
     module_ mace        = module_::import("mace");
     module_ calculators = module_::import("mace.calculators");
     _atoms_module       = module_::import("ase.atoms");
 
     dict kwargs;
-    kwargs["mode"]         = "large";
+    kwargs["model"]        = model.c_str();
     kwargs["dispersion"]   = false;
     kwargs["default_type"] = "float32";
     kwargs["device"]       = "cuda";
 
     _calculator = calculators.attr("mace_mp")(**kwargs);
+    std::cout << "Initializing MaceRunner" << std::endl;
 }
 
 void MaceRunner::prepareAtoms(simulationBox::SimulationBox &simBox)
@@ -35,15 +37,16 @@ void MaceRunner::prepareAtoms(simulationBox::SimulationBox &simBox)
     array_t<double> positions_array =
         array_t<double>(pos.size() * 3, &pos[0][0]);
 
-    const auto            box = simBox.getBox();
+    const auto            boxDimension = simBox.getBoxDimensions();
+    const auto            boxAngles    = simBox.getBoxAngles();
     std::array<double, 9> box_array;
 
-    box_array[0] = box.getBoxDimensions()[0];
-    box_array[1] = box.getBoxDimensions()[1];
-    box_array[2] = box.getBoxDimensions()[2];
-    box_array[3] = box.getBoxAngles()[0];
-    box_array[4] = box.getBoxAngles()[1];
-    box_array[5] = box.getBoxAngles()[2];
+    box_array[0] = boxDimension[0];
+    box_array[1] = boxDimension[1];
+    box_array[2] = boxDimension[2];
+    box_array[3] = boxAngles[0];
+    box_array[4] = boxAngles[1];
+    box_array[5] = boxAngles[2];
 
     array_t<double>     box_array_ = array_t<double>(9, &box_array[0]);
     std::array<bool, 3> pbc_array  = {true, true, true};

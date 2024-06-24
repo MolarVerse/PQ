@@ -16,11 +16,11 @@ set(source_files
     testParserCoulombLongRange.cpp
     testParserNonCoulomb.cpp
     testParserFiles.cpp
-    testParserQM.cpp
     testParserRingPolymer.cpp
 
-    testOptParser.cpp
     testConvergenceParser.cpp
+    testOptParser.cpp
+    testQMParser.cpp
 )
 
 foreach(source_file ${source_files})

@@ -22,10 +22,15 @@
 
 #include "qmSettings.hpp"
 
+#include <format>   // for std::format
+
+#include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
+using settings::MaceModel;
 using settings::QMMethod;
 using settings::QMSettings;
+using namespace customException;
 
 /**
  * @brief returns the qmMethod as string
@@ -43,6 +48,28 @@ std::string settings::string(const QMMethod method)
 
         case QMMethod::TURBOMOLE: return "TURBOMOLE";
 
+        case QMMethod::MACE: return "MACE";
+
+        default: return "none";
+    }
+}
+
+/**
+ * @brief returns the maceModel as string
+ *
+ * @param model
+ * @return std::string
+ */
+std::string settings::string(const MaceModel model)
+{
+    switch (model)
+    {
+        case MaceModel::LARGE: return "large";
+
+        case MaceModel::MEDIUM: return "medium";
+
+        case MaceModel::SMALL: return "small";
+
         default: return "none";
     }
 }
@@ -56,14 +83,17 @@ void QMSettings::setQMMethod(const std::string_view &method)
 {
     const auto methodToLower = utilities::toLowerCopy(method);
 
-    if ("dftbplus" == method)
+    if ("dftbplus" == methodToLower)
         _qmMethod = QMMethod::DFTBPLUS;
 
-    else if ("pyscf" == method)
+    else if ("pyscf" == methodToLower)
         _qmMethod = QMMethod::PYSCF;
 
-    else if ("turbomole" == method)
+    else if ("turbomole" == methodToLower)
         _qmMethod = QMMethod::TURBOMOLE;
+
+    else if ("mace" == methodToLower)
+        _qmMethod = QMMethod::MACE;
 
     else
         _qmMethod = QMMethod::NONE;
@@ -105,6 +135,37 @@ void QMSettings::setQMLoopTimeLimit(const double time)
 {
     _qmLoopTimeLimit = time;
 }
+
+/**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModel(const std::string_view &model)
+{
+    const auto modelToLower = utilities::toLowerCopy(model);
+
+    if ("large" == modelToLower)
+        _maceModel = MaceModel::LARGE;
+
+    else if ("medium" == modelToLower)
+        _maceModel = MaceModel::MEDIUM;
+
+    else if ("small" == modelToLower)
+        _maceModel = MaceModel::SMALL;
+
+    else
+        throw UserInputException(
+            std::format("Mace {} model not recognized", model)
+        );
+}
+
+/**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
 
 /**
  * @brief returns if the external qm runner is activated
@@ -149,3 +210,10 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  * @return double
  */
 double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+
+/**
+ * @brief returns the maceModel
+ *
+ * @return MaceModel
+ */
+MaceModel QMSettings::getMaceModel() { return _maceModel; }

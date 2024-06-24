@@ -22,14 +22,19 @@
 
 #include "qmmdEngine.hpp"
 
+#include "dftbplusRunner.hpp"    // for DFTBPlusRunner
 #include "integrator.hpp"        // for Integrator
+#include "maceRunner.hpp"        // for MaceRunner
 #include "manostat.hpp"          // for Manostat
 #include "physicalData.hpp"      // for PhysicalData
+#include "pyscfRunner.hpp"       // for PySCFRunner
 #include "resetKinetics.hpp"     // for ResetKinetics
 #include "thermostat.hpp"        // for Thermostat
 #include "timingsSettings.hpp"   // for TimingsSettings
+#include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 using engine::QMMDEngine;
+using namespace settings;
 
 /**
  * @brief Takes one step in a QM MD simulation.
@@ -82,3 +87,39 @@ void QMMDEngine::takeStep()
 
     _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
 }
+
+/**
+ * @brief Set the QMRunner object based on the QM method.
+ *
+ * @param method
+ */
+void QMMDEngine::setQMRunner(const QMMethod method)
+{
+    if (method == QMMethod::DFTBPLUS)
+        _qmRunner = std::make_shared<QM::DFTBPlusRunner>();
+
+    else if (method == QMMethod::PYSCF)
+        _qmRunner = std::make_shared<QM::PySCFRunner>();
+
+    else if (method == QMMethod::TURBOMOLE)
+        _qmRunner = std::make_shared<QM::TurbomoleRunner>();
+
+    else if (method == QMMethod::MACE)
+    {
+        const auto maceModel = string(QMSettings::getMaceModel());
+        _qmRunner            = std::make_shared<QM::MaceRunner>(maceModel);
+    }
+
+    else
+        throw customException::InputFileException(
+            "A qm based jobtype was requested but no external "
+            "program via \"qm_prog\" provided"
+        );
+}
+
+/**
+ * @brief Get the QMRunner object.
+ *
+ * @return QM::QMRunner *
+ */
+QM::QMRunner *QMMDEngine::getQMRunner() const { return _qmRunner.get(); }
