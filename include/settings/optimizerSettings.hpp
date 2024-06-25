@@ -53,6 +53,7 @@ namespace settings
         CONSTANT,
         CONSTANT_DECAY,
         EXPONENTIAL_DECAY,
+        LINESEARCH_WOLFE
     };
 
     std::string string(const Optimizer method);

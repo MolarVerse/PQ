@@ -55,6 +55,7 @@ std::string settings::string(const LREnum method)
         case CONSTANT: return "CONSTANT";
         case CONSTANT_DECAY: return "CONSTANT-DECAY";
         case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
+        case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
 
         default: return "none";
     }
@@ -107,6 +108,9 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 
     else if ("exponential-decay" == method)
         setLearningRateStrategy(EXPONENTIAL_DECAY);
+
+    else if ("linesearch-wolfe" == method)
+        setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else
         setLearningRateStrategy(NONE);
