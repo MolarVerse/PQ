@@ -10,6 +10,7 @@ add_library(settings
     timingsSettings.cpp
     forceFieldSettings.cpp
     qmSettings.cpp
+    qmmmSettings.cpp
     ringPolymerSettings.cpp
     outputFileSettings.cpp
     optimizerSettings.cpp
