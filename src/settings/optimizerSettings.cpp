@@ -95,14 +95,16 @@ void OptimizerSettings::setOptimizer(const Optimizer optimizer)
  */
 void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
+    using enum LREnum;
+
     if ("constant" == method)
-        setLearningRateStrategy(LREnum::CONSTANT);
+        setLearningRateStrategy(CONSTANT);
 
     else if ("constant-decay" == method)
-        setLearningRateStrategy(LREnum::CONSTANT_DECAY);
+        setLearningRateStrategy(CONSTANT_DECAY);
 
     else
-        setLearningRateStrategy(LREnum::NONE);
+        setLearningRateStrategy(NONE);
 }
 
 /**
