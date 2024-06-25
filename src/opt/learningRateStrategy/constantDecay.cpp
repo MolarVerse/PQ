@@ -69,7 +69,7 @@ std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
 /**
  * @brief Update the learning rate
  */
-void ConstantDecayLRStrategy::updateLearningRate()
+void ConstantDecayLRStrategy::updateLearningRate(const size_t)
 {
     if (_counter % _frequency == 0)
         _learningRate -= _decay;

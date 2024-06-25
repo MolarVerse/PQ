@@ -136,7 +136,7 @@ void OptEngine::takeStep()
 
     if (!_converged)
     {
-        _learningRateStrategy->updateLearningRate();
+        _learningRateStrategy->updateLearningRate(_step);
 
         if (!_learningRateStrategy->getErrorMessages().empty())
             _optStopped = true;

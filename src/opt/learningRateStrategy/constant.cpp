@@ -49,4 +49,4 @@ std::shared_ptr<LearningRateStrategy> ConstantLRStrategy::clone() const
  *
  * @details This function does nothing, as the learning rate is constant.
  */
-void ConstantLRStrategy::updateLearningRate() {}
+void ConstantLRStrategy::updateLearningRate(const size_t) {}

@@ -43,7 +43,7 @@ namespace opt
         ExpDecayLR() = default;
         ExpDecayLR(const double, const double);
 
-        void updateLearningRate() override;
+        void updateLearningRate(const size_t) override;
     };
 
 }   // namespace opt

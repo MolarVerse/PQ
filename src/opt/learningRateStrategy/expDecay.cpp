@@ -20,4 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-# include "expDecay.hpp"
+#include "expDecay.hpp"
+
+using namespace opt;
+
+/**
+ * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object
+ *
+ * @param initialLearningRate
+ * @param decay
+ * @param frequency
+ */
+ExpDecayLR::ExpDecayLR(const double initialLearningRate, const double decay)
+    : LearningRateStrategy(initialLearningRate), _decay(decay)
+{
+}
+
+/**
+ * @brief Update the learning rate
+ */
+void ExpDecayLR::updateLearningRate(const size_t step)
+{
+    _learningRate  = _initialLearningRate * std::exp(-_decay * _counter);
+    _counter      += _frequency;
+}

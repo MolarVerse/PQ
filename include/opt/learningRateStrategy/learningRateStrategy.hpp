@@ -67,7 +67,7 @@ namespace opt
 
         virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
-        virtual void updateLearningRate() = 0;
+        virtual void updateLearningRate(const size_t step) = 0;
         void         checkLearningRate();
 
         /***************************
