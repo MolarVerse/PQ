@@ -26,7 +26,6 @@
 
 #include "dftbplusRunner.hpp"      // for DFTBPlusRunner
 #include "exceptions.hpp"          // for InputFileException
-#include "maceRunner.hpp"          // for MaceRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
