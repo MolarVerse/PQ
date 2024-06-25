@@ -24,7 +24,7 @@
 
 #define _TURBOMOLE_RUNNER_HPP_
 
-#include "qmRunner.hpp"   // for QMRunner
+#include "externalQMRunner.hpp"   // for ExternalQMRunner
 
 namespace simulationBox
 {
@@ -36,15 +36,15 @@ namespace QM
     /**
      * @class TurbomoleRunner
      *
-     * @brief class for running DFTB+ inheriting from QMRunner
+     * @brief class for running DFTB+ inheriting from ExternalQMRunner
      *
      */
-    class TurbomoleRunner : public QMRunner
+    class TurbomoleRunner : public ExternalQMRunner
     {
-      private:
+       private:
         bool _isFirstExecution = true;
 
-      public:
+       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
     };

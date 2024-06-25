@@ -24,7 +24,7 @@
 
 #define _PYSCF_RUNNER_HPP_
 
-#include "qmRunner.hpp"   // for QMRunner
+#include "externalQMRunner.hpp"   // for ExternalQMRunner
 
 namespace simulationBox
 {
@@ -36,15 +36,15 @@ namespace QM
     /**
      * @class PySCFRunner
      *
-     * @brief class for running PySCF inheriting from QMRunner
+     * @brief class for running PySCF inheriting from ExternalQMRunner
      *
      */
-    class PySCFRunner : public QMRunner
+    class PySCFRunner : public ExternalQMRunner
     {
-      private:
+       private:
         bool _isFirstExecution = true;
 
-      public:
+       public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
     };

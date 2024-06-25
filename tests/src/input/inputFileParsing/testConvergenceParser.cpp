@@ -37,28 +37,25 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
-    EXPECT_EQ(
-        ConvSettings::getEnergyConvStrategy(),
-        std::optional<ConvStrategy>()
-    );
+    EXPECT_EQ(ConvSettings::getEnConvStrategy(), std::optional<ConvStrategy>());
 
     auto parser = ConvInputParser(*_engine);
 
     auto lineElements = strings{"energy-conv-strategy", "=", "loose"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::LOOSE);
+    EXPECT_EQ(ConvSettings::getEnConvStrategy(), ConvStrategy::LOOSE);
 
     lineElements = strings{"energy-conv-strategy", "=", "absolute"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::ABSOLUTE);
+    EXPECT_EQ(ConvSettings::getEnConvStrategy(), ConvStrategy::ABSOLUTE);
 
     lineElements = strings{"energy-conv-strategy", "=", "relative"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RELATIVE);
+    EXPECT_EQ(ConvSettings::getEnConvStrategy(), ConvStrategy::RELATIVE);
 
     lineElements = strings{"energy-conv-strategy", "=", "rigorous"};
     parser.parseEnergyConvergenceStrategy(lineElements, 0);
-    EXPECT_EQ(ConvSettings::getEnergyConvStrategy(), ConvStrategy::RIGOROUS);
+    EXPECT_EQ(ConvSettings::getEnConvStrategy(), ConvStrategy::RIGOROUS);
 
     ASSERT_THROW_MSG(
         parser.parseEnergyConvergenceStrategy(

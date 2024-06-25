@@ -137,14 +137,10 @@ void OptInputParser::parseLearningRateStrategy(
     const auto strategy = utilities::toLowerCopy(lineElements[2]);
 
     if ("constant" == strategy)
-        OptimizerSettings::setLearningRateStrategy(
-            LearningRateStrategy::CONSTANT
-        );
+        OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
 
     else if ("constant-decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(
-            LearningRateStrategy::CONSTANT_DECAY
-        );
+        OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT_DECAY);
 
     else
         throw customException::InputFileException(std::format(

@@ -143,6 +143,7 @@
         "impropers",
         "inputfile",
         "INPUTFILEEXCEPTION",
+        "INSTEN",
         "INTRANONBONDEDEXCEPTION",
         "iwyu",
         "jobtype",

@@ -22,7 +22,10 @@
 
 #include "convergenceSettings.hpp"
 
+#include "exceptions.hpp"
+
 using namespace settings;
+using namespace customException;
 
 /**
  * @brief returns the convergence strategy as string
@@ -34,10 +37,12 @@ std::string settings::string(const ConvStrategy strategy)
 {
     switch (strategy)
     {
-        case ConvStrategy::RIGOROUS: return "RIGOROUS";
-        case ConvStrategy::LOOSE: return "LOOSE";
-        case ConvStrategy::ABSOLUTE: return "ABSOLUTE";
-        case ConvStrategy::RELATIVE: return "RELATIVE";
+        using enum ConvStrategy;
+
+        case RIGOROUS: return "RIGOROUS";
+        case LOOSE: return "LOOSE";
+        case ABSOLUTE: return "ABSOLUTE";
+        case RELATIVE: return "RELATIVE";
 
         default: return "none";
     }
@@ -48,21 +53,33 @@ std::string settings::string(const ConvStrategy strategy)
  *
  * @param strategy
  * @return ConvStrategy
+ *
+ * @throw UserInputException if the strategy is unknown
  */
-ConvStrategy ConvSettings::determineConvStrategy(
-    const std::string_view &strategy
-)
+ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
 {
+    using enum ConvStrategy;
+
+    auto convStrategy = RIGOROUS;
+
     if ("rigorous" == strategy)
-        return ConvStrategy::RIGOROUS;
+        convStrategy = RIGOROUS;
+
     else if ("loose" == strategy)
-        return ConvStrategy::LOOSE;
+        convStrategy = LOOSE;
+
     else if ("absolute" == strategy)
-        return ConvStrategy::ABSOLUTE;
+        convStrategy = ABSOLUTE;
+
     else if ("relative" == strategy)
-        return ConvStrategy::RELATIVE;
+        convStrategy = RELATIVE;
+
     else
-        return ConvStrategy::RIGOROUS;
+        throw UserInputException(
+            "Unknown convergence strategy: " + std::string(strategy)
+        );
+
+    return convStrategy;
 }
 
 /***************************
@@ -201,7 +218,7 @@ void ConvSettings::setEnergyConvStrategy(const ConvStrategy strategy)
  */
 void ConvSettings::setEnergyConvStrategy(const std::string_view &strategy)
 {
-    _energyConvStrategy = determineConvStrategy(strategy);
+    _energyConvStrategy = getConvStrategy(strategy);
 }
 
 /***************************
@@ -291,7 +308,7 @@ bool ConvSettings::getUseRMSForceConv() { return _useRMSForceConv; }
  *
  * @return ConvStrategy
  */
-std::optional<ConvStrategy> ConvSettings::getEnergyConvStrategy()
+std::optional<ConvStrategy> ConvSettings::getEnConvStrategy()
 {
     return _energyConvStrategy;
 }
@@ -303,5 +320,5 @@ std::optional<ConvStrategy> ConvSettings::getEnergyConvStrategy()
  */
 ConvStrategy ConvSettings::getDefaultEnergyConvStrategy()
 {
-    return determineConvStrategy(_defaultEnergyConvStrategy);
+    return getConvStrategy(_defaultEnergyConvStrategy);
 }

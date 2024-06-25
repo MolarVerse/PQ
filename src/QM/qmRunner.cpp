@@ -22,28 +22,30 @@
 
 #include "qmRunner.hpp"
 
-#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
-#include "exceptions.hpp"                    // for InputFileException
-#include "physicalData.hpp"                  // for PhysicalData
-#include "qmSettings.hpp"                    // for QMSettings
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "vector3d.hpp"                      // for Vec3D
+#include <cmath>    // for ceil
+#include <thread>   // for sleep_for
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <chrono>       // for seconds
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <functional>   // for identity
-#include <functional>   // for bind
-#include <string>       // for string
-#include <thread>       // for sleep_for
-#include <vector>       // for vector
+#include "exceptions.hpp"
+#include "qmSettings.hpp"
 
 using QM::QMRunner;
+using namespace settings;
+using namespace customException;
 
+/**
+ * @brief function to throw an exception after a timeout
+ *
+ * @details This function is used to throw an exception after a timeout. The
+ * timeout is set in the settings file. If the timeout is set to 0, the function
+ * will return without throwing an exception.
+ *
+ * @param stopToken
+ *
+ * @throw QMRunnerException if the timeout is exceeded
+ */
 void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 {
-    const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
+    const auto qmLoopTimeLimit = QMSettings::getQMLoopTimeLimit();
 
     if (qmLoopTimeLimit <= 0)
         return;
@@ -58,69 +60,5 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    // Throw an exception after the timeout
-    throw customException::QMRunnerException("QM calculation timeout");
-}
-
-/**
- * @brief run the qm engine
- *
- * @param simBox
- */
-void QMRunner::run(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData)
-{
-    writeCoordsFile(simBox);
-
-    std::jthread timeoutThread{[this](const std::stop_token stopToken) { throwAfterTimeout(stopToken); }};
-
-    execute();
-
-    timeoutThread.request_stop();
-
-    readForceFile(simBox, physicalData);
-    readStressTensor(simBox.getBox(), physicalData);
-}
-
-/**
- * @brief reads the force file (including qm energy) and sets the forces of the atoms
- *
- * @param box
- * @param physicalData
- *
- * @throw customException::QMRunnerException
- *  - if the force file cannot be opened
- *  - if the force file is empty
- */
-void QMRunner::readForceFile(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
-{
-    const std::string forceFileName = "qm_forces";
-
-    std::ifstream forceFile(forceFileName);
-
-    if (!forceFile.is_open())
-        throw customException::QMRunnerException(
-            std::format("Cannot open {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
-
-    if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw customException::QMRunnerException(
-            std::format("Empty {} force file \"{}\"", string(settings::QMSettings::getQMMethod()), forceFileName));
-
-    double energy = 0.0;
-
-    forceFile >> energy;
-
-    physicalData.setQMEnergy(energy * constants::_HARTREE_TO_KCAL_PER_MOL_);
-
-    auto readForces = [&forceFile](auto &atom)
-    {
-        auto grad = linearAlgebra::Vec3D();
-
-        forceFile >> grad[0] >> grad[1] >> grad[2];
-
-        atom->setForce(-grad * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
-    };
-
-    std::ranges::for_each(box.getQMAtoms(), readForces);
-
-    forceFile.close();
+    throw QMRunnerException("QM calculation timeout");
 }

@@ -20,41 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_SETTINGS_HPP_
+#ifndef _INTERNAL_QM_RUNNER_HPP_
 
-#define _FORCE_FIELD_SETTINGS_HPP_
+#define _INTERNAL_QM_RUNNER_HPP_
 
-namespace settings
+#include <string>   // for std::string
+
+#include "qmRunner.hpp"
+#include "typeAliases.hpp"
+
+namespace QM
 {
     /**
-     * @class ForceFieldSettings
-     *
-     * @brief static class to store settings of the force field
+     * @brief InternalQMRunner inherits from QMRunner
      *
      */
-    class ForceFieldSettings
+    class InternalQMRunner : public QMRunner
     {
-       private:
-        static inline bool _active = false;
-
        public:
-        ForceFieldSettings()  = default;
-        ~ForceFieldSettings() = default;
+        InternalQMRunner()           = default;
+        ~InternalQMRunner() override = default;
 
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static bool isActive();
-
-        /********************
-         * standard setters *
-         ********************/
-
-        static void activate();
-        static void deactivate();
+        void         run(pq::SimBox &, pq::PhysicalData &) override;
+        virtual void execute(pq::SimBox &)                         = 0;
+        virtual void collectData(pq::SimBox &, pq::PhysicalData &) = 0;
     };
+}   // namespace QM
 
-}   // namespace settings
-
-#endif   // _FORCE_FIELD_SETTINGS_HPP_
+#endif   // _INTERNAL_QM_RUNNER_HPP_

@@ -20,41 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_SETTINGS_HPP_
+#include "internalQMRunner.hpp"
 
-#define _FORCE_FIELD_SETTINGS_HPP_
+#include <thread>
 
-namespace settings
+using QM::InternalQMRunner;
+
+void InternalQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
 {
-    /**
-     * @class ForceFieldSettings
-     *
-     * @brief static class to store settings of the force field
-     *
-     */
-    class ForceFieldSettings
-    {
-       private:
-        static inline bool _active = false;
+    std::jthread timeoutThread{[this](const std::stop_token stopToken)
+                               { throwAfterTimeout(stopToken); }};
 
-       public:
-        ForceFieldSettings()  = default;
-        ~ForceFieldSettings() = default;
+    execute(simBox);
+    collectData(simBox, physicalData);
 
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static bool isActive();
-
-        /********************
-         * standard setters *
-         ********************/
-
-        static void activate();
-        static void deactivate();
-    };
-
-}   // namespace settings
-
-#endif   // _FORCE_FIELD_SETTINGS_HPP_
+    timeoutThread.request_stop();
+}

@@ -26,6 +26,7 @@
 
 #include "dftbplusRunner.hpp"      // for DFTBPlusRunner
 #include "exceptions.hpp"          // for InputFileException
+#include "maceRunner.hpp"          // for MaceRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
@@ -61,7 +62,10 @@ void setup::setupQM(engine::Engine &engine)
 void QMSetup::setup()
 {
     setupQMMethod();
-    setupQMScript();
+
+    if (QMSettings::isExternalQMRunner())
+        setupQMScript();
+
     setupCoulombRadiusCutOff();
 
     setupWriteInfo();
@@ -75,20 +79,7 @@ void QMSetup::setupQMMethod()
 {
     const auto method = QMSettings::getQMMethod();
 
-    if (method == QMMethod::DFTBPLUS)
-        _engine.setQMRunner(QM::DFTBPlusRunner());
-
-    else if (method == QMMethod::PYSCF)
-        _engine.setQMRunner(QM::PySCFRunner());
-
-    else if (method == QMMethod::TURBOMOLE)
-        _engine.setQMRunner(QM::TurbomoleRunner());
-
-    else
-        throw customException::InputFileException(
-            "A qm based jobtype was requested but no external program via "
-            "\"qm_prog\" provided"
-        );
+    _engine.setQMRunner(method);
 }
 
 /**
@@ -105,8 +96,11 @@ void QMSetup::setupQMMethod()
  */
 void QMSetup::setupQMScript() const
 {
-    const auto singularityString = _engine.getQMRunner()->getSingularity();
-    const auto staticBuildString = _engine.getQMRunner()->getStaticBuild();
+    auto &qmRunner         = *_engine.getQMRunner();
+    auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
+
+    const auto singularityString = externalQMRunner.getSingularity();
+    const auto staticBuildString = externalQMRunner.getStaticBuild();
 
     const auto singularity = utilities::toLowerCopy(singularityString) == "on";
     const auto staticBuild = utilities::toLowerCopy(staticBuildString) == "on";
@@ -146,7 +140,7 @@ please refer to the documentation.
         else
         {
             // setting script path to empty string to avoid errors
-            _engine.getQMRunner()->setScriptPath("");
+            externalQMRunner.setScriptPath("");
             // overwriting qm_script with full path
             QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
@@ -161,7 +155,7 @@ please refer to the documentation.
     else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
     {
         // setting script path to empty string to avoid errors
-        _engine.getQMRunner()->setScriptPath("");
+        externalQMRunner.setScriptPath("");
         // overwriting qm_script with full path
         QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
@@ -200,5 +194,7 @@ void QMSetup::setupWriteInfo() const
     const auto qmScriptMessage = std::format("QM script: {}", qmScript);
 
     _engine.getLogOutput().writeSetupInfo(qmRunnerMessage);
-    _engine.getLogOutput().writeSetupInfo(qmScriptMessage);
+
+    if (QMSettings::isExternalQMRunner())
+        _engine.getLogOutput().writeSetupInfo(qmScriptMessage);
 }

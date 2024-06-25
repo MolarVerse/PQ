@@ -22,10 +22,16 @@
 
 #include "qmSettings.hpp"
 
+#include <format>   // for std::format
+
+#include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
+using settings::MaceModel;
 using settings::QMMethod;
 using settings::QMSettings;
+using namespace customException;
+using namespace utilities;
 
 /**
  * @brief returns the qmMethod as string
@@ -37,15 +43,60 @@ std::string settings::string(const QMMethod method)
 {
     switch (method)
     {
-        case QMMethod::DFTBPLUS: return "DFTBPLUS";
+        using enum QMMethod;
 
-        case QMMethod::PYSCF: return "PYSCF";
-
-        case QMMethod::TURBOMOLE: return "TURBOMOLE";
+        case DFTBPLUS: return "DFTBPLUS";
+        case PYSCF: return "PYSCF";
+        case TURBOMOLE: return "TURBOMOLE";
+        case MACE: return "MACE";
 
         default: return "none";
     }
 }
+
+/**
+ * @brief returns the maceModel as string
+ *
+ * @param model
+ * @return std::string
+ */
+std::string settings::string(const MaceModel model)
+{
+    switch (model)
+    {
+        using enum MaceModel;
+
+        case LARGE: return "large";
+        case MEDIUM: return "medium";
+        case SMALL: return "small";
+
+        default: return "none";
+    }
+}
+
+/**
+ * @brief returns if the external qm runner is activated
+ *
+ * @return bool
+ */
+bool QMSettings::isExternalQMRunner()
+{
+    using enum QMMethod;
+
+    auto isExternal = false;
+
+    isExternal = isExternal || _qmMethod == DFTBPLUS;
+    isExternal = isExternal || _qmMethod == PYSCF;
+    isExternal = isExternal || _qmMethod == TURBOMOLE;
+
+    return isExternal;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
 /**
  * @brief sets the qmMethod to enum in settings
@@ -54,19 +105,23 @@ std::string settings::string(const QMMethod method)
  */
 void QMSettings::setQMMethod(const std::string_view &method)
 {
-    const auto methodToLower = utilities::toLowerCopy(method);
+    using enum QMMethod;
+    const auto methodToLower = toLowerCopy(method);
 
-    if ("dftbplus" == method)
-        _qmMethod = QMMethod::DFTBPLUS;
+    if ("dftbplus" == methodToLower)
+        _qmMethod = DFTBPLUS;
 
-    else if ("pyscf" == method)
-        _qmMethod = QMMethod::PYSCF;
+    else if ("pyscf" == methodToLower)
+        _qmMethod = PYSCF;
 
-    else if ("turbomole" == method)
-        _qmMethod = QMMethod::TURBOMOLE;
+    else if ("turbomole" == methodToLower)
+        _qmMethod = TURBOMOLE;
+
+    else if ("mace" == methodToLower)
+        _qmMethod = MACE;
 
     else
-        _qmMethod = QMMethod::NONE;
+        _qmMethod = NONE;
 }
 
 /**
@@ -107,6 +162,44 @@ void QMSettings::setQMLoopTimeLimit(const double time)
 }
 
 /**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModel(const std::string_view &model)
+{
+    using enum MaceModel;
+    const auto modelToLower = toLowerCopy(model);
+
+    if ("large" == modelToLower)
+        _maceModel = LARGE;
+
+    else if ("medium" == modelToLower)
+        _maceModel = MEDIUM;
+
+    else if ("small" == modelToLower)
+        _maceModel = SMALL;
+
+    else
+        throw UserInputException(
+            std::format("Mace {} model not recognized", model)
+        );
+}
+
+/**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
  * @brief returns the qmMethod
  *
  * @return QMMethod
@@ -133,3 +226,10 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  * @return double
  */
 double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+
+/**
+ * @brief returns the maceModel
+ *
+ * @return MaceModel
+ */
+MaceModel QMSettings::getMaceModel() { return _maceModel; }

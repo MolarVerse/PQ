@@ -135,11 +135,11 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
 
     switch (OptimizerSettings::getLearningRateStrategy())
     {
-        case LearningRateStrategy::CONSTANT:
+        case LREnum::CONSTANT:
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case LearningRateStrategy::CONSTANT_DECAY:
+        case LREnum::CONSTANT_DECAY:
         {
             const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
 
@@ -238,7 +238,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
 void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
 )
 {
-    const auto energyConvStrategy = ConvSettings::getEnergyConvStrategy();
+    const auto energyConvStrategy = ConvSettings::getEnConvStrategy();
     const auto defEConvStrategy = ConvSettings::getDefaultEnergyConvStrategy();
     const auto energyStrategy   = energyConvStrategy.value_or(defEConvStrategy);
 

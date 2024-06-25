@@ -26,6 +26,7 @@
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
+#include "qmmdEngine.hpp"                    // for QMMDEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "stdoutOutput.hpp"                  // for StdoutOutput
@@ -93,6 +94,16 @@ void MDEngine::run()
 
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
+
+    if (settings::Settings::isQMActivated())
+    {
+        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
+            "QM Engine"
+        );
+        _timer.addTimer(
+            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+        );
+    }
 
 #ifdef WITH_KOKKOS
     _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");

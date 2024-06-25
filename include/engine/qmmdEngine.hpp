@@ -26,8 +26,9 @@
 
 #include <memory>   // for unique_ptr
 
-#include "mdEngine.hpp"   // for Engine
-#include "qmRunner.hpp"   // for QMRunner
+#include "mdEngine.hpp"     // for Engine
+#include "qmRunner.hpp"     // for QMRunner
+#include "qmSettings.hpp"   // for QMSettings
 
 namespace engine
 {
@@ -41,23 +42,16 @@ namespace engine
     class QMMDEngine : virtual public MDEngine
     {
        protected:
-        std::unique_ptr<QM::QMRunner> _qmRunner = nullptr;
+        std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:
         ~QMMDEngine() override = default;
 
         void takeStep() override;
 
-        template <typename T>
-        void setQMRunner(T runner)
-        {
-            _qmRunner = std::make_unique<T>(runner);
-        }
+        void setQMRunner(const settings::QMMethod method);
 
-        [[nodiscard]] QM::QMRunner *getQMRunner() const
-        {
-            return _qmRunner.get();
-        }
+        [[nodiscard]] QM::QMRunner *getQMRunner() const;
     };
 
 }   // namespace engine

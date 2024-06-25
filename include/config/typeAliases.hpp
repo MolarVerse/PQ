@@ -41,6 +41,7 @@ namespace simulationBox
     class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
+    class Box;             // forward declaration
 
 }   // namespace simulationBox
 
@@ -114,10 +115,6 @@ namespace pq
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
     using tensor3D      = linearAlgebra::tensor3D;
 
-    using SimBox          = simulationBox::SimulationBox;
-    using CellList        = simulationBox::CellList;
-    using Molecule        = simulationBox::Molecule;
-    using Atom            = simulationBox::Atom;
     using Virial          = virial::Virial;
     using VirialMolecular = virial::VirialMolecular;
     using Potential       = potential::Potential;
@@ -126,14 +123,25 @@ namespace pq
     using ForceField      = forceField::ForceField;
     using Constraints     = constraints::Constraints;
 
-    using SharedAtom         = std::shared_ptr<simulationBox::Atom>;
-    using SharedSimBox       = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedCellList     = std::shared_ptr<simulationBox::CellList>;
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
     using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    /***************************
+     * simulationBox namespace *
+     ***************************/
+
+    using SimBox   = simulationBox::SimulationBox;
+    using CellList = simulationBox::CellList;
+    using Molecule = simulationBox::Molecule;
+    using Atom     = simulationBox::Atom;
+    using Box      = simulationBox::Box;
+
+    using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
+    using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;
+    using SharedCellList = std::shared_ptr<simulationBox::CellList>;
 
     /**************************
      * physicalData namespace *

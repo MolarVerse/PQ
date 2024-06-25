@@ -89,10 +89,13 @@ void InputFileParserQM::parseQMMethod(
     else if ("turbomole" == method)
         settings::QMSettings::setQMMethod("turbomole");
 
+    else if ("mace" == method)
+        settings::QMSettings::setQMMethod("mace");
+
     else
         throw customException::InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, pyscf, turbomole",
+            "Possible values are: dftbplus, pyscf, turbomole, mace",
             lineElements[2]
         ));
 }

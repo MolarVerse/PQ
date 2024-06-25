@@ -83,7 +83,7 @@ namespace opt
         [[nodiscard]] double getAbsMaxForce() const;
         [[nodiscard]] double getAbsRMSForce() const;
 
-        [[nodiscard]] settings::ConvStrategy getEnergyConvStrategy() const;
+        [[nodiscard]] settings::ConvStrategy getEnConvStrategy() const;
 
         [[nodiscard]] bool isEnergyConvEnabled() const;
         [[nodiscard]] bool isMaxForceConvEnabled() const;

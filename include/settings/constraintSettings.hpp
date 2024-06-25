@@ -30,8 +30,6 @@
 
 namespace settings
 {
-    using namespace defaults;
-
     /**
      * @class ConstraintSettings
      *
@@ -41,15 +39,17 @@ namespace settings
     class ConstraintSettings
     {
        private:
-        static inline bool _shakeActive          = _CONSTRAINTS_ACTIVE_DEFAULT_;
-        static inline bool _mShakeActive         = _CONSTRAINTS_ACTIVE_DEFAULT_;
-        static inline bool _distanceConstsActive = _CONSTRAINTS_ACTIVE_DEFAULT_;
+        // clang-format off
+        static inline bool _shakeActive          = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
+        static inline bool _mShakeActive         = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
+        static inline bool _distanceConstsActive = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
 
-        static inline size_t _shakeMaxIter  = _SHAKE_MAX_ITER_DEFAULT_;
-        static inline size_t _rattleMaxIter = _RATTLE_MAX_ITER_DEFAULT_;
+        static inline size_t _shakeMaxIter  = defaults::_SHAKE_MAX_ITER_DEFAULT_;
+        static inline size_t _rattleMaxIter = defaults::_RATTLE_MAX_ITER_DEFAULT_;
 
-        static inline double _shakeTolerance  = _SHAKE_TOLERANCE_DEFAULT_;
-        static inline double _rattleTolerance = _RATTLE_TOLERANCE_DEFAULT_;
+        static inline double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
+        static inline double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
+        // clang-format on
 
        public:
         ConstraintSettings()  = default;

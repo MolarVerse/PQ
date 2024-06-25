@@ -22,17 +22,18 @@
 
 #include "pyscfRunner.hpp"
 
+#include <stdlib.h>   // for system, size_t
+
+#include <format>    // for format
+#include <fstream>   // for ofstream, operator<<, basic_ostream
+#include <string>    // for allocator, string, operator+, operator<<
+
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
-
-#include <format>     // for format
-#include <fstream>    // for ofstream, operator<<, basic_ostream
-#include <stdlib.h>   // for system, size_t
-#include <string>     // for allocator, string, operator+, operator<<
 
 using QM::PySCFRunner;
 
@@ -48,15 +49,19 @@ void PySCFRunner::writeCoordsFile(simulationBox::SimulationBox &box)
 
     coordsFile << box.getNumberOfQMAtoms() << "\n\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms(); i < numberOfAtoms; ++i)
+    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
+         i < numberOfAtoms;
+         ++i)
     {
         const auto &atom = box.getQMAtom(i);
 
-        coordsFile << std::format("{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                                  atom.getName(),
-                                  atom.getPosition()[0],
-                                  atom.getPosition()[1],
-                                  atom.getPosition()[2]);
+        coordsFile << std::format(
+            "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            atom.getName(),
+            atom.getPosition()[0],
+            atom.getPosition()[1],
+            atom.getPosition()[2]
+        );
     }
 
     coordsFile.close();
@@ -68,10 +73,14 @@ void PySCFRunner::writeCoordsFile(simulationBox::SimulationBox &box)
  */
 void PySCFRunner::execute()
 {
-    const auto scriptFileName = _scriptPath + settings::QMSettings::getQMScript();
+    const auto scriptFileName =
+        _scriptPath + settings::QMSettings::getQMScript();
 
     if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format("PySCF script file \"{}\" does not exist.", scriptFileName));
+        throw customException::InputFileException(std::format(
+            "PySCF script file \"{}\" does not exist.",
+            scriptFileName
+        ));
 
     const auto command = std::format("python {} > pyscf.out", scriptFileName);
     ::system(command.c_str());
