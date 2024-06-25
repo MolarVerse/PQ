@@ -60,7 +60,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
     EXPECT_EQ(
         OptimizerSettings::getLearningRateStrategy(),
-        LearningRateStrategy::CONSTANT_DECAY
+        LREnum::CONSTANT_DECAY
     );
 
     OptimizerSettings::setLearningRateStrategy("none");
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
     );
     EXPECT_EQ(
         settings::OptimizerSettings::getLearningRateStrategy(),
-        settings::LearningRateStrategy::CONSTANT_DECAY
+        settings::LREnum::CONSTANT_DECAY
     );
 
     parser.parseLearningRateStrategy(
@@ -81,7 +81,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
     );
     EXPECT_EQ(
         settings::OptimizerSettings::getLearningRateStrategy(),
-        settings::LearningRateStrategy::CONSTANT
+        settings::LREnum::CONSTANT
     );
 
     ASSERT_THROW_MSG(

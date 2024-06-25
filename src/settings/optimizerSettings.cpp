@@ -46,12 +46,13 @@ std::string settings::string(const Optimizer method)
  * @param method
  * @return std::string
  */
-std::string settings::string(const LearningRateStrategy method)
+std::string settings::string(const LREnum method)
 {
     switch (method)
     {
-        case LearningRateStrategy::CONSTANT: return "CONSTANT";
-        case LearningRateStrategy::CONSTANT_DECAY: return "CONSTANT-DECAY";
+        case LREnum::CONSTANT: return "CONSTANT";
+
+        case LREnum::CONSTANT_DECAY: return "CONSTANT-DECAY";
 
         default: return "none";
     }
@@ -72,6 +73,7 @@ void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
 {
     if ("steepest-descent" == optimizer)
         setOptimizer(Optimizer::STEEPEST_DESCENT);
+
     else
         setOptimizer(Optimizer::NONE);
 }
@@ -94,11 +96,13 @@ void OptimizerSettings::setOptimizer(const Optimizer optimizer)
 void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
     if ("constant" == method)
-        setLearningRateStrategy(LearningRateStrategy::CONSTANT);
+        setLearningRateStrategy(LREnum::CONSTANT);
+
     else if ("constant-decay" == method)
-        setLearningRateStrategy(LearningRateStrategy::CONSTANT_DECAY);
+        setLearningRateStrategy(LREnum::CONSTANT_DECAY);
+
     else
-        setLearningRateStrategy(LearningRateStrategy::NONE);
+        setLearningRateStrategy(LREnum::NONE);
 }
 
 /**
@@ -106,11 +110,9 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
  *
  * @param method
  */
-void OptimizerSettings::setLearningRateStrategy(
-    const LearningRateStrategy method
-)
+void OptimizerSettings::setLearningRateStrategy(const LREnum method)
 {
-    _learningRateStrategy = method;
+    _LRStrategy = method;
 }
 
 /**
@@ -191,10 +193,7 @@ settings::Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
  *
  * @return LearningRateStrategy
  */
-LearningRateStrategy OptimizerSettings::getLearningRateStrategy()
-{
-    return _learningRateStrategy;
-}
+LREnum OptimizerSettings::getLearningRateStrategy() { return _LRStrategy; }
 
 /**
  * @brief returns the number of epochs

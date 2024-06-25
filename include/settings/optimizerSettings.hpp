@@ -44,20 +44,18 @@ namespace settings
     };
 
     /**
-     * @class enum LearningRateStrategy
+     * @class enum LREnum
      *
      */
-    enum class LearningRateStrategy : size_t
+    enum class LREnum : size_t
     {
         NONE,
         CONSTANT,
         CONSTANT_DECAY,
     };
 
-    using LRStrategy = LearningRateStrategy;
-
     std::string string(const Optimizer method);
-    std::string string(const LRStrategy method);
+    std::string string(const LREnum method);
 
     /**
      * @class OptimizerSettings
@@ -69,19 +67,18 @@ namespace settings
     {
        private:
         // clang-format off
-        static inline Optimizer _optimizer             = Optimizer::STEEPEST_DESCENT;
-        static inline LRStrategy _learningRateStrategy = LRStrategy::CONSTANT_DECAY;
+        static inline Optimizer _optimizer = Optimizer::STEEPEST_DESCENT;
+        static inline LREnum _LRStrategy   = LREnum::CONSTANT_DECAY;
 
         static inline size_t _nEpochs           = defaults::_N_EPOCHS_DEFAULT_;
         static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;
 
         static inline double _initialLearningRate = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
         static inline double _minLearningRate     = defaults::_MIN_LEARNING_RATE_DEFAULT_;
+        // clang-format on
 
         static inline std::optional<double> _learningRateDecay;
         static inline std::optional<double> _maxLearningRate;
-
-        // clang-format on
 
        public:
         /***************************
@@ -92,7 +89,7 @@ namespace settings
         static void setOptimizer(const Optimizer optimizer);
 
         static void setLearningRateStrategy(const std::string_view &);
-        static void setLearningRateStrategy(const LRStrategy);
+        static void setLearningRateStrategy(const LREnum);
 
         static void setNumberOfEpochs(const size_t);
         static void setLRUpdateFrequency(const size_t);
@@ -107,8 +104,8 @@ namespace settings
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static Optimizer  getOptimizer();
-        [[nodiscard]] static LRStrategy getLearningRateStrategy();
+        [[nodiscard]] static Optimizer getOptimizer();
+        [[nodiscard]] static LREnum    getLearningRateStrategy();
 
         [[nodiscard]] static size_t getNumberOfEpochs();
         [[nodiscard]] static size_t getLRUpdateFrequency();

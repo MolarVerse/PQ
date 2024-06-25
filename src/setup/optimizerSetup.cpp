@@ -135,11 +135,11 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
 
     switch (OptimizerSettings::getLearningRateStrategy())
     {
-        case LearningRateStrategy::CONSTANT:
+        case LREnum::CONSTANT:
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case LearningRateStrategy::CONSTANT_DECAY:
+        case LREnum::CONSTANT_DECAY:
         {
             const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
 
