@@ -110,11 +110,15 @@ void OptInputParser::parseOptimizer(
 
     if ("steepest-descent" == method)
         OptimizerSettings::setOptimizer(Optimizer::STEEPEST_DESCENT);
+
+    if ("adam" == method)
+        OptimizerSettings::setOptimizer(Optimizer::ADAM);
+
     else
         throw InputFileException(std::format(
             "Unknown optimizer method \"{}\" in input file "
             "at line {}.\n"
-            "Possible options are: steepest-descent",
+            "Possible options are: steepest-descent, adam",
             lineElements[2],
             lineNumber
         ));

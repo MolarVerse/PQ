@@ -56,11 +56,14 @@ TEST_F(TestInputFileReader, parserOptimizer)
     parser.parseOptimizer({"optimizer", "=", "steepest-descent"}, 0);
     EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
+    parser.parseOptimizer({"optimizer", "=", "adam"}, 0);
+    EXPECT_EQ(OptimizerSettings::getOptimizer(), ADAM);
+
     ASSERT_THROW_MSG(
         parser.parseOptimizer({"optimizer", "=", "notValid"}, 0),
         InputFileException,
         "Unknown optimizer method \"notValid\" in input file at line 0.\n"
-        "Possible options are: steepest-descent"
+        "Possible options are: steepest-descent, adam"
     )
 }
 
