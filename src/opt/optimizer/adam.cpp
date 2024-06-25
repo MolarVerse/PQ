@@ -32,6 +32,18 @@ using namespace opt;
  * @brief Constructor
  *
  * @param nIterations
+ * @param nAtoms
+ */
+Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
+{
+    _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+}
+
+/**
+ * @brief Constructor
+ *
+ * @param nIterations
  * @param beta1
  * @param beta2
  */
