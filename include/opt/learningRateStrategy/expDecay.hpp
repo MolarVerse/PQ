@@ -41,7 +41,9 @@ namespace opt
 
        public:
         ExpDecayLR() = default;
-        ExpDecayLR(const double, const double);
+        ExpDecayLR(const double, const double, const size_t);
+
+        std::shared_ptr<LearningRateStrategy> clone() const override;
 
         void updateLearningRate(const size_t, const size_t) override;
     };

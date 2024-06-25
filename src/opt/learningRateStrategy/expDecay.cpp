@@ -34,9 +34,23 @@ using namespace settings;
  * @param decay
  * @param frequency
  */
-ExpDecayLR::ExpDecayLR(const double initialLearningRate, const double decay)
-    : LearningRateStrategy(initialLearningRate), _decay(decay)
+ExpDecayLR::ExpDecayLR(
+    const double initialLearningRate,
+    const double decay,
+    const size_t frequency
+)
+    : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
 {
+}
+
+/**
+ * @brief make a clone of the learning rate strategy
+ *
+ * @return std::shared_ptr<LearningRateStrategy>
+ */
+std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
+{
+    return std::make_shared<ExpDecayLR>(*this);
 }
 
 /**
