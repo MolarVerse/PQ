@@ -37,6 +37,8 @@
 
 using setup::OptimizerSetup;
 using namespace settings;
+using namespace customException;
+using namespace defaults;
 
 using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
 using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
@@ -103,14 +105,16 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 
     switch (OptimizerSettings::getOptimizer())
     {
-        case Optimizer::STEEPEST_DESCENT:
+        using enum Optimizer;
+
+        case STEEPEST_DESCENT:
         {
             optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
         }
         default:
         {
-            throw customException::UserInputException(std::format(
+            throw UserInputException(std::format(
                 "Unknown optimizer type {}",
                 string(OptimizerSettings::getOptimizer())
             ));
@@ -135,16 +139,18 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
 
     switch (OptimizerSettings::getLearningRateStrategy())
     {
-        case LREnum::CONSTANT:
+        using enum LREnum;
+
+        case CONSTANT:
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case LREnum::CONSTANT_DECAY:
+        case CONSTANT_DECAY:
         {
             const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
 
             if (!alphaDecay.has_value())
-                throw customException::UserInputException(
+                throw UserInputException(
                     "You need to specify a learning rate decay factor for the "
                     "constant decay learning rate strategy"
                 );
@@ -158,9 +164,10 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
                 alphaFreq
             );
         }
+
         default:
         {
-            throw customException::UserInputException(
+            throw UserInputException(
                 std::format("In order to run the optimizer, you need to "
                             "specify a learning rate strategy.")
             );
@@ -186,7 +193,7 @@ void OptimizerSetup::setupMinMaxLR(
 
         if (minLearningRate >= maxLearningRateValue)
         {
-            throw customException::UserInputException(std::format(
+            throw UserInputException(std::format(
                 "The minimum learning rate {} is greater or equal to the "
                 "maximum learning rate {}, which is not allowed.",
                 minLearningRate,
@@ -211,7 +218,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
         evaluator = std::make_shared<opt::MMEvaluator>();
 
     else
-        throw customException::UserInputException(
+        throw UserInputException(
             "Unknown job type for the optimizer in order to setup up the "
             "evaluator"
         );
@@ -235,7 +242,8 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
  *
  * @param optimizer as shared pointer reference
  */
-void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
+void OptimizerSetup::setupConvergence(
+    const std::shared_ptr<opt::Optimizer> &optimizer
 )
 {
     const auto energyConvStrategy = ConvSettings::getEnConvStrategy();
@@ -250,8 +258,8 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
     const auto absEnergyConv = ConvSettings::getAbsEnergyConv();
     const auto relEnergyConv = ConvSettings::getRelEnergyConv();
 
-    const auto defRelEnergyConv = defaults::_REL_ENERGY_CONV_DEFAULT_;
-    const auto defAbsEnergyConv = defaults::_ABS_ENERGY_CONV_DEFAULT_;
+    const auto defRelEnergyConv = _REL_ENERGY_CONV_DEFAULT_;
+    const auto defAbsEnergyConv = _ABS_ENERGY_CONV_DEFAULT_;
 
     auto relEnergyConvValue = energyConv.value_or(defRelEnergyConv);
     auto absEnergyConvValue = energyConv.value_or(defAbsEnergyConv);
@@ -263,8 +271,8 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
     const auto maxForceConv = ConvSettings::getMaxForceConv();
     const auto rmsForceConv = ConvSettings::getRMSForceConv();
 
-    const auto defMaxForceConv = defaults::_MAX_FORCE_CONV_DEFAULT_;
-    const auto defRMSForceConv = defaults::_RMS_FORCE_CONV_DEFAULT_;
+    const auto defMaxForceConv = _MAX_FORCE_CONV_DEFAULT_;
+    const auto defRMSForceConv = _RMS_FORCE_CONV_DEFAULT_;
 
     auto maxForceConvValue = forceConv.value_or(defMaxForceConv);
     auto rmsForceConvValue = forceConv.value_or(defRMSForceConv);

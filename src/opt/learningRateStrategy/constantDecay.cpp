@@ -22,6 +22,8 @@
 
 #include "constantDecay.hpp"
 
+#include <format>   // for std::format
+
 using namespace opt;
 
 /**
@@ -69,13 +71,13 @@ std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
 /**
  * @brief Update the learning rate
  */
-void ConstantDecayLRStrategy::updateLearningRate(const size_t)
+void ConstantDecayLRStrategy::updateLearningRate(
+    const size_t step,
+    const size_t
+)
 {
-    if (_counter % _frequency == 0)
+    if (step % _frequency == 0)
         _learningRate -= _decay;
 
-    ++_counter;
-
-    if (_learningRate <= 0.0)
-        _warningMessages.emplace_back("Learning rate got zero or negative.");
+    checkLearningRate();
 }

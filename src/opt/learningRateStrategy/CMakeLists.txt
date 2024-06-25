@@ -14,6 +14,7 @@ target_include_directories(learningRateStrategy
 target_link_libraries(learningRateStrategy
     PUBLIC
     linearAlgebra
+    settings
 )
 
 install(TARGETS learningRateStrategy

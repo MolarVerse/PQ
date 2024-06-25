@@ -56,7 +56,7 @@ namespace opt
 
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
-        void updateLearningRate(const size_t) override;
+        void updateLearningRate(const size_t, const size_t) override;
     };
 
 }   // namespace opt

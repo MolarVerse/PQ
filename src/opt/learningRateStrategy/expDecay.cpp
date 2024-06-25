@@ -22,7 +22,10 @@
 
 #include "expDecay.hpp"
 
+#include "optimizerSettings.hpp"
+
 using namespace opt;
+using namespace settings;
 
 /**
  * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object
@@ -39,8 +42,9 @@ ExpDecayLR::ExpDecayLR(const double initialLearningRate, const double decay)
 /**
  * @brief Update the learning rate
  */
-void ExpDecayLR::updateLearningRate(const size_t step)
+void ExpDecayLR::updateLearningRate(const size_t step, const size_t nEpochs)
 {
-    _learningRate  = _initialLearningRate * std::exp(-_decay * _counter);
-    _counter      += _frequency;
+    const auto factor = std::exp(-_decay * double(step) / double(nEpochs));
+
+    _learningRate = _initialLearningRate * factor;
 }

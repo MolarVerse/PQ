@@ -48,11 +48,10 @@ namespace opt
     {
        protected:
         size_t _frequency = 1;
-        size_t _counter   = 0;
         double _initialLearningRate;
         double _learningRate;
 
-        double                _minLearningRate;
+        double                _minLearningRate = 0.0;
         std::optional<double> _maxLearningRate;
 
         std::vector<std::string> _warningMessages;
@@ -67,8 +66,12 @@ namespace opt
 
         virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
-        virtual void updateLearningRate(const size_t step) = 0;
-        void         checkLearningRate();
+        virtual void updateLearningRate(
+            const size_t step,
+            const size_t nEpochs
+        ) = 0;
+
+        void checkLearningRate();
 
         /***************************
          * standard getter methods *

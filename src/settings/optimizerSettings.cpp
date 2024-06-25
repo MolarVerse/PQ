@@ -50,11 +50,11 @@ std::string settings::string(const LREnum method)
 {
     switch (method)
     {
-        case LREnum::CONSTANT: return "CONSTANT";
+        using enum LREnum;
 
-        case LREnum::CONSTANT_DECAY: return "CONSTANT-DECAY";
-
-        case LREnum::EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
+        case CONSTANT: return "CONSTANT";
+        case CONSTANT_DECAY: return "CONSTANT-DECAY";
+        case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
 
         default: return "none";
     }

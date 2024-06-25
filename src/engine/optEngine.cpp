@@ -42,11 +42,11 @@ void OptEngine::run()
     _evaluator->evaluate();
     _optimizer->updateHistory();
 
-    const auto numberOfSteps = _optimizer->getNEpochs();
+    _nSteps = _optimizer->getNEpochs();
 
-    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
+    progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
-    for (size_t i = 0; i < numberOfSteps; ++i)
+    for (size_t i = 0; i < _nSteps; ++i)
     {
         bar.update();
 
@@ -136,7 +136,7 @@ void OptEngine::takeStep()
 
     if (!_converged)
     {
-        _learningRateStrategy->updateLearningRate(_step);
+        _learningRateStrategy->updateLearningRate(_step, _nSteps);
 
         if (!_learningRateStrategy->getErrorMessages().empty())
             _optStopped = true;
