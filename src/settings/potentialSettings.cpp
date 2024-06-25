@@ -36,34 +36,171 @@ std::string settings::string(const NonCoulombType nonCoulombType)
 {
     switch (nonCoulombType)
     {
-    case NonCoulombType::LJ: return "lj";
-    case NonCoulombType::LJ_9_12: return "lj_9_12";
-    case NonCoulombType::BUCKINGHAM: return "buck";
-    case NonCoulombType::MORSE: return "morse";
-    case NonCoulombType::GUFF: return "guff";
-    default: return "none";
+        using enum NonCoulombType;
+
+        case LJ: return "lj";
+        case LJ_9_12: return "lj_9_12";
+        case BUCKINGHAM: return "buck";
+        case MORSE: return "morse";
+        case GUFF: return "guff";
+
+        default: return "none";
     }
 }
 
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
 /**
- * @brief Set the nonCoulomb type as string and enum in the PotentialSettings class
+ * @brief Set the nonCoulomb type as string and enum in the PotentialSettings
+ * class
  *
  * @param type
  */
 void PotentialSettings::setNonCoulombType(const std::string_view &type)
 {
+    using enum NonCoulombType;
     const auto typeToLower = utilities::toLowerCopy(type);
 
     if (typeToLower == "lj")
-        _nonCoulombType = NonCoulombType::LJ;
+        _nonCoulombType = LJ;
+
     else if (typeToLower == "lj_9_12")
-        _nonCoulombType = NonCoulombType::LJ_9_12;
+        _nonCoulombType = LJ_9_12;
+
     else if (typeToLower == "buck")
-        _nonCoulombType = NonCoulombType::BUCKINGHAM;
+        _nonCoulombType = BUCKINGHAM;
+
     else if (typeToLower == "morse")
-        _nonCoulombType = NonCoulombType::MORSE;
+        _nonCoulombType = MORSE;
+
     else if (typeToLower == "guff")
-        _nonCoulombType = NonCoulombType::GUFF;
+        _nonCoulombType = GUFF;
+
     else
-        _nonCoulombType = NonCoulombType::NONE;
+        _nonCoulombType = NONE;
 }
+
+/**
+ * @brief Set the nonCoulomb type as enum in the PotentialSettings class
+ *
+ * @param type
+ */
+void PotentialSettings::setNonCoulombType(const NonCoulombType type)
+{
+    _nonCoulombType = type;
+}
+
+/**
+ * @brief Set the Coulomb long range type in the PotentialSettings class
+ *
+ * @param type
+ */
+void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
+{
+    _coulombLRType = type;
+}
+
+/**
+ * @brief Set the Coulomb radius cut off in the PotentialSettings class
+ *
+ * @param coulombRadiusCutOff
+ */
+void PotentialSettings::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
+{
+    _coulombRadiusCutOff = coulombRadiusCutOff;
+}
+
+/**
+ * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
+ *
+ * @param scale14Coulomb
+ */
+void PotentialSettings::setScale14Coulomb(const double scale14Coulomb)
+{
+    _scale14Coulomb = scale14Coulomb;
+}
+
+/**
+ * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
+ * class
+ *
+ * @param scale14VanDerWaals
+ */
+void PotentialSettings::setScale14VanDerWaals(const double scale14VanDerWaals)
+{
+    _scale14VanDerWaals = scale14VanDerWaals;
+}
+
+/**
+ * @brief Set the Wolf parameter in the PotentialSettings class
+ *
+ * @param wolfParameter
+ */
+void PotentialSettings::setWolfParameter(const double wolfParameter)
+{
+    _wolfParameter = wolfParameter;
+}
+
+/********************
+ *                  *
+ * standard getters *
+ *                  *
+ ********************/
+
+/**
+ * @brief get the Coulomb long range type
+ *
+ * @return std::string
+ */
+std::string PotentialSettings::getCoulombLongRangeType()
+{
+    return _coulombLRType;
+}
+
+/**
+ * @brief get the nonCoulomb type
+ *
+ * @return NonCoulombType
+ */
+NonCoulombType PotentialSettings::getNonCoulombType()
+{
+    return _nonCoulombType;
+}
+
+/**
+ * @brief get the Coulomb radius cut off
+ *
+ * @return double
+ */
+double PotentialSettings::getCoulombRadiusCutOff()
+{
+    return _coulombRadiusCutOff;
+}
+
+/**
+ * @brief get the 1-4 Coulomb scaling factor
+ *
+ * @return double
+ */
+double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
+
+/**
+ * @brief get the 1-4 Van der Waals scaling factor
+ *
+ * @return double
+ */
+double PotentialSettings::getScale14VanDerWaals()
+{
+    return _scale14VanDerWaals;
+}
+
+/**
+ * @brief get the Wolf parameter
+ *
+ * @return double
+ */
+double PotentialSettings::getWolfParameter() { return _wolfParameter; }

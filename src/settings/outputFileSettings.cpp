@@ -198,6 +198,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
             return;
 
         const int occurrence = std::ranges::count(fileNames, fileName);
+
         if (occurrence > count)
         {
             mostCommonPrefix = fileName;
@@ -245,7 +246,6 @@ void OutputFileSettings::setInstantEnergyFileName(const std::string_view name)
 {
     _instEnFile = name;
 }
-
 /**
  * @brief sets the momentum file name
  *
