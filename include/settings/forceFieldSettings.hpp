@@ -34,10 +34,10 @@ namespace settings
      */
     class ForceFieldSettings
     {
-      private:
+       private:
         static inline bool _active = false;
 
-      public:
+       public:
         ForceFieldSettings()  = default;
         ~ForceFieldSettings() = default;
 
@@ -45,14 +45,14 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static bool isActive() { return _active; }
+        [[nodiscard]] static bool isActive();
 
         /********************
          * standard setters *
          ********************/
 
-        static void activate() { _active = true; }
-        static void deactivate() { _active = false; }
+        static void activate();
+        static void deactivate();
     };
 
 }   // namespace settings
