@@ -89,6 +89,9 @@ void OptimizerSetup::setup()
 
     setupMinMaxLR(learningRateStrategy);
 
+    learningRateStrategy->setEvaluator(evaluator);
+    learningRateStrategy->setOptimizer(optimizer);
+
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
     _optEngine.setEvaluator(evaluator);

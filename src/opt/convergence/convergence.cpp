@@ -49,10 +49,10 @@ Convergence::Convergence(
     : _enableEnergyConv(_enableEnergyConv),
       _enableMaxForceConv(_enableMaxForceConv),
       _enableRMSForceConv(_enableRMSForceConv),
-      _relEnergyConv(relEnergyConvThreshold),
-      _absEnergyConv(absEnergyConvThreshold),
-      _absMaxForceConv(absMaxForceConvThreshold),
-      _absRMSForceConv(absRMSForceConvThreshold),
+      _relEnergyConvThreshold(relEnergyConvThreshold),
+      _absEnergyConvThreshold(absEnergyConvThreshold),
+      _absMaxForceConvThreshold(absMaxForceConvThreshold),
+      _absRMSForceConvThreshold(absRMSForceConvThreshold),
       _energyConvStrategy(energyConvStrategy)
 {
 }
@@ -97,8 +97,8 @@ void Convergence::calcEnergyConvergence(
 
     if (_enableEnergyConv)
     {
-        _isAbsEnergyConv = _absEnergy < _absEnergyConv;
-        _isRelEnergyConv = _relEnergy < _relEnergyConv;
+        _isAbsEnergyConv = _absEnergy < _absEnergyConvThreshold;
+        _isRelEnergyConv = _relEnergy < _relEnergyConvThreshold;
     }
 }
 
@@ -117,10 +117,10 @@ void Convergence::calcForceConvergence(
     _absRMSForce = std::abs(rmsForce);
 
     if (_enableMaxForceConv)
-        _isAbsMaxForceConv = _absMaxForce < _absMaxForceConv;
+        _isAbsMaxForceConv = _absMaxForce < _absMaxForceConvThreshold;
 
     if (_enableRMSForceConv)
-        _isAbsRMSForceConv = _absRMSForce < _absRMSForceConv;
+        _isAbsRMSForceConv = _absRMSForce < _absRMSForceConvThreshold;
 }
 
 /***************************
@@ -225,14 +225,20 @@ bool Convergence::isAbsRMSForceConv() const { return _isAbsRMSForceConv; }
  *
  * @return double
  */
-double Convergence::getRelEnergyConvThreshold() const { return _relEnergyConv; }
+double Convergence::getRelEnergyConvThreshold() const
+{
+    return _relEnergyConvThreshold;
+}
 
 /**
  * @brief get the absolute energy convergence threshold
  *
  * @return double
  */
-double Convergence::getAbsEnergyConvThreshold() const { return _absEnergyConv; }
+double Convergence::getAbsEnergyConvThreshold() const
+{
+    return _absEnergyConvThreshold;
+}
 
 /**
  * @brief get the absolute maximum force convergence threshold
@@ -241,7 +247,7 @@ double Convergence::getAbsEnergyConvThreshold() const { return _absEnergyConv; }
  */
 double Convergence::getAbsMaxForceConvThreshold() const
 {
-    return _absMaxForceConv;
+    return _absMaxForceConvThreshold;
 }
 
 /**
@@ -251,5 +257,5 @@ double Convergence::getAbsMaxForceConvThreshold() const
  */
 double Convergence::getAbsRMSForceConvThreshold() const
 {
-    return _absRMSForceConv;
+    return _absRMSForceConvThreshold;
 }

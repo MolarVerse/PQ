@@ -30,14 +30,11 @@
 #include <string>     // for string
 #include <vector>     // for vector
 
-namespace engine
-{
-    class OptEngine;   // forward declaration
-
-}   // namespace engine
-
 namespace opt
 {
+    class Evaluator;   // forward declaration
+    class Optimizer;   // forward declaration
+
     /**
      * @class LearningRateStrategy
      *
@@ -50,6 +47,9 @@ namespace opt
         size_t _frequency = 1;
         double _initialLearningRate;
         double _learningRate;
+
+        std::shared_ptr<opt::Evaluator> _evaluator;
+        std::shared_ptr<opt::Optimizer> _optimizer;
 
         double                _minLearningRate = 0.0;
         std::optional<double> _maxLearningRate;
@@ -84,6 +84,9 @@ namespace opt
         /***************************
          * standard setter methods *
          ***************************/
+
+        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
 
         void setMinLearningRate(const double);
         void setMaxLearningRate(const std::optional<double>);
