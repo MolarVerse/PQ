@@ -52,13 +52,12 @@ std::string settings::string(const Isotropy &isotropy)
 {
     switch (isotropy)
     {
-        case Isotropy::ISOTROPIC: return "isotropic";
+        using enum Isotropy;
 
-        case Isotropy::SEMI_ISOTROPIC: return "semi_isotropic";
-
-        case Isotropy::ANISOTROPIC: return "anisotropic";
-
-        case Isotropy::FULL_ANISOTROPIC: return "full_anisotropic";
+        case ISOTROPIC: return "isotropic";
+        case SEMI_ISOTROPIC: return "semi_isotropic";
+        case ANISOTROPIC: return "anisotropic";
+        case FULL_ANISOTROPIC: return "full_anisotropic";
 
         default: return "isotropic";
     }
@@ -77,16 +76,17 @@ std::string settings::string(const Isotropy &isotropy)
  */
 void ManostatSettings::setManostatType(const std::string_view &manostatType)
 {
+    using enum ManostatType;
     const auto manostatTypeToLower = utilities::toLowerCopy(manostatType);
 
     if (manostatTypeToLower == "berendsen")
-        _manostatType = ManostatType::BERENDSEN;
+        _manostatType = BERENDSEN;
 
     else if (manostatTypeToLower == "stochastic_rescaling")
-        _manostatType = ManostatType::STOCHASTIC_RESCALING;
+        _manostatType = STOCHASTIC_RESCALING;
 
     else
-        _manostatType = ManostatType::NONE;
+        _manostatType = NONE;
 }
 
 /**
@@ -106,22 +106,23 @@ void ManostatSettings::setManostatType(const ManostatType &manostatType)
  */
 void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 {
+    using enum Isotropy;
     const auto isotropyToLower = utilities::toLowerCopy(isotropy);
 
     if (isotropyToLower == "isotropic")
-        _isotropy = Isotropy::ISOTROPIC;
+        _isotropy = ISOTROPIC;
 
     else if (isotropyToLower == "semi_isotropic")
-        _isotropy = Isotropy::SEMI_ISOTROPIC;
+        _isotropy = SEMI_ISOTROPIC;
 
     else if (isotropyToLower == "anisotropic")
-        _isotropy = Isotropy::ANISOTROPIC;
+        _isotropy = ANISOTROPIC;
 
     else if (isotropyToLower == "full_anisotropic")
-        _isotropy = Isotropy::FULL_ANISOTROPIC;
+        _isotropy = FULL_ANISOTROPIC;
 
     else
-        _isotropy = Isotropy::ISOTROPIC;
+        _isotropy = ISOTROPIC;
 }
 
 /**
