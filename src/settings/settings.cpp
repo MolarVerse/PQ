@@ -26,7 +26,8 @@
 
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using settings::Settings;
+using namespace settings;
+using namespace utilities;
 
 /***************************
  *                         *
@@ -41,20 +42,26 @@ using settings::Settings;
  */
 void Settings::setJobtype(const std::string_view jobtype)
 {
-    const auto jobtypeToLower = utilities::toLowerCopy(jobtype);
+    using enum JobType;
+    const auto jobtypeToLower = toLowerCopy(jobtype);
 
     if (jobtypeToLower == "mmmd")
-        setJobtype(settings::JobType::MM_MD);
+        setJobtype(MM_MD);
+
     else if (jobtypeToLower == "qmmd")
-        setJobtype(settings::JobType::QM_MD);
+        setJobtype(QM_MD);
+
     else if (jobtypeToLower == "ring_polymer_qmmd")
-        setJobtype(settings::JobType::RING_POLYMER_QM_MD);
+        setJobtype(RING_POLYMER_QM_MD);
+
     else if (jobtypeToLower == "qmmmmd")
-        setJobtype(settings::JobType::QMMM_MD);
+        setJobtype(QMMM_MD);
+
     else if (jobtypeToLower == "mmopt")
-        setJobtype(settings::JobType::MM_OPT);
+        setJobtype(MM_OPT);
+
     else
-        setJobtype(settings::JobType::NONE);
+        setJobtype(NONE);
 }
 
 /**
@@ -68,36 +75,42 @@ void Settings::setJobtype(const JobType jobtype)
 
     switch (jobtype)
     {
-        case JobType::MM_OPT:   // fallthrough
-        case JobType::MM_MD:
+        using enum JobType;
+
+        case MM_OPT:   // fallthrough
+        case MM_MD:
         {
             activateMM();
             deactivateQM();
             deactivateRingPolymerMD();
             break;
         }
-        case JobType::QM_MD:
+
+        case QM_MD:
         {
             deactivateMM();
             activateQM();
             deactivateRingPolymerMD();
             break;
         }
-        case JobType::RING_POLYMER_QM_MD:
+
+        case RING_POLYMER_QM_MD:
         {
             deactivateMM();
             activateQM();
             activateRingPolymerMD();
             break;
         }
-        case JobType::QMMM_MD:
+
+        case QMMM_MD:
         {
             activateMM();
             activateQM();
             deactivateRingPolymerMD();
             break;
         }
-        case JobType::NONE:   // fallthrough
+
+        // case NONE: fallthrough
         default:
         {
             deactivateMM();
@@ -115,13 +128,14 @@ void Settings::setJobtype(const JobType jobtype)
  */
 void Settings::setFloatingPointType(const std::string_view floatingPointType)
 {
-    const auto floatingPointTypeToLower =
-        utilities::toLowerCopy(floatingPointType);
+    using enum FPType;
+    const auto floatingPointTypeToLower = toLowerCopy(floatingPointType);
 
     if (floatingPointTypeToLower == "float")
-        setFloatingPointType(settings::FPType::FLOAT);
+        setFloatingPointType(FLOAT);
+
     else
-        setFloatingPointType(settings::FPType::DOUBLE);
+        setFloatingPointType(DOUBLE);
 }
 
 /**
@@ -179,14 +193,14 @@ void Settings::setDimensionality(const size_t dimensionality)
  *
  * @return JobType
  */
-settings::JobType Settings::getJobtype() { return _jobtype; }
+JobType Settings::getJobtype() { return _jobtype; }
 
 /**
  * @brief get the floating point type
  *
  * @return FPType
  */
-settings::FPType Settings::getFloatingPointType() { return _floatingPointType; }
+FPType Settings::getFloatingPointType() { return _floatingPointType; }
 
 /**
  * @brief get the floating point string representation used in pybind11 bindings
@@ -221,10 +235,14 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  */
 bool Settings::isQMOnly()
 {
-    if (_jobtype == settings::JobType::QM_MD)
+    using enum JobType;
+
+    if (_jobtype == QM_MD)
         return true;
-    else if (_jobtype == settings::JobType::RING_POLYMER_QM_MD)
+
+    else if (_jobtype == RING_POLYMER_QM_MD)
         return true;
+
     else
         return false;
 }
@@ -237,11 +255,13 @@ bool Settings::isQMOnly()
  */
 bool Settings::isMDJobType()
 {
+    using enum JobType;
+
     auto isMD = false;
-    isMD      = isMD || _jobtype == JobType::MM_MD;
-    isMD      = isMD || _jobtype == JobType::QM_MD;
-    isMD      = isMD || _jobtype == JobType::QMMM_MD;
-    isMD      = isMD || _jobtype == JobType::RING_POLYMER_QM_MD;
+    isMD      = isMD || _jobtype == MM_MD;
+    isMD      = isMD || _jobtype == QM_MD;
+    isMD      = isMD || _jobtype == QMMM_MD;
+    isMD      = isMD || _jobtype == RING_POLYMER_QM_MD;
 
     return isMD;
 }
