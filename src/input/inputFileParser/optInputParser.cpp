@@ -25,12 +25,14 @@
 #include <format>   // for std::format
 #include <string>   // for std::string
 
-#include "exceptions.hpp"          // for customException::InputFileException
+#include "exceptions.hpp"          // for InputFileException
 #include "optimizerSettings.hpp"   // for OptimizerSettings
-#include "stringUtilities.hpp"     // for utilities::toLowerCopy
+#include "stringUtilities.hpp"     // for toLowerCopy
 
 using namespace input;
 using namespace settings;
+using namespace customException;
+using namespace utilities;
 
 /**
  * @brief Constructor
@@ -94,7 +96,7 @@ OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the optimizer method is
+ * @throws InputFileException if the optimizer method is
  * unknown
  */
 void OptInputParser::parseOptimizer(
@@ -104,12 +106,12 @@ void OptInputParser::parseOptimizer(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto method = utilities::toLowerCopy(lineElements[2]);
+    const auto method = toLowerCopy(lineElements[2]);
 
     if ("steepest-descent" == method)
         OptimizerSettings::setOptimizer(Optimizer::STEEPEST_DESCENT);
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown optimizer method \"{}\" in input file "
             "at line {}.\n"
             "Possible options are: steepest-descent",
@@ -124,7 +126,7 @@ void OptInputParser::parseOptimizer(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the learning rate strategy is
+ * @throws InputFileException if the learning rate strategy is
  * unknown
  */
 void OptInputParser::parseLearningRateStrategy(
@@ -132,24 +134,31 @@ void OptInputParser::parseLearningRateStrategy(
     const size_t                    lineNumber
 )
 {
+    using enum LREnum;
     checkCommand(lineElements, lineNumber);
 
-    const auto strategy = utilities::toLowerCopy(lineElements[2]);
+    const auto strategy = toLowerCopy(lineElements[2]);
 
     if ("constant" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
+        OptimizerSettings::setLearningRateStrategy(CONSTANT);
 
     else if ("constant-decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT_DECAY);
+        OptimizerSettings::setLearningRateStrategy(CONSTANT_DECAY);
 
     else if ("exponential-decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LREnum::EXPONENTIAL_DECAY);
+        OptimizerSettings::setLearningRateStrategy(EXPONENTIAL_DECAY);
+
+    else if ("linesearch-wolfe" == strategy)
+        OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
+
+    else if ("linesearch" == strategy)
+        OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown learning rate strategy \"{}\" in input file "
             "at line {}.\nPossible options are: constant, "
-            "constant-decay, exponential-decay",
+            "constant-decay, exponential-decay, linesearch (linesearch-wolfe)",
             lineElements[2],
             lineNumber
         ));
@@ -161,7 +170,7 @@ void OptInputParser::parseLearningRateStrategy(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the initial learning rate is
+ * @throws InputFileException if the initial learning rate is
  * less than or equal to 0.0
  */
 void OptInputParser::parseInitialLearningRate(
@@ -174,7 +183,7 @@ void OptInputParser::parseInitialLearningRate(
     const auto initialLearningRate = std::stod(lineElements[2]);
 
     if (initialLearningRate <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Initial learning rate must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -189,7 +198,7 @@ void OptInputParser::parseInitialLearningRate(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the learning rate update
+ * @throws InputFileException if the learning rate update
  * frequency is less than or equal to 0
  */
 void OptInputParser::parseLearningRateUpdateFrequency(
@@ -202,7 +211,7 @@ void OptInputParser::parseLearningRateUpdateFrequency(
     const auto frequency = std::stoi(lineElements[2]);
 
     if (frequency <= 0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Learning rate update frequency must be greater than 0 in input "
             "file at line {}.",
             lineNumber
@@ -217,7 +226,7 @@ void OptInputParser::parseLearningRateUpdateFrequency(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the minimum learning rate is
+ * @throws InputFileException if the minimum learning rate is
  * less than or equal to 0.0
  */
 void OptInputParser::parseMinLearningRate(
@@ -230,7 +239,7 @@ void OptInputParser::parseMinLearningRate(
     const auto minLearningRate = std::stod(lineElements[2]);
 
     if (minLearningRate <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Minimum learning rate must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -245,7 +254,7 @@ void OptInputParser::parseMinLearningRate(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the maximum learning rate is
+ * @throws InputFileException if the maximum learning rate is
  * less than or equal to 0.0
  */
 void OptInputParser::parseMaxLearningRate(
@@ -258,7 +267,7 @@ void OptInputParser::parseMaxLearningRate(
     const auto maxLearningRate = std::stod(lineElements[2]);
 
     if (maxLearningRate <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Maximum learning rate must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -273,7 +282,7 @@ void OptInputParser::parseMaxLearningRate(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the learning rate decay is
+ * @throws InputFileException if the learning rate decay is
  * less than or equal to 0.0
  */
 void OptInputParser::parseLearningRateDecay(
@@ -286,7 +295,7 @@ void OptInputParser::parseLearningRateDecay(
     const auto decay = std::stod(lineElements[2]);
 
     if (decay <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Learning rate decay must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber

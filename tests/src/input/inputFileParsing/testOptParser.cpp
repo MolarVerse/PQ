@@ -35,6 +35,7 @@
 using namespace input;
 using namespace settings;
 using namespace customException;
+using namespace defaults;
 
 /**
  * @brief test parsing the optimizer input key
@@ -99,6 +100,18 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
     );
     EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
 
+    parser.parseLearningRateStrategy(
+        {"learning-rate-strategy", "=", "lineSearch-wolfe"},
+        0
+    );
+    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+
+    parser.parseLearningRateStrategy(
+        {"learning-rate-strategy", "=", "linesearch"},
+        0
+    );
+    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+
     ASSERT_THROW_MSG(
         parser.parseLearningRateStrategy(
             {"learning-rate-strategy", "=", "notValid"},
@@ -106,7 +119,8 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         ),
         InputFileException,
         "Unknown learning rate strategy \"notValid\" in input file at line 0.\n"
-        "Possible options are: constant, constant-decay, exponential-decay"
+        "Possible options are: constant, constant-decay, exponential-decay, "
+        "linesearch (linesearch-wolfe)"
     )
 }
 
@@ -120,7 +134,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getInitialLearningRate(),
-        defaults::_INITIAL_LEARNING_RATE_DEFAULT_
+        _INITIAL_LEARNING_RATE_DEFAULT_
     );
 
     OptimizerSettings::setInitialLearningRate(0.0);
@@ -197,7 +211,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
     EXPECT_EQ(
         OptimizerSettings::getLRUpdateFrequency(),
-        defaults::_LR_UPDATE_FREQUENCY_DEFAULT_
+        _LR_UPDATE_FREQUENCY_DEFAULT_
     );
 
     OptimizerSettings::setLRUpdateFrequency(0);
@@ -230,7 +244,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getMinLearningRate(),
-        defaults::_MIN_LEARNING_RATE_DEFAULT_
+        _MIN_LEARNING_RATE_DEFAULT_
     );
 
     OptimizerSettings::setMinLearningRate(0.0);
