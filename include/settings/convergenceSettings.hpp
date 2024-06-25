@@ -72,11 +72,11 @@ namespace settings
         static inline std::optional<ConvStrategy> _energyConvStrategy;
 
         // clang-format off
-        static inline std::string _defaultEnergyConvStrategy = defaults::_ENERGY_CONV_STRATEGY_DEFAULT_;
+        static inline std::string _defaultEnergyConvStrategy = defaults::_EN_CONV_STRATEGY_DEFAULT_;
         // clang-format on
 
        public:
-        [[nodiscard]] static ConvStrategy determineConvStrategy(
+        [[nodiscard]] static ConvStrategy getConvStrategy(
             const std::string_view &strategy
         );
 
@@ -117,9 +117,7 @@ namespace settings
         [[nodiscard]] static bool getUseMaxForceConv();
         [[nodiscard]] static bool getUseRMSForceConv();
 
-        [[nodiscard]] static std::optional<ConvStrategy> getEnergyConvStrategy(
-        );
-
+        [[nodiscard]] static std::optional<ConvStrategy> getEnConvStrategy();
         [[nodiscard]] static ConvStrategy getDefaultEnergyConvStrategy();
     };
 

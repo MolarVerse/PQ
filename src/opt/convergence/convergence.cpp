@@ -162,7 +162,7 @@ double Convergence::getAbsRMSForce() const { return _absRMSForce; }
  *
  * @return settings::ConvStrategy
  */
-settings::ConvStrategy Convergence::getEnergyConvStrategy() const
+settings::ConvStrategy Convergence::getEnConvStrategy() const
 {
     return _energyConvStrategy;
 }

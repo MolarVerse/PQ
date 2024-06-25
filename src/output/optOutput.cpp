@@ -51,7 +51,7 @@ void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
     _fp << maxForceStr;
     _fp << rmsForceStr;
 
-    const auto convStrategy = conv.getEnergyConvStrategy();
+    const auto convStrategy = conv.getEnConvStrategy();
 
     auto relEnConvStr    = std::format("{:3d}", 0);
     auto absEnConvStr    = std::format("{:3d}", 0);
