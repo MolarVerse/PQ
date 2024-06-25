@@ -148,7 +148,7 @@ void OptInputParser::parseLearningRateStrategy(
     else
         throw customException::InputFileException(std::format(
             "Unknown learning rate strategy \"{}\" in input file "
-            "at line {}.\n Possible options are: constant, ",
+            "at line {}.\n Possible options are: constant, "
             "constant-decay, exponential-decay",
             lineElements[2],
             lineNumber
