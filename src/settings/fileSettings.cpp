@@ -38,7 +38,7 @@ using namespace defaults;
  */
 std::string FileSettings::getMolDescriptorFileName()
 {
-    return _molDescriptorFileName;
+    return _molDescriptorFile;
 }
 
 /**
@@ -46,21 +46,21 @@ std::string FileSettings::getMolDescriptorFileName()
  *
  * @return std::string
  */
-std::string FileSettings::getGuffDatFileName() { return _guffDatFileName; }
+std::string FileSettings::getGuffDatFileName() { return _guffDatFile; }
 
 /**
  * @brief Get the topology file name
  *
  * @return std::string
  */
-std::string FileSettings::getTopologyFileName() { return _topologyFileName; }
+std::string FileSettings::getTopologyFileName() { return _topologyFile; }
 
 /**
  * @brief Get the parameter file name
  *
  * @return std::string
  */
-std::string FileSettings::getParameterFilename() { return _parameterFileName; }
+std::string FileSettings::getParameterFilename() { return _parameterFile; }
 
 /**
  * @brief Get the intra non bonded file name
@@ -69,7 +69,7 @@ std::string FileSettings::getParameterFilename() { return _parameterFileName; }
  */
 std::string FileSettings::getIntraNonBondedFileName()
 {
-    return _intraNonBondedFileName;
+    return _intraNonBondedFile;
 }
 
 /**
@@ -77,7 +77,7 @@ std::string FileSettings::getIntraNonBondedFileName()
  *
  * @return std::string
  */
-std::string FileSettings::getStartFileName() { return _startFileName; }
+std::string FileSettings::getStartFileName() { return _startFile; }
 
 /**
  * @brief Get the ring polymer start file name
@@ -86,7 +86,7 @@ std::string FileSettings::getStartFileName() { return _startFileName; }
  */
 std::string FileSettings::getRingPolymerStartFileName()
 {
-    return _ringPolymerStartFileName;
+    return _rpmdStartFile;
 }
 
 /**
@@ -94,21 +94,21 @@ std::string FileSettings::getRingPolymerStartFileName()
  *
  * @return std::string
  */
-std::string FileSettings::getMShakeFileName() { return _mShakeFileName; }
+std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 
 /**
  * @brief Check if the topology file name is set
  *
  * @return bool
  */
-bool FileSettings::isTopologyFileNameSet() { return _isTopologyFileNameSet; }
+bool FileSettings::isTopologyFileNameSet() { return _isTopologyFileSet; }
 
 /**
  * @brief Check if the parameter file name is set
  *
  * @return bool
  */
-bool FileSettings::isParameterFileNameSet() { return _isParameterFileNameSet; }
+bool FileSettings::isParameterFileNameSet() { return _isParameterFileSet; }
 
 /**
  * @brief Check if the intra non bonded file name is set
@@ -117,7 +117,7 @@ bool FileSettings::isParameterFileNameSet() { return _isParameterFileNameSet; }
  */
 bool FileSettings::isIntraNonBondedFileNameSet()
 {
-    return _isIntraNonBondedFileNameSet;
+    return _isIntraNonBondedFileSet;
 }
 
 /**
@@ -127,7 +127,7 @@ bool FileSettings::isIntraNonBondedFileNameSet()
  */
 bool FileSettings::isRingPolymerStartFileNameSet()
 {
-    return _isRingPolymerStartFileNameSet;
+    return _isRPMDStartFileSet;
 }
 
 /**
@@ -135,7 +135,7 @@ bool FileSettings::isRingPolymerStartFileNameSet()
  *
  * @return bool
  */
-bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileNameSet; }
+bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
 
 /***************************
  *                         *
@@ -150,7 +150,7 @@ bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileNameSet; }
  */
 void FileSettings::setMolDescriptorFileName(const std::string_view name)
 {
-    FileSettings::_molDescriptorFileName = name;
+    FileSettings::_molDescriptorFile = name;
 }
 
 /**
@@ -160,7 +160,7 @@ void FileSettings::setMolDescriptorFileName(const std::string_view name)
  */
 void FileSettings::setGuffDatFileName(const std::string_view name)
 {
-    FileSettings::_guffDatFileName = name;
+    FileSettings::_guffDatFile = name;
 }
 
 /**
@@ -170,7 +170,7 @@ void FileSettings::setGuffDatFileName(const std::string_view name)
  */
 void FileSettings::setTopologyFileName(const std::string_view name)
 {
-    FileSettings::_topologyFileName = name;
+    FileSettings::_topologyFile = name;
 }
 
 /**
@@ -180,7 +180,7 @@ void FileSettings::setTopologyFileName(const std::string_view name)
  */
 void FileSettings::setParameterFileName(const std::string_view name)
 {
-    FileSettings::_parameterFileName = name;
+    FileSettings::_parameterFile = name;
 }
 
 /**
@@ -190,7 +190,7 @@ void FileSettings::setParameterFileName(const std::string_view name)
  */
 void FileSettings::setIntraNonBondedFileName(const std::string_view name)
 {
-    FileSettings::_intraNonBondedFileName = name;
+    FileSettings::_intraNonBondedFile = name;
 }
 
 /**
@@ -200,7 +200,7 @@ void FileSettings::setIntraNonBondedFileName(const std::string_view name)
  */
 void FileSettings::setStartFileName(const std::string_view name)
 {
-    FileSettings::_startFileName = name;
+    FileSettings::_startFile = name;
 }
 
 /**
@@ -210,7 +210,7 @@ void FileSettings::setStartFileName(const std::string_view name)
  */
 void FileSettings::setRingPolymerStartFileName(const std::string_view name)
 {
-    FileSettings::_ringPolymerStartFileName = name;
+    FileSettings::_rpmdStartFile = name;
 }
 
 /**
@@ -220,7 +220,7 @@ void FileSettings::setRingPolymerStartFileName(const std::string_view name)
  */
 void FileSettings::setMShakeFileName(const std::string_view name)
 {
-    FileSettings::_mShakeFileName = name;
+    FileSettings::_mShakeFile = name;
 }
 
 /**
@@ -229,7 +229,7 @@ void FileSettings::setMShakeFileName(const std::string_view name)
  */
 void FileSettings::setIsTopologyFileNameSet()
 {
-    FileSettings::_isTopologyFileNameSet = true;
+    FileSettings::_isTopologyFileSet = true;
 }
 
 /**
@@ -238,7 +238,7 @@ void FileSettings::setIsTopologyFileNameSet()
  */
 void FileSettings::setIsParameterFileNameSet()
 {
-    FileSettings::_isParameterFileNameSet = true;
+    FileSettings::_isParameterFileSet = true;
 }
 
 /**
@@ -247,7 +247,7 @@ void FileSettings::setIsParameterFileNameSet()
  */
 void FileSettings::setIsIntraNonBondedFileNameSet()
 {
-    FileSettings::_isIntraNonBondedFileNameSet = true;
+    FileSettings::_isIntraNonBondedFileSet = true;
 }
 
 /**
@@ -256,7 +256,7 @@ void FileSettings::setIsIntraNonBondedFileNameSet()
  */
 void FileSettings::setIsRingPolymerStartFileNameSet()
 {
-    FileSettings::_isRingPolymerStartFileNameSet = true;
+    FileSettings::_isRPMDStartFileSet = true;
 }
 
 /**
@@ -265,7 +265,7 @@ void FileSettings::setIsRingPolymerStartFileNameSet()
  */
 void FileSettings::setIsMShakeFileNameSet()
 {
-    FileSettings::_isMShakeFileNameSet = true;
+    FileSettings::_isMShakeFileSet = true;
 }
 
 /**
@@ -274,7 +274,7 @@ void FileSettings::setIsMShakeFileNameSet()
  */
 void FileSettings::unsetIsTopologyFileNameSet()
 {
-    FileSettings::_isTopologyFileNameSet = false;
+    FileSettings::_isTopologyFileSet = false;
 }
 
 /**
@@ -283,7 +283,7 @@ void FileSettings::unsetIsTopologyFileNameSet()
  */
 void FileSettings::unsetIsParameterFileNameSet()
 {
-    FileSettings::_isParameterFileNameSet = false;
+    FileSettings::_isParameterFileSet = false;
 }
 
 /**
@@ -292,7 +292,7 @@ void FileSettings::unsetIsParameterFileNameSet()
  */
 void FileSettings::unsetIsIntraNonBondedFileNameSet()
 {
-    FileSettings::_isIntraNonBondedFileNameSet = false;
+    FileSettings::_isIntraNonBondedFileSet = false;
 }
 
 /**
@@ -301,7 +301,7 @@ void FileSettings::unsetIsIntraNonBondedFileNameSet()
  */
 void FileSettings::unsetIsRingPolymerStartFileNameSet()
 {
-    FileSettings::_isRingPolymerStartFileNameSet = false;
+    FileSettings::_isRPMDStartFileSet = false;
 }
 
 /**
@@ -310,5 +310,5 @@ void FileSettings::unsetIsRingPolymerStartFileNameSet()
  */
 void FileSettings::unsetIsMShakeFileNameSet()
 {
-    FileSettings::_isMShakeFileNameSet = false;
+    FileSettings::_isMShakeFileSet = false;
 }

@@ -40,24 +40,24 @@ namespace settings
     class FileSettings
     {
        private:
-        static inline std::string _molDescriptorFileName =
-            defaults::_MOLDESCRIPTOR_FILENAME_DEFAULT_;
+        // clang-format off
+        static inline std::string _molDescriptorFile = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
+        // clang-format on
 
-        static inline std::string _guffDatFileName =
-            defaults::_GUFF_FILENAME_DEFAULT_;
+        static inline std::string _guffDatFile = defaults::_GUFF_FILE_DEFAULT_;
 
-        static inline std::string _topologyFileName;
-        static inline std::string _parameterFileName;
-        static inline std::string _intraNonBondedFileName;
-        static inline std::string _startFileName;
-        static inline std::string _ringPolymerStartFileName;
-        static inline std::string _mShakeFileName;
+        static inline std::string _topologyFile;
+        static inline std::string _parameterFile;
+        static inline std::string _intraNonBondedFile;
+        static inline std::string _startFile;
+        static inline std::string _rpmdStartFile;
+        static inline std::string _mShakeFile;
 
-        static bool inline _isTopologyFileNameSet         = false;
-        static bool inline _isParameterFileNameSet        = false;
-        static bool inline _isIntraNonBondedFileNameSet   = false;
-        static bool inline _isRingPolymerStartFileNameSet = false;
-        static bool inline _isMShakeFileNameSet           = false;
+        static bool inline _isTopologyFileSet       = false;
+        static bool inline _isParameterFileSet      = false;
+        static bool inline _isIntraNonBondedFileSet = false;
+        static bool inline _isRPMDStartFileSet      = false;
+        static bool inline _isMShakeFileSet         = false;
 
        public:
         FileSettings()  = default;

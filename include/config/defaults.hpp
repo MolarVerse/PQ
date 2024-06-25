@@ -33,9 +33,9 @@
 namespace defaults
 {
     // clang-format off
-    static constexpr char   _MOLDESCRIPTOR_FILENAME_DEFAULT_[] = "moldescriptor.dat";
-    static constexpr char   _GUFF_FILENAME_DEFAULT_[]          = "guff.dat";
-    static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_           = 28;
+    static constexpr char   _MOLDESCRIPTOR_FILE_DEFAULT_[] = "moldescriptor.dat";
+    static constexpr char   _GUFF_FILE_DEFAULT_[]      = "guff.dat";
+    static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_       = 28;
 
     static constexpr char _RESTART_FILE_DEFAULT_[]  = "default.rst";
     static constexpr char _ENERGY_FILE_DEFAULT_[]   = "default.en";
@@ -81,8 +81,8 @@ namespace defaults
     static constexpr double _LANGEVIN_THERMOSTAT_FRICTION_         = 1.0e11;  // in s^-1
     static constexpr double _NOSE_HOOVER_COUPLING_FREQUENCY_       = 1.0e3;   // in cm^-1
 
-    static constexpr double _BERENDSEN_MANOSTAT_RELAXATION_TIME_ = 1.0;        // in ps
-    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_      = 4.591e-5;   // default value for berendsen manostat
+    static constexpr double _BERENDSEN_MANOSTAT_RELAX_TIME_ = 1.0;        // in ps
+    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // default value for berendsen manostat
 
     static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
 
@@ -94,7 +94,7 @@ namespace defaults
     static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0;
     static constexpr double _MIN_LEARNING_RATE_DEFAULT_     = 1e-15;
 
-    static constexpr char   _ENERGY_CONV_STRATEGY_DEFAULT_[] = "rigorous";
+    static constexpr char   _EN_CONV_STRATEGY_DEFAULT_[] = "rigorous";
     static constexpr char   _FORCE_CONV_STRATEGY_DEFAULT_[]  = "rigorous";
     static constexpr double _REL_ENERGY_CONV_DEFAULT_        = 1.0e-6;
     static constexpr double _ABS_ENERGY_CONV_DEFAULT_        = 1.0e-6;
