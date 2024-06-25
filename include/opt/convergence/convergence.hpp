@@ -69,7 +69,7 @@ namespace opt
             const settings::ConvStrategy
         );
 
-        bool checkConvergence() const;
+        [[nodiscard]] bool checkConvergence() const;
 
         void calcEnergyConvergence(const double, const double);
         void calcForceConvergence(const double, const double);

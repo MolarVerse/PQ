@@ -66,17 +66,26 @@ bool Convergence::checkConvergence() const
 {
     auto isEnergyConverged = true;
 
-    if (_energyConvStrategy == settings::ConvStrategy::RIGOROUS)
-        isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
+    switch (_energyConvStrategy)
+    {
+        case settings::ConvStrategy::RIGOROUS:
+            isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
+            break;
 
-    else if (_energyConvStrategy == settings::ConvStrategy::LOOSE)
-        isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
+        case settings::ConvStrategy::LOOSE:
+            isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
+            break;
 
-    else if (_energyConvStrategy == settings::ConvStrategy::ABSOLUTE)
-        isEnergyConverged = _isAbsEnergyConv;
+        case settings::ConvStrategy::ABSOLUTE:
+            isEnergyConverged = _isAbsEnergyConv;
+            break;
 
-    else if (_energyConvStrategy == settings::ConvStrategy::RELATIVE)
-        isEnergyConverged = _isRelEnergyConv;
+        case settings::ConvStrategy::RELATIVE:
+            isEnergyConverged = _isRelEnergyConv;
+            break;
+
+        default: break;
+    }
 
     return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;
 }
