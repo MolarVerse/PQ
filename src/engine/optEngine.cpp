@@ -44,6 +44,8 @@ void OptEngine::run()
 
     _nSteps = _optimizer->getNEpochs();
 
+    writeOutput();
+
     progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
     for (size_t i = 0; i < _nSteps; ++i)
