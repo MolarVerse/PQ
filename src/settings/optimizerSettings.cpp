@@ -22,7 +22,10 @@
 
 #include "optimizerSettings.hpp"
 
+#include "stringUtilities.hpp"   // for toLowerCopy
+
 using namespace settings;
+using namespace utilities;
 
 /**
  * @brief returns the optimizer as string
@@ -34,7 +37,10 @@ std::string settings::string(const Optimizer method)
 {
     switch (method)
     {
-        case Optimizer::STEEPEST_DESCENT: return "STEEPEST-DESCENT";
+        using enum Optimizer;
+
+        case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
+        case ADAM: return "ADAM";
 
         default: return "none";
     }
@@ -74,8 +80,14 @@ std::string settings::string(const LREnum method)
  */
 void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
 {
-    if ("steepest-descent" == optimizer)
+    using enum Optimizer;
+    const auto optimizerLower = toLowerCopy(optimizer);
+
+    if ("steepest-descent" == optimizerLower)
         setOptimizer(Optimizer::STEEPEST_DESCENT);
+
+    else if ("adam" == optimizerLower)
+        setOptimizer(Optimizer::ADAM);
 
     else
         setOptimizer(Optimizer::NONE);
@@ -100,16 +112,18 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
     using enum LREnum;
 
-    if ("constant" == method)
+    const auto methodLower = toLowerCopy(method);
+
+    if ("constant" == methodLower)
         setLearningRateStrategy(CONSTANT);
 
-    else if ("constant-decay" == method)
+    else if ("constant-decay" == methodLower)
         setLearningRateStrategy(CONSTANT_DECAY);
 
-    else if ("exponential-decay" == method)
+    else if ("exponential-decay" == methodLower)
         setLearningRateStrategy(EXPONENTIAL_DECAY);
 
-    else if ("linesearch-wolfe" == method)
+    else if ("linesearch-wolfe" == methodLower)
         setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else

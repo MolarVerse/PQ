@@ -41,6 +41,7 @@ namespace settings
     {
         NONE,
         STEEPEST_DESCENT,
+        ADAM
     };
 
     /**
