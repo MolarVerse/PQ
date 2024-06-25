@@ -90,8 +90,10 @@ namespace settings
         ThermostatSettings()  = default;
         ~ThermostatSettings() = default;
 
-        static auto addChi(const size_t index, const double chi);
-        static auto addZeta(const size_t index, const double zeta);
+        static auto addChi(const size_t index, const double chi)
+            -> decltype(_chi.try_emplace(index, chi));
+        static auto addZeta(const size_t index, const double zeta)
+            -> decltype(_zeta.try_emplace(index, zeta));
 
         /***************************
          * standard setter methods *

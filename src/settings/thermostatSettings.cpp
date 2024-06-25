@@ -56,6 +56,7 @@ std::string settings::string(const ThermostatType &thermostatType)
  * @return auto
  */
 auto ThermostatSettings::addChi(const size_t index, const double chi)
+    -> decltype(_chi.try_emplace(index, chi))
 {
     return _chi.try_emplace(index, chi);
 }
@@ -68,6 +69,7 @@ auto ThermostatSettings::addChi(const size_t index, const double chi)
  * @return auto
  */
 auto ThermostatSettings::addZeta(const size_t index, const double zeta)
+    -> decltype(_zeta.try_emplace(index, zeta))
 {
     return _zeta.try_emplace(index, zeta);
 }
