@@ -20,37 +20,43 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STEEPEST_DESCENT_HPP_
+#ifndef _ADAM_HPP_
 
-#define _STEEPEST_DESCENT_HPP_
+#define _ADAM_HPP_
+
+#include <vector>   // for vector
 
 #include "optimizer.hpp"
 
 namespace opt
 {
     /**
-     * @class SteepestDescent
-     *
-     * @brief Steepest Descent optimizer
+     * @class Adam
      *
      */
-    class SteepestDescent : public Optimizer
+    class Adam : public Optimizer
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;
 
-       public:
-        explicit SteepestDescent(const size_t nEpochs);
+        double _beta1 = 0.9;
+        double _beta2 = 0.999;
 
-        SteepestDescent()        = default;
-        ~SteepestDescent() final = default;
+        std::vector<linearAlgebra::Vec3D> _momentum1;
+        std::vector<linearAlgebra::Vec3D> _momentum2;
+
+       public:
+        explicit Adam(const size_t nEpochs, const size_t nAtoms);
+        explicit Adam(const size_t, const double, const double, const size_t);
+
+        Adam()        = default;
+        ~Adam() final = default;
 
         [[nodiscard]] pq::SharedOptimizer clone() const final;
         [[nodiscard]] size_t              maxHistoryLength() const final;
 
         void update(const double learningRate, const size_t step) final;
     };
-
 }   // namespace opt
 
-#endif   // _STEEPEST_DESCENT_HPP_
+#endif   // _ADAM_HPP_

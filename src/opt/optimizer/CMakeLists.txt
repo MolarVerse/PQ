@@ -2,6 +2,7 @@ add_library(optimizer
     optimizer.cpp
 
     steepestDescent.cpp
+    adam.cpp
 )
 
 target_include_directories(optimizer

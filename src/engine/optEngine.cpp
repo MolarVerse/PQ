@@ -127,7 +127,7 @@ void OptEngine::run()
  */
 void OptEngine::takeStep()
 {
-    _optimizer->update(_learningRateStrategy->getLearningRate());
+    _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
 
     _evaluator->evaluate();
 

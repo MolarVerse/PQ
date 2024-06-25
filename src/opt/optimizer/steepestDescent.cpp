@@ -57,14 +57,14 @@ size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
  *
  * @param learningRate
  */
-void SteepestDescent::update(const double learningRate)
+void SteepestDescent::update(const double learningRate, const size_t)
 {
     const auto& atoms = _simulationBox->getAtoms();
 
     for (auto& atom : atoms)
     {
         const auto force = atom->getForce();
-        const auto pos = atom->getPosition();
+        const auto pos   = atom->getPosition();
 
         auto pos_new = pos + learningRate * force;
         _simulationBox->applyPBC(pos_new);

@@ -24,6 +24,7 @@
 
 #include <memory>
 
+#include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
@@ -104,6 +105,7 @@ void OptimizerSetup::setup()
 std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs = TimingsSettings::getNumberOfSteps();
+    const auto simBox  = _optEngine.getSimulationBox();
 
     std::shared_ptr<opt::Optimizer> optimizer;
 
@@ -116,13 +118,19 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
             optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
         }
-        default:
+
+        case ADAM:
         {
+            const auto nAtoms = simBox.getNumberOfAtoms();
+            optimizer         = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+            break;
+        }
+
+        default:
             throw UserInputException(std::format(
                 "Unknown optimizer type {}",
                 string(OptimizerSettings::getOptimizer())
             ));
-        }
     }
 
     optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
