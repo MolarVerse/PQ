@@ -45,6 +45,10 @@ namespace settings
         MACE
     };
 
+    /**
+     * @class enum MaceModel
+     *
+     */
     enum class MaceModel : size_t
     {
         LARGE,
@@ -75,6 +79,12 @@ namespace settings
         static inline MaceModel _maceModel = MaceModel::LARGE;
 
        public:
+        [[nodiscard]] static bool isExternalQMRunner();
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
         static void setQMMethod(const std::string_view &method);
         static void setQMMethod(const QMMethod method);
 
@@ -85,7 +95,9 @@ namespace settings
         static void setMaceModel(const std::string_view &model);
         static void setMaceModel(const MaceModel model);
 
-        [[nodiscard]] static bool isExternalQMRunner();
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] static QMMethod    getQMMethod();
         [[nodiscard]] static std::string getQMScript();
