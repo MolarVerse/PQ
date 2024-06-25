@@ -28,6 +28,7 @@
 #include <vector>      // for vector
 
 using settings::OutputFileSettings;
+using namespace defaults;
 
 /**
  * @brief Sets the output frequency of the simulation
@@ -81,75 +82,75 @@ void OutputFileSettings::setFilePrefix(const std::string_view prefix)
  */
 void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 {
-    if (defaults::_RESTART_FILE_DEFAULT_ == _rstFile)
+    if (_RESTART_FILE_DEFAULT_ == _rstFile)
         _rstFile = prefix + ".rst";
 
-    if (defaults::_LOG_FILE_DEFAULT_ == _logFile)
+    if (_LOG_FILE_DEFAULT_ == _logFile)
         _logFile = prefix + ".log";
 
-    if (defaults::_TRAJ_FILE_DEFAULT_ == _trajFile)
+    if (_TRAJ_FILE_DEFAULT_ == _trajFile)
         _trajFile = prefix + ".xyz";
 
-    if (defaults::_ENERGY_FILE_DEFAULT_ == _energyFile)
+    if (_ENERGY_FILE_DEFAULT_ == _energyFile)
         _energyFile = prefix + ".en";
 
-    if (defaults::_INSTEN_FILE_DEFAULT_ == _instEnFile)
+    if (_INSTEN_FILE_DEFAULT_ == _instEnFile)
         _instEnFile = prefix + ".instant_en";
 
-    if (defaults::_FORCE_FILE_DEFAULT_ == _forceFile)
+    if (_FORCE_FILE_DEFAULT_ == _forceFile)
         _forceFile = prefix + ".force";
 
-    if (defaults::_VEL_FILE_DEFAULT_ == _velFile)
+    if (_VEL_FILE_DEFAULT_ == _velFile)
         _velFile = prefix + ".vel";
 
-    if (defaults::_CHARGE_FILE_DEFAULT_ == _chargeFile)
+    if (_CHARGE_FILE_DEFAULT_ == _chargeFile)
         _chargeFile = prefix + ".chrg";
 
-    if (defaults::_INFO_FILE_DEFAULT_ == _infoFile)
+    if (_INFO_FILE_DEFAULT_ == _infoFile)
         _infoFile = prefix + ".info";
 
-    if (defaults::_MOMENTUM_FILE_DEFAULT_ == _momFile)
+    if (_MOMENTUM_FILE_DEFAULT_ == _momFile)
         _momFile = prefix + ".mom";
 
-    if (defaults::_VIRIAL_FILE_DEFAULT_ == _virialFile)
+    if (_VIRIAL_FILE_DEFAULT_ == _virialFile)
         _virialFile = prefix + ".vir";
 
-    if (defaults::_STRESS_FILE_DEFAULT_ == _stressFile)
+    if (_STRESS_FILE_DEFAULT_ == _stressFile)
         _stressFile = prefix + ".stress";
 
-    if (defaults::_BOX_FILE_DEFAULT_ == _boxFile)
+    if (_BOX_FILE_DEFAULT_ == _boxFile)
         _boxFile = prefix + ".box";
 
-    if (defaults::_OPT_FILE_DEFAULT_ == _optFile)
+    if (_OPT_FILE_DEFAULT_ == _optFile)
         _optFile = prefix + ".opt";
 
     /*****************************
      * ring polymer output files *
      *****************************/
 
-    if (defaults::_RPMD_RST_FILE_DEFAULT_ == _rpmdRstFile)
+    if (_RPMD_RST_FILE_DEFAULT_ == _rpmdRstFile)
         _rpmdRstFile = prefix + ".rpmd.rst";
 
-    if (defaults::_RPMD_TRAJ_FILE_DEFAULT_ == _rpmdTrajFile)
+    if (_RPMD_TRAJ_FILE_DEFAULT_ == _rpmdTrajFile)
         _rpmdTrajFile = prefix + ".rpmd.xyz";
 
-    if (defaults::_RPMD_VEL_FILE_DEFAULT_ == _rpmdVelFile)
+    if (_RPMD_VEL_FILE_DEFAULT_ == _rpmdVelFile)
         _rpmdVelFile = prefix + ".rpmd.vel";
 
-    if (defaults::_RPMD_FORCE_FILE_DEFAULT_ == _rpmdForceFile)
+    if (_RPMD_FORCE_FILE_DEFAULT_ == _rpmdForceFile)
         _rpmdForceFile = prefix + ".rpmd.force";
 
-    if (defaults::_RPMD_CHARGE_FILE_DEFAULT_ == _rpmdChargeFile)
+    if (_RPMD_CHARGE_FILE_DEFAULT_ == _rpmdChargeFile)
         _rpmdChargeFile = prefix + ".rpmd.chrg";
 
-    if (defaults::_RPMD_ENERGY_FILE_DEFAULT_ == _rpmdEnergyFile)
+    if (_RPMD_ENERGY_FILE_DEFAULT_ == _rpmdEnergyFile)
         _rpmdEnergyFile = prefix + ".rpmd.en";
 
     /********************
      * the timings file *
      ********************/
 
-    if (defaults::_TIMINGS_FILE_DEFAULT_ == _timeFile)
+    if (_TIMINGS_FILE_DEFAULT_ == _timeFile)
         _timeFile = prefix + ".timings";
 }
 
