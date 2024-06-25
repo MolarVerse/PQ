@@ -189,6 +189,14 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
             );
         }
 
+        case LINESEARCH_WOLFE:
+        {
+            throw UserInputException(
+                "The Wolfe line search learning rate strategy is not yet "
+                "implemented"
+            );
+        }
+
         default:
         {
             throw UserInputException(

@@ -64,8 +64,9 @@ void SteepestDescent::update(const double learningRate)
     for (auto &atom : atoms)
     {
         const auto force = atom->getForce();
+        const auto mass  = atom->getMass();
 
         atom->setPositionOld(atom->getPosition());
-        atom->addPosition(learningRate * force);
+        atom->addPosition(learningRate * force / mass);
     }
 }
