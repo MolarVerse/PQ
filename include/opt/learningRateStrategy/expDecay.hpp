@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FIRST_ORDER_DECAY_HPP_
+#ifndef _EXP_DECAY_HPP_
 
-#define _FIRST_ORDER_DECAY_HPP_
+#define _EXP_DECAY_HPP_
 
 #include <cmath>   // for exp
 
@@ -31,21 +31,21 @@
 namespace opt
 {
     /**
-     * @brief First order decay learning rate strategy
+     * @brief Exponential decay learning rate strategy
      *
      */
-    class FirstOrderDecayLRStrategy : public LearningRateStrategy
+    class ExpDecayLR : public LearningRateStrategy
     {
        private:
         double _decay;
 
        public:
-        FirstOrderDecayLRStrategy() = default;
-        FirstOrderDecayLRStrategy(const double, const double);
+        ExpDecayLR() = default;
+        ExpDecayLR(const double, const double);
 
         void updateLearningRate() override;
     };
 
 }   // namespace opt
 
-#endif   // _FIRST_ORDER_DECAY_HPP_
+#endif   // _EXP_DECAY_HPP_
