@@ -63,11 +63,15 @@ namespace constraints
         [[nodiscard]] bool applyShake(const pq::SimBox &, const double);
         [[nodiscard]] bool applyRattle(const double);
 
-        /**************************************
-         * standard getter and setter methods *
-         **************************************/
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setShakeDistanceRef(const pq::Vec3D &shakeDistanceRef);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
 
         [[nodiscard]] double    getTargetBondLength() const;
         [[nodiscard]] pq::Vec3D getShakeDistanceRef() const;

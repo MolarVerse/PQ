@@ -79,7 +79,10 @@ namespace forceField
 
 namespace constraints
 {
-    class Constraints;   // forward declaration
+    class Constraints;           // forward declaration
+    class BondConstraints;       // forward declaration
+    class DistanceConstraints;   // forward declaration
+    class MShakeReference;       // forward declaration
 
 }   // namespace constraints
 
@@ -121,13 +124,25 @@ namespace pq
     using BruteForcePot   = potential::PotentialBruteForce;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
-    using Constraints     = constraints::Constraints;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
     using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    /**************************
+     * constraints namespace *
+     **************************/
+
+    using Constraints         = constraints::Constraints;
+    using BondConstraints     = constraints::BondConstraints;
+    using MShakeReference     = constraints::MShakeReference;
+    using DistanceConstraints = constraints::DistanceConstraints;
+
+    using BondConstraintsVec = std::vector<BondConstraints>;
+    using MShakeReferenceVec = std::vector<MShakeReference>;
+    using DistConstraintsVec = std::vector<DistanceConstraints>;
 
     /***************************
      * simulationBox namespace *
