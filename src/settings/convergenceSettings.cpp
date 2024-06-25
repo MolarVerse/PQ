@@ -22,7 +22,10 @@
 
 #include "convergenceSettings.hpp"
 
+#include "exceptions.hpp"
+
 using namespace settings;
+using namespace customException;
 
 /**
  * @brief returns the convergence strategy as string
@@ -34,13 +37,12 @@ std::string settings::string(const ConvStrategy strategy)
 {
     switch (strategy)
     {
-        case ConvStrategy::RIGOROUS: return "RIGOROUS";
+        using enum ConvStrategy;
 
-        case ConvStrategy::LOOSE: return "LOOSE";
-
-        case ConvStrategy::ABSOLUTE: return "ABSOLUTE";
-
-        case ConvStrategy::RELATIVE: return "RELATIVE";
+        case RIGOROUS: return "RIGOROUS";
+        case LOOSE: return "LOOSE";
+        case ABSOLUTE: return "ABSOLUTE";
+        case RELATIVE: return "RELATIVE";
 
         default: return "none";
     }
@@ -51,23 +53,33 @@ std::string settings::string(const ConvStrategy strategy)
  *
  * @param strategy
  * @return ConvStrategy
+ *
+ * @throw UserInputException if the strategy is unknown
  */
 ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
 {
+    using enum ConvStrategy;
+
+    auto convStrategy = RIGOROUS;
+
     if ("rigorous" == strategy)
-        return ConvStrategy::RIGOROUS;
+        convStrategy = RIGOROUS;
 
     else if ("loose" == strategy)
-        return ConvStrategy::LOOSE;
+        convStrategy = LOOSE;
 
     else if ("absolute" == strategy)
-        return ConvStrategy::ABSOLUTE;
+        convStrategy = ABSOLUTE;
 
     else if ("relative" == strategy)
-        return ConvStrategy::RELATIVE;
+        convStrategy = RELATIVE;
 
     else
-        return ConvStrategy::RIGOROUS;
+        throw UserInputException(
+            "Unknown convergence strategy: " + std::string(strategy)
+        );
+
+    return convStrategy;
 }
 
 /***************************
