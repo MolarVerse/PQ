@@ -52,6 +52,7 @@ namespace settings
         NONE,
         CONSTANT,
         CONSTANT_DECAY,
+        EXPONENTIAL_DECAY,
     };
 
     std::string string(const Optimizer method);

@@ -54,6 +54,8 @@ std::string settings::string(const LREnum method)
 
         case LREnum::CONSTANT_DECAY: return "CONSTANT-DECAY";
 
+        case LREnum::EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
+
         default: return "none";
     }
 }
@@ -102,6 +104,9 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 
     else if ("constant-decay" == method)
         setLearningRateStrategy(CONSTANT_DECAY);
+
+    else if ("exponential-decay" == method)
+        setLearningRateStrategy(EXPONENTIAL_DECAY);
 
     else
         setLearningRateStrategy(NONE);
