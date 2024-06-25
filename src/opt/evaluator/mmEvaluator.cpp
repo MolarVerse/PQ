@@ -48,7 +48,9 @@ std::shared_ptr<Evaluator> MMEvaluator::clone() const
 void MMEvaluator::evaluate()
 {
     _physicalDataOld->copy(*_physicalData);
+
     _simulationBox->updateOldForces();
+    _simulationBox->resetForces();
 
     // _constraints->applyShake(_simulationBox);
 

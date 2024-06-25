@@ -48,7 +48,7 @@ using namespace constants;
  *
  * @param toCopy
  */
-void SimulationBox::copy(const SimulationBox &toCopy)
+void SimulationBox::copy(const SimulationBox& toCopy)
 {
     *this = toCopy;
 
@@ -62,16 +62,16 @@ void SimulationBox::copy(const SimulationBox &toCopy)
         this->_qmAtoms.push_back(atom);
     }
 
-    auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule &molecule)
-    {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-        molecule.getAtoms().clear();
+    auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule& molecule)
+        {
+            const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+            molecule.getAtoms().clear();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-            molecule.addAtom(this->_atoms[runningIndex++]);
+            for (size_t i = 0; i < numberOfAtoms; ++i)
+                molecule.addAtom(this->_atoms[runningIndex++]);
 
-        return runningIndex;
-    };
+            return runningIndex;
+        };
 
     std::accumulate(
         this->_molecules.begin(),
@@ -99,8 +99,8 @@ std::shared_ptr<SimulationBox> SimulationBox::clone() const
  */
 std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 {
-    auto isMoleculeType = [moleculeType](const Molecule &mol)
-    { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const Molecule& mol)
+        { return mol.getMoltype() == moleculeType; };
 
     const auto molecule = std::ranges::find_if(_molecules, isMoleculeType);
 
@@ -117,16 +117,16 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::addQMCenterAtoms(const std::vector<int> &atomIndices)
+void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || (size_t)index >= _atoms.size())
             throw UserInputException(
                 std::format("QM center atom index {} out of range", index)
             );
 
-        _qmCenterAtoms.push_back(_atoms[(size_t) index]);
+        _qmCenterAtoms.push_back(_atoms[(size_t)index]);
     }
 }
 
@@ -139,23 +139,23 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int> &atomIndices)
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::setupQMOnlyAtoms(const std::vector<int> &atomIndices)
+void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || (size_t)index >= _atoms.size())
             throw UserInputException(
                 std::format("QM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setQMOnly(true);
+        _atoms[(size_t)index]->setQMOnly(true);
 
         if (std::ranges::find(
-                _qmAtoms.begin(),
-                _qmAtoms.end(),
-                _atoms[(size_t) index]
-            ) == _qmAtoms.end())
-            _qmAtoms.push_back(_atoms[(size_t) index]);
+            _qmAtoms.begin(),
+            _qmAtoms.end(),
+            _atoms[(size_t)index]
+        ) == _qmAtoms.end())
+            _qmAtoms.push_back(_atoms[(size_t)index]);
     }
 }
 
@@ -167,22 +167,22 @@ void SimulationBox::setupQMOnlyAtoms(const std::vector<int> &atomIndices)
  * @throw UserInputException if atom index out of range
  * @throw UserInputException if atom is already in QM only list
  */
-void SimulationBox::setupMMOnlyAtoms(const std::vector<int> &atomIndices)
+void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || (size_t)index >= _atoms.size())
             throw UserInputException(
                 std::format("MM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setMMOnly(true);
+        _atoms[(size_t)index]->setMMOnly(true);
 
         if (std::ranges::find(
-                _qmAtoms.begin(),
-                _qmAtoms.end(),
-                _atoms[(size_t) index]
-            ) != _qmAtoms.end())
+            _qmAtoms.begin(),
+            _qmAtoms.end(),
+            _atoms[(size_t)index]
+        ) != _qmAtoms.end())
 
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in QM only list - "
@@ -201,10 +201,10 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int> &atomIndices)
  *
  * @throw RstFileException if molecule type not found
  */
-MoleculeType &SimulationBox::findMoleculeType(const size_t moleculeType)
+MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
 {
-    auto isMoleculeType = [moleculeType](const auto &mol)
-    { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto& mol)
+        { return mol.getMoltype() == moleculeType; };
 
     const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeType);
 
@@ -225,8 +225,8 @@ MoleculeType &SimulationBox::findMoleculeType(const size_t moleculeType)
  */
 bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
 {
-    auto isMoleculeType = [moleculeType](const auto &mol)
-    { return mol.getMoltype() == moleculeType; };
+    auto isMoleculeType = [moleculeType](const auto& mol)
+        { return mol.getMoltype() == moleculeType; };
 
     const auto molType = std::ranges::find_if(_moleculeTypes, isMoleculeType);
 
@@ -243,11 +243,11 @@ bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
  * @return optional<size_t>
  */
 std::optional<size_t> SimulationBox::findMoleculeTypeByString(
-    const std::string &moleculeType
+    const std::string& moleculeType
 ) const
 {
-    auto isMoleculeName = [&moleculeType](const auto &mol)
-    { return mol.getName() == moleculeType; };
+    auto isMoleculeName = [&moleculeType](const auto& mol)
+        { return mol.getName() == moleculeType; };
 
     const auto molecule = std::ranges::find_if(_moleculeTypes, isMoleculeName);
 
@@ -266,13 +266,13 @@ std::optional<size_t> SimulationBox::findMoleculeTypeByString(
  * @param atomIndex
  * @return pair<Molecule *, size_t>
  */
-std::pair<Molecule *, size_t> SimulationBox::findMoleculeByAtomIndex(
+std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
     const size_t atomIndex
 )
 {
     size_t sum = 0;
 
-    for (auto &molecule : _molecules)
+    for (auto& molecule : _molecules)
     {
         sum += molecule.getNumberOfAtoms();
 
@@ -303,16 +303,16 @@ std::vector<MoleculeType> SimulationBox::findNecessaryMoleculeTypes()
 {
     std::vector<MoleculeType> neededMolTypes;
 
-    auto searchMoleculeTypes = [&neededMolTypes, this](const auto &molecule)
-    {
-        auto predicate = [&molecule](const auto moleculeType)
-        { return molecule.getMoltype() == moleculeType.getMoltype(); };
+    auto searchMoleculeTypes = [&neededMolTypes, this](const auto& molecule)
+        {
+            auto predicate = [&molecule](const auto moleculeType)
+                { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
-        const auto molType = std::ranges::find_if(neededMolTypes, predicate);
+            const auto molType = std::ranges::find_if(neededMolTypes, predicate);
 
-        if (molType == neededMolTypes.end() && molecule.getMoltype() != 0)
-            neededMolTypes.push_back(findMoleculeType(molecule.getMoltype()));
-    };
+            if (molType == neededMolTypes.end() && molecule.getMoltype() != 0)
+                neededMolTypes.push_back(findMoleculeType(molecule.getMoltype()));
+        };
 
     std::ranges::for_each(_molecules, searchMoleculeTypes);
 
@@ -328,22 +328,22 @@ std::vector<MoleculeType> SimulationBox::findNecessaryMoleculeTypes()
 void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
 {
     auto setPartialCharges =
-        [&moleculeTypes = _moleculeTypes](Molecule &molecule)
-    {
-        auto predicate = [&molecule](const auto moleculeType)
-        { return molecule.getMoltype() == moleculeType.getMoltype(); };
+        [&moleculeTypes = _moleculeTypes](Molecule& molecule)
+        {
+            auto predicate = [&molecule](const auto moleculeType)
+                { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
-        const auto molType = std::ranges::find_if(moleculeTypes, predicate);
+            const auto molType = std::ranges::find_if(moleculeTypes, predicate);
 
-        if (molType != moleculeTypes.end())
-            molecule.setPartialCharges(molType->getPartialCharges());
+            if (molType != moleculeTypes.end())
+                molecule.setPartialCharges(molType->getPartialCharges());
 
-        else if (molecule.getMoltype() != 0)
-            throw UserInputException(std::format(
-                "Molecule type {} not found in molecule types",
-                molecule.getMoltype()
-            ));
-    };
+            else if (molecule.getMoltype() != 0)
+                throw UserInputException(std::format(
+                    "Molecule type {} not found in molecule types",
+                    molecule.getMoltype()
+                ));
+        };
 
     std::ranges::for_each(_molecules, setPartialCharges);
 }
@@ -366,14 +366,14 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
      ****************************************************************************/
 
     auto fillExternalGlobalVdwTypes =
-        [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto &moleculeType)
-    {
-        externalGlobalVdwTypes.insert(
-            externalGlobalVdwTypes.end(),
-            moleculeType.getExternalGlobalVDWTypes().begin(),
-            moleculeType.getExternalGlobalVDWTypes().end()
-        );
-    };
+        [&externalGlobalVdwTypes = _externalGlobalVdwTypes](auto& moleculeType)
+        {
+            externalGlobalVdwTypes.insert(
+                externalGlobalVdwTypes.end(),
+                moleculeType.getExternalGlobalVDWTypes().begin(),
+                moleculeType.getExternalGlobalVDWTypes().end()
+            );
+        };
 
     std::ranges::for_each(_moleculeTypes, fillExternalGlobalVdwTypes);
 
@@ -390,7 +390,7 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
      *types are defined via increasing indices
      ***********************************************************************/
 
-    // c++23 with std::ranges::views::enumerate
+     // c++23 with std::ranges::views::enumerate
     const size_t size = _externalGlobalVdwTypes.size();
     for (size_t i = 0; i < size; ++i)
         _externalToInternalGlobalVDWTypes.try_emplace(
@@ -404,15 +404,15 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 
     auto setInternalGlobalVdwTypes =
         [&externalToInternalGlobalVDWTypes =
-             _externalToInternalGlobalVDWTypes](auto &molecule)
-    {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
-            molecule.getAtom(i).setInternalGlobalVDWType(
-                externalToInternalGlobalVDWTypes.at(
-                    molecule.getAtom(i).getExternalGlobalVDWType()
-                )
-            );
-    };
+        _externalToInternalGlobalVDWTypes](auto& molecule)
+        {
+            for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+                molecule.getAtom(i).setInternalGlobalVDWType(
+                    externalToInternalGlobalVDWTypes.at(
+                        molecule.getAtom(i).getExternalGlobalVDWType()
+                    )
+                );
+        };
 
     std::ranges::for_each(_molecules, setInternalGlobalVdwTypes);
 }
@@ -438,7 +438,7 @@ void SimulationBox::calculateTotalMass()
 
     std::ranges::for_each(
         _atoms,
-        [this](const auto &atom) { _totalMass += atom->getMass(); }
+        [this](const auto& atom) { _totalMass += atom->getMass(); }
     );
 }
 
@@ -448,11 +448,11 @@ void SimulationBox::calculateTotalMass()
  */
 void SimulationBox::calculateCenterOfMass()
 {
-    _centerOfMass = Vec3D{0.0};
+    _centerOfMass = Vec3D{ 0.0 };
 
     std::ranges::for_each(
         _atoms,
-        [this](const auto &atom)
+        [this](const auto& atom)
         { _centerOfMass += atom->getMass() * atom->getPosition(); }
     );
 
@@ -467,7 +467,7 @@ void SimulationBox::calculateCenterOfMassMolecules()
 {
     std::ranges::for_each(
         _molecules,
-        [&box = _box](Molecule &molecule)
+        [&box = _box](Molecule& molecule)
         { molecule.calculateCenterOfMass(*box); }
     );
 }
@@ -478,11 +478,11 @@ void SimulationBox::calculateCenterOfMassMolecules()
  */
 Vec3D SimulationBox::calculateMomentum()
 {
-    auto momentum = Vec3D{0.0};
+    auto momentum = Vec3D{ 0.0 };
 
     std::ranges::for_each(
         _atoms,
-        [&momentum](const auto &atom)
+        [&momentum](const auto& atom)
         { momentum += atom->getMass() * atom->getVelocity(); }
     );
 
@@ -493,16 +493,16 @@ Vec3D SimulationBox::calculateMomentum()
  * @brief calculate angular momentum of simulationBox
  *
  */
-Vec3D SimulationBox::calculateAngularMomentum(const Vec3D &momentum)
+Vec3D SimulationBox::calculateAngularMomentum(const Vec3D& momentum)
 {
-    auto angularMomentum = Vec3D{0.0};
+    auto angularMomentum = Vec3D{ 0.0 };
 
     std::ranges::for_each(
         _atoms,
-        [&angularMomentum](const auto &atom)
+        [&angularMomentum](const auto& atom)
         {
             angularMomentum += atom->getMass() *
-                               cross(atom->getPosition(), atom->getVelocity());
+                cross(atom->getPosition(), atom->getVelocity());
         }
     );
 
@@ -522,7 +522,7 @@ double SimulationBox::calculateTotalForce()
 
     std::ranges::for_each(
         _atoms,
-        [&totalForce](const auto &atom) { totalForce += atom->getForce(); }
+        [&totalForce](const auto& atom) { totalForce += atom->getForce(); }
     );
 
     return norm(totalForce);
@@ -586,7 +586,7 @@ double SimulationBox::calculateTemperature()
 
     std::ranges::for_each(
         _atoms,
-        [&temperature](const auto &atom)
+        [&temperature](const auto& atom)
         { temperature += atom->getMass() * normSquared(atom->getVelocity()); }
     );
 
@@ -631,7 +631,7 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
     std::ranges::transform(
         _qmAtoms,
         std::back_inserter(uniqueQMAtomNames),
-        [](const auto &atom) { return atom->getName(); }
+        [](const auto& atom) { return atom->getName(); }
     );
     std::ranges::sort(uniqueQMAtomNames);
     const auto [first, last] = std::ranges::unique(uniqueQMAtomNames);
@@ -658,7 +658,7 @@ void SimulationBox::calculateDensity()
  */
 Vec3D SimulationBox::calcBoxDimFromDensity() const
 {
-    return dynamic_cast<OrthorhombicBox &>(*_box).calcBoxDimFromDensity(
+    return dynamic_cast<OrthorhombicBox&>(*_box).calcBoxDimFromDensity(
         _totalMass,
         _density
     );
@@ -670,7 +670,7 @@ Vec3D SimulationBox::calcBoxDimFromDensity() const
  * @param position
  * @return Vec3D
  */
-Vec3D SimulationBox::calcShiftVector(const Vec3D &position) const
+Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
 {
     return _box->calcShiftVector(position);
 }
@@ -689,19 +689,19 @@ void SimulationBox::initPositions(const double displacement)
     };
 
     auto displacePositions =
-        [&uniformDistribution, &randomGenerator, this](auto &atom)
-    {
-        auto position =
-            atom->getPosition() + Vec3D{
-                                      uniformDistribution(randomGenerator),
-                                      uniformDistribution(randomGenerator),
-                                      uniformDistribution(randomGenerator)
-                                  };
+        [&uniformDistribution, &randomGenerator, this](auto& atom)
+        {
+            auto position =
+                atom->getPosition() + Vec3D{
+                                          uniformDistribution(randomGenerator),
+                                          uniformDistribution(randomGenerator),
+                                          uniformDistribution(randomGenerator)
+            };
 
-        applyPBC(position);
+            applyPBC(position);
 
-        atom->setPosition(position);
-    };
+            atom->setPosition(position);
+        };
 
     std::ranges::for_each(_atoms, displacePositions);
 }
@@ -714,7 +714,7 @@ void SimulationBox::updateOldPositions()
 {
     std::ranges::for_each(
         _atoms,
-        [](const auto &atom) { atom->updateOldPosition(); }
+        [](const auto& atom) { atom->updateOldPosition(); }
     );
 }
 
@@ -726,7 +726,7 @@ void SimulationBox::updateOldVelocities()
 {
     std::ranges::for_each(
         _atoms,
-        [](const auto &atom) { atom->updateOldVelocity(); }
+        [](const auto& atom) { atom->updateOldVelocity(); }
     );
 }
 
@@ -738,6 +738,18 @@ void SimulationBox::updateOldForces()
 {
     std::ranges::for_each(
         _atoms,
-        [](const auto &atom) { atom->updateOldForce(); }
+        [](const auto& atom) { atom->updateOldForce(); }
+    );
+}
+
+/**
+ * @brief reset forces of all atoms
+ *
+ */
+void SimulationBox::resetForces()
+{
+    std::ranges::for_each(
+        _atoms,
+        [](const auto& atom) { atom->setForceToZero(); }
     );
 }
