@@ -17,33 +17,33 @@ Clone the PQ GitHub repository and navigate into the directory:
 
 .. code-block:: bash
 
-    git clone https://github.com/MolarVerse/PQ.git
-    cd PQ
+    $ git clone https://github.com/MolarVerse/PQ.git
+    $ cd PQ
 
 Create a build directory and navigate into this directory:
 
 .. code-block:: bash
 
-    mkdir build
-    cd build
+    $ mkdir build
+    $ cd build
 
 Within this directory configure cmake:
 
 .. code-block:: bash
 
-    cmake ../ -DCMAKE_BUILD_TYPE=Release
+    $ cmake ../ -DCMAKE_BUILD_TYPE=Release
 
 Optionally it is also possible to enable MPI for Ring Polymer MD
 
 .. code-block:: bash
 
-    cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
+    $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
 
 For compilation then type:
 
 .. code-block:: bash
 
-    make -j <number_of_processors>
+    $ make -j <number_of_processors>
 
 .. _singularity:
 
@@ -68,17 +68,17 @@ In order to build both containers from the singularity file the following comman
 
 .. code-block:: bash
 
-    singularity build --fakeroot <name_of_container>.sif <name_of_definiton_file>.def
+    $ singularity build --fakeroot <name_of_container>.sif <name_of_definiton_file>.def
 
 In order to execute the program *via* the singularity container two possible commands are shown below:
 
 .. code-block:: bash
 
-    singularity exec --env MYPATH=$PATH <name_of_container>.sif /data/PQ/build/apps/PQ <name_of_input_file>
+    $ singularity exec --env MYPATH=$PATH <name_of_container>.sif /data/PQ/build/apps/PQ <name_of_input_file>
 
 .. code-block:: bash
     
-     singularity run --env MYPATH=$PATH <name_of_container>.sif <name_of_input_file>
+     $ singularity run --env MYPATH=$PATH <name_of_container>.sif <name_of_input_file>
 
 Depending on the directory structure of the host system it might be necessary to bind/mound the directory containing the 
 input file to the container. This can be achieved by adding ``--bind $PWD`` to the singularity command.
