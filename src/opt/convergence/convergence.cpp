@@ -23,6 +23,7 @@
 #include "convergence.hpp"
 
 using namespace opt;
+using namespace settings;
 
 /**
  * @brief Construct a new Convergence object
@@ -68,21 +69,31 @@ bool Convergence::checkConvergence() const
 
     switch (_energyConvStrategy)
     {
-        case settings::ConvStrategy::RIGOROUS:
+        using enum ConvStrategy;
+
+        case RIGOROUS:
+        {
             isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
             break;
+        }
 
-        case settings::ConvStrategy::LOOSE:
+        case LOOSE:
+        {
             isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
             break;
+        }
 
-        case settings::ConvStrategy::ABSOLUTE:
+        case ABSOLUTE:
+        {
             isEnergyConverged = _isAbsEnergyConv;
             break;
+        }
 
-        case settings::ConvStrategy::RELATIVE:
+        case RELATIVE:
+        {
             isEnergyConverged = _isRelEnergyConv;
             break;
+        }
 
         default: break;
     }
