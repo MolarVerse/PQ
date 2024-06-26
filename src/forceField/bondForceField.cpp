@@ -79,7 +79,7 @@ void BondForceField::calculateEnergyAndForces(
     box.applyPBC(dPosition);
 
     const auto distance      = norm(dPosition);
-    const auto deltaDistance = distance - _equilibriumBondLength;
+    const auto deltaDistance = distance - _equilBondLength;
 
     auto forceMagnitude = -_forceConstant * deltaDistance;
 
@@ -130,7 +130,7 @@ void BondForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
 void BondForceField::setEquilibriumBondLength(const double equilibriumBondLength
 )
 {
-    _equilibriumBondLength = equilibriumBondLength;
+    _equilBondLength = equilibriumBondLength;
 }
 
 /**
@@ -171,7 +171,7 @@ size_t BondForceField::getType() const { return _type; }
  */
 double BondForceField::getEquilibriumBondLength() const
 {
-    return _equilibriumBondLength;
+    return _equilBondLength;
 }
 
 /**

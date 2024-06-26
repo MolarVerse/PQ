@@ -33,30 +33,30 @@ namespace forceField
      *
      * @brief represents a bond type
      *
-     * @details this is a class representing a bond type defined in the parameter file
+     * @details this is a class representing a bond type defined in the
+     * parameter file
      *
      */
     class BondType
     {
-      private:
+       private:
         size_t _id;
 
-        double _equilibriumBondLength;
+        double _equilBondLength;
         double _forceConstant;
 
-      public:
-        BondType(const size_t id, const double equilibriumBondLength, const double springConstant)
-            : _id(id), _equilibriumBondLength(equilibriumBondLength), _forceConstant(springConstant){};
+       public:
+        BondType(const size_t, const double, const double);
 
-        [[nodiscard]] bool operator==(const BondType &other) const;
+        friend bool operator==(const BondType &, const BondType &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const { return _id; }
-        [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
+        [[nodiscard]] size_t getId() const;
+        [[nodiscard]] double getEquilibriumBondLength() const;
+        [[nodiscard]] double getForceConstant() const;
     };
 
 }   // namespace forceField

@@ -133,6 +133,7 @@
         "datapoints",
         "dxyz",
         "ekin",
+        "equil",
         "forcexyz",
         "freset",
         "fscale",

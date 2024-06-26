@@ -43,7 +43,7 @@ namespace forceField
         size_t _type;
         bool   _isLinker = false;
 
-        double _equilibriumBondLength;
+        double _equilBondLength;
         double _forceConstant;
 
        public:
