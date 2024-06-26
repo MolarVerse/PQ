@@ -10,7 +10,7 @@ Output Files
 Box File
 *********
 
-File Type: ``.box``
+**File Type:** ``.box``
 
 Contains the three lattice parameters (*a*, *b*, *c*) and the three angles (*α*, *β*, *γ*) of the simulation box for every frame in the following format:
     
@@ -22,11 +22,15 @@ Contains the three lattice parameters (*a*, *b*, *c*) and the three angles (*α*
 Charge File
 ************
 
-File Type: ``.chrg``
+**File Type:** ``.chrg``
 
 Stores the charge of each atom for every frame of the simulation in the following format:
     
     | line 1: number_of_atoms *a* *b* *c* *α* *β* *γ*
     | line 2: empty
     | line 3 to (number_of_atoms + 2): element charge
+
+The parameters *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the box dimensions and angles.
+
+
 
