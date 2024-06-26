@@ -138,10 +138,12 @@ namespace pq
     using Constraints        = constraints::Constraints;
     using BondConstraint     = constraints::BondConstraint;
     using MShakeReference    = constraints::MShakeReference;
+    using MShakeRef          = constraints::MShakeReference;
     using DistanceConstraint = constraints::DistanceConstraint;
 
     using BondConstraintsVec = std::vector<BondConstraint>;
     using MShakeReferenceVec = std::vector<MShakeReference>;
+    using MShakeRefVec       = std::vector<MShakeReference>;
     using DistConstraintsVec = std::vector<DistanceConstraint>;
 
     /***************************

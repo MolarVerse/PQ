@@ -426,7 +426,7 @@ size_t Constraints::getNumberOfBondConstraints() const
  */
 size_t Constraints::getNumberOfMShakeConstraints(SimulationBox &simBox) const
 {
-    return _mShake.calculateNumberOfBondConstraints(simBox);
+    return _mShake.calcNumberOfBondConstraints(simBox);
 }
 
 /**
