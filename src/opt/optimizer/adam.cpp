@@ -94,7 +94,7 @@ void Adam::update(const double learningRate, const size_t step)
         const auto m1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
         const auto m2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
 
-        auto pos_new = pos + learningRate * m1 / (sqrt(m2) + 1e-8);
+        auto pos_new = pos - learningRate * m1 / (sqrt(m2 + 1e-8));
         _simulationBox->applyPBC(pos_new);
 
         _simulationBox->getAtoms()[i]->setPositionOld(pos);
