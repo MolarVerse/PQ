@@ -27,6 +27,7 @@
 #include "optimizer.hpp"   // for Optimizer
 
 using namespace output;
+using namespace settings;
 using std::format;
 
 /**
@@ -67,20 +68,18 @@ void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
 
     if (isEnergyConvEnabled)
     {
-        if (convStrategy == settings::ConvStrategy::RIGOROUS ||
-            convStrategy == settings::ConvStrategy::LOOSE)
+        using enum ConvStrategy;
+
+        if (convStrategy == RIGOROUS || convStrategy == LOOSE)
         {
             isRelEnergyEnabled = true;
             isAbsEnergyEnabled = true;
         }
-        else if (convStrategy == settings::ConvStrategy::ABSOLUTE)
-        {
+        else if (convStrategy == ABSOLUTE)
             isAbsEnergyEnabled = true;
-        }
-        else if (convStrategy == settings::ConvStrategy::RELATIVE)
-        {
+
+        else if (convStrategy == RELATIVE)
             isRelEnergyEnabled = true;
-        }
     }
 
     const auto isRelEnConv    = conv.isRelEnergyConv();
