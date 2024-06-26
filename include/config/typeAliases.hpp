@@ -79,10 +79,10 @@ namespace forceField
 
 namespace constraints
 {
-    class Constraints;           // forward declaration
-    class BondConstraints;       // forward declaration
-    class DistanceConstraints;   // forward declaration
-    class MShakeReference;       // forward declaration
+    class Constraints;          // forward declaration
+    class BondConstraint;       // forward declaration
+    class DistanceConstraint;   // forward declaration
+    class MShakeReference;      // forward declaration
 
 }   // namespace constraints
 
@@ -135,14 +135,14 @@ namespace pq
      * constraints namespace *
      **************************/
 
-    using Constraints         = constraints::Constraints;
-    using BondConstraints     = constraints::BondConstraints;
-    using MShakeReference     = constraints::MShakeReference;
-    using DistanceConstraints = constraints::DistanceConstraints;
+    using Constraints        = constraints::Constraints;
+    using BondConstraint     = constraints::BondConstraint;
+    using MShakeReference    = constraints::MShakeReference;
+    using DistanceConstraint = constraints::DistanceConstraint;
 
-    using BondConstraintsVec = std::vector<BondConstraints>;
+    using BondConstraintsVec = std::vector<BondConstraint>;
     using MShakeReferenceVec = std::vector<MShakeReference>;
-    using DistConstraintsVec = std::vector<DistanceConstraints>;
+    using DistConstraintsVec = std::vector<DistanceConstraint>;
 
     /***************************
      * simulationBox namespace *
