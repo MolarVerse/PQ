@@ -22,6 +22,8 @@
 
 #include "bondForceField.hpp"
 
+#include <vector>   // for vector
+
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // for correctLinker
 #include "molecule.hpp"           // for Molecule
@@ -29,22 +31,46 @@
 #include "simulationBox.hpp"      // for SimulationBox
 #include "vector3d.hpp"           // for Vector3D, norm, operator*, Vec3D
 
-#include <vector>   // for vector
-
 using namespace forceField;
+using namespace simulationBox;
+using namespace connectivity;
+using namespace linearAlgebra;
+using namespace physicalData;
+using namespace potential;
+
+/**
+ * @brief constructor
+ *
+ * @param molecule1
+ * @param molecule2
+ * @param atomIndex1
+ * @param atomIndex2
+ * @param type
+ */
+BondForceField::BondForceField(
+    Molecule    *molecule1,
+    Molecule    *molecule2,
+    const size_t atomIndex1,
+    const size_t atomIndex2,
+    const size_t type
+)
+    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type){};
 
 /**
  * @brief calculate energy and forces for a single bond
  *
- * @details if bond is a linker bond, correct coulomb and non-coulomb energy and forces
+ * @details if bond is a linker bond, correct coulomb and non-coulomb energy and
+ * forces
  *
  * @param box
  * @param physicalData
  */
-void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox &box,
-                                              physicalData::PhysicalData         &physicalData,
-                                              const potential::CoulombPotential  &coulombPotential,
-                                              potential::NonCoulombPotential     &nonCoulombPotential)
+void BondForceField::calculateEnergyAndForces(
+    const SimulationBox    &box,
+    PhysicalData           &physicalData,
+    const CoulombPotential &coulombPotential,
+    NonCoulombPotential    &nonCoulombPotential
+)
 {
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -59,16 +85,18 @@ void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox
 
     physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-    if (_isLinker && distance < potential::CoulombPotential::getCoulombRadiusCutOff())
+    if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
     {
-        forceMagnitude += correctLinker<BondForceField>(coulombPotential,
-                                                        nonCoulombPotential,
-                                                        physicalData,
-                                                        _molecules[0],
-                                                        _molecules[1],
-                                                        _atomIndices[0],
-                                                        _atomIndices[1],
-                                                        distance);
+        forceMagnitude += correctLinker<BondForceField>(
+            coulombPotential,
+            nonCoulombPotential,
+            physicalData,
+            _molecules[0],
+            _molecules[1],
+            _atomIndices[0],
+            _atomIndices[1],
+            distance
+        );
     }
 
     forceMagnitude /= distance;
@@ -80,3 +108,75 @@ void BondForceField::calculateEnergyAndForces(const simulationBox::SimulationBox
 
     physicalData.addVirial(tensorProduct(dPosition, force));
 }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set if bond is a linker bond
+ *
+ * @param isLinker
+ */
+void BondForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+
+/**
+ * @brief set equilibrium bond length
+ *
+ * @param equilibriumBondLength
+ */
+void BondForceField::setEquilibriumBondLength(const double equilibriumBondLength
+)
+{
+    _equilibriumBondLength = equilibriumBondLength;
+}
+
+/**
+ * @brief set force constant
+ *
+ * @param forceConstant
+ */
+void BondForceField::setForceConstant(const double forceConstant)
+{
+    _forceConstant = forceConstant;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get if bond is a linker bond
+ *
+ * @return true
+ * @return false
+ */
+bool BondForceField::isLinker() const { return _isLinker; }
+
+/**
+ * @brief get the type of the bond
+ *
+ * @return size_t
+ */
+size_t BondForceField::getType() const { return _type; }
+
+/**
+ * @brief get the equilibrium bond length
+ *
+ * @return double
+ */
+double BondForceField::getEquilibriumBondLength() const
+{
+    return _equilibriumBondLength;
+}
+
+/**
+ * @brief get the force constant
+ *
+ * @return double
+ */
+double BondForceField::getForceConstant() const { return _forceConstant; }

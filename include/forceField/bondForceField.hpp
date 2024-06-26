@@ -24,26 +24,10 @@
 
 #define _BOND_FORCE_FIELD_HPP_
 
-#include "bond.hpp"
-
 #include <cstddef>
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
-}   // namespace simulationBox
-
-namespace potential
-{
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
-}   // namespace potential
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "bond.hpp"
+#include "typeAliases.hpp"
 
 namespace forceField
 {
@@ -55,42 +39,45 @@ namespace forceField
      */
     class BondForceField : public connectivity::Bond
     {
-      private:
+       private:
         size_t _type;
         bool   _isLinker = false;
 
         double _equilibriumBondLength;
         double _forceConstant;
 
-      public:
-        BondForceField(simulationBox::Molecule *molecule1,
-                       simulationBox::Molecule *molecule2,
-                       size_t                   atomIndex1,
-                       size_t                   atomIndex2,
-                       size_t                   type)
-            : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type){};
+       public:
+        BondForceField(
+            pq::Molecule *molecule1,
+            pq::Molecule *molecule2,
+            const size_t  atomIndex1,
+            const size_t  atomIndex2,
+            const size_t  type
+        );
 
-        void calculateEnergyAndForces(const simulationBox::SimulationBox &,
-                                      physicalData::PhysicalData &,
-                                      const potential::CoulombPotential &,
-                                      potential::NonCoulombPotential &);
+        void calculateEnergyAndForces(
+            const pq::SimBox     &simBox,
+            pq::PhysicalData     &data,
+            const pq::CoulombPot &coulombPot,
+            pq::NonCoulombPot    &nonCoulombPot
+        );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
-        void setEquilibriumBondLength(const double equilibriumBondLength) { _equilibriumBondLength = equilibriumBondLength; }
-        void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
+        void setIsLinker(const bool isLinker);
+        void setEquilibriumBondLength(const double equilibriumBondLength);
+        void setForceConstant(const double forceConstant);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const { return _type; }
-        [[nodiscard]] bool   isLinker() const { return _isLinker; }
-        [[nodiscard]] double getEquilibriumBondLength() const { return _equilibriumBondLength; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
+        [[nodiscard]] size_t getType() const;
+        [[nodiscard]] bool   isLinker() const;
+        [[nodiscard]] double getEquilibriumBondLength() const;
+        [[nodiscard]] double getForceConstant() const;
     };
 
 }   // namespace forceField

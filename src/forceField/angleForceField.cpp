@@ -142,7 +142,9 @@ void AngleForceField::calculateEnergyAndForces(
 }
 
 /***************************
+ *                         *
  * standard setter methods *
+ *                         *
  ***************************/
 
 /**
@@ -173,7 +175,9 @@ void AngleForceField::setForceConstant(const double forceConstant)
 }
 
 /***************************
+ *                         *
  * standard getter methods *
+ *                         *
  ***************************/
 
 /**
