@@ -41,6 +41,7 @@ namespace settings
     {
         NONE,
         STEEPEST_DESCENT,
+        ADAM
     };
 
     /**
@@ -52,6 +53,8 @@ namespace settings
         NONE,
         CONSTANT,
         CONSTANT_DECAY,
+        EXPONENTIAL_DECAY,
+        LINESEARCH_WOLFE
     };
 
     std::string string(const Optimizer method);

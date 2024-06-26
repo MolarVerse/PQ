@@ -47,10 +47,10 @@ void MDEngine::run()
         norm(_physicalData->getMomentum())
     );
 
-    const auto  numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
-    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
+    _nSteps = settings::TimingsSettings::getNumberOfSteps();
+    progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
-    for (; _step <= numberOfSteps; ++_step)
+    for (; _step <= _nSteps; ++_step)
     {
         bar.update();
         takeStep();

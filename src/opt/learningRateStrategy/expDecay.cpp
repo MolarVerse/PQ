@@ -20,21 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "constantDecay.hpp"
+#include "expDecay.hpp"
 
-#include <format>   // for std::format
+#include "optimizerSettings.hpp"
 
 using namespace opt;
+using namespace settings;
 
 /**
- * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
- * Strategy object
+ * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object
  *
  * @param initialLearningRate
  * @param decay
  * @param frequency
  */
-ConstantDecayLRStrategy::ConstantDecayLRStrategy(
+ExpDecayLR::ExpDecayLR(
     const double initialLearningRate,
     const double decay,
     const size_t frequency
@@ -44,40 +44,21 @@ ConstantDecayLRStrategy::ConstantDecayLRStrategy(
 }
 
 /**
- * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
- * Strategy object
- *
- * @param initialLearningRate
- * @param decay
- */
-ConstantDecayLRStrategy::ConstantDecayLRStrategy(
-    const double initialLearningRate,
-    const double decay
-)
-    : LearningRateStrategy(initialLearningRate), _decay(decay)
-{
-}
-
-/**
- * @brief Clone the learning rate strategy
+ * @brief make a clone of the learning rate strategy
  *
  * @return std::shared_ptr<LearningRateStrategy>
  */
-std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
+std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
 {
-    return std::make_shared<ConstantDecayLRStrategy>(*this);
+    return std::make_shared<ExpDecayLR>(*this);
 }
 
 /**
  * @brief Update the learning rate
  */
-void ConstantDecayLRStrategy::updateLearningRate(
-    const size_t step,
-    const size_t
-)
+void ExpDecayLR::updateLearningRate(const size_t step, const size_t nEpochs)
 {
-    if (step % _frequency == 0)
-        _learningRate -= _decay;
+    const auto factor = std::exp(-_decay * double(step) / double(nEpochs));
 
-    checkLearningRate();
+    _learningRate = _initialLearningRate * factor;
 }

@@ -3,6 +3,7 @@ add_library(learningRateStrategy
 
     constant.cpp
     constantDecay.cpp
+    expDecay.cpp
 )
 
 target_include_directories(learningRateStrategy
@@ -13,6 +14,7 @@ target_include_directories(learningRateStrategy
 target_link_libraries(learningRateStrategy
     PUBLIC
     linearAlgebra
+    settings
 )
 
 install(TARGETS learningRateStrategy

@@ -20,39 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#ifndef _EXP_DECAY_HPP_
 
-#define _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#define _EXP_DECAY_HPP_
+
+#include <cmath>   // for exp
 
 #include "learningRateStrategy.hpp"
 
 namespace opt
 {
     /**
-     * @class ConstantDecayLRStrategy
-     *
-     * @brief Constant Decay Learning Rate Strategy
+     * @brief Exponential decay learning rate strategy
      *
      */
-    class ConstantDecayLRStrategy : public LearningRateStrategy
+    class ExpDecayLR : public LearningRateStrategy
     {
        private:
         double _decay;
 
        public:
-        explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay,
-            const size_t frequency
-        );
-
-        explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay
-        );
-
-        ConstantDecayLRStrategy()           = default;
-        ~ConstantDecayLRStrategy() override = default;
+        ExpDecayLR() = default;
+        ExpDecayLR(const double, const double, const size_t);
 
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
@@ -61,4 +50,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#endif   // _EXP_DECAY_HPP_

@@ -48,7 +48,7 @@ namespace opt
         [[nodiscard]] pq::SharedOptimizer clone() const final;
         [[nodiscard]] size_t              maxHistoryLength() const final;
 
-        void update(const double learningRate) final;
+        void update(const double learningRate, const size_t step) final;
     };
 
 }   // namespace opt

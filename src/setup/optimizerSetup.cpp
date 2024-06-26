@@ -24,10 +24,12 @@
 
 #include <memory>
 
+#include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "expDecay.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
@@ -37,6 +39,8 @@
 
 using setup::OptimizerSetup;
 using namespace settings;
+using namespace customException;
+using namespace defaults;
 
 using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
 using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
@@ -86,6 +90,9 @@ void OptimizerSetup::setup()
 
     setupMinMaxLR(learningRateStrategy);
 
+    learningRateStrategy->setEvaluator(evaluator);
+    learningRateStrategy->setOptimizer(optimizer);
+
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
     _optEngine.setEvaluator(evaluator);
@@ -98,23 +105,32 @@ void OptimizerSetup::setup()
 std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs = TimingsSettings::getNumberOfSteps();
+    const auto simBox  = _optEngine.getSimulationBox();
 
     std::shared_ptr<opt::Optimizer> optimizer;
 
     switch (OptimizerSettings::getOptimizer())
     {
-        case Optimizer::STEEPEST_DESCENT:
+        using enum Optimizer;
+
+        case STEEPEST_DESCENT:
         {
             optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
             break;
         }
-        default:
+
+        case ADAM:
         {
-            throw customException::UserInputException(std::format(
+            const auto nAtoms = simBox.getNumberOfAtoms();
+            optimizer         = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+            break;
+        }
+
+        default:
+            throw UserInputException(std::format(
                 "Unknown optimizer type {}",
                 string(OptimizerSettings::getOptimizer())
             ));
-        }
     }
 
     optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
@@ -135,16 +151,18 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
 
     switch (OptimizerSettings::getLearningRateStrategy())
     {
-        case LREnum::CONSTANT:
+        using enum LREnum;
+
+        case CONSTANT:
         {
             return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
         }
-        case LREnum::CONSTANT_DECAY:
+        case CONSTANT_DECAY:
         {
             const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
 
             if (!alphaDecay.has_value())
-                throw customException::UserInputException(
+                throw UserInputException(
                     "You need to specify a learning rate decay factor for the "
                     "constant decay learning rate strategy"
                 );
@@ -158,9 +176,38 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
                 alphaFreq
             );
         }
+
+        case EXPONENTIAL_DECAY:
+        {
+            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
+
+            if (!alphaDecay.has_value())
+                throw UserInputException(
+                    "You need to specify a learning rate decay factor for the "
+                    "constant decay learning rate strategy"
+                );
+
+            const auto alphaDecayValue = alphaDecay.value();
+            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
+
+            return std::make_shared<opt::ExpDecayLR>(
+                alpha_0,
+                alphaDecayValue,
+                alphaFreq
+            );
+        }
+
+        case LINESEARCH_WOLFE:
+        {
+            throw UserInputException(
+                "The Wolfe line search learning rate strategy is not yet "
+                "implemented"
+            );
+        }
+
         default:
         {
-            throw customException::UserInputException(
+            throw UserInputException(
                 std::format("In order to run the optimizer, you need to "
                             "specify a learning rate strategy.")
             );
@@ -186,7 +233,7 @@ void OptimizerSetup::setupMinMaxLR(
 
         if (minLearningRate >= maxLearningRateValue)
         {
-            throw customException::UserInputException(std::format(
+            throw UserInputException(std::format(
                 "The minimum learning rate {} is greater or equal to the "
                 "maximum learning rate {}, which is not allowed.",
                 minLearningRate,
@@ -211,7 +258,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
         evaluator = std::make_shared<opt::MMEvaluator>();
 
     else
-        throw customException::UserInputException(
+        throw UserInputException(
             "Unknown job type for the optimizer in order to setup up the "
             "evaluator"
         );
@@ -235,51 +282,50 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
  *
  * @param optimizer as shared pointer reference
  */
-void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
+void OptimizerSetup::setupConvergence(
+    const std::shared_ptr<opt::Optimizer> &optimizer
 )
 {
-    const auto energyConvStrategy = ConvSettings::getEnConvStrategy();
-    const auto defEConvStrategy = ConvSettings::getDefaultEnergyConvStrategy();
-    const auto energyStrategy   = energyConvStrategy.value_or(defEConvStrategy);
+    const auto strategyOptional = ConvSettings::getEnConvStrategy();
+    const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
+    const auto energyStrategy   = strategyOptional.value_or(defaultStrategy);
 
-    const auto useEnergyConv   = ConvSettings::getUseEnergyConv();
-    const auto useMaxForceConv = ConvSettings::getUseMaxForceConv();
-    const auto useRMSForceConv = ConvSettings::getUseRMSForceConv();
+    const auto useEnergyOptional   = ConvSettings::getUseEnergyConv();
+    const auto useMaxForceOptional = ConvSettings::getUseMaxForceConv();
+    const auto useRMSForceOptional = ConvSettings::getUseRMSForceConv();
 
-    const auto energyConv    = ConvSettings::getEnergyConv();
-    const auto absEnergyConv = ConvSettings::getAbsEnergyConv();
-    const auto relEnergyConv = ConvSettings::getRelEnergyConv();
+    const auto energyOptional    = ConvSettings::getEnergyConv();
+    const auto absEnergyOptional = ConvSettings::getAbsEnergyConv();
+    const auto relEnergyOptional = ConvSettings::getRelEnergyConv();
+    const auto forceOptional     = ConvSettings::getForceConv();
+    const auto maxForceOptional  = ConvSettings::getMaxForceConv();
+    const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
 
-    const auto defRelEnergyConv = defaults::_REL_ENERGY_CONV_DEFAULT_;
-    const auto defAbsEnergyConv = defaults::_ABS_ENERGY_CONV_DEFAULT_;
+    const auto defaultRelEnergy = _REL_ENERGY_CONV_DEFAULT_;
+    const auto defaultAbsEnergy = _ABS_ENERGY_CONV_DEFAULT_;
+    const auto defaultMaxForce  = _MAX_FORCE_CONV_DEFAULT_;
+    const auto defaultRMSForce  = _RMS_FORCE_CONV_DEFAULT_;
 
-    auto relEnergyConvValue = energyConv.value_or(defRelEnergyConv);
-    auto absEnergyConvValue = energyConv.value_or(defAbsEnergyConv);
+    auto relEnergy = energyOptional.value_or(defaultRelEnergy);
+    auto absEnergy = energyOptional.value_or(defaultAbsEnergy);
 
-    relEnergyConvValue = relEnergyConv.value_or(relEnergyConvValue);
-    absEnergyConvValue = absEnergyConv.value_or(absEnergyConvValue);
+    relEnergy = relEnergyOptional.value_or(relEnergy);
+    absEnergy = absEnergyOptional.value_or(absEnergy);
 
-    const auto forceConv    = ConvSettings::getForceConv();
-    const auto maxForceConv = ConvSettings::getMaxForceConv();
-    const auto rmsForceConv = ConvSettings::getRMSForceConv();
+    auto maxForce = forceOptional.value_or(defaultMaxForce);
+    auto rmsForce = forceOptional.value_or(defaultRMSForce);
 
-    const auto defMaxForceConv = defaults::_MAX_FORCE_CONV_DEFAULT_;
-    const auto defRMSForceConv = defaults::_RMS_FORCE_CONV_DEFAULT_;
-
-    auto maxForceConvValue = forceConv.value_or(defMaxForceConv);
-    auto rmsForceConvValue = forceConv.value_or(defRMSForceConv);
-
-    maxForceConvValue = maxForceConv.value_or(maxForceConvValue);
-    rmsForceConvValue = rmsForceConv.value_or(rmsForceConvValue);
+    maxForce = maxForceOptional.value_or(maxForce);
+    rmsForce = rmsForceOptional.value_or(rmsForce);
 
     const opt::Convergence convergence(
-        useEnergyConv,
-        useMaxForceConv,
-        useRMSForceConv,
-        relEnergyConvValue,
-        absEnergyConvValue,
-        maxForceConvValue,
-        rmsForceConvValue,
+        useEnergyOptional,
+        useMaxForceOptional,
+        useRMSForceOptional,
+        relEnergy,
+        absEnergy,
+        maxForce,
+        rmsForce,
         energyStrategy
     );
 

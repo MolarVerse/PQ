@@ -42,11 +42,13 @@ void OptEngine::run()
     _evaluator->evaluate();
     _optimizer->updateHistory();
 
-    const auto numberOfSteps = _optimizer->getNEpochs();
+    _nSteps = _optimizer->getNEpochs();
 
-    progressbar bar(static_cast<int>(numberOfSteps), true, std::cout);
+    writeOutput();
 
-    for (size_t i = 0; i < numberOfSteps; ++i)
+    progressbar bar(static_cast<int>(_nSteps), true, std::cout);
+
+    for (size_t i = 0; i < _nSteps; ++i)
     {
         bar.update();
 
@@ -68,7 +70,7 @@ void OptEngine::run()
 
     if (_optStopped)
     {
-        auto exceptionMessage = std::format(
+        auto msg = std::format(
             "Optimizer stopped after {} epochs out of {}. The following error "
             "messages were raised:\n",
             _step,
@@ -78,10 +80,9 @@ void OptEngine::run()
         const auto &errorMessages = _learningRateStrategy->getErrorMessages();
 
         for (size_t i = 0; i < errorMessages.size(); ++i)
-            exceptionMessage +=
-                std::format("{}) {}\n", i + 1, errorMessages[i]);
+            msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
 
-        throw customException::OptException(exceptionMessage);
+        throw customException::OptException(msg);
     }
 
     _timer.stopSimulationTimer();
@@ -110,11 +111,11 @@ void OptEngine::run()
 
     if (_converged)
     {
-        const auto convergeMessage =
+        const auto msg =
             std::format("Optimizer converged after {} epochs.", _step);
 
-        getLogOutput().writeInfo(convergeMessage);
-        getStdoutOutput().writeInfo(convergeMessage);
+        getLogOutput().writeInfo(msg);
+        getStdoutOutput().writeInfo(msg);
 
         getLogOutput().writeEndedNormally(elapsedTime);
         getStdoutOutput().writeEndedNormally(elapsedTime);
@@ -126,7 +127,7 @@ void OptEngine::run()
  */
 void OptEngine::takeStep()
 {
-    _optimizer->update(_learningRateStrategy->getLearningRate());
+    _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
 
     _evaluator->evaluate();
 
@@ -136,15 +137,14 @@ void OptEngine::takeStep()
 
     if (!_converged)
     {
-        _learningRateStrategy->updateLearningRate();
+        _learningRateStrategy->updateLearningRate(_step, _nSteps);
 
         if (!_learningRateStrategy->getErrorMessages().empty())
             _optStopped = true;
 
-        const auto &warningMessages =
-            _learningRateStrategy->getWarningMessages();
+        const auto &msg = _learningRateStrategy->getWarningMessages();
 
-        if (!warningMessages.empty())
+        if (!msg.empty())
         {
             const auto headerMessage = std::format(
                 "Updating learning rate did raise "
@@ -155,7 +155,7 @@ void OptEngine::takeStep()
             getLogOutput().writeOptWarning(headerMessage);
             getStdoutOutput().writeOptWarning(headerMessage);
 
-            for (const auto &message : warningMessages)
+            for (const auto &message : msg)
             {
                 getLogOutput().writeOptWarning(message);
                 getStdoutOutput().writeOptWarning(message);

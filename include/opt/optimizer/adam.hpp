@@ -20,32 +20,43 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FIRST_ORDER_DECAY_HPP_
+#ifndef _ADAM_HPP_
 
-#define _FIRST_ORDER_DECAY_HPP_
+#define _ADAM_HPP_
 
-#include <cmath>   // for exp
+#include <vector>   // for vector
 
-#include "learningRateStrategy.hpp"
+#include "optimizer.hpp"
 
 namespace opt
 {
     /**
-     * @brief First order decay learning rate strategy
+     * @class Adam
      *
      */
-    class FirstOrderDecayLRStrategy : public LearningRateStrategy
+    class Adam : public Optimizer
     {
        private:
-        double _decay;
+        constexpr static size_t _maxHistoryLength = 2;
+
+        double _beta1 = 0.9;
+        double _beta2 = 0.999;
+
+        std::vector<linearAlgebra::Vec3D> _momentum1;
+        std::vector<linearAlgebra::Vec3D> _momentum2;
 
        public:
-        FirstOrderDecayLRStrategy() = default;
-        FirstOrderDecayLRStrategy(const double, const double);
+        explicit Adam(const size_t nEpochs, const size_t nAtoms);
+        explicit Adam(const size_t, const double, const double, const size_t);
 
-        void updateLearningRate() override;
+        Adam()        = default;
+        ~Adam() final = default;
+
+        [[nodiscard]] pq::SharedOptimizer clone() const final;
+        [[nodiscard]] size_t              maxHistoryLength() const final;
+
+        void update(const double learningRate, const size_t step) final;
     };
-
 }   // namespace opt
 
-#endif   // _FIRST_ORDER_DECAY_HPP_
+#endif   // _ADAM_HPP_

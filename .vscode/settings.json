@@ -151,6 +151,7 @@
         "KOKKOS",
         "ldlt",
         "Lennard",
+        "LINESEARCH",
         "LOGOUTPUT",
         "LOOPTIME",
         "manostat",

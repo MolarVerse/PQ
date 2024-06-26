@@ -129,6 +129,29 @@ std::vector<std::string> LearningRateStrategy::getErrorMessages() const
  ***************************/
 
 /**
+ * @brief set the evaluator from a shared pointer
+ *
+ */
+void LearningRateStrategy::setEvaluator(
+    const std::shared_ptr<Evaluator> evaluator
+)
+{
+    _evaluator = evaluator;
+}
+
+/**
+ * @brief set the optimizer from a shared pointer
+ *
+ * @param optimizer - std::shared_ptr<Optimizer>
+ */
+void LearningRateStrategy::setOptimizer(
+    const std::shared_ptr<Optimizer> optimizer
+)
+{
+    _optimizer = optimizer;
+}
+
+/**
  * @brief set the minimum learning rate
  *
  * @param minLearningRate - double

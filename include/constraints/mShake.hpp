@@ -28,19 +28,11 @@
 
 #include "mShakeReference.hpp"   // for MShakeReference
 #include "matrix.hpp"            // for Matrix
+#include "typeAliases.hpp"       // for SimBox, Vec3D, MShakeRef
 #include "vector3d.hpp"          // for Vec3D
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
 
 namespace constraints
 {
-
-    using SimBox    = simulationBox::SimulationBox;
-    using Vec3D     = linearAlgebra::Vec3D;
-    using MShakeRef = MShakeReference;
 
     /**
      * @class MShake
@@ -52,7 +44,7 @@ namespace constraints
     class MShake
     {
        private:
-        std::vector<MShakeRef>           _mShakeReferences;
+        pq::MShakeRefVec                 _mShakeReferences;
         std::vector<std::vector<double>> _mShakeRSquaredRefs;
 
         std::vector<linearAlgebra::Matrix<double>> _mShakeMatrices;
@@ -64,23 +56,22 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(const double, SimBox &);
-        void applyMRattle(SimBox &);
+        void applyMShake(const double, pq::SimBox &);
+        void applyMRattle(pq::SimBox &);
 
-        [[nodiscard]] size_t calculateNumberOfBondConstraints(SimBox &) const;
+        [[nodiscard]] size_t calcNumberOfBondConstraints(pq::SimBox &) const;
         [[nodiscard]] double calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
             const std::pair<double, double>                  &masses,
-            const std::pair<Vec3D, Vec3D>                    &pos
+            const std::pair<pq::Vec3D, pq::Vec3D>            &pos
         ) const;
 
-        [[nodiscard]] bool isMShakeType(const size_t moltype) const;
-
+        [[nodiscard]] bool   isMShakeType(const size_t moltype) const;
         [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-        [[nodiscard]] const MShakeRef &findMShakeReference(const size_t) const;
-        [[nodiscard]] const std::vector<MShakeRef> &getMShakeReferences() const;
+        [[nodiscard]] const pq::MShakeRef    &findMShakeRef(const size_t) const;
+        [[nodiscard]] const pq::MShakeRefVec &getMShakeReferences() const;
 
-        void addMShakeReference(const MShakeReference &mShakeReference);
+        void addMShakeReference(const pq::MShakeRef &mShakeReference);
     };
 }   // namespace constraints
 

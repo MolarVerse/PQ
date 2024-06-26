@@ -49,10 +49,10 @@ namespace opt
         double _absMaxForce = 0.0;
         double _absRMSForce = 0.0;
 
-        double _relEnergyConv;
-        double _absEnergyConv;
-        double _absMaxForceConv;
-        double _absRMSForceConv;
+        double _relEnergyConvThreshold   = 0.0;
+        double _absEnergyConvThreshold   = 0.0;
+        double _absMaxForceConvThreshold = 0.0;
+        double _absRMSForceConvThreshold = 0.0;
 
         settings::ConvStrategy _energyConvStrategy;
 
@@ -69,7 +69,7 @@ namespace opt
             const settings::ConvStrategy
         );
 
-        bool checkConvergence() const;
+        [[nodiscard]] bool checkConvergence() const;
 
         void calcEnergyConvergence(const double, const double);
         void calcForceConvergence(const double, const double);

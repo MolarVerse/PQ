@@ -89,7 +89,8 @@ namespace engine
     class Engine
     {
        protected:
-        size_t _step = 1;
+        size_t _step   = 1;
+        size_t _nSteps = 0;
 
         EngineOutput _engineOutput;
 

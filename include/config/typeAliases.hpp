@@ -38,6 +38,7 @@
 namespace simulationBox
 {
     class Molecule;        // forward declaration
+    class MoleculeType;    // forward declaration
     class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
@@ -79,7 +80,10 @@ namespace forceField
 
 namespace constraints
 {
-    class Constraints;   // forward declaration
+    class Constraints;          // forward declaration
+    class BondConstraint;       // forward declaration
+    class DistanceConstraint;   // forward declaration
+    class MShakeReference;      // forward declaration
 
 }   // namespace constraints
 
@@ -121,7 +125,6 @@ namespace pq
     using BruteForcePot   = potential::PotentialBruteForce;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
-    using Constraints     = constraints::Constraints;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
@@ -129,15 +132,31 @@ namespace pq
     using SharedVirial       = std::shared_ptr<virial::Virial>;
     using SharedPotential    = std::shared_ptr<potential::Potential>;
 
+    /**************************
+     * constraints namespace *
+     **************************/
+
+    using Constraints        = constraints::Constraints;
+    using BondConstraint     = constraints::BondConstraint;
+    using MShakeReference    = constraints::MShakeReference;
+    using MShakeRef          = constraints::MShakeReference;
+    using DistanceConstraint = constraints::DistanceConstraint;
+
+    using BondConstraintsVec = std::vector<BondConstraint>;
+    using MShakeReferenceVec = std::vector<MShakeReference>;
+    using MShakeRefVec       = std::vector<MShakeReference>;
+    using DistConstraintsVec = std::vector<DistanceConstraint>;
+
     /***************************
      * simulationBox namespace *
      ***************************/
 
-    using SimBox   = simulationBox::SimulationBox;
-    using CellList = simulationBox::CellList;
-    using Molecule = simulationBox::Molecule;
-    using Atom     = simulationBox::Atom;
-    using Box      = simulationBox::Box;
+    using SimBox       = simulationBox::SimulationBox;
+    using CellList     = simulationBox::CellList;
+    using Molecule     = simulationBox::Molecule;
+    using MoleculeType = simulationBox::MoleculeType;
+    using Atom         = simulationBox::Atom;
+    using Box          = simulationBox::Box;
 
     using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;

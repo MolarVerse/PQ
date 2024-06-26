@@ -23,6 +23,7 @@
 #include "convergence.hpp"
 
 using namespace opt;
+using namespace settings;
 
 /**
  * @brief Construct a new Convergence object
@@ -49,10 +50,10 @@ Convergence::Convergence(
     : _enableEnergyConv(_enableEnergyConv),
       _enableMaxForceConv(_enableMaxForceConv),
       _enableRMSForceConv(_enableRMSForceConv),
-      _relEnergyConv(relEnergyConvThreshold),
-      _absEnergyConv(absEnergyConvThreshold),
-      _absMaxForceConv(absMaxForceConvThreshold),
-      _absRMSForceConv(absRMSForceConvThreshold),
+      _relEnergyConvThreshold(relEnergyConvThreshold),
+      _absEnergyConvThreshold(absEnergyConvThreshold),
+      _absMaxForceConvThreshold(absMaxForceConvThreshold),
+      _absRMSForceConvThreshold(absRMSForceConvThreshold),
       _energyConvStrategy(energyConvStrategy)
 {
 }
@@ -66,17 +67,36 @@ bool Convergence::checkConvergence() const
 {
     auto isEnergyConverged = true;
 
-    if (_energyConvStrategy == settings::ConvStrategy::RIGOROUS)
-        isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
+    switch (_energyConvStrategy)
+    {
+        using enum ConvStrategy;
 
-    else if (_energyConvStrategy == settings::ConvStrategy::LOOSE)
-        isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
+        case RIGOROUS:
+        {
+            isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
+            break;
+        }
 
-    else if (_energyConvStrategy == settings::ConvStrategy::ABSOLUTE)
-        isEnergyConverged = _isAbsEnergyConv;
+        case LOOSE:
+        {
+            isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
+            break;
+        }
 
-    else if (_energyConvStrategy == settings::ConvStrategy::RELATIVE)
-        isEnergyConverged = _isRelEnergyConv;
+        case ABSOLUTE:
+        {
+            isEnergyConverged = _isAbsEnergyConv;
+            break;
+        }
+
+        case RELATIVE:
+        {
+            isEnergyConverged = _isRelEnergyConv;
+            break;
+        }
+
+        default: break;
+    }
 
     return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;
 }
@@ -97,8 +117,8 @@ void Convergence::calcEnergyConvergence(
 
     if (_enableEnergyConv)
     {
-        _isAbsEnergyConv = _absEnergy < _absEnergyConv;
-        _isRelEnergyConv = _relEnergy < _relEnergyConv;
+        _isAbsEnergyConv = _absEnergy < _absEnergyConvThreshold;
+        _isRelEnergyConv = _relEnergy < _relEnergyConvThreshold;
     }
 }
 
@@ -117,10 +137,10 @@ void Convergence::calcForceConvergence(
     _absRMSForce = std::abs(rmsForce);
 
     if (_enableMaxForceConv)
-        _isAbsMaxForceConv = _absMaxForce < _absMaxForceConv;
+        _isAbsMaxForceConv = _absMaxForce < _absMaxForceConvThreshold;
 
     if (_enableRMSForceConv)
-        _isAbsRMSForceConv = _absRMSForce < _absRMSForceConv;
+        _isAbsRMSForceConv = _absRMSForce < _absRMSForceConvThreshold;
 }
 
 /***************************
@@ -225,14 +245,20 @@ bool Convergence::isAbsRMSForceConv() const { return _isAbsRMSForceConv; }
  *
  * @return double
  */
-double Convergence::getRelEnergyConvThreshold() const { return _relEnergyConv; }
+double Convergence::getRelEnergyConvThreshold() const
+{
+    return _relEnergyConvThreshold;
+}
 
 /**
  * @brief get the absolute energy convergence threshold
  *
  * @return double
  */
-double Convergence::getAbsEnergyConvThreshold() const { return _absEnergyConv; }
+double Convergence::getAbsEnergyConvThreshold() const
+{
+    return _absEnergyConvThreshold;
+}
 
 /**
  * @brief get the absolute maximum force convergence threshold
@@ -241,7 +267,7 @@ double Convergence::getAbsEnergyConvThreshold() const { return _absEnergyConv; }
  */
 double Convergence::getAbsMaxForceConvThreshold() const
 {
-    return _absMaxForceConv;
+    return _absMaxForceConvThreshold;
 }
 
 /**
@@ -251,5 +277,5 @@ double Convergence::getAbsMaxForceConvThreshold() const
  */
 double Convergence::getAbsRMSForceConvThreshold() const
 {
-    return _absRMSForceConv;
+    return _absRMSForceConvThreshold;
 }

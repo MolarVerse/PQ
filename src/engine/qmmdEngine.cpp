@@ -24,7 +24,6 @@
 
 #include "dftbplusRunner.hpp"    // for DFTBPlusRunner
 #include "integrator.hpp"        // for Integrator
-#include "maceRunner.hpp"        // for MaceRunner
 #include "manostat.hpp"          // for Manostat
 #include "physicalData.hpp"      // for PhysicalData
 #include "pyscfRunner.hpp"       // for PySCFRunner
@@ -33,6 +32,10 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
+
+#ifdef WITH_MACE
+#include "maceRunner.hpp"        // for MaceRunner
+#endif
 
 using engine::QMMDEngine;
 using namespace settings;
@@ -105,13 +108,15 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::TURBOMOLE)
         _qmRunner = std::make_shared<QM::TurbomoleRunner>();
 
+#ifdef WITH_MACE
     else if (method == QMMethod::MACE)
     {
         const auto maceModel = string(QMSettings::getMaceModel());
-        const auto fpType    = Settings::getFloatingPointPybindString();
+        const auto fpType = Settings::getFloatingPointPybindString();
 
         _qmRunner = std::make_shared<QM::MaceRunner>(maceModel, fpType);
     }
+#endif
 
     else
         throw customException::InputFileException(
@@ -125,4 +130,4 @@ void QMMDEngine::setQMRunner(const QMMethod method)
  *
  * @return QM::QMRunner *
  */
-QM::QMRunner *QMMDEngine::getQMRunner() const { return _qmRunner.get(); }
+QM::QMRunner* QMMDEngine::getQMRunner() const { return _qmRunner.get(); }
