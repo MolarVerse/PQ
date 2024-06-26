@@ -96,7 +96,7 @@ namespace settings
 
         [[nodiscard]] static double getCoulombRadiusCutOff();
         [[nodiscard]] static double getScale14Coulomb();
-        [[nodiscard]] static double getScale14VanDerWaals();
+        [[nodiscard]] static double getScale14VDW();
         [[nodiscard]] static double getWolfParameter();
     };
 
