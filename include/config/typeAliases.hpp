@@ -140,7 +140,9 @@ namespace pq
     using CoulombPot    = potential::CoulombPotential;
     using NonCoulombPot = potential::NonCoulombPotential;
 
-    using SharedPotential = std::shared_ptr<potential::Potential>;
+    using SharedPotential     = std::shared_ptr<potential::Potential>;
+    using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
+    using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
 
     /**************************
      * constraints namespace *
