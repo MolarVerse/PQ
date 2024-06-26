@@ -56,6 +56,8 @@ namespace potential
 {
     class Potential;             // forward declaration
     class PotentialBruteForce;   // forward declaration
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 
 }   // namespace potential
 
@@ -121,8 +123,6 @@ namespace pq
 
     using Virial          = virial::Virial;
     using VirialMolecular = virial::VirialMolecular;
-    using Potential       = potential::Potential;
-    using BruteForcePot   = potential::PotentialBruteForce;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
 
@@ -130,7 +130,17 @@ namespace pq
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
-    using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    /**************************
+     * potential namespace    *
+     **************************/
+
+    using Potential     = potential::Potential;
+    using BruteForcePot = potential::PotentialBruteForce;
+    using CoulombPot    = potential::CoulombPotential;
+    using NonCoulombPot = potential::NonCoulombPotential;
+
+    using SharedPotential = std::shared_ptr<potential::Potential>;
 
     /**************************
      * constraints namespace *

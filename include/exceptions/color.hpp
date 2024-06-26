@@ -56,12 +56,11 @@ namespace Color
     {
         Code code;
 
-      public:
+       public:
         explicit Modifier(const Code pCode) : code(pCode) {}
         friend std::ostream &operator<<(std::ostream &os, const Modifier &mod)
         {
-            return os << "\033"
-                      << "[" << mod.code << "m";
+            return os << "\033" << "[" << mod.code << "m";
         }
     };
 }   // namespace Color
