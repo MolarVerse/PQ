@@ -38,6 +38,7 @@
 namespace simulationBox
 {
     class Molecule;        // forward declaration
+    class MoleculeType;    // forward declaration
     class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
@@ -150,11 +151,12 @@ namespace pq
      * simulationBox namespace *
      ***************************/
 
-    using SimBox   = simulationBox::SimulationBox;
-    using CellList = simulationBox::CellList;
-    using Molecule = simulationBox::Molecule;
-    using Atom     = simulationBox::Atom;
-    using Box      = simulationBox::Box;
+    using SimBox       = simulationBox::SimulationBox;
+    using CellList     = simulationBox::CellList;
+    using Molecule     = simulationBox::Molecule;
+    using MoleculeType = simulationBox::MoleculeType;
+    using Atom         = simulationBox::Atom;
+    using Box          = simulationBox::Box;
 
     using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;

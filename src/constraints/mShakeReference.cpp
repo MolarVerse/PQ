@@ -30,6 +30,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
+using namespace simulationBox;
 
 /***************************
  *                         *
@@ -42,9 +43,9 @@ using namespace constraints;
  *
  * @param moltype
  */
-void MShakeReference::setMoleculeType(simulationBox::MoleculeType &moltype)
+void MShakeReference::setMoleculeType(MoleculeType &moltype)
 {
-    _moleculeType = std::make_shared<simulationBox::MoleculeType>(moltype);
+    _moleculeType = std::make_shared<MoleculeType>(moltype);
 }
 
 /**
@@ -52,7 +53,7 @@ void MShakeReference::setMoleculeType(simulationBox::MoleculeType &moltype)
  *
  * @param atoms
  */
-void MShakeReference::setAtoms(const std::vector<simulationBox::Atom> &atoms)
+void MShakeReference::setAtoms(const std::vector<Atom> &atoms)
 {
     _atoms = atoms;
 }
@@ -73,16 +74,16 @@ size_t MShakeReference::getNumberOfAtoms() const { return _atoms.size(); }
 /**
  * @brief get the atoms
  *
- * @return const std::vector<simulationBox::Atom>&
+ * @return const std::vector<Atom>&
  */
-std::vector<simulationBox::Atom> &MShakeReference::getAtoms() { return _atoms; }
+std::vector<Atom> &MShakeReference::getAtoms() { return _atoms; }
 
 /**
  * @brief get the molecule type
  *
- * @return const simulationBox::MoleculeType&
+ * @return const MoleculeType&
  */
-simulationBox::MoleculeType &MShakeReference::getMoleculeType() const
+MoleculeType &MShakeReference::getMoleculeType() const
 {
     return *_moleculeType;
 }
