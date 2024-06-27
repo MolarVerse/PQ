@@ -29,7 +29,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "internalQMRunner.hpp"   // for InternalQMRunner
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
 namespace QM
 {

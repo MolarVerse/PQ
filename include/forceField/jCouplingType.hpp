@@ -64,16 +64,7 @@ namespace forceField
             const double b,
             const double c,
             const double phaseShift
-        )
-            : _id(id),
-              _J0(J0),
-              _forceConstant(forceConstant),
-              _a(a),
-              _b(b),
-              _c(c),
-              _phaseShift(phaseShift)
-        {
-        }
+        );
 
         friend bool operator==(const JCouplingType &, const JCouplingType &);
 

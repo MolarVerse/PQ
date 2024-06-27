@@ -33,7 +33,7 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
-#ifdef WITH_MACE
+#ifdef WITH_ASE
 #include "maceRunner.hpp"        // for MaceRunner
 #endif
 
@@ -108,7 +108,7 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::TURBOMOLE)
         _qmRunner = std::make_shared<QM::TurbomoleRunner>();
 
-#ifdef WITH_MACE
+#ifdef WITH_ASE
     else if (method == QMMethod::MACE)
     {
         const auto maceModel = string(QMSettings::getMaceModel());

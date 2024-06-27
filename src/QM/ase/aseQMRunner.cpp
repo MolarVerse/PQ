@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "internalQMRunner.hpp"
+#include "aseQMRunner.hpp"
 
 #include <thread>
 

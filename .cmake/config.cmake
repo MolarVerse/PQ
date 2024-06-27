@@ -60,11 +60,10 @@ option(BUILD_WITH_DOCS "Build documentation" ON)
 # ***********************
 option(BUILD_WITH_BENCHMARKING "Build benchmarking" OFF)
 
-# **********************************************************
-# BULID_WITH_MACE - MACE is a library for machine learning
-# that is used in the ML module of the
-# *********************************************************
-option(BUILD_WITH_MACE "Build with MACE" ON)
+# **************
+# BULID_WITH_ASE
+# **************
+option(BUILD_WITH_ASE "Build with ASE" ON)
 
 # **********************
 # BUILD WITH SINGULARITY
