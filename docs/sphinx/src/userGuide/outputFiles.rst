@@ -122,6 +122,8 @@ Starts with general information about the **PQ** program, such as the author, ve
 initialization of **PQ** and the simulation settings used. In case of a successful simulation, the file ends with the text 'PQ ended normally'. 
 In case of an error, the file shows the respective error message.
 
+.. _refFile:
+
 ***************
 Reference File
 ***************
@@ -129,6 +131,8 @@ Reference File
 **File Type:** ``.log.ref``
 
 Lists the references to be cited when publishing results obtained *via* the chosen simulation settings.
+
+.. _restartFile:
 
 *************
 Restart File
@@ -148,6 +152,8 @@ of Å and degrees. The following lines contain the element symbol, a running ind
 according to the :ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. 
 The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
+.. _velocityFile:
+
 *************
 Velocity File
 *************
@@ -163,8 +169,3 @@ Stores the velocity *v* of each atom for every frame of the simulation in the fo
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element
 symbol and the associated velocities along the x, y and z direction in :math:`\frac{\text{Å}}{\text{fs}}` for each atom in the system.
-
-
-
-
-
