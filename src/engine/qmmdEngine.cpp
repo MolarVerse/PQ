@@ -112,9 +112,11 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::MACE)
     {
         const auto maceModelType = string(QMSettings::getMaceModelType());
-        auto       maceModel     = string(QMSettings::getMaceModelSize());
         const auto modelPath     = QMSettings::getMaceModelPath();
+        const auto useDFTD       = QMSettings::useDispersionCorrection();
         const auto fpType        = Settings::getFloatingPointPybindString();
+
+        auto maceModel = string(QMSettings::getMaceModelSize());
 
         if (!modelPath.empty())
             maceModel = modelPath;
@@ -123,7 +125,7 @@ void QMMDEngine::setQMRunner(const QMMethod method)
             maceModelType,
             maceModel,
             fpType,
-            false
+            useDFTD
         );
     }
 #endif

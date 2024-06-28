@@ -87,6 +87,8 @@ namespace settings
         static inline std::string _qmScriptFullPath = "";
         static inline std::string _maceModelPath    = "";
 
+        static inline bool _useDispersionCorrection = false;
+
         // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
         // clang-format on
@@ -110,6 +112,8 @@ namespace settings
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
 
+        static void setUseDispersionCorrection(const bool use);
+
         static void setQMLoopTimeLimit(const double time);
 
         /***************************
@@ -123,7 +127,10 @@ namespace settings
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
-        [[nodiscard]] static double      getQMLoopTimeLimit();
+
+        [[nodiscard]] static bool useDispersionCorrection();
+
+        [[nodiscard]] static double getQMLoopTimeLimit();
     };
 }   // namespace settings
 
