@@ -29,6 +29,7 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
+#include "QMParser.hpp"                     // for InputFileParserQM
 #include "convergenceInputParser.hpp"       // for ConvergenceInputParser
 #include "engine.hpp"                       // for Engine
 #include "exceptions.hpp"                   // for InputFileException
@@ -42,7 +43,6 @@
 #include "inputFileParserManostat.hpp"        // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"      // for InputFileParserNonCoulomb
 #include "inputFileParserOutput.hpp"          // for InputFileParserOutput
-#include "inputFileParserQM.hpp"              // for InputFileParserQM
 #include "inputFileParserQMMM.hpp"            // for InputFileParserQM
 #include "inputFileParserResetKinetics.hpp"   // for InputFileParserResetKinetics
 #include "inputFileParserRingPolymer.hpp"     // for InputFileParserRingPolymer

@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "inputFileParserQM.hpp"
+#include "QMParser.hpp"
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front

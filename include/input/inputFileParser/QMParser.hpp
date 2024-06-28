@@ -54,6 +54,8 @@ namespace input
         void parseQMScript(const strings &, const size_t);
         void parseQMScriptFullPath(const strings &, const size_t);
         void parseQMLoopTimeLimit(const strings &, const size_t);
+
+        // void parseMaceModelSize(const strings &, const size_t);
     };
 
 }   // namespace input

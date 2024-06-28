@@ -24,10 +24,10 @@
 
 #include <string>   // for string, allocator
 
+#include "QMParser.hpp"              // for InputFileParserQM
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
 #include "inputFileParser.hpp"       // for readInput
-#include "inputFileParserQM.hpp"     // for InputFileParserQM
 #include "qmSettings.hpp"            // for QMSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
