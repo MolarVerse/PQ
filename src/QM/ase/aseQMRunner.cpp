@@ -24,9 +24,9 @@
 
 #include <thread>
 
-using QM::InternalQMRunner;
+using QM::ASEQMRunner;
 
-void InternalQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
+void ASEQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
 {
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};

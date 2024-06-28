@@ -24,29 +24,16 @@
 
 #define _MACE_RUNNER_HPP_
 
-#include <pybind11/embed.h>
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include "aseQMRunner.hpp"   // for InternalQMRunner
 
 namespace QM
 {
     /**
-     * @brief MaceRunner inherits from InternalQMRunner
+     * @brief MaceRunner inherits from ASEQMRunner
      *
      */
-    class __attribute__((visibility("default"))) MaceRunner
-        : public InternalQMRunner
+    class __attribute__((visibility("default"))) MaceRunner : public ASEQMRunner
     {
-       private:
-        double                    _energy;
-        pybind11::object          _calculator;
-        pybind11::object          _atoms_module;
-        pybind11::array_t<double> _forces;
-        pybind11::array_t<double> _stress_tensor;
-
        public:
         explicit MaceRunner(const std::string &, const std::string &);
         ~MaceRunner() override = default;

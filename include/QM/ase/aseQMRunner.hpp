@@ -20,9 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTERNAL_QM_RUNNER_HPP_
+#ifndef _ASE_QM_RUNNER_HPP_
 
-#define _INTERNAL_QM_RUNNER_HPP_
+#define _ASE_QM_RUNNER_HPP_
+
+#include <pybind11/embed.h>
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include <string>   // for std::string
 
@@ -32,14 +37,21 @@
 namespace QM
 {
     /**
-     * @brief InternalQMRunner inherits from QMRunner
+     * @brief ASEQMRunner inherits from QMRunner
      *
      */
-    class InternalQMRunner : public QMRunner
+    class __attribute__((visibility("default"))) ASEQMRunner : public QMRunner
     {
+       protected:
+        double                    _energy;
+        pybind11::object          _calculator;
+        pybind11::object          _atoms_module;
+        pybind11::array_t<double> _forces;
+        pybind11::array_t<double> _stress_tensor;
+
        public:
-        InternalQMRunner()           = default;
-        ~InternalQMRunner() override = default;
+        ASEQMRunner()           = default;
+        ~ASEQMRunner() override = default;
 
         void         run(pq::SimBox &, pq::PhysicalData &) override;
         virtual void execute(pq::SimBox &)                         = 0;
@@ -47,4 +59,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _INTERNAL_QM_RUNNER_HPP_
+#endif   // _ASE_QM_RUNNER_HPP_
