@@ -34,6 +34,7 @@
 
 using namespace input;
 using namespace settings;
+using namespace customExceptions;
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {
@@ -57,7 +58,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
-        customException::InputFileException,
+        InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
         "mace_off, mace_ani, mace_anicc"
@@ -93,7 +94,7 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("notAMaceModel"),
-        customException::InputFileException,
+        InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
         "Possible values are: mace (mace_mp), mace_off, mace_ani (mace_anicc)"
     )
@@ -142,7 +143,7 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
 
     ASSERT_THROW_MSG(
         parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
-        customException::InputFileException,
+        InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
         "Possible values are: small, medium, large"
     )
