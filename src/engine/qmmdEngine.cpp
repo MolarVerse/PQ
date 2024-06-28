@@ -34,7 +34,7 @@
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #ifdef WITH_ASE
-#include "maceRunner.hpp"        // for MaceRunner
+#include "maceRunner.hpp"   // for MaceRunner
 #endif
 
 using engine::QMMDEngine;
@@ -112,9 +112,14 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == QMMethod::MACE)
     {
         const auto maceModel = string(QMSettings::getMaceModel());
-        const auto fpType = Settings::getFloatingPointPybindString();
+        const auto fpType    = Settings::getFloatingPointPybindString();
 
-        _qmRunner = std::make_shared<QM::MaceRunner>(maceModel, fpType);
+        _qmRunner = std::make_shared<QM::MaceRunner>(
+            "mace_mp",
+            maceModel,
+            fpType,
+            false
+        );
     }
 #endif
 

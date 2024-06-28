@@ -27,7 +27,7 @@
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using settings::MaceModel;
+using settings::MaceModelSize;
 using settings::QMMethod;
 using settings::QMSettings;
 using namespace customException;
@@ -60,11 +60,11 @@ std::string settings::string(const QMMethod method)
  * @param model
  * @return std::string
  */
-std::string settings::string(const MaceModel model)
+std::string settings::string(const MaceModelSize model)
 {
     switch (model)
     {
-        using enum MaceModel;
+        using enum MaceModelSize;
 
         case LARGE: return "large";
         case MEDIUM: return "medium";
@@ -168,7 +168,7 @@ void QMSettings::setQMLoopTimeLimit(const double time)
  */
 void QMSettings::setMaceModel(const std::string_view &model)
 {
-    using enum MaceModel;
+    using enum MaceModelSize;
     const auto modelToLower = toLowerCopy(model);
 
     if ("large" == modelToLower)
@@ -191,7 +191,7 @@ void QMSettings::setMaceModel(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
+void QMSettings::setMaceModel(const MaceModelSize model) { _maceModel = model; }
 
 /***************************
  *                         *
@@ -230,6 +230,6 @@ double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
 /**
  * @brief returns the maceModel
  *
- * @return MaceModel
+ * @return MaceModelSize
  */
-MaceModel QMSettings::getMaceModel() { return _maceModel; }
+MaceModelSize QMSettings::getMaceModel() { return _maceModel; }

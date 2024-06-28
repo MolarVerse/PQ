@@ -35,8 +35,14 @@ namespace QM
     class __attribute__((visibility("default"))) MaceRunner : public ASEQMRunner
     {
        public:
-        explicit MaceRunner(const std::string &, const std::string &);
         ~MaceRunner() override = default;
+        
+        explicit MaceRunner(
+            const std::string& modelType,
+            const std::string& model,
+            const std::string& fpType,
+            const bool         dispersion
+        );
     };
 }   // namespace QM
 

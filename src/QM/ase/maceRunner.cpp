@@ -22,28 +22,39 @@
 
 #include "maceRunner.hpp"
 
-#include "physicalData.hpp"
 #include "pybind11/embed.h"
-#include "simulationBox.hpp"
 
 using QM::MaceRunner;
-using std::vector;
 
-MaceRunner::MaceRunner(const std::string &model, const std::string &fpType)
+/**
+ * @brief Construct a new MaceRunner::MaceRunner object
+ *
+ * @param modelType
+ * @param model
+ * @param fpType
+ * @param dispersion
+ *
+ * @throw py::error_already_set if the import of the mace module fails
+ */
+MaceRunner::MaceRunner(
+    const std::string &modelType,
+    const std::string &model,
+    const std::string &fpType,
+    const bool         dispersion
+)
     : ASEQMRunner()
 {
     try
     {
-        const py::module_ mace        = py::module_::import("mace");
         const py::module_ calculators = py::module_::import("mace.calculators");
 
         py::dict calculatorArgs;
         calculatorArgs["model"]         = model.c_str();
-        calculatorArgs["dispersion"]    = pybind11::bool_(false);
+        calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
         calculatorArgs["default_dtype"] = fpType.c_str();
         calculatorArgs["device"]        = pybind11::str("cuda");
 
-        _calculator = calculators.attr("mace_mp")(**calculatorArgs);
+        _calculator = calculators.attr(modelType.c_str())(**calculatorArgs);
     }
     catch (const py::error_already_set &)
     {
