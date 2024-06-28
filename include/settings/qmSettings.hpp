@@ -68,15 +68,16 @@ namespace settings
     class QMSettings
     {
        private:
-        static inline QMMethod    _qmMethod         = QMMethod::NONE;
+        static inline QMMethod      _qmMethod      = QMMethod::NONE;
+        static inline MaceModelSize _maceModelSize = MaceModelSize::LARGE;
+
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
+        static inline std::string _maceModelPath    = "";
 
         // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
         // clang-format on
-
-        static inline MaceModelSize _maceModel = MaceModelSize::LARGE;
 
        public:
         [[nodiscard]] static bool isExternalQMRunner();
@@ -88,22 +89,26 @@ namespace settings
         static void setQMMethod(const std::string_view &method);
         static void setQMMethod(const QMMethod method);
 
+        static void setMaceModelSize(const std::string_view &model);
+        static void setMaceModelSize(const MaceModelSize model);
+        static void setMaceModelPath(const std::string_view &path);
+
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
-        static void setQMLoopTimeLimit(const double time);
 
-        static void setMaceModel(const std::string_view &model);
-        static void setMaceModel(const MaceModelSize model);
+        static void setQMLoopTimeLimit(const double time);
 
         /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]] static QMMethod      getQMMethod();
-        [[nodiscard]] static std::string   getQMScript();
-        [[nodiscard]] static std::string   getQMScriptFullPath();
-        [[nodiscard]] static double        getQMLoopTimeLimit();
-        [[nodiscard]] static MaceModelSize getMaceModel();
+        [[nodiscard]] static MaceModelSize getMaceModelSize();
+        [[nodiscard]] static std::string   getMaceModelPath();
+
+        [[nodiscard]] static std::string getQMScript();
+        [[nodiscard]] static std::string getQMScriptFullPath();
+        [[nodiscard]] static double      getQMLoopTimeLimit();
     };
 }   // namespace settings
 

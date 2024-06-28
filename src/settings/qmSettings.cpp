@@ -132,6 +132,50 @@ void QMSettings::setQMMethod(const std::string_view &method)
 void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
 
 /**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModelSize(const std::string_view &model)
+{
+    using enum MaceModelSize;
+    const auto modelToLower = toLowerCopy(model);
+
+    if ("large" == modelToLower)
+        _maceModelSize = LARGE;
+
+    else if ("medium" == modelToLower)
+        _maceModelSize = MEDIUM;
+
+    else if ("small" == modelToLower)
+        _maceModelSize = SMALL;
+
+    else
+        throw UserInputException(
+            std::format("Mace {} model not recognized", model)
+        );
+}
+
+/**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModelSize(const MaceModelSize model)
+{
+    _maceModelSize = model;
+}
+
+/**
+ * @brief set the mace model path
+ *
+ */
+void QMSettings::setMaceModelPath(const std::string_view &path)
+{
+    _maceModelPath = path;
+}
+
+/**
  * @brief sets the qmScript in settings
  *
  * @param script
@@ -166,19 +210,19 @@ void QMSettings::setQMLoopTimeLimit(const double time)
  *
  * @param model
  */
-void QMSettings::setMaceModel(const std::string_view &model)
+void QMSettings::setMaceModelSize(const std::string_view &model)
 {
     using enum MaceModelSize;
     const auto modelToLower = toLowerCopy(model);
 
     if ("large" == modelToLower)
-        _maceModel = LARGE;
+        _maceModelSize = LARGE;
 
     else if ("medium" == modelToLower)
-        _maceModel = MEDIUM;
+        _maceModelSize = MEDIUM;
 
     else if ("small" == modelToLower)
-        _maceModel = SMALL;
+        _maceModelSize = SMALL;
 
     else
         throw UserInputException(
@@ -191,7 +235,10 @@ void QMSettings::setMaceModel(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModel(const MaceModelSize model) { _maceModel = model; }
+void QMSettings::setMaceModelSize(const MaceModelSize model)
+{
+    _maceModelSize = model;
+}
 
 /***************************
  *                         *
@@ -205,6 +252,20 @@ void QMSettings::setMaceModel(const MaceModelSize model) { _maceModel = model; }
  * @return QMMethod
  */
 QMMethod QMSettings::getQMMethod() { return _qmMethod; }
+
+/**
+ * @brief returns the maceModel
+ *
+ * @return MaceModelSize
+ */
+MaceModelSize QMSettings::getMaceModelSize() { return _maceModelSize; }
+
+/**
+ * @brief returns the maceModelPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
 
 /**
  * @brief returns the qmScript
@@ -226,10 +287,3 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  * @return double
  */
 double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
-
-/**
- * @brief returns the maceModel
- *
- * @return MaceModelSize
- */
-MaceModelSize QMSettings::getMaceModel() { return _maceModel; }
