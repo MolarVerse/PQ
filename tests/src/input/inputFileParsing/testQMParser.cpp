@@ -37,17 +37,18 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {
-    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
+    using enum QMMethod;
+    EXPECT_EQ(QMSettings::getQMMethod(), NONE);
 
     auto parser = QMInputParser(*_engine);
     parser.parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::DFTBPLUS);
+    EXPECT_EQ(QMSettings::getQMMethod(), DFTBPLUS);
 
     parser.parseQMMethod({"qm_prog", "=", "pyscf"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::PYSCF);
+    EXPECT_EQ(QMSettings::getQMMethod(), PYSCF);
 
     parser.parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::TURBOMOLE);
+    EXPECT_EQ(QMSettings::getQMMethod(), TURBOMOLE);
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
@@ -72,4 +73,36 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
         0
     );
     EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
+}
+
+TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "10"}, 0);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
+
+    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "-1"}, 0);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
+}
+
+TEST_F(TestInputFileReader, parseMaceModelSize)
+{
+    using enum MaceModelSize;
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseMaceModelSize({"mace_model_size", "=", "small"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "large"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
+        customException::InputFileException,
+        "Invalid mace_model_size \"notASize\" in input file.\n"
+        "Possible values are: small, medium, large"
+    )
 }

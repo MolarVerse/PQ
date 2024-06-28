@@ -29,16 +29,10 @@
 #include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
+#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
-    using strings = std::vector<std::string>;
-
     /**
      * @class QMInputParser inherits from InputFileParser
      *
@@ -48,14 +42,14 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        public:
-        explicit QMInputParser(engine::Engine &);
+        explicit QMInputParser(pq::Engine &);
 
-        void parseQMMethod(const strings &, const size_t);
-        void parseQMScript(const strings &, const size_t);
-        void parseQMScriptFullPath(const strings &, const size_t);
-        void parseQMLoopTimeLimit(const strings &, const size_t);
+        void parseQMMethod(const pq::strings &, const size_t);
+        void parseQMScript(const pq::strings &, const size_t);
+        void parseQMScriptFullPath(const pq::strings &, const size_t);
+        void parseQMLoopTimeLimit(const pq::strings &, const size_t);
 
-        // void parseMaceModelSize(const strings &, const size_t);
+        void parseMaceModelSize(const pq::strings &, const size_t);
     };
 
 }   // namespace input

@@ -110,6 +110,13 @@ namespace output
     class RingPolymerEnergyOutput;
 
 }   // namespace output
+
+namespace engine
+{
+    class Engine;   // forward declaration
+
+}   // namespace engine
+
 namespace pq
 {
     using strings   = std::vector<std::string>;
@@ -122,6 +129,8 @@ namespace pq
     using Vec3DVec      = std::vector<Vec3D>;
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
     using tensor3D      = linearAlgebra::tensor3D;
+
+    using Engine = engine::Engine;
 
     using Virial          = virial::Virial;
     using VirialMolecular = virial::VirialMolecular;

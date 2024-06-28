@@ -30,6 +30,8 @@
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
+using namespace utilities;
+using namespace settings;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -47,19 +49,28 @@ QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseQMMethod, this),
         false
     );
+
     addKeyword(
         std::string("qm_script"),
         bind_front(&QMInputParser::parseQMScript, this),
         false
     );
+
     addKeyword(
         std::string("qm_script_full_path"),
         bind_front(&QMInputParser::parseQMScriptFullPath, this),
         false
     );
+
     addKeyword(
         std::string("qm_loop_time_limit"),
         bind_front(&QMInputParser::parseQMLoopTimeLimit, this),
+        false
+    );
+
+    addKeyword(
+        std::string("mace_model_size"),
+        bind_front(&QMInputParser::parseMaceModelSize, this),
         false
     );
 }
@@ -69,27 +80,30 @@ QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws customException::InputFileException if the method is not recognized
  */
 void QMInputParser::parseQMMethod(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
+    using enum QMMethod;
     checkCommand(lineElements, lineNumber);
 
-    const auto method = utilities::toLowerCopy(lineElements[2]);
+    const auto method = toLowerCopy(lineElements[2]);
 
     if ("dftbplus" == method)
-        settings::QMSettings::setQMMethod("dftbplus");
+        QMSettings::setQMMethod(DFTBPLUS);
 
     else if ("pyscf" == method)
-        settings::QMSettings::setQMMethod("pyscf");
+        QMSettings::setQMMethod(PYSCF);
 
     else if ("turbomole" == method)
-        settings::QMSettings::setQMMethod("turbomole");
+        QMSettings::setQMMethod(TURBOMOLE);
 
     else if ("mace" == method)
-        settings::QMSettings::setQMMethod("mace");
+        QMSettings::setQMMethod(MACE);
 
     else
         throw customException::InputFileException(std::format(
@@ -111,7 +125,7 @@ void QMInputParser::parseQMScript(
 )
 {
     checkCommand(lineElements, lineNumber);
-    settings::QMSettings::setQMScript(lineElements[2]);
+    QMSettings::setQMScript(lineElements[2]);
 }
 
 /**
@@ -131,7 +145,7 @@ void QMInputParser::parseQMScriptFullPath(
 )
 {
     checkCommand(lineElements, lineNumber);
-    settings::QMSettings::setQMScriptFullPath(lineElements[2]);
+    QMSettings::setQMScriptFullPath(lineElements[2]);
 }
 
 /**
@@ -146,5 +160,40 @@ void QMInputParser::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-    settings::QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+    QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+}
+
+/**
+ * @brief parse the size of the Mace model
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws customException::InputFileException if the size is not recognized
+ */
+void QMInputParser::parseMaceModelSize(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum MaceModelSize;
+    checkCommand(lineElements, lineNumber);
+
+    const auto size = toLowerCopy(lineElements[2]);
+
+    if ("small" == size)
+        QMSettings::setMaceModelSize(SMALL);
+
+    else if ("medium" == size)
+        QMSettings::setMaceModelSize(MEDIUM);
+
+    else if ("large" == size)
+        QMSettings::setMaceModelSize(LARGE);
+
+    else
+        throw customException::InputFileException(std::format(
+            "Invalid mace_model_size \"{}\" in input file.\n"
+            "Possible values are: small, medium, large",
+            lineElements[2]
+        ));
 }
