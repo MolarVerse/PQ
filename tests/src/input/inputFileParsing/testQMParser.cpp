@@ -34,7 +34,7 @@
 
 using namespace input;
 using namespace settings;
-using namespace customExceptions;
+using namespace customException;
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {

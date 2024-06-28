@@ -39,6 +39,9 @@
 
 using engine::QMMDEngine;
 using namespace settings;
+using namespace customException;
+using namespace QM;
+using std::make_shared;
 
 /**
  * @brief Takes one step in a QM MD simulation.
@@ -99,47 +102,60 @@ void QMMDEngine::takeStep()
  */
 void QMMDEngine::setQMRunner(const QMMethod method)
 {
-    if (method == QMMethod::DFTBPLUS)
-        _qmRunner = std::make_shared<QM::DFTBPlusRunner>();
+    using enum QMMethod;
 
-    else if (method == QMMethod::PYSCF)
-        _qmRunner = std::make_shared<QM::PySCFRunner>();
+    if (method == DFTBPLUS)
+        _qmRunner = make_shared<DFTBPlusRunner>();
 
-    else if (method == QMMethod::TURBOMOLE)
-        _qmRunner = std::make_shared<QM::TurbomoleRunner>();
+    else if (method == PYSCF)
+        _qmRunner = make_shared<PySCFRunner>();
 
-#ifdef WITH_ASE
-    else if (method == QMMethod::MACE)
-    {
-        const auto maceModelType = string(QMSettings::getMaceModelType());
-        const auto modelPath     = QMSettings::getMaceModelPath();
-        const auto useDFTD       = QMSettings::useDispersionCorrection();
-        const auto fpType        = Settings::getFloatingPointPybindString();
+    else if (method == TURBOMOLE)
+        _qmRunner = make_shared<TurbomoleRunner>();
 
-        auto maceModel = string(QMSettings::getMaceModelSize());
-
-        if (!modelPath.empty())
-            maceModel = modelPath;
-
-        _qmRunner = std::make_shared<QM::MaceRunner>(
-            maceModelType,
-            maceModel,
-            fpType,
-            useDFTD
-        );
-    }
-#endif
+    else if (method == MACE)
+        setMaceQMRunner();
 
     else
-        throw customException::InputFileException(
+        throw InputFileException(
             "A qm based jobtype was requested but no external "
             "program via \"qm_prog\" provided"
         );
 }
 
 /**
+ * @brief sets the QMRunner object for mace type qm methods.
+ *
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
+ */
+void QMMDEngine::setMaceQMRunner()
+{
+#ifdef WITH_ASE
+    const auto modelType = string(QMSettings::getMaceModelType());
+    const auto modelPath = QMSettings::getMaceModelPath();
+    const auto useDFTD   = QMSettings::useDispersionCorrection();
+    const auto fpType    = Settings::getFloatingPointPybindString();
+
+    auto maceModel = string(QMSettings::getMaceModelSize());
+
+    if (!modelPath.empty())
+        maceModel = modelPath;
+
+    _qmRunner = make_shared<MaceRunner>(modelType, maceModel, fpType, useDFTD);
+#else
+    throw CompileTimeException(
+        "A mace type qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use mace type "
+        "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
+
+/**
  * @brief Get the QMRunner object.
  *
- * @return QM::QMRunner *
+ * @return QMRunner *
  */
-QM::QMRunner* QMMDEngine::getQMRunner() const { return _qmRunner.get(); }
+QMRunner* QMMDEngine::getQMRunner() const { return _qmRunner.get(); }
