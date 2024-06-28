@@ -56,8 +56,19 @@ namespace settings
         SMALL
     };
 
+    /**
+     * @class enum MaceModelType
+     */
+    enum class MaceModelType : size_t
+    {
+        MACE_MP,
+        MACE_OFF,
+        MACE_ANICC
+    };
+
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
+    std::string string(const MaceModelType model);
 
     /**
      * @class QMSettings
@@ -70,6 +81,7 @@ namespace settings
        private:
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
         static inline MaceModelSize _maceModelSize = MaceModelSize::LARGE;
+        static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
 
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
@@ -91,6 +103,8 @@ namespace settings
 
         static void setMaceModelSize(const std::string_view &model);
         static void setMaceModelSize(const MaceModelSize model);
+        static void setMaceModelType(const std::string_view &model);
+        static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
 
         static void setQMScript(const std::string_view &script);
@@ -104,6 +118,7 @@ namespace settings
 
         [[nodiscard]] static QMMethod      getQMMethod();
         [[nodiscard]] static MaceModelSize getMaceModelSize();
+        [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 
         [[nodiscard]] static std::string getQMScript();

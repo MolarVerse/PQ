@@ -28,6 +28,7 @@
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using settings::MaceModelSize;
+using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
 using namespace customException;
@@ -55,7 +56,7 @@ std::string settings::string(const QMMethod method)
 }
 
 /**
- * @brief returns the maceModel as string
+ * @brief returns the maceModel size as string
  *
  * @param model
  * @return std::string
@@ -69,6 +70,26 @@ std::string settings::string(const MaceModelSize model)
         case LARGE: return "large";
         case MEDIUM: return "medium";
         case SMALL: return "small";
+
+        default: return "none";
+    }
+}
+
+/**
+ * @brief returns the maceModel type as string
+ *
+ * @param model
+ * @return std::string
+ */
+std::string settings::string(const MaceModelType model)
+{
+    switch (model)
+    {
+        using enum MaceModelType;
+
+        case MACE_MP: return "mace_mp";
+        case MACE_OFF: return "mace_off";
+        case MACE_ANICC: return "mace_anicc";
 
         default: return "none";
     }
@@ -167,6 +188,41 @@ void QMSettings::setMaceModelSize(const MaceModelSize model)
 }
 
 /**
+ * @brief sets the maceModelType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModelType(const std::string_view &model)
+{
+    using enum MaceModelType;
+    const auto modelToLower = toLowerCopy(model);
+
+    if ("mace_mp" == modelToLower)
+        _maceModelType = MACE_MP;
+
+    else if ("mace_off" == modelToLower)
+        _maceModelType = MACE_OFF;
+
+    else if ("mace_anicc" == modelToLower)
+        _maceModelType = MACE_ANICC;
+
+    else
+        throw UserInputException(
+            std::format("Mace {} model not recognized", model)
+        );
+}
+
+/**
+ * @brief sets the maceModelType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModelType(const MaceModelType model)
+{
+    _maceModelType = model;
+}
+
+/**
  * @brief set the mace model path
  *
  */
@@ -205,41 +261,6 @@ void QMSettings::setQMLoopTimeLimit(const double time)
     _qmLoopTimeLimit = time;
 }
 
-/**
- * @brief sets the maceModel to enum in settings
- *
- * @param model
- */
-void QMSettings::setMaceModelSize(const std::string_view &model)
-{
-    using enum MaceModelSize;
-    const auto modelToLower = toLowerCopy(model);
-
-    if ("large" == modelToLower)
-        _maceModelSize = LARGE;
-
-    else if ("medium" == modelToLower)
-        _maceModelSize = MEDIUM;
-
-    else if ("small" == modelToLower)
-        _maceModelSize = SMALL;
-
-    else
-        throw UserInputException(
-            std::format("Mace {} model not recognized", model)
-        );
-}
-
-/**
- * @brief sets the maceModel to enum in settings
- *
- * @param model
- */
-void QMSettings::setMaceModelSize(const MaceModelSize model)
-{
-    _maceModelSize = model;
-}
-
 /***************************
  *                         *
  * standard getter methods *
@@ -259,6 +280,8 @@ QMMethod QMSettings::getQMMethod() { return _qmMethod; }
  * @return MaceModelSize
  */
 MaceModelSize QMSettings::getMaceModelSize() { return _maceModelSize; }
+
+MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
 
 /**
  * @brief returns the maceModelPath

@@ -111,15 +111,16 @@ void QMMDEngine::setQMRunner(const QMMethod method)
 #ifdef WITH_ASE
     else if (method == QMMethod::MACE)
     {
-        auto       maceModel = string(QMSettings::getMaceModelSize());
-        const auto modelPath = QMSettings::getMaceModelPath();
-        const auto fpType    = Settings::getFloatingPointPybindString();
+        const auto maceModelType = string(QMSettings::getMaceModelType());
+        auto       maceModel     = string(QMSettings::getMaceModelSize());
+        const auto modelPath     = QMSettings::getMaceModelPath();
+        const auto fpType        = Settings::getFloatingPointPybindString();
 
         if (!modelPath.empty())
             maceModel = modelPath;
 
         _qmRunner = std::make_shared<QM::MaceRunner>(
-            "mace_mp",
+            maceModelType,
             maceModel,
             fpType,
             false
