@@ -1,6 +1,10 @@
+.. _outputFiles: 
+
 ############
 Output Files
 ############
+
+.. _boxFile:
 
 *********
 Box File
@@ -14,6 +18,8 @@ every frame in the following format:
     step_number *a* *b* *c* *α* *β* *γ*
 
 The lattice parameters are given in units of Å and the angles are given in units of degrees.
+
+.. _chargeFile:
 
 ************
 Charge File
@@ -31,6 +37,8 @@ The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element 
 symbol and its charge in units of the elementary charge *e* for each atom in the system.
 
+.. _coordinateFile:
+
 ***************
 Coordinate File
 ***************
@@ -46,6 +54,8 @@ Stores the coordinates (*x*, *y*, *z*) of each atom for every frame of the simul
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element
 symbol and the associated Cartesian coordinates in Å for each atom in the system.
+
+.. _energyFile:
 
 ***********
 Energy File
@@ -68,7 +78,9 @@ and looptime denotes the time taken to complete the full MD simulation step in s
 .. note:: 
 
     In case of an *NVE* or *NVT* simulation, the columns for *V* and *ρ* are omitted from the ``.en`` file as they remain constant throughout. 
-    All quantities in correct ordering and with associated units are given in the ``.info`` output file, which is described in section `Info File`_.
+    All quantities in correct ordering and with associated units are given in the ``.info`` output file, which is described in section :ref:`infoFile`.
+
+.. _forceFile:
 
 ***********
 Force File
@@ -87,6 +99,8 @@ box and the respective box parameters in units of Å and degrees. The second lin
 :math:`\frac{\text{kcal}}{\text{mol Å}}`. The following lines contain the element symbol and the associated forces acting along the 
 x, y and z direction in :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system.
 
+.. _infoFile:
+
 **********
 Info File
 **********
@@ -94,13 +108,15 @@ Info File
 **File Type:** ``.info``
 
 Stores information about various quantities of the system and their units for the last frame calculated. The quantities are identical to those 
-in the ``.en`` file (described under section `Energy File`_), except the first entry which is the total simulation time in ps instead of the step number. 
+in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time in ps instead of the step number. 
+
+.. _logFile:
 
 *********
-Out File
+Log File
 *********
 
-**File Type:** ``.out``
+**File Type:** ``.log``
 
 Starts with general information about the **PQ** program, such as the author, version, and the date of compilation. The file then tracks the 
 initialization of **PQ** and the simulation settings used. In case of a successful simulation, the file ends with the text 'PQ ended normally'. 
@@ -110,9 +126,27 @@ In case of an error, the file shows the respective error message.
 Reference File
 ***************
 
-**File Type:** ``.out.ref``
+**File Type:** ``.log.ref``
 
 Lists the references to be cited when publishing results obtained *via* the chosen simulation settings.
+
+*************
+Restart File
+*************
+
+**File Type:** ``.rst``
+
+Stores the coordinates, velocities, and forces of each atom for the current and previous simulation step in the following format:
+    
+    | line 1: "Step" step_number
+    | line 2: n_atoms *a* *b* *c* *α* *β* *γ*
+    | line 3 to (n_atoms + 2): element running_index moltype *x* *y* *z* *v*:sub:`x` *v*:sub:`y` *v*:sub:`z` *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
+
+The first line contains the string "Step" followed by the total number of performed simulation steps. The parameters n_atoms, 
+*a*, *b*, *c*, *α*, *β*, and *γ* in the second line denote the number of atoms in the simulation box and the respective box parameters in units 
+of Å and degrees. The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to 
+according to the :ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. 
+The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
 *************
 Velocity File
