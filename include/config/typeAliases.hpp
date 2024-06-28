@@ -115,6 +115,8 @@ namespace pq
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
+    using ParseFunc = std::function<void(const strings &, const size_t)>;
+
     using Vec3D         = linearAlgebra::Vec3D;
     using Vec3DPair     = std::pair<Vec3D, Vec3D>;
     using Vec3DVec      = std::vector<Vec3D>;

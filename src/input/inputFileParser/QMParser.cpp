@@ -32,7 +32,7 @@
 using namespace input;
 
 /**
- * @brief Construct a new InputFileParserQM:: InputFileParserQM object
+ * @brief Construct a new QMInputParser:: QMInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
@@ -40,27 +40,26 @@ using namespace input;
  *
  * @param engine
  */
-InputFileParserQM::InputFileParserQM(engine::Engine &engine)
-    : InputFileParser(engine)
+QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("qm_prog"),
-        bind_front(&InputFileParserQM::parseQMMethod, this),
+        bind_front(&QMInputParser::parseQMMethod, this),
         false
     );
     addKeyword(
         std::string("qm_script"),
-        bind_front(&InputFileParserQM::parseQMScript, this),
+        bind_front(&QMInputParser::parseQMScript, this),
         false
     );
     addKeyword(
         std::string("qm_script_full_path"),
-        bind_front(&InputFileParserQM::parseQMScriptFullPath, this),
+        bind_front(&QMInputParser::parseQMScriptFullPath, this),
         false
     );
     addKeyword(
         std::string("qm_loop_time_limit"),
-        bind_front(&InputFileParserQM::parseQMLoopTimeLimit, this),
+        bind_front(&QMInputParser::parseQMLoopTimeLimit, this),
         false
     );
 }
@@ -71,7 +70,7 @@ InputFileParserQM::InputFileParserQM(engine::Engine &engine)
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMMethod(
+void QMInputParser::parseQMMethod(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -106,7 +105,7 @@ void InputFileParserQM::parseQMMethod(
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMScript(
+void QMInputParser::parseQMScript(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -126,7 +125,7 @@ void InputFileParserQM::parseQMScript(
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMScriptFullPath(
+void QMInputParser::parseQMScriptFullPath(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -141,7 +140,7 @@ void InputFileParserQM::parseQMScriptFullPath(
  * @param lineElements
  * @param lineNumber
  */
-void InputFileParserQM::parseQMLoopTimeLimit(
+void QMInputParser::parseQMLoopTimeLimit(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )

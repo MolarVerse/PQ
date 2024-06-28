@@ -40,15 +40,15 @@ namespace input
     using strings = std::vector<std::string>;
 
     /**
-     * @class InputFileParserQM inherits from InputFileParser
+     * @class QMInputParser inherits from InputFileParser
      *
      * @brief Parses the general commands in the input file
      *
      */
-    class InputFileParserQM : public InputFileParser
+    class QMInputParser : public InputFileParser
     {
        public:
-        explicit InputFileParserQM(engine::Engine &);
+        explicit QMInputParser(engine::Engine &);
 
         void parseQMMethod(const strings &, const size_t);
         void parseQMScript(const strings &, const size_t);

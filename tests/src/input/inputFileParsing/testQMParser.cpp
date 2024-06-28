@@ -39,7 +39,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
 {
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
 
-    auto parser = InputFileParserQM(*_engine);
+    auto parser = QMInputParser(*_engine);
     parser.parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::DFTBPLUS);
 
@@ -59,14 +59,14 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
 TEST_F(TestInputFileReader, parseQMScript)
 {
-    auto parser = InputFileParserQM(*_engine);
+    auto parser = QMInputParser(*_engine);
     parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
     EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
-    auto parser = InputFileParserQM(*_engine);
+    auto parser = QMInputParser(*_engine);
     parser.parseQMScriptFullPath(
         {"qm_script_full_path", "=", "/path/to/script.sh"},
         0
