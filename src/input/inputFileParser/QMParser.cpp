@@ -32,6 +32,7 @@
 using namespace input;
 using namespace utilities;
 using namespace settings;
+using namespace customException;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -81,7 +82,7 @@ QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
  * @param lineElements
  * @param lineNumber
  *
- * @throws customException::InputFileException if the method is not recognized
+ * @throws InputFileException if the method is not recognized
  */
 void QMInputParser::parseQMMethod(
     const std::vector<std::string> &lineElements,
@@ -102,13 +103,14 @@ void QMInputParser::parseQMMethod(
     else if ("turbomole" == method)
         QMSettings::setQMMethod(TURBOMOLE);
 
-    else if ("mace" == method)
-        QMSettings::setQMMethod(MACE);
+    else if (method.starts_with("mace"))
+        parseMaceQMMethod(method);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, pyscf, turbomole, mace",
+            "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
+            "mace_off, mace_ani, mace_anicc",
             lineElements[2]
         ));
 }
@@ -169,7 +171,7 @@ void QMInputParser::parseQMLoopTimeLimit(
  * @param lineElements
  * @param lineNumber
  *
- * @throws customException::InputFileException if the size is not recognized
+ * @throws InputFileException if the size is not recognized
  */
 void QMInputParser::parseMaceModelSize(
     const std::vector<std::string> &lineElements,
@@ -191,9 +193,42 @@ void QMInputParser::parseMaceModelSize(
         QMSettings::setMaceModelSize(LARGE);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
             "Possible values are: small, medium, large",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parses the QM method if it starts with "mace"
+ *
+ * @param model
+ *
+ * @throws InputFileException if the model is not recognized
+ */
+void QMInputParser::parseMaceQMMethod(const std::string_view &model)
+{
+    using enum MaceModelType;
+
+    if ("mace" == model || "mace_mp" == model)
+        QMSettings::setMaceModelType(MACE_MP);
+
+    else if ("mace_off" == model)
+        QMSettings::setMaceModelType(MACE_OFF);
+
+    else if ("mace_anicc" == model || "mace_ani" == model)
+        QMSettings::setMaceModelType(MACE_ANICC);
+
+    else
+    {
+        throw InputFileException(std::format(
+            "Invalid mace type qm_method \"{}\" in input file.\n"
+            "Possible values are: mace (mace_mp), mace_off, mace_ani "
+            "(mace_anicc)",
+            model
+        ));
+    }
+
+    QMSettings::setQMMethod(QMMethod::MACE);
 }

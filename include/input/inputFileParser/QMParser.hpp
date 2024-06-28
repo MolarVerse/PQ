@@ -50,6 +50,8 @@ namespace input
         void parseQMLoopTimeLimit(const pq::strings &, const size_t);
 
         void parseMaceModelSize(const pq::strings &, const size_t);
+
+        void parseMaceQMMethod(const std::string_view &);
     };
 
 }   // namespace input

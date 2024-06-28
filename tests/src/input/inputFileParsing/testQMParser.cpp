@@ -50,11 +50,52 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), TURBOMOLE);
 
+    parser.parseQMMethod({"qm_prog", "=", "mace"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+
+    // the more detailed mace parser is tested in TestMaceParser
+
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         customException::InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, pyscf, turbomole, mace"
+        "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
+        "mace_off, mace_ani, mace_anicc"
+    )
+}
+
+TEST_F(TestInputFileReader, parseMaceQMMethod)
+{
+    using enum QMMethod;
+    using enum MaceModelType;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseMaceQMMethod("mace");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+
+    parser.parseMaceQMMethod("mace_mp");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+
+    parser.parseMaceQMMethod("mace_off");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
+
+    parser.parseMaceQMMethod("mace_ani");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_ANICC);
+
+    parser.parseMaceQMMethod("mace_anicc");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_ANICC);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("notAMaceModel"),
+        customException::InputFileException,
+        "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
+        "Possible values are: mace (mace_mp), mace_off, mace_ani (mace_anicc)"
     )
 }
 
