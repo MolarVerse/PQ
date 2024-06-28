@@ -24,7 +24,7 @@
 
 #include <string>   // for string, allocator
 
-#include "QMParser.hpp"              // for InputFileParserQM
+#include "QMInputParser.hpp"         // for InputFileParserQM
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
 #include "inputFileParser.hpp"       // for readInput
@@ -125,6 +125,31 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 
     parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "-1"}, 0);
     EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
+}
+
+TEST_F(TestInputFileReader, parseDispersion)
+{
+    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseDispersion({"dispersion", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorrection());
+
+    parser.parseDispersion({"dispersion", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+
+    parser.parseDispersion({"dispersion", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorrection());
+
+    parser.parseDispersion({"dispersion", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+
+    ASSERT_THROW_MSG(
+        parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid dispersion \"notABool\" in input file.\n"
+        "Possible values are: true, false, on, off"
+    )
 }
 
 TEST_F(TestInputFileReader, parseMaceModelSize)

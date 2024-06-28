@@ -29,16 +29,16 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
-#include "QMParser.hpp"                     // for InputFileParserQM
+#include "QMInputParser.hpp"                // for InputFileParserQM
 #include "convergenceInputParser.hpp"       // for ConvergenceInputParser
 #include "engine.hpp"                       // for Engine
 #include "exceptions.hpp"                   // for InputFileException
+#include "generalInputParser.hpp"           // for InputFileParserGeneral
 #include "inputFileParserCellList.hpp"      // for InputFileParserCellList
 #include "inputFileParserConstraints.hpp"   // for InputFileParserConstraints
 #include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
 #include "inputFileParserFiles.hpp"              // for InputFileParserFiles
 #include "inputFileParserForceField.hpp"      // for InputFileParserForceField
-#include "inputFileParserGeneral.hpp"         // for InputFileParserGeneral
 #include "inputFileParserIntegrator.hpp"      // for InputFileParserIntegrator
 #include "inputFileParserManostat.hpp"        // for InputFileParserManostat
 #include "inputFileParserNonCoulomb.hpp"      // for InputFileParserNonCoulomb
@@ -79,7 +79,7 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<InputFileParserCoulombLongRange>(_engine));
     _parsers.push_back(make_unique<InputFileParserFiles>(_engine));
     _parsers.push_back(make_unique<InputFileParserForceField>(_engine));
-    _parsers.push_back(make_unique<InputFileParserGeneral>(_engine));
+    _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<InputFileParserIntegrator>(_engine));
     _parsers.push_back(make_unique<InputFileParserManostat>(_engine));
     _parsers.push_back(make_unique<InputFileParserNonCoulomb>(_engine));
@@ -245,7 +245,7 @@ void input::readJobType(
             const auto lineElements = splitString(command);
             if (!lineElements.empty() && "jobtype" == lineElements[0])
             {
-                auto parser = InputFileParserGeneral(*engine);
+                auto parser = GeneralInputParser(*engine);
                 parser.parseJobTypeForEngine(lineElements, lineNumber, engine);
                 jobtypeFound = true;
             }

@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "QMParser.hpp"
+#include "QMInputParser.hpp"
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
@@ -66,6 +66,12 @@ QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("qm_loop_time_limit"),
         bind_front(&QMInputParser::parseQMLoopTimeLimit, this),
+        false
+    );
+
+    addKeyword(
+        std::string("dispersion"),
+        bind_front(&QMInputParser::parseDispersion, this),
         false
     );
 
@@ -163,6 +169,35 @@ void QMInputParser::parseQMLoopTimeLimit(
 {
     checkCommand(lineElements, lineNumber);
     QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+}
+
+/**
+ * @brief parse the dispersion correction
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseDispersion(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto dispersion = toLowerCopy(lineElements[2]);
+
+    if ("true" == dispersion || "on" == dispersion)
+        QMSettings::setUseDispersionCorrection(true);
+
+    else if ("false" == dispersion || "off" == dispersion)
+        QMSettings::setUseDispersionCorrection(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid dispersion \"{}\" in input file.\n"
+            "Possible values are: true, false, on, off",
+            lineElements[2]
+        ));
 }
 
 /**

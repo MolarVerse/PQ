@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "inputFileParserGeneral.hpp"
+#include "generalInputParser.hpp"
 
 #include <algorithm>    // for ranges::remove
 #include <format>       // for format
@@ -37,6 +37,10 @@
 #include "stringUtilities.hpp"         // for toLowerCopy
 
 using namespace input;
+using namespace settings;
+using namespace utilities;
+using namespace customException;
+using namespace engine;
 
 /**
  * @brief Construct a new Input File Parser General:: Input File Parser General
@@ -47,17 +51,23 @@ using namespace input;
  *
  * @param engine
  */
-InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine)
-    : InputFileParser(engine)
+GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("jobtype"),
-        bind_front(&InputFileParserGeneral::parseJobType, this),
+        bind_front(&GeneralInputParser::parseJobType, this),
         true
     );
+
     addKeyword(
         std::string("dim"),
-        bind_front(&InputFileParserGeneral::parseDimensionality, this),
+        bind_front(&GeneralInputParser::parseDimensionality, this),
+        false
+    );
+
+    addKeyword(
+        std::string("floating_point_type"),
+        bind_front(&GeneralInputParser::parseFloatingPointType, this),
         false
     );
 }
@@ -66,7 +76,7 @@ InputFileParserGeneral::InputFileParserGeneral(engine::Engine &engine)
  * @brief parse jobtype of simulation left empty just to not parse it again
  * after engine is generated
  */
-void InputFileParserGeneral::parseJobType(
+void GeneralInputParser::parseJobType(
     const std::vector<std::string> &,
     const size_t
 )
@@ -85,45 +95,46 @@ void InputFileParserGeneral::parseJobType(
  * @param lineNumber
  * @param engine
  *
- * @throw customException::InputFileException if jobtype is not recognised
+ * @throw InputFileException if jobtype is not recognised
  */
-void InputFileParserGeneral::parseJobTypeForEngine(
-    const std::vector<std::string>  &lineElements,
-    const size_t                     lineNumber,
-    std::unique_ptr<engine::Engine> &engine
+void GeneralInputParser::parseJobTypeForEngine(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber,
+    std::unique_ptr<Engine>        &engine
 )
 {
+    using enum JobType;
     checkCommand(lineElements, lineNumber);
 
-    const auto jobtype = utilities::toLowerCopy(lineElements[2]);
+    const auto jobtype = toLowerCopy(lineElements[2]);
 
     if (jobtype == "mm-opt")
     {
-        settings::Settings::setJobtype("MMOPT");
-        engine.reset(new engine::OptEngine());
+        Settings::setJobtype(MM_OPT);
+        engine.reset(new OptEngine());
     }
     else if (jobtype == "mm-md")
     {
-        settings::Settings::setJobtype("MMMD");
-        engine.reset(new engine::MMMDEngine());
+        Settings::setJobtype(MM_MD);
+        engine.reset(new MMMDEngine());
     }
     else if (jobtype == "qm-md")
     {
-        settings::Settings::setJobtype("QMMD");
-        engine.reset(new engine::QMMDEngine());
+        Settings::setJobtype(QM_MD);
+        engine.reset(new QMMDEngine());
     }
     else if (jobtype == "qmmm-md")
     {
-        settings::Settings::setJobtype("QMMMMD");
-        engine.reset(new engine::QMMMMDEngine());
+        Settings::setJobtype(QMMM_MD);
+        engine.reset(new QMMMMDEngine());
     }
     else if (jobtype == "qm-rpmd")
     {
-        settings::Settings::setJobtype("Ring_Polymer_QMMD");
-        engine.reset(new engine::RingPolymerQMMDEngine());
+        Settings::setJobtype(RING_POLYMER_QM_MD);
+        engine.reset(new RingPolymerQMMDEngine());
     }
     else
-        throw customException::InputFileException(format(
+        throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
             "- mm-md\n"
@@ -143,28 +154,65 @@ void InputFileParserGeneral::parseJobTypeForEngine(
  * @param lineElements
  * @param lineNumber
  *
- * @throw customException::InputFileException if dimensionality is not
+ * @throw InputFileException if dimensionality is not
  * recognised
  */
-void InputFileParserGeneral::parseDimensionality(
+void GeneralInputParser::parseDimensionality(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    auto dimensionalityString = utilities::toLowerCopy(lineElements[2]);
+    auto dimensionalityString = toLowerCopy(lineElements[2]);
 
     std::erase(dimensionalityString, 'd');
 
     const auto dimensionality = std::stoi(dimensionalityString);
 
     if (dimensionality == 3)
-        settings::Settings::setDimensionality(size_t(dimensionality));
+        Settings::setDimensionality(size_t(dimensionality));
     else
-        throw customException::InputFileException(format(
+        throw InputFileException(format(
             "Invalid dimensionality \"{}\" in input file\n"
             "Possible values are: 3, 3d",
+            lineElements[2]
+        ));
+}
+
+/**
+ * @brief parse floating point type of simulation
+ *
+ * @details Possible options are:
+ * 1) float
+ * 2) double
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throw InputFileException if floating point type is not
+ * recognised
+ */
+void GeneralInputParser::parseFloatingPointType(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum FPType;
+    checkCommand(lineElements, lineNumber);
+
+    const auto floatingPointType = toLowerCopy(lineElements[2]);
+
+    if (floatingPointType == "float")
+        Settings::setFloatingPointType(FLOAT);
+
+    else if (floatingPointType == "double")
+        Settings::setFloatingPointType(DOUBLE);
+
+    else
+        throw InputFileException(format(
+            "Invalid floating point type \"{}\" in input file\n"
+            "Possible values are: float, double",
             lineElements[2]
         ));
 }

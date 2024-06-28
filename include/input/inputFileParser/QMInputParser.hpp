@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_QM_HPP_
+#ifndef _QM_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_QM_HPP_
+#define _QM_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -49,11 +49,12 @@ namespace input
         void parseQMScriptFullPath(const pq::strings &, const size_t);
         void parseQMLoopTimeLimit(const pq::strings &, const size_t);
 
-        void parseMaceModelSize(const pq::strings &, const size_t);
+        void parseDispersion(const pq::strings &, const size_t);
 
+        void parseMaceModelSize(const pq::strings &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_QM_HPP_
+#endif   // _QM_INPUT_PARSER_HPP_

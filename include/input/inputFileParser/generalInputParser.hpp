@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_GENERAL_HPP_
+#ifndef _GENERAL_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_GENERAL_HPP_
+#define _GENERAL_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <memory>    // for unique_ptr
@@ -30,33 +30,28 @@
 #include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
+#include "typeAliases.hpp"       // for pq::strings, pq::Engine
 
 namespace input
 {
-    using strings = std::vector<std::string>;
-
     /**
-     * @class InputFileParserGeneral inherits from InputFileParser
+     * @class GeneralInputParser inherits from InputFileParser
      *
      * @brief Parses the general commands in the input file
      *
      */
-    class InputFileParserGeneral : public InputFileParser
+    class GeneralInputParser : public InputFileParser
     {
        public:
-        explicit InputFileParserGeneral(engine::Engine &);
+        explicit GeneralInputParser(pq::Engine &);
 
-        void parseJobType(const strings &, const size_t);
-        void parseDimensionality(const strings &, const size_t);
+        void parseJobType(const pq::strings &, const size_t);
+        void parseDimensionality(const pq::strings &, const size_t);
+        void parseFloatingPointType(const pq::strings &, const size_t);
 
-        void parseJobTypeForEngine(const strings &, const size_t, std::unique_ptr<engine::Engine> &);
+        void parseJobTypeForEngine(const pq::strings &, const size_t, pq::UniqueEngine &);
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_GENERAL_HPP_
+#endif   // _GENERAL_INPUT_PARSER_HPP_

@@ -5,7 +5,6 @@ add_library(inputFileParser
     inputFileParserConstraints.cpp
     inputFileParserCoulombLongRange.cpp
     inputFileParserForceField.cpp
-    inputFileParserGeneral.cpp
     inputFileParserIntegrator.cpp
     inputFileParserManostat.cpp
     inputFileParserNonCoulomb.cpp
@@ -20,8 +19,9 @@ add_library(inputFileParser
     inputFileParserFiles.cpp
 
     convergenceInputParser.cpp
+    generalInputParser.cpp
     optInputParser.cpp
-    QMParser.cpp
+    QMInputParser.cpp
 )
 
 target_include_directories(inputFileParser
