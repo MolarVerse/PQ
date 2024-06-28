@@ -37,9 +37,6 @@ namespace QM
        public:
         explicit MaceRunner(const std::string &, const std::string &);
         ~MaceRunner() override = default;
-
-        void execute(pq::SimBox &) override;
-        void collectData(pq::SimBox &, pq::PhysicalData &) override;
     };
 }   // namespace QM
 

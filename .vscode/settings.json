@@ -209,6 +209,7 @@
         "USERINPUTEXCEPTIONWARNING",
         "Verlet",
         "Virial",
+        "voigt",
         "Waals"
     ],
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
