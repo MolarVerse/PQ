@@ -28,4 +28,7 @@ install(TARGETS QM
 )
 
 add_subdirectory(external)
-add_subdirectory(ase)
+
+if(BUILD_WITH_ASE)
+    add_subdirectory(ase)
+endif()

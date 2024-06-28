@@ -61,8 +61,14 @@ target_link_libraries(engine
     optimization
     QM
     externalQM
-    aseQM
 )
+
+if(BUILD_WITH_ASE)
+    target_link_libraries(engine
+        PUBLIC
+        aseQM
+    )
+endif()
 
 if(BUILD_WITH_KOKKOS)
     target_link_libraries(engine
