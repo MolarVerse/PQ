@@ -113,7 +113,8 @@ namespace output
 
 namespace engine
 {
-    class Engine;   // forward declaration
+    class Engine;       // forward declaration
+    class QMMDEngine;   // forward declaration
 
 }   // namespace engine
 
@@ -135,8 +136,6 @@ namespace pq
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
     using tensor3D      = linearAlgebra::tensor3D;
 
-    using Engine = engine::Engine;
-
     using Virial          = virial::Virial;
     using VirialMolecular = virial::VirialMolecular;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
@@ -148,9 +147,16 @@ namespace pq
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
 
-    /**************************
-     * potential namespace    *
-     **************************/
+    /********************
+     * engine namespace *
+     ********************/
+
+    using Engine     = engine::Engine;
+    using QMMDEngine = engine::QMMDEngine;
+
+    /***********************
+     * potential namespace *
+     ***********************/
 
     using Potential     = potential::Potential;
     using BruteForcePot = potential::PotentialBruteForce;

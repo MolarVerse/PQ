@@ -36,13 +36,17 @@
 
 using setup::QMSetup;
 using namespace settings;
+using namespace engine;
+using namespace QM;
+using namespace utilities;
+using namespace customException;
 
 /**
  * @brief wrapper to build QMSetup object and call setup
  *
  * @param engine
  */
-void setup::setupQM(engine::Engine &engine)
+void setup::setupQM(Engine &engine)
 {
     if (!Settings::isQMActivated())
         return;
@@ -50,9 +54,16 @@ void setup::setupQM(engine::Engine &engine)
     engine.getStdoutOutput().writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
-    QMSetup qmSetup(dynamic_cast<engine::QMMDEngine &>(engine));
+    QMSetup qmSetup(dynamic_cast<QMMDEngine &>(engine));
     qmSetup.setup();
 }
+
+/**
+ * @brief constructor
+ *
+ * @param engine
+ */
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine){};
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -76,9 +87,7 @@ void QMSetup::setup()
  */
 void QMSetup::setupQMMethod()
 {
-    const auto method = QMSettings::getQMMethod();
-
-    _engine.setQMRunner(method);
+    _engine.setQMRunner(QMSettings::getQMMethod());
 }
 
 /**
@@ -96,13 +105,13 @@ void QMSetup::setupQMMethod()
 void QMSetup::setupQMScript() const
 {
     auto &qmRunner         = *_engine.getQMRunner();
-    auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
+    auto &externalQMRunner = dynamic_cast<ExternalQMRunner &>(qmRunner);
 
     const auto singularityString = externalQMRunner.getSingularity();
     const auto staticBuildString = externalQMRunner.getStaticBuild();
 
-    const auto singularity = utilities::toLowerCopy(singularityString) == "on";
-    const auto staticBuild = utilities::toLowerCopy(staticBuildString) == "on";
+    const auto singularity = toLowerCopy(singularityString) == "on";
+    const auto staticBuild = toLowerCopy(staticBuildString) == "on";
 
     const auto qmScript        = QMSettings::getQMScript();
     const auto isQMScriptEmpty = qmScript.empty();
@@ -114,7 +123,7 @@ void QMSetup::setupQMScript() const
     {
         if (isQMScriptFullPathEmpty)
 
-            throw customException::QMRunnerException(
+            throw QMRunnerException(
                 R"(
 You are using at least one of these settings: i) singularity build or/and ii) static build of PQ.
 Therefore the general setting with "qm_script" to set only the name of the executable is not
@@ -128,7 +137,7 @@ full/relative path to it. For more information please refer to the documentation
 
         else if (!isQMScriptEmpty)
 
-            throw customException::QMRunnerException(
+            throw QMRunnerException(
                 R"(
 You have set both "qm_script" and "qm_script_full_path" in the input file. Please use only one the full
 path option as you are working either with a singularity build or a static build. For more information
@@ -140,13 +149,14 @@ please refer to the documentation.
         {
             // setting script path to empty string to avoid errors
             externalQMRunner.setScriptPath("");
+
             // overwriting qm_script with full path
             QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
     }
     else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
 
-        throw customException::InputFileException(
+        throw InputFileException(
             "No qm_script provided. Please provide a qm_script in the input "
             "file."
         );
@@ -155,12 +165,13 @@ please refer to the documentation.
     {
         // setting script path to empty string to avoid errors
         externalQMRunner.setScriptPath("");
+
         // overwriting qm_script with full path
         QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
 
-        throw customException::InputFileException(
+        throw InputFileException(
             R"(
 You have set both "qm_script" and "qm_script_full_path" in the input file. They are mutually exclusive.
 Please use only one of them. For more information please refer to the documentation.
@@ -174,9 +185,11 @@ Please use only one of them. For more information please refer to the documentat
  */
 void QMSetup::setupCoulombRadiusCutOff() const
 {
+    using enum JobType;
+
     const auto jobType = Settings::getJobtype();
 
-    if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
+    if (jobType == QM_MD || jobType == RING_POLYMER_QM_MD)
         PotentialSettings::setCoulombRadiusCutOff(0.0);
 }
 
