@@ -48,7 +48,8 @@ MaceRunner::MaceRunner(
     {
         const py::module_ calculators = py::module_::import("mace.calculators");
 
-        py::dict calculatorArgs;
+        const py::dict calculatorArgs;
+
         calculatorArgs["model"]         = model.c_str();
         calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
         calculatorArgs["default_dtype"] = fpType.c_str();

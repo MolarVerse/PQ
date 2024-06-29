@@ -116,7 +116,7 @@ void QMInputParser::parseQMMethod(
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
             "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
-            "mace_off, mace_ani, mace_anicc",
+            "mace_off",
             lineElements[2]
         ));
 }
@@ -253,14 +253,15 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
         QMSettings::setMaceModelType(MACE_OFF);
 
     else if ("mace_anicc" == model || "mace_ani" == model)
-        QMSettings::setMaceModelType(MACE_ANICC);
+        throw InputFileException(std::format(
+            "The mace ani model is not supported in this version of PQ.\n"
+        ));
 
     else
     {
         throw InputFileException(std::format(
             "Invalid mace type qm_method \"{}\" in input file.\n"
-            "Possible values are: mace (mace_mp), mace_off, mace_ani "
-            "(mace_anicc)",
+            "Possible values are: mace (mace_mp), mace_off",
             model
         ));
     }

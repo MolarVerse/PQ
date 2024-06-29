@@ -80,7 +80,7 @@ namespace settings
     {
        private:
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
-        static inline MaceModelSize _maceModelSize = MaceModelSize::LARGE;
+        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
 
         static inline std::string _qmScript         = "";

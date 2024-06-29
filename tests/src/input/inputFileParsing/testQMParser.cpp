@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
-        "mace_off, mace_ani, mace_anicc"
+        "mace_off"
     )
 }
 
@@ -84,19 +84,23 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     EXPECT_EQ(QMSettings::getQMMethod(), MACE);
     EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
 
-    parser.parseMaceQMMethod("mace_ani");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_ANICC);
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("mace_ani"),
+        InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    )
 
-    parser.parseMaceQMMethod("mace_anicc");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_ANICC);
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("mace_anicc"),
+        InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    )
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("notAMaceModel"),
         InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
-        "Possible values are: mace (mace_mp), mace_off, mace_ani (mace_anicc)"
+        "Possible values are: mace (mace_mp), mace_off"
     )
 }
 

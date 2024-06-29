@@ -58,14 +58,13 @@ namespace QM
         ~ASEQMRunner() override = default;
 
         void run(pq::SimBox &, pq::PhysicalData &) override;
-        void execute(const pq::SimBox &);
+        void buildAseAtoms(const pq::SimBox &);
+        void execute();
 
         void collectData(pq::SimBox &, pq::PhysicalData &) const;
         void collectForces(pq::SimBox &) const;
         void collectEnergy(pq::PhysicalData &) const;
         void collectStress(pq::PhysicalData &) const;
-
-        void buildAseAtoms(const pq::SimBox &);
 
         // clang-format off
         [[nodiscard]] py::array           asePositions(const pq::SimBox &) const;

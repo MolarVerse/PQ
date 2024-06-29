@@ -50,7 +50,18 @@ ASEQMRunner::ASEQMRunner()
 {
     try
     {
+        const auto warningsModule = py::module_::import("warnings");
+        warningsModule.attr("filterwarnings")("ignore");
+
+        const auto ioModule      = py::module_::import("io");
+        const auto sysModule     = py::module_::import("sys");
+        auto       old_stdout    = sysModule.attr("stdout");
+        const auto mystdout      = ioModule.attr("StringIO")();
+        sysModule.attr("stdout") = mystdout;
+
         _atomsModule = py::module_::import("ase.atoms");
+
+        sysModule.attr("stdout") = old_stdout;
     }
     catch (const py::error_already_set &)
     {
@@ -72,8 +83,17 @@ void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    execute(simBox);
+    startTimingsSection("Build ASE Atoms");
+    buildAseAtoms(simBox);
+    stopTimingsSection("Build ASE Atoms");
+
+    startTimingsSection("Execute ASE QM");
+    execute();
+    stopTimingsSection("Execute ASE QM");
+
+    startTimingsSection("Collect ASE Data");
     collectData(simBox, physicalData);
+    stopTimingsSection("Collect ASE Data");
 
     timeoutThread.request_stop();
 }
@@ -85,14 +105,13 @@ void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
  *
  * @throw py::error_already_set if the execution of the ASE QM calculation fails
  */
-void ASEQMRunner::execute(const SimulationBox &simBox)
+void ASEQMRunner::execute()
 {
     try
     {
-        buildAseAtoms(simBox);
         _atoms.attr("set_calculator")(_calculator);
 
-        const auto forces = _atoms.attr("get_forces")().cast<array_d>();
+        const auto forces = _atoms.attr("get_forces")();
         const auto energy = _atoms.attr("get_potential_energy")();
         const auto stress = _atoms.attr("get_stress")(py::arg("voigt") = false);
 
@@ -173,11 +192,10 @@ void ASEQMRunner::collectStress(PhysicalData &physicalData) const
 
     try
     {
-        const auto stress = _stress.unchecked<1>();
+        const auto stress = _stress.unchecked<2>();
 
         for (size_t i = 0; i < 3; ++i)
-            for (size_t j = 0; j < 3; ++j)
-                stress_[j][i] = stress[ssize_t(i * 3 + j)];
+            for (size_t j = 0; j < 3; ++j) stress_[j][i] = stress(i, j);
     }
     catch (const py::error_already_set &)
     {
@@ -241,7 +259,7 @@ py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
 
     try
     {
-        auto positions_array = array_d(ssize_t(nAtoms), &pos[0]);
+        auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
 
         const auto positions_array_reshaped = py::array(py::buffer_info(
             positions_array.mutable_data(),            // Pointer to data

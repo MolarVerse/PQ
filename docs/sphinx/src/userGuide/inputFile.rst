@@ -119,6 +119,22 @@ NStep
 
 The :code:`ǹstep` keyword sets the total amount of MD steps to be performed within the next simulation run.
 
+FLOATING_POINT_TYPE
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    floating_point_type = {string} -> "double"
+
+With the :code:`floating_point_type` keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.
+
+Possible options are:
+
+   1) **double** (default) - double precision floating point numbers are used
+
+   2) **float** - single precision floating point numbers are used
+
 Integrator
 ==========
 
@@ -1035,8 +1051,6 @@ Possible options are:
    4) **mace** - same as **mace_mp**
 
    5) **mace_off**
-
-   6) **mace_ani** - same as **mace_anicc**
 
 QM_SCRIPT
 =========
