@@ -141,7 +141,6 @@ namespace pq
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
 
-    using UniqueEngine       = std::unique_ptr<Engine>;
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
@@ -153,6 +152,8 @@ namespace pq
 
     using Engine     = engine::Engine;
     using QMMDEngine = engine::QMMDEngine;
+
+    using UniqueEngine = std::unique_ptr<Engine>;
 
     /***********************
      * potential namespace *
