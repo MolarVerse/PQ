@@ -129,6 +129,7 @@
         "Berendsen",
         "CELLLISTEXCEPTION",
         "chrg",
+        "Coeffs",
         "COMPILETIMEEXCEPTION",
         "COUL",
         "coulombic",

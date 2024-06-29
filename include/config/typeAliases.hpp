@@ -122,6 +122,11 @@ namespace pq
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
+    using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
+    using stlVector4d     = std::vector<stlVector3d>;
+    using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
+    using stlVector4dBool = std::vector<stlVector3dBool>;
+
     using ParseFunc = std::function<void(const strings &, const size_t)>;
 
     using Vec3D         = linearAlgebra::Vec3D;

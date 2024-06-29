@@ -30,21 +30,12 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::guffdat
 {
-    using c_ul     = const size_t;
-    using vector4d = std::vector<std::vector<std::vector<std::vector<double>>>>;
-    using vector4dBool =
-        std::vector<std::vector<std::vector<std::vector<bool>>>>;
-
-    void               readGuffDat(engine::Engine &);
-    [[nodiscard]] bool isNeeded(engine::Engine &);
+    void               readGuffDat(pq::Engine &);
+    [[nodiscard]] bool isNeeded(pq::Engine &);
 
     /**
      * @class GuffDatReader
@@ -58,16 +49,16 @@ namespace input::guffdat
         size_t      _lineNumber = 1;
         std::string _fileName   = defaults::_GUFF_FILE_DEFAULT_;
 
-        vector4d     _guffCoulombCoefficients;
-        vector4dBool _isGuffPairSet;
+        pq::stlVector4d     _guffCoulombCoeffs;
+        pq::stlVector4dBool _isGuffPairSet;
 
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit GuffDatReader(engine::Engine &engine);
+        explicit GuffDatReader(pq::Engine &engine);
 
         void setupGuffMaps();
-        void parseLine(const std::vector<std::string> &lineCommands);
+        void parseLine(const pq::strings &lineCommands);
         void read();
         void postProcessSetup();
         void calculatePartialCharges();
@@ -118,44 +109,28 @@ namespace input::guffdat
          * standard setters *
          ********************/
 
-        void setFilename(const std::string_view &filename)
-        {
-            _fileName = filename;
-        }
+        void setFilename(const std::string_view &filename);
         void setGuffCoulombCoefficients(
-            c_ul         molType1,
-            c_ul         molType2,
-            c_ul         atomType1,
-            c_ul         atomType2,
+            const size_t molType1,
+            const size_t molType2,
+            const size_t atomType1,
+            const size_t atomType2,
             const double coefficient
-        )
-        {
-            _guffCoulombCoefficients[molType1][molType2][atomType1][atomType2] =
-                coefficient;
-        }
+        );
         void setIsGuffPairSet(
-            c_ul       molType1,
-            c_ul       molType2,
-            c_ul       atomType1,
-            c_ul       atomType2,
-            const bool isSet
-        )
-        {
-            _isGuffPairSet[molType1][molType2][atomType1][atomType2] = isSet;
-        }
+            const size_t molType1,
+            const size_t molType2,
+            const size_t atomType1,
+            const size_t atomType2,
+            const bool   isSet
+        );
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] vector4d &getGuffCoulombCoefficients()
-        {
-            return _guffCoulombCoefficients;
-        }
-        [[nodiscard]] vector4dBool &getIsGuffPairSet()
-        {
-            return _isGuffPairSet;
-        }
+        [[nodiscard]] pq::stlVector4d     &getGuffCoulombCoefficients();
+        [[nodiscard]] pq::stlVector4dBool &getIsGuffPairSet();
     };
 
 }   // namespace input::guffdat
