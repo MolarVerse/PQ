@@ -45,8 +45,9 @@ InputFileParserTimings::InputFileParserTimings(engine::Engine &engine)
     addKeyword(
         std::string("timestep"),
         bind_front(&InputFileParserTimings::parseTimeStep, this),
-        true
+        false
     );
+
     addKeyword(
         std::string("nstep"),
         bind_front(&InputFileParserTimings::parseNumberOfSteps, this),

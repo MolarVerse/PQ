@@ -103,7 +103,7 @@ rcoulomb                    false
 density                     false
 init_velocities             false
 
-timestep                    true
+timestep                    false
 nstep                       true
 
 virial                      false

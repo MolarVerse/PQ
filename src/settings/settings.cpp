@@ -29,6 +29,28 @@
 using namespace settings;
 using namespace utilities;
 
+/**
+ * @brief convert jobtype to string representation
+ *
+ * @param jobtype
+ */
+std::string settings::string(const JobType jobtype)
+{
+    switch (jobtype)
+    {
+        using enum JobType;
+
+        case MM_MD: return "MM_MD";
+        case QM_MD: return "QM_MD";
+        case QMMM_MD: return "QMMM_MD";
+        case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
+        case MM_OPT: return "MM_OPT";
+        case NONE: return "NONE";
+
+        default: return "NONE";
+    }
+}
+
 /***************************
  *                         *
  * standard setter methods *
