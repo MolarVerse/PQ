@@ -255,9 +255,9 @@ void QMSettings::setQMScriptFullPath(const std::string_view &script)
  * @brief sets if the dispersion correction should be used
  *
  */
-void QMSettings::setUseDispersionCorrection(const bool useDispersionCorrection)
+void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
 {
-    _useDispersionCorrection = useDispersionCorrection;
+    _useDispersionCorrection = useDispersionCorr;
 }
 
 /**
@@ -318,7 +318,7 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  *
  * @return bool
  */
-bool QMSettings::useDispersionCorrection() { return _useDispersionCorrection; }
+bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
 
 /**
  * @brief returns the qmLoopTimeLimit

@@ -186,14 +186,43 @@ void QMSetup::setupCoulombRadiusCutOff() const
  */
 void QMSetup::setupWriteInfo() const
 {
+    using enum QMMethod;
+
+    auto &logOutput = _engine.getLogOutput();
+
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
 
-    const auto qmScript        = QMSettings::getQMScript();
-    const auto qmScriptMessage = std::format("QM script: {}", qmScript);
-
-    _engine.getLogOutput().writeSetupInfo(qmRunnerMessage);
+    logOutput.writeSetupInfo(qmRunnerMessage);
+    logOutput.writeEmptyLine();
 
     if (QMSettings::isExternalQMRunner())
-        _engine.getLogOutput().writeSetupInfo(qmScriptMessage);
+    {
+        const auto qmScript        = QMSettings::getQMScript();
+        const auto qmScriptMessage = std::format("QM script: {}", qmScript);
+
+        logOutput.writeSetupInfo(qmScriptMessage);
+    }
+
+    if (qmMethod == MACE)
+    {
+        const auto modelType = QMSettings::getMaceModelType();
+        const auto modelSize = QMSettings::getMaceModelSize();
+        const auto fp        = Settings::getFloatingPointPybindString();
+        const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
+
+        // clang-format off
+        const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
+        const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
+        const auto fpMsg        = std::format("Floating point type:   {}", fp);
+        const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
+        // clang-format on
+
+        logOutput.writeSetupInfo(modelTypeMsg);
+        logOutput.writeSetupInfo(modelSizeMsg);
+        logOutput.writeSetupInfo(fpMsg);
+        logOutput.writeSetupInfo(dispCorrMsg);
+    }
+
+    logOutput.writeEmptyLine();
 }

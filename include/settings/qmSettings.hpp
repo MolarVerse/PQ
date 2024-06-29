@@ -128,7 +128,7 @@ namespace settings
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
 
-        [[nodiscard]] static bool useDispersionCorrection();
+        [[nodiscard]] static bool useDispersionCorr();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

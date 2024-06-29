@@ -135,7 +135,7 @@ void QMMDEngine::setMaceQMRunner()
 #ifdef WITH_ASE
     const auto modelType = string(QMSettings::getMaceModelType());
     const auto modelPath = QMSettings::getMaceModelPath();
-    const auto useDFTD   = QMSettings::useDispersionCorrection();
+    const auto useDFTD   = QMSettings::useDispersionCorr();
     const auto fpType    = Settings::getFloatingPointPybindString();
 
     auto maceModel = string(QMSettings::getMaceModelSize());

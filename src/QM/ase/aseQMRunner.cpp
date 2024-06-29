@@ -33,11 +33,6 @@ using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
 
-namespace
-{
-    const py::scoped_interpreter guard{};
-}
-
 using array_d = py::array_t<double>;
 using array_i = py::array_t<int>;
 

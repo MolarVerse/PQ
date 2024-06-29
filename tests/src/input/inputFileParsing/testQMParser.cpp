@@ -133,20 +133,20 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 
 TEST_F(TestInputFileReader, parseDispersion)
 {
-    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     auto parser = QMInputParser(*_engine);
     parser.parseDispersion({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorrection());
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
 
     parser.parseDispersion({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     parser.parseDispersion({"dispersion", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorrection());
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
 
     parser.parseDispersion({"dispersion", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorrection());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     ASSERT_THROW_MSG(
         parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
