@@ -152,6 +152,12 @@ of Å and degrees. The following lines contain the element symbol, a running ind
 according to the :ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. 
 The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
+.. attention:: 
+
+    A ``.rst`` file needs to be provided by the user for the first run of the simulation alongside the :ref:`Input File <inputFile>`. 
+    Furthermore, this first ``.rst`` file has to contain all atoms of a moltype in the same order as provided in the 
+    :ref:`moldescriptorFile` setup file.
+
 .. _velocityFile:
 
 *************
