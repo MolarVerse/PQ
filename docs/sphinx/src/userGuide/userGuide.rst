@@ -8,9 +8,8 @@ This page explains in detail how to set up and use the PQ application. Please re
 
 .. toctree::
     :maxdepth: 1
-    :glob:
 
-    generalUsage.md
-    inputFile.md
-    outputFiles.md
-    setupFiles.md
+    generalUsage.rst
+    inputFile.rst
+    setupFiles.rst
+    outputFiles.rst
