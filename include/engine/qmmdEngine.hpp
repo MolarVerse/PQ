@@ -50,6 +50,7 @@ namespace engine
         void takeStep() override;
 
         void setQMRunner(const settings::QMMethod method);
+        void setMaceQMRunner();
 
         [[nodiscard]] QM::QMRunner *getQMRunner() const;
     };

@@ -20,19 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "internalQMRunner.hpp"
+#ifndef _MACE_RUNNER_HPP_
 
-#include <thread>
+#define _MACE_RUNNER_HPP_
 
-using QM::InternalQMRunner;
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-void InternalQMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
+namespace QM
 {
-    std::jthread timeoutThread{[this](const std::stop_token stopToken)
-                               { throwAfterTimeout(stopToken); }};
+    /**
+     * @brief MaceRunner inherits from ASEQMRunner
+     *
+     */
+    class __attribute__((visibility("default"))) MaceRunner : public ASEQMRunner
+    {
+       public:
+        ~MaceRunner() override = default;
+        
+        explicit MaceRunner(
+            const std::string& modelType,
+            const std::string& model,
+            const std::string& fpType,
+            const bool         dispersion
+        );
+    };
+}   // namespace QM
 
-    execute(simBox);
-    collectData(simBox, physicalData);
-
-    timeoutThread.request_stop();
-}
+#endif   // _MACE_RUNNER_HPP_

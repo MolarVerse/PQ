@@ -168,9 +168,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
             if (scale)
             {
                 nonCoulombEnergyLocal *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
-                nonCoulombForce *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
+                    settings::PotentialSettings::getScale14VDW();
+                nonCoulombForce *= settings::PotentialSettings::getScale14VDW();
             }
 
             nonCoulombEnergy  = nonCoulombEnergyLocal;

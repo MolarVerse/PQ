@@ -5,7 +5,6 @@ set(source_files
     testParserForceField.cpp
     testParserCelllist.cpp
     testParserConstraints.cpp
-    testParserGeneral.cpp
     testParserIntegrator.cpp
     testParserManostat.cpp
     testParserOutput.cpp
@@ -19,6 +18,7 @@ set(source_files
     testParserRingPolymer.cpp
 
     testConvergenceParser.cpp
+    testGeneralParser.cpp
     testOptParser.cpp
     testQMParser.cpp
 )

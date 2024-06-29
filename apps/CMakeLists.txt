@@ -21,6 +21,14 @@ if(BUILD_WITH_MPI)
   )
 endif()
 
+if(BUILD_WITH_PYBIND11)
+  target_link_libraries(PQ
+    PRIVATE
+    pybind11::embed
+    pybind11::module
+  )
+endif()
+
 install(TARGETS PQ
   DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )

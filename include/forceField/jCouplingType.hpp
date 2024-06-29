@@ -28,6 +28,9 @@
 
 namespace forceField
 {
+    class JCouplingType;   // forward declaration
+
+    bool operator==(const JCouplingType &lhs, const JCouplingType &rhs);
 
     /**
      * @class JCouplingType
@@ -61,37 +64,28 @@ namespace forceField
             const double b,
             const double c,
             const double phaseShift
-        )
-            : _id(id),
-              _J0(J0),
-              _forceConstant(forceConstant),
-              _a(a),
-              _b(b),
-              _c(c),
-              _phaseShift(phaseShift)
-        {
-        }
+        );
 
-        [[nodiscard]] bool operator==(const JCouplingType &other) const;
+        friend bool operator==(const JCouplingType &, const JCouplingType &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const { return _id; }
-        [[nodiscard]] double getJ0() const { return _J0; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
-        [[nodiscard]] double getA() const { return _a; }
-        [[nodiscard]] double getB() const { return _b; }
-        [[nodiscard]] double getC() const { return _c; }
-        [[nodiscard]] double getPhaseShift() const { return _phaseShift; }
+        [[nodiscard]] size_t getId() const;
+        [[nodiscard]] double getJ0() const;
+        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] double getA() const;
+        [[nodiscard]] double getB() const;
+        [[nodiscard]] double getC() const;
+        [[nodiscard]] double getPhaseShift() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean) { _upperSymmetry = boolean; }
-        void setLowerSymmetry(const bool boolean) { _lowerSymmetry = boolean; }
+        void setUpperSymmetry(const bool boolean);
+        void setLowerSymmetry(const bool boolean);
     };
 
 }   // namespace forceField

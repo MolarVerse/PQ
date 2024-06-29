@@ -7,7 +7,8 @@ FetchContent_Declare(
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG master
     GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE)
+    GIT_PROGRESS TRUE
+)
 
 # note: To disable eigen tests,
 # you should put this code in a add_subdirectory to avoid to change

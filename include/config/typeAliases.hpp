@@ -56,6 +56,8 @@ namespace potential
 {
     class Potential;             // forward declaration
     class PotentialBruteForce;   // forward declaration
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
 
 }   // namespace potential
 
@@ -108,10 +110,25 @@ namespace output
     class RingPolymerEnergyOutput;
 
 }   // namespace output
+
+namespace engine
+{
+    class Engine;       // forward declaration
+    class QMMDEngine;   // forward declaration
+
+}   // namespace engine
+
 namespace pq
 {
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
+
+    using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
+    using stlVector4d     = std::vector<stlVector3d>;
+    using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
+    using stlVector4dBool = std::vector<stlVector3dBool>;
+
+    using ParseFunc = std::function<void(const strings &, const size_t)>;
 
     using Vec3D         = linearAlgebra::Vec3D;
     using Vec3DPair     = std::pair<Vec3D, Vec3D>;
@@ -121,8 +138,6 @@ namespace pq
 
     using Virial          = virial::Virial;
     using VirialMolecular = virial::VirialMolecular;
-    using Potential       = potential::Potential;
-    using BruteForcePot   = potential::PotentialBruteForce;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
 
@@ -130,7 +145,28 @@ namespace pq
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
-    using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    /********************
+     * engine namespace *
+     ********************/
+
+    using Engine     = engine::Engine;
+    using QMMDEngine = engine::QMMDEngine;
+
+    using UniqueEngine = std::unique_ptr<Engine>;
+
+    /***********************
+     * potential namespace *
+     ***********************/
+
+    using Potential     = potential::Potential;
+    using BruteForcePot = potential::PotentialBruteForce;
+    using CoulombPot    = potential::CoulombPotential;
+    using NonCoulombPot = potential::NonCoulombPotential;
+
+    using SharedPotential     = std::shared_ptr<potential::Potential>;
+    using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
+    using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
 
     /**************************
      * constraints namespace *

@@ -119,6 +119,22 @@ NStep
 
 The :code:`ǹstep` keyword sets the total amount of MD steps to be performed within the next simulation run.
 
+FLOATING_POINT_TYPE
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    floating_point_type = {string} -> "double"
+
+With the :code:`floating_point_type` keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.
+
+Possible options are:
+
+   1) **double** (default) - double precision floating point numbers are used
+
+   2) **float** - single precision floating point numbers are used
+
 Integrator
 ==========
 
@@ -1032,6 +1048,10 @@ Possible options are:
 
    3) **turbomole**
 
+   4) **mace** - same as **mace_mp**
+
+   5) **mace_off**
+
 QM_SCRIPT
 =========
 
@@ -1054,7 +1074,6 @@ QM_SCRIPT_FULL_PATH
    This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
 
-
 With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_LOOP_TIME_LIMIT
@@ -1067,7 +1086,35 @@ QM_LOOP_TIME_LIMIT
 
 With the :code:`qm_loop_time_limit` keyword the user can specify the loop time limit in :code:`s` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
 
+DISPERSION_CORRECTION
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    dispersion = {bool} -> false
+
+With the :code:`dispersion` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
+
 .. _ringPolymerMDKeys:
+
+MACE_MODEL_SIZE
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_model_size = {string} -> "medium"
+
+With the :code:`mace_model_size` keyword the user can specify the size of the MACE model for the QM calculations.
+
+Possible options are:
+
+   1) **small** (default) - small MACE model
+
+   2) **medium** - medium MACE model
+
+   3) **large** - large MACE model
 
 ********************
 Ring Polymer MD Keys

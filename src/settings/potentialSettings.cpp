@@ -193,10 +193,7 @@ double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
  *
  * @return double
  */
-double PotentialSettings::getScale14VanDerWaals()
-{
-    return _scale14VanDerWaals;
-}
+double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
 
 /**
  * @brief get the Wolf parameter

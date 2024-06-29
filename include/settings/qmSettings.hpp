@@ -46,18 +46,29 @@ namespace settings
     };
 
     /**
-     * @class enum MaceModel
+     * @class enum MaceModelSize
      *
      */
-    enum class MaceModel : size_t
+    enum class MaceModelSize : size_t
     {
         LARGE,
         MEDIUM,
         SMALL
     };
 
+    /**
+     * @class enum MaceModelType
+     */
+    enum class MaceModelType : size_t
+    {
+        MACE_MP,
+        MACE_OFF,
+        MACE_ANICC
+    };
+
     std::string string(const QMMethod method);
-    std::string string(const MaceModel model);
+    std::string string(const MaceModelSize model);
+    std::string string(const MaceModelType model);
 
     /**
      * @class QMSettings
@@ -68,15 +79,19 @@ namespace settings
     class QMSettings
     {
        private:
-        static inline QMMethod    _qmMethod         = QMMethod::NONE;
+        static inline QMMethod      _qmMethod      = QMMethod::NONE;
+        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
+        static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
+        static inline std::string _maceModelPath    = "";
+
+        static inline bool _useDispersionCorrection = false;
 
         // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
         // clang-format on
-
-        static inline MaceModel _maceModel = MaceModel::LARGE;
 
        public:
         [[nodiscard]] static bool isExternalQMRunner();
@@ -88,22 +103,34 @@ namespace settings
         static void setQMMethod(const std::string_view &method);
         static void setQMMethod(const QMMethod method);
 
+        static void setMaceModelSize(const std::string_view &model);
+        static void setMaceModelSize(const MaceModelSize model);
+        static void setMaceModelType(const std::string_view &model);
+        static void setMaceModelType(const MaceModelType model);
+        static void setMaceModelPath(const std::string_view &path);
+
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
-        static void setQMLoopTimeLimit(const double time);
 
-        static void setMaceModel(const std::string_view &model);
-        static void setMaceModel(const MaceModel model);
+        static void setUseDispersionCorrection(const bool use);
+
+        static void setQMLoopTimeLimit(const double time);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static QMMethod    getQMMethod();
+        [[nodiscard]] static QMMethod      getQMMethod();
+        [[nodiscard]] static MaceModelSize getMaceModelSize();
+        [[nodiscard]] static MaceModelType getMaceModelType();
+        [[nodiscard]] static std::string   getMaceModelPath();
+
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
-        [[nodiscard]] static double      getQMLoopTimeLimit();
-        [[nodiscard]] static MaceModel   getMaceModel();
+
+        [[nodiscard]] static bool useDispersionCorr();
+
+        [[nodiscard]] static double getQMLoopTimeLimit();
     };
 }   // namespace settings
 

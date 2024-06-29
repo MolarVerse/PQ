@@ -26,19 +26,19 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "engine.hpp"                   // for Engine
-#include "exceptions.hpp"               // for InputFileException
-#include "gtest/gtest.h"                // for Message, TestPartResult
-#include "inputFileParser.hpp"          // for readInput
-#include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
-#include "mmmdEngine.hpp"               // for MMMDEngine
-#include "optEngine.hpp"                // for MMOptEngine
-#include "qmmdEngine.hpp"               // for QMMDEngine
-#include "qmmmmdEngine.hpp"             // for QMMMMDEngine
-#include "ringPolymerqmmdEngine.hpp"    // for RingPolymerQMMDEngine
-#include "settings.hpp"                 // for Settings
-#include "testInputFileReader.hpp"      // for TestInputFileReader
-#include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
+#include "engine.hpp"                  // for Engine
+#include "exceptions.hpp"              // for InputFileException
+#include "generalInputParser.hpp"      // for GeneralInputParser
+#include "gtest/gtest.h"               // for Message, TestPartResult
+#include "inputFileParser.hpp"         // for readInput
+#include "mmmdEngine.hpp"              // for MMMDEngine
+#include "optEngine.hpp"               // for MMOptEngine
+#include "qmmdEngine.hpp"              // for QMMDEngine
+#include "qmmmmdEngine.hpp"            // for QMMMMDEngine
+#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
+#include "settings.hpp"                // for Settings
+#include "testInputFileReader.hpp"     // for TestInputFileReader
+#include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
 
 using namespace input;
 using namespace settings;
@@ -52,7 +52,7 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, JobType)
 {
-    InputFileParserGeneral   parser(*_engine);
+    GeneralInputParser       parser(*_engine);
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
@@ -108,7 +108,7 @@ TEST_F(TestInputFileReader, JobType)
  */
 TEST_F(TestInputFileReader, parseDimensionality)
 {
-    InputFileParserGeneral   parser(*_engine);
+    GeneralInputParser       parser(*_engine);
     std::vector<std::string> lineElements = {"dim", "=", "3"};
     parser.parseDimensionality(lineElements, 0);
     EXPECT_EQ(Settings::getDimensionality(), 3);
@@ -139,5 +139,29 @@ TEST_F(TestInputFileReader, parseDimensionality)
         customException::InputFileException,
         "Invalid dimensionality \"0\" in input file\n"
         "Possible values are: 3, 3d"
+    );
+}
+
+/**
+ * @brief tests parsing the "floatingPointType" command
+ *
+ */
+TEST_F(TestInputFileReader, parseFloatingPointType)
+{
+    GeneralInputParser       parser(*_engine);
+    std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
+    parser.parseFloatingPointType(lineElements, 0);
+    EXPECT_EQ(Settings::getFloatingPointType(), FPType::FLOAT);
+
+    lineElements = {"floatingPointType", "=", "double"};
+    parser.parseFloatingPointType(lineElements, 0);
+    EXPECT_EQ(Settings::getFloatingPointType(), FPType::DOUBLE);
+
+    lineElements = {"floatingPointType", "=", "notValid"};
+    EXPECT_THROW_MSG(
+        parser.parseFloatingPointType(lineElements, 0),
+        customException::InputFileException,
+        "Invalid floating point type \"notValid\" in input file\n"
+        "Possible values are: float, double"
     );
 }

@@ -20,42 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_QM_HPP_
+#ifndef _QM_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_QM_HPP_
+#define _QM_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
+#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
-    using strings = std::vector<std::string>;
-
     /**
-     * @class InputFileParserQM inherits from InputFileParser
+     * @class QMInputParser inherits from InputFileParser
      *
      * @brief Parses the general commands in the input file
      *
      */
-    class InputFileParserQM : public InputFileParser
+    class QMInputParser : public InputFileParser
     {
        public:
-        explicit InputFileParserQM(engine::Engine &);
+        explicit QMInputParser(pq::Engine &);
 
-        void parseQMMethod(const strings &, const size_t);
-        void parseQMScript(const strings &, const size_t);
-        void parseQMScriptFullPath(const strings &, const size_t);
-        void parseQMLoopTimeLimit(const strings &, const size_t);
+        void parseQMMethod(const pq::strings &, const size_t);
+        void parseQMScript(const pq::strings &, const size_t);
+        void parseQMScriptFullPath(const pq::strings &, const size_t);
+        void parseQMLoopTimeLimit(const pq::strings &, const size_t);
+
+        void parseDispersion(const pq::strings &, const size_t);
+
+        void parseMaceModelSize(const pq::strings &, const size_t);
+        void parseMaceQMMethod(const std::string_view &);
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_QM_HPP_
+#endif   // _QM_INPUT_PARSER_HPP_

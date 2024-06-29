@@ -372,10 +372,7 @@ TEST_F(TestSetup, forceFieldSetup_setupImproperDihedrals)
         1.0
     );
 
-    EXPECT_EQ(
-        _engine->getForceFieldPtr()->getImproperDihedralTypes().size(),
-        0
-    );
+    EXPECT_EQ(_engine->getForceFieldPtr()->getImproperTypes().size(), 0);
 }
 
 /**
