@@ -20,6 +20,8 @@ target_link_libraries(externalQM
     utilities
     physicalData
     exceptions
+
+    QM
 )
 
 if(BUILD_SHARED_LIBS)

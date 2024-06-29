@@ -20,6 +20,8 @@ target_link_libraries(aseQM
     physicalData
     exceptions
 
+    QM
+
     pybind11::embed
     pybind11::module
 )
