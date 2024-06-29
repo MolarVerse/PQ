@@ -48,6 +48,7 @@ namespace output
         void writeHeader();
         void writeLeft(const double, const std::string_view &, const std::string_view &);
         void writeLeftScientific(const double, const std::string_view &, const std::string_view &);
+        void writeLeftInteger(const double, const std::string_view &, const std::string_view &);
         void writeRight(const double, const std::string_view &, const std::string_view &);
 
        public:

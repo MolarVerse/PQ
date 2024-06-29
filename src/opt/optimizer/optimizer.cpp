@@ -101,7 +101,7 @@ bool Optimizer::hasConverged()
  *
  * @param convergence
  */
-void Optimizer::setConvergence(const Convergence &convergence)
+void Optimizer::setConvergence(const Convergence convergence)
 {
     _convergence = convergence;
 }

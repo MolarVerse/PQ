@@ -65,7 +65,11 @@ void InfoOutput::write(
 
     writeHeader();
 
-    writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+    if (settings::Settings::isMDJobType())
+        writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+    else
+        writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
+
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
@@ -167,6 +171,29 @@ void InfoOutput::writeLeft(
 )
 {
     _fp << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
+}
+
+/**
+ * @brief write left column of info file
+ *
+ * @param value
+ * @param name
+ * @param unit
+ * @param formatter
+ * @param precision
+ */
+void InfoOutput::writeLeftInteger(
+    const double            value,
+    const std::string_view &name,
+    const std::string_view &unit
+)
+{
+    _fp << std::format(
+        "|   {:<15} {:15d} {:<8} ",
+        name,
+        static_cast<int>(value),
+        unit
+    );
 }
 
 /**

@@ -86,9 +86,10 @@ OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
 void OptimizerSetup::setup()
 {
     auto       learningRateStrategy = setupLearningRateStrategy();
-    const auto optimizer            = setupEmptyOptimizer();
+    auto       optimizer            = setupEmptyOptimizer();
     const auto evaluator            = setupEvaluator();
 
+    setupConvergence(optimizer);
     setupMinMaxLR(learningRateStrategy);
 
     learningRateStrategy->setEvaluator(evaluator);
@@ -285,8 +286,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
  *
  * @param optimizer as shared pointer reference
  */
-void OptimizerSetup::setupConvergence(
-    const std::shared_ptr<opt::Optimizer> &optimizer
+void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
 )
 {
     const auto strategyOptional = ConvSettings::getEnConvStrategy();

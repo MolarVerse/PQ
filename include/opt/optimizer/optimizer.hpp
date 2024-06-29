@@ -73,7 +73,7 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setConvergence(const opt::Convergence &);
+        void setConvergence(const opt::Convergence);
 
         void setSimulationBox(const pq::SharedSimBox);
         void setPhysicalData(const pq::SharedPhysicalData);

@@ -69,7 +69,7 @@ namespace setup
         void setup();
         void writeSetupInfo() const;
 
-        void setupConvergence(const std::shared_ptr<opt::Optimizer> &);
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &);
         void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
 
         std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
