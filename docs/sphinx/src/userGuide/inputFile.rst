@@ -96,7 +96,7 @@ Possible options are:
 
    4) **qmmm-md** - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
 
-   5) **opt** - represents a geometry optimization calculation. (Not implemented yet)
+   5) **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
 
 Timestep

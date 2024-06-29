@@ -277,6 +277,39 @@ void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> evaluator)
 /**
  * @brief get the optimizer
  *
+ */
+Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+
+/**
+ * @brief get the learning rate strategy
+ *
+ * @return LearningRate&
+ */
+LearningRateStrategy &OptEngine::getLearningRate()
+{
+    return *_learningRateStrategy;
+}
+
+/**
+ * @brief get the evaluator
+ *
+ * @return Evaluator&
+ */
+Evaluator &OptEngine::getEvaluator() { return *_evaluator; }
+
+/**
+ * @brief get the convergence
+ *
+ * @return Convergence&
+ */
+Convergence &OptEngine::getConvergence()
+{
+    return _optimizer->getConvergence();
+}
+
+/**
+ * @brief get the optimizer as a shared pointer
+ *
  * @return std::shared_ptr<Optimizer>
  */
 std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
@@ -285,7 +318,7 @@ std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
 }
 
 /**
- * @brief get the learning rate strategy
+ * @brief get the learning rate strategy as a shared pointer
  *
  * @return std::shared_ptr<LearningRateStrategy>
  */
@@ -295,7 +328,7 @@ std::shared_ptr<LearningRateStrategy> OptEngine::getSharedLearningRate()
 }
 
 /**
- * @brief get the evaluator
+ * @brief get the evaluator as a shared pointer
  *
  * @return std::shared_ptr<Evaluator>
  */

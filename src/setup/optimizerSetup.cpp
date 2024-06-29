@@ -29,6 +29,7 @@
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "engine.hpp"
 #include "expDecay.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
@@ -61,8 +62,8 @@ void setup::setupOptimizer(engine::Engine &engine)
     if (!Settings::isOptJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("optimizer");
-    engine.getLogOutput().writeSetup("optimizer");
+    engine.getStdoutOutput().writeSetup("Optimizer");
+    engine.getLogOutput().writeSetup("Optimizer");
 
     OptimizerSetup optimizerSetup(dynamic_cast<engine::OptEngine &>(engine));
     optimizerSetup.setup();
@@ -96,6 +97,8 @@ void OptimizerSetup::setup()
     _optEngine.setLearningRateStrategy(learningRateStrategy);
     _optEngine.setOptimizer(optimizer);
     _optEngine.setEvaluator(evaluator);
+
+    writeSetupInfo();
 }
 
 /**
@@ -330,4 +333,105 @@ void OptimizerSetup::setupConvergence(
     );
 
     optimizer->setConvergence(convergence);
+}
+
+/**
+ * @brief write setup info
+ *
+ */
+void OptimizerSetup::writeSetupInfo() const
+{
+    const auto optimizer  = OptimizerSettings::getOptimizer();
+    const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
+
+    const auto &convergence  = _optEngine.getOptimizer().getConvergence();
+    const auto  convStrategy = convergence.getEnConvStrategy();
+
+    const auto isEnergyConvEnabled   = convergence.isEnergyConvEnabled();
+    const auto isMaxForceConvEnabled = convergence.isMaxForceConvEnabled();
+    const auto isRMSForceConvEnabled = convergence.isRMSForceConvEnabled();
+
+    const auto relEnergyConv = convergence.getRelEnergyConvThreshold();
+    const auto absEnergyConv = convergence.getAbsEnergyConvThreshold();
+    const auto maxForceConv  = convergence.getAbsMaxForceConvThreshold();
+    const auto rmsForceConv  = convergence.getAbsRMSForceConvThreshold();
+
+    auto relEnergyConvStr = std::format("{:.2e}", relEnergyConv);
+    auto absEnergyConvStr = std::format("{:.2e}", absEnergyConv);
+    auto maxForceConvStr  = std::format("{:.2e}", maxForceConv);
+    auto rmsForceConvStr  = std::format("{:.2e}", rmsForceConv);
+
+    const auto convStrategyStr = string(convStrategy);
+
+    using enum ConvStrategy;
+
+    if (convStrategy == RELATIVE)
+        absEnergyConvStr = "disabled";
+    else if (convStrategy == ABSOLUTE)
+        relEnergyConvStr = "disabled";
+
+    if (!isEnergyConvEnabled)
+    {
+        relEnergyConvStr = "disabled";
+        absEnergyConvStr = "disabled";
+    }
+
+    if (!isMaxForceConvEnabled)
+        maxForceConvStr = "disabled";
+
+    if (!isRMSForceConvEnabled)
+        rmsForceConvStr = "disabled";
+
+    const auto initialLR = OptimizerSettings::getInitialLearningRate();
+    const auto lrFreq    = OptimizerSettings::getLRUpdateFrequency();
+
+    using enum LREnum;
+
+    auto decayLRStr = "";
+
+    if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
+    {
+        const auto alphaDecay      = OptimizerSettings::getLearningRateDecay();
+        const auto alphaDecayValue = alphaDecay.value();
+
+        // clang-format off
+        const auto alphaDecayStr = std::format("{:.2e}", alphaDecayValue);
+        // clang-format on
+    }
+
+    // clang-format off
+    const auto optMsg        = std::format("Optimizer:                   {}", string(optimizer));
+
+    const auto lrMsg         = std::format("Learning rate strategy:      {}", string(lrStrategy));
+    const auto initialLRMsg  = std::format("Initial learning rate:       {:.2e}", initialLR);
+    const auto lrFreqMsg     = std::format("Learning rate update freq:   {}", lrFreq);
+    const auto decayLRMsg    = std::format("Learning rate decay factor:  {}", decayLRStr);
+
+    const auto convStratMsg  = std::format("Convergence strategy:        {}", convStrategyStr);
+    const auto energyConvMsg = std::format("Relative Energy convergence: {}", relEnergyConvStr);
+    const auto absEnergyMsg  = std::format("Absolute Energy convergence: {}", absEnergyConvStr);
+    const auto maxForceMsg   = std::format("Max Force convergence:       {}", maxForceConvStr);
+    const auto rmsForceMsg   = std::format("RMS Force convergence:       {}", rmsForceConvStr);
+    // clang-format on
+
+    auto &logOutput = _optEngine.getLogOutput();
+
+    logOutput.writeSetupInfo(optMsg);
+    logOutput.writeEmptyLine();
+
+    logOutput.writeSetupInfo(lrMsg);
+    logOutput.writeSetupInfo(lrFreqMsg);
+    logOutput.writeSetupInfo(initialLRMsg);
+    if (decayLRStr != "")
+        logOutput.writeSetupInfo(decayLRMsg);
+
+    logOutput.writeEmptyLine();
+
+    logOutput.writeSetupInfo(convStratMsg);
+    logOutput.writeSetupInfo(energyConvMsg);
+    logOutput.writeSetupInfo(absEnergyMsg);
+    logOutput.writeSetupInfo(maxForceMsg);
+    logOutput.writeSetupInfo(rmsForceMsg);
+
+    logOutput.writeEmptyLine();
 }

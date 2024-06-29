@@ -67,6 +67,7 @@ namespace setup
         explicit OptimizerSetup(engine::OptEngine &optEngine);
 
         void setup();
+        void writeSetupInfo() const;
 
         void setupConvergence(const std::shared_ptr<opt::Optimizer> &);
         void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);

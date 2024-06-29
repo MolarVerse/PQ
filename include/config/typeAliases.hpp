@@ -101,6 +101,8 @@ namespace opt
     class Optimizer;
     class SteepestDescent;
 
+    class Convergence;
+
 }   // namespace opt
 
 namespace output
@@ -222,6 +224,8 @@ namespace pq
     using Optimizer       = opt::Optimizer;
     using SteepestDescent = opt::SteepestDescent;
     using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
+
+    using Convergence = opt::Convergence;
 
     /********************
      * output namespace *

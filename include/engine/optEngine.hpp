@@ -73,6 +73,11 @@ namespace engine
          * standard getter methods *
          ***************************/
 
+        [[nodiscard]] pq::Optimizer    &getOptimizer();
+        [[nodiscard]] pq::LearningRate &getLearningRate();
+        [[nodiscard]] pq::Evaluator    &getEvaluator();
+        [[nodiscard]] pq::Convergence  &getConvergence();
+
         [[nodiscard]] std::shared_ptr<pq::Optimizer>    getSharedOptimizer();
         [[nodiscard]] std::shared_ptr<pq::LearningRate> getSharedLearningRate();
         [[nodiscard]] std::shared_ptr<pq::Evaluator>    getSharedEvaluator();

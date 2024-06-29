@@ -102,7 +102,8 @@ namespace opt
         [[nodiscard]] pq::Vec3DVec getPositions() const;
         [[nodiscard]] pq::Vec3DVec getPositions(const int) const;
 
-        [[nodiscard]] opt::Convergence getConvergence() const;
+        [[nodiscard]] opt::Convergence &getConvergence();
+        [[nodiscard]] opt::Convergence  getConvergence() const;
     };
 
 }   // namespace opt
