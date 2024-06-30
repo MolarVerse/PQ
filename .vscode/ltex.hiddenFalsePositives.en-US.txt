@@ -1,0 +1,5 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qmm-opt - represents a geometry optimization calculation using molecular mechanics.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qqmmm-md - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qqm-rpmd - represents a full quantum mechanics ring polymer molecular dynamics simulation.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qqm-md - represents a full quantum mechanics molecular dynamics simulation.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Qmm-md - represents a full molecular mechanics molecular dynamics simulation either performed via the \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q formalism or the \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}

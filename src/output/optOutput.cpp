@@ -38,7 +38,7 @@ using std::format;
  */
 void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
 {
-    const auto conv = optimizer.getConvergence();
+    const auto& conv = optimizer.getConvergence();
 
     const auto stepStr     = format("{:8d}\t", step);
     const auto absEnStr    = format("{:.8e}\t", conv.getAbsEnergy());

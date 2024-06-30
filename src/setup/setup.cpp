@@ -51,6 +51,7 @@
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
 #include "timer.hpp"                  // for Timings
+#include "timingsSettings.hpp"        // for TimingsSettings
 #include "topologyReader.hpp"         // for readTopologyFile
 
 using namespace engine;
@@ -70,6 +71,14 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     startSetup(simulationTimer, setupTimer, engine);
 
     readInputFile(inputFileName, engine);
+
+    if (!settings::TimingsSettings::isTimeStepSet())
+        if (settings::Settings::isMDJobType())
+            throw customException::UserInputException(std::format(
+                "Molecular Dynamics job type {} selected. Please set the time "
+                "step in the input file.",
+                string(settings::Settings::getJobtype())
+            ));
 
     setupOutputFiles(engine);
 
