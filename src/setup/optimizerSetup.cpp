@@ -387,7 +387,7 @@ void OptimizerSetup::writeSetupInfo() const
 
     using enum LREnum;
 
-    auto decayLRStr = "";
+    std::string decayLRStr = "";
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {
