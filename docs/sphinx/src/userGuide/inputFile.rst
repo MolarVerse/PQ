@@ -496,6 +496,14 @@ Parameter_File
 
     parameter_file = {file}
 
+MSHake_File
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    mshake_file = {file}
+
 Intra-NonBonded_File
 ====================
 
