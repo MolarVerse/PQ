@@ -71,7 +71,7 @@ namespace settings
        private:
         // clang-format off
         static inline Optimizer _optimizer = Optimizer::STEEPEST_DESCENT;
-        static inline LREnum _LRStrategy   = LREnum::CONSTANT_DECAY;
+        static inline LREnum _LRStrategy   = LREnum::EXPONENTIAL_DECAY;
 
         static inline size_t _nEpochs           = defaults::_N_EPOCHS_DEFAULT_;
         static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;

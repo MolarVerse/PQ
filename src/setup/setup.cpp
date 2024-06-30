@@ -51,7 +51,7 @@
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
 #include "timer.hpp"                  // for Timings
-#include "timingsSection.hpp"         // for Timer
+#include "timingsSettings.hpp"        // for TimingsSettings
 #include "topologyReader.hpp"         // for readTopologyFile
 
 using namespace engine;
@@ -68,6 +68,10 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     auto simulationTimer = timings::Timer("Simulation");
     auto setupTimer      = timings::Timer("Setup");
 
+    startSetup(simulationTimer, setupTimer, engine);
+
+    readInputFile(inputFileName, engine);
+
     if (!settings::TimingsSettings::isTimeStepSet())
         if (settings::Settings::isMDJobType())
             throw customException::UserInputException(std::format(
@@ -75,10 +79,6 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
                 "step in the input file.",
                 string(settings::Settings::getJobtype())
             ));
-
-    startSetup(simulationTimer, setupTimer, engine);
-
-    readInputFile(inputFileName, engine);
 
     setupOutputFiles(engine);
 
