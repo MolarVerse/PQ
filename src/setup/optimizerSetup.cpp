@@ -422,7 +422,7 @@ void OptimizerSetup::writeSetupInfo() const
     logOutput.writeSetupInfo(lrMsg);
     logOutput.writeSetupInfo(lrFreqMsg);
     logOutput.writeSetupInfo(initialLRMsg);
-    if (decayLRStr != "")
+    if (!decayLRStr.empty())
         logOutput.writeSetupInfo(decayLRMsg);
 
     logOutput.writeEmptyLine();

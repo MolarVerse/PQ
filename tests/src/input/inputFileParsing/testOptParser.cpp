@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
     using enum LREnum;
 
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT_DECAY);
+    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
 
     OptimizerSettings::setLearningRateStrategy("none");
 
