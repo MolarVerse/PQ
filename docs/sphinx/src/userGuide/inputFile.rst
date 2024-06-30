@@ -613,9 +613,9 @@ Temperature_Ramp_Frequency
 .. admonition:: Key
     :class: tip
 
-    temp_ramp_freq = {uint+} -> 1
+    temp_ramp_frequency = {uint+} -> 1
 
-With the :code:`temp_ramp_freq` keyword the user can specify the frequency of the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
+With the :code:`temp_ramp_frequency` keyword the user can specify the frequency of the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
 
 .. centered:: *default value* = 1 step
 

@@ -117,4 +117,6 @@ void ExternalQMRunner::readForceFile(
     std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
+
+    ::system(std::format("rm -f {}", forceFileName).c_str());
 }
