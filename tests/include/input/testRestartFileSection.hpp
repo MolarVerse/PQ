@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>
+
 #include "atomSection.hpp"
 #include "boxSection.hpp"
-#include "engine.hpp"
+#include "mmmdEngine.hpp"
 #include "noseHooverSection.hpp"
 #include "restartFileSection.hpp"
 #include "stepCountSection.hpp"
-
-#include <gtest/gtest.h>
 
 /**
  * @class TestBoxSection
@@ -37,17 +37,21 @@
  */
 class TestBoxSection : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _section = new input::restartFile::BoxSection;
-        _engine  = new engine::Engine();
+
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
     }
 
     void TearDown() override { delete _section; }
 
     input::restartFile::RestartFileSection *_section;
-    engine::Engine                             *_engine;
+    engine::Engine                         *_engine;
 };
 
 /**
@@ -58,17 +62,21 @@ class TestBoxSection : public ::testing::Test
  */
 class TestNoseHooverSection : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _section = new input::restartFile::NoseHooverSection;
-        _engine  = new engine::Engine();
+
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
     }
 
     void TearDown() override { delete _section; }
 
     input::restartFile::RestartFileSection *_section;
-    engine::Engine                             *_engine;
+    engine::Engine                         *_engine;
 };
 
 /**
@@ -79,17 +87,21 @@ class TestNoseHooverSection : public ::testing::Test
  */
 class TestStepCountSection : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _section = new input::restartFile::StepCountSection;
-        _engine  = new engine::Engine();
+
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
     }
 
     void TearDown() override { delete _section; }
 
     input::restartFile::RestartFileSection *_section;
-    engine::Engine                             *_engine;
+    engine::Engine                         *_engine;
 };
 
 /**
@@ -100,15 +112,19 @@ class TestStepCountSection : public ::testing::Test
  */
 class TestAtomSection : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _section = new input::restartFile::AtomSection;
-        _engine  = new engine::Engine();
+
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
     }
 
     void TearDown() override { delete _section; }
 
     input::restartFile::RestartFileSection *_section;
-    engine::Engine                             *_engine;
+    engine::Engine                         *_engine;
 };

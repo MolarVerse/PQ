@@ -42,8 +42,11 @@ using namespace output;
  */
 void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
 {
-    _fp << simBox.getNumberOfAtoms() << "  " << simBox.getBoxDimensions()
-        << "  " << simBox.getBoxAngles() << '\n';
+    const auto  nAtoms    = simBox.getNumberOfAtoms();
+    const auto &boxDims   = simBox.getBoxDimensions();
+    const auto &boxAngles = simBox.getBoxAngles();
+
+    _fp << nAtoms << "  " << boxDims << "  " << boxAngles << '\n';
 }
 
 /**
@@ -59,9 +62,10 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
     buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+    {
+        const auto nAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
@@ -69,6 +73,7 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
             buffer << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[1]);
             buffer << std::format("{:15.8f}\n", molecule.getAtomPosition(i)[2]);
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -88,9 +93,10 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
     buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+    {
+        const auto nAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
@@ -98,6 +104,7 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
             buffer << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[1]);
             buffer << std::format("{:20.8e}\n", molecule.getAtomVelocity(i)[2]);
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -120,9 +127,10 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
     );
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+    {
+        const auto nAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
@@ -130,6 +138,7 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
             buffer << std::format("{:15.8f}\t", molecule.getAtomForce(i)[1]);
             buffer << std::format("{:15.8f}\n", molecule.getAtomForce(i)[2]);
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -149,17 +158,17 @@ void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
     buffer << '\n';
 
     for (const auto &molecule : simBox.getMolecules())
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+    {
+        const auto nAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-
             buffer << std::format("{:15.8f}\n", molecule.getPartialCharge(i));
-
             buffer << std::flush;
         }
-    
+    }
+
     // Write the buffer to the file
     _fp << buffer.str();
     _fp << std::flush;

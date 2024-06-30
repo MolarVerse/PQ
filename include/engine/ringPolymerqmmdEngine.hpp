@@ -32,12 +32,13 @@ namespace engine
     /**
      * @class RingPolymerQMMDEngine
      *
-     * @details Contains all the information needed to run a ring polymer QM MD simulation
+     * @details Contains all the information needed to run a ring polymer QM MD
+     * simulation
      *
      */
     class RingPolymerQMMDEngine : public QMMDEngine, public RingPolymerEngine
     {
-      public:
+       public:
         void takeStep() override;
 
         void qmCalculation();

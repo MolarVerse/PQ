@@ -47,6 +47,21 @@ void Atom::initMass()
         setMass(constants::atomMassMap.at(keyword));
 }
 
+/**
+ * @brief updates the old position of the atom to the current position
+ */
+void Atom::updateOldPosition() { _positionOld = _position; }
+
+/**
+ * @brief updates the old velocity of the atom to the current velocity
+ */
+void Atom::updateOldVelocity() { _velocityOld = _velocity; }
+
+/**
+ * @brief updates the old force of the atom to the current force
+ */
+void Atom::updateOldForce() { _forceOld = _force; }
+
 /*******************
  *                 *
  * scaling methods *
@@ -83,13 +98,13 @@ void Atom::scaleVelocityOrthogonalSpace(
 {
     if (settings::ManostatSettings::getIsotropy() !=
         settings::Isotropy::FULL_ANISOTROPIC)
-        _velocity = box.transformIntoOrthogonalSpace(_velocity);
+        _velocity = box.toOrthoSpace(_velocity);
 
     _velocity = scalingTensor * _velocity;
 
     if (settings::ManostatSettings::getIsotropy() !=
         settings::Isotropy::FULL_ANISOTROPIC)
-        _velocity = box.transformIntoSimulationSpace(_velocity);
+        _velocity = box.toSimSpace(_velocity);
 }
 
 /**************************
@@ -265,6 +280,13 @@ linearAlgebra::Vec3D Atom::getVelocity() const { return _velocity; }
 linearAlgebra::Vec3D Atom::getForce() const { return _force; }
 
 /**
+ * @brief return the old force of the atom
+ *
+ * @return linearAlgebra::Vec3D
+ */
+linearAlgebra::Vec3D Atom::getForceOld() const { return _forceOld; }
+
+/**
  * @brief return the shift force of the atom
  *
  * @return linearAlgebra::Vec3D
@@ -383,16 +405,6 @@ void Atom::setPosition(const linearAlgebra::Vec3D &position)
 }
 
 /**
- * @brief set the old position of the atom
- *
- * @param position
- */
-void Atom::setPositionOld(const linearAlgebra::Vec3D &position)
-{
-    _positionOld = position;
-}
-
-/**
  * @brief set the velocity of the atom
  *
  * @param velocity
@@ -423,3 +435,30 @@ void Atom::setShiftForce(const linearAlgebra::Vec3D &shiftForce)
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the old position of the atom
+ *
+ * @param position
+ */
+void Atom::setPositionOld(const linearAlgebra::Vec3D &position)
+{
+    _positionOld = position;
+}
+
+/**
+ * @brief set the old velocity of the atom
+ *
+ * @param velocity
+ */
+void Atom::setVelocityOld(const linearAlgebra::Vec3D &velocity)
+{
+    _velocityOld = velocity;
+}
+
+/**
+ * @brief set the old force of the atom
+ *
+ * @param force
+ */
+void Atom::setForceOld(const linearAlgebra::Vec3D &force) { _forceOld = force; }

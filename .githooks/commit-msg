@@ -96,10 +96,10 @@ if [[ "$lowercase_message" =~ ^ci(\(.+\))?: ]]; then
   group="CI"
 fi
 
-#pylint
-if [[ "$lowercase_message" =~ ^pylint(\(.+\))?: ]]; then
+#cmake
+if [[ "$lowercase_message" =~ ^cmake(\(.+\))?: ]]; then
   matched=true
-  group="Pylint"
+  group="cmake"
 fi
 
 if [[ "$lowercase_message" =~ ^admin(\(.+\))?: ]]; then
@@ -138,7 +138,7 @@ if ! $matched; then
   echo "  - Example:        example:, examples:"
   echo "  - Dependency:     deps:"
   echo "  - CI:             ci:"
-  echo "  - Pylint:         pylint:"
+  echo "  - Cmake:          cmake:"
   echo "  - Administrative: admin:"
   echo "  - Random:         $"
   # ... (similar output for other patterns in the list)

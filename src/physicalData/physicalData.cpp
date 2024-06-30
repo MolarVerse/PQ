@@ -85,6 +85,27 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
 }
 
 /**
+ * @brief clones the physicalData
+ *
+ * @return std::shared_ptr<PhysicalData>
+ */
+std::shared_ptr<PhysicalData> PhysicalData::clone() const
+{
+    return std::make_shared<PhysicalData>(*this);
+}
+
+/**
+ * @brief copies one physicalData to another
+ *
+ * @param physicalData
+ */
+void PhysicalData::copy(const PhysicalData &physicalData)
+{
+    reset();
+    updateAverages(physicalData);
+}
+
+/**
  * @brief calculates the sum of all physicalData of last steps
  *
  * @param physicalData

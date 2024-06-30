@@ -24,10 +24,11 @@
 
 #define _QM_MD_ENGINE_HPP_
 
-#include "engine.hpp"     // for Engine
-#include "qmRunner.hpp"   // for QMRunner
-
 #include <memory>   // for unique_ptr
+
+#include "mdEngine.hpp"     // for Engine
+#include "qmRunner.hpp"     // for QMRunner
+#include "qmSettings.hpp"   // for QMSettings
 
 namespace engine
 {
@@ -38,23 +39,20 @@ namespace engine
      * @brief Contains all the information needed to run a QM MD simulation
      *
      */
-    class QMMDEngine : virtual public Engine
+    class QMMDEngine : virtual public MDEngine
     {
-      protected:
-        std::unique_ptr<QM::QMRunner> _qmRunner = nullptr;
+       protected:
+        std::shared_ptr<QM::QMRunner> _qmRunner;
 
-      public:
+       public:
         ~QMMDEngine() override = default;
 
         void takeStep() override;
 
-        template <typename T>
-        void setQMRunner(T runner)
-        {
-            _qmRunner = std::make_unique<T>(runner);
-        }
+        void setQMRunner(const settings::QMMethod method);
+        void setMaceQMRunner();
 
-        [[nodiscard]] QM::QMRunner *getQMRunner() const { return _qmRunner.get(); }
+        [[nodiscard]] QM::QMRunner *getQMRunner() const;
     };
 
 }   // namespace engine

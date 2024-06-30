@@ -37,6 +37,16 @@ using namespace simulationBox;
 using namespace linearAlgebra;
 
 /**
+ * @brief clone cell list
+ *
+ * @return std::shared_ptr<CellList>
+ */
+std::shared_ptr<CellList> CellList::clone() const
+{
+    return std::make_shared<CellList>(*this);
+}
+
+/**
  * @brief get linearized cell index
  *
  * @param cellIndices

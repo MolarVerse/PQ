@@ -36,17 +36,20 @@ namespace output
      */
     class StdoutOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
+
+        void writeInfo(const std::string &message) const;
 
         void writeHeader() const;
         void writeEndedNormally(const double elapsedTime) const;
 
         void writeDensityWarning() const;
+        void writeOptWarning(const std::string &message) const;
 
         void writeSetup(const std::string &setup) const;
         void writeSetupCompleted() const;
-        void writeRead(const std::string &message, const std::string &file) const;
+        void writeRead(const std::string &, const std::string &) const;
     };
 
 }   // namespace output

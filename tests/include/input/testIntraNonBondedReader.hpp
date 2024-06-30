@@ -28,10 +28,10 @@
 
 #include <string>   // for allocator
 
-#include "engine.hpp"                 // for Engine
 #include "fileSettings.hpp"           // for FileSettings
 #include "intraNonBonded.hpp"         // for IntraNonBonded
 #include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
+#include "mmmdEngine.hpp"             // for Engine
 #include "moleculeType.hpp"           // for MoleculeType
 #include "simulationBox.hpp"          // for SimulationBox
 
@@ -54,7 +54,10 @@ class TestIntraNonBondedReader : public ::testing::Test
         molecule1.setMoltype(0);
         molecule1.setName("molecule1");
 
-        _engine = new engine::Engine();
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
         _engine->getIntraNonBonded().activate();

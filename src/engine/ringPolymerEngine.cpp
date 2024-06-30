@@ -68,11 +68,11 @@ void RingPolymerEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(_simulationBox);
-        _engineOutput.writeVelFile(_simulationBox);
-        _engineOutput.writeForceFile(_simulationBox);
-        _engineOutput.writeChargeFile(_simulationBox);
-        _engineOutput.writeRstFile(_simulationBox, effStep);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeVelFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeRstFile(*_simulationBox, effStep);
 
         _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, effStep);
         _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
@@ -101,7 +101,7 @@ void RingPolymerEngine::writeOutput()
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
             averageRPMDData[i].makeAverages(static_cast<double>(outputFreq));
 
-        _physicalData        = mean(rpmdData);
+        _physicalData->copy(mean(rpmdData));
         _averagePhysicalData = mean(averageRPMDData);
 
         const auto dt            = settings::TimingsSettings::getTimeStep();
@@ -109,7 +109,7 @@ void RingPolymerEngine::writeOutput()
         const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
+        _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
 
@@ -179,7 +179,7 @@ void RingPolymerEngine::combineBeads()
         settings::RingPolymerSettings::getNumberOfBeads();
 
     std::ranges::for_each(
-        _simulationBox.getAtoms(),
+        _simulationBox->getAtoms(),
         [](auto &atom)
         {
             atom->setPosition({0.0, 0.0, 0.0});
@@ -194,13 +194,13 @@ void RingPolymerEngine::combineBeads()
         {
             auto &atom = bead.getAtom(i);
 
-            _simulationBox.getAtom(i).addPosition(
+            _simulationBox->getAtom(i).addPosition(
                 atom.getPosition() / double(numberOfBeads)
             );
-            _simulationBox.getAtom(i).addVelocity(
+            _simulationBox->getAtom(i).addVelocity(
                 atom.getVelocity() / double(numberOfBeads)
             );
-            _simulationBox.getAtom(i).addForce(
+            _simulationBox->getAtom(i).addForce(
                 atom.getForce() / double(numberOfBeads)
             );
         }

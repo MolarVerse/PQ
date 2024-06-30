@@ -22,14 +22,26 @@
 
 #include "qmmdEngine.hpp"
 
+#include "dftbplusRunner.hpp"    // for DFTBPlusRunner
 #include "integrator.hpp"        // for Integrator
 #include "manostat.hpp"          // for Manostat
 #include "physicalData.hpp"      // for PhysicalData
+#include "pyscfRunner.hpp"       // for PySCFRunner
 #include "resetKinetics.hpp"     // for ResetKinetics
+#include "settings.hpp"          // for Settings
 #include "thermostat.hpp"        // for Thermostat
 #include "timingsSettings.hpp"   // for TimingsSettings
+#include "turbomoleRunner.hpp"   // for TurbomoleRunner
+
+#ifdef WITH_ASE
+#include "maceRunner.hpp"   // for MaceRunner
+#endif
 
 using engine::QMMDEngine;
+using namespace settings;
+using namespace customException;
+using namespace QM;
+using std::make_shared;
 
 /**
  * @brief Takes one step in a QM MD simulation.
@@ -48,37 +60,102 @@ using engine::QMMDEngine;
  */
 void QMMDEngine::takeStep()
 {
-    _thermostat->applyThermostatHalfStep(_simulationBox, _physicalData);
+    _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
-    _integrator->firstStep(_simulationBox);
+    _integrator->firstStep(*_simulationBox);
 
-    _constraints.applyShake(_simulationBox);
+    _constraints->applyShake(*_simulationBox);
 
-    _qmRunner->run(_simulationBox, _physicalData);
+    _qmRunner->run(*_simulationBox, *_physicalData);
 
-    _constraints.applyDistanceConstraints(
-        _simulationBox,
-        _physicalData,
+    _constraints->applyDistanceConstraints(
+        *_simulationBox,
+        *_physicalData,
         calculateTotalSimulationTime()
     );
 
-    _constraints.calculateConstraintBondRefs(_simulationBox);
+    _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _thermostat->applyThermostatOnForces(_simulationBox);
+    _thermostat->applyThermostatOnForces(*_simulationBox);
 
-    _integrator->secondStep(_simulationBox);
+    _integrator->secondStep(*_simulationBox);
 
-    _constraints.applyRattle(_simulationBox);
+    _constraints->applyRattle(*_simulationBox);
 
-    _thermostat->applyThermostat(_simulationBox, _physicalData);
+    _thermostat->applyThermostat(*_simulationBox, *_physicalData);
 
-    _physicalData.calculateKinetics(_simulationBox);
+    _physicalData->calculateKinetics(*_simulationBox);
 
-    _manostat->applyManostat(_simulationBox, _physicalData);
+    _manostat->applyManostat(*_simulationBox, *_physicalData);
 
-    _resetKinetics.reset(_step, _physicalData, _simulationBox);
+    _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
 
     _thermostat->applyTemperatureRamping();
 
-    _physicalData.setNumberOfQMAtoms(_simulationBox.getNumberOfQMAtoms());
+    _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
 }
+
+/**
+ * @brief Set the QMRunner object based on the QM method.
+ *
+ * @param method
+ */
+void QMMDEngine::setQMRunner(const QMMethod method)
+{
+    using enum QMMethod;
+
+    if (method == DFTBPLUS)
+        _qmRunner = make_shared<DFTBPlusRunner>();
+
+    else if (method == PYSCF)
+        _qmRunner = make_shared<PySCFRunner>();
+
+    else if (method == TURBOMOLE)
+        _qmRunner = make_shared<TurbomoleRunner>();
+
+    else if (method == MACE)
+        setMaceQMRunner();
+
+    else
+        throw InputFileException(
+            "A qm based jobtype was requested but no external "
+            "program via \"qm_prog\" provided"
+        );
+}
+
+/**
+ * @brief sets the QMRunner object for mace type qm methods.
+ *
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
+ */
+void QMMDEngine::setMaceQMRunner()
+{
+#ifdef WITH_ASE
+    const auto modelType = string(QMSettings::getMaceModelType());
+    const auto modelPath = QMSettings::getMaceModelPath();
+    const auto useDFTD   = QMSettings::useDispersionCorr();
+    const auto fpType    = Settings::getFloatingPointPybindString();
+
+    auto maceModel = string(QMSettings::getMaceModelSize());
+
+    if (!modelPath.empty())
+        maceModel = modelPath;
+
+    _qmRunner = make_shared<MaceRunner>(modelType, maceModel, fpType, useDFTD);
+#else
+    throw CompileTimeException(
+        "A mace type qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use mace type "
+        "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
+
+/**
+ * @brief Get the QMRunner object.
+ *
+ * @return QMRunner *
+ */
+QMRunner* QMMDEngine::getQMRunner() const { return _qmRunner.get(); }

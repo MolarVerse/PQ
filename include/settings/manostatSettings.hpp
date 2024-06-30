@@ -24,11 +24,11 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
-#include "defaults.hpp"
-
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
+
+#include "defaults.hpp"
 
 namespace settings
 {
@@ -70,53 +70,55 @@ namespace settings
      */
     class ManostatSettings
     {
-      private:
+       private:
         static inline ManostatType _manostatType = ManostatType::NONE;
         static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
 
         static inline bool _isPressureSet = false;
 
-        static inline double _targetPressure;   // no default value - has to be set by user
-        static inline double _tauManostat     = defaults::_BERENDSEN_MANOSTAT_RELAXATION_TIME_;   // 1.0 ps
-        static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;        // 4.5e-5 1/bar
+        static inline double _targetPressure;
+
+        // clang-format off
+        static inline double _tauManostat     = defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_;
+        static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;
+        // clang-format on
 
         static inline std::vector<size_t> _2DIsotropicAxes;
         static inline size_t              _2DAnisotropicAxis;
 
-      public:
+       public:
         ManostatSettings()  = default;
         ~ManostatSettings() = default;
-
-        static void setManostatType(const std::string_view &manostatType);
-        static void setManostatType(const ManostatType &manostatType) { _manostatType = manostatType; }
-
-        static void setIsotropy(const std::string_view &isotropy);
-        static void setIsotropy(const Isotropy &isotropy) { _isotropy = isotropy; }
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setPressureSet(const bool pressureSet) { _isPressureSet = pressureSet; }
-        static void setTargetPressure(const double targetPressure) { _targetPressure = targetPressure; }
-        static void setTauManostat(const double tauManostat) { _tauManostat = tauManostat; }
-        static void setCompressibility(const double compressibility) { _compressibility = compressibility; }
-        static void set2DIsotropicAxes(const std::vector<size_t> &indices) { _2DIsotropicAxes = indices; }
-        static void set2DAnisotropicAxis(const size_t index) { _2DAnisotropicAxis = index; }
+        static void setManostatType(const std::string_view &manostatType);
+        static void setManostatType(const ManostatType &manostatType);
+
+        static void setIsotropy(const std::string_view &isotropy);
+        static void setIsotropy(const Isotropy &isotropy);
+
+        static void setPressureSet(const bool pressureSet);
+        static void setTargetPressure(const double targetPressure);
+        static void setTauManostat(const double tauManostat);
+        static void setCompressibility(const double compressibility);
+        static void set2DIsotropicAxes(const std::vector<size_t> &indices);
+        static void set2DAnisotropicAxis(const size_t index);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static ManostatType getManostatType() { return _manostatType; }
-        [[nodiscard]] static Isotropy     getIsotropy() { return _isotropy; }
-        [[nodiscard]] static bool         isPressureSet() { return _isPressureSet; }
-        [[nodiscard]] static double       getTargetPressure() { return _targetPressure; }
-        [[nodiscard]] static double       getTauManostat() { return _tauManostat; }
-        [[nodiscard]] static double       getCompressibility() { return _compressibility; }
-
-        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes() { return _2DIsotropicAxes; }
-        [[nodiscard]] static size_t              get2DAnisotropicAxis() { return _2DAnisotropicAxis; }
+        [[nodiscard]] static ManostatType        getManostatType();
+        [[nodiscard]] static Isotropy            getIsotropy();
+        [[nodiscard]] static bool                isPressureSet();
+        [[nodiscard]] static double              getTargetPressure();
+        [[nodiscard]] static double              getTauManostat();
+        [[nodiscard]] static double              getCompressibility();
+        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes();
+        [[nodiscard]] static size_t              get2DAnisotropicAxis();
     };
 
 }   // namespace settings

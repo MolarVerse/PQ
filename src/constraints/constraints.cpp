@@ -33,6 +33,18 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
+using namespace simulationBox;
+using namespace customException;
+
+/**
+ * @brief clone constraints
+ *
+ * @return std::shared_ptr<Constraints>
+ */
+std::shared_ptr<Constraints> Constraints::clone() const
+{
+    return std::make_shared<Constraints>(*this);
+}
 
 /**
  * @brief init M-Shake from M-Shake references
@@ -48,8 +60,7 @@ void Constraints::initMShake() { _mShake.initMShake(); }
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(
-    const simulationBox::SimulationBox &simulationBox
+void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
 )
 {
     startTimingsSection("Reference Bond Data");
@@ -68,7 +79,7 @@ void Constraints::calculateConstraintBondRefs(
  *
  * @param simulationBox
  */
-void Constraints::applyShake(simulationBox::SimulationBox &simulationBox)
+void Constraints::applyShake(SimulationBox &simulationBox)
 {
     if (!_shakeActivated && !_mShakeActivated)
         return;
@@ -85,10 +96,10 @@ void Constraints::applyShake(simulationBox::SimulationBox &simulationBox)
  *
  * @param simulationBox
  *
- * @throws customException::ShakeException if shake algorithm does not
+ * @throws ShakeException if shake algorithm does not
  * converge
  */
-void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
+void Constraints::_applyShake(SimulationBox &simBox)
 {
     startTimingsSection("Shake");
 
@@ -101,15 +112,14 @@ void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
     {
         convergedVector.clear();
 
-        auto applyShakeForSingleBond =
-            [&simulationBox, &convergedVector, this](auto &bondConstraint)
-        {
-            convergedVector.push_back(
-                bondConstraint.applyShake(simulationBox, _shakeTolerance)
-            );
-        };
+        auto applyShakeSingleBond =
+            [&simBox, &convergedVector, this](auto &bondConst) {
+                convergedVector.push_back(
+                    bondConst.applyShake(simBox, _shakeTolerance)
+                );
+            };
 
-        std::ranges::for_each(_bondConstraints, applyShakeForSingleBond);
+        std::ranges::for_each(_bondConstraints, applyShakeSingleBond);
 
         converged = std::ranges::all_of(
             convergedVector,
@@ -120,7 +130,7 @@ void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
     }
 
     if (!converged)
-        throw customException::ShakeException(std::format(
+        throw ShakeException(std::format(
             "Shake algorithm did not converge for {} bonds.",
             std::ranges::count(convergedVector, false)
         ));
@@ -134,7 +144,7 @@ void Constraints::_applyShake(simulationBox::SimulationBox &simulationBox)
  * @param simulationBox
  *
  */
-void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
+void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Shake");
     _mShake.applyMShake(_shakeTolerance, simulationBox);
@@ -144,10 +154,10 @@ void Constraints::_applyMShake(simulationBox::SimulationBox &simulationBox)
 /**
  * @brief applies the rattle algorithm to all bond constraints
  *
- * @throws customException::ShakeException if rattle algorithm does not
+ * @throws ShakeException if rattle algorithm does not
  * converge
  */
-void Constraints::applyRattle(simulationBox::SimulationBox &simBox)
+void Constraints::applyRattle(SimulationBox &simBox)
 {
     if (!_shakeActivated && !_mShakeActivated)
         return;
@@ -162,7 +172,7 @@ void Constraints::applyRattle(simulationBox::SimulationBox &simBox)
 /**
  * @brief applies the rattle algorithm to all bond constraints
  *
- * @throws customException::ShakeException if rattle algorithm does not
+ * @throws ShakeException if rattle algorithm does not
  * converge
  */
 void Constraints::_applyRattle()
@@ -196,7 +206,7 @@ void Constraints::_applyRattle()
     }
 
     if (!converged)
-        throw customException::ShakeException(std::format(
+        throw ShakeException(std::format(
             "Rattle algorithm did not converge for {} bonds.",
             std::ranges::count(convergedVector, false)
         ));
@@ -209,7 +219,7 @@ void Constraints::_applyRattle()
  *
  * @param simulationBox
  */
-void Constraints::_applyMRattle(simulationBox::SimulationBox &simulationBox)
+void Constraints::_applyMRattle(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Rattle");
     _mShake.applyMRattle(simulationBox);
@@ -224,9 +234,9 @@ void Constraints::_applyMRattle(simulationBox::SimulationBox &simulationBox)
  *
  */
 void Constraints::applyDistanceConstraints(
-    const simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData         &data,
-    const double                        time
+    const SimulationBox        &simulationBox,
+    physicalData::PhysicalData &data,
+    const double                time
 )
 {
     if (!_distanceConstActivated)
@@ -384,8 +394,7 @@ const std::vector<BondConstraint> &Constraints::getBondConstraints() const
  *
  * @return all distance constraints
  */
-const std::vector<DistanceConstraint> &Constraints::getDistanceConstraints(
-) const
+const std::vector<DistanceConstraint> &Constraints::getDistConstraints() const
 {
     return _distanceConstraints;
 }
@@ -415,11 +424,9 @@ size_t Constraints::getNumberOfBondConstraints() const
  *
  * @return the number of mShake constraints
  */
-size_t Constraints::getNumberOfMShakeConstraints(
-    simulationBox::SimulationBox &simBox
-) const
+size_t Constraints::getNumberOfMShakeConstraints(SimulationBox &simBox) const
 {
-    return _mShake.calculateNumberOfBondConstraints(simBox);
+    return _mShake.calcNumberOfBondConstraints(simBox);
 }
 
 /**

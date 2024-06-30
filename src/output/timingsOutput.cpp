@@ -136,11 +136,11 @@ void TimingsOutput::write(timings::GlobalTimer &timer)
 
         for (const auto &subSection : subsections)
         {
-            const auto subName = subSection.getName();
-            const auto subTime = subSection.calculateElapsedTime();
-            const auto subTotPercentage =
-                (subTime / timer.calculateElapsedTime()) * 100.0;
-            const auto subPercentage = (subTime / time) * 100.0;
+            const auto elapsedTime      = subSection.calculateElapsedTime();
+            const auto subName          = subSection.getName();
+            const auto subTime          = subSection.calculateElapsedTime();
+            const auto subPercentage    = (subTime / time) * 100.0;
+            const auto subTotPercentage = (subTime / elapsedTime) * 100.0;
 
             _fp << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",

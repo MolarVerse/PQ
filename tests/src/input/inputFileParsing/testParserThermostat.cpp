@@ -138,8 +138,8 @@ TEST_F(TestInputFileReader, testParseThermostat)
     EXPECT_THROW_MSG(
         parser.parseThermostat(lineElements, 0),
         customException::InputFileException,
-        "Invalid thermostat \"notValid\" at line 0 in input file. Possible "
-        "options are: none, berendsen, "
+        "Invalid thermostat \"notValid\" at line 0 in input file.\n"
+        "Possible options are: none, berendsen, "
         "velocity_rescaling, langevin, nh-chain"
     );
 }

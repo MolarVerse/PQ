@@ -24,9 +24,9 @@
 
 #define _TEST_RST_FILE_READER_H_
 
-#include "engine.hpp"   // for Engine
-
 #include <gtest/gtest.h>
+
+#include "mmmdEngine.hpp"   // for Engine
 
 /**
  * @brief Fixture class for testing the RestartFileReader class
@@ -34,8 +34,14 @@
  */
 class TestRstFileReader : public ::testing::Test
 {
-  protected:
-    void SetUp() override { _engine = new engine::Engine(); }
+   protected:
+    void SetUp() override
+    {
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
+    }
 
     engine::Engine *_engine;
 };

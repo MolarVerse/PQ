@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_COULOMB_LONG_RANGE_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserCoulombLongRange inherits from InputFileParser
      *
@@ -45,11 +47,11 @@ namespace input
      */
     class InputFileParserCoulombLongRange : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserCoulombLongRange(engine::Engine &);
 
-        void parseCoulombLongRange(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseWolfParameter(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseCoulombLongRange(const strings &, const size_t);
+        void parseWolfParameter(const strings &, const size_t);
     };
 
 }   // namespace input

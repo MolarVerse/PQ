@@ -27,6 +27,10 @@
 
 using simulationBox::TriclinicBox;
 
+using namespace linearAlgebra;
+using namespace settings;
+using namespace constants;
+
 /**
  * @brief Calculate the volume of the box
  *
@@ -37,13 +41,14 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
 /**
  * @brief set box angles and recalculate the box matrix
  *
- * @details convert the angles from degrees to radians, calculate the transformation matrix and the box matrix
+ * @details convert the angles from degrees to radians, calculate the
+ * transformation matrix and the box matrix
  *
  * @param boxAngles
  */
-void TriclinicBox::setBoxAngles(const linearAlgebra::Vec3D &boxAngles)
+void TriclinicBox::setBoxAngles(const Vec3D &boxAngles)
 {
-    _boxAngles = boxAngles * constants::_DEG_TO_RAD_;
+    _boxAngles = boxAngles * _DEG_TO_RAD_;
 
     calculateTransformationMatrix();
     calculateBoxMatrix();
@@ -54,7 +59,7 @@ void TriclinicBox::setBoxAngles(const linearAlgebra::Vec3D &boxAngles)
  *
  * @param boxDimensions
  */
-void TriclinicBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions)
+void TriclinicBox::setBoxDimensions(const Vec3D &boxDimensions)
 {
     _boxDimensions = boxDimensions;
 
@@ -87,10 +92,14 @@ void TriclinicBox::calculateTransformationMatrix()
     _transformationMatrix[0][1] = cosGamma();
     _transformationMatrix[0][2] = cosBeta();
 
-    _transformationMatrix[1][1] = sinGamma();
-    _transformationMatrix[1][2] = (cosAlpha() - cosBeta() * cosGamma()) / sinGamma();
+    _transformationMatrix[1][1]  = sinGamma();
+    _transformationMatrix[1][2]  = cosAlpha() - cosBeta() * cosGamma();
+    _transformationMatrix[1][2] /= sinGamma();
 
-    _transformationMatrix[2][2] = ::sqrt(1.0 - sum(cos(_boxAngles) * cos(_boxAngles)) + 2 * prod(cos(_boxAngles))) / sinGamma();
+    const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
+    const auto prodcos           = prod(cos(_boxAngles));
+    _transformationMatrix[2][2]  = ::sqrt(1.0 - sumcos_2 + 2 * prodcos);
+    _transformationMatrix[2][2] /= sinGamma();
 }
 
 /**
@@ -98,7 +107,7 @@ void TriclinicBox::calculateTransformationMatrix()
  *
  * @param position
  */
-void TriclinicBox::applyPBC(linearAlgebra::Vec3D &position) const
+void TriclinicBox::applyPBC(Vec3D &position) const
 {
     auto fractionalPosition = inverse(_boxMatrix) * position;
 
@@ -111,9 +120,9 @@ void TriclinicBox::applyPBC(linearAlgebra::Vec3D &position) const
  * @brief Calculate the shift vector
  *
  * @param shiftVector
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D TriclinicBox::calculateShiftVector(const linearAlgebra::Vec3D &shiftVector) const
+Vec3D TriclinicBox::calcShiftVector(const Vec3D &shiftVector) const
 {
     return _boxMatrix * round(inverse(_boxMatrix) * shiftVector);
 }
@@ -122,9 +131,9 @@ linearAlgebra::Vec3D TriclinicBox::calculateShiftVector(const linearAlgebra::Vec
  * @brief transform a vector into the orthogonal space
  *
  * @param vec
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::Vec3D &vec) const
+Vec3D TriclinicBox::toOrthoSpace(const Vec3D &vec) const
 {
     return inverse(_transformationMatrix) * vec;
 }
@@ -133,9 +142,9 @@ linearAlgebra::Vec3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlge
  * @brief transform a matrix into the orthogonal space
  *
  * @param mat
- * @return linearAlgebra::tensor3D
+ * @return tensor3D
  */
-linearAlgebra::tensor3D TriclinicBox::transformIntoOrthogonalSpace(const linearAlgebra::tensor3D &mat) const
+tensor3D TriclinicBox::toOrthoSpace(const tensor3D &mat) const
 {
     return inverse(_transformationMatrix) * mat;
 }
@@ -144,9 +153,9 @@ linearAlgebra::tensor3D TriclinicBox::transformIntoOrthogonalSpace(const linearA
  * @brief transform a vector into the simulation space
  *
  * @param vec
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::Vec3D &vec) const
+Vec3D TriclinicBox::toSimSpace(const Vec3D &vec) const
 {
     return _transformationMatrix * vec;
 }
@@ -155,30 +164,34 @@ linearAlgebra::Vec3D TriclinicBox::transformIntoSimulationSpace(const linearAlge
  * @brief transform a matrix into the simulation space
  *
  * @param mat
- * @return linearAlgebra::tensor3D
+ * @return tensor3D
  */
-linearAlgebra::tensor3D TriclinicBox::transformIntoSimulationSpace(const linearAlgebra::tensor3D &mat) const
+tensor3D TriclinicBox::toSimSpace(const tensor3D &mat) const
 {
     return _transformationMatrix * mat;
 }
 
 /**
- * @brief scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume
+ * @brief scale box dimensions and angles and recalculate the box matrix,
+ * transformation matrix and volume
  *
- * @details it first calculates the new box matrix, then the new box dimensions and angles. By setting the box dimensions and
- * angles the transformation matrix and volume are recalculated
+ * @details it first calculates the new box matrix, then the new box dimensions
+ * and angles. By setting the box dimensions and angles the transformation
+ * matrix and volume are recalculated
  *
  * @param scalingTensor
  */
-void TriclinicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
 {
-    if (settings ::ManostatSettings::getIsotropy() != settings::Isotropy::FULL_ANISOTROPIC)
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
+
     else
     {
         const auto boxMatrix = scalingTensor * _boxMatrix;
 
-        const auto &[boxDimensions, boxAngles] = calculateBoxDimensionsAndAnglesFromBoxMatrix(boxMatrix);
+        const auto &[boxDimensions, boxAngles] =
+            calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
 
         setBoxDimensions(boxDimensions);
         setBoxAngles(boxAngles);
@@ -191,17 +204,25 @@ void TriclinicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
  * @brief determine box dimensions and angles from box matrix
  *
  * @param boxMatrix
- * @return std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
+ * @return std::pair<Vec3D, Vec3D>
  */
-std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D>
-simulationBox::calculateBoxDimensionsAndAnglesFromBoxMatrix(const linearAlgebra::tensor3D &boxMatrix)
+std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
+    const tensor3D &boxMatrix
+)
 {
     const auto box_x = boxMatrix[0][0];
-    const auto box_y = ::sqrt(boxMatrix[1][1] * boxMatrix[1][1] + boxMatrix[0][1] * boxMatrix[0][1]);
-    const auto box_z =
-        ::sqrt(boxMatrix[2][2] * boxMatrix[2][2] + boxMatrix[1][2] * boxMatrix[1][2] + boxMatrix[0][2] * boxMatrix[0][2]);
+    const auto box_y = ::sqrt(
+        boxMatrix[1][1] * boxMatrix[1][1] + boxMatrix[0][1] * boxMatrix[0][1]
+    );
+    const auto box_z = ::sqrt(
+        boxMatrix[2][2] * boxMatrix[2][2] + boxMatrix[1][2] * boxMatrix[1][2] +
+        boxMatrix[0][2] * boxMatrix[0][2]
+    );
 
-    const auto cos_alpha = (boxMatrix[0][1] * boxMatrix[0][2] + boxMatrix[1][1] * boxMatrix[1][2]) / (box_y * box_z);
+    const auto cos_alpha = (boxMatrix[0][1] * boxMatrix[0][2] +
+                            boxMatrix[1][1] * boxMatrix[1][2]) /
+                           (box_y * box_z);
+
     const auto cos_beta  = boxMatrix[0][2] / box_z;
     const auto cos_gamma = boxMatrix[0][1] / box_y;
 
@@ -209,6 +230,77 @@ simulationBox::calculateBoxDimensionsAndAnglesFromBoxMatrix(const linearAlgebra:
     const auto beta  = ::acos(cos_beta);
     const auto gamma = ::acos(cos_gamma);
 
-    return std::make_pair(linearAlgebra::Vec3D{box_x, box_y, box_z},
-                          linearAlgebra::Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_);
+    return std::make_pair(
+        Vec3D{box_x, box_y, box_z},
+        Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_
+    );
+}
+
+/**
+ * @brief calculate cos of alpha
+ *
+ * @return double
+ */
+double TriclinicBox::cosAlpha() const { return ::cos(_boxAngles[0]); }
+
+/**
+ * @brief calculate cos of beta
+ *
+ * @return double
+ */
+double TriclinicBox::cosBeta() const { return ::cos(_boxAngles[1]); }
+
+/**
+ * @brief calculate cos of gamma
+ *
+ * @return double
+ */
+double TriclinicBox::cosGamma() const { return ::cos(_boxAngles[2]); }
+
+/**
+ * @brief calculate sin of alpha
+ *
+ * @return double
+ */
+double TriclinicBox::sinAlpha() const { return ::sin(_boxAngles[0]); }
+
+/**
+ * @brief calculate sin of beta
+ *
+ * @return double
+ */
+double TriclinicBox::sinBeta() const { return ::sin(_boxAngles[1]); }
+
+/**
+ * @brief calculate sin of gamma
+ *
+ * @return double
+ */
+double TriclinicBox::sinGamma() const { return ::sin(_boxAngles[2]); }
+
+/**
+ * @brief get the box angles
+ *
+ * @return Vec3D
+ */
+Vec3D TriclinicBox::getBoxAngles() const
+{
+    return _boxAngles * constants::_RAD_TO_DEG_;
+}
+
+/**
+ * @brief get the box matrix
+ *
+ * @return tensor3D
+ */
+tensor3D TriclinicBox::getBoxMatrix() const { return _boxMatrix; }
+
+/**
+ * @brief get the transformation matrix
+ *
+ * @return tensor3D
+ */
+tensor3D TriclinicBox::getTransformationMatrix() const
+{
+    return _transformationMatrix;
 }

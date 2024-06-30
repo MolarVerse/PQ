@@ -32,6 +32,25 @@
 using namespace virial;
 
 /**
+ * @brief clones the molecular virial object
+ *
+ * @return std::shared_ptr<Virial>
+ */
+std::shared_ptr<Virial> VirialMolecular::clone() const
+{
+    return std::make_shared<VirialMolecular>(*this);
+}
+
+/**
+ * @brief clones the atomic virial object
+ *
+ */
+std::shared_ptr<Virial> VirialAtomic::clone() const
+{
+    return std::make_shared<VirialAtomic>(*this);
+}
+
+/**
  * @brief calculate virial for general systems
  *
  * @details It calculates the virial for all atoms in the simulation box without

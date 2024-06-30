@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_TIMINGS_HPP_
 
-#include "inputFileParser.hpp"
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserTimings inherits from InputFileParser
      *
@@ -45,11 +47,11 @@ namespace input
      */
     class InputFileParserTimings : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserTimings(engine::Engine &);
 
-        void parseTimeStep(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseNumberOfSteps(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseTimeStep(const strings &, const size_t);
+        void parseNumberOfSteps(const strings &, const size_t);
     };
 
 }   // namespace input

@@ -39,6 +39,10 @@
 #include "mpi.hpp"   // for MPI
 #endif
 
+#ifdef WITH_PYBIND11
+#include <pybind11/embed.h>   // for scoped_interpreter
+#endif
+
 static int PQ(int argc, const std::vector<std::string> &arguments)
 {
     auto commandLineArgs = CommandLineArgs(argc, arguments);
@@ -47,7 +51,7 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
     auto engine = std::unique_ptr<engine::Engine>();
     input::readJobType(commandLineArgs.getInputFileName(), engine);
 
-    setup::setupSimulation(commandLineArgs.getInputFileName(), *engine);
+    setup::setupRequestedJob(commandLineArgs.getInputFileName(), *engine);
 
     /*
         HERE STARTS THE MAIN LOOP
@@ -71,6 +75,10 @@ int main(int argc, char *argv[])
 
 #ifdef WITH_KOKKOS
     Kokkos::initialize(argc, argv);
+#endif
+
+#ifdef WITH_PYBIND11
+    pybind11::scoped_interpreter guard{};
 #endif
 
     try

@@ -1,6 +1,9 @@
 set(engine_source_files
     engine.cpp
 
+    optEngine.cpp
+    mdEngine.cpp
+
     mmmdEngine.cpp
     qmmdEngine.cpp
     qmmmmdEngine.cpp
@@ -14,6 +17,7 @@ if(BUILD_WITH_KOKKOS)
     set(engine_source_files
         ${engine_source_files}
         engine_kokkos.cpp
+        mdEngine_kokkos.cpp
     )
 endif()
 
@@ -52,15 +56,36 @@ target_link_libraries(engine
     virial
     forceField
     intraNonBonded
-    QM
     references
+
+    optimization
+    QM
+    externalQM
 )
+
+if(BUILD_WITH_ASE)
+    target_link_libraries(engine
+        PUBLIC
+        aseQM
+    )
+endif()
 
 if(BUILD_WITH_KOKKOS)
     target_link_libraries(engine
         PUBLIC
         nonCoulombPotential_kokkos
         coulombPotential_kokkos
+    )
+endif()
+
+if(BUILD_WITH_PYBIND11)
+    target_include_directories(engine
+        PRIVATE
+        ${pybind11_INCLUDE_DIR}
+    )
+    target_link_libraries(engine
+        PRIVATE
+        pybind11::embed
     )
 endif()
 

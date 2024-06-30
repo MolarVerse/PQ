@@ -170,8 +170,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     EXPECT_THROW_MSG(
         parser.parseMoldescriptorFilename(lineElements, 0),
         customException::InputFileException,
-        "Cannot open moldescriptor file - filename = moldescriptor.txt - file "
-        "not found"
+        "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
+        "file not found"
     );
 
     lineElements = {

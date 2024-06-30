@@ -24,15 +24,11 @@
 
 #define _RING_POLYMER_ENERGY_OUTPUT_HPP_
 
-#include "output.hpp"   // for Output
-
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "output.hpp"        // for Output
+#include "typeAliases.hpp"   // for VecPhysicalData
 
 namespace output
 {
@@ -44,12 +40,13 @@ namespace output
      */
     class RingPolymerEnergyOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
-        void   write(const size_t step, const std::vector<physicalData::PhysicalData> &);
-        double sumOfRingPolymerEnergies(const std::vector<physicalData::PhysicalData> &);
-        double maxRingPolymerEnergy(const std::vector<physicalData::PhysicalData> &);
+        void write(const size_t step, const pq::VecPhysicalData &);
+
+        double sumOfRingPolymerEnergies(const pq::VecPhysicalData &);
+        double maxRingPolymerEnergy(const pq::VecPhysicalData &);
     };
 
 }   // namespace output

@@ -111,7 +111,7 @@ void KokkosPotential::calculateForces(
                 };
 
                 double txyz[3];
-                simulationBox::KokkosSimulationBox::calculateShiftVector(
+                simulationBox::KokkosSimulationBox::calcShiftVector(
                     dxyz,
                     boxDimensions,
                     txyz

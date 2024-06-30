@@ -21,3 +21,107 @@
 ******************************************************************************/
 
 #include "resetKineticsSettings.hpp"
+
+using settings::ResetKineticsSettings;
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set nScale
+ *
+ * @param nScale
+ */
+void ResetKineticsSettings::setNScale(const size_t nScale) { _nScale = nScale; }
+
+/**
+ * @brief set fScale
+ *
+ * @param fScale
+ */
+void ResetKineticsSettings::setFScale(const size_t fScale) { _fScale = fScale; }
+
+/**
+ * @brief set nReset
+ *
+ * @param nReset
+ */
+void ResetKineticsSettings::setNReset(const size_t nReset) { _nReset = nReset; }
+
+/**
+ * @brief set fReset
+ *
+ * @param fReset
+ */
+void ResetKineticsSettings::setFReset(const size_t fReset) { _fReset = fReset; }
+
+/**
+ * @brief set nResetAngular
+ *
+ * @param nResetAngular
+ */
+void ResetKineticsSettings::setNResetAngular(const size_t nResetAngular)
+{
+    _nResetAngular = nResetAngular;
+}
+
+/**
+ * @brief set fResetAngular
+ *
+ * @param fResetAngular
+ */
+void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
+{
+    _fResetAngular = fResetAngular;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get nScale
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNScale() { return _nScale; }
+
+/**
+ * @brief get fScale
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFScale() { return _fScale; }
+
+/**
+ * @brief get nReset
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNReset() { return _nReset; }
+
+/**
+ * @brief get fReset
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFReset() { return _fReset; }
+
+/**
+ * @brief get nResetAngular
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNResetAngular() { return _nResetAngular; }
+
+/**
+ * @brief get fResetAngular
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFResetAngular() { return _fResetAngular; }

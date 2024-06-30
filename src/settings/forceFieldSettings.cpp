@@ -21,3 +21,32 @@
 ******************************************************************************/
 
 #include "forceFieldSettings.hpp"
+
+using namespace settings;
+
+/********************
+ * standard getters *
+ ********************/
+
+/**
+ * @brief Get if the force field is active
+ *
+ * @return ForceFieldType
+ */
+bool ForceFieldSettings::isActive() { return _active; }
+
+/********************
+ * standard setters *
+ ********************/
+
+/**
+ * @brief set the force field active
+ *
+ */
+void ForceFieldSettings::activate() { _active = true; }
+
+/**
+ * @brief set the force field inactive
+ *
+ */
+void ForceFieldSettings::deactivate() { _active = false; }

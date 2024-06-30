@@ -22,14 +22,15 @@
 
 #include "referencesOutput.hpp"
 
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-
 #include <algorithm>   // for for_each
 #include <fstream>     // for fstream
 #include <iostream>    // for cout
 #include <string>      // for string
 
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+
 using references::ReferencesOutput;
+using namespace settings;
 
 /**
  * @brief writes the references file
@@ -38,29 +39,34 @@ using references::ReferencesOutput;
  */
 void ReferencesOutput::writeReferencesFile()
 {
-    const auto    filename = settings::OutputFileSettings::getReferenceFileName();
+    const auto filename = OutputFileSettings::getReferenceFileName();
+
     std::ofstream fp(filename);
 
     auto printReference = [&fp](const std::string &referenceFileName)
     {
-        std::ifstream referenceFile(_referenceFilesPath + "/" + referenceFileName);
-        std::string   line;
-        while (getline(referenceFile, line))
-            fp << line << '\n';
+        const auto    filepath = _referenceFilesPath + "/" + referenceFileName;
+        std::ifstream referenceFile(filepath);
+
+        std::string line;
+        while (getline(referenceFile, line)) fp << line << '\n';
 
         fp << "\n\n";
         referenceFile.close();
     };
 
+    // clang-format off
     fp << "################################################################################\n";
     fp << "#                                                                              #\n";
     fp << "#  This file contains all references to the used software and the used theory  #\n";
     fp << "#                                                                              #\n";
     fp << "################################################################################\n";
     fp << '\n';
+    // clang-format on
 
     std::ranges::for_each(_referenceFileNames, printReference);
 
+    // clang-format off
     fp << '\n';
     fp << "################################################################################\n";
     fp << "#                                                                              #\n";
@@ -68,6 +74,7 @@ void ReferencesOutput::writeReferencesFile()
     fp << "#                                                                              #\n";
     fp << "################################################################################\n";
     fp << '\n';
+    // clang-format on
 
     std::ranges::for_each(_bibtexFileNames, printReference);
 

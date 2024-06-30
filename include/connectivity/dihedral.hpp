@@ -36,7 +36,7 @@ namespace connectivity
      */
     class Dihedral : public ConnectivityElement
     {
-      public:
+       public:
         using ConnectivityElement::ConnectivityElement;
     };
 

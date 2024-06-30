@@ -29,10 +29,7 @@
 #include <memory>     // for unique_ptr
 #include <vector>     // for vector
 
-namespace simulationBox
-{
-    class MoleculeType;   // Forward declaration
-}   // namespace simulationBox
+#include "typeAliases.hpp"   // for pq::MoleculeType
 
 namespace constraints
 {
@@ -46,28 +43,26 @@ namespace constraints
     class MShakeReference
     {
        private:
-        std::shared_ptr<simulationBox::MoleculeType> _moleculeType;
-        std::vector<simulationBox::Atom>             _atoms;
+        std::shared_ptr<pq::MoleculeType> _moleculeType;
+        std::vector<pq::Atom>             _atoms;
 
        public:
         MShakeReference() = default;
-
-        void storeReferencePositions();
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setMoleculeType(simulationBox::MoleculeType &moltype);
-        void setAtoms(const std::vector<simulationBox::Atom> &atoms);
+        void setMoleculeType(pq::MoleculeType &moltype);
+        void setAtoms(const std::vector<pq::Atom> &atoms);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] std::vector<simulationBox::Atom> &getAtoms();
-        [[nodiscard]] simulationBox::MoleculeType      &getMoleculeType() const;
+        [[nodiscard]] size_t                 getNumberOfAtoms() const;
+        [[nodiscard]] std::vector<pq::Atom> &getAtoms();
+        [[nodiscard]] pq::MoleculeType      &getMoleculeType() const;
     };
 }   // namespace constraints
 

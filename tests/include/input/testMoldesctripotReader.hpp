@@ -26,7 +26,7 @@
 
 #include <gtest/gtest.h>
 
-#include "engine.hpp"
+#include "mmmdEngine.hpp"
 
 /**
  * @class TestMoldescriptorReader
@@ -37,7 +37,13 @@
 class TestMoldescriptorReader : public ::testing::Test
 {
    protected:
-    void SetUp() override { _engine = new engine::Engine(); }
+    void SetUp() override
+    {
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
+    }
 
     engine::Engine *_engine;
 };

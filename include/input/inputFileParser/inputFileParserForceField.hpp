@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_FORCE_FIELD_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserForceField inherits from InputFileParser
      *
@@ -45,10 +47,10 @@ namespace input
      */
     class InputFileParserForceField : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserForceField(engine::Engine &);
 
-        void parseForceFieldType(const std::vector<std::string> &lineElements, const size_t);
+        void parseForceFieldType(const strings &, const size_t);
     };
 
 }   // namespace input

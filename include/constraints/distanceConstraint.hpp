@@ -27,13 +27,8 @@
 #include <cstddef>
 
 #include "bond.hpp"
+#include "typeAliases.hpp"
 #include "vector3d.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
-}   // namespace simulationBox
 
 namespace constraints
 {
@@ -54,46 +49,30 @@ namespace constraints
         double _springConstant;
         double _dSpringConstantDt;
 
-        double               _lowerEnergy = 0.0;
-        double               _upperEnergy = 0.0;
-        linearAlgebra::Vec3D _force       = {0.0};
+        double    _lowerEnergy = 0.0;
+        double    _upperEnergy = 0.0;
+        pq::Vec3D _force;
 
        public:
         DistanceConstraint(
-            simulationBox::Molecule *molecule1,
-            simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const double             lowerDistance,
-            const double             upperDistance,
-            const double             springConstant,
-            const double             dSpringConstantDt
-        )
-            : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
-              _lowerDistance(lowerDistance),
-              _upperDistance(upperDistance),
-              _springConstant(springConstant),
-              _dSpringConstantDt(dSpringConstantDt){};
-
-        void applyDistanceConstraint(
-            const simulationBox::SimulationBox &simulationBox,
-            const double                        dt
+            pq::Molecule *molecule1,
+            pq::Molecule *molecule2,
+            const size_t  atomIndex1,
+            const size_t  atomIndex2,
+            const double  lowerDistance,
+            const double  upperDistance,
+            const double  springConstant,
+            const double  dSpringConstantDt
         );
 
-        [[nodiscard]] double getLowerDistance() const { return _lowerDistance; }
-        [[nodiscard]] double getUpperDistance() const { return _upperDistance; }
+        void applyDistanceConstraint(const pq::SimBox &, const double);
 
-        [[nodiscard]] double getSpringConstant() const
-        {
-            return _springConstant;
-        }
-        [[nodiscard]] double getDSpringConstantDt() const
-        {
-            return _dSpringConstantDt;
-        }
-
-        [[nodiscard]] double getLowerEnergy() const { return _lowerEnergy; }
-        [[nodiscard]] double getUpperEnergy() const { return _upperEnergy; }
+        [[nodiscard]] double getLowerDistance() const;
+        [[nodiscard]] double getUpperDistance() const;
+        [[nodiscard]] double getSpringConstant() const;
+        [[nodiscard]] double getDSpringConstantDt() const;
+        [[nodiscard]] double getLowerEnergy() const;
+        [[nodiscard]] double getUpperEnergy() const;
     };
 
 }   // namespace constraints

@@ -10,6 +10,9 @@ target_include_directories(linearAlgebra
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
     ${PROJECT_SOURCE_DIR}/src/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/concepts
+    ${PROJECT_SOURCE_DIR}/include/config
+    ${eigen_SOURCE_DIR}
 )
 
 target_link_libraries(linearAlgebra

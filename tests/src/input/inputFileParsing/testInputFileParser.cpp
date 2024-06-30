@@ -27,12 +27,12 @@
 #include <string>       // for string, allocator, basic_string
 #include <vector>       // for vector
 
-#include "exceptions.hpp"               // for InputFileException
-#include "gtest/gtest.h"                // for Message, TestPartResult
-#include "inputFileParser.hpp"          // for ParseFunc, checkCommand
-#include "inputFileParserGeneral.hpp"   // for InputFileParserGeneral
-#include "testInputFileReader.hpp"      // for TestInputFileReader
-#include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
+#include "exceptions.hpp"            // for InputFileException
+#include "generalInputParser.hpp"    // for InputFileParserGeneral
+#include "gtest/gtest.h"             // for Message, TestPartResult
+#include "inputFileParser.hpp"       // for ParseFunc, checkCommand
+#include "testInputFileReader.hpp"   // for TestInputFileReader
+#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 using namespace input;
 
@@ -109,12 +109,12 @@ TEST_F(TestInputFileReader, equalSign)
  */
 TEST_F(TestInputFileReader, addKeyword)
 {
-    InputFileParserGeneral parser(*_engine);
-    const auto initialSizeOfMaps = parser.getKeywordCountMap().size();
+    GeneralInputParser parser(*_engine);
+    const auto         initialSizeOfMaps = parser.getKeywordCountMap().size();
 
     parser.addKeyword(
         "test",
-        bind_front(&InputFileParserGeneral::parseJobType, parser),
+        bind_front(&GeneralInputParser::parseJobType, parser),
         true
     );
 

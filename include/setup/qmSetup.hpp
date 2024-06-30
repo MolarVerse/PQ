@@ -24,14 +24,11 @@
 
 #define _QM_SETUP_HPP_
 
-namespace engine
-{
-    class QMMDEngine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupQM(engine::QMMDEngine &);
+    void setupQM(pq::Engine &);
 
     /**
      * @class QMSetup
@@ -41,16 +38,17 @@ namespace setup
      */
     class QMSetup
     {
-      private:
-        engine::QMMDEngine &_engine;
+       private:
+        pq::QMMDEngine &_engine;
 
-      public:
-        explicit QMSetup(engine::QMMDEngine &engine) : _engine(engine){};
+       public:
+        explicit QMSetup(pq::QMMDEngine &engine);
 
         void setup();
         void setupQMMethod();
         void setupQMScript() const;
         void setupCoulombRadiusCutOff() const;
+        void setupWriteInfo() const;
     };
 
 }   // namespace setup

@@ -19,14 +19,13 @@
 
 <GPL_HEADER>
 ******************************************************************************/
+#ifdef WITH_MPI
 
 #include <algorithm>   // for for_each
 
 #include "simulationBox.hpp"
 
 using simulationBox::SimulationBox;
-
-#ifdef WITH_MPI
 
 /**
  * @brief flattens atom types of each atom into a single vector of size_t
@@ -82,29 +81,6 @@ std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
     std::ranges::for_each(_atoms, addInternalGlobalVDWTypes);
 
     return internalGlobalVDWTypes;
-}
-
-/**
- * @brief flattens positions of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenPositions()
-{
-    std::vector<double> positions;
-
-    auto addPositions = [&positions](auto &atom)
-    {
-        const auto position = atom->getPosition();
-
-        positions.push_back(position[0]);
-        positions.push_back(position[1]);
-        positions.push_back(position[2]);
-    };
-
-    std::ranges::for_each(_atoms, addPositions);
-
-    return positions;
 }
 
 /**

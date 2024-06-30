@@ -24,9 +24,9 @@
 
 #define _MATRIX_HPP_
 
+#include <Eigen/Dense>
 #include <algorithm>
 #include <cstddef>
-#include <eigen3/Eigen/Dense>
 #include <utility>   // for make_pair, pair
 #include <vector>
 

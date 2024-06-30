@@ -125,7 +125,7 @@ void InputFileParserFiles::parseIntraNonBondedFile(
 
     if (!utilities::fileExists(fileName))
         throw customException::InputFileException(
-            "Intra non bonded file \"" + fileName + "\"" + " File not found"
+            std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
 
     _engine.getIntraNonBonded().activate();
@@ -154,7 +154,7 @@ void InputFileParserFiles::parseTopologyFilename(
 
     if (!utilities::fileExists(filename))
         throw customException::InputFileException(
-            "Cannot open topology file - filename = " + filename
+            std::format("Cannot open topology file - filename = {}", filename)
         );
 
     settings::FileSettings::setTopologyFileName(filename);
@@ -181,7 +181,7 @@ void InputFileParserFiles::parseParameterFilename(
 
     if (!utilities::fileExists(filename))
         throw customException::InputFileException(
-            "Cannot open parameter file - filename = " + filename
+            std::format("Cannot open parameter file - filename = {}", filename)
         );
 
     settings::FileSettings::setParameterFileName(filename);
@@ -205,7 +205,7 @@ void InputFileParserFiles::parseStartFilename(
 
     if (!utilities::fileExists(filename))
         throw customException::InputFileException(
-            "Cannot open start file - filename = " + filename
+            std::format("Cannot open start file - filename = {}", filename)
         );
 
     settings::FileSettings::setStartFileName(filename);
@@ -227,9 +227,10 @@ void InputFileParserFiles::parseRingPolymerStartFilename(
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException(
-            "Cannot open ring polymer start file - filename = " + filename
-        );
+        throw customException::InputFileException(std::format(
+            "Cannot open ring polymer start file - filename = {}",
+            filename
+        ));
 
     settings::FileSettings::setRingPolymerStartFileName(filename);
     settings::FileSettings::setIsRingPolymerStartFileNameSet();
@@ -254,10 +255,11 @@ void InputFileParserFiles::parseMoldescriptorFilename(
     const auto &filename = lineElements[2];
 
     if (!utilities::fileExists(filename))
-        throw customException::InputFileException(
-            "Cannot open moldescriptor file - filename = " + filename +
-            " - file not found"
-        );
+        throw customException::InputFileException(std::format(
+            "Cannot open moldescriptor file - filename = \"{}\" - file not "
+            "found",
+            filename
+        ));
 
     settings::FileSettings::setMolDescriptorFileName(filename);
 }
@@ -272,9 +274,10 @@ void InputFileParserFiles::parseGuffPath(
     const size_t
 )
 {
-    throw customException::InputFileException(
-        R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)"
-    );
+    throw customException::InputFileException(std::format(
+        "The \"guff_path\" keyword id deprecated. Please use \"guffdat_file\" "
+        "instead."
+    ));
 }
 
 /**
@@ -297,7 +300,7 @@ void InputFileParserFiles::parseGuffDatFilename(
 
     if (!utilities::fileExists(filename))
         throw customException::InputFileException(
-            "Cannot open guff file - filename = " + filename
+            std::format("Cannot open guff file - filename = {}", filename)
         );
 
     settings::FileSettings::setGuffDatFileName(filename);
@@ -321,7 +324,7 @@ void InputFileParserFiles::parseMShakeFilename(
 
     if (!utilities::fileExists(filename))
         throw customException::InputFileException(
-            "Cannot open mshake file - filename = " + filename
+            std::format("Cannot open mshake file - filename = {}", filename)
         );
 
     settings::FileSettings::setMShakeFileName(filename);

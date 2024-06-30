@@ -116,10 +116,9 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
     auto       dPos = pos1 - pos2;
     const auto txyz =
-        -box *
-        round(
-            dPos / box
-        );   // TODO: implement it more general via Box::calculateShiftVector
+        -box * round(
+                   dPos / box
+               );   // TODO: implement it more general via Box::calcShiftVector
 
     dPos += txyz;
 
@@ -169,9 +168,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
             if (scale)
             {
                 nonCoulombEnergyLocal *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
-                nonCoulombForce *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
+                    settings::PotentialSettings::getScale14VDW();
+                nonCoulombForce *= settings::PotentialSettings::getScale14VDW();
             }
 
             nonCoulombEnergy  = nonCoulombEnergyLocal;

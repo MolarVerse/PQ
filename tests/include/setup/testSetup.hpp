@@ -27,14 +27,25 @@
 #include <gtest/gtest.h>
 
 #include "engine.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
 #include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
    protected:
-    void SetUp() override { _engine = new engine::Engine(); }
+    void SetUp() override
+    {
+        // NOTE: here the MMOPTEngine is used as dummy engine
+        //       for testing the InputFileReader class
+        //       The mdEngine is used only for special cases
+        //       where optEngine is not supported
+        _engine   = new engine::OptEngine();
+        _mdEngine = new engine::MMMDEngine();
+    }
 
-    engine::Engine *_engine;
+    engine::Engine   *_engine;
+    engine::MDEngine *_mdEngine;
 
     void TearDown() override
     {

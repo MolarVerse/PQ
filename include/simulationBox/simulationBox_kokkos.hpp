@@ -63,7 +63,7 @@ namespace simulationBox
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        KOKKOS_INLINE_FUNCTION static void calculateShiftVector(
+        KOKKOS_INLINE_FUNCTION static void calcShiftVector(
             const double*         dxyz,
             Kokkos::View<double*> boxDimensions,
             double*               txyz

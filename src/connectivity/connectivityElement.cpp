@@ -21,3 +21,28 @@
 ******************************************************************************/
 
 #include "connectivityElement.hpp"
+
+using namespace connectivity;
+using namespace simulationBox;
+
+ConnectivityElement::ConnectivityElement(
+    const std::vector<Molecule *> &molecules,
+    const std::vector<size_t>     &atomIndices
+)
+    : _molecules(molecules), _atomIndices(atomIndices){};
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+std::vector<Molecule *> ConnectivityElement::getMolecules() const
+{
+    return _molecules;
+}
+
+std::vector<size_t> ConnectivityElement::getAtomIndices() const
+{
+    return _atomIndices;
+}

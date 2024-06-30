@@ -95,7 +95,7 @@ void KokkosVelocityVerlet::firstStep(
 
             double txyz[3] = {0.0, 0.0, 0.0};
 
-            simulationBox::KokkosSimulationBox::calculateShiftVector(
+            simulationBox::KokkosSimulationBox::calcShiftVector(
                 pos,
                 boxDimensions,
                 txyz

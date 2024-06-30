@@ -40,19 +40,28 @@ using namespace input;
  *
  * @param engine
  */
-InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserQMMM::InputFileParserQMMM(engine::Engine &engine)
+    : InputFileParser(engine)
 {
     addKeyword(
-        std::string("qm_center"), bind_front(&InputFileParserQMMM::parseQMCenter, this), false
+        std::string("qm_center"),
+        bind_front(&InputFileParserQMMM::parseQMCenter, this),
+        false
     );
     addKeyword(
-        std::string("qm_only_list"), bind_front(&InputFileParserQMMM::parseQMOnlyList, this), false
+        std::string("qm_only_list"),
+        bind_front(&InputFileParserQMMM::parseQMOnlyList, this),
+        false
     );
     addKeyword(
-        std::string("mm_only_list"), bind_front(&InputFileParserQMMM::parseMMOnlyList, this), false
+        std::string("mm_only_list"),
+        bind_front(&InputFileParserQMMM::parseMMOnlyList, this),
+        false
     );
     addKeyword(
-        std::string("qm_charges"), bind_front(&InputFileParserQMMM::parseUseQMCharges, this), false
+        std::string("qm_charges"),
+        bind_front(&InputFileParserQMMM::parseUseQMCharges, this),
+        false
     );
     addKeyword(
         std::string("qm_core_radius"),
@@ -83,7 +92,6 @@ void InputFileParserQMMM::parseQMCenter(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMMMSettings::setQMCenterString(lineElements[2]);
 }
 
@@ -99,7 +107,6 @@ void InputFileParserQMMM::parseQMOnlyList(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMMMSettings::setMMOnlyListString(lineElements[2]);
 }
 
@@ -115,7 +122,6 @@ void InputFileParserQMMM::parseMMOnlyList(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     settings::QMMMSettings::setMMOnlyListString(lineElements[2]);
 }
 
@@ -131,7 +137,6 @@ void InputFileParserQMMM::parseUseQMCharges(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     auto use_qm_charges = utilities::toLowerCopy(lineElements[2]);
 
     if ("qm" == use_qm_charges)
@@ -142,7 +147,9 @@ void InputFileParserQMMM::parseUseQMCharges(
 
     else
         throw customException::InputFileException(std::format(
-            "Invalid qm_charges \"{}\" in input file - possible values are: qm, mm", lineElements[2]
+            "Invalid qm_charges \"{}\" in input file\n"
+            "Possible values are: qm, mm",
+            lineElements[2]
         ));
 
     throw customException::UserInputException("Not implemented");

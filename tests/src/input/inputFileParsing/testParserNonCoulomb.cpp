@@ -77,7 +77,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     EXPECT_THROW_MSG(
         parser.parseNonCoulombType(lineElements, 0),
         customException::InputFileException,
-        "Invalid nonCoulomb type \"notValid\" at line 0 in input file. "
+        "Invalid nonCoulomb type \"notValid\" at line 0 in input file.\n"
         "Possible options are: lj, buck, morse and guff"
     );
 }

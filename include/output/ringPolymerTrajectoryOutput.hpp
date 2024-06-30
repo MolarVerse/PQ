@@ -24,9 +24,9 @@
 
 #define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
 
-#include "output.hpp"
-
 #include <vector>   // for vector
+
+#include "output.hpp"
 
 namespace simulationBox
 {
@@ -38,12 +38,13 @@ namespace output
     /**
      * @class RingPolymerTrajectoryOutput inherits from Output
      *
-     * @brief Output for xyz, vel, force, charges files for all ring polymer beads
+     * @brief Output for xyz, vel, force, charges files for all ring polymer
+     * beads
      *
      */
     class RingPolymerTrajectoryOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);

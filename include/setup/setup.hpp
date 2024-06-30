@@ -28,8 +28,15 @@
 
 namespace engine
 {
-    class Engine;
+    class Engine;   // forward declaration
+
 }   // namespace engine
+
+namespace timings
+{
+    class Timer;   // forward declaration
+
+}   // namespace timings
 
 /**
  * @namespace setup
@@ -42,7 +49,10 @@ namespace engine
  */
 namespace setup
 {
-    void setupSimulation(const std::string &inputFileName, engine::Engine &);
+    void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
+
+    void startSetup(timings::Timer &, timings::Timer &, engine::Engine &);
+    void endSetup(const timings::Timer &, timings::Timer &, engine::Engine &);
 
     void readFiles(engine::Engine &);
     void setupEngine(engine::Engine &);

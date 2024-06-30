@@ -24,13 +24,13 @@
 
 #define _RST_FILE_OUTPUT_HPP_
 
-#include "output.hpp"
-
 #include <cstddef>   // for size_t
+
+#include "output.hpp"
 
 namespace simulationBox
 {
-    class SimulationBox; // forward declaration
+    class SimulationBox;   // forward declaration
 }
 
 namespace output
@@ -43,7 +43,7 @@ namespace output
      */
     class RstFileOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void write(simulationBox::SimulationBox &, const size_t);

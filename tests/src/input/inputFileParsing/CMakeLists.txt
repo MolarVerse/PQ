@@ -5,7 +5,6 @@ set(source_files
     testParserForceField.cpp
     testParserCelllist.cpp
     testParserConstraints.cpp
-    testParserGeneral.cpp
     testParserIntegrator.cpp
     testParserManostat.cpp
     testParserOutput.cpp
@@ -16,8 +15,12 @@ set(source_files
     testParserCoulombLongRange.cpp
     testParserNonCoulomb.cpp
     testParserFiles.cpp
-    testParserQM.cpp
     testParserRingPolymer.cpp
+
+    testConvergenceParser.cpp
+    testGeneralParser.cpp
+    testOptParser.cpp
+    testQMParser.cpp
 )
 
 foreach(source_file ${source_files})

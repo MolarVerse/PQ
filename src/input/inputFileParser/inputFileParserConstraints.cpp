@@ -123,8 +123,8 @@ void InputFileParserConstraints::parseShakeActivated(
     else
     {
         auto message = format(
-            "(Invalid shake keyword \"{}\" at line {} in input file\n Possible "
-            "keywords are: \"on\", \"off\", \"shake\", \"mshake\")",
+            "Invalid shake keyword \"{}\" at line {} in input file\n"
+            "Possible keywords are: \"on\", \"off\", \"shake\", \"mshake\"",
             lineElements[2],
             lineNumber
         );
@@ -269,7 +269,8 @@ void InputFileParserConstraints::parseDistanceConstraintActivated(
     else
     {
         auto message = format(
-            R"(Invalid {} keyword "{}" at line {} in input file\n Possible keywords are "on" and "off")",
+            "Invalid {} keyword \"{}\" at line {} in input file\n"
+            "Possible keywords are \"on\" and \"off\"",
             lineElements[0],
             lineElements[2],
             lineNumber

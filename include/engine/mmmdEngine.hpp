@@ -24,7 +24,7 @@
 
 #define _MM_MD_ENGINE_HPP_
 
-#include "engine.hpp"
+#include "mdEngine.hpp"
 
 namespace engine
 {
@@ -35,9 +35,9 @@ namespace engine
      * @brief Contains all the information needed to run an MM MD simulation
      *
      */
-    class MMMDEngine : virtual public Engine
+    class MMMDEngine : virtual public MDEngine
     {
-      public:
+       public:
         ~MMMDEngine() override = default;
 
         void takeStep() override;

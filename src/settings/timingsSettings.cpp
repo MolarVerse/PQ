@@ -21,3 +21,76 @@
 ******************************************************************************/
 
 #include "timingsSettings.hpp"
+
+using settings::TimingsSettings;
+
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief Set the time step
+ *
+ * @param timeStep
+ */
+void TimingsSettings::setTimeStep(const double timeStep)
+{
+    _timeStep      = timeStep;
+    _isTimeStepSet = true;
+}
+
+/**
+ * @brief Set the step count
+ *
+ * @param stepCount
+ */
+void TimingsSettings::setStepCount(const size_t stepCount)
+{
+    _stepCount = stepCount;
+}
+
+/**
+ * @brief Set the number of steps
+ *
+ * @param numberOfSteps
+ */
+void TimingsSettings::setNumberOfSteps(const size_t numberOfSteps)
+{
+    _numberOfSteps = numberOfSteps;
+}
+
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief get the time step
+ *
+ * @return double
+ */
+double TimingsSettings::getTimeStep() { return _timeStep; }
+
+/**
+ * @brief get the step count
+ *
+ * @return size_t
+ */
+size_t TimingsSettings::getStepCount() { return _stepCount; }
+
+/**
+ * @brief get the number of steps
+ *
+ * @return size_t
+ */
+size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
+
+/**
+ * @brief check if the time step is set
+ *
+ * @return bool
+ */
+bool TimingsSettings::isTimeStepSet() { return _isTimeStepSet; }

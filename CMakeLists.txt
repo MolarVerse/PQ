@@ -57,6 +57,7 @@ endif()
 # ***************
 # cmake cxx flags
 # ***************
+set(CMAKE_CXX_STANDARD 20)
 
 # set default flags
 set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
@@ -102,6 +103,10 @@ endif()
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     include(python_bindings)
+endif()
+
+if(BUILD_WITH_ASE)
+    include(ase)
 endif()
 
 if(BUILD_WITH_TESTS)

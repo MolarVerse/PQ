@@ -58,7 +58,10 @@ namespace customException
         QMRUNTIMEEXCEEDED,
         MSHAKEFILEEXCEPTION,
         MSHAKEEXCEPTION,
-        LINEARALGEBRAEXCEPTION
+        LINEARALGEBRAEXCEPTION,
+        OPTEXCEPTION,
+        OPTWARNING,
+        COMPILETIMEEXCEPTION
     };
 
     /**
@@ -327,6 +330,45 @@ namespace customException
      * @brief Exception for linear algebra errors
      */
     class LinearAlgebraException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class OptException inherits from CustomException
+     *
+     * @brief Exception for optimization errors
+     */
+    class OptException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class OptWarning inherits from CustomException
+     *
+     * @brief Exception for optimization errors
+     */
+    class OptWarning : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class CompileTimeException inherits from CustomException
+     *
+     * @brief Exception for compile time errors
+     */
+    class CompileTimeException : public CustomException
     {
        public:
         using CustomException::CustomException;

@@ -53,46 +53,30 @@ namespace settings
         /********************
          * standard setters *
          ********************/
-        static void setQMCenterString(const std::string_view qmCenter)
-        {
-            _qmCenterString = qmCenter;
-        }
 
-        static void setQMOnlyListString(const std::string_view qmOnlyList)
-        {
-            _qmOnlyListString = qmOnlyList;
-        }
+        static void setQMCenterString(const std::string_view qmCenter);
+        static void setQMOnlyListString(const std::string_view qmOnlyList);
+        static void setMMOnlyListString(const std::string_view mmOnlyList);
 
-        static void setMMOnlyListString(const std::string_view mmOnlyList)
-        {
-            _mmOnlyListString = mmOnlyList;
-        }
+        static void setUseQMCharges(const bool useQMCharges);
 
-        static void setUseQMCharges(const bool useQMCharges) { _useQMCharges = useQMCharges; }
-
-        static void setQMCoreRadius(const double qmCoreRadius) { _qmCoreRadius = qmCoreRadius; }
-        static void setQMMMLayerRadius(const double qmmmLayerRadius)
-        {
-            _qmmmLayerRadius = qmmmLayerRadius;
-        }
-        static void setQMMMSmoothingRadius(const double qmmmSmoothingRadius)
-        {
-            _qmmmSmoothingRadius = qmmmSmoothingRadius;
-        }
+        static void setQMCoreRadius(const double qmCoreRadius);
+        static void setQMMMLayerRadius(const double qmmmLayerRadius);
+        static void setQMMMSmoothingRadius(const double qmmmSmoothingRadius);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getQMCenterString() { return _qmCenterString; }
-        [[nodiscard]] static std::string getQMOnlyListString() { return _qmOnlyListString; }
-        [[nodiscard]] static std::string getMMOnlyListString() { return _mmOnlyListString; }
+        [[nodiscard]] static std::string getQMCenterString();
+        [[nodiscard]] static std::string getQMOnlyListString();
+        [[nodiscard]] static std::string getMMOnlyListString();
 
-        [[nodiscard]] static bool getUseQMCharges() { return _useQMCharges; }
+        [[nodiscard]] static bool getUseQMCharges();
 
-        [[nodiscard]] static double getQMCoreRadius() { return _qmCoreRadius; }
-        [[nodiscard]] static double getQMMMLayerRadius() { return _qmmmLayerRadius; }
-        [[nodiscard]] static double getQMMMSmoothingRadius() { return _qmmmSmoothingRadius; }
+        [[nodiscard]] static double getQMCoreRadius();
+        [[nodiscard]] static double getQMMMLayerRadius();
+        [[nodiscard]] static double getQMMMSmoothingRadius();
     };
 }   // namespace settings
 

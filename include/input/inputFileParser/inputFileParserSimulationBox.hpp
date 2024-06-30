@@ -24,11 +24,11 @@
 
 #define _INPUT_FILE_PARSER_SIMULATION_BOX_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
 #include <vector>    // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
 
 namespace engine
 {
@@ -37,6 +37,8 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
+
     /**
      * @class InputFileParserSimulationBox inherits from InputFileParser
      *
@@ -45,12 +47,12 @@ namespace input
      */
     class InputFileParserSimulationBox : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserSimulationBox(engine::Engine &);
 
-        void parseCoulombRadius(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseDensity(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseInitializeVelocities(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseCoulombRadius(const strings &, const size_t);
+        void parseDensity(const strings &, const size_t);
+        void parseInitializeVelocities(const strings &, const size_t);
     };
 
 }   // namespace input
