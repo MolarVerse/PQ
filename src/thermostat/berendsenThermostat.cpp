@@ -22,14 +22,14 @@
 
 #include "berendsenThermostat.hpp"
 
+#include <cmath>    // for sqrt
+#include <memory>   // for __shared_ptr_access, shared_ptr
+#include <vector>   // for vector
+
 #include "atom.hpp"              // for Atom
 #include "physicalData.hpp"      // for PhysicalData
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
-
-#include <cmath>    // for sqrt
-#include <memory>   // for __shared_ptr_access, shared_ptr
-#include <vector>   // for vector
 
 using thermostat::BerendsenThermostat;
 
@@ -39,19 +39,28 @@ using thermostat::BerendsenThermostat;
  * @link https://doi.org/10.1063/1.448118
  *
  * @param simulationBox
- * @param physicalData
+ * @param data
  */
-void BerendsenThermostat::applyThermostat(simulationBox::SimulationBox &simulationBox, physicalData::PhysicalData &physicalData)
+void BerendsenThermostat::applyThermostat(
+    simulationBox::SimulationBox &simulationBox,
+    physicalData::PhysicalData   &data
+)
 {
-    physicalData.calculateTemperature(simulationBox);
+    startTimingsSection("Berendsen");
 
-    _temperature = physicalData.getTemperature();
+    data.calculateTemperature(simulationBox);
 
-    const auto berendsenFactor =
-        ::sqrt(1.0 + settings::TimingsSettings::getTimeStep() / _tau * (_targetTemperature / _temperature - 1.0));
+    _temperature = data.getTemperature();
+
+    const auto dt        = settings::TimingsSettings::getTimeStep();
+    const auto tempRatio = _targetTemperature / _temperature;
+
+    const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
 
     for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
-    physicalData.setTemperature(_temperature * berendsenFactor * berendsenFactor);
+    data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
+
+    stopTimingsSection("Berendsen");
 }

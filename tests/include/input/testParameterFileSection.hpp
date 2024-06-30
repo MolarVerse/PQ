@@ -24,15 +24,16 @@
 
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
-#include "engine.hpp"                 // for Engine
+#include <gtest/gtest.h>   // for Test
+#include <stdio.h>         // for remove
+
+#include <string>   // for allocator, string
+
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "mmmdEngine.hpp"             // for Engine
 #include "molecule.hpp"               // for Molecule
 #include "potential.hpp"              // for Potential
 #include "simulationBox.hpp"          // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
-#include <string>          // for allocator, string
 
 /**
  * @class TestParameterFileSection
@@ -42,7 +43,7 @@
  */
 class TestParameterFileSection : public ::testing::Test
 {
-  protected:
+   protected:
     engine::Engine *_engine;
     std::string     _parameterFileName = "param.param";
 
@@ -54,12 +55,17 @@ class TestParameterFileSection : public ::testing::Test
         auto molecule2 = simulationBox::Molecule();
         molecule2.setNumberOfAtoms(3);
 
-        _engine = new engine::Engine();
+        // NOTE: use dummy engine for testing
+        //       this is implemented by base class Engine
+        //       and works therefore for all derived classes
+        _engine = new engine::MMMDEngine();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _engine->getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb());
+        _engine->getPotential().makeNonCoulombPotential(
+            potential::ForceFieldNonCoulomb()
+        );
     }
 
     void TearDown() override

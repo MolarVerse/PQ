@@ -1,3 +1,27 @@
+jobtype                     true       
+dim                         false
+floating_point_type         false
+
+optimizer                   false
+learning-rate-strategy      false
+initial-learning-rate       false
+learning-rate-decay         false
+learning-rate-update-freq   false
+min-learning-rate           false
+max-learning-rate           false
+
+energy-conv-strategy        false
+use-energy-conv             false
+use-force-conv              false
+use-max-force-conv          false
+use-rms-force-conv          false
+energy-conv                 false
+rel-energy-conv             false
+abs-energy-conv             false
+force-conv                  false
+max-force-conv              false
+rms-force-conv              false
+
 cell-list                   false
 cell-number                 false
 
@@ -13,7 +37,6 @@ wolf_param                  false
 
 force-field                 false
 
-jobtype                     true       
 start_file                  true
 rpmd_start_file             false
 moldescriptor_file          false
@@ -22,7 +45,7 @@ guff_file                   false
 topology_file               false
 parameter_file              false
 intra-nonBonded_file        false
-dim                         false
+mshake_file                 false
 
 integrator                  false
 
@@ -60,6 +83,7 @@ virial_file                 false
 stress_file                 false
 momentum_file               false
 box_file                    false
+opt_file                    false
 
 rpmd_restart_file           false
 rpmd_traj_file              false
@@ -79,7 +103,7 @@ rcoulomb                    false
 density                     false
 init_velocities             false
 
-timestep                    true
+timestep                    false
 nstep                       true
 
 virial                      false
@@ -88,5 +112,15 @@ qm_prog                     false
 qm_script                   false
 qm_script_full_path         false
 qm_loop_time_limit          false
+dispersion                  false
+mace_model_size             false
 
 rpmd_n_replica              false
+
+qm_center                   false
+qm_only_list                false
+mm_only_list                false
+qm_charges                  false
+qm_core_radius              false
+qmmm_layer_radius           false
+qmmm_smoothing_radius       false

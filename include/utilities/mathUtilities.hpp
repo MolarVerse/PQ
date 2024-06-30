@@ -24,11 +24,11 @@
 
 #define _MATH_UTILITIES_HPP_
 
-#include "vector3d.hpp"
-
 #include <cmath>     // for fabs
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
+
+#include "vector3d.hpp"
 
 namespace utilities
 {
@@ -48,7 +48,11 @@ namespace utilities
         return std::abs(a - b) < tolerance;
     }
 
-    bool compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b, const double &tolerance);
+    bool compare(
+        const linearAlgebra::Vec3D &a,
+        const linearAlgebra::Vec3D &b,
+        const double               &tolerance
+    );
 
     /**
      * @brief compares two numbers via machine precision
@@ -84,6 +88,8 @@ namespace utilities
         else
             return -1;
     }
+
+    size_t kroneckerDelta(const size_t i, const size_t j);
 
 }   // namespace utilities
 

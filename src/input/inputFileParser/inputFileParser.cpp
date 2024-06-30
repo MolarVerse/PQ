@@ -22,11 +22,11 @@
 
 #include "inputFileParser.hpp"
 
-#include "exceptions.hpp"        // for InputFileException
-#include "stringUtilities.hpp"   // for toLowerCopy
-
 #include <format>        // for format
 #include <string_view>   // for string_view
+
+#include "exceptions.hpp"        // for InputFileException
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 
@@ -38,10 +38,15 @@ using namespace input;
  *
  * @throw customException::InputFileException if argument is not "="
  */
-void input::checkEqualSign(const std::string_view &view, const size_t lineNumber)
+void input::checkEqualSign(
+    const std::string_view &view,
+    const size_t            lineNumber
+)
 {
     if (view != "=")
-        throw customException::InputFileException(std::format("Invalid command at line {} in input file", lineNumber));
+        throw customException::InputFileException(
+            std::format("Invalid command at line {} in input file", lineNumber)
+        );
 }
 
 /**
@@ -50,15 +55,22 @@ void input::checkEqualSign(const std::string_view &view, const size_t lineNumber
  * @param lineElements
  * @param _lineNumber
  *
- * @throw customException::InputFileException if command array has less than 3 elements
+ * @throw customException::InputFileException if command array has less than 3
+ * elements
  *
- * @note this function is used for commands that have an array as their third argument
+ * @note this function is used for commands that have an array as their third
+ * argument
  */
-void input::checkCommandArray(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void input::checkCommandArray(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     if (lineElements.size() < 3)
-        throw customException::InputFileException(
-            std::format("Invalid number of arguments at line {} in input file", lineNumber));
+        throw customException::InputFileException(std::format(
+            "Invalid number of arguments at line {} in input file",
+            lineNumber
+        ));
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -69,13 +81,19 @@ void input::checkCommandArray(const std::vector<std::string> &lineElements, cons
  * @param lineElements
  * @param _lineNumber
  *
- * @throw customException::InputFileException if command array has less or more than 3 elements
+ * @throw customException::InputFileException if command array has less or more
+ * than 3 elements
  */
-void input::checkCommand(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void input::checkCommand(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     if (lineElements.size() != 3)
-        throw customException::InputFileException(
-            std::format("Invalid number of arguments at line {} in input file", lineNumber));
+        throw customException::InputFileException(std::format(
+            "Invalid number of arguments at line {} in input file",
+            lineNumber
+        ));
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -95,10 +113,44 @@ void input::checkCommand(const std::vector<std::string> &lineElements, const siz
  *  required is a boolean that indicates if the keyword is required
  *
  */
-void InputFileParser::addKeyword(const std::string &keyword, ParseFunc parserFunc, bool required)
+void InputFileParser::addKeyword(
+    const std::string &keyword,
+    ParseFunc          parserFunc,
+    bool               required
+)
 {
     const auto keywordLowerCase = utilities::toLowerCopy(keyword);
     _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
     _keywordRequiredMap.try_emplace(keywordLowerCase, required);
     _keywordCountMap.try_emplace(keywordLowerCase, 0);
+}
+
+/**
+ * @brief get the keyword function map
+ *
+ * @return the keyword function map
+ */
+std::map<std::string, ParseFunc> InputFileParser::getKeywordFuncMap() const
+{
+    return _keywordFuncMap;
+}
+
+/**
+ * @brief get the keyword required map
+ *
+ * @return the keyword required map
+ */
+std::map<std::string, bool> InputFileParser::getKeywordRequiredMap() const
+{
+    return _keywordRequiredMap;
+}
+
+/**
+ * @brief get the keyword count map
+ *
+ * @return the keyword count map
+ */
+std::map<std::string, int> InputFileParser::getKeywordCountMap() const
+{
+    return _keywordCountMap;
 }

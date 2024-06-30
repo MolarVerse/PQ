@@ -23,15 +23,20 @@
 #include "moleculeType.hpp"
 
 #include <algorithm>   // for sort, unique
+#include <iterator>    // for std::ranges::size
+#include <ranges>      // for ranges::size, ranges::unique
 
 using namespace simulationBox;
 
 /**
  * @brief finds number of different atom types in molecule
  *
+ * @note This function cannot be const due to std::ranges::unique
+ *
  * @return int
  */
 size_t MoleculeType::getNumberOfAtomTypes()
 {
-    return _externalAtomTypes.size() - std::ranges::size(std::ranges::unique(_externalAtomTypes));
+    return _externalAtomTypes.size() -
+           std::ranges::size(std::ranges::unique(_externalAtomTypes));
 }

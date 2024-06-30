@@ -26,7 +26,8 @@
 
 namespace engine
 {
-    class Engine;
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
 }   // namespace engine
 
 namespace setup
@@ -41,17 +42,19 @@ namespace setup
      */
     class ManostatSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        engine::MDEngine &_engine;
 
-      public:
-        explicit ManostatSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit ManostatSetup(engine::MDEngine &engine) : _engine(engine){};
 
         void setup();
 
         void isPressureSet() const;
         void setupBerendsenManostat();
         void setupStochasticRescalingManostat();
+
+        [[nodiscard]] engine::MDEngine &getEngine() const { return _engine; }
     };
 
 }   // namespace setup

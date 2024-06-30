@@ -22,12 +22,27 @@
 
 #include "commandLineArgs.hpp"
 
-#include "exceptions.hpp"   // for UserInputException
-
 #include <string_view>   // for string_view
 
+#include "exceptions.hpp"   // for UserInputException
+
+using namespace customException;
+
 /**
- * @brief Detects flags in the command line arguments. First argument is the input file name.
+ * @brief Construct a new CommandLineArgs::CommandLineArgs object
+ *
+ * @param argc
+ * @param argv
+ */
+CommandLineArgs::CommandLineArgs(
+    const int                       argc,
+    const std::vector<std::string> &argv
+)
+    : _argc(argc), _argv(argv){};
+
+/**
+ * @brief Detects flags in the command line arguments. First argument is the
+ * input file name.
  *
  * @throw UserInputException if a flag is detected (not yet implemented)
  * @throw UserInputException if no input file is specified
@@ -36,10 +51,21 @@ void CommandLineArgs::detectFlags()
 {
     for (const auto &arg : _argv)
         if ('-' == arg[0])
-            throw customException::UserInputException("Invalid flag: " + arg + " Flags are not yet implemented.");
+            throw UserInputException(
+                "Invalid flag: " + arg + " Flags are not yet implemented."
+            );
 
     if (_argc < 2)
-        throw customException::UserInputException("No input file specified. Usage: PQ <input_file>");
+        throw UserInputException(
+            "No input file specified. Usage: PQ <input_file>"
+        );
 
     _inputFileName = _argv[1];
 }
+
+/**
+ * @brief get the input file name
+ *
+ * @return std::string
+ */
+std::string CommandLineArgs::getInputFileName() const { return _inputFileName; }

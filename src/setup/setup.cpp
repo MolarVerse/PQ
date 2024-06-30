@@ -22,6 +22,8 @@
 
 #include "setup.hpp"
 
+#include <iostream>   // for operator<<, basic_ostream, cout
+
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
@@ -30,13 +32,17 @@
 #include "inputFileReader.hpp"        // for readInputFile
 #include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "kokkosSetup.hpp"            // for setupKokkos
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "optimizerSetup.hpp"         // for setupOptimizer
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
 #include "parameterFileReader.hpp"    // for readParameterFile
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
+#include "qmmmSetup.hpp"              // for setupQMMM
+#include "qmmmmdEngine.hpp"           // for QMMMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
 #include "ringPolymerEngine.hpp"      // for RingPolymerEngine
@@ -44,9 +50,9 @@
 #include "settings.hpp"               // for Settings
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox
 #include "thermostatSetup.hpp"        // for setupThermostat
+#include "timer.hpp"                  // for Timings
+#include "timingsSettings.hpp"        // for TimingsSettings
 #include "topologyReader.hpp"         // for readTopologyFile
-
-#include <iostream>   // for operator<<, basic_ostream, cout
 
 using namespace engine;
 using namespace input;
@@ -57,11 +63,22 @@ using namespace input;
  * @param inputFileName
  * @param engine
  */
-void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 {
-    engine.getStdoutOutput().writeHeader();
+    auto simulationTimer = timings::Timer("Simulation");
+    auto setupTimer      = timings::Timer("Setup");
+
+    startSetup(simulationTimer, setupTimer, engine);
 
     readInputFile(inputFileName, engine);
+
+    if (!settings::TimingsSettings::isTimeStepSet())
+        if (settings::Settings::isMDJobType())
+            throw customException::UserInputException(std::format(
+                "Molecular Dynamics job type {} selected. Please set the time "
+                "step in the input file.",
+                string(settings::Settings::getJobtype())
+            ));
 
     setupOutputFiles(engine);
 
@@ -72,8 +89,47 @@ void setup::setupSimulation(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     guffdat::readGuffDat(engine);
 
+#ifdef WITH_KOKKOS
+    setupKokkos(engine);
+#endif
+
+    endSetup(simulationTimer, setupTimer, engine);
+}
+
+/**
+ * @brief start the setup
+ *
+ * @param engine
+ */
+void setup::startSetup(
+    timings::Timer &simulationTimer,
+    timings::Timer &setupTimer,
+    Engine         &engine
+)
+{
+    simulationTimer.startTimingsSection();
+    setupTimer.startTimingsSection("TotalSetup");
+
+    engine.getStdoutOutput().writeHeader();
+}
+
+/**
+ * @brief end the setup
+ *
+ * @param engine
+ */
+void setup::endSetup(
+    const timings::Timer &simulationTimer,
+    timings::Timer       &setupTimer,
+    Engine               &engine
+)
+{
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
+
+    setupTimer.stopTimingsSection("TotalSetup");
+    engine.getTimer().addSimulationTimer(simulationTimer);
+    engine.addTimer(setupTimer);
 }
 
 /**
@@ -92,7 +148,7 @@ void setup::readFiles(Engine &engine)
 
     parameterFile::readParameterFile(engine);
 
-    input::intraNonBonded::readIntraNonBondedFile(engine);
+    input::intraNonBondedReader::readIntraNonBondedFile(engine);
 }
 
 /**
@@ -103,21 +159,25 @@ void setup::readFiles(Engine &engine)
 void setup::setupEngine(Engine &engine)
 {
     if (settings::Settings::isQMActivated())
-        setupQM(dynamic_cast<engine::QMMDEngine &>(engine));
+        setupQM(engine);
 
-    resetKinetics::setupResetKinetics(engine);
+    if (settings::Settings::isMDJobType())
+        resetKinetics::setupResetKinetics(engine);
 
     simulationBox::setupSimulationBox(engine);
 
     setupCellList(engine);
 
-    setupThermostat(engine);
+    if (settings::Settings::isMDJobType())
+    {
+        setupThermostat(engine);
 
-    setupManostat(engine);
+        setupManostat(engine);
+    }
 
     if (settings::Settings::isMMActivated())
     {
-        setupPotential(engine);   // has to be after simulationBox setup due to coulomb radius cutoff
+        setupPotential(engine);
 
         setupIntraNonBonded(engine);
 
@@ -126,5 +186,12 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    setupRingPolymer(engine);
+    if (settings::Settings::isMDJobType())
+        setupRingPolymer(engine);
+
+    if (settings::Settings::isQMMMActivated())
+        setupQMMM(engine);
+
+    if (settings::Settings::isOptJobType())
+        setupOptimizer(engine);
 }

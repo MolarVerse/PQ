@@ -36,19 +36,33 @@ namespace settings
      */
     class TimingsSettings
     {
-      private:
+       private:
         static inline double _timeStep;
         static inline size_t _numberOfSteps;
+        static inline size_t _stepCount = 0;
 
-      public:
+        static inline bool _isTimeStepSet = false;
+
+       public:
         TimingsSettings()  = default;
         ~TimingsSettings() = default;
 
-        static void setTimeStep(const double timeStep) { _timeStep = timeStep; }
-        static void setNumberOfSteps(const size_t numberOfSteps) { _numberOfSteps = numberOfSteps; }
+        /********************
+         * standard setters *
+         ********************/
 
-        [[nodiscard]] static double getTimeStep() { return _timeStep; }
-        [[nodiscard]] static size_t getNumberOfSteps() { return _numberOfSteps; }
+        static void setTimeStep(const double timeStep);
+        static void setStepCount(const size_t stepCount);
+        static void setNumberOfSteps(const size_t numberOfSteps);
+
+        /********************
+         * standard setters *
+         ********************/
+
+        [[nodiscard]] static double getTimeStep();
+        [[nodiscard]] static size_t getStepCount();
+        [[nodiscard]] static size_t getNumberOfSteps();
+        [[nodiscard]] static bool   isTimeStepSet();
     };
 }   // namespace settings
 

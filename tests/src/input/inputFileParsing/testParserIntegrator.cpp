@@ -20,18 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "engine.hpp"                      // for Engine
-#include "exceptions.hpp"                  // for InputFileException, customException
-#include "inputFileParser.hpp"             // for readInput
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "inputFileParser.hpp"   // for readInput
 #include "inputFileParserIntegrator.hpp"   // for InputFileParserIntegrator
 #include "integrator.hpp"                  // for Integrator
+#include "mdEngine.hpp"                    // for Engine
 #include "testInputFileReader.hpp"         // for TestInputFileReader
 #include "throwWithMessage.hpp"            // for ASSERT_THROW_MSG
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace input;
 
@@ -43,19 +44,15 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    InputFileParserIntegrator parser(*_engine);
+    InputFileParserIntegrator parser(*_mdEngine);
     std::vector<std::string>  lineElements = {"integrator", "=", "v-verlet"};
     parser.parseIntegrator(lineElements, 0);
-    EXPECT_EQ(_engine->getIntegrator().getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};
-    ASSERT_THROW_MSG(parser.parseIntegrator(lineElements, 0),
-                     customException::InputFileException,
-                     "Invalid integrator \"notValid\" at line 0 in input file");
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    ASSERT_THROW_MSG(
+        parser.parseIntegrator(lineElements, 0),
+        customException::InputFileException,
+        "Invalid integrator \"notValid\" at line 0 in input file"
+    );
 }

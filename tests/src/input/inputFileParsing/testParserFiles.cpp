@@ -170,8 +170,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     EXPECT_THROW_MSG(
         parser.parseMoldescriptorFilename(lineElements, 0),
         customException::InputFileException,
-        "Cannot open moldescriptor file - filename = moldescriptor.txt - file "
-        "not found"
+        "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
+        "file not found"
     );
 
     lineElements = {
@@ -192,8 +192,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    InputFileParserFiles     parser(*_engine);
-    std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
+    InputFileParserFiles           parser(*_engine);
+    const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
         parser.parseGuffPath(lineElements, 0),
         customException::InputFileException,
@@ -252,8 +252,24 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     );
 }
 
-int main(int argc, char **argv)
+/**
+ * @brief tests parsing the "mshake_file" command
+ */
+TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    InputFileParserFiles     parser(*_engine);
+    std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
+
+    EXPECT_THROW_MSG(
+        parser.parseMShakeFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open mshake file - filename = mshake.dat"
+    );
+
+    lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
+    parser.parseMShakeFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getMShakeFileName(),
+        "data/mshakeReader/mshake.dat"
+    );
 }

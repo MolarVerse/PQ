@@ -3,9 +3,9 @@
 # *********************
 cmake_minimum_required(VERSION 3.7...3.26)
 
-# ****************
-# set cmake policy
-# ****************
+# # ****************
+# # set cmake policy
+# # ****************
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
@@ -57,6 +57,7 @@ endif()
 # ***************
 # cmake cxx flags
 # ***************
+set(CMAKE_CXX_STANDARD 20)
 
 # set default flags
 set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
@@ -68,7 +69,11 @@ endif()
 # add flags dependent on build type
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -flto -march=native -mtune=native -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -march=native -mtune=native -g")
+
+    if(NOT BUILD_WITH_KOKKOS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+    endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -coverage -pg -fprofile-arcs -ftest-coverage")
@@ -86,12 +91,22 @@ message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
 # ************************
 set(CODE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
+include(eigen)
+
 if(BUILD_WITH_MPI)
     include(mpi)
 endif()
 
 if(BUILD_WITH_KOKKOS)
     include(kokkos)
+endif()
+
+if(BUILD_WITH_PYTHON_BINDINGS)
+    include(python_bindings)
+endif()
+
+if(BUILD_WITH_ASE)
+    include(ase)
 endif()
 
 if(BUILD_WITH_TESTS)
@@ -109,10 +124,6 @@ add_subdirectory(apps)
 if(BUILD_WITH_DOC)
     include(doxygen)
     add_subdirectory(docs EXCLUDE_FROM_ALL)
-endif()
-
-if(BUILD_TOOLS)
-    add_subdirectory(tools)
 endif()
 
 if(BUILD_WITH_IWYU)

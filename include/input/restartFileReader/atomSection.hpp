@@ -24,27 +24,32 @@
 
 #define _ATOM_SECTION_HPP_
 
+#include <memory>   // for shared_pointer
 #include <string>   // for string
 #include <vector>   // for vector
 
 #include "restartFileSection.hpp"   // for RestartFileSection
+#include "typeAliases.hpp"          // for strings
 
 #ifdef WITH_TESTS
 #include <gtest/gtest_prod.h>   // for FRIEND_TEST
-#endif
 
 class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
+#endif
 
 namespace engine
 {
     class Engine;   // Forward declaration
-}
+
+}   // namespace engine
 
 namespace simulationBox
 {
+    class Atom;            // Forward declaration
     class Molecule;        // Forward declaration
     class SimulationBox;   // Forward declaration
+
 }   // namespace simulationBox
 
 namespace input::restartFile
@@ -58,10 +63,11 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        private:
-        void processAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &, simulationBox::Molecule &)
-            const;
-        void processQMAtomLine(std::vector<std::string> &lineElements, simulationBox::SimulationBox &);
-        void checkAtomLine(std::vector<std::string> &lineElements, const simulationBox::Molecule &);
+        void processQMAtomLine(pq::strings &lineElements, pq::SimBox &);
+        void processAtomLine(pq::strings &, pq::SimBox &, pq::Molecule &) const;
+
+        void checkAtomLine(pq::strings &lineElements, const pq::Molecule &);
+        void setAtomPropertyVectors(pq::strings &, pq::SharedAtom &) const;
 
 #ifdef WITH_TESTS
         FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
@@ -71,10 +77,9 @@ namespace input::restartFile
        public:
         [[nodiscard]] std::string keyword() override { return ""; }
         [[nodiscard]] bool        isHeader() override { return false; }
-        void checkNumberOfLineArguments(std::vector<std::string> &lineElements
-        ) const;
-        void process(std::vector<std::string> &lineElements, engine::Engine &)
-            override;
+
+        void checkNumberOfLineArguments(pq::strings &) const;
+        void process(pq::strings &lineElements, engine::Engine &) override;
     };
 
 }   // namespace input::restartFile

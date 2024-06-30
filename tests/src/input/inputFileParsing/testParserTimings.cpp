@@ -20,18 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+
+#include <iosfwd>   // for std
+#include <string>   // for string, allocator, basic_string
+#include <vector>   // for vector
+
 #include "exceptions.hpp"               // for InputFileException
+#include "gtest/gtest.h"                // for Message, TestPartResult, testing
 #include "inputFileParser.hpp"          // for readInput
 #include "inputFileParserTimings.hpp"   // for InputFileParserTimings
 #include "testInputFileReader.hpp"      // for TestInputFileReader
 #include "throwWithMessage.hpp"         // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"          // for TimingsSettings
-
-#include "gtest/gtest.h"   // for Message, TestPartResult, testing
-#include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
-#include <iosfwd>          // for std
-#include <string>          // for string, allocator, basic_string
-#include <vector>          // for vector
 
 using namespace std;
 using namespace input;
@@ -64,11 +65,8 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
 
     lineElements = {"nsteps", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseNumberOfSteps(lineElements, 0), customException::InputFileException, "Number of steps cannot be negative");
-}
-
-int main(int argc, char **argv)
-{
-    InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+        parser.parseNumberOfSteps(lineElements, 0),
+        customException::InputFileException,
+        "Number of steps cannot be negative"
+    );
 }

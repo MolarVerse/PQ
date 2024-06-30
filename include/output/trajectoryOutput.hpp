@@ -41,7 +41,7 @@ namespace output
      */
     class TrajectoryOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);

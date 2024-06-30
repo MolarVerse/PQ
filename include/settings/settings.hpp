@@ -24,9 +24,9 @@
 
 #define _SETTINGS_HPP_
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
-
 #include <string_view>   // for string_view
+
+#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
 
 namespace settings
 {
@@ -40,9 +40,25 @@ namespace settings
     {
         MM_MD,
         QM_MD,
+        QMMM_MD,
         RING_POLYMER_QM_MD,
+        MM_OPT,
         NONE
     };
+
+    /**
+     * @enum FPType
+     *
+     * @brief enum class to store the floating point type
+     *
+     */
+    enum class FPType
+    {
+        FLOAT,
+        DOUBLE
+    };
+
+    [[nodiscard]] std::string string(const JobType jobtype);
 
     /**
      * @class Settings
@@ -52,52 +68,73 @@ namespace settings
      */
     class Settings
     {
-      private:
-        static inline JobType _jobtype;   // no default value
+       private:
+        static inline JobType _jobtype;
+        static inline FPType  _floatingPointType = FPType::DOUBLE;
+
+        static inline bool _useKokkos = false;
 
         static inline bool _isMMActivated            = false;
         static inline bool _isQMActivated            = false;
         static inline bool _isRingPolymerMDActivated = false;
 
+        // clang-format off
         static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
+        // clang-format on
 
-      public:
+       public:
         Settings()  = default;
         ~Settings() = default;
-
-        [[nodiscard]] static bool isQMOnly();
-
-        static void setJobtype(const std::string_view jobtype);
-        static void setJobtype(const JobType jobtype) { _jobtype = jobtype; }
-
-        static void activateMM() { _isMMActivated = true; }
-        static void activateQM() { _isQMActivated = true; }
-        static void activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
-
-        static void deactivateMM() { _isMMActivated = false; }
-        static void deactivateQM() { _isQMActivated = false; }
-        static void deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static JobType getJobtype() { return _jobtype; }
-
-        [[nodiscard]] static size_t getDimensionality() { return _dimensionality; }
-
-        [[nodiscard]] static bool isMMActivated() { return _isMMActivated; }
-        [[nodiscard]] static bool isQMActivated() { return _isQMActivated; }
-        [[nodiscard]] static bool isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
-        static void setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
-        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD) { _isRingPolymerMDActivated = isRingPolymerMD; }
-        static void setDimensionality(const size_t dimensionality) { _dimensionality = dimensionality; }
+        static void setJobtype(const std::string_view jobtype);
+        static void setJobtype(const JobType jobtype);
+
+        static void setFloatingPointType(const std::string_view);
+        static void setFloatingPointType(const FPType);
+
+        static void setIsMMActivated(const bool isMM);
+        static void setIsQMActivated(const bool isQM);
+        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
+        static void setDimensionality(const size_t dimensionality);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] static JobType getJobtype();
+
+        [[nodiscard]] static FPType      getFloatingPointType();
+        [[nodiscard]] static std::string getFloatingPointPybindString();
+
+        [[nodiscard]] static size_t getDimensionality();
+
+        /******************************
+         * standard is-active methods *
+         ******************************/
+
+        static void activateMM();
+        static void activateQM();
+        static void activateRingPolymerMD();
+        static void activateKokkos();
+
+        static void deactivateMM();
+        static void deactivateQM();
+        static void deactivateRingPolymerMD();
+
+        [[nodiscard]] static bool isQMOnly();
+        [[nodiscard]] static bool isMMActivated();
+        [[nodiscard]] static bool isQMActivated();
+        [[nodiscard]] static bool isQMMMActivated();
+        [[nodiscard]] static bool isQMOnlyActivated();
+        [[nodiscard]] static bool isMMOnlyActivated();
+        [[nodiscard]] static bool isRingPolymerMDActivated();
+        [[nodiscard]] static bool isMDJobType();
+        [[nodiscard]] static bool isOptJobType();
+        [[nodiscard]] static bool useKokkos();
     };
 
 }   // namespace settings

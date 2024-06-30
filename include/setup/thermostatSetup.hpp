@@ -26,8 +26,9 @@
 
 namespace engine
 {
-    class Engine;   // forward declaration
-}
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
@@ -42,10 +43,10 @@ namespace setup
     class ThermostatSetup
     {
        private:
-        engine::Engine &_engine;
+        engine::MDEngine &_engine;
 
        public:
-        explicit ThermostatSetup(engine::Engine &engine) : _engine(engine){};
+        explicit ThermostatSetup(engine::MDEngine &engine) : _engine(engine){};
 
         void setup();
 
@@ -56,7 +57,7 @@ namespace setup
         void setupNoseHooverThermostat();
         void setupVelocityRescalingThermostat();
 
-        [[nodiscard]] engine::Engine &getEngine() const { return _engine; }
+        [[nodiscard]] engine::MDEngine &getEngine() const { return _engine; }
     };
 
 }   // namespace setup

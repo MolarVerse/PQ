@@ -20,26 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ
+
+#include <cmath>    // for cbrt
+#include <memory>   // for make_shared, __shared_ptr_access
+#include <string>   // for basic_string
+#include <vector>   // for vector
+
 #include "atom.hpp"                          // for Atom
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for MolDescriptorException, InputFileException
-#include "forceFieldSettings.hpp"            // for ForceFieldSettings
-#include "molecule.hpp"                      // for Molecule
-#include "moleculeType.hpp"                  // for MoleculeType
-#include "potentialSettings.hpp"             // for PotentialSettings
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "simulationBoxSettings.hpp"         // for SimulationBoxSettings
-#include "simulationBoxSetup.hpp"            // for SimulationBoxSetup, setupSimulationBox
-#include "testSetup.hpp"                     // for TestSetup
-#include "vector3d.hpp"                      // for Vec3D
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <cmath>           // for cbrt
-#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ
-#include <memory>          // for make_shared, __shared_ptr_access
-#include <string>          // for basic_string
-#include <vector>          // for vector
+#include "exceptions.hpp"   // for MolDescriptorException, InputFileException
+#include "forceFieldSettings.hpp"      // for ForceFieldSettings
+#include "gtest/gtest.h"               // for Message, TestPartResult
+#include "molecule.hpp"                // for Molecule
+#include "moleculeType.hpp"            // for MoleculeType
+#include "potentialSettings.hpp"       // for PotentialSettings
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "simulationBoxSetup.hpp"   // for SimulationBoxSetup, setupSimulationBox
+#include "testSetup.hpp"            // for TestSetup
+#include "vector3d.hpp"             // for Vec3D
 
 using setup::simulationBox::SimulationBoxSetup;
 
@@ -73,9 +74,18 @@ TEST_F(TestSetup, setAtomNames)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomNames();
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomName(0), "Zn");
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomName(1), "H");
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomName(2), "H");
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomName(0),
+        "Zn"
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomName(1),
+        "H"
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomName(2),
+        "H"
+    );
 }
 
 TEST_F(TestSetup, setAtomTypes)
@@ -114,9 +124,27 @@ TEST_F(TestSetup, setAtomTypes)
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(0), 0);
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(1), 1);
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(2), 2);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtom(0).getExternalAtomType(), 0);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtom(1).getExternalAtomType(), 1);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtom(2).getExternalAtomType(), 2);
+    EXPECT_EQ(
+        _engine->getSimulationBox()
+            .getMolecules()[0]
+            .getAtom(0)
+            .getExternalAtomType(),
+        0
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox()
+            .getMolecules()[0]
+            .getAtom(1)
+            .getExternalAtomType(),
+        1
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox()
+            .getMolecules()[0]
+            .getAtom(2)
+            .getExternalAtomType(),
+        2
+    );
 }
 
 TEST_F(TestSetup, setExternalVDWTypes)
@@ -149,9 +177,21 @@ TEST_F(TestSetup, setExternalVDWTypes)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setExternalVDWTypes();
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes()[0], 0);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes()[1], 1);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes()[2], 2);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
+        )[0],
+        0
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
+        )[1],
+        1
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
+        )[2],
+        2
+    );
 }
 
 TEST_F(TestSetup, setPartialCharges)
@@ -184,9 +224,18 @@ TEST_F(TestSetup, setPartialCharges)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setPartialCharges();
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getPartialCharges()[0], 0.0);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getPartialCharges()[1], 1.0);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getPartialCharges()[2], 2.0);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[0],
+        0.0
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[1],
+        1.0
+    );
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[2],
+        2.0
+    );
 }
 
 TEST_F(TestSetup, testSetAtomMasses)
@@ -207,9 +256,18 @@ TEST_F(TestSetup, testSetAtomMasses)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomMass(0), 12.0107);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomMass(1), 1.00794);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomMass(2), 15.9994);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomMass(0),
+        12.0107
+    );
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomMass(1),
+        1.00794
+    );
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomMass(2),
+        15.9994
+    );
 }
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
@@ -228,7 +286,10 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(simulationBoxSetup.setAtomMasses(), customException::MolDescriptorException);
+    ASSERT_THROW(
+        simulationBoxSetup.setAtomMasses(),
+        customException::MolDescriptorException
+    );
 }
 
 TEST_F(TestSetup, testSetAtomicNumbers)
@@ -249,9 +310,18 @@ TEST_F(TestSetup, testSetAtomicNumbers)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomicNumbers();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomicNumber(0), 6);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomicNumber(1), 1);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomicNumber(2), 8);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(0),
+        6
+    );
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(1),
+        1
+    );
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(2),
+        8
+    );
 }
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
@@ -270,7 +340,10 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
     SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(simulationBoxSetup.setAtomicNumbers(), customException::MolDescriptorException);
+    ASSERT_THROW(
+        simulationBoxSetup.setAtomicNumbers(),
+        customException::MolDescriptorException
+    );
 }
 
 TEST_F(TestSetup, testSetMolMass)
@@ -302,7 +375,10 @@ TEST_F(TestSetup, testSetMolMass)
     simulationBoxSetup.setAtomMasses();
     simulationBoxSetup.calculateMolMasses();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getMolecules()[0].getMolMass(), 12.0107 + 1 * 1.00794 + 15.9994);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getMolMass(),
+        12.0107 + 1 * 1.00794 + 15.9994
+    );
 }
 
 TEST_F(TestSetup, testSetTotalCharge)
@@ -333,7 +409,10 @@ TEST_F(TestSetup, noDensityNoBox)
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(false);
     SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(simulationBoxSetup.checkBoxSettings(), customException::UserInputException);
+    ASSERT_THROW(
+        simulationBoxSetup.checkBoxSettings(),
+        customException::UserInputException
+    );
 }
 
 TEST_F(TestSetup, noDensity)
@@ -346,26 +425,35 @@ TEST_F(TestSetup, noDensity)
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getDensity(), constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getDensity(),
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+    );
 }
 
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    _engine->getSimulationBox().setDensity(
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+    );
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getBoxDimensions()[2], cbrt(6000.0));
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getBoxDimensions()[2],
+        cbrt(6000.0)
+    );
 }
 
 TEST_F(TestSetup, testBoxAndDensitySet)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(12341243.1234);   // this should be ignored
+    _engine->getSimulationBox().setDensity(12341243.1234
+    );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::SimulationBoxSettings::setDensitySet(true);
     settings::SimulationBoxSettings::setBoxSet(true);
@@ -373,7 +461,10 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getDensity(), constants::_AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getDensity(),
+        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+    );
 }
 
 TEST_F(TestSetup, testCheckRcCutoff)
@@ -381,7 +472,10 @@ TEST_F(TestSetup, testCheckRcCutoff)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     SimulationBoxSetup simulationBoxSetup(*_engine);
-    EXPECT_THROW(simulationBoxSetup.checkRcCutoff(), customException::InputFileException);
+    EXPECT_THROW(
+        simulationBoxSetup.checkRcCutoff(),
+        customException::InputFileException
+    );
 
     SimulationBoxSetup simulationBox2Setup(*_engine);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -391,7 +485,8 @@ TEST_F(TestSetup, testCheckRcCutoff)
 /**
  * @brief testing full setup of simulation box
  *
- * @TODO: this test is not complete, it only tests the functions that are called in the setup
+ * @TODO: this test is not complete, it only tests the functions that are called
+ * in the setup
  *
  */
 TEST_F(TestSetup, testFullSetup)
@@ -462,15 +557,10 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().addMoleculeType(moleculeType2);
 
     _engine->getSimulationBox().setTotalMass(33.0);
-    _engine->getSimulationBox().setDensity(12341243.1234);   // this should be ignored
+    _engine->getSimulationBox().setDensity(12341243.1234
+    );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     EXPECT_NO_THROW(setup::simulationBox::setupSimulationBox(*_engine));
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

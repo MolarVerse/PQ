@@ -24,9 +24,9 @@
 
 #define _BOX_FILE_OUTPUT_HPP_
 
-#include "output.hpp"
-
 #include <cstddef>   // for size_t
+
+#include "output.hpp"
 
 namespace simulationBox
 {
@@ -43,7 +43,7 @@ namespace output
      */
     class BoxFileOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void write(const size_t, const simulationBox::Box &);

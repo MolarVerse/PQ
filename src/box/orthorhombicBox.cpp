@@ -25,6 +25,8 @@
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
 using simulationBox::OrthorhombicBox;
+using namespace linearAlgebra;
+using namespace constants;
 
 /**
  * @brief Calculate the volume of the box
@@ -43,7 +45,7 @@ double OrthorhombicBox::calculateVolume()
  *
  * @param position
  */
-void OrthorhombicBox::applyPBC(linearAlgebra::Vec3D &position) const
+void OrthorhombicBox::applyPBC(Vec3D &position) const
 {
     position -= _boxDimensions * round(position / _boxDimensions);
 }
@@ -52,9 +54,9 @@ void OrthorhombicBox::applyPBC(linearAlgebra::Vec3D &position) const
  * @brief Calculate the shift vector
  *
  * @param shiftVector
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D OrthorhombicBox::calculateShiftVector(const linearAlgebra::Vec3D &shiftVector) const
+Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
 {
     return _boxDimensions * round(shiftVector / _boxDimensions);
 }
@@ -64,11 +66,14 @@ linearAlgebra::Vec3D OrthorhombicBox::calculateShiftVector(const linearAlgebra::
  *
  * @return vector<double>
  */
-linearAlgebra::Vec3D OrthorhombicBox::calculateBoxDimensionsFromDensity(const double totalMass, const double density)
+Vec3D OrthorhombicBox::calcBoxDimFromDensity(
+    const double totalMass,
+    const double density
+)
 {
-    _volume = totalMass / (density * constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_);
+    _volume = totalMass / (density * _KG_PER_L_TO_AMU_PER_ANGSTROM3_);
 
-    return linearAlgebra::Vec3D(::cbrt(_volume));
+    return Vec3D(::cbrt(_volume));
 }
 
 /**
@@ -76,7 +81,7 @@ linearAlgebra::Vec3D OrthorhombicBox::calculateBoxDimensionsFromDensity(const do
  *
  * @param scalingFactors
  */
-void OrthorhombicBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
 {
     setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
     _volume = calculateVolume();

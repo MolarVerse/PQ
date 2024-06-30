@@ -18,6 +18,7 @@ target_link_libraries(intraNonBonded
     nonCoulombPotential
     coulombPotential
     settings
+    timings
 )
 
 install(TARGETS intraNonBonded

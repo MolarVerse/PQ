@@ -22,11 +22,11 @@
 
 #include "manostat.hpp"
 
+#include <functional>   // for function
+
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
-
-#include <functional>   // for function
 
 using namespace manostat;
 
@@ -35,16 +35,20 @@ using namespace manostat;
  *
  * @param physicalData
  */
-void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+void Manostat::calculatePressure(
+    const simulationBox::SimulationBox &box,
+    physicalData::PhysicalData         &physicalData
+)
 {
     auto       ekinVirial  = physicalData.getKineticEnergyVirialVector();
     auto       forceVirial = physicalData.getVirial();
     const auto volume      = box.getVolume();
 
-    ekinVirial  = box.getBox().transformIntoOrthogonalSpace(ekinVirial);
-    forceVirial = box.getBox().transformIntoOrthogonalSpace(forceVirial);
+    ekinVirial  = box.getBox().toOrthoSpace(ekinVirial);
+    forceVirial = box.getBox().toOrthoSpace(forceVirial);
 
-    _pressureTensor = (2.0 * ekinVirial + forceVirial) / volume * constants::_PRESSURE_FACTOR_;
+    _pressureTensor = (2.0 * ekinVirial + forceVirial) / volume *
+                      constants::_PRESSURE_FACTOR_;
 
     _pressure = trace(_pressureTensor) / 3.0;
 
@@ -56,7 +60,12 @@ void Manostat::calculatePressure(const simulationBox::SimulationBox &box, physic
  *
  * @param physicalData
  */
-void Manostat::applyManostat(simulationBox::SimulationBox &box, physicalData::PhysicalData &physicalData)
+void Manostat::applyManostat(
+    simulationBox::SimulationBox &box,
+    physicalData::PhysicalData   &physicalData
+)
 {
+    startTimingsSection("Calc Pressure");
     calculatePressure(box, physicalData);
+    stopTimingsSection("Calc Pressure");
 }

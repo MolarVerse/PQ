@@ -22,27 +22,33 @@
 
 #include "inputFileParserNonCoulomb.hpp"
 
-#include "exceptions.hpp"          // for InputFileException, customException
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "stringUtilities.hpp"     // for toLowerCopy
-
 #include <cstddef>      // for size_t
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "stringUtilities.hpp"     // for toLowerCopy
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object
+ * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
+ * Non Coulomb Type object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) noncoulomb <string>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) noncoulomb <string>
  *
  * @param engine
  */
-InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("noncoulomb"), bind_front(&InputFileParserNonCoulomb::parseNonCoulombType, this), false);
+    addKeyword(
+        std::string("noncoulomb"),
+        bind_front(&InputFileParserNonCoulomb::parseNonCoulombType, this),
+        false
+    );
 }
 
 /**
@@ -58,7 +64,10 @@ InputFileParserNonCoulomb::InputFileParserNonCoulomb(engine::Engine &engine) : I
  *
  * @throws customException::InputFileException if invalid nonCoulomb type
  */
-void InputFileParserNonCoulomb::parseNonCoulombType(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserNonCoulomb::parseNonCoulombType(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -73,8 +82,10 @@ void InputFileParserNonCoulomb::parseNonCoulombType(const std::vector<std::strin
     else if (type == "morse")
         settings::PotentialSettings::setNonCoulombType("morse");
     else
-        throw customException::InputFileException(
-            format("Invalid nonCoulomb type \"{}\" at line {} in input file. Possible options are: lj, buck, morse and guff",
-                   lineElements[2],
-                   lineNumber));
+        throw customException::InputFileException(format(
+            "Invalid nonCoulomb type \"{}\" at line {} in input file.\n"
+            "Possible options are: lj, buck, morse and guff",
+            lineElements[2],
+            lineNumber
+        ));
 }

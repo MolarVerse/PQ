@@ -38,7 +38,7 @@ option(BUILD_WITH_MPI "Build with MPI" OFF)
 # ***********
 # BUILD TOOLS
 # ***********
-option(BUILD_TOOLS "Build tools" OFF)
+option(BUILD_WITH_PYTHON_BINDINGS "Build with python bindings" OFF)
 
 # ***************
 # BUILD WITH IWYU
@@ -59,6 +59,11 @@ option(BUILD_WITH_DOCS "Build documentation" ON)
 # BUILD WITH BENCHMARKING
 # ***********************
 option(BUILD_WITH_BENCHMARKING "Build benchmarking" OFF)
+
+# **************
+# BULID_WITH_ASE
+# **************
+option(BUILD_WITH_ASE "Build with ASE" ON)
 
 # **********************
 # BUILD WITH SINGULARITY

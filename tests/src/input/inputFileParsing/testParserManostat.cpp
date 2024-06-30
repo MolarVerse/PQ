@@ -108,8 +108,8 @@ TEST_F(TestInputFileReader, ParseManostat)
     EXPECT_THROW_MSG(
         parser.parseManostat(lineElements, 0),
         customException::InputFileException,
-        "Invalid manostat \"notValid\" at line 0 in input file. Possible "
-        "options are: berendsen and none"
+        "Invalid manostat \"notValid\" at line 0 in input file.\n"
+        "Possible options are: berendsen, stochastic_rescaling and none"
     );
 }
 
@@ -226,13 +226,8 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_THROW_MSG(
         parser.parseIsotropy(lineElements, 0),
         customException::InputFileException,
-        "Invalid isotropy \"notValid\" at line 0 in input file. Possible "
-        "options are: isotropic, xy, xz, yz, anisotropic and full_anisotropic"
+        "Invalid isotropy \"notValid\" at line 0 in input file.\n"
+        "Possible options are: isotropic, xy, xz, yz, anisotropic and "
+        "full_anisotropic"
     );
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

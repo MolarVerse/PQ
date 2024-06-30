@@ -22,11 +22,11 @@
 
 #include "testParameterFileSection.hpp"
 
-#include "bondSection.hpp"   // for BondSection
+#include <ostream>   // for operator<<, ofstream, basic_ostream, endl
+#include <vector>    // for vector
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <ostream>         // for operator<<, ofstream, basic_ostream, endl
-#include <vector>          // for vector
+#include "bondSection.hpp"   // for BondSection
+#include "gtest/gtest.h"     // for Message, TestPartResult
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this
@@ -56,10 +56,4 @@ TEST_F(TestParameterFileSection, processParameterSection)
     EXPECT_NO_THROW(section.process(lineElements, *_engine));
 
     EXPECT_EQ(section.getLineNumber(), 5);
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
 }

@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <memory>   // for allocator
+
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
 #include "vector3d.hpp"                      // for Vec3D
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <memory>          // for allocator
 
 using namespace simulationBox;
 
@@ -37,13 +37,13 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
 }
 
-TEST(TestOrthoRhombicBox, calculateBoxDimensionsFromDensity)
+TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    auto                       box           = OrthorhombicBox();
-    const double               density       = 1.0 / constants::_KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
-    const double               totalMass     = 1.0;
+    auto         box       = OrthorhombicBox();
+    const double density   = 1.0 / constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_;
+    const double totalMass = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(box.calculateBoxDimensionsFromDensity(totalMass, density), boxDimensions);
+    EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, calculateVolume)
@@ -74,7 +74,8 @@ TEST(TestOrthoRhombicBox, scaleBox)
     const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
-    const linearAlgebra::tensor3D scaleFactors = diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0});
+    const linearAlgebra::tensor3D scaleFactors =
+        diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
     const linearAlgebra::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
@@ -97,13 +98,7 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
     box.setBoxDimensions({1.0, 1.0, 1.0});
     const linearAlgebra::Vec3D vector{0.2, 1.2, -0.8};
 
-    EXPECT_EQ(box.calculateShiftVector(vector)[0], 0.0);
-    EXPECT_EQ(box.calculateShiftVector(vector)[1], 1.0);
-    EXPECT_EQ(box.calculateShiftVector(vector)[2], -1.0);
-}
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+    EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[2], -1.0);
 }

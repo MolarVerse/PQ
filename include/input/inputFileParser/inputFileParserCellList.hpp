@@ -24,10 +24,10 @@
 
 #define _INPUT_FILE_PARSER_CELL_LIST_HPP_
 
-#include "inputFileParser.hpp"
-
 #include <string>
 #include <vector>
+
+#include "inputFileParser.hpp"
 
 namespace engine
 {
@@ -36,6 +36,7 @@ namespace engine
 
 namespace input
 {
+    using strings = std::vector<std::string>;
     /**
      * @class InputFileParserCellList inherits from InputFileParser
      *
@@ -44,11 +45,11 @@ namespace input
      */
     class InputFileParserCellList : public InputFileParser
     {
-      public:
+       public:
         explicit InputFileParserCellList(engine::Engine &);
 
-        void parseCellListActivated(const std::vector<std::string> &lineElements, const size_t lineNumber);
-        void parseNumberOfCells(const std::vector<std::string> &lineElements, const size_t lineNumber);
+        void parseCellListActivated(const strings &, const size_t);
+        void parseNumberOfCells(const strings &, const size_t);
     };
 
 }   // namespace input

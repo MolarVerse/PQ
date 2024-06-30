@@ -1,10 +1,20 @@
 include(FetchContent)
-FetchContent_Declare(kokkos
-    GIT_REPOSITORY "https://github.com/kokkos/kokkos.git"
-)
-FetchContent_MakeAvailable(kokkos)
 
-FetchContent_Declare(kokkos-kernels
-    GIT_REPOSITORY "https://github.com/kokkos/kokkos-kernels.git"
-)
-FetchContent_MakeAvailable(kokkos-kernels)
+find_package(Kokkos QUIET)
+
+if(NOT Kokkos_FOUND)
+    FetchContent_Declare(kokkos
+        GIT_REPOSITORY "https://github.com/kokkos/kokkos.git"
+    )
+    FetchContent_MakeAvailable(kokkos)
+endif()
+
+# find_package(KokkosKernels QUIET)
+
+# if(NOT KokkosKernels_FOUND)
+# FetchContent_Declare(kokkos-kernels
+# GIT_REPOSITORY "https://github.com/kokkos/kokkos-kernels.git"
+# )
+# FetchContent_MakeAvailable(kokkos-kernels)
+# endif()
+add_definitions(-DWITH_KOKKOS)

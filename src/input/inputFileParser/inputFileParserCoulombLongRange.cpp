@@ -22,30 +22,46 @@
 
 #include "inputFileParserCoulombLongRange.hpp"
 
-#include "exceptions.hpp"          // for InputFileException, customException
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "stringUtilities.hpp"     // for toLowerCopy
-
 #include <cstddef>       // for size_t, std
 #include <format>        // for format
 #include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "stringUtilities.hpp"     // for toLowerCopy
+
 using namespace input;
 
 /**
- * @brief Construct a new Input File Parser Coulomb Long Range:: Input File Parser Coulomb Long Range object
+ * @brief Construct a new Input File Parser Coulomb Long Range:: Input File
+ * Parser Coulomb Long Range object
  *
- * @details following keywords are added to the _keywordFuncMap, _keywordRequiredMap and _keywordCountMap:
- * 1) long_range <string>
- * 2) wolf_param <double>
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) long_range <string> 2)
+ * wolf_param <double>
  *
  * @param engine
  */
-InputFileParserCoulombLongRange::InputFileParserCoulombLongRange(engine::Engine &engine) : InputFileParser(engine)
+InputFileParserCoulombLongRange::InputFileParserCoulombLongRange(
+    engine::Engine &engine
+)
+    : InputFileParser(engine)
 {
-    addKeyword(std::string("long_range"), bind_front(&InputFileParserCoulombLongRange::parseCoulombLongRange, this), false);
-    addKeyword(std::string("wolf_param"), bind_front(&InputFileParserCoulombLongRange::parseWolfParameter, this), false);
+    addKeyword(
+        std::string("long_range"),
+        bind_front(
+            &InputFileParserCoulombLongRange::parseCoulombLongRange,
+            this
+        ),
+        false
+    );
+
+    addKeyword(
+        std::string("wolf_param"),
+        bind_front(&InputFileParserCoulombLongRange::parseWolfParameter, this),
+        false
+    );
 }
 
 /**
@@ -57,10 +73,13 @@ InputFileParserCoulombLongRange::InputFileParserCoulombLongRange(engine::Engine 
  *
  * @param lineElements
  *
- * @throws customException::InputFileException if coulombic long-range correction is not valid - currently only none and wolf are
- * supported
+ * @throws customException::InputFileException if coulombic long-range
+ * correction is not valid - currently only none and wolf are supported
  */
-void InputFileParserCoulombLongRange::parseCoulombLongRange(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserCoulombLongRange::parseCoulombLongRange(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
@@ -74,9 +93,12 @@ void InputFileParserCoulombLongRange::parseCoulombLongRange(const std::vector<st
 
     else
         throw customException::InputFileException(format(
-            R"(Invalid long-range type for coulomb correction "{}" at line {} in input file - possible options are "none", "wolf")",
+            "Invalid long-range type for coulomb correction "
+            "\"{}\" at line {} in input file\n"
+            "Possible options are \"none\", \"wolf\"",
             lineElements[2],
-            lineNumber));
+            lineNumber
+        ));
 }
 
 /**
@@ -88,14 +110,19 @@ void InputFileParserCoulombLongRange::parseCoulombLongRange(const std::vector<st
  *
  * @throws customException::InputFileException if wolf parameter is negative
  */
-void InputFileParserCoulombLongRange::parseWolfParameter(const std::vector<std::string> &lineElements, const size_t lineNumber)
+void InputFileParserCoulombLongRange::parseWolfParameter(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
 {
     checkCommand(lineElements, lineNumber);
 
     const auto wolfParameter = stod(lineElements[2]);
 
     if (wolfParameter < 0.0)
-        throw customException::InputFileException("Wolf parameter cannot be negative");
+        throw customException::InputFileException(
+            "Wolf parameter cannot be negative"
+        );
 
     settings::PotentialSettings::setWolfParameter(wolfParameter);
 }

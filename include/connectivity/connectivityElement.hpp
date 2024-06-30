@@ -27,10 +27,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace simulationBox
-{
-    class Molecule;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace connectivity
 {
@@ -43,22 +40,19 @@ namespace connectivity
      */
     class ConnectivityElement
     {
-      protected:
+       protected:
         std::vector<simulationBox::Molecule *> _molecules;
         std::vector<size_t>                    _atomIndices;
 
-      public:
-        ConnectivityElement(const std::vector<simulationBox::Molecule *> &molecules, const std::vector<size_t> &atomIndices)
-            : _molecules(molecules), _atomIndices(atomIndices){};
+       public:
+        ConnectivityElement(const std::vector<pq::Molecule *> &, const std::vector<size_t> &);
 
         /***************************
-         *                         *
          * standard getter methods *
-         *                         *
          ***************************/
 
-        [[nodiscard]] std::vector<simulationBox::Molecule *> getMolecules() const { return _molecules; }
-        [[nodiscard]] std::vector<size_t>                    getAtomIndices() const { return _atomIndices; }
+        [[nodiscard]] std::vector<pq::Molecule *> getMolecules() const;
+        [[nodiscard]] std::vector<size_t>         getAtomIndices() const;
     };
 
 }   // namespace connectivity

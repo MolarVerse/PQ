@@ -37,29 +37,34 @@ Types of Input Values
 
 In the following sections the types of the input values will be denoted via :code:`{}`, where :code:`{[]}` represents a list of types:
 
-+------------+-------------------------------+
-|    Type    |          Description          |
-+============+===============================+
-|   {int}    |            integer            |
-+------------+-------------------------------+
-|  {uint+}   |       positive integers       |
-+------------+-------------------------------+
-|   {uint}   | positive integers including 0 |
-+------------+-------------------------------+
-|  {double}  |    floating point numbers     |
-+------------+-------------------------------+
-|  {string}  |              \-               |
-+------------+-------------------------------+
-|   {file}   |              \-               |
-+------------+-------------------------------+
-|   {path}   |              \-               |
-+------------+-------------------------------+
-| {pathFile} |     equal to {path/file}      |
-+------------+-------------------------------+
-|   {bool}   |          true/false           |
-+------------+-------------------------------+
++-------------+-------------------------------+
+|    Type     |          Description          |
++=============+===============================+
+|   {int}     |            integer            |
++-------------+-------------------------------+
+|  {uint+}    |       positive integers       |
++-------------+-------------------------------+
+|   {uint}    | positive integers including 0 |
++-------------+-------------------------------+
+|  {double}   |    floating point numbers     |
++-------------+-------------------------------+
+|  {string}   |              \-               |
++-------------+-------------------------------+
+|   {file}    |              \-               |
++-------------+-------------------------------+
+|   {path}    |              \-               |
++-------------+-------------------------------+
+| {pathFile}  |     equal to {path/file}      |
++-------------+-------------------------------+
+|   {bool}    |          true/false           |
++-------------+-------------------------------+
+| {selection} |          selection            |
++-------------+-------------------------------+
 
+.. _selectionType:
 
+.. Note::
+    The :code:`{selection}` type is used to select a specific atom or group of atoms. If the PQ software package was build including :code:`python3.12` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like :code:`{0, 1, 2}`. If a range of atom indices should be selected the user can use the following syntax :code:`{0-5, 10-15}` or :code:`{0..5, 10-15}` or :code:`{0..5, 10..15}`, where all would be equivalent to :code:`{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}`.
 
 Input Keys
 ==========
@@ -70,6 +75,8 @@ Input Keys
 ************
 General Keys
 ************
+
+.. _jobtype:
 
 Jobtype
 =======
@@ -88,6 +95,10 @@ Possible options are:
    2) **qm-md** - represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` keywords section.
 
    3) **qm-rpmd** - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringPolymerMDKeys` keywords section
+
+   4) **qmmm-md** - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+
+   5) **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
 
 Timestep
@@ -109,6 +120,22 @@ NStep
     nstep* = {uint+}
 
 The :code:`ǹstep` keyword sets the total amount of MD steps to be performed within the next simulation run.
+
+FLOATING_POINT_TYPE
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    floating_point_type = {string} -> "double"
+
+With the :code:`floating_point_type` keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.
+
+Possible options are:
+
+   1) **double** (default) - double precision floating point numbers are used
+
+   2) **float** - single precision floating point numbers are used
 
 Integrator
 ==========
@@ -468,6 +495,14 @@ Parameter_File
     :class: tip
 
     parameter_file = {file}
+
+MSHake_File
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    mshake_file = {file}
 
 Intra-NonBonded_File
 ====================
@@ -857,7 +892,11 @@ Possible options are:
 
    1) **off** (default) - no shake will be applied
 
-   2) **on** - shake for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2) **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   3) **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+
+   4) **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
 
 Shake-Tolerance
 ===============
@@ -1019,6 +1058,10 @@ Possible options are:
 
    3) **turbomole**
 
+   4) **mace** - same as **mace_mp**
+
+   5) **mace_off**
+
 QM_SCRIPT
 =========
 
@@ -1041,7 +1084,6 @@ QM_SCRIPT_FULL_PATH
    This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
 
-
 With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_LOOP_TIME_LIMIT
@@ -1054,7 +1096,35 @@ QM_LOOP_TIME_LIMIT
 
 With the :code:`qm_loop_time_limit` keyword the user can specify the loop time limit in :code:`s` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
 
+DISPERSION_CORRECTION
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    dispersion = {bool} -> false
+
+With the :code:`dispersion` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
+
 .. _ringPolymerMDKeys:
+
+MACE_MODEL_SIZE
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_model_size = {string} -> "medium"
+
+With the :code:`mace_model_size` keyword the user can specify the size of the MACE model for the QM calculations.
+
+Possible options are:
+
+   1) **small** (default) - small MACE model
+
+   2) **medium** - medium MACE model
+
+   3) **large** - large MACE model
 
 ********************
 Ring Polymer MD Keys
@@ -1072,6 +1142,80 @@ With the :code:`rpmd_n_replica` keyword the number of beads for a ring polymer M
 
 .. Note::
     This keyword is required for any kind of ring polymer MD simulation!
+
+**********
+QM/MM Keys
+**********
+
+QM_Center
+=========
+
+.. admonition:: Key
+    :class: tip
+
+    qm_center = {selection} -> 0
+
+With the :code:`qm_center` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The :code:`qm_center` if more than one atom is selected will be by default the center of mass of the selected atoms.
+
+QM_Only_List
+============
+
+.. admonition:: Key
+    :class: tip
+
+    qm_only_list = {selection}
+
+With the :code:`qm_only_list` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+
+MM_Only_List
+============
+
+.. admonition:: Key
+    :class: tip
+
+    mm_only_list = {selection}
+
+With the :code:`mm_only_list` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+
+QM_Charges
+==========
+
+.. admonition:: Key
+    :class: tip
+
+    qm_charges = {string} -> "off"
+
+With the :code:`qm_charges` keyword the user can specify the charge model for the QM atoms. If the :code:`qm_charges` keyword is set to :code:`off` the charges of the QM atoms are taken from the MM model applied. If the :code:`qm_charges` keyword is set to :code:`on` the charges of the QM atoms are taken from the QM calculation.
+
+QM_Core_Radius
+==============
+
+.. admonition:: Key
+    :class: tip
+
+    qm_core_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+
+With the :code:`qm_core_radius` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
+
+QMMM_Layer_Radius
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+
+With the :code:`qmmm_layer_radius` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+
+QMMM_Smoothing_Radius
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+
+With the :code:`qmmm_smoothing_radius` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
 
 **************
 Cell List Keys
@@ -1104,3 +1248,193 @@ Cell-Number
 With the :code:`cell-number` keyword the user can set the number of cells in each direction in which the simulation box will be split up (*e.g.* cell-number = 7 -> total cells = 7x7x7)
 
 .. centered:: *default value* = 7
+
+*****************
+Optimization Keys
+*****************
+
+In order to perform a geometry optimization on of the optimizer jobtypes has to be chosen. (For more info see the :ref:`jobtype` section)
+
+Optimizer
+=========
+
+.. admonition:: Key
+    :class: tip
+
+    optimizer = {string}
+
+This keyword is mandatory for any kind of geometry optimization. The user has to specify the optimizer which should be used for the optimization.
+
+Possible options are:
+
+   1) **steepest-descent** - steepest descent optimizer
+
+   2) **ADAM** - ADAM optimizer
+
+Learning-Rate-Strategy
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    learning-rate-strategy = {string} -> "exponential-decay"
+
+With the :code:`learning-rate-strategy` keyword the user can specify the learning rate strategy for all kind of optimization jobs.
+
+Possible options are:
+
+   1) **exponential-decay** (default) - exponential decay of the learning rate
+
+   2) **constant** - constant learning rate
+
+   3) **constant-decay** - constant decay of the learning rate
+
+Initial-Learning-Rate
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    initial-learning-rate = {double} -> 0.0001
+
+With the :code:`initial-learning-rate` keyword the user can specify the initial learning rate for all kind of optimization jobs.
+
+.. centered:: *default value* = 0.0001
+
+Learning-Rate-Decay
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    learning-rate-decay = {double}
+
+With the :code:`learning-rate-decay` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+
+****************
+Convergence Keys
+****************
+
+Energy-Convergence-Strategy
+===========================
+
+In general the convergence of the geometry optimization is checked by assuring that the absolute **and** relative energy difference between two consecutive steps is smaller than a certain threshold. The user can choose between different strategies to change this behavior.
+
+.. admonition:: Key
+    :class: tip
+
+    energy-conv-strategy = {string} -> "rigorous"
+
+With the :code:`energy-conv-strategy` keyword the user can specify the energy convergence strategy for all kind of optimization jobs.
+
+Possible options are:
+
+   1) **rigorous** (default) - both absolute and relative energy difference have to be smaller than the threshold
+
+   2) **loose** - only one of the two energy differences has to be smaller than the threshold
+
+   3) **relative** - only the relative energy difference has to be smaller than the threshold
+
+   4) **absolute** - only the absolute energy difference has to be smaller than the threshold
+
+Enable/Disable Energy Convergence Check
+=======================================
+
+.. admonition:: Key
+    :class: tip
+
+    use-energy-conv = {bool} -> true
+
+With the :code:`use-energy-conv` keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.
+
+Enable/Disable MAX Force Convergence Check
+==========================================
+
+.. admonition:: Key
+    :class: tip
+
+    use-max-force-conv = {bool} -> true
+
+With the :code:`use-max-force-conv` keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.
+
+Enable/Disable RMS Force Convergence Check
+==========================================
+
+.. admonition:: Key
+    :class: tip
+
+    use-rms-force-conv = {bool} -> true
+
+With the :code:`use-rms-force-conv` keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.
+
+Energy Convergence Threshold
+============================
+
+.. admonition:: Key
+    :class: tip
+
+    energy-conv = {double} -> 1e-6
+
+With the :code:`energy-conv` keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
+This keyword will set both the absolute and relative energy convergence threshold.
+
+.. centered:: *default value* = 1e-6
+
+Relative Energy Convergence Threshold
+=====================================
+
+.. admonition:: Key
+    :class: tip
+
+    rel-energy-conv = {double} -> 1e-6
+
+With the :code:`rel-energy-conv` keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`energy-conv` keyword.
+
+.. centered:: *default value* = 1e-6
+
+Absolute Energy Convergence Threshold
+=====================================
+
+.. admonition:: Key
+    :class: tip
+
+    abs-energy-conv = {double} -> 1e-6
+
+With the :code:`abs-energy-conv` keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`energy-conv` keyword.
+
+.. centered:: *default value* = 1e-6
+
+Force Convergence Threshold
+===========================
+
+.. admonition:: Key
+    :class: tip
+
+    force-conv = {double} -> 1e-6
+
+With the :code:`force-conv` keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.
+
+.. centered:: *default value* = 1e-6
+
+Maximum Force Convergence Threshold
+===================================
+
+.. admonition:: Key
+    :class: tip
+
+    max-force-conv = {double} -> 1e-6
+
+With the :code:`max-force-conv` keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`force-conv` keyword.
+
+.. centered:: *default value* = 1e-6
+
+RMS Force Convergence Threshold
+===============================
+
+.. admonition:: Key
+    :class: tip
+
+    rms-force-conv = {double} -> 1e-6
+
+With the :code:`rms-force-conv` keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`force-conv` keyword.
+

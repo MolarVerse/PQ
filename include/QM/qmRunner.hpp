@@ -31,6 +31,8 @@
 #include <stop_token>
 #include <string>
 
+#include "timer.hpp"
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -51,32 +53,13 @@ namespace QM
      * @brief base class for different qm engines
      *
      */
-    class QMRunner
+    class QMRunner : public timings::Timer
     {
-      protected:
-        std::string       _scriptPath  = SCRIPT_PATH_;
-        const std::string _singularity = SINGULARITY_;
-        const std::string _staticBuild = STATIC_BUILD_;
-
-      public:
+       public:
         virtual ~QMRunner() = default;
 
-        void         throwAfterTimeout(const std::stop_token stopToken) const;
-        void         run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
-        virtual void execute()                                       = 0;
-        virtual void readForceFile(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void readStressTensor(simulationBox::Box &, physicalData::PhysicalData &) {};
-
-        /*******************************
-         * standard getter and setters *
-         *******************************/
-
-        [[nodiscard]] const std::string &getScriptPath() const { return _scriptPath; }
-        [[nodiscard]] const std::string &getSingularity() const { return _singularity; }
-        [[nodiscard]] const std::string &getStaticBuild() const { return _staticBuild; }
-
-        void setScriptPath(const std::string_view &scriptPath) { _scriptPath = scriptPath; }
+        void throwAfterTimeout(const std::stop_token stopToken) const;
+        virtual void run(simulationBox::SimulationBox &, physicalData::PhysicalData &) = 0;
     };
 }   // namespace QM
 

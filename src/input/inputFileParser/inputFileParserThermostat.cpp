@@ -173,9 +173,9 @@ void InputFileParserThermostat::parseThermostat(
 
     else
         throw customException::InputFileException(format(
-            "Invalid thermostat \"{}\" at line {} in input file. Possible "
-            "options "
-            "are: none, berendsen, velocity_rescaling, langevin, nh-chain",
+            "Invalid thermostat \"{}\" at line {} in input file.\n"
+            "Possible options are: none, berendsen, velocity_rescaling, "
+            "langevin, nh-chain",
             lineElements[2],
             lineNumber
         ));

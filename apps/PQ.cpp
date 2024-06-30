@@ -20,11 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "commandLineArgs.hpp"   // for CommandLineArgs
-#include "engine.hpp"            // for Engine
-#include "inputFileReader.hpp"   // for readJobType
-#include "setup.hpp"             // for setupSimulation
-
 #include <cstdlib>      // for EXIT_SUCCESS
 #include <exception>    // for exception
 #include <filesystem>   // for remove_all
@@ -33,10 +28,19 @@
 #include <string>       // for string, char_traits
 #include <vector>       // for vector
 
-#ifdef WITH_MPI
-#include "mpi.hpp"   // for MPI
+#include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "engine.hpp"            // for Engine
+#include "inputFileReader.hpp"   // for readJobType
+#include "setup.hpp"             // for setupSimulation
 
+#ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
+
+#include "mpi.hpp"   // for MPI
+#endif
+
+#ifdef WITH_PYBIND11
+#include <pybind11/embed.h>   // for scoped_interpreter
 #endif
 
 static int PQ(int argc, const std::vector<std::string> &arguments)
@@ -47,7 +51,7 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
     auto engine = std::unique_ptr<engine::Engine>();
     input::readJobType(commandLineArgs.getInputFileName(), engine);
 
-    setup::setupSimulation(commandLineArgs.getInputFileName(), *engine);
+    setup::setupRequestedJob(commandLineArgs.getInputFileName(), *engine);
 
     /*
         HERE STARTS THE MAIN LOOP
@@ -69,6 +73,14 @@ int main(int argc, char *argv[])
     mpi::MPI::init(&argc, &argv);
 #endif
 
+#ifdef WITH_KOKKOS
+    Kokkos::initialize(argc, argv);
+#endif
+
+#ifdef WITH_PYBIND11
+    pybind11::scoped_interpreter guard{};
+#endif
+
     try
     {
         auto arguments = std::vector<std::string>(argv, argv + argc);
@@ -82,6 +94,10 @@ int main(int argc, char *argv[])
         ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
+
+#ifdef WITH_KOKKOS
+    Kokkos::finalize();
+#endif
 
 #ifdef WITH_MPI
     mpi::MPI::finalize();

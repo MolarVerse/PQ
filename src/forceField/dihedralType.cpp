@@ -25,6 +25,26 @@
 #include "mathUtilities.hpp"
 
 using namespace forceField;
+using namespace utilities;
+
+/**
+ * @brief Construct a new Dihedral Type:: Dihedral Type object
+ *
+ * @param id
+ * @param forceConstant
+ * @param frequency
+ * @param phaseShift
+ */
+DihedralType::DihedralType(
+    const size_t id,
+    const double forceConstant,
+    const double frequency,
+    const double phaseShift
+)
+    : _id(id),
+      _forceConstant(forceConstant),
+      _periodicity(frequency),
+      _phaseShift(phaseShift){};
 
 /**
  * @brief operator overload for the comparison of two DihedralType objects
@@ -33,12 +53,46 @@ using namespace forceField;
  * @return true
  * @return false
  */
-bool DihedralType::operator==(const DihedralType &other) const
+bool forceField::operator==(const DihedralType &self, const DihedralType &other)
 {
-    auto isEqual = _id == other._id;
-    isEqual      = isEqual && utilities::compare(_forceConstant, other._forceConstant);
-    isEqual      = isEqual && utilities::compare(_periodicity, other._periodicity);
-    isEqual      = isEqual && utilities::compare(_phaseShift, other._phaseShift);
+    auto isEqual = self._id == other._id;
+    isEqual = isEqual && compare(self._forceConstant, other._forceConstant);
+    isEqual = isEqual && compare(self._periodicity, other._periodicity);
+    isEqual = isEqual && compare(self._phaseShift, other._phaseShift);
 
     return isEqual;
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the id of the dihedral type
+ *
+ * @return size_t
+ */
+size_t DihedralType::getId() const { return _id; }
+
+/**
+ * @brief get the force constant of the dihedral type
+ *
+ * @return double
+ */
+double DihedralType::getForceConstant() const { return _forceConstant; }
+
+/**
+ * @brief get the periodicity of the dihedral type
+ *
+ * @return double
+ */
+double DihedralType::getPeriodicity() const { return _periodicity; }
+
+/**
+ * @brief get the phase shift of the dihedral type
+ *
+ * @return double
+ */
+double DihedralType::getPhaseShift() const { return _phaseShift; }

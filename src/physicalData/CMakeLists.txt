@@ -1,5 +1,7 @@
 add_library(physicalData
     physicalData.cpp
+
+    physicalData_standardMethods.cpp
 )
 
 target_include_directories(physicalData
@@ -12,6 +14,7 @@ target_link_libraries(physicalData
     PUBLIC
     utilities
     simulationBox
+    timings
 )
 
 install(TARGETS physicalData

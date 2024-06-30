@@ -10,16 +10,21 @@ _build*
 
 install/
 
+examples/cgo
+
 examples/**/testset*
 examples/**/perf*
 
-**/*.xyz
-**/*.vel
-**/*.force
-**/*.chrg
-**/*.charge
-**/*.mom
+examples/**/*.xyz
+examples/**/*.vel
+examples/**/*.force
+examples/**/*.chrg
+examples/**/*.charge
+examples/**/*.mom
 
 *.gcov
 
 googletest
+
+**/__pycache__*
+**/.pytest_cache

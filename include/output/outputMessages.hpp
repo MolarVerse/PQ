@@ -38,6 +38,6 @@ namespace output
 
     std::string setupMessage(const std::string &setup);
     std::string setupCompletedMessage();
-    std::string readMessage(const std::string &message, const std::string &file);
+    std::string readMessage(const std::string &, const std::string &);
 
 }   // namespace output

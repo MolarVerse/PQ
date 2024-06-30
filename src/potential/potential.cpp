@@ -22,18 +22,19 @@
 
 #include "potential.hpp"
 
+#include <cmath>   // for sqrt
+
 #include "box.hpp"                   // for Box
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
-#include <cmath>   // for sqrt
-
 using namespace potential;
 
 /**
- * @brief inner part of the double loop to calculate non-bonded inter molecular interactions
+ * @brief inner part of the double loop to calculate non-bonded inter molecular
+ * interactions
  *
  * @param box
  * @param molecule1
@@ -42,11 +43,13 @@ using namespace potential;
  * @param atom2
  * @return std::pair<double, double>
  */
-std::pair<double, double> Potential::calculateSingleInteraction(const simulationBox::Box &box,
-                                                                simulationBox::Molecule  &molecule1,
-                                                                simulationBox::Molecule  &molecule2,
-                                                                const size_t              atom1,
-                                                                const size_t              atom2) const
+std::pair<double, double> Potential::calculateSingleInteraction(
+    const simulationBox::Box &box,
+    simulationBox::Molecule  &molecule1,
+    simulationBox::Molecule  &molecule2,
+    const size_t              atom1,
+    const size_t              atom2
+) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
@@ -56,13 +59,14 @@ std::pair<double, double> Potential::calculateSingleInteraction(const simulation
 
     auto dxyz = xyz_i - xyz_j;
 
-    const auto txyz = -box.calculateShiftVector(dxyz);
+    const auto txyz = -box.calcShiftVector(dxyz);
 
     dxyz += txyz;
 
     const double distanceSquared = normSquared(dxyz);
 
-    if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff(); distanceSquared < RcCutOff * RcCutOff)
+    if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        distanceSquared < RcCutOff * RcCutOff)
     {
         const double distance   = ::sqrt(distanceSquared);
         const size_t atomType_i = molecule1.getAtomType(atom1);
@@ -74,19 +78,31 @@ std::pair<double, double> Potential::calculateSingleInteraction(const simulation
         const auto moltype_i = molecule1.getMoltype();
         const auto moltype_j = molecule2.getMoltype();
 
-        const auto combinedIndices = {moltype_i, moltype_j, atomType_i, atomType_j, globalVdwType_i, globalVdwType_j};
+        const auto combinedIndices = {
+            moltype_i,
+            moltype_j,
+            atomType_i,
+            atomType_j,
+            globalVdwType_i,
+            globalVdwType_j
+        };
 
-        const auto coulombPreFactor = molecule1.getPartialCharge(atomType_i) * molecule2.getPartialCharge(atomType_j);
+        const auto coulombPreFactor = molecule1.getPartialCharge(atomType_i) *
+                                      molecule2.getPartialCharge(atomType_j);
 
-        auto [energy, force] = _coulombPotential->calculate(distance, coulombPreFactor);
-        coulombEnergy        = energy;
+        auto [energy, force] =
+            _coulombPotential->calculate(distance, coulombPreFactor);
+        coulombEnergy = energy;
 
-        const auto nonCoulombicPair = _nonCoulombPotential->getNonCoulombPair(combinedIndices);
+        const auto nonCoulombicPair =
+            _nonCoulombPotential->getNonCoulombPair(combinedIndices);
 
-        if (const auto rncCutOff = nonCoulombicPair->getRadialCutOff(); distance < rncCutOff)
+        if (const auto rncCutOff = nonCoulombicPair->getRadialCutOff();
+            distance < rncCutOff)
         {
-            const auto &[energy, nonCoulombForce] = nonCoulombicPair->calculateEnergyAndForce(distance);
-            nonCoulombEnergy                      = energy;
+            const auto &[energy, nonCoulombForce] =
+                nonCoulombicPair->calculateEnergyAndForce(distance);
+            nonCoulombEnergy = energy;
 
             force += nonCoulombForce;
         }

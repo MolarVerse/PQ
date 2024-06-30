@@ -44,91 +44,83 @@ namespace constants
     /**
      * @brief Conversion factors for mass units
      */
-    static constexpr double _GRAM_TO_KG_ = 1.0e-3;
-    static constexpr double _KG_TO_GRAM_ = 1.0 / _GRAM_TO_KG_;
-    static constexpr double _AMU_TO_KG_  = _GRAM_TO_KG_ / _AVOGADRO_NUMBER_;
+    static constexpr double _G_TO_KG_    = 1.0e-3;
+    static constexpr double _KG_TO_GRAM_ = 1.0 / _G_TO_KG_;
+    static constexpr double _AMU_TO_KG_  = _G_TO_KG_ / _AVOGADRO_NUMBER_;
     static constexpr double _KG_TO_AMU_  = 1.0 / _AMU_TO_KG_;
 
     /**
      * @brief Conversion factors for length units
      */
-    static constexpr double _ANGSTROM_TO_METER_ = 1.0e-10;
-    static constexpr double _METER_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_METER_;
+    static constexpr double _ANGSTROM_TO_M_ = 1.0e-10;
+    static constexpr double _M_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_M_;
 
-    static constexpr double _BOHR_RADIUS_TO_METER_ = _BOHR_RADIUS_;
-    static constexpr double _METER_TO_BOHR_RADIUS_ =
-        1.0 / _BOHR_RADIUS_TO_METER_;
+    static constexpr double _BOHR_TO_M_ = _BOHR_RADIUS_;
+    static constexpr double _M_TO_BOHR_ = 1.0 / _BOHR_TO_M_;
 
-    static constexpr double _ANGSTROM_TO_BOHR_RADIUS_ =
-        _ANGSTROM_TO_METER_ / _BOHR_RADIUS_TO_METER_;
-    static constexpr double _BOHR_RADIUS_TO_ANGSTROM_ =
-        1.0 / _ANGSTROM_TO_BOHR_RADIUS_;
+    static constexpr double _ANGSTROM_TO_BOHR_ = _ANGSTROM_TO_M_ / _BOHR_TO_M_;
+    static constexpr double _BOHR_TO_ANGSTROM_ = 1.0 / _ANGSTROM_TO_BOHR_;
 
     /**
      * @brief Conversion factors for area units
      */
-    static constexpr double _ANGSTROM_SQUARED_TO_METER_SQUARED_ =
-        _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
-    static constexpr double _METER_SQUARED_TO_ANGSTROM_SQUARED_ =
-        1 / _ANGSTROM_SQUARED_TO_METER_SQUARED_;
+    // clang-format off
+    static constexpr double _ANGSTROM2_TO_M2_ = _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_;
+    static constexpr double _M2_TO_ANGSTROM2_ = 1 / _ANGSTROM2_TO_M2_;
+    // clang-format on
 
     /**
      * @brief Conversion factors for volume units
      */
-    static constexpr double _ANGSTROM_CUBIC_TO_METER_CUBIC_ =
-        _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_ * _ANGSTROM_TO_METER_;
-    static constexpr double _METER_CUBIC_TO_ANGSTROM_CUBIC_ =
-        1.0 / _ANGSTROM_CUBIC_TO_METER_CUBIC_;
-    static constexpr double _ANGSTROM_CUBIC_TO_LITER_ =
-        _ANGSTROM_CUBIC_TO_METER_CUBIC_ * 1.0e3;
-    static constexpr double _LITER_TO_ANGSTROM_CUBIC_ =
-        1.0 / _ANGSTROM_CUBIC_TO_LITER_;
-    static constexpr double _BOHR_RADIUS_CUBIC_TO_ANGSTROM_CUBIC_ =
-        _BOHR_RADIUS_TO_ANGSTROM_ * _BOHR_RADIUS_TO_ANGSTROM_ *
-        _BOHR_RADIUS_TO_ANGSTROM_;
+    // clang-format off
+    static constexpr double _ANGSTROM3_TO_M3     = _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_ * _ANGSTROM_TO_M_;
+    static constexpr double _M3_TO_ANGSTROM3_    = 1.0 / _ANGSTROM3_TO_M3;
+    static constexpr double _ANGSTROM3_TO_L_     = _ANGSTROM3_TO_M3 * 1.0e3;
+    static constexpr double _L_TO_ANGSTROM3_     = 1.0 / _ANGSTROM3_TO_L_;
+    static constexpr double _BOHR3_TO_ANGSTROM3_ = _BOHR_TO_ANGSTROM_ * _BOHR_TO_ANGSTROM_ * _BOHR_TO_ANGSTROM_;
+    // clang-format on
 
     /**
      * @brief Conversion factors for density units
      */
-    static constexpr double _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_ =
-        _KG_TO_AMU_ / _LITER_TO_ANGSTROM_CUBIC_;
-    static constexpr double _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_ =
-        1.0 / _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_;
+    // clang-format off
+    static constexpr double _KG_PER_L_TO_AMU_PER_ANGSTROM3_ = _KG_TO_AMU_ / _L_TO_ANGSTROM3_;
+    static constexpr double _AMU_PER_ANGSTROM3_TO_KG_PER_L_ = 1.0 / _KG_PER_L_TO_AMU_PER_ANGSTROM3_;
+    // clang-format on
 
     /**
      * @brief Conversion factors for energy units
      */
-    static constexpr double _KCAL_TO_JOULE_ = 4184.0;
-    static constexpr double _JOULE_TO_KCAL_ = 1.0 / _KCAL_TO_JOULE_;
-    static constexpr double _JOULE_TO_KCAL_PER_MOL_ =
-        _JOULE_TO_KCAL_ * _AVOGADRO_NUMBER_;
-    static constexpr double _KCAL_PER_MOL_TO_JOULE_ =
-        1.0 / _JOULE_TO_KCAL_PER_MOL_;
-    static constexpr double _HARTREE_TO_KCAL_PER_MOL_ = 627.5096080305927;
-    static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ =
-        _BOLTZMANN_CONSTANT_ * _JOULE_TO_KCAL_PER_MOL_;
+    // clang-format off
+    static constexpr double _KCAL_TO_J_                          = 4184.0;
+    static constexpr double _J_TO_KCAL_                          = 1.0 / _KCAL_TO_J_;
+    static constexpr double _J_TO_KCAL_PER_MOL_                  = _J_TO_KCAL_ * _AVOGADRO_NUMBER_;
+    static constexpr double _KCAL_PER_MOL_TO_J_                  = 1.0 / _J_TO_KCAL_PER_MOL_;
+    static constexpr double _EV_TO_J_                            = 1.602176634e-19;
+    static constexpr double _EV_TO_KCAL_PER_MOL_                 = _EV_TO_J_ * _J_TO_KCAL_PER_MOL_;
+    static constexpr double _HARTREE_TO_KCAL_PER_MOL_            = 627.5096080305927;
+    static constexpr double _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ = _BOLTZMANN_CONSTANT_ * _J_TO_KCAL_PER_MOL_;
+    // clang-format on
 
     /**
      * @brief Conversion factors for squared energy units
      */
-    static constexpr double _BOLTZMANN_CONSTANT_SQUARED_ =
-        _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
-    static constexpr double _REDUCED_PLANCK_CONSTANT_SQUARED_ =
-        _REDUCED_PLANCK_CONSTANT_ * _REDUCED_PLANCK_CONSTANT_;
+    // clang-format off
+    static constexpr double _BOLTZMANN_CONSTANT2_      = _BOLTZMANN_CONSTANT_ * _BOLTZMANN_CONSTANT_;
+    static constexpr double _REDUCED_PLANCK_CONSTANT2_ = _REDUCED_PLANCK_CONSTANT_ * _REDUCED_PLANCK_CONSTANT_;
+    // clang-format on
 
     /**
      * @brief Conversion factors for force units
      */
     static constexpr double _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ =
-        _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_;
+        _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_TO_ANGSTROM_;
 
     /**
      * @brief Conversion factors for stress units
      */
-    static constexpr double
-        _HARTREE_PER_BOHR_CUBIC_TO_KCAL_PER_MOL_PER_ANGSTROM_CUBIC_ =
-            _HARTREE_TO_KCAL_PER_MOL_ / _BOHR_RADIUS_TO_ANGSTROM_ /
-            _BOHR_RADIUS_TO_ANGSTROM_ / _BOHR_RADIUS_TO_ANGSTROM_;
+    static constexpr double _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_ =
+        _HARTREE_TO_KCAL_PER_MOL_ / _BOHR3_TO_ANGSTROM3_;
 
     /**
      * @brief Conversion factors for time units
@@ -141,8 +133,8 @@ namespace constants
     /**
      * @brief Conversion factors for pressure calculation
      */
-    static constexpr double _PASCAL_TO_BAR_ = 1.0e-5;
-    static constexpr double _BAR_TO_PASCAL_ = 1.0 / _PASCAL_TO_BAR_;
+    static constexpr double _P_TO_BAR_ = 1.0e-5;
+    static constexpr double _BAR_TO_P_ = 1.0 / _P_TO_BAR_;
 
     /**
      * @brief Conversion factors for velocities

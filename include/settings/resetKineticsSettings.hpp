@@ -36,7 +36,7 @@ namespace settings
      */
     class ResetKineticsSettings
     {
-      private:
+       private:
         static inline size_t _nScale        = 0;
         static inline size_t _fScale        = 0;
         static inline size_t _nReset        = 0;
@@ -44,7 +44,7 @@ namespace settings
         static inline size_t _nResetAngular = 0;
         static inline size_t _fResetAngular = 0;
 
-      public:
+       public:
         ResetKineticsSettings()  = default;
         ~ResetKineticsSettings() = default;
 
@@ -52,23 +52,23 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setNScale(const size_t nScale) { _nScale = nScale; }
-        static void setFScale(const size_t fScale) { _fScale = fScale; }
-        static void setNReset(const size_t nReset) { _nReset = nReset; }
-        static void setFReset(const size_t fReset) { _fReset = fReset; }
-        static void setNResetAngular(const size_t nResetAngular) { _nResetAngular = nResetAngular; }
-        static void setFResetAngular(const size_t fResetAngular) { _fResetAngular = fResetAngular; }
+        static void setNScale(const size_t nScale);
+        static void setFScale(const size_t fScale);
+        static void setNReset(const size_t nReset);
+        static void setFReset(const size_t fReset);
+        static void setNResetAngular(const size_t nResetAngular);
+        static void setFResetAngular(const size_t fResetAngular);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static size_t getNScale() { return _nScale; }
-        [[nodiscard]] static size_t getFScale() { return _fScale; }
-        [[nodiscard]] static size_t getNReset() { return _nReset; }
-        [[nodiscard]] static size_t getFReset() { return _fReset; }
-        [[nodiscard]] static size_t getNResetAngular() { return _nResetAngular; }
-        [[nodiscard]] static size_t getFResetAngular() { return _fResetAngular; }
+        [[nodiscard]] static size_t getNScale();
+        [[nodiscard]] static size_t getFScale();
+        [[nodiscard]] static size_t getNReset();
+        [[nodiscard]] static size_t getFReset();
+        [[nodiscard]] static size_t getNResetAngular();
+        [[nodiscard]] static size_t getFResetAngular();
     };
 }   // namespace settings
 

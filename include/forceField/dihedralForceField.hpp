@@ -24,27 +24,11 @@
 
 #define _DIHEDRAL_FORCE_FIELD_HPP_
 
-#include "dihedral.hpp"
-
 #include <cstddef>
 #include <vector>
 
-namespace potential
-{
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
-}   // namespace potential
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
-}   // namespace simulationBox
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "dihedral.hpp"
+#include "typeAliases.hpp"
 
 namespace forceField
 {
@@ -56,7 +40,7 @@ namespace forceField
      */
     class DihedralForceField : public connectivity::Dihedral
     {
-      private:
+       private:
         size_t _type;
         bool   _isLinker = false;
 
@@ -64,36 +48,40 @@ namespace forceField
         double _periodicity   = 0.0;
         double _phaseShift    = 0.0;
 
-      public:
-        DihedralForceField(const std::vector<simulationBox::Molecule *> &molecules,
-                           const std::vector<size_t>                    &atomIndices,
-                           size_t                                        type)
-            : connectivity::Dihedral(molecules, atomIndices), _type(type){};
+       public:
+        DihedralForceField(
+            const std::vector<pq::Molecule *> &molecules,
+            const std::vector<size_t>         &atomIndices,
+            const size_t                       type
+        );
 
-        void calculateEnergyAndForces(const simulationBox::SimulationBox &,
-                                      physicalData::PhysicalData &,
-                                      const bool isImproperDihedral,
-                                      const potential::CoulombPotential &,
-                                      potential::NonCoulombPotential &);
+        void calculateEnergyAndForces(
+            const pq::SimBox     &simBox,
+            pq::PhysicalData     &data,
+            const bool            isImproperDihedral,
+            const pq::CoulombPot &coulombPot,
+            pq::NonCoulombPot    &nonCoulombPot
+        );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker) { _isLinker = isLinker; }
-        void setForceConstant(const double forceConstant) { _forceConstant = forceConstant; }
-        void setPeriodicity(const double periodicity) { _periodicity = periodicity; }
-        void setPhaseShift(const double phaseShift) { _phaseShift = phaseShift; }
+        void setIsLinker(const bool isLinker);
+        void setForceConstant(const double forceConstant);
+        void setPeriodicity(const double periodicity);
+        void setPhaseShift(const double phaseShift);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const { return _type; }
-        [[nodiscard]] bool   isLinker() const { return _isLinker; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
-        [[nodiscard]] double getPeriodicity() const { return _periodicity; }
-        [[nodiscard]] double getPhaseShift() const { return _phaseShift; }
+        [[nodiscard]] bool isLinker() const;
+
+        [[nodiscard]] size_t getType() const;
+        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] double getPeriodicity() const;
+        [[nodiscard]] double getPhaseShift() const;
     };
 
 }   // namespace forceField

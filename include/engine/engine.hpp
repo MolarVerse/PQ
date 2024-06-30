@@ -24,23 +24,27 @@
 
 #define _ENGINE_HPP_
 
+#include <cstddef>   // for size_t
+#include <memory>
+
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
-#include "integrator.hpp"
+#include "globalTimer.hpp"
 #include "intraNonBonded.hpp"
-#include "manostat.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
-#include "resetKinetics.hpp"
 #include "simulationBox.hpp"
-#include "thermostat.hpp"
-#include "timings.hpp"
+#include "typeAliases.hpp"
 #include "virial.hpp"
 
-#include <cstddef>   // for size_t
-#include <memory>
+#ifdef WITH_KOKKOS
+#include "coulombWolf_kokkos.hpp"
+#include "lennardJones_kokkos.hpp"
+#include "potential_kokkos.hpp"
+#include "simulationBox_kokkos.hpp"
+#endif
 
 namespace output
 {
@@ -56,17 +60,25 @@ namespace output
     class BoxFileOutput;                  // forward declaration
     class RingPolymerRestartFileOutput;   // forward declaration
     class RingPolymerTrajectoryOutput;    // forward declaration
+    class TimingsOutput;                  // forward declaration
 
 }   // namespace output
 
 namespace engine
 {
-    using RPRestartFileOutput = output::RingPolymerRestartFileOutput;
-    using RPTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
-    using RPVelOutput         = output::RingPolymerTrajectoryOutput;
-    using RPForceOutput       = output::RingPolymerTrajectoryOutput;
-    using RPChargeOutput      = output::RingPolymerTrajectoryOutput;
-    using RPEnergyOutput      = output::RingPolymerEnergyOutput;
+    using RPMDRestartFileOutput = output::RingPolymerRestartFileOutput;
+    using RPMDTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
+    using RPMDVelOutput         = output::RingPolymerTrajectoryOutput;
+    using RPMDForceOutput       = output::RingPolymerTrajectoryOutput;
+    using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
+    using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
+
+#ifdef WITH_KOKKOS
+    using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
+    using KokkosLennardJones  = potential::KokkosLennardJones;
+    using KokkosCoulombWolf   = potential::KokkosCoulombWolf;
+    using KokkosPotential     = potential::KokkosPotential;
+#endif
 
     /**
      * @class Engine
@@ -76,121 +88,149 @@ namespace engine
      */
     class Engine
     {
-      protected:
-        size_t _step = 1;
+       protected:
+        size_t _step   = 1;
+        size_t _nSteps = 0;
 
-        EngineOutput                   _engineOutput;
-        timings::Timings               _timings;
-        simulationBox::CellList        _cellList;
-        simulationBox::SimulationBox   _simulationBox;
-        physicalData::PhysicalData     _physicalData;
-        physicalData::PhysicalData     _averagePhysicalData;
-        constraints::Constraints       _constraints;
-        forceField::ForceField         _forceField;
-        intraNonBonded::IntraNonBonded _intraNonBonded;
-        resetKinetics::ResetKinetics   _resetKinetics;
+        EngineOutput _engineOutput;
 
-        std::unique_ptr<integrator::Integrator> _integrator = std::make_unique<integrator::VelocityVerlet>();
-        std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
-        std::unique_ptr<manostat::Manostat>     _manostat   = std::make_unique<manostat::Manostat>();
-        std::unique_ptr<virial::Virial>         _virial     = std::make_unique<virial::VirialMolecular>();
-        std::unique_ptr<potential::Potential>   _potential  = std::make_unique<potential::PotentialBruteForce>();
+        timings::GlobalTimer _timer;
 
-      public:
+        physicalData::PhysicalData _averagePhysicalData;
+
+        // clang-format off
+        pq::SharedVirial       _virial         = std::make_shared<pq::VirialMolecular>();
+        pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
+        pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
+        pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
+        pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
+        pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
+        pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
+        pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
+        // clang-format on
+
+#ifdef WITH_KOKKOS
+        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
+        potential::KokkosLennardJones      _kokkosLennardJones;
+        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
+        potential::KokkosPotential         _kokkosPotential;
+#endif
+
+       public:
         Engine()          = default;
         virtual ~Engine() = default;
 
-        virtual void run();
-        virtual void takeStep(){};
-        virtual void writeOutput();
+        virtual void run()         = 0;
+        virtual void takeStep()    = 0;
+        virtual void writeOutput() = 0;
 
-        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const { return _forceField.isNonCoulombicActivated(); }
-        [[nodiscard]] bool isGuffActivated() const { return !_forceField.isNonCoulombicActivated(); }
-        [[nodiscard]] bool isCellListActivated() const { return _cellList.isActive(); }
-        [[nodiscard]] bool isConstraintsActivated() const { return _constraints.isActive(); }
-        [[nodiscard]] bool isIntraNonBondedActivated() const { return _intraNonBonded.isActive(); }
+        void addTimer(const timings::Timer &timings);
 
-        /************************************
-         *                                  *
-         * standard make unique_ptr methods *
-         *                                  *
-         ************************************/
+        [[nodiscard]] double calculateTotalSimulationTime() const;
 
-        template <typename T>
-        void makeIntegrator(T integrator)
-        {
-            _integrator = std::make_unique<T>(integrator);
-        }
-        template <typename T>
-        void makePotential(T)
-        {
-            _potential = std::make_unique<T>();
-        }
-        template <typename T>
-        void makeThermostat(T thermostat)
-        {
-            _thermostat = std::make_unique<T>(thermostat);
-        }
-        template <typename T>
-        void makeManostat(T manostat)
-        {
-            _manostat = std::make_unique<T>(manostat);
-        }
-        template <typename T>
-        void makeVirial(T virial)
-        {
-            _virial = std::make_unique<T>(virial);
-        }
+        /**********************************
+         * information about active parts *
+         **********************************/
+
+        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
+        [[nodiscard]] bool isGuffActivated() const;
+        [[nodiscard]] bool isCellListActivated() const;
+        [[nodiscard]] bool isConstraintsActivated() const;
+        [[nodiscard]] bool isIntraNonBondedActivated() const;
 
         /***************************
-         *                         *
          * standard getter methods *
-         *                         *
          ***************************/
 
-        [[nodiscard]] timings::Timings               &getTimings() { return _timings; }
-        [[nodiscard]] simulationBox::CellList        &getCellList() { return _cellList; }
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox() { return _simulationBox; }
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData() { return _physicalData; }
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData() { return _averagePhysicalData; }
-        [[nodiscard]] constraints::Constraints       &getConstraints() { return _constraints; }
-        [[nodiscard]] forceField::ForceField         &getForceField() { return _forceField; }
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded() { return _intraNonBonded; }
-        [[nodiscard]] resetKinetics::ResetKinetics   &getResetKinetics() { return _resetKinetics; }
+        [[nodiscard]] pq::CellList     &getCellList();
+        [[nodiscard]] pq::SimBox       &getSimulationBox();
+        [[nodiscard]] pq::PhysicalData &getPhysicalData();
+        [[nodiscard]] pq::PhysicalData &getAveragePhysicalData();
+        [[nodiscard]] pq::Constraints  &getConstraints();
+        [[nodiscard]] pq::ForceField   &getForceField();
+        [[nodiscard]] pq::IntraNonBond &getIntraNonBonded();
+        [[nodiscard]] pq::Virial       &getVirial();
+        [[nodiscard]] pq::Potential    &getPotential();
 
-        [[nodiscard]] forceField::ForceField *getForceFieldPtr() { return &_forceField; }
+        /*************************
+         * output getter methods *
+         *************************/
 
-        [[nodiscard]] virial::Virial         &getVirial() { return *_virial; }
-        [[nodiscard]] integrator::Integrator &getIntegrator() { return *_integrator; }
-        [[nodiscard]] potential::Potential   &getPotential() { return *_potential; }
-        [[nodiscard]] thermostat::Thermostat &getThermostat() { return *_thermostat; }
-        [[nodiscard]] manostat::Manostat     &getManostat() { return *_manostat; }
+        [[nodiscard]] EngineOutput          &getEngineOutput();
+        [[nodiscard]] output::LogOutput     &getLogOutput();
+        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] EngineOutput             &getEngineOutput() { return _engineOutput; }
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput() { return _engineOutput.getEnergyOutput(); }
-        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput() { return _engineOutput.getInstantEnergyOutput(); }
-        [[nodiscard]] output::MomentumOutput   &getMomentumOutput() { return _engineOutput.getMomentumOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput() { return _engineOutput.getXyzOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getVelOutput() { return _engineOutput.getVelOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput() { return _engineOutput.getForceOutput(); }
-        [[nodiscard]] output::TrajectoryOutput &getChargeOutput() { return _engineOutput.getChargeOutput(); }
-        [[nodiscard]] output::LogOutput        &getLogOutput() { return _engineOutput.getLogOutput(); }
-        [[nodiscard]] output::StdoutOutput     &getStdoutOutput() { return _engineOutput.getStdoutOutput(); }
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput() { return _engineOutput.getRstFileOutput(); }
-        [[nodiscard]] output::InfoOutput       &getInfoOutput() { return _engineOutput.getInfoOutput(); }
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
 
-        [[nodiscard]] output::VirialOutput  &getVirialOutput() { return _engineOutput.getVirialOutput(); }
-        [[nodiscard]] output::StressOutput  &getStressOutput() { return _engineOutput.getStressOutput(); }
-        [[nodiscard]] output::BoxFileOutput &getBoxFileOutput() { return _engineOutput.getBoxFileOutput(); }
+        /***********************
+         * get pointer methods *
+         ***********************/
 
-        [[nodiscard]] RPRestartFileOutput &getRingPolymerRstFileOutput() { return _engineOutput.getRingPolymerRstFileOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerXyzOutput() { return _engineOutput.getRingPolymerXyzOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerVelOutput() { return _engineOutput.getRingPolymerVelOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerForceOutput() { return _engineOutput.getRingPolymerForceOutput(); }
-        [[nodiscard]] RPTrajectoryOutput  &getRingPolymerChargeOutput() { return _engineOutput.getRingPolymerChargeOutput(); }
-        [[nodiscard]] RPEnergyOutput      &getRingPolymerEnergyOutput() { return _engineOutput.getRingPolymerEnergyOutput(); }
+        [[nodiscard]] pq::ForceField   *getForceFieldPtr();
+        [[nodiscard]] pq::Potential    *getPotentialPtr();
+        [[nodiscard]] pq::Virial       *getVirialPtr();
+        [[nodiscard]] pq::CellList     *getCellListPtr();
+        [[nodiscard]] pq::SimBox       *getSimulationBoxPtr();
+        [[nodiscard]] pq::PhysicalData *getPhysicalDataPtr();
+        [[nodiscard]] pq::Constraints  *getConstraintsPtr();
+        [[nodiscard]] pq::IntraNonBond *getIntraNonBondedPtr();
+
+        /******************************
+         * get shared pointer methods *
+         ******************************/
+
+        [[nodiscard]] pq::SharedForceField   getSharedForceField() const;
+        [[nodiscard]] pq::SharedSimBox       getSharedSimulationBox() const;
+        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalData() const;
+        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
+        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
+        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
+        [[nodiscard]] pq::SharedVirial       getSharedVirial() const;
+        [[nodiscard]] pq::SharedPotential    getSharedPotential() const;
+
+        /***************************
+         * make unique_ptr methods *
+         ***************************/
+
+        template <typename T>
+        void makePotential(T);
+        template <typename T>
+        void makeVirial(T virial);
+
+        /********************************
+         * standard getters and setters *
+         ********************************/
+
+        [[nodiscard]] size_t                getStep() const { return _step; }
+        [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
+
+        void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
+
+#ifdef WITH_KOKKOS
+        [[nodiscard]] KokkosSimulationBox &getKokkosSimulationBox();
+        [[nodiscard]] KokkosLennardJones  &getKokkosLennardJones();
+        [[nodiscard]] KokkosCoulombWolf   &getKokkosCoulombWolf();
+        [[nodiscard]] KokkosPotential     &getKokkosPotential();
+        void initKokkosSimulationBox(const size_t numAtoms);
+        void initKokkosLennardJones(const size_t numAtomTypes);
+        void initKokkosCoulombWolf(
+            const double coulombRadiusCutOff,
+            const double kappa,
+            const double wolfParameter1,
+            const double wolfParameter2,
+            const double wolfParameter3,
+            const double prefactor
+        );
+        void initKokkosPotential();
+#endif
     };
-
 }   // namespace engine
+
+#include "engine.tpp.hpp"   // DO NOT MOVE THIS LINE!
 
 #endif   // _ENGINE_HPP_

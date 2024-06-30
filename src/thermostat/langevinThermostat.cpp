@@ -65,7 +65,7 @@ void LangevinThermostat::calculateSigma(
 {
     const auto conversionFactor =
         constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_METER_SQUARED_TO_ANGSTROM_SQUARED_ *
+        constants::_M2_TO_ANGSTROM2_ *
         constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
 
     const auto timeStep = settings::TimingsSettings::getTimeStep();
@@ -141,8 +141,10 @@ void LangevinThermostat::applyThermostat(
     physicalData::PhysicalData   &data
 )
 {
+    startTimingsSection("LangevinThermostat - Full Step");
     applyLangevin(simBox);
     data.calculateTemperature(simBox);
+    stopTimingsSection("LangevinThermostat - Full Step");
 }
 
 /**
@@ -156,5 +158,7 @@ void LangevinThermostat::applyThermostat(
 void LangevinThermostat::
     applyThermostatHalfStep(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &)
 {
+    startTimingsSection("LangevinThermostat - Half Step");
     applyLangevin(simBox);
+    stopTimingsSection("LangevinThermostat - Half Step");
 }

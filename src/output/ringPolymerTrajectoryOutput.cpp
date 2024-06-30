@@ -22,30 +22,37 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ostream>      // for basic_ostream, ofstream, operator<<
+#include <sstream>      // for ostringstream
+#include <string>       // for operator<<, char_traits
+
 #include "molecule.hpp"              // for Molecule
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
 #include "vector3d.hpp"              // for Vec3D, operator<<
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <format>       // for format
-#include <functional>   // for identity
-#include <ostream>      // for basic_ostream, ofstream, operator<<
-#include <stddef.h>     // for size_t
-#include <string>       // for operator<<, char_traits
-
 using output::RingPolymerTrajectoryOutput;
+using namespace settings;
 
 /**
  * @brief write the header of the beads trajectory file
  *
- * @details number of atoms is multiplied by the number of beads - box dimensions and angles are the same for all beads
+ * @details number of atoms is multiplied by the number of beads - box
+ * dimensions and angles are the same for all beads
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
+void RingPolymerTrajectoryOutput::writeHeader(
+    const simulationBox::SimulationBox &simBox
+)
 {
-    _fp << simBox.getNumberOfAtoms() * settings::RingPolymerSettings::getNumberOfBeads() << "  ";
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+
+    _fp << simBox.getNumberOfAtoms() * nBeads << "  ";
     _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
 }
 
@@ -54,23 +61,39 @@ void RingPolymerTrajectoryOutput::writeHeader(const simulationBox::SimulationBox
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeXyz(std::vector<simulationBox::SimulationBox> &beads)
+void RingPolymerTrajectoryOutput::writeXyz(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
+    std::ostringstream buffer;
+
     writeHeader(beads[0]);
-    _fp << '\n';
+    buffer << '\n';
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+
+    for (size_t i = 0; i < nBeads; ++i)
         for (const auto &molecule : beads[i].getMolecules())
-            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        {
+            const auto nAtoms = molecule.getNumberOfAtoms();
+            for (size_t j = 0; j < nAtoms; ++j)
             {
-                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+                const auto atomName = molecule.getAtomName(j);
+                const auto x        = molecule.getAtomPosition(j)[0];
+                const auto y        = molecule.getAtomPosition(j)[1];
+                const auto z        = molecule.getAtomPosition(j)[2];
 
-                _fp << std::format("{:15.8f}\t", molecule.getAtomPosition(j)[0]);
-                _fp << std::format("{:15.8f}\t", molecule.getAtomPosition(j)[1]);
-                _fp << std::format("{:15.8f}\n", molecule.getAtomPosition(j)[2]);
+                buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                _fp << std::flush;
+                buffer << std::format("{:15.8f}\t", x);
+                buffer << std::format("{:15.8f}\t", y);
+                buffer << std::format("{:15.8f}\n", z);
             }
+        }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -78,23 +101,40 @@ void RingPolymerTrajectoryOutput::writeXyz(std::vector<simulationBox::Simulation
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeVelocities(std::vector<simulationBox::SimulationBox> &beads)
+void RingPolymerTrajectoryOutput::writeVelocities(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
+    std::ostringstream buffer;
+
     writeHeader(beads[0]);
-    _fp << '\n';
+    buffer << '\n';
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+
+    for (size_t i = 0; i < nBeads; ++i)
         for (const auto &molecule : beads[i].getMolecules())
-            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        {
+            const auto nAtoms = molecule.getNumberOfAtoms();
+
+            for (size_t j = 0; j < nAtoms; ++j)
             {
-                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+                const auto atomName = molecule.getAtomName(j);
+                const auto vx       = molecule.getAtomVelocity(j)[0];
+                const auto vy       = molecule.getAtomVelocity(j)[1];
+                const auto vz       = molecule.getAtomVelocity(j)[2];
 
-                _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(j)[0]);
-                _fp << std::format("{:20.8e}\t", molecule.getAtomVelocity(j)[1]);
-                _fp << std::format("{:20.8e}\n", molecule.getAtomVelocity(j)[2]);
+                buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                _fp << std::flush;
+                buffer << std::format("{:20.8e}\t", vx);
+                buffer << std::format("{:20.8e}\t", vy);
+                buffer << std::format("{:20.8e}\n", vz);
             }
+        }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -102,27 +142,49 @@ void RingPolymerTrajectoryOutput::writeVelocities(std::vector<simulationBox::Sim
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeForces(std::vector<simulationBox::SimulationBox> &beads)
+void RingPolymerTrajectoryOutput::writeForces(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
+    std::ostringstream buffer;
+
     writeHeader(beads[0]);
 
     auto totalForce = 0.0;
-    std::ranges::for_each(beads, [&totalForce](auto &bead) { totalForce += bead.calculateTotalForce(); });
+    std::ranges::for_each(
+        beads,
+        [&totalForce](auto &bead) { totalForce += bead.calculateTotalForce(); }
+    );
 
-    _fp << std::format("# Total force = {:.5e} kcal/mol/Angstrom\n", totalForce);
+    buffer << std::format(
+        "# Total force = {:.5e} kcal/mol/Angstrom\n",
+        totalForce
+    );
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+    for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
-            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        {
+            const auto nAtoms = molecule.getNumberOfAtoms();
+
+            for (size_t j = 0; j < nAtoms; ++j)
             {
-                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+                const auto atomName = molecule.getAtomName(j);
+                const auto fx       = molecule.getAtomForce(j)[0];
+                const auto fy       = molecule.getAtomForce(j)[1];
+                const auto fz       = molecule.getAtomForce(j)[2];
 
-                _fp << std::format("{:15.8f}\t", molecule.getAtomForce(j)[0]);
-                _fp << std::format("{:15.8f}\t", molecule.getAtomForce(j)[1]);
-                _fp << std::format("{:15.8f}\n", molecule.getAtomForce(j)[2]);
+                buffer
+                    << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
 
-                _fp << std::flush;
+                buffer << std::format("{:15.8f}\t", fx);
+                buffer << std::format("{:15.8f}\t", fy);
+                buffer << std::format("{:15.8f}\n", fz);
             }
+        }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }
 
 /**
@@ -130,19 +192,32 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<simulationBox::Simulat
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeCharges(std::vector<simulationBox::SimulationBox> &beads)
+void RingPolymerTrajectoryOutput::writeCharges(
+    std::vector<simulationBox::SimulationBox> &beads
+)
 {
+    std::ostringstream buffer;
+
     writeHeader(beads[0]);
-    _fp << '\n';
+    buffer << '\n';
 
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+    for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
-            for (size_t j = 0, numberOfAtoms = molecule.getNumberOfAtoms(); j < numberOfAtoms; ++j)
+        {
+            const auto nAtoms = molecule.getNumberOfAtoms();
+
+            for (size_t j = 0; j < nAtoms; ++j)
             {
-                _fp << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+                const auto atomName = molecule.getAtomName(j);
+                const auto charge   = molecule.getPartialCharge(j);
 
-                _fp << std::format("{:15.8f}\n", molecule.getPartialCharge(j));
-
-                _fp << std::flush;
+                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                buffer << std::format("{:15.8f}\n", charge);
+                buffer << std::flush;
             }
+        }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
 }

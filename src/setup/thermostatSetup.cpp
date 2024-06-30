@@ -32,10 +32,11 @@
 
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _PS_TO_FS_, _PER_CM_TO_HZ_
-#include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "mdEngine.hpp"                      // for Engine
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
+#include "settings.hpp"                      // for Settings
 #include "thermostat.hpp"                    // for Thermostat
 #include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
@@ -56,7 +57,7 @@ void setup::setupThermostat(engine::Engine &engine)
     engine.getStdoutOutput().writeSetup("thermostat");
     engine.getLogOutput().writeSetup("thermostat");
 
-    ThermostatSetup thermostatSetup(engine);
+    ThermostatSetup thermostatSetup(dynamic_cast<engine::MDEngine &>(engine));
     thermostatSetup.setup();
 }
 

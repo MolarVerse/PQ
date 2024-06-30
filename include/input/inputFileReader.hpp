@@ -24,8 +24,6 @@
 
 #define _INPUT_FILE_READER_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
 #include <cstddef>       // for size_t
 #include <functional>    // for function
 #include <map>           // for map
@@ -33,6 +31,9 @@
 #include <string>        // for string, operator<=>
 #include <string_view>   // for string_view
 #include <vector>        // for vector
+
+#include "inputFileParser.hpp"   // for InputFileParser
+#include "typeAliases.hpp"       // for pq::ParseFunc
 
 namespace engine
 {
@@ -49,8 +50,6 @@ namespace input
     void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
     void processEqualSign(std::string &command, const size_t lineNumber);
 
-    using ParseFunc = std::function<void(const std::vector<std::string> &lineElements, const size_t lineNumber)>;
-
     /**
      * @class InputFileReader
      *
@@ -59,41 +58,45 @@ namespace input
      */
     class InputFileReader
     {
-      private:
+       private:
         std::string     _fileName;
         engine::Engine &_engine;
 
-        std::map<std::string, ParseFunc> _keywordFuncMap;
-        std::map<std::string, size_t>    _keywordCountMap;
-        std::map<std::string, bool>      _keywordRequiredMap;
+        std::map<std::string, pq::ParseFunc> _keywordFuncMap;
+        std::map<std::string, size_t>        _keywordCountMap;
+        std::map<std::string, bool>          _keywordRequiredMap;
 
         std::vector<std::unique_ptr<InputFileParser>> _parsers;
 
         size_t _lineNumber = 1;
 
-      public:
-        explicit InputFileReader(const std::string_view &fileName, engine::Engine &engine);
+       public:
+        explicit InputFileReader(const std::string_view &, engine::Engine &);
 
         void read();
         void addKeywords();
-        void process(const std::vector<std::string> &lineElements);
+        void process(const pq::strings &lineElements);
         void postProcess();
 
-        /********************************
-         *                              *
-         * standard getters and setters *
-         *                              *
-         ********************************/
+        /***************************
+         * standard setter methods *
+         ***************************/
 
-        void setFilename(const std::string_view fileName) { _fileName = fileName; }
-        void setKeywordCount(const std::string &keyword, const size_t count) { _keywordCountMap[keyword] = count; }
+        void setFilename(const std::string_view fileName);
+        void setKeywordCount(const std::string &keyword, const size_t count);
 
-        [[nodiscard]] size_t getKeywordCount(const std::string &keyword) { return _keywordCountMap[keyword]; }
-        [[nodiscard]] bool   getKeywordRequired(const std::string &keyword) { return _keywordRequiredMap[keyword]; }
+        /***************************
+         * standard getter methods *
+         ***************************/
 
-        [[nodiscard]] std::map<std::string, size_t>    getKeywordCountMap() const { return _keywordCountMap; }
-        [[nodiscard]] std::map<std::string, bool>      getKeywordRequiredMap() const { return _keywordRequiredMap; }
-        [[nodiscard]] std::map<std::string, ParseFunc> getKeywordFuncMap() const { return _keywordFuncMap; }
+        [[nodiscard]] size_t getKeywordCount(const std::string &keyword);
+        [[nodiscard]] bool   getKeywordRequired(const std::string &keyword);
+
+        // clang-format off
+        [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
+        [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
+        [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap() const;
+        // clang-format on
     };
 
 }   // namespace input

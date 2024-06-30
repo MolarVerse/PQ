@@ -21,3 +21,71 @@
 ******************************************************************************/
 
 #include "simulationBoxSettings.hpp"
+
+using settings::SimulationBoxSettings;
+
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief Set the density set
+ *
+ * @param densitySet
+ */
+void SimulationBoxSettings::setDensitySet(const bool densitySet)
+{
+    _isDensitySet = densitySet;
+}
+
+/**
+ * @brief Set the box set
+ *
+ * @param boxSet
+ */
+void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
+
+/**
+ * @brief Set the initialize velocities
+ *
+ * @param initVelocities
+ */
+void SimulationBoxSettings::setInitializeVelocities(const bool initVelocities)
+{
+    _initializeVelocities = initVelocities;
+}
+
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief get if the density is set
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
+
+/**
+ * @brief get if the box is set
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
+
+/**
+ * @brief get if the velocities are initialized
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::getInitializeVelocities()
+{
+    return _initializeVelocities;
+}

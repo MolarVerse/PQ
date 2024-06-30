@@ -24,28 +24,30 @@
 
 #define _RING_POLYMER_ENGINE_HPP_
 
-#include "engine.hpp"          // for Engine
+#include <vector>   // for vector
+
+#include "mdEngine.hpp"        // for Engine
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-
-#include <vector>   // for vector
 
 namespace engine
 {
     /**
      * @class RingPolymerEngine
      *
-     * @details Contains all the information needed to run a ring polymer simulation
+     * @details Contains all the information needed to run a ring polymer
+     * simulation
      *
      */
-    class RingPolymerEngine : virtual public Engine
+    class RingPolymerEngine : virtual public MDEngine
     {
-      protected:
+       protected:
         std::vector<simulationBox::SimulationBox> _ringPolymerBeads;
         std::vector<physicalData::PhysicalData>   _ringPolymerBeadsPhysicalData;
-        std::vector<physicalData::PhysicalData>   _averageRingPolymerBeadsPhysicalData;
+        std::vector<physicalData::PhysicalData>
+            _averageRingPolymerBeadsPhysicalData;
 
-      public:
+       public:
         void writeOutput() override;
 
         void resizeRingPolymerBeadPhysicalData(const size_t numberOfBeads);
@@ -57,13 +59,20 @@ namespace engine
          * standard add methods *
          ************************/
 
-        void addRingPolymerBead(const simulationBox::SimulationBox &bead) { _ringPolymerBeads.push_back(bead); }
+        void addRingPolymerBead(const simulationBox::SimulationBox &bead)
+        {
+            _ringPolymerBeads.push_back(bead);
+        }
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<simulationBox::SimulationBox> &getRingPolymerBeads() { return _ringPolymerBeads; }
+        [[nodiscard]] std::vector<simulationBox::SimulationBox> &getRingPolymerBeads(
+        )
+        {
+            return _ringPolymerBeads;
+        }
     };
 }   // namespace engine
 

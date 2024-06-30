@@ -22,14 +22,14 @@
 
 #include "boxOutput.hpp"
 
-#include "box.hpp"        // for SimulationBox
-#include "vector3d.hpp"   // for Vec3D
-
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <string>    // for operator<<
 #include <vector>    // for vector
+
+#include "box.hpp"        // for SimulationBox
+#include "vector3d.hpp"   // for Vec3D
 
 using output::BoxFileOutput;
 
@@ -41,9 +41,20 @@ using output::BoxFileOutput;
 void BoxFileOutput::write(const size_t step, const simulationBox::Box &box)
 {
     _fp << std::format("{:<5}\t", step);
+
     _fp << std::format(
-        "{:15.8f}\t{:15.8f}\t{:15.8f}\t", box.getBoxDimensions()[0], box.getBoxDimensions()[1], box.getBoxDimensions()[2]);
-    _fp << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\n", box.getBoxAngles()[0], box.getBoxAngles()[1], box.getBoxAngles()[2]);
+        "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+        box.getBoxDimensions()[0],
+        box.getBoxDimensions()[1],
+        box.getBoxDimensions()[2]
+    );
+
+    _fp << std::format(
+        "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
+        box.getBoxAngles()[0],
+        box.getBoxAngles()[1],
+        box.getBoxAngles()[2]
+    );
 
     _fp << std::flush;
 }

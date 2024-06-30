@@ -22,12 +22,42 @@
 
 #include "distanceConstraint.hpp"
 
-#include "simulationBox.hpp"
-
 #include <cmath>
 #include <vector>
 
+#include "simulationBox.hpp"
+
 using namespace constraints;
+using namespace simulationBox;
+using namespace connectivity;
+
+/**
+ * @brief Construct a new Distance Constraint:: Distance Constraint object
+ *
+ * @param molecule1
+ * @param molecule2
+ * @param atomIndex1
+ * @param atomIndex2
+ * @param lowerDistance
+ * @param upperDistance
+ * @param springConstant
+ * @param dSpringConstantDt
+ */
+DistanceConstraint::DistanceConstraint(
+    Molecule    *molecule1,
+    Molecule    *molecule2,
+    const size_t atomIndex1,
+    const size_t atomIndex2,
+    const double lowerDistance,
+    const double upperDistance,
+    const double springConstant,
+    const double dSpringConstantDt
+)
+    : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
+      _lowerDistance(lowerDistance),
+      _upperDistance(upperDistance),
+      _springConstant(springConstant),
+      _dSpringConstantDt(dSpringConstantDt){};
 
 /**
  * @brief calculates the reference distance of all distance constraints
@@ -36,7 +66,10 @@ using namespace constraints;
  * @param dt
  *
  */
-void DistanceConstraint::applyDistanceConstraint(const simulationBox::SimulationBox &simulationBox, const double dt)
+void DistanceConstraint::applyDistanceConstraint(
+    const simulationBox::SimulationBox &simulationBox,
+    const double                        dt
+)
 {
     _lowerEnergy = 0.0;
     _upperEnergy = 0.0;
@@ -72,3 +105,54 @@ void DistanceConstraint::applyDistanceConstraint(const simulationBox::Simulation
     _molecules[0]->addAtomForce(_atomIndices[0], _force);
     _molecules[1]->addAtomForce(_atomIndices[1], -_force);
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get lower distance
+ *
+ * @return double
+ */
+double DistanceConstraint::getLowerDistance() const { return _lowerDistance; }
+
+/**
+ * @brief get upper distance
+ *
+ * @return double
+ */
+double DistanceConstraint::getUpperDistance() const { return _upperDistance; }
+
+/**
+ * @brief get spring constant
+ *
+ * @return double
+ */
+double DistanceConstraint::getSpringConstant() const { return _springConstant; }
+
+/**
+ * @brief get dSpringConstantDt
+ *
+ * @return double
+ */
+double DistanceConstraint::getDSpringConstantDt() const
+{
+    return _dSpringConstantDt;
+}
+
+/**
+ * @brief get lower energy
+ *
+ * @return double
+ */
+double DistanceConstraint::getLowerEnergy() const { return _lowerEnergy; }
+
+/**
+ * @brief get upper energy
+ *
+ * @return double
+ */
+double DistanceConstraint::getUpperEnergy() const { return _upperEnergy; }

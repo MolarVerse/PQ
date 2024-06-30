@@ -22,22 +22,36 @@
 
 #include "stdoutOutput.hpp"
 
-#include "exceptions.hpp"       // for UserInputExceptionWarning, customException
-#include "outputMessages.hpp"   // for initialMomentumMessage
-
 #include <format>        // for format
 #include <iostream>      // for operator<<, char_traits, basic_ostream, cout
 #include <string>        // for operator<<
 #include <string_view>   // for string_view
 
+#include "exceptions.hpp"   // for UserInputExceptionWarning, customException
+#include "outputMessages.hpp"   // for initialMomentumMessage
+
 using output::StdoutOutput;
+using namespace customException;
+
+/**
+ * @brief write a message to the stdout
+ *
+ * @param message
+ */
+void StdoutOutput::writeInfo(const std::string &message) const
+{
+    std::cout << message << '\n' << std::flush;
+}
 
 /**
  * @brief write header title
  *
  * @return string
  */
-void StdoutOutput::writeHeader() const { std::cout << header() << '\n' << std::flush; }
+void StdoutOutput::writeHeader() const
+{
+    std::cout << header() << '\n' << std::flush;
+}
 
 /**
  * @brief write a message to the stdout if the simulation ended normally
@@ -50,19 +64,40 @@ void StdoutOutput::writeEndedNormally(const double elapsedTime) const
 }
 
 /**
- * @brief write a warning message to the stdout if density and box dimensions are set
+ * @brief write a warning message to the stdout if density and box dimensions
+ * are set
  *
  */
 void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw customException::UserInputExceptionWarning(
-            std::format("{}Density and box dimensions set. Density will be ignored.", _OUTPUT_));
+        throw UserInputExceptionWarning(std::format(
+            "{}Density and box dimensions set. Density will be ignored.",
+            _OUTPUT_
+        ));
     }
-    catch (const customException::UserInputExceptionWarning &e)
+    catch (const UserInputExceptionWarning &e)
     {
-        std::cout << _OUTPUT_ << e.what() << '\n' << '\n' << std::flush;
+        std::cout << _OUTPUT_ << e.what() << "\n\n" << std::flush;
+    }
+}
+
+/**
+ * @brief write a warning message to the stdout if the optimization did not
+ * converge
+ *
+ * @param msg
+ */
+void StdoutOutput::writeOptWarning(const std::string &msg) const
+{
+    try
+    {
+        throw UserInputExceptionWarning(std::format("{}{}", _WARNING_, msg));
+    }
+    catch (const UserInputExceptionWarning &e)
+    {
+        std::cout << e.what() << "\n\n" << std::flush;
     }
 }
 
@@ -71,20 +106,30 @@ void StdoutOutput::writeDensityWarning() const
  *
  * @param momentum
  */
-void StdoutOutput::writeSetup(const std::string &setup) const { std::cout << setupMessage(setup) << '\n' << std::flush; }
+void StdoutOutput::writeSetup(const std::string &setup) const
+{
+    std::cout << setupMessage(setup) << '\n' << std::flush;
+}
 
 /**
  * @brief write a message to the stdout to inform that the setup is completed
  *
  * @param momentum
  */
-void StdoutOutput::writeSetupCompleted() const { std::cout << setupCompletedMessage() << '\n' << std::flush; }
+void StdoutOutput::writeSetupCompleted() const
+{
+    std::cout << setupCompletedMessage() << '\n' << std::flush;
+}
 
 /**
- * @brief write a message to the stdout to inform about the start of reading a file
+ * @brief write a message to the stdout to inform about the start of reading a
+ * file
  *
  */
-void StdoutOutput::writeRead(const std::string &message, const std::string &file) const
+void StdoutOutput::writeRead(
+    const std::string &message,
+    const std::string &file
+) const
 {
     std::cout << readMessage(message, file) << '\n' << std::flush;
 }

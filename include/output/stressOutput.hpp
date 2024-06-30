@@ -24,9 +24,9 @@
 
 #define _STRESS_OUTPUT_HPP_
 
-#include "output.hpp"   // for Output
-
 #include <cstddef>   // for size_t
+
+#include "output.hpp"   // for Output
 
 namespace physicalData
 {
@@ -43,7 +43,7 @@ namespace output
      */
     class StressOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
         void write(const size_t step, const physicalData::PhysicalData &);

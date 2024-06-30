@@ -11,7 +11,7 @@ target_include_directories(box
 )
 
 target_link_libraries(box
-    PUBLIC
+    PRIVATE
     linearAlgebra
     exceptions
     settings

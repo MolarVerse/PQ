@@ -20,30 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for TestInfo (ptr only)
+
+#include <string>   // for string, allocator
+#include <vector>   // for vector
+
 #include "exceptions.hpp"                        // for InputFileException
+#include "gtest/gtest.h"                         // for Message, TestPartResult
 #include "inputFileParser.hpp"                   // for readInput
 #include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
 #include "potentialSettings.hpp"                 // for PotentialSettings
 #include "testInputFileReader.hpp"               // for TestInputFileReader
 #include "throwWithMessage.hpp"                  // for EXPECT_THROW_MSG
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for TestInfo (ptr only)
-#include <string>          // for string, allocator
-#include <vector>          // for vector
-
 using namespace input;
 
 /**
  * @brief tests parsing the "long-range" command
  *
- * @details possible options are none or wolf - otherwise throws inputFileException
+ * @details possible options are none or wolf - otherwise throws
+ * inputFileException
  *
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
     InputFileParserCoulombLongRange parser(*_engine);
-    std::vector<std::string>        lineElements = {"long-range", "=", "none"};
+
+    std::vector<std::string> lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "none");
 
@@ -52,10 +55,13 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
     EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "wolf");
 
     lineElements = {"long-range", "=", "notValid"};
-    EXPECT_THROW_MSG(parser.parseCoulombLongRange(lineElements, 0),
-                     customException::InputFileException,
-                     "Invalid long-range type for coulomb correction \"notValid\" at line 0 in input file - possible options are "
-                     "\"none\", \"wolf\"");
+    EXPECT_THROW_MSG(
+        parser.parseCoulombLongRange(lineElements, 0),
+        customException::InputFileException,
+        "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
+        "in input file\n"
+        "Possible options are \"none\", \"wolf\""
+    );
 }
 
 /**
@@ -73,11 +79,8 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
-        parser.parseWolfParameter(lineElements, 0), customException::InputFileException, "Wolf parameter cannot be negative");
-}
-
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return ::RUN_ALL_TESTS();
+        parser.parseWolfParameter(lineElements, 0),
+        customException::InputFileException,
+        "Wolf parameter cannot be negative"
+    );
 }

@@ -22,11 +22,11 @@
 
 #include "outputMessages.hpp"
 
-#include "systemInfo.hpp"   // for _AUTHOR_
-
 #include <format>    // for format
 #include <sstream>   // for stringstream
 #include <string>    // for string
+
+#include "systemInfo.hpp"   // for _AUTHOR_
 
 /**
  * @brief construct header title
@@ -62,11 +62,13 @@ std::string output::header()
     header_title << _OUTPUT_ << "Testing:       " << sysinfo::_JOSEF_ << '\n';
     header_title << _OUTPUT_ << "               " << sysinfo::_ARMIN_ << '\n';
     header_title << _OUTPUT_ << "               " << sysinfo::_STEFAN_ << '\n';
-    header_title << _OUTPUT_ << "               " << sysinfo::_BENJAMIN_ << '\n';
+    header_title << _OUTPUT_ << "               " << sysinfo::_BENJAMIN_
+                 << '\n';
 
     header_title << '\n';
     header_title << _OUTPUT_ << "Version:       " << sysinfo::_VERSION_ << '\n';
-    header_title << _OUTPUT_ << "Compile date:  " << sysinfo::_COMPILE_DATE_ << '\n';
+    header_title << _OUTPUT_ << "Compile date:  " << sysinfo::_COMPILE_DATE_
+                 << '\n';
 
     return header_title.str();
 }
@@ -78,6 +80,7 @@ std::string output::header()
  */
 std::string output::endedNormally()
 {
+    // clang-format off
     const std::string endedNormally_message = std::format(R"(
 {}For citation please refer to the ".ref" file.
 
@@ -87,7 +90,8 @@ std::string output::endedNormally()
 *                                                                       *
 *************************************************************************
 )",
-                                                          _INFO_);
+_INFO_);
+    // clang-format on
 
     return endedNormally_message;
 }
@@ -100,7 +104,11 @@ std::string output::endedNormally()
  */
 std::string output::elapsedTimeMessage(const double elapsedTime)
 {
-    return std::format("\n\n{}Elapsed time = {:.5f} s\n", _OUTPUT_, elapsedTime);
+    return std::format(
+        "\n\n{}Elapsed time = {:.5f} s\n",
+        _OUTPUT_,
+        elapsedTime
+    );
 }
 
 /**
@@ -109,7 +117,10 @@ std::string output::elapsedTimeMessage(const double elapsedTime)
  * @param setup
  * @return std::string
  */
-std::string output::setupMessage(const std::string &setup) { return std::format("{}Setup of {}\n", _INFO_, setup); }
+std::string output::setupMessage(const std::string &setup)
+{
+    return std::format("{}Setup of {}\n", _INFO_, setup);
+}
 
 /**
  * @brief Message to inform about completed setup
@@ -129,7 +140,10 @@ std::string output::setupCompletedMessage()
  * @param file
  * @return std::string
  */
-std::string output::readMessage(const std::string &message, const std::string &file)
+std::string output::readMessage(
+    const std::string &message,
+    const std::string &file
+)
 {
     return std::format("{}Reading {} \"{}\"\n", _INFO_, message, file);
 }
