@@ -63,6 +63,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#jobtype">Jobtype</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#timestep">Timestep</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nstep">NStep</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#floating-point-type">FLOATING_POINT_TYPE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#integrator">Integrator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#virial">Virial</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#start-file">Start_File</a></li>
@@ -102,6 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#guff-file">Guff_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#topology-file">Topology_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameter-file">Parameter_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mshake-file">MSHake_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#intra-nonbonded-file">Intra-NonBonded_File</a></li>
 </ul>
 </li>
@@ -165,15 +167,47 @@
 <li class="toctree-l4"><a class="reference internal" href="#qm-script">QM_SCRIPT</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-script-full-path">QM_SCRIPT_FULL_PATH</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-loop-time-limit">QM_LOOP_TIME_LIMIT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispersion-correction">DISPERSION_CORRECTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mace-model-size">MACE_MODEL_SIZE</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ring-polymer-md-keys">Ring Polymer MD Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#rpmd-n-replica">RPMD_n_replica</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#qm-mm-keys">QM/MM Keys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qm-center">QM_Center</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-only-list">QM_Only_List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mm-only-list">MM_Only_List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-charges">QM_Charges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-core-radius">QM_Core_Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qmmm-layer-radius">QMMM_Layer_Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qmmm-smoothing-radius">QMMM_Smoothing_Radius</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#cell-list-keys">Cell List Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cell-list">Cell-List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cell-number">Cell-Number</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#optimization-keys">Optimization Keys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#optimizer">Optimizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#learning-rate-strategy">Learning-Rate-Strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-learning-rate">Initial-Learning-Rate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#learning-rate-decay">Learning-Rate-Decay</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#convergence-keys">Convergence Keys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#energy-convergence-strategy">Energy-Convergence-Strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-disable-energy-convergence-check">Enable/Disable Energy Convergence Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-disable-max-force-convergence-check">Enable/Disable MAX Force Convergence Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-disable-rms-force-convergence-check">Enable/Disable RMS Force Convergence Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-convergence-threshold">Energy Convergence Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#relative-energy-convergence-threshold">Relative Energy Convergence Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#absolute-energy-convergence-threshold">Absolute Energy Convergence Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#force-convergence-threshold">Force Convergence Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maximum-force-convergence-threshold">Maximum Force Convergence Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rms-force-convergence-threshold">RMS Force Convergence Threshold</a></li>
 </ul>
 </li>
 </ul>
@@ -272,8 +306,15 @@
 <tr class="row-even"><td><p>{bool}</p></td>
 <td><p>true/false</p></td>
 </tr>
+<tr class="row-odd"><td><p>{selection}</p></td>
+<td><p>selection</p></td>
+</tr>
 </tbody>
 </table>
+<div class="admonition note" id="selectiontype">
+<p class="admonition-title">Note</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">{selection}</span></code> type is used to select a specific atom or group of atoms. If the PQ software package was build including <code class="code docutils literal notranslate"><span class="pre">python3.12</span></code> dependencies, the user can apply the selection grammar defined in the <a class="reference external" href="https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html">PQAnalysis package</a>. However, if PQ was compiled without these dependencies it is possible to index <em>via</em> the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2}</span></code>. If a range of atom indices should be selected the user can use the following syntax <code class="code docutils literal notranslate"><span class="pre">{0-5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10..15}</span></code>, where all would be equivalent to <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">11,</span> <span class="pre">12,</span> <span class="pre">13,</span> <span class="pre">14,</span> <span class="pre">15}</span></code>.</p>
+</div>
 </section>
 <section id="input-keys">
 <h3>Input Keys<a class="headerlink" href="#input-keys" title="Link to this heading"></a></h3>
@@ -286,7 +327,7 @@
 <section id="general-keys">
 <h2>General Keys<a class="headerlink" href="#general-keys" title="Link to this heading"></a></h2>
 <section id="jobtype">
-<h3>Jobtype<a class="headerlink" href="#jobtype" title="Link to this heading"></a></h3>
+<span id="id1"></span><h3>Jobtype<a class="headerlink" href="#jobtype" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>jobtype* = {string}</p>
@@ -297,7 +338,9 @@
 <div><ol class="arabic simple">
 <li><p><strong>mm-md</strong> - represents a full molecular mechanics molecular dynamics simulation either performed via the <code class="code docutils literal notranslate"><span class="pre">Guff</span></code> formalism or the <code class="code docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code></p></li>
 <li><p><strong>qm-md</strong> - represents a full quantum mechanics molecular dynamics simulation. For more information see the <a class="reference internal" href="#qmkeys"><span class="std std-ref">QM Keys</span></a> keywords section.</p></li>
-<li><p><strong>qm-rpmd</strong> - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <a class="reference internal" href="#ringpolymermdkeys"><span class="std std-ref">Ring Polymer MD Keys</span></a> keywords section</p></li>
+<li><p><strong>qm-rpmd</strong> - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <a class="reference internal" href="#ringpolymermdkeys"><span class="std std-ref">MACE_MODEL_SIZE</span></a> keywords section</p></li>
+<li><p><strong>qmmm-md</strong> - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)</p></li>
+<li><p><strong>mm-opt</strong> - represents a geometry optimization calculation using molecular mechanics.</p></li>
 </ol>
 </div></blockquote>
 </section>
@@ -316,6 +359,21 @@
 <p>nstep* = {uint+}</p>
 </div>
 <p>The <code class="code docutils literal notranslate"><span class="pre">ǹstep</span></code> keyword sets the total amount of MD steps to be performed within the next simulation run.</p>
+</section>
+<section id="floating-point-type">
+<h3>FLOATING_POINT_TYPE<a class="headerlink" href="#floating-point-type" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>floating_point_type = {string} -&gt; “double”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">floating_point_type</span></code> keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>double</strong> (default) - double precision floating point numbers are used</p></li>
+<li><p><strong>float</strong> - single precision floating point numbers are used</p></li>
+</ol>
+</div></blockquote>
 </section>
 <section id="integrator">
 <h3>Integrator<a class="headerlink" href="#integrator" title="Link to this heading"></a></h3>
@@ -599,6 +657,13 @@
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>parameter_file = {file}</p>
+</div>
+</section>
+<section id="mshake-file">
+<h3>MSHake_File<a class="headerlink" href="#mshake-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>mshake_file = {file}</p>
 </div>
 </section>
 <section id="intra-nonbonded-file">
@@ -911,7 +976,9 @@
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><strong>off</strong> (default) - no shake will be applied</p></li>
-<li><p><strong>on</strong> - shake for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> will be applied.</p></li>
+<li><p><strong>on</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> will be applied.</p></li>
+<li><p><strong>shake</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> will be applied.</p></li>
+<li><p><strong>mshake</strong> - M-SHAKE for bond constraints defined in a special <a class="reference internal" href="setupFiles.html#mshakefile"><span class="std std-ref">The M-SHAKE File</span></a> will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)</p></li>
 </ol>
 </div></blockquote>
 </section>
@@ -1041,6 +1108,8 @@
 <li><p><strong>dftbplus</strong></p></li>
 <li><p><strong>pyscf</strong></p></li>
 <li><p><strong>turbomole</strong></p></li>
+<li><p><strong>mace</strong> - same as <strong>mace_mp</strong></p></li>
+<li><p><strong>mace_off</strong></p></li>
 </ol>
 </div></blockquote>
 </section>
@@ -1072,9 +1141,33 @@
 </div>
 <p>With the <code class="code docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="code docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.</p>
 </section>
+<section id="dispersion-correction">
+<h3>DISPERSION_CORRECTION<a class="headerlink" href="#dispersion-correction" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>dispersion = {bool} -&gt; false</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">dispersion</span></code> keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.</p>
+</section>
+<section id="mace-model-size">
+<span id="ringpolymermdkeys"></span><h3>MACE_MODEL_SIZE<a class="headerlink" href="#mace-model-size" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>mace_model_size = {string} -&gt; “medium”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">mace_model_size</span></code> keyword the user can specify the size of the MACE model for the QM calculations.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>small</strong> (default) - small MACE model</p></li>
+<li><p><strong>medium</strong> - medium MACE model</p></li>
+<li><p><strong>large</strong> - large MACE model</p></li>
+</ol>
+</div></blockquote>
+</section>
 </section>
 <section id="ring-polymer-md-keys">
-<span id="ringpolymermdkeys"></span><h2>Ring Polymer MD Keys<a class="headerlink" href="#ring-polymer-md-keys" title="Link to this heading"></a></h2>
+<h2>Ring Polymer MD Keys<a class="headerlink" href="#ring-polymer-md-keys" title="Link to this heading"></a></h2>
 <section id="rpmd-n-replica">
 <h3>RPMD_n_replica<a class="headerlink" href="#rpmd-n-replica" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1086,6 +1179,65 @@
 <p class="admonition-title">Note</p>
 <p>This keyword is required for any kind of ring polymer MD simulation!</p>
 </div>
+</section>
+</section>
+<section id="qm-mm-keys">
+<h2>QM/MM Keys<a class="headerlink" href="#qm-mm-keys" title="Link to this heading"></a></h2>
+<section id="qm-center">
+<h3>QM_Center<a class="headerlink" href="#qm-center" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_center = {selection} -&gt; 0</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
+</section>
+<section id="qm-only-list">
+<h3>QM_Only_List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_only_list = {selection}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+</section>
+<section id="mm-only-list">
+<h3>MM_Only_List<a class="headerlink" href="#mm-only-list" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>mm_only_list = {selection}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">mm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+</section>
+<section id="qm-charges">
+<h3>QM_Charges<a class="headerlink" href="#qm-charges" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_charges = {string} -&gt; “off”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword the user can specify the charge model for the QM atoms. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">off</span></code> the charges of the QM atoms are taken from the MM model applied. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">on</span></code> the charges of the QM atoms are taken from the QM calculation.</p>
+</section>
+<section id="qm-core-radius">
+<h3>QM_Core_Radius<a class="headerlink" href="#qm-core-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_core_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
+</section>
+<section id="qmmm-layer-radius">
+<h3>QMMM_Layer_Radius<a class="headerlink" href="#qmmm-layer-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
+</section>
+<section id="qmmm-smoothing-radius">
+<h3>QMMM_Smoothing_Radius<a class="headerlink" href="#qmmm-smoothing-radius" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
 </section>
 </section>
 <section id="cell-list-keys">
@@ -1114,6 +1266,157 @@
 <p>With the <code class="code docutils literal notranslate"><span class="pre">cell-number</span></code> keyword the user can set the number of cells in each direction in which the simulation box will be split up (<em>e.g.</em> cell-number = 7 -&gt; total cells = 7x7x7)</p>
 <p class="centered">
 <strong><em>default value</em> = 7</strong></p></section>
+</section>
+<section id="optimization-keys">
+<h2>Optimization Keys<a class="headerlink" href="#optimization-keys" title="Link to this heading"></a></h2>
+<p>In order to perform a geometry optimization on of the optimizer jobtypes has to be chosen. (For more info see the <a class="reference internal" href="#jobtype"><span class="std std-ref">Jobtype</span></a> section)</p>
+<section id="optimizer">
+<h3>Optimizer<a class="headerlink" href="#optimizer" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>optimizer = {string}</p>
+</div>
+<p>This keyword is mandatory for any kind of geometry optimization. The user has to specify the optimizer which should be used for the optimization.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>steepest-descent</strong> - steepest descent optimizer</p></li>
+<li><p><strong>ADAM</strong> - ADAM optimizer</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="learning-rate-strategy">
+<h3>Learning-Rate-Strategy<a class="headerlink" href="#learning-rate-strategy" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>learning-rate-strategy = {string} -&gt; “exponential-decay”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">learning-rate-strategy</span></code> keyword the user can specify the learning rate strategy for all kind of optimization jobs.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>exponential-decay</strong> (default) - exponential decay of the learning rate</p></li>
+<li><p><strong>constant</strong> - constant learning rate</p></li>
+<li><p><strong>constant-decay</strong> - constant decay of the learning rate</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="initial-learning-rate">
+<h3>Initial-Learning-Rate<a class="headerlink" href="#initial-learning-rate" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>initial-learning-rate = {double} -&gt; 0.0001</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">initial-learning-rate</span></code> keyword the user can specify the initial learning rate for all kind of optimization jobs.</p>
+<p class="centered">
+<strong><em>default value</em> = 0.0001</strong></p></section>
+<section id="learning-rate-decay">
+<h3>Learning-Rate-Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>learning-rate-decay = {double}</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">learning-rate-decay</span></code> keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.</p>
+</section>
+</section>
+<section id="convergence-keys">
+<h2>Convergence Keys<a class="headerlink" href="#convergence-keys" title="Link to this heading"></a></h2>
+<section id="energy-convergence-strategy">
+<h3>Energy-Convergence-Strategy<a class="headerlink" href="#energy-convergence-strategy" title="Link to this heading"></a></h3>
+<p>In general the convergence of the geometry optimization is checked by assuring that the absolute <strong>and</strong> relative energy difference between two consecutive steps is smaller than a certain threshold. The user can choose between different strategies to change this behavior.</p>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>energy-conv-strategy = {string} -&gt; “rigorous”</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">energy-conv-strategy</span></code> keyword the user can specify the energy convergence strategy for all kind of optimization jobs.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>rigorous</strong> (default) - both absolute and relative energy difference have to be smaller than the threshold</p></li>
+<li><p><strong>loose</strong> - only one of the two energy differences has to be smaller than the threshold</p></li>
+<li><p><strong>relative</strong> - only the relative energy difference has to be smaller than the threshold</p></li>
+<li><p><strong>absolute</strong> - only the absolute energy difference has to be smaller than the threshold</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="enable-disable-energy-convergence-check">
+<h3>Enable/Disable Energy Convergence Check<a class="headerlink" href="#enable-disable-energy-convergence-check" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>use-energy-conv = {bool} -&gt; true</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">use-energy-conv</span></code> keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.</p>
+</section>
+<section id="enable-disable-max-force-convergence-check">
+<h3>Enable/Disable MAX Force Convergence Check<a class="headerlink" href="#enable-disable-max-force-convergence-check" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>use-max-force-conv = {bool} -&gt; true</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">use-max-force-conv</span></code> keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.</p>
+</section>
+<section id="enable-disable-rms-force-convergence-check">
+<h3>Enable/Disable RMS Force Convergence Check<a class="headerlink" href="#enable-disable-rms-force-convergence-check" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>use-rms-force-conv = {bool} -&gt; true</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">use-rms-force-conv</span></code> keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.</p>
+</section>
+<section id="energy-convergence-threshold">
+<h3>Energy Convergence Threshold<a class="headerlink" href="#energy-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>energy-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
+This keyword will set both the absolute and relative energy convergence threshold.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
+<section id="relative-energy-convergence-threshold">
+<h3>Relative Energy Convergence Threshold<a class="headerlink" href="#relative-energy-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rel-energy-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">rel-energy-conv</span></code> keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
+<section id="absolute-energy-convergence-threshold">
+<h3>Absolute Energy Convergence Threshold<a class="headerlink" href="#absolute-energy-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>abs-energy-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">abs-energy-conv</span></code> keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
+<section id="force-convergence-threshold">
+<h3>Force Convergence Threshold<a class="headerlink" href="#force-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>force-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
+<section id="maximum-force-convergence-threshold">
+<h3>Maximum Force Convergence Threshold<a class="headerlink" href="#maximum-force-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>max-force-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">max-force-conv</span></code> keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
+<section id="rms-force-convergence-threshold">
+<h3>RMS Force Convergence Threshold<a class="headerlink" href="#rms-force-convergence-threshold" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rms-force-conv = {double} -&gt; 1e-6</p>
+</div>
+<p>With the <code class="code docutils literal notranslate"><span class="pre">rms-force-conv</span></code> keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
+</section>
 </section>
 </section>
 
