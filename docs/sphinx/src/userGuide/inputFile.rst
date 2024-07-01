@@ -692,6 +692,8 @@ With the :code:`coupling_frequency` keyword the coupling frequency of the Nose-H
 
 .. centered:: *default value* = 1000 cm⁻¹
 
+.. _pressureCouplingKeys:
+
 **********************
 Pressure Coupling Keys
 **********************
