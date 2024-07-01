@@ -63,10 +63,11 @@ namespace setup
         void setupDegreesOfFreedom();
 
         void writeSetupInfo();
-        void writeEnabledMessage();
-        void writeDofMessage();
-        void writeToleranceMessage();
-        void writeMaxIterMessage();
+        void writeEnabled();
+        void writeDof();
+        void writeTolerance();
+        void writeMaxIter();
+        void writeNConstraintBonds();
     };
 
 }   // namespace setup

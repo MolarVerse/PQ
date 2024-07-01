@@ -159,22 +159,22 @@ void ConstraintsSetup::writeSetupInfo()
 {
     const auto &constraints = _engine.getConstraints();
 
-    writeEnabledMessage();
+    writeEnabled();
 
     if (constraints.isShakeLikeActive())
-        writeToleranceMessage();
+        writeTolerance();
 
     if (constraints.isShakeActive())
-        writeMaxIterMessage();
+        writeMaxIter();
 
-    writeDofMessage();
+    writeDof();
 }
 
 /**
  * @brief write enabled message to log output
  *
  */
-void ConstraintsSetup::writeEnabledMessage()
+void ConstraintsSetup::writeEnabled()
 {
     auto &constraints = _engine.getConstraints();
 
@@ -197,7 +197,7 @@ void ConstraintsSetup::writeEnabledMessage()
  * @brief write degrees of freedom message to log output
  *
  */
-void ConstraintsSetup::writeDofMessage()
+void ConstraintsSetup::writeDof()
 {
     auto &simBox = _engine.getSimulationBox();
 
@@ -221,7 +221,7 @@ void ConstraintsSetup::writeDofMessage()
  * @brief write tolerances message to log output
  *
  */
-void ConstraintsSetup::writeToleranceMessage()
+void ConstraintsSetup::writeTolerance()
 {
     // clang-format off
     const auto shakeTolMsg  = std::format("SHAKE Tolerance:  {}", _shakeTolerance);
@@ -239,7 +239,7 @@ void ConstraintsSetup::writeToleranceMessage()
  * @brief write max iterations message to log output
  *
  */
-void ConstraintsSetup::writeMaxIterMessage()
+void ConstraintsSetup::writeMaxIter()
 {
     // clang-format off
     const auto shakeMaxIterMsg  = std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
@@ -250,5 +250,28 @@ void ConstraintsSetup::writeMaxIterMessage()
 
     logOutput.writeSetup(shakeMaxIterMsg);
     logOutput.writeSetup(rattleMaxIterMsg);
+    logOutput.writeEmptyLine();
+}
+
+void ConstraintsSetup::writeNConstraintBonds()
+{
+    auto &constraints = _engine.getConstraints();
+    auto &simBox      = _engine.getSimulationBox();
+
+    const auto nShakeBonds  = constraints.getNumberOfBondConstraints();
+    const auto nMShakeTypes = constraints.getMShakeReferences().size();
+    const auto nMShakeMols  = constraints.getNumberOfMShakeConstraints(simBox);
+
+    // clang-format off
+    const auto nShakeBondsMsg  = std::format("Number of SHAKE bonds:       {}", nShakeBonds);
+    const auto nMShakeTypesMsg = std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
+    const auto nMShakeMolsMsg  = std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
+    // clang-format on
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetup(nShakeBondsMsg);
+    logOutput.writeSetup(nMShakeTypesMsg);
+    logOutput.writeSetup(nMShakeMolsMsg);
     logOutput.writeEmptyLine();
 }
