@@ -116,11 +116,12 @@ namespace output
 
 namespace engine
 {
-    class Engine;         // forward declaration
-    class MDEngine;       // forward declaration
-    class OptEngine;      // forward declaration
-    class QMMDEngine;     // forward declaration
-    class QMMMMDEngine;   // forward declaration
+    class Engine;              // forward declaration
+    class MDEngine;            // forward declaration
+    class OptEngine;           // forward declaration
+    class QMMDEngine;          // forward declaration
+    class QMMMMDEngine;        // forward declaration
+    class RingPolymerEngine;   // forward declaration
 
 }   // namespace engine
 
@@ -176,11 +177,12 @@ namespace pq
      * engine namespace *
      ********************/
 
-    using Engine       = engine::Engine;
-    using MDEngine     = engine::MDEngine;
-    using OptEngine    = engine::OptEngine;
-    using QMMDEngine   = engine::QMMDEngine;
-    using QMMMMDEngine = engine::QMMMMDEngine;
+    using Engine            = engine::Engine;
+    using MDEngine          = engine::MDEngine;
+    using OptEngine         = engine::OptEngine;
+    using QMMDEngine        = engine::QMMDEngine;
+    using QMMMMDEngine      = engine::QMMMMDEngine;
+    using RingPolymerEngine = engine::RingPolymerEngine;
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
