@@ -82,7 +82,7 @@ namespace defaults
     static constexpr double _NH_COUPLING_FREQ_       = 1.0e3;   // in cm^-1
 
     static constexpr double _BERENDSEN_MANOSTAT_RELAX_TIME_ = 1.0;        // in ps
-    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // default value for berendsen manostat
+    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // in bar^-1 default value for berendsen manostat
 
     static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
 

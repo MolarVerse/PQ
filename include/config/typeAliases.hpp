@@ -122,6 +122,15 @@ namespace engine
 
 }   // namespace engine
 
+namespace manostat
+{
+    class StochasticRescalingManostat;                  // forward declaration
+    class SemiIsotropicStochasticRescalingManostat;     // forward declaration
+    class AnisotropicStochasticRescalingManostat;       // forward declaration
+    class FullAnisotropicStochasticRescalingManostat;   // forward declaration
+
+}   // namespace manostat
+
 namespace pq
 {
     using strings   = std::vector<std::string>;
@@ -149,6 +158,17 @@ namespace pq
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
+
+    /**********************
+     * manostat namespace *
+     **********************/
+
+    // clang-format off
+    using StochasticManostat          = manostat::StochasticRescalingManostat;
+    using SemiIsoStochasticManostat   = manostat::SemiIsotropicStochasticRescalingManostat;
+    using AnisoStochasticManostat     = manostat::AnisotropicStochasticRescalingManostat;
+    using FullAnisoStochasticManostat = manostat::FullAnisotropicStochasticRescalingManostat;
+    // clang-format on
 
     /********************
      * engine namespace *

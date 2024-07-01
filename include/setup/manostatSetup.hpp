@@ -52,6 +52,8 @@ namespace setup
 
         void writeSetupInfo() const;
         void writeManostatSelection() const;
+        void writeBerendsenSetup() const;
+        void writeIsotropy() const;
 
         [[nodiscard]] pq::MDEngine &getEngine() const;
     };
