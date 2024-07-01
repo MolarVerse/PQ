@@ -42,20 +42,28 @@
 
 using setup::OutputFilesSetup;
 using namespace settings;
+using namespace engine;
 
 /**
  * @brief wrapper function to setup output files
  *
  */
-void setup::setupOutputFiles(engine::Engine &engine)
+void setup::setupOutputFiles(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("output files");
+    engine.getStdoutOutput().writeSetup("Output Files");
 
     OutputFilesSetup outputFilesSetup(engine);
     outputFilesSetup.setup();
 
     engine.getLogOutput().writeHeader();
 }
+
+/**
+ * @brief Construct a new Output Files Setup object
+ *
+ * @param engine
+ */
+OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup output files
@@ -91,7 +99,7 @@ void OutputFilesSetup::setup()
 
     if (Settings::isMDJobType())
     {
-        auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
+        auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
 
         const auto instEnFile = OutputFileSettings::getInstantEnergyFileName();
         const auto velFile    = OutputFileSettings::getVelocityFileName();
@@ -129,7 +137,7 @@ void OutputFilesSetup::setup()
 
     if (Settings::isOptJobType())
     {
-        auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
+        auto &optEngine = dynamic_cast<OptEngine &>(_engine);
 
         const auto optFileName = OutputFileSettings::getOptFileName();
 
