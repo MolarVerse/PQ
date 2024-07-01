@@ -24,15 +24,11 @@
 
 #define _SIMULATION_BOX_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup::simulationBox
 {
-    void setupSimulationBox(engine::Engine &);
-    void writeSetupInfo(engine::Engine &);
+    void setupSimulationBox(pq::Engine &);
 
     /**
      * @class SetupSimulationBox
@@ -42,11 +38,11 @@ namespace setup::simulationBox
      */
     class SimulationBoxSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        pq::Engine &_engine;
 
-      public:
-        explicit SimulationBoxSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit SimulationBoxSetup(pq::Engine &engine);
 
         void setup();
 
@@ -65,6 +61,8 @@ namespace setup::simulationBox
         void checkRcCutoff();
 
         void initVelocities();
+
+        void writeSetupInfo() const;
     };
 
 }   // namespace setup::simulationBox
