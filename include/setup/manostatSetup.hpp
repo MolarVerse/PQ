@@ -24,15 +24,11 @@
 
 #define _MANOSTAT_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;     // forward declaration
-    class MDEngine;   // forward declaration
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupManostat(engine::Engine &);
+    void setupManostat(pq::Engine &);
 
     /**
      * @class ManostatSetup
@@ -43,10 +39,10 @@ namespace setup
     class ManostatSetup
     {
        private:
-        engine::MDEngine &_engine;
+        pq::MDEngine &_engine;
 
        public:
-        explicit ManostatSetup(engine::MDEngine &engine) : _engine(engine){};
+        explicit ManostatSetup(pq::MDEngine &engine);
 
         void setup();
 
@@ -54,7 +50,10 @@ namespace setup
         void setupBerendsenManostat();
         void setupStochasticRescalingManostat();
 
-        [[nodiscard]] engine::MDEngine &getEngine() const { return _engine; }
+        void writeSetupInfo() const;
+        void writeManostatSelection() const;
+
+        [[nodiscard]] pq::MDEngine &getEngine() const;
     };
 
 }   // namespace setup

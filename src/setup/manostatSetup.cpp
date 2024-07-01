@@ -35,23 +35,35 @@
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 
 using namespace setup;
+using namespace engine;
+using namespace settings;
+using namespace manostat;
+using namespace customException;
+using namespace constants;
 
 /**
  * @brief wrapper for setupManostat
  *
  * @param engine
  */
-void setup::setupManostat(engine::Engine &engine)
+void setup::setupManostat(Engine &engine)
 {
-    if (!settings::Settings::isMDJobType())
+    if (!Settings::isMDJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("manostat");
-    engine.getLogOutput().writeSetup("manostat");
+    engine.getStdoutOutput().writeSetup("Manostat");
+    engine.getLogOutput().writeSetup("Manostat");
 
-    ManostatSetup manostatSetup(dynamic_cast<engine::MDEngine &>(engine));
+    ManostatSetup manostatSetup(dynamic_cast<MDEngine &>(engine));
     manostatSetup.setup();
 }
+
+/**
+ * @brief Construct a new Manostat Setup:: Manostat Setup object
+ *
+ * @param engine
+ */
+ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
 
 /**
  * @brief setup manostat
@@ -68,22 +80,23 @@ void setup::setupManostat(engine::Engine &engine)
  */
 void ManostatSetup::setup()
 {
-    const auto manostatType = settings::ManostatSettings::getManostatType();
+    using enum ManostatType;
 
-    if (manostatType != settings::ManostatType::NONE)
+    const auto manostatType = ManostatSettings::getManostatType();
+
+    if (manostatType != NONE)
         isPressureSet();
 
-    if (manostatType == settings::ManostatType::BERENDSEN)
+    if (manostatType == BERENDSEN)
         setupBerendsenManostat();
 
-    else if (manostatType == settings::ManostatType::STOCHASTIC_RESCALING)
+    else if (manostatType == STOCHASTIC_RESCALING)
         setupStochasticRescalingManostat();
 
     else
-    {
-        _engine.makeManostat(manostat::Manostat());
-        _engine.getLogOutput().writeSetupInfo("No manostat selected");
-    }
+        _engine.makeManostat(Manostat());
+
+    writeSetupInfo();
 
     _engine.getLogOutput().writeEmptyLine();
 }
@@ -96,17 +109,11 @@ void ManostatSetup::setup()
  */
 void ManostatSetup::isPressureSet() const
 {
-    if (!settings::ManostatSettings::isPressureSet())
-        throw customException::InputFileException(std::format(
+    if (!ManostatSettings::isPressureSet())
+        throw InputFileException(std::format(
             "Pressure not set for {} manostat",
-            string(settings::ManostatSettings::getManostatType())
+            string(ManostatSettings::getManostatType())
         ));
-
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "target pressure: {:14.5f} bar",
-        settings::ManostatSettings::getTargetPressure()
-    ));
-    _engine.getLogOutput().writeEmptyLine();
 }
 
 /**
@@ -117,76 +124,47 @@ void ManostatSetup::isPressureSet() const
  */
 void ManostatSetup::setupBerendsenManostat()
 {
-    const auto isotropy = settings::ManostatSettings::getIsotropy();
+    using enum Isotropy;
 
-    _engine.getLogOutput().writeSetupInfo("Berendsen manostat:");
+    const auto isotropy = ManostatSettings::getIsotropy();
 
-    if (isotropy == settings::Isotropy::SEMI_ISOTROPIC)
+    if (isotropy == SEMI_ISOTROPIC)
     {
-        _engine.makeManostat(manostat::SemiIsotropicBerendsenManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility(),
-            settings::ManostatSettings::get2DAnisotropicAxis(),
-            settings::ManostatSettings::get2DIsotropicAxes()
+        _engine.makeManostat(SemiIsotropicBerendsenManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility(),
+            ManostatSettings::get2DAnisotropicAxis(),
+            ManostatSettings::get2DIsotropicAxes()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               semi-isotropic"
-        );
     }
 
-    else if (isotropy == settings::Isotropy::ANISOTROPIC)
+    else if (isotropy == ANISOTROPIC)
     {
-        _engine.makeManostat(manostat::AnisotropicBerendsenManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(AnisotropicBerendsenManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               anisotropic"
-        );
     }
 
-    else if (isotropy == settings::Isotropy::FULL_ANISOTROPIC)
+    else if (isotropy == FULL_ANISOTROPIC)
     {
-        _engine.makeManostat(manostat::FullAnisotropicBerendsenManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(FullAnisotropicBerendsenManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               full_anisotropic"
-        );
     }
 
     else
     {
-        _engine.makeManostat(manostat::BerendsenManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(BerendsenManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               isotropic"
-        );
     }
-
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "relaxation time: {:14.5f} ps",
-        settings::ManostatSettings::getTauManostat()
-    ));
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "compressibility: {:14.5f} bar⁻¹",
-        settings::ManostatSettings::getCompressibility()
-    ));
 }
 
 /**
@@ -197,74 +175,84 @@ void ManostatSetup::setupBerendsenManostat()
  */
 void ManostatSetup::setupStochasticRescalingManostat()
 {
-    const auto isotropy = settings::ManostatSettings::getIsotropy();
+    using enum Isotropy;
 
-    _engine.getLogOutput().writeSetupInfo("Stochastic Rescaling manostat:");
+    const auto isotropy = ManostatSettings::getIsotropy();
 
-    if (isotropy == settings::Isotropy::SEMI_ISOTROPIC)
+    if (isotropy == SEMI_ISOTROPIC)
     {
-        _engine.makeManostat(manostat::SemiIsotropicStochasticRescalingManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility(),
-            settings::ManostatSettings::get2DAnisotropicAxis(),
-            settings::ManostatSettings::get2DIsotropicAxes()
+        _engine.makeManostat(SemiIsotropicStochasticRescalingManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility(),
+            ManostatSettings::get2DAnisotropicAxis(),
+            ManostatSettings::get2DIsotropicAxes()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               semi-isotropic"
-        );
     }
 
-    else if (isotropy == settings::Isotropy::ANISOTROPIC)
+    else if (isotropy == ANISOTROPIC)
     {
-        _engine.makeManostat(manostat::AnisotropicStochasticRescalingManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(AnisotropicStochasticRescalingManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               anisotropic"
-        );
     }
 
-    else if (isotropy == settings::Isotropy::FULL_ANISOTROPIC)
+    else if (isotropy == FULL_ANISOTROPIC)
     {
-        _engine.makeManostat(manostat::AnisotropicStochasticRescalingManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(AnisotropicStochasticRescalingManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
-
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               full_anisotropic"
-        );
     }
 
     else
     {
-        _engine.makeManostat(manostat::StochasticRescalingManostat(
-            settings::ManostatSettings::getTargetPressure(),
-            settings::ManostatSettings::getTauManostat() *
-                constants::_PS_TO_FS_,
-            settings::ManostatSettings::getCompressibility()
+        _engine.makeManostat(StochasticRescalingManostat(
+            ManostatSettings::getTargetPressure(),
+            ManostatSettings::getTauManostat() * _PS_TO_FS_,
+            ManostatSettings::getCompressibility()
         ));
+    }
+}
 
-        _engine.getLogOutput().writeSetupInfo(
-            "isotropy:               isotropic"
-        );
+/**
+ * @brief write setup info
+ *
+ */
+void ManostatSetup::writeSetupInfo() const { writeManostatSelection(); }
+
+/**
+ * @brief write manostat selection
+ *
+ */
+void ManostatSetup::writeManostatSelection() const
+{
+    auto &logOutput = _engine.getLogOutput();
+
+    switch (ManostatSettings::getManostatType())
+    {
+        using enum ManostatType;
+
+        case BERENDSEN:
+            logOutput.writeSetupInfo("Berendsen manostat selected");
+            break;
+
+        case STOCHASTIC_RESCALING:
+            logOutput.writeSetupInfo("Stochastic rescaling manostat selected");
+            break;
+
+        default: logOutput.writeSetupInfo("No manostat selected");
     }
 
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "relaxation time: {:14.5f} ps",
-        settings::ManostatSettings::getTauManostat()
-    ));
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "compressibility: {:14.5f} bar⁻¹",
-        settings::ManostatSettings::getCompressibility()
-    ));
+    logOutput.writeEmptyLine();
 }
+
+/**
+ * @brief Get the Engine object
+ *
+ * @return MDEngine&
+ */
+MDEngine &ManostatSetup::getEngine() const { return _engine; }
