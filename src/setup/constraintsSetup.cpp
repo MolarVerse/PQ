@@ -162,7 +162,10 @@ void ConstraintsSetup::writeSetupInfo()
     writeEnabled();
 
     if (constraints.isShakeLikeActive())
+    {
+        writeNConstraintBonds();
         writeTolerance();
+    }
 
     if (constraints.isShakeActive())
         writeMaxIter();
@@ -253,10 +256,14 @@ void ConstraintsSetup::writeMaxIter()
     logOutput.writeEmptyLine();
 }
 
+/**
+ * @brief write number of constraint bonds to log output
+ *
+ */
 void ConstraintsSetup::writeNConstraintBonds()
 {
-    auto &constraints = _engine.getConstraints();
-    auto &simBox      = _engine.getSimulationBox();
+    const auto &constraints = _engine.getConstraints();
+    auto       &simBox      = _engine.getSimulationBox();
 
     const auto nShakeBonds  = constraints.getNumberOfBondConstraints();
     const auto nMShakeTypes = constraints.getMShakeReferences().size();
