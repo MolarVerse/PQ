@@ -253,4 +253,6 @@ void PotentialSetup::writeNonCoulombInfo() const
     }
     else
         log.writeSetupInfo("Non-coulombic potential: Guff");
+
+    log.writeEmptyLine();
 }
