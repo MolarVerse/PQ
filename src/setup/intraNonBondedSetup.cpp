@@ -27,25 +27,11 @@
 #include "potential.hpp"        // for Potential
 
 using namespace setup;
+using namespace engine;
 
 /**
- * @brief Setup intra non bonded interactions
- *
- * @details Setup the coulombPotential and nonCoulombPotential in the IntraNonBonded class. Then the IntraNonBonded maps vector is
- * filled with all single intraNonBonded maps. A single intraNonBonded map is a class containing the molecule pointer and the
- * IntraNonBonded container which represents the molecule type of the molecule pointer.
- *
- */
-void IntraNonBondedSetup::setup()
-{
-    _engine.getIntraNonBonded().setNonCoulombPotential(_engine.getPotential().getNonCoulombPotentialSharedPtr());
-    _engine.getIntraNonBonded().setCoulombPotential(_engine.getPotential().getCoulombPotentialSharedPtr());
-
-    _engine.getIntraNonBonded().fillIntraNonBondedMaps(_engine.getSimulationBox());
-}
-
-/**
- * @brief wrapper to construct IntraNonBondedSetup object and setup the intra non bonded interactions
+ * @brief wrapper to construct IntraNonBondedSetup object and setup the intra
+ * non bonded interactions
  *
  * @param engine
  */
@@ -54,9 +40,39 @@ void setup::setupIntraNonBonded(engine::Engine &engine)
     if (!engine.isIntraNonBondedActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("intra non-bonded interactions");
-    engine.getLogOutput().writeSetup("intra non-bonded interactions");
+    engine.getStdoutOutput().writeSetup("Intra Non-Bonded Interactions");
+    engine.getLogOutput().writeSetup("Intra Non-Bonded Interactions");
 
     IntraNonBondedSetup intraNonBondedSetup(engine);
     intraNonBondedSetup.setup();
+}
+
+/**
+ * @brief Construct a new Intra Non Bonded Setup:: Intra Non Bonded Setup object
+ *
+ * @param engine
+ */
+IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine){};
+
+/**
+ * @brief Setup intra non bonded interactions
+ *
+ * @details Setup the coulombPotential and nonCoulombPotential in the
+ * IntraNonBonded class. Then the IntraNonBonded maps vector is filled with all
+ * single intraNonBonded maps. A single intraNonBonded map is a class containing
+ * the molecule pointer and the IntraNonBonded container which represents the
+ * molecule type of the molecule pointer.
+ *
+ */
+void IntraNonBondedSetup::setup()
+{
+    auto       &intraNonBonded = _engine.getIntraNonBonded();
+    const auto &potential      = _engine.getPotential();
+    const auto &nonCoulombPot  = potential.getNonCoulombPotentialSharedPtr();
+    const auto &coulombPot     = potential.getCoulombPotentialSharedPtr();
+
+    intraNonBonded.setNonCoulombPotential(nonCoulombPot);
+    intraNonBonded.setCoulombPotential(coulombPot);
+
+    intraNonBonded.fillIntraNonBondedMaps(_engine.getSimulationBox());
 }
