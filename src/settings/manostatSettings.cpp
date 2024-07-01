@@ -202,6 +202,25 @@ void ManostatSettings::set2DAnisotropicAxis(const size_t index)
  ***************************/
 
 /**
+ * @brief get if pressure is set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isPressureSet() { return _isPressureSet; }
+
+/**
+ * @brief get if manostat is Berendsen based
+ *
+ * @return bool
+ */
+bool ManostatSettings::isBerendsenBased()
+{
+    using enum ManostatType;
+
+    return _manostatType == BERENDSEN || _manostatType == STOCHASTIC_RESCALING;
+}
+
+/**
  * @brief get the manostatType
  *
  * @return ManostatType
@@ -214,13 +233,6 @@ ManostatType ManostatSettings::getManostatType() { return _manostatType; }
  * @return Isotropy
  */
 Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
-
-/**
- * @brief get if pressure is set
- *
- * @return bool
- */
-bool ManostatSettings::isPressureSet() { return _isPressureSet; }
 
 /**
  * @brief get the target pressure
