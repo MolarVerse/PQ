@@ -24,11 +24,7 @@
 
 #define _INTEGRATOR_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;     // forward declaration
-    class MDEngine;   // forward declaration
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup
 {
@@ -41,10 +37,10 @@ namespace setup
     class IntegratorSetup
     {
        private:
-        engine::MDEngine &_engine;
+        pq::MDEngine &_engine;
 
        public:
-        explicit IntegratorSetup(engine::MDEngine &engine) : _engine(engine){};
+        explicit IntegratorSetup(pq::MDEngine &engine);
     };
 
 }   // namespace setup
