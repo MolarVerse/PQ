@@ -111,6 +111,8 @@ void ForceFieldSetup::setupBonds()
 
     std::ranges::for_each(forceField.getBonds(), addForceFieldParameters);
 
+    _nBondTypes = forceField.getBondTypes().size();
+
     forceField.clearBondTypes();
 }
 
@@ -135,6 +137,8 @@ void ForceFieldSetup::setupAngles()
 
     std::ranges::for_each(forceField.getAngles(), addForceFieldParameters);
 
+    _nAngleTypes = forceField.getAngleTypes().size();
+
     forceField.clearAngleTypes();
 }
 
@@ -148,20 +152,21 @@ void ForceFieldSetup::setupAngles()
  */
 void ForceFieldSetup::setupDihedrals()
 {
-    auto &forceField = _engine.getForceField();
+    auto &ff = _engine.getForceField();
 
-    auto addForceFieldParameters = [&forceField](auto &dihedral)
+    auto addForceFieldParameters = [&ff](auto &dihedral)
     {
-        const auto dihedralType =
-            forceField.findDihedralTypeById(dihedral.getType());
+        const auto dihedralType = ff.findDihedralTypeById(dihedral.getType());
         dihedral.setForceConstant(dihedralType.getForceConstant());
         dihedral.setPhaseShift(dihedralType.getPhaseShift());
         dihedral.setPeriodicity(dihedralType.getPeriodicity());
     };
 
-    std::ranges::for_each(forceField.getDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(ff.getDihedrals(), addForceFieldParameters);
 
-    forceField.clearDihedralTypes();
+    _nDihedralTypes = ff.getDihedralTypes().size();
+
+    ff.clearDihedralTypes();
 }
 
 /**
@@ -174,23 +179,21 @@ void ForceFieldSetup::setupDihedrals()
  */
 void ForceFieldSetup::setupImproperDihedrals()
 {
-    auto &forceField = _engine.getForceField();
+    auto &ff = _engine.getForceField();
 
-    auto addForceFieldParameters = [&forceField](auto &improper)
+    auto addForceFieldParameters = [&ff](auto &improper)
     {
-        const auto improperType =
-            forceField.findImproperDihedralTypeById(improper.getType());
+        const auto improperType = ff.findImproperTypeById(improper.getType());
         improper.setForceConstant(improperType.getForceConstant());
         improper.setPhaseShift(improperType.getPhaseShift());
         improper.setPeriodicity(improperType.getPeriodicity());
     };
 
-    std::ranges::for_each(
-        forceField.getImproperDihedrals(),
-        addForceFieldParameters
-    );
+    std::ranges::for_each(ff.getImproperDihedrals(), addForceFieldParameters);
 
-    forceField.clearImproperDihedralTypes();
+    _nImproperTypes = ff.getImproperTypes().size();
+
+    ff.clearImproperDihedralTypes();
 }
 
 /**
@@ -206,34 +209,29 @@ void ForceFieldSetup::writeSetupInfo()
     const auto nDihedrals         = forceField.getDihedrals().size();
     const auto nImproperDihedrals = forceField.getImproperDihedrals().size();
 
-    const auto nBondTypes     = forceField.getBondTypes().size();
-    const auto nAngleTypes    = forceField.getAngleTypes().size();
-    const auto nDihedralTypes = forceField.getDihedralTypes().size();
-    const auto nImproperTypes = forceField.getImproperTypes().size();
-
     const auto nBondMsg     = std::format("Bonds:     {}", nBonds);
     const auto nAngleMsg    = std::format("Angles:    {}", nAngles);
     const auto nDihedralMsg = std::format("Dihedrals: {}", nDihedrals);
     const auto nImproperMsg = std::format("Impropers: {}", nImproperDihedrals);
 
     // clang-format off
-    const auto nBondTypeMsg     = std::format("Bond Types:     {}", nBondTypes);
-    const auto nAngleTypeMsg    = std::format("Angle Types:    {}", nAngleTypes);
-    const auto nDihedralTypeMsg = std::format("Dihedral Types: {}", nDihedralTypes);
-    const auto nImproperTypeMsg = std::format("Improper Types: {}", nImproperTypes);
+    const auto nBondTypeMsg     = std::format("Bond Types:     {}", _nBondTypes);
+    const auto nAngleTypeMsg    = std::format("Angle Types:    {}", _nAngleTypes);
+    const auto nDihedralTypeMsg = std::format("Dihedral Types: {}", _nDihedralTypes);
+    const auto nImproperTypeMsg = std::format("Improper Types: {}", _nImproperTypes);
     // clang-format on
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(nBondMsg);
-    logOutput.writeSetup(nAngleMsg);
-    logOutput.writeSetup(nDihedralMsg);
-    logOutput.writeSetup(nImproperMsg);
+    logOutput.writeSetupInfo(nBondMsg);
+    logOutput.writeSetupInfo(nAngleMsg);
+    logOutput.writeSetupInfo(nDihedralMsg);
+    logOutput.writeSetupInfo(nImproperMsg);
     logOutput.writeEmptyLine();
 
-    logOutput.writeSetup(nBondTypeMsg);
-    logOutput.writeSetup(nAngleTypeMsg);
-    logOutput.writeSetup(nDihedralTypeMsg);
-    logOutput.writeSetup(nImproperTypeMsg);
+    logOutput.writeSetupInfo(nBondTypeMsg);
+    logOutput.writeSetupInfo(nAngleTypeMsg);
+    logOutput.writeSetupInfo(nDihedralTypeMsg);
+    logOutput.writeSetupInfo(nImproperTypeMsg);
     logOutput.writeEmptyLine();
 }

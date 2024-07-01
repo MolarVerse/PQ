@@ -41,6 +41,11 @@ namespace setup
        private:
         pq::Engine &_engine;
 
+        size_t _nBondTypes     = 0;
+        size_t _nAngleTypes    = 0;
+        size_t _nDihedralTypes = 0;
+        size_t _nImproperTypes = 0;
+
        public:
         explicit ForceFieldSetup(pq::Engine &engine);
 

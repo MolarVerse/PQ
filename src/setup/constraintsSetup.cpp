@@ -111,13 +111,13 @@ void ConstraintsSetup::setupTolerances()
  */
 void ConstraintsSetup::setupMaxIterations()
 {
-    _shakeMaxIter    = ConstraintSettings::getShakeMaxIter();
-    _rattleTolerance = ConstraintSettings::getRattleMaxIter();
+    _shakeMaxIter  = ConstraintSettings::getShakeMaxIter();
+    _rattleMaxIter = ConstraintSettings::getRattleMaxIter();
 
     auto &constraints = _engine.getConstraints();
 
     constraints.setShakeMaxIter(_shakeMaxIter);
-    constraints.setRattleMaxIter(_rattleTolerance);
+    constraints.setRattleMaxIter(_rattleMaxIter);
 }
 
 /**
@@ -191,8 +191,8 @@ void ConstraintsSetup::writeEnabled()
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(shakeMsg);
-    logOutput.writeSetup(mShakeMsg);
+    logOutput.writeSetupInfo(shakeMsg);
+    logOutput.writeSetupInfo(mShakeMsg);
     logOutput.writeEmptyLine();
 }
 
@@ -214,9 +214,9 @@ void ConstraintsSetup::writeDof()
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(shakeDofMsg);
-    logOutput.writeSetup(mShakeDofMsg);
-    logOutput.writeSetup(totalDofMsg);
+    logOutput.writeSetupInfo(shakeDofMsg);
+    logOutput.writeSetupInfo(mShakeDofMsg);
+    logOutput.writeSetupInfo(totalDofMsg);
     logOutput.writeEmptyLine();
 }
 
@@ -233,8 +233,8 @@ void ConstraintsSetup::writeTolerance()
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(shakeTolMsg);
-    logOutput.writeSetup(rattleTolMsg);
+    logOutput.writeSetupInfo(shakeTolMsg);
+    logOutput.writeSetupInfo(rattleTolMsg);
     logOutput.writeEmptyLine();
 }
 
@@ -251,8 +251,8 @@ void ConstraintsSetup::writeMaxIter()
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(shakeMaxIterMsg);
-    logOutput.writeSetup(rattleMaxIterMsg);
+    logOutput.writeSetupInfo(shakeMaxIterMsg);
+    logOutput.writeSetupInfo(rattleMaxIterMsg);
     logOutput.writeEmptyLine();
 }
 
@@ -277,8 +277,8 @@ void ConstraintsSetup::writeNConstraintBonds()
 
     auto &logOutput = _engine.getLogOutput();
 
-    logOutput.writeSetup(nShakeBondsMsg);
-    logOutput.writeSetup(nMShakeTypesMsg);
-    logOutput.writeSetup(nMShakeMolsMsg);
+    logOutput.writeSetupInfo(nShakeBondsMsg);
+    logOutput.writeSetupInfo(nMShakeTypesMsg);
+    logOutput.writeSetupInfo(nMShakeMolsMsg);
     logOutput.writeEmptyLine();
 }
