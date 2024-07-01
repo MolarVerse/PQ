@@ -54,10 +54,11 @@ namespace physicalData
 
 namespace potential
 {
-    class Potential;             // forward declaration
-    class PotentialBruteForce;   // forward declaration
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
+    class Potential;              // forward declaration
+    class PotentialBruteForce;    // forward declaration
+    class CoulombPotential;       // forward declaration
+    class NonCoulombPotential;    // forward declaration
+    class ForceFieldNonCoulomb;   // forward declaration
 
 }   // namespace potential
 
@@ -167,6 +168,7 @@ namespace pq
     using BruteForcePot = potential::PotentialBruteForce;
     using CoulombPot    = potential::CoulombPotential;
     using NonCoulombPot = potential::NonCoulombPotential;
+    using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;

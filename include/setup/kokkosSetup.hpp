@@ -24,15 +24,11 @@
 
 #define _KOKKOS_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;   // forward declaration
-
-}
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupKokkos(engine::Engine &);
+    void setupKokkos(pq::Engine &);
 
     /**
      * @class KokkosSetup
@@ -42,10 +38,10 @@ namespace setup
     class KokkosSetup
     {
        private:
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit KokkosSetup(engine::Engine &engine) : _engine(engine){};
+        explicit KokkosSetup(pq::Engine &engine);
 
         void setup();
     };
