@@ -109,10 +109,10 @@ void OptInputParser::parseOptimizer(
     const auto method = toLowerCopy(lineElements[2]);
 
     if ("steepest-descent" == method)
-        OptimizerSettings::setOptimizer(Optimizer::STEEPEST_DESCENT);
+        OptimizerSettings::setOptimizer(OptimizerType::STEEPEST_DESCENT);
 
     else if ("adam" == method)
-        OptimizerSettings::setOptimizer(Optimizer::ADAM);
+        OptimizerSettings::setOptimizer(OptimizerType::ADAM);
 
     else
         throw InputFileException(std::format(

@@ -118,6 +118,7 @@ namespace engine
 {
     class Engine;       // forward declaration
     class MDEngine;     // forward declaration
+    class OptEngine;    // forward declaration
     class QMMDEngine;   // forward declaration
 
 }   // namespace engine
@@ -176,6 +177,7 @@ namespace pq
 
     using Engine     = engine::Engine;
     using MDEngine   = engine::MDEngine;
+    using OptEngine  = engine::OptEngine;
     using QMMDEngine = engine::QMMDEngine;
 
     using UniqueEngine = std::unique_ptr<Engine>;
