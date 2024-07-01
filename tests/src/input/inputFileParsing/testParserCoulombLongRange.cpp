@@ -32,8 +32,11 @@
 #include "potentialSettings.hpp"                 // for PotentialSettings
 #include "testInputFileReader.hpp"               // for TestInputFileReader
 #include "throwWithMessage.hpp"                  // for EXPECT_THROW_MSG
+#include "typeAliases.hpp"
 
 using namespace input;
+using namespace settings;
+using namespace customException;
 
 /**
  * @brief tests parsing the "long-range" command
@@ -44,23 +47,24 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
+    using enum CoulombLongRangeType;
+
     InputFileParserCoulombLongRange parser(*_engine);
 
-    std::vector<std::string> lineElements = {"long-range", "=", "none"};
+    pq::strings lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "none");
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
 
     lineElements = {"long-range", "=", "wolf"};
     parser.parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), "wolf");
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), WOLF);
 
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseCoulombLongRange(lineElements, 0),
-        customException::InputFileException,
+        InputFileException,
         "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
-        "in input file\n"
-        "Possible options are \"none\", \"wolf\""
+        "in input file\nPossible options are: none, shifted, wolf"
     );
 }
 
@@ -73,14 +77,15 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
     InputFileParserCoulombLongRange parser(*_engine);
-    std::vector<std::string>        lineElements = {"wolf_param", "=", "1.0"};
+
+    pq::strings lineElements = {"wolf_param", "=", "1.0"};
     parser.parseWolfParameter(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
+    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
         parser.parseWolfParameter(lineElements, 0),
-        customException::InputFileException,
+        InputFileException,
         "Wolf parameter cannot be negative"
     );
 }

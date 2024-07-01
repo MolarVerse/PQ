@@ -64,8 +64,6 @@ namespace defaults
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;
     static constexpr double _WOLF_PARAM_DEFAULT_            = 0.25;     // TODO: add unit
-    static constexpr char   _COULOMB_LR_TYPE_DEFAULT_[] = "none";   // default no coulomb long range correction
-    static constexpr char   _NON_COULOMB_TYPE_DEFAULT_[]        = "guff";   // default is guff
 
     static constexpr bool   _CONSTRAINTS_ACTIVE_DEFAULT_ = false;
     static constexpr size_t _SHAKE_MAX_ITER_DEFAULT_     = 20;

@@ -85,17 +85,19 @@ void InputFileParserCoulombLongRange::parseCoulombLongRange(
 
     const auto type = utilities::toLowerCopy(lineElements[2]);
 
-    if (type == "none")
-        settings::PotentialSettings::setCoulombLongRangeType("none");
+    using enum settings::CoulombLongRangeType;
+
+    if (type == "none" || type == "shifted")
+        settings::PotentialSettings::setCoulombLongRangeType(SHIFTED);
 
     else if (type == "wolf")
-        settings::PotentialSettings::setCoulombLongRangeType("wolf");
+        settings::PotentialSettings::setCoulombLongRangeType(WOLF);
 
     else
         throw customException::InputFileException(format(
             "Invalid long-range type for coulomb correction "
             "\"{}\" at line {} in input file\n"
-            "Possible options are \"none\", \"wolf\"",
+            "Possible options are: none, shifted, wolf",
             lineElements[2],
             lineNumber
         ));

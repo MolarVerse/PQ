@@ -22,6 +22,13 @@
 
 #include "potentialSetup.hpp"
 
+#include <algorithm>     // for __for_each_fn, __sort_fn
+#include <functional>    // for identity
+#include <memory>        // for swap, shared_ptr, __shared_ptr_access
+#include <string>        // for operator==
+#include <string_view>   // for string_view
+#include <vector>        // for vector
+
 #include "angleForceField.hpp"           // for potential
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
@@ -36,22 +43,18 @@
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 
-#include <algorithm>     // for __for_each_fn, __sort_fn
-#include <functional>    // for identity
-#include <memory>        // for swap, shared_ptr, __shared_ptr_access
-#include <string>        // for operator==
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
 using namespace setup;
 using namespace potential;
+using namespace engine;
+using namespace settings;
+using namespace customException;
 
 /**
  * @brief wrapper to create PotentialSetup object and call setup
  *
  * @param engine
  */
-void setup::setupPotential(engine::Engine &engine)
+void setup::setupPotential(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("MM potential");
     engine.getLogOutput().writeSetup("MM potential");
@@ -61,9 +64,17 @@ void setup::setupPotential(engine::Engine &engine)
 }
 
 /**
+ * @brief Construct a new Potential Setup:: Potential Setup object
+ *
+ * @param engine
+ */
+PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
+
+/**
  * @brief sets all nonBonded potential types
  *
- * @details if forceFieldNonCoulombics are activated it sets up also the nonCoulombic pairs
+ * @details if forceFieldNonCoulombics are activated it sets up also the
+ * nonCoulombic pairs
  *
  */
 void PotentialSetup::setup()
@@ -75,6 +86,8 @@ void PotentialSetup::setup()
         return;
 
     setupNonCoulombicPairs();
+
+    writeSetupInfo();
 }
 
 /**
@@ -88,13 +101,22 @@ void PotentialSetup::setup()
  */
 void PotentialSetup::setupCoulomb()
 {
-    const auto coulombRadiusCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
-    auto       wolfParameter       = settings::PotentialSettings::getWolfParameter();
+    const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
+    const auto wolfParam = PotentialSettings::getWolfParameter();
+    auto      &potential = _engine.getPotential();
 
-    if (settings::PotentialSettings::getCoulombLongRangeType() == "wolf")
-        _engine.getPotential().makeCoulombPotential(CoulombWolf(coulombRadiusCutOff, wolfParameter));
-    else
-        _engine.getPotential().makeCoulombPotential(CoulombShiftedPotential(coulombRadiusCutOff));
+    switch (PotentialSettings::getCoulombLongRangeType())
+    {
+        using enum CoulombLongRangeType;
+
+        case WOLF:
+            potential.makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
+            break;
+
+        case SHIFTED:
+        default:
+            potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
+    }
 }
 
 /**
@@ -105,13 +127,14 @@ void PotentialSetup::setupCoulomb()
  */
 void PotentialSetup::setupNonCoulomb()
 {
-    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
-    {
-        // _engine.getPotential().makeNonCoulombPotential(potential::ForceFieldNonCoulomb()); TODO: think of a clever way to do
-        // this
-    }
-    else
-        _engine.getPotential().makeNonCoulombPotential(potential::GuffNonCoulomb());
+    auto &potential = _engine.getPotential();
+
+    // NOTE: no else branch needed ForceFieldNonCoulomb is default
+    //       makeForceFieldNonCoulomb is a no-op if already set
+    //       However, it does also throw errors atm - thus the else
+    //       statement is left out
+    if (!_engine.getForceFieldPtr()->isNonCoulombicActivated())
+        potential.makeNonCoulombPotential(GuffNonCoulomb());
 }
 
 /**
@@ -126,29 +149,108 @@ void PotentialSetup::setupNonCoulomb()
  * 6) fill diagonal elements of nonCoulombicPairsMatrix
  * 7) fill non diagonal elements of nonCoulombicPairsMatrix
  *
- * @throws customException::ParameterFileException if not all self interacting non coulombics are set
+ * @throws ParameterFileException if not all self interacting
+ * non coulombics are set
  *
  */
 void PotentialSetup::setupNonCoulombicPairs()
 {
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(_engine.getPotential().getNonCoulombPotential());
+    auto &pot    = _engine.getPotential();
+    auto &simBox = _engine.getSimulationBox();
 
-    potential.setupNonCoulombicCutoffs();
+    // clang-format off
+    auto &nonCoulPot = dynamic_cast<pq::FFNonCoulomb &>(pot.getNonCoulombPotential());
+    nonCoulPot.setupNonCoulombicCutoffs();
+    // clang-format on
 
-    _engine.getSimulationBox().setupExternalToInternalGlobalVdwTypesMap();
-    potential.determineInternalGlobalVdwTypes(_engine.getSimulationBox().getExternalToInternalGlobalVDWTypes());
+    const auto &extToIntVDWTypes = simBox.getExternalToInternalGlobalVDWTypes();
 
-    const auto numberOfGlobalVdwTypes           = _engine.getSimulationBox().getExternalGlobalVdwTypes().size();
-    auto       selfInteractionNonCoulombicPairs = potential.getSelfInteractionNonCoulombicPairs();
+    simBox.setupExternalToInternalGlobalVdwTypesMap();
+    nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
-    if (selfInteractionNonCoulombicPairs.size() != numberOfGlobalVdwTypes)
-        throw customException::ParameterFileException(
-            "Not all self interacting non coulombics were set in the noncoulombics section of the parameter file");
+    const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
+    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulombicPairs();
 
-    std::ranges::sort(selfInteractionNonCoulombicPairs,
-                      [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
-                      { return nonCoulombicPair1->getInternalType1() < nonCoulombicPair2->getInternalType1(); });
+    if (selfNonCoulPairs.size() != nGlobalVdwTypes)
+        throw ParameterFileException(
+            "Not all self interacting non coulombics were set in the "
+            "noncoulombics section of the parameter file"
+        );
 
-    potential.fillDiagonalElementsOfNonCoulombPairsMatrix(selfInteractionNonCoulombicPairs);
-    potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+    std::ranges::sort(
+        selfNonCoulPairs,
+        [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
+        {
+            const auto &internalType1 = nonCoulombicPair1->getInternalType1();
+            const auto &internalType2 = nonCoulombicPair2->getInternalType1();
+            return internalType1 < internalType2;
+        }
+    );
+
+    nonCoulPot.fillDiagonalElementsOfNonCoulombPairsMatrix(selfNonCoulPairs);
+    nonCoulPot.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+}
+
+/**
+ * @brief writes setup information to log file
+ *
+ */
+void PotentialSetup::writeSetupInfo() const
+{
+    writeCoulombInfo();
+    writeNonCoulombInfo();
+}
+
+/**
+ * @brief writes coulomb potential setup information to log file
+ *
+ */
+void PotentialSetup::writeCoulombInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto coulLRType = PotentialSettings::getCoulombLongRangeType();
+
+    // clang-format off
+    log.writeSetupInfo(std::format("Coulomb long range type: {}", string(coulLRType)));
+    log.writeEmptyLine();
+    // clang-format on
+
+    const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
+    auto       wolfParam = 0.0;
+
+    if (coulLRType == CoulombLongRangeType::WOLF)
+        wolfParam = PotentialSettings::getWolfParameter();
+
+    // clang-format off
+    const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
+    const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
+    // clang-format on
+
+    log.writeSetupInfo(coulRCutStr);
+    if (coulLRType == CoulombLongRangeType::WOLF)
+        log.writeSetupInfo(wolfParamStr);
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief writes non-coulomb potential setup information to log file
+ *
+ */
+void PotentialSetup::writeNonCoulombInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    {
+        auto      &simBox          = _engine.getSimulationBox();
+        const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
+
+        // clang-format off
+        log.writeSetupInfo(std::format("Non-coulombic potential: ForceField"));
+        log.writeSetupInfo(std::format("Total Global VDW types:  {}", nGlobalVdwTypes));
+        // clang-format on
+    }
+    else
+        log.writeSetupInfo("Non-coulombic potential: Guff");
 }
