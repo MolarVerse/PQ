@@ -59,6 +59,7 @@ namespace constraints
         void applyMShake(const double, pq::SimBox &);
         void applyMRattle(pq::SimBox &);
 
+        [[nodiscard]] size_t calcNumberOfMShakeMolecules(pq::SimBox &) const;
         [[nodiscard]] size_t calcNumberOfBondConstraints(pq::SimBox &) const;
         [[nodiscard]] double calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,

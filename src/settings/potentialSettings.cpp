@@ -22,9 +22,12 @@
 
 #include "potentialSettings.hpp"
 
+#include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
 using namespace settings;
+using namespace utilities;
+using namespace customException;
 
 /**
  * @brief return string of nonCoulombType
@@ -48,6 +51,25 @@ std::string settings::string(const NonCoulombType nonCoulombType)
     }
 }
 
+/**
+ * @brief return string of CoulombLongRangeType
+ *
+ * @param coulombLongRangeType
+ * @return std::string
+ */
+std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
+{
+    switch (coulombLongRangeType)
+    {
+        using enum CoulombLongRangeType;
+
+        case WOLF: return "wolf";
+        case SHIFTED: return "shifted";
+
+        default: return "shifted";
+    }
+}
+
 /********************
  *                  *
  * standard setters *
@@ -63,7 +85,7 @@ std::string settings::string(const NonCoulombType nonCoulombType)
 void PotentialSettings::setNonCoulombType(const std::string_view &type)
 {
     using enum NonCoulombType;
-    const auto typeToLower = utilities::toLowerCopy(type);
+    const auto typeToLower = toLowerCopy(type);
 
     if (typeToLower == "lj")
         _nonCoulombType = LJ;
@@ -94,12 +116,30 @@ void PotentialSettings::setNonCoulombType(const NonCoulombType type)
     _nonCoulombType = type;
 }
 
+void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
+{
+    using enum CoulombLongRangeType;
+    const auto typeToLower = toLowerCopy(type);
+
+    if (typeToLower == "wolf")
+        _coulombLRType = WOLF;
+
+    else if (typeToLower == "shifted")
+        _coulombLRType = SHIFTED;
+
+    else
+        throw UserInputException(
+            "Unknown Coulomb long range type " + std::string(type)
+        );
+}
+
 /**
  * @brief Set the Coulomb long range type in the PotentialSettings class
  *
  * @param type
  */
-void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
+void PotentialSettings::setCoulombLongRangeType(const CoulombLongRangeType &type
+)
 {
     _coulombLRType = type;
 }
@@ -154,9 +194,9 @@ void PotentialSettings::setWolfParameter(const double wolfParameter)
 /**
  * @brief get the Coulomb long range type
  *
- * @return std::string
+ * @return CoulombLongRangeType
  */
-std::string PotentialSettings::getCoulombLongRangeType()
+CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
 {
     return _coulombLRType;
 }

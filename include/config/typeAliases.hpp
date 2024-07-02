@@ -54,10 +54,11 @@ namespace physicalData
 
 namespace potential
 {
-    class Potential;             // forward declaration
-    class PotentialBruteForce;   // forward declaration
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
+    class Potential;              // forward declaration
+    class PotentialBruteForce;    // forward declaration
+    class CoulombPotential;       // forward declaration
+    class NonCoulombPotential;    // forward declaration
+    class ForceFieldNonCoulomb;   // forward declaration
 
 }   // namespace potential
 
@@ -115,10 +116,29 @@ namespace output
 
 namespace engine
 {
-    class Engine;       // forward declaration
-    class QMMDEngine;   // forward declaration
+    class Engine;              // forward declaration
+    class MDEngine;            // forward declaration
+    class OptEngine;           // forward declaration
+    class QMMDEngine;          // forward declaration
+    class QMMMMDEngine;        // forward declaration
+    class RingPolymerEngine;   // forward declaration
 
 }   // namespace engine
+
+namespace manostat
+{
+    class StochasticRescalingManostat;                  // forward declaration
+    class SemiIsotropicStochasticRescalingManostat;     // forward declaration
+    class AnisotropicStochasticRescalingManostat;       // forward declaration
+    class FullAnisotropicStochasticRescalingManostat;   // forward declaration
+
+}   // namespace manostat
+
+namespace timings
+{
+    class Timer;
+
+}   // namespace timings
 
 namespace pq
 {
@@ -142,18 +162,34 @@ namespace pq
     using VirialMolecular = virial::VirialMolecular;
     using IntraNonBond    = intraNonBonded::IntraNonBonded;
     using ForceField      = forceField::ForceField;
+    using Timer           = timings::Timer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
     using SharedVirial       = std::shared_ptr<virial::Virial>;
 
+    /**********************
+     * manostat namespace *
+     **********************/
+
+    // clang-format off
+    using StochasticManostat          = manostat::StochasticRescalingManostat;
+    using SemiIsoStochasticManostat   = manostat::SemiIsotropicStochasticRescalingManostat;
+    using AnisoStochasticManostat     = manostat::AnisotropicStochasticRescalingManostat;
+    using FullAnisoStochasticManostat = manostat::FullAnisotropicStochasticRescalingManostat;
+    // clang-format on
+
     /********************
      * engine namespace *
      ********************/
 
-    using Engine     = engine::Engine;
-    using QMMDEngine = engine::QMMDEngine;
+    using Engine            = engine::Engine;
+    using MDEngine          = engine::MDEngine;
+    using OptEngine         = engine::OptEngine;
+    using QMMDEngine        = engine::QMMDEngine;
+    using QMMMMDEngine      = engine::QMMMMDEngine;
+    using RingPolymerEngine = engine::RingPolymerEngine;
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
@@ -165,6 +201,7 @@ namespace pq
     using BruteForcePot = potential::PotentialBruteForce;
     using CoulombPot    = potential::CoulombPotential;
     using NonCoulombPot = potential::NonCoulombPotential;
+    using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;

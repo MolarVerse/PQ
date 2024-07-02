@@ -27,16 +27,11 @@
 #include <string>   // for string
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;         // forward declaration
-    class QMMMMDEngine;   // forward declaration
-
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupQMMM(engine::Engine &);
+    void setupQMMM(pq::Engine &);
 
     /**
      * @class QMSetup
@@ -47,10 +42,10 @@ namespace setup
     class QMMMSetup
     {
        private:
-        engine::QMMMMDEngine &_engine;
+        pq::QMMMMDEngine &_engine;
 
        public:
-        explicit QMMMSetup(engine::QMMMMDEngine &engine) : _engine(engine){};
+        explicit QMMMSetup(pq::QMMMMDEngine &engine);
 
         void setup();
         void setupQMCenter();

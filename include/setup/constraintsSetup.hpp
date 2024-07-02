@@ -24,14 +24,11 @@
 
 #define _CONSTRAINTS_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupConstraints(engine::Engine &);
+    void setupConstraints(pq::Engine &);
 
     /**
      * @class ConstraintsSetup
@@ -42,10 +39,19 @@ namespace setup
     class ConstraintsSetup
     {
        private:
-        engine::Engine &_engine;
+        pq::Engine &_engine;
+
+        size_t _shakeConstraints  = 0;
+        size_t _mShakeConstraints = 0;
+
+        size_t _shakeMaxIter  = 0;
+        size_t _rattleMaxIter = 0;
+
+        double _shakeTolerance  = 0.0;
+        double _rattleTolerance = 0.0;
 
        public:
-        explicit ConstraintsSetup(engine::Engine &engine) : _engine(engine){};
+        explicit ConstraintsSetup(pq::Engine &engine);
 
         void setup();
 
@@ -55,6 +61,13 @@ namespace setup
         void setupMaxIterations();
         void setupRefBondLengths();
         void setupDegreesOfFreedom();
+
+        void writeSetupInfo();
+        void writeEnabled();
+        void writeDof();
+        void writeTolerance();
+        void writeMaxIter();
+        void writeNConstraintBonds();
     };
 
 }   // namespace setup

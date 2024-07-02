@@ -111,9 +111,11 @@ namespace settings
          * standard getter methods *
          ***************************/
 
+        [[nodiscard]] static bool isPressureSet();
+        [[nodiscard]] static bool isBerendsenBased();
+
         [[nodiscard]] static ManostatType        getManostatType();
         [[nodiscard]] static Isotropy            getIsotropy();
-        [[nodiscard]] static bool                isPressureSet();
         [[nodiscard]] static double              getTargetPressure();
         [[nodiscard]] static double              getTauManostat();
         [[nodiscard]] static double              getCompressibility();

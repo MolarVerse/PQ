@@ -42,6 +42,8 @@ using setup::OptimizerSetup;
 using namespace settings;
 using namespace customException;
 using namespace defaults;
+using namespace engine;
+using namespace opt;
 
 using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
 using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
@@ -57,7 +59,7 @@ using SharedVirial         = std::shared_ptr<virial::Virial>;
  *
  * @param engine
  */
-void setup::setupOptimizer(engine::Engine &engine)
+void setup::setupOptimizer(Engine &engine)
 {
     if (!Settings::isOptJobType())
         return;
@@ -65,7 +67,7 @@ void setup::setupOptimizer(engine::Engine &engine)
     engine.getStdoutOutput().writeSetup("Optimizer");
     engine.getLogOutput().writeSetup("Optimizer");
 
-    OptimizerSetup optimizerSetup(dynamic_cast<engine::OptEngine &>(engine));
+    OptimizerSetup optimizerSetup(dynamic_cast<OptEngine &>(engine));
     optimizerSetup.setup();
 }
 
@@ -74,10 +76,7 @@ void setup::setupOptimizer(engine::Engine &engine)
  *
  * @param optEngine
  */
-OptimizerSetup::OptimizerSetup(engine::OptEngine &optEngine)
-    : _optEngine(optEngine)
-{
-}
+OptimizerSetup::OptimizerSetup(OptEngine &optEngine) : _optEngine(optEngine) {}
 
 /**
  * @brief Setup the optimizer
@@ -106,35 +105,35 @@ void OptimizerSetup::setup()
  * @brief Setup an empty optimizer
  *
  */
-std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
+pq::SharedOptimizer OptimizerSetup::setupEmptyOptimizer()
 {
-    const auto nEpochs = TimingsSettings::getNumberOfSteps();
-    const auto simBox  = _optEngine.getSimulationBox();
+    const auto nEpochs       = TimingsSettings::getNumberOfSteps();
+    const auto simBox        = _optEngine.getSimulationBox();
+    const auto optimizerType = OptimizerSettings::getOptimizer();
 
-    std::shared_ptr<opt::Optimizer> optimizer;
+    pq::SharedOptimizer optimizer;
 
-    switch (OptimizerSettings::getOptimizer())
+    switch (optimizerType)
     {
-        using enum Optimizer;
+        using enum OptimizerType;
 
         case STEEPEST_DESCENT:
         {
-            optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
+            optimizer = std::make_shared<SteepestDescent>(nEpochs);
             break;
         }
 
         case ADAM:
         {
             const auto nAtoms = simBox.getNumberOfAtoms();
-            optimizer         = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+            optimizer         = std::make_shared<Adam>(nEpochs, nAtoms);
             break;
         }
 
         default:
-            throw UserInputException(std::format(
-                "Unknown optimizer type {}",
-                string(OptimizerSettings::getOptimizer())
-            ));
+            throw UserInputException(
+                std::format("Unknown optimizer type {}", string(optimizerType))
+            );
     }
 
     optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
@@ -148,19 +147,17 @@ std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
  * @brief Setup the learning rate strategy
  *
  */
-std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
-    setupLearningRateStrategy()
+pq::SharedLearningRate OptimizerSetup::setupLearningRateStrategy()
 {
-    const auto alpha_0 = OptimizerSettings::getInitialLearningRate();
+    const auto alpha_0    = OptimizerSettings::getInitialLearningRate();
+    const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
 
-    switch (OptimizerSettings::getLearningRateStrategy())
+    switch (lrStrategy)
     {
         using enum LREnum;
 
-        case CONSTANT:
-        {
-            return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
-        }
+        case CONSTANT: return std::make_shared<ConstantLRStrategy>(alpha_0);
+
         case CONSTANT_DECAY:
         {
             const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
@@ -174,7 +171,7 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
             const auto alphaDecayValue = alphaDecay.value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
-            return std::make_shared<opt::ConstantDecayLRStrategy>(
+            return std::make_shared<ConstantDecayLRStrategy>(
                 alpha_0,
                 alphaDecayValue,
                 alphaFreq
@@ -194,7 +191,7 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
             const auto alphaDecayValue = alphaDecay.value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
-            return std::make_shared<opt::ExpDecayLR>(
+            return std::make_shared<ExpDecayLR>(
                 alpha_0,
                 alphaDecayValue,
                 alphaFreq
@@ -224,42 +221,33 @@ std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
  *
  * @param learningRateStrategy as shared pointer reference
  */
-void OptimizerSetup::setupMinMaxLR(
-    std::shared_ptr<opt::LearningRateStrategy> &learningRateStrategy
-)
+void OptimizerSetup::setupMinMaxLR(pq::SharedLearningRate &lrStrategy)
 {
-    const auto minLearningRate = OptimizerSettings::getMinLearningRate();
-    const auto maxLearningRate = OptimizerSettings::getMaxLearningRate();
+    const auto minLR = OptimizerSettings::getMinLearningRate();
+    const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
-    if (maxLearningRate.has_value())
-    {
-        const auto maxLearningRateValue = maxLearningRate.value();
+    if (maxLR.has_value() && minLR >= maxLR.value())
+        throw UserInputException(std::format(
+            "The minimum learning rate {} is greater or equal to the "
+            "maximum learning rate {}, which is not allowed.",
+            minLR,
+            maxLR.value()
+        ));
 
-        if (minLearningRate >= maxLearningRateValue)
-        {
-            throw UserInputException(std::format(
-                "The minimum learning rate {} is greater or equal to the "
-                "maximum learning rate {}, which is not allowed.",
-                minLearningRate,
-                maxLearningRateValue
-            ));
-        }
-    }
-
-    learningRateStrategy->setMinLearningRate(minLearningRate);
-    learningRateStrategy->setMaxLearningRate(maxLearningRate);
+    lrStrategy->setMinLearningRate(minLR);
+    lrStrategy->setMaxLearningRate(maxLR);
 }
 
 /**
  * @brief Setup the evaluator
  *
  */
-std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
+pq::SharedEvaluator OptimizerSetup::setupEvaluator()
 {
-    std::shared_ptr<opt::Evaluator> evaluator;
+    pq::SharedEvaluator evaluator;
 
     if (Settings::getJobtype() == JobType::MM_OPT)
-        evaluator = std::make_shared<opt::MMEvaluator>();
+        evaluator = std::make_shared<MMEvaluator>();
 
     else
         throw UserInputException(
@@ -286,8 +274,7 @@ std::shared_ptr<opt::Evaluator> OptimizerSetup::setupEvaluator()
  *
  * @param optimizer as shared pointer reference
  */
-void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
-)
+void OptimizerSetup::setupConvergence(pq::SharedOptimizer &optimizer)
 {
     const auto strategyOptional = ConvSettings::getEnConvStrategy();
     const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
@@ -321,7 +308,7 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer
     maxForce = maxForceOptional.value_or(maxForce);
     rmsForce = rmsForceOptional.value_or(rmsForce);
 
-    const opt::Convergence convergence(
+    const Convergence convergence(
         useEnergyOptional,
         useMaxForceOptional,
         useRMSForceOptional,
@@ -367,6 +354,7 @@ void OptimizerSetup::writeSetupInfo() const
 
     if (convStrategy == RELATIVE)
         absEnergyConvStr = "disabled";
+
     else if (convStrategy == ABSOLUTE)
         relEnergyConvStr = "disabled";
 
@@ -391,12 +379,8 @@ void OptimizerSetup::writeSetupInfo() const
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {
-        const auto alphaDecay      = OptimizerSettings::getLearningRateDecay();
-        const auto alphaDecayValue = alphaDecay.value();
-
-        // clang-format off
-        const auto alphaDecayStr = std::format("{:.2e}", alphaDecayValue);
-        // clang-format on
+        const auto decay         = OptimizerSettings::getLearningRateDecay();
+        const auto alphaDecayStr = std::format("{:.2e}", decay.value());
     }
 
     // clang-format off

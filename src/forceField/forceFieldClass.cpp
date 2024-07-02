@@ -125,7 +125,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
  * @throws TopologyException if improper dihedral type with id
  * not found
  */
-const DihedralType &ForceField::findImproperDihedralTypeById(const size_t id
+const DihedralType &ForceField::findImproperTypeById(const size_t id
 ) const
 {
     auto isImproperId = [id](const DihedralType &dihedralType)
