@@ -1,0 +1,60 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     5.434	   100.000
+
+Output                        	     0.020	     0.368
+Setup                         	     0.002	     0.037
+Thermostat                    	     0.000	     0.000
+Integrator                    	     0.000	     0.000
+Constraints                   	     0.000	     0.000
+Cell List                     	     0.000	     0.000
+Potential                     	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Virial                        	     0.000	     0.000
+Physical Data                 	     0.000	     0.000
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+QM Engine                     	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     5.434	   100.000	   100.000
+
+Output                        	     0.020	     0.368	   100.000
+InfoOutput                    	     0.013	   100.000	    62.993
+TrajectoryOutput              	     0.005	   100.000	    22.719
+RstFileOutput                 	     0.004	   100.000	    21.523
+MomentumOutput                	     0.000	   100.000	     0.336
+EnergyOutput                  	     0.000	   100.000	     0.296
+VirialOutput                  	     0.000	   100.000	     0.263
+StressOutput                  	     0.000	   100.000	     0.179
+InstantEnergyOutput           	     0.000	   100.000	     0.146
+BoxFileOutput                 	     0.000	   100.000	     0.142
+
+Setup                         	     0.002	     0.037	   100.000
+TotalSetup                    	     0.002	   100.000	   102.318
+
+Thermostat                    	     0.000	     0.000	   100.000
+Calc Temperature              	     0.000	   100.000	       inf
+
+Integrator                    	     0.000	     0.000	   100.000
+Velocity Verlet - First Step  	     0.000	   100.000	       inf
+Velocity Verlet - Second Step 	     0.000	   100.000	       inf
+
+Constraints                   	     0.000	     0.000	   100.000
+Reference Bond Data           	     0.000	   100.000	       inf
+
+Physical Data                 	     0.000	     0.000	   100.000
+Calc Kinetics                 	     0.000	   100.000	       inf
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	   100.000	       inf
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	   100.000	       inf
+

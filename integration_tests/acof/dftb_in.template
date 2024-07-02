@@ -1,0 +1,72 @@
+Geometry = GenFormat {
+<<< "geom.gen"
+}
+
+# Job-type - Geometry optimisation using
+# the LBFGS optimizer
+Driver = {}
+
+
+Hamiltonian = DFTB {
+  charge = 0
+  SCC = Yes
+  SCCTolerance = 1.0e-4
+  MaxSccIterations = 250
+
+  ThirdOrderFull = Yes
+  DampXH = Yes
+  DampXHExponent = 4.0
+  __GUESS__
+  
+  # Sampling of the Briullouin zone according to 
+  # the Monkhorst-Pack scheme
+  KPointsAndWeights = {
+    0.0 0.0 0.0 1.0
+  }
+
+  Dispersion = DftD3 {
+   Damping = BeckeJohnson {
+    a1 = 0.746 
+    a2 = 4.191
+    }
+   s6 = 1.0
+   s8 = 3.209
+  }
+
+  HubbardDerivs {
+    C  = -0.1492
+    H  = -0.1857
+    N  = -0.1535 
+  }
+
+
+
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "/home/jog/skf-files/3ob-3-1/"
+    Separator = "-"
+    Suffix = ".skf"
+  }
+
+
+  MaxAngularMomentum {
+    C  = "p"
+    N  = "p"
+    H  = "s"
+  }
+  
+  Filling = Fermi {
+    Temperature [Kelvin] = 0.0
+  }
+}
+
+Options {}
+
+Analysis = {
+   MullikenAnalysis = Yes
+   CalculateForces = Yes
+}  
+
+
+ParserOptions {
+  ParserVersion = 5
+}
