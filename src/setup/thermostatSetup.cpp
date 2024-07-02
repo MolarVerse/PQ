@@ -91,7 +91,7 @@ void ThermostatSetup::setup()
 
     const auto thermostatType = ThermostatSettings::getThermostatType();
 
-    if (thermostatType == NONE)
+    if (thermostatType != NONE)
         isTargetTemperatureSet();
 
     switch (thermostatType)
@@ -119,8 +119,8 @@ void ThermostatSetup::setup()
  */
 void ThermostatSetup::isTargetTemperatureSet() const
 {
-    auto targetTempDefined = ThermostatSettings::isTemperatureSet();
-    auto endTempDefined    = ThermostatSettings::isEndTemperatureSet();
+    const auto targetTempDefined = ThermostatSettings::isTemperatureSet();
+    const auto endTempDefined    = ThermostatSettings::isEndTemperatureSet();
 
     /************************************************************
      * Check if exactly one of target or end temperature is set *
@@ -302,11 +302,11 @@ void ThermostatSetup::setupTemperatureRamp()
             steps
         ));
 
-    const auto targetTemp          = ThermostatSettings::getTargetTemperature();
-    auto       temperatureIncrease = (targetTemp - startTemp);
-    temperatureIncrease /= double(steps) * frequency;
+    const auto targetTemp   = ThermostatSettings::getTargetTemperature();
+    const auto tempDelta    = targetTemp - startTemp;
+    const auto tempIncrease = tempDelta / double(steps) * frequency;
 
-    _engine.getThermostat().setTemperatureIncrease(temperatureIncrease);
+    _engine.getThermostat().setTemperatureIncrease(tempIncrease);
     _engine.getThermostat().setTemperatureRampingFrequency(frequency);
 }
 
