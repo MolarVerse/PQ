@@ -38,13 +38,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_KOKKOS=ON ..
           make -j20
+          make test
         env:
           CC: gcc-13
           CXX: g++-13
-
-      - name: Run integration Tests
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pytest integration_tests
