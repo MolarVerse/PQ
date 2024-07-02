@@ -124,25 +124,28 @@ void QMSetup::setupQMScript() const
         if (isQMScriptFullPathEmpty)
 
             throw QMRunnerException(
-                R"(
-You are using at least one of these settings: i) singularity build or/and ii) static build of PQ.
-Therefore the general setting with "qm_script" to set only the name of the executable is not
-applicable. Please use "qm_script_full_path" instead and provide the full path to the executable. For
-singularity builds the script can not be accessed from inside the container. In case of a static build
-the binary may be shipped without the source code and again PQ might therefore not be able to 
-locate the executable qm script. Therefore you have to provide the script somewhere else and give the
-full/relative path to it. For more information please refer to the documentation.
-)"
+                "You are using at least one of these settings: i) singularity "
+                "build or/and ii) static build of PQ. Therefore the general "
+                "setting with 'qm_script' to set only the name of the "
+                "executable is not applicable. Please use "
+                "'qm_script_full_path' instead and provide the full path to "
+                "the executable. For singularity builds the script can not be "
+                "accessed from inside the container. In case of a static build "
+                "the binary may be shipped without the source code and again "
+                "PQ might therefore not be able to locate the executable qm "
+                "script. Therefore you have to provide the script somewhere "
+                "else and give the full/relative path to it. For more "
+                "information please refer to the documentation."
             );
 
         else if (!isQMScriptEmpty)
 
             throw QMRunnerException(
-                R"(
-You have set both "qm_script" and "qm_script_full_path" in the input file. Please use only one the full
-path option as you are working either with a singularity build or a static build. For more information
-please refer to the documentation.
-)"
+                "You have set both 'qm_script' and 'qm_script_full_path' in "
+                "the input file. Please use only one the full path option as "
+                "you are working either with a singularity build or a static "
+                "build. For more information please refer to the "
+                "documentation."
             );
 
         else
@@ -172,10 +175,9 @@ please refer to the documentation.
     else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
 
         throw InputFileException(
-            R"(
-You have set both "qm_script" and "qm_script_full_path" in the input file. They are mutually exclusive.
-Please use only one of them. For more information please refer to the documentation.
-)"
+            "You have set both 'qm_script' and 'qm_script_full_path' in the "
+            "input file. They are mutually exclusive. Please use only one of "
+            "them. For more information please refer to the documentation."
         );
 }
 

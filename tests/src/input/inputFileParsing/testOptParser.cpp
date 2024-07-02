@@ -46,7 +46,7 @@ using namespace defaults;
  */
 TEST_F(TestInputFileReader, parserOptimizer)
 {
-    using enum Optimizer;
+    using enum OptimizerType;
 
     EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 

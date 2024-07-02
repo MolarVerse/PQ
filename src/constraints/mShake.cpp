@@ -515,6 +515,28 @@ const std::vector<MShakeReference> &MShake::getMShakeReferences() const
 }
 
 /**
+ * @brief calculate number of M - Shake molecules
+ *
+ * @param simulationBox
+ *
+ * @return size_t
+ */
+size_t MShake::calcNumberOfMShakeMolecules(SimulationBox &simBox) const
+{
+    size_t nMShakeMolecules = 0;
+
+    for (const auto &molecule : simBox.getMolecules())
+    {
+        const auto moltype = molecule.getMoltype();
+
+        if (isMShakeType(moltype))
+            ++nMShakeMolecules;
+    }
+
+    return nMShakeMolecules;
+}
+
+/**
  * @brief calculate number of bond constraints
  *
  * @param simulationBox

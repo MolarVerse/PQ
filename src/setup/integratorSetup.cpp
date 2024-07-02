@@ -21,3 +21,15 @@
 ******************************************************************************/
 
 #include "integratorSetup.hpp"
+
+#include "mdEngine.hpp"
+
+using namespace setup;
+using namespace engine;
+
+/**
+ * @brief Construct a new Integrator Setup:: Integrator Setup object
+ *
+ * @param engine
+ */
+IntegratorSetup::IntegratorSetup(MDEngine &engine) : _engine(engine){};
