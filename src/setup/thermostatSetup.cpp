@@ -44,6 +44,10 @@
 
 using namespace setup;
 using namespace settings;
+using namespace engine;
+using namespace thermostat;
+using namespace customException;
+using namespace constants;
 
 /**
  * @brief wrapper for thermostat setup
@@ -52,14 +56,21 @@ using namespace settings;
  *
  * @param engine
  */
-void setup::setupThermostat(engine::Engine &engine)
+void setup::setupThermostat(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("thermostat");
     engine.getLogOutput().writeSetup("thermostat");
 
-    ThermostatSetup thermostatSetup(dynamic_cast<engine::MDEngine &>(engine));
+    ThermostatSetup thermostatSetup(dynamic_cast<MDEngine &>(engine));
     thermostatSetup.setup();
 }
+
+/**
+ * @brief Construct a new Thermostat Setup object
+ *
+ * @param engine
+ */
+ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine){};
 
 /**
  * @brief setup thermostat
@@ -76,30 +87,25 @@ void setup::setupThermostat(engine::Engine &engine)
  */
 void ThermostatSetup::setup()
 {
+    using enum ThermostatType;
+
     const auto thermostatType = ThermostatSettings::getThermostatType();
 
-    if (thermostatType != ThermostatType::NONE)
+    if (thermostatType == NONE)
         isTargetTemperatureSet();
 
-    if (thermostatType == ThermostatType::BERENDSEN)
-        setupBerendsenThermostat();
-
-    else if (thermostatType == ThermostatType::VELOCITY_RESCALING)
-        setupVelocityRescalingThermostat();
-
-    else if (thermostatType == ThermostatType::LANGEVIN)
-        setupLangevinThermostat();
-
-    else if (thermostatType == ThermostatType::NOSE_HOOVER)
-        setupNoseHooverThermostat();
-
-    else
+    switch (thermostatType)
     {
-        _engine.makeThermostat(thermostat::Thermostat());
-        _engine.getLogOutput().writeSetupInfo("No thermostat selected");
-    }
+        case BERENDSEN: setupBerendsenThermostat(); break;
 
-    _engine.getLogOutput().writeEmptyLine();
+        case VELOCITY_RESCALING: setupVelocityRescalingThermostat(); break;
+
+        case LANGEVIN: setupLangevinThermostat(); break;
+
+        case NOSE_HOOVER: setupNoseHooverThermostat(); break;
+
+        default: _engine.makeThermostat(Thermostat());
+    }
 
     setupTemperatureRamp();
 }
@@ -121,15 +127,15 @@ void ThermostatSetup::isTargetTemperatureSet() const
      ************************************************************/
 
     if (!targetTempDefined && !endTempDefined)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Target or end temperature not set for {} thermostat",
             string(ThermostatSettings::getThermostatType())
         ));
 
     if (targetTempDefined && endTempDefined)
-        throw customException::InputFileException(std::format(
-            "Both target and end temperature set for {} thermostat. They are "
-            "mutually exclusive as they are treated as synonyms",
+        throw InputFileException(std::format(
+            "Both target and end temperature set for {} thermostat. They "
+            "are mutually exclusive as they are treated as synonyms",
             string(ThermostatSettings::getThermostatType())
         ));
 
@@ -138,24 +144,16 @@ void ThermostatSetup::isTargetTemperatureSet() const
      **************************************************/
 
     if (endTempDefined)
-        ThermostatSettings::setTargetTemperature(
-            ThermostatSettings::getEndTemperature()
-        );
+    {
+        const auto endTemp = ThermostatSettings::getEndTemperature();
+        ThermostatSettings::setTargetTemperature(endTemp);
+    }
 
     if (targetTempDefined)
-        ThermostatSettings::setEndTemperature(
-            ThermostatSettings::getTargetTemperature()
-        );
-
-    /******************************************
-     * Writing Target Temperature to Log File *
-     ******************************************/
-
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "target temperature: {:14.5f} K",
-        ThermostatSettings::getTargetTemperature()
-    ));
-    _engine.getLogOutput().writeEmptyLine();
+    {
+        const auto targetTemp = ThermostatSettings::getTargetTemperature();
+        ThermostatSettings::setEndTemperature(targetTemp);
+    }
 }
 
 /**
@@ -166,36 +164,25 @@ void ThermostatSetup::isTargetTemperatureSet() const
  */
 void ThermostatSetup::setupBerendsenThermostat()
 {
-    _engine.makeThermostat(thermostat::BerendsenThermostat(
-        ThermostatSettings::getTargetTemperature(),
-        ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_
-    ));
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto tau = ThermostatSettings::getRelaxationTime() * _PS_TO_FS_;
 
-    _engine.getLogOutput().writeSetupInfo("Berendsen thermostat:");
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "relaxation time: {:14.5f} ps",
-        ThermostatSettings::getRelaxationTime()
-    ));
+    _engine.makeThermostat(BerendsenThermostat(targetTemp, tau));
 }
 
 /**
  * @brief setup velocity rescaling thermostat
  *
- * @details constructs a velocity rescaling thermostat and adds it to the engine
+ * @details constructs a velocity rescaling thermostat and adds it to the
+ * engine
  *
  */
 void ThermostatSetup::setupVelocityRescalingThermostat()
 {
-    _engine.makeThermostat(thermostat::VelocityRescalingThermostat(
-        ThermostatSettings::getTargetTemperature(),
-        ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_
-    ));
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto tau = ThermostatSettings::getRelaxationTime() * _PS_TO_FS_;
 
-    _engine.getLogOutput().writeSetupInfo("Velocity Rescaling thermostat:");
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "relaxation time: {:14.5f} ps",
-        ThermostatSettings::getRelaxationTime()
-    ));
+    _engine.makeThermostat(VelocityRescalingThermostat(targetTemp, tau));
 }
 
 /**
@@ -206,16 +193,10 @@ void ThermostatSetup::setupVelocityRescalingThermostat()
  */
 void ThermostatSetup::setupLangevinThermostat()
 {
-    _engine.makeThermostat(thermostat::LangevinThermostat(
-        ThermostatSettings::getTargetTemperature(),
-        ThermostatSettings::getFriction()
-    ));
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto friction   = ThermostatSettings::getFriction();
 
-    _engine.getLogOutput().writeSetupInfo("Langevin thermostat:");
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "friction: {:14.5f} ps⁻¹",
-        ThermostatSettings::getFriction()
-    ));
+    _engine.makeThermostat(LangevinThermostat(targetTemp, friction));
 }
 
 /**
@@ -226,27 +207,25 @@ void ThermostatSetup::setupLangevinThermostat()
  */
 void ThermostatSetup::setupNoseHooverThermostat()
 {
-    const auto noseHooverChainLength =
-        ThermostatSettings::getNoseHooverChainLength();
-    const auto noseHooverCouplingFrequency =
-        ThermostatSettings::getNoseHooverCouplingFrequency() *
-        constants::_PER_CM_TO_HZ_;
+    const auto targetTemp    = ThermostatSettings::getTargetTemperature();
+    const auto nhChainLength = ThermostatSettings::getNoseHooverChainLength();
 
-    auto thermostat = thermostat::NoseHooverThermostat(
-        ThermostatSettings::getTargetTemperature(),
-        std::vector<double>(noseHooverChainLength + 1, 0.0),
-        std::vector<double>(noseHooverChainLength + 1, 0.0),
-        noseHooverCouplingFrequency
-    );
+    auto nhCouplFreq  = ThermostatSettings::getNoseHooverCouplingFrequency();
+    nhCouplFreq      *= _PER_CM_TO_HZ_;
 
-    auto fillChi = [&thermostat, noseHooverChainLength](const auto pair)
+    const auto chi  = std::vector<double>(nhChainLength + 1, 0.0);
+    const auto zeta = std::vector<double>(nhChainLength + 1, 0.0);
+
+    auto thermostat = NoseHooverThermostat(targetTemp, chi, zeta, nhCouplFreq);
+
+    auto fillChi = [&thermostat, nhChainLength](const auto pair)
     {
-        if (pair.first > noseHooverChainLength)
-            throw customException::InputFileException(std::format(
-                "Chi index {} is larger than the number of nose hoover chains "
-                "{}",
+        if (pair.first > nhChainLength)
+            throw InputFileException(std::format(
+                "Chi index {} is larger than the number of nose hoover "
+                "chains {}",
                 pair.first,
-                noseHooverChainLength
+                nhChainLength
             ));
 
         thermostat.setChi(size_t(pair.first - 1), pair.second);
@@ -259,32 +238,25 @@ void ThermostatSetup::setupNoseHooverThermostat()
     std::ranges::for_each(ThermostatSettings::getZeta(), fillZeta);
 
     _engine.makeThermostat(thermostat);
-
-    _engine.getLogOutput().writeSetupInfo("Nose-Hoover chain thermostat:");
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "chain length:       {:8d}",
-        ThermostatSettings::getNoseHooverChainLength()
-    ));
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "coupling frequency: {:14.5f} cm⁻¹",
-        ThermostatSettings::getNoseHooverCouplingFrequency()
-    ));
 }
 
 /**
  * @brief setup temperature ramp
  *
- * @details if the start temperature is defined, the temperature ramp is enabled
+ * @details if the start temperature is defined, the temperature ramp is
+ * enabled
  *
- * @throws InputFileException if the number of steps is smaller than the number
- * @throws InputFileException if the temperature ramp frequency is larger than
- * the number of steps
+ * @throws InputFileException if the number of steps is smaller than the
+ * number
+ * @throws InputFileException if the temperature ramp frequency is larger
+ * than the number of steps
  *
  */
 void ThermostatSetup::setupTemperatureRamp()
 {
     /*************************************************************************
-     * If the start temperature is defined, the temperature ramp is enabled. *
+     * If the start temperature is defined, the temperature ramp is enabled.
+     **
      *************************************************************************/
 
     if (!ThermostatSettings::isStartTemperatureSet())
@@ -294,13 +266,10 @@ void ThermostatSetup::setupTemperatureRamp()
      * resetting the target temperature to the start temperature *
      *************************************************************/
 
-    _engine.getThermostat().setTargetTemperature(
-        ThermostatSettings::getStartTemperature()
-    );
+    const auto startTemp = ThermostatSettings::getStartTemperature();
 
-    ThermostatSettings::setActualTargetTemperature(
-        ThermostatSettings::getStartTemperature()
-    );
+    _engine.getThermostat().setTargetTemperature(startTemp);
+    ThermostatSettings::setActualTargetTemperature(startTemp);
 
     auto steps = ThermostatSettings::getTemperatureRampSteps();
 
@@ -314,9 +283,9 @@ void ThermostatSetup::setupTemperatureRamp()
         ThermostatSettings::setTemperatureRampSteps(steps);
     }
     else if (steps > TimingsSettings::getNumberOfSteps())
-        throw customException::InputFileException(std::format(
-            "Number of total simulation steps {} is smaller than the number of "
-            "temperature ramping steps {}",
+        throw InputFileException(std::format(
+            "Number of total simulation steps {} is smaller than the "
+            "number of temperature ramping steps {}",
             TimingsSettings::getNumberOfSteps(),
             steps
         ));
@@ -326,43 +295,143 @@ void ThermostatSetup::setupTemperatureRamp()
     const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
 
     if (frequency > steps)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Temperature ramp frequency {} is larger than the number of "
             "ramping steps {}",
             frequency,
             steps
         ));
 
-    const auto temperatureIncrease =
-        (ThermostatSettings::getTargetTemperature() -
-         ThermostatSettings::getStartTemperature()) /
-        double(steps) * frequency;
+    const auto targetTemp          = ThermostatSettings::getTargetTemperature();
+    auto       temperatureIncrease = (targetTemp - startTemp);
+    temperatureIncrease /= double(steps) * frequency;
 
     _engine.getThermostat().setTemperatureIncrease(temperatureIncrease);
     _engine.getThermostat().setTemperatureRampingFrequency(frequency);
-
-    /****************************************************
-     * Writing Temperature Ramp Information to Log File *
-     ****************************************************/
-
-    _engine.getLogOutput().writeEmptyLine();
-    _engine.getLogOutput().writeSetupInfo("Temperature Ramp enabled:");
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "start temperature:  {:14.5f} K",
-        ThermostatSettings::getStartTemperature()
-    ));
-    _engine.getLogOutput().writeSetupInfo(std::format(
-        "end temperature:    {:14.5f} K",
-        ThermostatSettings::getTargetTemperature()
-    ));
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("ramping steps:      {:8d}", steps)
-    );
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("ramping frequency:  {:8d}", frequency)
-    );
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("temperature increase: {:10.5f} K", temperatureIncrease)
-    );
-    _engine.getLogOutput().writeEmptyLine();
 }
+
+void ThermostatSetup::writeSetupInfo() const
+{
+    auto      &log            = _engine.getLogOutput();
+    const auto thermostatType = ThermostatSettings::getThermostatType();
+
+    if (thermostatType == ThermostatType::NONE)
+        log.writeSetupInfo("No thermostat selected");
+    else
+    {
+        log.writeSetupInfo(
+            std::format("Thermostat type: {}", string(thermostatType))
+        );
+        log.writeEmptyLine();
+    }
+
+    if (thermostatType == ThermostatType::BERENDSEN)
+        writeBerendsenInfo();
+
+    else if (thermostatType == ThermostatType::VELOCITY_RESCALING)
+        writeVelocityRescalingInfo();
+
+    else if (thermostatType == ThermostatType::LANGEVIN)
+        writeLangevinInfo();
+
+    else if (thermostatType == ThermostatType::NOSE_HOOVER)
+        writeNoseHooverInfo();
+
+    if (ThermostatSettings::isStartTemperatureSet())
+        writeTemperatureRampInfo();
+}
+
+/**
+ * @brief write berendsen thermostat info
+ *
+ */
+void ThermostatSetup::writeBerendsenInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto tau        = ThermostatSettings::getRelaxationTime();
+
+    log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+    log.writeSetupInfo(std::format("Relaxation time:    {} ps", tau));
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief write langevin thermostat info
+ *
+ */
+void ThermostatSetup::writeLangevinInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto friction   = ThermostatSettings::getFriction();
+
+    log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+    log.writeSetupInfo(std::format("Friction:           {} 1/ps", friction));
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief write nose hoover thermostat info
+ *
+ */
+void ThermostatSetup::writeNoseHooverInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto targetTemp    = ThermostatSettings::getTargetTemperature();
+    const auto nhChainLength = ThermostatSettings::getNoseHooverChainLength();
+    const auto couplFreq = ThermostatSettings::getNoseHooverCouplingFrequency();
+
+    log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+    log.writeSetupInfo(std::format("NH chain length:    {}", nhChainLength));
+    log.writeSetupInfo(std::format("NH coupling freq:   {} cm⁻¹", couplFreq));
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief write temperature ramp info
+ *
+ */
+void ThermostatSetup::writeTemperatureRampInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto startTemp  = ThermostatSettings::getStartTemperature();
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto steps      = ThermostatSettings::getTemperatureRampSteps();
+    const auto frequency  = ThermostatSettings::getTemperatureRampFrequency();
+    const auto tempStep   = _engine.getThermostat().getTemperatureIncrease();
+
+    log.writeSetupInfo(std::format("Start temp:          {} K", startTemp));
+    log.writeSetupInfo(std::format("Target temp:         {} K", targetTemp));
+    log.writeSetupInfo(std::format("Temp ramp increase:  {} K", tempStep));
+    log.writeSetupInfo(std::format("Temp ramp steps:     {}", steps));
+    log.writeSetupInfo(std::format("Temp ramp frequency: {}", frequency));
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief write velocity rescaling thermostat info
+ *
+ */
+void ThermostatSetup::writeVelocityRescalingInfo() const
+{
+    auto &log = _engine.getLogOutput();
+
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto tau        = ThermostatSettings::getRelaxationTime();
+
+    log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+    log.writeSetupInfo(std::format("Relaxation time:    {} ps", tau));
+    log.writeEmptyLine();
+}
+
+/**
+ * @brief get the engine
+ *
+ * @return const ThermostatSetup::MDEngine&
+ */
+MDEngine &ThermostatSetup::getEngine() const { return _engine; }

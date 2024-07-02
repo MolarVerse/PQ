@@ -24,15 +24,11 @@
 
 #define _THERMOSTAT_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;     // forward declaration
-    class MDEngine;   // forward declaration
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupThermostat(engine::Engine &);
+    void setupThermostat(pq::Engine &);
 
     /**
      * @class ThermostatSetup
@@ -43,10 +39,10 @@ namespace setup
     class ThermostatSetup
     {
        private:
-        engine::MDEngine &_engine;
+        pq::MDEngine &_engine;
 
        public:
-        explicit ThermostatSetup(engine::MDEngine &engine) : _engine(engine){};
+        explicit ThermostatSetup(pq::MDEngine &engine);
 
         void setup();
 
@@ -57,7 +53,14 @@ namespace setup
         void setupNoseHooverThermostat();
         void setupVelocityRescalingThermostat();
 
-        [[nodiscard]] engine::MDEngine &getEngine() const { return _engine; }
+        void writeSetupInfo() const;
+        void writeBerendsenInfo() const;
+        void writeVelocityRescalingInfo() const;
+        void writeLangevinInfo() const;
+        void writeNoseHooverInfo() const;
+        void writeTemperatureRampInfo() const;
+
+        [[nodiscard]] pq::MDEngine &getEngine() const;
     };
 
 }   // namespace setup
