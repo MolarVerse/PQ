@@ -81,7 +81,8 @@ void KokkosSetup::setup()
         return;
     }
 
-    if (PotentialSettings::getCoulombLongRangeType() != "wolf")
+    using enum CoulombLongRangeType;
+    if (PotentialSettings::getCoulombLongRangeType() != WOLF)
     {
         const auto warning = UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of "
