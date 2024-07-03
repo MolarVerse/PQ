@@ -48,28 +48,13 @@ namespace potential
         std::vector<double> _coefficients;
 
        public:
-        explicit GuffPair(
-            const double               cutOff,
-            const std::vector<double> &coefficients
-        )
-            : NonCoulombPair(cutOff), _coefficients(coefficients){};
-
-        explicit GuffPair(
-            const double               cutOff,
-            const double               energyCutoff,
-            const double               forceCutoff,
-            const std::vector<double> &coefficients
-        )
-            : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-              _coefficients(coefficients){};
+        explicit GuffPair(const double, const std::vector<double> &);
+        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
 
         [[nodiscard]] std::pair<double, double> calculate(const double distance
         ) const override;
 
-        [[nodiscard]] std::vector<double> getCoefficients() const
-        {
-            return _coefficients;
-        }
+        [[nodiscard]] std::vector<double> getCoefficients() const;
     };
 
 }   // namespace potential

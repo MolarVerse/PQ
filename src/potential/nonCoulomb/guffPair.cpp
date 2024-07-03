@@ -27,6 +27,36 @@
 using namespace potential;
 
 /**
+ * @brief Construct a new Guff Pair:: Guff Pair object
+ *
+ * @param cutOff
+ * @param coefficients
+ */
+GuffPair::GuffPair(const double cutOff, const std::vector<double> &coefficients)
+    : NonCoulombPair(cutOff), _coefficients(coefficients)
+{
+}
+
+/**
+ * @brief Construct a new Guff Pair:: Guff Pair object
+ *
+ * @param cutOff
+ * @param energyCutoff
+ * @param forceCutoff
+ * @param coefficients
+ */
+GuffPair::GuffPair(
+    const double               cutOff,
+    const double               energyCutoff,
+    const double               forceCutoff,
+    const std::vector<double> &coefficients
+)
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
+      _coefficients(coefficients)
+{
+}
+
+/**
  * @brief calculates the energy and force of a GuffPair
  *
  * @param distance
@@ -42,9 +72,9 @@ std::pair<double, double> GuffPair::calculate(const double distance) const
     const double distance_n2 = ::pow(distance, n2);
     const double distance_n4 = ::pow(distance, n4);
 
-    auto energy = c1 / distance_n2 + c3 / distance_n4;
-    auto force =
-        n2 * c1 / (distance_n2 * distance) + n4 * c3 / (distance_n4 * distance);
+    auto energy  = c1 / distance_n2 + c3 / distance_n4;
+    auto force   = n2 * c1 / (distance_n2 * distance);
+    force       += n4 * c3 / (distance_n4 * distance);
 
     const double c5 = _coefficients[4];
     const double n6 = _coefficients[5];
@@ -55,8 +85,8 @@ std::pair<double, double> GuffPair::calculate(const double distance) const
     const double distance_n8 = ::pow(distance, n8);
 
     energy += c5 / distance_n6 + c7 / distance_n8;
-    force +=
-        n6 * c5 / (distance_n6 * distance) + n8 * c7 / (distance_n8 * distance);
+    force  += n6 * c5 / (distance_n6 * distance);
+    force  += n8 * c7 / (distance_n8 * distance);
 
     const double c9     = _coefficients[8];
     const double cexp10 = _coefficients[9];
@@ -103,3 +133,10 @@ std::pair<double, double> GuffPair::calculate(const double distance) const
 
     return {energy, force};
 }
+
+/**
+ * @brief get the coefficients of the GuffPair
+ *
+ * @return std::vector<double>
+ */
+std::vector<double> GuffPair::getCoefficients() const { return _coefficients; }
