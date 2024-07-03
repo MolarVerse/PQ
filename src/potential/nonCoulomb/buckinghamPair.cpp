@@ -27,6 +27,69 @@
 #include "mathUtilities.hpp"   // for compare
 
 using namespace potential;
+using namespace utilities;
+
+/**
+ * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+ *
+ * @param vanDerWaalsType1
+ * @param vanDerWaalsType2
+ * @param cutOff
+ * @param a
+ * @param dRho
+ * @param c6
+ */
+BuckinghamPair::BuckinghamPair(
+    const size_t vanDerWaalsType1,
+    const size_t vanDerWaalsType2,
+    const double cutOff,
+    const double a,
+    const double dRho,
+    const double c6
+)
+    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+      _a(a),
+      _dRho(dRho),
+      _c6(c6){};
+
+/**
+ * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+ *
+ * @param cutOff
+ * @param a
+ * @param dRho
+ * @param c6
+ */
+BuckinghamPair::BuckinghamPair(
+    const double cutOff,
+    const double a,
+    const double dRho,
+    const double c6
+)
+    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
+
+/**
+ * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+ *
+ * @param cutOff
+ * @param energyCutoff
+ * @param forceCutoff
+ * @param a
+ * @param dRho
+ * @param c6
+ */
+BuckinghamPair::BuckinghamPair(
+    const double cutOff,
+    const double energyCutoff,
+    const double forceCutoff,
+    const double a,
+    const double dRho,
+    const double c6
+)
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
+      _a(a),
+      _dRho(dRho),
+      _c6(c6){};
 
 /**
  * @brief operator overload for the comparison of two BuckinghamPair objects
@@ -37,10 +100,12 @@ using namespace potential;
  */
 bool BuckinghamPair::operator==(const BuckinghamPair &other) const
 {
-    return NonCoulombPair::operator==(other) &&
-           utilities::compare(_a, other._a) &&
-           utilities::compare(_dRho, other._dRho) &&
-           utilities::compare(_c6, other._c6);
+    auto isEqual = NonCoulombPair::operator==(other);
+    isEqual      = isEqual && compare(_a, other._a);
+    isEqual      = isEqual && compare(_dRho, other._dRho);
+    isEqual      = isEqual && compare(_c6, other._c6);
+
+    return isEqual;
 }
 
 /**
@@ -53,14 +118,42 @@ bool BuckinghamPair::operator==(const BuckinghamPair &other) const
  */
 std::pair<double, double> BuckinghamPair::calculate(const double distance) const
 {
-    const auto distanceSixth =
-        distance * distance * distance * distance * distance * distance;
-    const auto expTerm = _a * std::exp(_dRho * distance);
+    const auto distanceThird = distance * distance * distance;
+    const auto distanceSixth = distanceThird * distanceThird;
+    const auto expTerm       = _a * ::exp(_dRho * distance);
 
-    const auto energy = expTerm + _c6 / distanceSixth - _energyCutOff -
-                        _forceCutOff * (_radialCutOff - distance);
-    const auto force = -_dRho * expTerm +
-                       6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    auto energy  = expTerm + _c6 / distanceSixth - _energyCutOff;
+    energy      -= _forceCutOff * (_radialCutOff - distance);
+
+    auto force  = -_dRho * expTerm;
+    force      += 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
 
     return {energy, force};
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the A parameter
+ *
+ * @return double
+ */
+double BuckinghamPair::getA() const { return _a; }
+
+/**
+ * @brief get the dRho parameter
+ *
+ * @return double
+ */
+double BuckinghamPair::getDRho() const { return _dRho; }
+
+/**
+ * @brief get the C6 parameter
+ *
+ * @return double
+ */
+double BuckinghamPair::getC6() const { return _c6; }
