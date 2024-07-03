@@ -79,7 +79,7 @@ void BerendsenManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulombRadiusCutOff(
+    simBox.checkCoulRadiusCutOff(
         customException::ExceptionType::MANOSTATEXCEPTION
     );
 

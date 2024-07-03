@@ -52,14 +52,6 @@
  */
 namespace simulationBox
 {
-    using c_ul = const size_t;
-    using vector3d = std::vector<std::vector<std::vector<double>>>;
-    using vector4d = std::vector<vector3d>;
-    using vector5d = std::vector<vector4d>;
-    using map_ul_ul = std::map<size_t, size_t>;
-
-    using CustomException = customException::ExceptionType;
-
     /**
      * @class SimulationBox
      *
@@ -77,33 +69,33 @@ namespace simulationBox
      */
     class SimulationBox
     {
-    private:
+       private:
         int _waterType;
         int _ammoniaType;
 
         size_t _degreesOfFreedom = 0;
 
-        double _totalMass = 0.0;
+        double _totalMass   = 0.0;
         double _totalCharge = 0.0;
-        double _density = 0.0;
+        double _density     = 0.0;
 
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
-        pq::Vec3D                          _centerOfMass = { 0.0, 0.0, 0.0 };
-        std::vector<std::shared_ptr<Atom>> _atoms;
-        std::vector<std::shared_ptr<Atom>> _qmAtoms;
-        std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
-        std::vector<Molecule>              _molecules;
-        std::vector<MoleculeType>          _moleculeTypes;
+        pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
+        pq::SharedAtomVec         _atoms;
+        pq::SharedAtomVec         _qmAtoms;
+        pq::SharedAtomVec         _qmCenterAtoms;
+        std::vector<Molecule>     _molecules;
+        std::vector<MoleculeType> _moleculeTypes;
 
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
-    public:
-        void copy(const SimulationBox&);
+       public:
+        void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulombRadiusCutOff(const CustomException) const;
+        void checkCoulRadiusCutOff(const customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
@@ -130,8 +122,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calculateMomentum();
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D& position
-        ) const;
+        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -173,8 +164,8 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom);
-        void addQMAtom(const std::shared_ptr<Atom> atom);
+        void addAtom(const pq::SharedAtom atom);
+        void addQMAtom(const pq::SharedAtom atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -193,26 +184,27 @@ namespace simulationBox
         [[nodiscard]] double     getDensity() const;
         [[nodiscard]] pq::Vec3D& getCenterOfMass();
 
-        [[nodiscard]] Atom& getAtom(const size_t index);
-        [[nodiscard]] Atom& getQMAtom(const size_t index);
-        [[nodiscard]] Molecule& getMolecule(const size_t index);
+        [[nodiscard]] Atom&         getAtom(const size_t index);
+        [[nodiscard]] Atom&         getQMAtom(const size_t index);
+        [[nodiscard]] Molecule&     getMolecule(const size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getAtoms();
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getQMAtoms();
-        [[nodiscard]] std::vector<Molecule>& getMolecules();
+        [[nodiscard]] pq::SharedAtomVec&         getAtoms();
+        [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
+        [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
-        [[nodiscard]] map_ul_ul& getExternalToInternalGlobalVDWTypes();
+        [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(
+        );
 
-        [[nodiscard]] Box& getBox();
-        [[nodiscard]] Box& getBox() const;
-        [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
-        [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
+        [[nodiscard]] Box&          getBox();
+        [[nodiscard]] Box&          getBox() const;
+        [[nodiscard]] pq::SharedBox getBoxPtr();
+        [[nodiscard]] pq::SharedBox getBoxPtr() const;
 
         [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
@@ -232,17 +224,14 @@ namespace simulationBox
         void setDegreesOfFreedom(const size_t degreesOfFreedom);
 
         template <typename T>
-        void setBox(const T& box)
-        {
-            _box = std::make_shared<T>(box);
-        }
+        void setBox(const T& box);
 
         /**********************************************
          * Forwards the box methods to the box object *
          **********************************************/
 
         void applyPBC(pq::Vec3D& position) const;
-        void scaleBox(const tensor3D& scalingTensor);
+        void scaleBox(const pq::tensor3D& scalingTensor);
 
         [[nodiscard]] double calculateVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -259,5 +248,7 @@ namespace simulationBox
     };
 
 }   // namespace simulationBox
+
+#include "simulationBox.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _SIMULATION_BOX_HPP_

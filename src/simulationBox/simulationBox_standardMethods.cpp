@@ -197,9 +197,7 @@ std::vector<double> SimulationBox::getAtomicScalarForces() const
     std::vector<double> atomicScalarForces;
 
     for (const auto &atom : _atoms)
-    {
         atomicScalarForces.push_back(norm(atom->getForce()));
-    }
 
     return atomicScalarForces;
 }
@@ -214,9 +212,7 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
     std::vector<double> atomicScalarForces;
 
     for (const auto &atom : _atoms)
-    {
         atomicScalarForces.push_back(norm(atom->getForceOld()));
-    }
 
     return atomicScalarForces;
 }
@@ -270,7 +266,7 @@ std::vector<size_t> &SimulationBox::getExternalGlobalVdwTypes()
  *
  * @return std::unordered_map<size_t, size_t>&
  */
-map_ul_ul &SimulationBox::getExternalToInternalGlobalVDWTypes()
+std::map<size_t, size_t> &SimulationBox::getExternalToInternalGlobalVDWTypes()
 {
     return _externalToInternalGlobalVDWTypes;
 }

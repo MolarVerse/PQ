@@ -165,6 +165,7 @@ namespace pq
     using ParseFunc = std::function<void(const strings &, const size_t)>;
 
     using Vec3D         = linearAlgebra::Vec3D;
+    using Vec3Dul       = linearAlgebra::Vec3Dul;
     using Vec3DPair     = std::pair<Vec3D, Vec3D>;
     using Vec3DVec      = std::vector<Vec3D>;
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
@@ -262,6 +263,9 @@ namespace pq
     using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedCellList = std::shared_ptr<simulationBox::CellList>;
+    using SharedBox      = std::shared_ptr<simulationBox::Box>;
+
+    using SharedAtomVec = std::vector<SharedAtom>;
 
     /**************************
      * physicalData namespace *

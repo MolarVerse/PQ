@@ -26,6 +26,7 @@
 #include "simulationBox.hpp"
 
 using simulationBox::SimulationBox;
+using namespace linearAlgebra;
 
 /**
  * @brief flattens atom types of each atom into a single vector of size_t
@@ -157,7 +158,7 @@ void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
 
     auto setPositions = [&positions, &index](auto &atom)
     {
-        linearAlgebra::Vec3D position;
+        Vec3D position;
 
         position[0] = positions[index++];
         position[1] = positions[index++];
@@ -180,7 +181,7 @@ void SimulationBox::deFlattenVelocities(const std::vector<double> &velocities)
 
     auto setVelocities = [&velocities, &index](auto &atom)
     {
-        linearAlgebra::Vec3D velocity;
+        Vec3D velocity;
 
         velocity[0] = velocities[index++];
         velocity[1] = velocities[index++];
@@ -203,7 +204,7 @@ void SimulationBox::deFlattenForces(const std::vector<double> &forces)
 
     auto setForces = [&forces, &index](auto &atom)
     {
-        linearAlgebra::Vec3D force;
+        Vec3D force;
 
         force[0] = forces[index++];
         force[1] = forces[index++];
