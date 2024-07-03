@@ -29,6 +29,7 @@
 #include "forceFieldNonCoulomb.hpp"   // for matrix_shared_pair
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "matrix.hpp"                 // for matrix
+#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -47,85 +48,40 @@ namespace potential
         Kokkos::DualView<double **> _c12;
 
        public:
-        KokkosLennardJones(size_t numAtomTypes);
+        explicit KokkosLennardJones(size_t numAtomTypes);
 
         KokkosLennardJones()  = default;
         ~KokkosLennardJones() = default;
 
-        void transferFromNonCoulombPairMatrix(matrix_shared_pair &pairMatrix);
-        [[nodiscard]] Kokkos::DualView<double **> &getRadialCutoffs()
-        {
-            return _radialCutoffs;
-        }
-        [[nodiscard]] Kokkos::DualView<double **> &getEnergyCutoffs()
-        {
-            return _energyCutoffs;
-        }
-        [[nodiscard]] Kokkos::DualView<double **> &getForceCutoffs()
-        {
-            return _forceCutoffs;
-        }
-        [[nodiscard]] Kokkos::DualView<double **> &getC6() { return _c6; }
-        [[nodiscard]] Kokkos::DualView<double **> &getC12() { return _c12; }
+        void transferFromNonCoulombPairMatrix(pq::SharedNonCoulPairMat &);
 
-        KOKKOS_FUNCTION double getRadialCutoff(const size_t i, const size_t j)
-            const
-        {
-            return _radialCutoffs.d_view(i, j);
-        }
-        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j)
-            const
-        {
-            return _energyCutoffs.d_view(i, j);
-        }
-        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j)
-            const
-        {
-            return _forceCutoffs.d_view(i, j);
-        }
-        [[nodiscard]] double getC6(const size_t i, const size_t j) const
-        {
-            return _c6.d_view(i, j);
-        }
-        [[nodiscard]] double getC12(const size_t i, const size_t j) const
-        {
-            return _c12.d_view(i, j);
-        }
-
-        KOKKOS_INLINE_FUNCTION double calculate(
+        double calculate(
             const double distance,
             double      &force,
             const size_t vdWType_i,
             const size_t vdWType_j
-        ) const
-        {
-            // calculate r^12 and r^6
-            const auto distanceSquared = distance * distance;
-            const auto distanceSixth =
-                distanceSquared * distanceSquared * distanceSquared;
-            const auto distanceTwelfth = distanceSixth * distanceSixth;
+        ) const;
 
-            const auto c12     = _c12.d_view(vdWType_i, vdWType_j);
-            const auto c6      = _c6.d_view(vdWType_i, vdWType_j);
-            const auto eCutoff = _energyCutoffs.d_view(vdWType_i, vdWType_j);
-            const auto fCutoff = _forceCutoffs.d_view(vdWType_i, vdWType_j);
-            const auto rCutoff = _radialCutoffs.d_view(vdWType_i, vdWType_j);
+        /***************************
+         * standard getter methods *
+         ***************************/
 
-            // calculate energy
-            auto energy  = c12 / distanceTwelfth;
-            energy      += c6 / distanceSixth;
-            energy      -= eCutoff;
-            energy      -= fCutoff * (rCutoff - distance);
+        [[nodiscard]] Kokkos::DualView<double **> &getRadialCutoffs();
+        [[nodiscard]] Kokkos::DualView<double **> &getEnergyCutoffs();
+        [[nodiscard]] Kokkos::DualView<double **> &getForceCutoffs();
 
-            // calculate force
-            auto scalarForce  = 12.0 * c12 / (distanceTwelfth * distance);
-            scalarForce      += 6.0 * c6 / (distanceSixth * distance);
-            scalarForce      -= fCutoff;
+        [[nodiscard]] Kokkos::DualView<double **> &getC6();
+        [[nodiscard]] double getC6(const size_t i, const size_t j) const;
 
-            force += scalarForce;
+        [[nodiscard]] Kokkos::DualView<double **> &getC12();
+        [[nodiscard]] double getC12(const size_t i, const size_t j) const;
 
-            return energy;
-        }
+        KOKKOS_FUNCTION double getRadialCutoff(const size_t, const size_t)
+            const;
+        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j)
+            const;
+        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j)
+            const;
     };
 }   // namespace potential
 
