@@ -111,11 +111,11 @@ TEST_F(TestPhysicalData, calculateKinetics)
         momentumVector * constants::_FS_TO_S_
     );
     EXPECT_EQ(
-        diagonal(_physicalData->getKineticEnergyAtomicVector()),
+        diagonal(_physicalData->getKinEnergyAtomTensor()),
         kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_
     );
     EXPECT_EQ(
-        diagonal(_physicalData->getKineticEnergyMolecularVector()),
+        diagonal(_physicalData->getKinEnergyMolTensor()),
         kineticEnergyMolecularVector * constants::_KINETIC_ENERGY_FACTOR_
     );
     EXPECT_EQ(

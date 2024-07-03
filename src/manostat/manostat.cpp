@@ -40,7 +40,7 @@ void Manostat::calculatePressure(
     physicalData::PhysicalData         &physicalData
 )
 {
-    auto       ekinVirial  = physicalData.getKineticEnergyVirialVector();
+    auto       ekinVirial  = physicalData.getKinEnergyVirialTensor();
     auto       forceVirial = physicalData.getVirial();
     const auto volume      = box.getVolume();
 

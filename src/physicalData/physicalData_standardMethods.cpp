@@ -242,7 +242,7 @@ void PhysicalData::setKineticEnergyMolecularVector(
     const linearAlgebra::tensor3D &vec
 )
 {
-    _kineticEnergyMolecularTensor = vec;
+    _kinEnergyMolTensor = vec;
 }
 
 /**
@@ -572,7 +572,7 @@ double PhysicalData::getRingPolymerEnergy() const { return _ringPolymerEnergy; }
  *
  * @return linearAlgebra::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getKineticEnergyAtomicVector() const
+linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
 {
     return _kineticEnergyAtomicTensor;
 }
@@ -582,9 +582,9 @@ linearAlgebra::tensor3D PhysicalData::getKineticEnergyAtomicVector() const
  *
  * @return linearAlgebra::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getKineticEnergyMolecularVector() const
+linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
 {
-    return _kineticEnergyMolecularTensor;
+    return _kinEnergyMolTensor;
 }
 
 /**
