@@ -52,22 +52,14 @@ namespace potential
             const double dissociationEnergy,
             const double wellWidth,
             const double equilibriumDistance
-        )
-            : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-              _dissociationEnergy(dissociationEnergy),
-              _wellWidth(wellWidth),
-              _equilibriumDistance(equilibriumDistance){};
+        );
 
         explicit MorsePair(
             const double cutOff,
             const double dissociationEnergy,
             const double wellWidth,
             const double equilibriumDistance
-        )
-            : NonCoulombPair(cutOff),
-              _dissociationEnergy(dissociationEnergy),
-              _wellWidth(wellWidth),
-              _equilibriumDistance(equilibriumDistance){};
+        );
 
         explicit MorsePair(
             const double cutOff,
@@ -76,11 +68,7 @@ namespace potential
             const double dissociationEnergy,
             const double wellWidth,
             const double equilibriumDistance
-        )
-            : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-              _dissociationEnergy(dissociationEnergy),
-              _wellWidth(wellWidth),
-              _equilibriumDistance(equilibriumDistance){};
+        );
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
