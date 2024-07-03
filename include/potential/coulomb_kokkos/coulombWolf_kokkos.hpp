@@ -61,7 +61,7 @@ namespace potential
         KokkosCoulombWolf()  = default;
         ~KokkosCoulombWolf() = default;
 
-        [[nodiscard]] double calculate(const double, const double, const double, double&)
+        KOKKOS_FUNCTION double calculate(const double, const double, const double, double&)
             const;
 
         [[nodiscard]] Kokkos::View<double> getCoulombRadiusCutOff() const;

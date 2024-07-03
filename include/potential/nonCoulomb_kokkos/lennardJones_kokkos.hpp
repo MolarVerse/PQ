@@ -55,7 +55,7 @@ namespace potential
 
         void transferFromNonCoulombPairMatrix(pq::SharedNonCoulPairMat &);
 
-        double calculate(
+        KOKKOS_FUNCTION double calculate(
             const double distance,
             double      &force,
             const size_t vdWType_i,
