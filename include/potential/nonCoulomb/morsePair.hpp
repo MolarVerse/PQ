@@ -87,15 +87,9 @@ namespace potential
         [[nodiscard]] std::pair<double, double> calculate(const double distance
         ) const override;
 
-        [[nodiscard]] double getDissociationEnergy() const
-        {
-            return _dissociationEnergy;
-        }
-        [[nodiscard]] double getWellWidth() const { return _wellWidth; }
-        [[nodiscard]] double getEquilibriumDistance() const
-        {
-            return _equilibriumDistance;
-        }
+        [[nodiscard]] double getDissociationEnergy() const;
+        [[nodiscard]] double getWellWidth() const;
+        [[nodiscard]] double getEquilibriumDistance() const;
     };
 
 }   // namespace potential

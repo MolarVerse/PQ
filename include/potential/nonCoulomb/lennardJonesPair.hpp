@@ -72,8 +72,8 @@ namespace potential
         [[nodiscard]] std::pair<double, double> calculate(const double distance
         ) const override;
 
-        [[nodiscard]] double getC6() const { return _c6; }
-        [[nodiscard]] double getC12() const { return _c12; }
+        [[nodiscard]] double getC6() const;
+        [[nodiscard]] double getC12() const;
     };
 
 }   // namespace potential
