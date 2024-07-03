@@ -28,12 +28,7 @@
 #include <string_view>   // for string_view
 
 #include "timer.hpp"   // for Timer
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Atom;            // forward declaration
-}   // namespace simulationBox
+#include "typeAliases.hpp"
 
 namespace integrator
 {
@@ -46,44 +41,24 @@ namespace integrator
     class Integrator : public timings::Timer
     {
        protected:
-        std::string _integratorType;
+        std::string _integratorType;   // TODO: make enum
 
        public:
-        Integrator() = default;
-        explicit Integrator(const std::string_view integratorType)
-            : _integratorType(integratorType){};
+        explicit Integrator(const std::string_view integratorType);
+        Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(simulationBox::SimulationBox &)  = 0;
-        virtual void secondStep(simulationBox::SimulationBox &) = 0;
+        virtual void firstStep(pq::SimBox &)  = 0;
+        virtual void secondStep(pq::SimBox &) = 0;
 
-        void integrateVelocities(simulationBox::Atom *) const;
-        void integratePositions(simulationBox::Atom *, const simulationBox::SimulationBox &)
-            const;
+        void integrateVelocities(pq::Atom *) const;
+        void integratePositions(pq::Atom *, const pq::SimBox &) const;
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] std::string_view getIntegratorType() const
-        {
-            return _integratorType;
-        }
-    };
-
-    /**
-     * @class VelocityVerlet inherits Integrator
-     *
-     * @brief VelocityVerlet is a class for velocity verlet integrator
-     *
-     */
-    class VelocityVerlet : public Integrator
-    {
-       public:
-        explicit VelocityVerlet() : Integrator("VelocityVerlet"){};
-
-        void firstStep(simulationBox::SimulationBox &) override;
-        void secondStep(simulationBox::SimulationBox &) override;
+        [[nodiscard]] std::string_view getIntegratorType() const;
     };
 
 }   // namespace integrator
