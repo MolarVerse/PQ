@@ -25,6 +25,23 @@
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 
 using namespace timings;
+using namespace std::chrono;
+
+using ms = milliseconds;
+using ns = nanoseconds;
+
+/**
+ * @brief Construct a new Timings Section:: Timings Section object
+ *
+ * @param name
+ */
+TimingsSection::TimingsSection(const std::string_view name) : _name(name) {}
+
+/**
+ * @brief
+ *
+ */
+void TimingsSection::beginTimer() { _start = high_resolution_clock::now(); }
 
 /**
  * @brief end the timer
@@ -32,7 +49,7 @@ using namespace timings;
  */
 void TimingsSection::endTimer()
 {
-    _end           = std::chrono::high_resolution_clock::now();
+    _end           = high_resolution_clock::now();
     _steps         = _steps + 1;
     _totalTime    += _end - _start;
     _lastStepTime  = _end - _start;
@@ -44,12 +61,12 @@ void TimingsSection::endTimer()
  */
 double TimingsSection::calculateElapsedTime() const
 {
-    return double(std::chrono::duration_cast<ns>(_totalTime).count()) * 1.0e-6;
+    return double(duration_cast<ns>(_totalTime).count()) * 1.0e-6;
 }
 
 double TimingsSection::calculateAverageLoopTime() const
 {
-    auto time = double(std::chrono::duration_cast<ns>(_totalTime).count());
+    auto time = double(duration_cast<ns>(_totalTime).count());
     time      = time * 1.0e-9 / double(_steps);
 
     return time;
@@ -61,8 +78,15 @@ double TimingsSection::calculateAverageLoopTime() const
  */
 double TimingsSection::calculateLoopTime() const
 {
-    auto time = double(std::chrono::duration_cast<ns>(_lastStepTime).count());
+    auto time = double(duration_cast<ns>(_lastStepTime).count());
     time      = time * 1e-9;
 
     return time;
 }
+
+/**
+ * @brief get the name of the timings section
+ *
+ * @return std::string
+ */
+std::string TimingsSection::getName() const { return _name; }
