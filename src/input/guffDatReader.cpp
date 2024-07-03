@@ -419,7 +419,7 @@ void GuffDatReader::addLennardJonesPair(
 
     const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
         std::make_shared<LennardJonesPair>(
             rncCutOff,
@@ -430,7 +430,7 @@ void GuffDatReader::addLennardJonesPair(
         )
     );
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
         std::make_shared<LennardJonesPair>(
             rncCutOff,
@@ -475,7 +475,7 @@ void GuffDatReader::addBuckinghamPair(
     );
     const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
         std::make_shared<BuckinghamPair>(
             rncCutOff,
@@ -487,7 +487,7 @@ void GuffDatReader::addBuckinghamPair(
         )
     );
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
         std::make_shared<BuckinghamPair>(
             rncCutOff,
@@ -531,7 +531,7 @@ void GuffDatReader::addMorsePair(
     const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
     // clang-format on
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
         std::make_shared<MorsePair>(
             rncCutOff,
@@ -543,7 +543,7 @@ void GuffDatReader::addMorsePair(
         )
     );
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {
             molType2,
             molType1,
@@ -587,12 +587,12 @@ void GuffDatReader::addGuffPair(
     const auto guffPair           = GuffPair(rncCutOff, coefficients);
     const auto [eCutOff, fCutOff] = guffPair.calculate(rncCutOff);
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
         std::make_shared<GuffPair>(rncCutOff, eCutOff, fCutOff, coefficients)
     );
 
-    guffNonCoulomb.setGuffNonCoulombicPair(
+    guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
         std::make_shared<GuffPair>(rncCutOff, eCutOff, fCutOff, coefficients)
     );

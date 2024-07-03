@@ -222,8 +222,11 @@ namespace pq
 
     using OptSharedNonCoulPair = std::optional<SharedNonCoulPair>;
 
-    using SharedNonCoulPairVec = std::vector<SharedNonCoulPair>;
-    using SharedNonCoulPairMat = linearAlgebra::Matrix<SharedNonCoulPair>;
+    using SharedNonCoulPairVec   = std::vector<SharedNonCoulPair>;
+    using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
+    using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
+    using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
+    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
