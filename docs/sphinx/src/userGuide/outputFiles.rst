@@ -143,14 +143,14 @@ Restart File
 Stores the coordinates, velocities, and forces of each atom for the current and previous simulation step in the following format:
     
     | line 1: "Step" step_number
-    | line 2: n_atoms *a* *b* *c* *α* *β* *γ*
+    | line 2: "Box" *a* *b* *c* *α* *β* *γ*
     | line 3 to (n_atoms + 2): element running_index moltype *x* *y* *z* *v*:sub:`x` *v*:sub:`y` *v*:sub:`z` *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
 
-The first line contains the string "Step" followed by the total number of performed simulation steps. The parameters n_atoms, 
-*a*, *b*, *c*, *α*, *β*, and *γ* in the second line denote the number of atoms in the simulation box and the respective box parameters in units 
-of Å and degrees. The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to 
-according to the :ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. 
-The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
+The first line contains the string "Step" followed by the total number of performed simulation steps. The second line starts with the string 
+"Box" followed by the parameters *a*, *b*, *c*, *α*, *β*, and *γ*, which denote the parameters of the simulation box in units of Å and degrees. 
+The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to according to the 
+:ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. The moltype value 
+is set to 0 if no :ref:`moldescriptorFile` file is used.
 
 .. attention:: 
 
