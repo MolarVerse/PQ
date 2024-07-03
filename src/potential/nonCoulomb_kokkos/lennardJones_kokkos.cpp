@@ -78,7 +78,7 @@ void KokkosLennardJones::transferFromNonCoulombPairMatrix(
  * @param vdWType_j van der Waals type of atom j
  * @return double energy
  */
-KOKKOS_INLINE_FUNCTION double KokkosLennardJones::calculate(
+KOKKOS_FUNCTION double KokkosLennardJones::calculate(
     const double distance,
     double      &force,
     const size_t vdWType_i,

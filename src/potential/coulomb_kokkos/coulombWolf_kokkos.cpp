@@ -74,7 +74,7 @@ KokkosCoulombWolf::KokkosCoulombWolf(
  * @param distance
  * @return std::pair<double, double>
  */
-KOKKOS_INLINE_FUNCTION
+KOKKOS_FUNCTION
 double KokkosCoulombWolf::calculate(
     const double distance,
     const double charge_i,
