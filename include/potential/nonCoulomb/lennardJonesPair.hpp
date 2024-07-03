@@ -51,17 +51,13 @@ namespace potential
             const double cutOff,
             const double c6,
             const double c12
-        )
-            : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-              _c6(c6),
-              _c12(c12){};
+        );
 
         explicit LennardJonesPair(
             const double cutOff,
             const double c6,
             const double c12
-        )
-            : NonCoulombPair(cutOff), _c6(c6), _c12(c12){};
+        );
 
         explicit LennardJonesPair(
             const double cutOff,
@@ -69,10 +65,7 @@ namespace potential
             const double forceCutoff,
             const double c6,
             const double c12
-        )
-            : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-              _c6(c6),
-              _c12(c12){};
+        );
 
         [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 

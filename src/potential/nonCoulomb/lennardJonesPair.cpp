@@ -25,6 +25,59 @@
 #include "mathUtilities.hpp"   // for compare
 
 using namespace potential;
+using namespace utilities;
+
+/**
+ * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
+ *
+ * @param vanDerWaalsType1
+ * @param vanDerWaalsType2
+ * @param cutOff
+ * @param c6
+ * @param c12
+ */
+LennardJonesPair::LennardJonesPair(
+    const size_t vanDerWaalsType1,
+    const size_t vanDerWaalsType2,
+    const double cutOff,
+    const double c6,
+    const double c12
+)
+    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+      _c6(c6),
+      _c12(c12){};
+
+/**
+ * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
+ *
+ * @param cutOff
+ * @param c6
+ * @param c12
+ */
+LennardJonesPair::LennardJonesPair(
+    const double cutOff,
+    const double c6,
+    const double c12
+)
+    : NonCoulombPair(cutOff), _c6(c6), _c12(c12){};
+
+/**
+ * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
+ *
+ * @param cutOff
+ * @param energyCutoff
+ * @param forceCutoff
+ * @param c6
+ * @param c12
+ */
+LennardJonesPair::LennardJonesPair(
+    const double cutOff,
+    const double energyCutoff,
+    const double forceCutoff,
+    const double c6,
+    const double c12
+)
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _c6(c6), _c12(c12){};
 
 /**
  * @brief operator overload for the comparison of two LennardJonesPair objects
@@ -35,9 +88,12 @@ using namespace potential;
  */
 bool LennardJonesPair::operator==(const LennardJonesPair &other) const
 {
-    return NonCoulombPair::operator==(other) &&
-           utilities::compare(_c6, other._c6) &&
-           utilities::compare(_c12, other._c12);
+    auto isEqual = true;
+    isEqual      = isEqual && NonCoulombPair::operator==(other);
+    isEqual      = isEqual && compare(_c6, other._c6);
+    isEqual      = isEqual && compare(_c12, other._c12);
+
+    return isEqual;
 }
 
 /**
@@ -49,16 +105,32 @@ bool LennardJonesPair::operator==(const LennardJonesPair &other) const
 std::pair<double, double> LennardJonesPair::calculate(const double distance
 ) const
 {
-    const auto distanceSquared = distance * distance;
-    const auto distanceSixth =
-        distanceSquared * distanceSquared * distanceSquared;
+    const auto distanceThird   = distance * distance * distance;
+    const auto distanceSixth   = distanceThird * distanceThird;
     const auto distanceTwelfth = distanceSixth * distanceSixth;
 
-    const auto energy = _c12 / distanceTwelfth + _c6 / distanceSixth -
-                        _energyCutOff -
-                        _forceCutOff * (_radialCutOff - distance);
-    const auto force = 12.0 * _c12 / (distanceTwelfth * distance) +
-                       6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    auto energy  = _c12 / distanceTwelfth;
+    energy      += _c6 / distanceSixth;
+    energy      -= _energyCutOff;
+    energy      -= _forceCutOff * (_radialCutOff - distance);
+
+    auto force  = 12.0 * _c12 / (distanceTwelfth * distance);
+    force      += 6.0 * _c6 / (distanceSixth * distance);
+    force      -= _forceCutOff;
 
     return {energy, force};
 }
+
+/**
+ * @brief get the c6 and c12 coefficients
+ *
+ * @return double
+ */
+double LennardJonesPair::getC6() const { return _c6; }
+
+/**
+ * @brief get the c6 and c12 coefficients
+ *
+ * @return double
+ */
+double LennardJonesPair::getC12() const { return _c12; }
