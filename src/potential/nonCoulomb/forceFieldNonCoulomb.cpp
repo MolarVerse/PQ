@@ -34,42 +34,29 @@
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
 
 using namespace potential;
+using namespace customException;
+using namespace linearAlgebra;
 
-/**
- * @brief gets a shared pointer to a NonCoulombPair object
- *
- * @details the indices vector contains the indices of the atoms in the system,
- * the last two indices are the global van der Waals
- *
- * @param indices
- * @return std::shared_ptr<NonCoulombPair>
- */
-std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(
-    const std::vector<size_t> &indices
-)
-{
-    return _nonCoulombPairsMatrix(
-        getGlobalVdwType1(indices),
-        getGlobalVdwType2(indices)
-    );
-}
+using std::ranges::adjacent_find;
+using std::ranges::find_if;
 
 /**
  * @brief calculates and sets energy and force cutoff for all non-coulombic
- * pairs in _nonCoulombPairsVector
+ * pairs in _nonCoulPairsVec
  *
  */
 void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
 {
     auto setEnergyAndForceCutOff = [](auto &nonCoulombPair)
     {
-        const auto &[energy, force] =
-            nonCoulombPair->calculate(nonCoulombPair->getRadialCutOff());
+        const auto radialCutOff     = nonCoulombPair->getRadialCutOff();
+        const auto &[energy, force] = nonCoulombPair->calculate(radialCutOff);
+
         nonCoulombPair->setEnergyCutOff(energy);
         nonCoulombPair->setForceCutOff(force);
     };
 
-    std::ranges::for_each(_nonCoulombPairsVector, setEnergyAndForceCutOff);
+    std::ranges::for_each(_nonCoulPairsVec, setEnergyAndForceCutOff);
 }
 
 /**
@@ -80,21 +67,19 @@ void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
  *
  */
 void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
-    const std::map<size_t, size_t> &externalToInternalGlobalVDWTypes
+    const std::map<size_t, size_t> &extToIntGlobalVDWTypes
 )
 {
-    auto setInternalVanDerWaalsType =
-        [&externalToInternalGlobalVDWTypes](auto &nonCoulombPair)
+    auto setIntVDWType = [&extToIntGlobalVDWTypes](auto &nonCoulombPair)
     {
-        nonCoulombPair->setInternalType1(externalToInternalGlobalVDWTypes.at(
-            nonCoulombPair->getVanDerWaalsType1()
-        ));
-        nonCoulombPair->setInternalType2(externalToInternalGlobalVDWTypes.at(
-            nonCoulombPair->getVanDerWaalsType2()
-        ));
+        const auto VDWType1 = nonCoulombPair->getVanDerWaalsType1();
+        const auto VDWType2 = nonCoulombPair->getVanDerWaalsType2();
+
+        nonCoulombPair->setInternalType1(extToIntGlobalVDWTypes.at(VDWType1));
+        nonCoulombPair->setInternalType2(extToIntGlobalVDWTypes.at(VDWType2));
     };
 
-    std::ranges::for_each(_nonCoulombPairsVector, setInternalVanDerWaalsType);
+    std::ranges::for_each(_nonCoulPairsVec, setIntVDWType);
 }
 
 /**
@@ -106,36 +91,35 @@ void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
  * der Waals types are defined twice
  */
 void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
-    std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulombicPairsVector
+    std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulPairsVec
 )
 {
-    auto isLess =
-        [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
+    auto isLess = [](const auto &nonCoulPair1, const auto &nonCoulPair2)
     {
-        if (nonCoulombicPair1->getInternalType1() <
-            nonCoulombicPair2->getInternalType1())
+        const auto pair1IntType1 = nonCoulPair1->getInternalType1();
+        const auto pair1IntType2 = nonCoulPair1->getInternalType2();
+        const auto pair2IntType1 = nonCoulPair2->getInternalType1();
+        const auto pair2IntType2 = nonCoulPair2->getInternalType2();
+
+        if (pair1IntType1 < pair2IntType1)
             return true;
-        else if (nonCoulombicPair1->getInternalType1() ==
-                 nonCoulombicPair2->getInternalType1())
-            return nonCoulombicPair1->getInternalType2() <
-                   nonCoulombicPair2->getInternalType2();
+
+        else if (pair1IntType1 == pair2IntType1)
+            return pair1IntType2 < pair2IntType2;
+
         else
             return false;
     };
 
-    std::ranges::sort(nonCoulombicPairsVector, isLess);
+    std::ranges::sort(nonCoulPairsVec, isLess);
 
-    auto compareSharedPointers =
-        [](const auto &nonCoulombicPair1, const auto &nonCoulombicPair2)
-    { return *nonCoulombicPair1 == *nonCoulombicPair2; };
+    auto compareSharedPtrs = [](const auto &pair1, const auto &pair2)
+    { return *pair1 == *pair2; };
 
-    const auto iter = std::ranges::adjacent_find(
-        nonCoulombicPairsVector,
-        compareSharedPointers
-    );
+    const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
 
-    if (iter != nonCoulombicPairsVector.end())
-        throw customException::ParameterFileException(std::format(
+    if (iter != nonCoulPairsVec.end())
+        throw ParameterFileException(std::format(
             "Non-coulombic pairs with global van der Waals types {} and {} in "
             "the parameter file are defined twice",
             (*iter)->getVanDerWaalsType1(),
@@ -148,21 +132,17 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
  *
  * @param diagonalElements
  */
-void ForceFieldNonCoulomb::fillDiagonalElementsOfNonCoulombPairsMatrix(
-    std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
+void ForceFieldNonCoulomb::fillDiagOfNonCoulPairsMatrix(
+    std::vector<std::shared_ptr<NonCoulombPair>> &diag
 )
 {
-    sortNonCoulombicsPairs(diagonalElements);
+    sortNonCoulombicsPairs(diag);
 
-    _nonCoulombPairsMatrix =
-        linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>>(
-            diagonalElements.size()
-        );
+    _nonCoulPairsMat = Matrix<std::shared_ptr<NonCoulombPair>>(diag.size());
 
-    for (size_t i = 0, numberOfDiagonalElements = diagonalElements.size();
-         i < numberOfDiagonalElements;
-         ++i)
-        _nonCoulombPairsMatrix(i, i) = diagonalElements[i];
+    const auto nDiagElements = diag.size();
+
+    for (size_t i = 0; i < nDiagElements; ++i) _nonCoulPairsMat(i, i) = diag[i];
 }
 
 /**
@@ -170,7 +150,7 @@ void ForceFieldNonCoulomb::fillDiagonalElementsOfNonCoulombPairsMatrix(
  *
  * @details if no type is found check if mixing rules are used
  * if mixing rules are used, then add a new non-coulombic pair with the mixing
- * rule (TODO: not yet implemented) if no mixing rules are used, then throw an
+ * rule if no mixing rules are used, then throw an
  * exception if a type is found, then add the non-coulombic pair to the matrix
  * if a type is found with both index combinations and it has the same
  * parameters, then add the non-coulombic pair if a type is found with both
@@ -179,10 +159,10 @@ void ForceFieldNonCoulomb::fillDiagonalElementsOfNonCoulombPairsMatrix(
  * @param atomType1
  * @param atomType2
  *
- * @throws customException::ParameterFileException if mixing rules are not used
+ * @throws ParameterFileException if mixing rules are not used
  * and not all combinations of global van der Waals types are defined in the
  * parameter file
- * @throws customException::ParameterFileException if type is found with both
+ * @throws ParameterFileException if type is found with both
  * index combinations and it has different parameters
  */
 void ForceFieldNonCoulomb::setOffDiagonalElement(
@@ -190,30 +170,27 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
     const size_t atomType2
 )
 {
-    auto nonCoulombicPair1 =
-        findNonCoulombicPairByInternalTypes(atomType1, atomType2);
-    auto nonCoulombicPair2 =
-        findNonCoulombicPairByInternalTypes(atomType2, atomType1);
+    auto nonCoulPair1 = findNonCoulPairByInternalTypes(atomType1, atomType2);
+    auto nonCoulPair2 = findNonCoulPairByInternalTypes(atomType2, atomType1);
 
-    if (nonCoulombicPair1 == std::nullopt && nonCoulombicPair2 == std::nullopt)
+    if (nonCoulPair1 == std::nullopt && nonCoulPair2 == std::nullopt)
     {
         if (_mixingRule == MixingRule::NONE)
         {
-            throw customException::ParameterFileException(
+            throw ParameterFileException(
                 "Not all combinations of global van der Waals types are "
                 "defined in the parameter file - and no mixing "
                 "rules were chosen"
             );
         }
     }
-    else if (nonCoulombicPair1 != std::nullopt &&
-             nonCoulombicPair2 != std::nullopt)
+    else if (nonCoulPair1 != std::nullopt && nonCoulPair2 != std::nullopt)
     {
-        if (**nonCoulombicPair1 != **nonCoulombicPair2)
+        if (**nonCoulPair1 != **nonCoulPair2)
         {
-            const auto vdwType1 = (*nonCoulombicPair1)->getVanDerWaalsType1();
-            const auto vdwType2 = (*nonCoulombicPair1)->getVanDerWaalsType2();
-            throw customException::ParameterFileException(std::format(
+            const auto vdwType1 = (*nonCoulPair1)->getVanDerWaalsType1();
+            const auto vdwType2 = (*nonCoulPair1)->getVanDerWaalsType2();
+            throw ParameterFileException(std::format(
                 "Non-coulombic pairs with global van der Waals types {}, {} "
                 "and {}, {} in the parameter file have "
                 "different parameters",
@@ -224,18 +201,18 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
             ));
         }
 
-        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair1;
-        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair1;
+        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair1;
+        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair1;
     }
-    else if (nonCoulombicPair1 != std::nullopt)
+    else if (nonCoulPair1 != std::nullopt)
     {
-        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair1;
-        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair1;
+        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair1;
+        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair1;
     }
     else
     {
-        _nonCoulombPairsMatrix(atomType1, atomType2) = *nonCoulombicPair2;
-        _nonCoulombPairsMatrix(atomType2, atomType1) = *nonCoulombicPair2;
+        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair2;
+        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair2;
     }
 }
 
@@ -243,9 +220,9 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
  * @brief fills the off-diagonal elements of the non-coulombic pairs matrix
  *
  */
-void ForceFieldNonCoulomb::fillOffDiagonalElementsOfNonCoulombPairsMatrix()
+void ForceFieldNonCoulomb::fillOffDiagOfNonCoulPairsMatrix()
 {
-    const auto &[rows, cols] = _nonCoulombPairsMatrix.shape();
+    const auto &[rows, cols] = _nonCoulPairsMat.shape();
 
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = i + 1; j < cols; ++j) setOffDiagonalElement(i, j);
@@ -260,16 +237,17 @@ void ForceFieldNonCoulomb::fillOffDiagonalElementsOfNonCoulombPairsMatrix()
  * @return std::vector<std::shared_ptr<NonCoulombPair>>
  */
 std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
-    getSelfInteractionNonCoulombicPairs() const
+    getSelfInteractionNonCoulPairs() const
 {
     auto isSelfInteractionElement = [](const auto &nonCoulombPair)
     {
-        return nonCoulombPair->getInternalType1() ==
-               nonCoulombPair->getInternalType2();
+        const auto internalType1 = nonCoulombPair->getInternalType1();
+        const auto internalType2 = nonCoulombPair->getInternalType2();
+
+        return internalType1 == internalType2;
     };
 
-    auto view =
-        _nonCoulombPairsVector | std::views::filter(isSelfInteractionElement);
+    auto view = _nonCoulPairsVec | std::views::filter(isSelfInteractionElement);
 
     return std::vector(view.begin(), view.end());
 }
@@ -287,34 +265,36 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
  * @throws if the non coulombic pair is found twice
  */
 std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
-    findNonCoulombicPairByInternalTypes(
-        size_t internalType1,
-        size_t internalType2
-    ) const
+    findNonCoulPairByInternalTypes(const size_t intType1, const size_t intType2)
+        const
 {
-    auto findByInternalAtomTypes =
-        [internalType1, internalType2](const auto &nonCoulombPair)
+    auto findByIntAtomTypes = [intType1, intType2](const auto &nonCoulPair)
     {
-        return nonCoulombPair->getInternalType1() == internalType1 &&
-               nonCoulombPair->getInternalType2() == internalType2;
+        const auto internalType1_ = nonCoulPair->getInternalType1();
+        const auto internalType2_ = nonCoulPair->getInternalType2();
+
+        auto isEqual = true;
+        isEqual      = isEqual && internalType1_ == intType1;
+        isEqual      = isEqual && internalType2_ == intType2;
+
+        return isEqual;
     };
 
-    if (auto firstNonCoulombicPair = std::ranges::find_if(
-            _nonCoulombPairsVector,
-            findByInternalAtomTypes
-        );
-        firstNonCoulombicPair != _nonCoulombPairsVector.end())
+    const auto firstNonCoulPair = find_if(_nonCoulPairsVec, findByIntAtomTypes);
+
+    if (firstNonCoulPair != _nonCoulPairsVec.end())
     {
-        if (auto secondCoulombicPair = std::ranges::find_if(
-                firstNonCoulombicPair + 1,
-                _nonCoulombPairsVector.end(),
-                findByInternalAtomTypes
-            );
-            secondCoulombicPair != _nonCoulombPairsVector.end())
+        const auto secondNonCoulPair = find_if(
+            firstNonCoulPair + 1,
+            _nonCoulPairsVec.end(),
+            findByIntAtomTypes
+        );
+
+        if (secondNonCoulPair != _nonCoulPairsVec.end())
         {
-            auto vdwType1 = (*firstNonCoulombicPair)->getVanDerWaalsType1();
-            auto vdwType2 = (*firstNonCoulombicPair)->getVanDerWaalsType2();
-            throw customException::ParameterFileException(std::format(
+            auto vdwType1 = (*firstNonCoulPair)->getVanDerWaalsType1();
+            auto vdwType2 = (*firstNonCoulPair)->getVanDerWaalsType2();
+            throw ParameterFileException(std::format(
                 "Non coulombic pair with global van der waals types {} and {} "
                 "is defined twice in the parameter file.",
                 vdwType1,
@@ -322,8 +302,123 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
             ));
         }
 
-        return *firstNonCoulombicPair;
+        return *firstNonCoulPair;
     }
     else
         return std::nullopt;
+}
+
+/**
+ * @brief adds a non-coulombic pair to the vector of non-coulombic pairs
+ *
+ * @param pair
+ */
+void ForceFieldNonCoulomb::addNonCoulombicPair(
+    const std::shared_ptr<NonCoulombPair> &pair
+)
+{
+    _nonCoulPairsVec.push_back(pair);
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief gets a shared pointer to a NonCoulombPair object
+ *
+ * @details the indices vector contains the indices of the atoms in the system,
+ * the last two indices are the global van der Waals
+ *
+ * @param indices
+ * @return std::shared_ptr<NonCoulombPair>
+ */
+std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(
+    const std::vector<size_t> &indices
+)
+{
+    const auto idx1 = getGlobalVdwType1(indices);
+    const auto idx2 = getGlobalVdwType2(indices);
+
+    return _nonCoulPairsMat(idx1, idx2);
+}
+
+/**
+ * @brief get the global van der Waals type 1
+ *
+ * @param indices
+ * @return size_t
+ */
+size_t ForceFieldNonCoulomb::getGlobalVdwType1(
+    const std::vector<size_t> &indices
+) const
+{
+    return indices[4];
+}
+
+/**
+ * @brief get the global van der Waals type 2
+ *
+ * @param indices
+ * @return size_t
+ */
+size_t ForceFieldNonCoulomb::getGlobalVdwType2(
+    const std::vector<size_t> &indices
+) const
+{
+    return indices[5];
+}
+
+/**
+ * @brief Get the Non Coulomb Pairs Vector object
+ *
+ * @return std::vector<std::shared_ptr<NonCoulombPair>>&
+ */
+std::vector<std::shared_ptr<NonCoulombPair>> &ForceFieldNonCoulomb::
+    getNonCoulombPairsVector()
+{
+    return _nonCoulPairsVec;
+}
+
+/**
+ * @brief Get the Non Coulomb Pairs Matrix object
+ *
+ * @return Matrix<std::shared_ptr<NonCoulombPair>>&
+ */
+Matrix<std::shared_ptr<NonCoulombPair>> &ForceFieldNonCoulomb::
+    getNonCoulombPairsMatrix()
+{
+    return _nonCoulPairsMat;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the non-coulombic pairs vector
+ *
+ * @param vec
+ */
+void ForceFieldNonCoulomb::setNonCoulombPairsVector(
+    const std::vector<std::shared_ptr<NonCoulombPair>> &vec
+)
+{
+    _nonCoulPairsVec = vec;
+}
+
+/**
+ * @brief set the non-coulombic pairs matrix
+ *
+ * @param mat
+ */
+void ForceFieldNonCoulomb::setNonCoulombPairsMatrix(
+    const Matrix<std::shared_ptr<NonCoulombPair>> &mat
+)
+{
+    _nonCoulPairsMat = mat;
 }

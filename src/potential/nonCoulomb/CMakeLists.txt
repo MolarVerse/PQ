@@ -13,6 +13,7 @@ add_library(nonCoulombPotential
 target_include_directories(nonCoulombPotential
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/potential/nonCoulomb
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
 )
 
 target_link_libraries(nonCoulombPotential

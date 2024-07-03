@@ -46,7 +46,7 @@ namespace potential
      * - brute force
      * - cell list
      *
-     * @note _nonCoulombPairsVector is just a container to store the
+     * @note _nonCoulPairsVec is just a container to store the
      * nonCoulombicPairs for later processing
      *
      */
