@@ -95,7 +95,7 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
     );
 
     auto distance        = 2.0;
-    auto [energy, force] = potential.calculateEnergyAndForce(distance);
+    auto [energy, force] = potential.calculate(distance);
 
     auto helper = coefficients[0] * ::exp(coefficients[1] * distance);
 

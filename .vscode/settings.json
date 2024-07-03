@@ -114,7 +114,8 @@
         "nnls": "cpp",
         "nonlinearoptimization": "cpp",
         "sparseextra": "cpp",
-        "alignedvector3": "cpp"
+        "alignedvector3": "cpp",
+        "text_encoding": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -207,6 +208,7 @@
         "sonarlint",
         "STDOUTOUTPUT",
         "STREQ",
+        "Symm",
         "timestep",
         "TOPOLOGYEXCEPTION",
         "tparam",

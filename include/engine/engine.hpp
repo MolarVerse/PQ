@@ -35,6 +35,8 @@
 #include "intraNonBonded.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "potentialBruteForce.hpp"
+#include "potentialCellList.hpp"
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
 #include "virial.hpp"

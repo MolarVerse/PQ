@@ -28,21 +28,24 @@
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
 #include <memory>       // for std::shared_ptr
+#include <optional>     // for std::optional
 #include <set>          // for std::set
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
+#include "matrix.hpp"
 #include "staticMatrix3x3Class.hpp"
 #include "vector3d.hpp"
 
 namespace simulationBox
 {
-    class Molecule;        // forward declaration
-    class MoleculeType;    // forward declaration
-    class Atom;            // forward declaration
-    class SimulationBox;   // forward declaration
-    class CellList;        // forward declaration
-    class Box;             // forward declaration
+    class Molecule;              // forward declaration
+    class MoleculeType;          // forward declaration
+    class Atom;                  // forward declaration
+    class CellList;              // forward declaration
+    class Box;                   // forward declaration
+    class SimulationBox;         // forward declaration
+    class KokkosSimulationBox;   // forward declaration
 
 }   // namespace simulationBox
 
@@ -57,8 +60,12 @@ namespace potential
     class Potential;              // forward declaration
     class PotentialBruteForce;    // forward declaration
     class CoulombPotential;       // forward declaration
+    class NonCoulombPair;         // forward declaration
     class NonCoulombPotential;    // forward declaration
     class ForceFieldNonCoulomb;   // forward declaration
+
+    class KokkosLennardJones;   // forward declaration
+    class KokkosCoulombWolf;    // forward declaration
 
 }   // namespace potential
 
@@ -145,6 +152,7 @@ namespace pq
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
+    using stlVectorUL     = std::vector<size_t>;
     using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
     using stlVector4d     = std::vector<stlVector3d>;
     using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
@@ -202,10 +210,23 @@ namespace pq
     using CoulombPot    = potential::CoulombPotential;
     using NonCoulombPot = potential::NonCoulombPotential;
     using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
+    using NonCoulPair   = potential::NonCoulombPair;
+
+    using KokkosLJ   = potential::KokkosLennardJones;
+    using KokkosWolf = potential::KokkosCoulombWolf;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
     using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
+    using SharedNonCoulPair   = std::shared_ptr<potential::NonCoulombPair>;
+
+    using OptSharedNonCoulPair = std::optional<SharedNonCoulPair>;
+
+    using SharedNonCoulPairVec   = std::vector<SharedNonCoulPair>;
+    using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
+    using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
+    using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
+    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
@@ -227,6 +248,7 @@ namespace pq
      ***************************/
 
     using SimBox       = simulationBox::SimulationBox;
+    using KokkosSimBox = simulationBox::KokkosSimulationBox;
     using CellList     = simulationBox::CellList;
     using Molecule     = simulationBox::Molecule;
     using MoleculeType = simulationBox::MoleculeType;

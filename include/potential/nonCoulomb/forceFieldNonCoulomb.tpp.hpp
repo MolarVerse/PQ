@@ -20,43 +20,32 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_PAIR_HPP_
+#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
 
-#define _GUFF_PAIR_HPP_
+#define _FORCE_FIELD_NON_COULOMB_TPP_
 
-#include <utility>   // pair
-#include <vector>    // vector
-
-#include "nonCoulombPair.hpp"
+#include "forceFieldNonCoulomb.hpp"
 
 namespace potential
 {
     /**
-     * @class GuffPair
+     * @brief template function to set the nonCoulombPairsMatrix
      *
-     * @brief inherits from NonCoulombPair represents a pair of Guff types (full
-     * guff formula)
-     *
-     * @note here the constructor including the van der Waals types is missing
-     * as this class is only used for guff potentials. Therefore also the
-     * comparison operator == is missing.
-     *
+     * @tparam T
+     * @param index1
+     * @param index2
+     * @param value
      */
-    class GuffPair : public NonCoulombPair
+    template <typename T>
+    void ForceFieldNonCoulomb::setNonCoulombPairsMatrix(
+        const size_t index1,
+        const size_t index2,
+        T           &value
+    )
     {
-       private:
-        std::vector<double> _coefficients;
-
-       public:
-        explicit GuffPair(const double, const std::vector<double> &);
-        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
-
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
-
-        [[nodiscard]] std::vector<double> getCoefficients() const;
-    };
+        _nonCoulPairsMat(index1, index2) = std::make_shared<T>(value);
+    }
 
 }   // namespace potential
 
-#endif   // _GUFF_PAIR_HPP_
+#endif   // _FORCE_FIELD_NON_COULOMB_TPP_

@@ -25,23 +25,10 @@
 #define _KOKKOS_POTENTIAL_HPP_
 
 #include "timer.hpp"   // for Timer
-
-namespace physicalData
-{
-    class PhysicalData;
-}
-
-namespace simulationBox
-{
-    class SimulationBox;
-    class KokkosSimulationBox;
-}   // namespace simulationBox
+#include "typeAliases.hpp"
 
 namespace potential
 {
-    class KokkosLennardJones;   // forward declaration
-    class KokkosCoulombWolf;    // forward declaration
-
     /**
      * @class KokkosPotential
      *
@@ -51,7 +38,13 @@ namespace potential
     class KokkosPotential : public timings::Timer
     {
        public:
-        void calculateForces(simulationBox::SimulationBox &, simulationBox::KokkosSimulationBox &, physicalData::PhysicalData &, KokkosLennardJones &, KokkosCoulombWolf &);
+        void calculateForces(
+            pq::SimBox           &simBox,
+            pq::KokkosSimBox     &kokkosSimBox,
+            pq::PhysicalData     &data,
+            const pq::KokkosLJ   &lj,
+            const pq::KokkosWolf &wolf
+        );
     };
 
 }   // namespace potential

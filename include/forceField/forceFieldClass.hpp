@@ -63,7 +63,7 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<pq::NonCoulombPot> _nonCoulombPotential;
+        std::shared_ptr<pq::NonCoulombPot> _nonCoulombPot;
         std::shared_ptr<pq::CoulombPot>    _coulombPotential;
 
        public:

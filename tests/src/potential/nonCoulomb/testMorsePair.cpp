@@ -95,7 +95,7 @@ TEST(TestMorsePair, calculateEnergyAndForces)
     );
 
     const auto distance        = 2.0;
-    const auto [energy, force] = potential.calculateEnergyAndForce(distance);
+    const auto [energy, force] = potential.calculate(distance);
 
     const auto expTerm = ::exp(-coefficients[1] * (distance - coefficients[2]));
 

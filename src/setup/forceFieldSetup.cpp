@@ -75,8 +75,8 @@ void ForceFieldSetup::setup()
 {
     auto       &forceField    = _engine.getForceField();
     const auto &potential     = _engine.getPotential();
-    const auto &nonCoulombPot = potential.getNonCoulombPotentialSharedPtr();
-    const auto &coulombPot    = potential.getCoulombPotentialSharedPtr();
+    const auto &nonCoulombPot = potential.getNonCoulombPotSharedPtr();
+    const auto &coulombPot    = potential.getCoulombPotSharedPtr();
 
     forceField.setNonCoulombPotential(nonCoulombPot);
     forceField.setCoulombPotential(coulombPot);

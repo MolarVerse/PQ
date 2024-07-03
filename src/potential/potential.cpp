@@ -31,6 +31,7 @@
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
 using namespace potential;
+using namespace simulationBox;
 
 /**
  * @brief inner part of the double loop to calculate non-bonded inter molecular
@@ -44,11 +45,11 @@ using namespace potential;
  * @return std::pair<double, double>
  */
 std::pair<double, double> Potential::calculateSingleInteraction(
-    const simulationBox::Box &box,
-    simulationBox::Molecule  &molecule1,
-    simulationBox::Molecule  &molecule2,
-    const size_t              atom1,
-    const size_t              atom2
+    const Box   &box,
+    Molecule    &molecule1,
+    Molecule    &molecule2,
+    const size_t atom1,
+    const size_t atom2
 ) const
 {
     auto coulombEnergy    = 0.0;
@@ -78,7 +79,7 @@ std::pair<double, double> Potential::calculateSingleInteraction(
         const auto moltype_i = molecule1.getMoltype();
         const auto moltype_j = molecule2.getMoltype();
 
-        const auto combinedIndices = {
+        const auto combinedIdx = {
             moltype_i,
             moltype_j,
             atomType_i,
@@ -87,29 +88,27 @@ std::pair<double, double> Potential::calculateSingleInteraction(
             globalVdwType_j
         };
 
-        const auto coulombPreFactor = molecule1.getPartialCharge(atomType_i) *
-                                      molecule2.getPartialCharge(atomType_j);
+        const auto charge_i         = molecule1.getPartialCharge(atomType_i);
+        const auto charge_j         = molecule2.getPartialCharge(atomType_j);
+        const auto coulombPreFactor = charge_i * charge_j;
 
-        auto [energy, force] =
-            _coulombPotential->calculate(distance, coulombPreFactor);
-        coulombEnergy = energy;
+        auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
+        coulombEnergy = e;
 
-        const auto nonCoulombicPair =
-            _nonCoulombPotential->getNonCoulombPair(combinedIndices);
+        const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(combinedIdx);
+        const auto rncCutOff   = nonCoulPair->getRadialCutOff();
 
-        if (const auto rncCutOff = nonCoulombicPair->getRadialCutOff();
-            distance < rncCutOff)
+        if (distance < rncCutOff)
         {
-            const auto &[energy, nonCoulombForce] =
-                nonCoulombicPair->calculateEnergyAndForce(distance);
-            nonCoulombEnergy = energy;
+            const auto &[nonCoulE, nonCoulF] = nonCoulPair->calculate(distance);
+            nonCoulombEnergy                 = nonCoulE;
 
-            force += nonCoulombForce;
+            f += nonCoulF;
         }
 
-        force /= distance;
+        f /= distance;
 
-        const auto forcexyz = force * dxyz;
+        const auto forcexyz = f * dxyz;
 
         const auto shiftForcexyz = forcexyz * txyz;
 
@@ -120,4 +119,69 @@ std::pair<double, double> Potential::calculateSingleInteraction(
     }
 
     return {coulombEnergy, nonCoulombEnergy};
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the coulomb potential as a shared pointer
+ *
+ * @param pot
+ */
+void Potential::setNonCoulombPotential(
+    const std::shared_ptr<NonCoulombPotential> pot
+)
+{
+    _nonCoulombPot = pot;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the coulomb potential
+ *
+ * @return CoulombPotential&
+ */
+CoulombPotential &Potential::getCoulombPotential() const
+{
+    return *_coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential
+ *
+ * @return NonCoulombPotential&
+ */
+NonCoulombPotential &Potential::getNonCoulombPotential() const
+{
+    return *_nonCoulombPot;
+}
+
+/**
+ * @brief get the coulomb potential as a shared pointer
+ *
+ * @return SharedCoulombPot
+ */
+std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
+{
+    return _coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential as a shared pointer
+ *
+ * @return SharedNonCoulombPot
+ */
+std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
+) const
+{
+    return _nonCoulombPot;
 }
