@@ -32,24 +32,10 @@ Public License along with this program.  If not, see
 #include <utility>   // for pair
 
 #include "timer.hpp"
-
-namespace physicalData
-{
-    class PhysicalData;
-}
-
-namespace simulationBox
-{
-    class CellList;
-    class Molecule;
-    class SimulationBox;
-    class Box;
-}   // namespace simulationBox
+#include "typeAliases.hpp"
 
 namespace potential
 {
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
 
     /**
      * @class Potential
@@ -68,62 +54,47 @@ namespace potential
     class Potential : public timings::Timer
     {
        protected:
-        std::shared_ptr<CoulombPotential>    _coulombPotential;
-        std::shared_ptr<NonCoulombPotential> _nonCoulombPotential;
+        pq::SharedCoulombPot    _coulombPotential;
+        pq::SharedNonCoulombPot _nonCoulombPotential;
 
        public:
         virtual ~Potential() = default;
 
-        virtual void
-        calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &) = 0;
-        virtual std::shared_ptr<Potential> clone() const = 0;
+        virtual void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &) = 0;
+        virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const simulationBox::Box &,
-            simulationBox::Molecule &,
-            simulationBox::Molecule &,
+            const pq::Box &,
+            pq::Molecule &,
+            pq::Molecule &,
             const size_t,
             const size_t
         ) const;
 
         template <typename T>
-        void makeCoulombPotential(T p)
-        {
-            _coulombPotential = std::make_shared<T>(p);
-        }
+        void makeCoulombPotential(T p);
 
         template <typename T>
-        void makeNonCoulombPotential(T nonCoulombPotential)
-        {
-            _nonCoulombPotential = std::make_shared<T>(nonCoulombPotential);
-        }
+        void makeNonCoulombPotential(T nonCoulombPot);
 
-        void setNonCoulombPotential(
-            std::shared_ptr<NonCoulombPotential> nonCoulombPotential
-        )
-        {
-            _nonCoulombPotential = nonCoulombPotential;
-        }
+        /***************************
+         * standard setter methods *
+         ***************************/
 
-        [[nodiscard]] CoulombPotential &getCoulombPotential() const
-        {
-            return *_coulombPotential;
-        }
-        [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const
-        {
-            return *_nonCoulombPotential;
-        }
-        [[nodiscard]] std::shared_ptr<CoulombPotential> getCoulombPotentialSharedPtr(
-        ) const
-        {
-            return _coulombPotential;
-        }
-        [[nodiscard]] std::shared_ptr<NonCoulombPotential> getNonCoulombPotentialSharedPtr(
-        ) const
-        {
-            return _nonCoulombPotential;
-        }
+        void setNonCoulombPotential(pq::SharedNonCoulombPot nonCoulombPot);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] pq::CoulombPot      &getCoulombPotential() const;
+        [[nodiscard]] pq::NonCoulombPot   &getNonCoulombPotential() const;
+        [[nodiscard]] pq::SharedCoulombPot getCoulombPotentialSharedPtr() const;
+        [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotentialSharedPtr(
+        ) const;
     };
+
+#include "potential.tpp.hpp"   // DO NOT MOVE THIS LINE
 
     /**
      * @class PotentialBruteForce
@@ -134,14 +105,11 @@ namespace potential
     class PotentialBruteForce : public Potential
     {
        public:
-        ~PotentialBruteForce();
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+        ~PotentialBruteForce() override;
+        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
             override;
 
-        std::shared_ptr<Potential> clone() const override
-        {
-            return std::make_shared<PotentialBruteForce>(*this);
-        }
+        pq::SharedPotential clone() const override;
     };
 
     /**
@@ -153,14 +121,11 @@ namespace potential
     class PotentialCellList : public Potential
     {
        public:
-        ~PotentialCellList();
-        void calculateForces(simulationBox::SimulationBox &, physicalData::PhysicalData &, simulationBox::CellList &)
+        ~PotentialCellList() override;
+        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
             override;
 
-        std::shared_ptr<Potential> clone() const override
-        {
-            return std::make_shared<PotentialCellList>(*this);
-        }
+        pq::SharedPotential clone() const override;
     };
 
 }   // namespace potential

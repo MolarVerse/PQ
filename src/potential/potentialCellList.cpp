@@ -30,7 +30,13 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace potential;
+using namespace simulationBox;
+using namespace physicalData;
 
+/**
+ * @brief Destroy the Potential Cell List:: Potential Cell List object
+ *
+ */
 PotentialCellList::~PotentialCellList() = default;
 
 /**
@@ -49,9 +55,9 @@ PotentialCellList::~PotentialCellList() = default;
  * @param cellList
  */
 inline void PotentialCellList::calculateForces(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData,
-    simulationBox::CellList      &cellList
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
 )
 {
     startTimingsSection("InterNonBonded");
@@ -61,29 +67,29 @@ inline void PotentialCellList::calculateForces(
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    for (const auto &cell1 : cellList.getCells())
+    for (const auto &cell_i : cellList.getCells())
     {
-        const auto numberOfMolecules = cell1.getNumberOfMolecules();
+        const auto nMols = cell_i.getNumberOfMolecules();
 
-        for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
+        for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
         {
-            auto *molecule1 = cell1.getMolecule(mol1);
+            auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (size_t mol2 = 0; mol2 < mol1; ++mol2)
+            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                auto *molecule2 = cell1.getMolecule(mol2);
+                auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (const size_t atom1 : cell1.getAtomIndices(mol1))
+                for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    for (const size_t atom2 : cell1.getAtomIndices(mol2))
+                    for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction(
                                 *box,
-                                *molecule1,
-                                *molecule2,
-                                atom1,
-                                atom2
+                                *molecule_i,
+                                *molecule_j,
+                                atom_i,
+                                atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
@@ -93,38 +99,36 @@ inline void PotentialCellList::calculateForces(
             }
         }
     }
-    for (const auto &cell1 : cellList.getCells())
+    for (const auto &cell_i : cellList.getCells())
     {
-        const auto numberOfMoleculesInCell_i = cell1.getNumberOfMolecules();
+        const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
 
-        for (const auto *cell2 : cell1.getNeighbourCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
         {
-            const auto numberOfMoleculesInCell_j =
-                cell2->getNumberOfMolecules();
+            const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
 
-            for (size_t mol1 = 0; mol1 < numberOfMoleculesInCell_i; ++mol1)
+            for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
             {
-                auto *molecule1 = cell1.getMolecule(mol1);
+                auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (const auto atom1 : cell1.getAtomIndices(mol1))
+                for (const auto atom_i : cell_i.getAtomIndices(mol_i))
                 {
-                    for (size_t mol2 = 0; mol2 < numberOfMoleculesInCell_j;
-                         ++mol2)
+                    for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
-                        auto *molecule2 = cell2->getMolecule(mol2);
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
 
-                        if (molecule1 == molecule2)
+                        if (molecule_i == molecule_j)
                             continue;
 
-                        for (const auto atom2 : cell2->getAtomIndices(mol2))
+                        for (const auto atom_j : cell_j->getAtomIndices(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction(
                                     *box,
-                                    *molecule1,
-                                    *molecule2,
-                                    atom1,
-                                    atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    atom_i,
+                                    atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -140,4 +144,14 @@ inline void PotentialCellList::calculateForces(
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+/**
+ * @brief clone the potential
+ *
+ * @return std::shared_ptr<PotentialCellList>
+ */
+std::shared_ptr<Potential> PotentialCellList::clone() const
+{
+    return std::make_shared<PotentialCellList>(*this);
 }

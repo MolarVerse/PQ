@@ -121,3 +121,67 @@ std::pair<double, double> Potential::calculateSingleInteraction(
 
     return {coulombEnergy, nonCoulombEnergy};
 }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the coulomb potential as a shared pointer
+ *
+ * @param pot
+ */
+void Potential::setNonCoulombPotential(std::shared_ptr<NonCoulombPotential> pot)
+{
+    _nonCoulombPotential = pot;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the coulomb potential
+ *
+ * @return CoulombPotential&
+ */
+CoulombPotential &Potential::getCoulombPotential() const
+{
+    return *_coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential
+ *
+ * @return NonCoulombPotential&
+ */
+NonCoulombPotential &Potential::getNonCoulombPotential() const
+{
+    return *_nonCoulombPotential;
+}
+
+/**
+ * @brief get the coulomb potential as a shared pointer
+ *
+ * @return SharedCoulombPot
+ */
+std::shared_ptr<CoulombPotential> Potential::getCoulombPotentialSharedPtr(
+) const
+{
+    return _coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential as a shared pointer
+ *
+ * @return SharedNonCoulombPot
+ */
+std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotentialSharedPtr(
+) const
+{
+    return _nonCoulombPotential;
+}

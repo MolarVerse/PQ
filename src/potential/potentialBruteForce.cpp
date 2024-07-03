@@ -33,7 +33,13 @@ namespace simulationBox
 }   // namespace simulationBox
 
 using namespace potential;
+using namespace simulationBox;
+using namespace physicalData;
 
+/**
+ * @brief Destroy the Potential Brute Force:: Potential Brute Force object
+ *
+ */
 PotentialBruteForce::~PotentialBruteForce() = default;
 
 /**
@@ -44,7 +50,7 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @param physicalData
  */
 inline void PotentialBruteForce::
-    calculateForces(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &physicalData, simulationBox::CellList &)
+    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     startTimingsSection("InterNonBonded");
 
@@ -54,29 +60,27 @@ inline void PotentialBruteForce::
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    const size_t numberOfMolecules = simBox.getNumberOfMolecules();
+    const size_t nMol = simBox.getNumberOfMolecules();
 
-    for (size_t mol1 = 0; mol1 < numberOfMolecules; ++mol1)
+    for (size_t mol_i = 0; mol_i < nMol; ++mol_i)
     {
-        auto        &molecule1                 = simBox.getMolecule(mol1);
-        const size_t numberOfAtomsInMolecule_i = molecule1.getNumberOfAtoms();
+        auto        &molecule_i    = simBox.getMolecule(mol_i);
+        const size_t nAtomsInMol_i = molecule_i.getNumberOfAtoms();
 
-        for (size_t mol2 = 0; mol2 < mol1; ++mol2)
+        for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
         {
-            auto        &molecule2 = simBox.getMolecule(mol2);
-            const size_t numberOfAtomsInMolecule_j =
-                molecule2.getNumberOfAtoms();
+            auto        &molecule_j    = simBox.getMolecule(mol_j);
+            const size_t nAtomsInMol_j = molecule_j.getNumberOfAtoms();
 
-            for (size_t atom1 = 0; atom1 < numberOfAtomsInMolecule_i; ++atom1)
+            for (size_t atom1 = 0; atom1 < nAtomsInMol_i; ++atom1)
             {
-                for (size_t atom2 = 0; atom2 < numberOfAtomsInMolecule_j;
-                     ++atom2)
+                for (size_t atom2 = 0; atom2 < nAtomsInMol_j; ++atom2)
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
                         calculateSingleInteraction(
                             *box,
-                            molecule1,
-                            molecule2,
+                            molecule_i,
+                            molecule_j,
                             atom1,
                             atom2
                         );
@@ -92,4 +96,14 @@ inline void PotentialBruteForce::
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+/**
+ * @brief clone the potential
+ *
+ * @return std::shared_ptr<PotentialBruteForce>
+ */
+std::shared_ptr<Potential> PotentialBruteForce::clone() const
+{
+    return std::make_shared<PotentialBruteForce>(*this);
 }
