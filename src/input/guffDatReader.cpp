@@ -417,7 +417,7 @@ void GuffDatReader::addLennardJonesPair(
     const auto LJPair =
         LennardJonesPair(rncCutOff, coefficients[0], coefficients[2]);
 
-    const auto [eCutOff, fCutOff] = LJPair.calculateEnergyAndForce(rncCutOff);
+    const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
         {molType1, molType2, atomType1, atomType2},
@@ -473,7 +473,7 @@ void GuffDatReader::addBuckinghamPair(
         coefficients[1],
         coefficients[2]
     );
-    const auto [eCutOff, fCutOff] = buckPair.calculateEnergyAndForce(rncCutOff);
+    const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
         {molType1, molType2, atomType1, atomType2},
@@ -528,7 +528,7 @@ void GuffDatReader::addMorsePair(
 
     // clang-format off
     const auto morsePair          = MorsePair(rncCutOff, coeffs[0], coeffs[1], coeffs[2]);
-    const auto [eCutOff, fCutOff] = morsePair.calculateEnergyAndForce(rncCutOff);
+    const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
     // clang-format on
 
     guffNonCoulomb.setGuffNonCoulombicPair(
@@ -585,7 +585,7 @@ void GuffDatReader::addGuffPair(
     );
 
     const auto guffPair           = GuffPair(rncCutOff, coefficients);
-    const auto [eCutOff, fCutOff] = guffPair.calculateEnergyAndForce(rncCutOff);
+    const auto [eCutOff, fCutOff] = guffPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulombicPair(
         {molType1, molType2, atomType1, atomType2},

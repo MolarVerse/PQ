@@ -20,17 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "potentialBruteForce.hpp"   // for PotentialBruteForce
+
 #include <cstddef>   // for size_t
 
-#include "molecule.hpp"       // for Molecule
-#include "physicalData.hpp"   // for PhysicalData
-#include "potential.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-
-namespace simulationBox
-{
-    class CellList;
-}   // namespace simulationBox
 
 using namespace potential;
 using namespace simulationBox;

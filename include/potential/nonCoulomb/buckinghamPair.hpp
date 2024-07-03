@@ -24,10 +24,10 @@
 
 #define _BUCKINGHAM_PAIR_HPP_
 
-#include "nonCoulombPair.hpp"
-
 #include <cstddef>   // size_t
 #include <utility>   // pair
+
+#include "nonCoulombPair.hpp"
 
 namespace potential
 {
@@ -39,34 +39,50 @@ namespace potential
      */
     class BuckinghamPair : public NonCoulombPair
     {
-      private:
+       private:
         double _a;
         double _dRho;
         double _c6;
 
-      public:
-        explicit BuckinghamPair(const size_t vanDerWaalsType1,
-                                const size_t vanDerWaalsType2,
-                                const double cutOff,
-                                const double a,
-                                const double dRho,
-                                const double c6)
-            : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff), _a(a), _dRho(dRho), _c6(c6){};
+       public:
+        explicit BuckinghamPair(
+            const size_t vanDerWaalsType1,
+            const size_t vanDerWaalsType2,
+            const double cutOff,
+            const double a,
+            const double dRho,
+            const double c6
+        )
+            : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+              _a(a),
+              _dRho(dRho),
+              _c6(c6){};
 
-        explicit BuckinghamPair(const double cutOff, const double a, const double dRho, const double c6)
+        explicit BuckinghamPair(
+            const double cutOff,
+            const double a,
+            const double dRho,
+            const double c6
+        )
             : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
 
-        explicit BuckinghamPair(const double cutOff,
-                                const double energyCutoff,
-                                const double forceCutoff,
-                                const double a,
-                                const double dRho,
-                                const double c6)
-            : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _a(a), _dRho(dRho), _c6(c6){};
+        explicit BuckinghamPair(
+            const double cutOff,
+            const double energyCutoff,
+            const double forceCutoff,
+            const double a,
+            const double dRho,
+            const double c6
+        )
+            : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
+              _a(a),
+              _dRho(dRho),
+              _c6(c6){};
 
         [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculateEnergyAndForce(const double distance) const override;
+        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        ) const override;
 
         [[nodiscard]] double getA() const { return _a; }
         [[nodiscard]] double getDRho() const { return _dRho; }

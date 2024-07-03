@@ -37,12 +37,13 @@
 
 namespace simulationBox
 {
-    class Molecule;        // forward declaration
-    class MoleculeType;    // forward declaration
-    class Atom;            // forward declaration
-    class SimulationBox;   // forward declaration
-    class CellList;        // forward declaration
-    class Box;             // forward declaration
+    class Molecule;              // forward declaration
+    class MoleculeType;          // forward declaration
+    class Atom;                  // forward declaration
+    class CellList;              // forward declaration
+    class Box;                   // forward declaration
+    class SimulationBox;         // forward declaration
+    class KokkosSimulationBox;   // forward declaration
 
 }   // namespace simulationBox
 
@@ -59,6 +60,9 @@ namespace potential
     class CoulombPotential;       // forward declaration
     class NonCoulombPotential;    // forward declaration
     class ForceFieldNonCoulomb;   // forward declaration
+
+    class KokkosLennardJones;   // forward declaration
+    class KokkosCoulombWolf;    // forward declaration
 
 }   // namespace potential
 
@@ -203,6 +207,9 @@ namespace pq
     using NonCoulombPot = potential::NonCoulombPotential;
     using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
 
+    using KokkosLJ   = potential::KokkosLennardJones;
+    using KokkosWolf = potential::KokkosCoulombWolf;
+
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
     using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
@@ -227,6 +234,7 @@ namespace pq
      ***************************/
 
     using SimBox       = simulationBox::SimulationBox;
+    using KokkosSimBox = simulationBox::KokkosSimulationBox;
     using CellList     = simulationBox::CellList;
     using Molecule     = simulationBox::Molecule;
     using MoleculeType = simulationBox::MoleculeType;

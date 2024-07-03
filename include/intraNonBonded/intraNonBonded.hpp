@@ -75,7 +75,7 @@ namespace intraNonBonded
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
         bool               _isActivated        = false;
 
-        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPotential;
+        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
         std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
 
@@ -120,7 +120,7 @@ namespace intraNonBonded
             const std::shared_ptr<potential::NonCoulombPotential> &pot
         )
         {
-            _nonCoulombPotential = pot;
+            _nonCoulombPot = pot;
         }
         void setCoulombPotential(
             const std::shared_ptr<potential::CoulombPotential> &pot

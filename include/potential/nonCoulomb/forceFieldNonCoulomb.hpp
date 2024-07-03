@@ -77,7 +77,7 @@ namespace potential
         [[nodiscard]] std::optional<
             shared_pair> findNonCoulombicPairByInternalTypes(size_t, size_t)
             const;
-        [[nodiscard]] shared_pair getNonCoulombPair(
+        [[nodiscard]] shared_pair getNonCoulPair(
             const std::vector<size_t> &indices
         ) override;
 

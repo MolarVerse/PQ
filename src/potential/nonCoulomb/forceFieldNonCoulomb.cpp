@@ -44,7 +44,7 @@ using namespace potential;
  * @param indices
  * @return std::shared_ptr<NonCoulombPair>
  */
-std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulombPair(
+std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(
     const std::vector<size_t> &indices
 )
 {
@@ -63,9 +63,8 @@ void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
 {
     auto setEnergyAndForceCutOff = [](auto &nonCoulombPair)
     {
-        const auto &[energy, force] = nonCoulombPair->calculateEnergyAndForce(
-            nonCoulombPair->getRadialCutOff()
-        );
+        const auto &[energy, force] =
+            nonCoulombPair->calculate(nonCoulombPair->getRadialCutOff());
         nonCoulombPair->setEnergyCutOff(energy);
         nonCoulombPair->setForceCutOff(force);
     };

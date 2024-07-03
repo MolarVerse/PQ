@@ -36,7 +36,6 @@ Public License along with this program.  If not, see
 
 namespace potential
 {
-
     /**
      * @class Potential
      *
@@ -55,7 +54,7 @@ namespace potential
     {
        protected:
         pq::SharedCoulombPot    _coulombPotential;
-        pq::SharedNonCoulombPot _nonCoulombPotential;
+        pq::SharedNonCoulombPot _nonCoulombPot;
 
        public:
         virtual ~Potential() = default;
@@ -81,53 +80,20 @@ namespace potential
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPotential(pq::SharedNonCoulombPot nonCoulombPot);
+        void setNonCoulombPotential(const pq::SharedNonCoulombPot);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::CoulombPot      &getCoulombPotential() const;
-        [[nodiscard]] pq::NonCoulombPot   &getNonCoulombPotential() const;
-        [[nodiscard]] pq::SharedCoulombPot getCoulombPotentialSharedPtr() const;
-        [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotentialSharedPtr(
-        ) const;
-    };
-
-#include "potential.tpp.hpp"   // DO NOT MOVE THIS LINE
-
-    /**
-     * @class PotentialBruteForce
-     *
-     * @brief brute force implementation of the potential
-     *
-     */
-    class PotentialBruteForce : public Potential
-    {
-       public:
-        ~PotentialBruteForce() override;
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
-
-        pq::SharedPotential clone() const override;
-    };
-
-    /**
-     * @class PotentialCellList
-     *
-     * @brief cell list implementation of the potential
-     *
-     */
-    class PotentialCellList : public Potential
-    {
-       public:
-        ~PotentialCellList() override;
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
-
-        pq::SharedPotential clone() const override;
+        [[nodiscard]] pq::CoulombPot         &getCoulombPotential() const;
+        [[nodiscard]] pq::NonCoulombPot      &getNonCoulombPotential() const;
+        [[nodiscard]] pq::SharedCoulombPot    getCoulombPotSharedPtr() const;
+        [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotSharedPtr() const;
     };
 
 }   // namespace potential
+
+#include "potential.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _POTENTIAL_HPP_

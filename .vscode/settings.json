@@ -228,6 +228,6 @@
     },
     "python.formatting.provider": "none",
     "esbonio.sphinx.confDir": "",
-    "workbench.colorTheme": "Visual Studio Dark - C++",
+    "workbench.colorTheme": "Noctis",
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
 }

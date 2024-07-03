@@ -22,9 +22,9 @@
 
 #include "buckinghamPair.hpp"
 
-#include "mathUtilities.hpp"   // for compare
-
 #include <cmath>   // for exp
+
+#include "mathUtilities.hpp"   // for compare
 
 using namespace potential;
 
@@ -37,7 +37,9 @@ using namespace potential;
  */
 bool BuckinghamPair::operator==(const BuckinghamPair &other) const
 {
-    return NonCoulombPair::operator==(other) && utilities::compare(_a, other._a) && utilities::compare(_dRho, other._dRho) &&
+    return NonCoulombPair::operator==(other) &&
+           utilities::compare(_a, other._a) &&
+           utilities::compare(_dRho, other._dRho) &&
            utilities::compare(_c6, other._c6);
 }
 
@@ -49,13 +51,16 @@ bool BuckinghamPair::operator==(const BuckinghamPair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> BuckinghamPair::calculateEnergyAndForce(const double distance) const
+std::pair<double, double> BuckinghamPair::calculate(const double distance) const
 {
-    const auto distanceSixth = distance * distance * distance * distance * distance * distance;
-    const auto expTerm       = _a * std::exp(_dRho * distance);
+    const auto distanceSixth =
+        distance * distance * distance * distance * distance * distance;
+    const auto expTerm = _a * std::exp(_dRho * distance);
 
-    const auto energy = expTerm + _c6 / distanceSixth - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
-    const auto force  = -_dRho * expTerm + 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    const auto energy = expTerm + _c6 / distanceSixth - _energyCutOff -
+                        _forceCutOff * (_radialCutOff - distance);
+    const auto force = -_dRho * expTerm +
+                       6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
 
     return {energy, force};
 }

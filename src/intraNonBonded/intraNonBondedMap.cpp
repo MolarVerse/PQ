@@ -159,11 +159,11 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
         };
 
         if (const auto nonCoulombicPair =
-                nonCoulombPotential->getNonCoulombPair(combinedIndices);
+                nonCoulombPotential->getNonCoulPair(combinedIndices);
             distance < nonCoulombicPair->getRadialCutOff())
         {
             auto [nonCoulombEnergyLocal, nonCoulombForce] =
-                nonCoulombicPair->calculateEnergyAndForce(distance);
+                nonCoulombicPair->calculate(distance);
 
             if (scale)
             {

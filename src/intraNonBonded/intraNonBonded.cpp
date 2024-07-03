@@ -104,7 +104,7 @@ void IntraNonBonded::calculate(
     {
         intraNonBondedMap.calculate(
             _coulombPotential.get(),
-            _nonCoulombPotential.get(),
+            _nonCoulombPot.get(),
             box,
             physicalData
         );

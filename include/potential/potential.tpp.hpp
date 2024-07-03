@@ -27,7 +27,7 @@ namespace potential
     template <typename T>
     void Potential::makeNonCoulombPotential(T nonCoulombPotential)
     {
-        _nonCoulombPotential = std::make_shared<T>(nonCoulombPotential);
+        _nonCoulombPot = std::make_shared<T>(nonCoulombPotential);
     }
 
 }   // namespace potential

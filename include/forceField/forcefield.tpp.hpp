@@ -69,12 +69,12 @@ namespace forceField
         const auto indices =
             {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
 
-        const auto nonCoulombPair = nonCoulPot.getNonCoulombPair(indices);
+        const auto nonCoulombPair = nonCoulPot.getNonCoulPair(indices);
 
         if (distance < nonCoulombPair->getRadialCutOff())
         {
             auto [nonCoulombEnergy, nonCoulombForce] =
-                nonCoulombPair->calculateEnergyAndForce(distance);
+                nonCoulombPair->calculate(distance);
 
             if constexpr (std::is_same_v<T, DihedralForceField>)
             {

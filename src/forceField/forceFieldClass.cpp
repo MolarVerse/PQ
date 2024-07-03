@@ -125,8 +125,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
  * @throws TopologyException if improper dihedral type with id
  * not found
  */
-const DihedralType &ForceField::findImproperTypeById(const size_t id
-) const
+const DihedralType &ForceField::findImproperTypeById(const size_t id) const
 {
     auto isImproperId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
@@ -205,7 +204,7 @@ void ForceField::calculateBondInteractions(
             box,
             physicalData,
             *_coulombPotential,
-            *_nonCoulombPotential
+            *_nonCoulombPot
         );
     };
 
@@ -229,7 +228,7 @@ void ForceField::calculateAngleInteractions(
             box,
             physicalData,
             *_coulombPotential,
-            *_nonCoulombPotential
+            *_nonCoulombPot
         );
     };
 
@@ -257,7 +256,7 @@ void ForceField::calculateDihedralInteractions(
             physicalData,
             false,
             *_coulombPotential,
-            *_nonCoulombPotential
+            *_nonCoulombPot
         );
     };
 
@@ -285,7 +284,7 @@ void ForceField::calculateImproperDihedralInteractions(
             physicalData,
             true,
             *_coulombPotential,
-            *_nonCoulombPotential
+            *_nonCoulombPot
         );
     };
 
@@ -318,7 +317,7 @@ void ForceField::calculateJCouplingInteractions(
     //         box,
     //         physicalData,
     //         *_coulombPotential,
-    //         *_nonCoulombPotential
+    //         *_nonCoulombPot
     //     );
     // };
 
@@ -509,7 +508,7 @@ void ForceField::setNonCoulombPotential(
     const std::shared_ptr<NonCoulombPotential> &pot
 )
 {
-    _nonCoulombPotential = pot;
+    _nonCoulombPot = pot;
 }
 
 /**

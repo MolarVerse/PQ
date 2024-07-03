@@ -32,7 +32,7 @@ using namespace potential;
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> GuffPair::calculateEnergyAndForce(const double distance) const
+std::pair<double, double> GuffPair::calculate(const double distance) const
 {
     const double c1 = _coefficients[0];
     const double n2 = _coefficients[1];
@@ -43,7 +43,8 @@ std::pair<double, double> GuffPair::calculateEnergyAndForce(const double distanc
     const double distance_n4 = ::pow(distance, n4);
 
     auto energy = c1 / distance_n2 + c3 / distance_n4;
-    auto force  = n2 * c1 / (distance_n2 * distance) + n4 * c3 / (distance_n4 * distance);
+    auto force =
+        n2 * c1 / (distance_n2 * distance) + n4 * c3 / (distance_n4 * distance);
 
     const double c5 = _coefficients[4];
     const double n6 = _coefficients[5];
@@ -54,7 +55,8 @@ std::pair<double, double> GuffPair::calculateEnergyAndForce(const double distanc
     const double distance_n8 = ::pow(distance, n8);
 
     energy += c5 / distance_n6 + c7 / distance_n8;
-    force  += n6 * c5 / (distance_n6 * distance) + n8 * c7 / (distance_n8 * distance);
+    force +=
+        n6 * c5 / (distance_n6 * distance) + n8 * c7 / (distance_n8 * distance);
 
     const double c9     = _coefficients[8];
     const double cexp10 = _coefficients[9];

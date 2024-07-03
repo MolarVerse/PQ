@@ -20,13 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "potentialCellList.hpp"   // for PotentialCellList
+
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "cell.hpp"           // for Cell, simulationBox
-#include "celllist.hpp"       // for CellList
-#include "physicalData.hpp"   // for PhysicalData
-#include "potential.hpp"
+#include "cell.hpp"            // for Cell, simulationBox
+#include "celllist.hpp"        // for CellList
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace potential;
@@ -99,6 +100,7 @@ inline void PotentialCellList::calculateForces(
             }
         }
     }
+
     for (const auto &cell_i : cellList.getCells())
     {
         const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
