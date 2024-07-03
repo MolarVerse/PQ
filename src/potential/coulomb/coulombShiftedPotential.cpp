@@ -25,6 +25,7 @@
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 
 using namespace potential;
+using namespace constants;
 
 /**
  * @brief calculate the energy and force of the shifted Coulomb potential
@@ -32,13 +33,18 @@ using namespace potential;
  * @param distance
  * @return std::pair<double, double>
  */
-[[nodiscard]] std::pair<double, double> CoulombShiftedPotential::calculate(const double distance,
-                                                                           const double chargeProduct) const
+std::pair<double, double> CoulombShiftedPotential::calculate(
+    const double distance,
+    const double chargeProduct
+) const
 {
-    const auto coulombPrefactor = chargeProduct * constants::_COULOMB_PREFACTOR_;
+    const auto coulombPrefactor    = chargeProduct * _COULOMB_PREFACTOR_;
+    const auto dInv                = 1 / distance;
+    const auto deltaCutOff         = _coulombRadiusCutOff - distance;
+    const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
-    auto energy = (1 / distance) - _coulombEnergyCutOff - _coulombForceCutOff * (_coulombRadiusCutOff - distance);
-    auto force  = (1 / (distance * distance)) - _coulombForceCutOff;
+    auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
+    auto force  = dInv * dInv - _coulombForceCutOff;
 
     energy *= coulombPrefactor;
     force  *= coulombPrefactor;

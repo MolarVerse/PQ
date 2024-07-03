@@ -43,24 +43,24 @@ KokkosCoulombWolf::KokkosCoulombWolf(
 )
     : _coulombRadiusCutOff("coulombRadiusCutOff", 1),
       _kappa("kappa", 1),
-      _wolfParameter1("wolfParameter1", 1),
-      _wolfParameter2("wolfParameter2", 1),
-      _wolfParameter3("wolfParameter3", 1),
+      _wolfParam1("wolfParameter1", 1),
+      _wolfParam2("wolfParameter2", 1),
+      _wolfParam3("wolfParameter3", 1),
       _prefactor("prefactor", 1)
 
 {
     _coulombRadiusCutOff.h_view() = coulombRadiusCutOff;
     _kappa.h_view()               = kappa;
-    _wolfParameter1.h_view()      = wolfParameter1;
-    _wolfParameter2.h_view()      = wolfParameter2;
-    _wolfParameter3.h_view()      = wolfParameter3;
+    _wolfParam1.h_view()          = wolfParameter1;
+    _wolfParam2.h_view()          = wolfParameter2;
+    _wolfParam3.h_view()          = wolfParameter3;
     _prefactor.h_view()           = prefactor;
 
     Kokkos::deep_copy(_coulombRadiusCutOff.d_view, _coulombRadiusCutOff.h_view);
     Kokkos::deep_copy(_kappa.d_view, _kappa.h_view);
-    Kokkos::deep_copy(_wolfParameter1.d_view, _wolfParameter1.h_view);
-    Kokkos::deep_copy(_wolfParameter2.d_view, _wolfParameter2.h_view);
-    Kokkos::deep_copy(_wolfParameter3.d_view, _wolfParameter3.h_view);
+    Kokkos::deep_copy(_wolfParam1.d_view, _wolfParam1.h_view);
+    Kokkos::deep_copy(_wolfParam2.d_view, _wolfParam2.h_view);
+    Kokkos::deep_copy(_wolfParam3.d_view, _wolfParam3.h_view);
     Kokkos::deep_copy(_prefactor.d_view, _prefactor.h_view);
 }
 
@@ -83,9 +83,9 @@ KokkosCoulombWolf::KokkosCoulombWolf(
 // {
 //     const auto prefactor      = _prefactor.d_view();
 //     const auto kappa          = _kappa.d_view();
-//     const auto wolfParameter1 = _wolfParameter1.d_view();
-//     const auto wolfParameter2 = _wolfParameter2.d_view();
-//     const auto wolfParameter3 = _wolfParameter3.d_view();
+//     const auto wolfParameter1 = _wolfParam1.d_view();
+//     const auto wolfParameter2 = _wolfParam2.d_view();
+//     const auto wolfParameter3 = _wolfParam3.d_view();
 //     const auto rcCutOff       = _coulombRadiusCutOff.d_view();
 
 //     const auto coulombPrefactor = charge_i * charge_j * prefactor;

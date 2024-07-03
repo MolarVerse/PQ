@@ -43,9 +43,9 @@ namespace potential
        private:
         Kokkos::DualView<double> _coulombRadiusCutOff;
         Kokkos::DualView<double> _kappa;
-        Kokkos::DualView<double> _wolfParameter1;
-        Kokkos::DualView<double> _wolfParameter2;
-        Kokkos::DualView<double> _wolfParameter3;
+        Kokkos::DualView<double> _wolfParam1;
+        Kokkos::DualView<double> _wolfParam2;
+        Kokkos::DualView<double> _wolfParam3;
         Kokkos::DualView<double> _prefactor;
 
        public:
@@ -70,9 +70,9 @@ namespace potential
         {
             const auto prefactor      = _prefactor.d_view();
             const auto kappa          = _kappa.d_view();
-            const auto wolfParameter1 = _wolfParameter1.d_view();
-            const auto wolfParameter2 = _wolfParameter2.d_view();
-            const auto wolfParameter3 = _wolfParameter3.d_view();
+            const auto wolfParameter1 = _wolfParam1.d_view();
+            const auto wolfParameter2 = _wolfParam2.d_view();
+            const auto wolfParameter3 = _wolfParam3.d_view();
             const auto rcCutOff       = _coulombRadiusCutOff.d_view();
 
             const auto coulombPrefactor = charge_i * charge_j * prefactor;
