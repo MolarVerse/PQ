@@ -1,0 +1,127 @@
+
+************************************************************************
+*                                                                      *
+*                                                                      *
+*                      88888888ba     ,ad8888ba,                       *
+*                      88      "8b   d8"'    `"8b                      *
+*                      88      ,8P  d8'        `8b                     *
+*                      88aaaaaa8P'  88          88                     *
+*                      88""""""'    88          88                     *
+*                      88           Y8,    "88,,8P                     *
+*                      88            Y8a.    Y88P                      *
+*                      88             `"Y8888Y"Y8a                     *
+*                                                                      *
+*                                                                      *
+************************************************************************
+
+         Author:        Jakob Gamper
+         Email:         97gamjak@gmail.com
+
+         Testing:       Josef M. Gallmetzer
+                        Armin Penz
+                        Stefan Seiwald
+                        Benjamin Reitmair
+
+         Version:       v0.3.9.2-4b5d5eb2
+         Compile date:  Jul  3 2024 14:22:39
+
+INFO:    Reading Moldescriptor File "moldescriptor.dat"
+
+INFO:    Reading Start File "chignolin.rst"
+
+INFO:    Reading Topology File "topology.top"
+
+INFO:    Reading Parameter File "qmcfc.param"
+
+INFO:    Reading Intra Non-Bonded File "intra_nonbonded.dat"
+
+INFO:    Setup of Reset Kinetics
+
+         reset temperature:      first     0 steps, every    -1 steps
+         reset momentum:         first     0 steps, every    -1 steps
+         reset angular momentum: first     0 steps, every    -1 steps
+
+INFO:    Setup of simulation box
+
+         number of atoms:       7382
+         total mass:           44614.92630 g/mol
+         total charge:             0.00000
+         unconstrained DOF:    22143
+
+         density:                1.00849 kg/L
+         volume:          
+
+         box dimensions:        43.06894 Å       42.28829 Å       40.33430 Å
+         box angles:            90.00000°        90.00000°        90.00000°
+
+         coulomb cutoff:        20.00000 Å
+
+         velocities taken from start file "chignolin.rst"
+
+INFO:    Setup of thermostat
+
+INFO:    Setup of Manostat
+
+         No manostat selected
+
+INFO:    Setup of MM potential
+
+         Coulomb long range type: wolf
+
+         Coulomb radius cut-off: 20
+         Wolf parameter:         0.25
+
+         Non-coulombic potential: ForceField
+         Total Global VDW types:  14
+
+INFO:    Setup of Intra Non-Bonded Interactions
+
+INFO:    Setup of Force Field
+
+         Bonds:     80
+         Angles:    249
+         Dihedrals: 457
+         Impropers: 36
+
+         Bond Types:     42
+         Angle Types:    86
+         Dihedral Types: 60
+         Improper Types: 4
+
+INFO:    Setup of Constraints
+
+         SHAKE:   enabled
+         M-SHAKE: disabled
+
+         Number of SHAKE bonds:       7303
+         Number of M-SHAKE types:     0
+         Number of M-SHAKE molecules: 0
+
+         SHAKE Tolerance:  0.001
+         RATTLE Tolerance: 1e+09
+
+         SHAKE Max Iter:  20
+         RATTLE Max Iter: 20
+
+         SHAKE DOF:   7303
+         M-SHAKE DOF: 0
+         Total DOF:   14840
+
+
+************************ STARTING SIMULATION ****************************
+
+
+INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
+
+
+         Elapsed time = 28.42000 s
+
+
+INFO:    For citation please refer to the ".ref" file.
+
+*************************************************************************
+*                                                                       *
+*                          PQ ended normally                            *
+*                                                                       *
+*************************************************************************
+
