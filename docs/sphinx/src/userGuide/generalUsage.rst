@@ -4,7 +4,7 @@
 General Usage
 #############
 
-The PQ applications is based on a single input file execution. A fully prepared setup is completely defined by an input 
+**PQ** is based on a single input file execution. A fully prepared setup is completely defined by an input 
 file ``PQ.in`` and can be executed in the following form:
 
 .. code-block:: bash

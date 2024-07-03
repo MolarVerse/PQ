@@ -436,11 +436,14 @@ The :code:`rpmd_energy_file` keyword sets the name for the file containing relev
 
 .. centered:: *default value* = "default.rpmd.en"
 
-***********************
-Input (Setup) File Keys
-***********************
+.. _setupfilekeys:
 
-In order to setup certain calculations additional input files have to be used. The names of these files have to be specified in the input file. For further information about these input files can be found in the :ref:`setupFiles` section.
+****************
+Setup File Keys
+****************
+
+In order to setup certain calculations additional input files have to be used. The names of these setup files have to be specified in the 
+input file. Further information about these input files can be found in the :ref:`setupFiles` section.
 
 Moldesctiptor_File
 ==================
@@ -450,8 +453,6 @@ Moldesctiptor_File
 
     moldescriptor_file = {file} -> "moldescriptor.dat"
 
-.. centered:: *default value* = "moldescriptor.dat"
-
 Guff_File
 =========
 
@@ -459,8 +460,6 @@ Guff_File
     :class: tip
 
     guff_file = {file} -> "guff.dat"
-
-.. centered:: *default value* = "guff.dat"
 
 Topology_File
 =============
