@@ -21,8 +21,8 @@ the ``.rst`` file as described in the :ref:`restartFile` section. Providing a mo
 coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file. The moldescriptor file is structured into groups for every moltype,
 which have the following form:
 
-    | line 1: name n_atoms charge
-    | line 2 to (n_atoms + 1): element atom_type point_charge
+    | **line 1:** name n_atoms charge
+    | **line 2 to (n_atoms + 1):** element atom_type point_charge
 
 The parameters name, n_atoms, and charge in the first line denote the name of the moltype, the number of atoms in the moltype, and the total
 charge of the moltype in units of the elementary charge *e*. The following lines contain the element symbol, the MM atom type, and the MM 

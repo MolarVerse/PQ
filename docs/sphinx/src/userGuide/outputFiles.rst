@@ -29,9 +29,9 @@ Charge File
 
 Stores the charge of each atom for every frame of the simulation in the following format:
     
-    | line 1: n_atoms *a* *b* *c* *α* *β* *γ*
-    | line 2: empty
-    | line 3 to (n_atoms + 2): element charge
+    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
+    | **line 2:** empty
+    | **line 3 to (n_atoms + 2):** element charge
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation 
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element 
@@ -47,9 +47,9 @@ Coordinate File
 
 Stores the coordinates (*x*, *y*, *z*) of each atom for every frame of the simulation in the following format:
     
-    | line 1: n_atoms *a* *b* *c* *α* *β* *γ*
-    | line 2: empty
-    | line 3 to (n_atoms + 2): element *x* *y* *z*
+    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
+    | **line 2:** empty
+    | **line 3 to (n_atoms + 2):** element *x* *y* *z*
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element
@@ -90,9 +90,9 @@ Force File
 
 Stores the force *F* acting on each atom for every frame of the simulation in the following format:
     
-    | line 1: n_atoms *a* *b* *c* *α* *β* *γ*
-    | line 2: total_force
-    | line 3 to (n_atoms + 2): element *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
+    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
+    | **line 2:** total_force
+    | **line 3 to (n_atoms + 2):** element *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation 
 box and the respective box parameters in units of Å and degrees. The second line gives the total force acting on the system in 
@@ -142,9 +142,9 @@ Restart File
 
 Stores the coordinates, velocities, and forces of each atom for the current and previous simulation step in the following format:
     
-    | line 1: "Step" step_number
-    | line 2: "Box" *a* *b* *c* *α* *β* *γ*
-    | line 3 to (n_atoms + 2): element running_index moltype *x* *y* *z* *v*:sub:`x` *v*:sub:`y` *v*:sub:`z` *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
+    | **line 1:** "Step" step_number
+    | **line 2:** "Box" *a* *b* *c* *α* *β* *γ*
+    | **line 3 to (n_atoms + 2):** element running_index moltype *x* *y* *z* *v*:sub:`x` *v*:sub:`y` *v*:sub:`z` *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
 
 The first line contains the string "Step" followed by the total number of performed simulation steps. The second line starts with the string 
 "Box" followed by the parameters *a*, *b*, *c*, *α*, *β*, and *γ*, which denote the parameters of the simulation box in units of Å and degrees. 
@@ -168,9 +168,9 @@ Velocity File
 
 Stores the velocity *v* of each atom for every frame of the simulation in the following format:
     
-    | line 1: n_atoms *a* *b* *c* *α* *β* *γ*
-    | line 2: empty
-    | line 3 to (n_atoms + 2): element *v*:sub:`x` *v*:sub:`y` *v*:sub:`z`
+    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
+    | **line 2:** empty
+    | **line 3 to (n_atoms + 2):** element *v*:sub:`x` *v*:sub:`y` *v*:sub:`z`
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the element
