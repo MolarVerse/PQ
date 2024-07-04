@@ -34,10 +34,11 @@ identical atoms from different moltypes to the same atom type.
 .. Attention::
 
     Providing a moldescriptor file is optional for pure QM calculations, but becomes mandatory if there are MM atoms present in the 
-    system and/or pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file. In case of a pure QM 
-    calculation the charge of the moltype, the atom_type_index as well as the point_charge can be set to 0 and the global_vdW_type 
-    can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the point_charge can be set to 0 and the global_vdW_type 
-    can be omitted.
+    system and/or pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file. If no moldescriptor file is
+    provided, the element symbol (as given by the :ref:`restartFile`) will be printed to the output files instead of the 
+    atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be 
+    set to 0 and the global_vdW_type can be omitted. Moreover, the  For MM calculations that utilize just the :ref:`guffdatFile`, the 
+    point_charge can be set to 0 and the global_vdW_type can be omitted.
 
 .. _guffdatFile:
 
