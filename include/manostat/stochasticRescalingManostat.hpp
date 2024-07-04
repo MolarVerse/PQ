@@ -24,9 +24,9 @@
 
 #define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
 
-#include "berendsenManostat.hpp"   // for Manostat
-
 #include <random>   // for std::random_device, std::mt19937
+
+#include "berendsenManostat.hpp"   // for Manostat
 
 namespace simulationBox
 {
@@ -48,7 +48,7 @@ namespace manostat
      */
     class StochasticRescalingManostat : public Manostat
     {
-      protected:
+       protected:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
@@ -56,14 +56,30 @@ namespace manostat
         double _compressibility;
         double _dt;
 
-      public:
+       public:
         StochasticRescalingManostat() = default;
         StochasticRescalingManostat(const StochasticRescalingManostat &other);
-        explicit StochasticRescalingManostat(const double targetPressure, const double tau, const double compressibility);
+        explicit StochasticRescalingManostat(
+            const double targetPressure,
+            const double tau,
+            const double compressibility
+        );
 
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
+            override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double volume);
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(
+            const double volume
+        );
+
+        [[nodiscard]] settings::ManostatType getManostatType() const override;
+        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+
+        [[nodiscard]] double getTau() const { return _tau; }
+        [[nodiscard]] double getCompressibility() const
+        {
+            return _compressibility;
+        }
     };
 
     /**
@@ -72,22 +88,28 @@ namespace manostat
      * @link https://doi.org/10.1063/5.0020514
      *
      */
-    class SemiIsotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    class SemiIsotropicStochasticRescalingManostat
+        : public StochasticRescalingManostat
     {
-      private:
+       private:
         size_t              _2DAnisotropicAxis;
         std::vector<size_t> _2DIsotropicAxes;
 
-      public:
-        explicit SemiIsotropicStochasticRescalingManostat(const double               targetPressure,
-                                                          const double               tau,
-                                                          const double               compressibility,
-                                                          const size_t               anisotropicAxis,
-                                                          const std::vector<size_t> &isotropicAxes)
-            : StochasticRescalingManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
+       public:
+        explicit SemiIsotropicStochasticRescalingManostat(
+            const double               targetPressure,
+            const double               tau,
+            const double               compressibility,
+            const size_t               anisotropicAxis,
+            const std::vector<size_t> &isotropicAxes
+        )
+            : StochasticRescalingManostat(targetPressure, tau, compressibility),
+              _2DAnisotropicAxis(anisotropicAxis),
               _2DIsotropicAxes(isotropicAxes){};
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume
+        ) override;
+        [[nodiscard]] settings::Isotropy      getIsotropy() const final;
     };
 
     /**
@@ -96,12 +118,15 @@ namespace manostat
      * @link https://doi.org/10.1063/5.0020514
      *
      */
-    class AnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    class AnisotropicStochasticRescalingManostat
+        : public StochasticRescalingManostat
     {
-      public:
+       public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume
+        ) override;
+        [[nodiscard]] settings::Isotropy      getIsotropy() const final;
     };
 
     /**
@@ -110,12 +135,15 @@ namespace manostat
      * @link https://doi.org/10.1063/5.0020514
      *
      */
-    class FullAnisotropicStochasticRescalingManostat : public StochasticRescalingManostat
+    class FullAnisotropicStochasticRescalingManostat
+        : public StochasticRescalingManostat
     {
-      public:
+       public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume) override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu(const double volume
+        ) override;
+        [[nodiscard]] settings::Isotropy      getIsotropy() const final;
     };
 
 }   // namespace manostat

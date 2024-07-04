@@ -69,3 +69,23 @@ void Manostat::applyManostat(
     calculatePressure(box, physicalData);
     stopTimingsSection("Calc Pressure");
 }
+
+/**
+ * @brief get the manostat type
+ *
+ * @return settings::ManostatType
+ */
+settings::ManostatType Manostat::getManostatType() const
+{
+    return settings::ManostatType::NONE;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy Manostat::getIsotropy() const
+{
+    return settings::Isotropy::NONE;
+}
