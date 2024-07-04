@@ -32,6 +32,24 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using thermostat::VelocityRescalingThermostat;
+using namespace settings;
+using namespace simulationBox;
+using namespace physicalData;
+
+/**
+ * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
+ * Thermostat object
+ *
+ * @param targetTemp
+ * @param tau
+ */
+VelocityRescalingThermostat::VelocityRescalingThermostat(
+    const double targetTemp,
+    const double tau
+)
+    : Thermostat(targetTemp), _tau(tau)
+{
+}
 
 /**
  * @brief Copy constructor for Velocity Rescaling Thermostat
@@ -52,8 +70,8 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
  * @param physicalData
  */
 void VelocityRescalingThermostat::applyThermostat(
-    simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData   &physicalData
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
 )
 {
     startTimingsSection("Velocity Rescaling");
@@ -62,9 +80,10 @@ void VelocityRescalingThermostat::applyThermostat(
 
     _temperature = physicalData.getTemperature();
 
-    const auto timeStep  = settings::TimingsSettings::getTimeStep();
+    const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
     const auto dof       = double(simulationBox.getDegreesOfFreedom());
+
     const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
 
     auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
@@ -78,9 +97,23 @@ void VelocityRescalingThermostat::applyThermostat(
     for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
-    physicalData.setTemperature(
-        _temperature * berendsenFactor * berendsenFactor
-    );
+    const auto temperature = _temperature * berendsenFactor * berendsenFactor;
+
+    physicalData.setTemperature(temperature);
 
     stopTimingsSection("Velocity Rescaling");
 }
+
+/**
+ * @brief Get the tau (relaxation time) of the Velocity Rescaling thermostat
+ *
+ * @return double
+ */
+double VelocityRescalingThermostat::getTau() const { return _tau; }
+
+/**
+ * @brief Set the tau (relaxation time) of the Velocity Rescaling thermostat
+ *
+ * @param tau
+ */
+void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
