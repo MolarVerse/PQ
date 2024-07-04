@@ -135,8 +135,7 @@ void ManostatSetup::setupBerendsenManostat()
         using enum Isotropy;
 
             // clang-format off
-
-        case ISOTROPIC:
+        case SEMI_ISOTROPIC:
             _engine.makeManostat(SemiIsotropicBerendsenManostat(pTarget, tau, compress, aniso, iso));
             break;
 
@@ -148,6 +147,7 @@ void ManostatSetup::setupBerendsenManostat()
             _engine.makeManostat(FullAnisotropicBerendsenManostat(pTarget, tau, compress));
             break;
 
+        case ISOTROPIC: // fall through
         default:
             _engine.makeManostat(BerendsenManostat(pTarget, tau, compress));
 
@@ -176,7 +176,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 
             // clang-format off
 
-        case ISOTROPIC:
+        case SEMI_ISOTROPIC:
             _engine.makeManostat(pq::SemiIsoStochasticManostat(pTarget, tau, compress, aniso, iso));
             break;
 
@@ -188,6 +188,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
             _engine.makeManostat(pq::FullAnisoStochasticManostat(pTarget, tau, compress));
             break;
 
+        case ISOTROPIC: // fall through
         default:
             _engine.makeManostat(pq::StochasticManostat(pTarget, tau, compress));
 

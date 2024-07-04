@@ -252,3 +252,54 @@ linearAlgebra::tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
         stochasticFactor
     );
 }
+
+/**
+ * @brief get the manostat type
+ *
+ * @return settings::ManostatType
+ */
+settings::ManostatType StochasticRescalingManostat::getManostatType() const
+{
+    return settings::ManostatType::STOCHASTIC_RESCALING;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy StochasticRescalingManostat::getIsotropy() const
+{
+    return settings::Isotropy::ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy SemiIsotropicStochasticRescalingManostat::getIsotropy() const
+{
+    return settings::Isotropy::SEMI_ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy AnisotropicStochasticRescalingManostat::getIsotropy() const
+{
+    return settings::Isotropy::ANISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy FullAnisotropicStochasticRescalingManostat::getIsotropy(
+) const
+{
+    return settings::Isotropy::FULL_ANISOTROPIC;
+}

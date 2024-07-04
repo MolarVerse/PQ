@@ -162,6 +162,7 @@
         "ldlt",
         "Lennard",
         "LINESEARCH",
+        "Logfile",
         "LOGOUTPUT",
         "LOOPTIME",
         "manostat",
