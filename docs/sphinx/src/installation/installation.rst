@@ -10,7 +10,7 @@ Building from Source
 
 **Prerequisites**
 
-* CMake >= 3.28
+* CMake >= 3.18
 * GCC >= 13.0
 
 Clone the PQ GitHub repository and navigate into the directory:
