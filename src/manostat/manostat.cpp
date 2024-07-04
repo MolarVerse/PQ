@@ -32,6 +32,7 @@ using namespace manostat;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
+using namespace settings;
 
 /**
  * @brief Construct a new Manostat:: Manostat object
@@ -82,19 +83,13 @@ void Manostat::applyManostat(SimulationBox &box, PhysicalData &data)
 /**
  * @brief get the manostat type
  *
- * @return settings::ManostatType
+ * @return ManostatType
  */
-settings::ManostatType Manostat::getManostatType() const
-{
-    return settings::ManostatType::NONE;
-}
+ManostatType Manostat::getManostatType() const { return ManostatType::NONE; }
 
 /**
  * @brief get the isotropy of the manostat
  *
- * @return settings::Isotropy
+ * @return Isotropy
  */
-settings::Isotropy Manostat::getIsotropy() const
-{
-    return settings::Isotropy::NONE;
-}
+Isotropy Manostat::getIsotropy() const { return Isotropy::NONE; }

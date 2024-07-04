@@ -24,16 +24,17 @@
 
 #include <format>   // for std::format
 
-#include "globalTimer.hpp"   // for timings::GlobalTimer
+#include "globalTimer.hpp"   // for GlobalTimer
 
 using namespace output;
+using namespace timings;
 
 /**
  * @brief Write the timings to the output file
  *
  * @param timer The timer object
  */
-void TimingsOutput::write(timings::GlobalTimer &timer)
+void TimingsOutput::write(GlobalTimer &timer)
 {
     timer.sortTimers();
 

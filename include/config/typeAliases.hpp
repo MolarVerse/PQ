@@ -145,6 +145,7 @@ namespace manostat
 namespace timings
 {
     class Timer;
+    class GlobalTimer;
 
 }   // namespace timings
 
@@ -189,6 +190,7 @@ namespace pq
     using IntraNonBond = intraNonBonded::IntraNonBonded;
     using ForceField   = forceField::ForceField;
     using Timer        = timings::Timer;
+    using GlobalTimer  = timings::GlobalTimer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;

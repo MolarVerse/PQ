@@ -120,8 +120,9 @@ void RstFileOutput::writeNHChain(
 
     for (size_t i = 0; i < chi.size() - 1; ++i)
     {
-        buffer << "chi ";
-        buffer << std::format("{:2d}\t{:10.5e}\t{:10.5e}", i+1, chi[i], zeta[i]);
-        buffer << '\n';
+        buffer
+            << "chi "
+            << std::format("{:2d}\t{:10.5e}\t{:10.5e}", i + 1, chi[i], zeta[i])
+            << '\n';
     }
 }

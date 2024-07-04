@@ -37,6 +37,7 @@
 
 using output::RingPolymerTrajectoryOutput;
 using namespace settings;
+using namespace simulationBox;
 
 /**
  * @brief write the header of the beads trajectory file
@@ -46,9 +47,7 @@ using namespace settings;
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeHeader(
-    const simulationBox::SimulationBox &simBox
-)
+void RingPolymerTrajectoryOutput::writeHeader(const SimulationBox &simBox)
 {
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
@@ -61,9 +60,7 @@ void RingPolymerTrajectoryOutput::writeHeader(
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeXyz(
-    std::vector<simulationBox::SimulationBox> &beads
-)
+void RingPolymerTrajectoryOutput::writeXyz(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 
@@ -102,7 +99,7 @@ void RingPolymerTrajectoryOutput::writeXyz(
  * @param beads
  */
 void RingPolymerTrajectoryOutput::writeVelocities(
-    std::vector<simulationBox::SimulationBox> &beads
+    std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;
@@ -142,9 +139,7 @@ void RingPolymerTrajectoryOutput::writeVelocities(
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeForces(
-    std::vector<simulationBox::SimulationBox> &beads
-)
+void RingPolymerTrajectoryOutput::writeForces(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 
@@ -192,8 +187,7 @@ void RingPolymerTrajectoryOutput::writeForces(
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeCharges(
-    std::vector<simulationBox::SimulationBox> &beads
+void RingPolymerTrajectoryOutput::writeCharges(std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;
