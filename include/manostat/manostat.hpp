@@ -24,6 +24,7 @@
 
 #define _MANOSTAT_HPP_
 
+#include "manostatSettings.hpp"
 #include "staticMatrix3x3.hpp"   // for tensor3D
 #include "timer.hpp"             // for Timer
 
@@ -62,6 +63,9 @@ namespace manostat
 
         void calculatePressure(const simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+
+        virtual settings::ManostatType getManostatType() const;
+        virtual settings::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat
