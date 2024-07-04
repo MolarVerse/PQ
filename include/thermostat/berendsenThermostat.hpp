@@ -48,17 +48,22 @@ namespace thermostat
      */
     class BerendsenThermostat : public Thermostat
     {
-      private:
+       private:
         double _tau;
 
-      public:
+       public:
         BerendsenThermostat() = default;
-        explicit BerendsenThermostat(const double targetTemp, const double tau) : Thermostat(targetTemp), _tau(tau) {}
+        explicit BerendsenThermostat(const double targetTemp, const double tau)
+            : Thermostat(targetTemp), _tau(tau)
+        {
+        }
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
+            override;
 
-        [[nodiscard]] double getTau() const { return _tau; }
-        void                 setTau(const double tau) { _tau = tau; }
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]] double             getTau() const { return _tau; }
+        void setTau(const double tau) { _tau = tau; }
     };
 
 }   // namespace thermostat

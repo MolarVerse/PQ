@@ -26,10 +26,11 @@
 #include <memory>   // for __shared_ptr_access, shared_ptr
 #include <vector>   // for vector
 
-#include "atom.hpp"              // for Atom
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "atom.hpp"                 // for Atom
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "thermostatSettings.hpp"   // for ThermostatType
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::BerendsenThermostat;
 
@@ -63,4 +64,14 @@ void BerendsenThermostat::applyThermostat(
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 
     stopTimingsSection("Berendsen");
+}
+
+/**
+ * @brief Get thermostat type
+ *
+ * @return ThermostatType
+ */
+pq::ThermostatType BerendsenThermostat::getThermostatType() const
+{
+    return pq::ThermostatType::BERENDSEN;
 }

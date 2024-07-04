@@ -30,6 +30,7 @@
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
+#include "thermostatSettings.hpp"            // for ThermostatType
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "vector3d.hpp"                      // for operator*, Vec3D
 
@@ -64,8 +65,7 @@ void LangevinThermostat::calculateSigma(
 )
 {
     const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_M2_TO_ANGSTROM2_ *
+        constants::_UNIVERSAL_GAS_CONSTANT_ * constants::_M2_TO_ANGSTROM2_ *
         constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
 
     const auto timeStep = settings::TimingsSettings::getTimeStep();
@@ -161,4 +161,14 @@ void LangevinThermostat::
     startTimingsSection("LangevinThermostat - Half Step");
     applyLangevin(simBox);
     stopTimingsSection("LangevinThermostat - Half Step");
+}
+
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType LangevinThermostat::getThermostatType() const
+{
+    return settings::ThermostatType::LANGEVIN;
 }

@@ -74,6 +74,7 @@ namespace thermostat
 
         [[nodiscard]] double getFriction() const { return _friction; }
         [[nodiscard]] double getSigma() const { return _sigma; }
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
 
         void setFriction(const double friction) { _friction = friction; }
         void setSigma(const double sigma) { _sigma = sigma; }

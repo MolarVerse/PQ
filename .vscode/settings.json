@@ -115,7 +115,8 @@
         "nonlinearoptimization": "cpp",
         "sparseextra": "cpp",
         "alignedvector3": "cpp",
-        "text_encoding": "cpp"
+        "text_encoding": "cpp",
+        "numericaldiff": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [

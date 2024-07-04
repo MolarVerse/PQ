@@ -30,6 +30,7 @@
 #include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatType
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for operator*
 
@@ -130,4 +131,14 @@ void NoseHooverThermostat::applyThermostat(
     physicalData.setNoseHooverFrictionEnergy(energyFriction);
 
     stopTimingsSection("Nose-Hoover - Velocities");
+}
+
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType NoseHooverThermostat::getThermostatType() const
+{
+    return settings::ThermostatType::NOSE_HOOVER;
 }
