@@ -158,7 +158,10 @@ namespace thermostat
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
-}
+    enum class ManostatType;
+    enum class Isotropy;
+
+}   // namespace settings
 
 namespace pq
 {
@@ -196,6 +199,8 @@ namespace pq
      **********************/
 
     using ThermostatType = settings::ThermostatType;
+    using Isotropy       = settings::Isotropy;
+    using ManostatType   = settings::ManostatType;
 
     /************************
      * thermostat namespace *

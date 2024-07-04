@@ -48,9 +48,10 @@ namespace thermostat
 
         void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
 
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        void setTau(const double tau);
+
         [[nodiscard]] double             getTau() const;
-        void                             setTau(const double tau);
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

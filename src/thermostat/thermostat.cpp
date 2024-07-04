@@ -172,7 +172,7 @@ size_t Thermostat::getRampingFrequency() const { return _rampingFrequency; }
  *
  * @return ThermostatType
  */
-settings::ThermostatType Thermostat::getThermostatType() const
+ThermostatType Thermostat::getThermostatType() const
 {
-    return settings::ThermostatType::NONE;
+    return ThermostatType::NONE;
 }

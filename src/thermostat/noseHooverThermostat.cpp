@@ -247,7 +247,7 @@ void NoseHooverThermostat::setCouplingFrequency(const double couplingFrequency)
  *
  * @return ThermostatType
  */
-settings::ThermostatType NoseHooverThermostat::getThermostatType() const
+ThermostatType NoseHooverThermostat::getThermostatType() const
 {
-    return settings::ThermostatType::NOSE_HOOVER;
+    return ThermostatType::NOSE_HOOVER;
 }

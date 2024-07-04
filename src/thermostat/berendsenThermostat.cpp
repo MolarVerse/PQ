@@ -102,7 +102,7 @@ void BerendsenThermostat::setTau(const double tau) { _tau = tau; }
  *
  * @return ThermostatType
  */
-pq::ThermostatType BerendsenThermostat::getThermostatType() const
+ThermostatType BerendsenThermostat::getThermostatType() const
 {
-    return pq::ThermostatType::BERENDSEN;
+    return ThermostatType::BERENDSEN;
 }

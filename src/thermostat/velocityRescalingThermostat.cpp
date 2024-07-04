@@ -123,7 +123,7 @@ void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
  *
  * @return ThermostatType
  */
-pq::ThermostatType VelocityRescalingThermostat::getThermostatType() const
+ThermostatType VelocityRescalingThermostat::getThermostatType() const
 {
-    return pq::ThermostatType::VELOCITY_RESCALING;
+    return ThermostatType::VELOCITY_RESCALING;
 }

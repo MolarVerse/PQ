@@ -28,6 +28,7 @@
 #include "staticMatrix3x3.hpp"   // for tensor3D
 #include "timer.hpp"             // for Timer
 #include "typeAliases.hpp"
+
 namespace manostat
 {
     /**
@@ -51,8 +52,8 @@ namespace manostat
         void         calculatePressure(const pq::SimBox &, pq::PhysicalData &);
         virtual void applyManostat(pq::SimBox &, pq::PhysicalData &);
 
-        virtual settings::ManostatType getManostatType() const;
-        virtual settings::Isotropy     getIsotropy() const;
+        virtual pq::ManostatType getManostatType() const;
+        virtual pq::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat

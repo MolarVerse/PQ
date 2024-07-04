@@ -218,7 +218,7 @@ double LangevinThermostat::getSigma() const { return _sigma; }
  *
  * @return ThermostatType
  */
-settings::ThermostatType LangevinThermostat::getThermostatType() const
+ThermostatType LangevinThermostat::getThermostatType() const
 {
-    return settings::ThermostatType::LANGEVIN;
+    return ThermostatType::LANGEVIN;
 }
