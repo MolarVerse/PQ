@@ -70,3 +70,13 @@ void Thermostat::applyTemperatureRamping()
         --_rampingStepsLeft;
     }
 }
+
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType Thermostat::getThermostatType() const
+{
+    return settings::ThermostatType::NONE;
+}

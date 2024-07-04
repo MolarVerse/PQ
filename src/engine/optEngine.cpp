@@ -183,7 +183,7 @@ void OptEngine::writeOutput()
     {
         _engineOutput.writeXyzFile(*_simulationBox);
         _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
+        _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
 
         // _engineOutput.writeVirialFile(

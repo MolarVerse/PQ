@@ -27,6 +27,7 @@
 #include <vector>   // for std::vector
 
 #include "thermostat.hpp"
+#include "typeAliases.hpp"
 
 namespace physicalData
 {
@@ -85,6 +86,8 @@ namespace thermostat
         {
             return _couplingFrequency;
         }
+
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
 
         /***************************
          * standard setter methods *

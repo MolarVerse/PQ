@@ -24,8 +24,9 @@
 
 #define _THERMOSTAT_HPP_
 
+#include "cstddef"     // for size_t
 #include "timer.hpp"   // for Timer
-#include "cstddef"   // for size_t
+#include "typeAliases.hpp"
 
 namespace physicalData
 {
@@ -128,6 +129,8 @@ namespace thermostat
         {
             return _rampingFrequency;
         }
+
+        [[nodiscard]] virtual pq::ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat
