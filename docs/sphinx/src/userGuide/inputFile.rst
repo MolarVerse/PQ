@@ -189,6 +189,8 @@ The :code:`output_freq` keyword sets the frequency (*i.e.* every n-th step) of h
 
 .. centered:: *default value* = 1
 
+.. _fileprefixkey:
+
 File_Prefix
 ===========
 
@@ -207,6 +209,8 @@ Output_File
 The :code:`output_file` keyword sets the name for the log file, in which all important information about the performed calculation can be found. 
 
 .. centered:: *default value* = "default.out"
+
+.. _mdoutputfilekeys:
 
 *******************
 MD Output File Keys

@@ -48,9 +48,9 @@ GUFF File
 
 **Default Name:** ``guff.dat``
 
-The grand unified force field (GUFF) file is used to define the force field parameters for the MM atoms in the system and requires the 
-:ref:`moldescriptorFile` setup file. The GUFF file gives the force field parameters in form of a generalized equation () for every atom in every moltype 
-of the system. 
+The grand unified force field (GUFF) file is used to define the non-bonded force field parameters for the MM atoms in the system and 
+requires the :ref:`moldescriptorFile` setup file. The GUFF file gives the force field parameters in form of a generalized equation () 
+for every atom type index in every moltype of the system. 
 
 .. _topologyFile:
 

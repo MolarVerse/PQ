@@ -4,6 +4,12 @@
 Output Files
 ############
 
+The following output files are printed by **PQ**. The individual file names can be changed *via* the corresponding 
+:ref:`mdoutputfilekeys` in the ``.in`` file. Alternatively, a common prefix for all output files can be provided using the
+:ref:`fileprefixkey` key. 
+
+All data blocks shown for a single simulation step or frame are concatenated without blank lines in the output files.
+
 .. _boxFile:
 
 *********
@@ -141,7 +147,7 @@ Restart File
 
 **File Type:** ``.rst``
 
-Stores the coordinates, velocities, and forces of each atom for the current and previous simulation step in the following format:
+Stores the coordinates, velocities, and forces of each atom for the current simulation step in the following format:
     
     | **line 1:** "Step" step_number
     | **line 2:** "Box" *a* *b* *c* *α* *β* *γ*
