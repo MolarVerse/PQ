@@ -53,6 +53,7 @@ namespace settings
      */
     enum class Isotropy
     {
+        NONE,
         ISOTROPIC,
         SEMI_ISOTROPIC,
         ANISOTROPIC,

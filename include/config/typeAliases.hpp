@@ -148,6 +148,18 @@ namespace timings
 
 }   // namespace timings
 
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+    class NoseHoover;   // forward declaration
+
+}   // namespace thermostat
+
+namespace settings
+{
+    enum class ThermostatType;   // forward declaration
+}
+
 namespace pq
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -171,16 +183,35 @@ namespace pq
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
     using tensor3D      = linearAlgebra::tensor3D;
 
-    using Virial          = virial::Virial;
-    using VirialMolecular = virial::VirialMolecular;
-    using IntraNonBond    = intraNonBonded::IntraNonBonded;
-    using ForceField      = forceField::ForceField;
-    using Timer           = timings::Timer;
+    using IntraNonBond = intraNonBonded::IntraNonBonded;
+    using ForceField   = forceField::ForceField;
+    using Timer        = timings::Timer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
-    using SharedVirial       = std::shared_ptr<virial::Virial>;
+
+    /**********************
+     * settings namespace *
+     **********************/
+
+    using ThermostatType = settings::ThermostatType;
+
+    /************************
+     * thermostat namespace *
+     ************************/
+
+    using Thermostat = thermostat::Thermostat;
+    using NoseHoover = thermostat::NoseHoover;
+
+    /********************
+     * virial namespace *
+     ********************/
+
+    using Virial          = virial::Virial;
+    using VirialMolecular = virial::VirialMolecular;
+
+    using SharedVirial = std::shared_ptr<virial::Virial>;
 
     /**********************
      * manostat namespace *

@@ -24,7 +24,8 @@
 
 #define _THERMOSTAT_HPP_
 
-#include "cstddef"     // for size_t
+#include <cstddef>   // for size_t
+
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
 
@@ -76,11 +77,13 @@ namespace thermostat
          ***************************/
 
         [[nodiscard]] double getTemperature() const;
-        ;
+
         [[nodiscard]] double getTargetTemperature() const;
         [[nodiscard]] double getTemperatureIncrease() const;
         [[nodiscard]] size_t getRampingStepsLeft() const;
         [[nodiscard]] size_t getRampingFrequency() const;
+
+        [[nodiscard]] virtual pq::ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat

@@ -140,7 +140,7 @@ void MDEngine::writeOutput()
         _engineOutput.writeVelFile(*_simulationBox);
         _engineOutput.writeForceFile(*_simulationBox);
         _engineOutput.writeChargeFile(*_simulationBox);
-        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
+        _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
         _engineOutput.writeVirialFile(
             effStep,

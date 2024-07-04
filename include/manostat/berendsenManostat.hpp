@@ -24,10 +24,10 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include "manostat.hpp"   // for Manostat
-
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
+
+#include "manostat.hpp"   // for Manostat
 
 namespace simulationBox
 {
@@ -51,15 +51,20 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-      protected:
+       protected:
         double _tau;
         double _compressibility;
         double _dt;
 
-      public:
-        explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility);
+       public:
+        explicit BerendsenManostat(
+            const double targetPressure,
+            const double tau,
+            const double compressibility
+        );
 
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
+            override;
 
         [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
 
@@ -68,6 +73,13 @@ namespace manostat
          ********************/
 
         [[nodiscard]] double getTau() const { return _tau; }
+        [[nodiscard]] double getCompressibility() const
+        {
+            return _compressibility;
+        }
+
+        [[nodiscard]] settings::ManostatType getManostatType() const final;
+        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -78,20 +90,25 @@ namespace manostat
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
-      private:
+       private:
         size_t              _2DAnisotropicAxis;
         std::vector<size_t> _2DIsotropicAxes;
 
-      public:
-        SemiIsotropicBerendsenManostat(const double               targetPressure,
-                                       const double               tau,
-                                       const double               compressibility,
-                                       const size_t               anisotropicAxis,
-                                       const std::vector<size_t> &isotropicAxes)
-            : BerendsenManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
+       public:
+        SemiIsotropicBerendsenManostat(
+            const double               targetPressure,
+            const double               tau,
+            const double               compressibility,
+            const size_t               anisotropicAxis,
+            const std::vector<size_t> &isotropicAxes
+        )
+            : BerendsenManostat(targetPressure, tau, compressibility),
+              _2DAnisotropicAxis(anisotropicAxis),
               _2DIsotropicAxes(isotropicAxes){};
 
         [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -102,10 +119,12 @@ namespace manostat
      */
     class AnisotropicBerendsenManostat : public BerendsenManostat
     {
-      public:
+       public:
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -113,15 +132,18 @@ namespace manostat
      *
      * @link https://doi.org/10.1063/1.448118
      *
-     * @details Full anisotropic means that also the angles between the axes are scaled not only the lengths
+     * @details Full anisotropic means that also the angles between the axes are
+     * scaled not only the lengths
      *
      */
     class FullAnisotropicBerendsenManostat : public BerendsenManostat
     {
-      public:
+       public:
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

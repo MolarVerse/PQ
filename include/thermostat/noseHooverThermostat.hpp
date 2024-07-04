@@ -65,6 +65,8 @@ namespace thermostat
         [[nodiscard]] std::vector<double> getZeta() const;
         [[nodiscard]] double              getCouplingFrequency() const;
 
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+
         /***************************
          * standard setter methods *
          ***************************/

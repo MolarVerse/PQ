@@ -30,6 +30,7 @@
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
+#include "thermostatSettings.hpp"            // for ThermostatType
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "vector3d.hpp"                      // for operator*, Vec3D
 
@@ -211,3 +212,13 @@ double LangevinThermostat::getFriction() const { return _friction; }
  * @return double
  */
 double LangevinThermostat::getSigma() const { return _sigma; }
+
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType LangevinThermostat::getThermostatType() const
+{
+    return settings::ThermostatType::LANGEVIN;
+}

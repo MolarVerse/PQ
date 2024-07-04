@@ -41,11 +41,13 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
+       private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
         double _tau = 0.0;
 
+       public:
        public:
         VelocityRescalingThermostat() = default;
         VelocityRescalingThermostat(const VelocityRescalingThermostat &);
@@ -53,8 +55,9 @@ namespace thermostat
 
         void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
 
-        [[nodiscard]] double getTau() const;
-        void                 setTau(const double tau);
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]] double             getTau() const;
+        void                             setTau(const double tau);
     };
 }   // namespace thermostat
 

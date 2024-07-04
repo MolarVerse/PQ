@@ -65,8 +65,9 @@ namespace thermostat
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getFriction() const;
-        [[nodiscard]] double getSigma() const;
+        [[nodiscard]] double             getFriction() const;
+        [[nodiscard]] double             getSigma() const;
+        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

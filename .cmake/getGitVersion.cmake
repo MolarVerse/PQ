@@ -14,7 +14,7 @@
 find_package(Git)
 
 if(GIT_EXECUTABLE)
-    execute_process(COMMAND ${GIT_EXECUTABLE} describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=8
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=8 --tags
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         RESULT_VARIABLE status
         OUTPUT_VARIABLE GIT_VERSION

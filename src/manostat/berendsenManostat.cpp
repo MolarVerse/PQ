@@ -170,3 +170,53 @@ tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
 
     return mu;
 }
+
+/**
+ * @brief get the manostat type
+ *
+ * @return settings::ManostatType
+ */
+settings::ManostatType BerendsenManostat::getManostatType() const
+{
+    return settings::ManostatType::BERENDSEN;
+}
+
+/**
+ * @brief get the isotropy
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy BerendsenManostat::getIsotropy() const
+{
+    return settings::Isotropy::ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy SemiIsotropicBerendsenManostat::getIsotropy() const
+{
+    return settings::Isotropy::SEMI_ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy AnisotropicBerendsenManostat::getIsotropy() const
+{
+    return settings::Isotropy::ANISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy
+ *
+ * @return settings::Isotropy
+ */
+settings::Isotropy FullAnisotropicBerendsenManostat::getIsotropy() const
+{
+    return settings::Isotropy::FULL_ANISOTROPIC;
+}

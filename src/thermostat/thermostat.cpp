@@ -167,3 +167,12 @@ size_t Thermostat::getRampingStepsLeft() const { return _rampingStepsLeft; }
  * @return size_t
  */
 size_t Thermostat::getRampingFrequency() const { return _rampingFrequency; }
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType Thermostat::getThermostatType() const
+{
+    return settings::ThermostatType::NONE;
+}

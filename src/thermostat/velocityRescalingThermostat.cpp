@@ -26,10 +26,11 @@
 #include <memory>   // for __shared_ptr_access, shared_ptr
 #include <vector>   // for vector
 
-#include "atom.hpp"              // for Atom
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "atom.hpp"                 // for Atom
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "thermostatSettings.hpp"   // for ThermostatType
+#include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::VelocityRescalingThermostat;
 using namespace settings;
@@ -117,3 +118,12 @@ double VelocityRescalingThermostat::getTau() const { return _tau; }
  * @param tau
  */
 void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
+/**
+ * @brief Get thermostat type
+ *
+ * @return ThermostatType
+ */
+pq::ThermostatType VelocityRescalingThermostat::getThermostatType() const
+{
+    return pq::ThermostatType::VELOCITY_RESCALING;
+}

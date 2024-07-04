@@ -30,6 +30,7 @@
 #include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatType
 #include "timingsSettings.hpp"                       // for TimingsSettings
 #include "vector3d.hpp"                              // for operator*
 
@@ -239,4 +240,14 @@ void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
 void NoseHooverThermostat::setCouplingFrequency(const double couplingFrequency)
 {
     _couplingFrequency = couplingFrequency;
+}
+
+/**
+ * @brief get the ThermostatType
+ *
+ * @return ThermostatType
+ */
+settings::ThermostatType NoseHooverThermostat::getThermostatType() const
+{
+    return settings::ThermostatType::NOSE_HOOVER;
 }
