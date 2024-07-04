@@ -177,6 +177,8 @@ General Output Keys
 
     This feature enables easier post-processing of data and also easier deletion of all output files as PQ does not overwrite any existing output files and will throw an error.
 
+.. _outputfreqKey:
+
 Output_Freq
 ===========
 

@@ -83,8 +83,12 @@ and looptime denotes the time taken to complete the full MD simulation step in s
 
 .. note:: 
 
-    In case of an *NVE* or *NVT* simulation, the columns for *V* and *ρ* are omitted from the ``.en`` file as they remain constant throughout. 
-    All quantities in correct ordering and with associated units are given in the ``.info`` output file, which is described in section :ref:`infoFile`.
+    If the interval at which the results are printed to the output files is changed *via* the :ref:`outputfreqKey` key in the ``.in`` file, 
+    the values in the ``.en`` file are averaged over the respective interval.
+    
+    In case that the pressure coupling is not enabled, the columns for *V* and *ρ* are omitted from the ``.en`` file as they remain 
+    constant throughout. All quantities in correct ordering and with associated units are given in the ``.info`` output file, which 
+    is described in section :ref:`infoFile`.
 
 .. _forceFile:
 
@@ -106,6 +110,10 @@ box and the respective box parameters in units of Å and degrees. The second lin
 :ref:`moldescriptorFile` file) and the associated forces acting along the x, y and z direction in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system.
 
+.. note::
+
+    The total force should be marginal if no external fields (Planned) are applied to the system.
+
 .. _infoFile:
 
 **********
@@ -114,8 +122,21 @@ Info File
 
 **File Type:** ``.info``
 
-Stores information about various quantities of the system and their units for the last frame calculated. The quantities are identical to those 
-in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time in ps instead of the step number. 
+Stores information about various quantities of the system and their units for the last frame calculated. The quantities are identical 
+to those in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time 
+in ps instead of the step number. Entries in the ``.info`` file are read from left to right and top to bottom.
+
+.. _instantEnergyFile:
+
+********************
+Instant Energy File
+********************
+
+**File Type:** ``.instant_en``
+
+Stores the exact same quantities as the ``.en`` file (described under section :ref:`energyFile`), but for the last frame calculated
+and not averaged over the interval set by the :ref:`outputfreqKey` key in the ``.in`` file. Therefore, it is identical to the ``.en``
+file if the output frequency is set to 1.
 
 .. _logFile:
 
@@ -137,7 +158,7 @@ Reference File
 
 **File Type:** ``.log.ref``
 
-Lists the references to be cited when publishing results obtained *via* the chosen simulation settings.
+Lists the references to be cited when publishing results obtained *via* the chosen simulation settings as regular text and in BibTeX format.
 
 .. _restartFile:
 
@@ -156,14 +177,16 @@ Stores the coordinates, velocities, and forces of each atom for the current simu
 The first line contains the string "Step" followed by the total number of performed simulation steps. The second line starts with the string 
 "Box" followed by the parameters *a*, *b*, *c*, *α*, *β*, and *γ*, which denote the parameters of the simulation box in units of Å and degrees. 
 The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to according to the 
-:ref:`moldescriptorFile` setup file, the Cartesian coordinates, the velocities, and the forces for each atom in the system. The moltype value 
-is set to 0 if no :ref:`moldescriptorFile` file is used.
+:ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{fs}}`, and the forces in 
+:math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system. The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
 .. attention:: 
 
     A ``.rst`` file needs to be provided by the user for the first run of the simulation alongside the :ref:`Input File <inputFile>`. 
     Furthermore, this first ``.rst`` file has to contain all atoms of a moltype in the same order as provided in the 
-    :ref:`moldescriptorFile` setup file.
+    :ref:`moldescriptorFile` setup file. In this first ``.rst`` file, the whole first line denoting the step number as well as the 
+    columns denoting the velocities and forces can be omitted. If the parameters defining the box angles are left out, they are 
+    assumed to be 90°.
 
 .. _velocityFile:
 
