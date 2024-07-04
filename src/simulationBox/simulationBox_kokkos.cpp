@@ -25,11 +25,15 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace simulationBox;
+using namespace Kokkos;
+using namespace linearAlgebra;
 
 /**
- * @brief constructor
+ * @brief Construct a new Kokkos Simulation Box:: Kokkos Simulation Box object
+ *
+ * @param numAtoms
  */
-KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
+KokkosSimulationBox::KokkosSimulationBox(const size_t numAtoms)
     : _atomTypes("atomTypes", numAtoms),
       _molTypes("molTypes", numAtoms),
       _moleculeIndices("moleculeIndices", numAtoms),
@@ -38,9 +42,29 @@ KokkosSimulationBox::KokkosSimulationBox(size_t numAtoms)
       _velocities("velocities", numAtoms),
       _forces("forces", numAtoms),
       _shiftForces("shiftForces", numAtoms),
+      _partialCharges("partialCharges", numAtoms),
       _masses("masses", numAtoms),
-      _partialCharges("partialCharges", numAtoms)
+      _boxDimensions("boxDimensions", 3)
 {
+}
+
+/**
+ * @brief calculate shift vector
+ *
+ * @param dxyz
+ * @param boxDimensions
+ * @param txyz
+ * @return KOKKOS_FUNCTION
+ */
+KOKKOS_FUNCTION void KokkosSimulationBox::calcShiftVector(
+    const double* dxyz,
+    View<double*> boxDimensions,
+    double*       txyz
+)
+{
+    txyz[0] = -boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
+    txyz[1] = -boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
+    txyz[2] = -boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
 }
 
 /**
@@ -79,12 +103,12 @@ void KokkosSimulationBox::transferAtomTypesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
-    {
-        _atomTypes.h_view(i) = simBox.getAtom(i).getAtomType();
-    }
+    const auto nAtoms = simBox.getNumberOfAtoms();
 
-    deep_copy(_atomTypes.d_view, _atomTypes.h_view);
+    for (size_t i = 0; i < nAtoms; ++i)
+        _atomTypes.h_view(i) = simBox.getAtom(i).getAtomType();
+
+    Kokkos::deep_copy(_atomTypes.d_view, _atomTypes.h_view);
 }
 
 /**
@@ -96,11 +120,12 @@ void KokkosSimulationBox::transferMolTypesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    auto atom_counter = 0;
+    auto       atom_counter = 0;
+    const auto nMolecules   = simBox.getNumberOfMolecules();
 
-    for (size_t i = 0; i < simBox.getNumberOfMolecules(); ++i)
+    for (size_t i = 0; i < nMolecules; ++i)
     {
-        const auto molecule = simBox.getMolecule(i);
+        const auto& molecule = simBox.getMolecule(i);
 
         for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
         {
@@ -109,7 +134,7 @@ void KokkosSimulationBox::transferMolTypesFromSimulationBox(
         }
     }
 
-    deep_copy(_molTypes.d_view, _molTypes.h_view);
+    Kokkos::deep_copy(_molTypes.d_view, _molTypes.h_view);
 }
 
 /**
@@ -121,11 +146,12 @@ void KokkosSimulationBox::transferMoleculeIndicesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    auto atom_counter = 0;
+    auto       atom_counter = 0;
+    const auto nMolecules   = simBox.getNumberOfMolecules();
 
-    for (size_t i = 0; i < simBox.getNumberOfMolecules(); ++i)
+    for (size_t i = 0; i < nMolecules; ++i)
     {
-        const auto molecule = simBox.getMolecule(i);
+        const auto& molecule = simBox.getMolecule(i);
 
         for (size_t j = 0; j < molecule.getNumberOfAtoms(); ++j)
         {
@@ -134,7 +160,7 @@ void KokkosSimulationBox::transferMoleculeIndicesFromSimulationBox(
         }
     }
 
-    deep_copy(_moleculeIndices.d_view, _moleculeIndices.h_view);
+    Kokkos::deep_copy(_moleculeIndices.d_view, _moleculeIndices.h_view);
 }
 
 /**
@@ -146,13 +172,18 @@ void KokkosSimulationBox::transferInternalGlobalVDWTypesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        _internalGlobalVDWTypes.h_view(i) =
-            simBox.getAtom(i).getInternalGlobalVDWType();
+        const auto& atom                  = simBox.getAtom(i);
+        _internalGlobalVDWTypes.h_view(i) = atom.getInternalGlobalVDWType();
     }
 
-    deep_copy(_internalGlobalVDWTypes.d_view, _internalGlobalVDWTypes.h_view);
+    Kokkos::deep_copy(
+        _internalGlobalVDWTypes.d_view,
+        _internalGlobalVDWTypes.h_view
+    );
 }
 
 /**
@@ -164,14 +195,16 @@ void KokkosSimulationBox::transferPositionsFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
         _positions.h_view(i, 0) = simBox.getAtom(i).getPosition()[0];
         _positions.h_view(i, 1) = simBox.getAtom(i).getPosition()[1];
         _positions.h_view(i, 2) = simBox.getAtom(i).getPosition()[2];
     }
 
-    deep_copy(_positions.d_view, _positions.h_view);
+    Kokkos::deep_copy(_positions.d_view, _positions.h_view);
 }
 
 /**
@@ -192,7 +225,7 @@ void KokkosSimulationBox::transferVelocitiesFromSimulationBox(
         _velocities.h_view(i, 2) = simBox.getAtom(i).getVelocity()[2];
     }
 
-    deep_copy(_velocities.d_view, _velocities.h_view);
+    Kokkos::deep_copy(_velocities.d_view, _velocities.h_view);
 }
 
 /**
@@ -202,14 +235,16 @@ void KokkosSimulationBox::transferVelocitiesFromSimulationBox(
  */
 void KokkosSimulationBox::transferForcesFromSimulationBox(SimulationBox& simBox)
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
         _forces.h_view(i, 0) = simBox.getAtom(i).getForce()[0];
         _forces.h_view(i, 1) = simBox.getAtom(i).getForce()[1];
         _forces.h_view(i, 2) = simBox.getAtom(i).getForce()[2];
     }
 
-    deep_copy(_forces.d_view, _forces.h_view);
+    Kokkos::deep_copy(_forces.d_view, _forces.h_view);
 }
 
 /**
@@ -219,12 +254,12 @@ void KokkosSimulationBox::transferForcesFromSimulationBox(SimulationBox& simBox)
  */
 void KokkosSimulationBox::transferMassesFromSimulationBox(SimulationBox& simBox)
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
-    {
-        _masses.h_view(i) = simBox.getAtom(i).getMass();
-    }
+    const auto nAtoms = simBox.getNumberOfAtoms();
 
-    deep_copy(_masses.d_view, _masses.h_view);
+    for (size_t i = 0; i < nAtoms; ++i)
+        _masses.h_view(i) = simBox.getAtom(i).getMass();
+
+    Kokkos::deep_copy(_masses.d_view, _masses.h_view);
 }
 
 /**
@@ -236,12 +271,12 @@ void KokkosSimulationBox::transferPartialChargesFromSimulationBox(
     SimulationBox& simBox
 )
 {
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
-    {
-        _partialCharges.h_view(i) = simBox.getAtom(i).getPartialCharge();
-    }
+    const auto nAtoms = simBox.getNumberOfAtoms();
 
-    deep_copy(_partialCharges.d_view, _partialCharges.h_view);
+    for (size_t i = 0; i < nAtoms; ++i)
+        _partialCharges.h_view(i) = simBox.getAtom(i).getPartialCharge();
+
+    Kokkos::deep_copy(_partialCharges.d_view, _partialCharges.h_view);
 }
 
 /**
@@ -250,14 +285,14 @@ void KokkosSimulationBox::transferPartialChargesFromSimulationBox(
  * @param simBox simulation box
  */
 void KokkosSimulationBox::transferBoxDimensionsFromSimulationBox(
-    SimulationBox& simBox
+    const SimulationBox& simBox
 )
 {
     _boxDimensions.h_view(0) = simBox.getBoxDimensions()[0];
     _boxDimensions.h_view(1) = simBox.getBoxDimensions()[1];
     _boxDimensions.h_view(2) = simBox.getBoxDimensions()[2];
 
-    deep_copy(_boxDimensions.d_view, _boxDimensions.h_view);
+    Kokkos::deep_copy(_boxDimensions.d_view, _boxDimensions.h_view);
 }
 
 /**
@@ -267,15 +302,19 @@ void KokkosSimulationBox::transferPositionsToSimulationBox(SimulationBox& simBox
 )
 {
     // copy positions back to host
-    deep_copy(_positions.h_view, _positions.d_view);
+    Kokkos::deep_copy(_positions.h_view, _positions.d_view);
 
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        simBox.getAtom(i).setPosition(
-            {_positions.h_view(i, 0),
-             _positions.h_view(i, 1),
-             _positions.h_view(i, 2)}
-        );
+        const auto position = Vec3D{
+            _positions.h_view(i, 0),
+            _positions.h_view(i, 1),
+            _positions.h_view(i, 2)
+        };
+
+        simBox.getAtom(i).setPosition(position);
     }
 }
 
@@ -287,15 +326,19 @@ void KokkosSimulationBox::transferVelocitiesToSimulationBox(
 )
 {
     // copy velocities back to host
-    deep_copy(_velocities.h_view, _velocities.d_view);
+    Kokkos::deep_copy(_velocities.h_view, _velocities.d_view);
 
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        simBox.getAtom(i).setVelocity(
-            {_velocities.h_view(i, 0),
-             _velocities.h_view(i, 1),
-             _velocities.h_view(i, 2)}
-        );
+        const auto velocity = Vec3D{
+            _velocities.h_view(i, 0),
+            _velocities.h_view(i, 1),
+            _velocities.h_view(i, 2)
+        };
+
+        simBox.getAtom(i).setVelocity(velocity);
     }
 }
 
@@ -305,13 +348,19 @@ void KokkosSimulationBox::transferVelocitiesToSimulationBox(
 void KokkosSimulationBox::transferForcesToSimulationBox(SimulationBox& simBox)
 {
     // copy forces back to host
-    deep_copy(_forces.h_view, _forces.d_view);
+    Kokkos::deep_copy(_forces.h_view, _forces.d_view);
 
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        simBox.getAtom(i).addForce(
-            {_forces.h_view(i, 0), _forces.h_view(i, 1), _forces.h_view(i, 2)}
-        );
+        const auto force = Vec3D{
+            _forces.h_view(i, 0),
+            _forces.h_view(i, 1),
+            _forces.h_view(i, 2)
+        };
+
+        simBox.getAtom(i).addForce(force);
     }
 }
 
@@ -323,14 +372,125 @@ void KokkosSimulationBox::transferShiftForcesToSimulationBox(
 )
 {
     // copy forces back to host
-    deep_copy(_shiftForces.h_view, _shiftForces.d_view);
+    Kokkos::deep_copy(_shiftForces.h_view, _shiftForces.d_view);
 
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        simBox.getAtom(i).addShiftForce(
-            {_shiftForces.h_view(i, 0),
-             _shiftForces.h_view(i, 1),
-             _shiftForces.h_view(i, 2)}
-        );
+        const auto shiftForce = Vec3D{
+            _shiftForces.h_view(i, 0),
+            _shiftForces.h_view(i, 1),
+            _shiftForces.h_view(i, 2)
+        };
+
+        simBox.getAtom(i).addShiftForce(shiftForce);
     }
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get atom types
+ *
+ * @return Kokkos::DualView<size_t*>&
+ */
+DualView<size_t*>& KokkosSimulationBox::getAtomTypes() { return _atomTypes; }
+
+/**
+ * @brief get molecule types
+ *
+ * @return Kokkos::DualView<size_t*>&
+ */
+DualView<size_t*>& KokkosSimulationBox::getMolTypes() { return _molTypes; }
+
+/**
+ * @brief get molecule indices
+ *
+ * @return Kokkos::DualView<size_t*>&
+ */
+DualView<size_t*>& KokkosSimulationBox::getMoleculeIndices()
+{
+    return _moleculeIndices;
+}
+
+/**
+ * @brief get internal global VDW types
+ *
+ * @return Kokkos::DualView<size_t*>&
+ */
+DualView<size_t*>& KokkosSimulationBox::getInternalGlobalVDWTypes()
+{
+    return _internalGlobalVDWTypes;
+}
+
+/**
+ * @brief get positions
+ *
+ * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
+ */
+DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getPositions()
+{
+    return _positions;
+}
+
+/**
+ * @brief get velocities
+ *
+ * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
+ */
+DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getVelocities()
+{
+    return _velocities;
+}
+
+/**
+ * @brief get forces
+ *
+ * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
+ */
+DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getForces()
+{
+    return _forces;
+}
+
+/**
+ * @brief get shift forces
+ *
+ * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
+ */
+DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getShiftForces()
+{
+    return _shiftForces;
+}
+
+/**
+ * @brief get masses
+ *
+ * @return Kokkos::DualView<double*>&
+ */
+DualView<double*>& KokkosSimulationBox::getMasses() { return _masses; }
+
+/**
+ * @brief get partial charges
+ *
+ * @return Kokkos::DualView<double*>&
+ */
+DualView<double*>& KokkosSimulationBox::getPartialCharges()
+{
+    return _partialCharges;
+}
+
+/**
+ * @brief get box dimensions
+ *
+ * @return Kokkos::DualView<double*>
+ */
+DualView<double*> KokkosSimulationBox::getBoxDimensions()
+{
+    return _boxDimensions;
 }
