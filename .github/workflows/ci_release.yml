@@ -39,3 +39,10 @@ jobs:
         env:
           CC: gcc-13
           CXX: g++-13
+
+      - name: Run integration Tests
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pip install pqanalysis
+          pytest integration_tests
