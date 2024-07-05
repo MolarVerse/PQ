@@ -25,11 +25,7 @@
 #define _J_COUPLING_SECTION_HPP_
 
 #include "topologySection.hpp"
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -42,13 +38,10 @@ namespace input::topology
     class JCouplingSection : public TopologySection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "j-couplings"; }
-        void                      endedNormally(const bool) const override;
+        void processSection(pq::strings &, pq::Engine &) override;
 
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
+        [[nodiscard]] std::string keyword() override;
+        void                      endedNormally(const bool) const override;
     };
 }   // namespace input::topology
 

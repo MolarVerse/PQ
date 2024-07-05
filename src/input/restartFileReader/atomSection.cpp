@@ -39,9 +39,13 @@
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
 using namespace input::restartFile;
+using namespace simulationBox;
+using namespace engine;
+using namespace customException;
+using namespace settings;
+using namespace utilities;
 
-using MoleculeType = simulationBox::MoleculeType;
-using Molecule     = simulationBox::Molecule;
+using std::make_unique;
 
 /**
  * @brief processes the atom section of the rst file
@@ -54,13 +58,13 @@ using Molecule     = simulationBox::Molecule;
  * @param lineElements all elements of the line
  * @param engine
  *
- * @throws customException::RstFileException if the molecule type is not found
- * @throws customException::RstFileException if the number of atoms in the
+ * @throws RstFileException if the molecule type is not found
+ * @throws RstFileException if the number of atoms in the
  * molecule is not correct
  */
 void AtomSection::process(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     auto &simBox = engine.getSimulationBox();
@@ -83,19 +87,20 @@ void AtomSection::process(
 
     try
     {
-        moleculeType = std::make_unique<simulationBox::MoleculeType>(
-            simBox.findMoleculeType(moltype)
-        );
+        // clang-format off
+        moleculeType = make_unique<MoleculeType>(simBox.findMoleculeType(moltype));
+        // clang-format on
     }
-    catch (const customException::RstFileException &e)
+    catch (const RstFileException &e)
     {
-        std::cout << e.what() << '\n';
-        std::cout << "Error in linenumber " << _lineNumber
+        std::cout << e.what() << '\n'
+                  << "Error in linenumber " << _lineNumber
                   << " in restart file; Moltype not found\n";
+
         throw;
     }
 
-    auto molecule = std::make_unique<Molecule>(moleculeType->getMoltype());
+    auto molecule = make_unique<Molecule>(moleculeType->getMoltype());
 
     molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
     molecule->setName(moleculeType->getName());
@@ -111,7 +116,7 @@ void AtomSection::process(
          ********************************************************************************/
 
         if (molecule->getMoltype() != moltype)
-            throw customException::RstFileException(std::format(
+            throw RstFileException(std::format(
                 "Error in line {}: Molecule must have {} atoms",
                 _lineNumber,
                 molecule->getNumberOfAtoms()
@@ -133,10 +138,7 @@ void AtomSection::process(
 
         checkAtomLine(lineElements, *molecule);
 
-        while (lineElements.empty())
-        {
-            checkAtomLine(lineElements, *molecule);
-        }
+        while (lineElements.empty()) checkAtomLine(lineElements, *molecule);
 
         checkNumberOfLineArguments(lineElements);
 
@@ -164,12 +166,12 @@ void AtomSection::process(
  * @param molecule
  */
 void AtomSection::processAtomLine(
-    std::vector<std::string>     &lineElements,
-    simulationBox::SimulationBox &simBox,
-    simulationBox::Molecule      &molecule
+    std::vector<std::string> &lineElements,
+    SimulationBox            &simBox,
+    Molecule                 &molecule
 ) const
 {
-    auto atom = std::make_shared<simulationBox::Atom>();
+    auto atom = std::make_shared<Atom>();
 
     atom->setAtomTypeName(lineElements[0]);
 
@@ -178,7 +180,7 @@ void AtomSection::processAtomLine(
     simBox.addAtom(atom);
     molecule.addAtom(atom);
 
-    if (settings::Settings::isQMOnly())
+    if (Settings::isQMOnly())
         simBox.addQMAtom(atom);
 }
 
@@ -191,12 +193,12 @@ void AtomSection::processAtomLine(
  * @param simBox
  */
 void AtomSection::processQMAtomLine(
-    std::vector<std::string>     &lineElements,
-    simulationBox::SimulationBox &simBox
+    std::vector<std::string> &lineElements,
+    SimulationBox            &simBox
 )
 {
-    auto       atom     = std::make_shared<simulationBox::Atom>();
-    const auto molecule = std::make_unique<simulationBox::Molecule>(0);
+    auto       atom     = std::make_shared<Atom>();
+    const auto molecule = make_unique<Molecule>(0);
 
     molecule->setName("QM");
     molecule->setNumberOfAtoms(1);
@@ -224,26 +226,26 @@ void AtomSection::processQMAtomLine(
  * @param line
  * @param molecule
  *
- * @throws customException::RstFileException if the next line of the rst
+ * @throws RstFileException if the next line of the rst
  * file does not exist
  */
 void AtomSection::checkAtomLine(
-    std::vector<std::string>      &lineElements,
-    const simulationBox::Molecule &molecule
+    std::vector<std::string> &lineElements,
+    const Molecule           &molecule
 )
 {
     ++_lineNumber;
 
     if (std::string line; !getline(*_fp, line))
-        throw customException::RstFileException(std::format(
+        throw RstFileException(std::format(
             "Error in line {}: Molecule must have {} atoms",
             _lineNumber,
             molecule.getNumberOfAtoms()
         ));
     else
     {
-        line         = utilities::removeComments(line, "#");
-        lineElements = utilities::splitString(line);
+        line         = removeComments(line, "#");
+        lineElements = splitString(line);
     }
 }
 
@@ -254,8 +256,8 @@ void AtomSection::checkAtomLine(
  * @param atom
  */
 void AtomSection::setAtomPropertyVectors(
-    std::vector<std::string>             &lineElements,
-    std::shared_ptr<simulationBox::Atom> &atom
+    std::vector<std::string> &lineElements,
+    std::shared_ptr<Atom>    &atom
 ) const
 {
     const auto x = stod(lineElements[3]);
@@ -316,7 +318,7 @@ void AtomSection::setAtomPropertyVectors(
  *
  * @param lineElements
  *
- * @throws customException::RstFileException if the number of elements in
+ * @throws RstFileException if the number of elements in
  * the line is not 12 or 21
  */
 void AtomSection::checkNumberOfLineArguments(
@@ -326,9 +328,23 @@ void AtomSection::checkNumberOfLineArguments(
     const auto lineSize = lineElements.size();
 
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
-        throw customException::RstFileException(std::format(
+        throw RstFileException(std::format(
             "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
             "21 elements",
             _lineNumber
         ));
 }
+
+/**
+ * @brief returns the keyword of the section
+ *
+ * @return std::string
+ */
+std::string AtomSection::keyword() { return ""; }
+
+/**
+ * @brief returns if the section is a header
+ *
+ * @return bool
+ */
+bool AtomSection::isHeader() { return false; }

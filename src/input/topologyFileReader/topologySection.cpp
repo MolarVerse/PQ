@@ -22,30 +22,37 @@
 
 #include "topologySection.hpp"
 
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
-
 #include <fstream>   // for getline
 
+#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+
 using namespace input::topology;
+using namespace utilities;
+using namespace engine;
 
 /**
  * @brief general process function for topology sections
  *
- * @details Reads the topology file line by line and calls the processSection function for each line until the "end" keyword is
- * found. At the end of the section the endedNormally function is called, which checks if the "end" keyword was found.
+ * @details Reads the topology file line by line and calls the processSection
+ * function for each line until the "end" keyword is found. At the end of the
+ * section the endedNormally function is called, which checks if the "end"
+ * keyword was found.
  *
  * @param line
  * @param engine
  */
-void TopologySection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+void TopologySection::process(
+    std::vector<std::string> &lineElements,
+    Engine                   &engine
+)
 {
     std::string line;
     auto        endedNormal = false;
 
     while (getline(*_fp, line))
     {
-        line         = utilities::removeComments(line, "#");
-        lineElements = utilities::splitString(line);
+        line         = removeComments(line, "#");
+        lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -53,7 +60,7 @@ void TopologySection::process(std::vector<std::string> &lineElements, engine::En
             continue;
         }
 
-        if (utilities::toLowerCopy(lineElements[0]) == "end")
+        if (toLowerCopy(lineElements[0]) == "end")
         {
             ++_lineNumber;
             endedNormal = true;
@@ -67,3 +74,27 @@ void TopologySection::process(std::vector<std::string> &lineElements, engine::En
 
     endedNormally(endedNormal);
 }
+
+/**
+ * @brief set line number
+ *
+ * @param lineNumber
+ */
+void TopologySection::setLineNumber(const int lineNumber)
+{
+    _lineNumber = lineNumber;
+}
+
+/**
+ * @brief set file pointer
+ *
+ * @param fp
+ */
+void TopologySection::setFp(std::ifstream *fp) { _fp = fp; }
+
+/**
+ * @brief get line number
+ *
+ * @return int
+ */
+int TopologySection::getLineNumber() const { return _lineNumber; }

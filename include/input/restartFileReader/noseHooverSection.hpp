@@ -24,15 +24,11 @@
 
 #define _NOSE_HOOVER_SECTION_HPP_
 
-#include "restartFileSection.hpp"   // for RestartFileSection
-
 #include <string>   // for string
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "restartFileSection.hpp"   // for RestartFileSection
+#include "typeAliases.hpp"
 
 namespace input::restartFile
 {
@@ -40,15 +36,15 @@ namespace input::restartFile
      * @class NoseHooverSection
      *
      * @brief Reads the Nose-Hoover section of a .rst file
-     *        TODO: This section is not yet implemented
      *
      */
     class NoseHooverSection : public RestartFileSection
     {
-      public:
-        [[nodiscard]] std::string keyword() override { return "chi"; }
-        [[nodiscard]] bool        isHeader() override { return true; }
-        void                      process(std::vector<std::string> &lineElements, engine::Engine &) override;
+       public:
+        void process(pq::strings &lineElements, pq::Engine &) override;
+
+        [[nodiscard]] std::string keyword() override;
+        [[nodiscard]] bool        isHeader() override;
     };
 
 }   // namespace input::restartFile
