@@ -33,6 +33,7 @@
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
 #include "intraNonBonded.hpp"
+#include "molecularVirial.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "potentialBruteForce.hpp"
@@ -101,7 +102,7 @@ namespace engine
         physicalData::PhysicalData _averagePhysicalData;
 
         // clang-format off
-        pq::SharedVirial       _virial         = std::make_shared<pq::VirialMolecular>();
+        pq::SharedVirial       _virial         = std::make_shared<pq::MolecularVirial>();
         pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
         pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
         pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();

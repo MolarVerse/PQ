@@ -1,5 +1,8 @@
 add_library(virial
     virial.cpp
+
+    atomicVirial.cpp
+    molecularVirial.cpp
 )
 
 target_include_directories(virial

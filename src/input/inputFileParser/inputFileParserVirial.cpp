@@ -25,13 +25,16 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
+#include "atomicVirial.hpp"      // for VirialAtomic
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
+#include "molecularVirial.hpp"   // for VirialMolecular
 #include "physicalData.hpp"      // for PhysicalData
 #include "stringUtilities.hpp"   // for toLowerCopy
-#include "virial.hpp"            // for VirialAtomic, VirialMolecular, virial
+#include "virial.hpp"            // for Virial
 
 using namespace input;
+using namespace virial;
 
 /**
  * @brief Construct a new Input File Parser Virial:: Input File Parser Virial
@@ -74,11 +77,11 @@ void InputFileParserVirial::parseVirial(
     const auto virial = utilities::toLowerCopy(lineElements[2]);
 
     if (virial == "molecular")
-        _engine.makeVirial(virial::VirialMolecular());
+        _engine.makeVirial(MolecularVirial());
 
     else if (virial == "atomic")
     {
-        _engine.makeVirial(virial::VirialAtomic());
+        _engine.makeVirial(AtomicVirial());
         _engine.getPhysicalData().changeKineticVirialToAtomic();
     }
     else

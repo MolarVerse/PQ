@@ -20,47 +20,34 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_HPP_
+#ifndef _MOLECULAR_VIRIAL_HPP_
 
-#define _VIRIAL_HPP_
+#define _MOLECULAR_VIRIAL_HPP_
 
-#include <string>   // for string
-
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "timer.hpp"             // for Timer
-#include "typeAliases.hpp"
+#include "virial.hpp"
 
 namespace virial
 {
     /**
-     * @class Virial
+     * @class MolecularVirial
      *
-     * @brief Base class for virial calculation
+     * @brief Class for virial calculation of molecular systems
      *
-     * @details implements virial calculation, which is valid for both atomic
-     * and molecular systems
+     * @details overrides calculateVirial() function to include intra-molecular
+     * virial correction
      */
-    class Virial : public timings::Timer
+    class MolecularVirial : public Virial
     {
-       protected:
-        std::string _virialType;   // TODO: make this an enum
-
-        pq::tensor3D _virial;
-
        public:
-        virtual ~Virial() = default;
+        MolecularVirial();
 
-        virtual std::shared_ptr<Virial> clone() const = 0;
+        std::shared_ptr<Virial> clone() const override;
 
-        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
-        virtual void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &) {
-        };
-
-        void setVirial(const pq::tensor3D &virial);
-
-        [[nodiscard]] pq::tensor3D getVirial() const;
-        [[nodiscard]] std::string  getVirialType() const;
+        void calculateVirial(pq::SimBox &, pq::PhysicalData &) override;
+        void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &)
+            override;
     };
+
 }   // namespace virial
 
-#endif   // _VIRIAL_HPP_
+#endif   // _MOLECULAR_VIRIAL_HPP_

@@ -73,7 +73,7 @@ namespace potential
 namespace virial
 {
     class Virial;            // forward declaration
-    class VirialMolecular;   // forward declaration
+    class MolecularVirial;   // forward declaration
 
 }   // namespace virial
 
@@ -216,7 +216,7 @@ namespace pq
      ********************/
 
     using Virial          = virial::Virial;
-    using VirialMolecular = virial::VirialMolecular;
+    using MolecularVirial = virial::MolecularVirial;
 
     using SharedVirial = std::shared_ptr<virial::Virial>;
 
