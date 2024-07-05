@@ -28,11 +28,7 @@
 #include <vector>   // for vector
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::parameterFile
 {
@@ -45,32 +41,13 @@ namespace input::parameterFile
     class NonCoulombicsSection : public ParameterFileSection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "noncoulombics"; }
+        [[nodiscard]] std::string keyword() override;
 
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-
-        void processHeader(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-
-        void processLJ(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) const;
-
-        void processBuckingham(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) const;
-
-        void processMorse(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) const;
+        void processSection(pq::strings &, pq::Engine &) override;
+        void processHeader(pq::strings &, pq::Engine &) override;
+        void processLJ(pq::strings &, pq::Engine &) const;
+        void processBuckingham(pq::strings &, pq::Engine &) const;
+        void processMorse(pq::strings &, pq::Engine &) const;
     };
 
 }   // namespace input::parameterFile

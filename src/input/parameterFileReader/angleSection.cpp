@@ -22,18 +22,30 @@
 
 #include "angleSection.hpp"
 
+#include <format>   // for format
+
 #include "angleType.hpp"                     // for AngleType
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
 #include "forceFieldClass.hpp"               // for ForceField
 
-#include <format>   // for format
-
 using namespace input::parameterFile;
+using namespace engine;
+using namespace customException;
+using namespace forceField;
+using namespace constants;
 
 /**
- * @brief processes one line of the angle section of the parameter file and adds the angle type to the force field
+ * @brief returns the keyword of the angle section
+ *
+ * @return "angles"
+ */
+std::string AngleSection::keyword() { return "angles"; }
+
+/**
+ * @brief processes one line of the angle section of the parameter file and adds
+ * the angle type to the force field
  *
  * @details The line is expected to have the following format:
  * 1. angleTypeId
@@ -43,20 +55,26 @@ using namespace input::parameterFile;
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line is not 3
+ * @throw ParameterFileException if number of elements in line
+ * is not 3
  */
-void AngleSection::processSection(std::vector<std::string> &lineElements, engine::Engine &engine)
+void AngleSection::processSection(
+    std::vector<std::string> &lineElements,
+    Engine                   &engine
+)
 {
     if (lineElements.size() != 3)
-        throw customException::ParameterFileException(
-            std::format("Wrong number of arguments in parameter file angle section at line {} - number of elements has to be 3!",
-                        _lineNumber));
+        throw ParameterFileException(std::format(
+            "Wrong number of arguments in parameter file angle section at line "
+            "{} - number of elements has to be 3!",
+            _lineNumber
+        ));
 
     auto id               = stoul(lineElements[0]);
-    auto equilibriumAngle = stod(lineElements[1]) * constants::_DEG_TO_RAD_;
+    auto equilibriumAngle = stod(lineElements[1]) * _DEG_TO_RAD_;
     auto forceConstant    = stod(lineElements[2]);
 
-    auto angleType = forceField::AngleType(id, equilibriumAngle, forceConstant);
+    auto angleType = AngleType(id, equilibriumAngle, forceConstant);
 
     engine.getForceField().addAngleType(angleType);
 }

@@ -164,6 +164,11 @@ namespace settings
 
 }   // namespace settings
 
+namespace input::parameterFile
+{
+    class ParameterFileSection;   // forward declaration
+}
+
 namespace pq
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -195,6 +200,10 @@ namespace pq
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
+
+    using ParamFileSection       = input::parameterFile::ParameterFileSection;
+    using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;
+    using UniqueParamFileSectionVec = std::vector<UniqueParamFileSection>;
 
     /**********************
      * settings namespace *

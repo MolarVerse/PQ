@@ -28,11 +28,7 @@
 #include <string>   // for string, allocator
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
-
+#include "typeAliases.hpp"
 namespace input::parameterFile
 {
     /**
@@ -50,17 +46,17 @@ namespace input::parameterFile
        public:
         virtual ~ParameterFileSection() = default;
 
-        virtual void process(std::vector<std::string> &lineElements, engine::Engine &);
-        void endedNormally(bool);
+        virtual void process(pq::strings &lineElements, pq::Engine &);
+        void         endedNormally(const bool);
 
         virtual std::string keyword() = 0;
-        virtual void processSection(std::vector<std::string> &lineElements, engine::Engine &) = 0;
-        virtual void processHeader(std::vector<std::string> &lineElements, engine::Engine &) = 0;
+        virtual void processSection(pq::strings &lineElements, pq::Engine &) = 0;
+        virtual void processHeader(pq::strings &lineElements, pq::Engine &) = 0;
 
-        void setLineNumber(const int lineNumber) { _lineNumber = lineNumber; }
-        void setFp(std::ifstream *fp) { _fp = fp; }
+        void setLineNumber(const int lineNumber);
+        void setFp(std::ifstream *fp);
 
-        [[nodiscard]] int getLineNumber() const { return _lineNumber; }
+        [[nodiscard]] int getLineNumber() const;
     };
 
 }   // namespace input::parameterFile
