@@ -20,37 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_INPUT_PARSER_HPP_
+#ifndef _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
 
-#define _OPT_INPUT_PARSER_HPP_
+#define _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+
+#include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings, pq::Engine
+#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
     /**
-     * @class OptInputParser
+     * @class NonCoulombInputParser inherits from InputFileParser
      *
-     * @brief Parses the input file for the optimizer
+     * @brief Parses the non-Coulomb type commands in the input file
      *
      */
-    class OptInputParser : public InputFileParser
+    class NonCoulombInputParser : public InputFileParser
     {
        public:
-        explicit OptInputParser(pq::Engine &);
+        explicit NonCoulombInputParser(pq::Engine &);
 
-        void parseOptimizer(const pq::strings &, const size_t);
-
-        void parseLearningRateStrategy(const pq::strings &, const size_t);
-        void parseInitialLearningRate(const pq::strings &, const size_t);
-        void parseLearningRateUpdateFreq(const pq::strings &, const size_t);
-        void parseMinLearningRate(const pq::strings &, const size_t);
-        void parseMaxLearningRate(const pq::strings &, const size_t);
-
-        void parseLearningRateDecay(const pq::strings &, const size_t);
+        void parseNonCoulombType(const pq::strings &, const size_t);
     };
 
 }   // namespace input
 
-#endif   // _OPT_INPUT_PARSER_HPP_
+#endif   // _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_

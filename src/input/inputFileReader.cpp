@@ -29,29 +29,29 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
-#include "QMInputParser.hpp"                // for InputFileParserQM
-#include "convergenceInputParser.hpp"       // for ConvergenceInputParser
-#include "engine.hpp"                       // for Engine
-#include "exceptions.hpp"                   // for InputFileException
-#include "generalInputParser.hpp"           // for InputFileParserGeneral
-#include "inputFileParserCellList.hpp"      // for InputFileParserCellList
-#include "inputFileParserConstraints.hpp"   // for InputFileParserConstraints
-#include "inputFileParserCoulombLongRange.hpp"   // for InputFileParserCoulombLongRange
-#include "inputFileParserFiles.hpp"              // for InputFileParserFiles
-#include "inputFileParserForceField.hpp"      // for InputFileParserForceField
-#include "inputFileParserIntegrator.hpp"      // for InputFileParserIntegrator
-#include "inputFileParserManostat.hpp"        // for InputFileParserManostat
-#include "inputFileParserNonCoulomb.hpp"      // for InputFileParserNonCoulomb
-#include "inputFileParserOutput.hpp"          // for InputFileParserOutput
-#include "inputFileParserQMMM.hpp"            // for InputFileParserQM
-#include "inputFileParserResetKinetics.hpp"   // for InputFileParserResetKinetics
-#include "inputFileParserRingPolymer.hpp"     // for InputFileParserRingPolymer
-#include "inputFileParserSimulationBox.hpp"   // for InputFileParserSimulationBox
-#include "inputFileParserThermostat.hpp"      // for InputFileParserThermostat
-#include "inputFileParserTimings.hpp"         // for InputFileParserTimings
-#include "inputFileParserVirial.hpp"          // for InputFileParserVirial
-#include "optInputParser.hpp"                 // for OptInputParser
-#include "stringUtilities.hpp"   // for getLineCommands, removeComments, splitString, toLowerCopy
+#include "QMInputParser.hpp"                 // for InputFileParserQM
+#include "QMMMInputParser.hpp"               // for InputFileParserQMMM
+#include "cellListInputParser.hpp"           // for CellListInputParser
+#include "constraintsInputParser.hpp"        // for InputFileParserConstraints
+#include "convergenceInputParser.hpp"        // for ConvergenceInputParser
+#include "coulombLongRangeInputParser.hpp"   // for InputFileParserCoulombLongRange
+#include "engine.hpp"                        // for Engine
+#include "exceptions.hpp"                    // for InputFileException
+#include "filesInputParser.hpp"              // for InputFileParserFiles
+#include "forceFieldInputParser.hpp"         // for InputFileParserForceField
+#include "generalInputParser.hpp"            // for InputFileParserGeneral
+#include "integratorInputParser.hpp"         // for InputFileParserIntegrator
+#include "manostatInputParser.hpp"           // for InputFileParserManostat
+#include "nonCoulombInputParser.hpp"         // for InputFileParserNonCoulomb
+#include "optInputParser.hpp"                // for OptInputParser
+#include "outputInputParser.hpp"             // for InputFileParserOutput
+#include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
+#include "ringPolymerInputParser.hpp"        // for InputFileParserRingPolymer
+#include "simulationBoxInputParser.hpp"      // for InputFileParserSimulationBox
+#include "stringUtilities.hpp"         // for getLineCommands, removeComments
+#include "thermostatInputParser.hpp"   // for InputFileParserThermostat
+#include "timingsInputParser.hpp"      // for InputFileParserTimings
+#include "virialInputParser.hpp"       // for InputFileParserVirial
 
 using namespace input;
 using namespace utilities;
@@ -74,23 +74,23 @@ InputFileReader::InputFileReader(
 )
     : _fileName(fileName), _engine(engine)
 {
-    _parsers.push_back(make_unique<InputFileParserCellList>(_engine));
-    _parsers.push_back(make_unique<InputFileParserConstraints>(_engine));
-    _parsers.push_back(make_unique<InputFileParserCoulombLongRange>(_engine));
-    _parsers.push_back(make_unique<InputFileParserFiles>(_engine));
-    _parsers.push_back(make_unique<InputFileParserForceField>(_engine));
+    _parsers.push_back(make_unique<CellListInputParser>(_engine));
+    _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
+    _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
+    _parsers.push_back(make_unique<FilesInputParser>(_engine));
+    _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
-    _parsers.push_back(make_unique<InputFileParserIntegrator>(_engine));
-    _parsers.push_back(make_unique<InputFileParserManostat>(_engine));
-    _parsers.push_back(make_unique<InputFileParserNonCoulomb>(_engine));
-    _parsers.push_back(make_unique<InputFileParserOutput>(_engine));
-    _parsers.push_back(make_unique<InputFileParserResetKinetics>(_engine));
-    _parsers.push_back(make_unique<InputFileParserSimulationBox>(_engine));
-    _parsers.push_back(make_unique<InputFileParserThermostat>(_engine));
-    _parsers.push_back(make_unique<InputFileParserTimings>(_engine));
-    _parsers.push_back(make_unique<InputFileParserVirial>(_engine));
-    _parsers.push_back(make_unique<InputFileParserQMMM>(_engine));
-    _parsers.push_back(make_unique<InputFileParserRingPolymer>(_engine));
+    _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
+    _parsers.push_back(make_unique<ManostatInputParser>(_engine));
+    _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));
+    _parsers.push_back(make_unique<OutputInputParser>(_engine));
+    _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
+    _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));
+    _parsers.push_back(make_unique<ThermostatInputParser>(_engine));
+    _parsers.push_back(make_unique<TimingsInputParser>(_engine));
+    _parsers.push_back(make_unique<VirialInputParser>(_engine));
+    _parsers.push_back(make_unique<QMMMInputParser>(_engine));
+    _parsers.push_back(make_unique<RingPolymerInputParser>(_engine));
 
     _parsers.push_back(make_unique<ConvInputParser>(_engine));
     _parsers.push_back(make_unique<OptInputParser>(_engine));
@@ -148,7 +148,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
             _lineNumber
         ));
 
-    ParseFunc parserFunc = _keywordFuncMap[keyword];
+    pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
     parserFunc(lineElements, _lineNumber);
 
     ++_keywordCountMap[keyword];

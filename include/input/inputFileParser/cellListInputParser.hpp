@@ -20,37 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_INPUT_PARSER_HPP_
+#ifndef _CELL_LIST_INPUT_PARSER_HPP_
 
-#define _OPT_INPUT_PARSER_HPP_
+#define _CELL_LIST_INPUT_PARSER_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings, pq::Engine
+#include <string>
+#include <vector>
+
+#include "inputFileParser.hpp"
+#include "typeAliases.hpp"
 
 namespace input
 {
     /**
-     * @class OptInputParser
+     * @class CellListInputParser inherits from InputFileParser
      *
-     * @brief Parses the input file for the optimizer
+     * @brief Parses the cell list commands in the input file
      *
      */
-    class OptInputParser : public InputFileParser
+    class CellListInputParser : public InputFileParser
     {
        public:
-        explicit OptInputParser(pq::Engine &);
+        explicit CellListInputParser(pq::Engine &);
 
-        void parseOptimizer(const pq::strings &, const size_t);
-
-        void parseLearningRateStrategy(const pq::strings &, const size_t);
-        void parseInitialLearningRate(const pq::strings &, const size_t);
-        void parseLearningRateUpdateFreq(const pq::strings &, const size_t);
-        void parseMinLearningRate(const pq::strings &, const size_t);
-        void parseMaxLearningRate(const pq::strings &, const size_t);
-
-        void parseLearningRateDecay(const pq::strings &, const size_t);
+        void parseCellListActivated(const pq::strings &, const size_t);
+        void parseNumberOfCells(const pq::strings &, const size_t);
     };
 
 }   // namespace input
 
-#endif   // _OPT_INPUT_PARSER_HPP_
+#endif   // _CELL_LIST_INPUT_PARSER_HPP_
