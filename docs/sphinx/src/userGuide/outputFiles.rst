@@ -71,15 +71,23 @@ Energy File
 
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 
-    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *V* *ρ* *p* looptime
+    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
 
 The parameter *T* denotes the temperature of the system in Kelvin, *P* denotes the pressure in bar, *E*:sub:`tot` denotes the total
 energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`QM` denotes the quantum mechanical energy of the system in
 :math:`\frac{\text{kcal}}{\text{mol}}`, *N*:sub:`QM-atoms` denotes the number of atoms treated quantum mechanically, *E*:sub:`kin`
 denotes the kinetic energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`intra` denotes the intramolecular energy
-of the system in :math:`\frac{\text{kcal}}{\text{mol}}` (0 for pure QM MD simulations), *V* denotes the volume of the system in Å³, *ρ* 
-denotes the density of the system in :math:`\frac{\text{g}}{\text{cm}^3}`, *p* denotes the total momentum of the system in 
-:math:`\frac{\text{amu Å}}{\text{fs}}`, and looptime denotes the time taken to complete the full MD simulation step in s.
+of the system in :math:`\frac{\text{kcal}}{\text{mol}}` (0 for pure QM MD simulations), *E*:sub:`Coulomb` denotes the MM Coulomb energy 
+in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`non-Coulomb` denotes the MM non-Coulomb energy in :math:`\frac{\text{kcal}}{\text{mol}}`,
+*E*:sub:`bond` denotes the total energy of the MM bonds in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`angle` denotes the total energy
+of the MM angles in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`dihedral` denotes the total energy of the MM dihedrals in 
+:math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`improper` denotes the total energy of the MM improper dihedrals in 
+:math:`\frac{\text{kcal}}{\text{mol}}`, *V* denotes the volume of the system in Å³, *ρ* denotes the density of the system in 
+:math:`\frac{\text{g}}{\text{cm}^3}`, *E*:sub:`p-NH` denotes the momentum energy of the Nose Hoover chain thermostat in 
+:math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`χ-NH` denotes the friction energy of the Nose Hoover chain thermostat in 
+:math:`\frac{\text{kcal}}{\text{mol}}`, *r*:sub:`lower` denotes the lower bound of the distance constraints in Å, *r*:sub:`upper` denotes
+the upper bound of the distance constraints in Å, *p* denotes the total momentum of the system in :math:`\frac{\text{amu Å}}{\text{fs}}` 
+and looptime denotes the time taken to complete the full MD simulation step in s.
 
 .. note:: 
 
