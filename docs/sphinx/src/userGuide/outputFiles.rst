@@ -184,7 +184,7 @@ Restart File
 
 **File Type:** ``.rst``
 
-Stores the coordinates, velocities, and forces of each atom for the current simulation step in the following format:
+Stores the coordinates, velocities, and forces of each atom for the last performed simulation step in the following format:
     
     | **line 1:** "Step" step_number
     | **line 2:** "Box" *a* *b* *c* *α* *β* *γ*
@@ -196,13 +196,26 @@ The following lines contain the element symbol, a running index just for human r
 :ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{fs}}`, and the forces in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system. The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
-.. attention:: 
+.. note::
+
+    If the thermostat is set to the Nose Hoover chain *via* the :ref:`thermostatKey` key in the ``.in`` file, as many additional lines as 
+    chosen number of heat baths (set *via* the :ref:`nhchainlenghtKey` key) are added to the restart file between the box and the atom 
+    information in the following format:
+
+        "Chi" level *χ* *ζ*
+
+    Every line associated with the Nose Hoover chain thermostat begins with the string "Chi" followed by the level of the thermostat,
+    the corresponding friction coefficient *χ* and the cumulant *ζ*. Since these are time-dependent variables, they are
+    printed to the restart file.
+
+.. attention::
 
     A ``.rst`` file needs to be provided by the user for the first run of the simulation alongside the :ref:`Input File <inputFile>`. 
     Furthermore, this first ``.rst`` file has to contain all atoms of a moltype in the same order as provided in the 
     :ref:`moldescriptorFile` setup file. In this first ``.rst`` file, the whole first line denoting the step number as well as the 
     columns denoting the velocities and forces can be omitted. If the parameters defining the box angles are left out, they are 
-    assumed to be 90°.
+    assumed to be 90°. Also the information about the Nose Hoover chain thermostat is not needed for the first ``.rst`` file and 
+    can be omitted.
 
 .. _stressFile:
 

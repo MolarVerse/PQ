@@ -598,6 +598,8 @@ With the :code:`temp_ramp_freq` keyword the user can specify the frequency of th
 
 .. centered:: *default value* = 1 step
 
+.. _thermostatKey:
+
 Thermostat
 ==========
 .. TODO: reference manual
@@ -646,6 +648,8 @@ Friction
 With the :code:`friction` keyword the friction in :code:`ps⁻¹` applied in combination with the Langevin thermostat can be set.
 
 .. centered:: *default value* = 0.1 ps⁻¹
+
+.. _nhchainlenghtKey:
 
 NH-Chain_Length
 ===============
