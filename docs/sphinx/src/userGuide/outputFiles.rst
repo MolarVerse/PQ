@@ -204,6 +204,22 @@ The following lines contain the element symbol, a running index just for human r
     columns denoting the velocities and forces can be omitted. If the parameters defining the box angles are left out, they are 
     assumed to be 90°.
 
+.. _stressFile:
+
+************
+Stress File
+************
+
+**File Type:** ``.stress``
+
+Stores the individual components of the stress tensor *σ* for every frame in the following format:
+    
+    step_number *σ*:sub:`ax` *σ*:sub:`ay` *σ*:sub:`az` *σ*:sub:`bx` *σ*:sub:`by` *σ*:sub:`bz` *σ*:sub:`cx` *σ*:sub:`cy` *σ*:sub:`cz`
+
+The individual components of the stress tensor are given in units of :math:`\frac{\text{kcal}}{\text{mol Å}^3}`. The first character
+of the index denotes the lattice parameter (*a*, *b*, *c*), while the second character denotes the respective lattice parameter component 
+(*x*, *y*, *z*).
+
 .. _velocityFile:
 
 *************
@@ -222,3 +238,19 @@ The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
 of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated velocities along the x, y and z direction in 
 :math:`\frac{\text{Å}}{\text{fs}}` for each atom in the system.
+
+.. _virialFile:
+
+************
+Virial File
+************
+
+**File Type:** ``.vir``
+
+Stores the individual components of the virial tensor *W* for every frame in the following format:
+    
+    step_number *W*:sub:`ax` *W*:sub:`ay` *W*:sub:`az` *W*:sub:`bx` *W*:sub:`by` *W*:sub:`bz` *W*:sub:`cx` *W*:sub:`cy` *W*:sub:`cz`
+
+The individual components of the virial tensor are given in units of :math:`\frac{\text{kcal}}{\text{mol}}`. The first character
+of the index denotes the lattice parameter (*a*, *b*, *c*), while the second character denotes the respective lattice parameter component 
+(*x*, *y*, *z*).
