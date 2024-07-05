@@ -78,8 +78,8 @@ energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`QM` den
 :math:`\frac{\text{kcal}}{\text{mol}}`, *N*:sub:`QM-atoms` denotes the number of atoms treated quantum mechanically, *E*:sub:`kin`
 denotes the kinetic energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`intra` denotes the intramolecular energy
 of the system in :math:`\frac{\text{kcal}}{\text{mol}}` (0 for pure QM MD simulations), *V* denotes the volume of the system in Å³, *ρ* 
-denotes the density of the system in :math:`\frac{\text{g}}{\text{cm}^3}`, *p* denotes the momentum in :math:`\frac{\text{amu Å}}{\text{fs}}`,
-and looptime denotes the time taken to complete the full MD simulation step in s.
+denotes the density of the system in :math:`\frac{\text{g}}{\text{cm}^3}`, *p* denotes the total momentum of the system in 
+:math:`\frac{\text{amu Å}}{\text{fs}}`, and looptime denotes the time taken to complete the full MD simulation step in s.
 
 .. note:: 
 
@@ -149,6 +149,22 @@ Log File
 Starts with general information about the **PQ** program, such as the author, version, and the date of compilation. The file then tracks the 
 initialization of **PQ** and the simulation settings used. In case of a successful simulation, the file ends with the text 'PQ ended normally'. 
 In case of an error, the file shows the respective error message.
+
+.. _momentumFile:
+
+**************
+Momentum File
+**************
+
+**File Type:** ``.mom``
+
+Stores the total momentum *p* and the total angular momentum *L* of the system as well as their individual *x*, *y* and *z* components for 
+every frame in the following format:
+
+    step_number *p* *p*:sub:`x` *p*:sub:`y` *p*:sub:`z` *L* *L*:sub:`x` *L*:sub:`y` *L*:sub:`z`
+
+The total momentum and its components are given in units of :math:`\frac{\text{amu Å}}{\text{fs}}`, while the total angular momentum and its 
+components are given in units of :math:`\frac{\text{amu Å}^2}{\text{fs}}`.
 
 .. _refFile:
 
