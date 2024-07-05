@@ -29,6 +29,14 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief call selection tool of PQAnalysis.topology
+ *
+ * @param selection
+ * @param restartFileName
+ * @param moldescriptorFileName
+ * @return std::vector<int>
+ */
 std::vector<int> pq_python::select(
     const std::string &selection,
     const std::string &restartFileName,
@@ -63,7 +71,8 @@ std::vector<int> pq_python::select(
     else
         PyErr_Print();
 
-    if (moldescriptorFileName.empty() || ::fopen(moldescriptorFileName.c_str(), "r") == nullptr)
+    if (moldescriptorFileName.empty() ||
+        ::fopen(moldescriptorFileName.c_str(), "r") == nullptr)
         pArgs = ::PyTuple_New(2);
     else
         pArgs = ::PyTuple_New(3);
@@ -73,7 +82,8 @@ std::vector<int> pq_python::select(
     pValue = ::PyUnicode_FromString(restartFileName.c_str());
     ::PyTuple_SetItem(pArgs, 1, pValue);
 
-    if (!moldescriptorFileName.empty() && ::fopen(moldescriptorFileName.c_str(), "r") != nullptr)
+    if (!moldescriptorFileName.empty() &&
+        ::fopen(moldescriptorFileName.c_str(), "r") != nullptr)
     {
         pValue = ::PyUnicode_FromString(moldescriptorFileName.c_str());
         ::PyTuple_SetItem(pArgs, 2, pValue);
