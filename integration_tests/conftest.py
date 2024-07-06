@@ -90,7 +90,7 @@ def execute_pq(input_file):
     stdout = process.stdout
     stderr = process.stderr
 
-    file = open("cgo-mm-01.xyz", "w")
+    file = open("cgo-mm-01.xyz", "r")
     for line in stdout.decode().split("\n"):
         file.write(line + "\n")
 
