@@ -161,7 +161,6 @@ namespace settings
     enum class ThermostatType;   // forward declaration
     enum class ManostatType;     // forward declaration
     enum class Isotropy;         // forward declaration
-    enum class ConvStrategy;     // forward declaration
 
 }   // namespace settings
 
@@ -225,7 +224,6 @@ namespace pq
     using ThermostatType = settings::ThermostatType;
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
-    using ConvStrategy   = settings::ConvStrategy;
 
     /************************
      * thermostat namespace *
