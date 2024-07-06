@@ -35,7 +35,7 @@
 #include <vector>       // for std::vector
 
 #include "matrix.hpp"
-#include "staticMatrix3x3Class.hpp"
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 namespace simulationBox

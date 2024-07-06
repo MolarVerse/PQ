@@ -26,8 +26,8 @@
 
 #include <string>   // for string
 
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "timer.hpp"             // for Timer
+#include "staticMatrix.hpp"   // for StaticMatrix3x3
+#include "timer.hpp"          // for Timer
 #include "typeAliases.hpp"
 
 namespace virial

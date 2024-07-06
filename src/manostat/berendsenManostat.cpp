@@ -29,7 +29,7 @@
 #include "exceptions.hpp"        // for ExceptionType
 #include "physicalData.hpp"      // for PhysicalData
 #include "simulationBox.hpp"     // for SimulationBox
-#include "staticMatrix3x3.hpp"   // for diagonal, diagonalMatrix, trace
+#include "staticMatrix.hpp"      // for diagonal, diagonalMatrix, trace
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for Vec3D
 

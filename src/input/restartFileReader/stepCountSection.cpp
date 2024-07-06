@@ -49,10 +49,7 @@ using namespace customException;
  * @throws RstFileException if the number of elements in the line is not 2
  * @throws RstFileException if the step count is negative
  */
-void StepCountSection::process(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+void StepCountSection::process(std::vector<std::string> &lineElements, Engine &)
 {
     if (lineElements.size() != 2)
         throw RstFileException(std::format(

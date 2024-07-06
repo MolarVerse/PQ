@@ -30,8 +30,7 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
-#include "staticMatrix3x3.hpp"               // for operator*, operator+=
-#include "staticMatrix3x3Class.hpp"          // for StaticMatrix3x3
+#include "staticMatrix.hpp"                  // for operator*, operator+=
 #include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "vector3d.hpp"                      // for Vec3D, Vector3D, cross
 

@@ -1,38 +1,11 @@
-/*****************************************************************************
-<GPL_HEADER>
+#ifndef _STATIC_MATRIX_3X3_TPP_
 
-    PQ
-    Copyright (C) 2023-now  Jakob Gamper
+#define _STATIC_MATRIX_3X3_TPP_
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-<GPL_HEADER>
-******************************************************************************/
-
-#ifndef _STATIC_MATRIX_3X3_HPP_
-
-#define _STATIC_MATRIX_3X3_HPP_
-
-#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
-#include "vector3d.hpp"               // for Vector3D
-
-#include <cstddef>   // for size_t
-#include <ostream>   // for operator<<, ostream
+#include "staticMatrix3x3.hpp"
 
 namespace linearAlgebra
 {
-
     /**
      * @brief ostream operator for vector3d
      *
@@ -48,23 +21,11 @@ namespace linearAlgebra
                   << " [" << mat[2] << "]]";
     }
 
-    /**
-     * @brief transpose a StaticMatrix3x3
-     *
-     * @param mat
-     * @return StaticMatrix3x3<T>
-     */
-    template <typename T>
-    StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat)
-    {
-        StaticMatrix3x3<T> result;
-
-        for (size_t i = 0; i < 3; ++i)
-            for (size_t j = 0; j < 3; ++j)
-                result[i][j] = mat[j][i];
-
-        return result;
-    }
+    /****************************
+     *                          *
+     * operator+ and operator+= *
+     *                          *
+     ****************************/
 
     /**
      * @brief operator+ for two StaticMatrix3x3's
@@ -73,7 +34,10 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    StaticMatrix3x3<T> operator+(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
     {
         StaticMatrix3x3<T> result(lhs);
 
@@ -112,6 +76,12 @@ namespace linearAlgebra
         lhs[2] += rhs[2];
     }
 
+    /****************************
+     *                          *
+     * operator- and operator-= *
+     *                          *
+     ****************************/
+
     /**
      * @brief operator- for two StaticMatrix3x3's
      *
@@ -119,7 +89,10 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> operator-(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    StaticMatrix3x3<T> operator-(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
     {
         StaticMatrix3x3<T> result(lhs);
 
@@ -142,6 +115,12 @@ namespace linearAlgebra
         lhs[2] -= rhs[2];
     }
 
+    /****************************
+     *                          *
+     * operator* and operator*= *
+     *                          *
+     ****************************/
+
     /**
      * @brief operator* for two StaticMatrix3x3's
      *
@@ -149,7 +128,10 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    StaticMatrix3x3<T> operator*(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
     {
         StaticMatrix3x3<T> result;
         StaticMatrix3x3<T> rhsTransposed = transpose(rhs);
@@ -219,6 +201,12 @@ namespace linearAlgebra
         lhs[2] *= t;
     }
 
+    /****************************
+     *                          *
+     * operator/ and operator/= *
+     *                          *
+     ****************************/
+
     /**
      * @brief operator/ for StaticMatrix3x3 and scalar
      *
@@ -257,6 +245,29 @@ namespace linearAlgebra
         lhs[2] /= t;
     }
 
+    /****************************
+     *                          *
+     * general matrix functions *
+     *                          *
+     ****************************/
+
+    /**
+     * @brief transpose a StaticMatrix3x3
+     *
+     * @param mat
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat)
+    {
+        StaticMatrix3x3<T> result;
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = mat[j][i];
+
+        return result;
+    }
+
     /**
      * @brief determinant of a StaticMatrix3x3
      *
@@ -288,9 +299,11 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> tensorProduct(const Vector3D<T> &lhs, const Vector3D<T> &rhs)
+    StaticMatrix3x3<T> tensorProduct(
+        const Vector3D<T> &lhs,
+        const Vector3D<T> &rhs
+    )
     {
-
         StaticMatrix3x3<T> lhsMatrix{};
         StaticMatrix3x3<T> rhsMatrix{};
 
@@ -402,13 +415,15 @@ namespace linearAlgebra
 
     /**
      * @brief Kronecker delta
-     *
-     * @TODO: use concepts here
      */
     template <typename T>
     [[nodiscard]] StaticMatrix3x3<T> kroneckerDeltaMatrix()
     {
-        return StaticMatrix3x3<T>(Vec3D{T(1), 0.0, 0.0}, Vec3D{0.0, T(1), 0.0}, Vec3D{0.0, 0.0, T(1)});
+        return StaticMatrix3x3<T>(
+            Vec3D{T(1), 0.0, 0.0},
+            Vec3D{0.0, T(1), 0.0},
+            Vec3D{0.0, 0.0, T(1)}
+        );
     }
 
     /**
@@ -421,12 +436,10 @@ namespace linearAlgebra
         auto result = StaticMatrix3x3<T>(0.0);
 
         for (size_t i = 0; i < 3; ++i)
-            for (size_t j = i + 1; j < 3; ++j)
-                result[i][j] = ::exp(mat[i][j]);
+            for (size_t j = i + 1; j < 3; ++j) result[i][j] = ::exp(mat[i][j]);
 
         return result;
     }
-
 }   // namespace linearAlgebra
 
-#endif   // _STATIC_MATRIX_3X3_HPP_
+#endif   // _STATIC_MATRIX_3X3_TPP_
