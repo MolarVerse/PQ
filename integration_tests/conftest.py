@@ -26,14 +26,14 @@
 This module contains fixtures and helper functions for the tests.
 """
 
+
+
+
 import os
 import shutil
 import pathlib
 import subprocess
-
 import pytest
-
-
 @pytest.fixture(scope="function")
 def tmpdir():
 
@@ -88,5 +88,8 @@ def execute_pq(input_file):
     process = subprocess.Popen(
         [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
+
+    print(stdout)
+    print(stderr)
 
     return stdout, stderr
