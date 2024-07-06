@@ -98,4 +98,7 @@ def execute_pq(input_file):
             print(os.path.join(root, name),
                   os.path.getsize(os.path.join(root, name)))
 
+    file = open("cgo-mm-01.log", "r")
+    print(file.read())
+
     return stdout, stderr
