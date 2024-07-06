@@ -90,7 +90,9 @@ def execute_pq(input_file):
     stdout = process.stdout
     stderr = process.stderr
 
-    print(stdout)
-    print(stderr)
+    # print all files that are now in the directory
+    print("Files in directory after execution:")
+    for file in os.listdir():
+        print(file)
 
     return stdout, stderr
