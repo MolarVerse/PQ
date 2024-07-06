@@ -90,9 +90,8 @@ def execute_pq(input_file):
     stdout = process.stdout
     stderr = process.stderr
 
-    # print all files that are now in the directory
-    print("Files in directory after execution:")
-    for file in os.listdir():
-        print(file)
+    file = open("cgo-mm-01.xyz", "w")
+    for line in stdout.decode().split("\n"):
+        file.write(line + "\n")
 
     return stdout, stderr
