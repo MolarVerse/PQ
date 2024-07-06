@@ -22,6 +22,8 @@
 
 #include "convergence.hpp"
 
+#include "convergenceSettings.hpp"
+
 using namespace opt;
 using namespace settings;
 
@@ -38,14 +40,14 @@ using namespace settings;
  * @param energyConvStrategy
  */
 Convergence::Convergence(
-    const bool                   _enableEnergyConv,
-    const bool                   _enableMaxForceConv,
-    const bool                   _enableRMSForceConv,
-    const double                 relEnergyConvThreshold,
-    const double                 absEnergyConvThreshold,
-    const double                 absMaxForceConvThreshold,
-    const double                 absRMSForceConvThreshold,
-    const settings::ConvStrategy energyConvStrategy
+    const bool         _enableEnergyConv,
+    const bool         _enableMaxForceConv,
+    const bool         _enableRMSForceConv,
+    const double       relEnergyConvThreshold,
+    const double       absEnergyConvThreshold,
+    const double       absMaxForceConvThreshold,
+    const double       absRMSForceConvThreshold,
+    const ConvStrategy energyConvStrategy
 )
     : _enableEnergyConv(_enableEnergyConv),
       _enableMaxForceConv(_enableMaxForceConv),
@@ -72,28 +74,16 @@ bool Convergence::checkConvergence() const
         using enum ConvStrategy;
 
         case RIGOROUS:
-        {
             isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
             break;
-        }
 
         case LOOSE:
-        {
             isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
             break;
-        }
 
-        case ABSOLUTE:
-        {
-            isEnergyConverged = _isAbsEnergyConv;
-            break;
-        }
+        case ABSOLUTE: isEnergyConverged = _isAbsEnergyConv; break;
 
-        case RELATIVE:
-        {
-            isEnergyConverged = _isRelEnergyConv;
-            break;
-        }
+        case RELATIVE: isEnergyConverged = _isRelEnergyConv; break;
 
         default: break;
     }
@@ -180,9 +170,9 @@ double Convergence::getAbsRMSForce() const { return _absRMSForce; }
 /**
  * @brief get energy convergence strategy
  *
- * @return settings::ConvStrategy
+ * @return ConvStrategy
  */
-settings::ConvStrategy Convergence::getEnConvStrategy() const
+ConvStrategy Convergence::getEnConvStrategy() const
 {
     return _energyConvStrategy;
 }
