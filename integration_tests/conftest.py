@@ -90,8 +90,12 @@ def execute_pq(input_file):
     stdout = process.stdout
     stderr = process.stderr
 
-    file = open("cgo-mm-01.xyz", "r")
-    for line in file:
-        print(line)
+    print(stdout)
+
+    # print file size of every file in the directory
+    for root, dirs, files in os.walk("."):
+        for name in files:
+            print(os.path.join(root, name),
+                  os.path.getsize(os.path.join(root, name)))
 
     return stdout, stderr
