@@ -24,15 +24,13 @@
 
 #define _CONVERGENCE_HPP_
 
-#include "typeAliases.hpp"   // for pq::ConvStrategy
+#include "convergenceSettings.hpp"
 
 namespace opt
 {
     /**
      * @brief Convergence class
      *
-     * @details This class stores all information about the convergence of the
-     * optimization
      */
     class Convergence
     {
@@ -56,7 +54,7 @@ namespace opt
         double _absMaxForceConvThreshold = 0.0;
         double _absRMSForceConvThreshold = 0.0;
 
-        pq::ConvStrategy _energyConvStrategy;
+        settings::ConvStrategy _energyConvStrategy;
 
        public:
         Convergence() = default;
@@ -68,7 +66,7 @@ namespace opt
             const double,
             const double,
             const double,
-            const pq::ConvStrategy
+            const settings::ConvStrategy
         );
 
         [[nodiscard]] bool checkConvergence() const;
@@ -85,7 +83,7 @@ namespace opt
         [[nodiscard]] double getAbsMaxForce() const;
         [[nodiscard]] double getAbsRMSForce() const;
 
-        [[nodiscard]] pq::ConvStrategy getEnConvStrategy() const;
+        [[nodiscard]] settings::ConvStrategy getEnConvStrategy() const;
 
         [[nodiscard]] bool isEnergyConvEnabled() const;
         [[nodiscard]] bool isMaxForceConvEnabled() const;
