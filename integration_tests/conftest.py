@@ -87,7 +87,8 @@ def execute_pq(input_file):
     # Run the pq executable with the input file
     process = subprocess.run(
         [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    stdout, stderr = process.communicate()
+    stdout = process.stdout
+    stderr = process.stderr
 
     print(stdout)
     print(stderr)
