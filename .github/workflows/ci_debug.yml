@@ -20,6 +20,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gcc-13 g++-13
+          sudo apt install valgrind
         shell: bash
 
       - name: setup python
@@ -45,19 +46,27 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Run integration Tests
+      - name: valgrind tests
         run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pytest integration_tests
+          cd integration_tests/cgo
+          mkdir test
+          cp * test
+          cd test
+          valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ../../../build/apps/PQ run-01.in
+
+      # - name: Run integration Tests
+      #   run: |
+      #     pip install pytest
+      #     pip install pytest-cov
+      #     pip install pqanalysis
+      #     pytest integration_tests
 
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: true # optional (default = false)
-          gcov: true
-          gcov_executable: gcov-13
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     fail_ci_if_error: true # optional (default = false)
+      #     gcov: true
+      #     gcov_executable: gcov-13
+      #   env:
+      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
