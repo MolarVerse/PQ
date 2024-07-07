@@ -66,9 +66,9 @@ void Thermostat::applyThermostat(
  */
 void Thermostat::applyTemperatureRamping()
 {
-    const auto rampingModulo = (_rampingStepsLeft - 1) % _rampingFrequency;
+    const auto stepsLeft = _rampingStepsLeft;
 
-    if (_rampingStepsLeft > 0 && rampingModulo == 0)
+    if (stepsLeft > 0 && (stepsLeft - 1) % _rampingFrequency == 0)
     {
         setTargetTemperature(_targetTemperature + _temperatureIncrease);
         ThermostatSettings::setActualTargetTemperature(_targetTemperature);
