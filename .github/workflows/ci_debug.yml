@@ -50,7 +50,7 @@ jobs:
         run: |
           cd integration_tests/cgo
           mkdir test
-          cp * test
+          cp moldescriptor.dat guff.dat run-01.in cgo-mm-00.rst test
           cd test
           valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ../../../build/apps/PQ run-01.in
 
