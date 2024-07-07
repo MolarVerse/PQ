@@ -26,14 +26,14 @@
 This module contains fixtures and helper functions for the tests.
 """
 
-
-
-
 import os
 import shutil
 import pathlib
 import subprocess
+
 import pytest
+
+
 @pytest.fixture(scope="function")
 def tmpdir():
 
@@ -85,20 +85,8 @@ def execute_pq(input_file):
         folder_path, "..", "build", "apps", "PQ")
 
     # Run the pq executable with the input file
-    process = subprocess.run(
-        [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-    stdout = process.stdout
-    stderr = process.stderr
-
-    print(stdout)
-
-    # print file size of every file in the directory
-    for root, dirs, files in os.walk("."):
-        for name in files:
-            print(os.path.join(root, name),
-                  os.path.getsize(os.path.join(root, name)))
-
-    file = open("cgo-mm-01.log", "r")
-    print(file.read())
+    process = subprocess.Popen(
+        [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
 
     return stdout, stderr
