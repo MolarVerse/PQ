@@ -31,6 +31,9 @@
 #include "simulationBox.hpp"    // for SimulationBox
 
 using namespace input::topology;
+using namespace engine;
+using namespace customException;
+using namespace constraints;
 
 /**
  * @brief processes the shake section of the topology file
@@ -44,18 +47,18 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
+ * @throws TopologyException if number of elements in line is
  * not 4
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  * (=same atoms)
  */
 void ShakeSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 4 && lineElements.size() != 3)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file shake section at line "
             "{} - number of elements has to be 3 or 4!",
             _lineNumber
@@ -67,18 +70,18 @@ void ShakeSection::processSection(
     // TODO: auto linker = lineElements[3];
 
     if (atom1 == atom2)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file shake section at line {} - atoms cannot be the "
             "same!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    auto &simBox = engine.getSimulationBox();
 
-    auto bondConstraint = constraints::BondConstraint(
+    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
+
+    auto bondConstraint = BondConstraint(
         molecule1,
         molecule2,
         atomIndex1,
@@ -90,16 +93,23 @@ void ShakeSection::processSection(
 }
 
 /**
+ * @brief returns the keyword of the shake section
+ *
+ * @return std::string
+ */
+std::string ShakeSection::keyword() { return "shake"; }
+
+/**
  * @brief checks if shake sections ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void ShakeSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file shake section at line {} - no end of section found!",
             _lineNumber
         ));

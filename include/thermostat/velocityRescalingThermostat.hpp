@@ -27,21 +27,20 @@
 #include <random>   // for std::random_device, std::mt19937
 
 #include "thermostat.hpp"
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace thermostat
 {
+    /**
+     * @class VelocityRescalingThermostat
+     *
+     * @brief this class implements the velocity rescaling thermostat
+     * and inherits from the Thermostat class
+     *
+     */
     class VelocityRescalingThermostat : public Thermostat
     {
+       private:
        private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
@@ -49,22 +48,17 @@ namespace thermostat
         double _tau = 0.0;
 
        public:
+       public:
         VelocityRescalingThermostat() = default;
         VelocityRescalingThermostat(const VelocityRescalingThermostat &);
-        explicit VelocityRescalingThermostat(
-            const double targetTemp,
-            const double tau
-        )
-            : Thermostat(targetTemp), _tau(tau)
-        {
-        }
+        explicit VelocityRescalingThermostat(const double, const double);
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
+        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+
+        void setTau(const double tau);
 
         [[nodiscard]] pq::ThermostatType getThermostatType() const override;
-        [[nodiscard]] double             getTau() const { return _tau; }
-        void setTau(const double tau) { _tau = tau; }
+        [[nodiscard]] double             getTau() const;
     };
 }   // namespace thermostat
 

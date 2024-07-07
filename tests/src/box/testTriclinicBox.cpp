@@ -25,7 +25,7 @@
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "staticMatrix3x3.hpp"               // for StaticMatrix3x3
+#include "staticMatrix.hpp"                  // for StaticMatrix3x3
 #include "triclinicBox.hpp"                  // for TriclinicBox
 #include "vector3d.hpp"                      // for Vec3D
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR

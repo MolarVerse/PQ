@@ -21,3 +21,40 @@
 ******************************************************************************/
 
 #include "intraNonBondedContainer.hpp"
+
+using namespace intraNonBonded;
+
+/**
+ * @brief constructor for IntraNonBondedContainer
+ *
+ * @param molType
+ * @param atomIndices
+ */
+IntraNonBondedContainer::IntraNonBondedContainer(
+    const size_t                         molType,
+    const std::vector<std::vector<int>> &atomIndices
+)
+    : _molType(molType), _atomIndices(atomIndices){};
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the molType
+ *
+ * @return size_t
+ */
+size_t IntraNonBondedContainer::getMolType() const { return _molType; }
+
+/**
+ * @brief get the atomIndices
+ *
+ * @return std::vector<std::vector<int>>
+ */
+std::vector<std::vector<int>> IntraNonBondedContainer::getAtomIndices() const
+{
+    return _atomIndices;
+}

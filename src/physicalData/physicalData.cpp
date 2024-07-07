@@ -30,27 +30,27 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace physicalData;
+using namespace simulationBox;
+using namespace linearAlgebra;
+using namespace constants;
 
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
- * @Todo: check performs and usability of this function
- *
  * @param simulationBox
  */
-void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
-)
+void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
 {
     startTimingsSection("Calc Kinetics");
 
-    _momentum                     = linearAlgebra::Vec3D();
-    _kineticEnergyAtomicTensor    = linearAlgebra::tensor3D();
-    _kineticEnergyMolecularTensor = linearAlgebra::tensor3D();
+    _momentum                  = Vec3D();
+    _kineticEnergyAtomicTensor = tensor3D();
+    _kinEnergyMolTensor        = tensor3D();
 
-    auto kineticEnergyAndMomentumOfMolecule = [this](auto &molecule)
+    auto kinEnergyAndMomOfMol = [this](auto &molecule)
     {
         const auto numberOfAtoms   = molecule.getNumberOfAtoms();
-        auto       momentumSquared = linearAlgebra::tensor3D();
+        auto       momentumSquared = tensor3D();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
         {
@@ -63,23 +63,19 @@ void PhysicalData::calculateKinetics(simulationBox::SimulationBox &simulationBox
             momentumSquared            += tensorProduct(momentum, momentum);
         }
 
-        _kineticEnergyMolecularTensor +=
-            momentumSquared / molecule.getMolMass();
+        _kinEnergyMolTensor += momentumSquared / molecule.getMolMass();
     };
 
-    std::ranges::for_each(
-        simulationBox.getMolecules(),
-        kineticEnergyAndMomentumOfMolecule
-    );
+    std::ranges::for_each(simulationBox.getMolecules(), kinEnergyAndMomOfMol);
 
-    _kineticEnergyAtomicTensor    *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergyMolecularTensor *= constants::_KINETIC_ENERGY_FACTOR_;
-    _kineticEnergy                 = trace(_kineticEnergyAtomicTensor);
+    _kineticEnergyAtomicTensor *= _KINETIC_ENERGY_FACTOR_;
+    _kinEnergyMolTensor        *= _KINETIC_ENERGY_FACTOR_;
+    _kineticEnergy              = trace(_kineticEnergyAtomicTensor);
 
-    _angularMomentum = simulationBox.calculateAngularMomentum(_momentum) *=
-        constants::_FS_TO_S_;
+    _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
+    _angularMomentum *= _FS_TO_S_;
 
-    _momentum *= constants::_FS_TO_S_;
+    _momentum *= _FS_TO_S_;
 
     stopTimingsSection("Calc Kinetics");
 }
@@ -232,9 +228,7 @@ void PhysicalData::reset()
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(
-    simulationBox::SimulationBox &simulationBox
-)
+void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
 {
     _temperature = simulationBox.calculateTemperature();
 }
@@ -300,27 +294,27 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
  */
 void PhysicalData::changeKineticVirialToAtomic()
 {
-    getKineticEnergyVirialVector =
-        std::bind_front(&PhysicalData::getKineticEnergyAtomicVector, this);
+    getKinEnergyVirialTensor =
+        std::bind_front(&PhysicalData::getKinEnergyAtomTensor, this);
 }
 
 /**
  * @brief calculate the mean of a vector of physicalData
  *
- * @param physicalDataVector
+ * @param dataVec - vector of physicalData
  * @return PhysicalData
  */
-PhysicalData physicalData::mean(std::vector<PhysicalData> &physicalDataVector)
+PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
 {
     PhysicalData meanData;
 
     std::ranges::for_each(
-        physicalDataVector,
+        dataVec,
         [&meanData](auto &physicalData)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(physicalDataVector.size());
+    meanData.makeAverages(dataVec.size());
 
     return meanData;
 }

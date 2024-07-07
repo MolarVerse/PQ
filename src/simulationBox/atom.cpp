@@ -29,22 +29,27 @@
 #include "stringUtilities.hpp"    // for toLowerCopy
 #include "vector3d.hpp"           // for Vec3D
 
-using simulationBox::Atom;
+using namespace simulationBox;
+using namespace utilities;
+using namespace constants;
+using namespace customException;
+using namespace linearAlgebra;
+using namespace settings;
 
 /**
  * @brief sets the mass of the atom
  *
- * @throw customException::MolDescriptorException if the atom name is invalid
+ * @throw MolDescriptorException if the atom name is invalid
  */
 void Atom::initMass()
 {
-    const auto keyword = utilities::toLowerCopy(_name);
-    if (!constants::atomMassMap.contains(keyword))
-        throw customException::MolDescriptorException(
-            "Invalid atom name \"" + keyword + "\""
-        );
+    const auto keyword = toLowerCopy(_name);
+
+    if (!atomMassMap.contains(keyword))
+        throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
+
     else
-        setMass(constants::atomMassMap.at(keyword));
+        setMass(atomMassMap.at(keyword));
 }
 
 /**
@@ -80,10 +85,7 @@ void Atom::scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
  *
  * @param scaleFactor Vec3D
  */
-void Atom::scaleVelocity(const linearAlgebra::Vec3D &scaleFactor)
-{
-    _velocity *= scaleFactor;
-}
+void Atom::scaleVelocity(const Vec3D &scaleFactor) { _velocity *= scaleFactor; }
 
 /**
  * @brief scales the velocities of the atom in orthogonal space
@@ -92,18 +94,16 @@ void Atom::scaleVelocity(const linearAlgebra::Vec3D &scaleFactor)
  * @param box
  */
 void Atom::scaleVelocityOrthogonalSpace(
-    const linearAlgebra::tensor3D &scalingTensor,
-    const simulationBox::Box      &box
+    const tensor3D &scalingTensor,
+    const Box      &box
 )
 {
-    if (settings::ManostatSettings::getIsotropy() !=
-        settings::Isotropy::FULL_ANISOTROPIC)
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         _velocity = box.toOrthoSpace(_velocity);
 
     _velocity = scalingTensor * _velocity;
 
-    if (settings::ManostatSettings::getIsotropy() !=
-        settings::Isotropy::FULL_ANISOTROPIC)
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         _velocity = box.toSimSpace(_velocity);
 }
 
@@ -118,27 +118,21 @@ void Atom::scaleVelocityOrthogonalSpace(
  *
  * @param position
  */
-void Atom::addPosition(const linearAlgebra::Vec3D &position)
-{
-    _position += position;
-}
+void Atom::addPosition(const Vec3D &position) { _position += position; }
 
 /**
  * @brief  add a Vec3D to the current velocity of the atom
  *
  * @param velocity
  */
-void Atom::addVelocity(const linearAlgebra::Vec3D &velocity)
-{
-    _velocity += velocity;
-}
+void Atom::addVelocity(const Vec3D &velocity) { _velocity += velocity; }
 
 /**
  * @brief add a Vec3D to the current force of the atom
  *
  * @param force
  */
-void Atom::addForce(const linearAlgebra::Vec3D &force) { _force += force; }
+void Atom::addForce(const Vec3D &force) { _force += force; }
 
 /**
  * @brief  add a force to the current force of the atom
@@ -161,10 +155,7 @@ void Atom::addForce(
  *
  * @param shiftForce
  */
-void Atom::addShiftForce(const linearAlgebra::Vec3D &shiftForce)
-{
-    _shiftForce += shiftForce;
-}
+void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
 /***************************
  *                         *
@@ -254,44 +245,44 @@ double Atom::getPartialCharge() const { return _partialCharge; }
 /**
  * @brief return the position of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getPosition() const { return _position; }
+Vec3D Atom::getPosition() const { return _position; }
 
 /**
  * @brief return the old position of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getPositionOld() const { return _positionOld; }
+Vec3D Atom::getPositionOld() const { return _positionOld; }
 
 /**
  * @brief return the velocity of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getVelocity() const { return _velocity; }
+Vec3D Atom::getVelocity() const { return _velocity; }
 
 /**
  * @brief return the force of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getForce() const { return _force; }
+Vec3D Atom::getForce() const { return _force; }
 
 /**
  * @brief return the old force of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getForceOld() const { return _forceOld; }
+Vec3D Atom::getForceOld() const { return _forceOld; }
 
 /**
  * @brief return the shift force of the atom
  *
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::Vec3D Atom::getShiftForce() const { return _shiftForce; }
+Vec3D Atom::getShiftForce() const { return _shiftForce; }
 
 /***************************
  *                         *
@@ -399,37 +390,28 @@ void Atom::setInternalGlobalVDWType(const size_t internalGlobalVDWType)
  *
  * @param position
  */
-void Atom::setPosition(const linearAlgebra::Vec3D &position)
-{
-    _position = position;
-}
+void Atom::setPosition(const Vec3D &position) { _position = position; }
 
 /**
  * @brief set the velocity of the atom
  *
  * @param velocity
  */
-void Atom::setVelocity(const linearAlgebra::Vec3D &velocity)
-{
-    _velocity = velocity;
-}
+void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 
 /**
  * @brief set the force of the atom
  *
  * @param force
  */
-void Atom::setForce(const linearAlgebra::Vec3D &force) { _force = force; }
+void Atom::setForce(const Vec3D &force) { _force = force; }
 
 /**
  * @brief set the shift force of the atom
  *
  * @param shiftForce
  */
-void Atom::setShiftForce(const linearAlgebra::Vec3D &shiftForce)
-{
-    _shiftForce = shiftForce;
-}
+void Atom::setShiftForce(const Vec3D &shiftForce) { _shiftForce = shiftForce; }
 
 /**
  * @brief set the force of the atom to zero
@@ -441,24 +423,18 @@ void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
  *
  * @param position
  */
-void Atom::setPositionOld(const linearAlgebra::Vec3D &position)
-{
-    _positionOld = position;
-}
+void Atom::setPositionOld(const Vec3D &position) { _positionOld = position; }
 
 /**
  * @brief set the old velocity of the atom
  *
  * @param velocity
  */
-void Atom::setVelocityOld(const linearAlgebra::Vec3D &velocity)
-{
-    _velocityOld = velocity;
-}
+void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
 
 /**
  * @brief set the old force of the atom
  *
  * @param force
  */
-void Atom::setForceOld(const linearAlgebra::Vec3D &force) { _forceOld = force; }
+void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }

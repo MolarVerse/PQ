@@ -29,16 +29,6 @@
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
-
 namespace thermostat
 {
     /**
@@ -62,30 +52,18 @@ namespace thermostat
             const std::vector<double> &chi,
             const std::vector<double> &zeta,
             const double               couplingFrequency
-        )
-            : Thermostat(targetTemp),
-              _chi(chi),
-              _zeta(zeta),
-              _couplingFrequency(couplingFrequency){};
+        );
 
-        void applyThermostat(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData
-        ) override;
-
-        void applyThermostatOnForces(simulationBox::SimulationBox &simBox
-        ) override;
+        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostatOnForces(pq::SimBox &simBox) override;
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<double> getChi() const { return _chi; }
-        [[nodiscard]] std::vector<double> getZeta() const { return _zeta; }
-        [[nodiscard]] double              getCouplingFrequency() const
-        {
-            return _couplingFrequency;
-        }
+        [[nodiscard]] std::vector<double> getChi() const;
+        [[nodiscard]] std::vector<double> getZeta() const;
+        [[nodiscard]] double              getCouplingFrequency() const;
 
         [[nodiscard]] pq::ThermostatType getThermostatType() const override;
 
@@ -93,22 +71,11 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        void setChi(const unsigned int index, const double chi)
-        {
-            _chi[index] = chi;
-        }
-        void setChi(const std::vector<double> &chi) { _chi = chi; }
-
-        void setZeta(const unsigned int index, const double zeta)
-        {
-            _zeta[index] = zeta;
-        }
-        void setZeta(const std::vector<double> &zeta) { _zeta = zeta; }
-
-        void setCouplingFrequency(const double couplingFrequency)
-        {
-            _couplingFrequency = couplingFrequency;
-        }
+        void setChi(const unsigned int index, const double chi);
+        void setChi(const std::vector<double> &chi);
+        void setZeta(const unsigned int index, const double zeta);
+        void setZeta(const std::vector<double> &zeta);
+        void setCouplingFrequency(const double couplingFrequency);
     };
 }   // namespace thermostat
 

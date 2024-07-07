@@ -33,6 +33,17 @@
 #include "vector3d.hpp"                              // for operator*, Vector3D
 
 using namespace integrator;
+using namespace simulationBox;
+using namespace settings;
+using namespace constants;
+
+/**
+ * @brief Construct a new Integrator:: Integrator object
+ *
+ * @param integratorType
+ */
+Integrator::Integrator(const std::string_view integratorType)
+    : _integratorType(integratorType){};
 
 /**
  * @brief integrates the velocities of a single atom
@@ -40,14 +51,14 @@ using namespace integrator;
  * @param molecule
  * @param index
  */
-void Integrator::integrateVelocities(simulationBox::Atom *atom) const
+void Integrator::integrateVelocities(Atom *atom) const
 {
     auto       velocity = atom->getVelocity();
     const auto force    = atom->getForce();
     const auto mass     = atom->getMass();
+    const auto dt       = TimingsSettings::getTimeStep();
 
-    velocity += settings::TimingsSettings::getTimeStep() * force / mass *
-                constants::_V_VERLET_VELOCITY_FACTOR_;
+    velocity += dt * force / mass * _V_VERLET_VELOCITY_FACTOR_;
 
     atom->setVelocity(velocity);
 }
@@ -59,64 +70,29 @@ void Integrator::integrateVelocities(simulationBox::Atom *atom) const
  * @param index
  * @param simBox
  */
-void Integrator::integratePositions(
-    simulationBox::Atom                *atom,
-    const simulationBox::SimulationBox &simBox
-) const
+void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
+    const
 {
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();
 
-    position += settings::TimingsSettings::getTimeStep() * velocity *
-                constants::_FS_TO_S_;
+    position += TimingsSettings::getTimeStep() * velocity * _FS_TO_S_;
+
     simBox.applyPBC(position);
 
     atom->setPosition(position);
 }
 
-/**
- * @brief applies first half step of velocity verlet algorithm
- *
- * @param simBox
- */
-void VelocityVerlet::firstStep(simulationBox::SimulationBox &simBox)
-{
-    startTimingsSection("Velocity Verlet - First Step");
-
-    auto integrate = [this, &simBox](auto &atom)
-    {
-        integrateVelocities(atom.get());
-        integratePositions(atom.get(), simBox);
-    };
-
-    std::ranges::for_each(simBox.getAtoms(), integrate);
-
-    const auto box = simBox.getBoxPtr();
-
-    auto calculateCOM = [&box](auto &molecule)
-    {
-        molecule.calculateCenterOfMass(*box);
-        molecule.setAtomForcesToZero();
-    };
-
-    std::ranges::for_each(simBox.getMolecules(), calculateCOM);
-
-    stopTimingsSection("Velocity Verlet - First Step");
-}
+/********************************
+ * standard getters and setters *
+ ********************************/
 
 /**
- * @brief applies second half step of velocity verlet algorithm
+ * @brief get the integrator type
  *
- * @param simBox
+ * @return std::string_view
  */
-void VelocityVerlet::secondStep(simulationBox::SimulationBox &simBox)
+std::string_view Integrator::getIntegratorType() const
 {
-    startTimingsSection("Velocity Verlet - Second Step");
-
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [this](auto atom) { integrateVelocities(atom.get()); }
-    );
-
-    stopTimingsSection("Velocity Verlet - Second Step");
+    return _integratorType;
 }

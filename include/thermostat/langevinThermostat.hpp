@@ -27,16 +27,7 @@
 #include <random>   // for std::random_device, std::mt19937
 
 #include "thermostat.hpp"
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace thermostat
 {
@@ -51,33 +42,32 @@ namespace thermostat
         double _sigma    = 0.0;
 
        public:
-        LangevinThermostat() = default;
-        explicit LangevinThermostat(
-            const double targetTemperature,
-            const double friction
-        );
+        explicit LangevinThermostat(const double, const double);
         LangevinThermostat(const LangevinThermostat &);
+        LangevinThermostat() = default;
 
-        void calculateSigma(
-            const double friction,
-            const double targetTemperature
-        );
+        void calculateSigma(const double, const double);
+
+        void applyLangevin(pq::SimBox &);
+        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) override;
+
+        /***************************
+         * standard setter methods *
+         ***************************/
 
         void setTargetTemperature(const double targetTemperature) override;
 
-        void applyLangevin(simulationBox::SimulationBox &);
+        void setFriction(const double friction);
+        void setSigma(const double sigma);
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
-        void applyThermostatHalfStep(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
+        /***************************
+         * standard getter methods *
+         ***************************/
 
-        [[nodiscard]] double getFriction() const { return _friction; }
-        [[nodiscard]] double getSigma() const { return _sigma; }
+        [[nodiscard]] double             getFriction() const;
+        [[nodiscard]] double             getSigma() const;
         [[nodiscard]] pq::ThermostatType getThermostatType() const override;
-
-        void setFriction(const double friction) { _friction = friction; }
-        void setSigma(const double sigma) { _sigma = sigma; }
     };
 
 }   // namespace thermostat

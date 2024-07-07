@@ -24,15 +24,11 @@
 
 #define _BOX_SECTION_HPP_
 
-#include "restartFileSection.hpp"
-
 #include <string>   // for string
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "restartFileSection.hpp"
+#include "typeAliases.hpp"
 
 namespace input::restartFile
 {
@@ -44,10 +40,11 @@ namespace input::restartFile
      */
     class BoxSection : public RestartFileSection
     {
-      public:
-        [[nodiscard]] std::string keyword() override { return "box"; }
-        [[nodiscard]] bool        isHeader() override { return true; }
-        void                      process(std::vector<std::string> &lineElements, engine::Engine &) override;
+       public:
+        void process(pq::strings &lineElements, pq::Engine &) override;
+
+        [[nodiscard]] std::string keyword() override;
+        [[nodiscard]] bool        isHeader() override;
     };
 
 }   // namespace input::restartFile

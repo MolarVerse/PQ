@@ -35,6 +35,11 @@
 #include "vector3d.hpp"                      // for operator*, Vec3D
 
 using thermostat::LangevinThermostat;
+using namespace constants;
+using namespace physicalData;
+using namespace simulationBox;
+using namespace settings;
+using namespace linearAlgebra;
 
 /**
  * @brief Constructor for Langevin Thermostat
@@ -54,6 +59,16 @@ LangevinThermostat::LangevinThermostat(
 }
 
 /**
+ * @brief Copy constructor for Langevin Thermostat
+ *
+ * @param other
+ */
+LangevinThermostat::LangevinThermostat(const LangevinThermostat &other)
+    : Thermostat(other), _friction(other._friction), _sigma(other._sigma)
+{
+}
+
+/**
  * @brief Calculate sigma for Langevin Thermostat
  *
  * @param friction
@@ -64,16 +79,91 @@ void LangevinThermostat::calculateSigma(
     const double targetTemperature
 )
 {
-    const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ * constants::_M2_TO_ANGSTROM2_ *
-        constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
+    const auto unitConversion   = _M2_TO_ANGSTROM2_ * _KG_TO_GRAM_ / _FS_TO_S_;
+    const auto conversionFactor = _UNIVERSAL_GAS_CONSTANT_ * unitConversion;
 
-    const auto timeStep = settings::TimingsSettings::getTimeStep();
+    const auto timeStep = TimingsSettings::getTimeStep();
+    const auto force    = 4.0 * friction * conversionFactor * targetTemperature;
 
-    _sigma = std::sqrt(
-        4.0 * friction * conversionFactor * targetTemperature / timeStep
-    );
+    _sigma = std::sqrt(force / timeStep);
 }
+
+/**
+ * @brief apply Langevin thermostat
+ *
+ * @details calculates the friction and random factor for each atom and applies
+ * the Langevin thermostat to the velocities
+ *
+ * @param simBox
+ */
+void LangevinThermostat::applyLangevin(SimulationBox &simBox)
+{
+    auto applyFriction = [this](auto &atom)
+    {
+        const auto mass     = atom->getMass();
+        const auto timeStep = TimingsSettings::getTimeStep();
+
+        const auto propagationFactor = 0.5 * timeStep * _FS_TO_S_ / mass;
+
+        const Vec3D randomFactor = {
+            std::normal_distribution<double>(0.0, 1.0)(_generator),
+            std::normal_distribution<double>(0.0, 1.0)(_generator),
+            std::normal_distribution<double>(0.0, 1.0)(_generator)
+        };
+
+        const auto velocity = atom->getVelocity();
+        auto       dv       = -propagationFactor * _friction * mass * velocity;
+
+        dv += propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
+
+        atom->addVelocity(dv);
+    };
+
+    std::ranges::for_each(simBox.getAtoms(), applyFriction);
+}
+
+/**
+ * @brief apply thermostat - Langevin
+ *
+ * @param simBox
+ * @param data
+ */
+void LangevinThermostat::applyThermostat(
+    SimulationBox &simBox,
+    PhysicalData  &data
+)
+{
+    startTimingsSection("LangevinThermostat - Full Step");
+
+    applyLangevin(simBox);
+    data.calculateTemperature(simBox);
+
+    stopTimingsSection("LangevinThermostat - Full Step");
+}
+
+/**
+ * @brief apply thermostat half step - Langevin
+ *
+ * @note no temperature calculation
+ *
+ * @param simBox
+ * @param data
+ */
+void LangevinThermostat::
+    applyThermostatHalfStep(SimulationBox &simBox, PhysicalData &)
+{
+    startTimingsSection("LangevinThermostat - Half Step");
+
+    applyLangevin(simBox);
+
+    stopTimingsSection("LangevinThermostat - Half Step");
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
 /**
  * @brief Set target temperature for Langevin Thermostat and calculate sigma
@@ -87,88 +177,48 @@ void LangevinThermostat::setTargetTemperature(const double targetTemperature)
 }
 
 /**
- * @brief Copy constructor for Langevin Thermostat
+ * @brief Set the friction for Langevin Thermostat
  *
- * @param other
+ * @param friction
  */
-LangevinThermostat::LangevinThermostat(const LangevinThermostat &other)
-    : Thermostat(other), _friction(other._friction), _sigma(other._sigma){};
-
-/**
- * @brief apply Langevin thermostat
- *
- * @details calculates the friction and random factor for each atom and applies
- * the Langevin thermostat to the velocities
- *
- * @param simBox
- */
-void LangevinThermostat::applyLangevin(simulationBox::SimulationBox &simBox)
+void LangevinThermostat::setFriction(const double friction)
 {
-    auto applyFriction = [this](auto &atom)
-    {
-        const auto mass     = atom->getMass();
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
-
-        const auto propagationFactor =
-            0.5 * timeStep * constants::_FS_TO_S_ / mass;
-
-        const linearAlgebra::Vec3D randomFactor = {
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator)
-        };
-
-        auto dVelocity =
-            -propagationFactor * _friction * mass * atom->getVelocity();
-
-        dVelocity +=
-            propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
-
-        atom->addVelocity(dVelocity);
-    };
-
-    std::ranges::for_each(simBox.getAtoms(), applyFriction);
+    _friction = friction;
 }
 
 /**
- * @brief apply thermostat - Langevin
+ * @brief Set the sigma for Langevin Thermostat
  *
- * @param simBox
- * @param data
+ * @param sigma
  */
-void LangevinThermostat::applyThermostat(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &data
-)
-{
-    startTimingsSection("LangevinThermostat - Full Step");
-    applyLangevin(simBox);
-    data.calculateTemperature(simBox);
-    stopTimingsSection("LangevinThermostat - Full Step");
-}
+void LangevinThermostat::setSigma(const double sigma) { _sigma = sigma; }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
 /**
- * @brief apply thermostat half step - Langevin
+ * @brief Get the friction for Langevin Thermostat
  *
- * @note no temperature calculation
- *
- * @param simBox
- * @param data
+ * @return double
  */
-void LangevinThermostat::
-    applyThermostatHalfStep(simulationBox::SimulationBox &simBox, physicalData::PhysicalData &)
-{
-    startTimingsSection("LangevinThermostat - Half Step");
-    applyLangevin(simBox);
-    stopTimingsSection("LangevinThermostat - Half Step");
-}
+double LangevinThermostat::getFriction() const { return _friction; }
+
+/**
+ * @brief Get the sigma for Langevin Thermostat
+ *
+ * @return double
+ */
+double LangevinThermostat::getSigma() const { return _sigma; }
 
 /**
  * @brief get the ThermostatType
  *
  * @return ThermostatType
  */
-settings::ThermostatType LangevinThermostat::getThermostatType() const
+ThermostatType LangevinThermostat::getThermostatType() const
 {
-    return settings::ThermostatType::LANGEVIN;
+    return ThermostatType::LANGEVIN;
 }

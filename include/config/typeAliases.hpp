@@ -24,6 +24,7 @@
 
 #define _TYPE_ALIASES_HPP_
 
+#include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
@@ -34,7 +35,7 @@
 #include <vector>       // for std::vector
 
 #include "matrix.hpp"
-#include "staticMatrix3x3Class.hpp"
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 namespace simulationBox
@@ -72,7 +73,7 @@ namespace potential
 namespace virial
 {
     class Virial;            // forward declaration
-    class VirialMolecular;   // forward declaration
+    class MolecularVirial;   // forward declaration
 
 }   // namespace virial
 
@@ -144,6 +145,7 @@ namespace manostat
 namespace timings
 {
     class Timer;
+    class GlobalTimer;
 
 }   // namespace timings
 
@@ -157,10 +159,29 @@ namespace thermostat
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
-}
+    enum class ManostatType;     // forward declaration
+    enum class Isotropy;         // forward declaration
+
+}   // namespace settings
+
+namespace input
+{
+    namespace parameterFile
+    {
+        class ParameterFileSection;   // forward declaration
+    }
+
+    namespace restartFile
+    {
+        class RestartFileSection;   // forward declaration
+    }
+}   // namespace input
 
 namespace pq
 {
+    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    using Duration = std::chrono::duration<double>;
+
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
@@ -173,6 +194,7 @@ namespace pq
     using ParseFunc = std::function<void(const strings &, const size_t)>;
 
     using Vec3D         = linearAlgebra::Vec3D;
+    using Vec3Dul       = linearAlgebra::Vec3Dul;
     using Vec3DPair     = std::pair<Vec3D, Vec3D>;
     using Vec3DVec      = std::vector<Vec3D>;
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
@@ -181,16 +203,27 @@ namespace pq
     using IntraNonBond = intraNonBonded::IntraNonBonded;
     using ForceField   = forceField::ForceField;
     using Timer        = timings::Timer;
+    using GlobalTimer  = timings::GlobalTimer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
+
+    using ParamFileSection       = input::parameterFile::ParameterFileSection;
+    using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;
+    using UniqueParamFileSectionVec = std::vector<UniqueParamFileSection>;
+
+    using RestartSection          = input::restartFile::RestartFileSection;
+    using UniqueRestartSection    = std::unique_ptr<RestartSection>;
+    using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
 
     /**********************
      * settings namespace *
      **********************/
 
     using ThermostatType = settings::ThermostatType;
+    using Isotropy       = settings::Isotropy;
+    using ManostatType   = settings::ManostatType;
 
     /************************
      * thermostat namespace *
@@ -204,7 +237,7 @@ namespace pq
      ********************/
 
     using Virial          = virial::Virial;
-    using VirialMolecular = virial::VirialMolecular;
+    using MolecularVirial = virial::MolecularVirial;
 
     using SharedVirial = std::shared_ptr<virial::Virial>;
 
@@ -289,6 +322,9 @@ namespace pq
     using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedCellList = std::shared_ptr<simulationBox::CellList>;
+    using SharedBox      = std::shared_ptr<simulationBox::Box>;
+
+    using SharedAtomVec = std::vector<SharedAtom>;
 
     /**************************
      * physicalData namespace *

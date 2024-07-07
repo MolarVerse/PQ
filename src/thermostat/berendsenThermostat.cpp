@@ -33,6 +33,23 @@
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::BerendsenThermostat;
+using namespace settings;
+using namespace simulationBox;
+using namespace physicalData;
+
+/**
+ * @brief Construct a new Berendsen Thermostat object
+ *
+ * @param targetTemp
+ * @param tau
+ */
+BerendsenThermostat::BerendsenThermostat(
+    const double targetTemp,
+    const double tau
+)
+    : Thermostat(targetTemp), _tau(tau)
+{
+}
 
 /**
  * @brief apply thermostat - Berendsen
@@ -43,8 +60,8 @@ using thermostat::BerendsenThermostat;
  * @param data
  */
 void BerendsenThermostat::applyThermostat(
-    simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData   &data
+    SimulationBox &simulationBox,
+    PhysicalData  &data
 )
 {
     startTimingsSection("Berendsen");
@@ -53,7 +70,7 @@ void BerendsenThermostat::applyThermostat(
 
     _temperature = data.getTemperature();
 
-    const auto dt        = settings::TimingsSettings::getTimeStep();
+    const auto dt        = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
 
     const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
@@ -67,11 +84,25 @@ void BerendsenThermostat::applyThermostat(
 }
 
 /**
+ * @brief Get the tau (relaxation time) of the Berendsen thermostat
+ *
+ * @return double
+ */
+double BerendsenThermostat::getTau() const { return _tau; }
+
+/**
+ * @brief Set the tau (relaxation time) of the Berendsen thermostat
+ *
+ * @param tau
+ */
+void BerendsenThermostat::setTau(const double tau) { _tau = tau; }
+
+/**
  * @brief Get thermostat type
  *
  * @return ThermostatType
  */
-pq::ThermostatType BerendsenThermostat::getThermostatType() const
+ThermostatType BerendsenThermostat::getThermostatType() const
 {
-    return pq::ThermostatType::BERENDSEN;
+    return ThermostatType::BERENDSEN;
 }

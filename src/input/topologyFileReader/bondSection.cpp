@@ -33,6 +33,10 @@
 #include "simulationBox.hpp"     // for SimulationBox
 
 using namespace input::topology;
+using namespace simulationBox;
+using namespace forceField;
+using namespace customException;
+using namespace engine;
 
 /**
  * @brief processes the bond section of the topology file
@@ -46,19 +50,19 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
+ * @throws TopologyException if number of elements in line is
  * not 3 or 4
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  * (=same atoms)
- * @throws customException::TopologyException if forth element is not a '*'
+ * @throws TopologyException if forth element is not a '*'
  */
 void BondSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 3 && lineElements.size() != 4)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file bond section at line "
             "{} - number of elements has to be 3 or 4!",
             _lineNumber
@@ -73,8 +77,9 @@ void BondSection::processSection(
     {
         if (lineElements[3] == "*")
             isLinker = true;
+
         else
-            throw customException::TopologyException(std::format(
+            throw TopologyException(std::format(
                 "Forth entry in topology file in bond section has to be a "
                 "\'*\' or empty at line {}!",
                 _lineNumber
@@ -82,40 +87,41 @@ void BondSection::processSection(
     }
 
     if (atom1 == atom2)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file shake section at line {} - atoms cannot be the "
             "same!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    auto &simBox = engine.getSimulationBox();
 
-    auto bondForceField = forceField::BondForceField(
-        molecule1,
-        molecule2,
-        atomIndex1,
-        atomIndex2,
-        bondType
-    );
-    bondForceField.setIsLinker(isLinker);
+    const auto [mol1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [mol2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
 
-    engine.getForceField().addBond(bondForceField);
+    auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
+    bondFF.setIsLinker(isLinker);
+
+    engine.getForceField().addBond(bondFF);
 }
+
+/**
+ * @brief returns the keyword of the bond section
+ *
+ * @return "bonds"
+ */
+std::string BondSection::keyword() { return "bonds"; }
 
 /**
  * @brief checks if bond sections ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void BondSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file bond section at line {} - no end of section found!",
             _lineNumber
         ));

@@ -29,15 +29,10 @@
 #include <string>    // for string
 
 #include "timingsSection.hpp"   // for TimingsManager
+#include "typeAliases.hpp"
 
 namespace timings
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-    using ms       = std::chrono::milliseconds;
-    using ns       = std::chrono::nanoseconds;
-
-    using namespace std::chrono;
 
     /**
      * @class Timer
@@ -77,18 +72,21 @@ namespace timings
 
         void sortTimingsSections();
 
-        [[nodiscard]] TimingsSection getTimingsSection(
-            const std::string_view name
+        /********************
+         * standard setters *
+         ********************/
+
+        void setTimerName(const std::string_view name);
+
+        /********************
+         * standard getters *
+         ********************/
+
+        [[nodiscard]] TimingsSection getTimingsSection(const std::string_view
         ) const;
 
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-        void setTimerName(const std::string_view name) { _name = name; }
-
-        [[nodiscard]] std::string getTimerName() const { return _name; }
-        [[nodiscard]] Timer       getTimer() const { return *this; }
+        [[nodiscard]] std::string getTimerName() const;
+        [[nodiscard]] Timer       getTimer() const;
     };
 
 }   // namespace timings

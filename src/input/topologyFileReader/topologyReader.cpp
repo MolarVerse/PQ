@@ -40,6 +40,10 @@
 #include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
 
 using namespace input::topology;
+using namespace engine;
+using namespace customException;
+using namespace settings;
+using namespace utilities;
 
 /**
  * @brief constructor
@@ -50,10 +54,7 @@ using namespace input::topology;
  * @param filename
  * @param engine
  */
-TopologyReader::TopologyReader(
-    const std::string &filename,
-    engine::Engine    &engine
-)
+TopologyReader::TopologyReader(const std::string &filename, Engine &engine)
     : _fileName(filename), _fp(filename), _engine(engine)
 {
     _topologySections.push_back(std::make_unique<ShakeSection>());
@@ -71,8 +72,8 @@ TopologyReader::TopologyReader(
  * @details reads topology file line by line and determines which section the
  * line belongs to. Then the line is processed by the section.
  *
- * @throws customException::InputFileException if topology file is not set
- * @throws customException::InputFileException if topology file does not exist
+ * @throws InputFileException if topology file is not set
+ * @throws InputFileException if topology file does not exist
  *
  */
 void TopologyReader::read()
@@ -81,15 +82,15 @@ void TopologyReader::read()
     std::vector<std::string> lineElements;
     int                      lineNumber = 1;
 
-    if (!settings::FileSettings::isTopologyFileNameSet())
-        throw customException::InputFileException(
+    if (!FileSettings::isTopologyFileNameSet())
+        throw InputFileException(
             "Topology file needed for requested simulation setup"
         );
 
     while (getline(_fp, line))
     {
-        line         = utilities::removeComments(line, "#");
-        lineElements = utilities::splitString(line);
+        line         = removeComments(line, "#");
+        lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -113,7 +114,7 @@ void TopologyReader::read()
  * @param lineElements
  * @return TopologySection*
  *
- * @throws customException::TopologyException if keyword is unknown or already
+ * @throws TopologyException if keyword is unknown or already
  * parsed
  */
 TopologySection *TopologyReader::determineSection(
@@ -124,10 +125,10 @@ TopologySection *TopologyReader::determineSection(
     const auto iterEnd   = _topologySections.end();
 
     for (auto section = iterStart; section != iterEnd; ++section)
-        if ((*section)->keyword() == utilities::toLowerCopy(lineElements[0]))
+        if ((*section)->keyword() == toLowerCopy(lineElements[0]))
             return (*section).get();
 
-    throw customException::TopologyException(
+    throw TopologyException(
         "Unknown or already parsed keyword \"" + lineElements[0] +
         "\" in topology file"
     );
@@ -139,24 +140,17 @@ TopologySection *TopologyReader::determineSection(
  * @param filename
  * @param engine
  */
-void input::topology::readTopologyFile(engine::Engine &engine)
+void input::topology::readTopologyFile(Engine &engine)
 {
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(
-        "Topology File",
-        settings::FileSettings::getTopologyFileName()
-    );
-    engine.getLogOutput().writeRead(
-        "Topology File",
-        settings::FileSettings::getTopologyFileName()
-    );
+    const auto filename = FileSettings::getTopologyFileName();
 
-    TopologyReader topologyReader(
-        settings::FileSettings::getTopologyFileName(),
-        engine
-    );
+    engine.getStdoutOutput().writeRead("Topology File", filename);
+    engine.getLogOutput().writeRead("Topology File", filename);
+
+    TopologyReader topologyReader(filename, engine);
     topologyReader.read();
 }
 
@@ -169,13 +163,23 @@ void input::topology::readTopologyFile(engine::Engine &engine)
  * @return true if force field is activated
  * @return false
  */
-bool input::topology::isNeeded(engine::Engine &engine)
+bool input::topology::isNeeded(Engine &engine)
 {
     if (engine.getConstraints().isActive())
         return true;
 
-    if (settings::ForceFieldSettings::isActive())
+    if (ForceFieldSettings::isActive())
         return true;
 
     return false;
+}
+
+/**
+ * @brief sets filename
+ *
+ * @param filename
+ */
+void TopologyReader::setFilename(const std::string_view &filename)
+{
+    _fileName = filename;
 }

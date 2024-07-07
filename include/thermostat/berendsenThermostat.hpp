@@ -25,16 +25,7 @@
 #define _BERENDSEN_THERMOSTAT_HPP_
 
 #include "thermostat.hpp"
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace thermostat
 {
@@ -52,18 +43,15 @@ namespace thermostat
         double _tau;
 
        public:
+        explicit BerendsenThermostat(const double targetTemp, const double tau);
         BerendsenThermostat() = default;
-        explicit BerendsenThermostat(const double targetTemp, const double tau)
-            : Thermostat(targetTemp), _tau(tau)
-        {
-        }
 
-        void applyThermostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
+        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
 
+        void setTau(const double tau);
+
+        [[nodiscard]] double             getTau() const;
         [[nodiscard]] pq::ThermostatType getThermostatType() const override;
-        [[nodiscard]] double             getTau() const { return _tau; }
-        void setTau(const double tau) { _tau = tau; }
     };
 
 }   // namespace thermostat

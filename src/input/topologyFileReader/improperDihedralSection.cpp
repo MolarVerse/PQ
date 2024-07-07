@@ -32,6 +32,9 @@
 #include "exceptions.hpp"           // for TopologyException
 
 using namespace input::topology;
+using namespace forceField;
+using namespace customException;
+using namespace engine;
 
 /**
  * @brief processes the improper section of the topology file
@@ -46,18 +49,18 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
+ * @throws TopologyException if number of elements in line is
  * not 5
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  * (=same atoms)
  */
 void ImproperDihedralSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 5)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file improper dihedral "
             "section at "
             "line {} - number of elements has to be 5!",
@@ -74,42 +77,47 @@ void ImproperDihedralSection::processSection(
     std::ranges::sort(atoms);
     const auto [it, end] = std::ranges::unique(atoms);
     atoms.erase(it, end);
+
     if (4 != atoms.size())
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file improper dihedral section at line {} - atoms cannot "
             "be the same!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIndex3] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
-    const auto [molecule4, atomIndex4] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom4);
+    auto &simBox = engine.getSimulationBox();
 
-    auto improperDihedralForceField = forceField::DihedralForceField(
-        {molecule1, molecule2, molecule3, molecule4},
-        {atomIndex1, atomIndex2, atomIndex3, atomIndex4},
-        improperDihedralType
-    );
+    const auto [mol1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [mol2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [mol3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
+    const auto [mol4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
 
-    engine.getForceField().addImproperDihedral(improperDihedralForceField);
+    const auto mols     = std::vector{mol1, mol2, mol3, mol4};
+    const auto atomIdxs = std::vector{idx1, idx2, idx3, idx4};
+
+    auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
+
+    engine.getForceField().addImproperDihedral(improperFF);
 }
+
+/**
+ * @brief returns the keyword of the improper dihedral section
+ *
+ * @return "impropers"
+ */
+std::string ImproperDihedralSection::keyword() { return "impropers"; }
 
 /**
  * @brief checks if improper dihedral sections ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void ImproperDihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file improper dihedral section at line {} - no end of "
             "section found!",
             _lineNumber

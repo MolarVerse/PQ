@@ -22,6 +22,13 @@
 
 #include "boxSection.hpp"
 
+#include <algorithm>     // for __any_of_fn, any_of
+#include <format>        // for format
+#include <functional>    // for identity
+#include <string>        // for stod, string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
+
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
@@ -30,69 +37,108 @@
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "vector3d.hpp"                // for Vec3D
 
-#include <algorithm>     // for __any_of_fn, any_of
-#include <format>        // for format
-#include <functional>    // for identity
-#include <string>        // for stod, string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
 using namespace input::restartFile;
+using namespace customException;
+using namespace linearAlgebra;
+using namespace utilities;
+using namespace settings;
+using namespace simulationBox;
+using namespace engine;
 
 /**
  * @brief processes the box section of the rst file
  *
- * @details the box section can have 4 or 7 elements. If it has 4 elements, the box is assumed to be orthogonal. If it has 7
- * elements, the box is assumed to be triclinic. The second to fourth elements are the box dimensions, the next 3 elements are the
- * box angles.
+ * @details the box section can have 4 or 7 elements. If it has 4 elements, the
+ * box is assumed to be orthogonal. If it has 7 elements, the box is assumed to
+ * be triclinic. The second to fourth elements are the box dimensions, the next
+ * 3 elements are the box angles.
  *
  * @param lineElements all elements of the line
  * @param engine object containing the engine
  *
- * @throws customException::RstFileException if the number of elements in the line is not 4 or 7
- * @throws customException::RstFileException if the box dimensions are not positive
- * @throws customException::RstFileException if the box angles are not positive or larger than 90°
+ * @throws RstFileException if the number of elements in the
+ * line is not 4 or 7
+ * @throws RstFileException if the box dimensions are not
+ * positive
+ * @throws RstFileException if the box angles are not positive
+ * or larger than 90°
  */
-void BoxSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+void BoxSection::process(
+    std::vector<std::string> &lineElements,
+    Engine           &engine
+)
 {
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
-        throw customException::RstFileException(
-            std::format("Error in line {}: Box section must have 4 or 7 elements", _lineNumber));
+        throw RstFileException(std::format(
+            "Error in line {}: Box section must have 4 or 7 elements",
+            _lineNumber
+        ));
 
-    const auto boxDimensions = linearAlgebra::Vec3D{stod(lineElements[1]), stod(lineElements[2]), stod(lineElements[3])};
+    const auto boxDimensions = Vec3D{
+        stod(lineElements[1]),
+        stod(lineElements[2]),
+        stod(lineElements[3])
+    };
 
-    if (std::ranges::any_of(boxDimensions, [](const double dimension) { return dimension < 0.0; }))
-        throw customException::RstFileException("All box dimensions must be positive");
+    auto checkPositive = [](const double dimension) { return dimension < 0.0; };
 
-    auto boxAngles = linearAlgebra::Vec3D{90.0, 90.0, 90.0};
+    if (std::ranges::any_of(boxDimensions, checkPositive))
+        throw RstFileException("All box dimensions must be positive");
+
+    auto boxAngles = Vec3D{90.0, 90.0, 90.0};
 
     if (7 == lineElements.size())
     {
-        boxAngles = linearAlgebra::Vec3D{stod(lineElements[4]), stod(lineElements[5]), stod(lineElements[6])};
+        boxAngles = Vec3D{
+            stod(lineElements[4]),
+            stod(lineElements[5]),
+            stod(lineElements[6])
+        };
 
-        if (std::ranges::any_of(boxAngles, [](const double angle) { return angle < 0.0 || angle > 180.0; }))
-            throw customException::RstFileException("Box angles must be positive and smaller than 180°");
+        auto checkAngles = [](const double angle)
+        { return angle < 0.0 || angle > 180.0; };
+
+        if (std::ranges::any_of(boxAngles, checkAngles))
+            throw RstFileException(
+                "Box angles must be positive and smaller than 180°"
+            );
     }
 
-    if (!utilities::compare(boxAngles, linearAlgebra::Vec3D{90.0, 90.0, 90.0}, 1e-5))
+    if (!compare(boxAngles, Vec3D{90.0, 90.0, 90.0}, 1e-5))
     {
-        auto box = simulationBox::TriclinicBox();
+        auto box = TriclinicBox();
         box.setBoxAngles(boxAngles);
         box.setBoxDimensions(boxDimensions);
         engine.getSimulationBox().setBox(box);
 
-        const auto jobType = settings::Settings::getJobtype();
+        const auto jobType = Settings::getJobtype();
 
         // TODO: implement triclinic box for MM-MD
-        if (jobType != settings::JobType::QM_MD && jobType != settings::JobType::RING_POLYMER_QM_MD)
-            throw customException::InputFileException("Triclinic box is only supported for QM-MD and RP-QM-MD");
+        if (jobType != JobType::QM_MD && jobType != JobType::RING_POLYMER_QM_MD)
+            throw InputFileException(
+                "Triclinic box is only supported for QM-MD and RP-QM-MD"
+            );
     }
     else
     {
-        auto box = simulationBox::OrthorhombicBox();
+        auto box = OrthorhombicBox();
         box.setBoxDimensions(boxDimensions);
         engine.getSimulationBox().setBox(box);
     }
 
-    settings::SimulationBoxSettings::setBoxSet(true);
+    SimulationBoxSettings::setBoxSet(true);
 }
+
+/**
+ * @brief returns the keyword of the box section
+ *
+ * @return std::string
+ */
+std::string BoxSection::keyword() { return "box"; }
+
+/**
+ * @brief returns if the box section is a header
+ *
+ * @return true
+ */
+bool BoxSection::isHeader() { return true; }

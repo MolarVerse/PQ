@@ -220,14 +220,11 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
     OptimizerSettings::setLRUpdateFrequency(0);
 
     auto parser = OptInputParser(*_engine);
-    parser.parseLearningRateUpdateFrequency(
-        {"lr-update-frequency", "=", "100"},
-        0
-    );
+    parser.parseLearningRateUpdateFreq({"lr-update-frequency", "=", "100"}, 0);
     EXPECT_EQ(OptimizerSettings::getLRUpdateFrequency(), 100);
 
     ASSERT_THROW_MSG(
-        parser.parseLearningRateUpdateFrequency(
+        parser.parseLearningRateUpdateFreq(
             {"lr-update-frequency", "=", "-100"},
             0
         ),

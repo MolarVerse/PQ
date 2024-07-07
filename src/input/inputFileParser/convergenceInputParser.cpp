@@ -26,11 +26,14 @@
 #include <string>   // for std::string
 
 #include "convergenceSettings.hpp"   // for ConvSettings
-#include "exceptions.hpp"            // for customException::InputFileException
-#include "stringUtilities.hpp"       // for utilities::toLowerCopy
+#include "exceptions.hpp"            // for InputFileException
+#include "stringUtilities.hpp"       // for toLowerCopy
 
 using namespace input;
 using namespace settings;
+using namespace engine;
+using namespace utilities;
+using namespace customException;
 
 /**
  * @brief Constructor
@@ -53,8 +56,7 @@ using namespace settings;
  *
  * @param engine The engine
  */
-ConvInputParser::ConvInputParser(engine::Engine &engine)
-    : InputFileParser(engine)
+ConvInputParser::ConvInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         "energy-conv-strategy",
@@ -136,22 +138,24 @@ void ConvInputParser::parseEnergyConvergenceStrategy(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto strategy = utilities::toLowerCopy(lineElements[2]);
+    const auto strategy = toLowerCopy(lineElements[2]);
+
+    using enum ConvStrategy;
 
     if ("rigorous" == strategy)
-        ConvSettings::setEnergyConvStrategy(ConvStrategy::RIGOROUS);
+        ConvSettings::setEnergyConvStrategy(RIGOROUS);
 
     else if ("loose" == strategy)
-        ConvSettings::setEnergyConvStrategy(ConvStrategy::LOOSE);
+        ConvSettings::setEnergyConvStrategy(LOOSE);
 
     else if ("absolute" == strategy)
-        ConvSettings::setEnergyConvStrategy(ConvStrategy::ABSOLUTE);
+        ConvSettings::setEnergyConvStrategy(ABSOLUTE);
 
     else if ("relative" == strategy)
-        ConvSettings::setEnergyConvStrategy(ConvStrategy::RELATIVE);
+        ConvSettings::setEnergyConvStrategy(RELATIVE);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown energy convergence strategy \"{}\" in input file "
             "at line {}.\n"
             "Possible options are: rigorous, loose, absolute, relative",
@@ -173,7 +177,7 @@ void ConvInputParser::parseUseEnergyConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto useEnergyConvergence = utilities::toLowerCopy(lineElements[2]);
+    const auto useEnergyConvergence = toLowerCopy(lineElements[2]);
 
     if ("true" == useEnergyConvergence)
         ConvSettings::setUseEnergyConv(true);
@@ -182,7 +186,7 @@ void ConvInputParser::parseUseEnergyConvergence(
         ConvSettings::setUseEnergyConv(false);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown option \"{}\" for use-energy-conv in input file "
             "at line {}.\n"
             "Possible options are: true, false",
@@ -204,7 +208,7 @@ void ConvInputParser::parseUseForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto useForceConvergence = utilities::toLowerCopy(lineElements[2]);
+    const auto useForceConvergence = toLowerCopy(lineElements[2]);
 
     if ("true" == useForceConvergence)
         ConvSettings::setUseForceConv(true);
@@ -213,7 +217,7 @@ void ConvInputParser::parseUseForceConvergence(
         ConvSettings::setUseForceConv(false);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown option \"{}\" for use-force-conv in input file "
             "at line {}.\n"
             "Possible options are: true, false",
@@ -235,7 +239,7 @@ void ConvInputParser::parseUseMaxForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto useMaxForceConvergence = utilities::toLowerCopy(lineElements[2]);
+    const auto useMaxForceConvergence = toLowerCopy(lineElements[2]);
 
     if ("true" == useMaxForceConvergence)
         ConvSettings::setUseMaxForceConv(true);
@@ -244,7 +248,7 @@ void ConvInputParser::parseUseMaxForceConvergence(
         ConvSettings::setUseMaxForceConv(false);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown option \"{}\" for use-max-force-conv in input file "
             "at line {}.\n"
             "Possible options are: true, false",
@@ -266,7 +270,7 @@ void ConvInputParser::parseUseRMSForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto useRMSForceConvergence = utilities::toLowerCopy(lineElements[2]);
+    const auto useRMSForceConvergence = toLowerCopy(lineElements[2]);
 
     if ("true" == useRMSForceConvergence)
         ConvSettings::setUseRMSForceConv(true);
@@ -275,7 +279,7 @@ void ConvInputParser::parseUseRMSForceConvergence(
         ConvSettings::setUseRMSForceConv(false);
 
     else
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Unknown option \"{}\" for use-rms-force-conv in input file "
             "at line {}.\n"
             "Possible options are: true, false",
@@ -290,7 +294,7 @@ void ConvInputParser::parseUseRMSForceConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the energy convergence is
+ * @throws InputFileException if the energy convergence is
  * less than or equal to 0.0
  */
 void ConvInputParser::parseEnergyConvergence(
@@ -303,7 +307,7 @@ void ConvInputParser::parseEnergyConvergence(
     const auto energyConvergence = std::stod(lineElements[2]);
 
     if (energyConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Energy convergence must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -318,7 +322,7 @@ void ConvInputParser::parseEnergyConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the relative energy
+ * @throws InputFileException if the relative energy
  * convergence is less than or equal to 0.0
  */
 void ConvInputParser::parseRelativeEnergyConvergence(
@@ -331,7 +335,7 @@ void ConvInputParser::parseRelativeEnergyConvergence(
     const auto relativeEnergyConvergence = std::stod(lineElements[2]);
 
     if (relativeEnergyConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Relative energy convergence must be greater than 0.0 in input "
             "file "
             "at line {}.",
@@ -347,7 +351,7 @@ void ConvInputParser::parseRelativeEnergyConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the absolute energy
+ * @throws InputFileException if the absolute energy
  * convergence is less than or equal to 0.0
  */
 void ConvInputParser::parseAbsoluteEnergyConvergence(
@@ -360,7 +364,7 @@ void ConvInputParser::parseAbsoluteEnergyConvergence(
     const auto absoluteEnergyConvergence = std::stod(lineElements[2]);
 
     if (absoluteEnergyConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Absolute energy convergence must be greater than 0.0 in input "
             "file "
             "at line {}.",
@@ -376,7 +380,7 @@ void ConvInputParser::parseAbsoluteEnergyConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the force convergence is
+ * @throws InputFileException if the force convergence is
  * less than or equal to 0.0
  */
 void ConvInputParser::parseForceConvergence(
@@ -389,7 +393,7 @@ void ConvInputParser::parseForceConvergence(
     const auto forceConvergence = std::stod(lineElements[2]);
 
     if (forceConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Force convergence must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -404,7 +408,7 @@ void ConvInputParser::parseForceConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the max force convergence is
+ * @throws InputFileException if the max force convergence is
  * less than or equal to 0.0
  */
 void ConvInputParser::parseMaxForceConvergence(
@@ -417,7 +421,7 @@ void ConvInputParser::parseMaxForceConvergence(
     const auto maxForceConvergence = std::stod(lineElements[2]);
 
     if (maxForceConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Max force convergence must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber
@@ -432,7 +436,7 @@ void ConvInputParser::parseMaxForceConvergence(
  * @param lineElements The elements of the line
  * @param lineNumber The line number
  *
- * @throws customException::InputFileException if the RMS force convergence is
+ * @throws InputFileException if the RMS force convergence is
  * less than or equal to 0.0
  */
 void ConvInputParser::parseRMSForceConvergence(
@@ -445,7 +449,7 @@ void ConvInputParser::parseRMSForceConvergence(
     const auto rmsForceConvergence = std::stod(lineElements[2]);
 
     if (rmsForceConvergence <= 0.0)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "RMS force convergence must be greater than 0.0 in input file "
             "at line {}.",
             lineNumber

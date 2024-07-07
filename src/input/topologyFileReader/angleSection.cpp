@@ -33,12 +33,11 @@
 #include "forceFieldClass.hpp"   // for ForceField
 #include "simulationBox.hpp"     // for SimulationBox
 
-namespace simulationBox
-{
-    class Molecule;   // Forward declaration
-}
-
 using namespace input::topology;
+using namespace simulationBox;
+using namespace forceField;
+using namespace customException;
+using namespace engine;
 
 /**
  * @brief processes the angle section of the topology file
@@ -53,19 +52,19 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
+ * @throws TopologyException if number of elements in line is
  * not 4 or 5
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  * (=same atoms)
- * @throws customException::TopologyException if fifth element is not a '*'
+ * @throws TopologyException if fifth element is not a '*'
  */
 void AngleSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file angle section at line "
             "{} - number of elements has to be 4 or 5!",
             _lineNumber
@@ -81,8 +80,9 @@ void AngleSection::processSection(
     {
         if (lineElements[4] == "*")
             isLinker = true;
+
         else
-            throw customException::TopologyException(std::format(
+            throw TopologyException(std::format(
                 "Fifth entry in topology file in angle section has to be a "
                 "\'*\' or empty at line {}!",
                 _lineNumber
@@ -90,40 +90,45 @@ void AngleSection::processSection(
     }
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file angle section at line {} - atoms cannot be the "
             "same!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIndex3] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom3);
+    auto &simBox = engine.getSimulationBox();
 
-    auto angleForceField = forceField::AngleForceField(
-        {molecule2, molecule1, molecule3},
-        {atomIndex2, atomIndex1, atomIndex3},
-        angleType
-    );
+    const auto [molecule1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [molecule3, atomIdx3] = simBox.findMoleculeByAtomIndex(atom3);
+
+    const auto mols = std::vector<Molecule *>{molecule2, molecule1, molecule3};
+    const auto atomIndices = std::vector<size_t>{atomIdx2, atomIdx1, atomIdx3};
+
+    auto angleForceField = AngleForceField(mols, atomIndices, angleType);
     angleForceField.setIsLinker(isLinker);
 
     engine.getForceField().addAngle(angleForceField);
 }
 
 /**
+ * @brief returns the keyword of the angle section
+ *
+ * @return "angles"
+ */
+std::string AngleSection::keyword() { return "angles"; }
+
+/**
  * @brief checks if angle sections ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void AngleSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file angle section at line {} - no end of section found!",
             _lineNumber
         ));

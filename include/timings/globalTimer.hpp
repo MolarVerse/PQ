@@ -38,16 +38,17 @@ namespace timings
        public:
         void addSimulationTimer(const Timer &simulationTimer);
 
-        [[nodiscard]] const std::vector<Timer> &getTimers() const;
-        [[nodiscard]] double                    calculateLoopTime() const;
-        [[nodiscard]] double                    calculateElapsedTime() const;
+        [[nodiscard]] double calculateLoopTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
 
         void sortTimers();
 
-        void startSimulationTimer() { _simulationTimer.startTimingsSection(); }
-        void stopSimulationTimer() { _simulationTimer.stopTimingsSection(); }
+        void startSimulationTimer();
+        void stopSimulationTimer();
 
-        void addTimer(const Timer &timer) { _timers.push_back(timer); }
+        void addTimer(const Timer &timer);
+
+        [[nodiscard]] const std::vector<Timer> &getTimers() const;
     };
 }   // namespace timings
 

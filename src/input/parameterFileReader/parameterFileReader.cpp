@@ -39,6 +39,13 @@
 #include "typesSection.hpp"      // for TypesSection
 
 using namespace input::parameterFile;
+using namespace engine;
+using namespace utilities;
+using namespace customException;
+using namespace settings;
+
+using std::make_unique;
+using std::ranges::find_if;
 
 /**
  * @brief constructor
@@ -51,18 +58,17 @@ using namespace input::parameterFile;
  */
 ParameterFileReader::ParameterFileReader(
     const std::string &filename,
-    engine::Engine    &engine
+    Engine            &engine
 )
     : _fileName(filename), _fp(filename), _engine(engine)
 {
-    _parameterFileSections.push_back(std::make_unique<TypesSection>());
-    _parameterFileSections.push_back(std::make_unique<BondSection>());
-    _parameterFileSections.push_back(std::make_unique<AngleSection>());
-    _parameterFileSections.push_back(std::make_unique<DihedralSection>());
-    _parameterFileSections.push_back(std::make_unique<ImproperDihedralSection>()
-    );
-    _parameterFileSections.push_back(std::make_unique<JCouplingSection>());
-    _parameterFileSections.push_back(std::make_unique<NonCoulombicsSection>());
+    _parameterFileSections.push_back(make_unique<TypesSection>());
+    _parameterFileSections.push_back(make_unique<BondSection>());
+    _parameterFileSections.push_back(make_unique<AngleSection>());
+    _parameterFileSections.push_back(make_unique<DihedralSection>());
+    _parameterFileSections.push_back(make_unique<ImproperDihedralSection>());
+    _parameterFileSections.push_back(make_unique<JCouplingSection>());
+    _parameterFileSections.push_back(make_unique<NonCoulombicsSection>());
 }
 
 /**
@@ -72,7 +78,7 @@ ParameterFileReader::ParameterFileReader(
  * @param lineElements
  * @return ParameterFileSection*
  *
- * @throws customException::ParameterFileException if unknown or already parsed
+ * @throws ParameterFileException if unknown or already parsed
  * keyword
  */
 ParameterFileSection *ParameterFileReader::determineSection(
@@ -83,10 +89,10 @@ ParameterFileSection *ParameterFileReader::determineSection(
     const auto iterEnd   = _parameterFileSections.end();
 
     for (auto section = iterStart; section != iterEnd; ++section)
-        if ((*section)->keyword() == utilities::toLowerCopy(lineElements[0]))
+        if ((*section)->keyword() == toLowerCopy(lineElements[0]))
             return (*section).get();
 
-    throw customException::ParameterFileException(
+    throw ParameterFileException(
         "Unknown or already parsed keyword \"" + lineElements[0] +
         "\" in parameter file"
     );
@@ -99,8 +105,6 @@ ParameterFileSection *ParameterFileReader::determineSection(
  */
 void ParameterFileReader::deleteSection(const ParameterFileSection *section)
 {
-    using namespace std::ranges;
-
     auto sectionIsEqual = [section](auto &sectionUniquePtr)
     { return sectionUniquePtr.get() == section; };
 
@@ -115,13 +119,13 @@ void ParameterFileReader::deleteSection(const ParameterFileSection *section)
  * the corresponding section is called and then the line is processed. After
  * processing the line, the section is deleted from _parameterFileSections.
  *
- * @throws customException::InputFileException if file was not provided
- * @throws customException::InputFileException if file does not exist
+ * @throws InputFileException if file was not provided
+ * @throws InputFileException if file does not exist
  */
 void ParameterFileReader::read()
 {
-    if (!settings::FileSettings::isParameterFileNameSet())
-        throw customException::InputFileException(
+    if (!FileSettings::isParameterFileNameSet())
+        throw InputFileException(
             "Parameter file needed for requested simulation setup"
         );
 
@@ -130,8 +134,8 @@ void ParameterFileReader::read()
 
     while (getline(_fp, line))
     {
-        line              = utilities::removeComments(line, "#");
-        auto lineElements = utilities::splitString(line);
+        line              = removeComments(line, "#");
+        auto lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -155,24 +159,17 @@ void ParameterFileReader::read()
  *
  * @param engine
  */
-void input::parameterFile::readParameterFile(engine::Engine &engine)
+void input::parameterFile::readParameterFile(Engine &engine)
 {
     if (!isNeeded())
         return;
 
-    engine.getStdoutOutput().writeRead(
-        "Parameter File",
-        settings::FileSettings::getParameterFilename()
-    );
-    engine.getLogOutput().writeRead(
-        "Parameter File",
-        settings::FileSettings::getParameterFilename()
-    );
+    const auto filename = FileSettings::getParameterFilename();
 
-    ParameterFileReader parameterFileReader(
-        settings::FileSettings::getParameterFilename(),
-        engine
-    );
+    engine.getStdoutOutput().writeRead("Parameter File", filename);
+    engine.getLogOutput().writeRead("Parameter File", filename);
+
+    ParameterFileReader parameterFileReader(filename, engine);
     parameterFileReader.read();
 }
 
@@ -184,8 +181,45 @@ void input::parameterFile::readParameterFile(engine::Engine &engine)
  */
 bool input::parameterFile::isNeeded()
 {
-    if (settings::ForceFieldSettings::isActive())
+    if (ForceFieldSettings::isActive())
         return true;
 
     return false;
+}
+
+/**************************************
+ *                                    *
+ * standard getter and setter methods *
+ *                                    *
+ **************************************/
+
+/**
+ * @brief set filename of parameter file
+ *
+ * @param filename
+ */
+void ParameterFileReader::setFilename(const std::string_view &filename)
+{
+    _fileName = filename;
+}
+
+/**
+ * @brief get parameter file sections
+ *
+ * @return std::vector<std::unique_ptr<ParameterFileSection>>&
+ */
+std::vector<std::unique_ptr<ParameterFileSection>> &ParameterFileReader::
+    getParameterFileSections()
+{
+    return _parameterFileSections;
+}
+
+/**
+ * @brief get filename of parameter file
+ *
+ * @return const std::string&
+ */
+const std::string &ParameterFileReader::getFilename() const
+{
+    return _fileName;
 }

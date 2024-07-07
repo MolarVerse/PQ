@@ -24,22 +24,18 @@
 
 #define _RESTART_FILE_READER_HPP_
 
-#include "atomSection.hpp"          // for AtomSection
-#include "restartFileSection.hpp"   // for RstFileSection
-
 #include <fstream>   // for ifstream
 #include <memory>    // for unique_ptr, make_unique
 #include <string>    // for string
 #include <vector>    // for vector
 
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
+#include "atomSection.hpp"          // for AtomSection
+#include "restartFileSection.hpp"   // for RstFileSection
+#include "typeAliases.hpp"
 
 namespace input::restartFile
 {
-    void readRestartFile(engine::Engine &);
+    void readRestartFile(pq::Engine &);
 
     /**
      * @class RestartFileReader
@@ -49,19 +45,19 @@ namespace input::restartFile
      */
     class RestartFileReader
     {
-      private:
+       private:
         const std::string _fileName;
         std::ifstream     _fp;
-        engine::Engine   &_engine;
+        pq::Engine       &_engine;
 
-        std::unique_ptr<RestartFileSection>              _atomSection = std::make_unique<AtomSection>();
-        std::vector<std::unique_ptr<RestartFileSection>> _sections;
+        pq::UniqueRestartSection _atomSection = std::make_unique<AtomSection>();
+        pq::UniqueRestartSectionVec _sections;
 
-      public:
-        RestartFileReader(const std::string &, engine::Engine &);
+       public:
+        RestartFileReader(const std::string &, pq::Engine &);
 
         void                read();
-        RestartFileSection *determineSection(std::vector<std::string> &lineElements);
+        RestartFileSection *determineSection(pq::strings &lineElements);
     };
 
 }   // namespace input::restartFile

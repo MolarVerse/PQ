@@ -1,5 +1,7 @@
 set(integrator_source_files
     integrator.cpp
+
+    velocityVerlet.cpp
 )
 
 if(BUILD_WITH_KOKKOS)

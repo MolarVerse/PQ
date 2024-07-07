@@ -75,6 +75,31 @@ void GlobalTimer::sortTimers()
 }
 
 /**
+ * @brief start the simulation timer
+ *
+ */
+void GlobalTimer::startSimulationTimer()
+{
+    _simulationTimer.startTimingsSection();
+}
+
+/**
+ * @brief stop the simulation timer
+ *
+ */
+void GlobalTimer::stopSimulationTimer()
+{
+    _simulationTimer.stopTimingsSection();
+}
+
+/**
+ * @brief adds a timer
+ *
+ * @param timer
+ */
+void GlobalTimer::addTimer(const Timer& timer) { _timers.push_back(timer); }
+
+/**
  * @brief get the timers
  *
  * @return const std::vector<Timer>&

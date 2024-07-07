@@ -28,18 +28,7 @@
 #include <vector>    // for vector
 
 #include "manostat.hpp"   // for Manostat
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Box;             // forward declaration
-
-}   // namespace simulationBox
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace manostat
 {
@@ -57,29 +46,21 @@ namespace manostat
         double _dt;
 
        public:
-        explicit BerendsenManostat(
-            const double targetPressure,
-            const double tau,
-            const double compressibility
-        );
+        explicit BerendsenManostat(const double, const double, const double);
 
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
+        void applyManostat(pq::SimBox &, pq::PhysicalData &) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
+        [[nodiscard]] virtual pq::tensor3D calculateMu() const;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] double getTau() const { return _tau; }
-        [[nodiscard]] double getCompressibility() const
-        {
-            return _compressibility;
-        }
+        [[nodiscard]] double getTau() const;
+        [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] settings::ManostatType getManostatType() const final;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] pq::ManostatType getManostatType() const final;
+        [[nodiscard]] pq::Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -95,20 +76,11 @@ namespace manostat
         std::vector<size_t> _2DIsotropicAxes;
 
        public:
-        SemiIsotropicBerendsenManostat(
-            const double               targetPressure,
-            const double               tau,
-            const double               compressibility,
-            const size_t               anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes
-        )
-            : BerendsenManostat(targetPressure, tau, compressibility),
-              _2DAnisotropicAxis(anisotropicAxis),
-              _2DIsotropicAxes(isotropicAxes){};
+        SemiIsotropicBerendsenManostat(const double, const double, const double, const size_t, const std::vector<size_t> &);
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -122,9 +94,9 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -141,9 +113,9 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

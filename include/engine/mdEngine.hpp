@@ -29,6 +29,7 @@
 #include "manostat.hpp"
 #include "resetKinetics.hpp"
 #include "thermostat.hpp"
+#include "velocityVerlet.hpp"   // for VelocityVerlet
 
 #ifdef WITH_KOKKOS
 #include "integrator_kokkos.hpp"

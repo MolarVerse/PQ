@@ -22,20 +22,25 @@
 
 #include "moldescriptorReader.hpp"
 
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <string>        // for basic_string, string
+#include <string_view>   // for string_view
+
 #include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for customException::MolDescriptorException
+#include "exceptions.hpp"        // for MolDescriptorException
 #include "fileSettings.hpp"      // for FileSettings
 #include "forceFieldClass.hpp"   // for ForceField
 #include "moleculeType.hpp"      // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <string>        // for basic_string, string
-#include <string_view>   // for string_view
-
 using namespace input::molDescriptor;
+using namespace settings;
+using namespace engine;
+using namespace simulationBox;
+using namespace utilities;
+using namespace customException;
 
 /**
  * @brief constructor
@@ -44,11 +49,11 @@ using namespace input::molDescriptor;
  *
  * @param engine
  *
- * @throw customException::InputFileException if file not found
+ * @throw InputFileException if file not found
  */
-MoldescriptorReader::MoldescriptorReader(engine::Engine &engine) : _engine(engine)
+MoldescriptorReader::MoldescriptorReader(Engine &engine) : _engine(engine)
 {
-    _fileName = settings::FileSettings::getMolDescriptorFileName();
+    _fileName = FileSettings::getMolDescriptorFileName();
     _fp.open(_fileName);
 }
 
@@ -57,10 +62,12 @@ MoldescriptorReader::MoldescriptorReader(engine::Engine &engine) : _engine(engin
  *
  * @param engine
  */
-void input::molDescriptor::readMolDescriptor(engine::Engine &engine)
+void input::molDescriptor::readMolDescriptor(Engine &engine)
 {
-    engine.getStdoutOutput().writeRead("Moldescriptor File", settings::FileSettings::getMolDescriptorFileName());
-    engine.getLogOutput().writeRead("Moldescriptor File", settings::FileSettings::getMolDescriptorFileName());
+    const auto filename = FileSettings::getMolDescriptorFileName();
+
+    engine.getStdoutOutput().writeRead("Moldescriptor File", filename);
+    engine.getLogOutput().writeRead("Moldescriptor File", filename);
 
     MoldescriptorReader reader(engine);
     reader.read();
@@ -69,13 +76,15 @@ void input::molDescriptor::readMolDescriptor(engine::Engine &engine)
 /**
  * @brief read moldescriptor file
  *
- * @details Processes each line of the moldescriptor file. If a molecule is found the molecule is processed in a separate
- * function. Following keywords are recognized:
+ * @details Processes each line of the moldescriptor file. If a molecule is
+ * found the molecule is processed in a separate function. Following keywords
+ * are recognized:
  * - water_type <int> - sets the water type
  * - ammonia_type <int> - sets the ammonia type
  * - <molecule_name> <number_of_atoms> <charge> - defines a molecule
  *
- * @throws customException::MolDescriptorException if there is an error in the moldescriptor file
+ * @throws MolDescriptorException if there is an error in the
+ * moldescriptor file
  */
 void MoldescriptorReader::read()
 {
@@ -85,55 +94,72 @@ void MoldescriptorReader::read()
 
     while (getline(_fp, line))
     {
-        line              = utilities::removeComments(line, "#");
-        auto lineElements = utilities::splitString(line);
+        line              = removeComments(line, "#");
+        auto lineElements = splitString(line);
 
         ++_lineNumber;
 
         if (lineElements.empty())
             continue;
+
         else if (lineElements.size() > 1)
         {
-            if ("water_type" == utilities::toLowerCopy(lineElements[0]))
-                _engine.getSimulationBox().setWaterType(std::stoi(lineElements[1]));
-            else if ("ammonia_type" == utilities::toLowerCopy(lineElements[0]))
-                _engine.getSimulationBox().setAmmoniaType(std::stoi(lineElements[1]));
+            auto &simBox = _engine.getSimulationBox();
+
+            if ("water_type" == toLowerCopy(lineElements[0]))
+                simBox.setWaterType(std::stoi(lineElements[1]));
+
+            else if ("ammonia_type" == toLowerCopy(lineElements[0]))
+                simBox.setAmmoniaType(std::stoi(lineElements[1]));
+
             else
                 processMolecule(lineElements);
         }
         else
-            throw customException::MolDescriptorException(std::format("Error in moldescriptor file at line {}", _lineNumber));
+            throw MolDescriptorException(std::format(
+                "Error in moldescriptor file at line {}",
+                _lineNumber
+            ));
     }
 }
 
 /**
  * @brief process molecule in moldescriptor file
  *
- * @details Processes the header line of a molecule and then reads the atom lines. The header line has to have following format:
- * <molecule_name> <number_of_atoms> <charge> ...
- * The atom lines have to have following format:
- * <atom_name> <external_atom_type> <partial_charge> [<external_vdw_type>] (external_vdw_type optional if noncoulombics is not
- * activated)
- * After processing the atom lines the external atom types are converted to internal atom types
+ * @details Processes the header line of a molecule and then reads the atom
+ * lines. The header line has to have following format: <molecule_name>
+ * <number_of_atoms> <charge> ... The atom lines have to have following format:
+ * <atom_name> <external_atom_type> <partial_charge> [<external_vdw_type>]
+ * (external_vdw_type optional if noncoulombics is not activated) After
+ * processing the atom lines the external atom types are converted to internal
+ * atom types
  *
  * @param lineElements
  *
- * @throws customException::MolDescriptorException if number of arguments of header line is less than 3
- * @throws customException::MolDescriptorException if eof is reached before all atoms of a molecule are read
- * @throws customException::MolDescriptorException if number of arguments of atom line is not 3 or 4
- * @throws customException::MolDescriptorException if noncoulombics is activated but no global van der Waals parameter
+ * @throws MolDescriptorException if number of arguments of
+ * header line is less than 3
+ * @throws MolDescriptorException if eof is reached before all
+ * atoms of a molecule are read
+ * @throws MolDescriptorException if number of arguments of
+ * atom line is not 3 or 4
+ * @throws MolDescriptorException if noncoulombics is activated
+ * but no global van der Waals parameter
  */
-void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements)
+void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
+)
 {
     if (lineElements.size() < 3)
-        throw customException::MolDescriptorException(
-            std::format("Not enough arguments in moldescriptor file at line {}", _lineNumber));
+        throw MolDescriptorException(std::format(
+            "Not enough arguments in moldescriptor file at line {}",
+            _lineNumber
+        ));
 
-    simulationBox::MoleculeType molecule(lineElements[0]);
+    auto        &simBox = _engine.getSimulationBox();
+    MoleculeType molecule(lineElements[0]);
 
     molecule.setNumberOfAtoms(stoul(lineElements[1]));
     molecule.setCharge(stod(lineElements[2]));
-    molecule.setMoltype(_engine.getSimulationBox().getMoleculeTypes().size() + 1);
+    molecule.setMoltype(simBox.getMoleculeTypes().size() + 1);
 
     std::string line;
     size_t      atomCount = 0;
@@ -141,17 +167,20 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
     while (atomCount < molecule.getNumberOfAtoms())
     {
         if (_fp.eof())
-            throw customException::MolDescriptorException(
-                "Error reading of moldescriptor stopped before last molecule was finished");
+            throw MolDescriptorException(
+                "Error reading of moldescriptor stopped before last molecule "
+                "was finished"
+            );
 
         getline(_fp, line);
-        line         = utilities::removeComments(line, "#");
-        lineElements = utilities::splitString(line);
+        line         = removeComments(line, "#");
+        lineElements = splitString(line);
 
         ++_lineNumber;
 
         if (lineElements.empty())
             continue;
+
         else if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
@@ -160,17 +189,23 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
 
             ++atomCount;
         }
+
         else
-            throw customException::MolDescriptorException(
-                std::format("Atom line in moldescriptor file at line {} has to have 3 or 4 elements", _lineNumber));
+            throw MolDescriptorException(std::format(
+                "Atom line in moldescriptor file at line {} has to have 3 or 4 "
+                "elements",
+                _lineNumber
+            ));
 
         if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
-                throw customException::MolDescriptorException(
-                    std::format("Error in moldescriptor file at line {} - force field noncoulombics is "
-                                "activated but no global van der Waals parameter given",
-                                _lineNumber));
+                throw MolDescriptorException(std::format(
+                    "Error in moldescriptor file at line {} - force field "
+                    "noncoulombics is "
+                    "activated but no global van der Waals parameter given",
+                    _lineNumber
+                ));
 
             molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
         }
@@ -178,18 +213,20 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
 
     convertExternalToInternalAtomTypes(molecule);
 
-    _engine.getSimulationBox().addMoleculeType(molecule);
+    simBox.addMoleculeType(molecule);
 }
 
 /**
  * @brief convert external to internal atom types
  *
- * @details In order to manage if user declares for example only atom type 1 and 3 in the moldescriptor file, the internal atom
- * types are the 0 and 1.
+ * @details In order to manage if user declares for example only atom type 1 and
+ * 3 in the moldescriptor file, the internal atom types are the 0 and 1.
  *
  * @param molecule
  */
-void MoldescriptorReader::convertExternalToInternalAtomTypes(simulationBox::MoleculeType &molecule) const
+void MoldescriptorReader::convertExternalToInternalAtomTypes(
+    MoleculeType &molecule
+) const
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

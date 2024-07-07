@@ -27,6 +27,9 @@
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 
+using namespace linearAlgebra;
+using namespace simulationBox;
+
 /**
  * @brief calculate the squared distance between two particles
  *
@@ -37,13 +40,15 @@
  * @return double The squared distance between the two particles.
  */
 double kernel::distSquared(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+    const Vec3D         &pos_i,
+    const Vec3D         &pos_j,
+    const SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;
+
     simBox.applyPBC(r_ij);
+
     return dot(r_ij, r_ij);
 }
 
@@ -53,12 +58,9 @@ double kernel::distSquared(
  * @param pos_i
  * @param pos_j
  *
- * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ * @return Vec3D The distance vector between the two particles.
  */
-linearAlgebra::Vec3D kernel::distVec(
-    const linearAlgebra::Vec3D &pos_i,
-    const linearAlgebra::Vec3D &pos_j
-)
+Vec3D kernel::distVec(const Vec3D &pos_i, const Vec3D &pos_j)
 {
     return pos_i - pos_j;
 }
@@ -70,16 +72,18 @@ linearAlgebra::Vec3D kernel::distVec(
  * @param pos_j
  * @param simBox
  *
- * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ * @return Vec3D The distance vector between the two particles.
  */
-linearAlgebra::Vec3D kernel::distVec(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+Vec3D kernel::distVec(
+    const Vec3D         &pos_i,
+    const Vec3D         &pos_j,
+    const SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;
+
     simBox.applyPBC(r_ij);
+
     return r_ij;
 }
 
@@ -90,16 +94,18 @@ linearAlgebra::Vec3D kernel::distVec(
  * @param pos_i
  * @param pos_j
  *
- * @return std::pair<linearAlgebra::Vec3D, double> The distance vector and the
+ * @return std::pair<Vec3D, double> The distance vector and the
  * squared distance between the two particles.
  */
-std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
-    const linearAlgebra::Vec3D &pos_i,
-    const linearAlgebra::Vec3D &pos_j
+std::pair<Vec3D, double> kernel::distVecAndDist2(
+    const Vec3D &pos_i,
+    const Vec3D &pos_j
 )
 {
     const auto r_ij = pos_i - pos_j;
-    const auto r2   = dot(pos_i, pos_j);
+
+    const auto r2 = dot(pos_i, pos_j);
+
     return std::make_pair(r_ij, r2);
 }
 
@@ -111,16 +117,17 @@ std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
  * @param pos_j
  * @param simBox
  *
- * @return std::pair<linearAlgebra::Vec3D, double> The distance vector and the
+ * @return std::pair<Vec3D, double> The distance vector and the
  * squared distance between the two particles.
  */
-std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+std::pair<Vec3D, double> kernel::distVecAndDist2(
+    const Vec3D         &pos_i,
+    const Vec3D         &pos_j,
+    const SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;
+
     simBox.applyPBC(r_ij);
 
     const auto r2 = dot(r_ij, r_ij);

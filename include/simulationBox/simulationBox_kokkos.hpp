@@ -27,7 +27,8 @@
 #include <Kokkos_DualView.hpp>
 
 #include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vector3D
+#include "typeAliases.hpp"
+#include "vector3d.hpp"   // for Vector3D
 
 /**
  * @namespace simulationBox
@@ -54,97 +55,53 @@ namespace simulationBox
         Kokkos::DualView<double*>                         _partialCharges;
         Kokkos::DualView<double*>                         _masses;
 
-        Kokkos::DualView<double*> _boxDimensions =
-            Kokkos::DualView<double*>("boxDimensions", 3);
+        Kokkos::DualView<double*> _boxDimensions;
 
        public:
-        explicit KokkosSimulationBox(size_t numAtoms);
+        explicit KokkosSimulationBox(const size_t numAtoms);
 
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        KOKKOS_INLINE_FUNCTION static void calcShiftVector(
-            const double*         dxyz,
-            Kokkos::View<double*> boxDimensions,
-            double*               txyz
-        )
-        {
-            txyz[0] =
-                -boxDimensions(0) * Kokkos::round(dxyz[0] / boxDimensions(0));
-            txyz[1] =
-                -boxDimensions(1) * Kokkos::round(dxyz[1] / boxDimensions(1));
-            txyz[2] =
-                -boxDimensions(2) * Kokkos::round(dxyz[2] / boxDimensions(2));
-        }
+        KOKKOS_FUNCTION static void calcShiftVector(const double*, Kokkos::View<double*>, double*);
 
-        void initKokkosSimulationBox(simulationBox::SimulationBox& simBox);
+        void initKokkosSimulationBox(pq::SimBox& simBox);
         void initForces();
 
-        void transferAtomTypesFromSimulationBox(SimulationBox& simBox);
-        void transferMolTypesFromSimulationBox(SimulationBox& simBox);
-        void transferMoleculeIndicesFromSimulationBox(SimulationBox& simBox);
-        void transferInternalGlobalVDWTypesFromSimulationBox(
-            SimulationBox& simBox
-        );
+        void transferAtomTypesFromSimulationBox(pq::SimBox& simBox);
+        void transferMolTypesFromSimulationBox(pq::SimBox& simBox);
+        void transferMoleculeIndicesFromSimulationBox(pq::SimBox& simBox);
+        void transferInternalGlobalVDWTypesFromSimulationBox(pq::SimBox&);
 
-        void transferPositionsFromSimulationBox(SimulationBox& simBox);
-        void transferVelocitiesFromSimulationBox(SimulationBox& simBox);
-        void transferForcesFromSimulationBox(SimulationBox& simBox);
-        void transferPartialChargesFromSimulationBox(SimulationBox& simBox);
-        void transferMassesFromSimulationBox(SimulationBox& simBox);
-        void transferBoxDimensionsFromSimulationBox(SimulationBox& simBox);
+        void transferPositionsFromSimulationBox(pq::SimBox& simBox);
+        void transferVelocitiesFromSimulationBox(pq::SimBox& simBox);
+        void transferForcesFromSimulationBox(pq::SimBox& simBox);
+        void transferPartialChargesFromSimulationBox(pq::SimBox& simBox);
+        void transferMassesFromSimulationBox(pq::SimBox& simBox);
+        void transferBoxDimensionsFromSimulationBox(const pq::SimBox& simBox);
 
-        void transferPositionsToSimulationBox(SimulationBox& simBox);
-        void transferVelocitiesToSimulationBox(SimulationBox& simBox);
-        void transferForcesToSimulationBox(SimulationBox& simBox);
-        void transferShiftForcesToSimulationBox(SimulationBox& simBox);
+        void transferPositionsToSimulationBox(pq::SimBox& simBox);
+        void transferVelocitiesToSimulationBox(pq::SimBox& simBox);
+        void transferForcesToSimulationBox(pq::SimBox& simBox);
+        void transferShiftForcesToSimulationBox(pq::SimBox& simBox);
 
-        // getters
-        [[nodiscard]] Kokkos::DualView<size_t*>& getAtomTypes()
-        {
-            return _atomTypes;
-        }
-        [[nodiscard]] Kokkos::DualView<size_t*>& getMolTypes()
-        {
-            return _molTypes;
-        }
-        [[nodiscard]] Kokkos::DualView<size_t*>& getMoleculeIndices()
-        {
-            return _moleculeIndices;
-        }
-        [[nodiscard]] Kokkos::DualView<size_t*>& getInternalGlobalVDWTypes()
-        {
-            return _internalGlobalVDWTypes;
-        }
-        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getPositions(
-        )
-        {
-            return _positions;
-        }
-        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getVelocities(
-        )
-        {
-            return _velocities;
-        }
-        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getForces(
-        )
-        {
-            return _forces;
-        }
-        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getShiftForces(
-        )
-        {
-            return _shiftForces;
-        }
-        [[nodiscard]] Kokkos::DualView<double*>& getMasses() { return _masses; }
-        [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges()
-        {
-            return _partialCharges;
-        }
-        [[nodiscard]] Kokkos::DualView<double*> getBoxDimensions()
-        {
-            return _boxDimensions;
-        }
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] Kokkos::DualView<size_t*>& getAtomTypes();
+        [[nodiscard]] Kokkos::DualView<size_t*>& getMolTypes();
+        [[nodiscard]] Kokkos::DualView<size_t*>& getMoleculeIndices();
+        [[nodiscard]] Kokkos::DualView<size_t*>& getInternalGlobalVDWTypes();
+        // clang-format off
+        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getPositions();
+        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getVelocities();
+        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getForces();
+        [[nodiscard]] Kokkos::DualView<double* [3], Kokkos::LayoutLeft>& getShiftForces();
+        // clang-format on
+        [[nodiscard]] Kokkos::DualView<double*>& getMasses();
+        [[nodiscard]] Kokkos::DualView<double*>& getPartialCharges();
+        [[nodiscard]] Kokkos::DualView<double*>  getBoxDimensions();
     };
 }   // namespace simulationBox
 
