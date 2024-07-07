@@ -85,10 +85,11 @@ def execute_pq(input_file):
         folder_path, "..", "build", "apps", "PQ")
 
     # Run the pq executable with the input file
-    process = subprocess.run(
+    process = subprocess.Popen(
         [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout = process.stdout
-    stderr = process.stderr
+
+    stdout, stderr = process.communicate()
+    process.wait()
 
     print(stdout)
 
