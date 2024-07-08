@@ -132,7 +132,7 @@ void ASEQMRunner::collectData(SimulationBox &simBox, PhysicalData &physicalData)
 {
     collectForces(simBox);
     collectEnergy(physicalData);
-    collectStress(physicalData);
+    collectStress(simBox, physicalData);
 }
 
 /**
@@ -177,11 +177,13 @@ void ASEQMRunner::collectEnergy(PhysicalData &physicalData) const
 /**
  * @brief collect the stress from the ASE QM calculation
  *
+ * @param simBox
  * @param physicalData
  *
  * @throw py::error_already_set if the collection of the stress fails
  */
-void ASEQMRunner::collectStress(PhysicalData &physicalData) const
+void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
+    const
 {
     linearAlgebra::tensor3D stress_;
 
@@ -198,10 +200,10 @@ void ASEQMRunner::collectStress(PhysicalData &physicalData) const
         throw;
     }
 
-    const auto virial = stress_ * physicalData.getVolume();
+    const auto virial = stress_ * simBox.getVolume();
 
-    physicalData.setStressTensor(stress_ * _EV_TO_KCAL_PER_MOL_);
-    physicalData.addVirial(virial * _EV_TO_KCAL_PER_MOL_);
+    data.setStressTensor(stress_ * _EV_TO_KCAL_PER_MOL_);
+    data.addVirial(virial * _EV_TO_KCAL_PER_MOL_);
 }
 
 /**
