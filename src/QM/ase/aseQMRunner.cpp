@@ -192,7 +192,7 @@ void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
         const auto stress = _stress.unchecked<2>();
 
         for (size_t i = 0; i < 3; ++i)
-            for (size_t j = 0; j < 3; ++j) stress_[j][i] = stress(i, j);
+            for (size_t j = 0; j < 3; ++j) stress_[i][j] = -stress(i, j);
     }
     catch (const py::error_already_set &)
     {
