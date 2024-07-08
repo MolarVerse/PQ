@@ -3,11 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 <!-- insertion marker -->
+## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
+
+### Bug Fixes
+
+- Anisotropic NPT calculations now working correctly
+
 ## [v0.4.3](https://github.com/MolarVerse/PQ/releases/tag/v0.4.3) - 2024-07-08
 
 ### Bug Fixes
 
 - MACE NPT calculations bug fix - virial evaluation is now correct
+
+### Known Bugs
+
+- Anisotropic NPT calculations not working properly!
 
 ## [v0.4.2](https://github.com/MolarVerse/PQ/releases/tag/v0.4.2) - 2024-07-04
 
@@ -23,6 +33,7 @@ All notable changes to this project will be documented in this file.
 ### Known Bugs
 
 - MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
 
 ## [v0.4.1](https://github.com/MolarVerse/PQ/releases/tag/v0.4.1) - 2024-07-02
 
@@ -38,6 +49,7 @@ All notable changes to this project will be documented in this file.
 
 - Isotropic manostats producing SEGFAULTS
 - MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
 
 ## [v0.4.0](https://github.com/MolarVerse/PQ/releases/tag/v0.4.0) - 2024-07-01
 
@@ -50,3 +62,4 @@ All notable changes to this project will be documented in this file.
 ### Known Bugs
 
 - MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
