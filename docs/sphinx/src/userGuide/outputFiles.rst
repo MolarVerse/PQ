@@ -73,29 +73,27 @@ Stores information about the energy and various other quantities of the system f
 
     step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
 
-The parameter *T* denotes the temperature of the system in Kelvin, *P* denotes the pressure in bar, *E*:sub:`tot` denotes the total
-energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`QM` denotes the quantum mechanical energy of the system in
-:math:`\frac{\text{kcal}}{\text{mol}}`, *N*:sub:`QM-atoms` denotes the number of atoms treated quantum mechanically, *E*:sub:`kin`
-denotes the kinetic energy of the system in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`intra` denotes the intramolecular energy
-of the system in :math:`\frac{\text{kcal}}{\text{mol}}` (0 for pure QM MD simulations), *E*:sub:`Coulomb` denotes the MM Coulomb energy 
-in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`non-Coulomb` denotes the MM non-Coulomb energy in :math:`\frac{\text{kcal}}{\text{mol}}`,
-*E*:sub:`bond` denotes the total energy of the MM bonds in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`angle` denotes the total energy
-of the MM angles in :math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`dihedral` denotes the total energy of the MM dihedrals in 
-:math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`improper` denotes the total energy of the MM improper dihedrals in 
-:math:`\frac{\text{kcal}}{\text{mol}}`, *V* denotes the volume of the system in Å³, *ρ* denotes the density of the system in 
-:math:`\frac{\text{g}}{\text{cm}^3}`, *E*:sub:`p-NH` denotes the momentum energy of the Nose Hoover chain thermostat in 
-:math:`\frac{\text{kcal}}{\text{mol}}`, *E*:sub:`χ-NH` denotes the friction energy of the Nose Hoover chain thermostat in 
-:math:`\frac{\text{kcal}}{\text{mol}}`, *r*:sub:`lower` denotes the lower bound of the distance constraints in Å, *r*:sub:`upper` denotes
-the upper bound of the distance constraints in Å, *p* denotes the total momentum of the system in :math:`\frac{\text{amu Å}}{\text{fs}}` 
-and looptime denotes the time taken to complete the full MD simulation step in s.
+.. csv-table::
+    :file: en_file_entries.csv
+    :widths: 7 28 6 5
+    :header-rows: 1
 
 .. note:: 
 
+    The last column of the table denotes when the respective quantity is printed to the ``.en`` file. The letters have the following meaning:
+
+        | **A**: Always printed
+        | **QM**: Only printed if QM atoms are present
+        | **MM**: Only printed if MM atoms are present
+        | **MM***: Only printed if MM atoms are present and, which are not treated by the :ref:`guffdatFile`
+        | **P**: Only printed if pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file
+        | **NH**: Only printed if the Nose Hoover chain thermostat is enabled *via* the :ref:`thermostatKey` key in the ``.in`` file
+        | **DC**: Only printed if distance constraints are applied
+    
     If the interval at which the results are printed to the output files is changed *via* the :ref:`outputfreqKey` key in the ``.in`` file, 
     the values in the ``.en`` file are averaged over the respective interval.
     
-    In case that the pressure coupling is not enabled, the columns for *V* and *ρ* are omitted from the ``.en`` file as they remain 
-    constant throughout. All quantities in correct ordering and with associated units are given in the ``.info`` output file, which 
+    All printed quantities in correct ordering and with associated units are given in the ``.info`` output file, which 
     is described in section :ref:`infoFile`.
 
 .. _forceFile:
