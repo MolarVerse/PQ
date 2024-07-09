@@ -43,6 +43,6 @@ def test_acof(test_with_data_dir):
     stdout, stderr = execute_pq("run-01.in")
 
     # check if stderr is empty
-    # assert stderr == b""
+    assert stderr == b""
 
     check_pq_output("md-01", "acof")
