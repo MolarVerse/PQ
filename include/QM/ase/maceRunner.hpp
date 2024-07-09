@@ -36,7 +36,7 @@ namespace QM
     {
        public:
         ~MaceRunner() override = default;
-        
+
         explicit MaceRunner(
             const std::string& modelType,
             const std::string& model,
