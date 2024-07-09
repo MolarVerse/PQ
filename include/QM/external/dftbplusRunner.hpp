@@ -25,13 +25,7 @@
 #define _DFTBPLUS_RUNNER_HPP_
 
 #include "externalQMRunner.hpp"   // for ExternalQMRunner
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Box;             // forward declaration
-
-}   // namespace simulationBox
+#include "typeAliases.hpp"
 
 namespace QM
 {
@@ -47,12 +41,9 @@ namespace QM
         bool _isFirstExecution = true;
 
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &) override;
+        void writeCoordsFile(pq::SimBox &) override;
         void execute() override;
-        void readStressTensor(
-            simulationBox::Box         &box,
-            physicalData::PhysicalData &data
-        ) override;
+        void readStressTensor(pq::Box &box, pq::PhysicalData &data) override;
     };
 }   // namespace QM
 

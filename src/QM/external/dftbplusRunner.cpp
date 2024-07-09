@@ -42,12 +42,23 @@
 
 using QM::DFTBPlusRunner;
 
+using namespace simulationBox;
+using namespace physicalData;
+using namespace customException;
+using namespace settings;
+using namespace constants;
+using namespace utilities;
+using namespace linearAlgebra;
+
+using std::ranges::distance;
+using std::ranges::find;
+
 /**
  * @brief writes the coords file in order to run the external qm program
  *
  * @param box
  */
-void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
+void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 {
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
@@ -66,9 +77,8 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
     {
         const auto &atom = box.getQMAtom(i);
 
-        const auto iter = std::ranges::find(uniqueAtomNames, atom.getName());
-        const auto atomId =
-            std::ranges::distance(uniqueAtomNames.begin(), iter) + 1;
+        const auto iter   = find(uniqueAtomNames, atom.getName());
+        const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
@@ -89,6 +99,7 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
         0.0,
         0.0
     );
+
     coordsFile << std::format(
         "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
         "",
@@ -96,6 +107,7 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
         boxMatrix[1][0],
         boxMatrix[2][0]
     );
+
     coordsFile << std::format(
         "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
         "",
@@ -103,6 +115,7 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
         boxMatrix[1][1],
         boxMatrix[2][1]
     );
+
     coordsFile << std::format(
         "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
         "",
@@ -120,19 +133,16 @@ void DFTBPlusRunner::writeCoordsFile(simulationBox::SimulationBox &box)
  */
 void DFTBPlusRunner::execute()
 {
-    const auto scriptFileName =
-        _scriptPath + settings::QMSettings::getQMScript();
+    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
-    if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format(
-            "DFTB+ script file \"{}\" does not exist.",
-            scriptFileName
-        ));
+    if (!fileExists(scriptFile))
+        throw InputFileException(
+            std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command =
-        std::format("{} 0 {} 0 0 0", scriptFileName, reuseCharges);
+    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
     ::system(command.c_str());
 
     _isFirstExecution = false;
@@ -144,12 +154,9 @@ void DFTBPlusRunner::execute()
  * @param box
  * @param data
  */
-void DFTBPlusRunner::readStressTensor(
-    simulationBox::Box         &box,
-    physicalData::PhysicalData &data
-)
+void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (settings::Settings::getJobtype() != settings::JobType::QM_MD)
+    if (Settings::getJobtype() != JobType::QM_MD)
         return;
 
     const std::string stressFileName = "stress_tensor";
@@ -157,30 +164,23 @@ void DFTBPlusRunner::readStressTensor(
     std::ifstream stressFile(stressFileName);
 
     if (!stressFile.is_open())
-        throw customException::QMRunnerException(std::format(
+        throw QMRunnerException(std::format(
             "Cannot open {} stress tensor \"{}\"",
-            string(settings::QMSettings::getQMMethod()),
+            string(QMSettings::getQMMethod()),
             stressFileName
         ));
 
-    linearAlgebra::StaticMatrix3x3<double> stressTensor;
+    StaticMatrix3x3<double> stress;
 
-    stressFile >> stressTensor[0][0] >> stressTensor[0][1] >>
-        stressTensor[0][2];
-    stressFile >> stressTensor[1][0] >> stressTensor[1][1] >>
-        stressTensor[1][2];
-    stressFile >> stressTensor[2][0] >> stressTensor[2][1] >>
-        stressTensor[2][2];
+    stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2];
+    stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
+    stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
 
-    const auto virial =
-        stressTensor *
-        constants::_HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_ *
-        box.getVolume();
+    const auto conversion = _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_;
+    stress                = stress * conversion;
+    const auto virial     = stress * box.getVolume();
 
-    data.setStressTensor(
-        stressTensor *
-        constants::_HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_
-    );
+    data.setStressTensor(stress);
     data.addVirial(virial);
 
     stressFile.close();
