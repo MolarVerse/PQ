@@ -82,13 +82,13 @@ Stores information about the energy and various other quantities of the system f
 
     The last column of the table denotes when the respective quantity is printed to the ``.en`` file. The letters have the following meaning:
 
-        | **A**: Always printed
-        | **QM**: Only printed if QM atoms are present
-        | **MM**: Only printed if MM atoms are present
-        | **MM***: Only printed if MM atoms are present and, which are not treated by the :ref:`guffdatFile`
-        | **P**: Only printed if pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file
-        | **NH**: Only printed if the Nose Hoover chain thermostat is enabled *via* the :ref:`thermostatKey` key in the ``.in`` file
-        | **DC**: Only printed if distance constraints are applied
+        | **A**:   Always printed
+        | **QM**:  Only printed if QM atoms are present
+        | **MM**:  Only printed if MM atoms are present
+        | **MM***: Only printed if MM atoms are present, which are not treated by the :ref:`guffdatFile`
+        | **P**:   Only printed if pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file
+        | **NH**:  Only printed if the Nose Hoover chain thermostat is enabled *via* the :ref:`thermostatKey` key in the ``.in`` file
+        | **DC**:  Only printed if distance constraints are applied
     
     If the interval at which the results are printed to the output files is changed *via* the :ref:`outputfreqKey` key in the ``.in`` file, 
     the values in the ``.en`` file are averaged over the respective interval.

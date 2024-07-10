@@ -49,9 +49,27 @@ GUFF File
 **Default Name:** ``guff.dat``
 
 The grand unified force field (GUFF) file can be used to define the non-bonding force field parameters for the MM atoms in the system. 
-The GUFF file gives the force field parameters in form of a generalized equation () for every atom type index in every moltype of the system. 
+The GUFF file defines the Coulomb potential *V*:sub:`Coulomb` *via* equation :eq:`guffCoulombEquation` and the non-Coulombic potential *V*:sub:`non-Coulomb` 
+*via* the generalized equation :eq:`guffNonCoulombEquation` for every atom type index in every moltype of the system in the following format:
+
+    | moltype_1; atom_type_index_1; moltype_2; atom_type_index_2; *r*:sub:`cut`; *c*:sub:`0`; *c*:sub:`1`; *c*:sub:`2`; *c*:sub:`3`; *c*:sub:`4`; *c*:sub:`5`; *c*:sub:`6`; *c*:sub:`7`; *c*:sub:`8`; *c*:sub:`9`; *c*:sub:`10`; *c*:sub:`11`; *c*:sub:`12`; *c*:sub:`13`; *c*:sub:`14`; *c*:sub:`15`; *c*:sub:`16`; *c*:sub:`17`; *c*:sub:`18`; *c*:sub:`19`; *c*:sub:`20`; *c*:sub:`21`; *c*:sub:`22`
+
+    .. math:: V_{\text{Coulomb}} = \frac{c_0}{r}
+        :label: guffCoulombEquation
+
+    .. math:: V_{\text{non-Coulomb}} = \frac{c_1}{r^{c_2}} + \frac{c_3}{r^{c_4}} + \frac{c_5}{r^{c_6}} + \frac{c_7}{r^{c_8}} + \frac{c_9}{1 + e^{c_{10} (r - c_{11})}} + \frac{c_{12}}{1 + e^{c_{13} (r - c_{14})}} + c_{15} e^{c_{16} (r - c_{17})^{c_{18}}} + c_{19} e^{c_{20} (r - c_{21})^{c_{22}}}
+        :label: guffNonCoulombEquation
+        
+The moltype and atom_type_index are defined as in the :ref:`moldescriptorFile`.
+Utilizing equation :eq:`guffNonCoulombEquation` Lennard-Jones, Buckingham and Morse potentials, as well as arbitrary combinations of them can be used 
+for the description of the non-Coulombic interactions. The parameter *r*:sub:`cut` gives the cutoff radius for the non-bonded interactions. 
+The cutoff radius and all coefficients denoting distances are given in Å, while all coefficients denoting energies are given in kcal/mol.
+
 
 .. Attention::
+
+    All entries in the GUFF file need to be separated *via* a semicolon ``;``. Furthermore, defining all possible interactions is mandatory. If a certain 
+    potential is not needed, the corresponding coefficients are set to 0.
 
     Using the GUFF file requires the :ref:`moldescriptorFile` setup file to be provided as well.
 .. _topologyFile:
