@@ -60,10 +60,10 @@ The GUFF file defines the Coulomb potential *V*:sub:`Coulomb` *via* equation :eq
     .. math:: V_{\text{non-Coulomb}} = \frac{c_1}{r^{c_2}} + \frac{c_3}{r^{c_4}} + \frac{c_5}{r^{c_6}} + \frac{c_7}{r^{c_8}} + \frac{c_9}{1 + e^{c_{10} (r - c_{11})}} + \frac{c_{12}}{1 + e^{c_{13} (r - c_{14})}} + c_{15} e^{c_{16} (r - c_{17})^{c_{18}}} + c_{19} e^{c_{20} (r - c_{21})^{c_{22}}}
         :label: guffNonCoulombEquation
         
-The moltype and atom_type_index are defined as in the :ref:`moldescriptorFile`.
+The moltype and atom_type_index are defined as in the :ref:`moldescriptorFile` file.
 Utilizing equation :eq:`guffNonCoulombEquation` Lennard-Jones, Buckingham and Morse potentials, as well as arbitrary combinations of them can be used 
-for the description of the non-Coulombic interactions. The parameter *r*:sub:`cut` gives the cutoff radius for the non-bonded interactions. 
-The cutoff radius and all coefficients denoting distances are given in Å, while all coefficients denoting energies are given in kcal/mol.
+for the description of the non-Coulombic interactions. The parameter *r*:sub:`cut` gives the cutoff radius for the non-bonded interactions. Distances 
+are given in Å and energies in kcal/mol. The units of the parameters are chosen accordingly.
 
 
 .. Attention::
