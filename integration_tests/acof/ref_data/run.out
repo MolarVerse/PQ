@@ -41,12 +41,12 @@ Line: 66-66 (File: dftb_in.hsd)
 ***  Done.
 
 Reading SK-files:
-/home/jog/skf-files/3ob-3-1/C-C.skf
-/home/jog/skf-files/3ob-3-1/C-H.skf
-/home/jog/skf-files/3ob-3-1/C-N.skf
-/home/jog/skf-files/3ob-3-1/H-H.skf
-/home/jog/skf-files/3ob-3-1/H-N.skf
-/home/jog/skf-files/3ob-3-1/N-N.skf
+../slakos/3ob-3-1/C-C.skf
+../slakos/3ob-3-1/C-H.skf
+../slakos/3ob-3-1/C-N.skf
+../slakos/3ob-3-1/H-H.skf
+../slakos/3ob-3-1/H-N.skf
+../slakos/3ob-3-1/N-N.skf
 Done.
 
 
@@ -56,8 +56,8 @@ Starting initialization...
 --------------------------------------------------------------------------------
 WARNING!
 -> Dipole printed for extended system : value printed is not well defined
-OpenMP threads:              6
-Chosen random seed:          432978646
+OpenMP threads:              1
+Chosen random seed:          1213940592
 Current stacksize:           unlimited
 Mode:                        Static calculation
 Self consistent charges:     Yes
@@ -101,8 +101,8 @@ Force type                   original
     2   -0.30363749E+03   -0.30363749E+03    0.61401538E-02
     3   -0.30363759E+03   -0.96579512E-04    0.19329851E-02
     4   -0.30363763E+03   -0.47283919E-04    0.81826518E-03
-    5   -0.30363764E+03   -0.68247872E-05    0.14182039E-03
-    6   -0.30363764E+03   -0.60070465E-06    0.51236337E-04
+    5   -0.30363764E+03   -0.68247874E-05    0.14182039E-03
+    6   -0.30363764E+03   -0.60070431E-06    0.51236337E-04
 >> Charges saved for restart in charges.bin
 
 Total Energy:                     -296.6263872490 H        -8071.6147 eV
@@ -116,10 +116,10 @@ Pressure:                            0.183164E-03 au     0.538886E+10 Pa
 --------------------------------------------------------------------------------
 DFTB+ running times                          cpu [s]             wall clock [s]
 --------------------------------------------------------------------------------
-Pre-SCC initialisation                 +       0.66 ( 12.8%)       0.12 ( 13.1%)
-SCC                                    +       3.53 ( 68.1%)       0.57 ( 65.2%)
-Post-SCC processing                    +       0.99 ( 19.1%)       0.19 ( 21.5%)
+Pre-SCC initialisation                 +       0.47 ( 27.6%)       0.47 ( 27.4%)
+SCC                                    +       0.82 ( 47.9%)       0.83 ( 48.3%)
+Post-SCC processing                    +       0.41 ( 24.3%)       0.41 ( 24.1%)
 --------------------------------------------------------------------------------
-Missing                                +       0.00 (  0.0%)       0.00 (  0.2%)
-Total                                  =       5.19 (100.0%)       0.88 (100.0%)
+Missing                                +       0.00 (  0.1%)       0.00 (  0.1%)
+Total                                  =       1.71 (100.0%)       1.72 (100.0%)
 --------------------------------------------------------------------------------
