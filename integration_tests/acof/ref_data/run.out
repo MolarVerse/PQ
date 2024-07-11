@@ -57,7 +57,7 @@ Starting initialization...
 WARNING!
 -> Dipole printed for extended system : value printed is not well defined
 OpenMP threads:              1
-Chosen random seed:          1217204364
+Chosen random seed:          1219274706
 Current stacksize:           unlimited
 Mode:                        Static calculation
 Self consistent charges:     Yes
@@ -115,10 +115,10 @@ Pressure:                            0.592462E-04 au     0.174308E+10 Pa
 --------------------------------------------------------------------------------
 DFTB+ running times                          cpu [s]             wall clock [s]
 --------------------------------------------------------------------------------
-Pre-SCC initialisation                 +       0.45 ( 30.2%)       0.45 ( 30.2%)
-SCC                                    +       0.65 ( 43.5%)       0.65 ( 43.6%)
-Post-SCC processing                    +       0.39 ( 26.1%)       0.39 ( 26.1%)
+Pre-SCC initialisation                 +       0.45 ( 30.1%)       0.45 ( 30.1%)
+SCC                                    +       0.65 ( 43.6%)       0.65 ( 43.7%)
+Post-SCC processing                    +       0.39 ( 26.2%)       0.39 ( 26.1%)
 --------------------------------------------------------------------------------
 Missing                                +       0.00 (  0.1%)       0.00 (  0.1%)
-Total                                  =       1.49 (100.0%)       1.49 (100.0%)
+Total                                  =       1.49 (100.0%)       1.50 (100.0%)
 --------------------------------------------------------------------------------

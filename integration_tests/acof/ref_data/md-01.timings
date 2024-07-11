@@ -1,11 +1,11 @@
 Section                       	  Time [s]	  Time [%]
 ------------------------------	----------	----------
 
-Total                         	    17.554	   100.000
+Total                         	    17.686	   100.000
 
-Output                        	     0.066	     0.376
-Integrator                    	     0.022	     0.125
-Physical Data                 	     0.018	     0.103
+Output                        	     0.075	     0.424
+Integrator                    	     0.023	     0.130
+Physical Data                 	     0.017	     0.096
 Setup                         	     0.006	     0.034
 Thermostat                    	     0.000	     0.000
 Constraints                   	     0.000	     0.000
@@ -23,28 +23,28 @@ QM Engine                     	     0.000	     0.000
 Section                       	  Time [s]	  Time [%]	  RelT [%]
 ------------------------------	----------	----------	----------
 
-Total                         	    17.554	   100.000	   100.000
+Total                         	    17.686	   100.000	   100.000
 
-Output                        	     0.066	     0.376	   100.000
-TrajectoryOutput              	     0.036	   100.000	    54.599
-RstFileOutput                 	     0.028	   100.000	    43.024
-InfoOutput                    	     0.003	   100.000	     3.837
+Output                        	     0.075	     0.424	   100.000
+TrajectoryOutput              	     0.041	   100.000	    54.925
+RstFileOutput                 	     0.033	   100.000	    43.745
+InfoOutput                    	     0.003	   100.000	     3.646
+VirialOutput                  	     0.000	   100.000	     0.404
 EnergyOutput                  	     0.000	   100.000	     0.338
-VirialOutput                  	     0.000	   100.000	     0.337
-MomentumOutput                	     0.000	   100.000	     0.295
-StressOutput                  	     0.000	   100.000	     0.284
-InstantEnergyOutput           	     0.000	   100.000	     0.256
-BoxFileOutput                 	     0.000	   100.000	     0.234
+MomentumOutput                	     0.000	   100.000	     0.303
+StressOutput                  	     0.000	   100.000	     0.293
+InstantEnergyOutput           	     0.000	   100.000	     0.266
+BoxFileOutput                 	     0.000	   100.000	     0.210
 
-Integrator                    	     0.022	     0.125	   100.000
-Velocity Verlet - First Step  	     0.022	   100.000	    99.024
-Velocity Verlet - Second Step 	     0.001	   100.000	     5.437
+Integrator                    	     0.023	     0.130	   100.000
+Velocity Verlet - First Step  	     0.023	   100.000	    99.963
+Velocity Verlet - Second Step 	     0.001	   100.000	     4.882
 
-Physical Data                 	     0.018	     0.103	   100.000
-Calc Kinetics                 	     0.018	   100.000	   102.124
+Physical Data                 	     0.017	     0.096	   100.000
+Calc Kinetics                 	     0.018	   100.000	   103.558
 
 Setup                         	     0.006	     0.034	   100.000
-TotalSetup                    	     0.006	   100.000	   107.359
+TotalSetup                    	     0.007	   100.000	   109.201
 
 Thermostat                    	     0.000	     0.000	   100.000
 Calc Temperature              	     0.000	   100.000	       inf
