@@ -57,7 +57,7 @@ Starting initialization...
 WARNING!
 -> Dipole printed for extended system : value printed is not well defined
 OpenMP threads:              1
-Chosen random seed:          1213940592
+Chosen random seed:          1217204364
 Current stacksize:           unlimited
 Mode:                        Static calculation
 Self consistent charges:     Yes
@@ -97,29 +97,28 @@ Force type                   original
 ***  Geometry step: 0
 
  iSCC Total electronic   Diff electronic      SCC error    
-    1    0.00000000E+00    0.00000000E+00    0.83217815E-02
-    2   -0.30363749E+03   -0.30363749E+03    0.61401538E-02
-    3   -0.30363759E+03   -0.96579512E-04    0.19329851E-02
-    4   -0.30363763E+03   -0.47283919E-04    0.81826518E-03
-    5   -0.30363764E+03   -0.68247874E-05    0.14182039E-03
-    6   -0.30363764E+03   -0.60070431E-06    0.51236337E-04
+    1    0.00000000E+00    0.00000000E+00    0.69063408E-02
+    2   -0.30276039E+03   -0.30276039E+03    0.51344200E-02
+    3   -0.30276042E+03   -0.32041140E-04    0.12766719E-02
+    4   -0.30276044E+03   -0.14688565E-04    0.35896181E-03
+    5   -0.30276044E+03   -0.26144171E-05    0.73622269E-04
 >> Charges saved for restart in charges.bin
 
-Total Energy:                     -296.6263872490 H        -8071.6147 eV
-Extrapolated to 0K:               -296.6263872490 H        -8071.6147 eV
-Total Mermin free energy:         -296.6263872490 H        -8071.6147 eV
-Force related energy:             -296.6263872490 H        -8071.6147 eV
+Total Energy:                     -296.6816436333 H        -8073.1183 eV
+Extrapolated to 0K:               -296.6816436333 H        -8073.1183 eV
+Total Mermin free energy:         -296.6816436333 H        -8073.1183 eV
+Force related energy:             -296.6816436333 H        -8073.1183 eV
 
 Volume:                              0.251627E+05 au^3   0.372873E+04 A^3
-Pressure:                            0.183164E-03 au     0.538886E+10 Pa
+Pressure:                            0.592462E-04 au     0.174308E+10 Pa
 
 --------------------------------------------------------------------------------
 DFTB+ running times                          cpu [s]             wall clock [s]
 --------------------------------------------------------------------------------
-Pre-SCC initialisation                 +       0.47 ( 27.6%)       0.47 ( 27.4%)
-SCC                                    +       0.82 ( 47.9%)       0.83 ( 48.3%)
-Post-SCC processing                    +       0.41 ( 24.3%)       0.41 ( 24.1%)
+Pre-SCC initialisation                 +       0.45 ( 30.2%)       0.45 ( 30.2%)
+SCC                                    +       0.65 ( 43.5%)       0.65 ( 43.6%)
+Post-SCC processing                    +       0.39 ( 26.1%)       0.39 ( 26.1%)
 --------------------------------------------------------------------------------
 Missing                                +       0.00 (  0.1%)       0.00 (  0.1%)
-Total                                  =       1.71 (100.0%)       1.72 (100.0%)
+Total                                  =       1.49 (100.0%)       1.49 (100.0%)
 --------------------------------------------------------------------------------

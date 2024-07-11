@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.3.9.2-1724893d
-         Compile date:  Jul 11 2024 22:09:36
+         Version:       v0.3.9.2-8dac24bb
+         Compile date:  Jul 11 2024 23:06:39
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -73,7 +73,7 @@ INFO:    Setup of manostat
 INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
 
 
-         Elapsed time = 9.52600 s
+         Elapsed time = 17.55400 s
 
 
 INFO:    For citation please refer to the ".ref" file.
