@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.3.9.2-8dac24bb
-         Compile date:  Jul 11 2024 23:06:39
+         Version:       v0.4.4-d0417902
+         Compile date:  Jul 12 2024 00:24:39
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -49,7 +49,7 @@ INFO:    Setup of simulation box
          unconstrained DOF:      645
 
          density:                0.83455 kg/L
-         volume:              3728.73459 Å³
+         volume:          
 
          box dimensions:        14.72400 Å       14.72400 Å       19.86000 Å
          box angles:            90.00000°        90.00000°       120.00000°
@@ -60,9 +60,7 @@ INFO:    Setup of simulation box
 
 INFO:    Setup of thermostat
 
-         No thermostat selected
-
-INFO:    Setup of manostat
+INFO:    Setup of Manostat
 
          No manostat selected
 
@@ -73,7 +71,7 @@ INFO:    Setup of manostat
 INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
 
 
-         Elapsed time = 17.68600 s
+         Elapsed time = 18.55800 s
 
 
 INFO:    For citation please refer to the ".ref" file.
