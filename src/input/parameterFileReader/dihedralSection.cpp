@@ -31,6 +31,17 @@
 #include "forceFieldClass.hpp"               // for ForceField
 
 using namespace input::parameterFile;
+using namespace engine;
+using namespace customException;
+using namespace forceField;
+using namespace constants;
+
+/**
+ * @brief returns the keyword of the dihedral section
+ *
+ * @return "dihedrals"
+ */
+std::string DihedralSection::keyword() { return "dihedrals"; }
 
 /**
  * @brief processes one line of the dihedral section of the parameter file and
@@ -45,17 +56,17 @@ using namespace input::parameterFile;
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line
+ * @throw ParameterFileException if number of elements in line
  * is not 3
- * @throw customException::ParameterFileException if periodicity is negative
+ * @throw ParameterFileException if periodicity is negative
  */
 void DihedralSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 4)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file dihedral section at "
             "line {} - number of elements has to be 4!",
             _lineNumber
@@ -64,17 +75,16 @@ void DihedralSection::processSection(
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
-    auto phaseShift    = stod(lineElements[3]) * constants::_DEG_TO_RAD_;
+    auto phase         = stod(lineElements[3]) * _DEG_TO_RAD_;
 
     if (periodicity < 0.0)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Parameter file dihedral section at line {} - periodicity has to "
             "be positive!",
             _lineNumber
         ));
 
-    auto dihedralType =
-        forceField::DihedralType(id, forceConstant, periodicity, phaseShift);
+    auto dihedralType = DihedralType(id, forceConstant, periodicity, phase);
 
     engine.getForceField().addDihedralType(dihedralType);
 }

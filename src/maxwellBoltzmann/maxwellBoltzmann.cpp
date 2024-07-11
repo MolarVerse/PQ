@@ -40,6 +40,10 @@
 #endif
 
 using maxwellBoltzmann::MaxwellBoltzmann;
+using namespace simulationBox;
+using namespace constants;
+using namespace settings;
+using namespace resetKinetics;
 
 /**
  * @brief generate boltzmann distributed velocities for all atoms in the
@@ -50,20 +54,15 @@ using maxwellBoltzmann::MaxwellBoltzmann;
  *
  * @param simBox
  */
-void MaxwellBoltzmann::initializeVelocities(simulationBox::SimulationBox &simBox
-)
+void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 {
     auto generateVelocities = [this](auto &atom)
     {
-        const auto mass = atom->getMass() * constants::_AMU_TO_KG_;
+        const auto mass = atom->getMass() * _AMU_TO_KG_;
+        const auto kb   = _BOLTZMANN_CONSTANT_;
+        const auto temp = ThermostatSettings::getActualTargetTemperature();
 
-        const auto stddev =
-            ::sqrt(
-                constants::_BOLTZMANN_CONSTANT_ *
-                settings::ThermostatSettings::getActualTargetTemperature() /
-                mass
-            ) /
-            constants::_VELOCITY_UNIT_TO_SI_;
+        const auto stddev = ::sqrt(kb * temp / mass) / _VELOCITY_UNIT_TO_SI_;
 
         std::normal_distribution<double> distribution{0.0, stddev};
 
@@ -93,7 +92,7 @@ void MaxwellBoltzmann::initializeVelocities(simulationBox::SimulationBox &simBox
     std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 #endif
 
-    auto resetKinetics = resetKinetics::ResetKinetics();
+    auto resetKinetics = ResetKinetics();
     resetKinetics.setMomentum(simBox.calculateMomentum());
     resetKinetics.resetMomentum(simBox);
     resetKinetics.resetAngularMomentum(simBox);

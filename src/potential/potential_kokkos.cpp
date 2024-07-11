@@ -30,6 +30,8 @@
 #include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
 
 using namespace potential;
+using namespace simulationBox;
+using namespace physicalData;
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for brute force
@@ -41,11 +43,11 @@ using namespace potential;
  * @param physicalData
  */
 void KokkosPotential::calculateForces(
-    simulationBox::SimulationBox       &simBox,
-    simulationBox::KokkosSimulationBox &kokkosSimBox,
-    physicalData::PhysicalData         &physicalData,
-    KokkosLennardJones                 &ljPotential,
-    KokkosCoulombWolf                  &coulombWolf
+    SimulationBox            &simBox,
+    KokkosSimulationBox      &kokkosSimBox,
+    PhysicalData             &physicalData,
+    const KokkosLennardJones &ljPotential,
+    const KokkosCoulombWolf  &coulombWolf
 )
 {
     startTimingsSection("InterNonBonded - Transfer");
@@ -62,8 +64,7 @@ void KokkosPotential::calculateForces(
 
     const auto atomTypes       = kokkosSimBox.getAtomTypes().d_view;
     const auto moleculeIndices = kokkosSimBox.getMoleculeIndices().d_view;
-    auto       internalGlobalVDWTypes =
-        kokkosSimBox.getInternalGlobalVDWTypes().d_view;
+    auto       globalVDWTypes = kokkosSimBox.getInternalGlobalVDWTypes().d_view;
 
     auto positions      = kokkosSimBox.getPositions().d_view;
     auto forces         = kokkosSimBox.getForces().d_view;
@@ -87,7 +88,7 @@ void KokkosPotential::calculateForces(
         ) {
             const auto moleculeIndex_i = moleculeIndices(i);
             const auto partialCharge_i = partialCharges(i);
-            const auto vdWType_i       = internalGlobalVDWTypes(i);
+            const auto vdWType_i       = globalVDWTypes(i);
 
             forces(i, 0) = 0.0;
             forces(i, 1) = 0.0;
@@ -111,11 +112,7 @@ void KokkosPotential::calculateForces(
                 };
 
                 double txyz[3];
-                simulationBox::KokkosSimulationBox::calcShiftVector(
-                    dxyz,
-                    boxDimensions,
-                    txyz
-                );
+                KokkosSimulationBox::calcShiftVector(dxyz, boxDimensions, txyz);
 
                 dxyz[0] += txyz[0];
                 dxyz[1] += txyz[1];
@@ -141,16 +138,16 @@ void KokkosPotential::calculateForces(
 
                 coulombEnergy += coulombicEnergy;
 
-                const auto vdWType_j = internalGlobalVDWTypes(j);
+                const auto vdWType_j = globalVDWTypes(j);
                 const auto nRCCutOff =
                     ljPotential.getRadialCutoff(vdWType_i, vdWType_j);
 
                 if (distance < nRCCutOff)
                 {
-                    auto nonCoulombicEnergy =
+                    auto nonCoulE =
                         ljPotential
                             .calculate(distance, force, vdWType_i, vdWType_j);
-                    nonCoulombEnergy += nonCoulombicEnergy;
+                    nonCoulombEnergy += nonCoulE;
                 }
 
                 force /= distance;

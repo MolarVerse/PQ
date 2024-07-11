@@ -29,9 +29,12 @@
 #include "timingsSettings.hpp"
 
 using namespace timings;
+using namespace customException;
 
-/*
- * @brief constructor
+/**
+ * @brief Construct a new Timer:: Timer object
+ *
+ * @param name
  */
 Timer::Timer(const std::string_view name) : _name(name) {}
 
@@ -70,20 +73,6 @@ double Timer::calculateLoopTime() const
         loopTime += timing.calculateLoopTime();
 
     return loopTime;
-}
-
-/**
- * @brief get TimingsSection by name
- *
- */
-TimingsSection Timer::getTimingsSection(const std::string_view name) const
-{
-    const auto index = findTimingsSectionIndex(name);
-
-    if (index == _timingDetails.size())
-        throw customException::CustomException("Timer not found");
-
-    return _timingDetails[index];
 }
 
 /**
@@ -129,7 +118,7 @@ void Timer::stopTimingsSection()
     const auto index = findTimingsSectionIndex(_name);
 
     if (index == _timingDetails.size())
-        throw customException::CustomException("Timer not found");
+        throw CustomException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -143,7 +132,7 @@ void Timer::stopTimingsSection(const std::string_view name)
     const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
-        throw customException::CustomException("Timer not found");
+        throw CustomException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -173,3 +162,46 @@ void Timer::sortTimingsSections()
         { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
     );
 }
+
+/********************
+ * standard setters *
+ ********************/
+
+/**
+ * @brief set timer name
+ *
+ * @param name
+ */
+void Timer::setTimerName(const std::string_view name) { _name = name; }
+
+/********************
+ * standard getters *
+ ********************/
+
+/**
+ * @brief get TimingsSection by name
+ *
+ */
+TimingsSection Timer::getTimingsSection(const std::string_view name) const
+{
+    const auto index = findTimingsSectionIndex(name);
+
+    if (index == _timingDetails.size())
+        throw CustomException("Timer not found");
+
+    return _timingDetails[index];
+}
+
+/**
+ * @brief get timer name
+ *
+ * @return std::string
+ */
+std::string Timer::getTimerName() const { return _name; }
+
+/**
+ * @brief get timer
+ *
+ * @return Timer
+ */
+Timer Timer::getTimer() const { return *this; }

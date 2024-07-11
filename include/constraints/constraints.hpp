@@ -101,6 +101,7 @@ namespace constraints
 
         [[nodiscard]] bool isShakeActive() const;
         [[nodiscard]] bool isMShakeActive() const;
+        [[nodiscard]] bool isShakeLikeActive() const;
         [[nodiscard]] bool isDistanceConstraintsActive() const;
         [[nodiscard]] bool isActive() const;
 

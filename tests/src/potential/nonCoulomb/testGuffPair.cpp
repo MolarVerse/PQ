@@ -48,9 +48,8 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     const auto guffNonCoulomb =
         potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
-    auto distance = 2.0;
-    const auto [energy, force] =
-        guffNonCoulomb.calculateEnergyAndForce(distance);
+    auto distance              = 2.0;
+    const auto [energy, force] = guffNonCoulomb.calculate(distance);
 
     auto energyREF = coefficients[0] / ::pow(distance, coefficients[1]) +
                      coefficients[2] / ::pow(distance, coefficients[3]);

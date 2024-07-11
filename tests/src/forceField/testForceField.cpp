@@ -142,21 +142,21 @@ TEST(TestForceField, findDihedralTypeById_notFoundError)
 }
 
 /**
- * @brief tests findImproperDihedralTypeById function
+ * @brief tests findImproperTypeById function
  *
  */
-TEST(TestForceField, findImproperDihedralTypeById)
+TEST(TestForceField, findImproperTypeById)
 {
     auto forceField           = forceField::ForceField();
     auto improperDihedralType = forceField::DihedralType(0, 1.0, 1.0, 1.0);
 
     forceField.addImproperDihedralType(improperDihedralType);
 
-    EXPECT_EQ(forceField.findImproperDihedralTypeById(0), improperDihedralType);
+    EXPECT_EQ(forceField.findImproperTypeById(0), improperDihedralType);
 }
 
 /**
- * @brief tests findImproperDihedralTypeById function for not found error
+ * @brief tests findImproperTypeById function for not found error
  *
  */
 TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
@@ -164,7 +164,7 @@ TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findImproperDihedralTypeById(0),
+        forceField.findImproperTypeById(0),
         customException::TopologyException,
         "Improper dihedral type with id " + std::to_string(0) + " not found."
     );

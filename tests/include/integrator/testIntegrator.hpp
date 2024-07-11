@@ -24,15 +24,17 @@
 
 #define _TEST_INTEGRATOR_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+
 #include "atom.hpp"              // for Atom
 #include "integrator.hpp"        // for Integrator, VelocityVerlet
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "vector3d.hpp"          // for Vec3D
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
+#include "velocityVerlet.hpp"    // for VelocityVerlet
 
 /**
  * class TestIntegrator
@@ -42,7 +44,7 @@
  */
 class TestIntegrator : public ::testing::Test
 {
-  protected:
+   protected:
     virtual void SetUp()
     {
         _integrator = new integrator::VelocityVerlet();

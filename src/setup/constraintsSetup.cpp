@@ -28,6 +28,10 @@
 #include "mShakeReader.hpp"   // for readMShake
 
 using namespace setup;
+using namespace engine;
+using namespace settings;
+
+using input::mShake::readMShake;
 
 /**
  * @brief constructs a new Constraints Setup:: Constraints Setup object and
@@ -35,17 +39,24 @@ using namespace setup;
  *
  * @param engine
  */
-void setup::setupConstraints(engine::Engine &engine)
+void setup::setupConstraints(Engine &engine)
 {
     if (!engine.isConstraintsActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("constraints (e.g. SHAKE, RATTLE)");
-    engine.getLogOutput().writeSetup("constraints (e.g. SHAKE, RATTLE)");
+    engine.getStdoutOutput().writeSetup("Constraints");
+    engine.getLogOutput().writeSetup("Constraints");
 
     ConstraintsSetup constraintsSetup(engine);
     constraintsSetup.setup();
 }
+
+/**
+ * @brief constructor
+ *
+ * @param engine
+ */
+ConstraintsSetup::ConstraintsSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief sets constraints data in constraints object
@@ -57,7 +68,10 @@ void ConstraintsSetup::setup()
     setupTolerances();
     setupMaxIterations();
     setupRefBondLengths();
+    setupMShake();
     setupDegreesOfFreedom();
+
+    writeSetupInfo();
 }
 
 /**
@@ -66,14 +80,14 @@ void ConstraintsSetup::setup()
  */
 void ConstraintsSetup::setupMShake()
 {
-    if (!_engine.getConstraints().isMShakeActive())
+    auto &constraints = _engine.getConstraints();
+
+    if (!constraints.isMShakeActive())
         return;
 
-    input::mShake::readMShake(_engine);
+    readMShake(_engine);
 
-    _engine.getConstraints().initMShake();
-
-    throw customException::UserInputException("M-SHAKE is not implemented yet");
+    constraints.initMShake();
 }
 
 /**
@@ -82,11 +96,13 @@ void ConstraintsSetup::setupMShake()
  */
 void ConstraintsSetup::setupTolerances()
 {
-    const auto shakeTol  = settings::ConstraintSettings::getShakeTolerance();
-    const auto rattleTol = settings::ConstraintSettings::getRattleTolerance();
+    _shakeTolerance  = ConstraintSettings::getShakeTolerance();
+    _rattleTolerance = ConstraintSettings::getRattleTolerance();
 
-    _engine.getConstraints().setShakeTolerance(shakeTol);
-    _engine.getConstraints().setRattleTolerance(rattleTol);
+    auto &constraints = _engine.getConstraints();
+
+    constraints.setShakeTolerance(_shakeTolerance);
+    constraints.setRattleTolerance(_rattleTolerance);
 }
 
 /**
@@ -95,11 +111,13 @@ void ConstraintsSetup::setupTolerances()
  */
 void ConstraintsSetup::setupMaxIterations()
 {
-    const auto shakeMaxIter  = settings::ConstraintSettings::getShakeMaxIter();
-    const auto rattleMaxIter = settings::ConstraintSettings::getRattleMaxIter();
+    _shakeMaxIter  = ConstraintSettings::getShakeMaxIter();
+    _rattleMaxIter = ConstraintSettings::getRattleMaxIter();
 
-    _engine.getConstraints().setShakeMaxIter(shakeMaxIter);
-    _engine.getConstraints().setRattleMaxIter(rattleMaxIter);
+    auto &constraints = _engine.getConstraints();
+
+    constraints.setShakeMaxIter(_shakeMaxIter);
+    constraints.setRattleMaxIter(_rattleMaxIter);
 }
 
 /**
@@ -108,9 +126,10 @@ void ConstraintsSetup::setupMaxIterations()
  */
 void ConstraintsSetup::setupRefBondLengths()
 {
-    _engine.getConstraints().calculateConstraintBondRefs(
-        _engine.getSimulationBox()
-    );
+    auto       &constraints = _engine.getConstraints();
+    const auto &simBox      = _engine.getSimulationBox();
+
+    constraints.calculateConstraintBondRefs(simBox);
 }
 
 /**
@@ -119,27 +138,147 @@ void ConstraintsSetup::setupRefBondLengths()
  */
 void ConstraintsSetup::setupDegreesOfFreedom()
 {
-    auto &simBox      = _engine.getSimulationBox();
-    auto &constraints = _engine.getConstraints();
+    auto       &simBox      = _engine.getSimulationBox();
+    const auto &constraints = _engine.getConstraints();
 
-    const auto nBondConst   = constraints.getNumberOfBondConstraints();
-    const auto nMShakeConst = constraints.getNumberOfMShakeConstraints(simBox);
+    _shakeConstraints  = constraints.getNumberOfBondConstraints();
+    _mShakeConstraints = constraints.getNumberOfMShakeConstraints(simBox);
 
     auto dof  = simBox.getDegreesOfFreedom();
-    dof      -= nBondConst;
-    dof      -= nMShakeConst;
+    dof      -= _shakeConstraints;
+    dof      -= _mShakeConstraints;
 
     simBox.setDegreesOfFreedom(dof);
+}
 
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("constraint SHAKE DOF:   {:8d}", nBondConst)
-    );
+/**
+ * @brief write setup information to log output
+ *
+ */
+void ConstraintsSetup::writeSetupInfo()
+{
+    const auto &constraints = _engine.getConstraints();
 
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("constraint M-SHAKE DOF: {:8d}", nMShakeConst)
-    );
+    writeEnabled();
 
-    _engine.getLogOutput().writeSetupInfo(
-        std::format("simulation DOF:         {:8d}", dof)
-    );
+    if (constraints.isShakeLikeActive())
+    {
+        writeNConstraintBonds();
+        writeTolerance();
+    }
+
+    if (constraints.isShakeActive())
+        writeMaxIter();
+
+    writeDof();
+}
+
+/**
+ * @brief write enabled message to log output
+ *
+ */
+void ConstraintsSetup::writeEnabled()
+{
+    auto &constraints = _engine.getConstraints();
+
+    // clang-format off
+    std::string shakeMsg  = constraints.isShakeActive() ? "enabled" : "disabled";
+    std::string mShakeMsg = constraints.isMShakeActive() ? "enabled" : "disabled";
+    // clang-format on
+
+    shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
+    mShakeMsg = std::format("M-SHAKE: {}", mShakeMsg);
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetupInfo(shakeMsg);
+    logOutput.writeSetupInfo(mShakeMsg);
+    logOutput.writeEmptyLine();
+}
+
+/**
+ * @brief write degrees of freedom message to log output
+ *
+ */
+void ConstraintsSetup::writeDof()
+{
+    auto &simBox = _engine.getSimulationBox();
+
+    const auto totalDof = simBox.getDegreesOfFreedom();
+
+    // clang-format off
+    const auto shakeDofMsg  = std::format("SHAKE DOF:   {}", _shakeConstraints);
+    const auto mShakeDofMsg = std::format("M-SHAKE DOF: {}", _mShakeConstraints);
+    const auto totalDofMsg  = std::format("Total DOF:   {}", totalDof);
+    // clang-format on
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetupInfo(shakeDofMsg);
+    logOutput.writeSetupInfo(mShakeDofMsg);
+    logOutput.writeSetupInfo(totalDofMsg);
+    logOutput.writeEmptyLine();
+}
+
+/**
+ * @brief write tolerances message to log output
+ *
+ */
+void ConstraintsSetup::writeTolerance()
+{
+    // clang-format off
+    const auto shakeTolMsg  = std::format("SHAKE Tolerance:  {}", _shakeTolerance);
+    const auto rattleTolMsg = std::format("RATTLE Tolerance: {}", _rattleTolerance);
+    // clang-format on
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetupInfo(shakeTolMsg);
+    logOutput.writeSetupInfo(rattleTolMsg);
+    logOutput.writeEmptyLine();
+}
+
+/**
+ * @brief write max iterations message to log output
+ *
+ */
+void ConstraintsSetup::writeMaxIter()
+{
+    // clang-format off
+    const auto shakeMaxIterMsg  = std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
+    const auto rattleMaxIterMsg = std::format("RATTLE Max Iter: {}", _rattleMaxIter);
+    // clang-format on
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetupInfo(shakeMaxIterMsg);
+    logOutput.writeSetupInfo(rattleMaxIterMsg);
+    logOutput.writeEmptyLine();
+}
+
+/**
+ * @brief write number of constraint bonds to log output
+ *
+ */
+void ConstraintsSetup::writeNConstraintBonds()
+{
+    const auto &constraints = _engine.getConstraints();
+    auto       &simBox      = _engine.getSimulationBox();
+
+    const auto nShakeBonds  = constraints.getNumberOfBondConstraints();
+    const auto nMShakeTypes = constraints.getMShakeReferences().size();
+    const auto nMShakeMols  = constraints.getNumberOfMShakeConstraints(simBox);
+
+    // clang-format off
+    const auto nShakeBondsMsg  = std::format("Number of SHAKE bonds:       {}", nShakeBonds);
+    const auto nMShakeTypesMsg = std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
+    const auto nMShakeMolsMsg  = std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
+    // clang-format on
+
+    auto &logOutput = _engine.getLogOutput();
+
+    logOutput.writeSetupInfo(nShakeBondsMsg);
+    logOutput.writeSetupInfo(nMShakeTypesMsg);
+    logOutput.writeSetupInfo(nMShakeMolsMsg);
+    logOutput.writeEmptyLine();
 }

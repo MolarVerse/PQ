@@ -48,7 +48,22 @@ namespace settings
         NONE
     };
 
+    /**
+     * @enum CoulombLongRangeType
+     *
+     * @brief enum class to store the coulomb long range type
+     *
+     */
+    enum class CoulombLongRangeType : size_t
+    {
+        WOLF,
+        SHIFTED
+    };
+
+    // TODO: implement long range type as enum
+
     [[nodiscard]] std::string string(const NonCoulombType nonCoulombType);
+    [[nodiscard]] std::string string(const CoulombLongRangeType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -60,8 +75,8 @@ namespace settings
     {
        private:
         // clang-format off
-        static inline std::string    _coulombLRType  = defaults::_COULOMB_LR_TYPE_DEFAULT_;
-        static inline NonCoulombType _nonCoulombType = NonCoulombType::GUFF;
+        static inline CoulombLongRangeType _coulombLRType  = CoulombLongRangeType::SHIFTED;
+        static inline NonCoulombType       _nonCoulombType = NonCoulombType::GUFF;
 
         static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
         static inline double _scale14Coulomb      = defaults::_SCALE_14_COULOMB_DEFAULT_;
@@ -81,6 +96,7 @@ namespace settings
         static void setNonCoulombType(const std::string_view &type);
         static void setNonCoulombType(const NonCoulombType type);
         static void setCoulombLongRangeType(const std::string_view &type);
+        static void setCoulombLongRangeType(const CoulombLongRangeType &type);
 
         static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
         static void setScale14Coulomb(const double scale14Coulomb);
@@ -91,8 +107,8 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string    getCoulombLongRangeType();
-        [[nodiscard]] static NonCoulombType getNonCoulombType();
+        [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
+        [[nodiscard]] static NonCoulombType       getNonCoulombType();
 
         [[nodiscard]] static double getCoulombRadiusCutOff();
         [[nodiscard]] static double getScale14Coulomb();

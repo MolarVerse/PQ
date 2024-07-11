@@ -132,7 +132,7 @@ namespace linearAlgebra
 
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator-(const U &scalar, const V &vec)
-        -> Vector3D<decltype(vec[0] - scalar)>;
+        -> Vector3D<decltype(scalar - vec[0])>;
 
     /*********************
      * binary * operator *

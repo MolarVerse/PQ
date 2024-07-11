@@ -27,11 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"
-
-namespace simulationBox
-{
-    class Box;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -46,7 +42,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t, const simulationBox::Box &);
+        void write(const size_t, const pq::Box &);
     };
 
 }   // namespace output

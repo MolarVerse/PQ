@@ -27,11 +27,7 @@
 #include <string_view>   // for string_view
 
 #include "output.hpp"   // for Output
-
-namespace timings
-{
-    class GlobalTimer;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -47,7 +43,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(timings::GlobalTimer &timer);
+        void write(pq::GlobalTimer &timer);
     };
 
 }   // namespace output

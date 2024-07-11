@@ -33,6 +33,7 @@ using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace customException;
+using namespace engine;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -43,7 +44,7 @@ using namespace customException;
  *
  * @param engine
  */
-QMInputParser::QMInputParser(engine::Engine &engine) : InputFileParser(engine)
+QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("qm_prog"),

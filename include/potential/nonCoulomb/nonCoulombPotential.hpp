@@ -29,10 +29,18 @@
 #include <memory>    // for shared_ptr
 #include <vector>    // for vector
 
+#include "typeAliases.hpp"
+
 namespace potential
 {
-    class NonCoulombPair;   // forward declaration
-
+    /**
+     * @enum MixingRule
+     *
+     * @brief MixingRule is an enumeration for the different mixing rules
+     *
+     * TODO: implement the different mixing rules
+     *
+     */
     enum class MixingRule : size_t
     {
         NONE
@@ -48,22 +56,18 @@ namespace potential
     class NonCoulombPotential
     {
        protected:
-        MixingRule _mixingRule =
-            MixingRule::NONE;   // no mixing rule TODO: implement (including
-                                // input file keyword)
+        MixingRule _mixingRule = MixingRule::NONE;
 
        public:
         virtual ~NonCoulombPotential() = default;
 
-        [[nodiscard]] virtual std::shared_ptr<NonCoulombPair> getNonCoulombPair(
+        [[nodiscard]] virtual pq::SharedNonCoulPair getNonCoulPair(
             const std::vector<size_t> &indices
         ) = 0;
-        [[nodiscard]] MixingRule getMixingRule() const { return _mixingRule; }
 
-        void setMixingRule(const MixingRule mixingRule)
-        {
-            _mixingRule = mixingRule;
-        }
+        [[nodiscard]] MixingRule getMixingRule() const;
+
+        void setMixingRule(const MixingRule mixingRule);
     };
 
 }   // namespace potential

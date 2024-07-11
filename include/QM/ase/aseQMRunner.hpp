@@ -64,7 +64,7 @@ namespace QM
         void collectData(pq::SimBox &, pq::PhysicalData &) const;
         void collectForces(pq::SimBox &) const;
         void collectEnergy(pq::PhysicalData &) const;
-        void collectStress(pq::PhysicalData &) const;
+        void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
 
         // clang-format off
         [[nodiscard]] py::array           asePositions(const pq::SimBox &) const;

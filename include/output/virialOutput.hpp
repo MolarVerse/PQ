@@ -24,14 +24,10 @@
 
 #define _VIRIAL_OUTPUT_HPP_
 
-#include "output.hpp"   // for Output
-
 #include <cstddef>   // for size_t
 
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "output.hpp"   // for Output
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -43,10 +39,10 @@ namespace output
      */
     class VirialOutput : public Output
     {
-      public:
+       public:
         using Output::Output;
 
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void write(const size_t step, const pq::PhysicalData &);
     };
 
 }   // namespace output

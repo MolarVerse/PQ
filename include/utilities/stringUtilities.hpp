@@ -29,22 +29,18 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "typeAliases.hpp"
+
 /**
  * @brief utilities is a namespace for all utility functions
  */
 namespace utilities
 {
-    std::string removeComments(
-        std::string            &line,
-        const std::string_view &commentChar
-    );
+    std::string removeComments(std::string &, const std::string_view &);
 
-    std::vector<std::string> getLineCommands(
-        const std::string &line,
-        const size_t       lineNumber
-    );
+    pq::strings getLineCommands(const std::string &, const size_t);
 
-    std::vector<std::string> splitString(const std::string &);
+    pq::strings splitString(const std::string &);
 
     std::string toLowerCopy(std::string);
     std::string toLowerCopy(std::string_view);

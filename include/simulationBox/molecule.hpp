@@ -31,14 +31,13 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-#include "atom.hpp"       // for Atom
-#include "box.hpp"        // for Box
+#include "atom.hpp"   // for Atom
+#include "box.hpp"    // for Box
+#include "typeAliases.hpp"
 #include "vector3d.hpp"   // for Vec3D
 
 namespace simulationBox
 {
-    using c_ul = const size_t;
-
     /**
      * @class Molecule
      *
@@ -56,18 +55,18 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        linearAlgebra::Vec3D _centerOfMass =
-            linearAlgebra::Vec3D(0.0, 0.0, 0.0);
-        std::map<size_t, size_t>           _externalToInternalAtomTypes;
-        std::vector<std::shared_ptr<Atom>> _atoms;
+        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
+
+        std::map<size_t, size_t> _externalToInternalAtomTypes;
+        pq::SharedAtomVec        _atoms;
 
        public:
         Molecule() = default;
-        explicit Molecule(const std::string_view name) : _name(name){};
-        explicit Molecule(c_ul moltype) : _moltype(moltype){};
+        explicit Molecule(const std::string_view name);
+        explicit Molecule(const size_t moltype);
 
         void calculateCenterOfMass(const Box &);
-        void scale(const linearAlgebra::tensor3D &, const Box &);
+        void scale(const pq::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;
@@ -82,159 +81,71 @@ namespace simulationBox
          * standard adder methods for atom data *
          *****************************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom)
-        {
-            _atoms.push_back(atom);
-        }
-
-        void addAtomPosition(c_ul index, const linearAlgebra::Vec3D &position)
-        {
-            _atoms[index]->addPosition(position);
-        }
-        void addAtomVelocity(c_ul index, const linearAlgebra::Vec3D &velocity)
-        {
-            _atoms[index]->addVelocity(velocity);
-        }
-        void addAtomForce(c_ul index, const linearAlgebra::Vec3D &force)
-        {
-            _atoms[index]->addForce(force);
-        }
-        void addAtomShiftForce(
-            c_ul                        index,
-            const linearAlgebra::Vec3D &shiftForce
-        )
-        {
-            _atoms[index]->addShiftForce(shiftForce);
-        }
+        void addAtom(const std::shared_ptr<Atom> atom);
+        void addAtomPosition(const size_t index, const pq::Vec3D &position);
+        void addAtomVelocity(const size_t index, const pq::Vec3D &velocity);
+        void addAtomForce(const size_t index, const pq::Vec3D &force);
+        void addAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(c_ul index, const linearAlgebra::Vec3D &position)
-        {
-            _atoms[index]->setPosition(position);
-        }
-        void setAtomVelocity(c_ul index, const linearAlgebra::Vec3D &velocity)
-        {
-            _atoms[index]->setVelocity(velocity);
-        }
-        void setAtomForce(c_ul index, const linearAlgebra::Vec3D &force)
-        {
-            _atoms[index]->setForce(force);
-        }
-        void setAtomShiftForce(
-            c_ul                        index,
-            const linearAlgebra::Vec3D &shiftForce
-        )
-        {
-            _atoms[index]->setShiftForce(shiftForce);
-        }
+        void setAtomPosition(const size_t index, const pq::Vec3D &position);
+        void setAtomVelocity(const size_t index, const pq::Vec3D &velocity);
+        void setAtomForce(const size_t index, const pq::Vec3D &force);
+        void setAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(c_ul index) const
-        {
-            return _atoms[index]->getPosition();
-        }
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions() const
-        {
-            std::vector<linearAlgebra::Vec3D> positions;
-            for (const auto &atom : _atoms)
-            {
-                positions.push_back(atom->getPosition());
-            }
-            return positions;
-        }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(c_ul index) const
-        {
-            return _atoms[index]->getVelocity();
-        }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(c_ul index) const
-        {
-            return _atoms[index]->getForce();
-        }
-        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(c_ul index) const
-        {
-            return _atoms[index]->getShiftForce();
-        }
+        [[nodiscard]] pq::Vec3D getAtomPosition(const size_t index) const;
+        [[nodiscard]] std::vector<pq::Vec3D> getAtomPositions() const;
+        [[nodiscard]] pq::Vec3D getAtomVelocity(const size_t index) const;
+        [[nodiscard]] pq::Vec3D getAtomForce(const size_t index) const;
+        [[nodiscard]] pq::Vec3D getAtomShiftForce(const size_t index) const;
 
-        [[nodiscard]] int getAtomicNumber(c_ul index) const
-        {
-            return _atoms[index]->getAtomicNumber();
-        }
-        [[nodiscard]] double getAtomMass(c_ul index) const
-        {
-            return _atoms[index]->getMass();
-        }
-        [[nodiscard]] double getPartialCharge(c_ul index) const
-        {
-            return _atoms[index]->getPartialCharge();
-        }
-        [[nodiscard]] size_t getAtomType(c_ul index) const
-        {
-            return _atoms[index]->getAtomType();
-        }
-        [[nodiscard]] size_t getInternalGlobalVDWType(c_ul index) const
-        {
-            return _atoms[index]->getInternalGlobalVDWType();
-        }
-        [[nodiscard]] std::string getAtomName(c_ul index) const
-        {
-            return _atoms[index]->getName();
-        }
+        [[nodiscard]] int    getAtomicNumber(const size_t index) const;
+        [[nodiscard]] double getAtomMass(const size_t index) const;
+        [[nodiscard]] double getPartialCharge(const size_t index) const;
+        [[nodiscard]] size_t getAtomType(const size_t index) const;
+        [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const;
+        [[nodiscard]] std::string getAtomName(const size_t index) const;
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const { return _moltype; }
-        [[nodiscard]] size_t getNumberOfAtoms() const { return _numberOfAtoms; }
-        [[nodiscard]] size_t getDegreesOfFreedom() const
-        {
-            return 3 * getNumberOfAtoms();
-        }
+        [[nodiscard]] size_t getMoltype() const;
+        [[nodiscard]] size_t getNumberOfAtoms() const;
+        [[nodiscard]] size_t getDegreesOfFreedom() const;
 
-        [[nodiscard]] bool isQMOnly() const { return _isQMOnly; }
+        [[nodiscard]] bool isQMOnly() const;
 
-        [[nodiscard]] double getCharge() const { return _charge; }
-        [[nodiscard]] double getMolMass() const { return _molMass; }
+        [[nodiscard]] double getCharge() const;
+        [[nodiscard]] double getMolMass() const;
 
-        [[nodiscard]] std::string getName() const { return _name; }
+        [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const
-        {
-            return _centerOfMass;
-        }
+        [[nodiscard]] pq::Vec3D getCenterOfMass() const;
 
-        [[nodiscard]] Atom &getAtom(c_ul index) { return *(_atoms[index]); }
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms()
-        {
-            return _atoms;
-        }
+        [[nodiscard]] Atom              &getAtom(const size_t index);
+        [[nodiscard]] pq::SharedAtomVec &getAtoms();
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setName(const std::string_view name) { _name = name; }
+        void setName(const std::string_view name);
+        void setQMOnly(const bool isQMOnly);
 
-        void setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
+        void setNumberOfAtoms(const size_t numberOfAtoms);
+        void setMoltype(const size_t moltype);
 
-        void setNumberOfAtoms(c_ul numberOfAtoms)
-        {
-            _numberOfAtoms = numberOfAtoms;
-        }
-        void setMoltype(c_ul moltype) { _moltype = moltype; }
-
-        void setCharge(const double charge) { _charge = charge; }
-        void setMolMass(const double molMass) { _molMass = molMass; }
-        void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass)
-        {
-            _centerOfMass = centerOfMass;
-        }
+        void setCharge(const double charge);
+        void setMolMass(const double molMass);
+        void setCenterOfMass(const pq::Vec3D &centerOfMass);
     };
 
 }   // namespace simulationBox

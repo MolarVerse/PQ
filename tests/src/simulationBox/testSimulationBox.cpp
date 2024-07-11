@@ -168,7 +168,7 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
+        _simulationBox->checkCoulRadiusCutOff(
             customException::ExceptionType::USERINPUTEXCEPTION
         ),
         customException::UserInputException,
@@ -177,7 +177,7 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
+        _simulationBox->checkCoulRadiusCutOff(
             customException::ExceptionType::MANOSTATEXCEPTION
         ),
         customException::ManostatException,
@@ -188,7 +188,7 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
+        _simulationBox->checkCoulRadiusCutOff(
             customException::ExceptionType::USERINPUTEXCEPTION
         ),
         customException::UserInputException,
@@ -199,7 +199,7 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulombRadiusCutOff(
+        _simulationBox->checkCoulRadiusCutOff(
             customException::ExceptionType::USERINPUTEXCEPTION
         ),
         customException::UserInputException,

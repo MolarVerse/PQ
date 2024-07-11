@@ -22,6 +22,8 @@
 
 #include "engineOutput.hpp"
 
+#include "thermostat.hpp"
+
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
@@ -35,6 +37,8 @@ using namespace engine;
 using namespace output;
 using namespace simulationBox;
 using namespace physicalData;
+using namespace thermostat;
+
 using std::make_unique;
 
 /**
@@ -186,10 +190,30 @@ void EngineOutput::writeInfoFile(
  * @param simulationBox
  * @param step
  */
-void EngineOutput::writeRstFile(SimulationBox &simulationBox, const size_t step)
+void EngineOutput::writeRstFile(
+    SimulationBox    &simulationBox,
+    const Thermostat &thermostat,
+    const size_t      step
+)
 {
     startTimingsSection("RstFileOutput");
-    _rstFileOutput->write(simulationBox, step);
+    _rstFileOutput->write(simulationBox, thermostat, step);
+    stopTimingsSection("RstFileOutput");
+}
+
+/**
+ * @brief wrapper for restart file output function
+ *
+ * @param simulationBox
+ * @param step
+ */
+void EngineOutput::writeOptRstFile(
+    SimulationBox &simulationBox,
+    const size_t   step
+)
+{
+    startTimingsSection("RstFileOutput");
+    _rstFileOutput->write(simulationBox, Thermostat(), step);
     stopTimingsSection("RstFileOutput");
 }
 

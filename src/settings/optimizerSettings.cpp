@@ -33,11 +33,11 @@ using namespace utilities;
  * @param method
  * @return std::string
  */
-std::string settings::string(const Optimizer method)
+std::string settings::string(const OptimizerType method)
 {
     switch (method)
     {
-        using enum Optimizer;
+        using enum OptimizerType;
 
         case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
         case ADAM: return "ADAM";
@@ -80,17 +80,17 @@ std::string settings::string(const LREnum method)
  */
 void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
 {
-    using enum Optimizer;
+    using enum OptimizerType;
     const auto optimizerLower = toLowerCopy(optimizer);
 
     if ("steepest-descent" == optimizerLower)
-        setOptimizer(Optimizer::STEEPEST_DESCENT);
+        setOptimizer(OptimizerType::STEEPEST_DESCENT);
 
     else if ("adam" == optimizerLower)
-        setOptimizer(Optimizer::ADAM);
+        setOptimizer(OptimizerType::ADAM);
 
     else
-        setOptimizer(Optimizer::NONE);
+        setOptimizer(OptimizerType::NONE);
 }
 
 /**
@@ -98,7 +98,7 @@ void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
  *
  * @param optimizer
  */
-void OptimizerSettings::setOptimizer(const Optimizer optimizer)
+void OptimizerSettings::setOptimizer(const OptimizerType optimizer)
 {
     _optimizer = optimizer;
 }
@@ -209,9 +209,9 @@ void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
 /**
  * @brief returns the optimizer as string
  *
- * @return Optimizer
+ * @return OptimizerType
  */
-settings::Optimizer OptimizerSettings::getOptimizer() { return _optimizer; }
+settings::OptimizerType OptimizerSettings::getOptimizer() { return _optimizer; }
 
 /**
  * @brief returns the learning rate strategy as string

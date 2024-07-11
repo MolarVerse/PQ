@@ -90,7 +90,7 @@ TEST(TestLennardJonesPair, calculateEnergyAndForces)
     );
 
     auto distance        = 2.0;
-    auto [energy, force] = potential.calculateEnergyAndForce(distance);
+    auto [energy, force] = potential.calculate(distance);
 
     EXPECT_DOUBLE_EQ(
         energy,

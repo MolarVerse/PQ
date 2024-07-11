@@ -172,6 +172,7 @@ void GeneralInputParser::parseDimensionality(
 
     if (dimensionality == 3)
         Settings::setDimensionality(size_t(dimensionality));
+
     else
         throw InputFileException(format(
             "Invalid dimensionality \"{}\" in input file\n"

@@ -31,6 +31,9 @@
 #include "simulationBox.hpp"        // for SimulationBox
 
 using namespace input::topology;
+using namespace engine;
+using namespace customException;
+using namespace constraints;
 
 /**
  * @brief processes the distance constraints section of the topology file
@@ -46,20 +49,20 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line is
+ * @throws TopologyException if number of elements in line is
  * not 4
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  * (=same atoms)
- * @throws customException::TopologyException if lower distance is greater than
+ * @throws TopologyException if lower distance is greater than
  * upper distance
  */
 void DistanceConstraintsSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 6)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file \"Distance "
             "Constraints\" section at line {} - number of elements has to be "
             "6!",
@@ -74,26 +77,26 @@ void DistanceConstraintsSection::processSection(
     auto dSpringConstantDt = stod(lineElements[5]);
 
     if (atom1 == atom2)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file \"Distance "
             "Constraints\" at line {} - atoms cannot be the same!",
             _lineNumber
         ));
 
     if (lowerDistance > upperDistance)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file \"Distance "
             "Constraints\" at line {} - lower distance cannot be greater "
             "than upper distance!",
             _lineNumber
         ));
 
-    const auto [molecule1, atomIndex1] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] =
-        engine.getSimulationBox().findMoleculeByAtomIndex(atom2);
+    auto &simBox = engine.getSimulationBox();
 
-    auto distanceConstraint = constraints::DistanceConstraint(
+    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
+
+    auto distanceConstraint = DistanceConstraint(
         molecule1,
         molecule2,
         atomIndex1,
@@ -108,16 +111,23 @@ void DistanceConstraintsSection::processSection(
 }
 
 /**
+ * @brief returns the keyword of the distance constraints section
+ *
+ * @return "dist_constraints"
+ */
+std::string DistanceConstraintsSection::keyword() { return "dist_constraints"; }
+
+/**
  * @brief checks if distance constraints sections ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file error in \"Distance Constraints\" section at line "
             "{} - no end of section found!",
             _lineNumber

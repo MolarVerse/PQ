@@ -38,20 +38,6 @@ class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
 #endif
 
-namespace engine
-{
-    class Engine;   // Forward declaration
-
-}   // namespace engine
-
-namespace simulationBox
-{
-    class Atom;            // Forward declaration
-    class Molecule;        // Forward declaration
-    class SimulationBox;   // Forward declaration
-
-}   // namespace simulationBox
-
 namespace input::restartFile
 {
     /**
@@ -75,11 +61,11 @@ namespace input::restartFile
 #endif
 
        public:
-        [[nodiscard]] std::string keyword() override { return ""; }
-        [[nodiscard]] bool        isHeader() override { return false; }
-
         void checkNumberOfLineArguments(pq::strings &) const;
-        void process(pq::strings &lineElements, engine::Engine &) override;
+        void process(pq::strings &lineElements, pq::Engine &) override;
+
+        [[nodiscard]] std::string keyword() override;
+        [[nodiscard]] bool        isHeader() override;
     };
 
 }   // namespace input::restartFile

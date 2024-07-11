@@ -22,13 +22,14 @@
 
 #include "mpi.hpp"
 
+#include <mpi.h>   // for MPI_Comm_rank, MPI_Comm_size, MPI_Init, MPI_Finalize
+#include <sys/stat.h>   // for mkdir
+#include <unistd.h>     // for chdir
+
 #include <filesystem>   // for remove_all
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <iostream>     // for cout, cerr
-#include <mpi.h>        // for MPI_Comm_rank, MPI_Comm_size, MPI_Init, MPI_Finalize
-#include <sys/stat.h>   // for mkdir
-#include <unistd.h>     // for chdir
 
 using mpi::MPI;
 
@@ -101,3 +102,47 @@ void MPI::finalize()
 
     ::MPI_Finalize();
 }
+
+/***************************
+ * standard setter methods *
+ ***************************/
+
+/**
+ * @brief sets the rank
+ *
+ * @param rank
+ */
+void MPI::setRank(const size_t &rank) { MPI::_rank = rank; }
+
+/**
+ * @brief sets the size
+ *
+ * @param size
+ */
+void MPI::setSize(const size_t &size) { MPI::_size = size; }
+
+/***************************
+ * standard getter methods *
+ ***************************/
+
+/**
+ * @brief check if rank is root
+ *
+ * @return true
+ * @return false
+ */
+bool MPI::isRoot() { return _rank == 0; }
+
+/**
+ * @brief get rank
+ *
+ * @return size_t
+ */
+size_t MPI::getRank() { return _rank; }
+
+/**
+ * @brief get size
+ *
+ * @return size_t
+ */
+size_t MPI::getSize() { return _size; }

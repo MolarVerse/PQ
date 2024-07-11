@@ -314,6 +314,19 @@ bool Constraints::isShakeActive() const { return _shakeActivated; }
 bool Constraints::isMShakeActive() const { return _mShakeActivated; }
 
 /**
+ * @brief checks if shake like algorithm is active
+ *
+ * @details shake like algorithm is active if shake or mShake is active
+ *
+ * @return true
+ * @return false
+ */
+bool Constraints::isShakeLikeActive() const
+{
+    return isShakeActive() || isMShakeActive();
+}
+
+/**
  * @brief checks if distance constraints are active
  *
  * @return true if distance constraints are active

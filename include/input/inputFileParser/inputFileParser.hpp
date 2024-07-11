@@ -33,19 +33,11 @@
 
 #include "typeAliases.hpp"   // for strings. ParseFunc
 
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
-
 namespace input
 {
     void checkEqualSign(const std::string_view &, const size_t);
     void checkCommand(const pq::strings &, const size_t);
     void checkCommandArray(const pq::strings &, const size_t);
-
-    // special type definition for the parsing functions
-    using ParseFunc = std::function<void(const pq::strings &, const size_t)>;
 
     /**
      * @class InputFileParser
@@ -56,20 +48,20 @@ namespace input
     class InputFileParser
     {
        protected:
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
-        std::map<std::string, ParseFunc> _keywordFuncMap;
-        std::map<std::string, bool>      _keywordRequiredMap;
-        std::map<std::string, int>       _keywordCountMap;
+        std::map<std::string, pq::ParseFunc> _keywordFuncMap;
+        std::map<std::string, bool>          _keywordRequiredMap;
+        std::map<std::string, int>           _keywordCountMap;
 
        public:
-        explicit InputFileParser(engine::Engine &engine) : _engine(engine){};
+        explicit InputFileParser(pq::Engine &engine) : _engine(engine){};
 
-        void addKeyword(const std::string &, ParseFunc, bool);
+        void addKeyword(const std::string &, pq::ParseFunc, bool);
 
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
         [[nodiscard]] std::map<std::string, int>  getKeywordCountMap() const;
-        [[nodiscard]] std::map<std::string, ParseFunc> getKeywordFuncMap(
+        [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap(
         ) const;
     };
 

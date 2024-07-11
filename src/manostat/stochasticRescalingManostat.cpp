@@ -31,16 +31,18 @@
 #include "exceptions.hpp"                            // for ExceptionType
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
-#include "staticMatrix3x3.hpp"      // for diagonal, diagonalMatrix
+#include "staticMatrix.hpp"         // for diagonal, diagonalMatrix
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
 #include "vector3d.hpp"             // for Vec3D, operator/
 
-using manostat::AnisotropicStochasticRescalingManostat;
-using manostat::FullAnisotropicStochasticRescalingManostat;
-using manostat::SemiIsotropicStochasticRescalingManostat;
-using manostat::StochasticRescalingManostat;
-
+using namespace linearAlgebra;
+using namespace manostat;
+using namespace settings;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace customException;
+using namespace constants;
 using namespace linearAlgebra;
 
 /**
@@ -58,6 +60,28 @@ StochasticRescalingManostat::StochasticRescalingManostat(
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
+ *
+ * @param targetPressure
+ * @param tau
+ * @param compressibility
+ * @param anisotropicAxis
+ * @param isotropicAxes
+ * @return SemiIsotropicStochasticRescalingManostat::
+ */
+SemiIsotropicStochasticRescalingManostat::
+    SemiIsotropicStochasticRescalingManostat(
+        const double               targetPressure,
+        const double               tau,
+        const double               compressibility,
+        const size_t               anisotropicAxis,
+        const std::vector<size_t> &isotropicAxes
+    )
+    : StochasticRescalingManostat(targetPressure, tau, compressibility),
+      _2DAnisotropicAxis(anisotropicAxis),
+      _2DIsotropicAxes(isotropicAxes){};
+
+/**
+ * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
  * Manostat object
  *
  * @param targetPressure
@@ -71,7 +95,7 @@ StochasticRescalingManostat::StochasticRescalingManostat(
 )
     : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
 {
-    _dt = settings::TimingsSettings::getTimeStep();
+    _dt = TimingsSettings::getTimeStep();
 }
 
 /**
@@ -96,12 +120,11 @@ void StochasticRescalingManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulombRadiusCutOff(
-        customException::ExceptionType::MANOSTATEXCEPTION
-    );
+    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
 
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
+
     auto scaleVelocities = [&mu, &simBox](auto &atom)
     { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
 
@@ -116,28 +139,23 @@ void StochasticRescalingManostat::applyManostat(
  * (isotropic)
  *
  * @param volume
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::tensor3D StochasticRescalingManostat::calculateMu(
-    const double volume
-)
+tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 {
-    const auto compressibilityFactor = _compressibility * _dt / _tau;
-    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getActualTargetTemperature();
-    const auto randomFactor =
-        std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto compress = _compressibility * _dt / _tau;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
-    const auto stochasticFactor = ::sqrt(
-                                      2.0 * kT * compressibilityFactor /
-                                      volume * constants::_PRESSURE_FACTOR_
-                                  ) *
-                                  randomFactor;
+    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
 
-    return diagonalMatrix(::exp(
-        -compressibilityFactor * (_targetPressure - _pressure) +
-        stochasticFactor / 3.0
-    ));
+    auto stochasticFactor  = 2.0 * kT * compress / volume;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
+    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+
+    const auto deltaP = _targetPressure - _pressure;
+
+    return diagonalMatrix(::exp(-compress * (deltaP) + stochasticFactor / 3.0));
 }
 
 /**
@@ -145,29 +163,23 @@ linearAlgebra::tensor3D StochasticRescalingManostat::calculateMu(
  * (semi-isotropic)
  *
  * @param volume
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
+tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
     const double volume
 )
 {
-    const auto compressibilityFactor = _compressibility * _dt / _tau;
-    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getActualTargetTemperature();
-    const auto randomFactor =
-        std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto compress = _compressibility * _dt / _tau;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
-    const auto stochasticFactor_xy =
-        ::sqrt(
-            4.0 / 3.0 * kT * compressibilityFactor / volume *
-            constants::_PRESSURE_FACTOR_
-        ) *
-        randomFactor;
-    const auto stochasticFactor_z = ::sqrt(
-                                        2.0 / 3.0 * kT * compressibilityFactor /
-                                        volume * constants::_PRESSURE_FACTOR_
-                                    ) *
-                                    randomFactor;
+    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    auto stochasticFactor  = 1 / 3.0 * kT * compress / volume;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
+
+    const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
+    const auto stochasticFactor_z  = ::sqrt(2.0 * stochasticFactor) * random;
 
     const auto p_xyz = diagonal(_pressureTensor);
     const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
@@ -175,16 +187,15 @@ linearAlgebra::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
     const auto p_xy  = (p_x + p_y) / 2.0;
     const auto p_z   = p_xyz[_2DAnisotropicAxis];
 
-    const auto mu_xy = ::exp(
-        -compressibilityFactor * (_targetPressure - p_xy) / 3.0 +
-        stochasticFactor_xy / 2.0
-    );
-    const auto mu_z = ::exp(
-        -compressibilityFactor * (_targetPressure - p_z) / 3.0 +
-        stochasticFactor_z
-    );
+    const auto deltaPxy = _targetPressure - p_xy;
+    const auto deltaPz  = _targetPressure - p_z;
 
-    linearAlgebra::Vec3D mu;
+    // clang-format off
+    const auto mu_xy = ::exp(-compress * deltaPxy / 3.0 + stochasticFactor_xy / 2.0);
+    const auto mu_z  = ::exp(-compress * deltaPz / 3.0 + stochasticFactor_z);
+    // clang-format on
+
+    Vec3D mu;
 
     mu[_2DIsotropicAxes[0]] = mu_xy;
     mu[_2DIsotropicAxes[1]] = mu_xy;
@@ -198,29 +209,24 @@ linearAlgebra::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * (anisotropic)
  *
  * @param volume
- * @return linearAlgebra::Vec3D
+ * @return Vec3D
  */
-linearAlgebra::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
-    const double volume
+tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume
 )
 {
-    const auto compressibilityFactor = _compressibility * _dt / _tau;
-    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getActualTargetTemperature();
-    const auto randomFactor =
-        std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto compress = _compressibility * _dt / _tau;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
-    const auto stochasticFactor = ::sqrt(
-                                      2.0 / 3.0 * kT * compressibilityFactor /
-                                      volume * constants::_PRESSURE_FACTOR_
-                                  ) *
-                                  randomFactor;
+    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
 
-    return diagonalMatrix(
-        exp(-compressibilityFactor *
-                (_targetPressure - diagonal(_pressureTensor)) / 3.0 +
-            stochasticFactor)
-    );
+    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
+    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+
+    const auto deltaP = _targetPressure - diagonal(_pressureTensor);
+
+    return diagonalMatrix(exp(-compress * (deltaP) / 3.0 + stochasticFactor));
 }
 
 /**
@@ -228,27 +234,96 @@ linearAlgebra::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
  * anisotropic including angles)
  *
  * @param volume
- * @return linearAlgebra::tensor3D
+ * @return tensor3D
  */
-linearAlgebra::tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
+tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const double volume
 )
 {
-    const auto compressibilityFactor = _compressibility * _dt / _tau;
-    const auto kT = constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ *
-                    settings::ThermostatSettings::getActualTargetTemperature();
-    const auto randomFactor =
-        std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto compress = _compressibility * _dt / _tau;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
-    const auto stochasticFactor = ::sqrt(
-                                      2.0 / 3.0 * kT * compressibilityFactor /
-                                      volume * constants::_PRESSURE_FACTOR_
-                                  ) *
-                                  randomFactor;
+    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
 
-    return exp(
-        -compressibilityFactor *
-            (diagonalMatrix(_targetPressure) - _pressureTensor) / 3.0 +
-        stochasticFactor
-    );
+    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
+    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+
+    const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
+
+    return exp(-compress * deltaP / 3.0 + stochasticFactor);
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get tau (relaxation time)
+ *
+ * @return double
+ */
+double StochasticRescalingManostat::getTau() const { return _tau; }
+
+/**
+ * @brief get compressibility
+ *
+ * @return double
+ */
+double StochasticRescalingManostat::getCompressibility() const
+{
+    return _compressibility;
+}
+
+/**
+ * @brief get the manostat type
+ *
+ * @return ManostatType
+ */
+ManostatType StochasticRescalingManostat::getManostatType() const
+{
+    return ManostatType::STOCHASTIC_RESCALING;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return Isotropy
+ */
+Isotropy StochasticRescalingManostat::getIsotropy() const
+{
+    return Isotropy::ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return Isotropy
+ */
+Isotropy SemiIsotropicStochasticRescalingManostat::getIsotropy() const
+{
+    return Isotropy::SEMI_ISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return Isotropy
+ */
+Isotropy AnisotropicStochasticRescalingManostat::getIsotropy() const
+{
+    return Isotropy::ANISOTROPIC;
+}
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return Isotropy
+ */
+Isotropy FullAnisotropicStochasticRescalingManostat::getIsotropy() const
+{
+    return Isotropy::FULL_ANISOTROPIC;
 }

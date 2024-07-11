@@ -56,6 +56,17 @@
 
 using namespace engine;
 using namespace input;
+using namespace timings;
+using namespace settings;
+using namespace customException;
+using namespace guffdat;
+using namespace molDescriptor;
+using namespace restartFile;
+using namespace topology;
+using namespace parameterFile;
+using namespace input::intraNonBondedReader;
+using namespace setup::simulationBox;
+using namespace setup::resetKinetics;
 
 /**
  * @brief setup the engine
@@ -65,19 +76,19 @@ using namespace input;
  */
 void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 {
-    auto simulationTimer = timings::Timer("Simulation");
-    auto setupTimer      = timings::Timer("Setup");
+    auto simulationTimer = Timer("Simulation");
+    auto setupTimer      = Timer("Setup");
 
     startSetup(simulationTimer, setupTimer, engine);
 
     readInputFile(inputFileName, engine);
 
-    if (!settings::TimingsSettings::isTimeStepSet())
-        if (settings::Settings::isMDJobType())
-            throw customException::UserInputException(std::format(
+    if (!TimingsSettings::isTimeStepSet())
+        if (Settings::isMDJobType())
+            throw UserInputException(std::format(
                 "Molecular Dynamics job type {} selected. Please set the time "
                 "step in the input file.",
-                string(settings::Settings::getJobtype())
+                string(Settings::getJobtype())
             ));
 
     setupOutputFiles(engine);
@@ -87,7 +98,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     setupEngine(engine);
 
     // needs setup of engine before reading guff.dat
-    guffdat::readGuffDat(engine);
+    readGuffDat(engine);
 
 #ifdef WITH_KOKKOS
     setupKokkos(engine);
@@ -102,9 +113,9 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  * @param engine
  */
 void setup::startSetup(
-    timings::Timer &simulationTimer,
-    timings::Timer &setupTimer,
-    Engine         &engine
+    Timer  &simulationTimer,
+    Timer  &setupTimer,
+    Engine &engine
 )
 {
     simulationTimer.startTimingsSection();
@@ -119,9 +130,9 @@ void setup::startSetup(
  * @param engine
  */
 void setup::endSetup(
-    const timings::Timer &simulationTimer,
-    timings::Timer       &setupTimer,
-    Engine               &engine
+    const Timer &simulationTimer,
+    Timer       &setupTimer,
+    Engine      &engine
 )
 {
     engine.getStdoutOutput().writeSetupCompleted();
@@ -140,15 +151,15 @@ void setup::endSetup(
  */
 void setup::readFiles(Engine &engine)
 {
-    molDescriptor::readMolDescriptor(engine);
+    readMolDescriptor(engine);
 
-    restartFile::readRestartFile(engine);
+    readRestartFile(engine);
 
-    topology::readTopologyFile(engine);
+    readTopologyFile(engine);
 
-    parameterFile::readParameterFile(engine);
+    readParameterFile(engine);
 
-    input::intraNonBondedReader::readIntraNonBondedFile(engine);
+    readIntraNonBondedFile(engine);
 }
 
 /**
@@ -158,24 +169,24 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
-    if (settings::Settings::isQMActivated())
+    if (Settings::isQMActivated())
         setupQM(engine);
 
-    if (settings::Settings::isMDJobType())
-        resetKinetics::setupResetKinetics(engine);
+    if (Settings::isMDJobType())
+        setupResetKinetics(engine);
 
-    simulationBox::setupSimulationBox(engine);
+    setupSimulationBox(engine);
 
     setupCellList(engine);
 
-    if (settings::Settings::isMDJobType())
+    if (Settings::isMDJobType())
     {
         setupThermostat(engine);
 
         setupManostat(engine);
     }
 
-    if (settings::Settings::isMMActivated())
+    if (Settings::isMMActivated())
     {
         setupPotential(engine);
 
@@ -186,12 +197,12 @@ void setup::setupEngine(Engine &engine)
 
     setupConstraints(engine);
 
-    if (settings::Settings::isMDJobType())
+    if (Settings::isMDJobType())
         setupRingPolymer(engine);
 
-    if (settings::Settings::isQMMMActivated())
+    if (Settings::isQMMMActivated())
         setupQMMM(engine);
 
-    if (settings::Settings::isOptJobType())
+    if (Settings::isOptJobType())
         setupOptimizer(engine);
 }

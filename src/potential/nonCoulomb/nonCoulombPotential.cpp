@@ -21,3 +21,22 @@
 ******************************************************************************/
 
 #include "nonCoulombPotential.hpp"
+
+using namespace potential;
+
+/**
+ * @brief get the mixing rule
+ *
+ * @return MixingRule
+ */
+MixingRule NonCoulombPotential::getMixingRule() const { return _mixingRule; }
+
+/**
+ * @brief set the mixing rule
+ *
+ * @param mixingRule
+ */
+void NonCoulombPotential::setMixingRule(const MixingRule mixingRule)
+{
+    _mixingRule = mixingRule;
+}

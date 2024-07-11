@@ -24,22 +24,11 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include "manostat.hpp"   // for Manostat
-
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Box;             // forward declaration
-
-}   // namespace simulationBox
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "manostat.hpp"   // for Manostat
+#include "typeAliases.hpp"
 
 namespace manostat
 {
@@ -51,23 +40,27 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-      protected:
+       protected:
         double _tau;
         double _compressibility;
         double _dt;
 
-      public:
-        explicit BerendsenManostat(const double targetPressure, const double tau, const double compressibility);
+       public:
+        explicit BerendsenManostat(const double, const double, const double);
 
-        void applyManostat(simulationBox::SimulationBox &, physicalData::PhysicalData &) override;
+        void applyManostat(pq::SimBox &, pq::PhysicalData &) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
+        [[nodiscard]] virtual pq::tensor3D calculateMu() const;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] double getTau() const { return _tau; }
+        [[nodiscard]] double getTau() const;
+        [[nodiscard]] double getCompressibility() const;
+
+        [[nodiscard]] pq::ManostatType getManostatType() const final;
+        [[nodiscard]] pq::Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -78,20 +71,16 @@ namespace manostat
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
-      private:
+       private:
         size_t              _2DAnisotropicAxis;
         std::vector<size_t> _2DIsotropicAxes;
 
-      public:
-        SemiIsotropicBerendsenManostat(const double               targetPressure,
-                                       const double               tau,
-                                       const double               compressibility,
-                                       const size_t               anisotropicAxis,
-                                       const std::vector<size_t> &isotropicAxes)
-            : BerendsenManostat(targetPressure, tau, compressibility), _2DAnisotropicAxis(anisotropicAxis),
-              _2DIsotropicAxes(isotropicAxes){};
+       public:
+        SemiIsotropicBerendsenManostat(const double, const double, const double, const size_t, const std::vector<size_t> &);
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
+
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -102,10 +91,12 @@ namespace manostat
      */
     class AnisotropicBerendsenManostat : public BerendsenManostat
     {
-      public:
+       public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
+
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -113,15 +104,18 @@ namespace manostat
      *
      * @link https://doi.org/10.1063/1.448118
      *
-     * @details Full anisotropic means that also the angles between the axes are scaled not only the lengths
+     * @details Full anisotropic means that also the angles between the axes are
+     * scaled not only the lengths
      *
      */
     class FullAnisotropicBerendsenManostat : public BerendsenManostat
     {
-      public:
+       public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] pq::tensor3D calculateMu() const override;
+
+        [[nodiscard]] pq::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

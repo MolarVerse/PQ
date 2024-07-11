@@ -27,38 +27,43 @@
 #include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
 
+#include "typeAliases.hpp"
+
 namespace timings
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-    using ms       = std::chrono::milliseconds;
-    using ns       = std::chrono::nanoseconds;
-
-    using namespace std::chrono;
-
+    /**
+     * @class TimingsSection
+     *
+     * @brief Stores all timings information
+     *
+     * @details
+     *  stores internal simulation timings
+     *  as well as all timings corresponding to
+     *  execution time
+     *
+     */
     class TimingsSection
     {
        private:
         std::string _name;
         size_t      _steps = 0;
 
-        Time     _start;
-        Time     _end;
-        Duration _totalTime    = Duration::zero();
-        Duration _lastStepTime = Duration::zero();
+        pq::Time     _start;
+        pq::Time     _end;
+        pq::Duration _totalTime    = pq::Duration::zero();
+        pq::Duration _lastStepTime = pq::Duration::zero();
 
        public:
-        explicit TimingsSection(const std::string_view name) : _name(name) {}
+        explicit TimingsSection(const std::string_view name);
 
+        void beginTimer();
         void endTimer();
 
         [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;
         [[nodiscard]] double calculateAverageLoopTime() const;
 
-        [[nodiscard]] std::string getName() const { return _name; }
-
-        void beginTimer() { _start = high_resolution_clock::now(); }
+        [[nodiscard]] std::string getName() const;
     };
 
 }   // namespace timings

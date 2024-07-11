@@ -32,6 +32,12 @@
 #include "simulationBox.hpp"
 
 using namespace intraNonBonded;
+using namespace potential;
+using namespace customException;
+using namespace simulationBox;
+using namespace physicalData;
+
+using std::ranges::find_if;
 
 /**
  * @brief clones the IntraNonBonded object
@@ -56,12 +62,12 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
     auto findByMolType = [molType](const auto &intraNonBondedType)
     { return intraNonBondedType.getMolType() == molType; };
 
-    if (const auto it =
-            std::ranges::find_if(_intraNonBondedContainers, findByMolType);
-        it != _intraNonBondedContainers.end())
+    const auto it = find_if(_intraNonBondedContainers, findByMolType);
+
+    if (it != _intraNonBondedContainers.end())
         return std::to_address(it);
     else
-        throw customException::IntraNonBondedException(std::format(
+        throw IntraNonBondedException(std::format(
             "IntraNonBondedContainer with molType {} not found!",
             molType
         ));
@@ -72,12 +78,15 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
  *
  * @param box
  */
-void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
+void IntraNonBonded::fillIntraNonBondedMaps(SimulationBox &box)
 {
     auto fillSingleMap = [this](auto &molecule)
     {
+        const auto molType = molecule.getMoltype();
+
         auto *intraNonBondedContainer =
-            findIntraNonBondedContainerByMolType(molecule.getMoltype());
+            findIntraNonBondedContainerByMolType(molType);
+
         _intraNonBondedMaps.push_back(
             IntraNonBondedMap(&molecule, intraNonBondedContainer)
         );
@@ -93,24 +102,141 @@ void IntraNonBonded::fillIntraNonBondedMaps(simulationBox::SimulationBox &box)
  * @param physicalData
  */
 void IntraNonBonded::calculate(
-    const simulationBox::SimulationBox &box,
-    physicalData::PhysicalData         &physicalData
+    const SimulationBox &box,
+    PhysicalData        &physicalData
 )
 {
     startTimingsSection("IntraNonBonded");
 
-    auto calculateSingleContribution =
-        [this, &box, &physicalData](auto &intraNonBondedMap)
+    auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
     {
-        intraNonBondedMap.calculate(
+        intraMap.calculate(
             _coulombPotential.get(),
-            _nonCoulombPotential.get(),
+            _nonCoulombPot.get(),
             box,
             physicalData
         );
     };
 
-    std::ranges::for_each(_intraNonBondedMaps, calculateSingleContribution);
+    std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
 
     stopTimingsSection("IntraNonBonded");
+}
+
+/*************************
+ *                       *
+ * standard add methods  *
+ *                       *
+ *************************/
+
+/**
+ * @brief add a IntraNonBondedContainer to the _intraNonBondedContainers vector
+ *
+ * @param type
+ */
+void IntraNonBonded::addIntraNonBondedContainer(
+    const IntraNonBondedContainer &type
+)
+{
+    _intraNonBondedContainers.push_back(type);
+}
+
+/**
+ * @brief add a IntraNonBondedMap to the _intraNonBondedMaps vector
+ *
+ * @param interaction
+ */
+void IntraNonBonded::addIntraNonBondedMap(const IntraNonBondedMap &interaction)
+{
+    _intraNonBondedMaps.push_back(interaction);
+}
+
+/*****************************
+ *                           *
+ * standard activate methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief activate the IntraNonBonded object
+ */
+void IntraNonBonded::activate() { _isActivated = true; }
+
+/**
+ * @brief deactivate the IntraNonBonded object
+ */
+void IntraNonBonded::deactivate() { _isActivated = false; }
+
+/**
+ * @brief check if the IntraNonBonded object is active
+ *
+ * @return bool
+ */
+bool IntraNonBonded::isActive() const { return _isActivated; }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the nonCoulomb potential
+ *
+ * @param pot
+ */
+void IntraNonBonded::setNonCoulombPotential(
+    const std::shared_ptr<NonCoulombPotential> &pot
+)
+{
+    _nonCoulombPot = pot;
+}
+
+/**
+ * @brief set the Coulomb potential
+ *
+ * @param pot
+ */
+void IntraNonBonded::setCoulombPotential(
+    const std::shared_ptr<CoulombPotential> &pot
+)
+{
+    _coulombPotential = pot;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the IntraNonBondedType
+ *
+ * @return IntraNonBondedType
+ */
+IntraNonBondedType IntraNonBonded::getIntraNonBondedType() const
+{
+    return _intraNonBondedType;
+}
+
+/**
+ * @brief get the IntraNonBondedContainers
+ *
+ * @return vec_intra_container
+ */
+std::vector<IntraNonBondedContainer> IntraNonBonded::
+    getIntraNonBondedContainers() const
+{
+    return _intraNonBondedContainers;
+}
+
+/**
+ * @brief get the IntraNonBondedMaps
+ *
+ * @return std::vector<IntraNonBondedMap>
+ */
+std::vector<IntraNonBondedMap> IntraNonBonded::getIntraNonBondedMaps() const
+{
+    return _intraNonBondedMaps;
 }

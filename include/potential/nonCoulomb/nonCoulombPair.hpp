@@ -52,30 +52,15 @@ namespace potential
         double _forceCutOff  = 0.0;
 
        public:
-        explicit NonCoulombPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff
-        )
-            : _vanDerWaalsType1(vanDerWaalsType1),
-              _vanDerWaalsType2(vanDerWaalsType2),
-              _radialCutOff(cutOff){};
-
-        explicit NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
-
-        explicit NonCoulombPair(
-            const double cutoff,
-            const double energyCutoff,
-            const double forceCutoff
-        )
-            : _radialCutOff(cutoff),
-              _energyCutOff(energyCutoff),
-              _forceCutOff(forceCutoff){};
+        explicit NonCoulombPair(const size_t, const size_t, const double);
+        explicit NonCoulombPair(const double);
+        explicit NonCoulombPair(const double, const double, const double);
 
         virtual ~NonCoulombPair() = default;
 
         [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
-        [[nodiscard]] virtual std::pair<double, double> calculateEnergyAndForce(
+
+        [[nodiscard]] virtual std::pair<double, double> calculate(
             const double distance
         ) const = 0;
 
@@ -83,40 +68,22 @@ namespace potential
          * standard setters *
          ********************/
 
-        void setInternalType1(const size_t internalType1)
-        {
-            _internalType1 = internalType1;
-        }
-        void setInternalType2(const size_t internalType2)
-        {
-            _internalType2 = internalType2;
-        }
-        void setEnergyCutOff(const double energyCutoff)
-        {
-            _energyCutOff = energyCutoff;
-        }
-        void setForceCutOff(const double forceCutoff)
-        {
-            _forceCutOff = forceCutoff;
-        }
+        void setInternalType1(const size_t internalType1);
+        void setInternalType2(const size_t internalType2);
+        void setEnergyCutOff(const double energyCutoff);
+        void setForceCutOff(const double forceCutoff);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] size_t getVanDerWaalsType1() const
-        {
-            return _vanDerWaalsType1;
-        }
-        [[nodiscard]] size_t getVanDerWaalsType2() const
-        {
-            return _vanDerWaalsType2;
-        }
-        [[nodiscard]] size_t getInternalType1() const { return _internalType1; }
-        [[nodiscard]] size_t getInternalType2() const { return _internalType2; }
-        [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
-        [[nodiscard]] double getEnergyCutOff() const { return _energyCutOff; }
-        [[nodiscard]] double getForceCutOff() const { return _forceCutOff; }
+        [[nodiscard]] size_t getVanDerWaalsType1() const;
+        [[nodiscard]] size_t getVanDerWaalsType2() const;
+        [[nodiscard]] size_t getInternalType1() const;
+        [[nodiscard]] size_t getInternalType2() const;
+        [[nodiscard]] double getRadialCutOff() const;
+        [[nodiscard]] double getEnergyCutOff() const;
+        [[nodiscard]] double getForceCutOff() const;
     };
 
 }   // namespace potential

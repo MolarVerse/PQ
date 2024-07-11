@@ -114,7 +114,9 @@
         "nnls": "cpp",
         "nonlinearoptimization": "cpp",
         "sparseextra": "cpp",
-        "alignedvector3": "cpp"
+        "alignedvector3": "cpp",
+        "text_encoding": "cpp",
+        "numericaldiff": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -124,6 +126,7 @@
     "cSpell.words": [
         "Allman",
         "ANICC",
+        "aniso",
         "ARMIN",
         "ASEQM",
         "Berendsen",
@@ -148,6 +151,7 @@
         "guffdat",
         "GUFFDATEXCEPTION",
         "guffpath",
+        "Idxs",
         "impropers",
         "inputfile",
         "INPUTFILEEXCEPTION",
@@ -160,6 +164,7 @@
         "ldlt",
         "Lennard",
         "LINESEARCH",
+        "Logfile",
         "LOGOUTPUT",
         "LOOPTIME",
         "manostat",
@@ -206,6 +211,7 @@
         "sonarlint",
         "STDOUTOUTPUT",
         "STREQ",
+        "Symm",
         "timestep",
         "TOPOLOGYEXCEPTION",
         "tparam",
@@ -227,6 +233,6 @@
     },
     "python.formatting.provider": "none",
     "esbonio.sphinx.confDir": "",
-    "workbench.colorTheme": "Visual Studio Dark - C++",
+    "workbench.colorTheme": "Noctis",
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
 }

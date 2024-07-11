@@ -40,14 +40,14 @@ namespace mpi
      */
     class MPI
     {
-      private:
+       private:
         static inline size_t _rank = 0;
         static inline size_t _size;
 
         static void setupMPIDirectories();
         static void redirectOutput();
 
-      public:
+       public:
         static void init(int *argc, char ***argv);
         static void finalize();
 
@@ -71,16 +71,16 @@ namespace mpi
          * standard setter methods *
          ***************************/
 
-        static void setRank(const size_t &rank) { MPI::_rank = rank; }
-        static void setSize(const size_t &size) { MPI::_size = size; }
+        static void setRank(const size_t &rank);
+        static void setSize(const size_t &size);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static bool   isRoot() { return _rank == 0; }
-        [[nodiscard]] static size_t getRank() { return _rank; }
-        [[nodiscard]] static size_t getSize() { return _size; }
+        [[nodiscard]] static bool   isRoot();
+        [[nodiscard]] static size_t getRank();
+        [[nodiscard]] static size_t getSize();
     };
 }   // namespace mpi
 

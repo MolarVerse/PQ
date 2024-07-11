@@ -43,13 +43,15 @@
 
 using setup::QMMMSetup;
 using namespace settings;
+using namespace engine;
+using namespace customException;
 
 /**
  * @brief wrapper to build QMMMSetup object and call setup
  *
  * @param engine
  */
-void setup::setupQMMM(engine::Engine &engine)
+void setup::setupQMMM(Engine &engine)
 {
     if (!Settings::isQMMMActivated())
         return;
@@ -57,9 +59,16 @@ void setup::setupQMMM(engine::Engine &engine)
     engine.getStdoutOutput().writeSetup("QMMM setup");
     engine.getLogOutput().writeSetup("QMMM setup");
 
-    QMMMSetup qmmmSetup(dynamic_cast<engine::QMMMMDEngine &>(engine));
+    QMMMSetup qmmmSetup(dynamic_cast<QMMMMDEngine &>(engine));
     qmmmSetup.setup();
 }
+
+/**
+ * @brief Construct a new QMMMSetup object
+ *
+ * @param engine
+ */
+QMMMSetup::QMMMSetup(QMMMMDEngine &engine) : _engine(engine){};
 
 /**
  * @brief setup QMMM-MD
@@ -70,7 +79,7 @@ void QMMMSetup::setup()
     setupQMCenter();
     setupQMOnlyList();
     setupMMOnlyList();
-    throw customException::UserInputException("Not implemented");
+    throw UserInputException("Not implemented yet");
 }
 
 /**
@@ -141,11 +150,10 @@ std::vector<int> QMMMSetup::parseSelection(
     const std::string &key
 )
 {
-    std::string restartFileName = FileSettings::getStartFileName();
-    std::string moldescriptorFileName =
-        FileSettings::getMolDescriptorFileName();
+    std::string restartFile = FileSettings::getStartFileName();
+    std::string moldescFile = FileSettings::getMolDescriptorFileName();
 
-    std::vector<int> selectionVector;
+    std::vector<int> selectionVec;
 
     if (selection.empty())
         return {0};
@@ -156,28 +164,20 @@ std::vector<int> QMMMSetup::parseSelection(
 
 #ifdef PYTHON_ENABLED
     if (needsPython)
-        selectionVector = pq_python::select(
-            selection,
-            restartFileName,
-            moldescriptorFileName
-        );
+        selectionVec = pq_python::select(selection, restartFile, moldescFile);
 #else
 
     // check if string contains any characters that are not digits or commas
     if (needsPython)
     {
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "The value of key {} - {} contains characters that are not digits, "
-            "\"-\" or commas. The"
-            "current build of PQ was compiled without Python bindings, so the "
-            "{} string "
-            "must be a comma-separated list of integers, representing the atom "
-            "indices in the "
-            "restart file that should be treated as the {}. In order to use "
-            "the full selection "
-            "parser power of the PQAnalysis Python package, the PQ build must "
-            "be compiled with "
-            "Python bindings.",
+            "\"-\" or commas. The current build of PQ was compiled without "
+            "Python bindings, so the {} string must be a comma-separated list "
+            "of integers, representing the atom indices in the restart file "
+            "that should be treated as the {}. In order to use the full "
+            "selection parser power of the PQAnalysis Python package, the PQ "
+            "build must be compiled with Python bindings.",
             key,
             selection,
             key,
@@ -187,13 +187,13 @@ std::vector<int> QMMMSetup::parseSelection(
 #endif
 
     if (!needsPython)
-        selectionVector = parseSelectionNoPython(selection, key);
+        selectionVec = parseSelectionNoPython(selection, key);
 
-    std::ranges::sort(selectionVector);
-    auto ret = std::ranges::unique(selectionVector);
-    selectionVector.erase(ret.begin(), ret.end());
+    std::ranges::sort(selectionVec);
+    auto ret = std::ranges::unique(selectionVec);
+    selectionVec.erase(ret.begin(), ret.end());
 
-    return selectionVector;
+    return selectionVec;
 }
 
 /**
@@ -213,61 +213,54 @@ std::vector<int> QMMMSetup::parseSelectionNoPython(
 )
 {
     // parse the qm_center string
-    std::vector<int> selectionVector;
-    size_t           pos = 0;
+    std::vector<int> selectionVec;
+
+    size_t pos = 0;
     while (pos < selection.size())
     {
         size_t nextPos = selection.find(',', pos);
         if (nextPos == std::string::npos)
-        {
             nextPos = selection.size();
-        }
-        std::string_view atomIndexString(
-            selection.c_str() + pos,
-            nextPos - pos
-        );
+
+        std::string_view atomIndexStr(selection.c_str() + pos, nextPos - pos);
+
         // remove all whitespaces from the atom index string
-        atomIndexString.remove_prefix(std::min(
-            atomIndexString.find_first_not_of(" "),
-            atomIndexString.size()
-        ));
-        atomIndexString.remove_suffix(
-            atomIndexString.size() -
-            std::min(
-                atomIndexString.find_last_not_of(" ") + 1,
-                atomIndexString.size()
-            )
+        atomIndexStr.remove_prefix(
+            std::min(atomIndexStr.find_first_not_of(" "), atomIndexStr.size())
         );
+        const auto min = std::min(
+            atomIndexStr.find_last_not_of(" ") + 1,
+            atomIndexStr.size()
+        );
+        atomIndexStr.remove_suffix(atomIndexStr.size() - min);
 
         // check if the atom index string is a range of indices
-        size_t rangePos = atomIndexString.find('-');
+        size_t rangePos = atomIndexStr.find('-');
         if (rangePos != std::string::npos)
         {
-            int start =
-                std::stoi(std::string(atomIndexString.substr(0, rangePos)));
-            int end =
-                std::stoi(std::string(atomIndexString.substr(rangePos + 1)));
-            for (int i = start; i <= end; ++i)
-            {
-                selectionVector.push_back(i);
-            }
+            const auto startString = atomIndexStr.substr(0, rangePos);
+            const auto endString   = atomIndexStr.substr(rangePos + 1);
+            int        start       = std::stoi(std::string(startString));
+            int        end         = std::stoi(std::string(endString));
+
+            for (int i = start; i <= end; ++i) selectionVec.push_back(i);
+
             pos = nextPos + 1;
             continue;
         }
 
-        selectionVector.push_back(std::stoi(std::string(atomIndexString)));
+        selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
         pos = nextPos + 1;
     }
 
     // check if the selection vector is empty or contains duplicates
-    if (selectionVector.empty())
+    if (selectionVec.empty())
     {
         throw customException::InputFileException(std::format(
             "The value of key {} - {} is an empty list. The {} string must be "
-            "a comma-separated "
-            "list of integers or ranges, representing the atom indices in the "
-            "restart file that "
-            "should be treated as the {}.",
+            "a comma-separated list of integers or ranges, representing the "
+            "atom indices in the restart file that should be treated as the "
+            "{}.",
             key,
             selection,
             key,
@@ -275,5 +268,5 @@ std::vector<int> QMMMSetup::parseSelectionNoPython(
         ));
     }
 
-    return selectionVector;
+    return selectionVec;
 }
