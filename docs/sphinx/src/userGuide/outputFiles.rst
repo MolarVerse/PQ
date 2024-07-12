@@ -203,7 +203,8 @@ The following lines contain the element symbol, a running index just for human r
     :ref:`moldescriptorFile` setup file. In this first ``.rst`` file, the whole first line denoting the step number as well as the 
     columns denoting the velocities and forces can be omitted. If the parameters defining the box angles are left out, they are 
     assumed to be 90°. Also the information about the Nose Hoover chain thermostat is not needed for the first ``.rst`` file and 
-    can be omitted.
+    can be omitted. The whole line defining the box can be left out as well if the box is cubic and its density is provided *via* the
+    :ref:`densityKey` keyword in the ``.in`` file.
 
 .. _stressFile:
 
