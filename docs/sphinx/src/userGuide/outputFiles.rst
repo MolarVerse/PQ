@@ -43,24 +43,6 @@ The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
 of the atom type (as given in the :ref:`moldescriptorFile` file) and its charge in units of the elementary charge *e* for each atom in the system.
 
-.. _coordinateFile:
-
-***************
-Coordinate File
-***************
-
-**File Type:** ``.xyz``
-
-Stores the coordinates (*x*, *y*, *z*) of each atom for every frame of the simulation in the following format:
-    
-    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
-    | **line 2:** empty
-    | **line 3 to (n_atoms + 2):** atom_type_name *x* *y* *z*
-
-The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
-box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
-of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated Cartesian coordinates in Å for each atom in the system.
-
 .. _energyFile:
 
 ***********
@@ -248,6 +230,24 @@ Timing File
 **File Type:** ``.timings``
 
 Tracks the time **PQ** takes for executing the individual parts of the simulation.
+
+.. _trajectoryFile:
+
+***************
+Trajectory File
+***************
+
+**File Type:** ``.xyz``
+
+Stores the coordinates (*x*, *y*, *z*) of each atom for every frame of the simulation in the following format:
+    
+    | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
+    | **line 2:** empty
+    | **line 3 to (n_atoms + 2):** atom_type_name *x* *y* *z*
+
+The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
+box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
+of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated Cartesian coordinates in Å for each atom in the system.
 
 .. _velocityFile:
 

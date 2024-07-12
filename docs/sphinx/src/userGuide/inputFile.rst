@@ -14,28 +14,28 @@ General
 
 The concept of the input file is based on the definition of so-called "commands". A command in the input file can have one of the two following forms and is always case-insensitive:
 
-    1) key = value;
-    2) key = [value1, value2, ...];
+    1. key = value;
+    2. key = [value1, value2, ...];
 
 .. Note::
     The semicolon add the end of both command definitions is necessary, while the number of whitespace can be arbitrary at any position of the command as long as key and value are not split in parts.
 
-Command definition 1) represents a single value command, whereas definition 2) can be considered as a list of input values to which will always be represented with :code:`[]`.
+Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values to which will always be represented with ``[]``.
 
 Command Usage
 =============
 
-Due to the use of :code:`;` one line of the input file can contain multiple commands and blank lines will be ignored.
+Due to the use of ``;`` one line of the input file can contain multiple commands and blank lines will be ignored.
 
 Comments
 ========
 
-Every character following a :code:`#` will be ignored. The :code:`#` as a comment flag can be used also in all setup files - with some exceptions when contiguous input blocks are necessary.
+Every character following a ``#`` will be ignored. The ``#`` as a comment flag can be used also in all setup files - with some exceptions when contiguous input blocks are necessary.
 
 Types of Input Values
 =====================
 
-In the following sections the types of the input values will be denoted via :code:`{}`, where :code:`{[]}` represents a list of types:
+In the following sections the types of the input values will be denoted via ``{}``, where ``{[]}`` represents a list of types:
 
 +-------------+-------------------------------+
 |    Type     |          Description          |
@@ -64,13 +64,13 @@ In the following sections the types of the input values will be denoted via :cod
 .. _selectionType:
 
 .. Note::
-    The :code:`{selection}` type is used to select a specific atom or group of atoms. If the PQ software package was build including :code:`python3.12` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like :code:`{0, 1, 2}`. If a range of atom indices should be selected the user can use the following syntax :code:`{0-5, 10-15}` or :code:`{0..5, 10-15}` or :code:`{0..5, 10..15}`, where all would be equivalent to :code:`{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}`.
+    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
 
 Input Keys
 ==========
 
 .. Note::
-    Some of the following keys are necessary in the input file and are therefore marked with a :code:`*`. If there exists a default value for the possible options related to a key, they will be marked with :code:`->` after the command. Units of the values are given after the ``{}``.
+    Some of the following keys are necessary in the input file and are therefore marked with a ``*``. If there exists a default value for the possible options related to a key, they will be marked with ``->`` after the command. Units of the values are given after the ``{}``.
 
 ************
 General Keys
@@ -84,11 +84,11 @@ Jobtype
 
     jobtype* = {string} 
 
-With the :code:`jobtype` keyword the user can choose from different engines to perform (not only) MD simulations.
+With the ``jobtype`` keyword the user can choose from different engines to perform (not only) MD simulations.
 
 Possible options are:
 
-   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed via the :ref:`GUFF <guffdatFile>` formalism and/or the :code:`Amber force field`. Respective input file keys are found in the :ref:`mmKeys` section.
+   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed via the :ref:`GUFF <guffdatFile>` formalism and/or the ``Amber force field``. Respective input file keys are found in the :ref:`mmKeys` section.
 
    2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
@@ -109,7 +109,7 @@ Timestep
 
     timestep* = {double} fs
 
-With the :code:`timestep` keyword the time step in :code:`fs` of one molecular dynamics loop is set.
+With the ``timestep`` keyword the time step in ``fs`` of one molecular dynamics loop is set.
 
 .. _nstepKey:
 
@@ -121,7 +121,7 @@ NStep
 
     nstep* = {uint+}
 
-The :code:`ǹstep` keyword sets the total number of MD steps to be performed within this simulation run.
+The ``nstep`` keyword sets the total number of MD steps to be performed within this simulation run.
 
 .. _integratorKey:
 
@@ -133,7 +133,7 @@ Integrator
 
     integrator = {string} -> "v-verlet"
 
-With the :code:`integrator` keyword the user can choose the integrator type which should be applied.
+With the ``integrator`` keyword the user can choose the integrator type which should be applied.
 
 Possible options are:
 
@@ -149,7 +149,7 @@ Virial
 
     virial = {string} -> "molecular"
 
-With the :code:`virial` keyword the user can control if an intramolecular virial correction should be applied based on the definition of molecular units in the :ref:`moldescriptorFile` setup file.
+With the ``virial`` keyword the user can control if an intramolecular virial correction should be applied based on the definition of molecular units in the :ref:`moldescriptorFile` setup file.
 
 Possible options are:
 
@@ -167,7 +167,7 @@ Start File
 
     start_file* = {file}
 
-The :code:`start_file` keyword sets the name of the :ref:`restartFile` file for an MD simulation of any kind.
+The ``start_file`` keyword sets the name of the :ref:`restartFile` file for an MD simulation of any kind.
 
 .. _rpmdstartfileKey:
 
@@ -179,7 +179,7 @@ RPMD Start File
 
     rpmd_start_file = {file}
 
-The :code:`rpmd_start_file` keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.
+The ``rpmd_start_file`` keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.
 
 .. _generaloutputKeys:
 
@@ -187,7 +187,7 @@ General Output Keys
 ===================
 
 .. Note::
-    The **PQ** application has a special naming convention for output files. For every job type a certain set of :ref:`outputFiles` is written per default. If no output file names are given all prefixes of the output files will be named :code:`default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first :code:`.` character) and set it for all unspecified output files.
+    The **PQ** application has a special naming convention for output files. For every job type a certain set of :ref:`outputFiles` is written per default. If no output file names are given all prefixes of the output files will be named ``default.<ext>``. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first ``.`` character) and set it for all unspecified output files.
 
     This feature enables easier post-processing of data and deletion of output files as **PQ** does not overwrite any existing output files.
 
@@ -215,7 +215,7 @@ File Prefix
 
     file_prefix = {string}
 
-The :code:`file_prefix` keyword allows the user to set a common prefix name for all generated :ref:`outputFiles`.
+The ``file_prefix`` keyword allows the user to set a common prefix name for all generated :ref:`outputFiles`.
 
 .. _logfilekey:
 
@@ -237,9 +237,11 @@ The ``output_file`` keyword sets the name for the :ref:`logFile`, in which impor
 MD Output File Keys
 *******************
 
-All of the following output files presented in the MD Output Files section are wriiten during calculations using MD related jobtypes.
+All of the following output files are written during calculations using MD related jobtypes.
 
-Info_File
+.. _infofilekey:
+
+Info File
 =========
 
 .. admonition:: Key
@@ -247,11 +249,13 @@ Info_File
 
     info_file = {file} -> "default.info"
 
-The :code:`info_file` keyword sets the name for the info file, in which the most important physical properties of the last written step can be found.
+The ``info_file`` keyword sets the name for the :ref:`infoFile`, in which the most important physical properties of the last written step can be found.
 
 .. centered:: *default value* = "default.info"
 
-Energy_File
+.. _energyfilekey:
+
+Energy File
 ===========
 
 .. admonition:: Key
@@ -259,11 +263,13 @@ Energy_File
 
     energy_file = {file} -> "default.en"
 
-The :code:`energy_file` keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.
+The ``energy_file`` keyword sets the name for the :ref:`energyFile`, in which the most important physical properties of the full simulation can be found.
 
 .. centered:: *default value* = "default.en"
 
-Instant_Energy_File
+.. _instantenergyfilekey:
+
+Instant Energy File
 ===================
 
 .. admonition:: Key
@@ -271,47 +277,55 @@ Instant_Energy_File
 
     instant_energy_file = {file} -> "default.instant_en"
 
-The :code:`instant_energy_file` keyword sets the name for the instant energy file, in which the energy of the system at each step can be found.
+The ``instant_energy_file`` keyword sets the name for the :ref:`instantEnergyFile`, in which the most important physical properties of the full simulation can be found.
 
 .. centered:: *default value* = "default.instant_en"
 
-Rst_File
-========
+.. _rstfilekey:
+
+Restart File
+============
 
 .. admonition:: Key
     :class: tip
 
     rst_file = {file} -> "default.rst"
 
-The :code:`rst_file` keyword sets the name for the restart file, which contains all necessary information to restart (*i.e.* continue) the calculation from its timestamp.
+The ``rst_file`` keyword sets the name for the :ref:`restartFile`, which contains all necessary information to restart (*i.e.* continue) the calculation from its current timestamp.
 
 .. centered:: *default value* = "default.rst"
 
-Traj_File
-=========
+.. _trajectoryfilekey:
+
+Trajectory File
+===============
 
 .. admonition:: Key
     :class: tip
 
     traj_file = {file} -> "default.xyz"
 
-The :code:`traj_file` keyword sets the name for the trajectory file of the atomic positions.
+The ``traj_file`` keyword sets the name for the :ref:`trajectoryFile`, which stores the atomic positions throughout the MD simulation.
 
 .. centered:: *default value* = "default.xyz"
 
-Vel_File
-========
+.. _velocityfilekey:
+
+Velocity File
+=============
 
 .. admonition:: Key
     :class: tip
 
     vel_file = {file} -> "default.vel"
 
-The :code:`vel_file` keyword sets the name for the trajectory file of the atomic velocities.
+The ``vel_file`` keyword sets the name for the :ref:`velocityFile`, which stores the atomic velocities throughout the MD simulation.
 
 .. centered:: *default value* = "default.vel"
 
-Force_File
+.. _forcefilekey:
+
+Force File
 ==========
 
 .. admonition:: Key
@@ -319,11 +333,13 @@ Force_File
 
     force_file = {file} -> "default.force"
 
-The :code:`force_file` keyword sets the name for the trajectory file of the atomic forces.
+The ``force_file`` keyword sets the name for the :ref:`forceFile`, which stores the atomic forces throughout the MD simulation.
 
 .. centered:: *default value* = "default.force"
 
-Charge_File
+.. _chargefilekey:
+
+Charge File
 ===========
 
 .. admonition:: Key
@@ -331,11 +347,13 @@ Charge_File
 
     charge_file = {file} -> "default.chrg"
 
-The :code:`charge_file` keyword sets the name for the trajectory file of the atomic partial charges.
+The ``charge_file`` keyword sets the name for the :ref:`chargeFile`, which stores the atomic partial charges throughout the MD simulation.
 
 .. centered:: *default value* = "default.chrg"
 
-Momentum_File
+.. _momentumfilekey:
+
+Momentum File
 =============
 
 .. admonition:: Key
@@ -343,11 +361,13 @@ Momentum_File
 
     momentum_file = {file} -> "default.mom"
 
-The :code:`momentum_file` keyword sets the name for output file containing the total linear momentum of the system, the individual box momenta in each direction as well as the corresponding angular momenta.
+The ``momentum_file`` keyword sets the name for the :ref:`momentumFile`, which stores information about the total linear and total angular momentum throughout the MD simulation.
 
 .. centered:: *default value* = "default.mom"
 
-Virial_File
+.. _virialfilekey:
+
+Virial File
 ===========
 
 .. admonition:: Key
@@ -355,11 +375,13 @@ Virial_File
 
     virial_file = {file} -> "default.vir"
 
-The :code:`virial_file` keyword sets the name for the output file containing the virial tensor of the system.
+The ``virial_file`` keyword sets the name for the :ref:`virialFile`, which stores information about the virial tensor throughout the MD simulation.
 
 .. centered:: *default value* = "default.vir"
 
-Stress_File
+.. _stressfilekey:
+
+Stress File
 ===========
 
 .. admonition:: Key
@@ -367,11 +389,13 @@ Stress_File
 
     stress_file = {file} -> "default.stress"
 
-The :code:`stress_file` keyword sets the name for the output file containing the stress tensor of the system.
+The ``stress_file`` keyword sets the name for the :ref:`stressFile`, which stores information about the stress tensor throughout the MD simulation.
 
 .. centered:: *default value* = "default.stress"
 
-Box_File
+.. _boxfilekey:
+
+Box File
 ========
 
 .. admonition:: Key
@@ -379,7 +403,7 @@ Box_File
 
     box_file = {file} -> "default.box"
 
-The :code:`box_file` keyword sets the name for the output file containing the lattice parameters a, b, c, :math:`\alpha`, :math:`\beta`, :math:`\gamma`.
+The ``box_file`` keyword sets the name for the :ref:`boxFile`, which stores information about the simulation box throughout the simulation.
 
 .. centered:: *default value* = "default.box"
 
@@ -387,7 +411,7 @@ The :code:`box_file` keyword sets the name for the output file containing the la
 RPMD Output File Keys
 *********************
 
-All of the following output files presented in the RPMD Output Files section are wriiten during calculations using ring polymer MD related jobtypes. These files represents the trajectories of all individual beads.
+All of the following output files presented in the RPMD Output Files section are written during calculations using ring polymer MD related jobtypes. These files represents the trajectories of all individual beads.
 
 RPMD_Restart_File
 =================
@@ -397,7 +421,7 @@ RPMD_Restart_File
 
     rpmd_restart_file = {file} -> "default.rpmd.rst"
 
-The :code:`rpmd_restart_file` keyword sets the name for the ring polymer restart file, which contains all necessary information to restart (*i.e.* continue) the calculation from its timestamp.
+The ``rpmd_restart_file`` keyword sets the name for the ring polymer restart file, which contains all necessary information to restart (*i.e.* continue) the calculation from its timestamp.
 
 .. centered:: *default value* = "default.rpmd.rst"
 
@@ -409,7 +433,7 @@ RPMD_Traj_File
 
     rpmd_traj_file = {file} -> "default.rpmd.xyz"
 
-The :code:`rpmd_traj_file` keyword sets the name for the file containing positions of all atoms of each bead of the ring polymer trajectory.
+The ``rpmd_traj_file`` keyword sets the name for the file containing positions of all atoms of each bead of the ring polymer trajectory.
 
 .. centered:: *default value* = "default.rpmd.xyz"
 
@@ -421,7 +445,7 @@ RPMD_Vel_File
 
     rpmd_vel_file = {file} -> "default.rpmd.vel"
 
-The :code:`rpmd_vel_file` keyword sets the name for the file containing velocities of all atoms of each bead of the ring polymer trajectory.
+The ``rpmd_vel_file`` keyword sets the name for the file containing velocities of all atoms of each bead of the ring polymer trajectory.
 
 .. centered:: *default value* = "default.rpmd.vel"
 
@@ -433,7 +457,7 @@ RPMD_Force_File
 
     rpmd_force_file = {file} -> "default.rpmd.force"
 
-The :code:`rpmd_force_file` keyword sets the name for the file containing forces of all atoms of each bead of the ring polymer trajectory.
+The ``rpmd_force_file`` keyword sets the name for the file containing forces of all atoms of each bead of the ring polymer trajectory.
 
 .. centered:: *default value* = "default.rpmd.force"
 
@@ -445,7 +469,7 @@ RPMD_Charge_File
 
     rpmd_charge_file = {file} -> "default.rpmd.chrg"
 
-The :code:`rpmd_charge_file` keyword sets the name for the file containing partial charges of all atoms of each bead of the ring polymer trajectory.
+The ``rpmd_charge_file`` keyword sets the name for the file containing partial charges of all atoms of each bead of the ring polymer trajectory.
 
 .. centered:: *default value* = "default.rpmd.chrg"
 
@@ -457,7 +481,7 @@ RPMD_Energy_File
 
     rpmd_energy_file = {file} -> "default.rpmd.en"
 
-The :code:`rpmd_energy_file` keyword sets the name for the file containing relevant energy data for each ring polymer bead of the simulation.
+The ``rpmd_energy_file`` keyword sets the name for the file containing relevant energy data for each ring polymer bead of the simulation.
 
 .. centered:: *default value* = "default.rpmd.en"
 
@@ -467,7 +491,7 @@ The :code:`rpmd_energy_file` keyword sets the name for the file containing relev
 Setup File Keys
 ****************
 
-In order to setup certain calculations additional input files have to be used. The names of these setup files have to be specified in the 
+In order to set up certain calculations additional input files have to be used. The names of these setup files have to be specified in the 
 input file. Further information about these input files can be found in the :ref:`setupFiles` section.
 
 Moldesctiptor_File
@@ -522,10 +546,10 @@ Density
 
     density = {double} kgL⁻¹
 
-With the :code:`density` keyword the box dimension of the system can be inferred from the total mass of the simulation box.
+With the ``density`` keyword the box dimension of the system can be inferred from the total mass of the simulation box.
 
 .. Note::
-    This keyword implies that the simulation box has cubic shape. Furthermore, the :code:`density` keyword will be ignored if in the start file of a simulation any box information is given.
+    This keyword implies that the simulation box has cubic shape. Furthermore, the ``density`` keyword will be ignored if in the start file of a simulation any box information is given.
 
 RCoulomb
 ========
@@ -536,7 +560,7 @@ RCoulomb
 
     rcoulomb = {double} :math:`\mathrm{\mathring{A}}` -> 12.5 :math:`\mathrm{\mathring{A}}`
 
-With the :code:`rcoulomb` keyword the radial cut-off in :math:`\mathrm{\mathring{A}}` of Coulomb interactions for MM-MD type simulations can be set. If pure QM-MD type simulations are applied this keyword will be ignored and the value will be set to 0 :math:`\mathrm{\mathring{A}}`.
+With the ``rcoulomb`` keyword the radial cut-off in :math:`\mathrm{\mathring{A}}` of Coulomb interactions for MM-MD type simulations can be set. If pure QM-MD type simulations are applied this keyword will be ignored and the value will be set to 0 :math:`\mathrm{\mathring{A}}`.
 
 .. centered:: *default value* = 12.5 :math:`\mathrm{\mathring{A}}` (for MM-MD type simulations)
 
