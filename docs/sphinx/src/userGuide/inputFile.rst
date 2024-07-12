@@ -70,7 +70,7 @@ Input Keys
 ==========
 
 .. Note::
-    Some of the following keys are necessary in the input file and are therefore marked with a :code:`*`. If there exists a default value for the possible options related to a key, they will be marked with :code:`->` after the command.
+    Some of the following keys are necessary in the input file and are therefore marked with a :code:`*`. If there exists a default value for the possible options related to a key, they will be marked with :code:`->` after the command. Units of the values are given after the ``{}``.
 
 ************
 General Keys
@@ -84,20 +84,22 @@ Jobtype
 
     jobtype* = {string} 
 
-With the :code:`jobtype` keyword the user can choose out of different engines to perform (not only) MD simulations.
+With the :code:`jobtype` keyword the user can choose from different engines to perform (not only) MD simulations.
 
 Possible options are:
 
-   1) **mm-md** - represents a full molecular mechanics molecular dynamics simulation either performed via the :code:`Guff` formalism or the :code:`Amber force field`
+   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed via the :ref:`GUFF <guffdatFile>` formalism and/or the :code:`Amber force field`. Respective input file keys are found in the :ref:`mmKeys` section.
 
-   2) **qm-md** - represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` keywords section.
+   2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
-   3) **qm-rpmd** - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringPolymerMDKeys` keywords section
+   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringPolymerMDKeys` section
 
-   4) **qmmm-md** - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
 
-   5) **opt** - represents a geometry optimization calculation. (Not implemented yet)
+   5. **opt** - Represents a geometry optimization calculation. (Not implemented yet)
 
+
+.. _timestepKey:
 
 Timestep
 ========
@@ -107,7 +109,9 @@ Timestep
 
     timestep* = {double} fs
 
-With the :code:`timestep` keyword the time step in :code:`fs` of one molecular dynamics loop can be set.
+With the :code:`timestep` keyword the time step in :code:`fs` of one molecular dynamics loop is set.
+
+.. _nstepKey:
 
 NStep
 =====
@@ -117,7 +121,9 @@ NStep
 
     nstep* = {uint+}
 
-The :code:`ǹstep` keyword sets the total amount of MD steps to be performed within the next simulation run.
+The :code:`ǹstep` keyword sets the total number of MD steps to be performed within this simulation run.
+
+.. _integratorKey:
 
 Integrator
 ==========
@@ -131,7 +137,9 @@ With the :code:`integrator` keyword the user can choose the integrator type whic
 
 Possible options are:
 
-   1) **v-verlet** (default) - represents the Velocity-Verlet integrator 
+   1. **v-verlet** (default) - represents the Velocity-Verlet integrator 
+
+.. _virialKey:
 
 Virial
 ======
@@ -141,15 +149,17 @@ Virial
 
     virial = {string} -> "molecular"
 
-With the :code:`virial` keyword the user can control if an intramolecular virial correction should be applied on the basis of molecular units definitions form the moldescriptor file.
+With the :code:`virial` keyword the user can control if an intramolecular virial correction should be applied based on the definition of molecular units in the :ref:`moldescriptorFile` setup file.
 
 Possible options are:
 
-   1) **molecular** (default) - to the resulting virial from the force contributions an intramolecular correction will be applied.
+   1. **molecular** (default) - an intramolecular correction will be applied to the resulting virial from the force contributions
 
-   2) **atomic** - no intramolecular correction to the resulting virial will be applied
+   2. **atomic** - no intramolecular correction to the resulting virial will be applied
 
-Start_File
+.. _startfileKey:
+
+Start File
 ==========
 
 .. admonition:: Key
@@ -157,9 +167,11 @@ Start_File
 
     start_file* = {file}
 
-The :code:`start_file` keyword sets the name of the start file for an MD simulation of any kind.
+The :code:`start_file` keyword sets the name of the :ref:`restartFile` file for an MD simulation of any kind.
 
-RPMD_Start_File
+.. _rpmdstartfileKey:
+
+RPMD Start File
 ===============
 
 .. admonition:: Key
@@ -169,31 +181,33 @@ RPMD_Start_File
 
 The :code:`rpmd_start_file` keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.
 
+.. _generaloutputKeys:
+
 General Output Keys
 ===================
 
 .. Note::
-    The PQ application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named :code:`default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first :code:`.` character) and set it with the respective extension for all unspecified output files.
+    The **PQ** application has a special naming convention for output files. For every job type a certain set of :ref:`outputFiles` is written per default. If no output file names are given all prefixes of the output files will be named :code:`default.<ext>`. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (*i.e.* string before the first :code:`.` character) and set it for all unspecified output files.
 
-    This feature enables easier post-processing of data and also easier deletion of all output files as PQ does not overwrite any existing output files and will throw an error.
+    This feature enables easier post-processing of data and deletion of output files as **PQ** does not overwrite any existing output files.
 
 .. _outputfreqKey:
 
-Output_Freq
-===========
+Output Frequency
+================
 
 .. admonition:: Key
     :class: tip
 
     output_freq = {uint} -> 1
 
-The :code:`output_freq` keyword sets the frequency (*i.e.* every n-th step) of how often the application should write into the output files. For a complete dry run without any output files it is also possible to set it to :code:`0`.
+The ``output_freq`` keyword sets the frequency (*i.e.* every n-th step) of how often the application should write into the :ref:`outputFiles`. For a complete dry run without any output files the output frequency can be set to ``0``.
 
 .. centered:: *default value* = 1
 
 .. _fileprefixkey:
 
-File_Prefix
+File Prefix
 ===========
 
 .. admonition:: Key
@@ -201,16 +215,21 @@ File_Prefix
 
     file_prefix = {string}
 
-The :code:`file_prefix` keyword allows the user to set a common prefix name for all generated output files. The resulting names of the output files should be self-explanatory according to their unique file extension.
+The :code:`file_prefix` keyword allows the user to set a common prefix name for all generated :ref:`outputFiles`.
 
-Output_File
+.. _logfilekey:
+
+Log File
 ===========
 
-    output_file = {file} -> "default.out"
+.. admonition:: Key
+    :class: tip
 
-The :code:`output_file` keyword sets the name for the log file, in which all important information about the performed calculation can be found. 
+    output_file = {file} -> "default.log"
 
-.. centered:: *default value* = "default.out"
+The ``output_file`` keyword sets the name for the :ref:`logFile`, in which important information about the performed calculation can be found. 
+
+.. centered:: *default value* = "default.log"
 
 .. _mdoutputfilekeys:
 
@@ -942,6 +961,8 @@ Distance-Constraints
     distance-constraints = {string} -> "off"
 
 With the :code:`distance-constraints` keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the :ref:`topologyFile`.
+
+.. _mmKeys:
 
 *******
 MM Keys

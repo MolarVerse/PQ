@@ -6,7 +6,7 @@ Output Files
 
 The following output files are printed by **PQ**. The individual file names can be changed *via* the corresponding 
 :ref:`mdoutputfilekeys` in the ``.in`` file. Alternatively, a common prefix for all output files can be provided using the
-:ref:`fileprefixkey` key. 
+:ref:`file_prefix <fileprefixkey>` key. 
 
 All data blocks shown for a single simulation step or frame are concatenated without blank lines in the output files.
 
