@@ -61,7 +61,7 @@ The GUFF file defines the Coulomb potential *V*:sub:`Coulomb` *via* equation :eq
         :label: guffNonCoulombEquation
         
 The moltype and atom_type_index are defined as in the :ref:`moldescriptorFile` file.
-Utilizing equation :eq:`guffNonCoulombEquation` Lennard-Jones, Buckingham and Morse potentials, as well as arbitrary combinations of them can be used 
+Utilizing equation :eq:`guffNonCoulombEquation`, Lennard-Jones, Buckingham and Morse potentials, as well as arbitrary combinations of them can be used 
 for the description of the non-Coulombic interactions. The parameter *r*:sub:`cut` gives the cutoff radius for the non-bonded interactions. Distances 
 are given in Å and energies in kcal/mol. The units of the parameters are chosen accordingly.
 
