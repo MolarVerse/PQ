@@ -40,6 +40,8 @@ namespace potential
        public:
         ~PotentialBruteForce() override;
 
+        void calculateForces(const std::vector<pq::Molecule>, pq::SimBox &, pq::PhysicalData &, pq::CellList &)
+            override;
         void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
             override;
 

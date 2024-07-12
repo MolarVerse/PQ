@@ -64,22 +64,26 @@ ASEQMRunner::ASEQMRunner()
         throw;
     }
 }
-
 /**
  * @brief run the ASE QM calculation
  *
+ * @param molecules
  * @param simBox
  * @param physicalData
  *
- * @throw QMRunnerException if the calculation takes too long
+ * @throw QMRunnerException if the calculation takes too long for a specific selection of molecules
  */
-void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ASEQMRunner::run(const std::vector<Molecule> molecules, SimulationBox &simBox, PhysicalData &physicalData)
 {
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
+
+    auto partitionBox = simBox.selectPartitionBox(molecules);
+
+
     startTimingsSection("Build ASE Atoms");
-    buildAseAtoms(simBox);
+    buildAseAtoms(*partitionBox);
     stopTimingsSection("Build ASE Atoms");
 
     startTimingsSection("Execute ASE QM");
@@ -87,10 +91,24 @@ void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     stopTimingsSection("Execute ASE QM");
 
     startTimingsSection("Collect ASE Data");
-    collectData(simBox, physicalData);
+    collectData(*partitionBox, physicalData);
     stopTimingsSection("Collect ASE Data");
 
     timeoutThread.request_stop();
+}
+
+/**
+ * @brief run the ASE QM calculation
+ *
+ * @param simBox
+ * @param physicalData
+ *
+ * @throw QMRunnerException if the calculation takes too long for all molecules
+ */
+void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+{
+    auto molecules = simBox.getMolecules();
+    run(molecules, simBox, physicalData);
 }
 
 /**

@@ -48,7 +48,9 @@ namespace QM
         virtual ~QMRunner() = default;
 
         void throwAfterTimeout(const std::stop_token stopToken) const;
+        virtual void run(const std::vector<pq::Molecule> molecules, pq::SimBox &, pq::PhysicalData &) = 0;
         virtual void run(pq::SimBox &, pq::PhysicalData &) = 0;
+
     };
 }   // namespace QM
 

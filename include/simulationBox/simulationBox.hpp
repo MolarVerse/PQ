@@ -95,6 +95,8 @@ namespace simulationBox
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
+        [[nodiscard]] std::shared_ptr<SimulationBox> selectPartitionBox(const std::vector<Molecule> molecules) const;
+
         void checkCoulRadiusCutOff(const customException::ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 

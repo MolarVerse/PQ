@@ -40,8 +40,12 @@ namespace potential
        public:
         ~PotentialCellList() override;
 
+
+        void calculateForces(const std::vector<pq::Molecule> molecules,pq::SimBox &, pq::PhysicalData &, pq::CellList &)
+            override;
         void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
             override;
+        
 
         pq::SharedPotential clone() const override;
     };

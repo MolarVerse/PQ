@@ -40,32 +40,36 @@ PotentialBruteForce::~PotentialBruteForce() = default;
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for brute force
- * routine
- *
+ * routine for specific molecules
+ * 
+ * @param molecules
  * @param simBox
  * @param physicalData
  */
 inline void PotentialBruteForce::
-    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+    calculateForces(const std::vector<pq::Molecule> molecules, SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    auto partitionBox = simBox.selectPartitionBox(molecules);
+
+
+    const auto box = partitionBox->getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    const size_t nMol = simBox.getNumberOfMolecules();
+    const size_t nMol =  partitionBox->getNumberOfMolecules();
 
     for (size_t mol_i = 0; mol_i < nMol; ++mol_i)
     {
-        auto        &molecule_i    = simBox.getMolecule(mol_i);
+        auto        &molecule_i    = partitionBox->getMolecule(mol_i);
         const size_t nAtomsInMol_i = molecule_i.getNumberOfAtoms();
 
         for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
         {
-            auto        &molecule_j    = simBox.getMolecule(mol_j);
+            auto        &molecule_j    = partitionBox->getMolecule(mol_j);
             const size_t nAtomsInMol_j = molecule_j.getNumberOfAtoms();
 
             for (size_t atom1 = 0; atom1 < nAtomsInMol_i; ++atom1)
@@ -92,6 +96,20 @@ inline void PotentialBruteForce::
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+/**
+ * @brief calculates forces, coulombic and non-coulombic energy for brute force 
+ * routine for all molecules
+ *
+ * @param simBox
+ * @param physicalData
+ */
+inline void PotentialBruteForce::
+    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList & cellList)
+{
+    auto molecules = simBox.getMolecules();
+    calculateForces(molecules, simBox, physicalData, cellList);
 }
 
 /**

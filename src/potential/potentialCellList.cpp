@@ -42,7 +42,7 @@ PotentialCellList::~PotentialCellList() = default;
 
 /**
  * @brief calculates forces, coulombic and non-coulombic energy for cell list
- * routine
+ * routine for specific molecules
  *
  * @details first loops over all possible combinations of molecules within the
  * same cell, then over all possible molecule combinations between adjacent
@@ -50,12 +50,14 @@ PotentialCellList::~PotentialCellList() = default;
  * the two molecules are the same to avoid double counting. Due to the cutoff
  * criterion which is based on atoms a molecule can be found in more than only
  * one cell.
- *
+ * 
+ * @param molecules
  * @param simBox
  * @param physicalData
  * @param cellList
  */
 inline void PotentialCellList::calculateForces(
+    const std::vector<pq::Molecule> molecules,
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
@@ -63,7 +65,9 @@ inline void PotentialCellList::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    auto partitionBox = simBox.selectPartitionBox(molecules);
+
+    const auto box = partitionBox->getBoxPtr();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
@@ -146,6 +150,33 @@ inline void PotentialCellList::calculateForces(
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+
+/**
+ * @brief calculates forces, coulombic and non-coulombic energy for cell list
+ * routine
+ *
+ * @details first loops over all possible combinations of molecules within the
+ * same cell, then over all possible molecule combinations between adjacent
+ * cells. For the second loop over different cells, it is necessary to check if
+ * the two molecules are the same to avoid double counting. Due to the cutoff
+ * criterion which is based on atoms a molecule can be found in more than only
+ * one cell.
+ *
+ * @param simBox
+ * @param physicalData
+ * @param cellList
+ */
+inline void PotentialCellList::calculateForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    auto molecules = simBox.getMolecules();
+    calculateForces(molecules, simBox, physicalData, cellList);
+
 }
 
 /**

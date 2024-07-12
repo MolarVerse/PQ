@@ -95,6 +95,45 @@ std::shared_ptr<SimulationBox> SimulationBox::clone() const
 }
 
 /**
+ * @brief get a partition of simulationBox object
+ * 
+ * @param molecules
+ *
+ * @return std::shared_ptr<SimulationBox>
+ */
+std::shared_ptr<SimulationBox> SimulationBox::selectPartitionBox(const std::vector<Molecule> molecules) const
+{
+    
+ 
+    auto partitionBox = std::make_shared<SimulationBox>();
+  
+    for (const auto& molecule : molecules)
+    {
+        const auto nAtoms = molecule.getNumberOfAtoms();
+        // TODO
+        // for (size_t i = 0; i < nAtoms; ++i)
+        // {
+        //     const auto atom = molecule.getAtom(i);
+        //     partitionBox->addAtom(atom);
+        // }
+
+        partitionBox->addMolecule(molecule);
+    }
+
+    
+
+    // partitionBox->calculateDegreesOfFreedom();
+    // partitionBox->calculateTotalMass();
+    // partitionBox->calculateCenterOfMass();
+    // partitionBox->calculateCenterOfMassMolecules();
+    // partitionBox->calculateDensity();
+
+
+    return partitionBox;
+
+}
+
+/**
  * @brief finds molecule by moleculeType if (size_t)
  *
  * @param moleculeType

@@ -45,14 +45,23 @@ using namespace customException;
 using namespace settings;
 using namespace constants;
 
+
+
+
+
 /**
- * @brief run the qm engine
- *
+ * @brief run the qm engine with a specific selection of molecules
+ * 
+ * @param molecules
  * @param simBox
  */
-void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ExternalQMRunner::run(const std::vector<Molecule> molecules, SimulationBox &simBox, PhysicalData &physicalData)
 {
-    writeCoordsFile(simBox);
+
+    
+    auto partitionBox = simBox.selectPartitionBox(molecules);
+
+    writeCoordsFile(*partitionBox);
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
@@ -61,9 +70,23 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
 
     timeoutThread.request_stop();
 
-    readForceFile(simBox, physicalData);
-    readStressTensor(simBox.getBox(), physicalData);
+    readForceFile(*partitionBox, physicalData);
+    readStressTensor(partitionBox->getBox(), physicalData);
 }
+
+
+/**
+ * @brief run the qm engine with all molecules
+ *
+ * @param simBox
+ */
+void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+{   
+
+    auto molecules = simBox.getMolecules();
+    run(molecules, simBox, physicalData);
+}
+
 
 /**
  * @brief reads the force file (including qm energy) and sets the forces of the

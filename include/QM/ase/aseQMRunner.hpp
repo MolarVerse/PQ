@@ -57,7 +57,9 @@ namespace QM
         ASEQMRunner();
         ~ASEQMRunner() override = default;
 
+        void run(const std::vector<pq::Molecule> molecules, pq::SimBox &, pq::PhysicalData &) override;
         void run(pq::SimBox &, pq::PhysicalData &) override;
+       
         void buildAseAtoms(const pq::SimBox &);
         void execute();
 

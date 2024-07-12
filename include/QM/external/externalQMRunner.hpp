@@ -43,8 +43,11 @@ namespace QM
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
-
+        
+        void         run(const std::vector<pq::Molecule> molecules, pq::SimBox &, pq::PhysicalData &) override;
         void         run(pq::SimBox &, pq::PhysicalData &) override;
+        
+
         virtual void execute() = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
