@@ -67,6 +67,8 @@ namespace simulationBox
         void setBoxAngles(const pq::Vec3D &boxAngles);
         void setBoxDimensions(const pq::Vec3D &boxDimensions) override;
 
+        [[nodiscard]] double getMinimalBoxDimension() const override;
+
         [[nodiscard]] double cosAlpha() const;
         [[nodiscard]] double cosBeta() const;
         [[nodiscard]] double cosGamma() const;
