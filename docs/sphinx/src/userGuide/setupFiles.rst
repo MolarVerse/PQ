@@ -29,7 +29,7 @@ atom type, the MM point charge in units of *e* and the global van der Waals inde
 irrelevant for internal calculations, but will be printed to various :ref:`outputFiles`. The index of the atom type is relevant for 
 defining intra- and intermolecular non-bonded interactions in the :ref:`guffdatFile`. The point charge as well as the global van der Waals 
 type are only relevant for MM atoms that are not treated *via* the :ref:`guffdatFile`. The global van der Waals index is used to assign 
-identical atoms from different moltypes to the same atom type.
+identical elements exposed to a similar chemical environment from different moltypes to the same atom type.
 
 .. Attention::
 
@@ -37,7 +37,7 @@ identical atoms from different moltypes to the same atom type.
     system and/or pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file. If no moldescriptor file is
     provided, the element symbol (as given by the :ref:`restartFile`) will be printed to the output files instead of the 
     atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be 
-    set to 0 and the global_vdW_type can be omitted. Moreover, the  For MM calculations that utilize just the :ref:`guffdatFile`, the 
+    set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the 
     point_charge can be set to 0 and the global_vdW_type can be omitted.
 
 .. _guffdatFile:
