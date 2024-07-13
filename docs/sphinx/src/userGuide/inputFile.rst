@@ -629,7 +629,7 @@ Temperature
 
     temp = {double} K
 
-With the ``temp`` keyword the target temperature in :code:`K` of the system can be set. 
+With the ``temp`` keyword the target temperature in ``K`` of the system can be set. 
 
 .. Note::
     This keyword is not restricted to the use of any temperature coupling method, as it is used *e.g.* also for the initialization of Boltzmann distributed velocities or the reset of the system temperature.
@@ -658,7 +658,9 @@ End Temperature
 
 The ``end_temp`` keyword is a synonym for the ``temp`` keyword and can be used to set the target temperature of the system. It cannot be used in combination with the ``temp`` keyword.
 
-Temperature_Ramp_Steps
+.. _temperaturerampstepsKey:
+
+Temperature Ramp Steps
 ======================
 
 .. admonition:: Key
@@ -666,19 +668,21 @@ Temperature_Ramp_Steps
 
     temp_ramp_steps = {uint+}
 
-With the :code:`temp_ramp_steps` keyword the user can specify the number of steps for the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.
+With the ``temp_ramp_steps`` keyword the user can specify the number of steps for the temperature ramping from the ``start_temp`` to the ``temp`` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.
 
 .. centered:: *default value* = full simulation time
 
-Temperature_Ramp_Frequency
+.. _temperatureRampFrequencyKey:
+
+Temperature Ramp Frequency
 ==========================
 
 .. admonition:: Key
     :class: tip
 
-    temp_ramp_freq = {uint+} -> 1
+    temp_ramp_frequency = {uint+} -> 1
 
-With the :code:`temp_ramp_freq` keyword the user can specify the frequency of the temperature ramping from the :code:`start_temp` to the :code:`temp` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
+With the ``temp_ramp_frequency`` keyword the user can specify the frequency of the temperature ramping from the ``start_temp`` to the ``temp`` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
 
 .. centered:: *default value* = 1 step
 
@@ -693,22 +697,24 @@ Thermostat
 
     thermostat = {string} -> "none"
 
-With the :code:`thermostat` keyword the temperature coupling method can be chosen.
+With the ``thermostat`` keyword the temperature coupling method can be chosen.
 
 Possible options are:
 
-   1) **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
+   1. **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
-   2) **berendsen** - the Berendsen weak coupling thermostat
+   2. **berendsen** - the Berendsen weak coupling thermostat
 
-   3) **velocity_rescaling** - the stochastic velocity rescaling thermostat
+   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat
 
-   4) **langevin** - temperature coupling *via* stochastic Langevin dynamics
+   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics
 
-   5) **nh-chain** - temperature coupling *via* Nose Hoover extended Lagrangian 
+   5. **nh-chain** - temperature coupling *via* Nose Hoover extended Lagrangian 
 
-T_Relaxation
-============
+.. _temperatureRelaxationTimeKey:
+
+Temperature Relaxation Time
+===========================
 
 This keyword is used in combination with the Berendsen and velocity rescaling thermostat.
 
@@ -717,9 +723,11 @@ This keyword is used in combination with the Berendsen and velocity rescaling th
 
     t_relaxation = {double} ps -> 0.1 ps
 
-With the :code:`t_relaxation` keyword the relaxation time in :code:`ps` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set.
+With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set.
 
 .. centered:: *default value* = 0.1 ps
+
+.. _frictionKey:
 
 Friction
 ========
@@ -729,13 +737,13 @@ Friction
 
     friction = {double} ps⁻¹ -> 0.1 ps⁻¹
 
-With the :code:`friction` keyword the friction in :code:`ps⁻¹` applied in combination with the Langevin thermostat can be set.
+With the ``friction`` keyword the friction in ``ps⁻¹`` applied in combination with the Langevin thermostat can be set.
 
 .. centered:: *default value* = 0.1 ps⁻¹
 
 .. _nhchainlenghtKey:
 
-NH-Chain_Length
+NH-Chain Length
 ===============
 
 .. admonition:: Key
@@ -743,11 +751,13 @@ NH-Chain_Length
 
     nh-chain_length = {uint+} -> 3
 
-With the :code:`nh-chain_length` keyword the length of the chain for temperature control *via* an extended Nose-Hoover Lagrangian can be set.
+With the ``nh-chain_length`` keyword the length of the chain for temperature control *via* an extended Nose-Hoover Lagrangian can be set.
 
 .. centered:: *default value* = 3
 
-Coupling_Frequency
+.. _couplingFrequencyKey:
+
+Coupling Frequency
 ==================
 
 .. admonition:: Key
@@ -755,7 +765,7 @@ Coupling_Frequency
 
     coupling_frequency = {double} cm⁻¹ -> 1000 cm⁻¹
 
-With the :code:`coupling_frequency` keyword the coupling frequency of the Nose-Hoover chain in :code:`cm⁻¹` can be set.
+With the ``coupling_frequency`` keyword the coupling frequency of the Nose-Hoover chain in ``cm⁻¹`` can be set.
 
 .. centered:: *default value* = 1000 cm⁻¹
 
@@ -765,6 +775,8 @@ With the :code:`coupling_frequency` keyword the coupling frequency of the Nose-H
 Pressure Coupling Keys
 **********************
 
+.. _pressureKey:
+
 Pressure
 ========
 
@@ -773,10 +785,12 @@ Pressure
 
     pressure = {double} bar
 
-With the :code:`pressure` keyword the target pressure in :code:`bar` of the system can be set. 
+With the ``pressure`` keyword the target pressure in ``bar`` of the system can be set. 
 
 .. Note::
     This keyword is only used if a manostat for controlling the pressure is explicitly defined.
+
+.. _manostatKey:
 
 Manostat
 ========
@@ -787,18 +801,20 @@ Manostat
 
     manostat = {string} -> "none"
 
-With the :code:`manostat` keyword the type of the pressure coupling can be chosen.
+With the ``manostat`` keyword the type of pressure coupling can be chosen.
 
 Possible options are:
 
-   1) **none** (default) - no pressure coupling is applied (*i.e.* constant volume)
+   1. **none** (default) - no pressure coupling is applied (*i.e.* constant volume)
 
-   2) **berendsen** - Berendsen weak coupling manostat
+   2. **berendsen** - Berendsen weak coupling manostat
 
-   3) **stochastic_rescaling** - stochastic cell rescaling manostat
+   3. **stochastic_rescaling** - stochastic cell rescaling manostat
 
-P_Relaxation
-============
+.. _pressureRelaxationKey:
+
+Pressure Relaxation
+===================
 
 This keyword is used in combination with the Berendsen and stochastic cell rescaling manostat.
 
@@ -807,9 +823,11 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 
     p_relaxation = {double} ps -> 0.1 ps
 
-With the :code:`p_relaxation` keyword the relaxation time in :code:`ps` (*i.e.* :math:`\tau`) of the Berendsen or stochastic cell rescaling manostat is set.
+With the ``p_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic cell rescaling manostat is set.
 
 .. centered:: *default value* = 0.1 ps
+
+.. _compressibilityKey:
 
 Compressibility
 ===============
@@ -821,9 +839,11 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 
     compressibility = {double} bar⁻¹ -> 4.591e-5 bar⁻¹
 
-With the :code:`compressibility` keyword the user can specify the compressibility of the target system in :code:`bar⁻¹` for the Berendsen and stochastic cell rescaling manostat.
+With the ``compressibility`` keyword the user can specify the compressibility of the target system in ``bar⁻¹`` for the Berendsen and stochastic cell rescaling manostat.
 
 .. centered:: *default value* = 4.591e-5 bar⁻¹ (compressibility of water)
+
+.. _isotropyKey:
 
 Isotropy
 ========
@@ -833,25 +853,29 @@ Isotropy
 
     isotropy = {string} -> "isotropic"
 
-With the :code:`isotropy` keyword the isotropy of the pressure coupling for all manostat types is controlled.
+With the ``isotropy`` keyword the isotropy of the pressure coupling for all manostat types is controlled.
 
 Possible options are:
 
-   1) **isotropic** (default) - all axes are scaled with the same scaling factor
+   1. **isotropic** (default) - all axes are scaled with the same scaling factor
 
-   2) **xy** - semi-isotropic settings, with axes :code:`x` and :code:`y` coupled isotropic
+   2. **xy** - semi-isotropic settings, with axes ``x`` and ``y`` coupled isotropic
 
-   3) **xz** - semi-isotropic settings, with axes :code:`x` and :code:`z` coupled isotropic
+   3. **xz** - semi-isotropic settings, with axes ``x`` and ``z`` coupled isotropic
 
-   4) **yz** - semi-isotropic settings, with axes :code:`y` and :code:`z` coupled isotropic
+   4. **yz** - semi-isotropic settings, with axes ``y`` and ``z`` coupled isotropic
 
-   5) **anisotropic** - all axes are coupled in an anisotropic way
+   5. **anisotropic** - all axes are coupled in an anisotropic way
 
-   6) **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
+   6. **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
+
+.. _resetKineticsKeys:
 
 *******************
 Reset Kinetics Keys
 *******************
+
+.. _nscaleKey:
 
 NScale
 ======
@@ -861,12 +885,14 @@ NScale
 
     nscale = {uint} -> 0
 
-With the :code:`nscale` keyword the user can specify the first :code:`n` steps in which the temperature is reset *via* a hard scaling approach to the target temperature.
+With the ``nscale`` keyword the user can specify the first ``n`` steps in which the temperature is reset *via* a hard scaling approach to the target temperature.
 
 .. Note::
     Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.
 
 .. centered:: *default value* = 0 (*i.e.* never)
+
+.. _fscaleKey:
 
 FScale
 ======
@@ -876,7 +902,7 @@ FScale
 
     fscale = {uint} -> nstep + 1
 
-With the :code:`fscale` keyword the user can specify the frequency :code:`f` at which the temperature is reset *via* a hard scaling approach to the target temperature.
+With the ``fscale`` keyword the user can specify the frequency ``f`` at which the temperature is reset *via* a hard scaling approach to the target temperature.
 
 .. Note:: 
     Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.
@@ -884,6 +910,8 @@ With the :code:`fscale` keyword the user can specify the frequency :code:`f` at 
 .. centered:: *default value* = nstep + 1 (*i.e.* never)
 
 .. centered:: *special case* = 0 -> nstep + 1 
+
+.. _nresetKey:
 
 NReset
 ======
@@ -893,9 +921,11 @@ NReset
 
     nreset = {uint} -> 0
 
-With the :code:`nreset` keyword the user can specify the first :code:`n` steps in which the total box momentum is reset.
+With the ``nreset`` keyword the user can specify the first ``n`` steps in which the total box momentum is reset.
 
 .. centered:: *default value* = 0 (*i.e.* never)
+
+.. _fresetKey:
 
 FReset
 ======
@@ -905,13 +935,15 @@ FReset
 
     freset = {uint} -> nstep + 1
 
-With the :code:`freset` keyword the user can specify the frequency :code:`f` at which the total box momentum is reset.
+With the ``freset`` keyword the user can specify the frequency ``f`` at which the total box momentum is reset.
 
 .. centered:: *default value* = nstep + 1 (*i.e.* never)
 
 .. centered:: *special case* = 0 -> nstep + 1
 
-NReset_Angular
+.. _nresetangularKey:
+
+NReset Angular
 ==============
 
 .. admonition:: Key
@@ -919,14 +951,16 @@ NReset_Angular
 
     nreset_angular = {uint} -> 0
 
-With the :code:`nreset_angular` keyword the user can specify the first :code:`n` steps in which the total angular box momentum is reset.
+With the ``nreset_angular`` keyword the user can specify the first ``n`` steps in which the total angular box momentum is reset.
 
 .. Danger::
-    This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+    This setting should be used very carefully, since in periodic systems a reset of the angular momentum can result in severe unphysical behavior.
 
 .. centered:: *default value* = 0 (*i.e.* never)
 
-FReset_Angular
+.. _freseangularKey:
+
+FReset Angular
 ==============
 
 .. admonition:: Key
@@ -934,18 +968,22 @@ FReset_Angular
 
     freset_angular = {uint} -> nstep + 1
 
-With the :code:`freset_angular` keyword the user can specify the frequency :code:`f` at which the total angular box momentum is reset.
+With the ``freset_angular`` keyword the user can specify the frequency ``f`` at which the total angular box momentum is reset.
 
 .. Danger::
-    This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.
+    This setting should be used very carefully, since in periodic systems a reset of the angular momentum can result in severe unphysical behavior.
 
 .. centered:: *default value* = nstep + 1 (*i.e.* never)
 
 .. centered:: *special case* = 0 -> nstep + 1 
 
+.. _constraintsKeys:
+
 ****************
 Constraints Keys
 ****************
+
+.. _shakeKey:
 
 Shake
 =====
@@ -955,19 +993,21 @@ Shake
 
     shake = {string} -> "off"
 
-With the :code:`shake` keyword it is possible to activate the SHAKE/RATTLE algorithm for bond constraints.
+With the ``shake`` keyword the SHAKE/RATTLE algorithm for bond constraints can be activated.
 
 Possible options are:
 
-   1) **off** (default) - no shake will be applied
+   1. **off** (default) - no shake will be applied
 
-   2) **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2. **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
 
-   3) **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+   3. **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
 
-   4) **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
+   4. **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
 
-Shake-Tolerance
+.. _shaketoleranceKey:
+
+Shake Tolerance
 ===============
 
 .. admonition:: Key
@@ -975,23 +1015,27 @@ Shake-Tolerance
 
     shake-tolerance = {double} -> 1e-8
 
-With the :code:`shake-tolerance` keyword the user can specify the tolerance, with which the bond-length of the shaked bonds should converge.
+With the ``shake-tolerance`` keyword the user can specify the tolerance, with which the bond length of the shaked bonds should converge.
 
 .. centered:: *default value* = 1e-8
 
-Shake-Iter
-==========
+.. _shakeiterationKey:
+
+Shake Iteration
+===============
 
 .. admonition:: Key
     :class: tip
 
     shake-iter = {uint+} -> 20
 
-With the :code:`shake-iter` keyword the user can specify the maximum number of iteration until the convergence of the bond-lengths should be reached within the shake algorithm.
+With the ``shake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm.
 
 .. centered:: *default value* = 20
 
-Rattle-Tolerance
+.. _rattletoleranceKey:
+
+Rattle Tolerance
 ================
 
 .. admonition:: Key
@@ -1001,23 +1045,27 @@ Rattle-Tolerance
     rattle-tolerance = {double} s⁻¹kg⁻¹ -> 1e4 s⁻¹kg⁻¹ 
 
 
-With the :code:`rattle-tolerance` keyword the user can specify the tolerance in :code:`s⁻¹kg⁻¹`, with which the velocities of the shaked bonds should converge.
+With the ``rattle-tolerance`` keyword the user can specify the tolerance in ``s⁻¹kg⁻¹``, with which the velocities of the shaked bonds should converge.
 
 .. centered:: *default value* = 20 s⁻¹kg⁻¹
 
-Rattle-Iter
-===========
+.. _rattleiterationKey:
+
+Rattle Iteration
+================
 
 .. admonition:: Key
     :class: tip
 
     rattle-iter = {uint+} -> 20
 
-With the :code:`rattle-iter` keyword the user can specify the maximum number of iteration until the convergence of the velocities of the shaked bond-lengths should be reached within the rattle algorithm.
+With the ``rattle-iter`` keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm.
 
 .. centered:: *default value* = 20
 
-Distance-Constraints
+.. _distanceConstraintsKey:
+
+Distance Constraints
 ====================
 
 .. admonition:: Key
@@ -1025,7 +1073,7 @@ Distance-Constraints
 
     distance-constraints = {string} -> "off"
 
-With the :code:`distance-constraints` keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the :ref:`topologyFile`.
+With the ``distance-constraints`` keyword it is possible to activate distance constraints for the simulation. The distance constraints are defined *via* the :ref:`topologyFile`.
 
 .. _mmKeys:
 
@@ -1041,17 +1089,17 @@ NonCoulomb
 
     noncoulomb = {string} -> "guff"
 
-With the :code:`noncoulomb` keyword the user can specify which kind of [GUFF formalism](#guffdatFile) should be used for parsing the guff.dat input file. <span style="color:red"><b>Note</b></span>: This keyword is only considered if an MM-MD type simulation is requested and the force field is not turned on.
+With the ``noncoulomb`` keyword the user can specify which kind of [GUFF formalism](#guffdatFile) should be used for parsing the guff.dat input file. <span style="color:red"><b>Note</b></span>: This keyword is only considered if an MM-MD type simulation is requested and the force field is not turned on.
 
 Possible options are:
 
-   1) **guff** (default) - full GUFF formalism
+   1. **guff** (default) - full GUFF formalism
 
-   2) **lj** - Lennard Jones quick routine
+   2. **lj** - Lennard Jones quick routine
 
-   3) **buck** - Buckingham quick routine
+   3. **buck** - Buckingham quick routine
 
-   4) **morse** - Morse quick routine
+   4. **morse** - Morse quick routine
 
 ForceField
 ==========
@@ -1061,15 +1109,15 @@ ForceField
 
     forcefield = {string} -> "off"
 
-With the :code:`forcefield` keyword the user can switch from the GUFF formalism to force field type simulation (For details see Reference Manual).
+With the ``forcefield`` keyword the user can switch from the GUFF formalism to force field type simulation (For details see Reference Manual).
 
 Possible options are:
 
-   1) **off** (default) - GUFF formalism is applied
+   1. **off** (default) - GUFF formalism is applied
 
-   2) **on** - full force field definition is applied
+   2. **on** - full force field definition is applied
 
-   3) **bonded** - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
+   3. **bonded** - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
 
 *********************
 Long Range Correction
@@ -1083,13 +1131,13 @@ Long_Range
 
     long_range = {string} -> "none"
 
-With the :code:`long_range` correction keyword the user can specify the type of <b>Coulombic<B> long range correction, which should be applied during the Simulation.
+With the ``long_range`` correction keyword the user can specify the type of <b>Coulombic<B> long range correction, which should be applied during the Simulation.
 
 Possible options are:
 
-   1) **none** (default) - no long range correction
+   1. **none** (default) - no long range correction
 
-   2) **wolf** - Wolf summation
+   2. **wolf** - Wolf summation
 
 Wolf_Param
 ==========
@@ -1116,18 +1164,18 @@ QM_PROG
 
     qm_prog = {string}
 
-With the :code:`qm_prog` keyword the external QM engine for any kind of QM MD simulation is chosen.
+With the ``qm_prog`` keyword the external QM engine for any kind of QM MD simulation is chosen.
 
 .. Note::
     This keyword is required for any kind of QM MD simulation!
 
 Possible options are:
 
-   1) **dftbplus**
+   1. **dftbplus**
 
-   2) **pyscf**
+   2. **pyscf**
 
-   3) **turbomole**
+   3. **turbomole**
 
 QM_SCRIPT
 =========
@@ -1137,7 +1185,7 @@ QM_SCRIPT
 
     qm_script = {file}
 
-With the :code:`qm_script` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_SCRIPT_FULL_PATH
 ===================
@@ -1148,11 +1196,11 @@ QM_SCRIPT_FULL_PATH
     qm_script_full_path = {pathFile}
 
 .. attention::
-   This keyword can not be used in conjunction with the :code:`qm_script` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
+   This keyword can not be used in conjunction with the ``qm_script`` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
 
 
-With the :code:`qm_script_full_path` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 QM_LOOP_TIME_LIMIT
 ==================
@@ -1162,7 +1210,7 @@ QM_LOOP_TIME_LIMIT
 
     qm_loop_time_limit = {double} s -> -1 s
 
-With the :code:`qm_loop_time_limit` keyword the user can specify the loop time limit in :code:`s` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
+With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
 
 .. _ringPolymerMDKeys:
 
@@ -1178,7 +1226,7 @@ RPMD_n_replica
 
     rpmd_n_replica = {uint+}
 
-With the :code:`rpmd_n_replica` keyword the number of beads for a ring polymer MD simulation is controlled.
+With the ``rpmd_n_replica`` keyword the number of beads for a ring polymer MD simulation is controlled.
 
 .. Note::
     This keyword is required for any kind of ring polymer MD simulation!
@@ -1195,7 +1243,7 @@ QM_Center
 
     qm_center = {selection} -> 0
 
-With the :code:`qm_center` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The :code:`qm_center` if more than one atom is selected will be by default the center of mass of the selected atoms.
+With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
 QM_Only_List
 ============
@@ -1205,7 +1253,7 @@ QM_Only_List
 
     qm_only_list = {selection}
 
-With the :code:`qm_only_list` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
 
 MM_Only_List
 ============
@@ -1215,7 +1263,7 @@ MM_Only_List
 
     mm_only_list = {selection}
 
-With the :code:`mm_only_list` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
 
 QM_Charges
 ==========
@@ -1225,7 +1273,7 @@ QM_Charges
 
     qm_charges = {string} -> "off"
 
-With the :code:`qm_charges` keyword the user can specify the charge model for the QM atoms. If the :code:`qm_charges` keyword is set to :code:`off` the charges of the QM atoms are taken from the MM model applied. If the :code:`qm_charges` keyword is set to :code:`on` the charges of the QM atoms are taken from the QM calculation.
+With the ``qm_charges`` keyword the user can specify the charge model for the QM atoms. If the ``qm_charges`` keyword is set to ``off`` the charges of the QM atoms are taken from the MM model applied. If the ``qm_charges`` keyword is set to ``on`` the charges of the QM atoms are taken from the QM calculation.
 
 QM_Core_Radius
 ==============
@@ -1235,7 +1283,7 @@ QM_Core_Radius
 
     qm_core_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
 
-With the :code:`qm_core_radius` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
+With the ``qm_core_radius`` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
 
 QMMM_Layer_Radius
 =================
@@ -1245,7 +1293,7 @@ QMMM_Layer_Radius
 
     qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
 
-With the :code:`qmmm_layer_radius` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the :code:`qm_center`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
 
 QMMM_Smoothing_Radius
 =====================
@@ -1255,7 +1303,7 @@ QMMM_Smoothing_Radius
 
     qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
 
-With the :code:`qmmm_smoothing_radius` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
+With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
 
 **************
 Cell List Keys
@@ -1269,13 +1317,13 @@ Cell-List
 
     cell-list = {string} -> "off"
 
-With the :code:`cell-list` the user can activate a cell-list approach to calculate the pair-interactions in MM-MD simulations (no effect in pure QM-MD type simulations).
+With the ``cell-list`` the user can activate a cell-list approach to calculate the pair-interactions in MM-MD simulations (no effect in pure QM-MD type simulations).
 
 Possible options are:
 
-   1) **off** (default) - brute force routine
+   1. **off** (default) - brute force routine
 
-   2) **on** - cell list approach is applied
+   2. **on** - cell list approach is applied
 
 Cell-Number
 ===========
@@ -1285,6 +1333,6 @@ Cell-Number
 
     cell-number = {uint+} -> 7
 
-With the :code:`cell-number` keyword the user can set the number of cells in each direction in which the simulation box will be split up (*e.g.* cell-number = 7 -> total cells = 7x7x7)
+With the ``cell-number`` keyword the user can set the number of cells in each direction in which the simulation box will be split up (*e.g.* cell-number = 7 -> total cells = 7x7x7)
 
 .. centered:: *default value* = 7

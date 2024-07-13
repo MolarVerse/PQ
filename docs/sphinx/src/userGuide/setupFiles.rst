@@ -74,18 +74,18 @@ are given in Å and energies in kcal/mol. The units of the parameters are chosen
     Using the GUFF file requires the :ref:`moldescriptorFile` setup file to be provided as well.
 .. _topologyFile:
 
-*****************
-The Topology File
-*****************
+*************
+Topology File
+*************
 
 .. _parameterFile:
 
-******************
-The Parameter File
-******************
+**************
+Parameter File
+**************
 
 .. _mshakeFile:
 
-****************
-The M-SHAKE File
-****************
+************
+M-SHAKE File
+************
