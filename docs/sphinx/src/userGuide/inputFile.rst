@@ -1081,6 +1081,8 @@ With the ``distance-constraints`` keyword it is possible to activate distance co
 MM Keys
 *******
 
+.. _noncoulombKey:
+
 NonCoulomb
 ==========
 
@@ -1089,7 +1091,11 @@ NonCoulomb
 
     noncoulomb = {string} -> "guff"
 
-With the ``noncoulomb`` keyword the user can specify which kind of [GUFF formalism](#guffdatFile) should be used for parsing the guff.dat input file. <span style="color:red"><b>Note</b></span>: This keyword is only considered if an MM-MD type simulation is requested and the force field is not turned on.
+With the ``noncoulomb`` keyword the user can specify which kind of GUFF formalism should be used for parsing the :ref:`guffdatFile`.
+
+.. Note::
+
+    This keyword is only considered if an MM-MD type simulation is requested and the :ref:`forcefieldKey` is turned off.
 
 Possible options are:
 
@@ -1101,7 +1107,9 @@ Possible options are:
 
    4. **morse** - Morse quick routine
 
-ForceField
+.. _forcefieldKey:
+
+Force Field
 ==========
 
 .. admonition:: Key
@@ -1109,7 +1117,7 @@ ForceField
 
     forcefield = {string} -> "off"
 
-With the ``forcefield`` keyword the user can switch from the GUFF formalism to force field type simulation (For details see Reference Manual).
+With the ``forcefield`` keyword the user can switch from the GUFF formalism to a force field type simulation (For details see Reference Manual).
 
 Possible options are:
 
@@ -1119,11 +1127,15 @@ Possible options are:
 
    3. **bonded** - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
 
+.. _longrangecorrectionKeys:
+
 *********************
 Long Range Correction
 *********************
 
-Long_Range
+.. _longrangeKey:
+
+Long Range
 ==========
 
 .. admonition:: Key
@@ -1131,7 +1143,7 @@ Long_Range
 
     long_range = {string} -> "none"
 
-With the ``long_range`` correction keyword the user can specify the type of <b>Coulombic<B> long range correction, which should be applied during the Simulation.
+With the ``long_range`` correction keyword the user can specify the type of Coulombic long range correction, which should be applied during the simulation.
 
 Possible options are:
 
@@ -1139,8 +1151,10 @@ Possible options are:
 
    2. **wolf** - Wolf summation
 
-Wolf_Param
-==========
+.. _wolfParameterKey:
+
+Wolf Parameter
+==============
 .. TODO: add unit and description
 
 .. admonition:: Key
@@ -1156,8 +1170,10 @@ Wolf_Param
 QM Keys
 *******
 
-QM_PROG
-=======
+.. _qmprogamKey:
+
+QM Program
+==========
 
 .. admonition:: Key
     :class: tip
@@ -1177,7 +1193,9 @@ Possible options are:
 
    3. **turbomole**
 
-QM_SCRIPT
+.. _qmscriptKey:
+
+QM Script
 =========
 
 .. admonition:: Key
@@ -1187,7 +1205,9 @@ QM_SCRIPT
 
 With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
-QM_SCRIPT_FULL_PATH
+.. _qmscriptfullpathKey:
+
+QM Script Full Path
 ===================
 
 .. admonition:: Key
@@ -1202,7 +1222,9 @@ QM_SCRIPT_FULL_PATH
 
 With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
-QM_LOOP_TIME_LIMIT
+.. _qmlooptimelimitKey:
+
+QM Loop Time Limit
 ==================
 
 .. admonition:: Key
@@ -1218,7 +1240,9 @@ With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit
 Ring Polymer MD Keys
 ********************
 
-RPMD_n_replica
+.. _rpmdnreplicaKey:
+
+RPMD n replica
 ==============
 
 .. admonition:: Key
@@ -1231,11 +1255,15 @@ With the ``rpmd_n_replica`` keyword the number of beads for a ring polymer MD si
 .. Note::
     This keyword is required for any kind of ring polymer MD simulation!
 
+.. _qmmmKeys:
+
 **********
 QM/MM Keys
 **********
 
-QM_Center
+.. _qmcenterKey:
+
+QM Center
 =========
 
 .. admonition:: Key
@@ -1245,7 +1273,9 @@ QM_Center
 
 With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
-QM_Only_List
+.. _qmonlylistKey:
+
+QM Only List
 ============
 
 .. admonition:: Key
@@ -1253,9 +1283,11 @@ QM_Only_List
 
     qm_only_list = {selection}
 
-With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
 
-MM_Only_List
+.. _mmonlylistKey:
+
+MM Only List
 ============
 
 .. admonition:: Key
@@ -1263,9 +1295,11 @@ MM_Only_List
 
     mm_only_list = {selection}
 
-With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atom is selected.
+With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
 
-QM_Charges
+.. _qmchargesKey:
+
+QM Charges
 ==========
 
 .. admonition:: Key
@@ -1273,9 +1307,17 @@ QM_Charges
 
     qm_charges = {string} -> "off"
 
-With the ``qm_charges`` keyword the user can specify the charge model for the QM atoms. If the ``qm_charges`` keyword is set to ``off`` the charges of the QM atoms are taken from the MM model applied. If the ``qm_charges`` keyword is set to ``on`` the charges of the QM atoms are taken from the QM calculation.
+With the ``qm_charges`` keyword the user can specify the charge model for the QM atoms.
 
-QM_Core_Radius
+Possible options are:
+
+   1. **off** (default) - charges of the QM atoms are taken from the MM model
+
+   2. **on** - charges of the QM atoms are taken from the QM calculation
+
+.. _qmcoreradiusKey:
+
+QM Core Radius
 ==============
 
 .. admonition:: Key
@@ -1285,8 +1327,10 @@ QM_Core_Radius
 
 With the ``qm_core_radius`` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
 
-QMMM_Layer_Radius
-=================
+.. _qmmmlayerradiuskey:
+
+QM/MM Layer Radius
+==================
 
 .. admonition:: Key
     :class: tip
@@ -1295,8 +1339,10 @@ QMMM_Layer_Radius
 
 With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
 
-QMMM_Smoothing_Radius
-=====================
+.. _qmmmsmoothingradiuskey:
+
+QM/MM Smoothing Radius
+======================
 
 .. admonition:: Key
     :class: tip
@@ -1305,11 +1351,15 @@ QMMM_Smoothing_Radius
 
 With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
 
+.. _celllistKeys:
+
 **************
 Cell List Keys
 **************
 
-Cell-List
+.. _celllistKey:
+
+Cell List
 =========
 
 .. admonition:: Key
@@ -1325,7 +1375,9 @@ Possible options are:
 
    2. **on** - cell list approach is applied
 
-Cell-Number
+.. _cellnumberKey:
+
+Cell Number
 ===========
 
 .. admonition:: Key
