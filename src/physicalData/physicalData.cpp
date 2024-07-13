@@ -116,10 +116,11 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
     _intraNonCoulombEnergy += physicalData.getIntraNonCoulombEnergy();
 
-    _bondEnergy     += physicalData.getBondEnergy();
-    _angleEnergy    += physicalData.getAngleEnergy();
-    _dihedralEnergy += physicalData.getDihedralEnergy();
-    _improperEnergy += physicalData.getImproperEnergy();
+    _bondEnergy      += physicalData.getBondEnergy();
+    _angleEnergy     += physicalData.getAngleEnergy();
+    _dihedralEnergy  += physicalData.getDihedralEnergy();
+    _improperEnergy  += physicalData.getImproperEnergy();
+    _jCouplingEnergy += physicalData.getJCouplingEnergy();
 
     _temperature   += physicalData.getTemperature();
     _kineticEnergy += physicalData.getKineticEnergy();
@@ -158,10 +159,11 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _intraCoulombEnergy    /= outputFrequency;
     _intraNonCoulombEnergy /= outputFrequency;
 
-    _bondEnergy     /= outputFrequency;
-    _angleEnergy    /= outputFrequency;
-    _dihedralEnergy /= outputFrequency;
-    _improperEnergy /= outputFrequency;
+    _bondEnergy      /= outputFrequency;
+    _angleEnergy     /= outputFrequency;
+    _dihedralEnergy  /= outputFrequency;
+    _improperEnergy  /= outputFrequency;
+    _jCouplingEnergy /= outputFrequency;
 
     _temperature /= outputFrequency;
     _volume      /= outputFrequency;
@@ -198,10 +200,11 @@ void PhysicalData::reset()
     _intraCoulombEnergy    = 0.0;
     _intraNonCoulombEnergy = 0.0;
 
-    _bondEnergy     = 0.0;
-    _angleEnergy    = 0.0;
-    _dihedralEnergy = 0.0;
-    _improperEnergy = 0.0;
+    _bondEnergy      = 0.0;
+    _angleEnergy     = 0.0;
+    _dihedralEnergy  = 0.0;
+    _improperEnergy  = 0.0;
+    _jCouplingEnergy = 0.0;
 
     _temperature = 0.0;
     _volume      = 0.0;
@@ -246,6 +249,7 @@ double PhysicalData::getTotalEnergy() const
     potentialEnergy += _angleEnergy;
     potentialEnergy += _dihedralEnergy;
     potentialEnergy += _improperEnergy;
+    potentialEnergy += _jCouplingEnergy;
 
     potentialEnergy += _coulombEnergy;      // intra + inter
     potentialEnergy += _nonCoulombEnergy;   // intra + inter

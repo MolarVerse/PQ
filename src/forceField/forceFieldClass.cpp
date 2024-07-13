@@ -185,6 +185,7 @@ void ForceField::calculateBondedInteractions(
     calculateAngleInteractions(box, physicalData);
     calculateDihedralInteractions(box, physicalData);
     calculateImproperDihedralInteractions(box, physicalData);
+    calculateJCouplingInteractions(box, physicalData);
 }
 
 /**
@@ -305,23 +306,11 @@ void ForceField::calculateJCouplingInteractions(
     PhysicalData        &physicalData
 )
 {
-    if (!_jCouplings.empty())
-        throw UserInputException(
-            "JCoupling interactions are not implemented yet."
-        );
+    auto calculateJCouplingInteraction =
+        [&box, &physicalData, this](auto &jCoupling)
+    { jCoupling.calculateEnergyAndForces(box, physicalData); };
 
-    // auto calculateJCouplingInteraction =
-    //     [&box, &physicalData, this](auto &jCoupling)
-    // {
-    //     jCoupling.calculateEnergyAndForces(
-    //         box,
-    //         physicalData,
-    //         *_coulombPotential,
-    //         *_nonCoulombPot
-    //     );
-    // };
-
-    // std::ranges::for_each(_jCouplings, calculateJCouplingInteraction);
+    std::ranges::for_each(_jCouplings, calculateJCouplingInteraction);
 }
 
 /*****************************

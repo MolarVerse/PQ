@@ -105,8 +105,19 @@ void PhysicalData::addImproperEnergy(const double improperEnergy)
 }
 
 /**
- * @brief add ring polymer energy to the current ring polymer energy stored in
+ * @brief add intra J coupling energy to the current J coupling energy stored in
  * physical data
+ *
+ * @param jCouplingEnergy
+ */
+void PhysicalData::addJCouplingEnergy(const double jCouplingEnergy)
+{
+    _jCouplingEnergy += jCouplingEnergy;
+}
+
+/**
+ * @brief add ring polymer energy to the current ring polymer energy stored
+ * in physical data
  *
  * @param ringPolymerEnergy
  */
@@ -326,6 +337,16 @@ void PhysicalData::setImproperEnergy(const double improperEnergy)
 }
 
 /**
+ * @brief set the j coupling energy
+ *
+ * @param jCouplingEnergy
+ */
+void PhysicalData::setJCouplingEnergy(const double jCouplingEnergy)
+{
+    _jCouplingEnergy = jCouplingEnergy;
+}
+
+/**
  * @brief set the qm energy
  *
  * @param qmEnergy
@@ -512,6 +533,13 @@ double PhysicalData::getDihedralEnergy() const { return _dihedralEnergy; }
  * @return double
  */
 double PhysicalData::getImproperEnergy() const { return _improperEnergy; }
+
+/**
+ * @brief get the j coupling energy
+ *
+ * @return double
+ */
+double PhysicalData::getJCouplingEnergy() const { return _jCouplingEnergy; }
 
 /**
  * @brief get the qm energy

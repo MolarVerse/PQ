@@ -53,7 +53,6 @@ namespace forceField
         double _a;
         double _b;
         double _c;
-        double _phaseShift;
 
        public:
         JCouplingType(
@@ -62,8 +61,7 @@ namespace forceField
             const double forceConstant,
             const double a,
             const double b,
-            const double c,
-            const double phaseShift
+            const double c
         );
 
         friend bool operator==(const JCouplingType &, const JCouplingType &);
@@ -78,7 +76,6 @@ namespace forceField
         [[nodiscard]] double getA() const;
         [[nodiscard]] double getB() const;
         [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
 
         /***************************
          * standard setter methods *

@@ -22,8 +22,15 @@
 
 #include "jCouplingForceField.hpp"
 
+#include "molecule.hpp"        // for Molecule
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimBox
+
 using namespace forceField;
 using namespace connectivity;
+using namespace physicalData;
+using namespace simulationBox;
+using namespace potential;
 
 /**
  * @brief Construct a new JCouplingForceField::JCouplingForceField object
@@ -39,6 +46,87 @@ JCouplingForceField::JCouplingForceField(
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
+}
+
+/**
+ * @brief calculate energy and forces for a single dihedral
+ *
+ * @param simBox
+ * @param data
+ */
+void JCouplingForceField::calculateEnergyAndForces(
+    const SimulationBox &simBox,
+    PhysicalData        &data
+)
+{
+    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+    const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
+
+    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+    const auto position4 = _molecules[3]->getAtomPosition(_atomIndices[3]);
+
+    auto dPosition12 = position1 - position2;
+    auto dPosition23 = position2 - position3;
+    auto dPosition43 = position4 - position3;
+
+    simBox.applyPBC(dPosition12);
+    simBox.applyPBC(dPosition23);
+    simBox.applyPBC(dPosition43);
+
+    const auto crossPosition123 = cross(dPosition12, dPosition23);
+    const auto crossPosition432 = cross(dPosition43, dPosition23);
+
+    const auto distance123Squared = normSquared(crossPosition123);
+    const auto distance432Squared = normSquared(crossPosition432);
+
+    const auto distance23 = norm(dPosition23);
+
+    auto phi = angle(crossPosition123, crossPosition432);
+    phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
+
+    const auto cosine = ::cos(phi);
+    const auto J_phi  = _a * cosine * cosine + _b * cosine + _c;
+    const auto deltaJ = J_phi - _J0;
+
+    if (deltaJ < 0.0 && !_lowerSymmetry)
+        return;
+    else if (deltaJ > 0.0 && !_upperSymmetry)
+        return;
+
+    const auto energy = 0.5 * _forceConstant * deltaJ * deltaJ;
+
+    data.addJCouplingEnergy(energy);
+
+    auto       forceMagnitude = distance23 / distance123Squared;
+    const auto forceVector12  = forceMagnitude * crossPosition123;
+
+    forceMagnitude           = distance23 / distance432Squared;
+    const auto forceVector43 = forceMagnitude * crossPosition432;
+
+    forceMagnitude             = dot(dPosition12, dPosition23);
+    forceMagnitude            /= (distance123Squared * distance23);
+    const auto forceVector123  = forceMagnitude * crossPosition123;
+
+    forceMagnitude             = dot(dPosition43, dPosition23);
+    forceMagnitude            /= (distance432Squared * distance23);
+    const auto forceVector432  = forceMagnitude * crossPosition432;
+
+    const auto sine         = ::sin(phi);
+    const auto energyFactor = _forceConstant * deltaJ;
+    const auto J_derivative = 2 * _a * cosine + _b;
+    forceMagnitude          = sine * energyFactor * J_derivative;
+
+    const auto diffForce123_432 = forceVector123 - forceVector432;
+
+    const auto force_0 = -forceMagnitude * forceVector12;
+    const auto force_1 = forceMagnitude * (forceVector12 + diffForce123_432);
+    const auto force_2 = +forceMagnitude * (-forceVector43 - diffForce123_432);
+    const auto force_3 = forceMagnitude * forceVector43;
+
+    _molecules[0]->addAtomForce(_atomIndices[0], force_0);
+    _molecules[1]->addAtomForce(_atomIndices[1], force_1);
+    _molecules[2]->addAtomForce(_atomIndices[2], force_2);
+    _molecules[3]->addAtomForce(_atomIndices[3], force_3);
 }
 
 /***************************
@@ -105,13 +193,6 @@ void JCouplingForceField::setB(const double b) { _b = b; }
  */
 void JCouplingForceField::setC(const double c) { _c = c; }
 
-/**
- * @brief Set the phase shift
- *
- * @param phi
- */
-void JCouplingForceField::setPhaseShift(const double phi) { _phaseShift = phi; }
-
 /***************************
  *                         *
  * standard getter methods *
@@ -173,10 +254,3 @@ double JCouplingForceField::getB() const { return _b; }
  * @return double
  */
 double JCouplingForceField::getC() const { return _c; }
-
-/**
- * @brief get the phase shift
- *
- * @return double
- */
-double JCouplingForceField::getPhaseShift() const { return _phaseShift; }

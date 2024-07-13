@@ -35,7 +35,6 @@ using namespace forceField;
  * @param a
  * @param b
  * @param c
- * @param phaseShift
  */
 JCouplingType::JCouplingType(
     const size_t id,
@@ -43,16 +42,9 @@ JCouplingType::JCouplingType(
     const double forceConstant,
     const double a,
     const double b,
-    const double c,
-    const double phaseShift
+    const double c
 )
-    : _id(id),
-      _J0(J0),
-      _forceConstant(forceConstant),
-      _a(a),
-      _b(b),
-      _c(c),
-      _phaseShift(phaseShift)
+    : _id(id), _J0(J0), _forceConstant(forceConstant), _a(a), _b(b), _c(c)
 {
 }
 
@@ -69,10 +61,8 @@ bool forceField::operator==(
     const JCouplingType &other
 )
 {
-    const auto k         = self._forceConstant;
-    const auto phi       = self._phaseShift;
-    const auto other_k   = other._forceConstant;
-    const auto other_phi = other._phaseShift;
+    const auto k       = self._forceConstant;
+    const auto other_k = other._forceConstant;
 
     auto isEqual = self._id == other._id;
     isEqual      = isEqual && utilities::compare(self._J0, other._J0);
@@ -80,7 +70,6 @@ bool forceField::operator==(
     isEqual      = isEqual && utilities::compare(self._a, other._a);
     isEqual      = isEqual && utilities::compare(self._b, other._b);
     isEqual      = isEqual && utilities::compare(self._c, other._c);
-    isEqual      = isEqual && utilities::compare(phi, other_phi);
 
     return isEqual;
 }
@@ -132,13 +121,6 @@ double JCouplingType::getB() const { return _b; }
  * @return double
  */
 double JCouplingType::getC() const { return _c; }
-
-/**
- * @brief get the phase shift
- *
- * @return double
- */
-double JCouplingType::getPhaseShift() const { return _phaseShift; }
 
 /***************************
  *                         *

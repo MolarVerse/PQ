@@ -54,8 +54,7 @@ std::string JCouplingSection::keyword() { return "j-couplings"; }
  * 4. a
  * 5. b
  * 6. c
- * 7. phaseShift
- * 8. symmetry +/-/0 or anything
+ * 7. symmetry +/-/0 or anything
  *
  * According to the following equation:
  *
@@ -82,7 +81,7 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
-    if (lineElements.size() != 7 && lineElements.size() != 8)
+    if (lineElements.size() != 6 && lineElements.size() != 7)
         throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file j-coupling section at "
             "line {} - number of elements has to be 7 or 8!",
@@ -95,14 +94,13 @@ void JCouplingSection::processSection(
     auto a             = stod(lineElements[3]);
     auto b             = stod(lineElements[4]);
     auto c             = stod(lineElements[5]);
-    auto phase         = stod(lineElements[6]) * _DEG_TO_RAD_;
 
     auto upperSymmetry = true;
     auto lowerSymmetry = true;
 
     if (lineElements.size() == 8)
     {
-        const auto &symmetry = lineElements[7];
+        const auto &symmetry = lineElements[6];
 
         if (symmetry == "0")
             upperSymmetry = lowerSymmetry = false;
@@ -114,7 +112,7 @@ void JCouplingSection::processSection(
             upperSymmetry = false;
     }
 
-    auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c, phase);
+    auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c);
 
     jCouplingType.setUpperSymmetry(upperSymmetry);
     jCouplingType.setLowerSymmetry(lowerSymmetry);

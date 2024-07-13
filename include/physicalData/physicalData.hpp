@@ -59,10 +59,11 @@ namespace physicalData
         double _intraCoulombEnergy    = 0.0;
         double _intraNonCoulombEnergy = 0.0;
 
-        double _bondEnergy     = 0.0;
-        double _angleEnergy    = 0.0;
-        double _dihedralEnergy = 0.0;
-        double _improperEnergy = 0.0;
+        double _bondEnergy      = 0.0;
+        double _angleEnergy     = 0.0;
+        double _dihedralEnergy  = 0.0;
+        double _improperEnergy  = 0.0;
+        double _jCouplingEnergy = 0.0;
 
         double _qmEnergy = 0.0;
 
@@ -114,6 +115,7 @@ namespace physicalData
         void addAngleEnergy(const double angleEnergy);
         void addDihedralEnergy(const double dihedralEnergy);
         void addImproperEnergy(const double improperEnergy);
+        void addJCouplingEnergy(const double jCouplingEnergy);
 
         void addRingPolymerEnergy(const double ringPolymerEnergy);
 
@@ -148,6 +150,7 @@ namespace physicalData
         void setAngleEnergy(const double angleEnergy);
         void setDihedralEnergy(const double dihedralEnergy);
         void setImproperEnergy(const double improperEnergy);
+        void setJCouplingEnergy(const double jCouplingEnergy);
 
         void setQMEnergy(const double qmEnergy);
 
@@ -182,6 +185,7 @@ namespace physicalData
         [[nodiscard]] double getAngleEnergy() const;
         [[nodiscard]] double getDihedralEnergy() const;
         [[nodiscard]] double getImproperEnergy() const;
+        [[nodiscard]] double getJCouplingEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
 

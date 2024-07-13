@@ -50,7 +50,6 @@ namespace forceField
         double _a;
         double _b;
         double _c;
-        double _phaseShift;
 
        public:
         JCouplingForceField(
@@ -59,8 +58,7 @@ namespace forceField
             const size_t                       type
         );
 
-        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
-        };   // TODO: implement
+        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &);
 
         /***************************
          * standard setter methods *
@@ -74,7 +72,6 @@ namespace forceField
         void setA(const double a);
         void setB(const double b);
         void setC(const double c);
-        void setPhaseShift(const double phi);
 
         /***************************
          * standard getter methods *
@@ -90,7 +87,6 @@ namespace forceField
         [[nodiscard]] double getA() const;
         [[nodiscard]] double getB() const;
         [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
     };
 
 }   // namespace forceField
