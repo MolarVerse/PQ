@@ -42,7 +42,6 @@
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
 #include "qmmmSetup.hpp"              // for setupQMMM
-#include "qmmmmdEngine.hpp"           // for QMMMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
 #include "ringPolymerEngine.hpp"      // for RingPolymerEngine

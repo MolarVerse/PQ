@@ -93,7 +93,6 @@ namespace engine
         virtual ~Engine() = default;
 
         virtual void run()         = 0;
-        virtual void takeStep()    = 0;
         virtual void writeOutput() = 0;
 
         void addTimer(const timings::Timer &timings);

@@ -35,6 +35,9 @@
 
 using namespace engine;
 using namespace output;
+using namespace settings;
+using namespace constants;
+using namespace physicalData;
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -48,7 +51,7 @@ void MDEngine::run()
         norm(_physicalData->getMomentum())
     );
 
-    _nSteps = settings::TimingsSettings::getNumberOfSteps();
+    _nSteps = TimingsSettings::getNumberOfSteps();
     progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
     for (; _step <= _nSteps; ++_step)
@@ -96,7 +99,7 @@ void MDEngine::run()
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
 
-    if (settings::Settings::isQMActivated())
+    if (Settings::isQMActivated())
     {
         dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
             "QM Engine"
@@ -107,9 +110,6 @@ void MDEngine::run()
     }
 
 #ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.setTimerName("Kokkos Velocity Verlet");
-    _timer.addTimer(_kokkosVelocityVerlet.getTimer());
-
     _kokkosPotential.setTimerName("Kokkos Potential");
     _timer.addTimer(_kokkosPotential.getTimer());
 #endif
@@ -123,6 +123,65 @@ void MDEngine::run()
 }
 
 /**
+ * @brief MD Loop before force calculation.
+ *
+ */
+void MDEngine::takeStepBeforeForces()
+{
+    _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
+
+    _integrator->firstStep(*_simulationBox);
+
+    _constraints->applyShake(*_simulationBox);
+}
+
+/**
+ * @brief MD Loop after force calculation.
+ *
+ */
+void MDEngine::takeStepAfterForces()
+{
+    _constraints->applyDistanceConstraints(
+        *_simulationBox,
+        *_physicalData,
+        calculateTotalSimulationTime()
+    );
+
+    _constraints->calculateConstraintBondRefs(*_simulationBox);
+
+    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+
+    _thermostat->applyThermostatOnForces(*_simulationBox);
+
+    _integrator->secondStep(*_simulationBox);
+
+    _constraints->applyRattle(*_simulationBox);
+
+    _thermostat->applyThermostat(*_simulationBox, *_physicalData);
+
+    _physicalData->calculateKinetics(*_simulationBox);
+
+    _manostat->applyManostat(*_simulationBox, *_physicalData);
+
+    _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
+
+    _thermostat->applyTemperatureRamping();
+}
+
+/**
+ * @brief Takes one step in the simulation.
+ *
+ */
+void MDEngine::takeStep()
+{
+    takeStepBeforeForces();
+
+    calculateForces();
+
+    takeStepAfterForces();
+}
+
+/**
  * @brief Writes output files.
  *
  * @details output files are written if the step is a multiple of the output
@@ -131,8 +190,8 @@ void MDEngine::run()
  */
 void MDEngine::writeOutput()
 {
-    const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
-    const auto step0      = settings::TimingsSettings::getStepCount();
+    const auto outputFreq = OutputFileSettings::getOutputFrequency();
+    const auto step0      = TimingsSettings::getStepCount();
     const auto effStep    = _step + step0;
 
     if (0 == _step % outputFreq)
@@ -172,16 +231,16 @@ void MDEngine::writeOutput()
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
-        const auto dt            = settings::TimingsSettings::getTimeStep();
+        const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
         _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
         _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
 
-        _averagePhysicalData = physicalData::PhysicalData();
+        _averagePhysicalData = PhysicalData();
     }
 
     _physicalData->reset();

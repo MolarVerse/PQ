@@ -149,6 +149,8 @@ namespace engine
 
 namespace manostat
 {
+    class Manostat;   // forward declaration
+
     class StochasticRescalingManostat;                  // forward declaration
     class SemiIsotropicStochasticRescalingManostat;     // forward declaration
     class AnisotropicStochasticRescalingManostat;       // forward declaration
@@ -177,6 +179,17 @@ namespace settings
     enum class Isotropy;         // forward declaration
 
 }   // namespace settings
+
+namespace integrator
+{
+    class Integrator;       // forward declaration
+    class VelocityVerlet;   // forward declaration
+}   // namespace integrator
+
+namespace resetKinetics
+{
+    class ResetKinetics;   // forward declaration
+}   // namespace resetKinetics
 
 namespace input
 {
@@ -231,6 +244,17 @@ namespace pq
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
 
+    using ResetKinetics = resetKinetics::ResetKinetics;
+
+    /************************
+     * integrator namespace *
+     ************************/
+
+    using Integrator     = integrator::Integrator;
+    using VelocityVerlet = integrator::VelocityVerlet;
+
+    using UniqueIntegrator = std::unique_ptr<Integrator>;
+
     /**********************
      * settings namespace *
      **********************/
@@ -246,6 +270,8 @@ namespace pq
     using Thermostat = thermostat::Thermostat;
     using NoseHoover = thermostat::NoseHoover;
 
+    using UniqueThermostat = std::unique_ptr<Thermostat>;
+
     /********************
      * virial namespace *
      ********************/
@@ -258,6 +284,10 @@ namespace pq
     /**********************
      * manostat namespace *
      **********************/
+
+    using Manostat = manostat::Manostat;
+
+    using UniqueManostat = std::unique_ptr<Manostat>;
 
     // clang-format off
     using StochasticManostat          = manostat::StochasticRescalingManostat;
