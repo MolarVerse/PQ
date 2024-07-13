@@ -58,6 +58,8 @@ namespace simulationBox
 
         virtual void setBoxDimensions(const pq::Vec3D &boxDimensions);
 
+        [[nodiscard]] virtual double getMinimalBoxDimension() const;
+
         [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
@@ -75,7 +77,6 @@ namespace simulationBox
 
         [[nodiscard]] bool      getBoxSizeHasChanged() const;
         [[nodiscard]] double    getVolume() const;
-        [[nodiscard]] double    getMinimalBoxDimension() const;
         [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
         /********************
