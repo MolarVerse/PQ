@@ -34,6 +34,7 @@
 #include "vector3d.hpp"                      // for norm
 
 using namespace engine;
+using namespace output;
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -292,7 +293,7 @@ output::BoxFileOutput &MDEngine::getBoxFileOutput()
  *
  * @return output::RingPolymerRestartFileOutput&
  */
-RPMDRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
+RingPolymerRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
 {
     return _engineOutput.getRingPolymerRstFileOutput();
 }
@@ -302,7 +303,7 @@ RPMDRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
  *
  * @return output::RingPolymerTrajectoryOutput&
  */
-RPMDTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
+RingPolymerTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
 {
     return _engineOutput.getRingPolymerXyzOutput();
 }
@@ -312,7 +313,7 @@ RPMDTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
  *
  * @return output::RingPolymerTrajectoryOutput&
  */
-RPMDTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
+RingPolymerTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
 {
     return _engineOutput.getRingPolymerVelOutput();
 }
@@ -322,7 +323,7 @@ RPMDTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
  *
  * @return output::RingPolymerTrajectoryOutput&
  */
-RPMDTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
+RingPolymerTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
 {
     return _engineOutput.getRingPolymerForceOutput();
 }
@@ -332,7 +333,7 @@ RPMDTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
  *
  * @return output::RingPolymerTrajectoryOutput&
  */
-RPMDTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
+RingPolymerTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
 {
     return _engineOutput.getRingPolymerChargeOutput();
 }
@@ -342,7 +343,7 @@ RPMDTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
  *
  * @return output::RingPolymerEnergyOutput&
  */
-RPMDEnergyOutput &MDEngine::getRingPolymerEnergyOutput()
+RingPolymerEnergyOutput &MDEngine::getRingPolymerEnergyOutput()
 {
     return _engineOutput.getRingPolymerEnergyOutput();
 }

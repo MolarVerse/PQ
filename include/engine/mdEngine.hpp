@@ -89,12 +89,12 @@ namespace engine
         [[nodiscard]] output::VirialOutput         &getVirialOutput();
         [[nodiscard]] output::StressOutput         &getStressOutput();
         [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();
-        [[nodiscard]] RPMDRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerXyzOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerVelOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerForceOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerChargeOutput();
-        [[nodiscard]] RPMDEnergyOutput      &getRingPolymerEnergyOutput();
+        [[nodiscard]] pq::RPMDRstFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerXyzOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerVelOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerForceOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerChargeOutput();
+        [[nodiscard]] pq::RPMDEnergyOutput  &getRingPolymerEnergyOutput();
 
         /***************************
          * make unique_ptr methods *

@@ -67,6 +67,7 @@ namespace potential
 
     class KokkosLennardJones;   // forward declaration
     class KokkosCoulombWolf;    // forward declaration
+    class KokkosPotential;      // forward declaration
 
 }   // namespace potential
 
@@ -116,9 +117,22 @@ namespace opt
 
 namespace output
 {
-    class RingPolymerRestartFileOutput;
-    class RingPolymerTrajectoryOutput;
-    class RingPolymerEnergyOutput;
+    class EnergyOutput;       // forward declaration
+    class InfoOutput;         // forward declaration
+    class LogOutput;          // forward declaration
+    class RstFileOutput;      // forward declaration
+    class StdoutOutput;       // forward declaration
+    class TrajectoryOutput;   // forward declaration
+    class MomentumOutput;     // forward declaration
+    class VirialOutput;       // forward declaration
+    class StressOutput;       // forward declaration
+    class BoxFileOutput;      // forward declaration
+    class TimingsOutput;      // forward declaration
+    class OptOutput;          // forward declaration
+
+    class RingPolymerRestartFileOutput;   // forward declaration
+    class RingPolymerTrajectoryOutput;    // forward declaration
+    class RingPolymerEnergyOutput;        // forward declaration
 
 }   // namespace output
 
@@ -276,8 +290,9 @@ namespace pq
     using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
     using NonCoulPair   = potential::NonCoulombPair;
 
-    using KokkosLJ   = potential::KokkosLennardJones;
-    using KokkosWolf = potential::KokkosCoulombWolf;
+    using KokkosLJ        = potential::KokkosLennardJones;
+    using KokkosWolf      = potential::KokkosCoulombWolf;
+    using KokkosPotential = potential::KokkosPotential;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
@@ -356,6 +371,19 @@ namespace pq
     /********************
      * output namespace *
      ********************/
+
+    using EnergyOutput     = output::EnergyOutput;
+    using InfoOutput       = output::InfoOutput;
+    using LogOutput        = output::LogOutput;
+    using RstFileOutput    = output::RstFileOutput;
+    using StdoutOutput     = output::StdoutOutput;
+    using TrajectoryOutput = output::TrajectoryOutput;
+    using MomentumOutput   = output::MomentumOutput;
+    using VirialOutput     = output::VirialOutput;
+    using StressOutput     = output::StressOutput;
+    using BoxFileOutput    = output::BoxFileOutput;
+    using TimingsOutput    = output::TimingsOutput;
+    using OptOutput        = output::OptOutput;
 
     using RPMDRstFileOutput = output::RingPolymerRestartFileOutput;
     using RPMDTrajOutput    = output::RingPolymerTrajectoryOutput;
