@@ -25,11 +25,10 @@
 #define _CONVERGENCE_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "typeAliases.hpp"
 
 namespace input
 {
-    using strings = std::vector<std::string>;
-
     /**
      * @class ConvInputParser
      *
@@ -39,22 +38,22 @@ namespace input
     class ConvInputParser : public InputFileParser
     {
        public:
-        explicit ConvInputParser(engine::Engine &);
+        explicit ConvInputParser(pq::Engine &);
 
-        void parseEnergyConvergenceStrategy(const strings &, const size_t);
+        void parseEnergyConvergenceStrategy(const pq::strings &, const size_t);
 
-        void parseUseEnergyConvergence(const strings &, const size_t);
-        void parseUseForceConvergence(const strings &, const size_t);
-        void parseUseMaxForceConvergence(const strings &, const size_t);
-        void parseUseRMSForceConvergence(const strings &, const size_t);
+        void parseUseEnergyConvergence(const pq::strings &, const size_t);
+        void parseUseForceConvergence(const pq::strings &, const size_t);
+        void parseUseMaxForceConvergence(const pq::strings &, const size_t);
+        void parseUseRMSForceConvergence(const pq::strings &, const size_t);
 
-        void parseEnergyConvergence(const strings &, const size_t);
-        void parseRelativeEnergyConvergence(const strings &, const size_t);
-        void parseAbsoluteEnergyConvergence(const strings &, const size_t);
+        void parseEnergyConvergence(const pq::strings &, const size_t);
+        void parseRelativeEnergyConvergence(const pq::strings &, const size_t);
+        void parseAbsoluteEnergyConvergence(const pq::strings &, const size_t);
 
-        void parseForceConvergence(const strings &, const size_t);
-        void parseMaxForceConvergence(const strings &, const size_t);
-        void parseRMSForceConvergence(const strings &, const size_t);
+        void parseForceConvergence(const pq::strings &, const size_t);
+        void parseMaxForceConvergence(const pq::strings &, const size_t);
+        void parseRMSForceConvergence(const pq::strings &, const size_t);
     };
 
 }   // namespace input

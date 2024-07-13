@@ -60,7 +60,8 @@ namespace customException
         MSHAKEEXCEPTION,
         LINEARALGEBRAEXCEPTION,
         OPTEXCEPTION,
-        OPTWARNING
+        OPTWARNING,
+        COMPILETIMEEXCEPTION
     };
 
     /**
@@ -75,10 +76,9 @@ namespace customException
         std::string _message;
 
        public:
-        explicit CustomException(const std::string_view message)
-            : _message(message){};
-        void colorfulOutput(const Color::Code color, const std::string_view)
-            const;
+        explicit CustomException(const std::string_view message);
+
+        void colorfulOutput(const Color::Code, const std::string_view) const;
     };
 
     /**
@@ -355,6 +355,19 @@ namespace customException
      * @brief Exception for optimization errors
      */
     class OptWarning : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class CompileTimeException inherits from CustomException
+     *
+     * @brief Exception for compile time errors
+     */
+    class CompileTimeException : public CustomException
     {
        public:
         using CustomException::CustomException;

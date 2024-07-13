@@ -30,27 +30,28 @@
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
+using namespace customException;
+
 TEST_F(TestIntraNonBondedReader, findMoleculeType)
 {
     EXPECT_EQ(_intraNonBondedReader->findMoleculeType("molecule1"), 0);
-
     EXPECT_EQ(_intraNonBondedReader->findMoleculeType("0"), 0);
 
     _intraNonBondedReader->setFileName("intraNonBonded.dat");
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
             _intraNonBondedReader->findMoleculeType("molecule2"),
-        customException::IntraNonBondedException,
-        "ERROR: could not find molecule type \"molecule2\" in line 1 in file "
-        "\"intraNonBonded.dat\""
+        IntraNonBondedException,
+        "ERROR: could not find molecule type 'molecule2' in line 1 in file "
+        "'intraNonBonded.dat'"
     );
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
             _intraNonBondedReader->findMoleculeType("1"),
-        customException::IntraNonBondedException,
-        "ERROR: could not find molecule type \"1\" in line 1 in file "
-        "\"intraNonBonded.dat\""
+        IntraNonBondedException,
+        "ERROR: could not find molecule type '1' in line 1 in file "
+        "'intraNonBonded.dat'"
     );
 }
 
@@ -59,7 +60,7 @@ TEST_F(TestIntraNonBondedReader, noFileSetByUser)
     settings::FileSettings::unsetIsIntraNonBondedFileNameSet();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
-        customException::IntraNonBondedException,
+        IntraNonBondedException,
         "Intra non bonded file needed for requested simulation setup"
     );
 }
@@ -79,9 +80,9 @@ TEST_F(TestIntraNonBondedReader, referenceAtomOutOfRange)
     _intraNonBondedReader->reInitializeFp();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
-        customException::IntraNonBondedException,
-        "ERROR: reference atom index \"4\" in line 2 in file "
-        "\"data/intraNonBondedReader/referenceAtomOutOfRange.dat\" is out of "
+        IntraNonBondedException,
+        "ERROR: reference atom index '4' in line 2 in file "
+        "'data/intraNonBondedReader/referenceAtomOutOfRange.dat' is out of "
         "range"
     );
 }
@@ -94,9 +95,9 @@ TEST_F(TestIntraNonBondedReader, atomIndexOutOfRange)
     _intraNonBondedReader->reInitializeFp();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
-        customException::IntraNonBondedException,
-        "ERROR: atom index \"4\" in line 3 in file "
-        "\"data/intraNonBondedReader/atomIndexOutOfRange.dat\" is out of range"
+        IntraNonBondedException,
+        "ERROR: atom index '4' in line 3 in file "
+        "'data/intraNonBondedReader/atomIndexOutOfRange.dat' is out of range"
     );
 }
 
@@ -108,9 +109,9 @@ TEST_F(TestIntraNonBondedReader, missingEndKeyword)
     _intraNonBondedReader->reInitializeFp();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
-        customException::IntraNonBondedException,
-        "ERROR: could not find \"END\" for moltype \"0\" in file "
-        "\"data/intraNonBondedReader/missingEndKeyword.dat\""
+        IntraNonBondedException,
+        "ERROR: could not find 'END' for moltype '0' in file "
+        "'data/intraNonBondedReader/missingEndKeyword.dat'"
     );
 }
 
@@ -122,9 +123,9 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
     _intraNonBondedReader->reInitializeFp();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
-        customException::IntraNonBondedException,
-        "ERROR: moltype \"0\" is defined multiple times in file "
-        "\"data/intraNonBondedReader/molTypeDefinedMultipleTimes.dat\""
+        IntraNonBondedException,
+        "ERROR: moltype '0' is defined multiple times in file "
+        "'data/intraNonBondedReader/molTypeDefinedMultipleTimes.dat'"
     );
 }
 

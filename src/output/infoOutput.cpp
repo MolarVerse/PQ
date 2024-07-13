@@ -37,6 +37,8 @@
 #include "vector3d.hpp"             // for norm
 
 using namespace output;
+using namespace physicalData;
+using namespace settings;
 
 /**
  * @brief write info file
@@ -54,10 +56,7 @@ using namespace output;
  * @param simulationTime
  * @param data
  */
-void InfoOutput::write(
-    const double                      simulationTime,
-    const physicalData::PhysicalData &data
-)
+void InfoOutput::write(const double simulationTime, const PhysicalData &data)
 {
     _fp.close();
 
@@ -65,13 +64,17 @@ void InfoOutput::write(
 
     writeHeader();
 
-    writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+    if (Settings::isMDJobType())
+        writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+    else
+        writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
+
     writeRight(data.getTemperature(), "TEMPERATURE", "K");
 
     writeLeft(data.getPressure(), "PRESSURE", "bar");
     writeRight(data.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
-    if (settings::Settings::isQMActivated())
+    if (Settings::isQMActivated())
     {
         writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
         writeRight(data.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
@@ -80,13 +83,13 @@ void InfoOutput::write(
     writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
     writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
-    if (settings::Settings::isMMActivated())
+    if (Settings::isMMActivated())
     {
         writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
         writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
     }
 
-    if (settings::ForceFieldSettings::isActive())
+    if (ForceFieldSettings::isActive())
     {
         writeLeft(data.getBondEnergy(), "E(BOND)", "kcal/mol");
         writeRight(data.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
@@ -94,15 +97,13 @@ void InfoOutput::write(
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
-    if (settings::ManostatSettings::getManostatType() !=
-        settings::ManostatType::NONE)
+    if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
         writeRight(data.getDensity(), "DENSITY", "g/cm^3");
     }
 
-    if (settings::ThermostatSettings::getThermostatType() ==
-        settings::ThermostatType::NOSE_HOOVER)
+    if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
     {
         writeLeft(
             data.getNoseHooverMomentumEnergy(),
@@ -116,7 +117,7 @@ void InfoOutput::write(
         );
     }
 
-    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    if (ConstraintSettings::isDistanceConstraintsActivated())
     {
         writeLeft(
             data.getLowerDistanceConstraints(),
@@ -167,6 +168,29 @@ void InfoOutput::writeLeft(
 )
 {
     _fp << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
+}
+
+/**
+ * @brief write left column of info file
+ *
+ * @param value
+ * @param name
+ * @param unit
+ * @param formatter
+ * @param precision
+ */
+void InfoOutput::writeLeftInteger(
+    const double            value,
+    const std::string_view &name,
+    const std::string_view &unit
+)
+{
+    _fp << std::format(
+        "|   {:<15} {:15d} {:<8} ",
+        name,
+        static_cast<int>(value),
+        unit
+    );
 }
 
 /**

@@ -64,8 +64,6 @@ namespace defaults
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;
     static constexpr double _WOLF_PARAM_DEFAULT_            = 0.25;     // TODO: add unit
-    static constexpr char   _COULOMB_LR_TYPE_DEFAULT_[] = "none";   // default no coulomb long range correction
-    static constexpr char   _NON_COULOMB_TYPE_DEFAULT_[]        = "guff";   // default is guff
 
     static constexpr bool   _CONSTRAINTS_ACTIVE_DEFAULT_ = false;
     static constexpr size_t _SHAKE_MAX_ITER_DEFAULT_     = 20;
@@ -82,7 +80,7 @@ namespace defaults
     static constexpr double _NH_COUPLING_FREQ_       = 1.0e3;   // in cm^-1
 
     static constexpr double _BERENDSEN_MANOSTAT_RELAX_TIME_ = 1.0;        // in ps
-    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // default value for berendsen manostat
+    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // in bar^-1 default value for berendsen manostat
 
     static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
 
@@ -91,7 +89,7 @@ namespace defaults
     static constexpr char   _OPTIMIZER_DEFAULT_[]           = "gradient-descent";
     static constexpr size_t _N_EPOCHS_DEFAULT_              = 100;
     static constexpr size_t _LR_UPDATE_FREQUENCY_DEFAULT_   = 1;
-    static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0;
+    static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0e-4;
     static constexpr double _MIN_LEARNING_RATE_DEFAULT_     = 1e-15;
 
     static constexpr char   _EN_CONV_STRATEGY_DEFAULT_[] = "rigorous";

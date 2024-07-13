@@ -27,11 +27,7 @@
 #include <string_view>   // for string_view
 
 #include "output.hpp"   // for Output
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -48,12 +44,13 @@ namespace output
         void writeHeader();
         void writeLeft(const double, const std::string_view &, const std::string_view &);
         void writeLeftScientific(const double, const std::string_view &, const std::string_view &);
+        void writeLeftInteger(const double, const std::string_view &, const std::string_view &);
         void writeRight(const double, const std::string_view &, const std::string_view &);
 
        public:
         using Output::Output;
 
-        void write(const double, const physicalData::PhysicalData &);
+        void write(const double, const pq::PhysicalData &);
     };
 
 }   // namespace output

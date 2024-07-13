@@ -34,7 +34,9 @@
 #include "simulationBox.hpp"       // for SimulationBox
 
 using namespace simulationBox;
+using namespace settings;
 using namespace linearAlgebra;
+using namespace customException;
 
 /**
  * @brief clone cell list
@@ -52,10 +54,11 @@ std::shared_ptr<CellList> CellList::clone() const
  * @param cellIndices
  * @return size_t
  */
-[[nodiscard]] size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
+size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
 {
-    return cellIndices[0] * _nCells[1] * _nCells[2] +
-           cellIndices[1] * _nCells[2] + cellIndices[2];
+    const auto outerProduct = cellIndices[0] * _nCells[1] * _nCells[2];
+
+    return outerProduct + cellIndices[1] * _nCells[2] + cellIndices[2];
 }
 
 /**
@@ -73,11 +76,11 @@ void CellList::setup(const SimulationBox &simulationBox)
 {
     determineCellSize(simulationBox.getBoxDimensions());
 
-    checkCoulombCutoff(settings::PotentialSettings::getCoulombRadiusCutOff());
+    checkCoulombCutoff(PotentialSettings::getCoulombRadiusCutOff());
 
     determineCellBoundaries(simulationBox.getBoxDimensions());
 
-    addNeighbouringCells(settings::PotentialSettings::getCoulombRadiusCutOff());
+    addNeighbouringCells(PotentialSettings::getCoulombRadiusCutOff());
 }
 
 /**
@@ -85,7 +88,7 @@ void CellList::setup(const SimulationBox &simulationBox)
  *
  * @param simulationBox
  */
-void CellList::determineCellSize(const linearAlgebra::Vec3D &box)
+void CellList::determineCellSize(const Vec3D &box)
 {
     _cellSize = box / Vec3D(_nCells);
 }
@@ -101,7 +104,7 @@ void CellList::determineCellSize(const linearAlgebra::Vec3D &box)
 void CellList::checkCoulombCutoff(const double coulombCutoff) const
 {
     if (coulombCutoff < maximum(_cellSize) / 2.0)
-        throw customException::CellListException(
+        throw CellListException(
             "Coulomb cutoff is smaller than half of the largest cell size."
         );
 }
@@ -111,7 +114,7 @@ void CellList::checkCoulombCutoff(const double coulombCutoff) const
  *
  * @param simulationBox
  */
-void CellList::determineCellBoundaries(const linearAlgebra::Vec3D &box)
+void CellList::determineCellBoundaries(const Vec3D &box)
 {
     for (size_t i = 0; i < _nCells[0]; ++i)
         for (size_t j = 0; j < _nCells[1]; ++j)
@@ -139,10 +142,9 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
-    std::ranges::for_each(
-        _cells,
-        [this](auto &cell) { addNeighbouringCellPointers(cell); }
-    );
+    auto addCell = [this](auto &cell) { addNeighbouringCellPointers(cell); };
+
+    std::ranges::for_each(_cells, addCell);
 }
 
 /**
@@ -154,32 +156,34 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
 {
     const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
-    for (int i = -int(_nNeighbourCells[0]); i <= int(_nNeighbourCells[0]); ++i)
-        for (int j = -int(_nNeighbourCells[1]); j <= int(_nNeighbourCells[1]);
-             ++j)
-            for (int k = -int(_nNeighbourCells[2]);
-                 k <= int(_nNeighbourCells[2]);
-                 ++k)
+    const auto nNeighCells0 = int(_nNeighbourCells[0]);
+    const auto nNeighCells1 = int(_nNeighbourCells[1]);
+    const auto nNeighCells2 = int(_nNeighbourCells[2]);
+
+    for (int i = -nNeighCells0; i <= nNeighCells0; ++i)
+        for (int j = -nNeighCells1; j <= nNeighCells1; ++j)
+            for (int k = -nNeighCells2; k <= nNeighCells2; ++k)
             {
                 const auto ijk = Vec3Di(i, j, k);
 
                 if (ijk == Vec3Di(0, 0, 0))
                     continue;
 
-                auto neighbourCellIndex = ijk + Vec3Di(cell.getCellIndex());
-                neighbourCellIndex -=
-                    Vec3Di(_nCells) *
-                    Vec3Di(floor(Vec3D(neighbourCellIndex) / Vec3D(_nCells)));
+                auto neighCellIndex  = ijk + Vec3Di(cell.getCellIndex());
+                auto indices         = Vec3D(neighCellIndex) / Vec3D(_nCells);
+                indices              = floor(indices);
+                neighCellIndex      -= Vec3Di(_nCells) * Vec3Di(indices);
 
-                const auto neighbourCellIndexScalar =
-                    getCellIndex(Vec3Dul(neighbourCellIndex));
+                const auto scalarIndex          = Vec3Dul(neighCellIndex);
+                const auto neighCellIndexScalar = getCellIndex(scalarIndex);
 
-                Cell *neighbourCell = &_cells[neighbourCellIndexScalar];
+                Cell *neighbourCell = &_cells[neighCellIndexScalar];
 
                 cell.addNeighbourCell(neighbourCell);
 
-                if (cell.getNumberOfNeighbourCells() ==
-                    (totalCellNeighbours - 1) / 2)
+                const auto nNeighCells = cell.getNumberOfNeighbourCells();
+
+                if (nNeighCells == (totalCellNeighbours - 1) / 2)
                     return;
             }
 }
@@ -234,17 +238,17 @@ void CellList::updateCellList(SimulationBox &simulationBox)
  */
 void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 {
-    const auto box = simulationBox.getBoxDimensions();
+    const auto box        = simulationBox.getBoxDimensions();
+    const auto nMolecules = simulationBox.getNumberOfMolecules();
 
-    for (size_t i = 0, nMolecules = simulationBox.getNumberOfMolecules();
-         i < nMolecules;
-         ++i)
+    for (size_t i = 0; i < nMolecules; ++i)
     {
         auto *molecule                = &simulationBox.getMolecule(i);
         auto  mapCellIndexToAtomIndex = std::map<size_t, std::vector<size_t>>();
 
-        for (size_t j = 0, nAtoms = molecule->getNumberOfAtoms(); j < nAtoms;
-             ++j)
+        const auto nAtomsInMolecule = molecule->getNumberOfAtoms();
+
+        for (size_t j = 0; j < nAtomsInMolecule; ++j)
         {
             const auto position = molecule->getAtomPosition(j);
 
@@ -281,14 +285,119 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
  * @param position
  * @return Vec3Dul
  */
-[[nodiscard]] Vec3Dul CellList::getCellIndexOfAtom(
-    const Vec3D &box,
-    const Vec3D &position
-) const
+Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position)
+    const
 {
     auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 
     cellIndex -= _nCells * Vec3Dul(floor(Vec3D(cellIndex) / Vec3D(_nCells)));
 
     return cellIndex;
+}
+
+/**
+ * @brief resize cells
+ *
+ */
+void CellList::resizeCells() { _cells.resize(prod(_nCells)); }
+
+/**
+ * @brief add cell to cell list
+ *
+ * @param cell
+ */
+void CellList::addCell(const Cell &cell) { _cells.push_back(cell); }
+
+/*****************************
+ *                           *
+ * standard activate methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief activate cell list
+ *
+ */
+void CellList::activate() { _activated = true; }
+
+/**
+ * @brief deactivate cell list
+ *
+ */
+void CellList::deactivate() { _activated = false; }
+
+/**
+ * @brief check if cell list is active
+ *
+ * @return true
+ * @return false
+ */
+bool CellList::isActive() const { return _activated; }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get number of cells
+ *
+ * @return Vec3Dul
+ */
+Vec3Dul CellList::getNumberOfCells() const { return _nCells; }
+
+/**
+ * @brief get number of neighbour cells
+ *
+ * @return Vec3Dul
+ */
+Vec3Dul CellList::getNumberOfNeighbourCells() const { return _nNeighbourCells; }
+
+/**
+ * @brief get cell size
+ *
+ * @return Vec3D
+ */
+Vec3D CellList::getCellSize() const { return _cellSize; }
+
+/**
+ * @brief get cells
+ *
+ * @return std::vector<Cell>
+ */
+std::vector<Cell> CellList::getCells() const { return _cells; }
+
+/**
+ * @brief get cell by index
+ *
+ * @param index
+ * @return Cell&
+ */
+Cell &CellList::getCell(const size_t index) { return _cells[index]; }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set number of cells
+ *
+ * @param nCells
+ */
+void CellList::setNumberOfCells(const size_t nCells)
+{
+    _nCells = {nCells, nCells, nCells};
+}
+
+/**
+ * @brief set number of neighbour cells
+ *
+ * @param nCells
+ */
+void CellList::setNumberOfNeighbourCells(const size_t nCells)
+{
+    _nNeighbourCells = Vec3Dul(nCells);
 }

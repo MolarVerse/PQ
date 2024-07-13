@@ -22,6 +22,12 @@
 
 #include "ringPolymerSetup.hpp"
 
+#include <algorithm>     // for __for_each_fn, for_each
+#include <cstddef>       // for size_t
+#include <functional>    // for identity
+#include <iostream>      // for operator<<, endl, basic_ostream, cout
+#include <string_view>   // for string_view
+
 #include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
@@ -31,43 +37,51 @@
 #include "settings.hpp"                       // for Settings
 #include "simulationBox.hpp"                  // for SimulationBox
 
-#include <algorithm>     // for __for_each_fn, for_each
-#include <cstddef>       // for size_t
-#include <functional>    // for identity
-#include <iostream>      // for operator<<, endl, basic_ostream, cout
-#include <string_view>   // for string_view
-
 #ifdef WITH_MPI
 #include "mpi.hpp"   // for MPI
 #endif
 
 using setup::RingPolymerSetup;
+using namespace engine;
+using namespace settings;
+using namespace customException;
+using namespace input::ringPolymer;
+using namespace maxwellBoltzmann;
 
 /**
  * @brief wrapper to build RingPolymerSetup object and call setup
  *
  * @param engine
  */
-void setup::setupRingPolymer(engine::Engine &engine)
+void setup::setupRingPolymer(Engine &engine)
 {
-    if (!settings::Settings::isRingPolymerMDActivated())
+    if (!Settings::isRingPolymerMDActivated())
     {
-
 #ifdef WITH_MPI
         if (mpi::MPI::getSize() > 1)
-            throw customException::MPIException(
-                "MPI parallelization with more than one process is not supported for non-ring polymer MD");
+            throw MPIException(
+                "MPI parallelization with more than one process is not "
+                "supported for non-ring polymer MD"
+            );
 #endif
 
         return;
     }
 
-    engine.getStdoutOutput().writeSetup("ring polymer MD (RPMD)");
-    engine.getLogOutput().writeSetup("ring polymer MD (RPMD)");
+    engine.getStdoutOutput().writeSetup("Ring Polymer MD (RPMD)");
+    engine.getLogOutput().writeSetup("Ring Polymer MD (RPMD)");
 
-    RingPolymerSetup ringPolymerSetup(dynamic_cast<engine::RingPolymerEngine &>(engine));
-    ringPolymerSetup.setup();
+    RingPolymerSetup ringPolySetup(dynamic_cast<RingPolymerEngine &>(engine));
+    ringPolySetup.setup();
 }
+
+/**
+ * @brief Construct a new Ring Polymer Setup object
+ *
+ * @param engine
+ */
+RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine)
+    : _engine(engine){};
 
 /**
  * @brief setup a ring polymer simulation
@@ -75,8 +89,10 @@ void setup::setupRingPolymer(engine::Engine &engine)
  */
 void RingPolymerSetup::setup()
 {
-    if (!settings::RingPolymerSettings::isNumberOfBeadsSet())
-        throw customException::InputFileException("Number of beads not set for ring polymer simulation");
+    if (!RingPolymerSettings::isNumberOfBeadsSet())
+        throw InputFileException(
+            "Number of beads not set for ring polymer simulation"
+        );
 
     setupPhysicalData();
 
@@ -91,7 +107,8 @@ void RingPolymerSetup::setup()
  */
 void RingPolymerSetup::setupPhysicalData()
 {
-    _engine.resizeRingPolymerBeadPhysicalData(settings::RingPolymerSettings::getNumberOfBeads());
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+    _engine.resizeRingPolymerBeadPhysicalData(nBeads);
 }
 
 /**
@@ -100,7 +117,7 @@ void RingPolymerSetup::setupPhysicalData()
  */
 void RingPolymerSetup::setupSimulationBox()
 {
-    for (size_t i = 0; i < settings::RingPolymerSettings::getNumberOfBeads(); ++i)
+    for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
     {
         simulationBox::SimulationBox bead;
         bead.copy(_engine.getSimulationBox());
@@ -112,15 +129,23 @@ void RingPolymerSetup::setupSimulationBox()
 /**
  * @brief initialize beads for ring polymer simulation
  *
- * @details if no restart file is given, the velocities of the beads are initialized with maxwell boltzmann distribution
+ * @details if no restart file is given, the velocities of the beads are
+ * initialized with maxwell boltzmann distribution
  *
  */
 void RingPolymerSetup::initializeBeads()
 {
-    if (settings::FileSettings::isRingPolymerStartFileNameSet())
+    if (FileSettings::isRingPolymerStartFileNameSet())
     {
-        std::cout << "read ring polymer restart file" << std::endl;
-        input::ringPolymer::readRingPolymerRestartFile(_engine);
+        auto       &log    = _engine.getLogOutput();
+        const auto &stdOut = _engine.getStdoutOutput();
+        const auto &msg    = "Reading ring polymer restart file: ";
+        const auto &file   = FileSettings::getRingPolymerStartFileName();
+
+        log.writeRead(msg, file);
+        stdOut.writeRead(msg, file);
+
+        readRingPolymerRestartFile(_engine);
     }
     else
         initializeVelocitiesOfBeads();
@@ -134,7 +159,7 @@ void RingPolymerSetup::initializeVelocitiesOfBeads()
 {
     auto initVelocities = [](auto &bead)
     {
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(bead);
     };
 

@@ -24,9 +24,9 @@
 
 #define _BOX_HPP_
 
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "typeAliases.hpp"       // for diagonalMatrix
-#include "vector3d.hpp"          // for Vec3D
+#include "staticMatrix.hpp"   // for StaticMatrix3x3
+#include "typeAliases.hpp"    // for diagonalMatrix
+#include "vector3d.hpp"       // for Vec3D
 
 namespace simulationBox
 {
@@ -58,6 +58,8 @@ namespace simulationBox
 
         virtual void setBoxDimensions(const pq::Vec3D &boxDimensions);
 
+        [[nodiscard]] virtual double getMinimalBoxDimension() const;
+
         [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
@@ -75,7 +77,6 @@ namespace simulationBox
 
         [[nodiscard]] bool      getBoxSizeHasChanged() const;
         [[nodiscard]] double    getVolume() const;
-        [[nodiscard]] double    getMinimalBoxDimension() const;
         [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
         /********************

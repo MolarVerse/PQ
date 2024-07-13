@@ -73,7 +73,7 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setConvergence(const opt::Convergence &);
+        void setConvergence(const opt::Convergence);
 
         void setSimulationBox(const pq::SharedSimBox);
         void setPhysicalData(const pq::SharedPhysicalData);
@@ -102,7 +102,8 @@ namespace opt
         [[nodiscard]] pq::Vec3DVec getPositions() const;
         [[nodiscard]] pq::Vec3DVec getPositions(const int) const;
 
-        [[nodiscard]] opt::Convergence getConvergence() const;
+        [[nodiscard]] opt::Convergence &getConvergence();
+        [[nodiscard]] opt::Convergence  getConvergence() const;
     };
 
 }   // namespace opt

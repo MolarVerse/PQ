@@ -20,6 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifndef _SELECTION_HPP_
+
+#define _SELECTION_HPP_
+
 #include <string>
 #include <vector>
 
@@ -31,3 +35,5 @@ namespace pq_python
         const std::string &moldescriptorFileName
     );
 }   // namespace pq_python
+
+#endif   // _SELECTION_HPP_

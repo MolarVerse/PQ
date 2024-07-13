@@ -26,24 +26,10 @@
 
 #include <string>   // for string
 
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "timer.hpp"             // for Timer
+#include "staticMatrix.hpp"   // for StaticMatrix3x3
+#include "timer.hpp"          // for Timer
+#include "typeAliases.hpp"
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-/**
- * @namespace virial
- *
- * @brief Namespace for virial calculation
- */
 namespace virial
 {
     /**
@@ -57,69 +43,24 @@ namespace virial
     class Virial : public timings::Timer
     {
        protected:
-        std::string _virialType;
+        std::string _virialType;   // TODO: make this an enum
 
-        linearAlgebra::tensor3D _virial;
+        pq::tensor3D _virial;
 
        public:
         virtual ~Virial() = default;
 
         virtual std::shared_ptr<Virial> clone() const = 0;
 
-        virtual void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &);
-        virtual void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &) {
+        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
+        virtual void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &) {
         };
 
-        void setVirial(const linearAlgebra::tensor3D &virial)
-        {
-            _virial = virial;
-        }
+        void setVirial(const pq::tensor3D &virial);
 
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const
-        {
-            return _virial;
-        }
-        [[nodiscard]] std::string getVirialType() const { return _virialType; }
+        [[nodiscard]] pq::tensor3D getVirial() const;
+        [[nodiscard]] std::string  getVirialType() const;
     };
-
-    /**
-     * @class VirialMolecular
-     *
-     * @brief Class for virial calculation of molecular systems
-     *
-     * @details overrides calculateVirial() function to include intra-molecular
-     * virial correction
-     */
-    class VirialMolecular : public Virial
-    {
-       public:
-        VirialMolecular() : Virial() { _virialType = "molecular"; }
-
-        std::shared_ptr<Virial> clone() const override;
-
-        void calculateVirial(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
-        void intraMolecularVirialCorrection(simulationBox::SimulationBox &, physicalData::PhysicalData &)
-            override;
-    };
-
-    /**
-     * @class VirialAtomic
-     *
-     * @brief Class for virial calculation of atomic systems
-     *
-     * @details dummy class for atomic systems, since no virial correction is
-     * needed
-     *
-     */
-    class VirialAtomic : public Virial
-    {
-       public:
-        VirialAtomic() : Virial() { _virialType = "atomic"; }
-
-        std::shared_ptr<Virial> clone() const override;
-    };
-
 }   // namespace virial
 
 #endif   // _VIRIAL_HPP_

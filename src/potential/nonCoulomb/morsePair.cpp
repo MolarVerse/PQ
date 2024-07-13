@@ -22,11 +22,77 @@
 
 #include "morsePair.hpp"
 
-#include "mathUtilities.hpp"   // for compare
-
 #include <cmath>   // for exp
 
+#include "mathUtilities.hpp"   // for compare
+
 using namespace potential;
+using namespace utilities;
+
+/**
+ * @brief Construct a new Morse Pair:: Morse Pair object
+ *
+ * @param vanDerWaalsType1
+ * @param vanDerWaalsType2
+ * @param cutOff
+ * @param dissociationEnergy
+ * @param wellWidth
+ * @param equilibriumDistance
+ */
+MorsePair::MorsePair(
+    const size_t vanDerWaalsType1,
+    const size_t vanDerWaalsType2,
+    const double cutOff,
+    const double dissociationEnergy,
+    const double wellWidth,
+    const double equilibriumDistance
+)
+    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+      _dissociationEnergy(dissociationEnergy),
+      _wellWidth(wellWidth),
+      _equilibriumDistance(equilibriumDistance){};
+
+/**
+ * @brief Construct a new Morse Pair:: Morse Pair object
+ *
+ * @param cutOff
+ * @param dissociationEnergy
+ * @param wellWidth
+ * @param equilibriumDistance
+ */
+MorsePair::MorsePair(
+    const double cutOff,
+    const double dissociationEnergy,
+    const double wellWidth,
+    const double equilibriumDistance
+)
+    : NonCoulombPair(cutOff),
+      _dissociationEnergy(dissociationEnergy),
+      _wellWidth(wellWidth),
+      _equilibriumDistance(equilibriumDistance){};
+
+/**
+ * @brief Construct a new Morse Pair:: Morse Pair object
+ *
+ * @param cutOff
+ * @param energyCutoff
+ * @param forceCutoff
+ * @param dissociationEnergy
+ * @param wellWidth
+ * @param equilibriumDistance
+ */
+MorsePair::MorsePair(
+    const double cutOff,
+    const double energyCutoff,
+    const double forceCutoff,
+    const double dissociationEnergy,
+    const double wellWidth,
+    const double equilibriumDistance
+)
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
+      _dissociationEnergy(dissociationEnergy),
+      _wellWidth(wellWidth),
+      _equilibriumDistance(equilibriumDistance){};
 
 /**
  * @brief operator overload for the comparison of two MorsePair objects
@@ -37,9 +103,14 @@ using namespace potential;
  */
 bool MorsePair::operator==(const MorsePair &other) const
 {
-    return NonCoulombPair::operator==(other) && utilities::compare(_dissociationEnergy, other._dissociationEnergy) &&
-           utilities::compare(_wellWidth, other._wellWidth) &&
-           utilities::compare(_equilibriumDistance, other._equilibriumDistance);
+    auto isEq = true;
+
+    isEq = isEq && NonCoulombPair::operator==(other);
+    isEq = isEq && compare(_dissociationEnergy, other._dissociationEnergy);
+    isEq = isEq && compare(_wellWidth, other._wellWidth);
+    isEq = isEq && compare(_equilibriumDistance, other._equilibriumDistance);
+
+    return isEq;
 }
 
 /**
@@ -48,13 +119,43 @@ bool MorsePair::operator==(const MorsePair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> MorsePair::calculateEnergyAndForce(const double distance) const
+std::pair<double, double> MorsePair::calculate(const double distance) const
 {
-    const auto expTerm = std::exp(-_wellWidth * (distance - _equilibriumDistance));
+    const auto deltaEquilibrium = distance - _equilibriumDistance;
+    const auto expTerm          = std::exp(-_wellWidth * deltaEquilibrium);
+    const auto oneMinusExpTerm  = 1.0 - expTerm;
 
-    const auto energy =
-        _dissociationEnergy * (1.0 - expTerm) * (1.0 - expTerm) - _energyCutOff - _forceCutOff * (_radialCutOff - distance);
-    const auto force = -2.0 * _dissociationEnergy * _wellWidth * expTerm * (1.0 - expTerm) - _forceCutOff;
+    auto energy  = _dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
+    energy      -= _energyCutOff;
+    energy      -= _forceCutOff * (_radialCutOff - distance);
+
+    auto force  = -2.0 * _dissociationEnergy * _wellWidth;
+    force      *= expTerm * oneMinusExpTerm;
+    force      -= _forceCutOff;
 
     return {energy, force};
+}
+
+/**
+ * @brief get the dissociation energy
+ *
+ * @return double
+ */
+double MorsePair::getDissociationEnergy() const { return _dissociationEnergy; }
+
+/**
+ * @brief get the well width
+ *
+ * @return double
+ */
+double MorsePair::getWellWidth() const { return _wellWidth; }
+
+/**
+ * @brief get the equilibrium distance
+ *
+ * @return double
+ */
+double MorsePair::getEquilibriumDistance() const
+{
+    return _equilibriumDistance;
 }

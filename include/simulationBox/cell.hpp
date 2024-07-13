@@ -24,15 +24,13 @@
 
 #define _CELL_HPP_
 
-#include "vector3d.hpp"   // for Vec3D, Vec3Dul
-
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
+#include "typeAliases.hpp"
+
 namespace simulationBox
 {
-    class Molecule;   // forward declaration
-
     /**
      * @class Cell
      *
@@ -41,49 +39,51 @@ namespace simulationBox
      */
     class Cell
     {
-      private:
-        std::vector<Molecule *>          _molecules;
+       private:
+        std::vector<pq::Molecule *>      _molecules;
         std::vector<std::vector<size_t>> _atomIndices;
         std::vector<Cell *>              _neighbourCells;
 
-        linearAlgebra::Vec3D   _lowerBoundary = {0, 0, 0};
-        linearAlgebra::Vec3D   _upperBoundary = {0, 0, 0};
-        linearAlgebra::Vec3Dul _cellIndex     = {0, 0, 0};
+        pq::Vec3D   _lowerBoundary = {0, 0, 0};
+        pq::Vec3D   _upperBoundary = {0, 0, 0};
+        pq::Vec3Dul _cellIndex     = {0, 0, 0};
 
-      public:
-        void clearMolecules() { _molecules.clear(); }
-        void clearAtomIndices() { _atomIndices.clear(); }
+       public:
+        void clearMolecules();
+        void clearAtomIndices();
 
-        void addMolecule(Molecule &molecule) { _molecules.push_back(&molecule); }
-        void addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
-        void addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
-        void addAtomIndices(const std::vector<size_t> &atomIndices) { _atomIndices.push_back(atomIndices); }
+        void addMolecule(pq::Molecule &molecule);
+        void addMolecule(pq::Molecule *molecule);
+        void addNeighbourCell(Cell *cell);
+        void addAtomIndices(const std::vector<size_t> &atomIndices);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t                        getNumberOfMolecules() const { return _molecules.size(); }
-        [[nodiscard]] size_t                        getNumberOfNeighbourCells() const { return _neighbourCells.size(); }
-        [[nodiscard]] const linearAlgebra::Vec3D   &getLowerBoundary() const { return _lowerBoundary; }
-        [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const { return _upperBoundary; }
-        [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const { return _cellIndex; }
+        [[nodiscard]] size_t             getNumberOfMolecules() const;
+        [[nodiscard]] size_t             getNumberOfNeighbourCells() const;
+        [[nodiscard]] const pq::Vec3D   &getLowerBoundary() const;
+        [[nodiscard]] const pq::Vec3D   &getUpperBoundary() const;
+        [[nodiscard]] const pq::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] Molecule               *getMolecule(const size_t index) const { return _molecules[index]; }
-        [[nodiscard]] std::vector<Molecule *> getMolecules() const { return _molecules; }
+        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const;
+        [[nodiscard]] std::vector<Molecule *> getMolecules() const;
 
-        [[nodiscard]] Cell               *getNeighbourCell(const size_t index) const { return _neighbourCells[index]; }
-        [[nodiscard]] std::vector<Cell *> getNeighbourCells() const { return _neighbourCells; }
+        [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
+        [[nodiscard]] std::vector<Cell *> getNeighbourCells() const;
 
-        [[nodiscard]] const std::vector<size_t> &getAtomIndices(const size_t index) const { return _atomIndices[index]; }
+        [[nodiscard]] const std::vector<size_t> &getAtomIndices(
+            const size_t index
+        ) const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setLowerBoundary(const linearAlgebra::Vec3D &lowerBoundary) { _lowerBoundary = lowerBoundary; }
-        void setUpperBoundary(const linearAlgebra::Vec3D &upperBoundary) { _upperBoundary = upperBoundary; }
-        void setCellIndex(const linearAlgebra::Vec3Dul &cellIndex) { _cellIndex = cellIndex; }
+        void setLowerBoundary(const pq::Vec3D &lowerBoundary);
+        void setUpperBoundary(const pq::Vec3D &upperBoundary);
+        void setCellIndex(const pq::Vec3Dul &cellIndex);
     };
 
 }   // namespace simulationBox

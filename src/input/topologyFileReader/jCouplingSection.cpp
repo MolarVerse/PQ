@@ -32,6 +32,9 @@
 #include "jCouplingForceField.hpp"   // for JCouplingForceField
 
 using namespace input::topology;
+using namespace customException;
+using namespace engine;
+using namespace forceField;
 
 /**
  * @brief processes the j-coupling section of the topology file
@@ -46,18 +49,18 @@ using namespace input::topology;
  * @param line
  * @param engine
  *
- * @throws customException::TopologyException if number of elements in line
+ * @throws TopologyException if number of elements in line
  is not 5
- * @throws customException::TopologyException if atom indices are the same
+ * @throws TopologyException if atom indices are the same
  (=same atoms)
  */
 void JCouplingSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 5)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Wrong number of arguments in topology file j-coupling "
             "section at line {} - number of elements has to be 5!",
             _lineNumber
@@ -75,7 +78,7 @@ void JCouplingSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file dihedral section at line {} "
             "- atoms cannot be the same!",
             _lineNumber
@@ -83,31 +86,37 @@ void JCouplingSection::processSection(
 
     auto simBox = engine.getSimulationBox();
 
-    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIndex3] = simBox.findMoleculeByAtomIndex(atom3);
-    const auto [molecule4, atomIndex4] = simBox.findMoleculeByAtomIndex(atom4);
+    const auto [molecule1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
+    const auto [molecule2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [molecule3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
+    const auto [molecule4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
 
-    auto jCouplingForceField = forceField::JCouplingForceField(
-        {molecule1, molecule2, molecule3, molecule4},
-        {atomIndex1, atomIndex2, atomIndex3, atomIndex4},
-        dihedralType
-    );
+    const auto mols = std::vector{molecule1, molecule2, molecule3, molecule4};
+    const auto atomIdxs = std::vector{idx1, idx2, idx3, idx4};
 
-    engine.getForceField().addJCoupling(jCouplingForceField);
+    auto jCouplingFF = JCouplingForceField(mols, atomIdxs, dihedralType);
+
+    engine.getForceField().addJCoupling(jCouplingFF);
 }
+
+/**
+ * @brief returns the keyword of the j-coupling section
+ *
+ * @return "j-couplings"
+ */
+std::string JCouplingSection::keyword() { return "j-couplings"; }
 
 /**
  * @brief checks if j-coupling section ends normally
  *
  * @param endedNormal
  *
- * @throws customException::TopologyException if endedNormal is false
+ * @throws TopologyException if endedNormal is false
  */
 void JCouplingSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw customException::TopologyException(std::format(
+        throw TopologyException(std::format(
             "Topology file j-coupling section at line {} "
             "- no end of section found!",
             _lineNumber

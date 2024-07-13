@@ -31,6 +31,17 @@
 #include "jCouplingType.hpp"                 // for JCouplingType
 
 using namespace input::parameterFile;
+using namespace engine;
+using namespace customException;
+using namespace forceField;
+using namespace constants;
+
+/**
+ * @brief returns the keyword of the j-coupling section
+ *
+ * @return "j-couplings"
+ */
+std::string JCouplingSection::keyword() { return "j-couplings"; }
 
 /**
  * @brief processes one line of the j-coupling section of the parameter file and
@@ -63,16 +74,16 @@ using namespace input::parameterFile;
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line
+ * @throw ParameterFileException if number of elements in line
  * is not 7 or 8
  */
 void JCouplingSection::processSection(
     std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    Engine                   &engine
 )
 {
     if (lineElements.size() != 7 && lineElements.size() != 8)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file j-coupling section at "
             "line {} - number of elements has to be 7 or 8!",
             _lineNumber
@@ -84,7 +95,7 @@ void JCouplingSection::processSection(
     auto a             = stod(lineElements[3]);
     auto b             = stod(lineElements[4]);
     auto c             = stod(lineElements[5]);
-    auto phaseShift    = stod(lineElements[6]) * constants::_DEG_TO_RAD_;
+    auto phase         = stod(lineElements[6]) * _DEG_TO_RAD_;
 
     auto upperSymmetry = true;
     auto lowerSymmetry = true;
@@ -103,8 +114,7 @@ void JCouplingSection::processSection(
             upperSymmetry = false;
     }
 
-    auto jCouplingType =
-        forceField::JCouplingType(id, J0, forceConstant, a, b, c, phaseShift);
+    auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c, phase);
 
     jCouplingType.setUpperSymmetry(upperSymmetry);
     jCouplingType.setLowerSymmetry(lowerSymmetry);

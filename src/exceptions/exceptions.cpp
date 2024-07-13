@@ -27,6 +27,16 @@
 using namespace customException;
 
 /**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+CustomException::CustomException(const std::string_view message)
+    : _message(message)
+{
+}
+
+/**
  * @brief Prints the exception type in color.
  *
  * @param color
@@ -271,5 +281,16 @@ const char *OptException::what() const throw()
 const char *OptWarning::what() const throw()
 {
     colorfulOutput(Color::FG_ORANGE, "OptimizationWarning");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *CompileTimeException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "CompileTimeError");
     return _message.c_str();
 }

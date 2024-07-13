@@ -183,7 +183,7 @@ void OptEngine::writeOutput()
     {
         _engineOutput.writeXyzFile(*_simulationBox);
         _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
+        _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
 
         // _engineOutput.writeVirialFile(
@@ -215,14 +215,10 @@ void OptEngine::writeOutput()
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
-        const auto dt            = settings::TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * constants::_FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        // _engineOutput.writeInstantEnergyFile(effStep, _physicalData);
-        _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
-        // _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
+        _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
 
         _averagePhysicalData = PhysicalData();
     }
@@ -277,6 +273,39 @@ void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> evaluator)
 /**
  * @brief get the optimizer
  *
+ */
+Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+
+/**
+ * @brief get the learning rate strategy
+ *
+ * @return LearningRate&
+ */
+LearningRateStrategy &OptEngine::getLearningRate()
+{
+    return *_learningRateStrategy;
+}
+
+/**
+ * @brief get the evaluator
+ *
+ * @return Evaluator&
+ */
+Evaluator &OptEngine::getEvaluator() { return *_evaluator; }
+
+/**
+ * @brief get the convergence
+ *
+ * @return Convergence&
+ */
+Convergence &OptEngine::getConvergence()
+{
+    return _optimizer->getConvergence();
+}
+
+/**
+ * @brief get the optimizer as a shared pointer
+ *
  * @return std::shared_ptr<Optimizer>
  */
 std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
@@ -285,7 +314,7 @@ std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
 }
 
 /**
- * @brief get the learning rate strategy
+ * @brief get the learning rate strategy as a shared pointer
  *
  * @return std::shared_ptr<LearningRateStrategy>
  */
@@ -295,7 +324,7 @@ std::shared_ptr<LearningRateStrategy> OptEngine::getSharedLearningRate()
 }
 
 /**
- * @brief get the evaluator
+ * @brief get the evaluator as a shared pointer
  *
  * @return std::shared_ptr<Evaluator>
  */

@@ -36,6 +36,8 @@
 #include "vector3d.hpp"             // for norm
 
 using namespace output;
+using namespace physicalData;
+using namespace settings;
 
 /**
  * @brief Write the energy output
@@ -53,17 +55,14 @@ using namespace output;
  * @param step
  * @param data
  */
-void EnergyOutput::write(
-    const size_t                      step,
-    const physicalData::PhysicalData &data
-)
+void EnergyOutput::write(const size_t step, const PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.12f}\t", data.getTemperature());
     _fp << std::format("{:20.12f}\t", data.getPressure());
     _fp << std::format("{:20.12f}\t", data.getTotalEnergy());
 
-    if (settings::Settings::isQMActivated())
+    if (Settings::isQMActivated())
     {
         _fp << std::format("{:20.12f}\t", data.getQMEnergy());
         _fp << std::format("{:20.12f}\t", data.getNumberOfQMAtoms());
@@ -72,13 +71,13 @@ void EnergyOutput::write(
     _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
     _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
 
-    if (settings::Settings::isMMActivated())
+    if (Settings::isMMActivated())
     {
         _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
         _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
     }
 
-    if (settings::ForceFieldSettings::isActive())
+    if (ForceFieldSettings::isActive())
     {
         _fp << std::format("{:20.12f}\t", data.getBondEnergy());
         _fp << std::format("{:20.12f}\t", data.getAngleEnergy());
@@ -86,21 +85,19 @@ void EnergyOutput::write(
         _fp << std::format("{:20.12f}\t", data.getImproperEnergy());
     }
 
-    if (settings::ManostatSettings::getManostatType() !=
-        settings::ManostatType::NONE)
+    if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
         _fp << std::format("{:20.12f}\t", data.getVolume());
         _fp << std::format("{:20.12f}\t", data.getDensity());
     }
 
-    if (settings::ThermostatSettings::getThermostatType() ==
-        settings::ThermostatType::NOSE_HOOVER)
+    if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
     {
         _fp << std::format("{:20.12f}\t", data.getNoseHooverMomentumEnergy());
         _fp << std::format("{:20.12f}\t", data.getNoseHooverFrictionEnergy());
     }
 
-    if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+    if (ConstraintSettings::isDistanceConstraintsActivated())
     {
         _fp << std::format("{:20.12f}\t", data.getLowerDistanceConstraints());
         _fp << std::format("{:20.12f}\t", data.getUpperDistanceConstraints());

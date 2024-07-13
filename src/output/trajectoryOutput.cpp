@@ -34,13 +34,14 @@
 #include "vector3d.hpp"        // for Vec3D
 
 using namespace output;
+using namespace simulationBox;
 
 /**
  * @brief Write the header of a trajectory files
  *
  * @param simBox
  */
-void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
+void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
 {
     const auto  nAtoms    = simBox.getNumberOfAtoms();
     const auto &boxDims   = simBox.getBoxDimensions();
@@ -54,7 +55,7 @@ void TrajectoryOutput::writeHeader(const simulationBox::SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
+void TrajectoryOutput::writeXyz(SimulationBox &simBox)
 {
     std::ostringstream buffer;
 
@@ -69,9 +70,11 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            buffer << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[0]);
-            buffer << std::format("{:15.8f}\t", molecule.getAtomPosition(i)[1]);
-            buffer << std::format("{:15.8f}\n", molecule.getAtomPosition(i)[2]);
+            const auto &pos = molecule.getAtomPosition(i);
+
+            buffer << std::format("{:15.8f}\t", pos[0]);
+            buffer << std::format("{:15.8f}\t", pos[1]);
+            buffer << std::format("{:15.8f}\n", pos[2]);
         }
     }
 
@@ -85,7 +88,7 @@ void TrajectoryOutput::writeXyz(simulationBox::SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
+void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
     std::ostringstream buffer;
 
@@ -100,9 +103,11 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            buffer << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[0]);
-            buffer << std::format("{:20.8e}\t", molecule.getAtomVelocity(i)[1]);
-            buffer << std::format("{:20.8e}\n", molecule.getAtomVelocity(i)[2]);
+            const auto &vel = molecule.getAtomVelocity(i);
+
+            buffer << std::format("{:20.8e}\t", vel[0]);
+            buffer << std::format("{:20.8e}\t", vel[1]);
+            buffer << std::format("{:20.8e}\n", vel[2]);
         }
     }
 
@@ -116,7 +121,7 @@ void TrajectoryOutput::writeVelocities(simulationBox::SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
+void TrajectoryOutput::writeForces(SimulationBox &simBox)
 {
     std::ostringstream buffer;
 
@@ -134,9 +139,11 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
-            buffer << std::format("{:15.8f}\t", molecule.getAtomForce(i)[0]);
-            buffer << std::format("{:15.8f}\t", molecule.getAtomForce(i)[1]);
-            buffer << std::format("{:15.8f}\n", molecule.getAtomForce(i)[2]);
+            const auto &force = molecule.getAtomForce(i);
+
+            buffer << std::format("{:15.8f}\t", force[0]);
+            buffer << std::format("{:15.8f}\t", force[1]);
+            buffer << std::format("{:15.8f}\n", force[2]);
         }
     }
 
@@ -150,7 +157,7 @@ void TrajectoryOutput::writeForces(simulationBox::SimulationBox &simBox)
  *
  * @param simBox
  */
-void TrajectoryOutput::writeCharges(simulationBox::SimulationBox &simBox)
+void TrajectoryOutput::writeCharges(SimulationBox &simBox)
 {
     std::ostringstream buffer;
 

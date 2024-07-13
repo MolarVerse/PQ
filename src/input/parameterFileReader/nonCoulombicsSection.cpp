@@ -38,6 +38,18 @@
 #include "stringUtilities.hpp"        // for toLowerCopy
 
 using namespace input::parameterFile;
+using namespace customException;
+using namespace engine;
+using namespace potential;
+using namespace settings;
+using namespace utilities;
+
+/**
+ * @brief keyword for nonCoulombics section
+ *
+ * @return "noncoulombics"
+ */
+std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
 
 /**
  * @brief processes the nonCoulombics header of the parameter file
@@ -48,32 +60,36 @@ using namespace input::parameterFile;
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if type of nonCoulombic is not
+ * @throw ParameterFileException if type of nonCoulombic is not
  * lj, buckingham or morse
  */
-void NonCoulombicsSection::
-    processHeader(std::vector<std::string> &lineElements, engine::Engine &)
+void NonCoulombicsSection::processHeader(pq::strings &lineElements, Engine &)
 {
+    using enum NonCoulombType;
+
     if (lineElements.size() > 1)
     {
-        const auto type = utilities::toLowerCopy(lineElements[1]);
+        const auto type = toLowerCopy(lineElements[1]);
 
         if (type == "lj")
-            settings::PotentialSettings::setNonCoulombType("lj");
+            PotentialSettings::setNonCoulombType(LJ);
+
         else if (type == "buckingham")
-            settings::PotentialSettings::setNonCoulombType("buck");
+            PotentialSettings::setNonCoulombType(BUCKINGHAM);
+
         else if (type == "morse")
-            settings::PotentialSettings::setNonCoulombType("morse");
+            PotentialSettings::setNonCoulombType(MORSE);
+
         else
-            throw customException::ParameterFileException(std::format(
+            throw ParameterFileException(std::format(
                 "Invalid type of nonCoulombic in parameter file nonCoulombic "
                 "section at line {} - has to be lj, buckingham or morse!",
                 _lineNumber
             ));
     }
     else
-        settings::PotentialSettings::setNonCoulombType("lj"
-        );   // default of guff gets overriden
+        // default of guff gets overriden
+        PotentialSettings::setNonCoulombType(LJ);
 }
 
 /**
@@ -82,27 +98,25 @@ void NonCoulombicsSection::
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if nonCoulombic type is not
+ * @throw ParameterFileException if nonCoulombic type is not
  * lj, buckingham or morse
  */
 void NonCoulombicsSection::processSection(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    pq::strings &lineElements,
+    Engine      &engine
 )
 {
-    switch (settings::PotentialSettings::getNonCoulombType())
+    switch (PotentialSettings::getNonCoulombType())
     {
-        case settings::NonCoulombType::LJ:
-            processLJ(lineElements, engine);
-            break;
-        case settings::NonCoulombType::BUCKINGHAM:
-            processBuckingham(lineElements, engine);
-            break;
-        case settings::NonCoulombType::MORSE:
-            processMorse(lineElements, engine);
-            break;
+        using enum NonCoulombType;
+        case LJ: processLJ(lineElements, engine); break;
+
+        case BUCKINGHAM: processBuckingham(lineElements, engine); break;
+
+        case MORSE: processMorse(lineElements, engine); break;
+
         default:
-            throw customException::ParameterFileException(std::format(
+            throw ParameterFileException(std::format(
                 "Wrong type of nonCoulombic in parameter file nonCoulombic "
                 "section at line {}  - has to be lj, buckingham or morse!",
                 _lineNumber
@@ -125,16 +139,14 @@ void NonCoulombicsSection::processSection(
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line
+ * @throw ParameterFileException if number of elements in line
  * is not 4 or 5
  */
-void NonCoulombicsSection::processLJ(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
-) const
+void NonCoulombicsSection::processLJ(pq::strings &lineElements, Engine &engine)
+    const
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file in Lennard Jones "
             "nonCoulombics section at line {} - number of "
             "elements has to be 4 or 5!",
@@ -148,14 +160,14 @@ void NonCoulombicsSection::processLJ(
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
 
-    cutOff = cutOff < 0.0
-                 ? settings::PotentialSettings::getCoulombRadiusCutOff()
-                 : cutOff;
+    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
-    auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(
-        engine.getPotential().getNonCoulombPotential()
-    );
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
+
+    potential.addNonCoulombicPair(std::make_shared<LennardJonesPair>(
         atomType1,
         atomType2,
         cutOff,
@@ -180,16 +192,16 @@ void NonCoulombicsSection::processLJ(
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line
+ * @throw ParameterFileException if number of elements in line
  * is not 5 or 6
  */
 void NonCoulombicsSection::processBuckingham(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    pq::strings &lineElements,
+    Engine      &engine
 ) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file in Lennard Jones "
             "nonCoulombics section at line {} - number of "
             "elements has to be 5 or 6!",
@@ -204,14 +216,14 @@ void NonCoulombicsSection::processBuckingham(
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
 
-    cutOff = cutOff < 0.0
-                 ? settings::PotentialSettings::getCoulombRadiusCutOff()
-                 : cutOff;
+    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
-    auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(
-        engine.getPotential().getNonCoulombPotential()
-    );
-    potential.addNonCoulombicPair(std::make_shared<potential::BuckinghamPair>(
+    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
+
+    potential.addNonCoulombicPair(std::make_shared<BuckinghamPair>(
         atomType1,
         atomType2,
         cutOff,
@@ -237,16 +249,16 @@ void NonCoulombicsSection::processBuckingham(
  * @param line
  * @param engine
  *
- * @throw customException::ParameterFileException if number of elements in line
+ * @throw ParameterFileException if number of elements in line
  * is not 5 or 6
  */
 void NonCoulombicsSection::processMorse(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
+    pq::strings &lineElements,
+    Engine      &engine
 ) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw customException::ParameterFileException(std::format(
+        throw ParameterFileException(std::format(
             "Wrong number of arguments in parameter file in Lennard Jones "
             "nonCoulombics section at line {} - number of "
             "elements has to be 5 or 6!",
@@ -261,14 +273,14 @@ void NonCoulombicsSection::processMorse(
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
 
-    cutOff = cutOff < 0.0
-                 ? settings::PotentialSettings::getCoulombRadiusCutOff()
-                 : cutOff;
+    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
-    auto &potential = dynamic_cast<potential::ForceFieldNonCoulomb &>(
-        engine.getPotential().getNonCoulombPotential()
-    );
-    potential.addNonCoulombicPair(std::make_shared<potential::MorsePair>(
+    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
+
+    potential.addNonCoulombicPair(std::make_shared<MorsePair>(
         atomType1,
         atomType2,
         cutOff,

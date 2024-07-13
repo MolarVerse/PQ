@@ -35,6 +35,23 @@
 #include "vector3d.hpp"              // for norm, operator*, Vector3D
 
 using namespace intraNonBonded;
+using namespace potential;
+using namespace physicalData;
+using namespace simulationBox;
+using namespace linearAlgebra;
+using namespace settings;
+
+/**
+ * @brief Construct a new Intra Non Bonded Map:: Intra Non Bonded Map object
+ *
+ * @param molecule
+ * @param intraNonBondedType
+ */
+IntraNonBondedMap::IntraNonBondedMap(
+    pq::Molecule            *molecule,
+    IntraNonBondedContainer *intraNonBondedType
+)
+    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType){};
 
 /**
  * @brief calculate the intra non bonded interactions for a single
@@ -46,19 +63,19 @@ using namespace intraNonBonded;
  * @param physicalData
  */
 void IntraNonBondedMap::calculate(
-    const potential::CoulombPotential  *coulombPotential,
-    potential::NonCoulombPotential     *nonCoulombPotential,
-    const simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData         &physicalData
+    const CoulombPotential *coulombPotential,
+    NonCoulombPotential    *nonCoulombPotential,
+    const SimulationBox    &simulationBox,
+    PhysicalData           &physicalData
 ) const
 {
     auto       coulombEnergy    = 0.0;
     auto       nonCoulombEnergy = 0.0;
     const auto box              = simulationBox.getBoxDimensions();
 
-    for (size_t atomIndex1 = 0;
-         atomIndex1 < _intraNonBondedContainer->getAtomIndices().size();
-         ++atomIndex1)
+    const auto nAtomIndices = _intraNonBondedContainer->getAtomIndices().size();
+
+    for (size_t atomIndex1 = 0; atomIndex1 < nAtomIndices; ++atomIndex1)
     {
         const auto atomIndices =
             _intraNonBondedContainer->getAtomIndices()[atomIndex1];
@@ -97,59 +114,58 @@ void IntraNonBondedMap::calculate(
  * the interaction
  */
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-    const size_t                       atomIndex1,
-    const int                          atomIndex2AsInt,
-    const linearAlgebra::Vec3D        &box,
-    physicalData::PhysicalData        &physicalData,
-    const potential::CoulombPotential *coulombPotential,
-    potential::NonCoulombPotential    *nonCoulombPotential
+    const size_t atomIdx1,
+    const int    atomIndex2AsInt,
+    const Vec3D &box,
+    PhysicalData &,
+    const CoulombPotential *coulPot,
+    NonCoulombPotential    *nonCoulPot
 ) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIndex2 = size_t(::abs(atomIndex2AsInt));
-    const bool scale      = atomIndex2AsInt < 0;
+    const auto atomIdx2 = size_t(::abs(atomIndex2AsInt));
+    const bool scale    = atomIndex2AsInt < 0;
 
-    const auto &pos1 = _molecule->getAtomPosition(atomIndex1);
-    const auto &pos2 = _molecule->getAtomPosition(atomIndex2);
+    const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
+    const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
 
     auto       dPos = pos1 - pos2;
-    const auto txyz =
-        -box * round(
-                   dPos / box
-               );   // TODO: implement it more general via Box::calcShiftVector
+    const auto txyz = -box * round(dPos / box);
+    // TODO: implement it more general via Box::calcShiftVector
 
-    dPos += txyz;
+    dPos                += txyz;
+    const auto distance  = norm(dPos);
 
-    if (const auto distance = norm(dPos);
-        distance < potential::CoulombPotential::getCoulombRadiusCutOff())
+    if (distance < CoulombPotential::getCoulombRadiusCutOff())
     {
-        const auto chargeProduct =
-            _molecule->getPartialCharge(size_t(atomIndex1)) *
-            _molecule->getPartialCharge(atomIndex2);
+        const auto charge1 = _molecule->getPartialCharge(size_t(atomIdx1));
+        const auto charge2 = _molecule->getPartialCharge(atomIdx2);
 
-        auto [energy, force] =
-            coulombPotential->calculate(distance, chargeProduct);
+        const auto chargeProduct = charge1 * charge2;
+
+        auto [energy, force] = coulPot->calculate(distance, chargeProduct);
 
         if (scale)
         {
-            energy *= settings::PotentialSettings::getScale14Coulomb();
-            force  *= settings::PotentialSettings::getScale14Coulomb();
+            const auto scaling  = PotentialSettings::getScale14Coulomb();
+            energy             *= scaling;
+            force              *= scaling;
         }
         coulombEnergy = energy;
 
-        const size_t atomType1 = _molecule->getAtomType(atomIndex1);
-        const size_t atomType2 = _molecule->getAtomType(atomIndex2);
+        const size_t atomType1 = _molecule->getAtomType(atomIdx1);
+        const size_t atomType2 = _molecule->getAtomType(atomIdx2);
 
-        const auto globalVdwType1 =
-            _molecule->getInternalGlobalVDWType(atomIndex1);
-        const auto globalVdwType2 =
-            _molecule->getInternalGlobalVDWType(atomIndex2);
+        // clang-format off
+        const auto globalVdwType1 = _molecule->getInternalGlobalVDWType(atomIdx1);
+        const auto globalVdwType2 = _molecule->getInternalGlobalVDWType(atomIdx2);
+        // clang-format on
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIndices = {
+        const auto combinedIdx = {
             moltype,
             moltype,
             atomType1,
@@ -158,19 +174,18 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
             globalVdwType2
         };
 
-        if (const auto nonCoulombicPair =
-                nonCoulombPotential->getNonCoulombPair(combinedIndices);
-            distance < nonCoulombicPair->getRadialCutOff())
+        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(combinedIdx);
+
+        if (distance < nonCoulombicPair->getRadialCutOff())
         {
             auto [nonCoulombEnergyLocal, nonCoulombForce] =
-                nonCoulombicPair->calculateEnergyAndForce(distance);
+                nonCoulombicPair->calculate(distance);
 
             if (scale)
             {
-                nonCoulombEnergyLocal *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
-                nonCoulombForce *=
-                    settings::PotentialSettings::getScale14VanDerWaals();
+                const auto scaling     = PotentialSettings::getScale14VDW();
+                nonCoulombEnergyLocal *= scaling;
+                nonCoulombForce       *= scaling;
             }
 
             nonCoulombEnergy  = nonCoulombEnergyLocal;
@@ -183,11 +198,44 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto shiftForcexyz = forcexyz * txyz;
 
-        _molecule->addAtomForce(atomIndex1, forcexyz);
-        _molecule->addAtomForce(atomIndex2, -forcexyz);
+        _molecule->addAtomForce(atomIdx1, forcexyz);
+        _molecule->addAtomForce(atomIdx2, -forcexyz);
 
-        _molecule->addAtomShiftForce(atomIndex1, shiftForcexyz);
+        _molecule->addAtomShiftForce(atomIdx1, shiftForcexyz);
     }
 
     return {coulombEnergy, nonCoulombEnergy};
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the IntraNonBondedContainer object
+ *
+ * @return IntraNonBondedContainer*
+ */
+IntraNonBondedContainer *IntraNonBondedMap::getIntraNonBondedType() const
+{
+    return _intraNonBondedContainer;
+}
+
+/**
+ * @brief get the molecule pointer
+ *
+ * @return pq::Molecule*
+ */
+pq::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
+
+/**
+ * @brief get the atom indices of the IntraNonBondedContainer object
+ *
+ * @return std::vector<std::vector<int>>
+ */
+std::vector<std::vector<int>> IntraNonBondedMap::getAtomIndices() const
+{
+    return _intraNonBondedContainer->getAtomIndices();
 }

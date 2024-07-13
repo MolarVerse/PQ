@@ -56,11 +56,19 @@ target_link_libraries(engine
     virial
     forceField
     intraNonBonded
-    QM
     references
 
     optimization
+    QM
+    externalQM
 )
+
+if(BUILD_WITH_ASE)
+    target_link_libraries(engine
+        PUBLIC
+        aseQM
+    )
+endif()
 
 if(BUILD_WITH_KOKKOS)
     target_link_libraries(engine

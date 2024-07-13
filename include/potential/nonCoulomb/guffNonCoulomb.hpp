@@ -24,19 +24,15 @@
 
 #define _GUFF_NON_COULOMB_HPP_
 
-#include "nonCoulombPotential.hpp"
-
 #include <cstddef>   // size_t
 #include <memory>    // shared_ptr
 #include <vector>    // vector
 
+#include "nonCoulombPotential.hpp"
+#include "typeAliases.hpp"
+
 namespace potential
 {
-    class NonCoulombPair;   // forward declaration
-
-    using c_ul                     = const size_t;
-    using vector4dNonCoulombicPair = std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>;
-
     /**
      * @class GuffNonCoulomb
      *
@@ -45,24 +41,35 @@ namespace potential
      */
     class GuffNonCoulomb : public NonCoulombPotential
     {
-      private:
-        vector4dNonCoulombicPair _guffNonCoulombPairs;
+       private:
+        pq::SharedNonCoulPairVec4d _guffNonCoulombPairs;
 
-      public:
-        void resizeGuff(c_ul numberOfMoleculeTypes) { _guffNonCoulombPairs.resize(numberOfMoleculeTypes); }
-        void resizeGuff(c_ul m1, c_ul numberOfMoleculeTypes) { _guffNonCoulombPairs[m1].resize(numberOfMoleculeTypes); }
-        void resizeGuff(c_ul m1, c_ul m2, c_ul numberOfAtoms) { _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms); }
-        void resizeGuff(c_ul m1, c_ul m2, c_ul a1, c_ul numberOfAtoms) { _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms); }
+       public:
+        void resizeGuff(const size_t);
+        void resizeGuff(const size_t, const size_t);
+        void resizeGuff(const size_t, const size_t, const size_t);
+        void resizeGuff(const size_t, const size_t, const size_t, const size_t);
 
-        void setGuffNonCoulombicPair(const std::vector<size_t> &indices, const std::shared_ptr<NonCoulombPair> &nonCoulombPair);
+        /***************************
+         * standard setter methods *
+         ***************************/
 
-        [[nodiscard]] std::shared_ptr<NonCoulombPair> getNonCoulombPair(const std::vector<size_t> &indices) override;
-        [[nodiscard]] vector4dNonCoulombicPair        getNonCoulombPairs() const { return _guffNonCoulombPairs; }
+        void setGuffNonCoulPair(const std::vector<size_t> &, const pq::SharedNonCoulPair &);
 
-        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &indices) const { return indices[0]; }
-        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &indices) const { return indices[1]; }
-        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &indices) const { return indices[2]; }
-        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &indices) const { return indices[3]; }
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        [[nodiscard]] pq::SharedNonCoulPair getNonCoulPair(
+            const pq::stlVectorUL &indices
+        ) override;
+
+        [[nodiscard]] pq::SharedNonCoulPairVec4d getNonCoulombPairs() const;
+
+        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &) const;
+        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &) const;
+        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &) const;
+        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &) const;
     };
 
 }   // namespace potential

@@ -28,23 +28,7 @@
 #include <vector>
 
 #include "dihedral.hpp"
-
-namespace potential
-{
-    class CoulombPotential;      // forward declaration
-    class NonCoulombPotential;   // forward declaration
-}   // namespace potential
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Molecule;        // forward declaration
-}   // namespace simulationBox
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace forceField
 {
@@ -70,44 +54,43 @@ namespace forceField
 
        public:
         JCouplingForceField(
-            const std::vector<simulationBox::Molecule *> &molecules,
-            const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
-        )
-            : connectivity::Dihedral(molecules, atomIndices), _type(type){};
+            const std::vector<pq::Molecule *> &molecules,
+            const std::vector<size_t>         &atomIndices,
+            const size_t                       type
+        );
 
-        void calculateEnergyAndForces(const simulationBox::SimulationBox &, physicalData::PhysicalData &) {
+        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
         };   // TODO: implement
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean) { _upperSymmetry = boolean; }
-        void setLowerSymmetry(const bool boolean) { _lowerSymmetry = boolean; }
+        void setUpperSymmetry(const bool boolean);
+        void setLowerSymmetry(const bool boolean);
 
-        void setJ0(const double J0) { _J0 = J0; }
-        void setForceConstant(const double k) { _forceConstant = k; }
-        void setA(const double a) { _a = a; }
-        void setB(const double b) { _b = b; }
-        void setC(const double c) { _c = c; }
-        void setPhaseShift(const double phi) { _phaseShift = phi; }
+        void setJ0(const double J0);
+        void setForceConstant(const double k);
+        void setA(const double a);
+        void setB(const double b);
+        void setC(const double c);
+        void setPhaseShift(const double phi);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const { return _type; }
+        [[nodiscard]] size_t getType() const;
 
-        [[nodiscard]] bool getUpperSymmetry() const { return _upperSymmetry; }
-        [[nodiscard]] bool getLowerSymmetry() const { return _lowerSymmetry; }
+        [[nodiscard]] bool getUpperSymmetry() const;
+        [[nodiscard]] bool getLowerSymmetry() const;
 
-        [[nodiscard]] double getJ0() const { return _J0; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
-        [[nodiscard]] double getA() const { return _a; }
-        [[nodiscard]] double getB() const { return _b; }
-        [[nodiscard]] double getC() const { return _c; }
-        [[nodiscard]] double getPhaseShift() const { return _phaseShift; }
+        [[nodiscard]] double getJ0() const;
+        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] double getA() const;
+        [[nodiscard]] double getB() const;
+        [[nodiscard]] double getC() const;
+        [[nodiscard]] double getPhaseShift() const;
     };
 
 }   // namespace forceField

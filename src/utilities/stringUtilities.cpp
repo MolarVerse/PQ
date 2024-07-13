@@ -33,7 +33,12 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-#include "exceptions.hpp"   // for InputFil...
+#include "exceptions.hpp"
+
+using namespace customException;
+
+using std::views::split;
+using std::views::transform;
 
 /**
  * @brief Removes comments from a line
@@ -49,9 +54,11 @@ std::string utilities::removeComments(
     const std::string_view &commentChar
 )
 {
-    if (const auto commentPos = line.find(commentChar);
-        commentPos != std::string::npos)
+    const auto commentPos = line.find(commentChar);
+
+    if (commentPos != std::string::npos)
         line = line.substr(0, commentPos);
+
     return line;
 }
 
@@ -74,8 +81,9 @@ std::vector<std::string> utilities::getLineCommands(
     {
         if (';' == line[static_cast<size_t>(i)])
             break;
+
         else if (!bool(::isspace(line[static_cast<size_t>(i)])))
-            throw customException::InputFileException(std::format(
+            throw InputFileException(std::format(
                 "Missing semicolon in input file at line {}",
                 lineNumber
             ));
@@ -83,19 +91,16 @@ std::vector<std::string> utilities::getLineCommands(
 
     using std::operator""sv;
     constexpr auto delim{";"sv};
-    auto           splitView =
-        line | std::views::split(delim) |
-        std::views::transform([](auto &&view)
-                              { return std::string(view.begin(), view.end()); }
-        );
 
-    std::vector<std::string> lineCommands;
+    auto transformView = [](auto &&view)
+    { return std::string(view.begin(), view.end()); };
+
+    auto splitView = line | split(delim) | transform(transformView);
+
+    pq::strings lineCommands;
     for (auto it : splitView) lineCommands.emplace_back(it);
 
-    return std::vector<std::string>(
-        lineCommands.begin(),
-        lineCommands.end() - 1
-    );
+    return pq::strings(lineCommands.begin(), lineCommands.end() - 1);
 }
 
 /**
@@ -106,8 +111,8 @@ std::vector<std::string> utilities::getLineCommands(
  */
 std::vector<std::string> utilities::splitString(const std::string &line)
 {
-    std::string              word;
-    std::vector<std::string> lineElements = {};
+    std::string word;
+    pq::strings lineElements = {};
 
     std::stringstream ss(line);
 

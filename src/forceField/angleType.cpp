@@ -25,6 +25,23 @@
 #include "mathUtilities.hpp"
 
 using namespace forceField;
+using namespace utilities;
+
+/**
+ * @brief Construct a new Angle Type:: Angle Type object
+ *
+ * @param id
+ * @param equilibriumAngle
+ * @param springConstant
+ */
+AngleType::AngleType(
+    const size_t id,
+    const double equilibriumAngle,
+    const double springConstant
+)
+    : _id(id),
+      _equilibriumAngle(equilibriumAngle),
+      _forceConstant(springConstant){};
 
 /**
  * @brief operator overload for the comparison of two AngleType objects
@@ -33,11 +50,38 @@ using namespace forceField;
  * @return true
  * @return false
  */
-bool AngleType::operator==(const AngleType &other) const
+bool forceField::operator==(const AngleType &self, const AngleType &other)
 {
-    auto isEqual = _id == other._id;
-    isEqual      = isEqual && utilities::compare(_equilibriumAngle, other._equilibriumAngle);
-    isEqual      = isEqual && utilities::compare(_forceConstant, other._forceConstant);
+    auto isEq = self._id == other._id;
+    isEq = isEq && compare(self._equilibriumAngle, other._equilibriumAngle);
+    isEq = isEq && compare(self._forceConstant, other._forceConstant);
 
-    return isEqual;
+    return isEq;
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the id of the angle type
+ *
+ * @return size_t
+ */
+size_t AngleType::getId() const { return _id; }
+
+/**
+ * @brief get the equilibrium angle of the angle type
+ *
+ * @return double
+ */
+double AngleType::getEquilibriumAngle() const { return _equilibriumAngle; }
+
+/**
+ * @brief get the force constant of the angle type
+ *
+ * @return double
+ */
+double AngleType::getForceConstant() const { return _forceConstant; }

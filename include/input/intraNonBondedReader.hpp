@@ -25,15 +25,16 @@
 #define _INTRA_NON_BONDED_READER_HPP_
 
 #include <cstddef>   // for size_t
+#include <fstream>   // for ifstream
 #include <iosfwd>    // for ifstream
 #include <string>    // for string
 
-#include "engine.hpp"   // for Engine
+#include "typeAliases.hpp"
 
 namespace input::intraNonBondedReader
 {
-    void               readIntraNonBondedFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded(const engine::Engine &engine);
+    void               readIntraNonBondedFile(pq::Engine &);
+    [[nodiscard]] bool isNeeded(const pq::Engine &engine);
 
     /**
      * @class IntraNonBondedReader
@@ -49,26 +50,18 @@ namespace input::intraNonBondedReader
 
         size_t _lineNumber = 1;
 
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
        public:
-        IntraNonBondedReader(
-            const std::string &fileName,
-            engine::Engine    &engine
-        )
-            : _fileName(fileName), _fp(fileName), _engine(engine){};
+        IntraNonBondedReader(const std::string &fileName, pq::Engine &engine);
 
         void                 read();
         void                 processMolecule(const size_t moleculeType);
         void                 checkDuplicates() const;
-        [[nodiscard]] size_t findMoleculeType(const std::string &identifier
-        ) const;
+        [[nodiscard]] size_t findMoleculeType(const std::string &) const;
 
-        void setFileName(const std::string_view &fileName)
-        {
-            _fileName = fileName;
-        }
-        void reInitializeFp() { _fp = std::ifstream(_fileName); }
+        void setFileName(const std::string_view &fileName);
+        void reInitializeFp();
     };
 
 }   // namespace input::intraNonBondedReader

@@ -32,13 +32,14 @@
 #include "vector3d.hpp"   // for Vec3D
 
 using output::BoxFileOutput;
+using namespace simulationBox;
 
 /**
  * @brief Write the lattice parameters a, b, c, alpha, beta, gamma to file
  *
  * @param box
  */
-void BoxFileOutput::write(const size_t step, const simulationBox::Box &box)
+void BoxFileOutput::write(const size_t step, const Box &box)
 {
     _fp << std::format("{:<5}\t", step);
 

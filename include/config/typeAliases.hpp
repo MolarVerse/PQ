@@ -24,25 +24,29 @@
 
 #define _TYPE_ALIASES_HPP_
 
+#include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
 #include <memory>       // for std::shared_ptr
+#include <optional>     // for std::optional
 #include <set>          // for std::set
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "staticMatrix3x3Class.hpp"
+#include "matrix.hpp"
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 namespace simulationBox
 {
-    class Molecule;        // forward declaration
-    class MoleculeType;    // forward declaration
-    class Atom;            // forward declaration
-    class SimulationBox;   // forward declaration
-    class CellList;        // forward declaration
-    class Box;             // forward declaration
+    class Molecule;              // forward declaration
+    class MoleculeType;          // forward declaration
+    class Atom;                  // forward declaration
+    class CellList;              // forward declaration
+    class Box;                   // forward declaration
+    class SimulationBox;         // forward declaration
+    class KokkosSimulationBox;   // forward declaration
 
 }   // namespace simulationBox
 
@@ -54,15 +58,22 @@ namespace physicalData
 
 namespace potential
 {
-    class Potential;             // forward declaration
-    class PotentialBruteForce;   // forward declaration
+    class Potential;              // forward declaration
+    class PotentialBruteForce;    // forward declaration
+    class CoulombPotential;       // forward declaration
+    class NonCoulombPair;         // forward declaration
+    class NonCoulombPotential;    // forward declaration
+    class ForceFieldNonCoulomb;   // forward declaration
+
+    class KokkosLennardJones;   // forward declaration
+    class KokkosCoulombWolf;    // forward declaration
 
 }   // namespace potential
 
 namespace virial
 {
     class Virial;            // forward declaration
-    class VirialMolecular;   // forward declaration
+    class MolecularVirial;   // forward declaration
 
 }   // namespace virial
 
@@ -99,6 +110,8 @@ namespace opt
     class Optimizer;
     class SteepestDescent;
 
+    class Convergence;
+
 }   // namespace opt
 
 namespace output
@@ -108,29 +121,176 @@ namespace output
     class RingPolymerEnergyOutput;
 
 }   // namespace output
+
+namespace engine
+{
+    class Engine;              // forward declaration
+    class MDEngine;            // forward declaration
+    class OptEngine;           // forward declaration
+    class QMMDEngine;          // forward declaration
+    class QMMMMDEngine;        // forward declaration
+    class RingPolymerEngine;   // forward declaration
+
+}   // namespace engine
+
+namespace manostat
+{
+    class StochasticRescalingManostat;                  // forward declaration
+    class SemiIsotropicStochasticRescalingManostat;     // forward declaration
+    class AnisotropicStochasticRescalingManostat;       // forward declaration
+    class FullAnisotropicStochasticRescalingManostat;   // forward declaration
+
+}   // namespace manostat
+
+namespace timings
+{
+    class Timer;
+    class GlobalTimer;
+
+}   // namespace timings
+
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+    class NoseHoover;   // forward declaration
+
+}   // namespace thermostat
+
+namespace settings
+{
+    enum class ThermostatType;   // forward declaration
+    enum class ManostatType;     // forward declaration
+    enum class Isotropy;         // forward declaration
+
+}   // namespace settings
+
+namespace input
+{
+    namespace parameterFile
+    {
+        class ParameterFileSection;   // forward declaration
+    }
+
+    namespace restartFile
+    {
+        class RestartFileSection;   // forward declaration
+    }
+}   // namespace input
+
 namespace pq
 {
+    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    using Duration = std::chrono::duration<double>;
+
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
+    using stlVectorUL     = std::vector<size_t>;
+    using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
+    using stlVector4d     = std::vector<stlVector3d>;
+    using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
+    using stlVector4dBool = std::vector<stlVector3dBool>;
+
+    using ParseFunc = std::function<void(const strings &, const size_t)>;
+
     using Vec3D         = linearAlgebra::Vec3D;
+    using Vec3Dul       = linearAlgebra::Vec3Dul;
     using Vec3DPair     = std::pair<Vec3D, Vec3D>;
     using Vec3DVec      = std::vector<Vec3D>;
     using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
     using tensor3D      = linearAlgebra::tensor3D;
 
-    using Virial          = virial::Virial;
-    using VirialMolecular = virial::VirialMolecular;
-    using Potential       = potential::Potential;
-    using BruteForcePot   = potential::PotentialBruteForce;
-    using IntraNonBond    = intraNonBonded::IntraNonBonded;
-    using ForceField      = forceField::ForceField;
+    using IntraNonBond = intraNonBonded::IntraNonBonded;
+    using ForceField   = forceField::ForceField;
+    using Timer        = timings::Timer;
+    using GlobalTimer  = timings::GlobalTimer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
     using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
-    using SharedVirial       = std::shared_ptr<virial::Virial>;
-    using SharedPotential    = std::shared_ptr<potential::Potential>;
+
+    using ParamFileSection       = input::parameterFile::ParameterFileSection;
+    using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;
+    using UniqueParamFileSectionVec = std::vector<UniqueParamFileSection>;
+
+    using RestartSection          = input::restartFile::RestartFileSection;
+    using UniqueRestartSection    = std::unique_ptr<RestartSection>;
+    using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
+
+    /**********************
+     * settings namespace *
+     **********************/
+
+    using ThermostatType = settings::ThermostatType;
+    using Isotropy       = settings::Isotropy;
+    using ManostatType   = settings::ManostatType;
+
+    /************************
+     * thermostat namespace *
+     ************************/
+
+    using Thermostat = thermostat::Thermostat;
+    using NoseHoover = thermostat::NoseHoover;
+
+    /********************
+     * virial namespace *
+     ********************/
+
+    using Virial          = virial::Virial;
+    using MolecularVirial = virial::MolecularVirial;
+
+    using SharedVirial = std::shared_ptr<virial::Virial>;
+
+    /**********************
+     * manostat namespace *
+     **********************/
+
+    // clang-format off
+    using StochasticManostat          = manostat::StochasticRescalingManostat;
+    using SemiIsoStochasticManostat   = manostat::SemiIsotropicStochasticRescalingManostat;
+    using AnisoStochasticManostat     = manostat::AnisotropicStochasticRescalingManostat;
+    using FullAnisoStochasticManostat = manostat::FullAnisotropicStochasticRescalingManostat;
+    // clang-format on
+
+    /********************
+     * engine namespace *
+     ********************/
+
+    using Engine            = engine::Engine;
+    using MDEngine          = engine::MDEngine;
+    using OptEngine         = engine::OptEngine;
+    using QMMDEngine        = engine::QMMDEngine;
+    using QMMMMDEngine      = engine::QMMMMDEngine;
+    using RingPolymerEngine = engine::RingPolymerEngine;
+
+    using UniqueEngine = std::unique_ptr<Engine>;
+
+    /***********************
+     * potential namespace *
+     ***********************/
+
+    using Potential     = potential::Potential;
+    using BruteForcePot = potential::PotentialBruteForce;
+    using CoulombPot    = potential::CoulombPotential;
+    using NonCoulombPot = potential::NonCoulombPotential;
+    using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
+    using NonCoulPair   = potential::NonCoulombPair;
+
+    using KokkosLJ   = potential::KokkosLennardJones;
+    using KokkosWolf = potential::KokkosCoulombWolf;
+
+    using SharedPotential     = std::shared_ptr<potential::Potential>;
+    using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
+    using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
+    using SharedNonCoulPair   = std::shared_ptr<potential::NonCoulombPair>;
+
+    using OptSharedNonCoulPair = std::optional<SharedNonCoulPair>;
+
+    using SharedNonCoulPairVec   = std::vector<SharedNonCoulPair>;
+    using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
+    using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
+    using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
+    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
@@ -152,6 +312,7 @@ namespace pq
      ***************************/
 
     using SimBox       = simulationBox::SimulationBox;
+    using KokkosSimBox = simulationBox::KokkosSimulationBox;
     using CellList     = simulationBox::CellList;
     using Molecule     = simulationBox::Molecule;
     using MoleculeType = simulationBox::MoleculeType;
@@ -161,6 +322,9 @@ namespace pq
     using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
     using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;
     using SharedCellList = std::shared_ptr<simulationBox::CellList>;
+    using SharedBox      = std::shared_ptr<simulationBox::Box>;
+
+    using SharedAtomVec = std::vector<SharedAtom>;
 
     /**************************
      * physicalData namespace *
@@ -186,6 +350,8 @@ namespace pq
     using Optimizer       = opt::Optimizer;
     using SteepestDescent = opt::SteepestDescent;
     using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
+
+    using Convergence = opt::Convergence;
 
     /********************
      * output namespace *

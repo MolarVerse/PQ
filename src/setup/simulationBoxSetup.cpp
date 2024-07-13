@@ -53,115 +53,44 @@
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
 
 using setup::simulationBox::SimulationBoxSetup;
+using namespace engine;
+using namespace settings;
+using namespace utilities;
+using namespace constants;
+using namespace customException;
+using namespace maxwellBoltzmann;
+using namespace output;
 
 /**
  * @brief wrapper to create SetupSimulationBox object and call setup
  *
  * @param engine
  */
-void setup::simulationBox::setupSimulationBox(engine::Engine &engine)
+void setup::simulationBox::setupSimulationBox(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
 
     SimulationBoxSetup simulationBoxSetup(engine);
     simulationBoxSetup.setup();
-
-    writeSetupInfo(engine);
 }
 
 /**
- * @brief write setup info to log file
+ * @brief Construct a new Simulation Box Setup object
  *
  * @param engine
  */
-void setup::simulationBox::writeSetupInfo(engine::Engine &engine)
-{
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "number of atoms:   {:8d}",
-        engine.getSimulationBox().getNumberOfAtoms()
-    ));
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "total mass:        {:14.5f} g/mol",
-        engine.getSimulationBox().getTotalMass()
-    ));
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "total charge:      {:14.5f}",
-        engine.getSimulationBox().getTotalCharge()
-    ));
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "unconstrained DOF: {:8d}",
-        engine.getSimulationBox().getDegreesOfFreedom()
-    ));
-    engine.getLogOutput().writeEmptyLine();
-
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "density:         {:14.5f} kg/L",
-        engine.getSimulationBox().getDensity()
-    ));
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "volume:          {:14.5f} {}³",
-        engine.getSimulationBox().getVolume(),
-        output::_ANGSTROM_
-    ));
-    engine.getLogOutput().writeEmptyLine();
-
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "box dimensions:  {:14.5f} {} {:14.5f} {} {:14.5f} {}",
-        engine.getSimulationBox().getBoxDimensions()[0],
-        output::_ANGSTROM_,
-        engine.getSimulationBox().getBoxDimensions()[1],
-        output::_ANGSTROM_,
-        engine.getSimulationBox().getBoxDimensions()[2],
-        output::_ANGSTROM_
-    ));
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "box angles:      {:14.5f}°  {:14.5f}°  {:14.5f}°",
-        engine.getSimulationBox().getBoxAngles()[0],
-        engine.getSimulationBox().getBoxAngles()[1],
-        engine.getSimulationBox().getBoxAngles()[2]
-    ));
-    engine.getLogOutput().writeEmptyLine();
-
-    engine.getLogOutput().writeSetupInfo(std::format(
-        "coulomb cutoff:  {:14.5f} {}",
-        settings::PotentialSettings::getCoulombRadiusCutOff(),
-        output::_ANGSTROM_
-    ));
-    engine.getLogOutput().writeEmptyLine();
-
-    if (settings::SimulationBoxSettings::getInitializeVelocities())
-        engine.getLogOutput().writeSetupInfo(
-            "velocities initialized with Maxwell-Boltzmann distribution"
-        );
-    else
-        engine.getLogOutput().writeSetupInfo(std::format(
-            "velocities taken from start file \"{}\"",
-            settings::FileSettings::getStartFileName()
-        ));
-    engine.getLogOutput().writeEmptyLine();
-}
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup simulation box
- *
- * @details
- * 1) set atom masses of each atom in the simulation box
- * 2) set atomic numbers of each atom in the simulation box
- * 3) calculate the molecular mass of each molecule in the simulation box
- * 4) calculate the total mass of the simulation box
- * 5) calculate the total charge of the simulation box
- * 7) check if box dimensions and density are set
- * 8) check if cutoff radius is larger than half of the minimal box dimension
- *
- * @TODO: rewrite doc
  *
  */
 void SimulationBoxSetup::setup()
 {
     setAtomNames();
     setAtomTypes();
-    if (settings::ForceFieldSettings::isActive())
+    if (ForceFieldSettings::isActive())
         setExternalVDWTypes();
     setPartialCharges();
 
@@ -170,16 +99,19 @@ void SimulationBoxSetup::setup()
     calculateMolMasses();
     calculateTotalCharge();
 
-    _engine.getSimulationBox().calculateTotalMass();
+    auto &simBox = _engine.getSimulationBox();
+
+    simBox.calculateTotalMass();
 
     checkBoxSettings();
-
     checkRcCutoff();
 
-    _engine.getSimulationBox().calculateDegreesOfFreedom();
-    _engine.getSimulationBox().calculateCenterOfMassMolecules();
+    simBox.calculateDegreesOfFreedom();
+    simBox.calculateCenterOfMassMolecules();
 
     initVelocities();
+
+    writeSetupInfo();
 }
 
 /**
@@ -188,30 +120,27 @@ void SimulationBoxSetup::setup()
  */
 void SimulationBoxSetup::setAtomNames()
 {
-    auto setAtomNamesOfMolecule = [this](auto &molecule)
+    auto &simBox = _engine.getSimulationBox();
+
+    auto setAtomNamesOfMolecule = [this, &simBox](auto &molecule)
     {
-        if (molecule.getMoltype() == 0)
+        const auto &molType = molecule.getMoltype();
+        if (molType == 0)
             return;
 
-        const auto moleculeType =
-            _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
+        const auto moleculeType  = simBox.findMoleculeType(molType);
         const auto numberOfAtoms = molecule.getNumberOfAtoms();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
             molecule.getAtom(i).setName(moleculeType.getAtomName(i));
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setAtomNamesOfMolecule
-    );
+    std::ranges::for_each(simBox.getMolecules(), setAtomNamesOfMolecule);
 
     std::ranges::for_each(
-        _engine.getSimulationBox().getAtoms(),
-        [](auto &atom) {
-            atom->setName(utilities::firstLetterToUpperCaseCopy(atom->getName())
-            );
-        }
+        simBox.getAtoms(),
+        [](auto &atom)
+        { atom->setName(firstLetterToUpperCaseCopy(atom->getName())); }
     );
 }
 
@@ -222,28 +151,27 @@ void SimulationBoxSetup::setAtomNames()
  */
 void SimulationBoxSetup::setAtomTypes()
 {
-    auto setAtomTypesOfMolecule = [this](auto &molecule)
+    auto &simBox = _engine.getSimulationBox();
+
+    auto setAtomTypesOfMolecule = [this, &simBox](auto &molecule)
     {
-        if (molecule.getMoltype() == 0)
+        const auto &molType = molecule.getMoltype();
+
+        if (molType == 0)
             return;
 
-        auto moleculeType =
-            _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+        auto       moleculeType = simBox.findMoleculeType(molType);
+        const auto nAtoms       = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
+            const auto externalAtomType = moleculeType.getExternalAtomType(i);
             molecule.getAtom(i).setAtomType(moleculeType.getAtomType(i));
-            molecule.getAtom(i).setExternalAtomType(
-                moleculeType.getExternalAtomType(i)
-            );
+            molecule.getAtom(i).setExternalAtomType(externalAtomType);
         }
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setAtomTypesOfMolecule
-    );
+    std::ranges::for_each(simBox.getMolecules(), setAtomTypesOfMolecule);
 }
 
 /**
@@ -252,25 +180,26 @@ void SimulationBoxSetup::setAtomTypes()
  */
 void SimulationBoxSetup::setExternalVDWTypes()
 {
-    auto setExternalVDWTypesOfMolecule = [this](auto &molecule)
+    auto &simBox = _engine.getSimulationBox();
+
+    auto setExternalVDWTypesOfMolecule = [this, &simBox](auto &molecule)
     {
-        if (molecule.getMoltype() == 0)
+        const auto &molType = molecule.getMoltype();
+
+        if (molType == 0)
             return;
 
-        auto moleculeType =
-            _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
-            molecule.getAtom(i).setExternalGlobalVDWType(
-                moleculeType.getExternalGlobalVDWTypes()[i]
-            );
+        auto       moleculeType = simBox.findMoleculeType(molType);
+        const auto nAtoms       = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
+        {
+            const auto extVDWType = moleculeType.getExternalGlobalVDWTypes()[i];
+            molecule.getAtom(i).setExternalGlobalVDWType(extVDWType);
+        }
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setExternalVDWTypesOfMolecule
-    );
+    std::ranges::for_each(simBox.getMolecules(), setExternalVDWTypesOfMolecule);
 }
 
 /**
@@ -279,26 +208,26 @@ void SimulationBoxSetup::setExternalVDWTypes()
  */
 void SimulationBoxSetup::setPartialCharges()
 {
-    auto setPartialChargesOfMolecule = [this](auto &molecule)
+    auto &simBox = _engine.getSimulationBox();
+
+    auto setPartialChargesOfMolecule = [this, &simBox](auto &molecule)
     {
-        if (molecule.getMoltype() == 0)
+        const auto &molType = molecule.getMoltype();
+
+        if (molType == 0)
             return;
 
-        auto moleculeType =
-            _engine.getSimulationBox().findMoleculeType(molecule.getMoltype());
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+        auto        moleculeType = simBox.findMoleculeType(molType);
+        const auto &nAtoms       = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < nAtoms; ++i)
         {
-            molecule.getAtom(i).setPartialCharge(moleculeType.getPartialCharges(
-            )[i]);
+            const auto partialCharge = moleculeType.getPartialCharges()[i];
+            molecule.getAtom(i).setPartialCharge(partialCharge);
         }
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setPartialChargesOfMolecule
-    );
+    std::ranges::for_each(simBox.getMolecules(), setPartialChargesOfMolecule);
 }
 
 /**
@@ -313,10 +242,8 @@ void SimulationBoxSetup::setAtomMasses()
         for (auto &atom : molecule.getAtoms()) atom->initMass();
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setAtomMasses
-    );
+    auto &molecules = _engine.getSimulationBox().getMolecules();
+    std::ranges::for_each(molecules, setAtomMasses);
 }
 
 /**
@@ -328,28 +255,22 @@ void SimulationBoxSetup::setAtomicNumbers()
 {
     auto setAtomicNumbers = [](::simulationBox::Molecule &molecule)
     {
-        for (size_t i = 0, numberOfAtoms = molecule.getNumberOfAtoms();
-             i < numberOfAtoms;
-             ++i)
+        const auto nAtoms = molecule.getNumberOfAtoms();
+        for (size_t i = 0; i < nAtoms; ++i)
         {
-            const auto keyword =
-                utilities::toLowerCopy(molecule.getAtomName(i));
+            const auto keyword = toLowerCopy(molecule.getAtomName(i));
 
-            if (!constants::atomNumberMap.contains(keyword))
-                throw customException::MolDescriptorException(
+            if (!atomNumberMap.contains(keyword))
+                throw MolDescriptorException(
                     "Invalid atom name \"" + keyword + "\""
                 );
             else
-                molecule.getAtom(i).setAtomicNumber(
-                    constants::atomNumberMap.at(keyword)
-                );
+                molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
         }
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        setAtomicNumbers
-    );
+    auto &molecules = _engine.getSimulationBox().getMolecules();
+    std::ranges::for_each(molecules, setAtomicNumbers);
 }
 
 /**
@@ -364,10 +285,8 @@ void SimulationBoxSetup::calculateMolMasses()
         molecule.setMolMass(std::accumulate(masses.begin(), masses.end(), 0.0));
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        calculateMolMasses
-    );
+    auto &molecules = _engine.getSimulationBox().getMolecules();
+    std::ranges::for_each(molecules, calculateMolMasses);
 }
 
 /**
@@ -377,17 +296,14 @@ void SimulationBoxSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    auto calculateMolecularCharge =
-        [&totalCharge](const ::simulationBox::Molecule &molecule)
+    auto calcMolCharge = [&totalCharge](const ::simulationBox::Molecule &mol)
     {
-        const auto &charges = molecule.getPartialCharges();
+        const auto &charges = mol.getPartialCharges();
         totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
     };
 
-    std::ranges::for_each(
-        _engine.getSimulationBox().getMolecules(),
-        calculateMolecularCharge
-    );
+    auto &molecules = _engine.getSimulationBox().getMolecules();
+    std::ranges::for_each(molecules, calcMolCharge);
 
     _engine.getSimulationBox().setTotalCharge(totalCharge);
 }
@@ -406,47 +322,45 @@ void SimulationBoxSetup::calculateTotalCharge()
  */
 void SimulationBoxSetup::checkBoxSettings()
 {
-    if (!settings::SimulationBoxSettings::getDensitySet() &&
-        !settings::SimulationBoxSettings::getBoxSet())
-        throw customException::UserInputException(
-            "Box dimensions and density not set"
-        );
-    else if (!settings::SimulationBoxSettings::getBoxSet())
-    {
-        const auto boxDimensions =
-            _engine.getSimulationBox().calcBoxDimFromDensity();
-        _engine.getSimulationBox().setBoxDimensions(boxDimensions);
-        _engine.getSimulationBox().setVolume(
-            _engine.getSimulationBox().calculateVolume()
-        );
-    }
-    else if (!settings::SimulationBoxSettings::getDensitySet())
-    {
-        const auto volume  = _engine.getSimulationBox().calculateVolume();
-        const auto density = _engine.getSimulationBox().getTotalMass() /
-                             volume *
-                             constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+    auto &simBox = _engine.getSimulationBox();
 
-        _engine.getSimulationBox().setVolume(volume);
-        _engine.getSimulationBox().setDensity(density);
+    const auto isDensitySet = SimulationBoxSettings::getDensitySet();
+    const auto isBoxSet     = SimulationBoxSettings::getBoxSet();
+
+    if (!isDensitySet && !isBoxSet)
+        throw UserInputException("Box dimensions and density not set");
+
+    else if (!isBoxSet)
+    {
+        const auto boxDimensions = simBox.calcBoxDimFromDensity();
+
+        simBox.setBoxDimensions(boxDimensions);
+        simBox.setVolume(simBox.calculateVolume());
+    }
+    else if (!SimulationBoxSettings::getDensitySet())
+    {
+        const auto volume = simBox.calculateVolume();
+        const auto density =
+            simBox.getTotalMass() / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+
+        simBox.setVolume(volume);
+        simBox.setDensity(density);
     }
     else
     {
-        const auto volume  = _engine.getSimulationBox().calculateVolume();
-        const auto density = _engine.getSimulationBox().getTotalMass() /
-                             volume *
-                             constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+        const auto volume     = simBox.calculateVolume();
+        const auto convFactor = _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+        const auto density    = simBox.getTotalMass() / volume * convFactor;
 
-        _engine.getSimulationBox().setVolume(volume);
-        _engine.getSimulationBox().setDensity(density);
+        simBox.setVolume(volume);
+        simBox.setDensity(density);
 
         _engine.getLogOutput().writeDensityWarning();
         _engine.getStdoutOutput().writeDensityWarning();
     }
 
-    _engine.getPhysicalData().setVolume(_engine.getSimulationBox().getVolume());
-    _engine.getPhysicalData().setDensity(_engine.getSimulationBox().getDensity()
-    );
+    _engine.getPhysicalData().setVolume(simBox.getVolume());
+    _engine.getPhysicalData().setDensity(simBox.getDensity());
 }
 
 /**
@@ -458,12 +372,15 @@ void SimulationBoxSetup::checkBoxSettings()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    if (settings::PotentialSettings::getCoulombRadiusCutOff() >
-        _engine.getSimulationBox().getMinimalBoxDimension() / 2.0)
-        throw customException::InputFileException(std::format(
+    const auto &simBox = _engine.getSimulationBox();
+    const auto  rc     = PotentialSettings::getCoulombRadiusCutOff();
+    const auto  minDim = simBox.getMinimalBoxDimension();
+
+    if (rc > minDim / 2.0)
+        throw InputFileException(std::format(
             "Rc cutoff is larger than half of the minimal box dimension of {} "
             "Angstrom.",
-            _engine.getSimulationBox().getMinimalBoxDimension()
+            minDim
         ));
 }
 
@@ -475,9 +392,77 @@ void SimulationBoxSetup::checkRcCutoff()
  */
 void SimulationBoxSetup::initVelocities()
 {
-    if (settings::SimulationBoxSettings::getInitializeVelocities())
+    if (SimulationBoxSettings::getInitializeVelocities())
     {
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
     }
+}
+
+/**
+ * @brief write setup info to log file
+ *
+ */
+void SimulationBoxSetup::writeSetupInfo() const
+{
+    auto &log    = _engine.getLogOutput();
+    auto &simBox = _engine.getSimulationBox();
+
+    const auto nAtoms = simBox.getNumberOfAtoms();
+    const auto mass   = simBox.getTotalMass();
+    const auto charge = simBox.getTotalCharge();
+    const auto dof    = simBox.getDegreesOfFreedom();
+
+    log.writeSetupInfo(std::format("number of atoms:   {:8d}", nAtoms));
+    log.writeSetupInfo(std::format("total mass:        {:14.5f} g/mol", mass));
+    log.writeSetupInfo(std::format("total charge:      {:14.5f}", charge));
+    log.writeSetupInfo(std::format("unconstrained DOF: {:8d}", dof));
+    log.writeEmptyLine();
+
+    const auto density   = simBox.getDensity();
+    const auto volume    = simBox.getVolume();
+    const auto volumeStr = std::format("{:14.5f} {}³", volume, _ANGSTROM_);
+
+    log.writeSetupInfo(std::format("density:         {:14.5f} kg/L", density));
+    log.writeSetupInfo(std::format("volume:          ", volumeStr));
+    log.writeEmptyLine();
+
+    const auto boxA = simBox.getBoxDimensions()[0];
+    const auto boxB = simBox.getBoxDimensions()[1];
+    const auto boxC = simBox.getBoxDimensions()[2];
+
+    const auto boxAstr = std::format("{:14.5f} {}", boxA, _ANGSTROM_);
+    const auto boxBstr = std::format("{:14.5f} {}", boxB, _ANGSTROM_);
+    const auto boxCstr = std::format("{:14.5f} {}", boxC, _ANGSTROM_);
+
+    const auto alpha = simBox.getBoxAngles()[0];
+    const auto beta  = simBox.getBoxAngles()[1];
+    const auto gamma = simBox.getBoxAngles()[2];
+
+    const auto alphaStr = std::format("{:14.5f}°", alpha);
+    const auto betaStr  = std::format("{:14.5f}°", beta);
+    const auto gammaStr = std::format("{:14.5f}°", gamma);
+
+    // clang-format off
+    log.writeSetupInfo(std::format("box dimensions:  {} {} {}", boxAstr, boxBstr, boxCstr));
+    log.writeSetupInfo(std::format("box angles:      {}  {}  {}", alphaStr, betaStr, gammaStr));
+    log.writeEmptyLine();
+    // clang-format on
+
+    const auto rc    = PotentialSettings::getCoulombRadiusCutOff();
+    const auto rcStr = std::format("{:14.5f} {}", rc, _ANGSTROM_);
+
+    log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
+    log.writeEmptyLine();
+
+    if (SimulationBoxSettings::getInitializeVelocities())
+        log.writeSetupInfo(
+            "velocities initialized with Maxwell-Boltzmann distribution"
+        );
+    else
+        log.writeSetupInfo(std::format(
+            "velocities taken from start file \"{}\"",
+            FileSettings::getStartFileName()
+        ));
+    log.writeEmptyLine();
 }

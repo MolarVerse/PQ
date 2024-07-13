@@ -22,6 +22,9 @@
 
 #include "restartFileReader.hpp"
 
+#include <fstream>   // for basic_istream, ifstream
+#include <string>    // for basic_string, string
+
 #include "boxSection.hpp"          // for BoxSection
 #include "engine.hpp"              // for Engine
 #include "fileSettings.hpp"        // for FileSettings
@@ -29,22 +32,26 @@
 #include "stepCountSection.hpp"    // for StepCountSection
 #include "stringUtilities.hpp"     // for removeComments, splitString
 
-#include <fstream>   // for basic_istream, ifstream
-#include <string>    // for basic_string, string
-
 using namespace input::restartFile;
+using namespace engine;
+using namespace utilities;
+using namespace settings;
 
 /**
  * @brief Construct a new Rst File Reader:: Rst File Reader object
  *
- * @details The constructor initializes the sections of the .rst file and pushes them into a vector. It also sets the filename and
- * the engine object and with the filename it opens the file in the ifstream object _fp.
+ * @details The constructor initializes the sections of the .rst file and pushes
+ * them into a vector. It also sets the filename and the engine object and with
+ * the filename it opens the file in the ifstream object _fp.
  *
  *
  * @param filename
  * @param engine
  */
-RestartFileReader::RestartFileReader(const std::string &filename, engine::Engine &engine)
+RestartFileReader::RestartFileReader(
+    const std::string &filename,
+    Engine            &engine
+)
     : _fileName(filename), _fp(filename), _engine(engine)
 {
     _sections.push_back(std::make_unique<BoxSection>());
@@ -58,17 +65,20 @@ RestartFileReader::RestartFileReader(const std::string &filename, engine::Engine
  * @param lineElements
  * @return RestartFileSection*
  */
-RestartFileSection *RestartFileReader::determineSection(std::vector<std::string> &lineElements)
+RestartFileSection *RestartFileReader::determineSection(
+    std::vector<std::string> &lineElements
+)
 {
     for (const auto &section : _sections)
-        if (section->keyword() == utilities::toLowerCopy(lineElements[0]))
+        if (section->keyword() == toLowerCopy(lineElements[0]))
             return section.get();
 
     return _atomSection.get();
 }
 
 /**
- * @brief Reads a restart file and calls the process function of the corresponding section
+ * @brief Reads a restart file and calls the process function of the
+ * corresponding section
  *
  * @throw customException::InputFileException if file not found
  */
@@ -79,8 +89,8 @@ void RestartFileReader::read()
 
     while (getline(_fp, line))
     {
-        line              = utilities::removeComments(line, "#");
-        auto lineElements = utilities::splitString(line);
+        line              = removeComments(line, "#");
+        auto lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -98,15 +108,18 @@ void RestartFileReader::read()
 }
 
 /**
- * @brief wrapper function to construct a RestartFileReader object and call the read function
+ * @brief wrapper function to construct a RestartFileReader object and call the
+ * read function
  *
  * @param engine
  */
-void input::restartFile::readRestartFile(engine::Engine &engine)
+void input::restartFile::readRestartFile(Engine &engine)
 {
-    engine.getStdoutOutput().writeRead("Start File", settings::FileSettings::getStartFileName());
-    engine.getLogOutput().writeRead("Start File", settings::FileSettings::getStartFileName());
+    const auto filename = FileSettings::getStartFileName();
 
-    RestartFileReader rstFileReader(settings::FileSettings::getStartFileName(), engine);
+    engine.getStdoutOutput().writeRead("Start File", filename);
+    engine.getLogOutput().writeRead("Start File", filename);
+
+    RestartFileReader rstFileReader(filename, engine);
     rstFileReader.read();
 }

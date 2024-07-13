@@ -29,43 +29,67 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace manostat;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace constants;
+using namespace settings;
+
+/**
+ * @brief Construct a new Manostat:: Manostat object
+ *
+ * @param targetPressure
+ */
+Manostat::Manostat(const double targetPressure)
+    : _targetPressure(targetPressure)
+{
+}
 
 /**
  * @brief calculate the pressure of the system
  *
- * @param physicalData
+ * @param data
  */
-void Manostat::calculatePressure(
-    const simulationBox::SimulationBox &box,
-    physicalData::PhysicalData         &physicalData
-)
+void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
 {
-    auto       ekinVirial  = physicalData.getKineticEnergyVirialVector();
-    auto       forceVirial = physicalData.getVirial();
+    auto       ekinVirial  = data.getKinEnergyVirialTensor();
+    auto       forceVirial = data.getVirial();
     const auto volume      = box.getVolume();
 
     ekinVirial  = box.getBox().toOrthoSpace(ekinVirial);
     forceVirial = box.getBox().toOrthoSpace(forceVirial);
 
-    _pressureTensor = (2.0 * ekinVirial + forceVirial) / volume *
-                      constants::_PRESSURE_FACTOR_;
+    _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
+    _pressureTensor *= _PRESSURE_FACTOR_;
 
     _pressure = trace(_pressureTensor) / 3.0;
 
-    physicalData.setPressure(_pressure);
+    data.setPressure(_pressure);
 }
 
 /**
  * @brief apply dummy manostat for NVT ensemble
  *
- * @param physicalData
+ * @param data
  */
-void Manostat::applyManostat(
-    simulationBox::SimulationBox &box,
-    physicalData::PhysicalData   &physicalData
-)
+void Manostat::applyManostat(SimulationBox &box, PhysicalData &data)
 {
     startTimingsSection("Calc Pressure");
-    calculatePressure(box, physicalData);
+
+    calculatePressure(box, data);
+
     stopTimingsSection("Calc Pressure");
 }
+
+/**
+ * @brief get the manostat type
+ *
+ * @return ManostatType
+ */
+ManostatType Manostat::getManostatType() const { return ManostatType::NONE; }
+
+/**
+ * @brief get the isotropy of the manostat
+ *
+ * @return Isotropy
+ */
+Isotropy Manostat::getIsotropy() const { return Isotropy::NONE; }

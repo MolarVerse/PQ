@@ -34,6 +34,8 @@
 #include "vector3d.hpp"              // for operator<<
 
 using output::RingPolymerRestartFileOutput;
+using namespace simulationBox;
+using namespace settings;
 
 /**
  * @brief Write the restart file for all beads
@@ -42,8 +44,8 @@ using output::RingPolymerRestartFileOutput;
  * @param step
  */
 void RingPolymerRestartFileOutput::write(
-    std::vector<simulationBox::SimulationBox> &beads,
-    const size_t                               step
+    std::vector<SimulationBox> &beads,
+    const size_t                step
 )
 {
     std::ostringstream buffer;
@@ -51,7 +53,7 @@ void RingPolymerRestartFileOutput::write(
     _fp.close();
     _fp.open(_fileName);
 
-    const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
     for (size_t i = 0; i < nBeads; ++i)
         for (const auto &molecule : beads[i].getMolecules())

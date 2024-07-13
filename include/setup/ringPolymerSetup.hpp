@@ -24,15 +24,11 @@
 
 #define _RING_POLYMER_SETUP_HPP_
 
-namespace engine
-{
-    class RingPolymerEngine;   // forward declaration
-    class Engine;              // forward declaration
-}   // namespace engine
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupRingPolymer(engine::Engine &);
+    void setupRingPolymer(pq::Engine &);
 
     /**
      * @class RingPolymerSetup
@@ -42,11 +38,11 @@ namespace setup
      */
     class RingPolymerSetup
     {
-      private:
-        engine::RingPolymerEngine &_engine;
+       private:
+        pq::RingPolymerEngine &_engine;
 
-      public:
-        explicit RingPolymerSetup(engine::RingPolymerEngine &engine) : _engine(engine){};
+       public:
+        explicit RingPolymerSetup(pq::RingPolymerEngine &engine);
 
         void setup();
         void setupPhysicalData();

@@ -1,27 +1,27 @@
 
 add_library(inputFileParser
     inputFileParser.cpp
-    inputFileParserCelllist.cpp
-    inputFileParserConstraints.cpp
-    inputFileParserCoulombLongRange.cpp
-    inputFileParserForceField.cpp
-    inputFileParserGeneral.cpp
-    inputFileParserIntegrator.cpp
-    inputFileParserManostat.cpp
-    inputFileParserNonCoulomb.cpp
-    inputFileParserOutput.cpp
-    inputFileParserQM.cpp
-    inputFileParserQMMM.cpp
-    inputFileParserResetKinetics.cpp
-    inputFileParserRingPolymer.cpp
-    inputFileParserSimulationBox.cpp
-    inputFileParserThermostat.cpp
-    inputFileParserTimings.cpp
-    inputFileParserVirial.cpp
-    inputFileParserFiles.cpp
 
-    optInputParser.cpp
+    cellListInputParser.cpp
+    constraintsInputParser.cpp
     convergenceInputParser.cpp
+    coulombLongRangeInputParser.cpp
+    filesInputParser.cpp
+    forceFieldInputParser.cpp
+    generalInputParser.cpp
+    integratorInputParser.cpp
+    manostatInputParser.cpp
+    nonCoulombInputParser.cpp
+    outputInputParser.cpp
+    optInputParser.cpp
+    QMInputParser.cpp
+    QMMMInputParser.cpp
+    resetKineticsInputParser.cpp
+    ringPolymerInputParser.cpp
+    simulationBoxInputParser.cpp
+    thermostatInputParser.cpp
+    timingsInputParser.cpp
+    virialInputParser.cpp
 )
 
 target_include_directories(inputFileParser

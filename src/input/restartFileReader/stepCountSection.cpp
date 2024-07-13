@@ -32,6 +32,9 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input::restartFile;
+using namespace engine;
+using namespace settings;
+using namespace customException;
 
 /**
  * @brief processes the step count section of the rst file
@@ -46,13 +49,10 @@ using namespace input::restartFile;
  * @throws RstFileException if the number of elements in the line is not 2
  * @throws RstFileException if the step count is negative
  */
-void StepCountSection::process(
-    std::vector<std::string> &lineElements,
-    engine::Engine           &engine
-)
+void StepCountSection::process(std::vector<std::string> &lineElements, Engine &)
 {
     if (lineElements.size() != 2)
-        throw customException::RstFileException(std::format(
+        throw RstFileException(std::format(
             "Error in line {}: Step count section must have 2 elements",
             _lineNumber
         ));
@@ -60,10 +60,24 @@ void StepCountSection::process(
     auto stepCount = stoi(lineElements[1]);
 
     if (stepCount < 0)
-        throw customException::RstFileException(std::format(
+        throw RstFileException(std::format(
             "Error in line {}: Step count must be positive",
             _lineNumber
         ));
 
-    settings::TimingsSettings::setStepCount(size_t(stepCount));
+    TimingsSettings::setStepCount(size_t(stepCount));
 }
+
+/**
+ * @brief returns the keyword of the section
+ *
+ * @return "step"
+ */
+std::string StepCountSection::keyword() { return "step"; }
+
+/**
+ * @brief returns if the section is a header
+ *
+ * @return true
+ */
+bool StepCountSection::isHeader() { return true; }

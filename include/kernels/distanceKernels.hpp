@@ -24,42 +24,22 @@
 
 #define _DISTANCE_KERNELS_HPP_
 
+#include "typeAliases.hpp"
 #include "vector3d.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
 
 namespace kernel
 {
-    double distSquared(
-        const linearAlgebra::Vec3D         &pos_i,
-        const linearAlgebra::Vec3D         &pos_j,
-        const simulationBox::SimulationBox &simBox
-    );
+    [[nodiscard]] double distSquared(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
 
-    linearAlgebra::Vec3D distVec(
-        const linearAlgebra::Vec3D &pos_i,
-        const linearAlgebra::Vec3D &pos_j
-    );
+    [[nodiscard]] pq::Vec3D distVec(const pq::Vec3D &, const pq::Vec3D &);
 
-    linearAlgebra::Vec3D distVec(
-        const linearAlgebra::Vec3D         &pos_i,
-        const linearAlgebra::Vec3D         &pos_j,
-        const simulationBox::SimulationBox &simBox
-    );
+    [[nodiscard]] pq::Vec3D distVec(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
 
-    std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
-        const linearAlgebra::Vec3D &pos_i,
-        const linearAlgebra::Vec3D &pos_j
-    );
+    [[nodiscard]] std::pair<pq::Vec3D, double>
+    distVecAndDist2(const pq::Vec3D &, const pq::Vec3D &);
 
-    std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
-        const linearAlgebra::Vec3D         &pos_i,
-        const linearAlgebra::Vec3D         &pos_j,
-        const simulationBox::SimulationBox &simBox
-    );
+    [[nodiscard]] std::pair<pq::Vec3D, double>
+    distVecAndDist2(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
 
 }   // namespace kernel
 

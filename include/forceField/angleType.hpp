@@ -28,35 +28,38 @@
 
 namespace forceField
 {
+    class AngleType;   // forward declaration
+
+    bool operator==(const AngleType &, const AngleType &);
     /**
      * @class AngleType
      *
      * @brief represents an angle type
      *
-     * @details this is a class representing an angle type defined in the parameter file
+     * @details this is a class representing an angle type defined in the
+     * parameter file
      *
      */
     class AngleType
     {
-      private:
+       private:
         size_t _id;
 
         double _equilibriumAngle;
         double _forceConstant;
 
-      public:
-        AngleType(const size_t id, const double equilibriumAngle, const double springConstant)
-            : _id(id), _equilibriumAngle(equilibriumAngle), _forceConstant(springConstant){};
+       public:
+        AngleType(const size_t, const double, const double);
 
-        [[nodiscard]] bool operator==(const AngleType &other) const;
+        friend bool operator==(const AngleType &, const AngleType &);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const { return _id; }
-        [[nodiscard]] double getEquilibriumAngle() const { return _equilibriumAngle; }
-        [[nodiscard]] double getForceConstant() const { return _forceConstant; }
+        [[nodiscard]] size_t getId() const;
+        [[nodiscard]] double getEquilibriumAngle() const;
+        [[nodiscard]] double getForceConstant() const;
     };
 
 }   // namespace forceField

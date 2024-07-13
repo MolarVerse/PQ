@@ -30,25 +30,9 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace virial;
-
-/**
- * @brief clones the molecular virial object
- *
- * @return std::shared_ptr<Virial>
- */
-std::shared_ptr<Virial> VirialMolecular::clone() const
-{
-    return std::make_shared<VirialMolecular>(*this);
-}
-
-/**
- * @brief clones the atomic virial object
- *
- */
-std::shared_ptr<Virial> VirialAtomic::clone() const
-{
-    return std::make_shared<VirialAtomic>(*this);
-}
+using namespace simulationBox;
+using namespace physicalData;
+using namespace linearAlgebra;
 
 /**
  * @brief calculate virial for general systems
@@ -56,19 +40,16 @@ std::shared_ptr<Virial> VirialAtomic::clone() const
  * @details It calculates the virial for all atoms in the simulation box without
  * any corrections. It already sets the virial in the physicalData object
  *
- * @param simulationBox
- * @param physicalData
+ * @param simBox
+ * @param data
  */
-void Virial::calculateVirial(
-    simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData   &physicalData
-)
+void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 {
     startTimingsSection("Virial");
 
     _virial = {0.0};
 
-    for (auto &molecule : simulationBox.getMolecules())
+    for (auto &molecule : simBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
@@ -78,74 +59,36 @@ void Virial::calculateVirial(
             const auto shiftForcexyz = molecule.getAtomShiftForce(i);
             const auto xyz           = molecule.getAtomPosition(i);
 
-            // TODO: check if correct with shiftForcexyz
-            _virial +=
-                tensorProduct(xyz, forcexyz) + diagonalMatrix(shiftForcexyz);
+            const auto tensor = tensorProduct(xyz, forcexyz);
+
+            _virial += tensor + diagonalMatrix(shiftForcexyz);
 
             molecule.setAtomShiftForce(i, {0.0, 0.0, 0.0});
         }
     }
 
-    physicalData.setVirial(_virial);
+    data.setVirial(_virial);
 
     stopTimingsSection("Virial");
 }
 
 /**
- * @brief calculate virial for molecular systems
+ * @brief set the virial
  *
- * @details it calls the general virial calculation and then corrects it for
- *          intramolecular interactions. Afterwards it sets the virial in the
- *          physicalData object
- *
- * @param simulationBox
- * @param physicalData
+ * @param virial
  */
-void VirialMolecular::calculateVirial(
-    simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData   &physicalData
-)
-{
-    Virial::calculateVirial(simulationBox, physicalData);
-
-    physicalData.setVirial(_virial);
-}
+void Virial::setVirial(const tensor3D &virial) { _virial = virial; }
 
 /**
- * @brief calculate intramolecular virial correction
+ * @brief get the virial
  *
- * @note it directly corrects the virial member variable
- *
- * @param simulationBox
+ * @return tensor3D
  */
-void VirialMolecular::intraMolecularVirialCorrection(
-    simulationBox::SimulationBox &simulationBox,
-    physicalData::PhysicalData   &physicalData
-)
-{
-    startTimingsSection("IntraMolecular Correction");
+tensor3D Virial::getVirial() const { return _virial; }
 
-    _virial = {0.0};
-
-    for (const auto &molecule : simulationBox.getMolecules())
-    {
-        const auto   centerOfMass  = molecule.getCenterOfMass();
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-        {
-            const auto forcexyz = molecule.getAtomForce(i);
-            const auto xyz      = molecule.getAtomPosition(i);
-
-            auto dxyz = xyz - centerOfMass;
-
-            simulationBox.applyPBC(dxyz);
-
-            _virial -= tensorProduct(dxyz, forcexyz);
-        }
-    }
-
-    physicalData.addVirial(_virial);
-
-    stopTimingsSection("IntraMolecular Correction");
-}
+/**
+ * @brief get the virial type
+ *
+ * @return std::string
+ */
+std::string Virial::getVirialType() const { return _virialType; }

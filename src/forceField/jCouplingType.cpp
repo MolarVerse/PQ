@@ -27,26 +27,141 @@
 using namespace forceField;
 
 /**
+ * @brief Construct a new JCouplingType::JCouplingType object
+ *
+ * @param id
+ * @param J0
+ * @param forceConstant
+ * @param a
+ * @param b
+ * @param c
+ * @param phaseShift
+ */
+JCouplingType::JCouplingType(
+    const size_t id,
+    const double J0,
+    const double forceConstant,
+    const double a,
+    const double b,
+    const double c,
+    const double phaseShift
+)
+    : _id(id),
+      _J0(J0),
+      _forceConstant(forceConstant),
+      _a(a),
+      _b(b),
+      _c(c),
+      _phaseShift(phaseShift)
+{
+}
+
+/**
  * @brief operator overload for the comparison of two JCouplingType objects
  *
+ * @param self
  * @param other
  * @return true
  * @return false
  */
-bool JCouplingType::operator==(const JCouplingType &other) const
+bool forceField::operator==(
+    const JCouplingType &self,
+    const JCouplingType &other
+)
 {
-    const auto k         = _forceConstant;
+    const auto k         = self._forceConstant;
+    const auto phi       = self._phaseShift;
     const auto other_k   = other._forceConstant;
-    const auto phi       = _phaseShift;
     const auto other_phi = other._phaseShift;
 
-    auto isEqual = _id == other._id;
-    isEqual      = isEqual && utilities::compare(_J0, other._J0);
+    auto isEqual = self._id == other._id;
+    isEqual      = isEqual && utilities::compare(self._J0, other._J0);
     isEqual      = isEqual && utilities::compare(k, other_k);
-    isEqual      = isEqual && utilities::compare(_a, other._a);
-    isEqual      = isEqual && utilities::compare(_b, other._b);
-    isEqual      = isEqual && utilities::compare(_c, other._c);
+    isEqual      = isEqual && utilities::compare(self._a, other._a);
+    isEqual      = isEqual && utilities::compare(self._b, other._b);
+    isEqual      = isEqual && utilities::compare(self._c, other._c);
     isEqual      = isEqual && utilities::compare(phi, other_phi);
 
     return isEqual;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the id
+ *
+ * @return size_t
+ */
+size_t JCouplingType::getId() const { return _id; }
+
+/**
+ * @brief get the J0
+ *
+ * @return double
+ */
+double JCouplingType::getJ0() const { return _J0; }
+
+/**
+ * @brief get the force constant
+ *
+ * @return double
+ */
+double JCouplingType::getForceConstant() const { return _forceConstant; }
+
+/**
+ * @brief get the a
+ *
+ * @return double
+ */
+double JCouplingType::getA() const { return _a; }
+
+/**
+ * @brief get the b
+ *
+ * @return double
+ */
+double JCouplingType::getB() const { return _b; }
+
+/**
+ * @brief get the c
+ *
+ * @return double
+ */
+double JCouplingType::getC() const { return _c; }
+
+/**
+ * @brief get the phase shift
+ *
+ * @return double
+ */
+double JCouplingType::getPhaseShift() const { return _phaseShift; }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set if the upper symmetry should be used
+ *
+ * @param boolean
+ */
+void JCouplingType::setUpperSymmetry(const bool boolean)
+{
+    _upperSymmetry = boolean;
+}
+
+/**
+ * @brief set if the lower symmetry should be used
+ *
+ * @param boolean
+ */
+void JCouplingType::setLowerSymmetry(const bool boolean)
+{
+    _lowerSymmetry = boolean;
 }

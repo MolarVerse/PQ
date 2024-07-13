@@ -26,17 +26,15 @@
 
 #include <random>
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace maxwellBoltzmann
 {
     /**
      * @class MaxwellBoltzmann
      *
-     * @brief class to initialize velocities of particles with a random maxwell boltzmann distribution
+     * @brief class to initialize velocities of particles with a random maxwell
+     * boltzmann distribution
      *
      * @link https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up
      * @link https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up
@@ -44,12 +42,12 @@ namespace maxwellBoltzmann
      */
     class MaxwellBoltzmann
     {
-      private:
+       private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
 
-      public:
-        void initializeVelocities(simulationBox::SimulationBox &);
+       public:
+        void initializeVelocities(pq::SimBox &);
     };
 }   // namespace maxwellBoltzmann
 

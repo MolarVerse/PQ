@@ -29,6 +29,8 @@
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
+using namespace customException;
+using namespace utilities;
 
 /**
  * @brief check if parameter is "="
@@ -36,7 +38,7 @@ using namespace input;
  * @param view
  * @param _lineNumber
  *
- * @throw customException::InputFileException if argument is not "="
+ * @throw InputFileException if argument is not "="
  */
 void input::checkEqualSign(
     const std::string_view &view,
@@ -44,7 +46,7 @@ void input::checkEqualSign(
 )
 {
     if (view != "=")
-        throw customException::InputFileException(
+        throw InputFileException(
             std::format("Invalid command at line {} in input file", lineNumber)
         );
 }
@@ -55,7 +57,7 @@ void input::checkEqualSign(
  * @param lineElements
  * @param _lineNumber
  *
- * @throw customException::InputFileException if command array has less than 3
+ * @throw InputFileException if command array has less than 3
  * elements
  *
  * @note this function is used for commands that have an array as their third
@@ -67,7 +69,7 @@ void input::checkCommandArray(
 )
 {
     if (lineElements.size() < 3)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Invalid number of arguments at line {} in input file",
             lineNumber
         ));
@@ -81,7 +83,7 @@ void input::checkCommandArray(
  * @param lineElements
  * @param _lineNumber
  *
- * @throw customException::InputFileException if command array has less or more
+ * @throw InputFileException if command array has less or more
  * than 3 elements
  */
 void input::checkCommand(
@@ -90,7 +92,7 @@ void input::checkCommand(
 )
 {
     if (lineElements.size() != 3)
-        throw customException::InputFileException(std::format(
+        throw InputFileException(std::format(
             "Invalid number of arguments at line {} in input file",
             lineNumber
         ));
@@ -115,11 +117,11 @@ void input::checkCommand(
  */
 void InputFileParser::addKeyword(
     const std::string &keyword,
-    ParseFunc          parserFunc,
+    pq::ParseFunc      parserFunc,
     bool               required
 )
 {
-    const auto keywordLowerCase = utilities::toLowerCopy(keyword);
+    const auto keywordLowerCase = toLowerCopy(keyword);
     _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
     _keywordRequiredMap.try_emplace(keywordLowerCase, required);
     _keywordCountMap.try_emplace(keywordLowerCase, 0);
@@ -130,7 +132,7 @@ void InputFileParser::addKeyword(
  *
  * @return the keyword function map
  */
-std::map<std::string, ParseFunc> InputFileParser::getKeywordFuncMap() const
+std::map<std::string, pq::ParseFunc> InputFileParser::getKeywordFuncMap() const
 {
     return _keywordFuncMap;
 }

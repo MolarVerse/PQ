@@ -26,18 +26,9 @@
 
 #include <cstddef>   // for size_t
 
-#include "timer.hpp"      // for Timer
+#include "timer.hpp"   // for Timer
+#include "typeAliases.hpp"
 #include "vector3d.hpp"   // for Vec3D
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
 
 namespace resetKinetics
 {
@@ -58,9 +49,9 @@ namespace resetKinetics
         size_t _nStepsAngularReset;
         size_t _frequencyAngularReset;
 
-        double               _temperature = 0.0;
-        linearAlgebra::Vec3D _momentum;
-        linearAlgebra::Vec3D _angularMomentum;
+        double    _temperature = 0.0;
+        pq::Vec3D _momentum;
+        pq::Vec3D _angularMomentum;
 
        public:
         ResetKinetics() = default;
@@ -71,56 +62,29 @@ namespace resetKinetics
             const size_t frequencyMomentumReset,
             const size_t nStepsAngularReset,
             const size_t frequencyAngularReset
-        )
-            : _nStepsTemperatureReset(nStepsTemperatureReset),
-              _frequencyTemperatureReset(frequencyTemperatureReset),
-              _nStepsMomentumReset(nStepsMomentumReset),
-              _frequencyMomentumReset(frequencyMomentumReset),
-              _nStepsAngularReset(nStepsAngularReset),
-              _frequencyAngularReset(frequencyAngularReset){};
+        );
 
-        void reset(const size_t step, physicalData::PhysicalData &, simulationBox::SimulationBox &);
-        void resetTemperature(simulationBox::SimulationBox &);
-        void resetMomentum(simulationBox::SimulationBox &);
-        void resetAngularMomentum(simulationBox::SimulationBox &);
+        void reset(const size_t step, pq::PhysicalData &, pq::SimBox &);
+        void resetTemperature(pq::SimBox &);
+        void resetMomentum(pq::SimBox &);
+        void resetAngularMomentum(pq::SimBox &);
 
         /********************
          * standard setters *
          *******************/
 
-        void setTemperature(const double temperature)
-        {
-            _temperature = temperature;
-        }
-        void setMomentum(const linearAlgebra::Vec3D &momentum)
-        {
-            _momentum = momentum;
-        }
-        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum)
-        {
-            _angularMomentum = angularMomentum;
-        }
+        void setTemperature(const double temperature);
+        void setMomentum(const pq::Vec3D &momentum);
+        void setAngularMomentum(const pq::Vec3D &angularMomentum);
 
         /********************
          * standard getters *
          *******************/
 
-        [[nodiscard]] size_t getNStepsTemperatureReset() const
-        {
-            return _nStepsTemperatureReset;
-        }
-        [[nodiscard]] size_t getFrequencyTemperatureReset() const
-        {
-            return _frequencyTemperatureReset;
-        }
-        [[nodiscard]] size_t getNStepsMomentumReset() const
-        {
-            return _nStepsMomentumReset;
-        }
-        [[nodiscard]] size_t getFrequencyMomentumReset() const
-        {
-            return _frequencyMomentumReset;
-        }
+        [[nodiscard]] size_t getNStepsTemperatureReset() const;
+        [[nodiscard]] size_t getFrequencyTemperatureReset() const;
+        [[nodiscard]] size_t getNStepsMomentumReset() const;
+        [[nodiscard]] size_t getFrequencyMomentumReset() const;
     };
 
 }   // namespace resetKinetics

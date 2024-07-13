@@ -1,4 +1,6 @@
 jobtype                     true       
+dim                         false
+floating_point_type         false
 
 optimizer                   false
 learning-rate-strategy      false
@@ -44,8 +46,6 @@ topology_file               false
 parameter_file              false
 intra-nonBonded_file        false
 mshake_file                 false
-
-dim                         false
 
 integrator                  false
 
@@ -103,7 +103,7 @@ rcoulomb                    false
 density                     false
 init_velocities             false
 
-timestep                    true
+timestep                    false
 nstep                       true
 
 virial                      false
@@ -112,6 +112,8 @@ qm_prog                     false
 qm_script                   false
 qm_script_full_path         false
 qm_loop_time_limit          false
+dispersion                  false
+mace_model_size             false
 
 rpmd_n_replica              false
 

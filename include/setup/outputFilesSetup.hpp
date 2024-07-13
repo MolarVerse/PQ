@@ -24,14 +24,11 @@
 
 #define _OUTPUT_FILES_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupOutputFiles(engine::Engine &engine);
+    void setupOutputFiles(pq::Engine &engine);
 
     /**
      * @class OutputFilesSetup
@@ -41,11 +38,11 @@ namespace setup
      */
     class OutputFilesSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        pq::Engine &_engine;
 
-      public:
-        explicit OutputFilesSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit OutputFilesSetup(pq::Engine &engine);
 
         void setup();
     };

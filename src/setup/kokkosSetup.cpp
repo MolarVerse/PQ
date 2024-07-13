@@ -35,13 +35,19 @@
 #include "settings.hpp"
 #include "simulationBox_kokkos.hpp"
 #include "timingsSettings.hpp"
+#include "typeAliases.hpp"
 
 using namespace setup;
+using namespace engine;
+using namespace settings;
+using namespace customException;
+using namespace potential;
+using namespace constants;
 
 /**
  * @brief setup Kokkos
  */
-void setup::setupKokkos(engine::Engine &engine)
+void setup::setupKokkos(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("Kokkos");
     engine.getLogOutput().writeSetup("Kokkos");
@@ -51,17 +57,23 @@ void setup::setupKokkos(engine::Engine &engine)
 }
 
 /**
+ * @brief Construct a new Kokkos Setup:: Kokkos Setup object
+ *
+ * @param engine
+ */
+KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine){};
+
+/**
  * @brief setup Kokkos
  */
 void KokkosSetup::setup()
 {
-    if (!settings::Settings::isMMActivated())
+    if (!Settings::isMMActivated())
         return;
 
-    if (settings::PotentialSettings::getNonCoulombType() !=
-        settings::NonCoulombType::LJ)
+    if (PotentialSettings::getNonCoulombType() != NonCoulombType::LJ)
     {
-        auto warning = customException::UserInputExceptionWarning(
+        const auto warning = UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of non "
             "Coulomb potential - falling back to serial execution"
         );
@@ -69,9 +81,10 @@ void KokkosSetup::setup()
         return;
     }
 
-    if (settings::PotentialSettings::getCoulombLongRangeType() != "wolf")
+    using enum CoulombLongRangeType;
+    if (PotentialSettings::getCoulombLongRangeType() != WOLF)
     {
-        auto warning = customException::UserInputExceptionWarning(
+        const auto warning = UserInputExceptionWarning(
             "Kokkos installation is not enabled for the current type of "
             "Coulomb long range potential - falling back to serial execution"
         );
@@ -79,65 +92,60 @@ void KokkosSetup::setup()
         return;
     }
 
-    settings::Settings::activateKokkos();
+    Settings::activateKokkos();
 
     _engine.initKokkosPotential();
 
-    const auto numAtoms = _engine.getSimulationBox().getNumberOfAtoms();
+    auto       &simBox        = _engine.getSimulationBox();
+    const auto &potential     = _engine.getPotential();
+    const auto &nonCoulombPot = potential.getNonCoulombPotential();
+    const auto &coulombPot    = potential.getCoulombPotential();
+
+    const auto numAtoms = simBox.getNumberOfAtoms();
 
     /************************************
      * Initialize Kokkos simulation box *
      ************************************/
 
     _engine.initKokkosSimulationBox(numAtoms);
-
     auto kokkosSimulationBox = _engine.getKokkosSimulationBox();
+    kokkosSimulationBox.initKokkosSimulationBox(simBox);
 
-    kokkosSimulationBox.initKokkosSimulationBox(_engine.getSimulationBox());
-
-    auto forceFieldNonCoulomb = dynamic_cast<potential::ForceFieldNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
-    );
+    auto ffNonCoulomb = dynamic_cast<const pq::FFNonCoulomb &>(nonCoulombPot);
 
     /************************************
      * Initialize Kokkos Lennard Jones  *
      ************************************/
 
-    const auto numAtomTypes =
-        forceFieldNonCoulomb.getNonCoulombPairsMatrix().rows();
-
+    const auto numAtomTypes = ffNonCoulomb.getNonCoulombPairsMatrix().rows();
     _engine.initKokkosLennardJones(numAtomTypes);
-
     auto kokkosLennardJones = _engine.getKokkosLennardJones();
 
-    kokkosLennardJones.transferFromNonCoulombPairMatrix(
-        forceFieldNonCoulomb.getNonCoulombPairsMatrix()
-    );
+    auto &nonCoulPairMatrix = ffNonCoulomb.getNonCoulombPairsMatrix();
+    kokkosLennardJones.transferFromNonCoulombPairMatrix(nonCoulPairMatrix);
 
     /************************************
      * Initialize Kokkos Coulomb Wolf   *
      ************************************/
 
-    auto wolfPotential = dynamic_cast<potential::CoulombWolf &>(
-        _engine.getPotential().getCoulombPotential()
-    );
+    const auto wolfPotential = dynamic_cast<const CoulombWolf &>(coulombPot);
 
     _engine.initKokkosCoulombWolf(
-        wolfPotential.getCoulombRadiusCutOff(),
+        CoulombWolf::getCoulombRadiusCutOff(),
         wolfPotential.getKappa(),
         wolfPotential.getWolfParameter1(),
         wolfPotential.getWolfParameter2(),
         wolfPotential.getWolfParameter3(),
-        constants::_COULOMB_PREFACTOR_
+        _COULOMB_PREFACTOR_
     );
 
     /********************************
      * Initialize Kokkos Integrator *
      ********************************/
 
-    dynamic_cast<engine::MDEngine &>(_engine).initKokkosVelocityVerlet(
-        settings::TimingsSettings::getTimeStep(),
-        constants::_V_VERLET_VELOCITY_FACTOR_,
-        constants::_FS_TO_S_
-    );
+    const auto dt       = TimingsSettings::getTimeStep();
+    const auto vvFactor = _V_VERLET_VELOCITY_FACTOR_;
+    auto      &mdEngine = dynamic_cast<MDEngine &>(_engine);
+
+    mdEngine.initKokkosVelocityVerlet(dt, vvFactor, _FS_TO_S_);
 }

@@ -27,11 +27,7 @@
 #include <vector>   // for vector
 
 #include "output.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -47,11 +43,11 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(std::vector<simulationBox::SimulationBox> &);
-        void writeVelocities(std::vector<simulationBox::SimulationBox> &);
-        void writeForces(std::vector<simulationBox::SimulationBox> &);
-        void writeCharges(std::vector<simulationBox::SimulationBox> &);
+        void writeHeader(const pq::SimBox &);
+        void writeXyz(std::vector<pq::SimBox> &);
+        void writeVelocities(std::vector<pq::SimBox> &);
+        void writeForces(std::vector<pq::SimBox> &);
+        void writeCharges(std::vector<pq::SimBox> &);
     };
 }   // namespace output
 

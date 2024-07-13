@@ -58,6 +58,8 @@ namespace settings
         DOUBLE
     };
 
+    [[nodiscard]] std::string string(const JobType jobtype);
+
     /**
      * @class Settings
      *

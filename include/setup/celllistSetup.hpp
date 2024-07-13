@@ -24,14 +24,11 @@
 
 #define _CELL_LIST_SETUP_HPP_
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace setup
 {
-    void setupCellList(engine::Engine &);
+    void setupCellList(pq::Engine &);
 
     /**
      * @class SetupCellList
@@ -39,11 +36,11 @@ namespace setup
      */
     class CellListSetup
     {
-      private:
-        engine::Engine &_engine;
+       private:
+        pq::Engine &_engine;
 
-      public:
-        explicit CellListSetup(engine::Engine &engine) : _engine(engine){};
+       public:
+        explicit CellListSetup(pq::Engine &engine);
 
         void setup();
     };

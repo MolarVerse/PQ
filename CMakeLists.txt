@@ -105,8 +105,8 @@ if(BUILD_WITH_PYTHON_BINDINGS)
     include(python_bindings)
 endif()
 
-if(BUILD_WITH_MACE)
-    include(mace)
+if(BUILD_WITH_ASE)
+    include(ase)
 endif()
 
 if(BUILD_WITH_TESTS)

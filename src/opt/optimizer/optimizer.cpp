@@ -101,7 +101,7 @@ bool Optimizer::hasConverged()
  *
  * @param convergence
  */
-void Optimizer::setConvergence(const Convergence &convergence)
+void Optimizer::setConvergence(const Convergence convergence)
 {
     _convergence = convergence;
 }
@@ -285,3 +285,10 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(const int offset
  * @return opt::Convergence
  */
 Convergence Optimizer::getConvergence() const { return _convergence; }
+
+/**
+ * @brief get the convergence member
+ *
+ * @return opt::Convergence
+ */
+Convergence &Optimizer::getConvergence() { return _convergence; }

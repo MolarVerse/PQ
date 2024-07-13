@@ -28,11 +28,7 @@
 #include <vector>   // for vector
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::parameterFile
 {
@@ -45,17 +41,11 @@ namespace input::parameterFile
     class ImproperDihedralSection : public ParameterFileSection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "impropers"; }
+        [[nodiscard]] std::string keyword() override;
 
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-
-        void processHeader(
-            [[maybe_unused]] std::vector<std::string> &lineElements,
-            [[maybe_unused]] engine::Engine           &engine
-        ) override {};   // TODO: implement
+        void processSection(pq::strings &, pq::Engine &) override;
+        void processHeader(pq::strings &, pq::Engine &) override {};
+        // TODO: implement processHeader
     };
 
 }   // namespace input::parameterFile

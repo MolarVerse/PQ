@@ -24,18 +24,14 @@
 
 #define _TOPOLOGY_READER_HPP_
 
-#include "topologySection.hpp"
-
 #include <fstream>   // for ifstream
 #include <memory>
 #include <string>
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "topologySection.hpp"
+#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -50,20 +46,20 @@ namespace input::topology
      */
     class TopologyReader
     {
-      private:
+       private:
         std::string     _fileName;
         std::ifstream   _fp;
         engine::Engine &_engine;
 
         std::vector<std::unique_ptr<TopologySection>> _topologySections;
 
-      public:
-        TopologyReader(const std::string &filename, engine::Engine &engine);
+       public:
+        TopologyReader(const std::string &filename, pq::Engine &engine);
 
         void                           read();
-        [[nodiscard]] TopologySection *determineSection(const std::vector<std::string> &lineElements);
+        [[nodiscard]] TopologySection *determineSection(const pq::strings &);
 
-        void setFilename(const std::string_view &filename) { _fileName = filename; }
+        void setFilename(const std::string_view &filename);
     };
 
 }   // namespace input::topology

@@ -46,7 +46,7 @@ using namespace defaults;
  */
 TEST_F(TestInputFileReader, parserOptimizer)
 {
-    using enum Optimizer;
+    using enum OptimizerType;
 
     EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
     using enum LREnum;
 
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT_DECAY);
+    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
 
     OptimizerSettings::setLearningRateStrategy("none");
 
@@ -220,14 +220,11 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
     OptimizerSettings::setLRUpdateFrequency(0);
 
     auto parser = OptInputParser(*_engine);
-    parser.parseLearningRateUpdateFrequency(
-        {"lr-update-frequency", "=", "100"},
-        0
-    );
+    parser.parseLearningRateUpdateFreq({"lr-update-frequency", "=", "100"}, 0);
     EXPECT_EQ(OptimizerSettings::getLRUpdateFrequency(), 100);
 
     ASSERT_THROW_MSG(
-        parser.parseLearningRateUpdateFrequency(
+        parser.parseLearningRateUpdateFreq(
             {"lr-update-frequency", "=", "-100"},
             0
         ),

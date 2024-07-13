@@ -22,37 +22,60 @@
 
 #include "noseHooverSection.hpp"
 
-#include "exceptions.hpp"           // for RstFileException
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-
 #include <format>   // for format
 #include <string>   // for string
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "exceptions.hpp"           // for RstFileException
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using input::restartFile::NoseHooverSection;
+using namespace engine;
+using namespace customException;
+using namespace settings;
 
 /**
  * @brief checks the number of arguments in the line
  *
  * @param lineElements all elements of the line
  *
- * @throws customException::RstFileException if the number of arguments is not correct
+ * @throws RstFileException if the number of arguments is not
+ * correct
  */
-void NoseHooverSection::process(std::vector<std::string> &lineElements, engine::Engine &)
+void NoseHooverSection::process(pq::strings &lineElements, Engine &)
 {
     if (4 != lineElements.size())
-        throw customException::RstFileException(
-            std::format("Error not enough arguments in line {} for a chi entry of the nose hoover thermostat", _lineNumber));
+        throw RstFileException(std::format(
+            "Error not enough arguments in line {} for a chi entry of the nose "
+            "hoover thermostat",
+            _lineNumber
+        ));
 
-    auto [iterChi, chiIsInserted]   = settings::ThermostatSettings::addChi(stoul(lineElements[1]), stod(lineElements[2]));
-    auto [iterZeta, zetaIsInserted] = settings::ThermostatSettings::addZeta(stoul(lineElements[1]), stod(lineElements[3]));
+    const auto idx  = stoul(lineElements[1]);
+    const auto chi  = stod(lineElements[2]);
+    const auto zeta = stod(lineElements[3]);
+
+    auto [iterChi, chiIsInserted]   = ThermostatSettings::addChi(idx, chi);
+    auto [iterZeta, zetaIsInserted] = ThermostatSettings::addZeta(idx, zeta);
 
     if (!chiIsInserted || !zetaIsInserted)
-        throw customException::RstFileException(
-            std::format("Error in line {} in restart file; chi or zeta entry already exists", _lineNumber));
+        throw RstFileException(std::format(
+            "Error in line {} in restart file; chi or zeta entry already "
+            "exists",
+            _lineNumber
+        ));
 }
+
+/**
+ * @brief returns the keyword of the section
+ *
+ * @return std::string "chi"
+ */
+std::string NoseHooverSection::keyword() { return "chi"; }
+
+/**
+ * @brief returns if the section is a header
+ *
+ * @return bool true
+ */
+bool NoseHooverSection::isHeader() { return true; }

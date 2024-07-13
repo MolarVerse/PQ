@@ -27,11 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -46,7 +42,8 @@ namespace output
        public:
         using Output::Output;
 
-        void write(simulationBox::SimulationBox &, const size_t);
+        void write(pq::SimBox &, const pq::Thermostat &, const size_t);
+        void writeNHChain(const pq::Thermostat &, std::ostringstream &);
     };
 
 }   // namespace output
