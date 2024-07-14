@@ -29,6 +29,7 @@
 #include "manostat.hpp"
 #include "resetKinetics.hpp"
 #include "thermostat.hpp"
+#include "typeAliases.hpp"
 #include "velocityVerlet.hpp"   // for VelocityVerlet
 
 #ifdef WITH_KOKKOS
@@ -37,18 +38,6 @@
 
 namespace engine
 {
-    using VelocityVerlet   = integrator::VelocityVerlet;
-    using UniqueIntegrator = std::unique_ptr<integrator::Integrator>;
-
-    using Thermostat       = thermostat::Thermostat;
-    using UniqueThermostat = std::unique_ptr<thermostat::Thermostat>;
-
-    using UniqueManostat = std::unique_ptr<manostat::Manostat>;
-
-#ifdef WITH_KOKKOS
-    using KokkosVelocityVerlet = integrator::KokkosVelocityVerlet;
-#endif
-
     /**
      * @brief Molecular dynamics engine
      *
@@ -57,15 +46,13 @@ namespace engine
     class MDEngine : public Engine
     {
        protected:
-        resetKinetics::ResetKinetics _resetKinetics;
+        pq::ResetKinetics _resetKinetics;
 
-#ifdef WITH_KOKKOS
-        integrator::KokkosVelocityVerlet _kokkosVelocityVerlet;
-#endif
-
-        UniqueIntegrator _integrator = std::make_unique<VelocityVerlet>();
-        UniqueThermostat _thermostat = std::make_unique<Thermostat>();
-        UniqueManostat   _manostat   = std::make_unique<manostat::Manostat>();
+        // clang-format off
+        pq::UniqueIntegrator _integrator = std::make_unique<pq::VelocityVerlet>();
+        pq::UniqueThermostat _thermostat = std::make_unique<pq::Thermostat>();
+        pq::UniqueManostat   _manostat   = std::make_unique<pq::Manostat>();
+        // clang-format off
 
        public:
         MDEngine()           = default;
@@ -73,28 +60,34 @@ namespace engine
 
         void run() override;
         void writeOutput() override;
+        virtual void takeStep();
+
+        void takeStepBeforeForces();
+        void takeStepAfterForces();
+
+        virtual void calculateForces() = 0;
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics();
-        [[nodiscard]] integrator::Integrator       &getIntegrator();
-        [[nodiscard]] thermostat::Thermostat       &getThermostat();
-        [[nodiscard]] manostat::Manostat           &getManostat();
-        [[nodiscard]] output::EnergyOutput         &getInstantEnergyOutput();
-        [[nodiscard]] output::MomentumOutput       &getMomentumOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getChargeOutput();
-        [[nodiscard]] output::VirialOutput         &getVirialOutput();
-        [[nodiscard]] output::StressOutput         &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();
-        [[nodiscard]] RPMDRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerXyzOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerVelOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerForceOutput();
-        [[nodiscard]] RPMDTrajectoryOutput  &getRingPolymerChargeOutput();
-        [[nodiscard]] RPMDEnergyOutput      &getRingPolymerEnergyOutput();
+        [[nodiscard]] pq::ResetKinetics     &getResetKinetics();
+        [[nodiscard]] pq::Integrator        &getIntegrator();
+        [[nodiscard]] pq::Thermostat        &getThermostat();
+        [[nodiscard]] pq::Manostat          &getManostat();
+        [[nodiscard]] pq::EnergyOutput      &getInstantEnergyOutput();
+        [[nodiscard]] pq::MomentumOutput    &getMomentumOutput();
+        [[nodiscard]] pq::TrajectoryOutput  &getVelOutput();
+        [[nodiscard]] pq::TrajectoryOutput  &getChargeOutput();
+        [[nodiscard]] pq::VirialOutput      &getVirialOutput();
+        [[nodiscard]] pq::StressOutput      &getStressOutput();
+        [[nodiscard]] pq::BoxFileOutput     &getBoxFileOutput();
+        [[nodiscard]] pq::RPMDRstFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerXyzOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerVelOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerForceOutput();
+        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerChargeOutput();
+        [[nodiscard]] pq::RPMDEnergyOutput  &getRingPolymerEnergyOutput();
 
         /***************************
          * make unique_ptr methods *
@@ -106,20 +99,6 @@ namespace engine
         void makeThermostat(T thermostat);
         template <typename T>
         void makeManostat(T manostat);
-
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-#ifdef WITH_KOKKOS
-        [[nodiscard]] KokkosVelocityVerlet &getKokkosVelocityVerlet();
-
-        void initKokkosVelocityVerlet(
-            const double dt,
-            const double velocityFactor,
-            const double timeFactor
-        );
-#endif
     };
 }   // namespace engine
 

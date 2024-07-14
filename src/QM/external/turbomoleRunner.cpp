@@ -41,29 +41,37 @@
 
 using QM::TurbomoleRunner;
 
+using namespace simulationBox;
+using namespace customException;
+using namespace constants;
+using namespace settings;
+using namespace utilities;
+
 /**
  * @brief writes the coords file in turbomole format
  *
- * @param box
+ * @param simBox
  */
-void TurbomoleRunner::writeCoordsFile(simulationBox::SimulationBox &box)
+void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
 {
     const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+
+    const auto nAtoms = simBox.getNumberOfQMAtoms();
+
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        const auto &atom = box.getQMAtom(i);
+        const auto &atom = simBox.getQMAtom(i);
+        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
 
         // turbomole does not support tabs in the coord file
         coordsFile << std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
-            atom.getPosition()[0] * constants::_ANGSTROM_TO_BOHR_,
-            atom.getPosition()[1] * constants::_ANGSTROM_TO_BOHR_,
-            atom.getPosition()[2] * constants::_ANGSTROM_TO_BOHR_,
+            pos[0],
+            pos[1],
+            pos[2],
             atom.getName()
         );
     }
@@ -79,19 +87,17 @@ void TurbomoleRunner::writeCoordsFile(simulationBox::SimulationBox &box)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFileName =
-        _scriptPath + settings::QMSettings::getQMScript();
+    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
-    if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format(
+    if (!fileExists(scriptFile))
+        throw InputFileException(std::format(
             "Turbomole script file \"{}\" does not exist.",
-            scriptFileName
+            scriptFile
         ));
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command =
-        std::format("{} 0 {} 0 0 0", scriptFileName, reuseCharges);
+    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
     ::system(command.c_str());
 
     _isFirstExecution = false;

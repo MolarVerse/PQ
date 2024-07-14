@@ -22,7 +22,22 @@
 
 #include "engineOutput.hpp"
 
+#include "boxOutput.hpp"
+#include "energyOutput.hpp"
+#include "infoOutput.hpp"
+#include "logOutput.hpp"
+#include "momentumOutput.hpp"
+#include "optOutput.hpp"
+#include "ringPolymerEnergyOutput.hpp"
+#include "ringPolymerRestartFileOutput.hpp"
+#include "ringPolymerTrajectoryOutput.hpp"
+#include "rstFileOutput.hpp"
+#include "stdoutOutput.hpp"
+#include "stressOutput.hpp"
 #include "thermostat.hpp"
+#include "timingsOutput.hpp"
+#include "trajectoryOutput.hpp"
+#include "virialOutput.hpp"
 
 namespace physicalData
 {
