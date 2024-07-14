@@ -43,8 +43,8 @@ namespace connectivity
        public:
         using ConnectivityElement::ConnectivityElement;
 
-        Bond(pq::Molecule *, pq::Molecule *, size_t, size_t);
-        Bond(pq::Molecule *, size_t, pq::Molecule *, size_t);
+        Bond(pq::Molecule *const, pq::Molecule *const, size_t, size_t);
+        Bond(pq::Molecule *const, size_t, pq::Molecule *const, size_t);
 
         /***************************
          * standard getter methods *

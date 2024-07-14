@@ -69,11 +69,11 @@ void DihedralSection::processSection(
             _lineNumber
         ));
 
-    auto atom1        = stoul(lineElements[0]);
-    auto atom2        = stoul(lineElements[1]);
-    auto atom3        = stoul(lineElements[2]);
-    auto atom4        = stoul(lineElements[3]);
-    auto dihedralType = stoul(lineElements[4]);
+    const auto atom1        = stoul(lineElements[0]);
+    const auto atom2        = stoul(lineElements[1]);
+    const auto atom3        = stoul(lineElements[2]);
+    const auto atom4        = stoul(lineElements[3]);
+    const auto dihedralType = stoul(lineElements[4]);
     auto isLinker     = false;
 
     if (6 == lineElements.size())

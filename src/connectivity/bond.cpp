@@ -34,10 +34,10 @@ using namespace simulationBox;
  * @param atomIndex2
  */
 Bond::Bond(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2
+    Molecule *const molecule1,
+    Molecule *const molecule2,
+    const size_t    atomIndex1,
+    const size_t    atomIndex2
 )
     : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
 {
@@ -52,10 +52,10 @@ Bond::Bond(
  * @param atomIndex2
  */
 Bond::Bond(
-    Molecule    *molecule1,
-    const size_t atomIndex1,
-    Molecule    *molecule2,
-    const size_t atomIndex2
+    Molecule *const molecule1,
+    const size_t    atomIndex1,
+    Molecule *const molecule2,
+    const size_t    atomIndex2
 )
     : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
 {

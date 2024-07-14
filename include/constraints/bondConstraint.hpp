@@ -48,11 +48,11 @@ namespace constraints
 
        public:
         BondConstraint(
-            pq::Molecule *molecule1,
-            pq::Molecule *molecule2,
-            const size_t  atomIndex1,
-            const size_t  atomIndex2,
-            const double  bondLength
+            pq::Molecule *const molecule1,
+            pq::Molecule *const molecule2,
+            const size_t        atomIndex1,
+            const size_t        atomIndex2,
+            const double        bondLength
         );
 
         void calculateConstraintBondRef(const pq::SimBox &);

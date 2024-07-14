@@ -61,7 +61,7 @@ void DistanceConstraintsSection::processSection(
     Engine                   &engine
 )
 {
-    if (lineElements.size() != 5 || lineElements.size() != 6)
+    if (lineElements.size() != 5 && lineElements.size() != 6)
         throw TopologyException(std::format(
             "Wrong number of arguments in topology file \"Distance "
             "Constraints\" section at line {} - number of elements has to be "

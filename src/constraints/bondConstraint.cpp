@@ -47,11 +47,11 @@ using namespace settings;
  * @param bondLength
  */
 BondConstraint::BondConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double bondLength
+    Molecule *const molecule1,
+    Molecule *const molecule2,
+    const size_t    atomIndex1,
+    const size_t    atomIndex2,
+    const double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _targetBondLength(bondLength)
@@ -120,7 +120,7 @@ bool BondConstraint::applyShake(
         const auto sumInvMass              = invMass1 + invMass2;
         const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
 
-        const auto shakeForce = delta / (sumInvMass) / shakeDistanceRefSquared;
+        const auto shakeForce = delta / sumInvMass / shakeDistanceRefSquared;
         const auto dPosition  = shakeForce * _shakeDistanceRef;
 
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
@@ -154,7 +154,7 @@ bool BondConstraint::applyShake(
     const auto sumInvMass              = invMass1 + invMass2;
     const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
 
-    const auto delta = -scalarProduct / (sumInvMass) / shakeDistanceRefSquared;
+    const auto delta = -scalarProduct / sumInvMass / shakeDistanceRefSquared;
 
     return delta;
 }

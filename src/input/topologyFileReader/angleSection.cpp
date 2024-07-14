@@ -70,11 +70,11 @@ void AngleSection::processSection(
             _lineNumber
         ));
 
-    auto atom1     = stoul(lineElements[0]);
-    auto atom2     = stoul(lineElements[1]);
-    auto atom3     = stoul(lineElements[2]);
-    auto angleType = stoul(lineElements[3]);
-    auto isLinker  = false;
+    const auto atom1     = stoul(lineElements[0]);
+    const auto atom2     = stoul(lineElements[1]);
+    const auto atom3     = stoul(lineElements[2]);
+    const auto angleType = stoul(lineElements[3]);
+    auto       isLinker  = false;
 
     if (5 == lineElements.size())
     {

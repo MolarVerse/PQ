@@ -33,70 +33,60 @@
 #include "gtest/gtest.h"                    // for Message, TestPartResult
 #include "simulationBox.hpp"                // for SimulationBox
 #include "testTopologySection.hpp"          // for TestTopologySection
+#include "throwWithMessage.hpp"             // for EXPECT_THROW_MSG
+
+using namespace input::topology;
 
 /*
  * @brief Test for the DistanceConstraintsSection class
  *
  */
-TEST_F(TestTopologySection, processSectionShake)
+TEST_F(TestTopologySection, processSectionDistanceConstraints)
 {
     std::vector<std::string> lineElements = {"1", "2", "1.0", "2.0", "4", "6"};
-    input::topology::DistanceConstraintsSection distanceConstraintsSection;
+    DistanceConstraintsSection distanceConstraintsSection;
     distanceConstraintsSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getConstraints().getDistConstraints().size(), 1);
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getAtomIndex1(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getAtomIndex2(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getLowerDistance(),
-        1.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getUpperDistance(),
-        2.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getSpringConstant(),
-        4.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getDSpringConstantDt(
-        ),
-        6.0
-    );
+
+    auto &distanceConstraints = _engine->getConstraints().getDistConstraints();
+    auto &molecules           = _engine->getSimulationBox().getMolecules();
+
+    EXPECT_EQ(distanceConstraints.size(), 1);
+    EXPECT_EQ(distanceConstraints[0].getMolecule1(), &(molecules[0]));
+    EXPECT_EQ(distanceConstraints[0].getMolecule2(), &(molecules[1]));
+    EXPECT_EQ(distanceConstraints[0].getAtomIndex1(), 0);
+    EXPECT_EQ(distanceConstraints[0].getAtomIndex2(), 0);
+    EXPECT_EQ(distanceConstraints[0].getLowerDistance(), 1.0);
+    EXPECT_EQ(distanceConstraints[0].getUpperDistance(), 2.0);
+    EXPECT_EQ(distanceConstraints[0].getSpringConstant(), 4.0);
+    EXPECT_EQ(distanceConstraints[0].getDSpringConstantDt(), 6.0);
 
     // not enough elements
-    lineElements = {"1", "1", "1.0", "2", "1"};
-    EXPECT_THROW(
+    lineElements = {"1", "1", "1.0", "2"};
+    EXPECT_THROW_MSG(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        customException::TopologyException,
+        "Wrong number of arguments in topology file \"Distance "
+        "Constraints\" section at line 0 - number of elements has to be "
+        "5 or 6!"
     );
 
     // same atom indices
     lineElements = {"1", "1", "1.0", "2", "1", "2"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        customException::TopologyException,
+        "Topology file \"Distance "
+        "Constraints\" at line 0 - atoms cannot be the same!"
     );
 
     // lower distance greater than upper distance
     lineElements = {"1", "2", "2.0", "1.0", "1", "2"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        customException::TopologyException,
+        "Topology file \"Distance "
+        "Constraints\" at line 0 - lower distance cannot be greater "
+        "than upper distance!"
     );
 }
 
@@ -104,12 +94,16 @@ TEST_F(TestTopologySection, processSectionShake)
  * @brief test if endedNormally throws exception
  *
  */
-TEST_F(TestTopologySection, endedNormallyShake)
+TEST_F(TestTopologySection, endedNormallyDistanceConstraints)
 {
-    input::topology::DistanceConstraintsSection distanceConstraintsSection;
-    EXPECT_THROW(
+    const DistanceConstraintsSection distanceConstraintsSection{};
+
+    EXPECT_THROW_MSG(
         distanceConstraintsSection.endedNormally(false),
-        customException::TopologyException
+        customException::TopologyException,
+        "Topology file error in \"Distance Constraints\" section at line "
+        "0 - no end of section found!"
     );
+
     EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true));
 }

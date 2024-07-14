@@ -64,9 +64,9 @@ void ShakeSection::processSection(
             _lineNumber
         ));
 
-    auto atom1      = stoul(lineElements[0]);
-    auto atom2      = stoul(lineElements[1]);
-    auto bondLength = stod(lineElements[2]);
+    const auto atom1      = stoul(lineElements[0]);
+    const auto atom2      = stoul(lineElements[1]);
+    const auto bondLength = stod(lineElements[2]);
     // TODO: auto linker = lineElements[3];
 
     if (atom1 == atom2)
