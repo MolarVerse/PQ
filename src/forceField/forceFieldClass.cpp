@@ -185,6 +185,20 @@ void ForceField::calculateBondedInteractions(
     calculateAngleInteractions(box, physicalData);
     calculateDihedralInteractions(box, physicalData);
     calculateImproperDihedralInteractions(box, physicalData);
+}
+
+/**
+ * @brief calculates all extra interactions for:
+ * 1) j-couplings
+ *
+ * @param box
+ * @param physicalData
+ */
+void ForceField::calculateExtraInteractions(
+    const SimulationBox &box,
+    PhysicalData        &physicalData
+)
+{
     calculateJCouplingInteractions(box, physicalData);
 }
 
