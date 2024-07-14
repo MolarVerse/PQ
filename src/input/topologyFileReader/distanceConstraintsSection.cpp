@@ -61,20 +61,24 @@ void DistanceConstraintsSection::processSection(
     Engine                   &engine
 )
 {
-    if (lineElements.size() != 6)
+    if (lineElements.size() != 5 || lineElements.size() != 6)
         throw TopologyException(std::format(
             "Wrong number of arguments in topology file \"Distance "
             "Constraints\" section at line {} - number of elements has to be "
-            "6!",
+            "5 or 6!",
             _lineNumber
         ));
 
-    auto atom1             = stoul(lineElements[0]);
-    auto atom2             = stoul(lineElements[1]);
-    auto lowerDistance     = stod(lineElements[2]);
-    auto upperDistance     = stod(lineElements[3]);
-    auto springConstant    = stod(lineElements[4]);
-    auto dSpringConstantDt = stod(lineElements[5]);
+    const auto atom1          = stoul(lineElements[0]);
+    const auto atom2          = stoul(lineElements[1]);
+    const auto lowerDistance  = stod(lineElements[2]);
+    const auto upperDistance  = stod(lineElements[3]);
+    const auto springConstant = stod(lineElements[4]);
+
+    auto dSpringConstantDt = 0.0;
+
+    if (lineElements.size() == 6)
+        dSpringConstantDt = stod(lineElements[5]);
 
     if (atom1 == atom2)
         throw TopologyException(std::format(
