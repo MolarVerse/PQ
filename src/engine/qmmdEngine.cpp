@@ -44,55 +44,12 @@ using namespace QM;
 using std::make_shared;
 
 /**
- * @brief Takes one step in a QM MD simulation.
- *
- * @details The step is taken in the following order:
- * - First step of the integrator
- * - Apply thermostat half step
- * - Run QM calculations
- * - Apply thermostat on forces
- * - Second step of the integrator
- * - Apply thermostat
- * - Calculate kinetic energy and momentum
- * - Apply manostat
- * - Reset temperature and momentum
+ * @brief calculate QM forces
  *
  */
-void QMMDEngine::takeStep()
+void QMMDEngine::calculateForces()
 {
-    _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
-
-    _integrator->firstStep(*_simulationBox);
-
-    _constraints->applyShake(*_simulationBox);
-
     _qmRunner->run(*_simulationBox, *_physicalData);
-
-    _constraints->applyDistanceConstraints(
-        *_simulationBox,
-        *_physicalData,
-        calculateTotalSimulationTime()
-    );
-
-    _constraints->calculateConstraintBondRefs(*_simulationBox);
-
-    _thermostat->applyThermostatOnForces(*_simulationBox);
-
-    _integrator->secondStep(*_simulationBox);
-
-    _constraints->applyRattle(*_simulationBox);
-
-    _thermostat->applyThermostat(*_simulationBox, *_physicalData);
-
-    _physicalData->calculateKinetics(*_simulationBox);
-
-    _manostat->applyManostat(*_simulationBox, *_physicalData);
-
-    _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
-
-    _thermostat->applyTemperatureRamping();
-
-    _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
 }
 
 /**

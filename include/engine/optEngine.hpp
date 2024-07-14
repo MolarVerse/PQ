@@ -58,7 +58,7 @@ namespace engine
 
        public:
         void run() final;
-        void takeStep() final;
+        void takeStep();
         void writeOutput() final;
 
         /***************************
