@@ -146,7 +146,7 @@ void MDEngine::takeStepAfterForces()
     _constraints->applyDistanceConstraints(
         *_simulationBox,
         *_physicalData,
-        calculateTotalSimulationTime()
+        calculateSimulationTime()
     );
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);

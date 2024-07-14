@@ -51,6 +51,16 @@ using namespace settings;
 void Engine::addTimer(const Timer &timings) { _timer.addTimer(timings); }
 
 /**
+ * @brief Calculate the simulation time.
+ *
+ * @return double
+ */
+double Engine::calculateSimulationTime() const
+{
+    return static_cast<double>(_step) * TimingsSettings::getTimeStep();
+}
+
+/**
  * @brief Calculate total simulation time.
  *
  * @return double

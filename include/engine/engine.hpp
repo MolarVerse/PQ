@@ -97,6 +97,7 @@ namespace engine
 
         void addTimer(const timings::Timer &timings);
 
+        [[nodiscard]] double calculateSimulationTime() const;
         [[nodiscard]] double calculateTotalSimulationTime() const;
 
         /**********************************

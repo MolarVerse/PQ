@@ -242,7 +242,7 @@ void Constraints::applyDistanceConstraints(
     if (!_distanceConstActivated)
         return;
 
-    auto effective_time = time - _startTime;
+    auto effective_time = time;
 
     effective_time = effective_time > 0.0 ? effective_time : -1.0;
 
