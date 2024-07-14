@@ -141,6 +141,8 @@ void MDEngine::takeStepBeforeForces()
  */
 void MDEngine::takeStepAfterForces()
 {
+    _forceField->calculateExtraInteractions(*_simulationBox, *_physicalData);
+
     _constraints->applyDistanceConstraints(
         *_simulationBox,
         *_physicalData,
