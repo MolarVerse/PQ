@@ -14,7 +14,7 @@ To perform calculations using the PQ program just execute the executable `PQ` wi
 ## Building from Source
 
 Prerequisites:
-- CMake >= 3.12
+- CMake >= 3.18
 - GCC   >= 13.0
 
 Clone the PQ GitHub repository and navigate into the directory:

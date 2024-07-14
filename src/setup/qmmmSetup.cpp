@@ -34,7 +34,6 @@
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "qmmmSettings.hpp"   // for QMMMSettings
-#include "qmmmmdEngine.hpp"   // for QMMMEngine
 #include "settings.hpp"       // for Settings
 
 #ifdef PYTHON_ENABLED
@@ -59,7 +58,7 @@ void setup::setupQMMM(Engine &engine)
     engine.getStdoutOutput().writeSetup("QMMM setup");
     engine.getLogOutput().writeSetup("QMMM setup");
 
-    QMMMSetup qmmmSetup(dynamic_cast<QMMMMDEngine &>(engine));
+    QMMMSetup qmmmSetup(engine);
     qmmmSetup.setup();
 }
 
@@ -68,7 +67,7 @@ void setup::setupQMMM(Engine &engine)
  *
  * @param engine
  */
-QMMMSetup::QMMMSetup(QMMMMDEngine &engine) : _engine(engine){};
+QMMMSetup::QMMMSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup QMMM-MD

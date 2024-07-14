@@ -25,9 +25,11 @@
 #include <format>   // for format
 
 #include "exceptions.hpp"
+#include "logOutput.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "settings.hpp"
+#include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 
 using namespace engine;

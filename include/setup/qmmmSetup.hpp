@@ -42,10 +42,10 @@ namespace setup
     class QMMMSetup
     {
        private:
-        pq::QMMMMDEngine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit QMMMSetup(pq::QMMMMDEngine &engine);
+        explicit QMMMSetup(pq::Engine &engine);
 
         void setup();
         void setupQMCenter();
