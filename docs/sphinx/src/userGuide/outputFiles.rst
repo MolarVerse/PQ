@@ -152,7 +152,7 @@ every frame in the following format:
     step_number *p* *p*:sub:`x` *p*:sub:`y` *p*:sub:`z` *L* *L*:sub:`x` *L*:sub:`y` *L*:sub:`z`
 
 The total momentum and its components are given in units of :math:`\frac{\text{amu Å}}{\text{fs}}`, while the total angular momentum and its 
-components are given in units of :math:`\frac{\text{amu Å}^2}{\text{fs}}`.
+components are given in units of :math:`\frac{\text{amu }\text{Å}^2}{\text{fs}}`.
 
 .. _refFile:
 
