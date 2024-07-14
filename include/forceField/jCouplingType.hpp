@@ -76,6 +76,8 @@ namespace forceField
         [[nodiscard]] double getA() const;
         [[nodiscard]] double getB() const;
         [[nodiscard]] double getC() const;
+        [[nodiscard]] bool   getUpperSymmetry() const;
+        [[nodiscard]] bool   getLowerSymmetry() const;
 
         /***************************
          * standard setter methods *

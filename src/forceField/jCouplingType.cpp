@@ -122,6 +122,20 @@ double JCouplingType::getB() const { return _b; }
  */
 double JCouplingType::getC() const { return _c; }
 
+/**
+ * @brief get if the upper symmetry is set
+ *
+ * @return bool
+ */
+bool JCouplingType::getUpperSymmetry() const { return _upperSymmetry; }
+
+/**
+ * @brief get if the lower symmetry is set
+ *
+ * @return bool
+ */
+bool JCouplingType::getLowerSymmetry() const { return _lowerSymmetry; }
+
 /***************************
  *                         *
  * standard setter methods *

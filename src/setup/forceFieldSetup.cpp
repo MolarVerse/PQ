@@ -85,6 +85,7 @@ void ForceFieldSetup::setup()
     setupAngles();
     setupDihedrals();
     setupImproperDihedrals();
+    setupJCouplings();
 
     writeSetupInfo();
 }
@@ -197,6 +198,39 @@ void ForceFieldSetup::setupImproperDihedrals()
 }
 
 /**
+ * @brief setup all J couplings for force field
+ *
+ * @details find J coupling type by id and set force constants
+ *
+ * @note J coupling types are deleted afterwards from force field
+ *
+ */
+void ForceFieldSetup::setupJCouplings()
+{
+    auto &ff = _engine.getForceField();
+
+    auto addForceFieldParameters = [&ff](auto &jCoupling)
+    {
+        const auto type          = jCoupling.getType();
+        const auto jCouplingType = ff.findJCouplingTypeById(type);
+
+        jCoupling.setForceConstant(jCouplingType.getForceConstant());
+        jCoupling.setA(jCouplingType.getA());
+        jCoupling.setB(jCouplingType.getB());
+        jCoupling.setC(jCouplingType.getC());
+        jCoupling.setJ0(jCouplingType.getJ0());
+        jCoupling.setUpperSymmetry(jCouplingType.getUpperSymmetry());
+        jCoupling.setLowerSymmetry(jCouplingType.getLowerSymmetry());
+    };
+
+    std::ranges::for_each(ff.getJCouplings(), addForceFieldParameters);
+
+    _nJCouplingTypes = ff.getJCouplTypes().size();
+
+    ff.clearJCouplingTypes();
+}
+
+/**
  * @brief write setup information to log output
  *
  */
@@ -204,21 +238,24 @@ void ForceFieldSetup::writeSetupInfo()
 {
     auto &forceField = _engine.getForceField();
 
-    const auto nBonds             = forceField.getBonds().size();
-    const auto nAngles            = forceField.getAngles().size();
-    const auto nDihedrals         = forceField.getDihedrals().size();
-    const auto nImproperDihedrals = forceField.getImproperDihedrals().size();
+    const auto nBonds      = forceField.getBonds().size();
+    const auto nAngles     = forceField.getAngles().size();
+    const auto nDihedrals  = forceField.getDihedrals().size();
+    const auto nImpropers  = forceField.getImproperDihedrals().size();
+    const auto nJCouplings = forceField.getJCouplings().size();
 
-    const auto nBondMsg     = std::format("Bonds:     {}", nBonds);
-    const auto nAngleMsg    = std::format("Angles:    {}", nAngles);
-    const auto nDihedralMsg = std::format("Dihedrals: {}", nDihedrals);
-    const auto nImproperMsg = std::format("Impropers: {}", nImproperDihedrals);
+    const auto nBondMsg      = std::format("Bonds:       {}", nBonds);
+    const auto nAngleMsg     = std::format("Angles:      {}", nAngles);
+    const auto nDihedralMsg  = std::format("Dihedrals:   {}", nDihedrals);
+    const auto nImproperMsg  = std::format("Impropers:   {}", nImpropers);
+    const auto nJCouplingMsg = std::format("J-Couplings: {}", nJCouplings);
 
     // clang-format off
-    const auto nBondTypeMsg     = std::format("Bond Types:     {}", _nBondTypes);
-    const auto nAngleTypeMsg    = std::format("Angle Types:    {}", _nAngleTypes);
-    const auto nDihedralTypeMsg = std::format("Dihedral Types: {}", _nDihedralTypes);
-    const auto nImproperTypeMsg = std::format("Improper Types: {}", _nImproperTypes);
+    const auto nBondTypeMsg      = std::format("Bond Types:       {}", _nBondTypes);
+    const auto nAngleTypeMsg     = std::format("Angle Types:      {}", _nAngleTypes);
+    const auto nDihedralTypeMsg  = std::format("Dihedral Types:   {}", _nDihedralTypes);
+    const auto nImproperTypeMsg  = std::format("Improper Types:   {}", _nImproperTypes);
+    const auto nJCouplingTypeMsg = std::format("J-Coupling Types: {}", _nJCouplingTypes);
     // clang-format on
 
     auto &logOutput = _engine.getLogOutput();
@@ -227,11 +264,13 @@ void ForceFieldSetup::writeSetupInfo()
     logOutput.writeSetupInfo(nAngleMsg);
     logOutput.writeSetupInfo(nDihedralMsg);
     logOutput.writeSetupInfo(nImproperMsg);
+    logOutput.writeSetupInfo(nJCouplingMsg);
     logOutput.writeEmptyLine();
 
     logOutput.writeSetupInfo(nBondTypeMsg);
     logOutput.writeSetupInfo(nAngleTypeMsg);
     logOutput.writeSetupInfo(nDihedralTypeMsg);
     logOutput.writeSetupInfo(nImproperTypeMsg);
+    logOutput.writeSetupInfo(nJCouplingTypeMsg);
     logOutput.writeEmptyLine();
 }
