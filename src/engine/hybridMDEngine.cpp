@@ -20,33 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_INPUT_PARSER_HPP_
-
-#define _VIRIAL_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
-
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
-
-namespace input
-{
-    /**
-     * @class VirialInputParser inherits from InputFileParser
-     *
-     * @brief Parses the virial commands in the input file
-     *
-     */
-    class VirialInputParser : public InputFileParser
-    {
-       public:
-        explicit VirialInputParser(pq::Engine &);
-
-        void parseVirial(const pq::strings &, const size_t);
-    };
-
-}   // namespace input
-
-#endif   // _VIRIAL_INPUT_PARSER_HPP_
+#include "hybridMDEngine.hpp"

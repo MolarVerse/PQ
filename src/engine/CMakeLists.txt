@@ -9,6 +9,9 @@ set(engine_source_files
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
+    hybridMDEngine.cpp
+    qmmmMDEngine.cpp
+
     engineOutput.cpp
 )
 

@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_OUTPUT_HPP_
+#ifndef _OUTPUT_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_OUTPUT_HPP_
+#define _OUTPUT_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -73,4 +73,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_OUTPUT_HPP_
+#endif   // _OUTPUT_INPUT_PARSER_HPP_
