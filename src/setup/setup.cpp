@@ -27,6 +27,7 @@
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
+#include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "forceFieldSetup.hpp"        // for setupForceField
 #include "guffDatReader.hpp"          // for readGuffDat, readInput
 #include "hybridSetup.hpp"            // for setupQMMM
@@ -190,9 +191,10 @@ void setup::setupEngine(Engine &engine)
         setupPotential(engine);
 
         setupIntraNonBonded(engine);
-
-        setupForceField(engine);
     }
+
+    if (ForceFieldSettings::isActive())
+        setupForceField(engine);
 
     setupConstraints(engine);
 
