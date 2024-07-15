@@ -1289,9 +1289,9 @@ With the ``mace_model_size`` keyword the user can specify the size of the `MACE 
 
 Possible options are:
 
-   1. **small** (default) - small MACE model
+   1. **small** - small MACE model
 
-   2. **medium** - medium MACE model
+   2. **medium** (default) - medium MACE model
 
    3. **large** - large MACE model
 
