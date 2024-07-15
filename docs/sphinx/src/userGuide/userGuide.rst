@@ -4,13 +4,12 @@
 User Guide
 ##########
 
-This page explains into detail on how to setup and use the PQ application. Please read the following sections:
+This page explains in detail how to set up and use the PQ application. Please read the following sections:
 
 .. toctree::
     :maxdepth: 1
-    :glob:
 
-    generalUsage.md
-    inputFile.md
-    outputFiles.md
-    setupFiles.md
+    generalUsage.rst
+    inputFile.rst
+    setupFiles.rst
+    outputFiles.rst

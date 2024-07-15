@@ -7,18 +7,9 @@ Welcome to PQ's documentation!
 =====================================
 
 .. toctree::
-    :hidden:
     :maxdepth: 1
     
     src/featureList/featureList
     src/userGuide/userGuide
     src/installation/installation
     src/developerGuide/developerGuide
-
-* :ref:`featureList`
-
-* :ref:`userGuide`
-
-* :ref:`installation`
-
-* :ref:`developerGuide`
