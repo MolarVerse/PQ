@@ -72,6 +72,7 @@ are given in Å and energies in kcal/mol. The units of the parameters are chosen
     potential is not needed, the corresponding coefficients are set to 0.
 
     Using the GUFF file requires the :ref:`moldescriptorFile` setup file to be provided as well.
+
 .. _topologyFile:
 
 *************
