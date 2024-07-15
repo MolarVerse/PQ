@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_COULOMB_LONG_RANGE_HPP_
+#ifndef _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_COULOMB_LONG_RANGE_HPP_
+#define _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -50,4 +50,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_COULOMB_LONG_RANGE_HPP_
+#endif   // _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
