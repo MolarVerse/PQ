@@ -124,9 +124,9 @@ NStep
 
 The ``nstep`` keyword sets the total number of MD steps to be performed within this simulation run.
 
-.. _integratorKey:
+.. _floatingpointtypeKey:
 
-FLOATING_POINT_TYPE
+Floating Point Type
 ===================
 
 .. admonition:: Key
@@ -134,13 +134,15 @@ FLOATING_POINT_TYPE
 
     floating_point_type = {string} -> "double"
 
-With the :code:`floating_point_type` keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.
+With the ``floating_point_type`` keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.
 
 Possible options are:
 
-   1) **double** (default) - double precision floating point numbers are used
+   1. **double** (default) - double precision floating point numbers are used
 
-   2) **float** - single precision floating point numbers are used
+   2. **float** - single precision floating point numbers are used
+
+.. _integratorKey:
 
 Integrator
 ==========
@@ -1135,7 +1137,7 @@ Possible options are:
 .. _forcefieldKey:
 
 Force Field
-==========
+===========
 
 .. admonition:: Key
     :class: tip
@@ -1212,19 +1214,19 @@ With the ``qm_prog`` keyword the external QM engine for any kind of QM MD simula
 
 Possible options are:
 
-   1. **dftbplus**
+   1. **dftbplus** - `DFTB+ <https://dftbplus.org/index.html>`_
 
-   2. **pyscf**
+   2. **pyscf** - `PySCF <https://pyscf.org/>`_
 
-   3. **turbomole**
+   3. **turbomole** - `Turbomole <https://www.turbomole.org/>`_
 
-   4. **mace** - same as **mace_mp**
+   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`_ same as using **mace_mp**
 
-   5. **mace_off**
+   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`_
    
 .. _qmscriptKey:
 
-QM_SCRIPT
+QM Script
 =========
 
 .. admonition:: Key
@@ -1261,7 +1263,9 @@ QM Loop Time Limit
 
 With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
 
-DISPERSION_CORRECTION
+.. _disperstoncorrectionKey:
+
+Dispersion Correction
 =====================
 
 .. admonition:: Key
@@ -1269,11 +1273,11 @@ DISPERSION_CORRECTION
 
     dispersion = {bool} -> false
 
-With the :code:`dispersion` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
+With the ``dispersion`` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
 
 .. _ringPolymerMDKeys:
 
-MACE_MODEL_SIZE
+MACE Model Size
 ===============
 
 .. admonition:: Key
@@ -1281,15 +1285,17 @@ MACE_MODEL_SIZE
 
     mace_model_size = {string} -> "medium"
 
-With the :code:`mace_model_size` keyword the user can specify the size of the MACE model for the QM calculations.
+With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://arxiv.org/abs/2206.07697>`_ model for the QM calculations.
 
 Possible options are:
 
-   1) **small** (default) - small MACE model
+   1. **small** - small MACE model
 
-   2) **medium** - medium MACE model
+   2. **medium** (default) - medium MACE model
 
-   3) **large** - large MACE model
+   3. **large** - large MACE model
+
+.. _ringpolymermdKeys:
 
 ********************
 Ring Polymer MD Keys
@@ -1444,11 +1450,15 @@ With the ``cell-number`` keyword the user can set the number of cells in each di
 
 .. centered:: *default value* = 7
 
+.. _optimizationKeys:
+
 *****************
 Optimization Keys
 *****************
 
-In order to perform a geometry optimization on of the optimizer jobtypes has to be chosen. (For more info see the :ref:`jobtype` section)
+In order to perform a geometry optimization one of the optimizer :ref:`Jobtypes <jobtype>` has to be chosen.
+
+.. _optimizerKey:
 
 Optimizer
 =========
@@ -1462,11 +1472,13 @@ This keyword is mandatory for any kind of geometry optimization. The user has to
 
 Possible options are:
 
-   1) **steepest-descent** - steepest descent optimizer
+   1. **steepest-descent** - steepest descent optimizer
 
-   2) **ADAM** - ADAM optimizer
+   2. **ADAM** - ADAM optimizer
 
-Learning-Rate-Strategy
+.. _learningratestrategyKey:
+
+Learning Rate Strategy
 ======================
 
 .. admonition:: Key
@@ -1474,17 +1486,19 @@ Learning-Rate-Strategy
 
     learning-rate-strategy = {string} -> "exponential-decay"
 
-With the :code:`learning-rate-strategy` keyword the user can specify the learning rate strategy for all kind of optimization jobs.
+With the ``learning-rate-strategy`` keyword the user can specify the learning rate strategy for all kind of optimization jobs.
 
 Possible options are:
 
-   1) **exponential-decay** (default) - exponential decay of the learning rate
+   1. **exponential-decay** (default) - exponential decay of the learning rate
 
-   2) **constant** - constant learning rate
+   2. **constant** - constant learning rate
 
-   3) **constant-decay** - constant decay of the learning rate
+   3. **constant-decay** - constant decay of the learning rate
 
-Initial-Learning-Rate
+.. _initiallearningrateKey:
+
+Initial Learning Rate
 =====================
 
 .. admonition:: Key
@@ -1492,11 +1506,13 @@ Initial-Learning-Rate
 
     initial-learning-rate = {double} -> 0.0001
 
-With the :code:`initial-learning-rate` keyword the user can specify the initial learning rate for all kind of optimization jobs.
+With the ``initial-learning-rate`` keyword the user can specify the initial learning rate for all kind of optimization jobs.
 
 .. centered:: *default value* = 0.0001
 
-Learning-Rate-Decay
+.. _learningratedecayKey:
+
+Learning Rate Decay
 ===================
 
 .. admonition:: Key
@@ -1504,13 +1520,17 @@ Learning-Rate-Decay
 
     learning-rate-decay = {double}
 
-With the :code:`learning-rate-decay` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+
+.. _convergenceKeys:
 
 ****************
 Convergence Keys
 ****************
 
-Energy-Convergence-Strategy
+.. _energyconvergencestrategyKey:
+
+Energy Convergence Strategy
 ===========================
 
 In general the convergence of the geometry optimization is checked by assuring that the absolute **and** relative energy difference between two consecutive steps is smaller than a certain threshold. The user can choose between different strategies to change this behavior.
@@ -1520,17 +1540,19 @@ In general the convergence of the geometry optimization is checked by assuring t
 
     energy-conv-strategy = {string} -> "rigorous"
 
-With the :code:`energy-conv-strategy` keyword the user can specify the energy convergence strategy for all kind of optimization jobs.
+With the ``energy-conv-strategy`` keyword the user can specify the energy convergence strategy for all kind of optimization jobs.
 
 Possible options are:
 
-   1) **rigorous** (default) - both absolute and relative energy difference have to be smaller than the threshold
+   1. **rigorous** (default) - both absolute and relative energy difference have to be smaller than the threshold
 
-   2) **loose** - only one of the two energy differences has to be smaller than the threshold
+   2. **loose** - only one of the two energy differences has to be smaller than the threshold
 
-   3) **relative** - only the relative energy difference has to be smaller than the threshold
+   3. **relative** - only the relative energy difference has to be smaller than the threshold
 
-   4) **absolute** - only the absolute energy difference has to be smaller than the threshold
+   4. **absolute** - only the absolute energy difference has to be smaller than the threshold
+
+.. _energyconvergencecheckKey:
 
 Enable/Disable Energy Convergence Check
 =======================================
@@ -1540,7 +1562,9 @@ Enable/Disable Energy Convergence Check
 
     use-energy-conv = {bool} -> true
 
-With the :code:`use-energy-conv` keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.
+With the ``use-energy-conv`` keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.
+
+.. _maxforceconvergencecheckKey:
 
 Enable/Disable MAX Force Convergence Check
 ==========================================
@@ -1550,7 +1574,9 @@ Enable/Disable MAX Force Convergence Check
 
     use-max-force-conv = {bool} -> true
 
-With the :code:`use-max-force-conv` keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.
+With the ``use-max-force-conv`` keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.
+
+.. _rmsforceconvergencecheckKey:
 
 Enable/Disable RMS Force Convergence Check
 ==========================================
@@ -1560,7 +1586,9 @@ Enable/Disable RMS Force Convergence Check
 
     use-rms-force-conv = {bool} -> true
 
-With the :code:`use-rms-force-conv` keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.
+With the ``use-rms-force-conv`` keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.
+
+.. _energyconvergencethresholdKey:
 
 Energy Convergence Threshold
 ============================
@@ -1570,10 +1598,12 @@ Energy Convergence Threshold
 
     energy-conv = {double} -> 1e-6
 
-With the :code:`energy-conv` keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
+With the ``energy-conv`` keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
 This keyword will set both the absolute and relative energy convergence threshold.
 
 .. centered:: *default value* = 1e-6
+
+.. _relativeenergyconvergencethresholdKey:
 
 Relative Energy Convergence Threshold
 =====================================
@@ -1583,9 +1613,11 @@ Relative Energy Convergence Threshold
 
     rel-energy-conv = {double} -> 1e-6
 
-With the :code:`rel-energy-conv` keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`energy-conv` keyword.
+With the ``rel-energy-conv`` keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the ``energy-conv`` keyword.
 
 .. centered:: *default value* = 1e-6
+
+.. _absoluteenergyconvergencethresholdKey:
 
 Absolute Energy Convergence Threshold
 =====================================
@@ -1595,9 +1627,11 @@ Absolute Energy Convergence Threshold
 
     abs-energy-conv = {double} -> 1e-6
 
-With the :code:`abs-energy-conv` keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`energy-conv` keyword.
+With the ``abs-energy-conv`` keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the ``energy-conv`` keyword.
 
 .. centered:: *default value* = 1e-6
+
+.. _forceconvergencethresholdKeys:
 
 Force Convergence Threshold
 ===========================
@@ -1607,9 +1641,11 @@ Force Convergence Threshold
 
     force-conv = {double} -> 1e-6
 
-With the :code:`force-conv` keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.
+With the ``force-conv`` keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.
 
 .. centered:: *default value* = 1e-6
+
+.. _maxforceconvergencethresholdKey:
 
 Maximum Force Convergence Threshold
 ===================================
@@ -1619,9 +1655,11 @@ Maximum Force Convergence Threshold
 
     max-force-conv = {double} -> 1e-6
 
-With the :code:`max-force-conv` keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`force-conv` keyword.
+With the ``max-force-conv`` keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the ``force-conv`` keyword.
 
 .. centered:: *default value* = 1e-6
+
+.. _rmsforceconvergencethresholdKey:
 
 RMS Force Convergence Threshold
 ===============================
@@ -1631,5 +1669,6 @@ RMS Force Convergence Threshold
 
     rms-force-conv = {double} -> 1e-6
 
-With the :code:`rms-force-conv` keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the :code:`force-conv` keyword.
+With the ``rms-force-conv`` keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the ``force-conv`` keyword.
 
+.. centered:: *default value* = 1e-6
