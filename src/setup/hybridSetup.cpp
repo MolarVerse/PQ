@@ -75,9 +75,9 @@ HybridSetup::HybridSetup(Engine &engine) : _engine(engine){};
  */
 void HybridSetup::setup()
 {
-    setupQMCenter();
-    setupQMOnlyList();
-    setupMMOnlyList();
+    setupCoreCenter();
+    setupCoreOnlyList();
+    setupNonCoreOnlyList();
     throw UserInputException("Not implemented yet");
 }
 
@@ -90,36 +90,37 @@ void HybridSetup::setup()
  * added to the QM center list in the simulation box.
  *
  */
-void HybridSetup::setupQMCenter()
+void HybridSetup::setupCoreCenter()
 {
-    const auto qmCenterString = HybridSettings::getCoreCenterString();
-    const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
+    const auto coreCenterString = HybridSettings::getCoreCenterString();
+    const auto coreCenter = parseSelection(coreCenterString, "core_center");
 
-    _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
+    _engine.getSimulationBox().addQMCenterAtoms(coreCenter);
 }
 
 /**
  * @brief setup QM only list
  *
  */
-void HybridSetup::setupQMOnlyList()
+void HybridSetup::setupCoreOnlyList()
 {
-    const auto qmOnlyListString = HybridSettings::getCoreOnlyListString();
-    const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
+    const auto coreOnlyListStr = HybridSettings::getCoreOnlyListString();
+    const auto coreOnlyList = parseSelection(coreOnlyListStr, "core_only_list");
 
-    _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
+    _engine.getSimulationBox().setupQMOnlyAtoms(coreOnlyList);
 }
 
 /**
  * @brief setup MM only list
  *
  */
-void HybridSetup::setupMMOnlyList()
+void HybridSetup::setupNonCoreOnlyList()
 {
-    const auto mmOnlyListString = HybridSettings::getNonCoreOnlyListString();
-    const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
+    const auto nonCoreOnlyListStr = HybridSettings::getNonCoreOnlyListString();
+    const auto nonCoreOnlyList =
+        parseSelection(nonCoreOnlyListStr, "non_core_only_list");
 
-    _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
+    _engine.getSimulationBox().setupMMOnlyAtoms(nonCoreOnlyList);
 }
 
 /**

@@ -48,9 +48,9 @@ namespace setup
         explicit HybridSetup(pq::Engine &engine);
 
         void setup();
-        void setupQMCenter();
-        void setupQMOnlyList();
-        void setupMMOnlyList();
+        void setupCoreCenter();
+        void setupCoreOnlyList();
+        void setupNonCoreOnlyList();
 
         std::vector<int> parseSelection(const std::string &, const std::string &);
         std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
