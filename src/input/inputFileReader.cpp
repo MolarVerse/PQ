@@ -30,7 +30,6 @@
 #include <vector>      // for vector
 
 #include "QMInputParser.hpp"                 // for InputFileParserQM
-#include "QMMMInputParser.hpp"               // for InputFileParserQMMM
 #include "cellListInputParser.hpp"           // for CellListInputParser
 #include "constraintsInputParser.hpp"        // for InputFileParserConstraints
 #include "convergenceInputParser.hpp"        // for ConvergenceInputParser
@@ -40,6 +39,7 @@
 #include "filesInputParser.hpp"              // for InputFileParserFiles
 #include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
+#include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
 #include "nonCoulombInputParser.hpp"         // for InputFileParserNonCoulomb
@@ -89,7 +89,7 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<ThermostatInputParser>(_engine));
     _parsers.push_back(make_unique<TimingsInputParser>(_engine));
     _parsers.push_back(make_unique<VirialInputParser>(_engine));
-    _parsers.push_back(make_unique<QMMMInputParser>(_engine));
+    _parsers.push_back(make_unique<HybridInputParser>(_engine));
     _parsers.push_back(make_unique<RingPolymerInputParser>(_engine));
 
     _parsers.push_back(make_unique<ConvInputParser>(_engine));

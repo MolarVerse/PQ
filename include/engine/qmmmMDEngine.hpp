@@ -20,33 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_INPUT_PARSER_HPP_
+#ifndef _QM_MM_MD_ENGINE_HPP_
 
-#define _VIRIAL_INPUT_PARSER_HPP_
+#define _QM_MM_MD_ENGINE_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
+#include "hybridMDEngine.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
-
-namespace input
+namespace engine
 {
     /**
-     * @class VirialInputParser inherits from InputFileParser
+     * @brief class QMMMMDEngine
      *
-     * @brief Parses the virial commands in the input file
+     * @details This class is a class that inherits from HybridMDEngine
+     * and is used to implement the QM/MM MD engine.
      *
      */
-    class VirialInputParser : public InputFileParser
+    class QMMMMDEngine : public HybridMDEngine
     {
        public:
-        explicit VirialInputParser(pq::Engine &);
+        QMMMMDEngine()  = default;
+        ~QMMMMDEngine() = default;
 
-        void parseVirial(const pq::strings &, const size_t);
+        void calculateForces() override {};   // TODO: implement
     };
 
-}   // namespace input
+}   // namespace engine
 
-#endif   // _VIRIAL_INPUT_PARSER_HPP_
+#endif   // _QM_MM_MD_ENGINE_HPP_

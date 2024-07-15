@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_THERMOSTAT_HPP_
+#ifndef _THERMOSTAT_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_THERMOSTAT_HPP_
+#define _THERMOSTAT_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -53,9 +53,12 @@ namespace input
         void parseThermostatRelaxationTime(const pq::strings &, const size_t);
         void parseThermostatFriction(const pq::strings &, const size_t);
         void parseThermostatChainLength(const pq::strings &, const size_t);
-        void parseThermostatCouplingFrequency(const pq::strings &, const size_t);
+        void parseThermostatCouplingFrequency(
+            const pq::strings &,
+            const size_t
+        );
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_THERMOSTAT_HPP_
+#endif   // _THERMOSTAT_INPUT_PARSER_HPP_

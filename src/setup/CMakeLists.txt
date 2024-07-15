@@ -11,7 +11,7 @@ set(setup_source_files
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
     qmSetup.cpp
-    qmmmSetup.cpp
+    hybridSetup.cpp
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
     optimizerSetup.cpp

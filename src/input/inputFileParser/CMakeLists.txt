@@ -9,13 +9,13 @@ add_library(inputFileParser
     filesInputParser.cpp
     forceFieldInputParser.cpp
     generalInputParser.cpp
+    hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp
     nonCoulombInputParser.cpp
     outputInputParser.cpp
     optInputParser.cpp
     QMInputParser.cpp
-    QMMMInputParser.cpp
     resetKineticsInputParser.cpp
     ringPolymerInputParser.cpp
     simulationBoxInputParser.cpp

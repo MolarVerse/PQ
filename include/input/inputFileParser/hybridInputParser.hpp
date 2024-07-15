@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_QMMM_HPP_
+#ifndef _HYBRID_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_QMMM_HPP_
+#define _HYBRID_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -34,25 +34,25 @@
 namespace input
 {
     /**
-     * @class QMMMInputParser inherits from InputFileParser
+     * @class HybridInputParser inherits from InputFileParser
      *
      * @brief Parses the general commands in the input file
      *
      */
-    class QMMMInputParser : public InputFileParser
+    class HybridInputParser : public InputFileParser
     {
        public:
-        explicit QMMMInputParser(pq::Engine &);
+        explicit HybridInputParser(pq::Engine &);
 
-        void parseQMCenter(const pq::strings &, const size_t);
-        void parseQMOnlyList(const pq::strings &, const size_t);
-        void parseMMOnlyList(const pq::strings &, const size_t);
+        void parseCoreCenter(const pq::strings &, const size_t);
+        void parseCoreOnlyList(const pq::strings &, const size_t);
+        void parseNonCoreOnlyList(const pq::strings &, const size_t);
         void parseUseQMCharges(const pq::strings &, const size_t);
-        void parseQMCoreRadius(const pq::strings &, const size_t);
-        void parseQMMMLayerRadius(const pq::strings &, const size_t);
-        void parseQMMMSmoothingRadius(const pq::strings &, const size_t);
+        void parseCoreRadius(const pq::strings &, const size_t);
+        void parseLayerRadius(const pq::strings &, const size_t);
+        void parseSmoothingRadius(const pq::strings &, const size_t);
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_QMMM_HPP_
+#endif   // _HYBRID_INPUT_PARSER_HPP_

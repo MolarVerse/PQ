@@ -33,17 +33,16 @@
 #include "testEnergyOutput.hpp"   // for TestEnergyOutput
 #include "vector3d.hpp"           // for Vec3D
 
+using namespace linearAlgebra;
+
 /**
  * @brief tests writing momentum output file
  *
  */
 TEST_F(TestEnergyOutput, writeMomentumFile)
 {
-    _physicalData->setMomentum(linearAlgebra::Vec3D(3.0, 4.0, 0.0));
-    _physicalData->setAngularMomentum(linearAlgebra::Vec3D(4.0, 0.0, 3.0));
-
-    settings::ForceFieldSettings::deactivate();
-    settings::Settings::activateMM();
+    _physicalData->setMomentum(Vec3D(3.0, 4.0, 0.0));
+    _physicalData->setAngularMomentum(Vec3D(4.0, 0.0, 3.0));
 
     _momentumOutput->setFilename("default.mom");
     _momentumOutput->write(100, *_physicalData);

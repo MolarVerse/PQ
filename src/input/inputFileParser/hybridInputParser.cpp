@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "QMMMInputParser.hpp"
+#include "hybridInputParser.hpp"
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
 #include "exceptions.hpp"        // for InputFileException, customException
-#include "qmmmSettings.hpp"      // for QMMMSettings
+#include "hybridSettings.hpp"    // for HybridSettings
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -36,7 +36,7 @@ using namespace settings;
 using namespace utilities;
 
 /**
- * @brief Construct a new QMMMInputParser:: QMMMInputParser object
+ * @brief Construct a new HybridInputParser:: HybridInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
@@ -44,88 +44,88 @@ using namespace utilities;
  *
  * @param engine
  */
-QMMMInputParser::QMMMInputParser(Engine &engine) : InputFileParser(engine)
+HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
-        std::string("qm_center"),
-        bind_front(&QMMMInputParser::parseQMCenter, this),
+        std::string("core_center"),
+        bind_front(&HybridInputParser::parseCoreCenter, this),
         false
     );
     addKeyword(
-        std::string("qm_only_list"),
-        bind_front(&QMMMInputParser::parseQMOnlyList, this),
+        std::string("core_only_list"),
+        bind_front(&HybridInputParser::parseCoreOnlyList, this),
         false
     );
     addKeyword(
-        std::string("mm_only_list"),
-        bind_front(&QMMMInputParser::parseMMOnlyList, this),
+        std::string("non_core_only_list"),
+        bind_front(&HybridInputParser::parseNonCoreOnlyList, this),
         false
     );
     addKeyword(
         std::string("qm_charges"),
-        bind_front(&QMMMInputParser::parseUseQMCharges, this),
+        bind_front(&HybridInputParser::parseUseQMCharges, this),
         false
     );
     addKeyword(
-        std::string("qm_core_radius"),
-        bind_front(&QMMMInputParser::parseQMCoreRadius, this),
+        std::string("core_radius"),
+        bind_front(&HybridInputParser::parseCoreRadius, this),
         false
     );
     addKeyword(
-        std::string("qmmm_layer_radius"),
-        bind_front(&QMMMInputParser::parseQMCoreRadius, this),
+        std::string("layer_radius"),
+        bind_front(&HybridInputParser::parseLayerRadius, this),
         false
     );
     addKeyword(
-        std::string("qmmm_smoothing_radius"),
-        bind_front(&QMMMInputParser::parseQMCoreRadius, this),
+        std::string("smoothing_radius"),
+        bind_front(&HybridInputParser::parseSmoothingRadius, this),
         false
     );
 }
 
 /**
- * @brief parse external QM Center which should be used
+ * @brief parse atom index selection which defines the core region
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseQMCenter(
+void HybridInputParser::parseCoreCenter(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMMMSettings::setQMCenterString(lineElements[2]);
+    HybridSettings::setCoreCenterString(lineElements[2]);
 }
 
 /**
- * @brief parse list of atoms which should be treated with QM only
+ * @brief parse list of atoms which should be treated as core region only
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseQMOnlyList(
+void HybridInputParser::parseCoreOnlyList(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMMMSettings::setMMOnlyListString(lineElements[2]);
+    HybridSettings::setCoreOnlyListString(lineElements[2]);
 }
 
 /**
- * @brief parse list of atoms which should be treated with MM only
+ * @brief parse list of atoms which should be treated as non-core region only
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseMMOnlyList(
+void HybridInputParser::parseNonCoreOnlyList(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMMMSettings::setMMOnlyListString(lineElements[2]);
+    HybridSettings::setNonCoreOnlyListString(lineElements[2]);
 }
 
 /**
@@ -134,7 +134,7 @@ void QMMMInputParser::parseMMOnlyList(
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseUseQMCharges(
+void HybridInputParser::parseUseQMCharges(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -143,10 +143,10 @@ void QMMMInputParser::parseUseQMCharges(
     auto use_qm_charges = toLowerCopy(lineElements[2]);
 
     if ("qm" == use_qm_charges)
-        QMMMSettings::setUseQMCharges(true);
+        HybridSettings::setUseQMCharges(true);
 
     else if ("mm" == use_qm_charges)
-        QMMMSettings::setUseQMCharges(false);
+        HybridSettings::setUseQMCharges(false);
 
     else
         throw InputFileException(std::format(
@@ -159,82 +159,82 @@ void QMMMInputParser::parseUseQMCharges(
 }
 
 /**
- * @brief parse QM core radius
+ * @brief parse core radius
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseQMCoreRadius(
+void HybridInputParser::parseCoreRadius(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto qmCoreRadius = std::stod(lineElements[2]);
+    const auto coreRadius = std::stod(lineElements[2]);
 
-    if (qmCoreRadius < 0.0)
+    if (coreRadius < 0.0)
         throw InputFileException(std::format(
             "Invalid {} {} in input file - must be a positive number",
             lineElements[0],
             lineElements[2]
         ));
 
-    QMMMSettings::setQMCoreRadius(qmCoreRadius);
+    HybridSettings::setCoreRadius(coreRadius);
 
     throw UserInputException("Not implemented");
 }
 
 /**
- * @brief parse QMMM layer radius
+ * @brief parse layer radius
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseQMMMLayerRadius(
+void HybridInputParser::parseLayerRadius(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto qmmmLayerRadius = std::stod(lineElements[2]);
+    const auto layerRadius = std::stod(lineElements[2]);
 
-    if (qmmmLayerRadius < 0.0)
+    if (layerRadius < 0.0)
         throw InputFileException(std::format(
             "Invalid {} {} in input file - must be a positive number",
             lineElements[0],
             lineElements[2]
         ));
 
-    QMMMSettings::setQMMMLayerRadius(qmmmLayerRadius);
+    HybridSettings::setLayerRadius(layerRadius);
 
     throw UserInputException("Not implemented");
 }
 
 /**
- * @brief parse QMMM smoothing radius
+ * @brief parse smoothing radius
  *
  * @param lineElements
  * @param lineNumber
  */
-void QMMMInputParser::parseQMMMSmoothingRadius(
+void HybridInputParser::parseSmoothingRadius(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto qmmmSmoothingRadius = std::stod(lineElements[2]);
+    const auto smoothingRadius = std::stod(lineElements[2]);
 
-    if (qmmmSmoothingRadius < 0.0)
+    if (smoothingRadius < 0.0)
         throw InputFileException(std::format(
             "Invalid {} {} in input file - must be a positive number",
             lineElements[0],
             lineElements[2]
         ));
 
-    QMMMSettings::setQMMMSmoothingRadius(qmmmSmoothingRadius);
+    HybridSettings::setSmoothingRadius(smoothingRadius);
 
     throw UserInputException("Not implemented");
 }

@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETTINGS_HPP_
+#ifndef _HYBRID_SETTINGS_HPP_
 
-#define _QMMM_SETTINGS_HPP_
+#define _HYBRID_SETTINGS_HPP_
 
 #include <cstddef>       // for size_t
 #include <string>        // for string
@@ -31,53 +31,53 @@
 namespace settings
 {
     /**
-     * @class QMMMSettings
+     * @class HybridSettings
      *
      * @brief stores all information about the external qmmm runner
      *
      */
-    class QMMMSettings
+    class HybridSettings
     {
        private:
-        static inline std::string _qmCenterString   = "";
-        static inline std::string _qmOnlyListString = "";
-        static inline std::string _mmOnlyListString = "";
+        static inline std::string _coreCenterString      = "";
+        static inline std::string _coreOnlyListString    = "";
+        static inline std::string _nonCoreOnlyListString = "";
 
         static inline bool _useQMCharges = false;
 
-        static inline double _qmCoreRadius        = 0.0;
-        static inline double _qmmmLayerRadius     = 0.0;
-        static inline double _qmmmSmoothingRadius = 0.0;
+        static inline double _coreRadius      = 0.0;
+        static inline double _layerRadius     = 0.0;
+        static inline double _smoothingRadius = 0.0;
 
        public:
         /********************
          * standard setters *
          ********************/
 
-        static void setQMCenterString(const std::string_view qmCenter);
-        static void setQMOnlyListString(const std::string_view qmOnlyList);
-        static void setMMOnlyListString(const std::string_view mmOnlyList);
+        static void setCoreCenterString(const std::string_view qmCenter);
+        static void setCoreOnlyListString(const std::string_view qmOnlyList);
+        static void setNonCoreOnlyListString(const std::string_view mmOnlyList);
 
         static void setUseQMCharges(const bool useQMCharges);
 
-        static void setQMCoreRadius(const double qmCoreRadius);
-        static void setQMMMLayerRadius(const double qmmmLayerRadius);
-        static void setQMMMSmoothingRadius(const double qmmmSmoothingRadius);
+        static void setCoreRadius(const double qmCoreRadius);
+        static void setLayerRadius(const double qmmmLayerRadius);
+        static void setSmoothingRadius(const double qmmmSmoothingRadius);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getQMCenterString();
-        [[nodiscard]] static std::string getQMOnlyListString();
-        [[nodiscard]] static std::string getMMOnlyListString();
+        [[nodiscard]] static std::string getCoreCenterString();
+        [[nodiscard]] static std::string getCoreOnlyListString();
+        [[nodiscard]] static std::string getNonCoreOnlyListString();
 
         [[nodiscard]] static bool getUseQMCharges();
 
-        [[nodiscard]] static double getQMCoreRadius();
-        [[nodiscard]] static double getQMMMLayerRadius();
-        [[nodiscard]] static double getQMMMSmoothingRadius();
+        [[nodiscard]] static double getCoreRadius();
+        [[nodiscard]] static double getLayerRadius();
+        [[nodiscard]] static double getSmoothingRadius();
     };
 }   // namespace settings
 
-#endif   // _QMMM_SETTINGS_HPP_
+#endif   // _HYBRID_SETTINGS_HPP_

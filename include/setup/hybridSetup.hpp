@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETUP_HPP_
+#ifndef _HYBRID_SETUP_HPP_
 
-#define _QMMM_SETUP_HPP_
+#define _HYBRID_SETUP_HPP_
 
 #include <string>   // for string
 #include <vector>   // for vector
@@ -31,21 +31,21 @@
 
 namespace setup
 {
-    void setupQMMM(pq::Engine &);
+    void setupHybrid(pq::Engine &);
 
     /**
-     * @class QMSetup
+     * @class HybridSetup
      *
-     * @brief Setup QM
+     * @brief Setup Hybrid calculations e.g. QM/MM
      *
      */
-    class QMMMSetup
+    class HybridSetup
     {
        private:
         pq::Engine &_engine;
 
        public:
-        explicit QMMMSetup(pq::Engine &engine);
+        explicit HybridSetup(pq::Engine &engine);
 
         void setup();
         void setupQMCenter();
@@ -58,4 +58,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _QMMM_SETUP_HPP_
+#endif   // _HYBRID_SETUP_HPP_
