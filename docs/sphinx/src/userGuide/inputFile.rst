@@ -730,13 +730,22 @@ Possible options are:
 
    1. **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
-   2. **berendsen** - the Berendsen weak coupling thermostat
+   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`_ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
 
-   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat
+        .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 \right)}
+            :label: BerendsenThermostatEquation
 
-   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics
+   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`_ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
 
-   5. **nh-chain** - temperature coupling *via* Nose Hoover extended Lagrangian 
+        .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
+            :label: BussiDonadioParrinelloThermostatEquation
+
+   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics. Based on modifying the force of each individual particle :math:`F_{\text i}` *via* a friction force :math:`\gamma \cdot p_{\text i}` and a random force :math:`\xi`, equation :eq:`LangevinThermostatEquation`. The friction coefficient :math:`\gamma` can be set with the :ref:`frictionKey` keyword. Enforces a canonical kinetic energy distribution. However, the Langevin thermostat is unable to conserve the total momentum of the system, which may lead to critical erros in the resulting dynamical data.
+
+        .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
+            :label: LangevinThermostatEquation
+
+   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
 
 .. _temperatureRelaxationTimeKey:
 
@@ -750,7 +759,7 @@ This keyword is used in combination with the Berendsen and velocity rescaling th
 
     t_relaxation = {double} ps -> 0.1 ps
 
-With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set.
+With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set, see equations :eq:`BerendsenThermostatEquation` and :eq:`BussiDonadioParrinelloThermostatEquation`.
 
 .. centered:: *default value* = 0.1 ps
 
@@ -764,7 +773,7 @@ Friction
 
     friction = {double} ps⁻¹ -> 0.1 ps⁻¹
 
-With the ``friction`` keyword the friction in ``ps⁻¹`` applied in combination with the Langevin thermostat can be set.
+With the ``friction`` keyword the friction coefficient :math:`\gamma` in ``ps⁻¹`` of the Langevin thermostat, equation :eq:`LangevinThermostatEquation`, can be set.
 
 .. centered:: *default value* = 0.1 ps⁻¹
 
