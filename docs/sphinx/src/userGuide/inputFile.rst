@@ -730,13 +730,19 @@ Possible options are:
 
    1. **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
-   2. **berendsen** - the Berendsen weak coupling thermostat
+   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`_ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
 
-   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat
+        .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 \right)}
+            :label: BerendsenThermostatEquation
+
+   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`_ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
+
+        .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
+            :label: BussiDonadioParrinelloThermostatEquation
 
    4. **langevin** - temperature coupling *via* stochastic Langevin dynamics
 
-   5. **nh-chain** - temperature coupling *via* Nose Hoover extended Lagrangian 
+   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_
 
 .. _temperatureRelaxationTimeKey:
 
@@ -750,7 +756,7 @@ This keyword is used in combination with the Berendsen and velocity rescaling th
 
     t_relaxation = {double} ps -> 0.1 ps
 
-With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set.
+With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set, see equations :eq:`BerendsenThermostatEquation` and :eq:`BussiDonadioParrinelloThermostatEquation`.
 
 .. centered:: *default value* = 0.1 ps
 
