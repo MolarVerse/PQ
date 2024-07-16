@@ -38,16 +38,30 @@ using namespace settings;
  * object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) output_freq <size_t> 2)
- * output_file <string> 3) info_file <string> 4) energy_file <string> 5)
- * instant_energy_file <string> 6) traj_file <string> 7) vel_file <string> 8)
- * force_file <string> 9) restart_file <string> 10) charge_file <string> 11)
- * momentum_file <string> 12) virial_file <string> 13) stress_file <string> 14)
- * box_file <string> 15) rpmd_restart_file <string> 16) rpmd_traj_file <string>
- * 17) rpmd_vel_file <string>
- * 18) rpmd_force_file <string>
- * 19) rpmd_charge_file <string>
- * 20) rpmd_energy_file <string>
+ * _keywordRequiredMap and _keywordCountMap: 
+ * 1) output_freq <size_t> 
+ * 2) file_prefix <string> 
+ * 3) output_file <string> 
+ * 4) info_file <string> 
+ * 5) energy_file <string> 
+ * 6) instant_energy_file <string> 
+ * 7) traj_file <string> 
+ * 8) vel_file <string> 
+ * 9) force_file <string> 
+ * 10) restart_file <string> 
+ * 11) charge_file <string> 
+ * 12) momentum_file <string> 
+ * 13) virial_file <string> 
+ * 14) stress_file <string> 
+ * 15) box_file <string> 
+ * 16) timings_file <string> 
+ * 17) opt_file <string>
+ * 18) rpmd_restart_file <string> 
+ * 19) rpmd_traj_file <string>
+ * 20) rpmd_vel_file <string>
+ * 21) rpmd_force_file <string>
+ * 22) rpmd_charge_file <string>
+ * 23) rpmd_energy_file <string>
  *
  * @param engine
  */
@@ -128,6 +142,11 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("box_file"),
         bind_front(&OutputInputParser::parseBoxFilename, this),
+        false
+    );
+    addKeyword(
+        std::string("timings_file"),
+        bind_front(&OutputInputParser::parseTimingsFilename, this),
         false
     );
     addKeyword(
@@ -418,6 +437,22 @@ void OutputInputParser::parseBoxFilename(
 {
     checkCommand(lineElements, lineNumber);
     OutputFileSettings::setBoxFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse timings filename of simulation and add it to output
+ *
+ * @details default value is default.timings
+ *
+ * @param lineElements
+ */
+void OutputInputParser::parseTimingsFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    OutputFileSettings::setTimingsFileName(lineElements[2]);
 }
 
 /**

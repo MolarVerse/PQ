@@ -384,6 +384,20 @@ The ``stress_file`` keyword sets the name for the :ref:`stressFile`, which store
 
 .. centered:: *default value* = "default.stress"
 
+.. _timingsfilekey:
+
+Timings File
+============
+
+.. admonition:: Key
+    :class: tip
+
+    timings_file = {file} -> "default.timings"
+
+The ``timings_file`` keyword sets the name for the :ref:`timingFile`, which tracks the time **PQ** takes for executing individual parts of the simulation.
+
+.. centered:: *default value* = "default.timings"
+
 .. _trajectoryfilekey:
 
 Trajectory File
