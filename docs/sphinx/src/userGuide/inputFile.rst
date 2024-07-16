@@ -745,7 +745,7 @@ Possible options are:
         .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
             :label: LangevinThermostatEquation
 
-   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_
+   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
 
 .. _temperatureRelaxationTimeKey:
 
