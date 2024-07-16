@@ -740,7 +740,10 @@ Possible options are:
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
             :label: BussiDonadioParrinelloThermostatEquation
 
-   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics
+   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics. Based on modifying the force of each individual particle :math:`F_{\text i}` *via* a friction force :math:`\gamma \cdot p_{\text i}` and a random force :math:`\xi`, equation :eq:`LangevinThermostatEquation`. The friction coefficient :math:`\gamma` can be set with the :ref:`frictionKey` keyword. Enforces a canonical kinetic energy distribution. However, the Langevin thermostat is unable to conserve the total momentum of the system, which may lead to critical erros in the resulting dynamical data.
+
+        .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
+            :label: LangevinThermostatEquation
 
    5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_
 
@@ -770,7 +773,7 @@ Friction
 
     friction = {double} ps⁻¹ -> 0.1 ps⁻¹
 
-With the ``friction`` keyword the friction in ``ps⁻¹`` applied in combination with the Langevin thermostat can be set.
+With the ``friction`` keyword the friction coefficient :math:`\gamma` in ``ps⁻¹`` of the Langevin thermostat, equation :eq:`LangevinThermostatEquation`, can be set.
 
 .. centered:: *default value* = 0.1 ps⁻¹
 
