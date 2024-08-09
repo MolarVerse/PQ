@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install gcc13
         run: |
@@ -23,9 +23,14 @@ jobs:
         shell: bash
 
       - name: setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
+
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
 
       - name: install coverage
         run: |
@@ -45,13 +50,17 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Run integration Tests
+      - name: Install dependencies
         run: |
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
-          pytest integration_tests
+          conda install conda-forge::gsl
+          conda install conda-forge::dftbplus
 
+      - name: Run integration Tests
+        run: |
+          pytest integration_tests
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
