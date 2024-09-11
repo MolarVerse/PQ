@@ -61,6 +61,7 @@ namespace input
         void parseVirialFilename(const pq::strings &, const size_t);
         void parseStressFilename(const pq::strings &, const size_t);
         void parseBoxFilename(const pq::strings &, const size_t);
+        void parseTimingsFilename(const pq::strings &, const size_t);
         void parseOptFilename(const pq::strings &, const size_t);
 
         void parseRPMDRestartFilename(const pq::strings &, const size_t);

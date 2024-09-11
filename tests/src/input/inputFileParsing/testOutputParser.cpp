@@ -270,6 +270,19 @@ TEST_F(TestInputFileReader, testBoxFilename)
 }
 
 /**
+ * @brief tests parsing the "timings_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testTimingsFilename)
+{
+    OutputInputParser parser(*_engine);
+    _fileName                                   = "timings.txt";
+    const std::vector<std::string> lineElements = {"timings_file", "=", _fileName};
+    parser.parseTimingsFilename(lineElements, 0);
+    EXPECT_EQ(settings::OutputFileSettings::getTimingsFileName(), _fileName);
+}
+
+/**
  * @brief tests parsing the "rpmd_traj_file" command
  *
  */
