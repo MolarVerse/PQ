@@ -35,6 +35,7 @@ using namespace input::topology;
 using namespace forceField;
 using namespace customException;
 using namespace engine;
+using namespace simulationBox;
 
 /**
  * @brief processes the improper section of the topology file
@@ -92,7 +93,7 @@ void ImproperDihedralSection::processSection(
     const auto [mol3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
     const auto [mol4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
 
-    const auto mols     = std::vector{mol1, mol2, mol3, mol4};
+    const auto mols     = std::vector<Molecule *>{mol1, mol2, mol3, mol4};
     const auto atomIdxs = std::vector{idx1, idx2, idx3, idx4};
 
     auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
