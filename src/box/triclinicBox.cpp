@@ -216,8 +216,11 @@ void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
         setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
 
     else
-    {
-        const auto boxMatrix = scalingTensor * _boxMatrix;
+    {   
+        auto boxMatrix = tensor3D();
+        for(int i = 0; i < 3; ++i)
+            for(int j = 0; j < 3; ++j)
+                boxMatrix[i][j] = scalingTensor[i][j] * _boxMatrix[i][j];       
 
         const auto &[boxDimensions, boxAngles] =
             calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
