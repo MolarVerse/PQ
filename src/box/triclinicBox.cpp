@@ -216,11 +216,12 @@ void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
         setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
 
     else
-    {   
+    {
+        // Hadamard product of the scaling tensor and the box matrix
         auto boxMatrix = tensor3D();
-        for(int i = 0; i < 3; ++i)
-            for(int j = 0; j < 3; ++j)
-                boxMatrix[i][j] = scalingTensor[i][j] * _boxMatrix[i][j];       
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                boxMatrix[i][j] = scalingTensor[i][j] * _boxMatrix[i][j];
 
         const auto &[boxDimensions, boxAngles] =
             calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
