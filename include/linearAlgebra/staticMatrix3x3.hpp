@@ -421,7 +421,7 @@ namespace linearAlgebra
         auto result = StaticMatrix3x3<T>(0.0);
 
         for (size_t i = 0; i < 3; ++i)
-            for (size_t j = i + 1; j < 3; ++j)
+            for (size_t j = 0; j < 3; ++j)
                 result[i][j] = ::exp(mat[i][j]);
 
         return result;
