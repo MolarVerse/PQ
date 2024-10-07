@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,24 +8,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Setup Files &mdash; PQ [] documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=98a1f6db" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=590adc1f"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Installation" href="../installation/installation.html" />
-    <link rel="prev" title="Output Files" href="outputFiles.html" /> 
+    <link rel="next" title="Output Files" href="outputFiles.html" />
+    <link rel="prev" title="The Input File" href="inputFile.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,14 +50,15 @@
 <li class="toctree-l1 current"><a class="reference internal" href="userGuide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="generalUsage.html">General Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputFile.html">The Input File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Setup Files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-guffdat-file">The Guffdat File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-topology-file">The Topology File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-parameter-file">The Parameter File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#the-m-shake-file">The M-SHAKE File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#moldescriptor">Moldescriptor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guff-file">GUFF File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#topology-file">Topology File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-file">Parameter File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#m-shake-file">M-SHAKE File</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
@@ -92,17 +92,72 @@
              
   <section id="setup-files">
 <span id="setupfiles"></span><h1>Setup Files<a class="headerlink" href="#setup-files" title="Link to this heading"></a></h1>
-<section id="the-guffdat-file">
-<span id="guffdatfile"></span><h2>The Guffdat File<a class="headerlink" href="#the-guffdat-file" title="Link to this heading"></a></h2>
+<p>The following setup files can be given as additional input to <strong>PQ</strong>. The names of the used files need to be provided with the according
+<a class="reference internal" href="inputFile.html#setupfilekeys"><span class="std std-ref">Setup File Keys</span></a> in the <code class="docutils literal notranslate"><span class="pre">.in</span></code> file if the name does not match the default name.</p>
+<section id="moldescriptor">
+<span id="moldescriptorfile"></span><h2>Moldescriptor<a class="headerlink" href="#moldescriptor" title="Link to this heading"></a></h2>
+<p><strong>Default Name:</strong> <code class="docutils literal notranslate"><span class="pre">moldescriptor.dat</span></code></p>
+<p>The moldescriptor file is used to assign every atom in the system to a molecular unit, also called moltype. These molecular units can be as small
+as just a single atom or as big as a whole molecule. They are numbered consecutively starting from 1 and are given in the third column of
+the <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file as described in the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a> section.  The moldescriptor file is structured into groups for every moltype,
+which have the following form:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>line 1:</strong> name n_atoms charge</div>
+<div class="line"><strong>line 2 to (n_atoms + 1):</strong> atom_type_name atom_type_index point_charge global_vdW_index</div>
+</div>
+</div></blockquote>
+<p>The parameters name, n_atoms, and charge in the first line denote the name of the moltype, the number of atoms in the moltype, and the total
+charge of the moltype in units of the elementary charge <em>e</em>. The following lines contain the name of the atom type, the index of the MM
+atom type, the MM point charge in units of <em>e</em> and the global van der Waals index for each atom in the moltype. The atom type name is
+irrelevant for internal calculations, but will be printed to various <a class="reference internal" href="outputFiles.html#outputfiles"><span class="std std-ref">Output Files</span></a>. The index of the atom type is relevant for
+defining intra- and intermolecular non-bonded interactions in the <a class="reference internal" href="#guffdatfile"><span class="std std-ref">GUFF File</span></a>. The point charge as well as the global van der Waals
+type are only relevant for MM atoms that are not treated <em>via</em> the <a class="reference internal" href="#guffdatfile"><span class="std std-ref">GUFF File</span></a>. The global van der Waals index is used to assign
+identical elements exposed to a similar chemical environment from different moltypes to the same atom type.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Providing a moldescriptor file is optional for pure QM calculations, but becomes mandatory if there are MM atoms present in the
+system and/or pressure coupling is enabled <em>via</em> the <a class="reference internal" href="inputFile.html#pressurecouplingkeys"><span class="std std-ref">Pressure Coupling Keys</span></a> in the <code class="docutils literal notranslate"><span class="pre">.in</span></code> file. If no moldescriptor file is
+provided, the element symbol (as given by the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a>) will be printed to the output files instead of the
+atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be
+set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the <a class="reference internal" href="#guffdatfile"><span class="std std-ref">GUFF File</span></a>, the
+point_charge can be set to 0 and the global_vdW_type can be omitted.</p>
+</div>
 </section>
-<section id="the-topology-file">
-<span id="topologyfile"></span><h2>The Topology File<a class="headerlink" href="#the-topology-file" title="Link to this heading"></a></h2>
+<section id="guff-file">
+<span id="guffdatfile"></span><h2>GUFF File<a class="headerlink" href="#guff-file" title="Link to this heading"></a></h2>
+<p><strong>Default Name:</strong> <code class="docutils literal notranslate"><span class="pre">guff.dat</span></code></p>
+<p>The grand unified force field (GUFF) file can be used to define the non-bonding force field parameters for the MM atoms in the system.
+The GUFF file defines the Coulomb potential <em>V</em><sub>Coulomb</sub> <em>via</em> equation <a class="reference internal" href="#equation-guffcoulombequation">(1)</a> and the non-Coulombic potential <em>V</em><sub>non-Coulomb</sub>
+<em>via</em> the generalized equation <a class="reference internal" href="#equation-guffnoncoulombequation">(2)</a> for every atom type index in every moltype of the system in the following format:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">moltype_1; atom_type_index_1; moltype_2; atom_type_index_2; <em>r</em><sub>cut</sub>; <em>c</em><sub>0</sub>; <em>c</em><sub>1</sub>; <em>c</em><sub>2</sub>; <em>c</em><sub>3</sub>; <em>c</em><sub>4</sub>; <em>c</em><sub>5</sub>; <em>c</em><sub>6</sub>; <em>c</em><sub>7</sub>; <em>c</em><sub>8</sub>; <em>c</em><sub>9</sub>; <em>c</em><sub>10</sub>; <em>c</em><sub>11</sub>; <em>c</em><sub>12</sub>; <em>c</em><sub>13</sub>; <em>c</em><sub>14</sub>; <em>c</em><sub>15</sub>; <em>c</em><sub>16</sub>; <em>c</em><sub>17</sub>; <em>c</em><sub>18</sub>; <em>c</em><sub>19</sub>; <em>c</em><sub>20</sub>; <em>c</em><sub>21</sub>; <em>c</em><sub>22</sub></div>
+</div>
+<div class="math notranslate nohighlight" id="equation-guffcoulombequation">
+<span class="eqno">(1)<a class="headerlink" href="#equation-guffcoulombequation" title="Link to this equation"></a></span>\[V_{\text{Coulomb}} = \frac{c_0}{r}\]</div>
+<div class="math notranslate nohighlight" id="equation-guffnoncoulombequation">
+<span class="eqno">(2)<a class="headerlink" href="#equation-guffnoncoulombequation" title="Link to this equation"></a></span>\[V_{\text{non-Coulomb}} = \frac{c_1}{r^{c_2}} + \frac{c_3}{r^{c_4}} + \frac{c_5}{r^{c_6}} + \frac{c_7}{r^{c_8}} + \frac{c_9}{1 + e^{c_{10} (r - c_{11})}} + \frac{c_{12}}{1 + e^{c_{13} (r - c_{14})}} + c_{15} e^{c_{16} (r - c_{17})^{c_{18}}} + c_{19} e^{c_{20} (r - c_{21})^{c_{22}}}\]</div>
+</div></blockquote>
+<p>The moltype and atom_type_index are defined as in the <a class="reference internal" href="#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> file.
+Utilizing equation <a class="reference internal" href="#equation-guffnoncoulombequation">(2)</a>, Lennard-Jones, Buckingham and Morse potentials, as well as arbitrary combinations of them can be used
+for the description of the non-Coulombic interactions. The parameter <em>r</em><sub>cut</sub> gives the cutoff radius for the non-bonded interactions. Distances
+are given in Å and energies in kcal/mol. The units of the parameters are chosen accordingly.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All entries in the GUFF file need to be separated <em>via</em> a semicolon <code class="docutils literal notranslate"><span class="pre">;</span></code>. Furthermore, defining all possible interactions is mandatory. If a certain
+potential is not needed, the corresponding coefficients are set to 0.</p>
+<p>Using the GUFF file requires the <a class="reference internal" href="#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file to be provided as well.</p>
+</div>
 </section>
-<section id="the-parameter-file">
-<span id="parameterfile"></span><h2>The Parameter File<a class="headerlink" href="#the-parameter-file" title="Link to this heading"></a></h2>
+<section id="topology-file">
+<span id="topologyfile"></span><h2>Topology File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h2>
 </section>
-<section id="the-m-shake-file">
-<span id="mshakefile"></span><h2>The M-SHAKE File<a class="headerlink" href="#the-m-shake-file" title="Link to this heading"></a></h2>
+<section id="parameter-file">
+<span id="parameterfile"></span><h2>Parameter File<a class="headerlink" href="#parameter-file" title="Link to this heading"></a></h2>
+</section>
+<section id="m-shake-file">
+<span id="mshakefile"></span><h2>M-SHAKE File<a class="headerlink" href="#m-shake-file" title="Link to this heading"></a></h2>
 </section>
 </section>
 
@@ -110,8 +165,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="outputFiles.html" class="btn btn-neutral float-left" title="Output Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../installation/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="inputFile.html" class="btn btn-neutral float-left" title="The Input File" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="outputFiles.html" class="btn btn-neutral float-right" title="Output Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

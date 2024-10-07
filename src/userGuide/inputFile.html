@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,24 +8,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Input File &mdash; PQ [] documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=98a1f6db" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=590adc1f"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Output Files" href="outputFiles.html" />
+    <link rel="next" title="Setup Files" href="setupFiles.html" />
     <link rel="prev" title="General Usage" href="generalUsage.html" /> 
 </head>
 
@@ -63,73 +61,74 @@
 <li class="toctree-l4"><a class="reference internal" href="#jobtype">Jobtype</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#timestep">Timestep</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nstep">NStep</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#floating-point-type">FLOATING_POINT_TYPE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#floating-point-type">Floating Point Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#integrator">Integrator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#virial">Virial</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#start-file">Start_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-start-file">RPMD_Start_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#start-file">Start File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-start-file">RPMD Start File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#general-output-keys">General Output Keys</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#output-freq">Output_Freq</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#file-prefix">File_Prefix</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#output-file">Output_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-frequency">Output Frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-prefix">File Prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-file">Log File</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#md-output-file-keys">MD Output File Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#info-file">Info_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#energy-file">Energy_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#instant-energy-file">Instant_Energy_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rst-file">Rst_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#traj-file">Traj_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#vel-file">Vel_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#force-file">Force_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#charge-file">Charge_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#momentum-file">Momentum_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#virial-file">Virial_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#stress-file">Stress_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#box-file">Box_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#box-file">Box File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#charge-file">Charge File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-file">Energy File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#force-file">Force File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#info-file">Info File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#instant-energy-file">Instant Energy File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#momentum-file">Momentum File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restart-file">Restart File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stress-file">Stress File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#timings-file">Timings File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trajectory-file">Trajectory File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#velocity-file">Velocity File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virial-file">Virial File</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#rpmd-output-file-keys">RPMD Output File Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-restart-file">RPMD_Restart_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-traj-file">RPMD_Traj_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-vel-file">RPMD_Vel_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-force-file">RPMD_Force_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-charge-file">RPMD_Charge_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-energy-file">RPMD_Energy_File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-charge-file">RPMD Charge File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-energy-file">RPMD Energy File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-force-file">RPMD Force File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-restart-file">RPMD Restart File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-trajectory-file">RPMD Trajectory File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-velocity-file">RPMD Velocity File</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#input-setup-file-keys">Input (Setup) File Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#moldesctiptor-file">Moldesctiptor_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#guff-file">Guff_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#topology-file">Topology_File</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#parameter-file">Parameter_File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-file-keys">Setup File Keys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#moldesctiptor-file">Moldesctiptor File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#guff-file">GUFF File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#topology-file">Topology File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameter-file">Parameter File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mshake-file">MSHake_File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#intra-nonbonded-file">Intra-NonBonded_File</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#simulation-box-keys">Simulation Box Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#density">Density</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rcoulomb">RCoulomb</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#init-velocities">Init_Velocities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#radial-coulomb-cutoff">Radial Coulomb Cutoff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-velocities">Initial Velocities</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#temperature-coupling-keys">Temperature Coupling Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#temperature">Temperature</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#start-temperature">Start_Temperature</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#end-temperature">End_Temperature</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-steps">Temperature_Ramp_Steps</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-frequency">Temperature_Ramp_Frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#starting-temperature">Starting Temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#end-temperature">End Temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-steps">Temperature Ramp Steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#temperature-ramp-frequency">Temperature Ramp Frequency</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#thermostat">Thermostat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#t-relaxation">T_Relaxation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#temperature-relaxation-time">Temperature Relaxation Time</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#friction">Friction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#nh-chain-length">NH-Chain_Length</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#coupling-frequency">Coupling_Frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nh-chain-length">NH-Chain Length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coupling-frequency">Coupling Frequency</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#pressure-coupling-keys">Pressure Coupling Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pressure">Pressure</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#manostat">Manostat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#p-relaxation">P_Relaxation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pressure-relaxation">Pressure Relaxation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#compressibility">Compressibility</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#isotropy">Isotropy</a></li>
 </ul>
@@ -139,66 +138,66 @@
 <li class="toctree-l4"><a class="reference internal" href="#fscale">FScale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#nreset">NReset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#freset">FReset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#nreset-angular">NReset_Angular</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#freset-angular">FReset_Angular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nreset-angular">NReset Angular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#freset-angular">FReset Angular</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#constraints-keys">Constraints Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#shake">Shake</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#shake-tolerance">Shake-Tolerance</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#shake-iter">Shake-Iter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rattle-tolerance">Rattle-Tolerance</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rattle-iter">Rattle-Iter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#distance-constraints">Distance-Constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shake-tolerance">Shake Tolerance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shake-iteration">Shake Iteration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rattle-tolerance">Rattle Tolerance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rattle-iteration">Rattle Iteration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#distance-constraints">Distance Constraints</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#mm-keys">MM Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#noncoulomb">NonCoulomb</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#forcefield">ForceField</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#force-field">Force Field</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#long-range-correction">Long Range Correction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#long-range">Long_Range</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#wolf-param">Wolf_Param</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long-range">Long Range</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#wolf-parameter">Wolf Parameter</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#qm-keys">QM Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#qm-prog">QM_PROG</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-script">QM_SCRIPT</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-script-full-path">QM_SCRIPT_FULL_PATH</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-loop-time-limit">QM_LOOP_TIME_LIMIT</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dispersion-correction">DISPERSION_CORRECTION</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mace-model-size">MACE_MODEL_SIZE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-program">QM Program</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-script">QM Script</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-script-full-path">QM Script Full Path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-loop-time-limit">QM Loop Time Limit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dispersion-correction">Dispersion Correction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mace-model-size">MACE Model Size</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#ring-polymer-md-keys">Ring Polymer MD Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#rpmd-n-replica">RPMD_n_replica</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpmd-n-replica">RPMD n replica</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#qm-mm-keys">QM/MM Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#qm-center">QM_Center</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-only-list">QM_Only_List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mm-only-list">MM_Only_List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-charges">QM_Charges</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-core-radius">QM_Core_Radius</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qmmm-layer-radius">QMMM_Layer_Radius</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qmmm-smoothing-radius">QMMM_Smoothing_Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-center">QM Center</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-only-list">QM Only List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mm-only-list">MM Only List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-charges">QM Charges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-core-radius">QM Core Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-mm-layer-radius">QM/MM Layer Radius</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qm-mm-smoothing-radius">QM/MM Smoothing Radius</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#cell-list-keys">Cell List Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cell-list">Cell-List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cell-number">Cell-Number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cell-list">Cell List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cell-number">Cell Number</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#optimization-keys">Optimization Keys</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#optimizer">Optimizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#learning-rate-strategy">Learning-Rate-Strategy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#initial-learning-rate">Initial-Learning-Rate</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#learning-rate-decay">Learning-Rate-Decay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#learning-rate-strategy">Learning Rate Strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-learning-rate">Initial Learning Rate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#learning-rate-decay">Learning Rate Decay</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#convergence-keys">Convergence Keys</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#energy-convergence-strategy">Energy-Convergence-Strategy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-convergence-strategy">Energy Convergence Strategy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#enable-disable-energy-convergence-check">Enable/Disable Energy Convergence Check</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#enable-disable-max-force-convergence-check">Enable/Disable MAX Force Convergence Check</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#enable-disable-rms-force-convergence-check">Enable/Disable RMS Force Convergence Check</a></li>
@@ -212,8 +211,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setupFiles.html">Setup Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
@@ -260,18 +259,18 @@
 <p class="admonition-title">Note</p>
 <p>The semicolon add the end of both command definitions is necessary, while the number of whitespace can be arbitrary at any position of the command as long as key and value are not split in parts.</p>
 </div>
-<p>Command definition 1) represents a single value command, whereas definition 2) can be considered as a list of input values to which will always be represented with <code class="code docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+<p>Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values to which will always be represented with <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
 <section id="command-usage">
 <h3>Command Usage<a class="headerlink" href="#command-usage" title="Link to this heading"></a></h3>
-<p>Due to the use of <code class="code docutils literal notranslate"><span class="pre">;</span></code> one line of the input file can contain multiple commands and blank lines will be ignored.</p>
+<p>Due to the use of <code class="docutils literal notranslate"><span class="pre">;</span></code> one line of the input file can contain multiple commands and blank lines will be ignored.</p>
 </section>
 <section id="comments">
 <h3>Comments<a class="headerlink" href="#comments" title="Link to this heading"></a></h3>
-<p>Every character following a <code class="code docutils literal notranslate"><span class="pre">#</span></code> will be ignored. The <code class="code docutils literal notranslate"><span class="pre">#</span></code> as a comment flag can be used also in all setup files - with some exceptions when contiguous input blocks are necessary.</p>
+<p>Every character following a <code class="docutils literal notranslate"><span class="pre">#</span></code> will be ignored. The <code class="docutils literal notranslate"><span class="pre">#</span></code> as a comment flag can be used also in all setup files - with some exceptions when contiguous input blocks are necessary.</p>
 </section>
 <section id="types-of-input-values">
 <h3>Types of Input Values<a class="headerlink" href="#types-of-input-values" title="Link to this heading"></a></h3>
-<p>In the following sections the types of the input values will be denoted via <code class="code docutils literal notranslate"><span class="pre">{}</span></code>, where <code class="code docutils literal notranslate"><span class="pre">{[]}</span></code> represents a list of types:</p>
+<p>In the following sections the types of the input values will be denoted via <code class="docutils literal notranslate"><span class="pre">{}</span></code>, where <code class="docutils literal notranslate"><span class="pre">{[]}</span></code> represents a list of types:</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
@@ -313,14 +312,14 @@
 </table>
 <div class="admonition note" id="selectiontype">
 <p class="admonition-title">Note</p>
-<p>The <code class="code docutils literal notranslate"><span class="pre">{selection}</span></code> type is used to select a specific atom or group of atoms. If the PQ software package was build including <code class="code docutils literal notranslate"><span class="pre">python3.12</span></code> dependencies, the user can apply the selection grammar defined in the <a class="reference external" href="https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html">PQAnalysis package</a>. However, if PQ was compiled without these dependencies it is possible to index <em>via</em> the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2}</span></code>. If a range of atom indices should be selected the user can use the following syntax <code class="code docutils literal notranslate"><span class="pre">{0-5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10-15}</span></code> or <code class="code docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10..15}</span></code>, where all would be equivalent to <code class="code docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">11,</span> <span class="pre">12,</span> <span class="pre">13,</span> <span class="pre">14,</span> <span class="pre">15}</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">{selection}</span></code> type is used to select a specific atom or group of atoms. If the PQ software package was build including <code class="docutils literal notranslate"><span class="pre">python3.12</span></code> dependencies, the user can apply the selection grammar defined in the <a class="reference external" href="https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html">PQAnalysis package</a>. However, if PQ was compiled without these dependencies it is possible to index <em>via</em> the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like <code class="docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2}</span></code>. If a range of atom indices should be selected the user can use the following syntax <code class="docutils literal notranslate"><span class="pre">{0-5,</span> <span class="pre">10-15}</span></code> or <code class="docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10-15}</span></code> or <code class="docutils literal notranslate"><span class="pre">{0..5,</span> <span class="pre">10..15}</span></code>, where all would be equivalent to <code class="docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">11,</span> <span class="pre">12,</span> <span class="pre">13,</span> <span class="pre">14,</span> <span class="pre">15}</span></code>.</p>
 </div>
 </section>
 <section id="input-keys">
 <h3>Input Keys<a class="headerlink" href="#input-keys" title="Link to this heading"></a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Some of the following keys are necessary in the input file and are therefore marked with a <code class="code docutils literal notranslate"><span class="pre">*</span></code>. If there exists a default value for the possible options related to a key, they will be marked with <code class="code docutils literal notranslate"><span class="pre">-&gt;</span></code> after the command.</p>
+<p>Some of the following keys are necessary in the input file and are therefore marked with a <code class="docutils literal notranslate"><span class="pre">*</span></code>. If there exists a default value for the possible options related to a key, they will be marked with <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> after the command. Units of the values are given after the <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p>
 </div>
 </section>
 </section>
@@ -332,41 +331,41 @@
 <p class="admonition-title">Key</p>
 <p>jobtype* = {string}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">jobtype</span></code> keyword the user can choose out of different engines to perform (not only) MD simulations.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">jobtype</span></code> keyword the user can choose from different engines to perform (not only) MD simulations.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>mm-md</strong> - represents a full molecular mechanics molecular dynamics simulation either performed via the <code class="code docutils literal notranslate"><span class="pre">Guff</span></code> formalism or the <code class="code docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code></p></li>
-<li><p><strong>qm-md</strong> - represents a full quantum mechanics molecular dynamics simulation. For more information see the <a class="reference internal" href="#qmkeys"><span class="std std-ref">QM Keys</span></a> keywords section.</p></li>
-<li><p><strong>qm-rpmd</strong> - represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <a class="reference internal" href="#ringpolymermdkeys"><span class="std std-ref">MACE_MODEL_SIZE</span></a> keywords section</p></li>
-<li><p><strong>qmmm-md</strong> - represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)</p></li>
+<li><p><strong>mm-md</strong> - Represents a full molecular mechanics molecular dynamics simulation performed via the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF</span></a> formalism and/or the <code class="docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code>. Respective input file keys are found in the <a class="reference internal" href="#mmkeys"><span class="std std-ref">MM Keys</span></a> section.</p></li>
+<li><p><strong>qm-md</strong> - Represents a full quantum mechanics molecular dynamics simulation. For more information see the <a class="reference internal" href="#qmkeys"><span class="std std-ref">QM Keys</span></a> section.</p></li>
+<li><p><strong>qm-rpmd</strong> - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <span class="xref std std-ref">ringPolymerMDKeys</span> section</p></li>
+<li><p><strong>qmmm-md</strong> - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)</p></li>
 <li><p><strong>mm-opt</strong> - represents a geometry optimization calculation using molecular mechanics.</p></li>
 </ol>
 </div></blockquote>
 </section>
 <section id="timestep">
-<h3>Timestep<a class="headerlink" href="#timestep" title="Link to this heading"></a></h3>
+<span id="timestepkey"></span><h3>Timestep<a class="headerlink" href="#timestep" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>timestep* = {double} fs</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">timestep</span></code> keyword the time step in <code class="code docutils literal notranslate"><span class="pre">fs</span></code> of one molecular dynamics loop can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">timestep</span></code> keyword the time step in <code class="docutils literal notranslate"><span class="pre">fs</span></code> of one molecular dynamics loop is set.</p>
 </section>
 <section id="nstep">
-<h3>NStep<a class="headerlink" href="#nstep" title="Link to this heading"></a></h3>
+<span id="nstepkey"></span><h3>NStep<a class="headerlink" href="#nstep" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>nstep* = {uint+}</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">ǹstep</span></code> keyword sets the total amount of MD steps to be performed within the next simulation run.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">nstep</span></code> keyword sets the total number of MD steps to be performed within this simulation run.</p>
 </section>
 <section id="floating-point-type">
-<h3>FLOATING_POINT_TYPE<a class="headerlink" href="#floating-point-type" title="Link to this heading"></a></h3>
+<span id="floatingpointtypekey"></span><h3>Floating Point Type<a class="headerlink" href="#floating-point-type" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>floating_point_type = {string} -&gt; “double”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">floating_point_type</span></code> keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">floating_point_type</span></code> keyword the user can choose the precision of the floating point numbers used in the QM calculations if enabled by the external QM program/model.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -376,12 +375,12 @@
 </div></blockquote>
 </section>
 <section id="integrator">
-<h3>Integrator<a class="headerlink" href="#integrator" title="Link to this heading"></a></h3>
+<span id="integratorkey"></span><h3>Integrator<a class="headerlink" href="#integrator" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>integrator = {string} -&gt; “v-verlet”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">integrator</span></code> keyword the user can choose the integrator type which should be applied.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">integrator</span></code> keyword the user can choose the integrator type which should be applied.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -390,270 +389,279 @@
 </div></blockquote>
 </section>
 <section id="virial">
-<h3>Virial<a class="headerlink" href="#virial" title="Link to this heading"></a></h3>
+<span id="virialkey"></span><h3>Virial<a class="headerlink" href="#virial" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>virial = {string} -&gt; “molecular”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">virial</span></code> keyword the user can control if an intramolecular virial correction should be applied on the basis of molecular units definitions form the moldescriptor file.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">virial</span></code> keyword the user can control if an intramolecular virial correction should be applied based on the definition of molecular units in the <a class="reference internal" href="setupFiles.html#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>molecular</strong> (default) - to the resulting virial from the force contributions an intramolecular correction will be applied.</p></li>
+<li><p><strong>molecular</strong> (default) - an intramolecular correction will be applied to the resulting virial from the force contributions</p></li>
 <li><p><strong>atomic</strong> - no intramolecular correction to the resulting virial will be applied</p></li>
 </ol>
 </div></blockquote>
 </section>
 <section id="start-file">
-<h3>Start_File<a class="headerlink" href="#start-file" title="Link to this heading"></a></h3>
+<span id="startfilekey"></span><h3>Start File<a class="headerlink" href="#start-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>start_file* = {file}</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">start_file</span></code> keyword sets the name of the start file for an MD simulation of any kind.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">start_file</span></code> keyword sets the name of the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a> file for an MD simulation of any kind.</p>
 </section>
 <section id="rpmd-start-file">
-<h3>RPMD_Start_File<a class="headerlink" href="#rpmd-start-file" title="Link to this heading"></a></h3>
+<span id="rpmdstartfilekey"></span><h3>RPMD Start File<a class="headerlink" href="#rpmd-start-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rpmd_start_file = {file}</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_start_file</span></code> keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_start_file</span></code> keyword is used to continue a ring polymer MD simulation containing positions, velocities and forces of all atoms of each bead of the ring polymer.</p>
 </section>
 <section id="general-output-keys">
-<h3>General Output Keys<a class="headerlink" href="#general-output-keys" title="Link to this heading"></a></h3>
+<span id="generaloutputkeys"></span><h3>General Output Keys<a class="headerlink" href="#general-output-keys" title="Link to this heading"></a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The PQ application has a special naming convention for output files. For every job type a certain set of output files is written per default. If no output file names are given all prefixes of the output files will be named <code class="code docutils literal notranslate"><span class="pre">default.&lt;ext&gt;</span></code>. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (<em>i.e.</em> string before the first <code class="code docutils literal notranslate"><span class="pre">.</span></code> character) and set it with the respective extension for all unspecified output files.</p>
-<p>This feature enables easier post-processing of data and also easier deletion of all output files as PQ does not overwrite any existing output files and will throw an error.</p>
+<p>The <strong>PQ</strong> application has a special naming convention for output files. For every job type a certain set of <a class="reference internal" href="outputFiles.html#outputfiles"><span class="std std-ref">Output Files</span></a> is written per default. If no output file names are given all prefixes of the output files will be named <code class="docutils literal notranslate"><span class="pre">default.&lt;ext&gt;</span></code>. If at least one of the output file keys was given in the input file - the program will determine the most common prefix (<em>i.e.</em> string before the first <code class="docutils literal notranslate"><span class="pre">.</span></code> character) and set it for all unspecified output files.</p>
+<p>This feature enables easier post-processing of data and deletion of output files as <strong>PQ</strong> does not overwrite any existing output files.</p>
 </div>
 </section>
-<section id="output-freq">
-<h3>Output_Freq<a class="headerlink" href="#output-freq" title="Link to this heading"></a></h3>
+<section id="output-frequency">
+<span id="outputfreqkey"></span><h3>Output Frequency<a class="headerlink" href="#output-frequency" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>output_freq = {uint} -&gt; 1</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">output_freq</span></code> keyword sets the frequency (<em>i.e.</em> every n-th step) of how often the application should write into the output files. For a complete dry run without any output files it is also possible to set it to <code class="code docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">output_freq</span></code> keyword sets the frequency (<em>i.e.</em> every n-th step) of how often the application should write into the <a class="reference internal" href="outputFiles.html#outputfiles"><span class="std std-ref">Output Files</span></a>. For a complete dry run without any output files the output frequency can be set to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 <p class="centered">
 <strong><em>default value</em> = 1</strong></p></section>
 <section id="file-prefix">
-<h3>File_Prefix<a class="headerlink" href="#file-prefix" title="Link to this heading"></a></h3>
+<span id="fileprefixkey"></span><h3>File Prefix<a class="headerlink" href="#file-prefix" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>file_prefix = {string}</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">file_prefix</span></code> keyword allows the user to set a common prefix name for all generated output files. The resulting names of the output files should be self-explanatory according to their unique file extension.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">file_prefix</span></code> keyword allows the user to set a common prefix name for all generated <a class="reference internal" href="outputFiles.html#outputfiles"><span class="std std-ref">Output Files</span></a>.</p>
 </section>
-<section id="output-file">
-<h3>Output_File<a class="headerlink" href="#output-file" title="Link to this heading"></a></h3>
-<blockquote>
-<div><p>output_file = {file} -&gt; “default.out”</p>
-</div></blockquote>
-<p>The <code class="code docutils literal notranslate"><span class="pre">output_file</span></code> keyword sets the name for the log file, in which all important information about the performed calculation can be found.</p>
+<section id="log-file">
+<span id="logfilekey"></span><h3>Log File<a class="headerlink" href="#log-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>output_file = {file} -&gt; “default.log”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">output_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#logfile"><span class="std std-ref">Log File</span></a>, in which important information about the performed calculation can be found.</p>
 <p class="centered">
-<strong><em>default value</em> = “default.out”</strong></p></section>
+<strong><em>default value</em> = “default.log”</strong></p></section>
 </section>
 <section id="md-output-file-keys">
-<h2>MD Output File Keys<a class="headerlink" href="#md-output-file-keys" title="Link to this heading"></a></h2>
-<p>All of the following output files presented in the MD Output Files section are wriiten during calculations using MD related jobtypes.</p>
-<section id="info-file">
-<h3>Info_File<a class="headerlink" href="#info-file" title="Link to this heading"></a></h3>
+<span id="mdoutputfilekeys"></span><h2>MD Output File Keys<a class="headerlink" href="#md-output-file-keys" title="Link to this heading"></a></h2>
+<p>All of the following output files are written during calculations using MD related jobtypes.</p>
+<section id="box-file">
+<span id="boxfilekey"></span><h3>Box File<a class="headerlink" href="#box-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>info_file = {file} -&gt; “default.info”</p>
+<p>box_file = {file} -&gt; “default.box”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">info_file</span></code> keyword sets the name for the info file, in which the most important physical properties of the last written step can be found.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">box_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#boxfile"><span class="std std-ref">Box File</span></a>, which stores information about the simulation box throughout the simulation.</p>
 <p class="centered">
-<strong><em>default value</em> = “default.info”</strong></p></section>
-<section id="energy-file">
-<h3>Energy_File<a class="headerlink" href="#energy-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>energy_file = {file} -&gt; “default.en”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">energy_file</span></code> keyword sets the name for the energy file, in which the (almost) all important physical properties of the full simulation can be found.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.en”</strong></p></section>
-<section id="instant-energy-file">
-<h3>Instant_Energy_File<a class="headerlink" href="#instant-energy-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>instant_energy_file = {file} -&gt; “default.instant_en”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">instant_energy_file</span></code> keyword sets the name for the instant energy file, in which the energy of the system at each step can be found.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.instant_en”</strong></p></section>
-<section id="rst-file">
-<h3>Rst_File<a class="headerlink" href="#rst-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>rst_file = {file} -&gt; “default.rst”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rst_file</span></code> keyword sets the name for the restart file, which contains all necessary information to restart (<em>i.e.</em> continue) the calculation from its timestamp.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.rst”</strong></p></section>
-<section id="traj-file">
-<h3>Traj_File<a class="headerlink" href="#traj-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>traj_file = {file} -&gt; “default.xyz”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">traj_file</span></code> keyword sets the name for the trajectory file of the atomic positions.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.xyz”</strong></p></section>
-<section id="vel-file">
-<h3>Vel_File<a class="headerlink" href="#vel-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>vel_file = {file} -&gt; “default.vel”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">vel_file</span></code> keyword sets the name for the trajectory file of the atomic velocities.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.vel”</strong></p></section>
-<section id="force-file">
-<h3>Force_File<a class="headerlink" href="#force-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>force_file = {file} -&gt; “default.force”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">force_file</span></code> keyword sets the name for the trajectory file of the atomic forces.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.force”</strong></p></section>
+<strong><em>default value</em> = “default.box”</strong></p></section>
 <section id="charge-file">
-<h3>Charge_File<a class="headerlink" href="#charge-file" title="Link to this heading"></a></h3>
+<span id="chargefilekey"></span><h3>Charge File<a class="headerlink" href="#charge-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>charge_file = {file} -&gt; “default.chrg”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">charge_file</span></code> keyword sets the name for the trajectory file of the atomic partial charges.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">charge_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#chargefile"><span class="std std-ref">Charge File</span></a>, which stores the atomic partial charges throughout the MD simulation.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.chrg”</strong></p></section>
+<section id="energy-file">
+<span id="energyfilekey"></span><h3>Energy File<a class="headerlink" href="#energy-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>energy_file = {file} -&gt; “default.en”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">energy_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#energyfile"><span class="std std-ref">Energy File</span></a>, in which the most important physical properties of the full simulation can be found.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.en”</strong></p></section>
+<section id="force-file">
+<span id="forcefilekey"></span><h3>Force File<a class="headerlink" href="#force-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>force_file = {file} -&gt; “default.force”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">force_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#forcefile"><span class="std std-ref">Force File</span></a>, which stores the atomic forces throughout the MD simulation.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.force”</strong></p></section>
+<section id="info-file">
+<span id="infofilekey"></span><h3>Info File<a class="headerlink" href="#info-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>info_file = {file} -&gt; “default.info”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">info_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#infofile"><span class="std std-ref">Info File</span></a>, in which the most important physical properties of the last written step can be found.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.info”</strong></p></section>
+<section id="instant-energy-file">
+<span id="instantenergyfilekey"></span><h3>Instant Energy File<a class="headerlink" href="#instant-energy-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>instant_energy_file = {file} -&gt; “default.instant_en”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">instant_energy_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#instantenergyfile"><span class="std std-ref">Instant Energy File</span></a>, in which the most important physical properties of the full simulation can be found.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.instant_en”</strong></p></section>
 <section id="momentum-file">
-<h3>Momentum_File<a class="headerlink" href="#momentum-file" title="Link to this heading"></a></h3>
+<span id="momentumfilekey"></span><h3>Momentum File<a class="headerlink" href="#momentum-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <blockquote>
 <div><p>momentum_file = {file} -&gt; “default.mom”</p>
 </div></blockquote>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">momentum_file</span></code> keyword sets the name for output file containing the total linear momentum of the system, the individual box momenta in each direction as well as the corresponding angular momenta.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">momentum_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#momentumfile"><span class="std std-ref">Momentum File</span></a>, which stores information about the total linear and total angular momentum throughout the MD simulation.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.mom”</strong></p></section>
-<section id="virial-file">
-<h3>Virial_File<a class="headerlink" href="#virial-file" title="Link to this heading"></a></h3>
+<section id="restart-file">
+<span id="rstfilekey"></span><h3>Restart File<a class="headerlink" href="#restart-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>virial_file = {file} -&gt; “default.vir”</p>
+<p>rst_file = {file} -&gt; “default.rst”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">virial_file</span></code> keyword sets the name for the output file containing the virial tensor of the system.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rst_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a>, which contains all necessary information to restart (<em>i.e.</em> continue) the calculation from its current timestamp.</p>
 <p class="centered">
-<strong><em>default value</em> = “default.vir”</strong></p></section>
+<strong><em>default value</em> = “default.rst”</strong></p></section>
 <section id="stress-file">
-<h3>Stress_File<a class="headerlink" href="#stress-file" title="Link to this heading"></a></h3>
+<span id="stressfilekey"></span><h3>Stress File<a class="headerlink" href="#stress-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>stress_file = {file} -&gt; “default.stress”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">stress_file</span></code> keyword sets the name for the output file containing the stress tensor of the system.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">stress_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#stressfile"><span class="std std-ref">Stress File</span></a>, which stores information about the stress tensor throughout the MD simulation.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.stress”</strong></p></section>
-<section id="box-file">
-<h3>Box_File<a class="headerlink" href="#box-file" title="Link to this heading"></a></h3>
+<section id="timings-file">
+<span id="timingsfilekey"></span><h3>Timings File<a class="headerlink" href="#timings-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>box_file = {file} -&gt; “default.box”</p>
+<p>timings_file = {file} -&gt; “default.timings”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">box_file</span></code> keyword sets the name for the output file containing the lattice parameters a, b, c, <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">timings_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#timingfile"><span class="std std-ref">Timing File</span></a>, which tracks the time <strong>PQ</strong> takes for executing individual parts of the simulation.</p>
 <p class="centered">
-<strong><em>default value</em> = “default.box”</strong></p></section>
+<strong><em>default value</em> = “default.timings”</strong></p></section>
+<section id="trajectory-file">
+<span id="trajectoryfilekey"></span><h3>Trajectory File<a class="headerlink" href="#trajectory-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>traj_file = {file} -&gt; “default.xyz”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">traj_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#trajectoryfile"><span class="std std-ref">Trajectory File</span></a>, which stores the atomic positions throughout the MD simulation.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.xyz”</strong></p></section>
+<section id="velocity-file">
+<span id="velocityfilekey"></span><h3>Velocity File<a class="headerlink" href="#velocity-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>vel_file = {file} -&gt; “default.vel”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">vel_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#velocityfile"><span class="std std-ref">Velocity File</span></a>, which stores the atomic velocities throughout the MD simulation.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.vel”</strong></p></section>
+<section id="virial-file">
+<span id="virialfilekey"></span><h3>Virial File<a class="headerlink" href="#virial-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>virial_file = {file} -&gt; “default.vir”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">virial_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#virialfile"><span class="std std-ref">Virial File</span></a>, which stores information about the virial tensor throughout the MD simulation.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.vir”</strong></p></section>
 </section>
 <section id="rpmd-output-file-keys">
-<h2>RPMD Output File Keys<a class="headerlink" href="#rpmd-output-file-keys" title="Link to this heading"></a></h2>
-<p>All of the following output files presented in the RPMD Output Files section are wriiten during calculations using ring polymer MD related jobtypes. These files represents the trajectories of all individual beads.</p>
-<section id="rpmd-restart-file">
-<h3>RPMD_Restart_File<a class="headerlink" href="#rpmd-restart-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>rpmd_restart_file = {file} -&gt; “default.rpmd.rst”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_restart_file</span></code> keyword sets the name for the ring polymer restart file, which contains all necessary information to restart (<em>i.e.</em> continue) the calculation from its timestamp.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.rpmd.rst”</strong></p></section>
-<section id="rpmd-traj-file">
-<h3>RPMD_Traj_File<a class="headerlink" href="#rpmd-traj-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>rpmd_traj_file = {file} -&gt; “default.rpmd.xyz”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_traj_file</span></code> keyword sets the name for the file containing positions of all atoms of each bead of the ring polymer trajectory.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.rpmd.xyz”</strong></p></section>
-<section id="rpmd-vel-file">
-<h3>RPMD_Vel_File<a class="headerlink" href="#rpmd-vel-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>rpmd_vel_file = {file} -&gt; “default.rpmd.vel”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_vel_file</span></code> keyword sets the name for the file containing velocities of all atoms of each bead of the ring polymer trajectory.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.rpmd.vel”</strong></p></section>
-<section id="rpmd-force-file">
-<h3>RPMD_Force_File<a class="headerlink" href="#rpmd-force-file" title="Link to this heading"></a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Key</p>
-<p>rpmd_force_file = {file} -&gt; “default.rpmd.force”</p>
-</div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_force_file</span></code> keyword sets the name for the file containing forces of all atoms of each bead of the ring polymer trajectory.</p>
-<p class="centered">
-<strong><em>default value</em> = “default.rpmd.force”</strong></p></section>
+<span id="rpmdoutputfilekeys"></span><h2>RPMD Output File Keys<a class="headerlink" href="#rpmd-output-file-keys" title="Link to this heading"></a></h2>
+<p>All of the following output files are written during calculations using ring polymer MD jobtype. The files represent the trajectories of all individual beads.</p>
 <section id="rpmd-charge-file">
-<h3>RPMD_Charge_File<a class="headerlink" href="#rpmd-charge-file" title="Link to this heading"></a></h3>
+<span id="rpmdchargefilekey"></span><h3>RPMD Charge File<a class="headerlink" href="#rpmd-charge-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rpmd_charge_file = {file} -&gt; “default.rpmd.chrg”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_charge_file</span></code> keyword sets the name for the file containing partial charges of all atoms of each bead of the ring polymer trajectory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_charge_file</span></code> keyword sets the name for the file containing partial charges of all atoms of each bead of the ring polymer trajectory.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.rpmd.chrg”</strong></p></section>
 <section id="rpmd-energy-file">
-<h3>RPMD_Energy_File<a class="headerlink" href="#rpmd-energy-file" title="Link to this heading"></a></h3>
+<span id="rpmdenergyfilekey"></span><h3>RPMD Energy File<a class="headerlink" href="#rpmd-energy-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rpmd_energy_file = {file} -&gt; “default.rpmd.en”</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">rpmd_energy_file</span></code> keyword sets the name for the file containing relevant energy data for each ring polymer bead of the simulation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_energy_file</span></code> keyword sets the name for the file containing relevant energy data for each ring polymer bead of the simulation.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.rpmd.en”</strong></p></section>
+<section id="rpmd-force-file">
+<span id="rpmdforcefilekey"></span><h3>RPMD Force File<a class="headerlink" href="#rpmd-force-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rpmd_force_file = {file} -&gt; “default.rpmd.force”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_force_file</span></code> keyword sets the name for the file containing forces of all atoms of each bead of the ring polymer trajectory.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.rpmd.force”</strong></p></section>
+<section id="rpmd-restart-file">
+<span id="rpmdrestartfilekey"></span><h3>RPMD Restart File<a class="headerlink" href="#rpmd-restart-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rpmd_restart_file = {file} -&gt; “default.rpmd.rst”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_restart_file</span></code> keyword sets the name for the ring polymer restart file, which contains all necessary information to restart (<em>i.e.</em> continue) the calculation from its current timestamp.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.rpmd.rst”</strong></p></section>
+<section id="rpmd-trajectory-file">
+<span id="rpmdtrajectoryfilekey"></span><h3>RPMD Trajectory File<a class="headerlink" href="#rpmd-trajectory-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rpmd_traj_file = {file} -&gt; “default.rpmd.xyz”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_traj_file</span></code> keyword sets the name for the file containing positions of all atoms of each bead of the ring polymer trajectory.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.rpmd.xyz”</strong></p></section>
+<section id="rpmd-velocity-file">
+<span id="rpmdvelocityfilekey"></span><h3>RPMD Velocity File<a class="headerlink" href="#rpmd-velocity-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rpmd_vel_file = {file} -&gt; “default.rpmd.vel”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">rpmd_vel_file</span></code> keyword sets the name for the file containing velocities of all atoms of each bead of the ring polymer trajectory.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.rpmd.vel”</strong></p></section>
 </section>
-<section id="input-setup-file-keys">
-<h2>Input (Setup) File Keys<a class="headerlink" href="#input-setup-file-keys" title="Link to this heading"></a></h2>
-<p>In order to setup certain calculations additional input files have to be used. The names of these files have to be specified in the input file. For further information about these input files can be found in the <a class="reference internal" href="setupFiles.html#setupfiles"><span class="std std-ref">Setup Files</span></a> section.</p>
+<section id="setup-file-keys">
+<span id="setupfilekeys"></span><h2>Setup File Keys<a class="headerlink" href="#setup-file-keys" title="Link to this heading"></a></h2>
+<p>In order to set up certain calculations additional input files have to be used. The names of these setup files have to be specified in the
+input file. Further information about the individual files can be found in the <a class="reference internal" href="setupFiles.html#setupfiles"><span class="std std-ref">Setup Files</span></a> section.</p>
 <section id="moldesctiptor-file">
-<h3>Moldesctiptor_File<a class="headerlink" href="#moldesctiptor-file" title="Link to this heading"></a></h3>
+<span id="moldescriptorfilekey"></span><h3>Moldesctiptor File<a class="headerlink" href="#moldesctiptor-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>moldescriptor_file = {file} -&gt; “moldescriptor.dat”</p>
 </div>
-<p class="centered">
-<strong><em>default value</em> = “moldescriptor.dat”</strong></p></section>
+</section>
 <section id="guff-file">
-<h3>Guff_File<a class="headerlink" href="#guff-file" title="Link to this heading"></a></h3>
+<span id="gufffilekey"></span><h3>GUFF File<a class="headerlink" href="#guff-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>guff_file = {file} -&gt; “guff.dat”</p>
 </div>
-<p class="centered">
-<strong><em>default value</em> = “guff.dat”</strong></p></section>
+</section>
 <section id="topology-file">
-<h3>Topology_File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h3>
+<span id="topologyfilekey"></span><h3>Topology File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>topology_file = {file}</p>
 </div>
 </section>
 <section id="parameter-file">
-<h3>Parameter_File<a class="headerlink" href="#parameter-file" title="Link to this heading"></a></h3>
+<span id="parameterfilekey"></span><h3>Parameter File<a class="headerlink" href="#parameter-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>parameter_file = {file}</p>
@@ -667,7 +675,7 @@
 </div>
 </section>
 <section id="intra-nonbonded-file">
-<h3>Intra-NonBonded_File<a class="headerlink" href="#intra-nonbonded-file" title="Link to this heading"></a></h3>
+<span id="intranonbondedfilekey"></span><h3>Intra-NonBonded_File<a class="headerlink" href="#intra-nonbonded-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>intra-nonbonded_file = {file}</p>
@@ -675,35 +683,35 @@
 </section>
 </section>
 <section id="simulation-box-keys">
-<h2>Simulation Box Keys<a class="headerlink" href="#simulation-box-keys" title="Link to this heading"></a></h2>
+<span id="simulationboxkeys"></span><h2>Simulation Box Keys<a class="headerlink" href="#simulation-box-keys" title="Link to this heading"></a></h2>
 <section id="density">
-<h3>Density<a class="headerlink" href="#density" title="Link to this heading"></a></h3>
+<span id="densitykey"></span><h3>Density<a class="headerlink" href="#density" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>density = {double} kgL⁻¹</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">density</span></code> keyword the box dimension of the system can be inferred from the total mass of the simulation box.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">density</span></code> keyword the box dimension of the system can be inferred from the total mass of the simulation box.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This keyword implies that the simulation box has cubic shape. Furthermore, the <code class="code docutils literal notranslate"><span class="pre">density</span></code> keyword will be ignored if in the start file of a simulation any box information is given.</p>
+<p>This keyword implies that the simulation box has a cubic shape. Furthermore, the <code class="docutils literal notranslate"><span class="pre">density</span></code> keyword will be ignored if in the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a> contains any box information.</p>
 </div>
 </section>
-<section id="rcoulomb">
-<h3>RCoulomb<a class="headerlink" href="#rcoulomb" title="Link to this heading"></a></h3>
+<section id="radial-coulomb-cutoff">
+<span id="radialcoulombcutoffkey"></span><h3>Radial Coulomb Cutoff<a class="headerlink" href="#radial-coulomb-cutoff" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rcoulomb = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 12.5 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rcoulomb</span></code> keyword the radial cut-off in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of Coulomb interactions for MM-MD type simulations can be set. If pure QM-MD type simulations are applied this keyword will be ignored and the value will be set to 0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rcoulomb</span></code> keyword the radial cut-off in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of Coulomb interactions for MM-MD type simulations can be set. If pure QM-MD type simulations are applied this keyword will be ignored and the value will be set to 0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>.</p>
 <p class="centered">
 <strong><em>default value</em> = 12.5 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> (for MM-MD type simulations)</strong></p></section>
-<section id="init-velocities">
-<h3>Init_Velocities<a class="headerlink" href="#init-velocities" title="Link to this heading"></a></h3>
+<section id="initial-velocities">
+<span id="initialvelocitieskey"></span><h3>Initial Velocities<a class="headerlink" href="#initial-velocities" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>init_velocities = {bool} -&gt; false</p>
 </div>
-<p>To initialize the velocities of the system according to the target temperature with a Boltzmann distribution the user has to set the <code class="code docutils literal notranslate"><span class="pre">init_velocities</span></code> to true.</p>
+<p>To initialize the velocities of the system according to the target temperature with a Boltzmann distribution the user has to set the <code class="docutils literal notranslate"><span class="pre">init_velocities</span></code> to true.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -714,130 +722,145 @@
 </section>
 </section>
 <section id="temperature-coupling-keys">
-<h2>Temperature Coupling Keys<a class="headerlink" href="#temperature-coupling-keys" title="Link to this heading"></a></h2>
+<span id="temperaturecouplingkeys"></span><h2>Temperature Coupling Keys<a class="headerlink" href="#temperature-coupling-keys" title="Link to this heading"></a></h2>
 <section id="temperature">
-<h3>Temperature<a class="headerlink" href="#temperature" title="Link to this heading"></a></h3>
+<span id="temperaturekey"></span><h3>Temperature<a class="headerlink" href="#temperature" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>temp = {double} K</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword the target temperature in <code class="code docutils literal notranslate"><span class="pre">K</span></code> of the system can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">temp</span></code> keyword the target temperature in <code class="docutils literal notranslate"><span class="pre">K</span></code> of the system can be set.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This keyword is not restricted to the use of any temperature coupling method, as it is used <em>e.g.</em> also for the initialization of Boltzmann distributed velocities or the reset of the system temperature.</p>
 </div>
 </section>
-<section id="start-temperature">
-<h3>Start_Temperature<a class="headerlink" href="#start-temperature" title="Link to this heading"></a></h3>
+<section id="starting-temperature">
+<span id="startingtemperaturekey"></span><h3>Starting Temperature<a class="headerlink" href="#starting-temperature" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>start_temp = {double} K</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> keyword the initial temperature in <code class="code docutils literal notranslate"><span class="pre">K</span></code> of the system can be set. If a value is given the PQ application will perform a temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">start_temp</span></code> keyword the initial temperature in <code class="docutils literal notranslate"><span class="pre">K</span></code> of the system can be set. If a value is given the PQ application will perform a temperature ramping from the <code class="docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="docutils literal notranslate"><span class="pre">temp</span></code> value.</p>
 </section>
 <section id="end-temperature">
-<h3>End_Temperature<a class="headerlink" href="#end-temperature" title="Link to this heading"></a></h3>
+<span id="endtemperaturekey"></span><h3>End Temperature<a class="headerlink" href="#end-temperature" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>end_temp = {double} K</p>
 </div>
-<p>The <code class="code docutils literal notranslate"><span class="pre">end_temp</span></code> keyword is a synonym for the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword and can be used to set the target temperature of the system. It cannot be used in combination with the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> keyword.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">end_temp</span></code> keyword is a synonym for the <code class="docutils literal notranslate"><span class="pre">temp</span></code> keyword and can be used to set the target temperature of the system. It cannot be used in combination with the <code class="docutils literal notranslate"><span class="pre">temp</span></code> keyword.</p>
 </section>
 <section id="temperature-ramp-steps">
-<h3>Temperature_Ramp_Steps<a class="headerlink" href="#temperature-ramp-steps" title="Link to this heading"></a></h3>
+<span id="temperaturerampstepskey"></span><h3>Temperature Ramp Steps<a class="headerlink" href="#temperature-ramp-steps" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>temp_ramp_steps = {uint+}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">temp_ramp_steps</span></code> keyword the user can specify the number of steps for the temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">temp_ramp_steps</span></code> keyword the user can specify the number of steps for the temperature ramping from the <code class="docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed over the full simulation time.</p>
 <p class="centered">
 <strong><em>default value</em> = full simulation time</strong></p></section>
 <section id="temperature-ramp-frequency">
-<h3>Temperature_Ramp_Frequency<a class="headerlink" href="#temperature-ramp-frequency" title="Link to this heading"></a></h3>
+<span id="temperaturerampfrequencykey"></span><h3>Temperature Ramp Frequency<a class="headerlink" href="#temperature-ramp-frequency" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>temp_ramp_frequency = {uint+} -&gt; 1</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">temp_ramp_frequency</span></code> keyword the user can specify the frequency of the temperature ramping from the <code class="code docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="code docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">temp_ramp_frequency</span></code> keyword the user can specify the frequency of the temperature ramping from the <code class="docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.</p>
 <p class="centered">
 <strong><em>default value</em> = 1 step</strong></p></section>
 <section id="thermostat">
-<h3>Thermostat<a class="headerlink" href="#thermostat" title="Link to this heading"></a></h3>
+<span id="thermostatkey"></span><h3>Thermostat<a class="headerlink" href="#thermostat" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>thermostat = {string} -&gt; “none”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">thermostat</span></code> keyword the temperature coupling method can be chosen.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">thermostat</span></code> keyword the temperature coupling method can be chosen.</p>
 <p>Possible options are:</p>
 <blockquote>
-<div><ol class="arabic simple">
+<div><ol class="arabic">
 <li><p><strong>none</strong> (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.</p></li>
-<li><p><strong>berendsen</strong> - the Berendsen weak coupling thermostat</p></li>
-<li><p><strong>velocity_rescaling</strong> - the stochastic velocity rescaling thermostat</p></li>
-<li><p><strong>langevin</strong> - temperature coupling <em>via</em> stochastic Langevin dynamics</p></li>
-<li><p><strong>nh-chain</strong> - temperature coupling <em>via</em> Nose Hoover extended Lagrangian</p></li>
+<li><p><strong>berendsen</strong> - the <a class="reference external" href="https://doi.org/10.1063/1.448118">Berendsen</a> weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor <span class="math notranslate nohighlight">\(\zeta\)</span>, equation <a class="reference internal" href="#equation-berendsenthermostatequation">(1)</a>. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight" id="equation-berendsenthermostatequation">
+<span class="eqno">(1)<a class="headerlink" href="#equation-berendsenthermostatequation" title="Link to this equation"></a></span>\[\zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 \right)}\]</div>
+</div></blockquote>
+</li>
+<li><p><strong>velocity_rescaling</strong> - the stochastic velocity rescaling thermostat also known as <a class="reference external" href="https://doi.org/10.1063/1.2408420">Bussi-Donadio-Parrinello</a> thermostat. Based on the rescaling of velocities according to the scaling factor <span class="math notranslate nohighlight">\(\zeta\)</span>, equation <a class="reference internal" href="#equation-bussidonadioparrinellothermostatequation">(2)</a>. Enforces a canonical kinetic energy distribution.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight" id="equation-bussidonadioparrinellothermostatequation">
+<span class="eqno">(2)<a class="headerlink" href="#equation-bussidonadioparrinellothermostatequation" title="Link to this equation"></a></span>\[\zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}\]</div>
+</div></blockquote>
+</li>
+<li><p><strong>langevin</strong> - temperature coupling <em>via</em> stochastic Langevin dynamics. Based on modifying the force of each individual particle <span class="math notranslate nohighlight">\(F_{\text i}\)</span> <em>via</em> a friction force <span class="math notranslate nohighlight">\(\gamma \cdot p_{\text i}\)</span> and a random force <span class="math notranslate nohighlight">\(\xi\)</span>, equation <a class="reference internal" href="#equation-langevinthermostatequation">(3)</a>. The friction coefficient <span class="math notranslate nohighlight">\(\gamma\)</span> can be set with the <a class="reference internal" href="#frictionkey"><span class="std std-ref">Friction</span></a> keyword. Enforces a canonical kinetic energy distribution. However, the Langevin thermostat is unable to conserve the total momentum of the system, which may lead to critical erros in the resulting dynamical data.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight" id="equation-langevinthermostatequation">
+<span class="eqno">(3)<a class="headerlink" href="#equation-langevinthermostatequation" title="Link to this equation"></a></span>\[m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi\]</div>
+</div></blockquote>
+</li>
+<li><p><strong>nh-chain</strong> - temperature coupling <em>via</em> <a class="reference external" href="https://doi.org/10.1063/1.463940">Nose Hoover extended Lagrangian</a>. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the <a class="reference internal" href="#nhchainlenghtkey"><span class="std std-ref">NH-Chain Length</span></a> and the <a class="reference internal" href="#couplingfrequencykey"><span class="std std-ref">Coupling Frequency</span></a> keywords, respectively. Enforces a canonical kinetic energy distribution.</p></li>
 </ol>
 </div></blockquote>
 </section>
-<section id="t-relaxation">
-<h3>T_Relaxation<a class="headerlink" href="#t-relaxation" title="Link to this heading"></a></h3>
+<section id="temperature-relaxation-time">
+<span id="temperaturerelaxationtimekey"></span><h3>Temperature Relaxation Time<a class="headerlink" href="#temperature-relaxation-time" title="Link to this heading"></a></h3>
 <p>This keyword is used in combination with the Berendsen and velocity rescaling thermostat.</p>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>t_relaxation = {double} ps -&gt; 0.1 ps</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">t_relaxation</span></code> keyword the relaxation time in <code class="code docutils literal notranslate"><span class="pre">ps</span></code> (<em>i.e.</em> <span class="math notranslate nohighlight">\(\tau\)</span>) of the Berendsen or stochastic velocity rescaling thermostat is set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">t_relaxation</span></code> keyword the relaxation time in <code class="docutils literal notranslate"><span class="pre">ps</span></code> (<em>i.e.</em> <span class="math notranslate nohighlight">\(\tau\)</span>) of the Berendsen or stochastic velocity rescaling thermostat is set, see equations <a class="reference internal" href="#equation-berendsenthermostatequation">(1)</a> and <a class="reference internal" href="#equation-bussidonadioparrinellothermostatequation">(2)</a>.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.1 ps</strong></p></section>
 <section id="friction">
-<h3>Friction<a class="headerlink" href="#friction" title="Link to this heading"></a></h3>
+<span id="frictionkey"></span><h3>Friction<a class="headerlink" href="#friction" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>friction = {double} ps⁻¹ -&gt; 0.1 ps⁻¹</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">friction</span></code> keyword the friction in <code class="code docutils literal notranslate"><span class="pre">ps⁻¹</span></code> applied in combination with the Langevin thermostat can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">friction</span></code> keyword the friction coefficient <span class="math notranslate nohighlight">\(\gamma\)</span> in <code class="docutils literal notranslate"><span class="pre">ps⁻¹</span></code> of the Langevin thermostat, equation <a class="reference internal" href="#equation-langevinthermostatequation">(3)</a>, can be set.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.1 ps⁻¹</strong></p></section>
 <section id="nh-chain-length">
-<h3>NH-Chain_Length<a class="headerlink" href="#nh-chain-length" title="Link to this heading"></a></h3>
+<span id="nhchainlenghtkey"></span><h3>NH-Chain Length<a class="headerlink" href="#nh-chain-length" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>nh-chain_length = {uint+} -&gt; 3</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">nh-chain_length</span></code> keyword the length of the chain for temperature control <em>via</em> an extended Nose-Hoover Lagrangian can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">nh-chain_length</span></code> keyword the length of the chain for temperature control <em>via</em> an extended Nose-Hoover Lagrangian can be set.</p>
 <p class="centered">
 <strong><em>default value</em> = 3</strong></p></section>
 <section id="coupling-frequency">
-<h3>Coupling_Frequency<a class="headerlink" href="#coupling-frequency" title="Link to this heading"></a></h3>
+<span id="couplingfrequencykey"></span><h3>Coupling Frequency<a class="headerlink" href="#coupling-frequency" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>coupling_frequency = {double} cm⁻¹ -&gt; 1000 cm⁻¹</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">coupling_frequency</span></code> keyword the coupling frequency of the Nose-Hoover chain in <code class="code docutils literal notranslate"><span class="pre">cm⁻¹</span></code> can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">coupling_frequency</span></code> keyword the coupling frequency of the Nose-Hoover chain in <code class="docutils literal notranslate"><span class="pre">cm⁻¹</span></code> can be set.</p>
 <p class="centered">
 <strong><em>default value</em> = 1000 cm⁻¹</strong></p></section>
 </section>
 <section id="pressure-coupling-keys">
-<h2>Pressure Coupling Keys<a class="headerlink" href="#pressure-coupling-keys" title="Link to this heading"></a></h2>
+<span id="pressurecouplingkeys"></span><h2>Pressure Coupling Keys<a class="headerlink" href="#pressure-coupling-keys" title="Link to this heading"></a></h2>
 <section id="pressure">
-<h3>Pressure<a class="headerlink" href="#pressure" title="Link to this heading"></a></h3>
+<span id="pressurekey"></span><h3>Pressure<a class="headerlink" href="#pressure" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>pressure = {double} bar</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">pressure</span></code> keyword the target pressure in <code class="code docutils literal notranslate"><span class="pre">bar</span></code> of the system can be set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">pressure</span></code> keyword the target pressure in <code class="docutils literal notranslate"><span class="pre">bar</span></code> of the system can be set.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This keyword is only used if a manostat for controlling the pressure is explicitly defined.</p>
 </div>
 </section>
 <section id="manostat">
-<h3>Manostat<a class="headerlink" href="#manostat" title="Link to this heading"></a></h3>
+<span id="manostatkey"></span><h3>Manostat<a class="headerlink" href="#manostat" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>manostat = {string} -&gt; “none”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">manostat</span></code> keyword the type of the pressure coupling can be chosen.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">manostat</span></code> keyword the type of pressure coupling can be chosen.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -847,40 +870,40 @@
 </ol>
 </div></blockquote>
 </section>
-<section id="p-relaxation">
-<h3>P_Relaxation<a class="headerlink" href="#p-relaxation" title="Link to this heading"></a></h3>
+<section id="pressure-relaxation">
+<span id="pressurerelaxationkey"></span><h3>Pressure Relaxation<a class="headerlink" href="#pressure-relaxation" title="Link to this heading"></a></h3>
 <p>This keyword is used in combination with the Berendsen and stochastic cell rescaling manostat.</p>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>p_relaxation = {double} ps -&gt; 0.1 ps</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">p_relaxation</span></code> keyword the relaxation time in <code class="code docutils literal notranslate"><span class="pre">ps</span></code> (<em>i.e.</em> <span class="math notranslate nohighlight">\(\tau\)</span>) of the Berendsen or stochastic cell rescaling manostat is set.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">p_relaxation</span></code> keyword the relaxation time in <code class="docutils literal notranslate"><span class="pre">ps</span></code> (<em>i.e.</em> <span class="math notranslate nohighlight">\(\tau\)</span>) of the Berendsen or stochastic cell rescaling manostat is set.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.1 ps</strong></p></section>
 <section id="compressibility">
-<h3>Compressibility<a class="headerlink" href="#compressibility" title="Link to this heading"></a></h3>
+<span id="compressibilitykey"></span><h3>Compressibility<a class="headerlink" href="#compressibility" title="Link to this heading"></a></h3>
 <p>This keyword is used in combination with the Berendsen and stochastic cell rescaling manostat.</p>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>compressibility = {double} bar⁻¹ -&gt; 4.591e-5 bar⁻¹</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">compressibility</span></code> keyword the user can specify the compressibility of the target system in <code class="code docutils literal notranslate"><span class="pre">bar⁻¹</span></code> for the Berendsen and stochastic cell rescaling manostat.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">compressibility</span></code> keyword the user can specify the compressibility of the target system in <code class="docutils literal notranslate"><span class="pre">bar⁻¹</span></code> for the Berendsen and stochastic cell rescaling manostat.</p>
 <p class="centered">
 <strong><em>default value</em> = 4.591e-5 bar⁻¹ (compressibility of water)</strong></p></section>
 <section id="isotropy">
-<h3>Isotropy<a class="headerlink" href="#isotropy" title="Link to this heading"></a></h3>
+<span id="isotropykey"></span><h3>Isotropy<a class="headerlink" href="#isotropy" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>isotropy = {string} -&gt; “isotropic”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">isotropy</span></code> keyword the isotropy of the pressure coupling for all manostat types is controlled.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">isotropy</span></code> keyword the isotropy of the pressure coupling for all manostat types is controlled.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><strong>isotropic</strong> (default) - all axes are scaled with the same scaling factor</p></li>
-<li><p><strong>xy</strong> - semi-isotropic settings, with axes <code class="code docutils literal notranslate"><span class="pre">x</span></code> and <code class="code docutils literal notranslate"><span class="pre">y</span></code> coupled isotropic</p></li>
-<li><p><strong>xz</strong> - semi-isotropic settings, with axes <code class="code docutils literal notranslate"><span class="pre">x</span></code> and <code class="code docutils literal notranslate"><span class="pre">z</span></code> coupled isotropic</p></li>
-<li><p><strong>yz</strong> - semi-isotropic settings, with axes <code class="code docutils literal notranslate"><span class="pre">y</span></code> and <code class="code docutils literal notranslate"><span class="pre">z</span></code> coupled isotropic</p></li>
+<li><p><strong>xy</strong> - semi-isotropic settings, with axes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> coupled isotropic</p></li>
+<li><p><strong>xz</strong> - semi-isotropic settings, with axes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> coupled isotropic</p></li>
+<li><p><strong>yz</strong> - semi-isotropic settings, with axes <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> coupled isotropic</p></li>
 <li><p><strong>anisotropic</strong> - all axes are coupled in an anisotropic way</p></li>
 <li><p><strong>full_anisotropic</strong> - all axes are coupled in an anisotropic way and the box angles are also scaled</p></li>
 </ol>
@@ -888,14 +911,14 @@
 </section>
 </section>
 <section id="reset-kinetics-keys">
-<h2>Reset Kinetics Keys<a class="headerlink" href="#reset-kinetics-keys" title="Link to this heading"></a></h2>
+<span id="resetkineticskeys"></span><h2>Reset Kinetics Keys<a class="headerlink" href="#reset-kinetics-keys" title="Link to this heading"></a></h2>
 <section id="nscale">
-<h3>NScale<a class="headerlink" href="#nscale" title="Link to this heading"></a></h3>
+<span id="nscalekey"></span><h3>NScale<a class="headerlink" href="#nscale" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>nscale = {uint} -&gt; 0</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">nscale</span></code> keyword the user can specify the first <code class="code docutils literal notranslate"><span class="pre">n</span></code> steps in which the temperature is reset <em>via</em> a hard scaling approach to the target temperature.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">nscale</span></code> keyword the user can specify the first <code class="docutils literal notranslate"><span class="pre">n</span></code> steps in which the temperature is reset <em>via</em> a hard scaling approach to the target temperature.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.</p>
@@ -903,12 +926,12 @@
 <p class="centered">
 <strong><em>default value</em> = 0 (<em>i.e.</em> never)</strong></p></section>
 <section id="fscale">
-<h3>FScale<a class="headerlink" href="#fscale" title="Link to this heading"></a></h3>
+<span id="fscalekey"></span><h3>FScale<a class="headerlink" href="#fscale" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>fscale = {uint} -&gt; nstep + 1</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">fscale</span></code> keyword the user can specify the frequency <code class="code docutils literal notranslate"><span class="pre">f</span></code> at which the temperature is reset <em>via</em> a hard scaling approach to the target temperature.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">fscale</span></code> keyword the user can specify the frequency <code class="docutils literal notranslate"><span class="pre">f</span></code> at which the temperature is reset <em>via</em> a hard scaling approach to the target temperature.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Resetting the temperature to the target temperature does imply also a subsequent reset of the total box momentum. Furthermore, resetting to the target temperature does not necessarily require a constant temperature ensemble setting.</p>
@@ -917,125 +940,129 @@
 <strong><em>default value</em> = nstep + 1 (<em>i.e.</em> never)</strong></p><p class="centered">
 <strong><em>special case</em> = 0 -&gt; nstep + 1</strong></p></section>
 <section id="nreset">
-<h3>NReset<a class="headerlink" href="#nreset" title="Link to this heading"></a></h3>
+<span id="nresetkey"></span><h3>NReset<a class="headerlink" href="#nreset" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>nreset = {uint} -&gt; 0</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">nreset</span></code> keyword the user can specify the first <code class="code docutils literal notranslate"><span class="pre">n</span></code> steps in which the total box momentum is reset.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">nreset</span></code> keyword the user can specify the first <code class="docutils literal notranslate"><span class="pre">n</span></code> steps in which the total box momentum is reset.</p>
 <p class="centered">
 <strong><em>default value</em> = 0 (<em>i.e.</em> never)</strong></p></section>
 <section id="freset">
-<h3>FReset<a class="headerlink" href="#freset" title="Link to this heading"></a></h3>
+<span id="fresetkey"></span><h3>FReset<a class="headerlink" href="#freset" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>freset = {uint} -&gt; nstep + 1</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">freset</span></code> keyword the user can specify the frequency <code class="code docutils literal notranslate"><span class="pre">f</span></code> at which the total box momentum is reset.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">freset</span></code> keyword the user can specify the frequency <code class="docutils literal notranslate"><span class="pre">f</span></code> at which the total box momentum is reset.</p>
 <p class="centered">
 <strong><em>default value</em> = nstep + 1 (<em>i.e.</em> never)</strong></p><p class="centered">
 <strong><em>special case</em> = 0 -&gt; nstep + 1</strong></p></section>
 <section id="nreset-angular">
-<h3>NReset_Angular<a class="headerlink" href="#nreset-angular" title="Link to this heading"></a></h3>
+<span id="nresetangularkey"></span><h3>NReset Angular<a class="headerlink" href="#nreset-angular" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>nreset_angular = {uint} -&gt; 0</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">nreset_angular</span></code> keyword the user can specify the first <code class="code docutils literal notranslate"><span class="pre">n</span></code> steps in which the total angular box momentum is reset.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">nreset_angular</span></code> keyword the user can specify the first <code class="docutils literal notranslate"><span class="pre">n</span></code> steps in which the total angular box momentum is reset.</p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
-<p>This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.</p>
+<p>This setting should be used very carefully, since in periodic systems a reset of the angular momentum can result in severe unphysical behavior.</p>
 </div>
 <p class="centered">
 <strong><em>default value</em> = 0 (<em>i.e.</em> never)</strong></p></section>
 <section id="freset-angular">
-<h3>FReset_Angular<a class="headerlink" href="#freset-angular" title="Link to this heading"></a></h3>
+<span id="freseangularkey"></span><h3>FReset Angular<a class="headerlink" href="#freset-angular" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>freset_angular = {uint} -&gt; nstep + 1</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">freset_angular</span></code> keyword the user can specify the frequency <code class="code docutils literal notranslate"><span class="pre">f</span></code> at which the total angular box momentum is reset.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">freset_angular</span></code> keyword the user can specify the frequency <code class="docutils literal notranslate"><span class="pre">f</span></code> at which the total angular box momentum is reset.</p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
-<p>This setting should be used very carefully, since in periodic system a reset of the angular momentum can result in some very unphysical behavior.</p>
+<p>This setting should be used very carefully, since in periodic systems a reset of the angular momentum can result in severe unphysical behavior.</p>
 </div>
 <p class="centered">
 <strong><em>default value</em> = nstep + 1 (<em>i.e.</em> never)</strong></p><p class="centered">
 <strong><em>special case</em> = 0 -&gt; nstep + 1</strong></p></section>
 </section>
 <section id="constraints-keys">
-<h2>Constraints Keys<a class="headerlink" href="#constraints-keys" title="Link to this heading"></a></h2>
+<span id="constraintskeys"></span><h2>Constraints Keys<a class="headerlink" href="#constraints-keys" title="Link to this heading"></a></h2>
 <section id="shake">
-<h3>Shake<a class="headerlink" href="#shake" title="Link to this heading"></a></h3>
+<span id="shakekey"></span><h3>Shake<a class="headerlink" href="#shake" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>shake = {string} -&gt; “off”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">shake</span></code> keyword it is possible to activate the SHAKE/RATTLE algorithm for bond constraints.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">shake</span></code> keyword the SHAKE/RATTLE algorithm for bond constraints can be activated.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><strong>off</strong> (default) - no shake will be applied</p></li>
-<li><p><strong>on</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> will be applied.</p></li>
-<li><p><strong>shake</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> will be applied.</p></li>
-<li><p><strong>mshake</strong> - M-SHAKE for bond constraints defined in a special <a class="reference internal" href="setupFiles.html#mshakefile"><span class="std std-ref">The M-SHAKE File</span></a> will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a> and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)</p></li>
+<li><p><strong>on</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">Topology File</span></a> will be applied.</p></li>
+<li><p><strong>shake</strong> - SHAKE for bond constraints defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">Topology File</span></a> will be applied.</p></li>
+<li><p><strong>mshake</strong> - M-SHAKE for bond constraints defined in a special <a class="reference internal" href="setupFiles.html#mshakefile"><span class="std std-ref">M-SHAKE File</span></a> will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">Topology File</span></a> and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)</p></li>
 </ol>
 </div></blockquote>
 </section>
 <section id="shake-tolerance">
-<h3>Shake-Tolerance<a class="headerlink" href="#shake-tolerance" title="Link to this heading"></a></h3>
+<span id="shaketolerancekey"></span><h3>Shake Tolerance<a class="headerlink" href="#shake-tolerance" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>shake-tolerance = {double} -&gt; 1e-8</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">shake-tolerance</span></code> keyword the user can specify the tolerance, with which the bond-length of the shaked bonds should converge.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">shake-tolerance</span></code> keyword the user can specify the tolerance, with which the bond length of the shaked bonds should converge.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-8</strong></p></section>
-<section id="shake-iter">
-<h3>Shake-Iter<a class="headerlink" href="#shake-iter" title="Link to this heading"></a></h3>
+<section id="shake-iteration">
+<span id="shakeiterationkey"></span><h3>Shake Iteration<a class="headerlink" href="#shake-iteration" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>shake-iter = {uint+} -&gt; 20</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">shake-iter</span></code> keyword the user can specify the maximum number of iteration until the convergence of the bond-lengths should be reached within the shake algorithm.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">shake-iter</span></code> keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm.</p>
 <p class="centered">
 <strong><em>default value</em> = 20</strong></p></section>
 <section id="rattle-tolerance">
-<h3>Rattle-Tolerance<a class="headerlink" href="#rattle-tolerance" title="Link to this heading"></a></h3>
+<span id="rattletolerancekey"></span><h3>Rattle Tolerance<a class="headerlink" href="#rattle-tolerance" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rattle-tolerance = {double} s⁻¹kg⁻¹ -&gt; 1e4 s⁻¹kg⁻¹</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rattle-tolerance</span></code> keyword the user can specify the tolerance in <code class="code docutils literal notranslate"><span class="pre">s⁻¹kg⁻¹</span></code>, with which the velocities of the shaked bonds should converge.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rattle-tolerance</span></code> keyword the user can specify the tolerance in <code class="docutils literal notranslate"><span class="pre">s⁻¹kg⁻¹</span></code>, with which the velocities of the shaked bonds should converge.</p>
 <p class="centered">
 <strong><em>default value</em> = 20 s⁻¹kg⁻¹</strong></p></section>
-<section id="rattle-iter">
-<h3>Rattle-Iter<a class="headerlink" href="#rattle-iter" title="Link to this heading"></a></h3>
+<section id="rattle-iteration">
+<span id="rattleiterationkey"></span><h3>Rattle Iteration<a class="headerlink" href="#rattle-iteration" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rattle-iter = {uint+} -&gt; 20</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rattle-iter</span></code> keyword the user can specify the maximum number of iteration until the convergence of the velocities of the shaked bond-lengths should be reached within the rattle algorithm.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rattle-iter</span></code> keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm.</p>
 <p class="centered">
 <strong><em>default value</em> = 20</strong></p></section>
 <section id="distance-constraints">
-<h3>Distance-Constraints<a class="headerlink" href="#distance-constraints" title="Link to this heading"></a></h3>
+<span id="distanceconstraintskey"></span><h3>Distance Constraints<a class="headerlink" href="#distance-constraints" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>distance-constraints = {string} -&gt; “off”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">distance-constraints</span></code> keyword it is possible to activate the distance constraints for the simulation. The distance constraints are defined in the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">The Topology File</span></a>.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">distance-constraints</span></code> keyword it is possible to activate distance constraints for the simulation. The distance constraints are defined <em>via</em> the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">Topology File</span></a>.</p>
 </section>
 </section>
 <section id="mm-keys">
-<h2>MM Keys<a class="headerlink" href="#mm-keys" title="Link to this heading"></a></h2>
+<span id="mmkeys"></span><h2>MM Keys<a class="headerlink" href="#mm-keys" title="Link to this heading"></a></h2>
 <section id="noncoulomb">
-<h3>NonCoulomb<a class="headerlink" href="#noncoulomb" title="Link to this heading"></a></h3>
+<span id="noncoulombkey"></span><h3>NonCoulomb<a class="headerlink" href="#noncoulomb" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>noncoulomb = {string} -&gt; “guff”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">noncoulomb</span></code> keyword the user can specify which kind of [GUFF formalism](#guffdatFile) should be used for parsing the guff.dat input file. &lt;span style=”color:red”&gt;&lt;b&gt;Note&lt;/b&gt;&lt;/span&gt;: This keyword is only considered if an MM-MD type simulation is requested and the force field is not turned on.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">noncoulomb</span></code> keyword the user can specify which kind of GUFF formalism should be used for parsing the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF File</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This keyword is only considered if an MM-MD type simulation is requested and the <a class="reference internal" href="#forcefieldkey"><span class="std std-ref">Force Field</span></a> is turned off.</p>
+</div>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1046,13 +1073,13 @@
 </ol>
 </div></blockquote>
 </section>
-<section id="forcefield">
-<h3>ForceField<a class="headerlink" href="#forcefield" title="Link to this heading"></a></h3>
+<section id="force-field">
+<span id="forcefieldkey"></span><h3>Force Field<a class="headerlink" href="#force-field" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>forcefield = {string} -&gt; “off”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">forcefield</span></code> keyword the user can switch from the GUFF formalism to force field type simulation (For details see Reference Manual).</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">forcefield</span></code> keyword the user can switch from the GUFF formalism to a force field type simulation (For details see Reference Manual).</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1064,14 +1091,14 @@
 </section>
 </section>
 <section id="long-range-correction">
-<h2>Long Range Correction<a class="headerlink" href="#long-range-correction" title="Link to this heading"></a></h2>
+<span id="longrangecorrectionkeys"></span><h2>Long Range Correction<a class="headerlink" href="#long-range-correction" title="Link to this heading"></a></h2>
 <section id="long-range">
-<h3>Long_Range<a class="headerlink" href="#long-range" title="Link to this heading"></a></h3>
+<span id="longrangekey"></span><h3>Long Range<a class="headerlink" href="#long-range" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>long_range = {string} -&gt; “none”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">long_range</span></code> correction keyword the user can specify the type of &lt;b&gt;Coulombic&lt;B&gt; long range correction, which should be applied during the Simulation.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">long_range</span></code> correction keyword the user can specify the type of Coulombic long range correction, which should be applied during the simulation.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1080,8 +1107,8 @@
 </ol>
 </div></blockquote>
 </section>
-<section id="wolf-param">
-<h3>Wolf_Param<a class="headerlink" href="#wolf-param" title="Link to this heading"></a></h3>
+<section id="wolf-parameter">
+<span id="wolfparameterkey"></span><h3>Wolf Parameter<a class="headerlink" href="#wolf-parameter" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>wolf_param = {double} -&gt; 0.25</p>
@@ -1091,13 +1118,13 @@
 </section>
 <section id="qm-keys">
 <span id="qmkeys"></span><h2>QM Keys<a class="headerlink" href="#qm-keys" title="Link to this heading"></a></h2>
-<section id="qm-prog">
-<h3>QM_PROG<a class="headerlink" href="#qm-prog" title="Link to this heading"></a></h3>
+<section id="qm-program">
+<span id="qmprogamkey"></span><h3>QM Program<a class="headerlink" href="#qm-program" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_prog = {string}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_prog</span></code> keyword the external QM engine for any kind of QM MD simulation is chosen.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_prog</span></code> keyword the external QM engine for any kind of QM MD simulation is chosen.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This keyword is required for any kind of QM MD simulation!</p>
@@ -1105,76 +1132,76 @@
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>dftbplus</strong></p></li>
-<li><p><strong>pyscf</strong></p></li>
-<li><p><strong>turbomole</strong></p></li>
-<li><p><strong>mace</strong> - same as <strong>mace_mp</strong></p></li>
-<li><p><strong>mace_off</strong></p></li>
+<li><p><strong>dftbplus</strong> - <a class="reference external" href="https://dftbplus.org/index.html">DFTB+</a></p></li>
+<li><p><strong>pyscf</strong> - <a class="reference external" href="https://pyscf.org/">PySCF</a></p></li>
+<li><p><strong>turbomole</strong> - <a class="reference external" href="https://www.turbomole.org/">Turbomole</a></p></li>
+<li><p><strong>mace</strong>  - <a class="reference external" href="https://arxiv.org/abs/2401.00096">MACE-MP</a> same as using <strong>mace_mp</strong></p></li>
+<li><p><strong>mace_off</strong> - <a class="reference external" href="https://arxiv.org/abs/2312.15211">MACE-OFF23</a></p></li>
 </ol>
 </div></blockquote>
 </section>
 <section id="qm-script">
-<h3>QM_SCRIPT<a class="headerlink" href="#qm-script" title="Link to this heading"></a></h3>
+<span id="qmscriptkey"></span><h3>QM Script<a class="headerlink" href="#qm-script" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_script = {file}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under <a class="reference external" href="https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts">https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_script</span></code> keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under <a class="reference external" href="https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts">https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
 </section>
 <section id="qm-script-full-path">
-<h3>QM_SCRIPT_FULL_PATH<a class="headerlink" href="#qm-script-full-path" title="Link to this heading"></a></h3>
+<span id="qmscriptfullpathkey"></span><h3>QM Script Full Path<a class="headerlink" href="#qm-script-full-path" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_script_full_path = {pathFile}</p>
 </div>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>This keyword can not be used in conjunction with the <code class="code docutils literal notranslate"><span class="pre">qm_script</span></code> keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the <a class="reference internal" href="../installation/installation.html#userg-installation"><span class="std std-ref">Installation</span></a> section.</p>
+<p>This keyword can not be used in conjunction with the <code class="docutils literal notranslate"><span class="pre">qm_script</span></code> keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the <a class="reference internal" href="../installation/installation.html#userg-installation"><span class="std std-ref">Installation</span></a> section.</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_script_full_path</span></code> keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under <a class="reference external" href="https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts">https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_script_full_path</span></code> keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under <a class="reference external" href="https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts">https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts</a>. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.</p>
 </section>
 <section id="qm-loop-time-limit">
-<h3>QM_LOOP_TIME_LIMIT<a class="headerlink" href="#qm-loop-time-limit" title="Link to this heading"></a></h3>
+<span id="qmlooptimelimitkey"></span><h3>QM Loop Time Limit<a class="headerlink" href="#qm-loop-time-limit" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_loop_time_limit = {double} s -&gt; -1 s</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="code docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.</p>
 </section>
 <section id="dispersion-correction">
-<h3>DISPERSION_CORRECTION<a class="headerlink" href="#dispersion-correction" title="Link to this heading"></a></h3>
+<span id="disperstoncorrectionkey"></span><h3>Dispersion Correction<a class="headerlink" href="#dispersion-correction" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>dispersion = {bool} -&gt; false</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">dispersion</span></code> keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">dispersion</span></code> keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.</p>
 </section>
 <section id="mace-model-size">
-<span id="ringpolymermdkeys"></span><h3>MACE_MODEL_SIZE<a class="headerlink" href="#mace-model-size" title="Link to this heading"></a></h3>
+<span id="ringpolymermdkeys"></span><h3>MACE Model Size<a class="headerlink" href="#mace-model-size" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>mace_model_size = {string} -&gt; “medium”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">mace_model_size</span></code> keyword the user can specify the size of the MACE model for the QM calculations.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">mace_model_size</span></code> keyword the user can specify the size of the <a class="reference external" href="https://arxiv.org/abs/2206.07697">MACE</a> model for the QM calculations.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>small</strong> (default) - small MACE model</p></li>
-<li><p><strong>medium</strong> - medium MACE model</p></li>
+<li><p><strong>small</strong> - small MACE model</p></li>
+<li><p><strong>medium</strong> (default) - medium MACE model</p></li>
 <li><p><strong>large</strong> - large MACE model</p></li>
 </ol>
 </div></blockquote>
 </section>
 </section>
 <section id="ring-polymer-md-keys">
-<h2>Ring Polymer MD Keys<a class="headerlink" href="#ring-polymer-md-keys" title="Link to this heading"></a></h2>
+<span id="id3"></span><h2>Ring Polymer MD Keys<a class="headerlink" href="#ring-polymer-md-keys" title="Link to this heading"></a></h2>
 <section id="rpmd-n-replica">
-<h3>RPMD_n_replica<a class="headerlink" href="#rpmd-n-replica" title="Link to this heading"></a></h3>
+<span id="rpmdnreplicakey"></span><h3>RPMD n replica<a class="headerlink" href="#rpmd-n-replica" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rpmd_n_replica = {uint+}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rpmd_n_replica</span></code> keyword the number of beads for a ring polymer MD simulation is controlled.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rpmd_n_replica</span></code> keyword the number of beads for a ring polymer MD simulation is controlled.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This keyword is required for any kind of ring polymer MD simulation!</p>
@@ -1182,73 +1209,80 @@
 </section>
 </section>
 <section id="qm-mm-keys">
-<h2>QM/MM Keys<a class="headerlink" href="#qm-mm-keys" title="Link to this heading"></a></h2>
+<span id="qmmmkeys"></span><h2>QM/MM Keys<a class="headerlink" href="#qm-mm-keys" title="Link to this heading"></a></h2>
 <section id="qm-center">
-<h3>QM_Center<a class="headerlink" href="#qm-center" title="Link to this heading"></a></h3>
+<span id="qmcenterkey"></span><h3>QM Center<a class="headerlink" href="#qm-center" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_center = {selection} -&gt; 0</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
 </section>
 <section id="qm-only-list">
-<h3>QM_Only_List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
+<span id="qmonlylistkey"></span><h3>QM Only List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_only_list = {selection}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atoms are selected.</p>
 </section>
 <section id="mm-only-list">
-<h3>MM_Only_List<a class="headerlink" href="#mm-only-list" title="Link to this heading"></a></h3>
+<span id="mmonlylistkey"></span><h3>MM Only List<a class="headerlink" href="#mm-only-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>mm_only_list = {selection}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">mm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atom is selected.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">mm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atoms are selected.</p>
 </section>
 <section id="qm-charges">
-<h3>QM_Charges<a class="headerlink" href="#qm-charges" title="Link to this heading"></a></h3>
+<span id="qmchargeskey"></span><h3>QM Charges<a class="headerlink" href="#qm-charges" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_charges = {string} -&gt; “off”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword the user can specify the charge model for the QM atoms. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">off</span></code> the charges of the QM atoms are taken from the MM model applied. If the <code class="code docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword is set to <code class="code docutils literal notranslate"><span class="pre">on</span></code> the charges of the QM atoms are taken from the QM calculation.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword the user can specify the charge model for the QM atoms.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>off</strong> (default) - charges of the QM atoms are taken from the MM model</p></li>
+<li><p><strong>on</strong> - charges of the QM atoms are taken from the QM calculation</p></li>
+</ol>
+</div></blockquote>
 </section>
 <section id="qm-core-radius">
-<h3>QM_Core_Radius<a class="headerlink" href="#qm-core-radius" title="Link to this heading"></a></h3>
+<span id="qmcoreradiuskey"></span><h3>QM Core Radius<a class="headerlink" href="#qm-core-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qm_core_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
 </section>
-<section id="qmmm-layer-radius">
-<h3>QMMM_Layer_Radius<a class="headerlink" href="#qmmm-layer-radius" title="Link to this heading"></a></h3>
+<section id="qm-mm-layer-radius">
+<span id="qmmmlayerradiuskey"></span><h3>QM/MM Layer Radius<a class="headerlink" href="#qm-mm-layer-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="code docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
 </section>
-<section id="qmmm-smoothing-radius">
-<h3>QMMM_Smoothing_Radius<a class="headerlink" href="#qmmm-smoothing-radius" title="Link to this heading"></a></h3>
+<section id="qm-mm-smoothing-radius">
+<span id="qmmmsmoothingradiuskey"></span><h3>QM/MM Smoothing Radius<a class="headerlink" href="#qm-mm-smoothing-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
 </section>
 </section>
 <section id="cell-list-keys">
-<h2>Cell List Keys<a class="headerlink" href="#cell-list-keys" title="Link to this heading"></a></h2>
+<span id="celllistkeys"></span><h2>Cell List Keys<a class="headerlink" href="#cell-list-keys" title="Link to this heading"></a></h2>
 <section id="cell-list">
-<h3>Cell-List<a class="headerlink" href="#cell-list" title="Link to this heading"></a></h3>
+<span id="celllistkey"></span><h3>Cell List<a class="headerlink" href="#cell-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>cell-list = {string} -&gt; “off”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">cell-list</span></code> the user can activate a cell-list approach to calculate the pair-interactions in MM-MD simulations (no effect in pure QM-MD type simulations).</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">cell-list</span></code> the user can activate a cell-list approach to calculate the pair-interactions in MM-MD simulations (no effect in pure QM-MD type simulations).</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1258,20 +1292,20 @@
 </div></blockquote>
 </section>
 <section id="cell-number">
-<h3>Cell-Number<a class="headerlink" href="#cell-number" title="Link to this heading"></a></h3>
+<span id="cellnumberkey"></span><h3>Cell Number<a class="headerlink" href="#cell-number" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>cell-number = {uint+} -&gt; 7</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">cell-number</span></code> keyword the user can set the number of cells in each direction in which the simulation box will be split up (<em>e.g.</em> cell-number = 7 -&gt; total cells = 7x7x7)</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">cell-number</span></code> keyword the user can set the number of cells in each direction in which the simulation box will be split up (<em>e.g.</em> cell-number = 7 -&gt; total cells = 7x7x7)</p>
 <p class="centered">
 <strong><em>default value</em> = 7</strong></p></section>
 </section>
 <section id="optimization-keys">
-<h2>Optimization Keys<a class="headerlink" href="#optimization-keys" title="Link to this heading"></a></h2>
-<p>In order to perform a geometry optimization on of the optimizer jobtypes has to be chosen. (For more info see the <a class="reference internal" href="#jobtype"><span class="std std-ref">Jobtype</span></a> section)</p>
+<span id="optimizationkeys"></span><h2>Optimization Keys<a class="headerlink" href="#optimization-keys" title="Link to this heading"></a></h2>
+<p>In order to perform a geometry optimization one of the optimizer <a class="reference internal" href="#jobtype"><span class="std std-ref">Jobtypes</span></a> has to be chosen.</p>
 <section id="optimizer">
-<h3>Optimizer<a class="headerlink" href="#optimizer" title="Link to this heading"></a></h3>
+<span id="optimizerkey"></span><h3>Optimizer<a class="headerlink" href="#optimizer" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>optimizer = {string}</p>
@@ -1286,12 +1320,12 @@
 </div></blockquote>
 </section>
 <section id="learning-rate-strategy">
-<h3>Learning-Rate-Strategy<a class="headerlink" href="#learning-rate-strategy" title="Link to this heading"></a></h3>
+<span id="learningratestrategykey"></span><h3>Learning Rate Strategy<a class="headerlink" href="#learning-rate-strategy" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>learning-rate-strategy = {string} -&gt; “exponential-decay”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">learning-rate-strategy</span></code> keyword the user can specify the learning rate strategy for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">learning-rate-strategy</span></code> keyword the user can specify the learning rate strategy for all kind of optimization jobs.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1302,33 +1336,33 @@
 </div></blockquote>
 </section>
 <section id="initial-learning-rate">
-<h3>Initial-Learning-Rate<a class="headerlink" href="#initial-learning-rate" title="Link to this heading"></a></h3>
+<span id="initiallearningratekey"></span><h3>Initial Learning Rate<a class="headerlink" href="#initial-learning-rate" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>initial-learning-rate = {double} -&gt; 0.0001</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">initial-learning-rate</span></code> keyword the user can specify the initial learning rate for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">initial-learning-rate</span></code> keyword the user can specify the initial learning rate for all kind of optimization jobs.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.0001</strong></p></section>
 <section id="learning-rate-decay">
-<h3>Learning-Rate-Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h3>
+<span id="learningratedecaykey"></span><h3>Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>learning-rate-decay = {double}</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">learning-rate-decay</span></code> keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">learning-rate-decay</span></code> keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.</p>
 </section>
 </section>
 <section id="convergence-keys">
-<h2>Convergence Keys<a class="headerlink" href="#convergence-keys" title="Link to this heading"></a></h2>
+<span id="convergencekeys"></span><h2>Convergence Keys<a class="headerlink" href="#convergence-keys" title="Link to this heading"></a></h2>
 <section id="energy-convergence-strategy">
-<h3>Energy-Convergence-Strategy<a class="headerlink" href="#energy-convergence-strategy" title="Link to this heading"></a></h3>
+<span id="energyconvergencestrategykey"></span><h3>Energy Convergence Strategy<a class="headerlink" href="#energy-convergence-strategy" title="Link to this heading"></a></h3>
 <p>In general the convergence of the geometry optimization is checked by assuring that the absolute <strong>and</strong> relative energy difference between two consecutive steps is smaller than a certain threshold. The user can choose between different strategies to change this behavior.</p>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>energy-conv-strategy = {string} -&gt; “rigorous”</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">energy-conv-strategy</span></code> keyword the user can specify the energy convergence strategy for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">energy-conv-strategy</span></code> keyword the user can specify the energy convergence strategy for all kind of optimization jobs.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -1340,83 +1374,84 @@
 </div></blockquote>
 </section>
 <section id="enable-disable-energy-convergence-check">
-<h3>Enable/Disable Energy Convergence Check<a class="headerlink" href="#enable-disable-energy-convergence-check" title="Link to this heading"></a></h3>
+<span id="energyconvergencecheckkey"></span><h3>Enable/Disable Energy Convergence Check<a class="headerlink" href="#enable-disable-energy-convergence-check" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>use-energy-conv = {bool} -&gt; true</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">use-energy-conv</span></code> keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">use-energy-conv</span></code> keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.</p>
 </section>
 <section id="enable-disable-max-force-convergence-check">
-<h3>Enable/Disable MAX Force Convergence Check<a class="headerlink" href="#enable-disable-max-force-convergence-check" title="Link to this heading"></a></h3>
+<span id="maxforceconvergencecheckkey"></span><h3>Enable/Disable MAX Force Convergence Check<a class="headerlink" href="#enable-disable-max-force-convergence-check" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>use-max-force-conv = {bool} -&gt; true</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">use-max-force-conv</span></code> keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">use-max-force-conv</span></code> keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.</p>
 </section>
 <section id="enable-disable-rms-force-convergence-check">
-<h3>Enable/Disable RMS Force Convergence Check<a class="headerlink" href="#enable-disable-rms-force-convergence-check" title="Link to this heading"></a></h3>
+<span id="rmsforceconvergencecheckkey"></span><h3>Enable/Disable RMS Force Convergence Check<a class="headerlink" href="#enable-disable-rms-force-convergence-check" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>use-rms-force-conv = {bool} -&gt; true</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">use-rms-force-conv</span></code> keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">use-rms-force-conv</span></code> keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.</p>
 </section>
 <section id="energy-convergence-threshold">
-<h3>Energy Convergence Threshold<a class="headerlink" href="#energy-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="energyconvergencethresholdkey"></span><h3>Energy Convergence Threshold<a class="headerlink" href="#energy-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>energy-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
+<p>With the <code class="docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
 This keyword will set both the absolute and relative energy convergence threshold.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-6</strong></p></section>
 <section id="relative-energy-convergence-threshold">
-<h3>Relative Energy Convergence Threshold<a class="headerlink" href="#relative-energy-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="relativeenergyconvergencethresholdkey"></span><h3>Relative Energy Convergence Threshold<a class="headerlink" href="#relative-energy-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rel-energy-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rel-energy-conv</span></code> keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rel-energy-conv</span></code> keyword the user can specify the relative energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-6</strong></p></section>
 <section id="absolute-energy-convergence-threshold">
-<h3>Absolute Energy Convergence Threshold<a class="headerlink" href="#absolute-energy-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="absoluteenergyconvergencethresholdkey"></span><h3>Absolute Energy Convergence Threshold<a class="headerlink" href="#absolute-energy-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>abs-energy-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">abs-energy-conv</span></code> keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">abs-energy-conv</span></code> keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="docutils literal notranslate"><span class="pre">energy-conv</span></code> keyword.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-6</strong></p></section>
 <section id="force-convergence-threshold">
-<h3>Force Convergence Threshold<a class="headerlink" href="#force-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="forceconvergencethresholdkeys"></span><h3>Force Convergence Threshold<a class="headerlink" href="#force-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>force-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">force-conv</span></code> keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-6</strong></p></section>
 <section id="maximum-force-convergence-threshold">
-<h3>Maximum Force Convergence Threshold<a class="headerlink" href="#maximum-force-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="maxforceconvergencethresholdkey"></span><h3>Maximum Force Convergence Threshold<a class="headerlink" href="#maximum-force-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>max-force-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">max-force-conv</span></code> keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">max-force-conv</span></code> keyword the user can specify the maximum force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
 <p class="centered">
 <strong><em>default value</em> = 1e-6</strong></p></section>
 <section id="rms-force-convergence-threshold">
-<h3>RMS Force Convergence Threshold<a class="headerlink" href="#rms-force-convergence-threshold" title="Link to this heading"></a></h3>
+<span id="rmsforceconvergencethresholdkey"></span><h3>RMS Force Convergence Threshold<a class="headerlink" href="#rms-force-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>rms-force-conv = {double} -&gt; 1e-6</p>
 </div>
-<p>With the <code class="code docutils literal notranslate"><span class="pre">rms-force-conv</span></code> keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="code docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
-</section>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rms-force-conv</span></code> keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the <code class="docutils literal notranslate"><span class="pre">force-conv</span></code> keyword.</p>
+<p class="centered">
+<strong><em>default value</em> = 1e-6</strong></p></section>
 </section>
 </section>
 
@@ -1425,7 +1460,7 @@ This keyword will set both the absolute and relative energy convergence threshol
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="generalUsage.html" class="btn btn-neutral float-left" title="General Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="outputFiles.html" class="btn btn-neutral float-right" title="Output Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="setupFiles.html" class="btn btn-neutral float-right" title="Setup Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
