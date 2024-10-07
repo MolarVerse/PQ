@@ -22,23 +22,30 @@
 
 #include "parameterFileSection.hpp"
 
+#include <fstream>   // for getline
+
 #include "exceptions.hpp"        // for ParameterFileException
 #include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
 
-#include <fstream>   // for getline
-
 using namespace input::parameterFile;
+using namespace utilities;
+using namespace customException;
+using namespace engine;
 
 /**
  * @brief reads a general parameter file section
  *
- * @details Calls processHeader at the beginning of each section and processSection for each line in the section.
- * If the "end" keyword is found, the section is ended normally.
+ * @details Calls processHeader at the beginning of each section and
+ * processSection for each line in the section. If the "end" keyword is found,
+ * the section is ended normally.
  *
  * @param line
  * @param engine
  */
-void ParameterFileSection::process(std::vector<std::string> &lineElements, engine::Engine &engine)
+void ParameterFileSection::process(
+    std::vector<std::string> &lineElements,
+    Engine                   &engine
+)
 {
     processHeader(lineElements, engine);
 
@@ -47,9 +54,8 @@ void ParameterFileSection::process(std::vector<std::string> &lineElements, engin
 
     while (getline(*_fp, line))
     {
-
-        line         = utilities::removeComments(line, "#");
-        lineElements = utilities::splitString(line);
+        line         = removeComments(line, "#");
+        lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -57,7 +63,7 @@ void ParameterFileSection::process(std::vector<std::string> &lineElements, engin
             continue;
         }
 
-        if (utilities::toLowerCopy(lineElements[0]) == "end")
+        if (toLowerCopy(lineElements[0]) == "end")
         {
             ++_lineNumber;
             endedNormal = true;
@@ -77,10 +83,37 @@ void ParameterFileSection::process(std::vector<std::string> &lineElements, engin
  *
  * @param endedNormally
  *
- * @throw customException::ParameterFileException if section did not end normally
+ * @throw ParameterFileException if section did not end
+ * normally
  */
-void ParameterFileSection::endedNormally(bool endedNormally)
+void ParameterFileSection::endedNormally(const bool endedNormally)
 {
     if (!endedNormally)
-        throw customException::ParameterFileException("Parameter file " + keyword() + " section ended abnormally!");
+        throw ParameterFileException(
+            "Parameter file " + keyword() + " section ended abnormally!"
+        );
 }
+
+/**
+ * @brief set line number of section
+ *
+ * @param lineNumber
+ */
+void ParameterFileSection::setLineNumber(const int lineNumber)
+{
+    _lineNumber = lineNumber;
+}
+
+/**
+ * @brief set file pointer
+ *
+ * @param fp
+ */
+void ParameterFileSection::setFp(std::ifstream *fp) { _fp = fp; }
+
+/**
+ * @brief get line number of section
+ *
+ * @return int
+ */
+int ParameterFileSection::getLineNumber() const { return _lineNumber; }

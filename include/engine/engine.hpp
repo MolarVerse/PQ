@@ -33,8 +33,11 @@
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
 #include "intraNonBonded.hpp"
+#include "molecularVirial.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "potentialBruteForce.hpp"
+#include "potentialCellList.hpp"
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
 #include "virial.hpp"
@@ -46,39 +49,8 @@
 #include "simulationBox_kokkos.hpp"
 #endif
 
-namespace output
-{
-    class EnergyOutput;                   // forward declaration
-    class InfoOutput;                     // forward declaration
-    class LogOutput;                      // forward declaration
-    class RstFileOutput;                  // forward declaration
-    class StdoutOutput;                   // forward declaration
-    class TrajectoryOutput;               // forward declaration
-    class MomentumOutput;                 // forward declaration
-    class VirialOutput;                   // forward declaration
-    class StressOutput;                   // forward declaration
-    class BoxFileOutput;                  // forward declaration
-    class RingPolymerRestartFileOutput;   // forward declaration
-    class RingPolymerTrajectoryOutput;    // forward declaration
-    class TimingsOutput;                  // forward declaration
-
-}   // namespace output
-
 namespace engine
 {
-    using RPMDRestartFileOutput = output::RingPolymerRestartFileOutput;
-    using RPMDTrajectoryOutput  = output::RingPolymerTrajectoryOutput;
-    using RPMDVelOutput         = output::RingPolymerTrajectoryOutput;
-    using RPMDForceOutput       = output::RingPolymerTrajectoryOutput;
-    using RPMDChargeOutput      = output::RingPolymerTrajectoryOutput;
-    using RPMDEnergyOutput      = output::RingPolymerEnergyOutput;
-
-#ifdef WITH_KOKKOS
-    using KokkosSimulationBox = simulationBox::KokkosSimulationBox;
-    using KokkosLennardJones  = potential::KokkosLennardJones;
-    using KokkosCoulombWolf   = potential::KokkosCoulombWolf;
-    using KokkosPotential     = potential::KokkosPotential;
-#endif
 
     /**
      * @class Engine
@@ -96,10 +68,10 @@ namespace engine
 
         timings::GlobalTimer _timer;
 
-        physicalData::PhysicalData _averagePhysicalData;
+        pq::PhysicalData _averagePhysicalData;
 
         // clang-format off
-        pq::SharedVirial       _virial         = std::make_shared<pq::VirialMolecular>();
+        pq::SharedVirial       _virial         = std::make_shared<pq::MolecularVirial>();
         pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
         pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
         pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
@@ -110,10 +82,10 @@ namespace engine
         // clang-format on
 
 #ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
+        pq::KokkosSimBox    _kokkosSimulationBox;
+        pq::KokkosLJ        _kokkosLennardJones;
+        pq::KokkosWolf      _kokkosCoulombWolf;
+        pq::KokkosPotential _kokkosPotential;
 #endif
 
        public:
@@ -121,7 +93,6 @@ namespace engine
         virtual ~Engine() = default;
 
         virtual void run()         = 0;
-        virtual void takeStep()    = 0;
         virtual void writeOutput() = 0;
 
         void addTimer(const timings::Timer &timings);
@@ -156,16 +127,16 @@ namespace engine
          * output getter methods *
          *************************/
 
-        [[nodiscard]] EngineOutput          &getEngineOutput();
-        [[nodiscard]] output::LogOutput     &getLogOutput();
-        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput      &getEngineOutput();
+        [[nodiscard]] pq::LogOutput     &getLogOutput();
+        [[nodiscard]] pq::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] pq::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] pq::InfoOutput       &getInfoOutput();
+        [[nodiscard]] pq::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] pq::RstFileOutput    &getRstFileOutput();
 
         /***********************
          * get pointer methods *
@@ -212,10 +183,10 @@ namespace engine
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
 
 #ifdef WITH_KOKKOS
-        [[nodiscard]] KokkosSimulationBox &getKokkosSimulationBox();
-        [[nodiscard]] KokkosLennardJones  &getKokkosLennardJones();
-        [[nodiscard]] KokkosCoulombWolf   &getKokkosCoulombWolf();
-        [[nodiscard]] KokkosPotential     &getKokkosPotential();
+        [[nodiscard]] pq::KokkosSimBox    &getKokkosSimulationBox();
+        [[nodiscard]] pq::KokkosLJ        &getKokkosLennardJones();
+        [[nodiscard]] pq::KokkosWolf      &getKokkosCoulombWolf();
+        [[nodiscard]] pq::KokkosPotential &getKokkosPotential();
         void initKokkosSimulationBox(const size_t numAtoms);
         void initKokkosLennardJones(const size_t numAtomTypes);
         void initKokkosCoulombWolf(

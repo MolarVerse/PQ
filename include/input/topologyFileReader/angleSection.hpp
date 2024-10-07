@@ -28,11 +28,7 @@
 #include <vector>   // for vector
 
 #include "topologySection.hpp"   // for TopologySection
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -45,13 +41,10 @@ namespace input::topology
     class AngleSection : public TopologySection
     {
        public:
-        [[nodiscard]] std::string keyword() override { return "angles"; }
-        void                      endedNormally(bool) const override;
+        void processSection(pq::strings &, pq::Engine &) override;
 
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
+        [[nodiscard]] std::string keyword() override;
+        void                      endedNormally(bool) const override;
     };
 }   // namespace input::topology
 

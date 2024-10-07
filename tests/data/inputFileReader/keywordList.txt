@@ -83,6 +83,7 @@ virial_file                 false
 stress_file                 false
 momentum_file               false
 box_file                    false
+timings_file                false
 opt_file                    false
 
 rpmd_restart_file           false
@@ -117,10 +118,10 @@ mace_model_size             false
 
 rpmd_n_replica              false
 
-qm_center                   false
-qm_only_list                false
-mm_only_list                false
+center                      false
+core_only_list              false
+non_core_only_list          false
 qm_charges                  false
-qm_core_radius              false
-qmmm_layer_radius           false
-qmmm_smoothing_radius       false
+core_radius                 false
+layer_radius                false
+smoothing_radius            false

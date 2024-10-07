@@ -6,9 +6,11 @@ set(engine_source_files
 
     mmmdEngine.cpp
     qmmdEngine.cpp
-    qmmmmdEngine.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
+
+    hybridMDEngine.cpp
+    qmmmMDEngine.cpp
 
     engineOutput.cpp
 )
@@ -17,7 +19,6 @@ if(BUILD_WITH_KOKKOS)
     set(engine_source_files
         ${engine_source_files}
         engine_kokkos.cpp
-        mdEngine_kokkos.cpp
     )
 endif()
 

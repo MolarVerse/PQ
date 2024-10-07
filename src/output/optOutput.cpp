@@ -28,6 +28,8 @@
 
 using namespace output;
 using namespace settings;
+using namespace opt;
+
 using std::format;
 
 /**
@@ -36,7 +38,7 @@ using std::format;
  * @param step
  * @param optimizer
  */
-void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
+void OptOutput::write(const size_t step, const Optimizer& optimizer)
 {
     const auto& conv = optimizer.getConvergence();
 
@@ -54,10 +56,10 @@ void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
 
     const auto convStrategy = conv.getEnConvStrategy();
 
-    auto relEnConvStr    = std::format("{:3d}", 0);
-    auto absEnConvStr    = std::format("{:3d}", 0);
-    auto maxForceConvStr = std::format("{:3d}", 0);
-    auto rmsForceConvStr = std::format("{:3d}", 0);
+    auto relEnConvStr    = format("{:3d}", 0);
+    auto absEnConvStr    = format("{:3d}", 0);
+    auto maxForceConvStr = format("{:3d}", 0);
+    auto rmsForceConvStr = format("{:3d}", 0);
 
     const auto isEnergyConvEnabled   = conv.isEnergyConvEnabled();
     const auto isMaxForceConvEnabled = conv.isMaxForceConvEnabled();
@@ -97,15 +99,15 @@ void OptOutput::write(const size_t step, const opt::Optimizer& optimizer)
     isMaxForceConvInt = isMaxForceConvEnabled ? isMaxForceConvInt : 0;
     isRMSForceConvInt = isRMSForceConvEnabled ? isRMSForceConvInt : 0;
 
-    _fp << std::format("{:3d}\t", isRelEnConvInt);
-    _fp << std::format("{:3d}\t", isAbsEnConvInt);
-    _fp << std::format("{:3d}\t", isMaxForceConvInt);
-    _fp << std::format("{:3d}\t", isRMSForceConvInt);
+    _fp << format("{:3d}\t", isRelEnConvInt);
+    _fp << format("{:3d}\t", isAbsEnConvInt);
+    _fp << format("{:3d}\t", isMaxForceConvInt);
+    _fp << format("{:3d}\t", isRMSForceConvInt);
 
-    _fp << std::format("{:.8e}\t", conv.getRelEnergyConvThreshold());
-    _fp << std::format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
-    _fp << std::format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
-    _fp << std::format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
+    _fp << format("{:.8e}\t", conv.getRelEnergyConvThreshold());
+    _fp << format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
+    _fp << format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
+    _fp << format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
 
     _fp.flush();
 }

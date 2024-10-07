@@ -29,6 +29,7 @@
 #include "forceFieldClass.hpp"      // for ForceField
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "potential.hpp"            // for Potential
+#include "settings.hpp"             // for Settings
 
 using namespace setup;
 using namespace engine;
@@ -75,16 +76,19 @@ void ForceFieldSetup::setup()
 {
     auto       &forceField    = _engine.getForceField();
     const auto &potential     = _engine.getPotential();
-    const auto &nonCoulombPot = potential.getNonCoulombPotentialSharedPtr();
-    const auto &coulombPot    = potential.getCoulombPotentialSharedPtr();
+    const auto &nonCoulombPot = potential.getNonCoulombPotSharedPtr();
+    const auto &coulombPot    = potential.getCoulombPotSharedPtr();
 
-    forceField.setNonCoulombPotential(nonCoulombPot);
-    forceField.setCoulombPotential(coulombPot);
+    if (Settings::isMMActivated())
+    {
+        forceField.setNonCoulombPotential(nonCoulombPot);
+        forceField.setCoulombPotential(coulombPot);
 
-    setupBonds();
-    setupAngles();
-    setupDihedrals();
-    setupImproperDihedrals();
+        setupBonds();
+        setupAngles();
+        setupDihedrals();
+        setupImproperDihedrals();
+    }
 
     writeSetupInfo();
 }

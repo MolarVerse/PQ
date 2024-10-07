@@ -29,19 +29,11 @@
 #include <string>    // for string
 #include <vector>    // for vector
 
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
-
-namespace constraints
-{
-    class MShakeReference;   // Forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::mShake
 {
-    void readMShake(engine::Engine &engine);
+    void readMShake(pq::Engine &engine);
 
     /**
      * @class MShakeReader
@@ -56,20 +48,14 @@ namespace input::mShake
         std::string   _fileName;
         std::ifstream _fp;
 
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit MShakeReader(engine::Engine &engine);
+        explicit MShakeReader(pq::Engine &engine);
 
         void read();
-        void processCommentLine(
-            std::string                  &line,
-            constraints::MShakeReference &mShakeReference
-        );
-        void processAtomLines(
-            std::vector<std::string>     &lines,
-            constraints::MShakeReference &mShakeReference
-        );
+        void processCommentLine(std::string &line, pq::MShakeRef &mShakeRef);
+        void processAtomLines(pq::strings &lines, pq::MShakeRef &mShakeRef);
 
         [[nodiscard]] std::string getFileName() const;
     };

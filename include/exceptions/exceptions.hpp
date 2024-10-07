@@ -76,10 +76,9 @@ namespace customException
         std::string _message;
 
        public:
-        explicit CustomException(const std::string_view message)
-            : _message(message){};
-        void colorfulOutput(const Color::Code color, const std::string_view)
-            const;
+        explicit CustomException(const std::string_view message);
+
+        void colorfulOutput(const Color::Code, const std::string_view) const;
     };
 
     /**

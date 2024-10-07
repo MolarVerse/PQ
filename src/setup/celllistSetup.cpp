@@ -66,7 +66,7 @@ CellListSetup::CellListSetup(Engine &engine) : _engine(engine){};
 void CellListSetup::setup()
 {
     const auto &potential     = _engine.getPotential();
-    const auto  nonCoulombPot = potential.getNonCoulombPotentialSharedPtr();
+    const auto  nonCoulombPot = potential.getNonCoulombPotSharedPtr();
 
     if (_engine.isCellListActivated())
     {

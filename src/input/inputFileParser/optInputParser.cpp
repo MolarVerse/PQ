@@ -33,6 +33,7 @@ using namespace input;
 using namespace settings;
 using namespace customException;
 using namespace utilities;
+using namespace engine;
 
 /**
  * @brief Constructor
@@ -45,7 +46,7 @@ using namespace utilities;
  *
  * @param engine The engine
  */
-OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
+OptInputParser::OptInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         "optimizer",
@@ -73,7 +74,7 @@ OptInputParser::OptInputParser(engine::Engine &engine) : InputFileParser(engine)
 
     addKeyword(
         "learning-rate-update-freq",
-        bind_front(&OptInputParser::parseLearningRateUpdateFrequency, this),
+        bind_front(&OptInputParser::parseLearningRateUpdateFreq, this),
         false
     );
 
@@ -108,11 +109,13 @@ void OptInputParser::parseOptimizer(
 
     const auto method = toLowerCopy(lineElements[2]);
 
+    using enum OptimizerType;
+
     if ("steepest-descent" == method)
-        OptimizerSettings::setOptimizer(OptimizerType::STEEPEST_DESCENT);
+        OptimizerSettings::setOptimizer(STEEPEST_DESCENT);
 
     else if ("adam" == method)
-        OptimizerSettings::setOptimizer(OptimizerType::ADAM);
+        OptimizerSettings::setOptimizer(ADAM);
 
     else
         throw InputFileException(std::format(
@@ -205,7 +208,7 @@ void OptInputParser::parseInitialLearningRate(
  * @throws InputFileException if the learning rate update
  * frequency is less than or equal to 0
  */
-void OptInputParser::parseLearningRateUpdateFrequency(
+void OptInputParser::parseLearningRateUpdateFreq(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )

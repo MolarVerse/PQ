@@ -74,8 +74,6 @@ namespace settings
 
         static inline bool _useKokkos = false;
 
-        static inline bool _isMMActivated            = false;
-        static inline bool _isQMActivated            = false;
         static inline bool _isRingPolymerMDActivated = false;
 
         // clang-format off
@@ -96,8 +94,6 @@ namespace settings
         static void setFloatingPointType(const std::string_view);
         static void setFloatingPointType(const FPType);
 
-        static void setIsMMActivated(const bool isMM);
-        static void setIsQMActivated(const bool isQM);
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
         static void setDimensionality(const size_t dimensionality);
 
@@ -116,13 +112,8 @@ namespace settings
          * standard is-active methods *
          ******************************/
 
-        static void activateMM();
-        static void activateQM();
-        static void activateRingPolymerMD();
         static void activateKokkos();
-
-        static void deactivateMM();
-        static void deactivateQM();
+        static void activateRingPolymerMD();
         static void deactivateRingPolymerMD();
 
         [[nodiscard]] static bool isQMOnly();

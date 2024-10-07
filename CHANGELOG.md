@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Next Release
+
+### Enhancements
+
+- Nose-Hoover chain restarting now including old chain parameters
+
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 

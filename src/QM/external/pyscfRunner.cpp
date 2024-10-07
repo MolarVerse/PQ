@@ -36,13 +36,17 @@
 #include "vector3d.hpp"          // for Vec3D
 
 using QM::PySCFRunner;
+using namespace simulationBox;
+using namespace settings;
+using namespace customException;
+using namespace utilities;
 
 /**
  * @brief writes the coords file in order to run the external qm program
  *
  * @param box
  */
-void PySCFRunner::writeCoordsFile(simulationBox::SimulationBox &box)
+void PySCFRunner::writeCoordsFile(SimulationBox &box)
 {
     const std::string fileName = "coords.xyz";
     std::ofstream     coordsFile(fileName);
@@ -73,15 +77,15 @@ void PySCFRunner::writeCoordsFile(simulationBox::SimulationBox &box)
  */
 void PySCFRunner::execute()
 {
-    const auto scriptFileName =
-        _scriptPath + settings::QMSettings::getQMScript();
+    const auto scriptFileName = _scriptPath + QMSettings::getQMScript();
 
-    if (!utilities::fileExists(scriptFileName))
-        throw customException::InputFileException(std::format(
+    if (!fileExists(scriptFileName))
+        throw InputFileException(std::format(
             "PySCF script file \"{}\" does not exist.",
             scriptFileName
         ));
 
     const auto command = std::format("python {} > pyscf.out", scriptFileName);
+
     ::system(command.c_str());
 }

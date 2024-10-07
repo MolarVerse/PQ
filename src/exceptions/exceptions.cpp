@@ -27,6 +27,16 @@
 using namespace customException;
 
 /**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+CustomException::CustomException(const std::string_view message)
+    : _message(message)
+{
+}
+
+/**
  * @brief Prints the exception type in color.
  *
  * @param color

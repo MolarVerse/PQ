@@ -29,20 +29,11 @@
 #include <vector>    // for vector
 
 #include "defaults.hpp"
-
-namespace engine
-{
-    class Engine;   // Forward declaration
-}
-
-namespace simulationBox
-{
-    class MoleculeType;   // Forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::molDescriptor
 {
-    void readMolDescriptor(engine::Engine &);
+    void readMolDescriptor(pq::Engine &);
 
     /**
      * @class MoldescriptorReader
@@ -57,15 +48,14 @@ namespace input::molDescriptor
         std::string   _fileName = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
         std::ifstream _fp;
 
-        engine::Engine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit MoldescriptorReader(engine::Engine &engine);
+        explicit MoldescriptorReader(pq::Engine &engine);
 
         void read();
-        void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(simulationBox::MoleculeType &)
-            const;
+        void processMolecule(pq::strings &lineElements);
+        void convertExternalToInternalAtomTypes(pq::MoleculeType &) const;
     };
 
 }   // namespace input::molDescriptor

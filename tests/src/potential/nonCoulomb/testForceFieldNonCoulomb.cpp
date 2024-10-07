@@ -71,10 +71,10 @@ TEST(TestPotential, determineInternalGlobalVdwTypes)
 }
 
 /**
- * @brief tests fillDiagonalElementsOfNonCoulombPairsMatrix function
+ * @brief tests fillDiagOfNonCoulPairsMatrix function
  *
  */
-TEST(TestPotential, fillDiagonalElementsOfNonCoulombPairsMatrix)
+TEST(TestPotential, fillDiagOfNonCoulPairsMatrix)
 {
     auto potential = potential::ForceFieldNonCoulomb();
     auto nonCoulombicPair1 =
@@ -91,7 +91,7 @@ TEST(TestPotential, fillDiagonalElementsOfNonCoulombPairsMatrix)
         std::make_shared<potential::LennardJonesPair>(nonCoulombicPair2)
     };
 
-    potential.fillDiagonalElementsOfNonCoulombPairsMatrix(diagonalElements);
+    potential.fillDiagOfNonCoulPairsMatrix(diagonalElements);
 
     EXPECT_EQ(potential.getNonCoulombPairsMatrix().rows(), 2);
     EXPECT_EQ(potential.getNonCoulombPairsMatrix().cols(), 2);
@@ -114,7 +114,7 @@ TEST(TestPotential, fillDiagonalElementsOfNonCoulombPairsMatrix)
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if only
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if only
  * one type is found
  *
  */
@@ -142,13 +142,13 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findOneType)
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
     potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
-    auto nonCoulombicPair = potential.findNonCoulombicPairByInternalTypes(0, 2);
+    auto nonCoulombicPair = potential.findNonCoulPairByInternalTypes(0, 2);
     EXPECT_EQ((*nonCoulombicPair)->getInternalType1(), 0);
     EXPECT_EQ((*nonCoulombicPair)->getInternalType2(), 2);
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if no
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if no
  * type is found
  *
  */
@@ -176,12 +176,12 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findNothing)
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
     potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
-    auto nonCoulombicPair = potential.findNonCoulombicPairByInternalTypes(0, 3);
+    auto nonCoulombicPair = potential.findNonCoulPairByInternalTypes(0, 3);
     EXPECT_EQ(nonCoulombicPair, std::nullopt);
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * multiple types are found
  *
  */
@@ -218,7 +218,7 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findMultipleTypes)
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
-            potential.findNonCoulombicPairByInternalTypes(0, 2),
+            potential.findNonCoulPairByInternalTypes(0, 2),
         customException::ParameterFileException,
         "Non coulombic pair with global van der waals types 1 and 5 is defined "
         "twice in the parameter file."
@@ -226,7 +226,7 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findMultipleTypes)
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * element is not found
  *
  */
@@ -254,7 +254,7 @@ TEST(
     );
 
     EXPECT_THROW_MSG(
-        potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix(),
+        potential.fillOffDiagOfNonCoulPairsMatrix(),
         customException::ParameterFileException,
         "Not all combinations of global van der Waals types are defined in the "
         "parameter file - and no mixing rules were chosen"
@@ -262,7 +262,7 @@ TEST(
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * element is found with lower index first
  *
  */
@@ -302,7 +302,7 @@ TEST(
     potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
     EXPECT_EQ(
         potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
@@ -323,7 +323,7 @@ TEST(
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * element is found with higher index first
  *
  */
@@ -363,7 +363,7 @@ TEST(
     potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
     EXPECT_EQ(
         potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
@@ -384,7 +384,7 @@ TEST(
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * element is found for both index combinations with same parameters
  *
  */
@@ -431,7 +431,7 @@ TEST(
     potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
     EXPECT_EQ(
         potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
@@ -452,7 +452,7 @@ TEST(
 }
 
 /**
- * @brief tests fillOffDiagonalElementsOfNonCoulombPairsMatrix function if
+ * @brief tests fillOffDiagOfNonCoulPairsMatrix function if
  * element is found for both index combinations with different parameters
  *
  */
@@ -487,7 +487,7 @@ TEST(
     );
 
     EXPECT_THROW_MSG(
-        potential.fillOffDiagonalElementsOfNonCoulombPairsMatrix(),
+        potential.fillOffDiagOfNonCoulPairsMatrix(),
         customException::ParameterFileException,
         "Non-coulombic pairs with global van der Waals types 1, 2 and 2, 1 in "
         "the parameter file have different parameters"
@@ -495,10 +495,10 @@ TEST(
 }
 
 /**
- * @brief tests getSelfInteractionNonCoulombicPairs function
+ * @brief tests getSelfInteractionNonCoulPairs function
  *
  */
-TEST(TestPotential, getSelfInteractionNonCoulombicPairs)
+TEST(TestPotential, getSelfInteractionNonCoulPairs)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
@@ -537,7 +537,7 @@ TEST(TestPotential, getSelfInteractionNonCoulombicPairs)
     potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
     auto selfInteractionNonCoulombicPairs =
-        potential.getSelfInteractionNonCoulombicPairs();
+        potential.getSelfInteractionNonCoulPairs();
 
     EXPECT_EQ(selfInteractionNonCoulombicPairs.size(), 2);
 }

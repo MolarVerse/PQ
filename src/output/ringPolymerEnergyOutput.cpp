@@ -30,6 +30,7 @@
 #include "stlVector.hpp"      // for sum
 
 using namespace output;
+using namespace physicalData;
 
 /**
  * @brief write the energy output of each ring polymer
@@ -44,8 +45,8 @@ using namespace output;
  * @param data
  */
 void RingPolymerEnergyOutput::write(
-    const size_t                                   step,
-    const std::vector<physicalData::PhysicalData> &dataVector
+    const size_t                     step,
+    const std::vector<PhysicalData> &dataVector
 )
 {
     _fp << std::format("{:10d}\t", step);
@@ -78,7 +79,7 @@ void RingPolymerEnergyOutput::write(
  * @return sum of all ring polymer spring energies
  */
 double RingPolymerEnergyOutput::sumOfRingPolymerEnergies(
-    const std::vector<physicalData::PhysicalData> &dataVector
+    const std::vector<PhysicalData> &dataVector
 )
 {
     return std::accumulate(
@@ -98,7 +99,7 @@ double RingPolymerEnergyOutput::sumOfRingPolymerEnergies(
  * @return maximum ring polymer spring energy
  */
 double RingPolymerEnergyOutput::maxRingPolymerEnergy(
-    const std::vector<physicalData::PhysicalData> &dataVector
+    const std::vector<PhysicalData> &dataVector
 )
 {
     return std::ranges::max_element(

@@ -169,7 +169,7 @@ void PotentialSetup::setupNonCoulombicPairs()
     nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
     const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
-    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulombicPairs();
+    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
         throw ParameterFileException(
@@ -187,8 +187,8 @@ void PotentialSetup::setupNonCoulombicPairs()
         }
     );
 
-    nonCoulPot.fillDiagonalElementsOfNonCoulombPairsMatrix(selfNonCoulPairs);
-    nonCoulPot.fillOffDiagonalElementsOfNonCoulombPairsMatrix();
+    nonCoulPot.fillDiagOfNonCoulPairsMatrix(selfNonCoulPairs);
+    nonCoulPot.fillOffDiagOfNonCoulPairsMatrix();
 }
 
 /**

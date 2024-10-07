@@ -28,10 +28,7 @@
 #include <string>   // for string, allocator
 #include <vector>   // for vector
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -50,16 +47,16 @@ namespace input::topology
        public:
         virtual ~TopologySection() = default;
 
-        void process(std::vector<std::string> &lineElements, engine::Engine &);
+        void process(pq::strings &, pq::Engine &);
 
-        virtual std::string keyword() = 0;
-        virtual void processSection(std::vector<std::string> &lineElements, engine::Engine &) = 0;
-        virtual void endedNormally(const bool) const = 0;
+        virtual std::string keyword()                                   = 0;
+        virtual void        processSection(pq::strings &, pq::Engine &) = 0;
+        virtual void        endedNormally(const bool) const             = 0;
 
-        void setLineNumber(const int lineNumber) { _lineNumber = lineNumber; }
-        void setFp(std::ifstream *fp) { _fp = fp; }
+        void setLineNumber(const int lineNumber);
+        void setFp(std::ifstream *fp);
 
-        [[nodiscard]] int getLineNumber() const { return _lineNumber; }
+        [[nodiscard]] int getLineNumber() const;
     };
 
 }   // namespace input::topology

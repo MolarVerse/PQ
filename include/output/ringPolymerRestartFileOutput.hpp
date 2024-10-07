@@ -28,11 +28,7 @@
 #include <vector>    // for vector
 
 #include "output.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -47,7 +43,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<simulationBox::SimulationBox> &, const size_t);
+        void write(std::vector<pq::SimBox> &, const size_t);
     };
 
 }   // namespace output

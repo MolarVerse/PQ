@@ -28,7 +28,7 @@
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
 
-#include "vector3d.hpp"
+#include "typeAliases.hpp"
 
 namespace utilities
 {
@@ -43,15 +43,15 @@ namespace utilities
      * @return false
      */
     template <typename T>
-    bool compare(const T &a, const T &b, const T &tolerance)
+    [[nodiscard]] bool compare(const T &a, const T &b, const T &tolerance)
     {
         return std::abs(a - b) < tolerance;
     }
 
-    bool compare(
-        const linearAlgebra::Vec3D &a,
-        const linearAlgebra::Vec3D &b,
-        const double               &tolerance
+    [[nodiscard]] bool compare(
+        const pq::Vec3D &a,
+        const pq::Vec3D &b,
+        const double    &tol
     );
 
     /**
@@ -64,12 +64,12 @@ namespace utilities
      * @return false
      */
     template <typename T>
-    bool compare(const T &a, const T &b)
+    [[nodiscard]] bool compare(const T &a, const T &b)
     {
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
 
-    bool compare(const linearAlgebra::Vec3D &a, const linearAlgebra::Vec3D &b);
+    [[nodiscard]] bool compare(const pq::Vec3D &a, const pq::Vec3D &b);
 
     /**
      * @brief calculates the sign of a number
@@ -79,7 +79,7 @@ namespace utilities
      * @return int
      */
     template <typename T>
-    int sign(const T &a)
+    [[nodiscard]] int sign(const T &a)
     {
         if (compare(a, T(0)))
             return 0;
@@ -89,7 +89,7 @@ namespace utilities
             return -1;
     }
 
-    size_t kroneckerDelta(const size_t i, const size_t j);
+    [[nodiscard]] size_t kroneckerDelta(const size_t i, const size_t j);
 
 }   // namespace utilities
 

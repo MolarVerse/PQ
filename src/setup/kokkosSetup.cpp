@@ -138,14 +138,4 @@ void KokkosSetup::setup()
         wolfPotential.getWolfParameter3(),
         _COULOMB_PREFACTOR_
     );
-
-    /********************************
-     * Initialize Kokkos Integrator *
-     ********************************/
-
-    const auto dt       = TimingsSettings::getTimeStep();
-    const auto vvFactor = _V_VERLET_VELOCITY_FACTOR_;
-    auto      &mdEngine = dynamic_cast<MDEngine &>(_engine);
-
-    mdEngine.initKokkosVelocityVerlet(dt, vvFactor, _FS_TO_S_);
 }

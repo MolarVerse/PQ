@@ -26,14 +26,14 @@
 #include <functional>   // for identity
 #include <memory>       // for unique_ptr
 
-#include "integrator.hpp"        // for Integrator
-#include "manostat.hpp"          // for Manostat
-#include "physicalData.hpp"      // for PhysicalData
-#include "qmRunner.hpp"          // for QMRunner
-#include "resetKinetics.hpp"     // for ResetKinetics
-#include "staticMatrix3x3.hpp"   // for StaticMatrix3x3
-#include "thermostat.hpp"        // for Thermostat
-#include "vector3d.hpp"          // for Vec3D
+#include "integrator.hpp"      // for Integrator
+#include "manostat.hpp"        // for Manostat
+#include "physicalData.hpp"    // for PhysicalData
+#include "qmRunner.hpp"        // for QMRunner
+#include "resetKinetics.hpp"   // for ResetKinetics
+#include "staticMatrix.hpp"    // for StaticMatrix3x3
+#include "thermostat.hpp"      // for Thermostat
+#include "vector3d.hpp"        // for Vec3D
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
@@ -42,6 +42,8 @@
 #endif
 
 using engine::RingPolymerQMMDEngine;
+
+using namespace linearAlgebra;
 
 /**
  * @brief Takes one step in a ring polymer QM MD simulation.
@@ -91,17 +93,20 @@ void RingPolymerQMMDEngine::takeStep()
     applyThermostat();
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _ringPolymerBeadsPhysicalData[i].calculateKinetics(_ringPolymerBeads[i]
-        );
+    {
+        auto &bead = _ringPolymerBeads[i];
+        _ringPolymerBeadsPhysicalData[i].calculateKinetics(bead);
+    }
 
     applyManostat();
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _resetKinetics.reset(
-            _step,
-            _ringPolymerBeadsPhysicalData[i],
-            _ringPolymerBeads[i]
-        );
+    {
+        auto &data = _ringPolymerBeadsPhysicalData[i];
+        auto &bead = _ringPolymerBeads[i];
+
+        _resetKinetics.reset(_step, data, bead);
+    }
 
     combineBeads();
 
@@ -121,10 +126,12 @@ void RingPolymerQMMDEngine::qmCalculation()
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
         if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
-            _qmRunner->run(
-                _ringPolymerBeads[i],
-                _ringPolymerBeadsPhysicalData[i]
-            );
+        {
+            auto &bead = _ringPolymerBeads[i];
+            auto &data = _ringPolymerBeadsPhysicalData[i];
+
+            _qmRunner->run(bead, data);
+        }
     }
 
     ::MPI_Barrier(MPI_COMM_WORLD);
@@ -133,8 +140,9 @@ void RingPolymerQMMDEngine::qmCalculation()
     {
         auto forces   = _ringPolymerBeads[i].flattenForces();
         auto qmEnergy = _ringPolymerBeadsPhysicalData[i].getQMEnergy();
-        auto virial =
-            _ringPolymerBeadsPhysicalData[i].getVirial().toStdVector();
+
+        auto &virialMatrix = _ringPolymerBeadsPhysicalData[i].getVirial();
+        auto  virial       = virialMatrix.toStdVector();
 
         ::MPI_Bcast(
             forces.data(),
@@ -143,6 +151,7 @@ void RingPolymerQMMDEngine::qmCalculation()
             i % mpi::MPI::getSize(),
             MPI_COMM_WORLD
         );
+
         ::MPI_Bcast(
             &qmEnergy,
             1,
@@ -160,9 +169,9 @@ void RingPolymerQMMDEngine::qmCalculation()
 
         _ringPolymerBeads[i].deFlattenForces(forces);
         _ringPolymerBeadsPhysicalData[i].setQMEnergy(qmEnergy);
-        _ringPolymerBeadsPhysicalData[i].setVirial(
-            linearAlgebra::StaticMatrix3x3(virial)
-        );
+
+        const auto virialMatrix = StaticMatrix3x3(virial);
+        _ringPolymerBeadsPhysicalData[i].setVirial(virialMatrix);
     }
 }
 #else
@@ -186,10 +195,12 @@ void RingPolymerQMMDEngine::applyThermostatHalfStep()
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
         if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
-            _thermostat->applyThermostatHalfStep(
-                _ringPolymerBeads[i],
-                _ringPolymerBeadsPhysicalData[i]
-            );
+        {
+            auto &bead = _ringPolymerBeads[i];
+            auto &data = _ringPolymerBeadsPhysicalData[i];
+
+            _thermostat->applyThermostatHalfStep(bead, data);
+        }
     }
 
     ::MPI_Barrier(MPI_COMM_WORLD);
@@ -213,10 +224,12 @@ void RingPolymerQMMDEngine::applyThermostatHalfStep()
 void RingPolymerQMMDEngine::applyThermostatHalfStep()
 {
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _thermostat->applyThermostatHalfStep(
-            _ringPolymerBeads[i],
-            _ringPolymerBeadsPhysicalData[i]
-        );
+    {
+        auto &bead = _ringPolymerBeads[i];
+        auto &data = _ringPolymerBeadsPhysicalData[i];
+
+        _thermostat->applyThermostatHalfStep(bead, data);
+    }
 }
 #endif
 
@@ -233,22 +246,25 @@ void RingPolymerQMMDEngine::applyThermostat()
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
         if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
-            _thermostat->applyThermostat(
-                _ringPolymerBeads[i],
-                _ringPolymerBeadsPhysicalData[i]
-            );
+        {
+            auto &bead = _ringPolymerBeads[i];
+            auto &data = _ringPolymerBeadsPhysicalData[i];
+
+            _thermostat->applyThermostat(bead, data);
+        }
     }
 
     ::MPI_Barrier(MPI_COMM_WORLD);
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
+        auto &data = _ringPolymerBeadsPhysicalData[i];
+
         auto velocities  = _ringPolymerBeads[i].flattenVelocities();
-        auto temperature = _ringPolymerBeadsPhysicalData[i].getTemperature();
-        auto noseHooverMomentumEnergy =
-            _ringPolymerBeadsPhysicalData[i].getNoseHooverMomentumEnergy();
-        auto noseHooverFrictionEnergy =
-            _ringPolymerBeadsPhysicalData[i].getNoseHooverFrictionEnergy();
+        auto temperature = data.getTemperature();
+
+        auto noseHooverMomentumEnergy = data.getNoseHooverMomentumEnergy();
+        auto noseHooverFrictionEnergy = data.getNoseHooverFrictionEnergy();
 
         ::MPI_Bcast(
             velocities.data(),
@@ -280,23 +296,21 @@ void RingPolymerQMMDEngine::applyThermostat()
         );
 
         _ringPolymerBeads[i].deFlattenVelocities(velocities);
-        _ringPolymerBeadsPhysicalData[i].setTemperature(temperature);
-        _ringPolymerBeadsPhysicalData[i].setNoseHooverMomentumEnergy(
-            noseHooverMomentumEnergy
-        );
-        _ringPolymerBeadsPhysicalData[i].setNoseHooverFrictionEnergy(
-            noseHooverFrictionEnergy
-        );
+        data.setTemperature(temperature);
+        data.setNoseHooverMomentumEnergy(noseHooverMomentumEnergy);
+        data.setNoseHooverFrictionEnergy(noseHooverFrictionEnergy);
     }
 }
 #else
 void RingPolymerQMMDEngine::applyThermostat()
 {
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _thermostat->applyThermostat(
-            _ringPolymerBeads[i],
-            _ringPolymerBeadsPhysicalData[i]
-        );
+    {
+        auto &bead = _ringPolymerBeads[i];
+        auto &data = _ringPolymerBeadsPhysicalData[i];
+
+        _thermostat->applyThermostat(bead, data);
+    }
 }
 #endif
 
@@ -313,10 +327,12 @@ void RingPolymerQMMDEngine::applyManostat()
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
         if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
-            _manostat->applyManostat(
-                _ringPolymerBeads[i],
-                _ringPolymerBeadsPhysicalData[i]
-            );
+        {
+            auto &bead = _ringPolymerBeads[i];
+            auto &data = _ringPolymerBeadsPhysicalData[i];
+
+            _manostat->applyManostat(bead, data);
+        }
     }
 
     ::MPI_Barrier(MPI_COMM_WORLD);
@@ -325,10 +341,12 @@ void RingPolymerQMMDEngine::applyManostat()
     {
         auto positions  = _ringPolymerBeads[i].flattenPositions();
         auto velocities = _ringPolymerBeads[i].flattenVelocities();
-        auto boxDimensions =
-            _ringPolymerBeads[i].getBox().getBoxDimensions().toStdVector();
-        auto volume  = _ringPolymerBeadsPhysicalData[i].getVolume();
-        auto density = _ringPolymerBeadsPhysicalData[i].getDensity();
+
+        auto &box = _ringPolymerBeads[i].getBox();
+
+        auto boxDimensions = box.getBoxDimensions().toStdVector();
+        auto volume        = _ringPolymerBeadsPhysicalData[i].getVolume();
+        auto density       = _ringPolymerBeadsPhysicalData[i].getDensity();
 
         ::MPI_Bcast(
             velocities.data(),
@@ -366,11 +384,11 @@ void RingPolymerQMMDEngine::applyManostat()
             MPI_COMM_WORLD
         );
 
+        const auto boxDimensionsVec = Vec3D(boxDimensions);
+
         _ringPolymerBeads[i].deFlattenVelocities(velocities);
         _ringPolymerBeads[i].deFlattenPositions(positions);
-        _ringPolymerBeads[i].getBox().setBoxDimensions(
-            {boxDimensions[0], boxDimensions[1], boxDimensions[2]}
-        );
+        box.setBoxDimensions(boxDimensionsVec);
         _ringPolymerBeadsPhysicalData[i].setVolume(volume);
         _ringPolymerBeadsPhysicalData[i].setDensity(density);
     }
@@ -379,9 +397,11 @@ void RingPolymerQMMDEngine::applyManostat()
 void RingPolymerQMMDEngine::applyManostat()
 {
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-        _manostat->applyManostat(
-            _ringPolymerBeads[i],
-            _ringPolymerBeadsPhysicalData[i]
-        );
+    {
+        auto &bead = _ringPolymerBeads[i];
+        auto &data = _ringPolymerBeadsPhysicalData[i];
+
+        _manostat->applyManostat(bead, data);
+    }
 }
 #endif

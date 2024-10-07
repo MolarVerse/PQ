@@ -29,6 +29,7 @@
 #include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
 
 #include "atom.hpp"            // for Atom
+#include "atomicVirial.hpp"    // for AtomicVirial
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -40,10 +41,10 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _virial = new virial::VirialAtomic();
+        _virial = new virial::AtomicVirial();
         _data   = new physicalData::PhysicalData();
 
-        _simulationBox = new simulationBox::SimulationBox();
+        _simBox = new simulationBox::SimulationBox();
 
         auto molecule1 = simulationBox::Molecule();
 
@@ -73,22 +74,21 @@ class TestVirial : public ::testing::Test
         molecule2.setCenterOfMass(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         molecule2.addAtom(atom3);
 
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
+        _simBox->addMolecule(molecule1);
+        _simBox->addMolecule(molecule2);
 
-        _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0)
-        );
+        _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     }
 
     void TearDown() override
     {
         delete _data;
-        delete _simulationBox;
+        delete _simBox;
         delete _virial;
     }
 
     physicalData::PhysicalData   *_data;
-    simulationBox::SimulationBox *_simulationBox;
+    simulationBox::SimulationBox *_simBox;
     virial::Virial               *_virial;
 };
 

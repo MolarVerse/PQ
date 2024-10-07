@@ -27,14 +27,11 @@
 #include <fstream>   // IWYU pragma: keep
 #include <string>    // for string
 
-namespace engine
-{
-    class RingPolymerEngine;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace input::ringPolymer
 {
-    void readRingPolymerRestartFile(engine::RingPolymerEngine &);
+    void readRingPolymerRestartFile(pq::RingPolymerEngine &);
 
     /**
      * @class RingPolymerRestartFileReader
@@ -44,14 +41,13 @@ namespace input::ringPolymer
      */
     class RingPolymerRestartFileReader
     {
-      private:
-        const std::string          _fileName;
-        std::ifstream              _fp;
-        engine::RingPolymerEngine &_engine;
+       private:
+        const std::string      _fileName;
+        std::ifstream          _fp;
+        pq::RingPolymerEngine &_engine;
 
-      public:
-        RingPolymerRestartFileReader(const std::string &fileName, engine::RingPolymerEngine &engine)
-            : _fileName(fileName), _fp(fileName), _engine(engine){};
+       public:
+        RingPolymerRestartFileReader(const std::string &, pq::RingPolymerEngine &);
 
         void read();
     };

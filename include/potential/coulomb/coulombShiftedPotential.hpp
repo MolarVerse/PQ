@@ -24,9 +24,9 @@
 
 #define _COULOMB_SHIFTED_POTENTIAL_HPP_
 
-#include "coulombPotential.hpp"
-
 #include <utility>   // for pair
+
+#include "coulombPotential.hpp"
 
 namespace potential
 {
@@ -40,10 +40,13 @@ namespace potential
      */
     class CoulombShiftedPotential : public potential::CoulombPotential
     {
-      public:
+       public:
         using CoulombPotential::CoulombPotential;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double, const double) const override;
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double,
+            const double
+        ) const override;
     };
 
 }   // namespace potential

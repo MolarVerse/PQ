@@ -27,11 +27,7 @@
 #include <string_view>   // for string_view
 
 #include "output.hpp"   // for Output
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -54,7 +50,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const double, const physicalData::PhysicalData &);
+        void write(const double, const pq::PhysicalData &);
     };
 
 }   // namespace output

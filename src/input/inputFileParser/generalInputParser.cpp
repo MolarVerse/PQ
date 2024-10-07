@@ -26,12 +26,11 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for InputFileException, customException
-#include "mmmdEngine.hpp"     // for MMMDEngine
-#include "optEngine.hpp"      // for MMOptEngine
-#include "qmmdEngine.hpp"     // for QMMDEngine
-#include "qmmmmdEngine.hpp"   // for QMMMMDEngine
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "mmmdEngine.hpp"   // for MMMDEngine
+#include "optEngine.hpp"    // for MMOptEngine
+#include "qmmdEngine.hpp"   // for QMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -123,11 +122,6 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(QM_MD);
         engine.reset(new QMMDEngine());
     }
-    else if (jobtype == "qmmm-md")
-    {
-        Settings::setJobtype(QMMM_MD);
-        engine.reset(new QMMMMDEngine());
-    }
     else if (jobtype == "qm-rpmd")
     {
         Settings::setJobtype(RING_POLYMER_QM_MD);
@@ -139,7 +133,6 @@ void GeneralInputParser::parseJobTypeForEngine(
             "- mm-opt\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qmmm-md\n"
             "- qm-rpmd\n",
             lineElements[2]
         ));
@@ -172,6 +165,7 @@ void GeneralInputParser::parseDimensionality(
 
     if (dimensionality == 3)
         Settings::setDimensionality(size_t(dimensionality));
+
     else
         throw InputFileException(format(
             "Invalid dimensionality \"{}\" in input file\n"

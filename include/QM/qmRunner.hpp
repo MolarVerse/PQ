@@ -32,18 +32,7 @@
 #include <string>
 
 #include "timer.hpp"
-
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-    class Box;             // forward declaration
-
-}   // namespace simulationBox
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "typeAliases.hpp"
 
 namespace QM
 {
@@ -59,7 +48,7 @@ namespace QM
         virtual ~QMRunner() = default;
 
         void throwAfterTimeout(const std::stop_token stopToken) const;
-        virtual void run(simulationBox::SimulationBox &, physicalData::PhysicalData &) = 0;
+        virtual void run(pq::SimBox &, pq::PhysicalData &) = 0;
     };
 }   // namespace QM
 

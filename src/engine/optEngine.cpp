@@ -25,9 +25,11 @@
 #include <format>   // for format
 
 #include "exceptions.hpp"
+#include "logOutput.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "settings.hpp"
+#include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 
 using namespace engine;
@@ -183,7 +185,7 @@ void OptEngine::writeOutput()
     {
         _engineOutput.writeXyzFile(*_simulationBox);
         _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeRstFile(*_simulationBox, _step + step0);
+        _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
 
         // _engineOutput.writeVirialFile(
