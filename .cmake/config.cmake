@@ -21,6 +21,16 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 # *****************
+# BUILD WITH OPENMP
+# *****************
+option(BUILD_WITH_OPENMP "Build with OpenMP" ON)
+
+# **************
+# BUILD WITH GPU
+# **************
+option(BUILD_WITH_GPU "Build with GPU" OFF)
+
+# *****************
 # BUILD WITH KOKKOS
 # *****************
 option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
