@@ -294,3 +294,14 @@ const char *CompileTimeException::what() const throw()
     colorfulOutput(Color::FG_RED, "CompileTimeError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *DeviceException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "DeviceError");
+    return _message.c_str();
+}
