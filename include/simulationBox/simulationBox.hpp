@@ -171,7 +171,13 @@ namespace simulationBox
 
 #ifdef __PQ_GPU__
         void initDeviceMemory();
-#endif   // __PQ_GPU__
+        void copyPosToDevice();
+        void copyVelToDevice();
+        void copyForcesToDevice();
+        void copyPosToHost();
+        void copyVelToHost();
+        void copyForcesToHost();
+#endif
 
         /************************
          * QMMM related methods *

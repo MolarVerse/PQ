@@ -33,6 +33,10 @@
 #include "settings.hpp"            // for Settings
 #include "stlVector.hpp"           // for rms
 
+#ifdef __PQ_GPU__
+#include <device_runtime.h>   // wrapper for HIP/CUDA runtime functions
+#endif
+
 using simulationBox::SimulationBox;
 using namespace linearAlgebra;
 using namespace simulationBox;

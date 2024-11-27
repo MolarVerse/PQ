@@ -92,7 +92,7 @@ std::vector<Real> SimulationBox::flattenPositions()
     for (const auto &atom : _atoms)
     {
         const auto position = atom->getPosition();
-        
+
         for (size_t i = 0; i < 3; ++i)
             _pos.push_back(position[i]);
     }
@@ -110,13 +110,16 @@ std::vector<Real> SimulationBox::flattenPositions()
  */
 std::vector<Real> SimulationBox::flattenVelocities()
 {
+    // clang-format off
+    #pragma omp parallel for collapse(2)
     for (const auto &atom : _atoms)
     {
         const auto velocity = atom->getVelocity();
-        _vel.push_back(velocity[0]);
-        _vel.push_back(velocity[1]);
-        _vel.push_back(velocity[2]);
+
+        for (size_t i = 0; i < 3; ++i)
+            _vel.push_back(velocity[i]);
     }
+    // clang-format off
 
     return _vel;
 }
@@ -131,13 +134,16 @@ std::vector<Real> SimulationBox::flattenVelocities()
  */
 std::vector<Real> SimulationBox::flattenForces()
 {
+    // clang-format off
+    #pragma omp parallel for collapse(2)
     for (const auto &atom : _atoms)
     {
         const auto force = atom->getForce();
-        _forces.push_back(force[0]);
-        _forces.push_back(force[1]);
-        _forces.push_back(force[2]);
+
+        for (size_t i = 0; i < 3; ++i)
+            _forces.push_back(force[i]);
     }
+    // clang-format off
 
     return _forces;
 }

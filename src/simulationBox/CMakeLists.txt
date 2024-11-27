@@ -23,6 +23,13 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
+if(BUILD_WITH_GPU)
+    set(simulationBox_source_files
+        ${simulationBox_source_files}
+        simulationBox_GPU.cpp
+    )
+endif()
+
 add_library(simulationBox
     ${simulationBox_source_files}
 )
@@ -45,6 +52,7 @@ target_include_directories(simulationBox
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/simulationBox
     ${PROJECT_SOURCE_DIR}/include/config
+    ${PROJECT_SOURCE_DIR}/include/device
 )
 
 target_link_libraries(simulationBox
