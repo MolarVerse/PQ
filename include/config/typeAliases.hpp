@@ -38,6 +38,17 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
+#if defined(__SINGLE_PRECISION__)
+using Real  = float;
+using Realm = float;
+#elif defined(__MIXED_PRECISION__)
+using Real  = double;
+using Realm = float;
+#else
+using Real  = double;
+using Realm = double;
+#endif
+
 namespace simulationBox
 {
     class Molecule;              // forward declaration
