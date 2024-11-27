@@ -85,29 +85,6 @@ std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
 }
 
 /**
- * @brief flattens velocities of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenVelocities()
-{
-    std::vector<double> velocities;
-
-    auto addVelocities = [&velocities](auto &atom)
-    {
-        const auto velocity = atom->getVelocity();
-
-        velocities.push_back(velocity[0]);
-        velocities.push_back(velocity[1]);
-        velocities.push_back(velocity[2]);
-    };
-
-    std::ranges::for_each(_atoms, addVelocities);
-
-    return velocities;
-}
-
-/**
  * @brief flattens forces of each atom into a single vector of doubles
  *
  * @return std::vector<double>

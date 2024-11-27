@@ -24,6 +24,7 @@
 
 #define _SIMULATION_BOX_HPP_
 
+#include <cstdint>    // for size_t
 #include <map>        // for map
 #include <optional>   // for optional
 #include <string>     // for string
@@ -91,6 +92,20 @@ namespace simulationBox
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
+        // NEWLY introduced for OMP/CUDA
+
+        std::vector<Real> _pos;
+        std::vector<Real> _vel;
+        std::vector<Real> _forces;
+
+#ifdef __PQ_GPU__
+        Real* _posDevice;
+        Real* _velDevice;
+        Real* _forcesDevice;
+#endif   // __PQ_GPU__
+
+        // END NEWLY introduced for OMP/CUDA
+
        public:
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
@@ -138,19 +153,25 @@ namespace simulationBox
             const size_t atomIndex
         );
 
+        [[nodiscard]] std::vector<Real> flattenPositions();
+        [[nodiscard]] std::vector<Real> flattenVelocities();
+        [[nodiscard]] std::vector<Real> flattenForces();
+
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<size_t> flattenAtomTypes();
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
         [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
 
-        [[nodiscard]] std::vector<double> flattenVelocities();
-        [[nodiscard]] std::vector<double> flattenForces();
         [[nodiscard]] std::vector<double> flattenPartialCharges();
 
         void deFlattenPositions(const std::vector<double>& positions);
         void deFlattenVelocities(const std::vector<double>& velocities);
         void deFlattenForces(const std::vector<double>& forces);
 #endif
+
+#ifdef __PQ_GPU__
+        void initDeviceMemory();
+#endif   // __PQ_GPU__
 
         /************************
          * QMMM related methods *
@@ -210,7 +231,14 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
         [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>    flattenPositions() const;
+
+        // NEWLY introduced for OMP/CUDA
+
+        [[nodiscard]] const Real* getPosPtr() const;
+        [[nodiscard]] const Real* getVelPtr() const;
+        [[nodiscard]] const Real* getForcesPtr() const;
+
+        // END NEWLY introduced for OMP/CUDA
 
         /***************************
          * standard setter methods *

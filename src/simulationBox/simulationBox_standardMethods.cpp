@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 #include "simulationBox.hpp"
+#include "typeAliases.hpp"
 
 using namespace simulationBox;
 
@@ -68,6 +69,77 @@ void SimulationBox::addMolecule(const Molecule &molecule)
 void SimulationBox::addMoleculeType(const MoleculeType &molecule)
 {
     _moleculeTypes.push_back(molecule);
+}
+
+/****************************
+ *                          *
+ * standard flatten methods *
+ *                          *
+ ****************************/
+
+/**
+ * @brief flattens positions of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ *
+ * @TODO: this method should not return anything, but rather only set the _pos
+ * member variable
+ */
+std::vector<Real> SimulationBox::flattenPositions()
+{
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (const auto &atom : _atoms)
+    {
+        const auto position = atom->getPosition();
+        
+        for (size_t i = 0; i < 3; ++i)
+            _pos.push_back(position[i]);
+    }
+    // clang-format off
+
+    return _pos;
+}
+
+/**
+ * @brief flattens velocities of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ *
+ * @TODO: this method should not return anything, but rather only set the _vel
+ */
+std::vector<Real> SimulationBox::flattenVelocities()
+{
+    for (const auto &atom : _atoms)
+    {
+        const auto velocity = atom->getVelocity();
+        _vel.push_back(velocity[0]);
+        _vel.push_back(velocity[1]);
+        _vel.push_back(velocity[2]);
+    }
+
+    return _vel;
+}
+
+/**
+ * @brief flattens forces of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ *
+ * @TODO: this method should not return anything, but rather only set the
+ * _forces
+ */
+std::vector<Real> SimulationBox::flattenForces()
+{
+    for (const auto &atom : _atoms)
+    {
+        const auto force = atom->getForce();
+        _forces.push_back(force[0]);
+        _forces.push_back(force[1]);
+        _forces.push_back(force[2]);
+    }
+
+    return _forces;
 }
 
 /***************************
@@ -342,6 +414,63 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 }
 
 /**
+ * @brief get the positions ptr
+ *
+ * @details This method is used to get a pointer to the positions either on the
+ * CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the positions on the GPU is returned. Otherwise, the pointer to
+ * the positions on the CPU is returned.
+ *
+ * @return const Real*
+ */
+const Real *SimulationBox::getPosPtr() const
+{
+#ifdef __PQ_GPU__
+    return _posDevice;
+#else
+    return _pos.data();
+#endif
+}
+
+/**
+ * @brief get the velocities ptr
+ *
+ * @details This method is used to get a pointer to the velocities either on the
+ * CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the velocities on the GPU is returned. Otherwise, the pointer to
+ * the velocities on the CPU is returned.
+ *
+ * @return const Real*
+ */
+const Real *SimulationBox::getVelPtr() const
+{
+#ifdef __PQ_GPU__
+    return _velDevice;
+#else
+    return _vel.data();
+#endif
+}
+
+/**
+ * @brief get the forces ptr
+ *
+ * @details This method is used to get a pointer to the forces either on the CPU
+ * or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the pointer
+ * to the forces on the GPU is returned. Otherwise, the pointer to the forces on
+ * the CPU is returned.
+ *
+ * @return const Real*
+ */
+const Real *SimulationBox::getForcesPtr() const
+{
+#ifdef __PQ_GPU__
+    return _forcesDevice;
+#else
+    return _forces.data();
+#endif
+}
+
+/**
  * @brief get all atomic numbers of all atoms
  *
  * @return std::vector<int>
@@ -354,29 +483,6 @@ std::vector<int> SimulationBox::getAtomicNumbers() const
         atomicNumbers.push_back(atom->getAtomicNumber());
 
     return atomicNumbers;
-}
-
-/**
- * @brief flattens positions of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenPositions() const
-{
-    std::vector<double> positions;
-
-    auto addPositions = [&positions](auto &atom)
-    {
-        const auto position = atom->getPosition();
-
-        positions.push_back(position[0]);
-        positions.push_back(position[1]);
-        positions.push_back(position[2]);
-    };
-
-    std::ranges::for_each(_atoms, addPositions);
-
-    return positions;
 }
 
 /***************************
