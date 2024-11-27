@@ -88,6 +88,10 @@ namespace engine
         pq::KokkosPotential _kokkosPotential;
 #endif
 
+#ifdef __PQ_GPU__
+        Device _device;
+#endif
+
        public:
         Engine()          = default;
         virtual ~Engine() = default;
