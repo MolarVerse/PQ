@@ -32,3 +32,7 @@ endif()
 if(BUILD_WITH_MPI)
     add_subdirectory(mpi)
 endif()
+
+if(BUILD_WITH_GPU)
+    add_subdirectory(device)
+endif()
