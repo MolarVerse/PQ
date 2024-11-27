@@ -90,11 +90,11 @@ else()
 endif()
 
 if(BUILD_WITH_OPENMP)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D_OPENMP")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D__PQ_OPENMP__")
 endif()
 
 if(BUILD_WITH_GPU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GPU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__")
 endif()
 
 # add git version as flag
