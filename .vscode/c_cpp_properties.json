@@ -4,7 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include/**",
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/**"
             ],
             "browse": {
                 "path": [
@@ -12,7 +12,7 @@
                     "${workspaceFolder}/**"
                 ]
             },
-            "compileCommands": "${workspaceFolder}/.build/compile_commands.json",
+            "compileCommands": "${config:cmake.buildDirectory}/compile_commands.json",
             "defines": [],
             "cStandard": "c17",
             "cppStandard": "c++20",
