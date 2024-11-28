@@ -31,7 +31,6 @@
 
 namespace device
 {
-
     /**
      * @class Device
      *
@@ -42,18 +41,20 @@ namespace device
     class Device
     {
        private:
-        size_t _deviceCount;
-        size_t _deviceID;
+        int _deviceID;
+        int _deviceCount;
 
         std::vector<std::string> _errorMsgs;
 
         void addDeviceError(const deviceError_t error, const std::string& msg);
 
        public:
-        Device(const size_t deviceID = -1);
-        virtual ~Device() = default;
+        Device();
+        explicit Device(const int deviceID);
+        ~Device() = default;
 
-        void checkErrors(const std::string& msg = "");
+        void checkErrors();
+        void checkErrors(const std::string& msg);
 
         template <typename T>
         void deviceMalloc(T** ptr, size_t size);

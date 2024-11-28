@@ -20,24 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __DEVICE_UTILS_HPP__
-#define __DEVICE_UTILS_HPP__
+#ifndef __DEVICE_CONFIG_HPP__
+#define __DEVICE_CONFIG_HPP__
 
 #ifdef __PQ_GPU__
 
 // clang-format off
-
-/*********************************
- *                               *
- * Clean up the macro namespaces *
- *                               *
- *********************************/
-
-#if defined(__HIPCC__)
-    #define __PQ_HIP__
-#elif defined(__PQ_NVCXX__)
-    #define __PQ_CUDA__
-#endif
 
 /*******************************
  *                             *
@@ -76,9 +64,9 @@
  ************************************/
 
 #if defined(__PQ_HIP__)
-    #define __deviceMalloc(ptr, size) hipMalloc(ptr, size)
+    #define __deviceMalloc(ptr, size) hipMalloc((ptr), (size))
 #elif defined(__PQ_CUDA__)
-    #define __deviceMalloc(ptr, size) cudaMalloc(ptr, size)
+    #define __deviceMalloc(ptr, size) cudaMalloc((ptr), (size))
 #endif
 
 /*********************************
@@ -107,4 +95,4 @@
 
 #endif   // __PQ_GPU__
 
-#endif   // __DEVICE_UTILS_HPP__
+#endif   // __DEVICE_CONFIG_HPP__

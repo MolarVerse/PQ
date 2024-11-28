@@ -1,5 +1,7 @@
 #include "device.hpp"
 
+#include <format>
+
 #include "deviceConfig.hpp"
 #include "exceptions.hpp"
 
@@ -20,23 +22,28 @@ using namespace device;
  *
  * @param deviceID
  */
-Device::Device(const size_t deviceID = -1)
+Device::Device()
 {
-    if (deviceID == -1)
-    {
-        deviceError_t error = __getDevice(&_deviceID);
-        addDeviceError(error, "Getting the device ID");
-    }
+    int                 deviceID = -1;
+    const deviceError_t error    = __getDevice(&deviceID);
 
+    addDeviceError(error, "Getting the device ID");
+
+    *this = Device(_deviceID);
+}
+
+Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
+{
     deviceError_t error = __getDeviceCount(&_deviceCount);
     addDeviceError(error, "Getting the device count");
 
     if (_deviceID >= _deviceCount)
-        _errorMsgs.push_back(
-            "The device ID is out of range. The device ID is " +
-            std::to_string(_deviceID) + " and the device count is " +
-            std::to_string(_deviceCount)
-        );
+        _errorMsgs.push_back(std::format(
+            "The device ID is out of range. The device ID is {} and the "
+            "device count is {}",
+            _deviceID,
+            _deviceCount
+        ));
 
     checkErrors("Device initialization");
 }
@@ -53,7 +60,10 @@ Device::Device(const size_t deviceID = -1)
  * @param error the error code that occurred
  * @param msg the message that should be added to the error message list
  */
-void Device::addDeviceError(const deviceError_t error, const std::string& msg)
+void device::Device::addDeviceError(
+    const deviceError_t error,
+    const std::string&  msg
+)
 {
     if (error != __deviceSuccess__)
         _errorMsgs.push_back(
@@ -72,15 +82,13 @@ void Device::addDeviceError(const deviceError_t error, const std::string& msg)
  * additional message. The msg parameter will be inserted in a string "Error
  * in " + msg + ":\n" + error messages.
  */
-void Device::checkErrors(const std::string& msg = "")
-{
-    std::string _msg = msg;
-    if (_errorMsgs.size() > 0)
-    {
-        if (_msg.empty())
-            _msg = "Device API call";
+void Device::checkErrors() { checkErrors("Device API call"); }
 
-        std::string errorMsg = "Error in " + _msg + ":\n\n";
+void Device::checkErrors(const std::string& msg)
+{
+    if (!_errorMsgs.empty())
+    {
+        std::string errorMsg = "Error in " + msg + ":\n\n";
 
         for (const auto& e : _errorMsgs) errorMsg = errorMsg + e + "\n";
 

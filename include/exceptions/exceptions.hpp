@@ -38,7 +38,7 @@ namespace customException
      * @enum ExceptionType
      *
      */
-    enum class ExceptionType : size_t
+    enum class ExceptionType : std::size_t
     {
         INPUTFILEEXCEPTION,
         RSTFILEEXCEPTION,

@@ -12,6 +12,14 @@ target_link_libraries(device
     exceptions
 )
 
+if(BUILD_WITH_GPU)
+    target_link_libraries(device
+        PUBLIC
+        cuda
+        cudart
+    )
+endif()
+
 install(TARGETS device
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
