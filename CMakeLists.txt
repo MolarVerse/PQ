@@ -15,7 +15,7 @@ endif()
 # ***********************
 project(PQ
     DESCRIPTION "MolarVerse - PQ"
-    LANGUAGES CXX CUDA)
+    LANGUAGES CXX)
 
 # **************************
 # add .cmake to include path
@@ -50,8 +50,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(NOT(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease"))
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
     endif()
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_NVCXX__ -cuda")
 else()
     message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
 endif()
@@ -96,9 +94,19 @@ if(BUILD_WITH_OPENMP)
 endif()
 
 if(BUILD_WITH_GPU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__")
-    #TODO: make this more flexible and general
-    include_directories(${CUDA_INCLUDE_DIRS})
+    #TODO: add for hip
+    enable_language(CUDA)
+    if(NOT CMAKE_CUDA_COMPILER)
+        message(FATAL_ERROR "CUDA compiler not found")
+    endif()
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__")
+    # set(CUDA_HOME $ENV{CUDA_HOME})
+    # if(NOT CUDA_HOME)
+    #     message(FATAL_ERROR "CUDA_HOME not set")
+    # endif()
+    # include_directories(${CUDA_HOME}/include)
+    include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 endif()
 
 # add git version as flag
