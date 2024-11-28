@@ -15,7 +15,7 @@ endif()
 # ***********************
 project(PQ
     DESCRIPTION "MolarVerse - PQ"
-    LANGUAGES CXX C)
+    LANGUAGES CXX CUDA)
 
 # **************************
 # add .cmake to include path
@@ -27,6 +27,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/.cmake)
 # ********
 include(config) # include default settins
 include(getGitVersion) # include get git version
+
+#TODO: add compiler flags based on which compiler is used
+
+# ***************
+# cmake cxx flags
+# ***************
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall -Wextra")
 
 # **************
 # check compiler
@@ -42,6 +50,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(NOT(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease"))
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
     endif()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "NVHPC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_NVCXX__ -cuda")
 else()
     message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
 endif()
@@ -60,14 +70,6 @@ else()
     )
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
-
-# ***************
-# cmake cxx flags
-# ***************
-set(CMAKE_CXX_STANDARD 20)
-
-# set default flags
-set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
 
 if(WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-use-linker-plugin")
@@ -95,6 +97,8 @@ endif()
 
 if(BUILD_WITH_GPU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__")
+    #TODO: make this more flexible and general
+    include_directories(${CUDA_INCLUDE_DIRS})
 endif()
 
 # add git version as flag

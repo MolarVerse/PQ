@@ -33,9 +33,9 @@
  *                               *
  *********************************/
 
-#if defined(__HIPCC__) && !defined(__PQ_CUDA__)
+#if defined(__HIPCC__)
     #define __PQ_HIP__
-#elif defined(__CUDACC__)
+#elif defined(__PQ_NVCXX__)
     #define __PQ_CUDA__
 #endif
 
@@ -49,8 +49,24 @@
     #include <hip/hip_runtime.h>
 #elif defined(__PQ_CUDA__)
     #include <cuda_runtime.h>
-#else
-    #include <cuda_runtime.h>
+#endif
+
+/*******************************************
+ *                                         *
+ * Define the initialization device macros *
+ *                                         *
+ *******************************************/
+
+#if defined(__PQ_HIP__)
+    #define __getDevice(x) hipGetDevice(x)
+#elif defined(__PQ_CUDA__)
+    #define __getDevice(x) cudaGetDevice(x)
+#endif
+
+#if defined(__PQ_HIP__)
+    #define __getDeviceCount(x) hipGetDeviceCount(x)
+#elif defined(__PQ_CUDA__)
+    #define __getDeviceCount(x) cudaGetDeviceCount(x)
 #endif
 
 /************************************
@@ -60,9 +76,9 @@
  ************************************/
 
 #if defined(__PQ_HIP__)
-    #define __DEVICE_MALLOC(ptr, size) hipMalloc(ptr, size)
+    #define __deviceMalloc(ptr, size) hipMalloc(ptr, size)
 #elif defined(__PQ_CUDA__)
-    #define __DEVICE_MALLOC(ptr, size) cudaMalloc(ptr, size)
+    #define __deviceMalloc(ptr, size) cudaMalloc(ptr, size)
 #endif
 
 /*********************************
@@ -72,15 +88,15 @@
  *********************************/
 
 #if defined(__PQ_HIP__)
-    #define deviceSuccess hipSuccess
+    #define __deviceSuccess__ hipSuccess
 #elif defined(__PQ_CUDA__)
-    #define deviceSuccess cudaSuccess
+    #define __deviceSuccess__ cudaSuccess
 #endif
 
 #if defined(__PQ_HIP__)
-    #define deviceGetErrorString hipGetErrorString
+    #define __deviceGetErrorString(x) hipGetErrorString(x)
 #elif defined(__PQ_CUDA__)
-    #define deviceGetErrorString cudaGetErrorString
+    #define __deviceGetErrorString(x) cudaGetErrorString(x)
 #endif
 
 #if defined(__PQ_HIP__)

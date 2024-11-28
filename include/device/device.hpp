@@ -32,13 +32,25 @@
 namespace device
 {
 
+    /**
+     * @class Device
+     *
+     * @brief Contains all the information needed to run the simulation on the
+     * device
+     *
+     */
     class Device
     {
        private:
+        size_t _deviceCount;
+        size_t _deviceID;
+
         std::vector<std::string> _errorMsgs;
 
+        void addDeviceError(const deviceError_t error, const std::string& msg);
+
        public:
-        Device()          = default;
+        Device(const size_t deviceID = -1);
         virtual ~Device() = default;
 
         void checkErrors(const std::string& msg = "");
