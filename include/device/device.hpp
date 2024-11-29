@@ -37,8 +37,11 @@ namespace device
      * @brief Contains all the information needed to run the simulation on the
      * device
      *
-     * @TODO: generalize this whole class to use multiple devices
-     *
+     * @TODO:
+     *      - generalize this whole class to use multiple devices
+     *      - add memcpy
+     *      - add memcpyAsync
+     *      - add streams with different priorities
      */
     class Device
     {
@@ -61,10 +64,10 @@ namespace device
         void checkErrors(const std::string& msg);
 
         template <typename T>
-        void deviceMalloc(T** ptr, const size_t size);
+        deviceError_t deviceMalloc(T** ptr, const size_t size);
 
         template <typename T>
-        void deviceFree(T* ptr);
+        deviceError_t deviceFree(T* ptr);
     };
 
 }   // namespace device

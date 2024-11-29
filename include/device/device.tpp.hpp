@@ -26,12 +26,14 @@ namespace device
      * @return deviceError_t
      */
     template <typename T>
-    void Device::deviceMalloc(T** ptr, const size_t size)
+    deviceError_t Device::deviceMalloc(T** ptr, const size_t size)
     {
         const auto error =
             __deviceMalloc(reinterpret_cast<void**>(ptr), size * sizeof(T));
 
         addDeviceError(error, "Device memory allocation");
+
+        return error;
     }
 
     /**
@@ -47,11 +49,13 @@ namespace device
      * @return deviceError_t
      */
     template <typename T>
-    void Device::deviceFree(T* ptr)
+    deviceError_t Device::deviceFree(T* ptr)
     {
         const auto error = __deviceFree(reinterpret_cast<void*>(ptr));
 
         addDeviceError(error, "Device memory deallocation");
+
+        return error;
     }
 }   // namespace device
 
