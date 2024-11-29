@@ -70,6 +70,12 @@
 #endif
 
 #if defined(__PQ_HIP__)
+    #define __setDevice(x) hipSetDevice(x)
+#elif defined(__PQ_CUDA__)
+    #define __setDevice(x) cudaSetDevice(x)
+#endif
+
+#if defined(__PQ_HIP__)
     #define __getDeviceCount(x) hipGetDeviceCount(x)
 #elif defined(__PQ_CUDA__)
     #define __getDeviceCount(x) cudaGetDeviceCount(x)

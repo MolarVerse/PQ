@@ -54,6 +54,12 @@ Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
     error = __getDeviceProperties(&_deviceProp, _deviceID);
     addDeviceError(error, "Getting the device properties");
 
+    error = __setDevice(_deviceID);
+    addDeviceError(
+        error,
+        std::format("Setting the device with the device ID {}", _deviceID)
+    );
+
     checkErrors("Device initialization");
 }
 
