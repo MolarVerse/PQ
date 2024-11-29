@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "../../include/device/deviceConfig.hpp"   // wrapper for HIP/CUDA runtime functions
+#include "device.hpp"          // for device::Device
 #include "simulationBox.hpp"   // header for the class definition
 
 using namespace simulationBox;
@@ -29,15 +29,16 @@ using namespace device;
 /**
  * @brief initialize device memory for simulationBox object
  *
+ * @param device
  */
-void SimulationBox::initDeviceMemory()
+void SimulationBox::initDeviceMemory(device::Device& device)
 {
-    const size_t nAtoms = getNumberOfAtoms();
-    const size_t size   = nAtoms * 3 * sizeof(Real);
+    const size_t size = getNumberOfAtoms() * 3;
 
-    assert(nAtoms > 0);
+    assert(size > 0);
 
-    deviceMalloc((void**) &_posDevice, size);
-    deviceMalloc((void**) &_velDevice, size);
-    deviceMalloc((void**) &_forcesDevice, size);
+    device.deviceMalloc(&_posDevice, size);
+    device.deviceMalloc(&_velDevice, size);
+    device.deviceMalloc(&_forcesDevice, size);
+    device.checkErrors("SimulationBox device memory allocation");
 }

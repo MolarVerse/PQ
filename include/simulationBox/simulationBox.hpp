@@ -40,6 +40,10 @@
 #include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
 
+#ifdef __PQ_GPU__
+#include "device.hpp"   // for Device
+#endif
+
 /**
  * @namespace simulationBox
  *
@@ -170,13 +174,13 @@ namespace simulationBox
 #endif
 
 #ifdef __PQ_GPU__
-        void initDeviceMemory();
-        void copyPosToDevice();
-        void copyVelToDevice();
-        void copyForcesToDevice();
-        void copyPosToHost();
-        void copyVelToHost();
-        void copyForcesToHost();
+        void initDeviceMemory(device::Device& device);
+        void copyPosToDevice(device::Device& device);
+        void copyVelToDevice(device::Device& device);
+        void copyForcesToDevice(device::Device& device);
+        void copyPosToHost(device::Device& device);
+        void copyVelToHost(device::Device& device);
+        void copyForcesToHost(device::Device& device);
 #endif
 
         /************************
