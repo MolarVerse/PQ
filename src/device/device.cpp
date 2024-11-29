@@ -11,11 +11,17 @@ using namespace device;
  * @brief Construct a new Device:: Device object
  *
  * @details This constructor is used to initialize the device object. The device
- * object is used to handle all device API calls. The constructor initializes
- * the device ID and the device count. If the device ID is not given, the
- * constructor will get the device ID from the device API. If the device ID is
- * given, the constructor will use the given device ID. The constructor will
- * also get the device count from the device API.
+ * object is used to handle all device API calls.
+ * The constructor initializes the following variables:
+ *      - _deviceID: the device ID of the device
+ *      - _deviceCount: the number of devices in the system
+ *      - _deviceProp: the device properties of the device
+ *
+ *
+ * @note If the device ID is not given, the constructor will get the device ID
+ * from the device API. If the device ID is given, the constructor will use the
+ * given device ID. The constructor will also get the device count from the
+ * device API.
  *
  * @throw DeviceException if an error occurred during the device API calls or
  * if the device ID is out of range.
@@ -44,6 +50,9 @@ Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
             _deviceID,
             _deviceCount
         ));
+
+    error = __getDeviceProperties(&_deviceProp, _deviceID);
+    addDeviceError(error, "Getting the device properties");
 
     checkErrors("Device initialization");
 }

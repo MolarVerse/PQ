@@ -46,6 +46,8 @@ namespace device
         int _deviceID;
         int _deviceCount;
 
+        deviceProp_t _deviceProp;
+
         std::vector<std::string> _errorMsgs;
 
         void addDeviceError(const deviceError_t error, const std::string& msg);

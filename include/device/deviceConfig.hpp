@@ -39,6 +39,24 @@
     #include <cuda_runtime.h>
 #endif
 
+/***************************
+ *                         *
+ * Define the device types *
+ *                         *
+ ***************************/
+
+#if defined(__PQ_HIP__)
+    using deviceProp_t = hipDeviceProp_t;
+#elif defined(__PQ_CUDA__)
+    using deviceProp_t = cudaDeviceProp;
+#endif
+
+#if defined(__PQ_HIP__)
+    using deviceError_t = hipError_t;
+#elif defined(__PQ_CUDA__)
+    using deviceError_t = cudaError_t;
+#endif
+
 /*******************************************
  *                                         *
  * Define the initialization device macros *
@@ -55,6 +73,12 @@
     #define __getDeviceCount(x) hipGetDeviceCount(x)
 #elif defined(__PQ_CUDA__)
     #define __getDeviceCount(x) cudaGetDeviceCount(x)
+#endif
+
+#if defined(__PQ_HIP__)
+    #define __getDeviceProperties(x, y) hipGetDeviceProperties(x, y)
+#elif defined(__PQ_CUDA__)
+    #define __getDeviceProperties(x, y) cudaGetDeviceProperties(x, y)
 #endif
 
 /************************************
@@ -91,12 +115,6 @@
     #define __deviceGetErrorString(x) hipGetErrorString(x)
 #elif defined(__PQ_CUDA__)
     #define __deviceGetErrorString(x) cudaGetErrorString(x)
-#endif
-
-#if defined(__PQ_HIP__)
-    using deviceError_t = hipError_t;
-#elif defined(__PQ_CUDA__)
-    using deviceError_t = cudaError_t;
 #endif
 
 #endif   // __PQ_GPU__
