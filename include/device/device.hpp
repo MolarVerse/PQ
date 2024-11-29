@@ -37,6 +37,8 @@ namespace device
      * @brief Contains all the information needed to run the simulation on the
      * device
      *
+     * @TODO: generalize this whole class to use multiple devices
+     *
      */
     class Device
     {
@@ -57,7 +59,7 @@ namespace device
         void checkErrors(const std::string& msg);
 
         template <typename T>
-        void deviceMalloc(T** ptr, size_t size);
+        void deviceMalloc(T** ptr, const size_t size);
 
         template <typename T>
         void deviceFree(T* ptr);

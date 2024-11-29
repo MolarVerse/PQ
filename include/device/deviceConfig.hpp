@@ -69,6 +69,12 @@
     #define __deviceMalloc(ptr, size) cudaMalloc((ptr), (size))
 #endif
 
+#if defined(__PQ_HIP__)
+    #define __deviceFree(ptr) hipFree(ptr)
+#elif defined(__PQ_CUDA__)
+    #define __deviceFree(ptr) cudaFree(ptr)
+#endif
+
 /*********************************
  *                               *
  * Error handling for device API *
