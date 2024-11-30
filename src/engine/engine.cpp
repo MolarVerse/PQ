@@ -23,6 +23,7 @@
 #include "engine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "device.hpp"                        // for Device
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
@@ -43,6 +44,7 @@ using namespace constraints;
 using namespace output;
 using namespace timings;
 using namespace settings;
+using namespace device;
 
 /**
  * @brief Adds a timings section to the timingsSection vector.
@@ -175,6 +177,15 @@ Virial &Engine::getVirial() { return *_virial; }
  * @return Potential&
  */
 Potential &Engine::getPotential() { return *_potential; }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief get the reference to the device
+ *
+ * @return Device&
+ */
+Device &Engine::getDevice() { return _device; }
+#endif
 
 /**
  * @brief get the pointer to the force field

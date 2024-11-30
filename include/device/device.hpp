@@ -46,6 +46,8 @@ namespace device
     class Device
     {
        private:
+        bool _useDevice;
+
         int _deviceID;
         int _deviceCount;
 
@@ -58,9 +60,11 @@ namespace device
         void addDeviceError(const deviceError_t error, const std::string& msg);
 
        public:
-        Device();
+        explicit Device(const bool useDevice);
         explicit Device(const int deviceID);
         ~Device();
+
+        [[nodiscard]] bool isDeviceUsed() const;
 
         void checkErrors();
         void checkErrors(const std::string& msg);

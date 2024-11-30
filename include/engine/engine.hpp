@@ -49,6 +49,10 @@
 #include "simulationBox_kokkos.hpp"
 #endif
 
+#ifdef __PQ_GPU__
+#include "device.hpp"
+#endif
+
 namespace engine
 {
 
@@ -89,7 +93,7 @@ namespace engine
 #endif
 
 #ifdef __PQ_GPU__
-        Device _device;
+        device::Device _device = device::Device(false);
 #endif
 
        public:
@@ -126,6 +130,10 @@ namespace engine
         [[nodiscard]] pq::IntraNonBond &getIntraNonBonded();
         [[nodiscard]] pq::Virial       &getVirial();
         [[nodiscard]] pq::Potential    &getPotential();
+
+#ifdef __PQ_GPU__
+        [[nodiscard]] device::Device &getDevice();
+#endif
 
         /*************************
          * output getter methods *

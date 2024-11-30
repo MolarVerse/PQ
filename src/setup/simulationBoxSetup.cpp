@@ -80,7 +80,7 @@ void setup::simulationBox::setupSimulationBox(Engine &engine)
  *
  * @param engine
  */
-SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine){};
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
 
 /**
  * @brief setup simulation box
@@ -110,6 +110,11 @@ void SimulationBoxSetup::setup()
     simBox.calculateCenterOfMassMolecules();
 
     initVelocities();
+
+#ifdef __PQ_GPU__
+    if (_engine.getDevice().isDeviceUsed())
+        initDeviceMemory();
+#endif
 
     writeSetupInfo();
 }
@@ -466,3 +471,20 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     log.writeEmptyLine();
 }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief Initialize device memory for simulation box
+ *
+ */
+void SimulationBoxSetup::initDeviceMemory()
+{
+    auto &simBox = _engine.getSimulationBox();
+    auto &device = _engine.getDevice();
+
+    simBox.initDeviceMemory(device);
+    simBox.copyPosTo(device);
+    simBox.copyVelTo(device);
+    simBox.copyForcesTo(device);
+}
+#endif

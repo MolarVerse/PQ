@@ -63,6 +63,10 @@ namespace setup::simulationBox
         void initVelocities();
 
         void writeSetupInfo() const;
+
+#ifdef __PQ_GPU__
+        void initDeviceMemory();
+#endif
     };
 
 }   // namespace setup::simulationBox

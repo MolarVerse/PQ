@@ -30,19 +30,27 @@ using namespace device;
  * @throw DeviceException if an error occurred during the device API calls or
  * if the device ID is out of range.
  *
- * @param deviceID
+ * @param useDevice if true the device will be used, if false the device will
+ * not be used
  */
-Device::Device()
+Device::Device(const bool useDevice)
 {
+    if (!useDevice)
+    {
+        _useDevice = false;
+        return;
+    }
+
     int                 deviceID = -1;
     const deviceError_t error    = __getDevice(&deviceID);
 
     addDeviceError(error, "Getting the device ID");
 
-    *this = Device(_deviceID);
+    *this = Device(deviceID);
 }
 
-Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
+Device::Device(const int deviceID)
+    : _useDevice(true), _deviceID(deviceID), _deviceCount(0)
 {
     deviceError_t error = __getDeviceCount(&_deviceCount);
     addDeviceError(error, "Getting the device count");
@@ -97,6 +105,17 @@ Device::~Device()
         std::cerr << e.what() << std::endl;
     }
 }
+
+/**
+ * @brief function to check if the device is used
+ *
+ * @details This function is used to check if the device is used. The function
+ * will return true if the device is used and false if the device is not used.
+ *
+ * @return true if the device is used
+ * @return false if the device is not used
+ */
+[[nodiscard]] bool Device::isDeviceUsed() const { return _useDevice; }
 
 /**
  * @brief function to add an error message to the error message list
