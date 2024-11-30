@@ -52,7 +52,7 @@ namespace device
     template <typename T>
     deviceError_t Device::deviceFree(T* ptr)
     {
-        const auto error = __deviceFree(reinterpret_cast<void*>(ptr));
+        const auto error = deviceFree(ptr);
 
         addDeviceError(error, "Device memory deallocation");
 

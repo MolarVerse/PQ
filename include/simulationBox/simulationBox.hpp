@@ -174,13 +174,17 @@ namespace simulationBox
 #endif
 
 #ifdef __PQ_GPU__
+
+        ~SimulationBox();
+
         void initDeviceMemory(device::Device& device);
-        void copyPosToDevice(device::Device& device);
-        void copyVelToDevice(device::Device& device);
-        void copyForcesToDevice(device::Device& device);
-        void copyPosToHost(device::Device& device);
-        void copyVelToHost(device::Device& device);
-        void copyForcesToHost(device::Device& device);
+
+        void copyPosTo(device::Device& device);
+        void copyVelTo(device::Device& device);
+        void copyForcesTo(device::Device& device);
+        void copyPosFrom(device::Device& device);
+        void copyVelFrom(device::Device& device);
+        void copyForcesFrom(device::Device& device);
 #endif
 
         /************************

@@ -4,9 +4,15 @@
 #include <cstddef>   // for size_t
 
 #include "deviceConfig.hpp"
+#include "exceptions.hpp"
 
 namespace device
 {
+    template <typename T>
+    deviceError_t deviceFreeThrowError(T* ptr, const std::string& msg);
+
+    template <typename T>
+    deviceError_t deviceFree(T* ptr);
 
     template <typename T>
     deviceError_t deviceMemcpy(

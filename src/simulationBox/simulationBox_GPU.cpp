@@ -21,10 +21,24 @@
 ******************************************************************************/
 
 #include "device.hpp"          // for device::Device
+#include "deviceAPI.hpp"       // for device::Device
 #include "simulationBox.hpp"   // header for the class definition
 
 using namespace simulationBox;
 using namespace device;
+
+/**
+ * @brief Destructor for the SimulationBox class
+ */
+SimulationBox::~SimulationBox()
+{
+    deviceFree(_posDevice);
+    deviceFree(_velDevice);
+    deviceFree(_forcesDevice);
+    _posDevice    = nullptr;
+    _velDevice    = nullptr;
+    _forcesDevice = nullptr;
+}
 
 /**
  * @brief initialize device memory for simulationBox object
@@ -41,4 +55,82 @@ void SimulationBox::initDeviceMemory(device::Device& device)
     device.deviceMalloc(&_velDevice, size);
     device.deviceMalloc(&_forcesDevice, size);
     device.checkErrors("SimulationBox device memory allocation");
+}
+
+/**
+ * @brief copy position data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyPosTo(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyToAsync(_posDevice, _pos);
+    device.checkErrors("SimulationBox copy position data to device");
+}
+
+/**
+ * @brief copy velocity data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyVelTo(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyToAsync(_velDevice, _vel);
+    device.checkErrors("SimulationBox copy velocity data to device");
+}
+
+/**
+ * @brief copy forces data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyForcesTo(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyToAsync(_forcesDevice, _forces);
+    device.checkErrors("SimulationBox copy forces data to device");
+}
+
+/**
+ * @brief copy position data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyPosFrom(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyFromAsync(_pos, _posDevice);
+    device.checkErrors("SimulationBox copy position data from device");
+}
+
+/**
+ * @brief copy velocity data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyVelFrom(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyFromAsync(_vel, _velDevice);
+    device.checkErrors("SimulationBox copy velocity data from device");
+}
+
+/**
+ * @brief copy forces data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyForcesFrom(device::Device& device)
+{
+    const size_t size = getNumberOfAtoms() * 3;
+
+    device.deviceMemcpyFromAsync(_forces, _forcesDevice);
+    device.checkErrors("SimulationBox copy forces data from device");
 }
