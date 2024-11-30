@@ -20,10 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
 
 using namespace simulationBox;
+using namespace settings;
 
 /************************
  *                      *
@@ -447,10 +449,11 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 const Real *SimulationBox::getPosPtr() const
 {
 #ifdef __PQ_GPU__
-    return _posDevice;
-#else
-    return _pos.data();
+    if (Settings::useDevice())
+        return _posDevice;
+    else
 #endif
+        return _pos.data();
 }
 
 /**
@@ -466,10 +469,11 @@ const Real *SimulationBox::getPosPtr() const
 const Real *SimulationBox::getVelPtr() const
 {
 #ifdef __PQ_GPU__
-    return _velDevice;
-#else
-    return _vel.data();
+    if (Settings::useDevice())
+        return _velDevice;
+    else
 #endif
+        return _vel.data();
 }
 
 /**
@@ -485,10 +489,11 @@ const Real *SimulationBox::getVelPtr() const
 const Real *SimulationBox::getForcesPtr() const
 {
 #ifdef __PQ_GPU__
-    return _forcesDevice;
-#else
-    return _forces.data();
+    if (Settings::useDevice())
+        return _forcesDevice;
+    else
 #endif
+        return _forces.data();
 }
 
 /**

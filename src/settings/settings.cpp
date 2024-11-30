@@ -157,6 +157,15 @@ void Settings::setDimensionality(const size_t dimensionality)
     _dimensionality = dimensionality;
 }
 
+#ifdef __PQ_GPU__
+/**
+ * @brief sets if device is used
+ *
+ * @param useDevice
+ */
+void Settings::setUseDevice(const bool useDevice) { _useDevice = useDevice; }
+#endif
+
 /***************************
  *                         *
  * standard getter methods *
@@ -332,6 +341,16 @@ bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
  *
  */
 bool Settings::useKokkos() { return _useKokkos; }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief Returns true if the device is used
+ *
+ * @return true/false
+ *
+ */
+bool Settings::useDevice() { return _useDevice; }
+#endif
 
 /*****************************
  *                           *

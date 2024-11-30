@@ -36,7 +36,8 @@
 #include "atomMassMap.hpp"     // for atomMassMap
 #include "atomNumberMap.hpp"   // for atomNumberMap
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
-#include "engine.hpp"                        // for Engine
+#include "device.hpp"
+#include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException
 #include "fileSettings.hpp"            // for FileSettings
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings

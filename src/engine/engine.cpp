@@ -66,6 +66,14 @@ double Engine::calculateTotalSimulationTime() const
     return static_cast<double>(effStep) * dt;
 }
 
+#ifdef __PQ_GPU__
+/**
+ * @brief init the device
+ *
+ */
+void Engine::initDevice(const bool useDevice) { _device = Device(useDevice); }
+#endif
+
 /**
  * @brief checks if the force field is activated
  *

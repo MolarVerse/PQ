@@ -107,6 +107,10 @@ namespace engine
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
 
+#ifdef __PQ_GPU__
+        void initDevice(const bool useDevice);
+#endif
+
         /**********************************
          * information about active parts *
          **********************************/

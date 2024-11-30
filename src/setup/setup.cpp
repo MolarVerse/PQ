@@ -169,6 +169,11 @@ void setup::readFiles(Engine &engine)
  */
 void setup::setupEngine(Engine &engine)
 {
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        engine.initDevice(true);
+#endif
+
     if (Settings::isQMActivated())
         setupQM(engine);
 

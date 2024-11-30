@@ -80,6 +80,10 @@ namespace settings
         static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
         // clang-format on
 
+#ifdef __PQ_GPU__
+        static inline bool _useDevice = true;
+#endif
+
        public:
         Settings()  = default;
         ~Settings() = default;
@@ -96,6 +100,8 @@ namespace settings
 
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
         static void setDimensionality(const size_t dimensionality);
+
+        static void setUseDevice(const bool useDevice);
 
         /***************************
          * standard getter methods *
@@ -126,6 +132,7 @@ namespace settings
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
         [[nodiscard]] static bool useKokkos();
+        [[nodiscard]] static bool useDevice();
     };
 
 }   // namespace settings
