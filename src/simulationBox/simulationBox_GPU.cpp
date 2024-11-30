@@ -32,9 +32,9 @@ using namespace device;
  */
 SimulationBox::~SimulationBox()
 {
-    deviceFree(_posDevice);
-    deviceFree(_velDevice);
-    deviceFree(_forcesDevice);
+    deviceFreeThrowError(_posDevice, "Freeing the position device memory");
+    deviceFreeThrowError(_velDevice, "Freeing the velocity device memory");
+    deviceFreeThrowError(_forcesDevice, "Freeing the forces device memory");
     _posDevice    = nullptr;
     _velDevice    = nullptr;
     _forcesDevice = nullptr;

@@ -1,6 +1,7 @@
 #include "device.hpp"
 
 #include <format>
+#include <iostream>
 
 #include "deviceAPI.hpp"
 #include "deviceConfig.hpp"
@@ -70,6 +71,31 @@ Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
     addDeviceError(error, "Creating the compute stream");
 
     checkErrors("Device initialization");
+}
+
+/**
+ * @brief Destroy the Device:: Device object
+ *
+ * @details This destructor is used to destroy the device object. The destructor
+ * will free the data stream and the compute stream.
+ */
+Device::~Device()
+{
+    deviceError_t error = __deviceStreamDestroy(_dataStream);
+    addDeviceError(error, "Destroying the data stream");
+
+    error = __deviceStreamDestroy(_computeStream);
+    addDeviceError(error, "Destroying the compute stream");
+
+    // To not throw an uncaught exception in the destructor
+    try
+    {
+        checkErrors("Device destruction");
+    }
+    catch (const customException::DeviceException& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 /**

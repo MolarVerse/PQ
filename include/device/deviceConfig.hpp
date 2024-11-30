@@ -76,20 +76,12 @@
  *******************************************/
 
 #if defined(__PQ_HIP__)
-    #define __getDevice(x) hipGetDevice(x)
-#elif defined(__PQ_CUDA__)
-    #define __getDevice(x) cudaGetDevice(x)
-#endif
-
-#if defined(__PQ_HIP__)
-    #define __setDevice(x) hipSetDevice(x)
-#elif defined(__PQ_CUDA__)
-    #define __setDevice(x) cudaSetDevice(x)
-#endif
-
-#if defined(__PQ_HIP__)
+    #define __getDevice(x)      hipGetDevice(x)
+    #define __setDevice(x)      hipSetDevice(x)
     #define __getDeviceCount(x) hipGetDeviceCount(x)
 #elif defined(__PQ_CUDA__)
+    #define __getDevice(x)      cudaGetDevice(x)
+    #define __setDevice(x)      cudaSetDevice(x)
     #define __getDeviceCount(x) cudaGetDeviceCount(x)
 #endif
 
@@ -100,10 +92,13 @@
 #endif
 
 #if defined(__PQ_HIP__)
-    #define __deviceStreamCreate(x) hipStreamCreate(x)
+    #define __deviceStreamCreate(x)  hipStreamCreate(x)
+    #define __deviceStreamDestroy(x) hipStreamDestroy(x)
 #elif defined(__PQ_CUDA__)
-    #define __deviceStreamCreate(x) cudaStreamCreate(x)
+    #define __deviceStreamCreate(x)  cudaStreamCreate(x)
+    #define __deviceStreamDestroy(x) cudaStreamDestroy(x)
 #endif
+
 
 /************************************
  *                                  *
@@ -113,14 +108,10 @@
 
 #if defined(__PQ_HIP__)
     #define __deviceMalloc(ptr, size) hipMalloc((ptr), (size))
+    #define __deviceFree(ptr)         hipFree(ptr)
 #elif defined(__PQ_CUDA__)
     #define __deviceMalloc(ptr, size) cudaMalloc((ptr), (size))
-#endif
-
-#if defined(__PQ_HIP__)
-    #define __deviceFree(ptr) hipFree(ptr)
-#elif defined(__PQ_CUDA__)
-    #define __deviceFree(ptr) cudaFree(ptr)
+    #define __deviceFree(ptr)         cudaFree(ptr)
 #endif
 
 /************************************
@@ -144,14 +135,10 @@
 #endif
 
 #if defined(__PQ_HIP__)
-    #define __deviceMemcpy(dst, src, size, kind) hipMemcpy((dst), (src), (size), (kind))
-#elif defined(__PQ_CUDA__)
-    #define __deviceMemcpy(dst, src, size, kind) cudaMemcpy((dst), (src), (size), (kind))
-#endif
-
-#if defined(__PQ_HIP__)
+    #define __deviceMemcpy(dst, src, size, kind)              hipMemcpy((dst), (src), (size), (kind))
     #define __deviceMemcpyAsync(dst, src, size, kind, stream) hipMemcpyAsync((dst), (src), (size), (kind), (stream))
 #elif defined(__PQ_CUDA__)
+    #define __deviceMemcpy(dst, src, size, kind)              cudaMemcpy((dst), (src), (size), (kind))
     #define __deviceMemcpyAsync(dst, src, size, kind, stream) cudaMemcpyAsync((dst), (src), (size), (kind), (stream))
 #endif
 

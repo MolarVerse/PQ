@@ -60,7 +60,7 @@ namespace device
        public:
         Device();
         explicit Device(const int deviceID);
-        ~Device() = default;
+        ~Device();
 
         void checkErrors();
         void checkErrors(const std::string& msg);
