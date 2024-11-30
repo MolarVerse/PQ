@@ -192,6 +192,7 @@
         "nscale",
         "nstep",
         "nsteps",
+        "OPENMP",
         "OPTEXCEPTION",
         "OPTWARNING",
         "outputfiles",

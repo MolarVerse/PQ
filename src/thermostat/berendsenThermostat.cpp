@@ -75,8 +75,27 @@ void BerendsenThermostat::applyThermostat(
 
     const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
 
+#ifdef __PQ_OPENMP__
+
+    simulationBox.flattenVelocities();
+    auto *const velPtr = simulationBox.getVelPtr();
+
+    // clang-format off
+    // #pragma omp target teams distribute parallel for collapse(2) \
+    //             is_device_ptr(velPtr)
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < simulationBox.getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            velPtr[i*3 + j] *= berendsenFactor;
+
+    // clang-format on
+
+    simulationBox.deFlattenVelocities();
+
+#else
     for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
+#endif
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
 

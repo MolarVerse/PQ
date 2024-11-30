@@ -85,29 +85,6 @@ std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
 }
 
 /**
- * @brief flattens forces of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenForces()
-{
-    std::vector<double> forces;
-
-    auto addForces = [&forces](auto &atom)
-    {
-        const auto force = atom->getForce();
-
-        forces.push_back(force[0]);
-        forces.push_back(force[1]);
-        forces.push_back(force[2]);
-    };
-
-    std::ranges::for_each(_atoms, addForces);
-
-    return forces;
-}
-
-/**
  * @brief flattens partial charges of each atom into a single vector of doubles
  *
  * @return std::vector<double>

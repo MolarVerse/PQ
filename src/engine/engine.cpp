@@ -23,7 +23,6 @@
 #include "engine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
-#include "device.hpp"                        // for Device
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
@@ -32,6 +31,11 @@
 #include "stdoutOutput.hpp"                  // for StdoutOutput
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "vector3d.hpp"                      // for norm
+
+#ifdef __PQ_GPU__
+#include "device.hpp"   // for Device
+using namespace device;
+#endif
 
 using namespace engine;
 using namespace simulationBox;
@@ -44,7 +48,6 @@ using namespace constraints;
 using namespace output;
 using namespace timings;
 using namespace settings;
-using namespace device;
 
 /**
  * @brief Adds a timings section to the timingsSection vector.

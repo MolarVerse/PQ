@@ -165,6 +165,66 @@ std::vector<Real> SimulationBox::flattenForces()
     return _forces;
 }
 
+/**
+ * @brief de-flattens positions of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param positions
+ */
+void SimulationBox::deFlattenPositions()
+{
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setPosition(_pos[i * 3 + j], j);
+    }
+    // clang-format on
+}
+
+/**
+ * @brief de-flattens velocities of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param velocities
+ */
+void SimulationBox::deFlattenVelocities()
+{
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setVelocity(_vel[i * 3 + j], j);
+    }
+    // clang-format on
+}
+
+/**
+ * @brief de-flattens forces of each atom from a single vector of doubles into
+ * the atom objects
+ *
+ * @param forces
+ */
+void SimulationBox::deFlattenForces()
+{
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setForce(_forces[i * 3 + j], j);
+    }
+    // clang-format on
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -446,7 +506,7 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
  *
  * @return const Real*
  */
-const Real *SimulationBox::getPosPtr() const
+Real *SimulationBox::getPosPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())
@@ -466,7 +526,7 @@ const Real *SimulationBox::getPosPtr() const
  *
  * @return const Real*
  */
-const Real *SimulationBox::getVelPtr() const
+Real *SimulationBox::getVelPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())
@@ -486,7 +546,7 @@ const Real *SimulationBox::getVelPtr() const
  *
  * @return const Real*
  */
-const Real *SimulationBox::getForcesPtr() const
+Real *SimulationBox::getForcesPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())

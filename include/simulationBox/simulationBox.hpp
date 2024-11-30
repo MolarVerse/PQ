@@ -161,6 +161,10 @@ namespace simulationBox
         [[nodiscard]] std::vector<Real> flattenVelocities();
         [[nodiscard]] std::vector<Real> flattenForces();
 
+        void deFlattenPositions();
+        void deFlattenVelocities();
+        void deFlattenForces();
+
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<size_t> flattenAtomTypes();
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
@@ -248,9 +252,9 @@ namespace simulationBox
 
         // NEWLY introduced for OMP/CUDA
 
-        [[nodiscard]] const Real* getPosPtr() const;
-        [[nodiscard]] const Real* getVelPtr() const;
-        [[nodiscard]] const Real* getForcesPtr() const;
+        [[nodiscard]] Real* getPosPtr();
+        [[nodiscard]] Real* getVelPtr();
+        [[nodiscard]] Real* getForcesPtr();
 
         // END NEWLY introduced for OMP/CUDA
 

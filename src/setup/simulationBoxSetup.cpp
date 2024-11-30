@@ -36,8 +36,7 @@
 #include "atomMassMap.hpp"     // for atomMassMap
 #include "atomNumberMap.hpp"   // for atomNumberMap
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
-#include "device.hpp"
-#include "engine.hpp"                  // for Engine
+#include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException
 #include "fileSettings.hpp"            // for FileSettings
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings
@@ -52,6 +51,10 @@
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
+
+#ifdef __PQ_GPU__
+#include "device.hpp"
+#endif
 
 using setup::simulationBox::SimulationBoxSetup;
 using namespace engine;

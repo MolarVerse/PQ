@@ -393,6 +393,17 @@ void Atom::setInternalGlobalVDWType(const size_t internalGlobalVDWType)
 void Atom::setPosition(const Vec3D &position) { _position = position; }
 
 /**
+ * @brief set the position of the atom
+ *
+ * @param position
+ * @param index
+ */
+void Atom::setPosition(const double position, const size_t index)
+{
+    _position[index] = position;
+}
+
+/**
  * @brief set the velocity of the atom
  *
  * @param velocity
@@ -400,11 +411,33 @@ void Atom::setPosition(const Vec3D &position) { _position = position; }
 void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 
 /**
+ * @brief set the velocity of the atom
+ *
+ * @param velocity
+ * @param index
+ */
+void Atom::setVelocity(const double velocity, const size_t index)
+{
+    _velocity[index] = velocity;
+}
+
+/**
  * @brief set the force of the atom
  *
  * @param force
  */
 void Atom::setForce(const Vec3D &force) { _force = force; }
+
+/**
+ * @brief set the force of the atom
+ *
+ * @param force
+ * @param index
+ */
+void Atom::setForce(const double force, const size_t index)
+{
+    _force[index] = force;
+}
 
 /**
  * @brief set the shift force of the atom

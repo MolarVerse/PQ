@@ -140,8 +140,11 @@ namespace simulationBox
         void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
 
         void setPosition(const pq::Vec3D &position);
+        void setPosition(const double, const size_t index);
         void setVelocity(const pq::Vec3D &velocity);
+        void setVelocity(const double, const size_t index);
         void setForce(const pq::Vec3D &force);
+        void setForce(const double, const size_t index);
         void setShiftForce(const pq::Vec3D &shiftForce);
 
         void setPositionOld(const pq::Vec3D &positionOld);

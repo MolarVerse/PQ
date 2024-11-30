@@ -215,7 +215,7 @@ void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
  *
  * @throw py::error_already_set if the construction of the Atoms object fails
  */
-void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
+void ASEQMRunner::buildAseAtoms(SimulationBox &simBox)
 {
     try
     {
@@ -247,7 +247,7 @@ void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
+py::array ASEQMRunner::asePositions(SimulationBox &simBox) const
 {
     const auto nAtoms = simBox.getNumberOfAtoms();
     const auto pos    = simBox.flattenPositions();
