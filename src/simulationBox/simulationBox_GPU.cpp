@@ -64,8 +64,6 @@ void SimulationBox::initDeviceMemory(device::Device& device)
  */
 void SimulationBox::copyPosTo(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyToAsync(_posDevice, _pos);
     device.checkErrors("SimulationBox copy position data to device");
 }
@@ -77,8 +75,6 @@ void SimulationBox::copyPosTo(device::Device& device)
  */
 void SimulationBox::copyVelTo(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyToAsync(_velDevice, _vel);
     device.checkErrors("SimulationBox copy velocity data to device");
 }
@@ -90,8 +86,6 @@ void SimulationBox::copyVelTo(device::Device& device)
  */
 void SimulationBox::copyForcesTo(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyToAsync(_forcesDevice, _forces);
     device.checkErrors("SimulationBox copy forces data to device");
 }
@@ -103,8 +97,6 @@ void SimulationBox::copyForcesTo(device::Device& device)
  */
 void SimulationBox::copyPosFrom(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyFromAsync(_pos, _posDevice);
     device.checkErrors("SimulationBox copy position data from device");
 }
@@ -116,8 +108,6 @@ void SimulationBox::copyPosFrom(device::Device& device)
  */
 void SimulationBox::copyVelFrom(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyFromAsync(_vel, _velDevice);
     device.checkErrors("SimulationBox copy velocity data from device");
 }
@@ -129,8 +119,6 @@ void SimulationBox::copyVelFrom(device::Device& device)
  */
 void SimulationBox::copyForcesFrom(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
-
     device.deviceMemcpyFromAsync(_forces, _forcesDevice);
     device.checkErrors("SimulationBox copy forces data from device");
 }

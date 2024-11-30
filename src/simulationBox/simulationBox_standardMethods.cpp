@@ -87,16 +87,21 @@ void SimulationBox::addMoleculeType(const MoleculeType &molecule)
  */
 std::vector<Real> SimulationBox::flattenPositions()
 {
+    if (_pos.size() != _atoms.size() * 3)
+        _pos.resize(_atoms.size() * 3);
+
+    Real *const positions = _pos.data();
+
     // clang-format off
     #pragma omp parallel for collapse(2)
-    for (const auto &atom : _atoms)
+    for (size_t i = 0; i < _atoms.size(); ++i)
     {
-        const auto position = atom->getPosition();
+        const auto atom = _atoms[i];
 
-        for (size_t i = 0; i < 3; ++i)
-            _pos.push_back(position[i]);
+        for (size_t j = 0; j < 3; ++j)
+            positions[i * 3 + j] = atom->getPosition()[j];
     }
-    // clang-format off
+    // clang-format on
 
     return _pos;
 }
@@ -110,16 +115,21 @@ std::vector<Real> SimulationBox::flattenPositions()
  */
 std::vector<Real> SimulationBox::flattenVelocities()
 {
+    if (_vel.size() != _atoms.size() * 3)
+        _vel.resize(_atoms.size() * 3);
+
+    Real *const velocities = _vel.data();
+
     // clang-format off
     #pragma omp parallel for collapse(2)
-    for (const auto &atom : _atoms)
+    for (size_t i = 0; i < _atoms.size(); ++i)
     {
-        const auto velocity = atom->getVelocity();
+        const auto atom = _atoms[i];
 
-        for (size_t i = 0; i < 3; ++i)
-            _vel.push_back(velocity[i]);
+        for (size_t j = 0; j < 3; ++j)
+            velocities[i * 3 + j] = atom->getVelocity()[j];
     }
-    // clang-format off
+    // clang-format on
 
     return _vel;
 }
@@ -134,16 +144,21 @@ std::vector<Real> SimulationBox::flattenVelocities()
  */
 std::vector<Real> SimulationBox::flattenForces()
 {
+    if (_forces.size() != _atoms.size() * 3)
+        _forces.resize(_atoms.size() * 3);
+
+    Real *const forces = _forces.data();
+
     // clang-format off
     #pragma omp parallel for collapse(2)
-    for (const auto &atom : _atoms)
+    for (size_t i = 0; i < _atoms.size(); ++i)
     {
-        const auto force = atom->getForce();
+        const auto atom = _atoms[i];
 
-        for (size_t i = 0; i < 3; ++i)
-            _forces.push_back(force[i]);
+        for (size_t j = 0; j < 3; ++j)
+            forces[i * 3 + j] = atom->getForce()[j];
     }
-    // clang-format off
+    // clang-format on
 
     return _forces;
 }
