@@ -89,40 +89,6 @@ void LangevinThermostat::calculateSigma(
 }
 
 /**
- * @brief apply Langevin thermostat
- *
- * @details calculates the friction and random factor for each atom and applies
- * the Langevin thermostat to the velocities
- *
- * @param simBox
- */
-void LangevinThermostat::applyLangevin(SimulationBox &simBox)
-{
-    auto applyFriction = [this](auto &atom)
-    {
-        const auto mass     = atom->getMass();
-        const auto timeStep = TimingsSettings::getTimeStep();
-
-        const auto propagationFactor = 0.5 * timeStep * _FS_TO_S_ / mass;
-
-        const Vec3D randomFactor = {
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator)
-        };
-
-        const auto velocity = atom->getVelocity();
-        auto       dv       = -propagationFactor * _friction * mass * velocity;
-
-        dv += propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
-
-        atom->addVelocity(dv);
-    };
-
-    std::ranges::for_each(simBox.getAtoms(), applyFriction);
-}
-
-/**
  * @brief apply thermostat - Langevin
  *
  * @param simBox

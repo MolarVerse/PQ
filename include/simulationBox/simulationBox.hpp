@@ -96,18 +96,29 @@ namespace simulationBox
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
-        // NEWLY introduced for OMP/CUDA
+#ifndef __PQ_LEGACY__
 
         std::vector<Real> _pos;
         std::vector<Real> _vel;
         std::vector<Real> _forces;
-        std::vector<Real> _mass;
+
+        std::vector<Real> _oldPos;
+        std::vector<Real> _oldVel;
+        std::vector<Real> _oldForces;
+
+        std::vector<Real> _masses;
+#endif
 
 #ifdef __PQ_GPU__
         Real* _posDevice;
         Real* _velDevice;
         Real* _forcesDevice;
-        Real* _massDevice;
+
+        Real* _oldPosDevice;
+        Real* _oldVelDevice;
+        Real* _oldForcesDevice;
+
+        Real* _massesDevice;
 #endif   // __PQ_GPU__
 
         // END NEWLY introduced for OMP/CUDA
@@ -159,19 +170,35 @@ namespace simulationBox
             const size_t atomIndex
         );
 
+#ifdef __PQ_LEGACY__
+        [[nodiscard]] std::vector<double> flattenPositions();
+#else
         [[nodiscard]] std::vector<Real> flattenPositions();
         [[nodiscard]] std::vector<Real> flattenVelocities();
         [[nodiscard]] std::vector<Real> flattenForces();
-        [[nodiscard]] std::vector<Real> flattenMasses();
+
+        void flattenOldPositions();
+        void flattenOldVelocities();
+        void flattenOldForces();
+        void flattenMasses();
 
         void deFlattenPositions();
         void deFlattenVelocities();
         void deFlattenForces();
+        void deFlattenOldPositions();
+        void deFlattenOldVelocities();
+        void deFlattenOldForces();
+#endif
 
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<size_t> flattenAtomTypes();
         [[nodiscard]] std::vector<size_t> flattenMolTypes();
         [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
+
+#ifdef __PQ_LEGACY__
+        std::vector<double> flattenVelocities();
+        std::vector<double> flattenForces();
+#endif
 
         [[nodiscard]] std::vector<double> flattenPartialCharges();
 
@@ -189,12 +216,18 @@ namespace simulationBox
         void copyPosTo(device::Device& device);
         void copyVelTo(device::Device& device);
         void copyForcesTo(device::Device& device);
-        void copyMassTo(device::Device& device);
+        void copyOldPosTo(device::Device& device);
+        void copyOldVelTo(device::Device& device);
+        void copyOldForcesTo(device::Device& device);
+        void copyMassesTo(device::Device& device);
 
         void copyPosFrom(device::Device& device);
         void copyVelFrom(device::Device& device);
         void copyForcesFrom(device::Device& device);
-        void copyMassFrom(device::Device& device);
+        void copyOldPosFrom(device::Device& device);
+        void copyOldVelFrom(device::Device& device);
+        void copyOldForcesFrom(device::Device& device);
+        void copyMassesFrom(device::Device& device);
 #endif
 
         /************************
@@ -256,13 +289,19 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
         [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
 
-        // NEWLY introduced for OMP/CUDA
+#ifndef __PQ_LEGACY__
 
         [[nodiscard]] Real* getPosPtr();
         [[nodiscard]] Real* getVelPtr();
         [[nodiscard]] Real* getForcesPtr();
 
-        // END NEWLY introduced for OMP/CUDA
+        [[nodiscard]] Real* getOldPosPtr();
+        [[nodiscard]] Real* getOldVelPtr();
+        [[nodiscard]] Real* getOldForcesPtr();
+
+        [[nodiscard]] Real* getMassesPtr();
+
+#endif
 
         /***************************
          * standard setter methods *

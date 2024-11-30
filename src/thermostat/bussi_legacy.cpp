@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "velocityRescalingThermostat.hpp"
-
 #include <cmath>    // for sqrt
 #include <memory>   // for __shared_ptr_access, shared_ptr
 #include <vector>   // for vector
@@ -31,6 +29,7 @@
 #include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"
 
 using thermostat::VelocityRescalingThermostat;
 using namespace settings;
@@ -38,50 +37,44 @@ using namespace simulationBox;
 using namespace physicalData;
 
 /**
- * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
- * Thermostat object
+ * @brief apply thermostat - Velocity Rescaling
  *
- * @param targetTemp
- * @param tau
+ * @link https://doi.org/10.1063/1.2408420
+ *
+ * @param simulationBox
+ * @param physicalData
  */
-VelocityRescalingThermostat::VelocityRescalingThermostat(
-    const double targetTemp,
-    const double tau
+void VelocityRescalingThermostat::applyThermostat(
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
 )
-    : Thermostat(targetTemp), _tau(tau)
 {
-}
+    startTimingsSection("Velocity Rescaling");
 
-/**
- * @brief Copy constructor for Velocity Rescaling Thermostat
- *
- * @param other
- */
-VelocityRescalingThermostat::VelocityRescalingThermostat(
-    const VelocityRescalingThermostat &other
-)
-    : Thermostat(other), _tau(other._tau) {};
+    physicalData.calculateTemperature(simulationBox);
 
-/**
- * @brief Get the tau (relaxation time) of the Velocity Rescaling thermostat
- *
- * @return double
- */
-double VelocityRescalingThermostat::getTau() const { return _tau; }
+    _temperature = physicalData.getTemperature();
 
-/**
- * @brief Set the tau (relaxation time) of the Velocity Rescaling thermostat
- *
- * @param tau
- */
-void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
+    const auto timeStep  = TimingsSettings::getTimeStep();
+    const auto tempRatio = _targetTemperature / _temperature;
+    const auto dof       = double(simulationBox.getDegreesOfFreedom());
 
-/**
- * @brief Get thermostat type
- *
- * @return ThermostatType
- */
-ThermostatType VelocityRescalingThermostat::getThermostatType() const
-{
-    return ThermostatType::VELOCITY_RESCALING;
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
+    rescalingFactor      *= random;
+
+    auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
+    lambda      += rescalingFactor;
+
+    const auto berendsenFactor = ::sqrt(lambda);
+
+    for (const auto &atom : simulationBox.getAtoms())
+        atom->scaleVelocity(berendsenFactor);
+
+    const auto temperature = _temperature * berendsenFactor * berendsenFactor;
+
+    physicalData.setTemperature(temperature);
+
+    stopTimingsSection("Velocity Rescaling");
 }

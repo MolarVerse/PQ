@@ -9,6 +9,18 @@ set(simulationBox_source_files
     atom.cpp
 )
 
+if(NOT BUILD_LEGACY)
+    set(simulationBox_source_files
+        ${simulationBox_source_files}
+        simulationBox_nonLegacy.cpp
+    )
+else()
+    set(simulationBox_source_files
+        ${simulationBox_source_files}
+        simulationBox_legacy.cpp
+    )
+endif()
+
 if(BUILD_WITH_MPI)
     set(simulationBox_source_files
         ${simulationBox_source_files}

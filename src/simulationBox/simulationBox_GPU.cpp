@@ -55,7 +55,10 @@ void SimulationBox::initDeviceMemory(device::Device& device)
     device.deviceMalloc(&_posDevice, size);
     device.deviceMalloc(&_velDevice, size);
     device.deviceMalloc(&_forcesDevice, size);
-    device.deviceMalloc(&_massDevice, nAtoms);
+    device.deviceMalloc(&_oldPosDevice, size);
+    device.deviceMalloc(&_oldVelDevice, size);
+    device.deviceMalloc(&_oldForcesDevice, size);
+    device.deviceMalloc(&_massesDevice, nAtoms);
     device.checkErrors("SimulationBox device memory allocation");
 }
 
@@ -90,6 +93,39 @@ void SimulationBox::copyForcesTo(device::Device& device)
 {
     device.deviceMemcpyToAsync(_forcesDevice, _forces);
     device.checkErrors("SimulationBox copy forces data to device");
+}
+
+/**
+ * @brief copy old position data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldPosTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_oldPosDevice, _pos);
+    device.checkErrors("SimulationBox copy old position data to device");
+}
+
+/**
+ * @brief copy old velocity data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldVelTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_oldVelDevice, _vel);
+    device.checkErrors("SimulationBox copy old velocity data to device");
+}
+
+/**
+ * @brief copy old forces data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldForcesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_oldForcesDevice, _forces);
+    device.checkErrors("SimulationBox copy old forces data to device");
 }
 
 /**

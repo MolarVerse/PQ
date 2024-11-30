@@ -33,10 +33,6 @@
 #include "settings.hpp"            // for Settings
 #include "stlVector.hpp"           // for rms
 
-#ifdef __PQ_GPU__
-#include <device_runtime.h>   // wrapper for HIP/CUDA runtime functions
-#endif
-
 using simulationBox::SimulationBox;
 using namespace linearAlgebra;
 using namespace simulationBox;
@@ -577,54 +573,6 @@ double SimulationBox::calculateMaxForceOld() const
     return max(scalarForces);
 }
 
-#ifdef __PQ_LEGACY__
-/**
- * @brief calculate temperature of simulationBox
- *
- */
-double SimulationBox::calculateTemperature()
-{
-    auto temperature = 0.0;
-
-    auto accumulateTemperature = [&temperature](const auto& atom)
-    { temperature += atom->getMass() * normSquared(atom->getVelocity()); };
-
-    std::ranges::for_each(_atoms, accumulateTemperature);
-
-    temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
-
-    return temperature;
-}
-#else
-/**
- * @brief calculate temperature of simulationBox
- *
- */
-double SimulationBox::calculateTemperature()
-{
-    auto temperature = 0.0;
-
-    flattenVelocities();
-
-    auto* const _velPtr  = getVelPtr();
-    auto* const _massPtr = getMassPtr();
-
-    // clang-format off
-    #pragma omp target teams distribute parallel for collapse(2) \
-                is_device_ptr(_velPtr)                           \
-                reduction(+:temperature)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        for (size_t j = 0; j < 3; ++j)
-            temperature += _massPtr[i] * _velPtr[i * 3 + j] * _velPtr[i * 3 + j];
-
-    temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
-
-    deFlattenVelocities();
-
-    return temperature;
-}
-#endif
-
 /**
  * @brief checks if the coulomb radius cut off is smaller than half of the
  * minimal box dimension
@@ -765,15 +713,4 @@ void SimulationBox::updateOldForces()
     auto updateOldForce = [](const auto& atom) { atom->updateOldForce(); };
 
     std::ranges::for_each(_atoms, updateOldForce);
-}
-
-/**
- * @brief reset forces of all atoms
- *
- */
-void SimulationBox::resetForces()
-{
-    auto resetForce = [](const auto& atom) { atom->setForceToZero(); };
-
-    std::ranges::for_each(_atoms, resetForce);
 }

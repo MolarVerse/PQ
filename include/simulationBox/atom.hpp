@@ -116,6 +116,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D getPosition() const;
         [[nodiscard]] pq::Vec3D getPositionOld() const;
         [[nodiscard]] pq::Vec3D getVelocity() const;
+        [[nodiscard]] pq::Vec3D getVelocityOld() const;
         [[nodiscard]] pq::Vec3D getForce() const;
         [[nodiscard]] pq::Vec3D getForceOld() const;
         [[nodiscard]] pq::Vec3D getShiftForce() const;
@@ -148,8 +149,11 @@ namespace simulationBox
         void setShiftForce(const pq::Vec3D &shiftForce);
 
         void setPositionOld(const pq::Vec3D &positionOld);
+        void setPositionOld(const double, const size_t index);
         void setVelocityOld(const pq::Vec3D &velocityOld);
+        void setVelocityOld(const double, const size_t index);
         void setForceOld(const pq::Vec3D &forceOld);
+        void setForceOld(const double, const size_t index);
 
         void setForceToZero();
     };

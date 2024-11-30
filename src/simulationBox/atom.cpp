@@ -264,6 +264,13 @@ Vec3D Atom::getPositionOld() const { return _positionOld; }
 Vec3D Atom::getVelocity() const { return _velocity; }
 
 /**
+ * @brief return the old velocity of the atom
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getVelocityOld() const { return _velocityOld; }
+
+/**
  * @brief return the force of the atom
  *
  * @return Vec3D
@@ -459,6 +466,17 @@ void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
 void Atom::setPositionOld(const Vec3D &position) { _positionOld = position; }
 
 /**
+ * @brief set the old position of the atom
+ *
+ * @param position
+ * @param index
+ */
+void Atom::setPositionOld(const double position, const size_t index)
+{
+    _positionOld[index] = position;
+}
+
+/**
  * @brief set the old velocity of the atom
  *
  * @param velocity
@@ -466,8 +484,30 @@ void Atom::setPositionOld(const Vec3D &position) { _positionOld = position; }
 void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
 
 /**
+ * @brief set the old velocity of the atom
+ *
+ * @param velocity
+ * @param index
+ */
+void Atom::setVelocityOld(const double velocity, const size_t index)
+{
+    _velocityOld[index] = velocity;
+}
+
+/**
  * @brief set the old force of the atom
  *
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+
+/**
+ * @brief set the old force of the atom
+ *
+ * @param force
+ * @param index
+ */
+void Atom::setForceOld(const double force, const size_t index)
+{
+    _forceOld[index] = force;
+}

@@ -91,35 +91,28 @@ endif()
 
 if(BUILD_LEGACY)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_LEGACY__")
+    set(BUILD_WITH_OPENMP OFF)
+    set(BUILD_WITH_GPU OFF)
+endif()
 
-    if(BUILD_WITH_OPENMP)
-        message(FATAL_ERROR "OpenMP not supported for legacy code")
+if(BUILD_WITH_OPENMP)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D__PQ_OPENMP__")
+endif()
+
+if(BUILD_WITH_GPU)
+    #TODO: add for hip
+    enable_language(CUDA)
+    if(NOT CMAKE_CUDA_COMPILER)
+        message(FATAL_ERROR "CUDA compiler not found")
     endif()
 
-    if(BUILD_WITH_GPU)
-        message(FATAL_ERROR "GPU not supported for legacy code")
-    endif()
-else()
-
-    if(BUILD_WITH_OPENMP)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D__PQ_OPENMP__")
-    endif()
-
-    if(BUILD_WITH_GPU)
-        #TODO: add for hip
-        enable_language(CUDA)
-        if(NOT CMAKE_CUDA_COMPILER)
-            message(FATAL_ERROR "CUDA compiler not found")
-        endif()
-
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__")
-        # set(CUDA_HOME $ENV{CUDA_HOME})
-        # if(NOT CUDA_HOME)
-        #     message(FATAL_ERROR "CUDA_HOME not set")
-        # endif()
-        # include_directories(${CUDA_HOME}/include)
-        include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__")
+    # set(CUDA_HOME $ENV{CUDA_HOME})
+    # if(NOT CUDA_HOME)
+    #     message(FATAL_ERROR "CUDA_HOME not set")
+    # endif()
+    # include_directories(${CUDA_HOME}/include)
+    include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 endif()
 
 # add git version as flag
