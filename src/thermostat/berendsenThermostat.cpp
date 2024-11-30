@@ -75,7 +75,7 @@ void BerendsenThermostat::applyThermostat(
 
     const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
 
-#ifdef __PQ_OPENMP__
+#if defined(__PQ_OPENMP__) && !defined(__PQ_LEGACY__)
 
     simulationBox.flattenVelocities();
     auto *const velPtr = simulationBox.getVelPtr();

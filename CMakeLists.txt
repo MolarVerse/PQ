@@ -89,11 +89,15 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -pg")
 endif()
 
-if(BUILD_WITH_OPENMP)
+if(BUILD_LEGACY)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_LEGACY__")
+endif()
+
+if(BUILD_WITH_OPENMP AND NOT BUILD_LEGACY)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D__PQ_OPENMP__")
 endif()
 
-if(BUILD_WITH_GPU)
+if(BUILD_WITH_GPU AND NOT BUILD_LEGACY)
     #TODO: add for hip
     enable_language(CUDA)
     if(NOT CMAKE_CUDA_COMPILER)

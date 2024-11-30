@@ -20,6 +20,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
 endif()
 
+# ************
+# BUILD LEGACY
+# ************
+option(BUILD_LEGACY "Build legacy code" OFF)
+
 # *****************
 # BUILD WITH OPENMP
 # *****************
