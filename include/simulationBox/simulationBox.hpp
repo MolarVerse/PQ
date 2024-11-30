@@ -101,11 +101,13 @@ namespace simulationBox
         std::vector<Real> _pos;
         std::vector<Real> _vel;
         std::vector<Real> _forces;
+        std::vector<Real> _mass;
 
 #ifdef __PQ_GPU__
         Real* _posDevice;
         Real* _velDevice;
         Real* _forcesDevice;
+        Real* _massDevice;
 #endif   // __PQ_GPU__
 
         // END NEWLY introduced for OMP/CUDA
@@ -160,6 +162,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<Real> flattenPositions();
         [[nodiscard]] std::vector<Real> flattenVelocities();
         [[nodiscard]] std::vector<Real> flattenForces();
+        [[nodiscard]] std::vector<Real> flattenMasses();
 
         void deFlattenPositions();
         void deFlattenVelocities();
@@ -186,9 +189,12 @@ namespace simulationBox
         void copyPosTo(device::Device& device);
         void copyVelTo(device::Device& device);
         void copyForcesTo(device::Device& device);
+        void copyMassTo(device::Device& device);
+
         void copyPosFrom(device::Device& device);
         void copyVelFrom(device::Device& device);
         void copyForcesFrom(device::Device& device);
+        void copyMassFrom(device::Device& device);
 #endif
 
         /************************

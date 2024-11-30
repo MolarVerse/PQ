@@ -115,6 +115,13 @@ void SimulationBoxSetup::setup()
 
     initVelocities();
 
+#ifndef __PQ_LEGACY__
+    simBox.flattenPositions();
+    simBox.flattenVelocities();
+    simBox.flattenForces();
+    simBox.flattenMasses();
+#endif
+
 #ifdef __PQ_GPU__
     if (_engine.getDevice().isDeviceUsed())
         initDeviceMemory();
@@ -490,5 +497,6 @@ void SimulationBoxSetup::initDeviceMemory()
     simBox.copyPosTo(device);
     simBox.copyVelTo(device);
     simBox.copyForcesTo(device);
+    simBox.copyMassTo(device);
 }
 #endif

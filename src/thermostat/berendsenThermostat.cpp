@@ -66,9 +66,7 @@ void BerendsenThermostat::applyThermostat(
 {
     startTimingsSection("Berendsen");
 
-    data.calculateTemperature(simulationBox);
-
-    _temperature = data.getTemperature();
+    _temperature = simulationBox.calculateTemperature();
 
     const auto dt        = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;

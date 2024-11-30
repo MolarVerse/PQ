@@ -227,10 +227,12 @@ void PhysicalData::reset()
  * @brief calculate temperature
  *
  * @param simulationBox
+ * @return temperature
  */
-void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+double PhysicalData::calculateTemperature(SimulationBox &simulationBox)
 {
     _temperature = simulationBox.calculateTemperature();
+    return _temperature;
 }
 
 /**

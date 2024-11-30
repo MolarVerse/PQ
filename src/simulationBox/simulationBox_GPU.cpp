@@ -47,13 +47,15 @@ SimulationBox::~SimulationBox()
  */
 void SimulationBox::initDeviceMemory(device::Device& device)
 {
-    const size_t size = getNumberOfAtoms() * 3;
+    const size_t nAtoms = getNumberOfAtoms();
+    const size_t size   = nAtoms * 3;
 
-    assert(size > 0);
+    assert(nAtoms > 0);
 
     device.deviceMalloc(&_posDevice, size);
     device.deviceMalloc(&_velDevice, size);
     device.deviceMalloc(&_forcesDevice, size);
+    device.deviceMalloc(&_massDevice, nAtoms);
     device.checkErrors("SimulationBox device memory allocation");
 }
 

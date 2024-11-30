@@ -83,9 +83,9 @@ namespace physicalData
         double _ringPolymerEnergy = 0.0;
 
        public:
-        void calculateTemperature(pq::SimBox &);
-        void calculateKinetics(pq::SimBox &);
-        void changeKineticVirialToAtomic();
+        double calculateTemperature(pq::SimBox &);
+        void   calculateKinetics(pq::SimBox &);
+        void   changeKineticVirialToAtomic();
 
         std::function<pq::tensor3D()> getKinEnergyVirialTensor =
             std::bind_front(&PhysicalData::getKinEnergyMolTensor, this);
