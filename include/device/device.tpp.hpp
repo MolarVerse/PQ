@@ -2,6 +2,7 @@
 #define __DEVICE_TPP_HPP__
 
 #include "device.hpp"
+#include "deviceAPI.hpp"
 #include "deviceConfig.hpp"
 
 namespace device
@@ -57,6 +58,223 @@ namespace device
 
         return error;
     }
+
+    /**
+     * @brief function to copy memory from the host to the device
+     *
+     * @param dst the destination pointer on the device
+     * @param src the source vector on the host
+     * @return deviceError_t
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyTo(T* dst, const std::vector<T>& src)
+    {
+        const auto error =
+            deviceMemcpy(dst, src, src.size(), __deviceMemcpyHostToDevice__);
+
+        addDeviceError(error, "Copying memory from host to device");
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the host to the device
+     *
+     * @param dst the destination pointer on the device
+     * @param src the source vector on the host
+     * @param size the size of the memory to copy
+     * @return deviceError_t
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyTo(
+        T*           dst,
+        const T*     src,
+        const size_t size
+    )
+    {
+        const auto error =
+            deviceMemcpy(dst, src, size, __deviceMemcpyHostToDevice__);
+
+        addDeviceError(error, "Copying memory from host to device");
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the device to the host
+     *
+     * @param dst the destination vector on the host
+     * @param src the source pointer on the device
+     * @return deviceError_t
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyFrom(std::vector<T>& dst, const T* src)
+    {
+        const auto error = deviceMemcpy(
+            dst.data(),
+            src,
+            dst.size(),
+            __deviceMemcpyDeviceToHost__
+        );
+
+        addDeviceError(error, "Copying memory from device to host");
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the device to the host
+     *
+     * @param dst the destination pointer on the host
+     * @param src the source pointer on the device
+     * @param size the size of the memory to copy
+     * @return deviceError_t
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyFrom(
+        T*           dst,
+        const T*     src,
+        const size_t size
+    )
+    {
+        const auto error =
+            deviceMemcpy(dst, src, size, __deviceMemcpyDeviceToHost__);
+
+        addDeviceError(error, "Copying memory from device to host");
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the host to the device asynchronously
+     *
+     * @details this function will use per default the PQ dataStream to copy the
+     * memory from the host to the device.
+     *
+     * @param dst the destination pointer on the device
+     * @param src the source vector on the host
+     * @return deviceError_t
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyToAsync(T* dst, const std::vector<T>& src)
+    {
+        const auto error = deviceMemcpyAsync(
+            dst,
+            src.data(),
+            src.size(),
+            __deviceMemcpyHostToDevice__,
+            _dataStream
+        );
+
+        addDeviceError(
+            error,
+            "Asynchronous copying memory from host to device"
+        );
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the host to the device asynchronously
+     *
+     * @details this function will use per default the PQ dataStream to copy the
+     * memory from the host to the device.
+     *
+     * @param dst the destination pointer on the device
+     * @param src the source pointer on the host
+     * @param size the size of the memory to copy
+     * @return deviceError_t
+     *
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyToAsync(
+        T*           dst,
+        const T*     src,
+        const size_t size
+    )
+    {
+        const auto error = deviceMemcpyAsync(
+            dst,
+            src,
+            size,
+            __deviceMemcpyHostToDevice__,
+            _dataStream
+        );
+
+        addDeviceError(
+            error,
+            "Asynchronous copying memory from host to device"
+        );
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the device to the host asynchronously
+     *
+     * @details this function will use per default the PQ dataStream to copy the
+     *
+     * @param dst the destination vector on the host
+     * @param src the source pointer on the device
+     * @return deviceError_t
+     *
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyFromAsync(
+        std::vector<T>& dst,
+        const T*        src
+    )
+    {
+        const auto error = deviceMemcpyAsync(
+            dst.data(),
+            src,
+            dst.size(),
+            __deviceMemcpyDeviceToHost__,
+            _dataStream
+        );
+
+        addDeviceError(
+            error,
+            "Asynchronous copying memory from device to host"
+        );
+
+        return error;
+    }
+
+    /**
+     * @brief function to copy memory from the device to the host asynchronously
+     *
+     * @details this function will use per default the PQ dataStream to copy the
+     *
+     * @param dst the destination pointer on the host
+     * @param src the source pointer on the device
+     * @param size the size of the memory to copy
+     * @return deviceError_t
+     *
+     */
+    template <typename T>
+    deviceError_t Device::deviceMemcpyFromAsync(
+        T*           dst,
+        const T*     src,
+        const size_t size
+    )
+    {
+        const auto error = deviceMemcpyAsync(
+            dst,
+            src,
+            size,
+            __deviceMemcpyDeviceToHost__,
+            _dataStream
+        );
+
+        addDeviceError(
+            error,
+            "Asynchronous copying memory from device to host"
+        );
+
+        return error;
+    }
+
 }   // namespace device
 
 #endif   // __DEVICE_TPP_HPP__

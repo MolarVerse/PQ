@@ -57,6 +57,18 @@
     using deviceError_t = cudaError_t;
 #endif
 
+#if defined(__PQ_HIP__)
+    using deviceStream_t = hipStream_t;
+#elif defined(__PQ_CUDA__)
+    using deviceStream_t = cudaStream_t;
+#endif
+
+#if defined(__PQ_HIP__)
+    using deviceMemcpyKind_t = hipMemcpyKind;
+#elif defined(__PQ_CUDA__)
+    using deviceMemcpyKind_t = cudaMemcpyKind;
+#endif
+
 /*******************************************
  *                                         *
  * Define the initialization device macros *
@@ -87,6 +99,12 @@
     #define __getDeviceProperties(x, y) cudaGetDeviceProperties(x, y)
 #endif
 
+#if defined(__PQ_HIP__)
+    #define __deviceStreamCreate(x) hipStreamCreate(x)
+#elif defined(__PQ_CUDA__)
+    #define __deviceStreamCreate(x) cudaStreamCreate(x)
+#endif
+
 /************************************
  *                                  *
  * Define the __DEVICE_MALLOC macro *
@@ -103,6 +121,38 @@
     #define __deviceFree(ptr) hipFree(ptr)
 #elif defined(__PQ_CUDA__)
     #define __deviceFree(ptr) cudaFree(ptr)
+#endif
+
+/************************************
+ *                                  *
+ * Define the device syncing macros *
+ *                                  *
+ ************************************/
+
+#if defined(__PQ_HIP__)
+    #define __deviceStreamSynchronize(x) hipStreamSynchronize(x)
+#elif defined(__PQ_CUDA__)
+    #define __deviceStreamSynchronize(x) cudaStreamSynchronize(x)
+#endif
+
+#if defined(__PQ_HIP__)
+    #define __deviceMemcpyHostToDevice__ hipMemcpyHostToDevice
+    #define __deviceMemcpyDeviceToHost__ hipMemcpyDeviceToHost
+#elif defined(__PQ_CUDA__)
+    #define __deviceMemcpyHostToDevice__ cudaMemcpyHostToDevice
+    #define __deviceMemcpyDeviceToHost__ cudaMemcpyDeviceToHost
+#endif
+
+#if defined(__PQ_HIP__)
+    #define __deviceMemcpy(dst, src, size, kind) hipMemcpy((dst), (src), (size), (kind))
+#elif defined(__PQ_CUDA__)
+    #define __deviceMemcpy(dst, src, size, kind) cudaMemcpy((dst), (src), (size), (kind))
+#endif
+
+#if defined(__PQ_HIP__)
+    #define __deviceMemcpyAsync(dst, src, size, kind, stream) hipMemcpyAsync((dst), (src), (size), (kind), (stream))
+#elif defined(__PQ_CUDA__)
+    #define __deviceMemcpyAsync(dst, src, size, kind, stream) cudaMemcpyAsync((dst), (src), (size), (kind), (stream))
 #endif
 
 /*********************************

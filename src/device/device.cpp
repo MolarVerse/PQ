@@ -2,6 +2,7 @@
 
 #include <format>
 
+#include "deviceAPI.hpp"
 #include "deviceConfig.hpp"
 #include "exceptions.hpp"
 
@@ -16,6 +17,8 @@ using namespace device;
  *      - _deviceID: the device ID of the device
  *      - _deviceCount: the number of devices in the system
  *      - _deviceProp: the device properties of the device
+ *      - _dataStream: the data stream of the device
+ *      - _computeStream: the compute stream of the device
  *
  *
  * @note If the device ID is not given, the constructor will get the device ID
@@ -59,6 +62,12 @@ Device::Device(const int deviceID) : _deviceID(deviceID), _deviceCount(0)
         error,
         std::format("Setting the device with the device ID {}", _deviceID)
     );
+
+    error = __deviceStreamCreate(&_dataStream);
+    addDeviceError(error, "Creating the data stream");
+
+    error = __deviceStreamCreate(&_computeStream);
+    addDeviceError(error, "Creating the compute stream");
 
     checkErrors("Device initialization");
 }

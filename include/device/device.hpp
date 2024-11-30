@@ -49,7 +49,9 @@ namespace device
         int _deviceID;
         int _deviceCount;
 
-        deviceProp_t _deviceProp;
+        deviceProp_t   _deviceProp;
+        deviceStream_t _dataStream;
+        deviceStream_t _computeStream;
 
         std::vector<std::string> _errorMsgs;
 
@@ -68,6 +70,32 @@ namespace device
 
         template <typename T>
         deviceError_t deviceFree(T* ptr);
+
+        template <typename T>
+        deviceError_t deviceMemcpyTo(T* dst, const std::vector<T>& src);
+        template <typename T>
+        deviceError_t deviceMemcpyTo(T* dst, const T* src, const size_t size);
+        template <typename T>
+        deviceError_t deviceMemcpyFrom(std::vector<T>& dst, const T* src);
+        template <typename T>
+        deviceError_t deviceMemcpyFrom(T* dst, const T* src, const size_t size);
+
+        template <typename T>
+        deviceError_t deviceMemcpyToAsync(T* dst, const std::vector<T>& src);
+        template <typename T>
+        deviceError_t deviceMemcpyToAsync(
+            T*           dst,
+            const T*     src,
+            const size_t size
+        );
+        template <typename T>
+        deviceError_t deviceMemcpyFromAsync(std::vector<T>& dst, const T* src);
+        template <typename T>
+        deviceError_t deviceMemcpyFromAsync(
+            T*           dst,
+            const T*     src,
+            const size_t size
+        );
     };
 
 }   // namespace device
