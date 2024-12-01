@@ -1,8 +1,24 @@
 set(potential_source_files
     potential.cpp
-    potentialBruteForce.cpp
     potentialCellList.cpp
 )
+
+if(BUILD_LEGACY)
+    set(potential_source_files
+        ${potential_source_files}
+        potential_legacy.cpp
+        potentialBruteForce_legacy.cpp
+    )
+else()
+    set(potential_source_files
+        ${potential_source_files}
+        potential_legacy.cpp # remove this one - atm needed for celllist
+        potential_nonLegacy.cpp
+        potentialBruteForce_nonLegacy.cpp
+        # potentialBruteForce_legacy.cpp
+    )
+endif()
+
 
 if(BUILD_WITH_KOKKOS)
     set(potential_source_files

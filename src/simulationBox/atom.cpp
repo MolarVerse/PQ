@@ -454,6 +454,17 @@ void Atom::setForce(const double force, const size_t index)
 void Atom::setShiftForce(const Vec3D &shiftForce) { _shiftForce = shiftForce; }
 
 /**
+ * @brief set the shift force of the atom
+ *
+ * @param shiftForce
+ * @param index
+ */
+void Atom::setShiftForce(const double shiftForce, const size_t index)
+{
+    _shiftForce[index] = shiftForce;
+}
+
+/**
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }

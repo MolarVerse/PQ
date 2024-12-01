@@ -119,18 +119,6 @@ void SimulationBoxSetup::setup()
 
     initVelocities();
 
-#ifndef __PQ_LEGACY__
-    simBox.flattenPositions();
-    simBox.flattenVelocities();
-    simBox.flattenForces();
-    simBox.initAtomsPerMolecule();
-#endif
-
-#ifdef __PQ_GPU__
-    if (_engine.getDevice().isDeviceUsed())
-        initDeviceMemory();
-#endif
-
     writeSetupInfo();
 }
 
@@ -486,25 +474,3 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     log.writeEmptyLine();
 }
-
-#ifdef __PQ_GPU__
-/**
- * @brief Initialize device memory for simulation box
- *
- */
-void SimulationBoxSetup::initDeviceMemory()
-{
-    auto &simBox = _engine.getSimulationBox();
-    auto &device = _engine.getDevice();
-
-    simBox.initDeviceMemory(device);
-    simBox.copyPosTo(device);
-    simBox.copyVelTo(device);
-    simBox.copyForcesTo(device);
-    simBox.copyMassesTo(device);
-    simBox.copyOldPosTo(device);
-    simBox.copyOldVelTo(device);
-    simBox.copyOldForcesTo(device);
-    simBox.copyAtomsPerMoleculeTo(device);
-}
-#endif

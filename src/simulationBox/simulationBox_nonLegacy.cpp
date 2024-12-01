@@ -124,6 +124,26 @@ Real *SimulationBox::getForcesPtr()
 }
 
 /**
+ * @brief get the shift forces ptr
+ *
+ * @details This method is used to get a pointer to the shift forces either on
+ * the CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the shift forces on the GPU is returned. Otherwise, the pointer to
+ * the shift forces on the CPU is returned.
+ *
+ * @return const Real*
+ */
+Real *SimulationBox::getShiftForcesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _shiftForcesDevice;
+    else
+#endif
+        return _shiftForces.data();
+}
+
+/**
  * @brief get the old positions ptr
  *
  * @details This method is used to get a pointer to the old positions either on
@@ -204,6 +224,66 @@ Real *SimulationBox::getMassesPtr()
 }
 
 /**
+ * @brief get the charges ptr
+ *
+ * @details This method is used to get a pointer to the charges either on the
+ * CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the charges on the GPU is returned. Otherwise, the pointer to the
+ * charges on the CPU is returned.
+ *
+ * @return const Real*
+ */
+Real *SimulationBox::getChargesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _chargesDevice;
+    else
+#endif
+        return _charges.data();
+}
+
+/**
+ * @brief get the atom types ptr
+ *
+ * @details This method is used to get a pointer to the atom types either on the
+ * CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the atom types on the GPU is returned. Otherwise, the pointer to
+ * the atom types on the CPU is returned.
+ *
+ * @return const size_t*
+ */
+size_t *SimulationBox::getAtomTypesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _atomTypesDevice;
+    else
+#endif
+        return _atomTypes.data();
+}
+
+/**
+ * @brief get the molecule types ptr
+ *
+ * @details This method is used to get a pointer to the molecule types either on
+ * the CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the molecule types on the GPU is returned. Otherwise, the pointer
+ * to the molecule types on the CPU is returned.
+ *
+ * @return const size_t*
+ */
+size_t *SimulationBox::getMolTypesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _molTypesDevice;
+    else
+#endif
+        return _molTypes.data();
+}
+
+/**
  * @brief get the atoms per molecule ptr
  *
  * @details This method is used to get a pointer to the atoms per molecule
@@ -221,6 +301,47 @@ size_t *SimulationBox::getAtomsPerMoleculePtr()
     else
 #endif
         return _atomsPerMolecule.data();
+}
+
+/**
+ * @brief get the molecule indices ptr
+ *
+ * @details This method is used to get a pointer to the molecule indices either
+ * on the CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag,
+ * the pointer to the molecule indices on the GPU is returned. Otherwise, the
+ * pointer to the molecule indices on the CPU is returned.
+ *
+ * @return const size_t*
+ */
+size_t *SimulationBox::getMoleculeIndicesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _moleculeIndicesDevice;
+    else
+#endif
+        return _moleculeIndices.data();
+}
+
+/**
+ * @brief get the internal global VDW types ptr
+ *
+ * @details This method is used to get a pointer to the internal global VDW
+ * types either on the CPU or on the GPU. If the code is compiled with the
+ * __PQ_GPU__ flag, the pointer to the internal global VDW types on the GPU is
+ * returned. Otherwise, the pointer to the internal global VDW types on the CPU
+ * is returned.
+ *
+ * @return const size_t*
+ */
+size_t *SimulationBox::getInternalGlobalVDWTypesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _internalGlobalVDWTypesDevice;
+    else
+#endif
+        return _internalGlobalVDWTypes.data();
 }
 
 /**
@@ -310,6 +431,30 @@ std::vector<Real> SimulationBox::flattenForces()
 }
 
 /**
+ * @brief flattens shift forces of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+void SimulationBox::flattenShiftForces()
+{
+    if (_shiftForces.size() != _atoms.size() * 3)
+        _shiftForces.resize(_atoms.size() * 3);
+
+    Real *const shiftForces = _shiftForces.data();
+
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            shiftForces[i * 3 + j] = atom->getShiftForce()[j];
+    }
+    // clang-format on
+}
+
+/**
  * @brief flattens old positions of each atom into a single vector of Real
  *
  */
@@ -380,8 +525,6 @@ void SimulationBox::flattenOldForces()
 
 /**
  * @brief flattens masses of each atom into a single vector of Real
- *
- * @return std::vector<Real>
  */
 void SimulationBox::flattenMasses()
 {
@@ -394,6 +537,93 @@ void SimulationBox::flattenMasses()
     #pragma omp parallel for
     for (size_t i = 0; i < _atoms.size(); ++i)
         masses[i] = _atoms[i]->getMass();
+    // clang-format on
+}
+
+/**
+ * @brief flattens charges of each atom into a single vector of Real
+ *
+ */
+void SimulationBox::flattenCharges()
+{
+    if (_charges.size() != _atoms.size())
+        _charges.resize(_atoms.size());
+
+    Real *const charges = _charges.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    for (size_t i = 0; i < _atoms.size(); ++i)
+        charges[i] = _atoms[i]->getPartialCharge();
+    // clang-format on
+}
+
+/**
+ * @brief flattens atomtypes of each atom into a single vector of size_t
+ * integers
+ *
+ * @details This method is used to flatten the atom types of each atom into a
+ * single vector of size_t integers. This is useful when the atom types are
+ * needed in a single vector, for example when calculating the Lennard-Jones
+ * potential.
+ */
+void SimulationBox::flattenAtomTypes()
+{
+    if (_atomTypes.size() != _atoms.size())
+        _atomTypes.resize(_atoms.size());
+
+    size_t *const atomTypes = _atomTypes.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    for (size_t i = 0; i < _atoms.size(); ++i)
+        atomTypes[i] = _atoms[i]->getAtomType();
+    // clang-format on
+}
+
+/**
+ * @brief flattens molecule types of each atom into a single vector of size_t
+ * integers
+ *
+ * @details This method is used to flatten the molecule types of each atom into
+ * a single vector of size_t integers. This is useful when the molecule types
+ * are needed in a single vector, for example when calculating the Lennard-Jones
+ * potential.
+ */
+void SimulationBox::flattenMolTypes()
+{
+    if (_molTypes.size() != _molecules.size())
+        _molTypes.resize(_molecules.size());
+
+    size_t *const molTypes = _molTypes.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    for (size_t i = 0; i < _molecules.size(); ++i)
+        molTypes[i] = _molecules[i].getMoltype();
+    // clang-format on
+}
+
+/**
+ * @brief flattens the internal global VDW types of each atom into a single
+ * vector of size_t integers
+ *
+ * @details This method is used to flatten the internal global VDW types of each
+ * atom into a single vector of size_t integers. This is useful when the global
+ * VDW types are needed in a single vector, for example when calculating the
+ * Lennard-Jones potential.
+ */
+void SimulationBox::flattenInternalGlobalVDWTypes()
+{
+    if (_internalGlobalVDWTypes.size() != _atoms.size())
+        _internalGlobalVDWTypes.resize(_atoms.size());
+
+    size_t *const internalGlobalVDWTypes = _internalGlobalVDWTypes.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    for (size_t i = 0; i < _atoms.size(); ++i)
+        internalGlobalVDWTypes[i] = _atoms[i]->getInternalGlobalVDWType();
     // clang-format on
 }
 
@@ -453,6 +683,25 @@ void SimulationBox::deFlattenForces()
 
         for (size_t j = 0; j < 3; ++j)
             atom->setForce(_forces[i * 3 + j], j);
+    }
+    // clang-format on
+}
+
+/**
+ * @brief de-flattens shift forces of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ */
+void SimulationBox::deFlattenShiftForces()
+{
+    // clang-format off
+    #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setShiftForce(_shiftForces[i * 3 + j], j);
     }
     // clang-format on
 }
@@ -594,8 +843,6 @@ double SimulationBox::calculateTemperature()
     // clang-format on
 
     temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
-
-    deFlattenVelocities();
 
     return temperature;
 }
@@ -866,4 +1113,28 @@ void SimulationBox::initAtomsPerMolecule()
     for (size_t i = 0; i < _molecules.size(); ++i)
         _atomsPerMolecule[i] = _molecules[i].getNumberOfAtoms();
     // clang-format on
+}
+
+/**
+ * @brief initializes a vector that is n atoms long and each element contains
+ * the index of the molecule to which the atom belongs
+ *
+ * @details This method is used to initialize a vector that is n atoms long and
+ * each element contains the index of the molecule to which the atom belongs.
+ * This is useful when the atom types are needed in a single vector, for example
+ * when calculating the Lennard-Jones potential.
+ */
+void SimulationBox::initMoleculeIndices()
+{
+    _moleculeIndices.resize(_atoms.size());
+
+    size_t moleculeIndex = 0;
+
+    for (size_t i = 0; i < _molecules.size(); ++i)
+    {
+        const auto nAtoms = _molecules[i].getNumberOfAtoms();
+
+        for (size_t j = 0; j < nAtoms; ++j)
+            _moleculeIndices[moleculeIndex++] = i;
+    }
 }

@@ -26,8 +26,10 @@
 
 #include <cstddef>   // size_t
 #include <utility>   // pair
+#include <vector>    // vector
 
 #include "nonCoulombPair.hpp"
+#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -67,7 +69,7 @@ namespace potential
             const double c12
         );
 
-        [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
+        [[nodiscard]] bool operator==(const LennardJonesPair& other) const;
 
         [[nodiscard]] std::pair<double, double> calculate(const double distance
         ) const override;

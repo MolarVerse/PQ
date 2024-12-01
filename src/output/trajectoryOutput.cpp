@@ -92,10 +92,6 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 {
     std::ostringstream buffer;
 
-#ifndef __PQ_LEGACY__
-    simBox.deFlattenVelocities();
-#endif
-
     writeHeader(simBox);
     buffer << '\n';
 

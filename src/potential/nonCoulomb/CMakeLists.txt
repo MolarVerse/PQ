@@ -1,4 +1,4 @@
-add_library(nonCoulombPotential
+set(nonCoulombPotentialSources
     nonCoulombPair.cpp
     lennardJonesPair.cpp
     buckinghamPair.cpp
@@ -8,6 +8,16 @@ add_library(nonCoulombPotential
     nonCoulombPotential.cpp
     guffNonCoulomb.cpp
     forceFieldNonCoulomb.cpp
+)
+
+if(NOT BUILD_LEGACY)
+    list(APPEND nonCoulombPotentialSources
+        lennardJones.cpp
+    )
+endif()
+
+add_library(nonCoulombPotential
+    ${nonCoulombPotentialSources}
 )
 
 target_include_directories(nonCoulombPotential

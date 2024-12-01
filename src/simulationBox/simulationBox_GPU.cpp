@@ -35,9 +35,58 @@ SimulationBox::~SimulationBox()
     deviceFreeThrowError(_posDevice, "Freeing the position device memory");
     deviceFreeThrowError(_velDevice, "Freeing the velocity device memory");
     deviceFreeThrowError(_forcesDevice, "Freeing the forces device memory");
-    _posDevice    = nullptr;
-    _velDevice    = nullptr;
-    _forcesDevice = nullptr;
+    deviceFreeThrowError(
+        _shiftForcesDevice,
+        "Freeing the shift forces device memory"
+    );
+    deviceFreeThrowError(
+        _oldPosDevice,
+        "Freeing the old position device memory"
+    );
+    deviceFreeThrowError(
+        _oldVelDevice,
+        "Freeing the old velocity device memory"
+    );
+    deviceFreeThrowError(
+        _oldForcesDevice,
+        "Freeing the old forces device memory"
+    );
+    deviceFreeThrowError(_massesDevice, "Freeing the masses device memory");
+    deviceFreeThrowError(_chargesDevice, "Freeing the charges device memory");
+    deviceFreeThrowError(
+        _atomsPerMoleculeDevice,
+        "Freeing the atoms per molecule device memory"
+    );
+    deviceFreeThrowError(
+        _moleculeIndicesDevice,
+        "Freeing the molecule indices device memory"
+    );
+    deviceFreeThrowError(
+        _atomTypesDevice,
+        "Freeing the atom types device memory"
+    );
+    deviceFreeThrowError(
+        _molTypesDevice,
+        "Freeing the mol types device memory"
+    );
+    deviceFreeThrowError(
+        _internalGlobalVDWTypesDevice,
+        "Freeing the internal global vdw types device memory"
+    );
+    _posDevice                    = nullptr;
+    _velDevice                    = nullptr;
+    _forcesDevice                 = nullptr;
+    _shiftForcesDevice            = nullptr;
+    _oldPosDevice                 = nullptr;
+    _oldVelDevice                 = nullptr;
+    _oldForcesDevice              = nullptr;
+    _massesDevice                 = nullptr;
+    _chargesDevice                = nullptr;
+    _atomsPerMoleculeDevice       = nullptr;
+    _moleculeIndicesDevice        = nullptr;
+    _atomTypesDevice              = nullptr;
+    _molTypesDevice               = nullptr;
+    _internalGlobalVDWTypesDevice = nullptr;
 }
 
 /**
@@ -47,18 +96,29 @@ SimulationBox::~SimulationBox()
  */
 void SimulationBox::initDeviceMemory(device::Device& device)
 {
-    const size_t nAtoms = getNumberOfAtoms();
-    const size_t size   = nAtoms * 3;
+    const size_t nAtoms     = getNumberOfAtoms();
+    const size_t nMolecules = getNumberOfMolecules();
+    const size_t size       = nAtoms * 3;
 
     assert(nAtoms > 0);
+    assert(nMolecules > 0);
 
     device.deviceMalloc(&_posDevice, size);
     device.deviceMalloc(&_velDevice, size);
     device.deviceMalloc(&_forcesDevice, size);
+    device.deviceMalloc(&_shiftForcesDevice, size);
+
     device.deviceMalloc(&_oldPosDevice, size);
     device.deviceMalloc(&_oldVelDevice, size);
     device.deviceMalloc(&_oldForcesDevice, size);
+
     device.deviceMalloc(&_massesDevice, nAtoms);
+    device.deviceMalloc(&_chargesDevice, nAtoms);
+    device.deviceMalloc(&_atomsPerMoleculeDevice, nMolecules);
+    device.deviceMalloc(&_atomTypesDevice, nAtoms);
+    device.deviceMalloc(&_molTypesDevice, nMolecules);
+    device.deviceMalloc(&_internalGlobalVDWTypesDevice, nAtoms);
+
     device.checkErrors("SimulationBox device memory allocation");
 }
 
@@ -93,6 +153,17 @@ void SimulationBox::copyForcesTo(device::Device& device)
 {
     device.deviceMemcpyToAsync(_forcesDevice, _forces);
     device.checkErrors("SimulationBox copy forces data to device");
+}
+
+/**
+ * @brief copy shift forces data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyShiftForcesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_shiftForcesDevice, _shiftForces);
+    device.checkErrors("SimulationBox copy shift forces data to device");
 }
 
 /**
@@ -140,6 +211,17 @@ void SimulationBox::copyMassesTo(device::Device& device)
 }
 
 /**
+ * @brief copy charges data from host to device asynchronoysly
+ *
+ * @param device
+ */
+void SimulationBox::copyChargesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_chargesDevice, _charges);
+    device.checkErrors("SimulationBox copy charges data to device");
+}
+
+/**
  * @brief copy number of atoms per molecule data from host to device
  * asynchronously
  *
@@ -149,6 +231,57 @@ void SimulationBox::copyAtomsPerMoleculeTo(device::Device& device)
 {
     device.deviceMemcpyToAsync(_atomsPerMoleculeDevice, _atomsPerMolecule);
     device.checkErrors("SimulationBox copy atoms per molecule data to device");
+}
+
+/**
+ * @brief copy the molecule indices data per atom from host to device
+ * asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyMoleculeIndicesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_moleculeIndicesDevice, _moleculeIndices);
+    device.checkErrors("SimulationBox copy molecule indices data to device");
+}
+
+/**
+ * @brief copy atomtypes data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyAtomTypesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_atomTypesDevice, _atomTypes);
+    device.checkErrors("SimulationBox copy atom types data to device");
+}
+
+/**
+ * @brief copy moltypes data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyMolTypesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_molTypesDevice, _molTypes);
+    device.checkErrors("SimulationBox copy mol types data to device");
+}
+
+/**
+ * @brief copy internal global vdw types data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyInternalGlobalVDWTypesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(
+        _internalGlobalVDWTypesDevice,
+        _internalGlobalVDWTypes
+    );
+
+    device.checkErrors(
+        "SimulationBox copy internal global vdw types data to device"
+    );
 }
 
 /**

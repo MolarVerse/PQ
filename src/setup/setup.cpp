@@ -211,4 +211,57 @@ void setup::setupEngine(Engine &engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
+
+#ifndef __PQ_LEGACY__
+    auto &simBox = engine.getSimulationBox();
+    simBox.flattenPositions();
+    simBox.flattenVelocities();
+    simBox.flattenForces();
+    simBox.flattenShiftForces();
+    simBox.flattenCharges();
+
+    simBox.initAtomsPerMolecule();
+    simBox.initMoleculeIndices();
+
+    simBox.flattenAtomTypes();
+    simBox.flattenMolTypes();
+    simBox.flattenInternalGlobalVDWTypes();
+#endif
+
+#ifdef __PQ_GPU__
+    if (engine.getDevice().isDeviceUsed())
+        initDeviceMemory();
+#endif
 }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief Initialize device memory for simulation box
+ *
+ */
+void initDeviceMemory()
+{
+    auto &simBox = _engine.getSimulationBox();
+    auto &device = _engine.getDevice();
+
+    simBox.initDeviceMemory(device);
+
+    simBox.copyPosTo(device);
+    simBox.copyVelTo(device);
+    simBox.copyForcesTo(device);
+    simBox.copyShiftForcesTo(device);
+
+    simBox.copyMassesTo(device);
+    simBox.copyChargesTo(device);
+
+    simBox.copyAtomsPerMoleculeTo(device);
+    simBox.copyMoleculeIndicesTo(device);
+    simBox.copyAtomTypesTo(device);
+    simBox.copyMolTypesTo(device);
+    simBox.copyInternalGlobalVDWTypesTo(device);
+
+    simBox.copyOldPosTo(device);
+    simBox.copyOldVelTo(device);
+    simBox.copyOldForcesTo(device);
+}
+#endif

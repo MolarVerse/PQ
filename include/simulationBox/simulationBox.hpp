@@ -101,6 +101,8 @@ namespace simulationBox
         std::vector<Real> _pos;
         std::vector<Real> _vel;
         std::vector<Real> _forces;
+        std::vector<Real> _shiftForces;
+        std::vector<Real> _charges;
 
         std::vector<Real> _oldPos;
         std::vector<Real> _oldVel;
@@ -109,12 +111,18 @@ namespace simulationBox
         std::vector<Real> _masses;
 
         std::vector<size_t> _atomsPerMolecule;
+        std::vector<size_t> _moleculeIndices;
+        std::vector<size_t> _atomTypes;
+        std::vector<size_t> _molTypes;
+        std::vector<size_t> _internalGlobalVDWTypes;
 #endif
 
 #ifdef __PQ_GPU__
         Real* _posDevice;
         Real* _velDevice;
         Real* _forcesDevice;
+        Real* _shiftForcesDevice;
+        Real* _chargesDevice;
 
         Real* _oldPosDevice;
         Real* _oldVelDevice;
@@ -123,6 +131,10 @@ namespace simulationBox
         Real* _massesDevice;
 
         size_t* _atomsPerMoleculeDevice;
+        size_t* _moleculeIndicesDevice;
+        size_t* _atomTypesDevice;
+        size_t* _molTypesDevice;
+        size_t* _internalGlobalVDWTypesDevice;
 #endif   // __PQ_GPU__
 
         // END NEWLY introduced for OMP/CUDA
@@ -183,20 +195,27 @@ namespace simulationBox
         std::vector<Real> flattenPositions();
         std::vector<Real> flattenVelocities();
         std::vector<Real> flattenForces();
+        void              flattenShiftForces();
 
         void flattenOldPositions();
         void flattenOldVelocities();
         void flattenOldForces();
         void flattenMasses();
+        void flattenCharges();
+        void flattenAtomTypes();
+        void flattenMolTypes();
+        void flattenInternalGlobalVDWTypes();
 
         void deFlattenPositions();
         void deFlattenVelocities();
         void deFlattenForces();
+        void deFlattenShiftForces();
         void deFlattenOldPositions();
         void deFlattenOldVelocities();
         void deFlattenOldForces();
 
         void initAtomsPerMolecule();
+        void initMoleculeIndices();
 #endif
 
 #ifdef WITH_MPI
@@ -225,11 +244,17 @@ namespace simulationBox
         void copyPosTo(device::Device& device);
         void copyVelTo(device::Device& device);
         void copyForcesTo(device::Device& device);
+        void copyShiftForcesTo(device::Device& device);
         void copyOldPosTo(device::Device& device);
         void copyOldVelTo(device::Device& device);
         void copyOldForcesTo(device::Device& device);
         void copyMassesTo(device::Device& device);
+        void copyChargesTo(device::Device& device);
         void copyAtomsPerMoleculeTo(device::Device& device);
+        void copyMoleculeIndicesTo(device::Device& device);
+        void copyAtomTypesTo(device::Device& device);
+        void copyMolTypesTo(device::Device& device);
+        void copyInternalGlobalVDWTypesTo(device::Device& device);
 
         void copyPosFrom(device::Device& device);
         void copyVelFrom(device::Device& device);
@@ -308,14 +333,20 @@ namespace simulationBox
         [[nodiscard]] Real* getPosPtr();
         [[nodiscard]] Real* getVelPtr();
         [[nodiscard]] Real* getForcesPtr();
+        [[nodiscard]] Real* getShiftForcesPtr();
 
         [[nodiscard]] Real* getOldPosPtr();
         [[nodiscard]] Real* getOldVelPtr();
         [[nodiscard]] Real* getOldForcesPtr();
 
         [[nodiscard]] Real* getMassesPtr();
+        [[nodiscard]] Real* getChargesPtr();
 
         [[nodiscard]] size_t* getAtomsPerMoleculePtr();
+        [[nodiscard]] size_t* getMoleculeIndicesPtr();
+        [[nodiscard]] size_t* getAtomTypesPtr();
+        [[nodiscard]] size_t* getMolTypesPtr();
+        [[nodiscard]] size_t* getInternalGlobalVDWTypesPtr();
 
 #endif
 

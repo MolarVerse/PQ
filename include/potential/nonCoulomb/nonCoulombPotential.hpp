@@ -29,7 +29,11 @@
 #include <memory>    // for shared_ptr
 #include <vector>    // for vector
 
+#include "lennardJones.hpp"
+
+#ifndef __PQ_LEGACY__
 #include "typeAliases.hpp"
+#endif
 
 namespace potential
 {
@@ -57,6 +61,10 @@ namespace potential
     {
        protected:
         MixingRule _mixingRule = MixingRule::NONE;
+
+#ifndef __PQ_LEGACY__
+        LennardJones _lennardJones = LennardJones();
+#endif
 
        public:
         virtual ~NonCoulombPotential() = default;

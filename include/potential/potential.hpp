@@ -70,6 +70,34 @@ namespace potential
             const size_t
         ) const;
 
+#ifndef __PQ_LEGACY__
+
+std::pair<Real, Real> calculateSingleInteraction(
+    const pq::Box&   box,
+    const Real   xi,
+    const Real   yi,
+    const Real   zi,
+    const Real   xj,
+    const Real   yj,
+    const Real   zj,
+    const size_t atomType_i,
+    const size_t atomType_j,
+    const size_t globalVdwType_i,
+    const size_t globalVdwType_j,
+    const size_t moltype_i,
+    const size_t moltype_j,
+    const Real   charge_i,
+    const Real   charge_j,
+    Real&        fx,
+    Real&        fy,
+    Real&        fz,
+    Real&        shiftfx,
+    Real&        shiftfy,
+    Real&        shiftfz
+) const;
+
+#endif   // __PQ_LEGACY__
+
         template <typename T>
         void makeCoulombPotential(T p);
 

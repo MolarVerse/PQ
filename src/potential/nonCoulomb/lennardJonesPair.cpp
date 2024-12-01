@@ -45,7 +45,7 @@ LennardJonesPair::LennardJonesPair(
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _c6(c6),
-      _c12(c12){};
+      _c12(c12) {};
 
 /**
  * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
@@ -59,7 +59,7 @@ LennardJonesPair::LennardJonesPair(
     const double c6,
     const double c12
 )
-    : NonCoulombPair(cutOff), _c6(c6), _c12(c12){};
+    : NonCoulombPair(cutOff), _c6(c6), _c12(c12) {};
 
 /**
  * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
@@ -77,7 +77,7 @@ LennardJonesPair::LennardJonesPair(
     const double c6,
     const double c12
 )
-    : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _c6(c6), _c12(c12){};
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _c6(c6), _c12(c12) {};
 
 /**
  * @brief operator overload for the comparison of two LennardJonesPair objects

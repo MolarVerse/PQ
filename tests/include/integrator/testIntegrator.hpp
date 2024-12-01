@@ -79,6 +79,10 @@ class TestIntegrator : public ::testing::Test
         _box->addMolecule(*_molecule1);
         _box->addAtom(atom1);
         _box->addAtom(atom2);
+
+#ifndef __PQ_LEGACY__
+        _box->flattenMasses();
+#endif
     }
 
     virtual void TearDown()

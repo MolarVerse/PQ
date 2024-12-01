@@ -147,6 +147,7 @@ namespace simulationBox
         void setForce(const pq::Vec3D &force);
         void setForce(const double, const size_t index);
         void setShiftForce(const pq::Vec3D &shiftForce);
+        void setShiftForce(const double, const size_t index);
 
         void setPositionOld(const pq::Vec3D &positionOld);
         void setPositionOld(const double, const size_t index);

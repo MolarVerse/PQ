@@ -46,6 +46,10 @@ namespace setup
 
     void readFiles(pq::Engine &);
     void setupEngine(pq::Engine &);
+
+#ifdef __PQ_GPU__
+    void initDeviceMemory();
+#endif
 }   // namespace setup
 
 #endif   // _SETUP_HPP_
