@@ -107,6 +107,8 @@ namespace simulationBox
         std::vector<Real> _oldForces;
 
         std::vector<Real> _masses;
+
+        std::vector<size_t> _atomsPerMolecule;
 #endif
 
 #ifdef __PQ_GPU__
@@ -119,6 +121,8 @@ namespace simulationBox
         Real* _oldForcesDevice;
 
         Real* _massesDevice;
+
+        size_t* _atomsPerMoleculeDevice;
 #endif   // __PQ_GPU__
 
         // END NEWLY introduced for OMP/CUDA
@@ -132,9 +136,11 @@ namespace simulationBox
 
         void calculateDegreesOfFreedom();
         void calculateTotalMass();
-        void calculateCenterOfMass();
         void calculateCenterOfMassMolecules();
         void calculateDensity();
+
+        void scaleVelocities(const double factor);
+        void addToVelocities(const pq::Vec3D& velocity);
 
         void updateOldPositions();
         void updateOldVelocities();
@@ -147,14 +153,15 @@ namespace simulationBox
 
         [[nodiscard]] double    calculateTemperature();
         [[nodiscard]] double    calculateTotalForce();
-        [[nodiscard]] double    calculateRMSForce() const;
-        [[nodiscard]] double    calculateMaxForce() const;
-        [[nodiscard]] double    calculateRMSForceOld() const;
-        [[nodiscard]] double    calculateMaxForceOld() const;
+        [[nodiscard]] double    calculateRMSForce();
+        [[nodiscard]] double    calculateMaxForce();
+        [[nodiscard]] double    calculateRMSForceOld();
+        [[nodiscard]] double    calculateMaxForceOld();
         [[nodiscard]] pq::Vec3D calculateMomentum();
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
+        [[nodiscard]] pq::Vec3D calculateCenterOfMass();
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -171,11 +178,11 @@ namespace simulationBox
         );
 
 #ifdef __PQ_LEGACY__
-        [[nodiscard]] std::vector<double> flattenPositions();
+        std::vector<double> flattenPositions();
 #else
-        [[nodiscard]] std::vector<Real> flattenPositions();
-        [[nodiscard]] std::vector<Real> flattenVelocities();
-        [[nodiscard]] std::vector<Real> flattenForces();
+        std::vector<Real> flattenPositions();
+        std::vector<Real> flattenVelocities();
+        std::vector<Real> flattenForces();
 
         void flattenOldPositions();
         void flattenOldVelocities();
@@ -188,6 +195,8 @@ namespace simulationBox
         void deFlattenOldPositions();
         void deFlattenOldVelocities();
         void deFlattenOldForces();
+
+        void initAtomsPerMolecule();
 #endif
 
 #ifdef WITH_MPI
@@ -220,6 +229,7 @@ namespace simulationBox
         void copyOldVelTo(device::Device& device);
         void copyOldForcesTo(device::Device& device);
         void copyMassesTo(device::Device& device);
+        void copyAtomsPerMoleculeTo(device::Device& device);
 
         void copyPosFrom(device::Device& device);
         void copyVelFrom(device::Device& device);
@@ -227,7 +237,6 @@ namespace simulationBox
         void copyOldPosFrom(device::Device& device);
         void copyOldVelFrom(device::Device& device);
         void copyOldForcesFrom(device::Device& device);
-        void copyMassesFrom(device::Device& device);
 #endif
 
         /************************
@@ -267,8 +276,13 @@ namespace simulationBox
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
+#ifdef __PQ_LEGACY__
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
+#else
+        [[nodiscard]] std::vector<Real> getAtomicScalarForces();
+        [[nodiscard]] std::vector<Real> getAtomicScalarForcesOld();
+#endif
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
         [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
@@ -300,6 +314,8 @@ namespace simulationBox
         [[nodiscard]] Real* getOldForcesPtr();
 
         [[nodiscard]] Real* getMassesPtr();
+
+        [[nodiscard]] size_t* getAtomsPerMoleculePtr();
 
 #endif
 

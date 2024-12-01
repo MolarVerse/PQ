@@ -5,14 +5,15 @@
             "includePath": [
                 "${workspaceFolder}/include/**",
                 "${workspaceFolder}/**",
-                "/opt/cuda/include/**",
-                "/opt/nvidia/hpc_sdk/Linux_x86_64/24.7/cuda/include/**"
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/tests/**"
             ],
             "browse": {
                 "path": [
                     "${workspaceFolder}/include/**",
                     "${workspaceFolder}/**",
-                    "/opt/nvidia/hpc_sdk/Linux_x86_64/24.7/cuda/include/**"
+                    "${workspaceFolder}/src/**",
+                    "${workspaceFolder}/tests/**"
                 ]
             },
             "compileCommands": "${config:cmake.buildDirectory}/compile_commands.json",

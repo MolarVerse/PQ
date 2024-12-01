@@ -130,10 +130,7 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
     const auto lambda     = ::sqrt(targetTemp / _temperature);
 
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [lambda](auto &atom) { atom->scaleVelocity(lambda); }
-    );
+    simBox.scaleVelocities(lambda);
 
     _temperature     = simBox.calculateTemperature();
     _momentum        = simBox.calculateMomentum();
@@ -154,55 +151,7 @@ void ResetKinetics::resetMomentum(SimulationBox &simBox)
     const auto momentumVector     = _momentum;
     const auto momentumCorrection = momentumVector / simBox.getTotalMass();
 
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [momentumCorrection](auto &atom)
-        { atom->addVelocity(-momentumCorrection); }
-    );
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-}
-
-/**
- * @brief reset the angular momentum of the system
- *
- * @details subtract angular momentum correction from all velocities -
- * correction is the total angular momentum divided by the total mass
- *
- * @param physicalData
- * @param simBox
- */
-void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
-{
-    simBox.calculateCenterOfMass();
-    const auto centerOfMass = simBox.getCenterOfMass();
-
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-
-    StaticMatrix3x3 helperMatrix{0.0};
-
-    auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
-    {
-        auto       relativePosition = atom->getPosition() - centerOfMass;
-        const auto tensor  = tensorProduct(relativePosition, relativePosition);
-        helperMatrix      += tensor * atom->getMass();
-    };
-
-    std::ranges::for_each(simBox.getAtoms(), addInertiaOfAtom);
-
-    const auto inertia = -helperMatrix + diagonalMatrix(trace(helperMatrix));
-    const auto inverseInertia  = inverse(inertia);
-    const auto angularVelocity = inverseInertia * _angularMomentum;
-
-    auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
-    {
-        auto relativePosition = atom->getPosition() - centerOfMass;
-        atom->addVelocity(-cross(angularVelocity, relativePosition));
-    };
-
-    std::ranges::for_each(simBox.getAtoms(), correctVelocities);
+    simBox.addToVelocities(-momentumCorrection);
 
     _temperature     = simBox.calculateTemperature();
     _momentum        = simBox.calculateMomentum();

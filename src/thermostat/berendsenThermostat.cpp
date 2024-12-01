@@ -24,8 +24,12 @@
 
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "physicalData.hpp"         // for PhysicalData
 
 using thermostat::BerendsenThermostat;
+using namespace simulationBox;
+using namespace physicalData;
 using namespace settings;
 
 /**
@@ -40,6 +44,35 @@ BerendsenThermostat::BerendsenThermostat(
 )
     : Thermostat(targetTemp), _tau(tau)
 {
+}
+
+/**
+ * @brief apply thermostat - Berendsen
+ *
+ * @link https://doi.org/10.1063/1.448118
+ *
+ * @param simulationBox
+ * @param data
+ */
+void BerendsenThermostat::applyThermostat(
+    SimulationBox &simulationBox,
+    PhysicalData  &data
+)
+{
+    startTimingsSection("Berendsen");
+
+    _temperature = simulationBox.calculateTemperature();
+
+    const auto dt        = TimingsSettings::getTimeStep();
+    const auto tempRatio = _targetTemperature / _temperature;
+
+    const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
+
+    simulationBox.scaleVelocities(berendsenFactor);
+
+    data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
+
+    stopTimingsSection("Berendsen");
 }
 
 /**

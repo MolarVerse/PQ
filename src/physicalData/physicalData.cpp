@@ -37,6 +37,8 @@ using namespace constants;
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
+ * @TODO: implement this for not legacy code
+ *
  * @param simulationBox
  */
 void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
@@ -46,6 +48,10 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _momentum                  = Vec3D();
     _kineticEnergyAtomicTensor = tensor3D();
     _kinEnergyMolTensor        = tensor3D();
+
+#ifndef __PQ_LEGACY__
+    simulationBox.deFlattenVelocities();
+#endif
 
     auto kinEnergyAndMomOfMol = [this](auto &molecule)
     {

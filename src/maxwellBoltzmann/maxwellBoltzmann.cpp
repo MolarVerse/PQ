@@ -45,6 +45,8 @@ using namespace constants;
 using namespace settings;
 using namespace resetKinetics;
 
+// TODO: implement this for not legacy code
+
 /**
  * @brief generate boltzmann distributed velocities for all atoms in the
  * simulation box

@@ -1,8 +1,18 @@
 set(integrator_source_files
     integrator.cpp
-
-    velocityVerlet.cpp
 )
+
+if(BUILD_LEGACY)
+    set(integrator_source_files
+        ${integrator_source_files}
+        velocityVerlet_legacy.cpp
+    )
+else()
+    set(integrator_source_files
+        ${integrator_source_files}
+        velocityVerlet_nonLegacy.cpp
+    )
+endif()
 
 if(BUILD_WITH_KOKKOS)
     set(integrator_source_files

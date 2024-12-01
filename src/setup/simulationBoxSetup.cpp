@@ -105,6 +105,10 @@ void SimulationBoxSetup::setup()
 
     auto &simBox = _engine.getSimulationBox();
 
+#ifndef __PQ_LEGACY__
+    simBox.flattenMasses();
+#endif
+
     simBox.calculateTotalMass();
 
     checkBoxSettings();
@@ -119,7 +123,7 @@ void SimulationBoxSetup::setup()
     simBox.flattenPositions();
     simBox.flattenVelocities();
     simBox.flattenForces();
-    simBox.flattenMasses();
+    simBox.initAtomsPerMolecule();
 #endif
 
 #ifdef __PQ_GPU__
@@ -497,6 +501,10 @@ void SimulationBoxSetup::initDeviceMemory()
     simBox.copyPosTo(device);
     simBox.copyVelTo(device);
     simBox.copyForcesTo(device);
-    simBox.copyMassTo(device);
+    simBox.copyMassesTo(device);
+    simBox.copyOldPosTo(device);
+    simBox.copyOldVelTo(device);
+    simBox.copyOldForcesTo(device);
+    simBox.copyAtomsPerMoleculeTo(device);
 }
 #endif

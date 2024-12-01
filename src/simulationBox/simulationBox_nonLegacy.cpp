@@ -1,10 +1,67 @@
 #include "constants.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "vector3d.hpp"
 
 using namespace simulationBox;
 using namespace constants;
 using namespace settings;
+using namespace linearAlgebra;
+
+/**
+ * @brief calculate total mass of simulationBox
+ *
+ */
+void SimulationBox::calculateTotalMass()
+{
+    _totalMass = 0.0;
+
+    const auto *const massPtr = getMassesPtr();
+
+    // clang-format off
+
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(massPtr)               \
+                map(_totalMass)                      \
+                reduction(+:_totalMass)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        _totalMass += massPtr[i];
+
+    // clang-format on
+}
+
+/**
+ * @brief calculate total force of simulationBox
+ *
+ * @return double
+ */
+double SimulationBox::calculateTotalForce()
+{
+    auto fx = 0.0;
+    auto fy = 0.0;
+    auto fz = 0.0;
+
+    flattenForces();
+
+    const auto *const forcesPtr = getForcesPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(forcesPtr)              \
+                map(fx, fy, fz)                       \
+                reduction(+:fx, fy, fz)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    {
+        fx += forcesPtr[i * 3];
+        fy += forcesPtr[i * 3 + 1];
+        fz += forcesPtr[i * 3 + 2];
+    }
+    // clang-format on
+
+    const auto totalForce = Vec3D{fx, fy, fz};
+
+    return norm(totalForce);
+}
 
 /**
  * @brief get the positions ptr
@@ -67,6 +124,66 @@ Real *SimulationBox::getForcesPtr()
 }
 
 /**
+ * @brief get the old positions ptr
+ *
+ * @details This method is used to get a pointer to the old positions either on
+ * the CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the old positions on the GPU is returned. Otherwise, the pointer
+ * to the old positions on the CPU is returned.
+ *
+ * @return const Real*
+ */
+Real *SimulationBox::getOldPosPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _oldPosDevice;
+    else
+#endif
+        return _oldPos.data();
+}
+
+/**
+ * @brief get the old velocities ptr
+ *
+ * @details This method is used to get a pointer to the old velocities either on
+ * the CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the old velocities on the GPU is returned. Otherwise, the pointer
+ * to the old velocities on the CPU is returned.
+ *
+ * @return const Real*
+ */
+Real *SimulationBox::getOldVelPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _oldVelDevice;
+    else
+#endif
+        return _oldVel.data();
+}
+
+/**
+ * @brief get the old forces ptr
+ *
+ * @details This method is used to get a pointer to the old forces either on the
+ * CPU or on the GPU. If the code is compiled with the __PQ_GPU__ flag, the
+ * pointer to the old forces on the GPU is returned. Otherwise, the pointer to
+ * the old forces on the CPU is returned.
+ *
+ * @return const Real*
+ */
+Real *SimulationBox::getOldForcesPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _oldForcesDevice;
+    else
+#endif
+        return _oldForces.data();
+}
+
+/**
  * @brief get the masses ptr
  *
  * @details This method is used to get a pointer to the masses either on the
@@ -84,6 +201,26 @@ Real *SimulationBox::getMassesPtr()
     else
 #endif
         return _masses.data();
+}
+
+/**
+ * @brief get the atoms per molecule ptr
+ *
+ * @details This method is used to get a pointer to the atoms per molecule
+ * either on the CPU or on the GPU. If the code is compiled with the __PQ_GPU__
+ * flag, the pointer to the atoms per molecule on the GPU is returned.
+ * Otherwise, the pointer to the atoms per molecule on the CPU is returned.
+ *
+ * @return const size_t*
+ */
+size_t *SimulationBox::getAtomsPerMoleculePtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _atomsPerMoleculeDevice;
+    else
+#endif
+        return _atomsPerMolecule.data();
 }
 
 /**
@@ -400,6 +537,39 @@ void SimulationBox::resetForces()
 }
 
 /**
+ * @brief calculate center of mass of simulationBox
+ *
+ * @return Vec3D center of mass
+ */
+Vec3D SimulationBox::calculateCenterOfMass()
+{
+    auto comX = 0.0;
+    auto comY = 0.0;
+    auto comZ = 0.0;
+
+    flattenPositions();
+
+    const auto *const posPtr    = getPosPtr();
+    const auto *const massesPtr = getMassesPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(posPtr, massesPtr)       \
+                map(comX, comY, comZ)                  \
+                reduction(+:comX, comY, comZ)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    {
+        comX += massesPtr[i] * posPtr[i * 3];
+        comY += massesPtr[i] * posPtr[i * 3 + 1];
+        comZ += massesPtr[i] * posPtr[i * 3 + 2];
+    }
+
+    _centerOfMass = Vec3D{comX, comY, comZ} / _totalMass;
+
+    return _centerOfMass;
+}
+
+/**
  * @brief calculate temperature of simulationBox
  *
  */
@@ -409,17 +579,17 @@ double SimulationBox::calculateTemperature()
 
     flattenVelocities();
 
-    const auto *const _velPtr  = getVelPtr();
-    const auto *const _massPtr = getMassesPtr();
+    const auto *const velPtr  = getVelPtr();
+    const auto *const massPtr = getMassesPtr();
 
     // clang-format off
 
     #pragma omp target teams distribute parallel for collapse(2) \
-                is_device_ptr(_velPtr)                           \
+                is_device_ptr(velPtr,massPtr)                    \
                 reduction(+:temperature)
     for (size_t i = 0; i < getNumberOfAtoms(); ++i)
         for (size_t j = 0; j < 3; ++j)
-            temperature += _massPtr[i] * _velPtr[i * 3 + j] * _velPtr[i * 3 + j];
+            temperature += massPtr[i] * velPtr[i * 3 + j] * velPtr[i * 3 + j];
 
     // clang-format on
 
@@ -428,4 +598,272 @@ double SimulationBox::calculateTemperature()
     deFlattenVelocities();
 
     return temperature;
+}
+
+/**
+ * @brief calculate momentum of simulationBox
+ *
+ * @return Vec3D
+ */
+Vec3D SimulationBox::calculateMomentum()
+{
+    auto momentumX = 0.0;
+    auto momentumY = 0.0;
+    auto momentumZ = 0.0;
+
+    flattenVelocities();
+    const auto *const velPtr    = getVelPtr();
+    const auto *const massesPtr = getMassesPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for         \
+                is_device_ptr(velPtr, massesPtr)             \
+                map(momentumX, momentumY, momentumZ)         \
+                reduction(+:momentumX, momentumY, momentumZ)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    {
+        momentumX += massesPtr[i] * velPtr[i * 3 ];
+        momentumY += massesPtr[i] * velPtr[i * 3  + 1];
+        momentumZ += massesPtr[i] * velPtr[i * 3  + 2];
+    }
+
+    // clang-format on
+
+    return Vec3D{momentumX, momentumY, momentumZ};
+}
+
+/**
+ * @brief calculate angular momentum of simulationBox
+ *
+ */
+Vec3D SimulationBox::calculateAngularMomentum(const Vec3D &momentum)
+{
+    Real angularMomX = 0.0;
+    Real angularMomY = 0.0;
+    Real angularMomZ = 0.0;
+
+    flattenPositions();
+    flattenVelocities();
+
+    const auto *const massesPtr = getMassesPtr();
+    const auto *const posPtr    = getPosPtr();
+    const auto *const velPtr    = getVelPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for                \
+                is_device_ptr(massesPtr, posPtr, velPtr)            \
+                map(angularMomX, angularMomY, angularMomZ)          \
+                reduction(+:angularMomX, angularMomY, angularMomZ)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    {
+        const auto mass = massesPtr[i];
+        const auto pos  = Vec3D{posPtr[i * 3], posPtr[i * 3 + 1], posPtr[i * 3 + 2]};
+        const auto vel  = Vec3D{velPtr[i * 3], velPtr[i * 3 + 1], velPtr[i * 3 + 2]};
+
+        const auto _angularMom = mass * cross(pos, vel);
+        angularMomX += _angularMom[0];
+        angularMomY += _angularMom[1];
+        angularMomZ += _angularMom[2];
+    }
+
+    auto angularMom = Vec3D{angularMomX, angularMomY, angularMomZ};
+
+    angularMom -= cross(_centerOfMass, momentum / _totalMass) * _totalMass;
+
+    return angularMom;
+}
+
+/**
+ * @brief scale all velocities by a factor
+ *
+ * @param lambda
+ */
+void SimulationBox::scaleVelocities(const Real lambda)
+{
+    flattenVelocities();
+
+    Real *const _velPtr = getVelPtr();
+
+    // clang-format off
+
+    #pragma omp target teams distribute parallel for \
+                collapse(2)                          \
+                is_device_ptr(_velPtr)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            _velPtr[i * 3 + j] *= lambda;
+
+    // clang-format on
+
+    deFlattenVelocities();
+}
+
+/**
+ * @brief add to all velocities a vector
+ *
+ * @param velocity
+ */
+void SimulationBox::addToVelocities(const Vec3D &velocity)
+{
+    flattenVelocities();
+
+    Real *const _velPtr = getVelPtr();
+
+    // clang-format off
+
+    #pragma omp target teams distribute parallel for \
+                collapse(2)                          \
+                is_device_ptr(_velPtr)               \
+                map(velocity)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            _velPtr[i * 3 + j] += velocity[j];
+
+    // clang-format on
+
+    deFlattenVelocities();
+}
+
+/**
+ * @brief get atomic scalar forces
+ *
+ * @return std::vector<Real>
+ */
+std::vector<Real> SimulationBox::getAtomicScalarForces()
+{
+    flattenForces();
+
+    const auto *const forcesPtr = getForcesPtr();
+
+    const auto nAtoms = getNumberOfAtoms();
+
+    std::vector<Real> atomicScalarForces;
+    atomicScalarForces.reserve(nAtoms);
+
+    auto *const scalarForces = atomicScalarForces.data();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(forcesPtr)             \
+                map(scalarForces)
+    for (size_t i = 0; i < nAtoms; ++i)
+        scalarForces[i] = ::sqrt(forcesPtr[i * 3]     * forcesPtr[i * 3]     +
+                                 forcesPtr[i * 3 + 1] * forcesPtr[i * 3 + 1] +
+                                 forcesPtr[i * 3 + 2] * forcesPtr[i * 3 + 2]);
+    // clang-format on
+
+    return atomicScalarForces;
+}
+
+/**
+ * @brief get atomic scalar forces
+ *
+ * @return std::vector<Real>
+ */
+std::vector<Real> SimulationBox::getAtomicScalarForcesOld()
+{
+    flattenOldForces();
+
+    const auto *const forcesPtr = getOldForcesPtr();
+
+    const auto nAtoms = getNumberOfAtoms();
+
+    std::vector<Real> atomicScalarForces;
+    atomicScalarForces.reserve(nAtoms);
+
+    auto *const scalarForces = atomicScalarForces.data();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(forcesPtr)             \
+                map(scalarForces)
+    for (size_t i = 0; i < nAtoms; ++i)
+        scalarForces[i] = ::sqrt(forcesPtr[i * 3]     * forcesPtr[i * 3]     +
+                                 forcesPtr[i * 3 + 1] * forcesPtr[i * 3 + 1] +
+                                 forcesPtr[i * 3 + 2] * forcesPtr[i * 3 + 2]);
+    // clang-format on
+
+    return atomicScalarForces;
+}
+
+/**
+ * @brief update old positions of all atoms
+ *
+ */
+void SimulationBox::updateOldPositions()
+{
+    flattenPositions();
+
+    const auto *const posPtr    = getPosPtr();
+    auto *const       oldPosPtr = getOldPosPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(posPtr, oldPosPtr)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            oldPosPtr[i * 3 + j] = posPtr[i * 3 + j];
+    // clang-format on
+
+    deFlattenOldPositions();
+}
+
+/**
+ * @brief update old velocities of all atoms
+ *
+ */
+void SimulationBox::updateOldVelocities()
+{
+    flattenVelocities();
+
+    const auto *const velPtr    = getVelPtr();
+    auto *const       oldVelPtr = getOldVelPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(velPtr, oldVelPtr)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            oldVelPtr[i * 3 + j] = velPtr[i * 3 + j];
+    // clang-format on
+
+    deFlattenOldVelocities();
+}
+
+/**
+ * @brief update old forces of all atoms
+ *
+ */
+void SimulationBox::updateOldForces()
+{
+    flattenForces();
+
+    const auto *const forcesPtr    = getForcesPtr();
+    auto *const       oldForcesPtr = getOldForcesPtr();
+
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(forcesPtr, oldForcesPtr)
+    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+        for (size_t j = 0; j < 3; ++j)
+            oldForcesPtr[i * 3 + j] = forcesPtr[i * 3 + j];
+    // clang-format on
+
+    deFlattenOldForces();
+}
+
+/**
+ * @brief initializes a vector that is n molecules long and each element
+ * contains the number of atoms in the molecule
+ *
+ */
+void SimulationBox::initAtomsPerMolecule()
+{
+    _atomsPerMolecule.resize(_molecules.size());
+
+    // clang-format off
+    #pragma omp parallel for
+    for (size_t i = 0; i < _molecules.size(); ++i)
+        _atomsPerMolecule[i] = _molecules[i].getNumberOfAtoms();
+    // clang-format on
 }

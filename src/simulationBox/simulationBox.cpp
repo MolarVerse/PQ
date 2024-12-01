@@ -429,36 +429,6 @@ void SimulationBox::calculateDegreesOfFreedom()
 }
 
 /**
- * @brief calculate total mass of simulationBox
- *
- */
-void SimulationBox::calculateTotalMass()
-{
-    _totalMass = 0.0;
-
-    auto accumulateMass = [this](const auto& atom)
-    { _totalMass += atom->getMass(); };
-
-    std::ranges::for_each(_atoms, accumulateMass);
-}
-
-/**
- * @brief calculate center of mass of simulationBox
- *
- */
-void SimulationBox::calculateCenterOfMass()
-{
-    _centerOfMass = Vec3D{0.0};
-
-    auto accumulateMassWeightedPos = [this](const auto& atom)
-    { _centerOfMass += atom->getMass() * atom->getPosition(); };
-
-    std::ranges::for_each(_atoms, accumulateMassWeightedPos);
-
-    _centerOfMass /= _totalMass;
-}
-
-/**
  * @brief calculate center of mass of all molecules
  *
  */
@@ -471,66 +441,11 @@ void SimulationBox::calculateCenterOfMassMolecules()
 }
 
 /**
- * @brief calculate momentum of simulationBox
- *
- * @return Vec3D
- */
-Vec3D SimulationBox::calculateMomentum()
-{
-    auto momentum = Vec3D{0.0};
-
-    auto accumulateAtomicMomentum = [&momentum](const auto& atom)
-    { momentum += atom->getMass() * atom->getVelocity(); };
-
-    std::ranges::for_each(_atoms, accumulateAtomicMomentum);
-
-    return momentum;
-}
-
-/**
- * @brief calculate angular momentum of simulationBox
- *
- */
-Vec3D SimulationBox::calculateAngularMomentum(const Vec3D& momentum)
-{
-    auto angularMom = Vec3D{0.0};
-
-    auto accumulateAngularMomentum = [&angularMom](const auto& atom)
-    {
-        const auto mass = atom->getMass();
-        angularMom += mass * cross(atom->getPosition(), atom->getVelocity());
-    };
-
-    std::ranges::for_each(_atoms, accumulateAngularMomentum);
-
-    angularMom -= cross(_centerOfMass, momentum / _totalMass) * _totalMass;
-
-    return angularMom;
-}
-
-/**
- * @brief calculate total force of simulationBox
- *
- * @return double
- */
-double SimulationBox::calculateTotalForce()
-{
-    Vec3D totalForce(0.0);
-
-    auto accumulateForce = [&totalForce](const auto& atom)
-    { totalForce += atom->getForce(); };
-
-    std::ranges::for_each(_atoms, accumulateForce);
-
-    return norm(totalForce);
-}
-
-/**
  * @brief calculate RMS force of simulationBox
  *
  * @return double
  */
-double SimulationBox::calculateRMSForce() const
+double SimulationBox::calculateRMSForce()
 {
     const auto scalarForces = getAtomicScalarForces();
 
@@ -542,7 +457,7 @@ double SimulationBox::calculateRMSForce() const
  *
  * @return double
  */
-double SimulationBox::calculateMaxForce() const
+double SimulationBox::calculateMaxForce()
 {
     const auto scalarForces = getAtomicScalarForces();
 
@@ -554,7 +469,7 @@ double SimulationBox::calculateMaxForce() const
  *
  * @return double
  */
-double SimulationBox::calculateRMSForceOld() const
+double SimulationBox::calculateRMSForceOld()
 {
     const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -566,7 +481,7 @@ double SimulationBox::calculateRMSForceOld() const
  *
  * @return double
  */
-double SimulationBox::calculateMaxForceOld() const
+double SimulationBox::calculateMaxForceOld()
 {
     const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -678,39 +593,4 @@ void SimulationBox::initPositions(const double displacement)
     };
 
     std::ranges::for_each(_atoms, displacePositions);
-}
-
-/**
- * @brief update old positions of all atoms
- *
- */
-void SimulationBox::updateOldPositions()
-{
-    auto updateOldPosition = [](const auto& atom)
-    { atom->updateOldPosition(); };
-
-    std::ranges::for_each(_atoms, updateOldPosition);
-}
-
-/**
- * @brief update old velocities of all atoms
- *
- */
-void SimulationBox::updateOldVelocities()
-{
-    auto updateOldVelocity = [](const auto& atom)
-    { atom->updateOldVelocity(); };
-
-    std::ranges::for_each(_atoms, updateOldVelocity);
-}
-
-/**
- * @brief update old forces of all atoms
- *
- */
-void SimulationBox::updateOldForces()
-{
-    auto updateOldForce = [](const auto& atom) { atom->updateOldForce(); };
-
-    std::ranges::for_each(_atoms, updateOldForce);
 }

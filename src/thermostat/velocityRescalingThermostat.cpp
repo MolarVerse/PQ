@@ -53,6 +53,46 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 }
 
 /**
+ * @brief apply thermostat - Velocity Rescaling
+ *
+ * @link https://doi.org/10.1063/1.2408420
+ *
+ * @param simulationBox
+ * @param physicalData
+ */
+void VelocityRescalingThermostat::applyThermostat(
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
+)
+{
+    startTimingsSection("Velocity Rescaling");
+
+    _temperature = simulationBox.calculateTemperature();
+
+    const auto timeStep  = TimingsSettings::getTimeStep();
+    const auto tempRatio = _targetTemperature / _temperature;
+    const auto dof       = double(simulationBox.getDegreesOfFreedom());
+
+    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+
+    auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
+    rescalingFactor      *= random;
+
+    auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
+    lambda      += rescalingFactor;
+
+    const auto berendsenFactor = ::sqrt(lambda);
+
+    simulationBox.scaleVelocities(berendsenFactor);
+
+    const auto temperature = _temperature * berendsenFactor * berendsenFactor;
+
+    physicalData.setTemperature(temperature);
+
+    stopTimingsSection("Velocity Rescaling");
+}
+
+/**
  * @brief Copy constructor for Velocity Rescaling Thermostat
  *
  * @param other

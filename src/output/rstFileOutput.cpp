@@ -53,6 +53,10 @@ void RstFileOutput::write(
 {
     std::ostringstream buffer;
 
+#ifndef __PQ_LEGACY__
+    simBox.deFlattenVelocities();
+#endif
+
     _fp.close();
 
     _fp.open(_fileName);

@@ -237,5 +237,11 @@
     "python.formatting.provider": "none",
     "esbonio.sphinx.confDir": "",
     "workbench.colorTheme": "Visual Studio Dark - C++",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
+    "C_Cpp.files.exclude": {
+        "**/build*": true,
+        "**/.build*": true,
+        "**/.vscode": true,
+        "**/.git": true
+    },
 }

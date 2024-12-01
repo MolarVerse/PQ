@@ -1,5 +1,21 @@
-add_library(resetKinetics
+set(resetKinetics_sources
     resetKinetics.cpp
+)
+
+if(BUILD_LEGACY)
+    set(resetKinetics_sources
+        ${resetKinetics_sources}
+        resetKinetics_legacy.cpp
+    )
+else()
+    set(resetKinetics_sources
+        ${resetKinetics_sources}
+        resetKinetics_nonLegacy.cpp
+    )
+endif()
+
+add_library(resetKinetics
+    ${resetKinetics_sources}
 )
 
 target_include_directories(resetKinetics

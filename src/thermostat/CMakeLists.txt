@@ -9,16 +9,12 @@ set(thermostat_source_files
 if(BUILD_LEGACY)
     set(thermostat_source_files
         ${thermostat_source_files}
-        berendsen_legacy.cpp
-        bussi_legacy.cpp
         langevin_legacy.cpp
         noseHoover_legacy.cpp
     )
 else()
     set(thermostat_source_files
         ${thermostat_source_files}
-        berendsen_nonLegacy.cpp
-        bussi_nonLegacy.cpp
         langevin_nonLegacy.cpp
         noseHoover_nonLegacy.cpp
     )

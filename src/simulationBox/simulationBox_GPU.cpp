@@ -129,6 +129,29 @@ void SimulationBox::copyOldForcesTo(device::Device& device)
 }
 
 /**
+ * @brief copy masses data from host to device asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyMassesTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_massesDevice, _masses);
+    device.checkErrors("SimulationBox copy masses data to device");
+}
+
+/**
+ * @brief copy number of atoms per molecule data from host to device
+ * asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyAtomsPerMoleculeTo(device::Device& device)
+{
+    device.deviceMemcpyToAsync(_atomsPerMoleculeDevice, _atomsPerMolecule);
+    device.checkErrors("SimulationBox copy atoms per molecule data to device");
+}
+
+/**
  * @brief copy position data from device to host asynchronously
  *
  * @param device
@@ -159,4 +182,37 @@ void SimulationBox::copyForcesFrom(device::Device& device)
 {
     device.deviceMemcpyFromAsync(_forces, _forcesDevice);
     device.checkErrors("SimulationBox copy forces data from device");
+}
+
+/**
+ * @brief copy old position data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldPosFrom(device::Device& device)
+{
+    device.deviceMemcpyFromAsync(_pos, _oldPosDevice);
+    device.checkErrors("SimulationBox copy old position data from device");
+}
+
+/**
+ * @brief copy old velocity data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldVelFrom(device::Device& device)
+{
+    device.deviceMemcpyFromAsync(_vel, _oldVelDevice);
+    device.checkErrors("SimulationBox copy old velocity data from device");
+}
+
+/**
+ * @brief copy old forces data from device to host asynchronously
+ *
+ * @param device
+ */
+void SimulationBox::copyOldForcesFrom(device::Device& device)
+{
+    device.deviceMemcpyFromAsync(_forces, _oldForcesDevice);
+    device.checkErrors("SimulationBox copy old forces data from device");
 }
