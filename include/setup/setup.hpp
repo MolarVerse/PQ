@@ -48,7 +48,7 @@ namespace setup
     void setupEngine(pq::Engine &);
 
 #ifdef __PQ_GPU__
-    void initDeviceMemory();
+    void initDeviceMemory(engine::Engine &engine);
 #endif
 }   // namespace setup
 

@@ -239,10 +239,10 @@ void setup::setupEngine(Engine &engine)
  * @brief Initialize device memory for simulation box
  *
  */
-void initDeviceMemory()
+void initDeviceMemory(engine::Engine &engine)
 {
-    auto &simBox = _engine.getSimulationBox();
-    auto &device = _engine.getDevice();
+    auto &simBox = engine.getSimulationBox();
+    auto &device = engine.getDevice();
 
     simBox.initDeviceMemory(device);
 
