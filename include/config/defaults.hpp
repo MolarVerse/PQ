@@ -34,7 +34,8 @@ namespace defaults
 {
     // clang-format off
     static constexpr char   _MOLDESCRIPTOR_FILE_DEFAULT_[] = "moldescriptor.dat";
-    static constexpr char   _GUFF_FILE_DEFAULT_[]      = "guff.dat";
+    static constexpr char   _GUFF_FILE_DEFAULT_[]          = "guff.dat";
+    static constexpr char   _DFTB_FILE_DEFAULT_[]          = "dftb_in.template";
     static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_       = 28;
 
     static constexpr char _RESTART_FILE_DEFAULT_[]  = "default.rst";
