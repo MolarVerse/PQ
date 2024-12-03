@@ -53,7 +53,7 @@ namespace input
         void parseGuffDatFilename(const pq::strings &, const size_t);
         void parseGuffPath(const pq::strings &, const size_t);
         void parseMShakeFilename(const pq::strings &, const size_t);
-        void parseDFTBFilename(const strings &, const size_t);
+        void parseDFTBFilename(const pq::strings &, const size_t);
     };
 
 }   // namespace input

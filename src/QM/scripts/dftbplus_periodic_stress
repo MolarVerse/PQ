@@ -34,7 +34,6 @@ my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
 # files and commands
 my $dftb_exe          = "dftb+";             # executable
 my $dftb_chrg         = "charges.bin";       # result file: converged charges of all qm atoms
-my $dftb_template     = "dftb_in.template";  # required before you start
 my $dftb_input        = "dftb_in.hsd";       # dftb input file
 my $dftb_out          = "dftb.out";          # dftb output file
 my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
