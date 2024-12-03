@@ -144,7 +144,7 @@ void DFTBPlusRunner::execute()
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
     const auto command = 
-            std::format("{} 0 {} 0 0 0 {}", scriptFileName, reuseCharges, settings::FileSettings::getDFTBFileName());
+            std::format("{} 0 {} 0 0 0 {}", scriptFile, reuseCharges, settings::FileSettings::getDFTBFileName());
     ::system(command.c_str());
 
     _isFirstExecution = false;
