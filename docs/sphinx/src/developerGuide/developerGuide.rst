@@ -18,6 +18,18 @@ Tests
 Documentation
 *************
 
+This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_ files ``.rst`` and converted to HTML websites files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
+The respective source files are located in ``PQ/docs/sphinx/src/``.
+In order to compile the files locally you need a python environment in which the following packages are installed:
+
+    - `Sphinx            <https://pypi.org/project/Sphinx/>`_
+    - `sphinx_sitemap    <https://pypi.org/project/sphinx-sitemap/>`_
+    - `breathe           <https://pypi.org/project/breathe/>`_
+    - `sphinx_rtd_theme  <https://pypi.org/project/sphinx-rtd-theme/>`_
+
+The project is built by running ``make html`` in the folder ``PQ/docs/sphinx/``.
+The resulting website can be viewed by opening the file ``PQ/docs/sphinx/_build/html/index.html`` *via* your favorite browser.
+
 *****************
 How to Contribute
 *****************
