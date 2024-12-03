@@ -562,6 +562,16 @@ GUFF File
 
     guff_file = {file} -> "guff.dat"
 
+.. _dftbfileKey:
+
+DFTB Setup File
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    dftb_file = {file} -> "dftb_in.template"
+
 .. _topologyFileKey:
 
 Topology File
