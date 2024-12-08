@@ -22,8 +22,11 @@
 
 #include "box.hpp"
 
+#include "settings.hpp"
+
 using namespace linearAlgebra;
 using namespace simulationBox;
+using namespace settings;
 
 /******************************************************
  *                                                    *
@@ -124,6 +127,26 @@ double Box::getMinimalBoxDimension() const { return minimum(_boxDimensions); }
  * @return Vec3D
  */
 linearAlgebra::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
+
+#ifndef __PQ_LEGACY__
+
+/**
+ * @brief get the box params
+ *
+ * @return Real*
+ *
+ */
+Real *Box::getBoxParamsPtr()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        return _boxParamsDevice;
+    else
+#endif
+        return _boxParams.data();
+}
+
+#endif
 
 /********************
  * standard setters *

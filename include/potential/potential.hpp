@@ -127,9 +127,9 @@ namespace potential
         [[nodiscard]] pq::SharedCoulombPot    getCoulombPotSharedPtr() const;
         [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotSharedPtr() const;
 
-        [[nodiscard]] Real *const getNonCoulParamsPtr();
-        [[nodiscard]] Real *const getNonCoulCutOffsPtr();
-        [[nodiscard]] Real *const getCoulParamsPtr();
+        [[nodiscard]] Real *getNonCoulParamsPtr();
+        [[nodiscard]] Real *getNonCoulCutOffsPtr();
+        [[nodiscard]] Real *getCoulParamsPtr();
     };
 
     template <typename CoulombType, typename NonCoulombType, typename BoxType>

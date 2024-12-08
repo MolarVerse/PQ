@@ -82,8 +82,16 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D    getBoxAngles() const override;
         [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
         [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
+
+#ifndef __PQ_LEGACY__
+        void updateBoxParams() override;
+#endif
     };
 
 }   // namespace simulationBox
+
+#ifndef __PQ_LEGACY__
+#include "triclinicBox.inl"
+#endif
 
 #endif   // _TRICLINIC_BOX_HPP_

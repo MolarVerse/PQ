@@ -44,6 +44,14 @@ namespace simulationBox
         bool   _boxSizeHasChanged = false;
         double _volume;
 
+#ifndef __PQ_LEGACY__
+        std::vector<Real> _boxParams;
+
+#ifdef __PQ_GPU__
+        Real *_boxParamsDevice;
+#endif
+
+#endif
        public:
         virtual ~Box() = default;
 
@@ -80,6 +88,12 @@ namespace simulationBox
         [[nodiscard]] bool      getBoxSizeHasChanged() const;
         [[nodiscard]] double    getVolume() const;
         [[nodiscard]] pq::Vec3D getBoxDimensions() const;
+
+#ifndef __PQ_LEGACY__
+        virtual void updateBoxParams() = 0;
+
+        [[nodiscard]] Real *getBoxParamsPtr();
+#endif
 
         /********************
          * standard setters *

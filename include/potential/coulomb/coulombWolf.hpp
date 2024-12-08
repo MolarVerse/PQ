@@ -81,4 +81,6 @@ namespace potential
 
 }   // namespace potential
 
+#include "coulombWolf.inl"
+
 #endif   // _COULOMB_WOLF_HPP_

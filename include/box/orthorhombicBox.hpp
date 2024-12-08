@@ -52,6 +52,10 @@ namespace simulationBox
             const double totalMass,
             const double density
         );
+
+#ifndef __PQ_LEGACY__
+        void updateBoxParams() override;
+#endif
     };
 }   // namespace simulationBox
 

@@ -28,6 +28,7 @@
 #include "celllist.hpp"                  // for CellList
 #include "coulombPotential.hpp"          // for CoulombPotential
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "coulombWolf.hpp"               // for CoulombWolf
 #include "debug.hpp"                     // for debug
 #include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "lennardJones.hpp"              // for LennardJones
@@ -38,12 +39,20 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "settings.hpp"                  // for Settings
-#include "simulationBox.hpp"             // for SimulationBox
+#include "simulationBox.hpp"   // for SimulationBox   // for SimulationBox
 
 using namespace potential;
 using namespace simulationBox;
 using namespace settings;
 
+/**
+ * @brief calls the correct function pointer to a specialized template function
+ * to calculate all inter non-bonded forces
+ *
+ * @param simBox
+ * @param data
+ * @param cellList
+ */
 void Potential::calculateForces(
     pq::SimBox&       simBox,
     pq::PhysicalData& data,
@@ -75,8 +84,8 @@ void Potential::calculateForces(
     auto* const       force         = simBox.getForcesPtr();
     auto* const       shiftForce    = simBox.getShiftForcesPtr();
 
-    const auto boxDims      = simBox.getBoxDimensions();
-    const Real boxParams[3] = {boxDims[0], boxDims[1], boxDims[2]};
+    simBox.getBox().updateBoxParams();   // TODO: remove this line later on
+    const auto* const boxParams = simBox.getBox().getBoxParamsPtr();
 
     Real totalCoulombEnergy    = 0.0;
     Real totalNonCoulombEnergy = 0.0;
@@ -107,6 +116,7 @@ void Potential::calculateForces(
         );
 
 #ifdef __PQ_DEBUG__
+    // TODO: check why this always prints 0 for both energies
     if (config::Debug::useDebug(config::DebugLevel::ENERGY_DEBUG))
     {
         std::cout << std::format("Coulomb energy: {}\n", totalCoulombEnergy);
@@ -176,13 +186,41 @@ void Potential::setFunctionPointers(const bool isBoxOrthogonal)
             LennardJonesFF,
             OrthorhombicBox>;
     }
-    else
+    else if (checkTypes(true, LJ, SHIFTED, false))
     {
+        // _cellListPtr = &potential::cellList<
+        //     CoulombShiftedPotential,
+        //     LennardJonesFF,
+        //     OrthorhombicBox>;
+        _bruteForcePtr = &potential::bruteForce<
+            CoulombShiftedPotential,
+            LennardJonesFF,
+            TriclinicBox>;
+    }
+    else if (checkTypes(true, LJ, WOLF, true))
+    {
+        // _cellListPtr = &potential::cellList<
+        //     CoulombWolfPotential,
+        //     LennardJonesFF,
+        //     OrthorhombicBox>;
+        _bruteForcePtr =
+            &potential::
+                bruteForce<CoulombWolf, LennardJonesFF, OrthorhombicBox>;
+    }
+    else if (checkTypes(true, LJ, WOLF, false))
+    {
+        // _cellListPtr = &potential::cellList<
+        //     CoulombWolfPotential,
+        //     LennardJonesFF,
+        //     OrthorhombicBox>;
+        _bruteForcePtr =
+            &potential::bruteForce<CoulombWolf, LennardJonesFF, TriclinicBox>;
+    }
+    else
         throw customException::NotImplementedException(
             "The combination of the non-coulomb potential and the coulomb "
             "potential is not implemented yet"
         );
-    }
 }
 
 /***************************
@@ -283,9 +321,9 @@ std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
 /**
  * @brief get the non-coulomb parameters pointer
  *
- * @return Real* const
+ * @return Real*
  */
-Real* const Potential::getNonCoulParamsPtr()
+Real* Potential::getNonCoulParamsPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())
@@ -298,9 +336,9 @@ Real* const Potential::getNonCoulParamsPtr()
 /**
  * @brief get the non-coulomb cutoffs pointer
  *
- * @return Real* const
+ * @return Real*
  */
-Real* const Potential::getNonCoulCutOffsPtr()
+Real* Potential::getNonCoulCutOffsPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())
@@ -313,9 +351,9 @@ Real* const Potential::getNonCoulCutOffsPtr()
 /**
  * @brief get the coulomb parameters pointer
  *
- * @return Real* const
+ * @return Real*
  */
-Real* const Potential::getCoulParamsPtr()
+Real* Potential::getCoulParamsPtr()
 {
 #ifdef __PQ_GPU__
     if (Settings::useDevice())

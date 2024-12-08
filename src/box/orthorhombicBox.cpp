@@ -94,3 +94,18 @@ void OrthorhombicBox::scaleBox(const tensor3D& scalingTensor)
     setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
     _volume = calculateVolume();
 }
+
+#ifndef __PQ_LEGACY__
+
+/**
+ * @brief update box parameters
+ *
+ * @TODO: remove this later on should not be necessary
+ *
+ */
+void OrthorhombicBox::updateBoxParams()
+{
+    _boxParams = {_boxDimensions[0], _boxDimensions[1], _boxDimensions[2]};
+}
+
+#endif

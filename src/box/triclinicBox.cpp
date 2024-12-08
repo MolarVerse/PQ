@@ -351,3 +351,39 @@ tensor3D TriclinicBox::getTransformationMatrix() const
 {
     return _transformationMatrix;
 }
+
+#ifndef __PQ_LEGACY__
+
+/**
+ * @brief update box parameters
+ *
+ * @TODO: remove this later on should not be necessary
+ *
+ */
+void TriclinicBox::updateBoxParams()
+{
+    auto invMatrix = inverse(_boxMatrix);
+
+    _boxParams = {
+        _boxMatrix[0][0],
+        _boxMatrix[0][1],
+        _boxMatrix[0][2],
+        _boxMatrix[1][0],
+        _boxMatrix[1][1],
+        _boxMatrix[1][2],
+        _boxMatrix[2][0],
+        _boxMatrix[2][1],
+        _boxMatrix[2][2],
+        invMatrix[0][0],
+        invMatrix[0][1],
+        invMatrix[0][2],
+        invMatrix[1][0],
+        invMatrix[1][1],
+        invMatrix[1][2],
+        invMatrix[2][0],
+        invMatrix[2][1],
+        invMatrix[2][2]
+    };
+}
+
+#endif
