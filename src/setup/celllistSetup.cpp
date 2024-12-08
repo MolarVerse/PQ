@@ -26,6 +26,11 @@
 #include "engine.hpp"     // for Engine
 #include "potential.hpp"   // for PotentialBruteForce, PotentialCellList, Potential
 
+#ifdef __PQ_LEGACY__
+#include "potentialBruteForce.hpp"   // for PotentialBruteForce
+#include "potentialCellList.hpp"     // for PotentialCellList
+#endif
+
 using namespace setup;
 using namespace engine;
 using namespace potential;
@@ -52,7 +57,7 @@ void setup::setupCellList(Engine &engine)
  *
  * @param engine
  */
-CellListSetup::CellListSetup(Engine &engine) : _engine(engine){};
+CellListSetup::CellListSetup(Engine &engine) : _engine(engine) {};
 
 /**
  * @brief setup cell list
@@ -72,10 +77,13 @@ void CellListSetup::setup()
     {
         _engine.getCellList().resizeCells();
         _engine.getCellList().setup(_engine.getSimulationBox());
+#ifdef __PQ_LEGACY__
         _engine.makePotential(PotentialCellList());
+#endif
     }
+#ifdef __PQ_LEGACY__
     else
         _engine.makePotential(PotentialBruteForce());
-
+#endif
     _engine.getPotential().setNonCoulombPotential(nonCoulombPot);
 }

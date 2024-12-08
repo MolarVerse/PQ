@@ -10,6 +10,11 @@ target_include_directories(coulombPotential
     ${PROJECT_SOURCE_DIR}/include/config
 )
 
+target_link_libraries(coulombPotential
+    PUBLIC
+    linearAlgebra
+)
+
 install(TARGETS coulombPotential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

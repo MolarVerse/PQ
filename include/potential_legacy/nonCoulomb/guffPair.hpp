@@ -20,31 +20,43 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_BRUTE_FORCE_HPP_
+#ifndef _GUFF_PAIR_HPP_
 
-#define _POTENTIAL_BRUTE_FORCE_HPP_
+#define _GUFF_PAIR_HPP_
 
-#include "potential.hpp"
-#include "typeAliases.hpp"
+#include <utility>   // pair
+#include <vector>    // vector
+
+#include "nonCoulombPair.hpp"
 
 namespace potential
 {
     /**
-     * @class PotentialBruteForce
+     * @class GuffPair
      *
-     * @brief brute force implementation of the potential
+     * @brief inherits from NonCoulombPair represents a pair of Guff types (full
+     * guff formula)
+     *
+     * @note here the constructor including the van der Waals types is missing
+     * as this class is only used for guff potentials. Therefore also the
+     * comparison operator == is missing.
      *
      */
-    class PotentialBruteForce : public Potential
+    class GuffPair : public NonCoulombPair
     {
+       private:
+        std::vector<double> _coefficients;
+
        public:
-        ~PotentialBruteForce() override;
+        explicit GuffPair(const double, const std::vector<double> &);
+        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
 
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
+        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        ) const override;
 
-        pq::SharedPotential clone() const override;
+        [[nodiscard]] std::vector<double> getCoefficients() const;
     };
+
 }   // namespace potential
 
-#endif   // _POTENTIAL_BRUTE_FORCE_HPP_
+#endif   // _GUFF_PAIR_HPP_

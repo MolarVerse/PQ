@@ -20,15 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+
+#include <string>   // for allocator, basic_string
+
 #include "celllist.hpp"        // for CellList
 #include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
 #include "engine.hpp"          // for Engine
+#include "gtest/gtest.h"       // for Message, TestPartResult
 #include "potential.hpp"       // for PotentialBruteForce, PotentialCellList
 #include "testSetup.hpp"       // for TestSetup
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
-#include <string>          // for allocator, basic_string
+#ifdef __PQ_LEGACY__
+#include "potentialBruteForce.hpp"   // for PotentialBruteForce
+#include "potentialCellList.hpp"     // for PotentialCellList
+#endif
 
 using namespace setup;
 
@@ -41,12 +47,26 @@ TEST_F(TestSetup, setupCellList)
     CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialBruteForce));
+#ifdef __PQ_LEGACY__
+    EXPECT_EQ(
+        typeid((_engine->getPotential())),
+        typeid(potential::PotentialBruteForce)
+    );
+#else
+    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::Potential));
+#endif
 
     _engine->getCellList().activate();
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialCellList));
+#ifdef __PQ_LEGACY__
+    EXPECT_EQ(
+        typeid((_engine->getPotential())),
+        typeid(potential::PotentialCellList)
+    );
+#else
+    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::Potential));
+#endif
 
     EXPECT_NO_THROW(setupCellList(*_engine));
 }

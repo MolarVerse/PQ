@@ -49,6 +49,8 @@ using Real  = double;
 using Realm = double;
 #endif
 
+using cul = const size_t;
+
 namespace simulationBox
 {
     class Molecule;              // forward declaration
@@ -336,9 +338,9 @@ namespace pq
     using KokkosPotential = potential::KokkosPotential;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
+    using SharedNonCoulPair   = std::shared_ptr<potential::NonCoulombPair>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
     using SharedNonCoulombPot = std::shared_ptr<potential::NonCoulombPotential>;
-    using SharedNonCoulPair   = std::shared_ptr<potential::NonCoulombPair>;
 
     using OptSharedNonCoulPair = std::optional<SharedNonCoulPair>;
 

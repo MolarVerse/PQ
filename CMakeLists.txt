@@ -81,12 +81,18 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     if(NOT BUILD_WITH_KOKKOS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
     endif()
+
+    set(BUILD_WITH_DEBUG OFF)
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -pg")
 else()
     message("\n   Release with Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -pg")
+endif()
+
+if(BUILD_WITH_DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_DEBUG__")
 endif()
 
 if(BUILD_LEGACY)

@@ -1,3 +1,25 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
 #include "lennardJones.hpp"
 
 #include "settings.hpp"
@@ -11,12 +33,9 @@ using namespace settings;
  * @param size
  */
 LennardJones::LennardJones(const size_t size)
-    : _c6(size * size),
-      _c12(size * size),
-      _cutOff(size * size),
-      _energyCutOff(size * size),
-      _forceCutOff(size * size),
-      _size(size)
+    : _size(size),
+      _cutOffs(size * size),
+      _params(size * size * _nParams * _nParams)
 {
 }
 
@@ -25,6 +44,18 @@ LennardJones::LennardJones(const size_t size)
  *
  */
 LennardJones::LennardJones() { *this = LennardJones(0); }
+
+/**
+ * @brief Resize the LennardJones object
+ *
+ * @param size
+ */
+void LennardJones::resize(const size_t size)
+{
+    _params.resize(size * size * _nParams * _nParams);
+    _cutOffs.resize(size * size);
+    _size = size;
+}
 
 /**
  * @brief Add a pair of Lennard-Jones types to the LennardJones object
@@ -39,89 +70,45 @@ void LennardJones::addPair(
     const size_t            index2
 )
 {
-    _c6[index1 * _size + index2]           = pair.getC6();
-    _c6[index2 * _size + index1]           = pair.getC6();
-    _c12[index1 * _size + index2]          = pair.getC12();
-    _c12[index2 * _size + index1]          = pair.getC12();
-    _cutOff[index1 * _size + index2]       = pair.getRadialCutOff();
-    _cutOff[index2 * _size + index1]       = pair.getRadialCutOff();
-    _energyCutOff[index1 * _size + index2] = pair.getEnergyCutOff();
-    _energyCutOff[index2 * _size + index1] = pair.getEnergyCutOff();
-    _forceCutOff[index1 * _size + index2]  = pair.getForceCutOff();
-    _forceCutOff[index2 * _size + index1]  = pair.getForceCutOff();
+    const auto newIndex1   = (index1 * _size + index2) * _nParams;
+    const auto newIndex2   = (index2 * _size + index1) * _nParams;
+    _params[newIndex1]     = pair.getC6();
+    _params[newIndex2]     = pair.getC6();
+    _params[newIndex1 + 1] = pair.getC12();
+    _params[newIndex2 + 1] = pair.getC12();
+    _params[newIndex1 + 2] = pair.getEnergyCutOff();
+    _params[newIndex2 + 2] = pair.getEnergyCutOff();
+    _params[newIndex1 + 3] = pair.getForceCutOff();
+    _params[newIndex2 + 3] = pair.getForceCutOff();
+
+    _cutOffs[index1 * _size + index2] = pair.getRadialCutOff();
+    _cutOffs[index2 * _size + index1] = pair.getRadialCutOff();
 }
 
 /**
- * @brief Get the C6 object
+ * @brief Get the parameters of all pairs of Lennard-Jones types
  *
- * @return const Real*
+ * @return std::vector<Real>
  */
-const Real* LennardJones::getC6() const
-{
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        return _c6Device;
-    else
-#endif
-        return _c6.data();
-}
+std::vector<Real> LennardJones::copyParams() const { return _params; }
 
 /**
- * @brief Get the C12 object
+ * @brief Get the cutoffs of all pairs of Lennard-Jones types
  *
- * @return const Real*
+ * @return std::vector<Real>
  */
-const Real* LennardJones::getC12() const
-{
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        return _c12Device;
-    else
-#endif
-        return _c12.data();
-}
+std::vector<Real> LennardJones::copyCutOffs() const { return _cutOffs; }
 
 /**
- * @brief Get the CutOff object
+ * @brief Get the number of parameters
  *
- * @return const Real*
+ * @return size_t
  */
-const Real* LennardJones::getCutOff() const
-{
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        return _cutOffDevice;
-    else
-#endif
-        return _cutOff.data();
-}
+size_t LennardJones::getNParams() { return _nParams; }
 
 /**
- * @brief Get the Energy CutOff object
+ * @brief Get the size of the LennardJones object
  *
- * @return const Real*
+ * @return size_t
  */
-const Real* LennardJones::getEnergyCutOff() const
-{
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        return _energyCutOffDevice;
-    else
-#endif
-        return _energyCutOff.data();
-}
-
-/**
- * @brief Get the Force CutOff object
- *
- * @return const Real*
- */
-const Real* LennardJones::getForceCutOff() const
-{
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        return _forceCutOffDevice;
-    else
-#endif
-        return _forceCutOff.data();
-}
+size_t LennardJones::getSize() const { return _size; }

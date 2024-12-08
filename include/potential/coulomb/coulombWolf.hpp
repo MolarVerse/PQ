@@ -58,6 +58,8 @@ namespace potential
             const double
         ) const override;
 
+        [[nodiscard]] std::vector<Real> copyParamsVector();
+
         /***************************
          * standard setter methods *
          ***************************/

@@ -41,11 +41,19 @@ double OrthorhombicBox::calculateVolume()
 }
 
 /**
+ * @brief Check if the box is orthorhombic
+ *
+ * @return true
+ * @return false
+ */
+bool OrthorhombicBox::isOrthoRhombic() const { return true; }
+
+/**
  * @brief applies the periodic boundary conditions
  *
  * @param position
  */
-void OrthorhombicBox::applyPBC(Vec3D &position) const
+void OrthorhombicBox::applyPBC(Vec3D& position) const
 {
     position -= _boxDimensions * round(position / _boxDimensions);
 }
@@ -56,7 +64,7 @@ void OrthorhombicBox::applyPBC(Vec3D &position) const
  * @param shiftVector
  * @return Vec3D
  */
-Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
+Vec3D OrthorhombicBox::calcShiftVector(const Vec3D& shiftVector) const
 {
     return _boxDimensions * round(shiftVector / _boxDimensions);
 }
@@ -81,7 +89,7 @@ Vec3D OrthorhombicBox::calcBoxDimFromDensity(
  *
  * @param scalingFactors
  */
-void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
+void OrthorhombicBox::scaleBox(const tensor3D& scalingTensor)
 {
     setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
     _volume = calculateVolume();

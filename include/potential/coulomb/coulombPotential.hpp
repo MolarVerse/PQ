@@ -28,7 +28,8 @@
 #include <utility>   // for pair
 #include <vector>    // for vector
 
-#include "defaults.hpp"   // for _COULOMB_CUT_OFF_DEFAULT_
+#include "defaults.hpp"      // for _COULOMB_CUT_OFF_DEFAULT_
+#include "typeAliases.hpp"   // for Real
 
 namespace potential
 {
@@ -74,6 +75,8 @@ namespace potential
         [[nodiscard]] static double getCoulombRadiusCutOff();
         [[nodiscard]] static double getCoulombEnergyCutOff();
         [[nodiscard]] static double getCoulombForceCutOff();
+
+        [[nodiscard]] virtual std::vector<Real> copyParamsVector() = 0;
     };
 
 }   // namespace potential

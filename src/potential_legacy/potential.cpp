@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "potential.hpp"
+
 #include <cmath>   // for sqrt
 
 #include "box.hpp"                   // for Box
@@ -27,11 +29,9 @@
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "potential.hpp"
 
 using namespace potential;
 using namespace simulationBox;
-using namespace linearAlgebra;
 
 /**
  * @brief inner part of the double loop to calculate non-bonded inter molecular
@@ -44,35 +44,19 @@ using namespace linearAlgebra;
  * @param atom2
  * @return std::pair<double, double>
  */
-std::pair<Real, Real> Potential::calculateSingleInteraction(
-    const Box&   box,
-    const Real   xi,
-    const Real   yi,
-    const Real   zi,
-    const Real   xj,
-    const Real   yj,
-    const Real   zj,
-    const size_t atomType_i,
-    const size_t atomType_j,
-    const size_t globalVdwType_i,
-    const size_t globalVdwType_j,
-    const size_t moltype_i,
-    const size_t moltype_j,
-    const Real   charge_i,
-    const Real   charge_j,
-    Real&        fx,
-    Real&        fy,
-    Real&        fz,
-    Real&        shiftfx,
-    Real&        shiftfy,
-    Real&        shiftfz
+std::pair<double, double> Potential::calculateSingleInteraction(
+    const Box   &box,
+    Molecule    &molecule1,
+    Molecule    &molecule2,
+    const size_t atom1,
+    const size_t atom2
 ) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto xyz_i = Vec3D{xi, yi, zi};
-    const auto xyz_j = Vec3D{xj, yj, zj};
+    const auto xyz_i = molecule1.getAtomPosition(atom1);
+    const auto xyz_j = molecule2.getAtomPosition(atom2);
 
     auto dxyz = xyz_i - xyz_j;
 
@@ -85,7 +69,15 @@ std::pair<Real, Real> Potential::calculateSingleInteraction(
     if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
         distanceSquared < RcCutOff * RcCutOff)
     {
-        const double distance = ::sqrt(distanceSquared);
+        const double distance   = ::sqrt(distanceSquared);
+        const size_t atomType_i = molecule1.getAtomType(atom1);
+        const size_t atomType_j = molecule2.getAtomType(atom2);
+
+        const auto globalVdwType_i = molecule1.getInternalGlobalVDWType(atom1);
+        const auto globalVdwType_j = molecule2.getInternalGlobalVDWType(atom2);
+
+        const auto moltype_i = molecule1.getMoltype();
+        const auto moltype_j = molecule2.getMoltype();
 
         const auto combinedIdx = {
             moltype_i,
@@ -96,6 +88,8 @@ std::pair<Real, Real> Potential::calculateSingleInteraction(
             globalVdwType_j
         };
 
+        const auto charge_i         = molecule1.getPartialCharge(atomType_i);
+        const auto charge_j         = molecule2.getPartialCharge(atomType_j);
         const auto coulombPreFactor = charge_i * charge_j;
 
         auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
@@ -106,7 +100,7 @@ std::pair<Real, Real> Potential::calculateSingleInteraction(
 
         if (distance < rncCutOff)
         {
-            const auto& [nonCoulE, nonCoulF] = nonCoulPair->calculate(distance);
+            const auto &[nonCoulE, nonCoulF] = nonCoulPair->calculate(distance);
             nonCoulombEnergy                 = nonCoulE;
 
             f += nonCoulF;
@@ -116,16 +110,78 @@ std::pair<Real, Real> Potential::calculateSingleInteraction(
 
         const auto forcexyz = f * dxyz;
 
-        fx = forcexyz[0];
-        fy = forcexyz[1];
-        fz = forcexyz[2];
-
         const auto shiftForcexyz = forcexyz * txyz;
 
-        shiftfx = shiftForcexyz[0];
-        shiftfy = shiftForcexyz[1];
-        shiftfz = shiftForcexyz[2];
+        molecule1.addAtomForce(atom1, forcexyz);
+        molecule2.addAtomForce(atom2, -forcexyz);
+
+        molecule1.addAtomShiftForce(atom1, shiftForcexyz);
     }
 
     return {coulombEnergy, nonCoulombEnergy};
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the coulomb potential as a shared pointer
+ *
+ * @param pot
+ */
+void Potential::setNonCoulombPotential(
+    const std::shared_ptr<NonCoulombPotential> pot
+)
+{
+    _nonCoulombPot = pot;
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the coulomb potential
+ *
+ * @return CoulombPotential&
+ */
+CoulombPotential &Potential::getCoulombPotential() const
+{
+    return *_coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential
+ *
+ * @return NonCoulombPotential&
+ */
+NonCoulombPotential &Potential::getNonCoulombPotential() const
+{
+    return *_nonCoulombPot;
+}
+
+/**
+ * @brief get the coulomb potential as a shared pointer
+ *
+ * @return SharedCoulombPot
+ */
+std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
+{
+    return _coulombPotential;
+}
+
+/**
+ * @brief get the non-coulomb potential as a shared pointer
+ *
+ * @return SharedNonCoulombPot
+ */
+std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
+) const
+{
+    return _nonCoulombPot;
 }

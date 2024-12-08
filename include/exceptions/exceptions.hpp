@@ -61,7 +61,9 @@ namespace customException
         LINEARALGEBRAEXCEPTION,
         OPTEXCEPTION,
         OPTWARNING,
-        COMPILETIMEEXCEPTION
+        COMPILETIMEEXCEPTION,
+        DEVICEEXCEPTION,
+        NOTIMPLEMENTEDEXCEPTION
     };
 
     /**
@@ -381,6 +383,19 @@ namespace customException
      * @brief Exception for device errors
      */
     class DeviceException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class NotImplementedException inherits from CustomException
+     *
+     * @brief Exception for not yet implemented errors
+     */
+    class NotImplementedException : public CustomException
     {
        public:
         using CustomException::CustomException;

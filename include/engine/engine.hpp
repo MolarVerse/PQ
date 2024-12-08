@@ -36,11 +36,13 @@
 #include "molecularVirial.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
-#include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
 #include "virial.hpp"
+
+#ifdef __PQ_LEGACY__
+#include "potentialBruteForce.hpp"
+#endif
 
 #ifdef WITH_KOKKOS
 #include "coulombWolf_kokkos.hpp"
@@ -76,7 +78,11 @@ namespace engine
 
         // clang-format off
         pq::SharedVirial       _virial         = std::make_shared<pq::MolecularVirial>();
+#ifdef __PQ_LEGACY__
         pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
+#else
+        pq::SharedPotential    _potential      = std::make_shared<pq::Potential>();
+#endif
         pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
         pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
         pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();

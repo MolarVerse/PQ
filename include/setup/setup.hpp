@@ -50,6 +50,13 @@ namespace setup
 #ifdef __PQ_GPU__
     void initDeviceMemory(engine::Engine &engine);
 #endif
+
+#ifndef __PQ_LEGACY__
+    void setupFlattenedData(pq::Engine &engine);
+
+    void setupFlattenedLJ(pq::NonCoulombPot &, pq::Potential *const);
+
+#endif
 }   // namespace setup
 
 #endif   // _SETUP_HPP_

@@ -17,7 +17,6 @@ target_include_directories(linearAlgebra
 target_link_libraries(linearAlgebra
     PUBLIC
     exceptions
-    PRIVATE
     Eigen3::Eigen
 )
 

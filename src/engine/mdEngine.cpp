@@ -23,6 +23,7 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "debug.hpp"                         // for Debug
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
@@ -52,11 +53,15 @@ void MDEngine::run()
     );
 
     _nSteps = TimingsSettings::getNumberOfSteps();
+
     progressbar bar(static_cast<int>(_nSteps), true, std::cout);
+
+    __DEBUG_LOCATION__();
 
     for (; _step <= _nSteps; ++_step)
     {
         bar.update();
+
         takeStep();
 
         writeOutput();

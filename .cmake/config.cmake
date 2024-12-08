@@ -25,6 +25,11 @@ endif()
 # ************
 option(BUILD_LEGACY "Build legacy code" OFF)
 
+# ************
+# BUILD DEBUG
+# ************
+option(BUILD_WITH_DEBUG "Build with debug" ON   )
+
 # *****************
 # BUILD WITH OPENMP
 # *****************

@@ -29,6 +29,7 @@
 #include <vector>       // for vector
 
 #include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "debug.hpp"             // for debug
 #include "engine.hpp"            // for Engine
 #include "inputFileReader.hpp"   // for readJobType
 #include "setup.hpp"             // for setupSimulation
@@ -43,8 +44,13 @@
 #include <pybind11/embed.h>   // for scoped_interpreter
 #endif
 
-static int PQ(int argc, const std::vector<std::string> &arguments)
+static int PQ(const int argc, const std::vector<std::string> &arguments)
 {
+#ifdef __PQ_DEBUG__
+    config::Debug::initDebug();
+    std::cout << "Debugging is activated." << std::endl;
+#endif
+
     auto commandLineArgs = CommandLineArgs(argc, arguments);
     commandLineArgs.detectFlags();
 

@@ -47,8 +47,12 @@ namespace potential
             const double,
             const double
         ) const override;
+
+        [[nodiscard]] std::vector<Real> copyParamsVector();
     };
 
 }   // namespace potential
+
+#include "coulombShiftedPotential.inl"
 
 #endif   // _COULOMB_SHIFTED_POTENTIAL_HPP_

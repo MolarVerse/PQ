@@ -8,13 +8,9 @@ set(nonCoulombPotentialSources
     nonCoulombPotential.cpp
     guffNonCoulomb.cpp
     forceFieldNonCoulomb.cpp
-)
 
-if(NOT BUILD_LEGACY)
-    list(APPEND nonCoulombPotentialSources
-        lennardJones.cpp
-    )
-endif()
+    lennardJones.cpp
+)
 
 add_library(nonCoulombPotential
     ${nonCoulombPotentialSources}

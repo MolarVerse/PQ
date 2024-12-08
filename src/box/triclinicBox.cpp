@@ -146,6 +146,14 @@ void TriclinicBox::applyPBC(Vec3D &position) const
 }
 
 /**
+ * @brief check if the box is orthorhombic
+ *
+ * @return true
+ * @return false
+ */
+bool TriclinicBox::isOrthoRhombic() const { return false; }
+
+/**
  * @brief Calculate the shift vector
  *
  * @param shiftVector

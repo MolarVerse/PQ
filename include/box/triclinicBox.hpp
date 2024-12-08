@@ -49,7 +49,10 @@ namespace simulationBox
         void calculateTransformationMatrix();
 
        public:
-        [[nodiscard]] double    calculateVolume() override;
+        [[nodiscard]] double calculateVolume() override;
+
+        [[nodiscard]] bool isOrthoRhombic() const override;
+
         [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &)
             const override;
 

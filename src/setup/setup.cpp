@@ -27,6 +27,7 @@
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
+#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "forceFieldSetup.hpp"        // for setupForceField
 #include "guffDatReader.hpp"          // for readGuffDat, readInput
@@ -40,6 +41,7 @@
 #include "optimizerSetup.hpp"         // for setupOptimizer
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
 #include "parameterFileReader.hpp"    // for readParameterFile
+#include "potentialSettings.hpp"      // for PotentialSettings
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
@@ -67,6 +69,8 @@ using namespace parameterFile;
 using namespace input::intraNonBondedReader;
 using namespace setup::simulationBox;
 using namespace setup::resetKinetics;
+using namespace settings;
+using namespace potential;
 
 /**
  * @brief setup the engine
@@ -102,6 +106,10 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 
 #ifdef WITH_KOKKOS
     setupKokkos(engine);
+#endif
+
+#ifndef __PQ_LEGACY__
+    setupFlattenedData(engine);
 #endif
 
     endSetup(simulationTimer, setupTimer, engine);
@@ -211,27 +219,6 @@ void setup::setupEngine(Engine &engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
-
-#ifndef __PQ_LEGACY__
-    auto &simBox = engine.getSimulationBox();
-    simBox.flattenPositions();
-    simBox.flattenVelocities();
-    simBox.flattenForces();
-    simBox.flattenShiftForces();
-    simBox.flattenCharges();
-
-    simBox.initAtomsPerMolecule();
-    simBox.initMoleculeIndices();
-
-    simBox.flattenAtomTypes();
-    simBox.flattenMolTypes();
-    simBox.flattenInternalGlobalVDWTypes();
-#endif
-
-#ifdef __PQ_GPU__
-    if (engine.getDevice().isDeviceUsed())
-        initDeviceMemory();
-#endif
 }
 
 #ifdef __PQ_GPU__

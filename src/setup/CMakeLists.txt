@@ -24,6 +24,13 @@ if(BUILD_WITH_KOKKOS)
     )
 endif()
 
+if(NOT BUILD_LEGACY)
+    set(setup_source_files
+        ${setup_source_files}
+        setup_nonLegacy.cpp
+    )
+endif()
+
 add_library(setup
     ${setup_source_files}
 )

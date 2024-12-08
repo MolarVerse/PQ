@@ -116,7 +116,9 @@
         "sparseextra": "cpp",
         "alignedvector3": "cpp",
         "text_encoding": "cpp",
-        "numericaldiff": "cpp"
+        "numericaldiff": "cpp",
+        "adolcforward": "cpp",
+        "mprealsupport": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
@@ -139,6 +141,7 @@
         "Coulombics",
         "Coupl",
         "datapoints",
+        "DEVICEEXCEPTION",
         "DFTD",
         "dxyz",
         "ekin",
@@ -188,6 +191,7 @@
         "Neighbours",
         "noncoulomb",
         "noncoulombics",
+        "NOTYETIMPLEMENTEDEXCEPTION",
         "nreset",
         "nscale",
         "nstep",

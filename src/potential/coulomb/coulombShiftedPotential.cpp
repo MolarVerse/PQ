@@ -51,3 +51,13 @@ std::pair<double, double> CoulombShiftedPotential::calculate(
 
     return {energy, force};
 }
+
+/**
+ * @brief copy the parameter vector
+ *
+ * @return std::vector<Real>
+ */
+std::vector<Real> CoulombShiftedPotential::copyParamsVector()
+{
+    return std::vector<Real>{_coulombEnergyCutOff, _coulombForceCutOff};
+}

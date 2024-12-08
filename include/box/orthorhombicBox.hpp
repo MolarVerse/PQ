@@ -40,10 +40,12 @@ namespace simulationBox
        public:
         [[nodiscard]] double calculateVolume() override;
 
-        void applyPBC(pq::Vec3D &position) const override;
-        void scaleBox(const pq::tensor3D &scalingTensor) override;
+        [[nodiscard]] bool isOrthoRhombic() const override;
 
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &)
+        void applyPBC(pq::Vec3D& position) const override;
+        void scaleBox(const pq::tensor3D& scalingTensor) override;
+
+        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&)
             const override;
 
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity(
@@ -51,7 +53,10 @@ namespace simulationBox
             const double density
         );
     };
-
 }   // namespace simulationBox
+
+#ifndef __PQ_LEGACY__
+#include "orthorhombicBox.inl"
+#endif
 
 #endif   // _ORTHORHOMBIC_BOX_HPP_

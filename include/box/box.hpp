@@ -52,6 +52,8 @@ namespace simulationBox
         virtual double    calculateVolume()                            = 0;
         virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const     = 0;
 
+        virtual bool isOrthoRhombic() const = 0;
+
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *
          ******************************************************/

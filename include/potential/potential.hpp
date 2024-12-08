@@ -56,59 +56,67 @@ namespace potential
         pq::SharedCoulombPot    _coulombPotential;
         pq::SharedNonCoulombPot _nonCoulombPot;
 
+        std::vector<Real> _nonCoulParams;
+        std::vector<Real> _nonCoulCutOffs;
+        std::vector<Real> _coulParams;
+
+        size_t _nonCoulParamsOffset;
+        size_t _nonCoulNumberOfTypes;
+
+#ifdef __PQ_GPU__
+        Real *_nonCoulParamsDevice;
+        Real *_nonCoulCutOffsDevice;
+        Real *_coulParamsDevice;
+#endif
+
        public:
         virtual ~Potential() = default;
 
-        virtual void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &) = 0;
-        virtual pq::SharedPotential clone() const = 0;
+        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &);
 
-        std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
-            const size_t,
-            const size_t
-        ) const;
+        using calcForcesPtr = void (*)(
+            const Real *const   pos,
+            Real *const         force,
+            Real *const         shiftForce,
+            const Real *const   charge,
+            const Real *const   coulParams,
+            const Real *const   nonCoulParams,
+            const Real *const   ncCutOffs,
+            const Real *const   boxParams,
+            const size_t *const moleculeIndex,
+            const size_t *const molTypes,
+            const size_t *const atomTypes,
+            Real               &totalCoulombEnergy,
+            Real               &totalNonCoulombEnergy,
+            const Real          coulCutOff,
+            const size_t        nAtoms,
+            const size_t        nAtomTypes,
+            const size_t        nonCoulParamsOffset
+        );
 
-#ifndef __PQ_LEGACY__
+        calcForcesPtr _cellListPtr;
+        calcForcesPtr _bruteForcePtr;
 
-std::pair<Real, Real> calculateSingleInteraction(
-    const pq::Box&   box,
-    const Real   xi,
-    const Real   yi,
-    const Real   zi,
-    const Real   xj,
-    const Real   yj,
-    const Real   zj,
-    const size_t atomType_i,
-    const size_t atomType_j,
-    const size_t globalVdwType_i,
-    const size_t globalVdwType_j,
-    const size_t moltype_i,
-    const size_t moltype_j,
-    const Real   charge_i,
-    const Real   charge_j,
-    Real&        fx,
-    Real&        fy,
-    Real&        fz,
-    Real&        shiftfx,
-    Real&        shiftfy,
-    Real&        shiftfz
-) const;
-
-#endif   // __PQ_LEGACY__
+        void setFunctionPointers(const bool isBoxOrthogonal);
 
         template <typename T>
         void makeCoulombPotential(T p);
 
         template <typename T>
-        void makeNonCoulombPotential(T nonCoulombPot);
+        void makeNonCoulombPotential(T p);
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setNonCoulombPotential(const pq::SharedNonCoulombPot);
+        void setNonCoulombParamVectors(
+            const std::vector<Real> nonCoulParams,
+            const std::vector<Real> nonCoulCutOffs,
+            const size_t            nonCoulParamsOffset,
+            const size_t            nonCoulNumberOfTypes
+        );
+        void setCoulombParamVectors(const std::vector<Real> coulParams);
 
         /***************************
          * standard getter methods *
@@ -118,10 +126,57 @@ std::pair<Real, Real> calculateSingleInteraction(
         [[nodiscard]] pq::NonCoulombPot      &getNonCoulombPotential() const;
         [[nodiscard]] pq::SharedCoulombPot    getCoulombPotSharedPtr() const;
         [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotSharedPtr() const;
+
+        [[nodiscard]] Real *const getNonCoulParamsPtr();
+        [[nodiscard]] Real *const getNonCoulCutOffsPtr();
+        [[nodiscard]] Real *const getCoulParamsPtr();
     };
+
+    template <typename CoulombType, typename NonCoulombType, typename BoxType>
+    void cellList(
+        const Real *const   pos,
+        Real *const         force,
+        Real *const         shiftForce,
+        const Real *const   charge,
+        const Real *const   coulParams,
+        const Real *const   nonCoulParams,
+        const Real *const   ncCutOffs,
+        const Real *const   boxParams,
+        const size_t *const moleculeIndex,
+        const size_t *const molTypes,
+        const size_t *const atomTypes,
+        Real               &totalCoulombEnergy,
+        Real               &totalNonCoulombEnergy,
+        const Real          coulCutOff,
+        const size_t        nAtoms,
+        const size_t        nAtomTypes,
+        const size_t        nonCoulParamsOffset
+    );
+
+    template <typename CoulombType, typename NonCoulombType, typename BoxType>
+    void bruteForce(
+        const Real *const   pos,
+        Real *const         force,
+        Real *const         shiftForce,
+        const Real *const   charge,
+        const Real *const   coulParams,
+        const Real *const   nonCoulParams,
+        const Real *const   ncCutOffs,
+        const Real *const   boxParams,
+        const size_t *const moleculeIndex,
+        const size_t *const molTypes,
+        const size_t *const atomTypes,
+        Real               &totalCoulombEnergy,
+        Real               &totalNonCoulombEnergy,
+        const Real          coulCutOff,
+        const size_t        nAtoms,
+        const size_t        nAtomTypes,
+        const size_t        nonCoulParamsOffset
+    );
 
 }   // namespace potential
 
-#include "potential.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "potential.tpp.hpp"             // DO NOT MOVE THIS LINE
+#include "potentialBruteForce.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _POTENTIAL_HPP_
