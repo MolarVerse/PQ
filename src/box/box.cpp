@@ -20,6 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+/**
+ * @file box.cpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the box class. The box class
+ * is the base class for all box types. It contains the basic methods which are
+ * needed for all box types.
+ *
+ * @date 2024-12-09
+ *
+ * @see box.hpp
+ */
+
 #include "box.hpp"
 
 #include "settings.hpp"
@@ -132,6 +144,12 @@ linearAlgebra::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
 
 /**
  * @brief get the box params
+ *
+ * @details The box params are the parameters of the box which are needed for
+ * the minimum image convention. The box params are stored in a vector. If a
+ * device is used the box params are stored on the device as a pointer. The
+ * method returns the pointer to the box params either on the device or on the
+ * host.
  *
  * @return Real*
  *

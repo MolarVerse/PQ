@@ -20,6 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+/**
+ * @file orthorhombicBox.cpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the orthorhombic box class.
+ * The orthorhombic box class is a derived class of the box class. It contains
+ * the methods which are needed for the orthorhombic box. The orthorhombic box
+ * is a box with right angles.
+ *
+ * @date 2024-12-09
+ *
+ * @see orthorhombicBox.hpp
+ * @see box.hpp
+ */
+
 #include "orthorhombicBox.hpp"
 
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_

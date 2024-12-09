@@ -20,6 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+/**
+ * @file manostatSettings.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the triclinic box class. The
+ * triclinic box class is a derived class of the box class. It contains the
+ * methods which are needed for the triclinic box. The triclinic box is a box
+ * with angles that are not 90 degrees. It contains in addition to the base
+ * class methods that are needed for the triclinic box i.e. to transform the
+ * coordinates from the simulation space to the orthogonal space and vice versa.
+ *
+ * @date 2024-12-09
+ *
+ * @see triclinicBox.hpp
+ * @see box.hpp
+ *
+ */
+
 #include "triclinicBox.hpp"
 
 #include "constants.hpp"          // for constants
