@@ -20,9 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_TPP_
+#ifndef _POTENTIAL_INL_
+#define _POTENTIAL_INL_
 
-#define _POTENTIAL_TPP_
+/**
+ * @file potential.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This function contains the implementation of template functions in
+ * order to make shared pointers of the Coulomb and non-Coulomb potentials.
+ *
+ * @date 2024-12-09
+ *
+ */
 
 #include "potential.hpp"
 
@@ -54,4 +63,4 @@ namespace potential
 
 }   // namespace potential
 
-#endif   // _POTENTIAL_TPP_
+#endif   // _POTENTIAL_INL_

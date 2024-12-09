@@ -209,7 +209,7 @@ namespace potential
 
 // clang-format off
 #include "potentialHandleTypes.inl"      // DO NOT MOVE THIS LINE
-#include "potential.tpp.hpp"             // DO NOT MOVE THIS LINE
+#include "potential.inl"             // DO NOT MOVE THIS LINE
 #include "potentialBruteForce.inl"   // DO NOT MOVE THIS LINE
 // clang-format on
 
