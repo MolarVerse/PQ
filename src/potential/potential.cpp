@@ -20,6 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+/**
+ * @file potential.cpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of all member functions of the
+ * Potential class that are not template functions and should not be inlined.
+ *
+ * @date 2024-12-09
+ *
+ */
+
 #include "potential.hpp"
 
 #include <cmath>   // for sqrt
@@ -39,7 +49,7 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "settings.hpp"                  // for Settings
-#include "simulationBox.hpp"   // for SimulationBox   // for SimulationBox
+#include "simulationBox.hpp"             // for SimulationBox
 
 using namespace potential;
 using namespace simulationBox;
@@ -249,14 +259,14 @@ void Potential::setNonCoulombPotential(
  * @param cutOffs
  */
 void Potential::setNonCoulombParamVectors(
-    const std::vector<Real> params,
-    const std::vector<Real> cutOffs,
-    const size_t            nonCoulParamsOffset,
-    const size_t            nonCoulNumberOfTypes
+    std::vector<Real> params,
+    std::vector<Real> cutOffs,
+    const size_t      nonCoulParamsOffset,
+    const size_t      nonCoulNumberOfTypes
 )
 {
-    _nonCoulParams        = params;
-    _nonCoulCutOffs       = cutOffs;
+    _nonCoulParams        = std::move(params);
+    _nonCoulCutOffs       = std::move(cutOffs);
     _nonCoulParamsOffset  = nonCoulParamsOffset;
     _nonCoulNumberOfTypes = nonCoulNumberOfTypes;
 }
@@ -266,9 +276,9 @@ void Potential::setNonCoulombParamVectors(
  *
  * @param coulParams
  */
-void Potential::setCoulombParamVectors(const std::vector<Real> coulParams)
+void Potential::setCoulombParamVectors(std::vector<Real> coulParams)
 {
-    _coulParams = coulParams;
+    _coulParams = std::move(coulParams);
 }
 
 /***************************

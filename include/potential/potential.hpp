@@ -120,12 +120,12 @@ namespace potential
          ***************************/
 
         void setNonCoulombPotential(const pq::SharedNonCoulombPot);
-        void setCoulombParamVectors(const std::vector<Real> coulParams);
+        void setCoulombParamVectors(std::vector<Real> coulParams);
         void setNonCoulombParamVectors(
-            const std::vector<Real> nonCoulParams,
-            const std::vector<Real> nonCoulCutOffs,
-            const size_t            nonCoulParamsOffset,
-            const size_t            nonCoulNumberOfTypes
+            std::vector<Real> nonCoulParams,
+            std::vector<Real> nonCoulCutOffs,
+            const size_t      nonCoulParamsOffset,
+            const size_t      nonCoulNumberOfTypes
         );
 
         /***************************
