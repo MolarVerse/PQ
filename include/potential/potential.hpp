@@ -174,9 +174,43 @@ namespace potential
         const size_t        nonCoulParamsOffset
     );
 
+    template <typename BoxType>
+    void inline image(
+        const auto &boxParams,
+        auto       &dx,
+        auto       &dy,
+        auto       &dz,
+        auto       &tx,
+        auto       &ty,
+        auto       &tz
+    );
+
+    template <typename CoulombType>
+    void inline calculateCoulomb(
+        auto             &coulombEnergy,
+        auto             &localForce,
+        const auto        distance,
+        const auto        coulombPreFactor,
+        const auto        coulCutOff,
+        const auto *const coulParams
+    );
+
+    template <typename NonCoulombType>
+    void calculateNonCoulombEnergy(
+        auto             &nonCoulombEnergy,
+        auto             &localForce,
+        const auto        distance,
+        const auto        distanceSquared,
+        const auto        rncCutOff,
+        const auto *const nonCoulParams
+    );
+
 }   // namespace potential
 
+// clang-format off
+#include "potentialHandleTypes.inl"      // DO NOT MOVE THIS LINE
 #include "potential.tpp.hpp"             // DO NOT MOVE THIS LINE
 #include "potentialBruteForce.tpp.hpp"   // DO NOT MOVE THIS LINE
+// clang-format on
 
-#endif   // _POTENTIAL_HPP_
+#endif   // _POTENTIAL_HPP      _

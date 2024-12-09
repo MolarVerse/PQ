@@ -23,6 +23,8 @@
 #ifndef __POTENTIAL_BRUTE_FORCE_TPP__
 #define __POTENTIAL_BRUTE_FORCE_TPP__
 
+#include <cassert>
+
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
 #include "debug.hpp"
@@ -35,7 +37,6 @@
 
 namespace potential
 {
-
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     void bruteForce(
         const Real* const   pos,
@@ -88,30 +89,7 @@ namespace potential
                     Real ty = 0;
                     Real tz = 0;
 
-                    if constexpr (std::is_same_v<BoxType, simulationBox::OrthorhombicBox>)
-                        simulationBox::imageOrthoRhombic(
-                            boxParams,
-                            dx,
-                            dy,
-                            dz,
-                            tx,
-                            ty,
-                            tz
-                        );
-                    else if constexpr (std::is_same_v<BoxType, simulationBox::TriclinicBox>)
-                        simulationBox::imageTriclinic(
-                            boxParams,
-                            dx,
-                            dy,
-                            dz,
-                            tx,
-                            ty,
-                            tz
-                        );
-                    else
-                        throw customException::NotImplementedException(
-                            "The box type is not implemented yet"
-                        );
+                    image<BoxType>(boxParams, dx, dy, dz, tx, ty, tz);
 
                     const double distanceSquared = dx * dx + dy * dy + dz * dz;
 
@@ -131,26 +109,14 @@ namespace potential
 
                         const auto coulombPreFactor = charge[atomIndex_i] * charge[atomIndex_j];
 
-                        if constexpr (std::is_same_v<CoulombType, CoulombShiftedPotential>)
-                            coulombEnergy = calculateCoulombShiftedPotential(
-                                localForce,
-                                distance,
-                                coulombPreFactor,
-                                coulCutOff,
-                                coulParams
-                            );
-                        else if constexpr (std::is_same_v<CoulombType, CoulombWolf>)
-                            coulombEnergy = calculateCoulombWolfPotential(
-                                localForce,
-                                distance,
-                                coulombPreFactor,
-                                coulCutOff,
-                                coulParams
-                            );
-                        else
-                            throw customException::NotImplementedException(
-                                "The coulomb potential is not implemented yet"
-                            );
+                        calculateCoulombPotential<CoulombType>(
+                            coulombEnergy,
+                            localForce,
+                            distance,
+                            coulombPreFactor,
+                            coulCutOff,
+                            coulParams
+                        );
 
                         #pragma omp atomic
                         totalCoulombEnergy    += coulombEnergy;
@@ -173,18 +139,15 @@ namespace potential
                         if (distance < rncCutOff)
                         {
                             auto nonCoulombEnergy = 0.0;
-                            if constexpr (std::is_same_v<NonCoulombType, LennardJonesFF>)
-                                nonCoulombEnergy = calculateLennardJones(
-                                    localForce,
-                                    distance,
-                                    distanceSquared,
-                                    rncCutOff,
-                                    &nonCoulParams[combinedIndex]
-                                );
-                            else
-                                throw customException::NotImplementedException(
-                                    "The nonCoulomb potential is not implemented yet"
-                                );
+
+                            calculateNonCoulombEnergy<NonCoulombType>(
+                                nonCoulombEnergy,
+                                localForce,
+                                distance,
+                                distanceSquared,
+                                rncCutOff,
+                                &nonCoulParams[combinedIndex]
+                            );
 
                             #pragma omp atomic
                             totalNonCoulombEnergy += nonCoulombEnergy;
@@ -225,6 +188,7 @@ namespace potential
         }
         // clang-format on
     }
+
 }   // namespace potential
 
 #endif   // __POTENTIAL_BRUTE_FORCE_TPP__
