@@ -23,6 +23,20 @@
 #ifndef __POTENTIAL_BRUTE_FORCE_INL__
 #define __POTENTIAL_BRUTE_FORCE_INL__
 
+/**
+ * @file potentialBruteForce.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the main implementation of the brute force
+ * potential calculation. The brute force calculation routine is only used to
+ * determine all inter non-bonded forces and energies. The calculation is done
+ * in a brute force manner, were only the upper diagonal matrix of all atom
+ * interactions is considered excluding all interactions of atoms belonging to
+ * same molecule.
+ *
+ * @date 2024-12-09
+ *
+ */
+
 #include <cassert>
 
 #include "coulombShiftedPotential.hpp"
@@ -37,6 +51,38 @@
 
 namespace potential
 {
+    /**
+     * @brief a template function to calculate the brute force approach for the
+     * non-bonded interactions.
+     *
+     * @details The function calculates the non-bonded forces and energies for
+     * all atom pairs. The function is implemented in a brute force manner and
+     * is only used to determine all inter non-bonded forces and energies. The
+     * calculation is done in a brute force manner, were only the upper diagonal
+     * matrix of all atom interactions is considered excluding all interactions
+     * of atoms belonging to same molecule.
+     *
+     * @tparam CoulombType the type of the coulomb potential
+     * @tparam NonCoulombType the type of the non-coulomb potential
+     * @tparam BoxType the type of the simulation box
+     * @param pos the positions of all atoms
+     * @param force the forces acting on all atoms
+     * @param shiftForce the forces acting on all atoms due to the shift
+     * @param charge the charges of all atoms
+     * @param coulParams the parameters of the coulomb potential
+     * @param nonCoulParams the parameters of the non-coulomb potential
+     * @param ncCutOffs the cutoffs of the non-coulomb potential
+     * @param boxParams the parameters of the simulation box
+     * @param moleculeIndex the index of the molecule each atom belongs to
+     * @param molTypes the types of the molecules
+     * @param atomTypes the types of the atoms
+     * @param totalCoulombEnergy the total coulomb energy
+     * @param totalNonCoulombEnergy the total non-coulomb energy
+     * @param coulCutOff the cutoff of the coulomb potential
+     * @param nAtoms the number of atoms
+     * @param nAtomTypes the number of atom types
+     * @param nonCoulParamsOffset the offset of the non-coulomb parameters
+     */
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     void bruteForce(
         const Real* const   pos,
@@ -68,8 +114,8 @@ namespace potential
         {
             for (size_t atomIndex_j = 0; atomIndex_j < nAtoms; ++atomIndex_j)
             {
-                const size_t mol_i = moleculeIndex[atomIndex_i];
-                const size_t mol_j = moleculeIndex[atomIndex_j];
+                const auto mol_i = moleculeIndex[atomIndex_i];
+                const auto mol_j = moleculeIndex[atomIndex_j];
 
                 if (mol_i < mol_j)
                 {
@@ -105,7 +151,7 @@ namespace potential
 
                         auto coulombEnergy    = 0.0;
 
-                        const double distance = ::sqrt(distanceSquared);
+                        const auto distance = ::sqrt(distanceSquared);
 
                         const auto coulombPreFactor = charge[atomIndex_i] * charge[atomIndex_j];
 
