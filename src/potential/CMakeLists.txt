@@ -28,25 +28,6 @@ target_link_libraries(potential
     linearAlgebra
 )
 
-if(BUILD_WITH_KOKKOS)
-    # add_dependencies(potential
-    # kokkos
-    # )
-    target_include_directories(potential
-        PUBLIC
-        ${Kokkos_INCLUDE_DIRS_RET}
-    )
-
-    target_link_libraries(potential
-        PUBLIC
-        nonCoulombPotential_kokkos
-        coulombPotential_kokkos
-        Kokkos::kokkos
-
-        # Kokkos::kokkoskernels
-    )
-endif()
-
 install(TARGETS potential
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

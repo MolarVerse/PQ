@@ -28,7 +28,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/.cmake)
 include(config) # include default settins
 include(getGitVersion) # include get git version
 
-#TODO: add compiler flags based on which compiler is used
+# TODO: add compiler flags based on which compiler is used
 
 # ***************
 # cmake cxx flags
@@ -43,10 +43,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
         message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
     endif()
+
     # add flags dependent on build type
     if(NOT BUILD_WITH_KOKKOS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
     endif()
+
     if(NOT(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease"))
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
     endif()
@@ -106,16 +108,18 @@ if(BUILD_WITH_OPENMP)
 endif()
 
 if(BUILD_WITH_GPU)
-    #TODO: add for hip
+    # TODO: add for hip
     enable_language(CUDA)
+
     if(NOT CMAKE_CUDA_COMPILER)
         message(FATAL_ERROR "CUDA compiler not found")
     endif()
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__")
+
     # set(CUDA_HOME $ENV{CUDA_HOME})
     # if(NOT CUDA_HOME)
-    #     message(FATAL_ERROR "CUDA_HOME not set")
+    # message(FATAL_ERROR "CUDA_HOME not set")
     # endif()
     # include_directories(${CUDA_HOME}/include)
     include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
@@ -137,6 +141,10 @@ if(BUILD_WITH_MPI)
 endif()
 
 if(BUILD_WITH_KOKKOS)
+    if(NOT BUILD_LEGACY)
+        message(FATAL_ERROR "Kokkos is only supported in legacy mode")
+    endif()
+
     include(kokkos)
 endif()
 
