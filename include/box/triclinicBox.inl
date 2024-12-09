@@ -23,6 +23,18 @@
 #ifndef __TRICLINIC_BOX_INL__
 #define __TRICLINIC_BOX_INL__
 
+/**
+ * @file triclinicBox.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the free inline functions for
+ * the triclinic box. The functions are used to image the triclinic box.
+ *
+ * @date 2024-12-09
+ *
+ * @see triclinicBox.hpp
+ * @see box.hpp
+ */
+
 #include "triclinicBox.hpp"
 
 #ifdef __PQ_DEBUG__

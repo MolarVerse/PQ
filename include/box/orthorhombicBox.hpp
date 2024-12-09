@@ -24,6 +24,20 @@
 
 #define _ORTHORHOMBIC_BOX_HPP_
 
+/**
+ * @file orthorhombicBox.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the main class definition for the orthorhombic box.
+ * The class is used to represent the unit cell of an orthorhombic box. The
+ * class is used to calculate the volume of the simulation cell, apply periodic
+ * boundary conditions and scale the simulation cell. This class is derived from
+ * the base class Box.
+ *
+ * @date 2024-12-09
+ *
+ * @see box.hpp
+ */
+
 #include "box.hpp"           // for Box
 #include "typeAliases.hpp"   // for tensor3D, Vec3D
 
@@ -34,6 +48,7 @@ namespace simulationBox
      *
      * @brief This class represents the unit cell of an orthorhombic box
      *
+     * @see Box
      */
     class OrthorhombicBox : public Box
     {

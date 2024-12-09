@@ -23,6 +23,18 @@
 #ifndef __ORTHORHOMBIC_BOX_INL__
 #define __ORTHORHOMBIC_BOX_INL__
 
+/**
+ * @file orthorhombicBox.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the free inline functions for
+ * the orthorhombic box. The functions are used to image the orthorhombic box.
+ *
+ * @date 2024-12-09
+ *
+ * @see orthorhombicBox.hpp
+ * @see box.hpp
+ */
+
 #include "orthorhombicBox.hpp"
 
 #ifdef __PQ_DEBUG__
