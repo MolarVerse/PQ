@@ -1,6 +1,16 @@
 #ifndef __POTENTIAL_HANDLE_TYPES_INL__
 #define __POTENTIAL_HANDLE_TYPES_INL__
 
+/**
+ * @file potentialHandleTypes.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief  This file is used to define the template functions for the inter
+ * non-bonded routines. The functions are just wrappers for the actual functions
+ * in order to reduce the verbosity of the actual non-bonded routines.
+ *
+ * @date 2024-12-09
+ */
+
 #include <cassert>
 #include <type_traits>
 
@@ -13,6 +23,22 @@
 
 namespace potential
 {
+    /**
+     * @brief image
+     *
+     * @details This function is used to apply periodic boundary conditions to
+     * the coordinates of the atoms. This is just a template function
+     * functioning as a wrapper for the actual image function.
+     *
+     * @tparam BoxType the type of the box to use
+     * @param boxParams
+     * @param dx
+     * @param dy
+     * @param dz
+     * @param tx
+     * @param ty
+     * @param tz
+     */
     template <typename BoxType>
     void inline image(
         const auto* const boxParams,
@@ -32,6 +58,21 @@ namespace potential
             static_assert(std::false_type::value, "Unsupported BoxType");
     }
 
+    /**
+     * @brief calculateCoulomb
+     *
+     * @details This function is used to calculate the Coulomb potential
+     * between two atoms. This is just a template function functioning as a
+     * wrapper for the actual calculateCoulombPotential function.
+     *
+     * @tparam CoulombType the type of the Coulomb potential to use
+     * @param coulombEnergy
+     * @param localForce
+     * @param distance
+     * @param coulombPreFactor
+     * @param coulCutOff
+     * @param coulParams
+     */
     template <typename CoulombType>
     void inline calculateCoulombPotential(
         double&           coulombEnergy,
@@ -62,6 +103,21 @@ namespace potential
             static_assert(std::false_type::value, "Unsupported Coulomb type");
     }
 
+    /**
+     * @brief calculateNonCoulombEnergy
+     *
+     * @details This function is used to calculate the non-Coulomb potential
+     * between two atoms. This is just a template function functioning as a
+     * wrapper for the actual calculateNonCoulombEnergy function.
+     *
+     * @tparam NonCoulombType the type of the non-Coulomb potential to use
+     * @param nonCoulombEnergy
+     * @param localForce
+     * @param distance
+     * @param distanceSquared
+     * @param rncCutOff
+     * @param nonCoulParams
+     */
     template <typename NonCoulombType>
     void calculateNonCoulombEnergy(
         auto&             nonCoulombEnergy,
