@@ -24,8 +24,18 @@ Public License along with this program.  If not, see
 ******************************************************************************/
 
 #ifndef _POTENTIAL_HPP_
-
 #define _POTENTIAL_HPP_
+
+/**
+ * @file potential.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the main class definition for the potential
+ * calculation. The class is used to calculate the forces and energies of the
+ * inter non-bonded interactions for coulomb and non-coulomb potentials.
+ *
+ * @date 2024-12-09
+ *
+ */
 
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
@@ -37,17 +47,37 @@ Public License along with this program.  If not, see
 namespace potential
 {
     /**
+     * @brief A type definition for the function pointer to calculate the forces
+     * and energies of the inter non-bonded interactions. This function pointer
+     * is used to point to the actual template specialization of the function,
+     * which is determined during runtime in the pre-simulation phase.
+     *
+     */
+    using calcForcesPtr = void (*)(
+        const Real *const   pos,
+        Real *const         force,
+        Real *const         shiftForce,
+        const Real *const   charge,
+        const Real *const   coulParams,
+        const Real *const   nonCoulParams,
+        const Real *const   ncCutOffs,
+        const Real *const   boxParams,
+        const size_t *const moleculeIndex,
+        const size_t *const molTypes,
+        const size_t *const atomTypes,
+        Real               &totalCoulombEnergy,
+        Real               &totalNonCoulombEnergy,
+        const Real          coulCutOff,
+        const size_t        nAtoms,
+        const size_t        nAtomTypes,
+        const size_t        nonCoulParamsOffset
+    );
+
+    /**
      * @class Potential
      *
-     * @brief base class for all potential routines
-     *
-     * @details
-     * possible options:
-     * - brute force
-     * - cell list
-     *
-     * @note _nonCoulPairsVec is just a container to store the
-     * nonCoulombicPairs for later processing
+     * @brief This class is used to calculate the forces and energies of the
+     * inter non-bonded interactions for coulomb and non-coulomb potentials.
      *
      */
     class Potential : public timings::Timer
@@ -74,26 +104,6 @@ namespace potential
 
         void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &);
 
-        using calcForcesPtr = void (*)(
-            const Real *const   pos,
-            Real *const         force,
-            Real *const         shiftForce,
-            const Real *const   charge,
-            const Real *const   coulParams,
-            const Real *const   nonCoulParams,
-            const Real *const   ncCutOffs,
-            const Real *const   boxParams,
-            const size_t *const moleculeIndex,
-            const size_t *const molTypes,
-            const size_t *const atomTypes,
-            Real               &totalCoulombEnergy,
-            Real               &totalNonCoulombEnergy,
-            const Real          coulCutOff,
-            const size_t        nAtoms,
-            const size_t        nAtomTypes,
-            const size_t        nonCoulParamsOffset
-        );
-
         calcForcesPtr _cellListPtr;
         calcForcesPtr _bruteForcePtr;
 
@@ -110,13 +120,13 @@ namespace potential
          ***************************/
 
         void setNonCoulombPotential(const pq::SharedNonCoulombPot);
+        void setCoulombParamVectors(const std::vector<Real> coulParams);
         void setNonCoulombParamVectors(
             const std::vector<Real> nonCoulParams,
             const std::vector<Real> nonCoulCutOffs,
             const size_t            nonCoulParamsOffset,
             const size_t            nonCoulNumberOfTypes
         );
-        void setCoulombParamVectors(const std::vector<Real> coulParams);
 
         /***************************
          * standard getter methods *
