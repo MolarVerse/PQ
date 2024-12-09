@@ -21,8 +21,21 @@
 ******************************************************************************/
 
 #ifndef _COULOMB_POTENTIAL_HPP_
-
 #define _COULOMB_POTENTIAL_HPP_
+
+/**
+ * @file coulombPotential.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the main class definition for the coulomb potential
+ * calculation. The class is used to calculate the forces and energies of the
+ * inter and intra non-bonded interactions for coulomb potentials. The class is
+ * a base class for all coulomb type potentials. It inherits in general the
+ * coulombRadiusCutOff, coulombEnergyCutOff and coulombForceCutOff to all
+ * coulomb type potentials.
+ *
+ * @date 2024-12-09
+ *
+ */
 
 #include <cstddef>   // for size_t
 #include <utility>   // for pair
@@ -60,6 +73,8 @@ namespace potential
         virtual std::pair<double, double> calculate(const double, const double)
             const = 0;
 
+        [[nodiscard]] virtual std::vector<Real> copyParamsVector() = 0;
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -75,8 +90,6 @@ namespace potential
         [[nodiscard]] static double getCoulombRadiusCutOff();
         [[nodiscard]] static double getCoulombEnergyCutOff();
         [[nodiscard]] static double getCoulombForceCutOff();
-
-        [[nodiscard]] virtual std::vector<Real> copyParamsVector() = 0;
     };
 
 }   // namespace potential

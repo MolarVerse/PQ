@@ -21,8 +21,20 @@
 ******************************************************************************/
 
 #ifndef _BOX_HPP_
-
 #define _BOX_HPP_
+
+/**
+ * @file box.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the main class definition for the box. The class is
+ * used to represent the base class for the simulation cell. The class is used
+ * to calculate the volume of the simulation cell, apply periodic boundary
+ * conditions and scale the simulation cell. The two derived classes are the
+ * orthorhombic and triclinic box.
+ *
+ * @date 2024-12-09
+ *
+ */
 
 #include "staticMatrix.hpp"   // for StaticMatrix3x3
 #include "typeAliases.hpp"    // for diagonalMatrix
@@ -62,6 +74,10 @@ namespace simulationBox
 
         virtual bool isOrthoRhombic() const = 0;
 
+#ifndef __PQ_LEGACY__
+        virtual void updateBoxParams() = 0;
+#endif
+
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *
          ******************************************************/
@@ -90,8 +106,6 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
 #ifndef __PQ_LEGACY__
-        virtual void updateBoxParams() = 0;
-
         [[nodiscard]] Real *getBoxParamsPtr();
 #endif
 
