@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __POTENTIAL_BRUTE_FORCE_TPP__
-#define __POTENTIAL_BRUTE_FORCE_TPP__
+#ifndef __POTENTIAL_BRUTE_FORCE_INL__
+#define __POTENTIAL_BRUTE_FORCE_INL__
 
 #include <cassert>
 
@@ -153,9 +153,11 @@ namespace potential
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
 
-                        fx = localForce / distance * dx;
-                        fy = localForce / distance * dy;
-                        fz = localForce / distance * dz;
+                        localForce /= distance;
+
+                        fx = localForce * dx;
+                        fy = localForce * dy;
+                        fz = localForce * dz;
 
                         shiftFx = fx * tx;
                         shiftFy = fy * ty;
@@ -191,4 +193,4 @@ namespace potential
 
 }   // namespace potential
 
-#endif   // __POTENTIAL_BRUTE_FORCE_TPP__
+#endif   // __POTENTIAL_BRUTE_FORCE_INL__
