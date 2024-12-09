@@ -1,4 +1,4 @@
-for i in $(find src/ tests/ include/ apps/ -regex ".*\.\(hpp\|cpp\|c\|h\)$"); do
+for i in $(find src/ tests/ include/ apps/ -regex ".*\.\(hpp\|cpp\|c\|h\|inl\)$"); do
 
     if ! grep -q Copyright $i; then
 
