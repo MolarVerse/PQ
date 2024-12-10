@@ -23,17 +23,40 @@
 #ifndef __COULOMB_WOLF_INL__
 #define __COULOMB_WOLF_INL__
 
+/**
+ * @file coulombWolf.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the free inline functions for
+ * the Coulomb potential with Wolf summation as long range correction. The
+ * functions are used to calculate the energy and force of the Coulomb potential
+ * with Wolf summation as long range correction.
+ *
+ * @date 2024-12-09
+ *
+ * @see coulombWolf.hpp
+ *
+ */
+
 #include <cmath>   // for exp, sqrt, erfc
 
 #include "constants.hpp"   // for _COULOMB_PREFACTOR_
 #include "coulombWolf.hpp"
 
-#ifndef M_PI
-#define M_PI std::numbers::pi
-#endif
-
 namespace potential
 {
+    /**
+     * @brief calculate the energy and force of the Coulomb potential with Wolf
+     * summation as long range correction
+     *
+     * @link https://doi.org/10.1063%2F1.478738
+     *
+     * @param force
+     * @param r
+     * @param chargeProduct
+     * @param cutOff
+     * @param params
+     * @return Real
+     */
     static inline Real calculateCoulombWolfPotential(
         Real&             force,
         const Real        r,

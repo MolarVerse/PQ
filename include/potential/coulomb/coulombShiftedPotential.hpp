@@ -24,6 +24,19 @@
 
 #define _COULOMB_SHIFTED_POTENTIAL_HPP_
 
+/**
+ * @file coulombShiftedPotential.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the declaration of the CoulombShiftedPotential
+ * class. The CoulombShiftedPotential class is a class for the shifted Coulomb
+ * potential. It inherits the CoulombPotential class.
+ *
+ * @date 2024-12-09
+ *
+ * @see coulombPotential.hpp
+ *
+ */
+
 #include <utility>   // for pair
 
 #include "coulombPotential.hpp"
@@ -48,7 +61,7 @@ namespace potential
             const double
         ) const override;
 
-        [[nodiscard]] std::vector<Real> copyParamsVector();
+        [[nodiscard]] std::vector<Real> copyParamsVector() const override;
     };
 
 }   // namespace potential

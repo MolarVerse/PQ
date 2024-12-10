@@ -181,7 +181,7 @@ void CoulombWolf::setWolfParameter3(const double wolfParam3)
  *
  * @return std::vector<Real>
  */
-std::vector<Real> CoulombWolf::copyParamsVector()
+std::vector<Real> CoulombWolf::copyParamsVector() const
 {
     return std::vector<Real>{_kappa, _wolfParam1, _wolfParam2, _wolfParam3};
 }

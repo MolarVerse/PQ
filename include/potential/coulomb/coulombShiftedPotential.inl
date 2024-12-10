@@ -23,11 +23,34 @@
 #ifndef _COULOMB_SHIFTED_POTENTIAL_INL_
 #define _COULOMB_SHIFTED_POTENTIAL_INL_
 
+/**
+ * @file coulombShiftedPotential.inl
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the implementation of the free inline functions for
+ * the shifted Coulomb potential. The functions are used to calculate the energy
+ * and force of the shifted Coulomb potential.
+ *
+ * @date 2024-12-09
+ *
+ * @see coulombShiftedPotential.hpp
+ *
+ */
+
 #include "constants.hpp"
 #include "coulombShiftedPotential.hpp"
 
 namespace potential
 {
+    /**
+     * @brief calculate the energy and force of the shifted Coulomb potential
+     *
+     * @param force
+     * @param r
+     * @param chargeProduct
+     * @param cutOff
+     * @param params
+     * @return Real
+     */
     static inline Real calculateCoulombShiftedPotential(
         Real&             force,
         const Real        r,

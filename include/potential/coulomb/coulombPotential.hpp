@@ -73,7 +73,7 @@ namespace potential
         virtual std::pair<double, double> calculate(const double, const double)
             const = 0;
 
-        [[nodiscard]] virtual std::vector<Real> copyParamsVector() = 0;
+        [[nodiscard]] virtual std::vector<Real> copyParamsVector() const = 0;
 
         /***************************
          * standard setter methods *

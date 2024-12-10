@@ -24,6 +24,19 @@
 
 #define _COULOMB_WOLF_HPP_
 
+/**
+ * @file coulombWolf.hpp
+ * @author Jakob Gamper (97gamjak@gmail.com)
+ * @brief This file contains the declaration of the CoulombWolf class. The
+ * CoulombWolf class is a class for the Coulomb potential with Wolf summation as
+ * long range correction. It inherits the CoulombPotential class.
+ *
+ * @date 2024-12-09
+ *
+ * @see coulombPotential.hpp
+ *
+ */
+
 #include <utility>   // for pair
 
 #include "coulombPotential.hpp"
@@ -58,7 +71,7 @@ namespace potential
             const double
         ) const override;
 
-        [[nodiscard]] std::vector<Real> copyParamsVector();
+        [[nodiscard]] std::vector<Real> copyParamsVector() const override;
 
         /***************************
          * standard setter methods *
