@@ -10,6 +10,7 @@ set(nonCoulombPotentialSources
     forceFieldNonCoulomb.cpp
 
     lennardJones.cpp
+    buckingham.cpp
 )
 
 add_library(nonCoulombPotential

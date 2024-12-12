@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __LENNARD_JONES_INL__
-#define __LENNARD_JONES_INL__
+#ifndef __BUCKINGHAM_INL__
+#define __BUCKINGHAM_INL__
 
-#include "lennardJones.hpp"
+#include "buckingham.hpp"
 
 namespace potential
 {
     /**
-     * @brief Calculate the Lennard-Jones potential
+     * @brief Calculate the Buckingham potential
      *
      * @param r
      * @param r2
@@ -36,7 +36,7 @@ namespace potential
      * @param params
      * @return Real
      */
-    static inline Real calculateLennardJones(
+    static inline Real calculateBuckingham(
         Real&             force,
         const Real        r,
         const Real        r2,
@@ -44,17 +44,17 @@ namespace potential
         const Real* const params
     )
     {
-        const Real forceCut  = params[3];
-        const Real r2Inv     = 1.0 / r2;
-        const Real r6        = r2Inv * r2Inv * r2Inv;
-        const Real cr12      = params[1] * r6 * r6;
-        const Real cr6       = params[0] * r6;
-        const Real energy    = cr12 + cr6 - params[2] - forceCut * (cutOff - r);
+        const Real dRho     = params[1];
+        const Real forceCut = params[4];
+        const Real r2Inv    = 1.0 / r2;
+        const Real cr6      = params[2] * r2Inv * r2Inv * r2Inv;
+        const Real expTerm  = params[0] * ::exp(dRho * r);
+        const Real energy = expTerm + cr6 - params[3] - forceCut * (cutOff - r);
 
-        force += (12.0 * cr12 + 6.0 * cr6) / r - forceCut;
+        force += -dRho * expTerm + 6.0 * cr6 / r - forceCut;
 
         return energy;
     }
 }   // namespace potential
 
-#endif   // __LENNARD_JONES_INL__
+#endif   // __BUCKINGHAM_INL__
