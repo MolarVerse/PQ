@@ -33,6 +33,7 @@ using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
 using namespace settings;
+using namespace linearAlgebra;
 
 /**
  * @brief Construct a new Manostat:: Manostat object
@@ -64,6 +65,25 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
     _pressure = trace(_pressureTensor) / 3.0;
 
     data.setPressure(_pressure);
+}
+
+/**
+ * @brief rotate mu back into upper diagonal space
+ *
+ * @details first order approximation of mu rotation according to gromacs
+ * @link https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
+ *
+ * @param mu
+ */
+void Manostat::rotateMu(tensor3D &mu)
+{
+    mu[0][1] += mu[1][0];
+    mu[0][2] += mu[2][0];
+    mu[1][2] += mu[2][1];
+
+    mu[1][0] = 0.0;
+    mu[2][0] = 0.0;
+    mu[2][1] = 0.0;
 }
 
 /**

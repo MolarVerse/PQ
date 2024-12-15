@@ -253,16 +253,7 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
     auto       mu     = expPade(-compress * deltaP / 3.0 + stochasticFactor);
 
-    // rotate mu to the original coordinate system
-    // first-order approximation
-
-    mu[0][1] += mu[1][0];
-    mu[0][2] += mu[2][0];
-    mu[1][2] += mu[2][1];
-
-    mu[1][0] = 0.0;
-    mu[2][0] = 0.0;
-    mu[2][1] = 0.0;
+    rotateMu(mu);
 
     return mu;
 }

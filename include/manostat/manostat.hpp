@@ -50,6 +50,7 @@ namespace manostat
         virtual ~Manostat() = default;
 
         void         calculatePressure(const pq::SimBox &, pq::PhysicalData &);
+        void         rotateMu(linearAlgebra::tensor3D &mu);
         virtual void applyManostat(pq::SimBox &, pq::PhysicalData &);
 
         virtual pq::ManostatType getManostatType() const;

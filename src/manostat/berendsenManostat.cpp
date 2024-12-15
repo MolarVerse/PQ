@@ -178,16 +178,7 @@ tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
 
     auto mu = kronecker - preFactor * (pTarget - _pressureTensor);
 
-    // rotate mu to the original coordinate system
-    // first-order approximation
-
-    mu[0][1] += mu[1][0];
-    mu[0][2] += mu[2][0];
-    mu[1][2] += mu[2][1];
-
-    mu[1][0] = 0.0;
-    mu[2][0] = 0.0;
-    mu[2][1] = 0.0;
+    rotateMu(mu);
 
     return mu;
 }
