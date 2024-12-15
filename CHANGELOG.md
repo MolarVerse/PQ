@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Enhancements
 
 - Nose-Hoover chain restarting now including old chain parameters
+- 'dftb_file\ keyword added to change default input file dtfb.template
+  for dftbplus QMMD
 
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13

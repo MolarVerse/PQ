@@ -2,7 +2,7 @@
 #
 #  calc_forces.dftbplus 
 #
-#  Interface between QMCFC and DFTB+
+#  Interface between PQ and DFTB+
 
 use strict;
 
@@ -10,12 +10,14 @@ use strict;
 my $progname = $0;
 $progname =~ s{^.*/}{};
 
-# input data from the QMCFC programm
+# input data from the PQ program
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
 my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
 my $pointcharges       = $ARGV[3];             # pointcharge scheme
 my $nprocessors        = $ARGV[4];             # number of processors
+my $dftb_template      = $ARGV[5];             # dftb setup file that generates $dftb_input
+
 
 # various variables
 my @line;                                      # helper variable
@@ -26,26 +28,25 @@ my $energy;                                    # QM energy
 my $control_contents   = "";                   # helper variable - control file modifications
 my $gaussian_out       = "";                   # output of define, dscf, and grad
 my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
-  '\s+iterations';		               # energy search string
+  '\s+iterations';		                         # energy search string
 
 
 # files and commands
 my $dftb_exe          = "dftb+";             # executable
-my $dftb_chrg         = "charges.bin";       # resutl file: converged charges of all qm atoms
-my $dftb_template     = "dftb_in.template";  # required before you start
+my $dftb_chrg         = "charges.bin";       # result file: converged charges of all qm atoms
 my $dftb_input        = "dftb_in.hsd";       # dftb input file
 my $dftb_out          = "dftb.out";          # dftb output file
 my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
 
-my $qm_forces          = "qm_forces";           # result file: energy plus forces of all qm atoms
-my $qm_charges         = "qm_charges";          # restul file: partial charges of all qm atoms
-my $mm_forces          = "mm_forces";           # result file: forces of all mm atoms 
-my $stress_tensor_file = "stress_tensor";       # result file: stress tensor 
-my $stress_tensor_file_mat = "stress_tensor_mat";       # result file: stress tensor 
+my $qm_forces          = "qm_forces";              # result file: energy plus forces of all qm atoms
+my $qm_charges         = "qm_charges";             # result file: partial charges of all qm atoms
+my $mm_forces          = "mm_forces";              # result file: forces of all mm atoms 
+my $stress_tensor_file = "stress_tensor";          # result file: stress tensor 
+my $stress_tensor_file_mat = "stress_tensor_mat";  # result file: stress tensor 
 
 my $qm_coords             = "coords";               # coordinates
 my $qm_coords_prev        = "coords.prev";          # coordinates previous step
-my $mm_pointcharges       = "mm_pointcharges";     # mm_pointcharges
+my $mm_pointcharges       = "mm_pointcharges";      # mm_pointcharges
 
 my $energy_found          = 0;                     # energy  control flag
 my $forces_found          = 0;                     # forces  control flag
