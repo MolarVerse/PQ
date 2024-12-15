@@ -75,7 +75,7 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
  *
  * @param mu
  */
-void Manostat::rotateMu(tensor3D &mu)
+void Manostat::rotateMu(tensor3D &mu) const
 {
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];
