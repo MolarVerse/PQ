@@ -25,11 +25,11 @@
 using namespace settings;
 using namespace defaults;
 
-/****************************
- *                          *
- * standard getters methods *
- *                          *
- ****************************/
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
 /**
  * @brief Get the mol descriptor file name
@@ -97,6 +97,13 @@ std::string FileSettings::getRingPolymerStartFileName()
 std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 
 /**
+ * @brief Get the DFTB setup file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getDFTBFileName() { return _dftbFile; }
+
+/**
  * @brief Check if the topology file name is set
  *
  * @return bool
@@ -136,6 +143,13 @@ bool FileSettings::isRingPolymerStartFileNameSet()
  * @return bool
  */
 bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
+
+/**
+ * @brief Check if the DFTB setup file name is set
+ *
+ * @return bool
+ */
+bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
 
 /***************************
  *                         *
@@ -224,6 +238,16 @@ void FileSettings::setMShakeFileName(const std::string_view name)
 }
 
 /**
+ * @brief set the DFTB setup file name
+ *
+ * @param name
+ */
+void FileSettings::setDFTBFileName(const std::string_view name)
+{
+    FileSettings::_dftbFile = name;
+}
+
+/**
  * @brief set the topology file name flag to is set
  *
  */
@@ -269,6 +293,15 @@ void FileSettings::setIsMShakeFileNameSet()
 }
 
 /**
+ * @brief set the DFTB setup file name flag to is set
+ *
+ */
+void FileSettings::setIsDFTBFileNameSet()
+{
+    FileSettings::_isDFTBFileSet = true;
+}
+
+/**
  * @brief set the topology file name flag to is not set
  *
  */
@@ -311,4 +344,13 @@ void FileSettings::unsetIsRingPolymerStartFileNameSet()
 void FileSettings::unsetIsMShakeFileNameSet()
 {
     FileSettings::_isMShakeFileSet = false;
+}
+
+/**
+ * @brief set the DFTB setup file name flag to is not set
+ *
+ */
+void FileSettings::unsetIsDFTBFileNameSet()
+{
+    FileSettings::_isDFTBFileSet = false;
 }

@@ -40,6 +40,7 @@ identical elements exposed to a similar chemical environment from different molt
     set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the 
     point_charge can be set to 0 and the global_vdW_type can be omitted.
 
+
 .. _guffdatFile:
 
 **********
@@ -65,13 +66,32 @@ Utilizing equation :eq:`guffNonCoulombEquation`, Lennard-Jones, Buckingham and M
 for the description of the non-Coulombic interactions. The parameter *r*:sub:`cut` gives the cutoff radius for the non-bonded interactions. Distances 
 are given in Å and energies in kcal/mol. The units of the parameters are chosen accordingly.
 
-
 .. Attention::
 
     All entries in the GUFF file need to be separated *via* a semicolon ``;``. Furthermore, defining all possible interactions is mandatory. If a certain 
     potential is not needed, the corresponding coefficients are set to 0.
 
     Using the GUFF file requires the :ref:`moldescriptorFile` setup file to be provided as well.
+
+
+.. _dftbFile:
+
+***************
+DFTB Setup File
+***************
+
+**Default Name:** ``dftb_in.template``
+
+The DFTB setup file is used by PQ to generate the dftb_in.hsd file, which is used as input for calculations by the `DFTB+ <https://dftbplus.org/index.html>`_ software.
+As such, it has the same structure and keywords as the human-readable structured data (HSD) file for a single point calculation.
+The documentation of which can be found `here <https://www.dftbplus.org/documentation.html>`_.
+There is an additional keyword, named ``__GUESS__``, that can be used within the Hamiltonian of the DFTB setup file.
+If the ``__GUESS__`` flag is included, the charges will be read for an initial guess in every step of the MD simulation except the first.
+
+.. Attention::
+
+    Providing a DFTB setup file is mandatory if the :ref:`qm_prog <qmprogamKey>` keyword is set to ``dftbplus``.
+
 
 .. _topologyFile:
 

@@ -36,6 +36,7 @@
 #include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "settings.hpp"          // for Settings
+#include "fileSettings.hpp"      // for FileSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
@@ -142,7 +143,8 @@ void DFTBPlusRunner::execute()
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
+    const auto command = 
+            std::format("{} 0 {} 0 0 0 {}", scriptFile, reuseCharges, FileSettings::getDFTBFileName());
     ::system(command.c_str());
 
     _isFirstExecution = false;
