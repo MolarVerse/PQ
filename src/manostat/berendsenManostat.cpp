@@ -73,7 +73,7 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
 )
     : BerendsenManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes){};
+      _2DIsotropicAxes(isotropicAxes) {};
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -177,6 +177,9 @@ tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     const auto kronecker = kroneckerDeltaMatrix<double>();
 
     auto mu = kronecker - preFactor * (pTarget - _pressureTensor);
+
+    // rotate mu to the original coordinate system
+    // first-order approximation
 
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];
