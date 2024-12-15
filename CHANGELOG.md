@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Nose-Hoover chain restarting now including old chain parameters
 
+### Bug Fixes
+
+- full anistrop coupling works now with stochastic cell rescaling manostat
+
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
