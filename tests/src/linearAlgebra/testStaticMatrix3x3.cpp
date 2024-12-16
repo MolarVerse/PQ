@@ -367,3 +367,57 @@ TEST(TestStaticMatrix3x3, getDiagonalVectorFromMatrix)
 
     EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
 }
+
+TEST(TestStaticMatrix3x3, getExponentialMatrix)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 0.0, 0.0},
+        {0.0, 2.0, 0.0},
+        {0.0, 0.0, 3.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        exp(mat),
+        StaticMatrix3x3<double>(
+            {exp(1.0), exp(0.0), exp(0.0)},
+            {exp(0.0), exp(2.0), exp(0.0)},
+            {exp(0.0), exp(0.0), exp(3.0)}
+        ),
+        1e-6
+    );
+}
+
+TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        expPade(mat),
+        StaticMatrix3x3<double>(
+            {exp(1.0), 0.0, 0.0},
+            {0.0, exp(1.0), 0.0},
+            {0.0, 0.0, exp(1.0)}
+        ),
+        1e-3
+    );
+
+    const StaticMatrix3x3<double> mat2{
+        {1.0, 1.0, 1.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        expPade(mat2),
+        StaticMatrix3x3<double>(
+            {exp(1.0), exp(1.0), exp(1.0)},
+            {0.0, exp(1.0), 0.0},
+            {0.0, 0.0, exp(1.0)}
+        ),
+        1e-3
+    );
+}
