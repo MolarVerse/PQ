@@ -1,0 +1,38 @@
+# Type of this run
+      jobtype = qm-md;
+
+# Number of steps to be performed and timestep in fs; nreset gives the first n steps in which the total momentum is reset
+      nstep = 20000; timestep = 0.5; nreset = 5;
+
+# Time integration algorithm
+      integrator = v-verlet;
+
+# Request computation of the stress tensor
+# (IMPORTANT for virial calculation to the correct pressure)
+      virial = atomic;
+
+# Output frequency of ALL data files
+      output_freq = 1;
+
+# Generate Start velocities instead of taking them from the .rst file
+      init_velocities = true;
+
+# Temperature algorithm (Berendsen), Target T in K and Relaxation time in ps
+      thermostat = velocity_rescaling; temp = 298.15; t_relaxation = 0.1;
+
+# Pressure coupling algorithm, Target p in bar and Relaxation time in ps
+      manostat = stochastic_rescaling; pressure = 1.013; p_relaxation = 1.0;
+      isotropy = full_anisotropic;
+
+# Mace Calculation Setup Keywords
+      qm_prog = mace_mp;
+      mace_model_size = large;
+      dispersion = true;
+      floating_point_type = float;
+
+# Files
+
+      start_file   = acof1.rst;
+
+      file_prefix  = acof1-md-01;
+
