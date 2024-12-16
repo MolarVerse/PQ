@@ -26,9 +26,6 @@
 
 #include "staticMatrix3x3.hpp"
 
-#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
-#include "vector3d.hpp"               // for Vector3D
-
 namespace linearAlgebra
 {
     /**
