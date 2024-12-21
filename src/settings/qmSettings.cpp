@@ -238,7 +238,7 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
  */
 void QMSettings::setQMScript(const std::string_view &script)
 {
-    _qmScript = script;
+    _qmScript = toLowerAndReplaceDashesCopy(script);
 }
 
 /**
