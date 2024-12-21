@@ -8,11 +8,11 @@ This example shows how [MACE](https://github.com/ACEsuit/mace) can be used to si
 
 The input files for this example are:
 
-- `acof1.rst`: The atomic structure of the ACOF1 framework in the `.rst` format.
-- `moldescriptor.dat`: The molecular descriptor file for the ACOF1 framework.
-- `run-01.in`: The input file for the MACE simulation.
+- [`acof1.rst`](acof1.rst): The atomic structure of the ACOF1 framework in the `.rst` format.
+- [`moldescriptor.dat`](moldescriptor.dat): The molecular descriptor file for the ACOF1 framework.
+- [`run-01.in`](run-01.in): The input file for the MACE simulation.
 
-## Settings in `run-01.in`
+## Settings in [`run-01.in`](run-01.in)
 
 The input file `run-01.in` contains the following settings:
 
