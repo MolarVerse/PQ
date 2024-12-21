@@ -65,7 +65,7 @@ std::string settings::string(const JobType jobtype)
 void Settings::setJobtype(const std::string_view jobtype)
 {
     using enum JobType;
-    const auto jobtypeToLower = toLowerCopy(jobtype);
+    const auto jobtypeToLower = toLowerAndReplaceDashesCopy(jobtype);
 
     if (jobtypeToLower == "mmmd")
         setJobtype(MM_MD);

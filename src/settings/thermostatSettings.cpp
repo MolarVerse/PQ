@@ -90,7 +90,7 @@ void ThermostatSettings::setThermostatType(
 )
 {
     using enum ThermostatType;
-    const auto thermostatTypeToLower = toLowerCopy(thermostatType);
+    const auto thermostatTypeToLower = toLowerAndReplaceDashesCopy(thermostatType);
 
     if (thermostatTypeToLower == "berendsen")
         _thermostatType = BERENDSEN;
@@ -101,7 +101,7 @@ void ThermostatSettings::setThermostatType(
     else if (thermostatTypeToLower == "langevin")
         _thermostatType = LANGEVIN;
 
-    else if (thermostatTypeToLower == "nh-chain")
+    else if (thermostatTypeToLower == "nh_chain")
         _thermostatType = NOSE_HOOVER;
 
     else
