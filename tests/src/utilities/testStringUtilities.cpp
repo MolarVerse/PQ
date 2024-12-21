@@ -106,6 +106,16 @@ TEST(TestStringUtilities, toLowerCopy)
 }
 
 /**
+ * @brief test toLowerAndReplaceDashesCopy function
+ *
+ */
+TEST(TestStringUtilities, toLowerAndReplaceDashesCopy)
+{
+    std::string line = "TE-S--T";
+    EXPECT_EQ("te_s__t", utilities::toLowerAndReplaceDashesCopy(line));
+}
+
+/**
  * @brief test firstLetterToUpperCaseCopy function
  *
  */
