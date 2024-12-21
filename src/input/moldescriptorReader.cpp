@@ -106,10 +106,10 @@ void MoldescriptorReader::read()
         {
             auto &simBox = _engine.getSimulationBox();
 
-            if ("water_type" == toLowerCopy(lineElements[0]))
+            if ("water_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
                 simBox.setWaterType(std::stoi(lineElements[1]));
 
-            else if ("ammonia_type" == toLowerCopy(lineElements[0]))
+            else if ("ammonia_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
                 simBox.setAmmoniaType(std::stoi(lineElements[1]));
 
             else

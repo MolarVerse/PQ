@@ -105,24 +105,24 @@ void GeneralInputParser::parseJobTypeForEngine(
     using enum JobType;
     checkCommand(lineElements, lineNumber);
 
-    const auto jobtype = toLowerCopy(lineElements[2]);
+    const auto jobtype = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (jobtype == "mm-opt")
+    if (jobtype == "mm_opt")
     {
         Settings::setJobtype(MM_OPT);
         engine.reset(new OptEngine());
     }
-    else if (jobtype == "mm-md")
+    else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
         engine.reset(new MMMDEngine());
     }
-    else if (jobtype == "qm-md")
+    else if (jobtype == "qm_md")
     {
         Settings::setJobtype(QM_MD);
         engine.reset(new QMMDEngine());
     }
-    else if (jobtype == "qm-rpmd")
+    else if (jobtype == "qm_rpmd")
     {
         Settings::setJobtype(RING_POLYMER_QM_MD);
         engine.reset(new RingPolymerQMMDEngine());

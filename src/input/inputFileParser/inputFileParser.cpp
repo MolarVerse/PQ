@@ -121,7 +121,7 @@ void InputFileParser::addKeyword(
     bool               required
 )
 {
-    const auto keywordLowerCase = toLowerCopy(keyword);
+    const auto keywordLowerCase = toLowerAndReplaceDashesCopy(keyword);
     _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
     _keywordRequiredMap.try_emplace(keywordLowerCase, required);
     _keywordCountMap.try_emplace(keywordLowerCase, 0);

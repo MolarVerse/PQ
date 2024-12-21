@@ -76,14 +76,14 @@ void IntegratorInputParser::parseIntegrator(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto integrator = toLowerCopy(lineElements[2]);
+    const auto integrator = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if (!Settings::isMDJobType())
         throw InputFileException(
             std::format("Integrator is only supported for MD simulations!")
         );
 
-    if (integrator == "v-verlet")
+    if (integrator == "v_verlet")
     {
         auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
         mdEngine.makeIntegrator(VelocityVerlet());

@@ -195,7 +195,7 @@ void QMSettings::setMaceModelSize(const MaceModelSize model)
 void QMSettings::setMaceModelType(const std::string_view &model)
 {
     using enum MaceModelType;
-    const auto modelToLower = toLowerCopy(model);
+    const auto modelToLower = toLowerAndReplaceDashesCopy(model);
 
     if ("mace_mp" == modelToLower)
         _maceModelType = MACE_MP;
