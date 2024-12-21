@@ -152,8 +152,12 @@ std::string utilities::toLowerCopy(const std::string_view myString)
  */
 std::string utilities::toLowerAndReplaceDashesCopy(std::string myString)
 {
-    std::ranges::for_each(myString, [](char &c) { c = char(::tolower(c)); });
-    replace(myString.begin(), myString.end(), '-', '_');
+    for (char &c : myString)
+    {
+        c = char(::tolower(c));
+        if (c == '-')
+            c = '_';
+    }
     return myString;
 }
 
