@@ -44,6 +44,8 @@ namespace utilities
 
     std::string toLowerCopy(std::string);
     std::string toLowerCopy(std::string_view);
+    std::string toLowerAndReplaceDashesCopy(std::string);
+    std::string toLowerAndReplaceDashesCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
 
     void addSpaces(std::string &, const std::string &, const size_t);
