@@ -104,7 +104,7 @@ void JCouplingSection::processSection(
  *
  * @return "j-couplings"
  */
-std::string JCouplingSection::keyword() { return "j-couplings"; }
+std::string JCouplingSection::keyword() { return "j_couplings"; }
 
 /**
  * @brief checks if j-coupling section ends normally
