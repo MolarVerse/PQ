@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file.
 - 'dftb_file' keyword added to change default input file dtfb.template
   for dftbplus QMMD
 - input keys in input file can now be given case-insensitive as well as with '-' or '_'
-
+- Checks for `CHANGELOG.md` modifications on pull requests and pulls
+  
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
