@@ -89,7 +89,7 @@ ParameterFileSection *ParameterFileReader::determineSection(
     const auto iterEnd   = _parameterFileSections.end();
 
     for (auto section = iterStart; section != iterEnd; ++section)
-        if ((*section)->keyword() == toLowerCopy(lineElements[0]))
+        if ((*section)->keyword() == toLowerAndReplaceDashesCopy(lineElements[0]))
             return (*section).get();
 
     throw ParameterFileException(

@@ -77,7 +77,7 @@ std::string settings::string(const Isotropy &isotropy)
 void ManostatSettings::setManostatType(const std::string_view &manostatType)
 {
     using enum ManostatType;
-    const auto manostatTypeToLower = utilities::toLowerCopy(manostatType);
+    const auto manostatTypeToLower = utilities::toLowerAndReplaceDashesCopy(manostatType);
 
     if (manostatTypeToLower == "berendsen")
         _manostatType = BERENDSEN;
@@ -107,7 +107,7 @@ void ManostatSettings::setManostatType(const ManostatType &manostatType)
 void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 {
     using enum Isotropy;
-    const auto isotropyToLower = utilities::toLowerCopy(isotropy);
+    const auto isotropyToLower = utilities::toLowerAndReplaceDashesCopy(isotropy);
 
     if (isotropyToLower == "isotropic")
         _isotropy = ISOTROPIC;

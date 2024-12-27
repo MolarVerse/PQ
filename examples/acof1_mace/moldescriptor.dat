@@ -1,0 +1,36 @@
+# Include entire system in unit for ANI 
+# Unit 1
+3HBenzene   9   0
+C  0    0.0  
+C  0    0.0  
+C  0    0.0  
+H  0    0.0  
+C  0    0.0  
+H  0    0.0  
+H  0    0.0  
+C  0    0.0  
+C  0    0.0  
+
+# Unit2
+ArineLinker 6 0
+H  0    0.0  
+C  0    0.0  
+H  0    0.0  
+C  0    0.0  
+N  0    0.0  
+N  0    0.0  
+
+ # Unit 3
+ CO2    3    0
+ C  0   0.0
+ O  0   0.0
+ O  0   0.0
+
+
+ # Unit 4
+ Methane    5  0
+  C  0   0.0
+  H  0   0.0
+  H  0   0.0
+  H  0   0.0
+  H  0   0.0

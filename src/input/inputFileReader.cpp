@@ -139,12 +139,13 @@ void InputFileReader::addKeywords()
  */
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
-    const auto keyword = toLowerCopy(lineElements[0]);
+    const auto original_keyword = lineElements[0];
+    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
         throw InputFileException(std::format(
             "Invalid keyword \"{}\" at line {}",
-            keyword,
+            original_keyword,
             _lineNumber
         ));
 
