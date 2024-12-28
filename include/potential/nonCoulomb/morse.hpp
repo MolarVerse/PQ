@@ -20,30 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __BUCKINGHAM_HPP__
-#define __BUCKINGHAM_HPP__
+#ifndef __MORSE_HPP__
+#define __MORSE_HPP__
 
 #include <vector>   // vector
 
-#include "buckinghamPair.hpp"
+#include "morsePair.hpp"
 #include "typeAliases.hpp"
 
 namespace potential
 {
     /**
-     * @class Buckingham
+     * @class Morse
      *
-     * @brief Buckingham is a class for the Buckingham potential
+     * @brief Morse is a class for the Morse potential
      *
      * @details the _params vector contains the following parameters:
-     * - a
-     * - dRho
-     * - c6
+     * - dissociationEnergy
+     * - wellWidth
+     * - equilibriumDistance
      * - energyCutOff
      * - forceCutOff
      *
      */
-    class Buckingham
+    class Morse
     {
        private:
         constexpr static size_t _nParams = 5;
@@ -53,12 +53,12 @@ namespace potential
         std::vector<Real> _params;
 
        public:
-        Buckingham();
-        explicit Buckingham(cul size);
+        Morse();
+        explicit Morse(cul size);
 
         void resize(cul size);
 
-        void addPair(const BuckinghamPair& pair, cul index1, cul index2);
+        void addPair(const MorsePair& pair, cul index1, cul index2);
 
         [[nodiscard]] std::vector<Real> copyParams() const;
         [[nodiscard]] std::vector<Real> copyCutOffs() const;
@@ -67,16 +67,16 @@ namespace potential
         [[nodiscard]] size_t        getSize() const;
     };
 
-    class BuckinghamFF : public Buckingham
+    class MorseFF : public Morse
     {
     };
 
-    class BuckinghamGuff : public Buckingham
+    class MorseGuff : public Morse
     {
     };
 
 }   // namespace potential
 
-#include "buckingham.inl"
+#include "morse.inl"
 
-#endif   // __BUCKINGHAM_HPP__
+#endif   // __MORSE_HPP__

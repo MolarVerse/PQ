@@ -11,6 +11,7 @@ set(nonCoulombPotentialSources
 
     lennardJones.cpp
     buckingham.cpp
+    morse.cpp
 )
 
 add_library(nonCoulombPotential

@@ -54,9 +54,13 @@ namespace setup
 #ifndef __PQ_LEGACY__
     void setupFlattenedData(pq::Engine &engine);
 
-    void setupFlattenedLJ(pq::NonCoulombPot &, pq::Potential *const);
-
+    template <typename T>
+    void setupFlattenedNonCoulPot(pq::Potential *const);
 #endif
 }   // namespace setup
+
+#ifndef __PQ_LEGACY__
+#include "setup_nonLegacy.inl"
+#endif
 
 #endif   // _SETUP_HPP_

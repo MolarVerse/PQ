@@ -36,9 +36,11 @@
 #include <cassert>
 #include <type_traits>
 
+#include "buckingham.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
 #include "lennardJones.hpp"
+#include "morse.hpp"
 #include "orthorhombicBox.hpp"
 #include "potential.hpp"
 #include "triclinicBox.hpp"
@@ -142,12 +144,12 @@ namespace potential
      */
     template <typename NonCoulombType>
     void calculateNonCoulombEnergy(
-        auto&             nonCoulombEnergy,
-        auto&             localForce,
-        const auto        distance,
-        const auto        distanceSquared,
-        const auto        rncCutOff,
-        const auto* const nonCoulParams
+        auto&                       nonCoulombEnergy,
+        auto&                       localForce,
+        const auto                  distance,
+        [[maybe_unused]] const auto distanceSquared,   // not needed for Morse
+        const auto                  rncCutOff,
+        const auto* const           nonCoulParams
     )
     {
         if constexpr (std::is_same_v<NonCoulombType, LennardJonesFF>)
@@ -158,6 +160,17 @@ namespace potential
                 rncCutOff,
                 nonCoulParams
             );
+        else if constexpr (std::is_same_v<NonCoulombType, BuckinghamFF>)
+            nonCoulombEnergy = calculateBuckingham(
+                localForce,
+                distance,
+                distanceSquared,
+                rncCutOff,
+                nonCoulParams
+            );
+        else if constexpr (std::is_same_v<NonCoulombType, MorseFF>)
+            nonCoulombEnergy =
+                calculateMorse(localForce, distance, rncCutOff, nonCoulParams);
         else
             static_assert(
                 std::false_type::value,

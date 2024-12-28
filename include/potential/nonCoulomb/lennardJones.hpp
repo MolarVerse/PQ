@@ -70,7 +70,7 @@ namespace potential
     {
     };
 
-    class LenardJonesGuff : public LennardJones
+    class LennardJonesGuff : public LennardJones
     {
     };
 

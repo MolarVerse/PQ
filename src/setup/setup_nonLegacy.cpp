@@ -68,12 +68,25 @@ void setup::setupFlattenedData(Engine &engine)
 
     auto *const pot = engine.getPotentialPtr();
 
-    if (PotentialSettings::getNonCoulombType() == NonCoulombType::LJ)
-    {
-        auto &nonCoulombPot = pot->getNonCoulombPotential();
+    using enum NonCoulombType;
 
-        setupFlattenedLJ(nonCoulombPot, pot);
+    if (ForceFieldSettings::isActive())
+    {
+        if (PotentialSettings::getNonCoulombType() == LJ)
+            setupFlattenedNonCoulPot<LennardJones>(pot);
+        else if (PotentialSettings::getNonCoulombType() == BUCKINGHAM)
+            setupFlattenedNonCoulPot<Buckingham>(pot);
+        else if (PotentialSettings::getNonCoulombType() == MORSE)
+            setupFlattenedNonCoulPot<Morse>(pot);
+        else
+            customException::UserInputException(
+                "NonCoulombType not implemented yet"
+            );
     }
+    else
+        customException::UserInputException(
+            "NonCoulombType only implemented for ForceField at the moment"
+        );
 
     pot->setCoulombParamVectors(pot->getCoulombPotential().copyParamsVector());
 
@@ -81,63 +94,4 @@ void setup::setupFlattenedData(Engine &engine)
     const auto isOrthoRhombic = box->isOrthoRhombic();
 
     pot->setFunctionPointers(isOrthoRhombic);
-}
-
-/**
- * @brief setup the flattened Lennard-Jones potential
- *
- * @param nonCoulPot
- * @param potential
- */
-void setup::setupFlattenedLJ(
-    NonCoulombPotential &nonCoulPot,
-    Potential *const     potential
-)
-{
-    std::vector<Real> params;
-    std::vector<Real> cutOffs;
-
-    size_t size = 0;
-
-    if (ForceFieldSettings::isActive())
-    {
-        auto &nonCoulombPot = dynamic_cast<ForceFieldNonCoulomb &>(nonCoulPot);
-
-        auto &nonCoulombPairs = nonCoulombPot.getNonCoulombPairsMatrix();
-        const auto [row, col] = nonCoulombPairs.shape();
-
-        assert(row == col);
-
-        auto lennardJones = LennardJones();
-        lennardJones.resize(row);
-
-        // clang-format off
-        #pragma omp parallel for collapse(2)
-        for (size_t i = 0; i < row; ++i)
-            for (size_t j = 0; j < col; ++j)
-            {
-                const auto &pair =
-                    dynamic_cast<LennardJonesPair &>(*nonCoulombPairs(i, j));
-
-                lennardJones.addPair(pair, i, j);
-            }
-        // clang-format on
-
-        params  = lennardJones.copyParams();
-        cutOffs = lennardJones.copyCutOffs();
-        size    = lennardJones.getSize();
-    }
-    else
-    {
-        throw customException::NotImplementedException(
-            "The nonCoulomb potential is not implemented yet"
-        );
-    }
-
-    potential->setNonCoulombParamVectors(
-        params,
-        cutOffs,
-        LennardJones::getNParams(),
-        size
-    );
 }
