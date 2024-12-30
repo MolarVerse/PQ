@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 #
-#  qmcf_calc.turbomole_mp2
+#  pq_calc.turbomole_mp2
 #
-# + Interface between QMCFC and Turbomole
+# + Interface between PQ and Turbomole
 # + initializes QM run: define
 # + modification of the control file to run rimp2 using 
 #     Turbomoles 'ricc2' module

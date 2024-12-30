@@ -37,6 +37,7 @@ namespace references
     // QM Programs
     static constexpr char _DFTBPLUS_FILE_[] = "dftbplus.ref";
     static constexpr char _PYSCF_FILE_[]    = "pyscf.ref";
+    static constexpr char _TURBOMOLE_FILE_[]    = "turbomole.ref";
     // clang-format on
 
 }   // namespace references

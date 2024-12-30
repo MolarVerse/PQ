@@ -116,7 +116,10 @@ void QMInputParser::parseQMMethod(
     }
 
     else if ("turbomole" == method)
+    {
         QMSettings::setQMMethod(TURBOMOLE);
+        ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
+    }
 
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
