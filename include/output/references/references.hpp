@@ -28,7 +28,7 @@ namespace references
 {
     // clang-format off
     // Time Integrators
-    static constexpr char _VELOCITY_VERLET_FILE_[]            = "velocity_verlet.ref";
+    static constexpr char _VELOCITY_VERLET_FILE_[] = "velocity_verlet.ref";
 
     // Thermostats and Manostats
     static constexpr char _BERENDSEN_FILE_[]            = "berendsen.ref";
@@ -43,6 +43,10 @@ namespace references
     static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
     static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
     static constexpr char _MACEOFF_FILE_[]   = "maceoff.ref";
+
+    // Constraint Dynamics
+    static constexpr char _RATTLE_FILE_[] = "rattle.ref";
+
     // clang-format on
 
 }   // namespace references
