@@ -259,7 +259,10 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     using enum MaceModelType;
 
     if ("mace" == model || "mace_mp" == model)
+    {
         QMSettings::setMaceModelType(MACE_MP);
+        ReferencesOutput::addReferenceFile(_MACEMP_FILE_);
+    }
 
     else if ("mace_off" == model)
         QMSettings::setMaceModelType(MACE_OFF);

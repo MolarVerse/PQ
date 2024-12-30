@@ -35,9 +35,10 @@ namespace references
     static constexpr char _STOCHASTIC_RESCALING_FILE_[] = "stochastic_rescaling.ref";
 
     // QM Programs
-    static constexpr char _DFTBPLUS_FILE_[] = "dftbplus.ref";
-    static constexpr char _PYSCF_FILE_[]    = "pyscf.ref";
-    static constexpr char _TURBOMOLE_FILE_[]    = "turbomole.ref";
+    static constexpr char _DFTBPLUS_FILE_[]  = "dftbplus.ref";
+    static constexpr char _PYSCF_FILE_[]     = "pyscf.ref";
+    static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
+    static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
     // clang-format on
 
 }   // namespace references
