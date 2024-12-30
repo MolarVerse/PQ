@@ -27,6 +27,9 @@
 namespace references
 {
     // clang-format off
+    // Time Integrators
+    static constexpr char _VELOCITY_VERLET_FILE_[]            = "velocity_verlet.ref";
+
     // Thermostats and Manostats
     static constexpr char _BERENDSEN_FILE_[]            = "berendsen.ref";
     static constexpr char _VELOCITY_RESCALING_FILE_[]   = "velocity_rescaling.ref";
