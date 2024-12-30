@@ -25,15 +25,18 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "qmSettings.hpp"        // for Settings
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "qmSettings.hpp"         // for Settings
+#include "references.hpp"         // for ReferencesOutput
+#include "referencesOutput.hpp"   // for ReferencesOutput
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace customException;
 using namespace engine;
+using namespace references;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -102,8 +105,10 @@ void QMInputParser::parseQMMethod(
     const auto method = toLowerCopy(lineElements[2]);
 
     if ("dftbplus" == method)
+    {
         QMSettings::setQMMethod(DFTBPLUS);
-
+        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+    }
     else if ("pyscf" == method)
         QMSettings::setQMMethod(PYSCF);
 
