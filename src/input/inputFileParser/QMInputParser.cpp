@@ -110,7 +110,10 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
     }
     else if ("pyscf" == method)
+    {
         QMSettings::setQMMethod(PYSCF);
+        ReferencesOutput::addReferenceFile(_PYSCF_FILE_);
+    }
 
     else if ("turbomole" == method)
         QMSettings::setQMMethod(TURBOMOLE);
