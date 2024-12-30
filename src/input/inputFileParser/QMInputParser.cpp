@@ -265,7 +265,10 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     else if ("mace_off" == model)
+    {
         QMSettings::setMaceModelType(MACE_OFF);
+        ReferencesOutput::addReferenceFile(_MACEOFF_FILE_);
+    }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
         throw InputFileException(std::format(

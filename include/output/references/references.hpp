@@ -39,6 +39,7 @@ namespace references
     static constexpr char _PYSCF_FILE_[]     = "pyscf.ref";
     static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
     static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
+    static constexpr char _MACEOFF_FILE_[]   = "maceoff.ref";
     // clang-format on
 
 }   // namespace references
