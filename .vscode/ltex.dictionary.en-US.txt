@@ -11,3 +11,7 @@ Kokkos
 Manostats
 Logfile
 triclinic
+chem-ph
+PySCF
+WIREs
+TURBOMOLE
