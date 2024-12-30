@@ -26,12 +26,11 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for InputFileException, customException
-#include "mmmdEngine.hpp"     // for MMMDEngine
-#include "optEngine.hpp"      // for MMOptEngine
-#include "qmmdEngine.hpp"     // for QMMDEngine
-#include "qmmmmdEngine.hpp"   // for QMMMMDEngine
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "mmmdEngine.hpp"   // for MMMDEngine
+#include "optEngine.hpp"    // for MMOptEngine
+#include "qmmdEngine.hpp"   // for QMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -106,29 +105,24 @@ void GeneralInputParser::parseJobTypeForEngine(
     using enum JobType;
     checkCommand(lineElements, lineNumber);
 
-    const auto jobtype = toLowerCopy(lineElements[2]);
+    const auto jobtype = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (jobtype == "mm-opt")
+    if (jobtype == "mm_opt")
     {
         Settings::setJobtype(MM_OPT);
         engine.reset(new OptEngine());
     }
-    else if (jobtype == "mm-md")
+    else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
         engine.reset(new MMMDEngine());
     }
-    else if (jobtype == "qm-md")
+    else if (jobtype == "qm_md")
     {
         Settings::setJobtype(QM_MD);
         engine.reset(new QMMDEngine());
     }
-    else if (jobtype == "qmmm-md")
-    {
-        Settings::setJobtype(QMMM_MD);
-        engine.reset(new QMMMMDEngine());
-    }
-    else if (jobtype == "qm-rpmd")
+    else if (jobtype == "qm_rpmd")
     {
         Settings::setJobtype(RING_POLYMER_QM_MD);
         engine.reset(new RingPolymerQMMDEngine());
@@ -139,7 +133,6 @@ void GeneralInputParser::parseJobTypeForEngine(
             "- mm-opt\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qmmm-md\n"
             "- qm-rpmd\n",
             lineElements[2]
         ));

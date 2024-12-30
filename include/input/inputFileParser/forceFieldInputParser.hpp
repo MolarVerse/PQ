@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_FORCE_FIELD_HPP_
+#ifndef _FORCE_FIELD_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_FORCE_FIELD_HPP_
+#define _FORCE_FIELD_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -49,4 +49,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_FORCE_FIELD_HPP_
+#endif   // _FORCE_FIELD_INPUT_PARSER_HPP_

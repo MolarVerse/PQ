@@ -107,11 +107,11 @@ void OptInputParser::parseOptimizer(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto method = toLowerCopy(lineElements[2]);
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum OptimizerType;
 
-    if ("steepest-descent" == method)
+    if ("steepest_descent" == method)
         OptimizerSettings::setOptimizer(STEEPEST_DESCENT);
 
     else if ("adam" == method)
@@ -144,18 +144,18 @@ void OptInputParser::parseLearningRateStrategy(
     using enum LREnum;
     checkCommand(lineElements, lineNumber);
 
-    const auto strategy = toLowerCopy(lineElements[2]);
+    const auto strategy = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("constant" == strategy)
         OptimizerSettings::setLearningRateStrategy(CONSTANT);
 
-    else if ("constant-decay" == strategy)
+    else if ("constant_decay" == strategy)
         OptimizerSettings::setLearningRateStrategy(CONSTANT_DECAY);
 
-    else if ("exponential-decay" == strategy)
+    else if ("exponential_decay" == strategy)
         OptimizerSettings::setLearningRateStrategy(EXPONENTIAL_DECAY);
 
-    else if ("linesearch-wolfe" == strategy)
+    else if ("linesearch_wolfe" == strategy)
         OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else if ("linesearch" == strategy)

@@ -56,23 +56,11 @@ namespace QM
          * standard getter and setters *
          *******************************/
 
-        [[nodiscard]] const std::string &getScriptPath() const
-        {
-            return _scriptPath;
-        }
-        [[nodiscard]] const std::string &getSingularity() const
-        {
-            return _singularity;
-        }
-        [[nodiscard]] const std::string &getStaticBuild() const
-        {
-            return _staticBuild;
-        }
+        [[nodiscard]] const std::string &getScriptPath() const;
+        [[nodiscard]] const std::string &getSingularity() const;
+        [[nodiscard]] const std::string &getStaticBuild() const;
 
-        void setScriptPath(const std::string_view &scriptPath)
-        {
-            _scriptPath = scriptPath;
-        }
+        void setScriptPath(const std::string_view &scriptPath);
     };
 }   // namespace QM
 

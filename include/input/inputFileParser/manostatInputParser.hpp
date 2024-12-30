@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_MANOSTAT_HPP_
+#ifndef _MANOSTAT_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_MANOSTAT_HPP_
+#define _MANOSTAT_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -53,4 +53,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_MANOSTAT_HPP_
+#endif   // _MANOSTAT_INPUT_PARSER_HPP_

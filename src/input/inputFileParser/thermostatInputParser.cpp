@@ -130,7 +130,7 @@ void ThermostatInputParser::parseThermostat(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto thermostat = toLowerCopy(lineElements[2]);
+    const auto thermostat = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum ThermostatType;
 
@@ -155,7 +155,7 @@ void ThermostatInputParser::parseThermostat(
         ReferencesOutput::addReferenceFile(_LANGEVIN_FILE_);
     }
 
-    else if (thermostat == "nh-chain")
+    else if (thermostat == "nh_chain")
     {
         ThermostatSettings::setThermostatType(NOSE_HOOVER);
         ReferencesOutput::addReferenceFile(_NOSE_HOOVER_CHAIN_FILE_);

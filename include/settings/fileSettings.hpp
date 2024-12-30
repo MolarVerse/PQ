@@ -52,12 +52,14 @@ namespace settings
         static inline std::string _startFile;
         static inline std::string _rpmdStartFile;
         static inline std::string _mShakeFile;
+        static inline std::string _dftbFile = defaults::_DFTB_FILE_DEFAULT_;
 
         static bool inline _isTopologyFileSet       = false;
         static bool inline _isParameterFileSet      = false;
         static bool inline _isIntraNonBondedFileSet = false;
         static bool inline _isRPMDStartFileSet      = false;
         static bool inline _isMShakeFileSet         = false;
+        static bool inline _isDFTBFileSet           = false;
 
        public:
         FileSettings()  = default;
@@ -75,12 +77,14 @@ namespace settings
         [[nodiscard]] static std::string getStartFileName();
         [[nodiscard]] static std::string getRingPolymerStartFileName();
         [[nodiscard]] static std::string getMShakeFileName();
+        [[nodiscard]] static std::string getDFTBFileName();
 
         [[nodiscard]] static bool isTopologyFileNameSet();
         [[nodiscard]] static bool isParameterFileNameSet();
         [[nodiscard]] static bool isIntraNonBondedFileNameSet();
         [[nodiscard]] static bool isRingPolymerStartFileNameSet();
         [[nodiscard]] static bool isMShakeFileNameSet();
+        [[nodiscard]] static bool isDFTBFileNameSet();
 
         /********************
          * standard setters *
@@ -94,18 +98,21 @@ namespace settings
         static void setStartFileName(const std::string_view name);
         static void setRingPolymerStartFileName(const std::string_view name);
         static void setMShakeFileName(const std::string_view name);
+        static void setDFTBFileName(const std::string_view name);
 
         static void setIsTopologyFileNameSet();
         static void setIsParameterFileNameSet();
         static void setIsIntraNonBondedFileNameSet();
         static void setIsRingPolymerStartFileNameSet();
         static void setIsMShakeFileNameSet();
+        static void setIsDFTBFileNameSet();
 
         static void unsetIsTopologyFileNameSet();
         static void unsetIsParameterFileNameSet();
         static void unsetIsIntraNonBondedFileNameSet();
         static void unsetIsRingPolymerStartFileNameSet();
         static void unsetIsMShakeFileNameSet();
+        static void unsetIsDFTBFileNameSet();
     };
 
 }   // namespace settings

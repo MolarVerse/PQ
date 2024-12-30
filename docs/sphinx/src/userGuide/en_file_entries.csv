@@ -1,0 +1,23 @@
+Quantity,Description,Unit,Printed
+step_number,overall number of simulation steps so far,\-,A
+*T*,temperature,K,A
+*P*,pressure,bar,A
+*E*:sub:`tot`,total energy,kcal/mol,A
+*E*:sub:`QM`, quantum mechanical energy,kcal/mol,QM
+*N*:sub:`QM-atoms`,number of atoms treated quantum mechanically,\-,QM
+*E*:sub:`kin`,kinetic energy,kcal/mol,A
+*E*:sub:`intra`,MM intra-molecular energy,kcal/mol,A
+*E*:sub:`Coulomb`,MM Coulomb energy,kcal/mol,MM
+*E*:sub:`non-Coulomb`,MM non-Coulomb energy,kcal/mol,MM
+*E*:sub:`bond`,total energy of the MM bonds,kcal/mol,MM*
+*E*:sub:`angle`,total energy of the MM angles,kcal/mol,MM*
+*E*:sub:`dihedral`,total energy of the MM dihedrals,kcal/mol,MM*
+*E*:sub:`improper`,total energy of the MM improper dihedrals,kcal/mol,MM*
+*V*,volume,Å³,P
+*ρ*,density,g/cm³,P
+*E*:sub:`p-NH`,momentum energy of the Nose Hoover chain thermostat,kcal/mol,NH
+*E*:sub:`χ-NH`,friction energy of the Nose Hoover chain thermostat,kcal/mol,NH
+*r*:sub:`lower`, lower bound of the distance constraints,Å,DC
+*r*:sub:`upper`, upper bound of the distance constraints,Å,DC
+*p*,total momentum,amu Å/fs,A
+looptime,time taken to complete the full MD simulation step,s,A

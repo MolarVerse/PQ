@@ -45,8 +45,9 @@ using namespace utilities;
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
  * topology_file <string> 3) parameter_file <string> 4) start_file <string>
- * (required) 5) moldescriptor_file <string> 6) guff_path <string> (deprecated)
- * 7) guff_file <string>
+ * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string> 
+ * 7) guff_path <string> (deprecated) 8) guff_file <string>
+ * 9) mshake_file <string> 10) dftb_file <string>
  *
  * @param engine
  */
@@ -103,6 +104,12 @@ FilesInputParser::FilesInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("mshake_file"),
         bind_front(&FilesInputParser::parseMShakeFilename, this),
+        false
+    );
+
+    addKeyword(
+        std::string("dftb_file"),
+        bind_front(&FilesInputParser::parseDFTBFilename, this),
         false
     );
 }
@@ -331,4 +338,28 @@ void FilesInputParser::parseMShakeFilename(
         );
 
     FileSettings::setMShakeFileName(filename);
+}
+
+/**
+ * @brief parse dftb file of simulation and set it in settings
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if file does not exist
+ */
+void FilesInputParser::parseDFTBFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto &filename = lineElements[2];
+
+    if (!fileExists(filename))
+        throw InputFileException(
+            std::format("Cannot open DFTB setup file - filename = {}", filename)
+        );
+
+    FileSettings::setDFTBFileName(filename);
 }

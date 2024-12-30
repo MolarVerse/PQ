@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#ifndef _NON_COULOMB_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#define _NON_COULOMB_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -49,4 +49,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_NON_COULOMB_TYPE_HPP_
+#endif   // _NON_COULOMB_INPUT_PARSER_HPP_

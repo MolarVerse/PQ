@@ -200,10 +200,12 @@ void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
         throw;
     }
 
+    stress_ = stress_ * _EV_TO_KCAL_PER_MOL_;
+
     const auto virial = stress_ * simBox.getVolume();
 
-    data.setStressTensor(stress_ * _EV_TO_KCAL_PER_MOL_);
-    data.addVirial(virial * _EV_TO_KCAL_PER_MOL_);
+    data.setStressTensor(stress_);
+    data.addVirial(virial);
 }
 
 /**

@@ -28,23 +28,23 @@
 #include <memory>    // for make_unique, unique_ptr
 #include <vector>    // for vector
 
-#include "boxOutput.hpp"                      // for BoxFileOutput
-#include "energyOutput.hpp"                   // for EnergyOutput
-#include "infoOutput.hpp"                     // for InfoOutput
-#include "logOutput.hpp"                      // for LogOutput
-#include "momentumOutput.hpp"                 // for MomentumOutput
-#include "optOutput.hpp"                      // for OptOutput
-#include "ringPolymerEnergyOutput.hpp"        // for RingPolymerEnergyOutput
-#include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
-#include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
-#include "rstFileOutput.hpp"                  // for RstFileOutput
-#include "stdoutOutput.hpp"                   // for StdoutOutput
-#include "stressOutput.hpp"                   // for StressOutput
-#include "timer.hpp"                          // for Timer
-#include "timingsOutput.hpp"                  // for TimingsOutput
-#include "trajectoryOutput.hpp"               // for TrajectoryOutput
-#include "typeAliases.hpp"                    // for PhysicalData, SimBox
-#include "virialOutput.hpp"                   // for VirialOutput
+#include "boxOutput.hpp"
+#include "energyOutput.hpp"
+#include "infoOutput.hpp"
+#include "logOutput.hpp"
+#include "momentumOutput.hpp"
+#include "optOutput.hpp"
+#include "ringPolymerEnergyOutput.hpp"
+#include "ringPolymerRestartFileOutput.hpp"
+#include "ringPolymerTrajectoryOutput.hpp"
+#include "rstFileOutput.hpp"
+#include "stdoutOutput.hpp"
+#include "stressOutput.hpp"
+#include "timer.hpp"   // for Timer
+#include "timingsOutput.hpp"
+#include "trajectoryOutput.hpp"
+#include "typeAliases.hpp"
+#include "virialOutput.hpp"
 
 namespace engine
 {
@@ -57,25 +57,25 @@ namespace engine
     class EngineOutput : public timings::Timer
     {
        private:
-        std::unique_ptr<output::EnergyOutput> _energyOutput;
-        std::unique_ptr<output::EnergyOutput> _instantEnergyOutput;
-        std::unique_ptr<output::InfoOutput>   _infoOutput;
+        std::unique_ptr<pq::EnergyOutput> _energyOutput;
+        std::unique_ptr<pq::EnergyOutput> _instantEnergyOutput;
+        std::unique_ptr<pq::InfoOutput>   _infoOutput;
 
-        std::unique_ptr<output::TrajectoryOutput> _xyzOutput;
-        std::unique_ptr<output::TrajectoryOutput> _velOutput;
-        std::unique_ptr<output::TrajectoryOutput> _forceOutput;
-        std::unique_ptr<output::TrajectoryOutput> _chargeOutput;
-        std::unique_ptr<output::RstFileOutput>    _rstFileOutput;
+        std::unique_ptr<pq::TrajectoryOutput> _xyzOutput;
+        std::unique_ptr<pq::TrajectoryOutput> _velOutput;
+        std::unique_ptr<pq::TrajectoryOutput> _forceOutput;
+        std::unique_ptr<pq::TrajectoryOutput> _chargeOutput;
+        std::unique_ptr<pq::RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<output::LogOutput>    _logOutput;
-        std::unique_ptr<output::StdoutOutput> _stdoutOutput;
+        std::unique_ptr<pq::LogOutput>    _logOutput;
+        std::unique_ptr<pq::StdoutOutput> _stdoutOutput;
 
-        std::unique_ptr<output::MomentumOutput> _momentumOutput;
-        std::unique_ptr<output::VirialOutput>   _virialOutput;
-        std::unique_ptr<output::StressOutput>   _stressOutput;
-        std::unique_ptr<output::BoxFileOutput>  _boxFileOutput;
+        std::unique_ptr<pq::MomentumOutput> _momentumOutput;
+        std::unique_ptr<pq::VirialOutput>   _virialOutput;
+        std::unique_ptr<pq::StressOutput>   _stressOutput;
+        std::unique_ptr<pq::BoxFileOutput>  _boxFileOutput;
 
-        std::unique_ptr<output::OptOutput> _optOutput;
+        std::unique_ptr<pq::OptOutput> _optOutput;
 
         pq::UniqueRPMDRstFileOutput _rpmdRstFileOutput;
         pq::UniqueRPMDTrajOutput    _rpmdXyzOutput;
@@ -84,7 +84,7 @@ namespace engine
         pq::UniqueRPMDTrajOutput    _rpmdChargeOutput;
         pq::UniqueRPMDEnergyOutput  _rpmdEnergyOutput;
 
-        std::unique_ptr<output::TimingsOutput> _timingsOutput;
+        std::unique_ptr<pq::TimingsOutput> _timingsOutput;
 
        public:
         EngineOutput();
@@ -118,24 +118,24 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput();
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::TrajectoryOutput &getChargeOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] pq::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] pq::EnergyOutput     &getInstantEnergyOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getVelOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] pq::TrajectoryOutput &getChargeOutput();
+        [[nodiscard]] pq::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] pq::InfoOutput       &getInfoOutput();
 
-        [[nodiscard]] output::LogOutput    &getLogOutput();
-        [[nodiscard]] output::StdoutOutput &getStdoutOutput();
+        [[nodiscard]] pq::LogOutput    &getLogOutput();
+        [[nodiscard]] pq::StdoutOutput &getStdoutOutput();
 
-        [[nodiscard]] output::MomentumOutput &getMomentumOutput();
-        [[nodiscard]] output::VirialOutput   &getVirialOutput();
-        [[nodiscard]] output::StressOutput   &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput  &getBoxFileOutput();
+        [[nodiscard]] pq::MomentumOutput &getMomentumOutput();
+        [[nodiscard]] pq::VirialOutput   &getVirialOutput();
+        [[nodiscard]] pq::StressOutput   &getStressOutput();
+        [[nodiscard]] pq::BoxFileOutput  &getBoxFileOutput();
 
-        [[nodiscard]] output::OptOutput &getOptOutput();
+        [[nodiscard]] pq::OptOutput &getOptOutput();
 
         [[nodiscard]] pq::RPMDRstFileOutput &getRingPolymerRstFileOutput();
         [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerXyzOutput();
@@ -144,7 +144,7 @@ namespace engine
         [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerChargeOutput();
         [[nodiscard]] pq::RPMDEnergyOutput  &getRingPolymerEnergyOutput();
 
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] pq::TimingsOutput &getTimingsOutput();
     };
 
 }   // namespace engine

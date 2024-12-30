@@ -34,7 +34,6 @@
 #include "mmmdEngine.hpp"              // for MMMDEngine
 #include "optEngine.hpp"               // for MMOptEngine
 #include "qmmdEngine.hpp"              // for QMMDEngine
-#include "qmmmmdEngine.hpp"            // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "testInputFileReader.hpp"     // for TestInputFileReader
@@ -73,13 +72,6 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_EQ(Settings::isRingPolymerMDActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::RingPolymerQMMDEngine));
 
-    lineElements = {"jobtype", "=", "qmmm-md"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::QMMM_MD);
-    EXPECT_EQ(Settings::isQMActivated(), true);
-    EXPECT_EQ(Settings::isMMActivated(), true);
-    EXPECT_EQ(typeid(*engine), typeid(engine::QMMMMDEngine));
-
     lineElements = {"jobtype", "=", "mm-opt"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
@@ -95,7 +87,6 @@ TEST_F(TestInputFileReader, JobType)
         "- mm-opt\n"
         "- mm-md\n"
         "- qm-md\n"
-        "- qmmm-md\n"
         "- qm-rpmd\n"
     );
 

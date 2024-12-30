@@ -67,6 +67,7 @@ namespace potential
 
     class KokkosLennardJones;   // forward declaration
     class KokkosCoulombWolf;    // forward declaration
+    class KokkosPotential;      // forward declaration
 
 }   // namespace potential
 
@@ -116,9 +117,22 @@ namespace opt
 
 namespace output
 {
-    class RingPolymerRestartFileOutput;
-    class RingPolymerTrajectoryOutput;
-    class RingPolymerEnergyOutput;
+    class EnergyOutput;       // forward declaration
+    class InfoOutput;         // forward declaration
+    class LogOutput;          // forward declaration
+    class RstFileOutput;      // forward declaration
+    class StdoutOutput;       // forward declaration
+    class TrajectoryOutput;   // forward declaration
+    class MomentumOutput;     // forward declaration
+    class VirialOutput;       // forward declaration
+    class StressOutput;       // forward declaration
+    class BoxFileOutput;      // forward declaration
+    class TimingsOutput;      // forward declaration
+    class OptOutput;          // forward declaration
+
+    class RingPolymerRestartFileOutput;   // forward declaration
+    class RingPolymerTrajectoryOutput;    // forward declaration
+    class RingPolymerEnergyOutput;        // forward declaration
 
 }   // namespace output
 
@@ -135,6 +149,8 @@ namespace engine
 
 namespace manostat
 {
+    class Manostat;   // forward declaration
+
     class StochasticRescalingManostat;                  // forward declaration
     class SemiIsotropicStochasticRescalingManostat;     // forward declaration
     class AnisotropicStochasticRescalingManostat;       // forward declaration
@@ -163,6 +179,17 @@ namespace settings
     enum class Isotropy;         // forward declaration
 
 }   // namespace settings
+
+namespace integrator
+{
+    class Integrator;       // forward declaration
+    class VelocityVerlet;   // forward declaration
+}   // namespace integrator
+
+namespace resetKinetics
+{
+    class ResetKinetics;   // forward declaration
+}   // namespace resetKinetics
 
 namespace input
 {
@@ -217,6 +244,17 @@ namespace pq
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
 
+    using ResetKinetics = resetKinetics::ResetKinetics;
+
+    /************************
+     * integrator namespace *
+     ************************/
+
+    using Integrator     = integrator::Integrator;
+    using VelocityVerlet = integrator::VelocityVerlet;
+
+    using UniqueIntegrator = std::unique_ptr<Integrator>;
+
     /**********************
      * settings namespace *
      **********************/
@@ -232,6 +270,8 @@ namespace pq
     using Thermostat = thermostat::Thermostat;
     using NoseHoover = thermostat::NoseHoover;
 
+    using UniqueThermostat = std::unique_ptr<Thermostat>;
+
     /********************
      * virial namespace *
      ********************/
@@ -244,6 +284,10 @@ namespace pq
     /**********************
      * manostat namespace *
      **********************/
+
+    using Manostat = manostat::Manostat;
+
+    using UniqueManostat = std::unique_ptr<Manostat>;
 
     // clang-format off
     using StochasticManostat          = manostat::StochasticRescalingManostat;
@@ -276,8 +320,9 @@ namespace pq
     using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
     using NonCoulPair   = potential::NonCoulombPair;
 
-    using KokkosLJ   = potential::KokkosLennardJones;
-    using KokkosWolf = potential::KokkosCoulombWolf;
+    using KokkosLJ        = potential::KokkosLennardJones;
+    using KokkosWolf      = potential::KokkosCoulombWolf;
+    using KokkosPotential = potential::KokkosPotential;
 
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
@@ -356,6 +401,19 @@ namespace pq
     /********************
      * output namespace *
      ********************/
+
+    using EnergyOutput     = output::EnergyOutput;
+    using InfoOutput       = output::InfoOutput;
+    using LogOutput        = output::LogOutput;
+    using RstFileOutput    = output::RstFileOutput;
+    using StdoutOutput     = output::StdoutOutput;
+    using TrajectoryOutput = output::TrajectoryOutput;
+    using MomentumOutput   = output::MomentumOutput;
+    using VirialOutput     = output::VirialOutput;
+    using StressOutput     = output::StressOutput;
+    using BoxFileOutput    = output::BoxFileOutput;
+    using TimingsOutput    = output::TimingsOutput;
+    using OptOutput        = output::OptOutput;
 
     using RPMDRstFileOutput = output::RingPolymerRestartFileOutput;
     using RPMDTrajOutput    = output::RingPolymerTrajectoryOutput;

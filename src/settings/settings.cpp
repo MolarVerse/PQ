@@ -65,7 +65,7 @@ std::string settings::string(const JobType jobtype)
 void Settings::setJobtype(const std::string_view jobtype)
 {
     using enum JobType;
-    const auto jobtypeToLower = toLowerCopy(jobtype);
+    const auto jobtypeToLower = toLowerAndReplaceDashesCopy(jobtype);
 
     if (jobtypeToLower == "mmmd")
         setJobtype(MM_MD);
@@ -100,46 +100,13 @@ void Settings::setJobtype(const JobType jobtype)
         using enum JobType;
 
         case MM_OPT:   // fallthrough
-        case MM_MD:
-        {
-            activateMM();
-            deactivateQM();
-            deactivateRingPolymerMD();
-            break;
-        }
-
-        case QM_MD:
-        {
-            deactivateMM();
-            activateQM();
-            deactivateRingPolymerMD();
-            break;
-        }
-
-        case RING_POLYMER_QM_MD:
-        {
-            deactivateMM();
-            activateQM();
-            activateRingPolymerMD();
-            break;
-        }
-
-        case QMMM_MD:
-        {
-            activateMM();
-            activateQM();
-            deactivateRingPolymerMD();
-            break;
-        }
+        case MM_MD: deactivateRingPolymerMD(); break;
+        case QM_MD: deactivateRingPolymerMD(); break;
+        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
+        case QMMM_MD: deactivateRingPolymerMD(); break;
 
         // case NONE: fallthrough
-        default:
-        {
-            deactivateMM();
-            deactivateQM();
-            deactivateRingPolymerMD();
-            break;
-        }
+        default: deactivateRingPolymerMD(); break;
     }
 }
 
@@ -169,20 +136,6 @@ void Settings::setFloatingPointType(const FPType floatingPointType)
 {
     _floatingPointType = floatingPointType;
 }
-
-/**
- * @brief sets MM to active
- *
- * @param dimensionality
- */
-void Settings::setIsMMActivated(const bool isMM) { _isMMActivated = isMM; }
-
-/**
- * @brief sets QM to active
- *
- * @param dimensionality
- */
-void Settings::setIsQMActivated(const bool isQM) { _isQMActivated = isQM; }
 
 /**
  * @brief sets Ring Polymer MD to active
@@ -302,7 +255,18 @@ bool Settings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
  * @return true/false
  *
  */
-bool Settings::isMMActivated() { return _isMMActivated; }
+bool Settings::isMMActivated()
+{
+    using enum JobType;
+
+    auto isMM = false;
+
+    isMM = isMM || _jobtype == MM_MD;
+    isMM = isMM || _jobtype == QMMM_MD;
+    isMM = isMM || _jobtype == MM_OPT;
+
+    return isMM;
+}
 
 /**
  * @brief Returns true if the QM simulations are activated
@@ -310,7 +274,18 @@ bool Settings::isMMActivated() { return _isMMActivated; }
  * @return true/false
  *
  */
-bool Settings::isQMActivated() { return _isQMActivated; }
+bool Settings::isQMActivated()
+{
+    using enum JobType;
+
+    auto isQM = false;
+
+    isQM = isQM || _jobtype == QM_MD;
+    isQM = isQM || _jobtype == QMMM_MD;
+    isQM = isQM || _jobtype == RING_POLYMER_QM_MD;
+
+    return isQM;
+}
 
 /**
  * @brief Returns true if both MM and QM simulations are activated
@@ -318,7 +293,7 @@ bool Settings::isQMActivated() { return _isQMActivated; }
  * @return true/false
  *
  */
-bool Settings::isQMMMActivated() { return _isMMActivated && _isQMActivated; }
+bool Settings::isQMMMActivated() { return _jobtype == JobType::QMMM_MD; }
 
 /**
  * @brief Returns true if only QM simulations are activated
@@ -326,7 +301,10 @@ bool Settings::isQMMMActivated() { return _isMMActivated && _isQMActivated; }
  * @return true/false
  *
  */
-bool Settings::isQMOnlyActivated() { return _isQMActivated && !_isMMActivated; }
+bool Settings::isQMOnlyActivated()
+{
+    return isQMActivated() && !isMMActivated();
+}
 
 /**
  * @brief Returns true if only MM simulations are activated
@@ -334,7 +312,10 @@ bool Settings::isQMOnlyActivated() { return _isQMActivated && !_isMMActivated; }
  * @return true/false
  *
  */
-bool Settings::isMMOnlyActivated() { return _isMMActivated && !_isQMActivated; }
+bool Settings::isMMOnlyActivated()
+{
+    return isMMActivated() && !isQMActivated();
+}
 
 /**
  * @brief Returns true if the ring polymer MD simulations are activated
@@ -359,18 +340,6 @@ bool Settings::useKokkos() { return _useKokkos; }
  *****************************/
 
 /**
- * @brief activate MM
- *
- */
-void Settings::activateMM() { _isMMActivated = true; }
-
-/**
- * @brief activate QM
- *
- */
-void Settings::activateQM() { _isQMActivated = true; }
-
-/**
  * @brief activate ring polymer MD simulations
  *
  */
@@ -381,18 +350,6 @@ void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
  *
  */
 void Settings::activateKokkos() { _useKokkos = true; }
-
-/**
- * @brief deactivate MM
- *
- */
-void Settings::deactivateMM() { _isMMActivated = false; }
-
-/**
- * @brief deactivate QM
- *
- */
-void Settings::deactivateQM() { _isQMActivated = false; }
 
 /**
  * @brief deactivate ring polymer MD simulations

@@ -105,7 +105,7 @@ void ManostatInputParser::parseManostat(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto manostat = toLowerCopy(lineElements[2]);
+    const auto manostat = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum ManostatType;
 
@@ -220,7 +220,7 @@ void ManostatInputParser::parseIsotropy(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto isotropy = toLowerCopy(lineElements[2]);
+    const auto isotropy = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum Isotropy;
 

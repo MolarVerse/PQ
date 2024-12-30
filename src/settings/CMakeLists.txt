@@ -6,11 +6,11 @@ add_library(settings
     constraintSettings.cpp
     potentialSettings.cpp
     fileSettings.cpp
+    hybridSettings.cpp
     resetKineticsSettings.cpp
     timingsSettings.cpp
     forceFieldSettings.cpp
     qmSettings.cpp
-    qmmmSettings.cpp
     ringPolymerSettings.cpp
     outputFileSettings.cpp
     optimizerSettings.cpp
