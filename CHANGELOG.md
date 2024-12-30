@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
   for dftbplus QMMD
 - input keys in input file can now be given case-insensitive as well as with '-' or '_'
 - Checks for `CHANGELOG.md` modifications on pull requests and pulls
+- The reference output file is now decoupled from the .log output file and is given
+  its own input file keyword 'reference_file'
   
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
