@@ -40,13 +40,13 @@ def check_pq_output(base_name, folder_name, ref_folder="ref_data"):
     ref_traj = read_trajectory(
         ref_path + base_name + ".vel", traj_format="vel")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=1e-6)
 
     traj = read_trajectory(base_name + ".force", traj_format="force")
     ref_traj = read_trajectory(
         ref_path + base_name + ".force", traj_format="force")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=1e-6)
 
     traj = read_trajectory(base_name + ".chrg", traj_format="charge")
     ref_traj = read_trajectory(
