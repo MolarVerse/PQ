@@ -1,4 +1,4 @@
-Velocity rescaling thermostat:
+Stochastic Rescaling Manostat:
    Mattia Bernetti, Giovanni Bussi
    Pressure control using stochastic cell rescaling
    J. Chem. Phys. 21 September 2020; 153 (11): 114107
