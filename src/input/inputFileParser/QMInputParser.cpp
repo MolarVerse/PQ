@@ -102,7 +102,7 @@ void QMInputParser::parseQMMethod(
     using enum QMMethod;
     checkCommand(lineElements, lineNumber);
 
-    const auto method = toLowerCopy(lineElements[2]);
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("dftbplus" == method)
     {
