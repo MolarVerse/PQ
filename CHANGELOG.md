@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Enhancements
 
 - Nose-Hoover chain restarting now including old chain parameters
+- Integration test for DFTB+ calculation added
 
 <!-- insertion marker -->
 ## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
