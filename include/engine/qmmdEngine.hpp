@@ -47,7 +47,7 @@ namespace engine
        public:
         ~QMMDEngine() override = default;
 
-        void takeStep() override;
+        void calculateForces() override;
 
         void setQMRunner(const settings::QMMethod method);
         void setMaceQMRunner();

@@ -23,15 +23,17 @@
 #include "engine.hpp"
 
 using namespace engine;
+using namespace simulationBox;
+using namespace potential;
 
 #ifdef WITH_KOKKOS
 
 /**
  * @brief get reference to KokkosSimulationBox
  *
- * @return simulationBox::KokkosSimulationBox&
+ * @return KokkosSimulationBox&
  */
-simulationBox::KokkosSimulationBox &Engine::getKokkosSimulationBox()
+KokkosSimulationBox &Engine::getKokkosSimulationBox()
 {
     return _kokkosSimulationBox;
 }
@@ -39,9 +41,9 @@ simulationBox::KokkosSimulationBox &Engine::getKokkosSimulationBox()
 /**
  * @brief get reference to KokkosLennardJones
  *
- * @return potential::KokkosLennardJones&
+ * @return KokkosLennardJones&
  */
-potential::KokkosLennardJones &Engine::getKokkosLennardJones()
+KokkosLennardJones &Engine::getKokkosLennardJones()
 {
     return _kokkosLennardJones;
 }
@@ -49,22 +51,16 @@ potential::KokkosLennardJones &Engine::getKokkosLennardJones()
 /**
  * @brief get reference to KokkosCoulombWolf
  *
- * @return potential::KokkosCoulombWolf&
+ * @return KokkosCoulombWolf&
  */
-potential::KokkosCoulombWolf &Engine::getKokkosCoulombWolf()
-{
-    return _kokkosCoulombWolf;
-}
+KokkosCoulombWolf &Engine::getKokkosCoulombWolf() { return _kokkosCoulombWolf; }
 
 /**
  * @brief get reference to KokkosPotential
  *
- * @return potential::KokkosPotential&
+ * @return KokkosPotential&
  */
-potential::KokkosPotential &Engine::getKokkosPotential()
-{
-    return _kokkosPotential;
-}
+KokkosPotential &Engine::getKokkosPotential() { return _kokkosPotential; }
 
 /**
  * @brief initialize KokkosSimulationBox
@@ -73,7 +69,7 @@ potential::KokkosPotential &Engine::getKokkosPotential()
  */
 void Engine::initKokkosSimulationBox(const size_t numAtoms)
 {
-    _kokkosSimulationBox = simulationBox::KokkosSimulationBox(numAtoms);
+    _kokkosSimulationBox = KokkosSimulationBox(numAtoms);
 }
 
 /**
@@ -83,7 +79,7 @@ void Engine::initKokkosSimulationBox(const size_t numAtoms)
  */
 void Engine::initKokkosLennardJones(const size_t numAtomTypes)
 {
-    _kokkosLennardJones = potential::KokkosLennardJones(numAtomTypes);
+    _kokkosLennardJones = KokkosLennardJones(numAtomTypes);
 }
 
 /**
@@ -105,7 +101,7 @@ void Engine::initKokkosCoulombWolf(
     const double prefactor
 )
 {
-    _kokkosCoulombWolf = potential::KokkosCoulombWolf(
+    _kokkosCoulombWolf = KokkosCoulombWolf(
         coulombRadiusCutOff,
         kappa,
         wolfParameter1,
@@ -118,9 +114,6 @@ void Engine::initKokkosCoulombWolf(
 /**
  * @brief initialize KokkosPotential
  */
-void Engine::initKokkosPotential()
-{
-    _kokkosPotential = potential::KokkosPotential();
-}
+void Engine::initKokkosPotential() { _kokkosPotential = KokkosPotential(); }
 
 #endif

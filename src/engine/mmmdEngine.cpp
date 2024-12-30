@@ -40,41 +40,15 @@
 #ifdef WITH_KOKKOS
 #include "potential_kokkos.hpp"   // for KokkosPotential
 #endif
+
 using namespace engine;
 
 /**
- * @brief Takes one step in the simulation.
- *
- * @details The step is taken in the following order:
- * - First step of the integrator
- * - Apply SHAKE
- * - Update cell list
- * - Calculate forces
- * - Calculate intra non bonded forces
- * - Calculate virial
- * - Calculate constraint bond references
- * - calculate intra molecular virial correction
- * - Apply thermostat on forces
- * - Second step of the integrator
- * - Apply RATTLE
- * - Apply thermostat
- * - Calculate kinetic energy and momentum
- * - Apply manostat
- * - Reset temperature and momentum
+ * @brief calculate MM forces
  *
  */
-void MMMDEngine::takeStep()
+void MMMDEngine::calculateForces()
 {
-    _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
-
-#ifdef WITH_KOKKOS_NO
-    _kokkosVelocityVerlet.firstStep(*_simulationBox, _kokkosSimulationBox);
-#else
-    _integrator->firstStep(*_simulationBox);
-#endif
-
-    _constraints->applyShake(*_simulationBox);
-
     _cellList->updateCellList(*_simulationBox);
 
 #ifdef WITH_KOKKOS
@@ -94,34 +68,4 @@ void MMMDEngine::takeStep()
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
-
-    _constraints->applyDistanceConstraints(
-        *_simulationBox,
-        *_physicalData,
-        calculateTotalSimulationTime()
-    );
-
-    _constraints->calculateConstraintBondRefs(*_simulationBox);
-
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
-
-    _thermostat->applyThermostatOnForces(*_simulationBox);
-
-#ifdef WITH_KOKKOS
-    _kokkosVelocityVerlet.secondStep(*_simulationBox, _kokkosSimulationBox);
-#else
-    _integrator->secondStep(*_simulationBox);
-#endif
-
-    _constraints->applyRattle(*_simulationBox);
-
-    _thermostat->applyThermostat(*_simulationBox, *_physicalData);
-
-    _physicalData->calculateKinetics(*_simulationBox);
-
-    _manostat->applyManostat(*_simulationBox, *_physicalData);
-
-    _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
-
-    _thermostat->applyTemperatureRamping();
 }

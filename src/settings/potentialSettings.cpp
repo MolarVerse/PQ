@@ -85,7 +85,7 @@ std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
 void PotentialSettings::setNonCoulombType(const std::string_view &type)
 {
     using enum NonCoulombType;
-    const auto typeToLower = toLowerCopy(type);
+    const auto typeToLower = toLowerAndReplaceDashesCopy(type);
 
     if (typeToLower == "lj")
         _nonCoulombType = LJ;

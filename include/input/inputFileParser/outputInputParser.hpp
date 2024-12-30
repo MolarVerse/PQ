@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_PARSER_OUTPUT_HPP_
+#ifndef _OUTPUT_INPUT_PARSER_HPP_
 
-#define _INPUT_FILE_PARSER_OUTPUT_HPP_
+#define _OUTPUT_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -61,6 +61,7 @@ namespace input
         void parseVirialFilename(const pq::strings &, const size_t);
         void parseStressFilename(const pq::strings &, const size_t);
         void parseBoxFilename(const pq::strings &, const size_t);
+        void parseTimingsFilename(const pq::strings &, const size_t);
         void parseOptFilename(const pq::strings &, const size_t);
 
         void parseRPMDRestartFilename(const pq::strings &, const size_t);
@@ -73,4 +74,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_PARSER_OUTPUT_HPP_
+#endif   // _OUTPUT_INPUT_PARSER_HPP_

@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "qmmmSetup.hpp"
+#include "hybridSetup.hpp"
 
 #include <algorithm>     // for min, unique
 #include <cstddef>       // for size_t
@@ -30,28 +30,27 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-#include "engine.hpp"         // for QMMMMDEngine
-#include "exceptions.hpp"     // for InputFileException
-#include "fileSettings.hpp"   // for FileSettings
-#include "qmmmSettings.hpp"   // for QMMMSettings
-#include "qmmmmdEngine.hpp"   // for QMMMEngine
-#include "settings.hpp"       // for Settings
+#include "engine.hpp"           // for QMMMMDEngine
+#include "exceptions.hpp"       // for InputFileException
+#include "fileSettings.hpp"     // for FileSettings
+#include "hybridSettings.hpp"   // for HybridSettings
+#include "settings.hpp"         // for Settings
 
 #ifdef PYTHON_ENABLED
 #include "selection.hpp"   // for select
 #endif
 
-using setup::QMMMSetup;
+using setup::HybridSetup;
 using namespace settings;
 using namespace engine;
 using namespace customException;
 
 /**
- * @brief wrapper to build QMMMSetup object and call setup
+ * @brief wrapper to build HybridSetup object and call setup
  *
  * @param engine
  */
-void setup::setupQMMM(Engine &engine)
+void setup::setupHybrid(Engine &engine)
 {
     if (!Settings::isQMMMActivated())
         return;
@@ -59,22 +58,22 @@ void setup::setupQMMM(Engine &engine)
     engine.getStdoutOutput().writeSetup("QMMM setup");
     engine.getLogOutput().writeSetup("QMMM setup");
 
-    QMMMSetup qmmmSetup(dynamic_cast<QMMMMDEngine &>(engine));
+    HybridSetup qmmmSetup(engine);
     qmmmSetup.setup();
 }
 
 /**
- * @brief Construct a new QMMMSetup object
+ * @brief Construct a new HybridSetup object
  *
  * @param engine
  */
-QMMMSetup::QMMMSetup(QMMMMDEngine &engine) : _engine(engine){};
+HybridSetup::HybridSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup QMMM-MD
  *
  */
-void QMMMSetup::setup()
+void HybridSetup::setup()
 {
     setupQMCenter();
     setupQMOnlyList();
@@ -91,9 +90,9 @@ void QMMMSetup::setup()
  * added to the QM center list in the simulation box.
  *
  */
-void QMMMSetup::setupQMCenter()
+void HybridSetup::setupQMCenter()
 {
-    const auto qmCenterString = QMMMSettings::getQMCenterString();
+    const auto qmCenterString = HybridSettings::getCoreCenterString();
     const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
 
     _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
@@ -103,9 +102,9 @@ void QMMMSetup::setupQMCenter()
  * @brief setup QM only list
  *
  */
-void QMMMSetup::setupQMOnlyList()
+void HybridSetup::setupQMOnlyList()
 {
-    const auto qmOnlyListString = QMMMSettings::getQMOnlyListString();
+    const auto qmOnlyListString = HybridSettings::getCoreOnlyListString();
     const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
 
     _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
@@ -115,9 +114,9 @@ void QMMMSetup::setupQMOnlyList()
  * @brief setup MM only list
  *
  */
-void QMMMSetup::setupMMOnlyList()
+void HybridSetup::setupMMOnlyList()
 {
-    const auto mmOnlyListString = QMMMSettings::getMMOnlyListString();
+    const auto mmOnlyListString = HybridSettings::getNonCoreOnlyListString();
     const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
 
     _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
@@ -145,7 +144,7 @@ void QMMMSetup::setupMMOnlyList()
  * characters that are not digits, "-" or commas and the PQ build is compiled
  * without Python bindings.
  */
-std::vector<int> QMMMSetup::parseSelection(
+std::vector<int> HybridSetup::parseSelection(
     const std::string &selection,
     const std::string &key
 )
@@ -207,7 +206,7 @@ std::vector<int> QMMMSetup::parseSelection(
  * @throws customException::InputFileException if the selection string is an
  * empty list
  */
-std::vector<int> QMMMSetup::parseSelectionNoPython(
+std::vector<int> HybridSetup::parseSelectionNoPython(
     const std::string &selection,
     const std::string &key
 )

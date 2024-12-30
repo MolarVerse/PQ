@@ -41,7 +41,7 @@ using namespace constants;
  *
  * @return "j-couplings"
  */
-std::string JCouplingSection::keyword() { return "j-couplings"; }
+std::string JCouplingSection::keyword() { return "j_couplings"; }
 
 /**
  * @brief processes one line of the j-coupling section of the parameter file and

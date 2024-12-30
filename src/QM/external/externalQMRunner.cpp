@@ -39,16 +39,18 @@
 #include "vector3d.hpp"                      // for Vec3D
 
 using QM::ExternalQMRunner;
+using namespace simulationBox;
+using namespace physicalData;
+using namespace customException;
+using namespace settings;
+using namespace constants;
 
 /**
  * @brief run the qm engine
  *
  * @param simBox
  */
-void ExternalQMRunner::run(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
-)
+void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
 {
     writeCoordsFile(simBox);
 
@@ -70,13 +72,13 @@ void ExternalQMRunner::run(
  * @param box
  * @param physicalData
  *
- * @throw customException::QMRunnerException
+ * @throw QMRunnerException
  *  - if the force file cannot be opened
  *  - if the force file is empty
  */
 void ExternalQMRunner::readForceFile(
-    simulationBox::SimulationBox &box,
-    physicalData::PhysicalData   &physicalData
+    SimulationBox &box,
+    PhysicalData  &physicalData
 )
 {
     const std::string forceFileName = "qm_forces";
@@ -84,16 +86,16 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
-        throw customException::QMRunnerException(std::format(
+        throw QMRunnerException(std::format(
             "Cannot open {} force file \"{}\"",
-            string(settings::QMSettings::getQMMethod()),
+            string(QMSettings::getQMMethod()),
             forceFileName
         ));
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw customException::QMRunnerException(std::format(
+        throw QMRunnerException(std::format(
             "Empty {} force file \"{}\"",
-            string(settings::QMSettings::getQMMethod()),
+            string(QMSettings::getQMMethod()),
             forceFileName
         ));
 
@@ -101,7 +103,7 @@ void ExternalQMRunner::readForceFile(
 
     forceFile >> energy;
 
-    physicalData.setQMEnergy(energy * constants::_HARTREE_TO_KCAL_PER_MOL_);
+    physicalData.setQMEnergy(energy * _HARTREE_TO_KCAL_PER_MOL_);
 
     auto readForces = [&forceFile](auto &atom)
     {
@@ -109,9 +111,7 @@ void ExternalQMRunner::readForceFile(
 
         forceFile >> grad[0] >> grad[1] >> grad[2];
 
-        atom->setForce(
-            -grad * constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_
-        );
+        atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };
 
     std::ranges::for_each(box.getQMAtoms(), readForces);
@@ -119,4 +119,50 @@ void ExternalQMRunner::readForceFile(
     forceFile.close();
 
     ::system(std::format("rm -f {}", forceFileName).c_str());
+}
+
+/*******************************
+ *                             *
+ * standard getter and setters *
+ *                             *
+ *******************************/
+
+/**
+ * @brief getter for the script path
+ *
+ * @return const std::string&
+ */
+const std::string &ExternalQMRunner::getScriptPath() const
+{
+    return _scriptPath;
+}
+
+/**
+ * @brief getter for the singularity path
+ *
+ * @return const std::string&
+ */
+const std::string &ExternalQMRunner::getSingularity() const
+{
+    return _singularity;
+}
+
+/**
+ * @brief getter for the static build path
+ *
+ * @return const std::string&
+ */
+const std::string &ExternalQMRunner::getStaticBuild() const
+{
+    return _staticBuild;
+}
+
+/**
+ * @brief setter for the script path
+ *
+ * @param scriptPath
+ */
+void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
+{
+    _scriptPath = scriptPath;
 }

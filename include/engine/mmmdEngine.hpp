@@ -40,7 +40,7 @@ namespace engine
        public:
         ~MMMDEngine() override = default;
 
-        void takeStep() override;
+        void calculateForces() override;
     };
 
 }   // namespace engine

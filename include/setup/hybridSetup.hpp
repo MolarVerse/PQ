@@ -20,37 +20,42 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_KOKKOS
+#ifndef _HYBRID_SETUP_HPP_
 
-#include "mdEngine.hpp"
+#define _HYBRID_SETUP_HPP_
 
-using namespace engine;
+#include <string>   // for string
+#include <vector>   // for vector
 
-/**
- * @brief get reference to KokkosVelocityVerlet
- *
- * @return integrator::KokkosVelocityVerlet&
- */
-integrator::KokkosVelocityVerlet &MDEngine::getKokkosVelocityVerlet()
+#include "typeAliases.hpp"
+
+namespace setup
 {
-    return _kokkosVelocityVerlet;
-}
+    void setupHybrid(pq::Engine &);
 
-/**
- * @brief initialize KokkosVelocityVerlet
- *
- * @param dt time step
- * @param velocityFactor factor for velocity
- * @param timeFactor factor for time
- */
-void MDEngine::initKokkosVelocityVerlet(
-    const double dt,
-    const double velocityFactor,
-    const double timeFactor
-)
-{
-    _kokkosVelocityVerlet =
-        integrator::KokkosVelocityVerlet(dt, velocityFactor, timeFactor);
-}
+    /**
+     * @class HybridSetup
+     *
+     * @brief Setup Hybrid calculations e.g. QM/MM
+     *
+     */
+    class HybridSetup
+    {
+       private:
+        pq::Engine &_engine;
 
-#endif
+       public:
+        explicit HybridSetup(pq::Engine &engine);
+
+        void setup();
+        void setupQMCenter();
+        void setupQMOnlyList();
+        void setupMMOnlyList();
+
+        std::vector<int> parseSelection(const std::string &, const std::string &);
+        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
+    };
+
+}   // namespace setup
+
+#endif   // _HYBRID_SETUP_HPP_

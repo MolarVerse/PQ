@@ -89,7 +89,7 @@ TEST_F(TestParameterFileReader, determineSection)
         typeid(input::parameterFile::NonCoulombicsSection)
     );
 
-    const auto *section6 = reader->determineSection({"j-couplings"});
+    const auto *section6 = reader->determineSection({"j_couplings"});
     EXPECT_EQ(
         typeid(*section6),
         typeid(input::parameterFile::JCouplingSection)
@@ -137,7 +137,7 @@ TEST_F(TestParameterFileReader, deleteSection)
     reader->deleteSection(section5);
     EXPECT_EQ(reader->getParameterFileSections().size(), 1);
 
-    const auto *section6 = reader->determineSection({"j-couplings"});
+    const auto *section6 = reader->determineSection({"j_couplings"});
     reader->deleteSection(section6);
     EXPECT_EQ(reader->getParameterFileSections().size(), 0);
 }

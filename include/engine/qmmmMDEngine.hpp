@@ -20,42 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_SETUP_HPP_
+#ifndef _QM_MM_MD_ENGINE_HPP_
 
-#define _QMMM_SETUP_HPP_
+#define _QM_MM_MD_ENGINE_HPP_
 
-#include <string>   // for string
-#include <vector>   // for vector
+#include "hybridMDEngine.hpp"
 
-#include "typeAliases.hpp"
-
-namespace setup
+namespace engine
 {
-    void setupQMMM(pq::Engine &);
-
     /**
-     * @class QMSetup
+     * @brief class QMMMMDEngine
      *
-     * @brief Setup QM
+     * @details This class is a class that inherits from HybridMDEngine
+     * and is used to implement the QM/MM MD engine.
      *
      */
-    class QMMMSetup
+    class QMMMMDEngine : public HybridMDEngine
     {
-       private:
-        pq::QMMMMDEngine &_engine;
-
        public:
-        explicit QMMMSetup(pq::QMMMMDEngine &engine);
+        QMMMMDEngine()  = default;
+        ~QMMMMDEngine() = default;
 
-        void setup();
-        void setupQMCenter();
-        void setupQMOnlyList();
-        void setupMMOnlyList();
-
-        std::vector<int> parseSelection(const std::string &, const std::string &);
-        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
+        void calculateForces() override {};   // TODO: implement
     };
 
-}   // namespace setup
+}   // namespace engine
 
-#endif   // _QMMM_SETUP_HPP_
+#endif   // _QM_MM_MD_ENGINE_HPP_

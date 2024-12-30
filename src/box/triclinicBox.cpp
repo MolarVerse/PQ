@@ -109,11 +109,40 @@ void TriclinicBox::calculateTransformationMatrix()
  */
 void TriclinicBox::applyPBC(Vec3D &position) const
 {
+    const auto originalPosition = position;
+
     auto fractionalPosition = inverse(_boxMatrix) * position;
 
     fractionalPosition -= round(fractionalPosition);
 
     position = _boxMatrix * fractionalPosition;
+
+    const auto distance = norm(position);
+
+    Vec3D  analyticPosition   = position;
+    double analyticalDistance = distance;
+
+    if (distance > 0.5 * getMinimalBoxDimension())
+    {
+        for (int i = -1; i <= 1; ++i)
+            for (int j = -1; j <= 1; ++j)
+                for (int k = -1; k <= 1; ++k)
+                {
+                    const auto shift = _boxMatrix * Vec3D{i, j, k};
+
+                    const auto newPosition = originalPosition + shift;
+
+                    const auto newDistance = norm(newPosition);
+
+                    if (newDistance < analyticalDistance)
+                    {
+                        analyticPosition   = newPosition;
+                        analyticalDistance = newDistance;
+                    }
+                }
+    }
+
+    position = analyticPosition;
 }
 
 /**
@@ -234,6 +263,16 @@ std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
         Vec3D{box_x, box_y, box_z},
         Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_
     );
+}
+
+/**
+ * @brief get the minimal box dimension
+ *
+ * @return double
+ */
+double TriclinicBox::getMinimalBoxDimension() const
+{
+    return minimum(diagonal(_boxMatrix));
 }
 
 /**

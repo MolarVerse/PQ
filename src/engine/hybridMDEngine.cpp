@@ -20,32 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QMMM_MD_ENGINE_HPP_
-
-#define _QMMM_MD_ENGINE_HPP_
-
-#include "mmmdEngine.hpp"   // for MMEngine
-#include "qmmdEngine.hpp"   // for QMEngine
-
-#include <memory>   // for unique_ptr
-
-namespace engine
-{
-
-    /**
-     * @class QMMMMDEngine
-     *
-     * @brief Contains all the information needed to run a QMMM MD simulation
-     *
-     * @note This class is a concrete class and inherits from both QMMDEngine and MMMDEngine
-     *
-     */
-    class QMMMMDEngine : public QMMDEngine, public MMMDEngine
-    {
-      public:
-        void takeStep() override;
-    };
-
-}   // namespace engine
-
-#endif   // _QMMM_MD_ENGINE_HPP_
+#include "hybridMDEngine.hpp"

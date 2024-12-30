@@ -81,9 +81,9 @@ std::string settings::string(const LREnum method)
 void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
 {
     using enum OptimizerType;
-    const auto optimizerLower = toLowerCopy(optimizer);
+    const auto optimizerLower = toLowerAndReplaceDashesCopy(optimizer);
 
-    if ("steepest-descent" == optimizerLower)
+    if ("steepest_descent" == optimizerLower)
         setOptimizer(OptimizerType::STEEPEST_DESCENT);
 
     else if ("adam" == optimizerLower)
@@ -112,18 +112,18 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
 {
     using enum LREnum;
 
-    const auto methodLower = toLowerCopy(method);
+    const auto methodLower = toLowerAndReplaceDashesCopy(method);
 
     if ("constant" == methodLower)
         setLearningRateStrategy(CONSTANT);
 
-    else if ("constant-decay" == methodLower)
+    else if ("constant_decay" == methodLower)
         setLearningRateStrategy(CONSTANT_DECAY);
 
-    else if ("exponential-decay" == methodLower)
+    else if ("exponential_decay" == methodLower)
         setLearningRateStrategy(EXPONENTIAL_DECAY);
 
-    else if ("linesearch-wolfe" == methodLower)
+    else if ("linesearch_wolfe" == methodLower)
         setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else

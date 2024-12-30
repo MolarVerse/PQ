@@ -27,8 +27,10 @@
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
+#include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "forceFieldSetup.hpp"        // for setupForceField
 #include "guffDatReader.hpp"          // for readGuffDat, readInput
+#include "hybridSetup.hpp"            // for setupQMMM
 #include "inputFileReader.hpp"        // for readInputFile
 #include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
@@ -41,8 +43,6 @@
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
 #include "qmmdEngine.hpp"             // for QMMDEngine
-#include "qmmmSetup.hpp"              // for setupQMMM
-#include "qmmmmdEngine.hpp"           // for QMMMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
 #include "ringPolymerEngine.hpp"      // for RingPolymerEngine
@@ -191,9 +191,10 @@ void setup::setupEngine(Engine &engine)
         setupPotential(engine);
 
         setupIntraNonBonded(engine);
-
-        setupForceField(engine);
     }
+
+    if (ForceFieldSettings::isActive())
+        setupForceField(engine);
 
     setupConstraints(engine);
 
@@ -201,7 +202,7 @@ void setup::setupEngine(Engine &engine)
         setupRingPolymer(engine);
 
     if (Settings::isQMMMActivated())
-        setupQMMM(engine);
+        setupHybrid(engine);
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
