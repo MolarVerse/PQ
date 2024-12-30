@@ -27,6 +27,7 @@
 #include <iostream>    // for cout
 #include <string>      // for string
 
+#include "references.hpp"           // for ReferencesOutput
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 using references::ReferencesOutput;
@@ -64,6 +65,7 @@ void ReferencesOutput::writeReferencesFile()
     fp << '\n';
     // clang-format on
 
+    printReference(_PQ_FILE_);
     std::ranges::for_each(_referenceFileNames, printReference);
 
     // clang-format off

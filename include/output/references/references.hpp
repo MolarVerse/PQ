@@ -27,6 +27,9 @@
 namespace references
 {
     // clang-format off
+    // PQ Software
+    static constexpr char _PQ_FILE_[] = "pq.ref";
+
     // Time Integrators
     static constexpr char _VELOCITY_VERLET_FILE_[] = "velocity_verlet.ref";
 
