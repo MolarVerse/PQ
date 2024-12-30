@@ -55,6 +55,7 @@ namespace settings
         static inline std::string _forceFile  = defaults::_FORCE_FILE_DEFAULT_;
         static inline std::string _chargeFile = defaults::_CHARGE_FILE_DEFAULT_;
         static inline std::string _logFile    = defaults::_LOG_FILE_DEFAULT_;
+        static inline std::string _refFile    = defaults::_REF_FILE_DEFAULT_;
         static inline std::string _infoFile   = defaults::_INFO_FILE_DEFAULT_;
 
         static inline std::string _virialFile = defaults::_VIRIAL_FILE_DEFAULT_;
@@ -98,6 +99,7 @@ namespace settings
         static void setForceFileName(const std::string_view);
         static void setChargeFileName(const std::string_view);
         static void setLogFileName(const std::string_view);
+        static void setRefFileName(const std::string_view);
         static void setInfoFileName(const std::string_view);
 
         static void setVirialFileName(const std::string_view);
@@ -133,6 +135,7 @@ namespace settings
         [[nodiscard]] static std::string getForceFileName();
         [[nodiscard]] static std::string getChargeFileName();
         [[nodiscard]] static std::string getLogFileName();
+        [[nodiscard]] static std::string getRefFileName();
         [[nodiscard]] static std::string getInfoFileName();
 
         [[nodiscard]] static std::string getVirialFileName();
