@@ -11,6 +11,12 @@ All notable changes to this project will be documented in this file.
   for dftbplus QMMD
 - input keys in input file can now be given case-insensitive as well as with '-' or '_'
 - Checks for `CHANGELOG.md` modifications on pull requests and pulls
+- Citations added in the .ref output file for the available QM programs,
+  the v-Verlet integrator, the RATTLE algorithm and PQ itself
+
+### Bug Fixes
+
+- BibTeX entries are now included in the .ref output file
   
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
