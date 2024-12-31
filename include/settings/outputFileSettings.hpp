@@ -84,7 +84,6 @@ namespace settings
         static void replaceDefaultValues(const std::string &prefix);
 
         [[nodiscard]] static std::string determineMostCommonPrefix();
-        [[nodiscard]] static std::string getReferenceFileName();
 
         /***************************
          * standard setter methods *
