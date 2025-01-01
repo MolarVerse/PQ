@@ -56,24 +56,26 @@ void LangevinThermostat::applyLangevin(SimulationBox& simBox)
     const auto* const massPtr  = simBox.getMassesPtr();
     auto* const       velPtr   = simBox.getVelPtr();
 
+    const auto factor1 = 0.5 * timeStep * _FS_TO_S_ * _friction;
+    const auto factor2 = 0.5 * timeStep * _FS_TO_S_ * _sigma;
+
     // clang-format off
-    #pragma omp target teams distribute parallel for collapse(2) \
+    #pragma omp target teams distribute parallel for \
                 is_device_ptr(massPtr, velPtr)
+    //clang-format on
     for(size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
         const auto mass = massPtr[i];
-        const auto propagationFactor = 0.5 * timeStep * _FS_TO_S_ / mass;
+        const auto propagationFactor = factor2 / std::sqrt(mass);
 
         for(size_t j = 0; j < 3; ++j)
         {
-            const auto randomFactor = std::normal_distribution<double>(0.0, 1.0)(_generator);
-            const auto velocity = velPtr[i * 3 + j];
-            const auto dv = -propagationFactor * _friction * mass * velocity;
+            const auto index  = i * 3 + j;
+            const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
 
-            velPtr[i*3 + j] += (propagationFactor * _sigma * std::sqrt(mass) * randomFactor + dv);
+            velPtr[index] += (propagationFactor * random - factor1 * velPtr[index]);
         }
     }
-    //clang-format on
 
     simBox.deFlattenVelocities();
 }
