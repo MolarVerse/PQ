@@ -52,22 +52,24 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
     auto* const       forcesPtr = simBox.getForcesPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
 
+    const auto massFactor = dt * _V_VERLET_VELOCITY_FACTOR_;
+    const auto posFactor  = dt * _FS_TO_S_;
+
     // clang-format off
     #pragma omp target teams distribute parallel for                \
-                collapse(2)                                         \
                 is_device_ptr(velPtr, posPtr, massesPtr, forcesPtr)
-    for(size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    // clang-format on
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
     {
-        const auto mass = massesPtr[i];
+        const auto massDt = massesPtr[i] / massFactor;
 
-        for(size_t j = 0; j < 3; ++j)
+        for (size_t j = 0; j < 3; ++j)
         {
-            velPtr[3 * i + j] += dt * forcesPtr[3 * i + j] / mass * _V_VERLET_VELOCITY_FACTOR_;
-            posPtr[3 * i + j] += dt * velPtr[3 * i + j] * _FS_TO_S_;
-            forcesPtr[3 * i + j] = 0.0;
+            velPtr[3 * i + j]    += forcesPtr[3 * i + j] / massDt;
+            posPtr[3 * i + j]    += velPtr[3 * i + j] * posFactor;
+            forcesPtr[3 * i + j]  = 0.0;
         }
     }
-    // clang-format on
 
     simBox.deFlattenVelocities();
     simBox.deFlattenPositions();
@@ -101,18 +103,19 @@ void VelocityVerlet::secondStep(SimulationBox& simBox)
     const auto* const massesPtr = simBox.getMassesPtr();
     const auto* const forcesPtr = simBox.getForcesPtr();
 
+    const auto factor = dt * _V_VERLET_VELOCITY_FACTOR_;
+
     // clang-format off
     #pragma omp target teams distribute parallel for                \
-                collapse(2)                                         \
                 is_device_ptr(velPtr, massesPtr, forcesPtr)
-    for(size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
-    {
-        const auto mass = massesPtr[i];
-
-        for(size_t j = 0; j < 3; ++j)
-            velPtr[3 * i + j] += dt * forcesPtr[3 * i + j] / mass * _V_VERLET_VELOCITY_FACTOR_;
-    }
     // clang-format on
+    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    {
+        const auto massDt = massesPtr[i] / factor;
+
+        for (size_t j = 0; j < 3; ++j)
+            velPtr[3 * i + j] += forcesPtr[3 * i + j] / massDt;
+    }
 
     simBox.deFlattenVelocities();
 
