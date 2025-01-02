@@ -82,6 +82,8 @@ namespace potential
      * @param nAtoms the number of atoms
      * @param nAtomTypes the number of atom types
      * @param nonCoulParamsOffset the offset of the non-coulomb parameters
+     * @param maxNumAtomTypes the maximum number of atom types
+     * @param numMolTypes the number of molecule types
      */
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     void bruteForce(
@@ -101,12 +103,16 @@ namespace potential
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset
+        const size_t        nonCoulParamsOffset,
+        const size_t        maxNumAtomTypes,
+        const size_t        numMolTypes
     )
     {
         __DEBUG_LOCATION__();
 
         const auto coulCutOffSquared = coulCutOff * coulCutOff;
+        const auto indexHelper1 = numMolTypes * numMolTypes * maxNumAtomTypes;
+        const auto indexHelper2 = numMolTypes * maxNumAtomTypes;
 
         // clang-format off
         #pragma omp target teams distribute parallel for collapse(2)
@@ -171,9 +177,24 @@ namespace potential
                         auto combinedIndex      = -1;
 
                         // TODO: check here all FF types combined
-                        if constexpr (std::is_same_v<NonCoulombType, LennardJonesFF>){
+                        if constexpr (std::is_same_v<NonCoulombType, LennardJonesFF> ||
+                                      std::is_same_v<NonCoulombType, BuckinghamFF> ||
+                                      std::is_same_v<NonCoulombType, MorseFF>)
+                        {
+                            
                             combinedCutoffIndex = atomTypes[atomIndex_i] * nAtomTypes + atomTypes[atomIndex_j];
-                            combinedIndex = atomTypes[atomIndex_i] * nAtomTypes * nonCoulParamsOffset + atomTypes[atomIndex_j] * nonCoulParamsOffset;
+                            combinedIndex = (atomTypes[atomIndex_i] * nAtomTypes + atomTypes[atomIndex_j]) * nonCoulParamsOffset;
+
+                        } else if constexpr (std::is_same_v<NonCoulombType, LennardJonesGuff> ||
+                                             std::is_same_v<NonCoulombType, BuckinghamGuff> ||
+                                             std::is_same_v<NonCoulombType, MorseGuff>)
+                        {
+                            auto index = molTypes[mol_i] * indexHelper1;
+                            index += molTypes[mol_j] * indexHelper2;
+                            index += atomTypes[atomIndex_i] * numMolTypes;
+                            index += atomTypes[atomIndex_j];
+                            combinedCutoffIndex = index;
+                            combinedIndex = index * nonCoulParamsOffset;
                         }
                         else
                             throw customException::NotImplementedException(

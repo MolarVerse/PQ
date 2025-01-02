@@ -122,7 +122,9 @@ void Potential::calculateForces(
             rcCutOff,
             simBox.getNumberOfAtoms(),
             _nonCoulNumberOfTypes,
-            _nonCoulParamsOffset
+            _nonCoulParamsOffset,
+            _maxNumAtomTypes,
+            _numMolTypes
         );
 
 #ifdef __PQ_DEBUG__
@@ -281,9 +283,29 @@ void Potential::setCoulombParamVectors(std::vector<Real> coulParams)
     _coulParams = std::move(coulParams);
 }
 
+/**
+ * @brief set maximum number of atom types
+ *
+ * @param maxNumAtomTypes
+ */
+void Potential::setMaxNumAtomTypes(const size_t maxNumAtomTypes)
+{
+    _maxNumAtomTypes = maxNumAtomTypes;
+}
+
+/**
+ * @brief set the number of molecule types
+ *
+ * @param numMolTypes
+ */
+void Potential::setNumMolTypes(const size_t numMolTypes)
+{
+    _numMolTypes = numMolTypes;
+}
+
 /***************************
  *                         *
- * standard setter methods *
+ * standard getter methods *
  *                         *
  ***************************/
 

@@ -55,7 +55,10 @@ namespace setup
     void setupFlattenedData(pq::Engine &engine);
 
     template <typename T>
-    void setupFlattenedNonCoulPot(pq::Potential *const);
+    void setupFlattenedNonCoulPotFF(pq::Potential *const);
+
+    template <typename T>
+    void setupFlattenedNonCoulPotGuff(pq::Potential *const, pq::SimBox &);
 #endif
 }   // namespace setup
 

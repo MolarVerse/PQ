@@ -70,7 +70,9 @@ namespace potential
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset
+        const size_t        nonCoulParamsOffset,
+        const size_t        maxNumAtomTypes,
+        const size_t        numMolTypes
     );
 
     /**
@@ -92,6 +94,9 @@ namespace potential
 
         size_t _nonCoulParamsOffset;
         size_t _nonCoulNumberOfTypes;
+
+        size_t _maxNumAtomTypes;
+        size_t _numMolTypes;
 
 #ifdef __PQ_GPU__
         Real *_nonCoulParamsDevice;
@@ -128,6 +133,9 @@ namespace potential
             const size_t      nonCoulNumberOfTypes
         );
 
+        void setMaxNumAtomTypes(const size_t maxNumAtomTypes);
+        void setNumMolTypes(const size_t numMolTypes);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -160,7 +168,9 @@ namespace potential
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset
+        const size_t        nonCoulParamsOffset,
+        const size_t        maxNumAtomTypes,
+        const size_t        numMolTypes
     );
 
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
@@ -181,7 +191,9 @@ namespace potential
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset
+        const size_t        nonCoulParamsOffset,
+        const size_t        maxNumAtomTypes,
+        const size_t        numMolTypes
     );
 
     template <typename BoxType>

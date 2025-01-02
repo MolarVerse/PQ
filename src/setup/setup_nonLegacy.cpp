@@ -73,20 +73,29 @@ void setup::setupFlattenedData(Engine &engine)
     if (ForceFieldSettings::isActive())
     {
         if (PotentialSettings::getNonCoulombType() == LJ)
-            setupFlattenedNonCoulPot<LennardJones>(pot);
+            setupFlattenedNonCoulPotFF<LennardJones>(pot);
         else if (PotentialSettings::getNonCoulombType() == BUCKINGHAM)
-            setupFlattenedNonCoulPot<Buckingham>(pot);
+            setupFlattenedNonCoulPotFF<Buckingham>(pot);
         else if (PotentialSettings::getNonCoulombType() == MORSE)
-            setupFlattenedNonCoulPot<Morse>(pot);
+            setupFlattenedNonCoulPotFF<Morse>(pot);
         else
             customException::UserInputException(
                 "NonCoulombType not implemented yet"
             );
     }
     else
-        customException::UserInputException(
-            "NonCoulombType only implemented for ForceField at the moment"
-        );
+    {
+        if (PotentialSettings::getNonCoulombType() == LJ)
+            setupFlattenedNonCoulPotGuff<LennardJones>(pot, simBox);
+        else if (PotentialSettings::getNonCoulombType() == BUCKINGHAM)
+            setupFlattenedNonCoulPotGuff<Buckingham>(pot, simBox);
+        else if (PotentialSettings::getNonCoulombType() == MORSE)
+            setupFlattenedNonCoulPotGuff<Morse>(pot, simBox);
+        else
+            customException::UserInputException(
+                "NonCoulombType only implemented for ForceField at the moment"
+            );
+    }
 
     pot->setCoulombParamVectors(pot->getCoulombPotential().copyParamsVector());
 
