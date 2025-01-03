@@ -166,6 +166,11 @@ void MDEngine::takeStepAfterForces()
     _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
 
     _thermostat->applyTemperatureRamping();
+
+    if (Settings::isQMActivated())
+    {
+        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+    }
 }
 
 /**
