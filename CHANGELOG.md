@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 - input keys in input file can now be given case-insensitive as well as with '-' or '_'
 - Checks for `CHANGELOG.md` modifications on pull requests and pulls
 
+### Bug Fixes
+
+- Fixed QM atoms update for QM-MD calculations
+
 ### Testing
 
 - Integration test added for DFTB+ calculation
