@@ -16,9 +16,13 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Fixed QM atoms update for QM-MD calculations
 - BibTeX entries are now included in the .ref output file
-  
-<!-- insertion marker -->
+
+### Testing
+
+- Integration test added for DFTB+ calculation
+
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
 ### Bug Fixes

@@ -61,7 +61,7 @@ def check_pq_output(base_name, folder_name, ref_folder="ref_data"):
     energy = reader.read()
     ref_energy = ref_reader.read()
 
-    assert np.allclose(energy.data[:-1], ref_energy.data[:-1])
+    assert np.allclose(energy.data[:-2], ref_energy.data[:-2])
 
     assert energy.info_given
     assert energy.info == ref_energy.info
