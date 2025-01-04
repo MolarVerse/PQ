@@ -9,12 +9,17 @@ All notable changes to this project will be documented in this file.
 - Nose-Hoover chain restarting now including old chain parameters
 - 'dftb_file' keyword added to change default input file dtfb.template
   for dftbplus QMMD
-- input keys in input file can now be given case-insensitive as well as with '-' or '_'
+- Input keys in input file can now be given case-insensitive as well as with '-' or '_'
 - Checks for `CHANGELOG.md` modifications on pull requests and pulls
 
 ### Bug Fixes
 
-- full anistrop coupling works now with stochastic cell rescaling manostat
+- Full anistrop coupling works now with stochastic cell rescaling manostat
+- Fixed QM atoms update for QM-MD calculations
+
+### Testing
+
+- Integration test added for DFTB+ calculation
   
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
