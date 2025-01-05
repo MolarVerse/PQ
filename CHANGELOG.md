@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### CI
+
+- CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
+
 ### Bug Fixes
 
 - CI for Release build updated to install all integration test dependencies
