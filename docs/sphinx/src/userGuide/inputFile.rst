@@ -356,6 +356,20 @@ The ``momentum_file`` keyword sets the name for the :ref:`momentumFile`, which s
 
 .. centered:: *default value* = "default.mom"
 
+.. _referencefilekey:
+
+Reference File
+=============
+
+.. admonition:: Key
+   :class: tip
+
+    reference_file = {file} -> "default.ref"
+
+The ``reference_file`` keyword sets the name for the :ref:`refFile`, which lists the sources to be cited when publishing data with the chosen settings.
+
+.. centered:: *default value* = "default.ref"
+
 .. _rstfilekey:
 
 Restart File

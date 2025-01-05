@@ -72,6 +72,7 @@ noncoulomb                  false
 output_freq                 false
 file_prefix                 false
 output_file                 false
+ref_file                    false
 info_file                   false
 energy_file                 false
 instant_energy_file         false

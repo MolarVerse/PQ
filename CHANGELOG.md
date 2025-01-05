@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- The reference output file is now decoupled from the .log output file and is given
+  its own input file keyword 'reference_file'
+
 ### CI
 
 - CI workflows removed `on push` events
@@ -31,14 +36,14 @@ All notable changes to this project will be documented in this file.
 ### Testing
 
 - Integration test added for DFTB+ calculation
-  
+
 <!-- insertion marker -->
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
 ### Bug Fixes
 
 - Minimal Image Convention for triclinic cells now implemented with analytic extension
-  
+
 ## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
 
 ### Bug Fixes

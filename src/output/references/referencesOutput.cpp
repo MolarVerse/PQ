@@ -39,7 +39,7 @@ using namespace settings;
  */
 void ReferencesOutput::writeReferencesFile()
 {
-    const auto filename = OutputFileSettings::getReferenceFileName();
+    const auto filename = OutputFileSettings::getRefFileName();
 
     std::ofstream fp(filename);
 

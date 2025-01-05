@@ -48,6 +48,7 @@ namespace input
         void parseFilePrefix(const pq::strings &, const size_t);
 
         void parseLogFilename(const pq::strings &, const size_t);
+        void parseRefFilename(const pq::strings &, const size_t);
         void parseInfoFilename(const pq::strings &, const size_t);
         void parseEnergyFilename(const pq::strings &, const size_t);
         void parseInstantEnergyFilename(const pq::strings &, const size_t);
