@@ -46,6 +46,29 @@ TEST(TestStaticMatrix3x3, unaryMinusOperator)
     );
 }
 
+TEST(TestStaticMatrix3x3, subtractMatrices)
+{
+    const StaticMatrix3x3<double> lhs{
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7, 8, 9}
+    };
+    const StaticMatrix3x3<double> rhs{
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7, 8, 9}
+    };
+
+    EXPECT_EQ(
+        lhs - rhs,
+        StaticMatrix3x3<double>(
+            {0.0, 0.0, 0.0},
+            {0.0, 0.0, 0.0},
+            {0.0, 0.0, 0.0}
+        )
+    );
+}
+
 TEST(TestStaticMatrix3x3, addAssignmentOperator)
 {
     StaticMatrix3x3<double> lhs{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7, 8, 9}};
@@ -132,6 +155,26 @@ TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithScalar)
         )
     );
     EXPECT_EQ(scalar * mat, mat * scalar);
+}
+
+TEST(TestStaticMatrix3x3, addStaticMatrixWithScalar)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0}
+    };
+
+    const double scalar = 3.0;
+
+    EXPECT_EQ(
+        mat + scalar,
+        StaticMatrix3x3<double>(
+            {4.0, 5.0, 6.0},
+            {7.0, 8.0, 9.0},
+            {10.0, 11.0, 12.0}
+        )
+    );
 }
 
 TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithVector3D)
@@ -366,4 +409,71 @@ TEST(TestStaticMatrix3x3, getDiagonalVectorFromMatrix)
     };
 
     EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
+}
+
+TEST(TestStaticMatrix3x3, getExponentialMatrix)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 0.0, 0.0},
+        {0.0, 2.0, 0.0},
+        {0.0, 0.0, 3.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        exp(mat),
+        StaticMatrix3x3<double>(
+            {exp(1.0), exp(0.0), exp(0.0)},
+            {exp(0.0), exp(2.0), exp(0.0)},
+            {exp(0.0), exp(0.0), exp(3.0)}
+        ),
+        1e-6
+    );
+}
+
+TEST(TestStaticMatrix3x3, getKroneckerDeltaMatrix)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    auto delta = kroneckerDeltaMatrix<double>();
+
+    EXPECT_EQ(delta, mat);
+}
+
+TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
+{
+    const StaticMatrix3x3<double> mat{
+        {1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        expPade(mat),
+        StaticMatrix3x3<double>(
+            {exp(1.0), 0.0, 0.0},
+            {0.0, exp(1.0), 0.0},
+            {0.0, 0.0, exp(1.0)}
+        ),
+        1e-3
+    );
+
+    const StaticMatrix3x3<double> mat2{
+        {1.0, 1.0, 1.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    EXPECT_MATRIX_NEAR(
+        expPade(mat2),
+        StaticMatrix3x3<double>(
+            {exp(1.0), exp(1.0), exp(1.0)},
+            {0.0, exp(1.0), 0.0},
+            {0.0, 0.0, exp(1.0)}
+        ),
+        1e-3
+    );
 }

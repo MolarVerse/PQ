@@ -51,6 +51,8 @@ namespace manostat
 
         void         calculatePressure(const pq::SimBox &, pq::PhysicalData &);
         virtual void applyManostat(pq::SimBox &, pq::PhysicalData &);
+        
+        void rotateMu(linearAlgebra::tensor3D &mu) const;
 
         virtual pq::ManostatType getManostatType() const;
         virtual pq::Isotropy     getIsotropy() const;

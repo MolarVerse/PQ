@@ -1,9 +1,16 @@
-name: KOKKOS BUILD
+name: RELEASE BUILD
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'main'
+      - '*'
+    paths:
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
   workflow_dispatch:
 
 jobs:
@@ -24,7 +31,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: install coverage
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+
+      - name: install python dependencies
         run: |
           python -m pip install numpy
         shell: bash
@@ -40,9 +52,14 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Run integration Tests
+      - name: Install Integration Test Dependencies
         run: |
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
+          conda install conda-forge::gsl
+          conda install conda-forge::dftbplus
+
+      - name: Integration Tests
+        run: |
           pytest integration_tests

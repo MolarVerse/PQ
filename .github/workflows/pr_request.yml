@@ -1,0 +1,32 @@
+name: PR Target Branch Update Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+jobs:
+  check-target-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR source branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch target branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+      - name: Compare commits
+        run: |
+          # Get the latest commit hashes
+          target_commit_hash=$(git rev-parse origin/${{ github.base_ref }})
+
+          # Compare the commits
+          if ( git --no-pager log --sparse | grep -q $target_commit_hash ); then
+            echo "The target branch has new commits since the PR was created."
+            exit 1
+          else
+            echo "No new commits on the target branch since the PR was created."
+          fi
