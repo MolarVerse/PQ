@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
+
 ### Enhancements
 
 - The reference output file is now decoupled from the .log output file and is given
@@ -23,7 +26,6 @@ All notable changes to this project will be documented in this file.
 - CI for Release build updated to install all integration test dependencies
 - Full anistrop coupling works now with stochastic cell rescaling manostat
 
-<!-- insertion marker -->
 ## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
 
 ### Enhancements
