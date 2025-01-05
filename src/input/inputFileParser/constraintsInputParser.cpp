@@ -30,11 +30,14 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
+#include "references.hpp"           // for ReferencesOutput
+#include "referencesOutput.hpp"     // for ReferencesOutput
 #include "exceptions.hpp"           // for InputFileException
 
 using namespace input;
 using namespace engine;
 using namespace settings;
+using namespace references;
 using namespace customException;
 
 /**
@@ -112,6 +115,7 @@ void ConstraintsInputParser::parseShakeActivated(
     {
         constraints.activateShake();
         ConstraintSettings::activateShake();
+        ReferencesOutput::addReferenceFile(_RATTLE_FILE_);
     }
     else if (lineElements[2] == "off")
     {

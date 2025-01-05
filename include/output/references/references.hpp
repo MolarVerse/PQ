@@ -27,11 +27,29 @@
 namespace references
 {
     // clang-format off
+    // PQ Software
+    static constexpr char _PQ_FILE_[] = "pq.ref";
+
+    // Time Integrators
+    static constexpr char _VELOCITY_VERLET_FILE_[] = "velocity_verlet.ref";
+
+    // Thermostats and Manostats
     static constexpr char _BERENDSEN_FILE_[]            = "berendsen.ref";
     static constexpr char _VELOCITY_RESCALING_FILE_[]   = "velocity_rescaling.ref";
     static constexpr char _NOSE_HOOVER_CHAIN_FILE_[]    = "nose_hoover_chain.ref";
     static constexpr char _LANGEVIN_FILE_[]             = "langevin.ref";
     static constexpr char _STOCHASTIC_RESCALING_FILE_[] = "stochastic_rescaling.ref";
+
+    // QM Programs
+    static constexpr char _DFTBPLUS_FILE_[]  = "dftbplus.ref";
+    static constexpr char _PYSCF_FILE_[]     = "pyscf.ref";
+    static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
+    static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
+    static constexpr char _MACEOFF_FILE_[]   = "maceoff.ref";
+
+    // Constraint Dynamics
+    static constexpr char _RATTLE_FILE_[] = "rattle.ref";
+
     // clang-format on
 
 }   // namespace references

@@ -38,30 +38,31 @@ using namespace settings;
  * object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 
- * 1) output_freq <size_t> 
- * 2) file_prefix <string> 
- * 3) output_file <string> 
- * 4) info_file <string> 
- * 5) energy_file <string> 
- * 6) instant_energy_file <string> 
- * 7) traj_file <string> 
- * 8) vel_file <string> 
- * 9) force_file <string> 
- * 10) restart_file <string> 
- * 11) charge_file <string> 
- * 12) momentum_file <string> 
- * 13) virial_file <string> 
- * 14) stress_file <string> 
- * 15) box_file <string> 
- * 16) timings_file <string> 
- * 17) opt_file <string>
- * 18) rpmd_restart_file <string> 
- * 19) rpmd_traj_file <string>
- * 20) rpmd_vel_file <string>
- * 21) rpmd_force_file <string>
- * 22) rpmd_charge_file <string>
- * 23) rpmd_energy_file <string>
+ * _keywordRequiredMap and _keywordCountMap:
+ * 1)  output_freq <size_t>
+ * 2)  file_prefix <string>
+ * 3)  output_file <string>
+ * 4)  ref_file <string>
+ * 5)  info_file <string>
+ * 6)  energy_file <string>
+ * 7)  instant_energy_file <string>
+ * 8)  traj_file <string>
+ * 9)  vel_file <string>
+ * 10) force_file <string>
+ * 11) restart_file <string>
+ * 12) charge_file <string>
+ * 13) momentum_file <string>
+ * 14) virial_file <string>
+ * 15) stress_file <string>
+ * 16) box_file <string>
+ * 17) timings_file <string>
+ * 18) opt_file <string>
+ * 19) rpmd_restart_file <string>
+ * 20) rpmd_traj_file <string>
+ * 21) rpmd_vel_file <string>
+ * 22) rpmd_force_file <string>
+ * 23) rpmd_charge_file <string>
+ * 24) rpmd_energy_file <string>
  *
  * @param engine
  */
@@ -77,10 +78,14 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&OutputInputParser::parseFilePrefix, this),
         false
     );
-
     addKeyword(
         std::string("output_file"),
         bind_front(&OutputInputParser::parseLogFilename, this),
+        false
+    );
+    addKeyword(
+        std::string("reference_file"),
+        bind_front(&OutputInputParser::parseRefFilename, this),
         false
     );
     addKeyword(
@@ -128,7 +133,6 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&OutputInputParser::parseMomentumFilename, this),
         false
     );
-
     addKeyword(
         std::string("virial_file"),
         bind_front(&OutputInputParser::parseVirialFilename, this),
@@ -154,7 +158,6 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&OutputInputParser::parseOptFilename, this),
         false
     );
-
     addKeyword(
         std::string("rpmd_restart_file"),
         bind_front(&OutputInputParser::parseRPMDRestartFilename, this),
@@ -234,7 +237,7 @@ void OutputInputParser::parseFilePrefix(
 /**
  * @brief parse log filename of simulation and add it to output
  *
- * @details default value is default.out
+ * @details default value is default.log
  *
  * @param lineElements
  */
@@ -245,6 +248,22 @@ void OutputInputParser::parseLogFilename(
 {
     checkCommand(lineElements, lineNumber);
     OutputFileSettings::setLogFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse ref filename of simulation and add it to output
+ *
+ * @details default value is default.ref
+ *
+ * @param lineElements
+ */
+void OutputInputParser::parseRefFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    OutputFileSettings::setRefFileName(lineElements[2]);
 }
 
 /**
