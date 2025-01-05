@@ -9,6 +9,15 @@ All notable changes to this project will be documented in this file.
 - The reference output file is now decoupled from the .log output file and is given
   its own input file keyword 'reference_file'
 
+### CI
+
+- CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
+
+### Bug Fixes
+
+- CI for Release build updated to install all integration test dependencies
+
 <!-- insertion marker -->
 ## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
 
