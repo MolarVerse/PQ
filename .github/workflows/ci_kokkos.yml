@@ -1,9 +1,6 @@
 name: KOKKOS BUILD
 
 on:
-  push:
-    branches:
-      - '*'
   pull_request:
     branches:
       - '*'
