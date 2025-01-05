@@ -53,6 +53,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Setup Files</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#moldescriptor">Moldescriptor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#guff-file">GUFF File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dftb-setup-file">DFTB Setup File</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#topology-file">Topology File</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parameter-file">Parameter File</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#m-shake-file">M-SHAKE File</a></li>
@@ -148,6 +149,19 @@ are given in Å and energies in kcal/mol. The units of the parameters are chosen
 <p>All entries in the GUFF file need to be separated <em>via</em> a semicolon <code class="docutils literal notranslate"><span class="pre">;</span></code>. Furthermore, defining all possible interactions is mandatory. If a certain
 potential is not needed, the corresponding coefficients are set to 0.</p>
 <p>Using the GUFF file requires the <a class="reference internal" href="#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file to be provided as well.</p>
+</div>
+</section>
+<section id="dftb-setup-file">
+<span id="dftbfile"></span><h2>DFTB Setup File<a class="headerlink" href="#dftb-setup-file" title="Link to this heading"></a></h2>
+<p><strong>Default Name:</strong> <code class="docutils literal notranslate"><span class="pre">dftb_in.template</span></code></p>
+<p>The DFTB setup file is used by PQ to generate the dftb_in.hsd file, which is used as input for calculations by the <a class="reference external" href="https://dftbplus.org/index.html">DFTB+</a> software.
+As such, it has the same structure and keywords as the human-readable structured data (HSD) file for a single point calculation.
+The documentation of which can be found <a class="reference external" href="https://www.dftbplus.org/documentation.html">here</a>.
+There is an additional keyword, named <code class="docutils literal notranslate"><span class="pre">__GUESS__</span></code>, that can be used within the Hamiltonian of the DFTB setup file.
+If the <code class="docutils literal notranslate"><span class="pre">__GUESS__</span></code> flag is included, the charges will be read for an initial guess in every step of the MD simulation except the first.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Providing a DFTB setup file is mandatory if the <a class="reference internal" href="inputFile.html#qmprogamkey"><span class="std std-ref">qm_prog</span></a> keyword is set to <code class="docutils literal notranslate"><span class="pre">dftbplus</span></code>.</p>
 </div>
 </section>
 <section id="topology-file">
