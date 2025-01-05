@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### CI
 
 - CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
 
 ### Bug Fixes
 
