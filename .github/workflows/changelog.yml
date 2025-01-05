@@ -11,10 +11,47 @@ on:
   workflow_dispatch:
   
 jobs:
-  Check-Changelog:
-    name: Check Changelog Action
-    runs-on: ubuntu-20.04
+  check-changelog:
+    runs-on: ubuntu-latest
     steps:
-      - uses: tarides/changelog-check-action@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          changelog: CHANGELOG.md
+          fetch-depth: 0  # Fetch all history for accurate comparison
+
+      - name: Fetch target branch
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Extract content above insertion marker from target branch
+        id: extract-target
+        run: |
+          marker="<!-- insertion marker -->"
+          # Extract content above the marker in the target branch
+          git show origin/${{ github.event.pull_request.base.ref }}:CHANGELOG.md | awk -v marker="$marker" '
+            BEGIN { found=0 }
+            $0 ~ marker { found=1; exit }
+            { if (!found) print }
+          ' | sed '/^\s*$/d' > target_above_marker.txt
+
+      - name: Extract content above insertion marker from PR branch
+        id: extract-pr
+        run: |
+          marker="<!-- insertion marker -->"
+          # Extract content above the marker in the PR branch
+          cat CHANGELOG.md | awk -v marker="$marker" '
+            BEGIN { found=0 }
+            $0 ~ marker { found=1; exit }
+            { if (!found) print }
+          ' | sed '/^\s*$/d' > pr_above_marker.txt
+
+      - name: Compare content above insertion marker
+        id: compare
+        run: |
+          if ! diff -q target_above_marker.txt pr_above_marker.txt > /dev/null; then
+            echo "Differences detected above the insertion marker in CHANGELOG.md."
+            exit 0
+          else
+            echo "No differences detected above the insertion marker."
+            exit 1
+          fi
