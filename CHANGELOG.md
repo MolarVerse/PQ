@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- The reference output file is now decoupled from the .log output file and is given
+  its own input file keyword 'reference_file'
+- Citations added in the .ref output file for the available QM programs,
+  the v-Verlet integrator, the RATTLE algorithm and PQ itself
+- BibTeX entries are now included in the .ref output file
+
+### CI
+
+- CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
+
 ### Bug Fixes
 
 - CI for Release build updated to install all integration test dependencies
@@ -26,14 +39,13 @@ All notable changes to this project will be documented in this file.
 ### Testing
 
 - Integration test added for DFTB+ calculation
-  
-<!-- insertion marker -->
+
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
 ### Bug Fixes
 
 - Minimal Image Convention for triclinic cells now implemented with analytic extension
-  
+
 ## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
 
 ### Bug Fixes

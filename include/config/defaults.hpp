@@ -46,7 +46,8 @@ namespace defaults
     static constexpr char _VEL_FILE_DEFAULT_[]      = "default.vel";
     static constexpr char _FORCE_FILE_DEFAULT_[]    = "default.force";
     static constexpr char _CHARGE_FILE_DEFAULT_[]   = "default.charge";
-    static constexpr char _LOG_FILE_DEFAULT_[]      = "default.out";
+    static constexpr char _LOG_FILE_DEFAULT_[]      = "default.log";
+    static constexpr char _REF_FILE_DEFAULT_[]      = "default.ref";
     static constexpr char _INFO_FILE_DEFAULT_[]     = "default.info";
     static constexpr char _VIRIAL_FILE_DEFAULT_[]   = "default.vir";
     static constexpr char _STRESS_FILE_DEFAULT_[]   = "default.stress";

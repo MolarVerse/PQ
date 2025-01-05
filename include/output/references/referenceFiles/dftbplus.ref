@@ -1,0 +1,14 @@
+DFTB+ Software
+    B. Hourahine, B. Aradi, V. Blum, F. Bonafé, A. Buccheri,
+    C. Camacho, C. Cevallos, M. Y. Deshaye, T. Dumitrică,
+    A. Dominguez, S. Ehlert, M. Elstner, T. van der Heide,
+    J. Hermann, S. Irle, J. J. Kranz, C. Köhler, T. Kowalczyk,
+    T. Kubař, I. S. Lee, V. Lutsker, R. J. Maurer, S. K. Min,
+    I. Mitchell, C. Negre, T. A. Niehaus, A. M. N. Niklasson,
+    A. J. Page, A. Pecchia, G. Penazzi, M. P. Persson, J. Řezáč,
+    C. G. Sánchez, M. Sternberg, M. Stöhr, F. Stuckenberg,
+    A. Tkatchenko, V. W.-z. Yu, T. Frauenheim;
+    DFTB+, a software package for efficient approximate density
+    functional theory based atomistic simulations.
+    J. Chem. Phys. 31 March 2020; 152 (12): 124101.
+    https://doi.org/10.1063/1.5143190

@@ -1,10 +1,16 @@
 name: RELEASE BUILD
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'main'
-      - 'dev'
+      - '*'
+    paths:
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
   workflow_dispatch:
 
 jobs:
@@ -29,6 +35,11 @@ jobs:
         run: |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           echo $CONDA/bin >> $GITHUB_PATH
+
+      - name: install python dependencies
+        run: |
+          python -m pip install numpy
+        shell: bash
 
       - name: Build and Test Project
         run: |

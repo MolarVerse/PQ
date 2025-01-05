@@ -51,20 +51,6 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
 }
 
 /**
- * @brief returns the reference file name
- *
- * @details in order to avoid overwriting the reference file and not to set it
- * in the input file - the reference file name is set to the log file name +
- * ".ref"
- *
- * @param restartFileName
- */
-std::string OutputFileSettings::getReferenceFileName()
-{
-    return _logFile + ".ref";
-}
-
-/**
  * @brief sets the file prefix for all output files
  *
  * @param restartFileName
@@ -87,6 +73,9 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 
     if (_LOG_FILE_DEFAULT_ == _logFile)
         _logFile = prefix + ".log";
+
+    if (_REF_FILE_DEFAULT_ == _refFile)
+        _refFile = prefix + ".ref";
 
     if (_TRAJ_FILE_DEFAULT_ == _trajFile)
         _trajFile = prefix + ".xyz";
@@ -305,6 +294,16 @@ void OutputFileSettings::setChargeFileName(const std::string_view name)
 void OutputFileSettings::setLogFileName(const std::string_view name)
 {
     _logFile = name;
+}
+
+/**
+ * @brief sets the ref file name
+ *
+ * @param name
+ */
+void OutputFileSettings::setRefFileName(const std::string_view name)
+{
+    _refFile = name;
 }
 
 /**
@@ -530,6 +529,13 @@ std::string OutputFileSettings::getChargeFileName() { return _chargeFile; }
  * @return std::string
  */
 std::string OutputFileSettings::getLogFileName() { return _logFile; }
+
+/**
+ * @brief get the ref file name
+ *
+ * @return std::string
+ */
+std::string OutputFileSettings::getRefFileName() { return _refFile; }
 
 /**
  * @brief get the info file name
