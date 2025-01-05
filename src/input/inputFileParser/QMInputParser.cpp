@@ -25,15 +25,18 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "qmSettings.hpp"        // for Settings
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "qmSettings.hpp"         // for Settings
+#include "references.hpp"         // for ReferencesOutput
+#include "referencesOutput.hpp"   // for ReferencesOutput
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace customException;
 using namespace engine;
+using namespace references;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -99,16 +102,24 @@ void QMInputParser::parseQMMethod(
     using enum QMMethod;
     checkCommand(lineElements, lineNumber);
 
-    const auto method = toLowerCopy(lineElements[2]);
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("dftbplus" == method)
+    {
         QMSettings::setQMMethod(DFTBPLUS);
-
+        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+    }
     else if ("pyscf" == method)
+    {
         QMSettings::setQMMethod(PYSCF);
+        ReferencesOutput::addReferenceFile(_PYSCF_FILE_);
+    }
 
     else if ("turbomole" == method)
+    {
         QMSettings::setQMMethod(TURBOMOLE);
+        ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
+    }
 
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
@@ -248,10 +259,16 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     using enum MaceModelType;
 
     if ("mace" == model || "mace_mp" == model)
+    {
         QMSettings::setMaceModelType(MACE_MP);
+        ReferencesOutput::addReferenceFile(_MACEMP_FILE_);
+    }
 
     else if ("mace_off" == model)
+    {
         QMSettings::setMaceModelType(MACE_OFF);
+        ReferencesOutput::addReferenceFile(_MACEOFF_FILE_);
+    }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
         throw InputFileException(std::format(

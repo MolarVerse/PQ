@@ -30,6 +30,8 @@
 #include "integrator.hpp"        // for VelocityVerlet, integrator
 #include "mdEngine.hpp"          // for Engine
 #include "settings.hpp"          // for Settings
+#include "references.hpp"         // for ReferencesOutput
+#include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -38,6 +40,7 @@ using namespace customException;
 using namespace settings;
 using namespace utilities;
 using namespace integrator;
+using namespace references;
 
 /**
  * @brief Construct a new Input File Parser Integrator:: Input File Parser
@@ -87,6 +90,7 @@ void IntegratorInputParser::parseIntegrator(
     {
         auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
         mdEngine.makeIntegrator(VelocityVerlet());
+        ReferencesOutput::addReferenceFile(_VELOCITY_VERLET_FILE_);
     }
 
     else

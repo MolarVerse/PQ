@@ -27,6 +27,7 @@
 #include <iostream>    // for cout
 #include <string>      // for string
 
+#include "references.hpp"           // for ReferencesOutput
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 using references::ReferencesOutput;
@@ -56,26 +57,28 @@ void ReferencesOutput::writeReferencesFile()
     };
 
     // clang-format off
-    fp << "################################################################################\n";
-    fp << "#                                                                              #\n";
-    fp << "#  This file contains all references to the used software and the used theory  #\n";
-    fp << "#                                                                              #\n";
-    fp << "################################################################################\n";
+    fp << "########################################################################\n";
+    fp << "#                                                                      #\n";
+    fp << "#  This file contains all references to the software and theory used.  #\n";
+    fp << "#                                                                      #\n";
+    fp << "########################################################################\n";
     fp << '\n';
     // clang-format on
 
+    printReference(_PQ_FILE_);
     std::ranges::for_each(_referenceFileNames, printReference);
 
     // clang-format off
     fp << '\n';
-    fp << "################################################################################\n";
-    fp << "#                                                                              #\n";
-    fp << "#                               BIBTEX ENTIRES                                 #\n";
-    fp << "#                                                                              #\n";
-    fp << "################################################################################\n";
+    fp << "########################################################################\n";
+    fp << "#                                                                      #\n";
+    fp << "#                            BIBTEX ENTRIES                            #\n";
+    fp << "#                                                                      #\n";
+    fp << "########################################################################\n";
     fp << '\n';
     // clang-format on
 
+    printReference(static_cast<std::string>(_PQ_FILE_) + ".bib");
     std::ranges::for_each(_bibtexFileNames, printReference);
 
     fp.close();
