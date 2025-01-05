@@ -273,3 +273,25 @@ TEST_F(TestInputFileReader, testMShakeFileName)
         "data/mshakeReader/mshake.dat"
     );
 }
+
+/**
+ * @brief tests parsing the "dftb_file" command
+ */
+TEST_F(TestInputFileReader, testDFTBFileName)
+{
+    FilesInputParser         parser(*_engine);
+    std::vector<std::string> lineElements = {"dftb_file", "=", "dftb_in.template"};
+
+    EXPECT_THROW_MSG(
+        parser.parseDFTBFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open DFTB setup file - filename = dftb_in.template"
+    );
+
+    lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
+    parser.parseDFTBFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getDFTBFileName(),
+        "data/dftbReader/dftb_in.template"
+    );
+}

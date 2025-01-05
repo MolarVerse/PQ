@@ -145,6 +145,36 @@ std::string utilities::toLowerCopy(const std::string_view myString)
 }
 
 /**
+ * @brief returns a copy of a string all lower case and with '-' replaced by '_'
+ *
+ * @param myString
+ * @return string
+ */
+std::string utilities::toLowerAndReplaceDashesCopy(std::string myString)
+{
+    for (char &c : myString)
+    {
+        c = char(::tolower(c));
+        if (c == '-')
+            c = '_';
+    }
+    return myString;
+}
+
+/**
+ * @brief returns a copy of a string all lower case and with '-' replaced by '_'
+ *
+ * @param myString
+ * @return string
+ */
+std::string utilities::toLowerAndReplaceDashesCopy(
+    const std::string_view myString
+)
+{
+    return toLowerAndReplaceDashesCopy(std::string(myString));
+}
+
+/**
  * @brief converts the first letter of a string to upper case and the rest to
  * lower case
  *

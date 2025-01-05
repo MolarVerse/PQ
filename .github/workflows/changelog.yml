@@ -1,0 +1,20 @@
+name: Check Changelog
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+  
+jobs:
+  Check-Changelog:
+    name: Check Changelog Action
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: tarides/changelog-check-action@v2
+        with:
+          changelog: CHANGELOG.md

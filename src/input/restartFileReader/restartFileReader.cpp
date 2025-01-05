@@ -70,7 +70,7 @@ RestartFileSection *RestartFileReader::determineSection(
 )
 {
     for (const auto &section : _sections)
-        if (section->keyword() == toLowerCopy(lineElements[0]))
+        if (section->keyword() == toLowerAndReplaceDashesCopy(lineElements[0]))
             return section.get();
 
     return _atomSection.get();
