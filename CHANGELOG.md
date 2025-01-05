@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ### Enhancements
 
+- The reference output file is now decoupled from the .log output file and is given
+  its own input file keyword 'reference_file'
+
+### CI
+
+- CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
+
+### Bug Fixes
+
+- CI for Release build updated to install all integration test dependencies
+
+<!-- insertion marker -->
+## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
+
+### Enhancements
+
 - Nose-Hoover chain restarting now including old chain parameters
 - 'dftb_file' keyword added to change default input file dtfb.template
   for dftbplus QMMD
@@ -28,7 +45,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Minimal Image Convention for triclinic cells now implemented with analytic extension
-  
+
 ## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
 
 ### Bug Fixes

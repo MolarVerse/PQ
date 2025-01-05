@@ -160,7 +160,7 @@ components are given in units of :math:`\frac{\text{amu }\text{Å}^2}{\text{fs}}
 Reference File
 ***************
 
-**File Type:** ``.log.ref``
+**File Type:** ``.ref``
 
 Lists the references to be cited when publishing results obtained *via* the chosen simulation settings as regular text and in BibTeX format.
 
