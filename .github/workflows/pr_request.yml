@@ -21,11 +21,10 @@ jobs:
       - name: Compare commits
         run: |
           # Get the latest commit hashes
-          pr_commit_hash=$(git rev-parse HEAD)
           target_commit_hash=$(git rev-parse origin/${{ github.base_ref }})
 
           # Compare the commits
-          if [ "$pr_commit_hash" != "$target_commit_hash" ]; then
+          if ( git --no-pager log --sparse | grep -q $target_commit_hash ); then
             echo "The target branch has new commits since the PR was created."
             exit 1
           else
