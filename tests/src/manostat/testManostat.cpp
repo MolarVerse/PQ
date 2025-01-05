@@ -141,3 +141,26 @@ TEST_F(TestManostat, applyNoneManostat)
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
 }
+
+/**
+ * @brief test rotation of mu
+ */
+TEST_F(TestManostat, testRotateMu)
+{
+    auto mu = linearAlgebra::tensor3D({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0},
+    });
+
+    _manostat->rotateMu(mu);
+
+    EXPECT_EQ(
+        mu,
+        linearAlgebra::tensor3D({
+            {1.0, 6.0, 10.0},
+            {0.0, 5.0, 14.0},
+            {0.0, 0.0, 9.0},
+        })
+    );
+}

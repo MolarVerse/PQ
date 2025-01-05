@@ -458,7 +458,32 @@ namespace linearAlgebra
         auto result = StaticMatrix3x3<T>(0.0);
 
         for (size_t i = 0; i < 3; ++i)
-            for (size_t j = i + 1; j < 3; ++j) result[i][j] = ::exp(mat[i][j]);
+            for (size_t j = 0; j < 3; ++j) result[i][j] = ::exp(mat[i][j]);
+
+        return result;
+    }
+
+    /**
+     * @brief Pade approximation of the exponential of a StaticMatrix3x3
+     *
+     * @link https://en.wikipedia.org/wiki/Matrix_exponential
+     * @link https://en.wikipedia.org/wiki/Pad%C3%A9_table
+     * @link https://en.wikipedia.org/wiki/Pad%C3%A9_approximant
+     * @link
+     * https://github.com/bussilab/crescale/blob/master/simplemd_anisotropic/simplemd.cpp#L351
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = StaticMatrix3x3<T>(0.0);
+
+        auto mat2 = mat * mat;
+        auto mat3 = mat2 * mat;
+
+        auto den = diagonalMatrix(1.0) - 0.5 * mat + 0.1 * mat2 - mat3 / 120.0;
+        auto num = diagonalMatrix(1.0) + 0.5 * mat + 0.1 * mat2 + mat3 / 120.0;
+
+        result = inverse(den) * num;
 
         return result;
     }

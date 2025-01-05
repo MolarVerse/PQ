@@ -128,6 +128,9 @@ namespace linearAlgebra
     template <typename T>
     [[nodiscard]] StaticMatrix3x3<T> exp(const StaticMatrix3x3<T> &mat);
 
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat);
+
 }   // namespace linearAlgebra
 
 #include "staticMatrix3x3.tpp.hpp"   // DO NOT MOVE THIS LINE
