@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 - CI workflows removed `on push` events
 - building and testing workflows are deployed now only if relevant files change
+- Added checks to PRs if latest base commit is included in changes of PR
 
 ### Bug Fixes
 
