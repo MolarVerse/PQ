@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - CI for Release build updated to install all integration test dependencies
+- Full anistrop coupling works now with stochastic cell rescaling manostat
 
 <!-- insertion marker -->
 ## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
@@ -34,7 +35,6 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
-- Full anistrop coupling works now with stochastic cell rescaling manostat
 - Fixed QM atoms update for QM-MD calculations
 
 ### Testing
