@@ -4,6 +4,13 @@ on:
   pull_request:
     branches:
       - '*'
+    paths:
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
   workflow_dispatch:
 
 jobs:
