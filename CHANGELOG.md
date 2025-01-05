@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
-- ci workflows removed `on push` events
+### CI
+
+- CI workflows removed `on push` events
+
+### Bug Fixes
+
+- CI for Release build updated to install all integration test dependencies
+
 
 <!-- insertion marker -->
 ## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
