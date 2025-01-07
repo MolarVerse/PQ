@@ -110,6 +110,7 @@ endif()
 
 if(BUILD_WITH_ASE)
     include(ase)
+    include(slakos)
 endif()
 
 if(BUILD_WITH_TESTS)

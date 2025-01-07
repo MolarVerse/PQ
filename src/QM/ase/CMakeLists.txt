@@ -1,6 +1,7 @@
 add_library(aseQM
     aseQMRunner.cpp
     maceRunner.cpp
+    aseDftbRunner.cpp
 )
 
 target_include_directories(aseQM
