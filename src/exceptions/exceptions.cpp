@@ -58,7 +58,7 @@ void CustomException::colorfulOutput(
  *
  * @return const char*
  */
-const char *InputFileException::what() const throw()
+const char *InputFileException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "InputFileError");
     return _message.c_str();
@@ -69,7 +69,7 @@ const char *InputFileException::what() const throw()
  *
  * @return const char*
  */
-const char *RstFileException::what() const throw()
+const char *RstFileException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "RstFileError");
     return _message.c_str();
@@ -80,7 +80,7 @@ const char *RstFileException::what() const throw()
  *
  * @return const char*
  */
-const char *UserInputException::what() const throw()
+const char *UserInputException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "UserInputError");
     return _message.c_str();
@@ -91,7 +91,7 @@ const char *UserInputException::what() const throw()
  *
  * @return const char*
  */
-const char *MolDescriptorException::what() const throw()
+const char *MolDescriptorException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "MolDescriptorError");
     return _message.c_str();
@@ -102,7 +102,7 @@ const char *MolDescriptorException::what() const throw()
  *
  * @return const char*
  */
-const char *UserInputExceptionWarning::what() const throw()
+const char *UserInputExceptionWarning::what() const noexcept
 {
     colorfulOutput(Color::FG_ORANGE, "UserInputWarning");
     return _message.c_str();
@@ -113,7 +113,7 @@ const char *UserInputExceptionWarning::what() const throw()
  *
  * @return const char*
  */
-const char *GuffDatException::what() const throw()
+const char *GuffDatException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "GuffDatError");
     return _message.c_str();
@@ -124,7 +124,7 @@ const char *GuffDatException::what() const throw()
  *
  * @return const char*
  */
-const char *TopologyException::what() const throw()
+const char *TopologyException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "TopologyError");
     return _message.c_str();
@@ -135,7 +135,7 @@ const char *TopologyException::what() const throw()
  *
  * @return const char*
  */
-const char *ParameterFileException::what() const throw()
+const char *ParameterFileException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "ParameterFileError");
     return _message.c_str();
@@ -146,7 +146,7 @@ const char *ParameterFileException::what() const throw()
  *
  * @return const char*
  */
-const char *ManostatException::what() const throw()
+const char *ManostatException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "ManostatError");
     return _message.c_str();
@@ -157,7 +157,7 @@ const char *ManostatException::what() const throw()
  *
  * @return const char*
  */
-const char *IntraNonBondedException::what() const throw()
+const char *IntraNonBondedException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "IntraNonBondedError");
     return _message.c_str();
@@ -168,7 +168,7 @@ const char *IntraNonBondedException::what() const throw()
  *
  * @return const char*
  */
-const char *ShakeException::what() const throw()
+const char *ShakeException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "ShakeError");
     return _message.c_str();
@@ -179,7 +179,7 @@ const char *ShakeException::what() const throw()
  *
  * @return const char*
  */
-const char *CellListException::what() const throw()
+const char *CellListException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "CellListError");
     return _message.c_str();
@@ -190,7 +190,7 @@ const char *CellListException::what() const throw()
  *
  * @param message
  */
-const char *RingPolymerRestartFileException::what() const throw()
+const char *RingPolymerRestartFileException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "RingPolymerRestartFileError");
     return _message.c_str();
@@ -201,7 +201,7 @@ const char *RingPolymerRestartFileException::what() const throw()
  *
  * @param message
  */
-const char *QMRunnerException::what() const throw()
+const char *QMRunnerException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "QMRunnerError");
     return _message.c_str();
@@ -212,7 +212,7 @@ const char *QMRunnerException::what() const throw()
  *
  * @param message
  */
-const char *MPIException::what() const throw()
+const char *MPIException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "MPIError");
     return _message.c_str();
@@ -223,7 +223,7 @@ const char *MPIException::what() const throw()
  *
  * @param message
  */
-const char *QMRunTimeExceeded::what() const throw()
+const char *QMRunTimeExceeded::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "QMRunTimeExceeded");
     return _message.c_str();
@@ -234,7 +234,7 @@ const char *QMRunTimeExceeded::what() const throw()
  *
  * @param message
  */
-const char *MShakeFileException::what() const throw()
+const char *MShakeFileException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "MShakeError");
     return _message.c_str();
@@ -245,7 +245,7 @@ const char *MShakeFileException::what() const throw()
  *
  * @param message
  */
-const char *MShakeException::what() const throw()
+const char *MShakeException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "MShakeError");
     return _message.c_str();
@@ -256,7 +256,7 @@ const char *MShakeException::what() const throw()
  *
  * @param message
  */
-const char *LinearAlgebraException::what() const throw()
+const char *LinearAlgebraException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "LinearAlgebraError");
     return _message.c_str();
@@ -267,7 +267,7 @@ const char *LinearAlgebraException::what() const throw()
  *
  * @param message
  */
-const char *OptException::what() const throw()
+const char *OptException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "OptimizationError");
     return _message.c_str();
@@ -278,7 +278,7 @@ const char *OptException::what() const throw()
  *
  * @param message
  */
-const char *OptWarning::what() const throw()
+const char *OptWarning::what() const noexcept
 {
     colorfulOutput(Color::FG_ORANGE, "OptimizationWarning");
     return _message.c_str();
@@ -289,7 +289,7 @@ const char *OptWarning::what() const throw()
  *
  * @param message
  */
-const char *CompileTimeException::what() const throw()
+const char *CompileTimeException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "CompileTimeError");
     return _message.c_str();
@@ -300,7 +300,7 @@ const char *CompileTimeException::what() const throw()
  *
  * @param message
  */
-const char *DeviceException::what() const throw()
+const char *DeviceException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "DeviceError");
     return _message.c_str();
@@ -311,7 +311,7 @@ const char *DeviceException::what() const throw()
  *
  * @param message
  */
-const char *NotImplementedException::what() const throw()
+const char *NotImplementedException::what() const noexcept
 {
     colorfulOutput(Color::FG_RED, "NotImplementedError");
     return _message.c_str();
