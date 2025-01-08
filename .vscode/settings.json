@@ -118,9 +118,12 @@
         "text_encoding": "cpp",
         "numericaldiff": "cpp",
         "adolcforward": "cpp",
-        "mprealsupport": "cpp"
+        "mprealsupport": "cpp",
+        "globaltimer.hpp": "c",
+        "forcefieldclass.hpp": "c",
+        "celllist.hpp": "c"
     },
-    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
         "-p",
         "${workspaceFolder}/.build"
@@ -191,6 +194,7 @@
         "Neighbours",
         "noncoulomb",
         "noncoulombics",
+        "NOTIMPLEMENTEDEXCEPTION",
         "NOTYETIMPLEMENTEDEXCEPTION",
         "nreset",
         "nscale",
@@ -232,20 +236,17 @@
         "voigt",
         "Waals"
     ],
-    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
-        "clang-diagnostic-error"
-    ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
     "esbonio.sphinx.confDir": "",
     "workbench.colorTheme": "Visual Studio Dark - C++",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
     "C_Cpp.files.exclude": {
         "**/build*": true,
         "**/.build*": true,
         "**/.vscode": true,
         "**/.git": true
     },
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
 }
