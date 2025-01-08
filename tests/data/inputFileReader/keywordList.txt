@@ -117,6 +117,8 @@ qm_script_full_path         false
 qm_loop_time_limit          false
 dispersion                  false
 mace_model_size             false
+slakos                      false
+slakos_path                 false
 
 rpmd_n_replica              false
 
