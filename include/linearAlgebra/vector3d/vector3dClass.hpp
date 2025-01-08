@@ -24,12 +24,10 @@
 
 #define _VECTOR3D_CLASS_HPP_
 
-#include <array>         // for array
-#include <cmath>         // for ceil, fabs, floor, rint, sqrt
-#include <cstddef>       // for size_t
-#include <iostream>      // for ostream
-#include <type_traits>   // for is_fundamental_v
-#include <vector>        // for vector
+#include <array>     // for array
+#include <cmath>     // for ceil, fabs, floor, rint, sqrt
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "concepts/vector3dConcepts.hpp"
 
@@ -149,6 +147,8 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#include "vector3dClass.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef __VECTOR3D_CLASS_TPP__
+#include "vector3dClass.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _VECTOR3D_CLASS_HPP_

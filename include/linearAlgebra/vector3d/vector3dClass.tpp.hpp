@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_CLASS_TPP_
+#ifndef __VECTOR3D_CLASS_TPP__
 
-#define _VECTOR3D_CLASS_TPP_
+#define __VECTOR3D_CLASS_TPP__
 
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
@@ -328,4 +328,4 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#endif   // _VECTOR3D_CLASS_TPP_
+#endif   // __VECTOR3D_CLASS_TPP__

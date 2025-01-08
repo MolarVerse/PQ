@@ -25,6 +25,7 @@
 #define _VECTOR3d_HPP_
 
 #include <cmath>
+#include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
@@ -44,7 +45,7 @@ namespace linearAlgebra
     requires std::equality_comparable<U>
     bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
-    // operator<
+    // operator< ###
     template <class U, class V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
