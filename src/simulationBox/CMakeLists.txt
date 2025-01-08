@@ -76,6 +76,13 @@ target_link_libraries(simulationBox
     timings
 )
 
+if(BUILD_WITH_GPU)
+    target_link_libraries(simulationBox
+        PUBLIC
+        device
+    )
+endif()
+
 install(TARGETS simulationBox
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
