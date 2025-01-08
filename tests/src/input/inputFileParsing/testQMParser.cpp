@@ -54,13 +54,16 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "mace"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
+    parser.parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
+        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, mace_mp, "
         "mace_off"
     )
 }
