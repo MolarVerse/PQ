@@ -44,8 +44,22 @@ namespace QM
             const std::string &slakosType,
             const std::string &slakosPath
         );
-        const std::unordered_map<std::string, float> get3obHubbDerivDict(
-        ) const;
+
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+        const std::unordered_map<std::string, double> getHubbDerivDict() const;
+
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+        void setHubbDerivDict(const std::unordered_map<std::string, double> slakosDict);
+
+
+       private:
+        std::unordered_map<std::string, double> _slakosDict;
     };
 }   // namespace QM
 

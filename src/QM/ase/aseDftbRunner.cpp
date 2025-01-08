@@ -21,7 +21,7 @@
 ******************************************************************************/
 
 #include "aseDftbRunner.hpp"
-
+#include "hubbardDerivMap.hpp"
 #include "pybind11/embed.h"
 
 using QM::AseDftbRunner;
@@ -56,9 +56,10 @@ AseDftbRunner::AseDftbRunner(
 
         if (slakosType == "3ob")
         {
+            setHubbDerivDict(constants::hubbardDerivMap3ob);
             calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
             calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
-            const auto slakosDict = get3obHubbDerivDict();
+            const auto slakosDict                        = getHubbDerivDict();
             for (const auto &[key, value] : slakosDict)
             {
                 auto _key = "Hamiltonian_hubbardderivs_" + key;
@@ -76,24 +77,31 @@ AseDftbRunner::AseDftbRunner(
     }
 }
 
-const std::unordered_map<std::string, float> AseDftbRunner::get3obHubbDerivDict(
-) const
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the 3ob Hubbard derivatives as dict
+ *
+ * @return std::unordered_map<std::string, float>
+ */
+const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict() const { return _slakosDict; }
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief set the 3ob Hubbard derivatives as dict
+ */
+void AseDftbRunner::setHubbDerivDict(
+    const std::unordered_map<std::string, double> slakosDict
+)
 {
-    std::unordered_map<std::string, float> slakosDict;
-    slakosDict["C"]  = -0.1492;
-    slakosDict["N"]  = -0.1535;
-    slakosDict["O"]  = -0.1575;
-    slakosDict["H"]  = -0.1857;
-    slakosDict["S"]  = -0.11;
-    slakosDict["P"]  = -0.14;
-    slakosDict["F"]  = -0.1623;
-    slakosDict["Cl"] = -0.0697;
-    slakosDict["Br"] = -0.0573;
-    slakosDict["I"]  = -0.0433;
-    slakosDict["Zn"] = -0.03;
-    slakosDict["Mg"] = -0.02;
-    slakosDict["Ca"] = -0.0340;
-    slakosDict["K"]  = -0.0339;
-    slakosDict["Na"] = -0.0454;
-    return slakosDict;
+    _slakosDict = slakosDict;
 }
