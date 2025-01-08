@@ -34,7 +34,8 @@
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #ifdef WITH_ASE
-#include "maceRunner.hpp"   // for MaceRunner
+#include "aseDftbRunner.hpp"   // for aseDftbRunner
+#include "maceRunner.hpp"      // for MaceRunner
 #endif
 
 using engine::QMMDEngine;
@@ -63,6 +64,9 @@ void QMMDEngine::setQMRunner(const QMMethod method)
 
     if (method == DFTBPLUS)
         _qmRunner = make_shared<DFTBPlusRunner>();
+
+    else if (method == ASEDFTBPLUS)
+        setAseDftbRunner();
 
     else if (method == PYSCF)
         _qmRunner = make_shared<PySCFRunner>();
@@ -104,6 +108,31 @@ void QMMDEngine::setMaceQMRunner()
 #else
     throw CompileTimeException(
         "A mace type qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use mace type "
+        "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
+
+/**
+ * @brief sets the QMRunner object for ase dftbplus type qm methods.
+ *
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
+ */
+void QMMDEngine::setAseDftbRunner()
+{
+#ifdef WITH_ASE
+    const auto slakosType = string(QMSettings::getSlakosType());
+    const auto slakosPath = QMSettings::getSlakosPath();
+
+    auto maceModel = string(QMSettings::getMaceModelSize());
+
+    _qmRunner = make_shared<AseDftbRunner>(slakosType, slakosPath);
+#else
+    throw CompileTimeException(
+        "The ASE DFTB+ qm method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use mace type "
         "qm methods using: -DBUILD_WITH_ASE=ON"
     );

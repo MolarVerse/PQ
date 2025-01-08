@@ -84,6 +84,18 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseMaceModelSize, this),
         false
     );
+
+    addKeyword(
+        std::string("slakos"),
+        bind_front(&QMInputParser::parseSlakosType, this),
+        false
+    );
+
+    addKeyword(
+        std::string("slakos_path"),
+        bind_front(&QMInputParser::parseSlakosPath, this),
+        false
+    );
 }
 
 /**
@@ -109,6 +121,13 @@ void QMInputParser::parseQMMethod(
         QMSettings::setQMMethod(DFTBPLUS);
         ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
     }
+
+    else if ("ase_dftbplus" == method)
+    {
+        QMSettings::setQMMethod(ASEDFTBPLUS);
+        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+    }
+
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
@@ -127,8 +146,8 @@ void QMInputParser::parseQMMethod(
     else
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
-            "mace_off",
+            "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
+            "mace, mace_mp, mace_off",
             lineElements[2]
         ));
 }
@@ -285,4 +304,54 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     QMSettings::setQMMethod(QMMethod::MACE);
+}
+
+/**
+ * @brief parse the Slakos type to be used
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if the slakos type is not recognized
+ */
+void QMInputParser::parseSlakosType(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum SlakosType;
+    checkCommand(lineElements, lineNumber);
+
+    const auto slakos = toLowerCopy(lineElements[2]);
+
+    if ("3ob" == slakos)
+        QMSettings::setSlakosType(THREEOB);
+
+    else if ("matsci" == slakos)
+        QMSettings::setSlakosType(MATSCI);
+
+    else if ("custom" == slakos)
+        QMSettings::setSlakosType(CUSTOM);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid slakos type \"{}\" in input file.\n"
+            "Possible values are: 3ob, matsci, custom",
+            lineElements[2]
+        ));
+}
+
+/**
+ * @brief parse external Slakos path
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseSlakosPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setSlakosPath(lineElements[2]);
 }

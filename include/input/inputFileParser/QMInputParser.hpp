@@ -53,6 +53,9 @@ namespace input
 
         void parseMaceModelSize(const pq::strings &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
+
+        void parseSlakosType(const pq::strings &, const size_t);
+        void parseSlakosPath(const pq::strings &, const size_t);
     };
 
 }   // namespace input

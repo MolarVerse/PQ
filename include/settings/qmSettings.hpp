@@ -40,6 +40,7 @@ namespace settings
     {
         NONE,
         DFTBPLUS,
+        ASEDFTBPLUS,
         PYSCF,
         TURBOMOLE,
         MACE
@@ -66,9 +67,21 @@ namespace settings
         MACE_ANICC
     };
 
+    /**
+     * @class enum Slakos
+     */
+    enum class SlakosType : size_t
+    {
+        NONE,
+        THREEOB,
+        MATSCI,
+        CUSTOM
+    };
+
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
+    std::string string(const SlakosType slakos);
 
     /**
      * @class QMSettings
@@ -82,10 +95,12 @@ namespace settings
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
         static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+        static inline SlakosType    _slakosType    = SlakosType::NONE;
 
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
         static inline std::string _maceModelPath    = "";
+        static inline std::string _slakosPath       = "";
 
         static inline bool _useDispersionCorrection = false;
 
@@ -112,6 +127,10 @@ namespace settings
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
 
+        static void setSlakosType(const std::string_view &slakos);
+        static void setSlakosType(const SlakosType slakos);
+        static void setSlakosPath(const std::string_view &path);
+
         static void setUseDispersionCorrection(const bool use);
 
         static void setQMLoopTimeLimit(const double time);
@@ -127,6 +146,9 @@ namespace settings
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
+
+        [[nodiscard]] static SlakosType   getSlakosType();
+        [[nodiscard]] static std::string  getSlakosPath();
 
         [[nodiscard]] static bool useDispersionCorr();
 

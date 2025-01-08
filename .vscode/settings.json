@@ -116,7 +116,12 @@
         "sparseextra": "cpp",
         "alignedvector3": "cpp",
         "text_encoding": "cpp",
-        "numericaldiff": "cpp"
+        "numericaldiff": "cpp",
+        "__config": "cpp",
+        "__debug": "cpp",
+        "version": "cpp",
+        "__split_buffer": "cpp",
+        "queue": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.codeAnalysis.clangTidy.args": [
