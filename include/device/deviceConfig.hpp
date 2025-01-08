@@ -86,9 +86,9 @@
 #endif
 
 #if defined(__PQ_HIP__)
-    #define __getDeviceProperties(x, y) hipGetDeviceProperties(x, y)
+    #define __getDeviceProperties(x, y) hipGetDeviceProperties((x), (y))
 #elif defined(__PQ_CUDA__)
-    #define __getDeviceProperties(x, y) cudaGetDeviceProperties(x, y)
+    #define __getDeviceProperties(x, y) cudaGetDeviceProperties((x), (y))
 #endif
 
 #if defined(__PQ_HIP__)

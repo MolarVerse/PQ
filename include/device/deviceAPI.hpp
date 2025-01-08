@@ -24,9 +24,9 @@
 #define __DEVICE_API_HPP__
 
 #include <cstddef>   // for size_t
+#include <string>    // for std::string
 
 #include "deviceConfig.hpp"
-#include "exceptions.hpp"
 
 namespace device
 {
@@ -55,6 +55,8 @@ namespace device
 
 }   // namespace device
 
-#include "deviceAPI.tpp.hpp"   // DO NOT MOVE THIS LINE!!!
+#ifndef __DEVICE_API_TPP__
+#include "deviceAPI.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE!
+#endif
 
-#endif __DEVICE_API_HPP__
+#endif   // __DEVICE_API_HPP__
