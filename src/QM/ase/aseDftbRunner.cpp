@@ -44,13 +44,26 @@ AseDftbRunner::AseDftbRunner(const std::string &slakos) : ASEQMRunner()
 
         if (slakos == "3ob" || slakos == "matsci")
         {
-            const std::string slakosDir    = SLAKOS_DIR + slakos + "/skfiles/";
-            calculatorArgs["slakos"] = slakosDir.c_str();
+            const std::string slakosDir = SLAKOS_DIR + slakos + "/skfiles/";
+            calculatorArgs["slakos"]    = slakosDir.c_str();
         }
         else
             calculatorArgs["slakos"] = slakos.c_str();
 
-        _calculator = calculator(**calculatorArgs);
+        if (slakos == "3ob")
+        {
+            calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
+            calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
+            auto slakosDict = get3obHubbDerivDict();
+            for (const auto &[key, value] : slakosDict)
+            {
+                auto _key = "Hamiltonian_hubbardderivs_" + key;
+                calculatorArgs[_key.c_str()] = value;
+            }
+        }
+
+        calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
+        _calculator            = calculator(**calculatorArgs);
     }
     catch (const py::error_already_set &)
     {
