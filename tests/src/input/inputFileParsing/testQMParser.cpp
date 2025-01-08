@@ -63,7 +63,8 @@ TEST_F(TestInputFileReader, parseQMMethod)
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, mace_mp, "
+        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
+        "mace_mp, "
         "mace_off"
     )
 }
@@ -104,6 +105,29 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
         "Possible values are: mace (mace_mp), mace_off"
+    )
+}
+
+TEST_F(TestInputFileReader, parseSlakosType)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
+        InputFileException,
+        "Invalid slakos type \"notASlakosType\" in input file.\n"
+        "Possible values are: 3ob, matsci, custom"
     )
 }
 

@@ -147,8 +147,8 @@ namespace settings
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
 
-        [[nodiscard]] static SlakosType   getSlakosType();
-        [[nodiscard]] static std::string  getSlakosPath();
+        [[nodiscard]] static SlakosType  getSlakosType();
+        [[nodiscard]] static std::string getSlakosPath();
 
         [[nodiscard]] static bool useDispersionCorr();
 
