@@ -220,35 +220,3 @@ void setup::setupEngine(Engine &engine)
     if (Settings::isOptJobType())
         setupOptimizer(engine);
 }
-
-#ifdef __PQ_GPU__
-/**
- * @brief Initialize device memory for simulation box
- *
- */
-void initDeviceMemory(engine::Engine &engine)
-{
-    auto &simBox = engine.getSimulationBox();
-    auto &device = engine.getDevice();
-
-    simBox.initDeviceMemory(device);
-
-    simBox.copyPosTo(device);
-    simBox.copyVelTo(device);
-    simBox.copyForcesTo(device);
-    simBox.copyShiftForcesTo(device);
-
-    simBox.copyMassesTo(device);
-    simBox.copyChargesTo(device);
-
-    simBox.copyAtomsPerMoleculeTo(device);
-    simBox.copyMoleculeIndicesTo(device);
-    simBox.copyAtomTypesTo(device);
-    simBox.copyMolTypesTo(device);
-    simBox.copyInternalGlobalVDWTypesTo(device);
-
-    simBox.copyOldPosTo(device);
-    simBox.copyOldVelTo(device);
-    simBox.copyOldForcesTo(device);
-}
-#endif

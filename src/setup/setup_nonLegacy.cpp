@@ -104,3 +104,35 @@ void setup::setupFlattenedData(Engine &engine)
 
     pot->setFunctionPointers(isOrthoRhombic);
 }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief Initialize device memory for simulation box
+ *
+ */
+void setup::initDeviceMemory(engine::Engine &engine)
+{
+    auto &simBox = engine.getSimulationBox();
+    auto &device = engine.getDevice();
+
+    simBox.initDeviceMemory(device);
+
+    simBox.copyPosTo(device);
+    simBox.copyVelTo(device);
+    simBox.copyForcesTo(device);
+    simBox.copyShiftForcesTo(device);
+
+    simBox.copyMassesTo(device);
+    simBox.copyChargesTo(device);
+
+    simBox.copyAtomsPerMoleculeTo(device);
+    simBox.copyMoleculeIndicesTo(device);
+    simBox.copyAtomTypesTo(device);
+    simBox.copyMolTypesTo(device);
+    simBox.copyInternalGlobalVDWTypesTo(device);
+
+    simBox.copyOldPosTo(device);
+    simBox.copyOldVelTo(device);
+    simBox.copyOldForcesTo(device);
+}
+#endif
