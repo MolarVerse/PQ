@@ -40,8 +40,12 @@ namespace QM
        public:
         ~AseDftbRunner() override = default;
 
-        explicit AseDftbRunner::AseDftbRunner(const std::string &slakosType, const std::string &slakosPath);
-        // const auto get3obHubbDerivDict() const;
+        explicit AseDftbRunner(
+            const std::string &slakosType,
+            const std::string &slakosPath
+        );
+        const std::unordered_map<std::string, float> get3obHubbDerivDict(
+        ) const;
     };
 }   // namespace QM
 
