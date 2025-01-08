@@ -42,17 +42,17 @@ AseDftbRunner::AseDftbRunner(
     try
     {
         const py::module_ calculator =
-            py::module_::import("ase.calculators.dftb.Dftb");
+            py::module_::import("ase.calculators.dftb");
 
         const py::dict calculatorArgs;
 
         if (slakosType == "3ob" || slakosType == "matsci")
         {
             const std::string slakosDir = SLAKOS_DIR + slakosType + "/skfiles/";
-            calculatorArgs["slakos"]    = slakosDir.c_str();
+            calculatorArgs["slako_dir"] = slakosDir.c_str();
         }
         else
-            calculatorArgs["slakos"] = slakosType.c_str();
+            calculatorArgs["slako_dir"] = slakosType.c_str();
 
         if (slakosType == "3ob")
         {
@@ -67,7 +67,7 @@ AseDftbRunner::AseDftbRunner(
         }
 
         calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
-        _calculator            = calculator(**calculatorArgs);
+        _calculator            = calculator.attr("Dftb")(**calculatorArgs);
     }
     catch (const py::error_already_set &)
     {

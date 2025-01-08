@@ -25,4 +25,4 @@ CloneRepository("https://github.com/dftbparams/3ob.git" "${CMAKE_BINARY_DIR}/ext
 CloneRepository("https://github.com/dftbparams/matsci.git" "${CMAKE_BINARY_DIR}/external/slakos/matsci")
 
 # define directory for 3ob and matsci for preprocessor
-add_compile_definitions(SLAKOS_DIR="${CMAKE_BINARY_DIR}/external/slakos")
+add_compile_definitions(SLAKOS_DIR="${CMAKE_BINARY_DIR}/external/slakos/")

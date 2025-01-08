@@ -127,8 +127,6 @@ void QMMDEngine::setAseDftbRunner()
     const auto slakosType = string(QMSettings::getSlakosType());
     const auto slakosPath = QMSettings::getSlakosPath();
 
-    auto maceModel = string(QMSettings::getMaceModelSize());
-
     _qmRunner = make_shared<AseDftbRunner>(slakosType, slakosPath);
 #else
     throw CompileTimeException(
