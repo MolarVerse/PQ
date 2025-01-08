@@ -115,7 +115,7 @@ namespace potential
         const auto indexHelper2 = numMolTypes * maxNumAtomTypes;
 
         // clang-format off
-        #pragma omp target teams distribute parallel for collapse(2)
+        #pragma omp parallel for collapse(2)
         for (size_t atomIndex_i = 0; atomIndex_i < nAtoms; ++atomIndex_i)
         {
             for (size_t atomIndex_j = 0; atomIndex_j < nAtoms; ++atomIndex_j)

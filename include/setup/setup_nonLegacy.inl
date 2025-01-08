@@ -34,36 +34,37 @@ void setup::setupFlattenedNonCoulPotFF(potential::Potential *const pot)
     tempPot.resize(row);
 
     // clang-format off
-        #pragma omp parallel for collapse(2)
-        for (size_t i = 0; i < row; ++i)
-            for (size_t j = 0; j < col; ++j)
+    // #pragma omp parallel for collapse(2)
+    for (size_t i = 0; i < row; ++i)
+        for (size_t j = 0; j < col; ++j)
+        {
+            if constexpr (std::is_same_v<T, potential::LennardJones>)
             {
-                if constexpr (std::is_same_v<T, potential::LennardJones>)
-                {
-                    const auto &pair =
-                        dynamic_cast<potential::LennardJonesPair &>(
-                            *nonCoulPairs(i, j)
-                        );
-                    tempPot.addPair(pair, i, j);
-                }
-                else if constexpr (std::is_same_v<T, potential::Buckingham>)
-                {
-                    const auto &pair =
-                        dynamic_cast<potential::BuckinghamPair &>(
-                            *nonCoulPairs(i, j)
-                        );
-                    tempPot.addPair(pair, i, j);
-                }
-                else if constexpr (std::is_same_v<T, potential::Morse>)
-                {
-                    const auto &pair = dynamic_cast<potential::MorsePair &>(
+                const auto &pair =
+                    dynamic_cast<potential::LennardJonesPair &>(
                         *nonCoulPairs(i, j)
                     );
-                    tempPot.addPair(pair, i, j);
-                }
-                else
-                    static_assert(false, "Unknown potential type");
+                tempPot.addPair(pair, i, j);
             }
+            else if constexpr (std::is_same_v<T, potential::Buckingham>)
+            {
+                const auto &pair =
+                    dynamic_cast<potential::BuckinghamPair &>(
+                        *nonCoulPairs(i, j)
+                    );
+                tempPot.addPair(pair, i, j);
+            }
+            else if constexpr (std::is_same_v<T, potential::Morse>)
+            {
+                const auto &pair = dynamic_cast<potential::MorsePair &>(
+                    *nonCoulPairs(i, j)
+                );
+                tempPot.addPair(pair, i, j);
+            }
+            else
+                static_assert(std::is_same_v<T, void>,
+                                "Unknown potential type");
+        }
     // clang-format on
 
     const auto params  = tempPot.copyParams();
@@ -98,7 +99,7 @@ void setup::setupFlattenedNonCoulPotGuff(
             maxNumAtomTypes = numAtomTypes;
     }
 
-    auto &nonCoulPot =
+    const auto &nonCoulPot =
         dynamic_cast<potential::GuffNonCoulomb &>(pot->getNonCoulombPotential()
         );
 
@@ -189,7 +190,10 @@ void setup::setupFlattenedNonCoulPotGuff(
                             //     tempPot.addPair(pair, index_k, index_l);
                         }
                         else
-                            static_assert(false, "Unknown potential type");
+                            static_assert(
+                                std::is_same_v<T, void>,
+                                "Unknown potential type"
+                            );
                     }
                     catch (const std::bad_cast &e)
                     {

@@ -79,7 +79,10 @@ namespace potential
         else if constexpr (std::is_same_v<BoxType, simulationBox::TriclinicBox>)
             simulationBox::imageTriclinic(boxParams, dx, dy, dz, tx, ty, tz);
         else
-            static_assert(std::false_type::value, "Unsupported BoxType");
+            static_assert(
+                std::is_same_v<BoxType, void>,
+                "Unsupported Box type"
+            );
     }
 
     /**
@@ -124,7 +127,10 @@ namespace potential
                 coulParams
             );
         else
-            static_assert(std::false_type::value, "Unsupported Coulomb type");
+            static_assert(
+                std::is_same_v<CoulombType, void>,
+                "Unsupported Coulomb type"
+            );
     }
 
     /**
@@ -173,7 +179,7 @@ namespace potential
                 calculateMorse(localForce, distance, rncCutOff, nonCoulParams);
         else
             static_assert(
-                std::false_type::value,
+                std::is_same_v<NonCoulombType, void>,
                 "Unsupported NonCoulomb type"
             );
     }
