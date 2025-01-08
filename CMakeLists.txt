@@ -104,7 +104,7 @@ if(BUILD_LEGACY)
 endif()
 
 if(BUILD_WITH_OPENMP)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -D__PQ_OPENMP__")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_OPENMP__ -fopenmp")
 endif()
 
 if(BUILD_WITH_GPU)
@@ -115,14 +115,21 @@ if(BUILD_WITH_GPU)
         message(FATAL_ERROR "CUDA compiler not found")
     endif()
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__ -mp=gpu -gpu=cc75,debug -cuda -lcudart")
 
-    # set(CUDA_HOME $ENV{CUDA_HOME})
-    # if(NOT CUDA_HOME)
-    # message(FATAL_ERROR "CUDA_HOME not set")
-    # endif()
-    # include_directories(${CUDA_HOME}/include)
+    set(CUDA_HOME $ENV{NVHPC_CUDA_HOME})
+    if(NOT CUDA_HOME)
+        set(CUDA_HOME $ENV{CUDA_HOME})
+    endif()
+    if(NOT CUDA_HOME)
+        message(FATAL_ERROR "CUDA_HOME not set")
+    endif()
+    
+    include_directories(${CUDA_HOME}/include)
     include_directories(${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+
+    # to prevent stack execution on the GPU (not supported by CUDA)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,noexecstack")
 endif()
 
 # add git version as flag
